@@ -1,0 +1,74 @@
+{
+  "schema": "sf2h.independent-review.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "next30_source": "1d9d49ec26281ffd6486d722a97298596289605d",
+  "mission": 208,
+  "actor_id": "S2-R2",
+  "title": "Revisão independente de integridade e segurança",
+  "branch": "sf-review-integrity",
+  "epoch": "cold-review-e1-browser208",
+  "state": "PREPARED_NOT_STARTED",
+  "reviewed_source": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "source_branch": "sf2-stack",
+  "product_write_authority": "NONE",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review208/**"
+  ],
+  "scope": "Semântica financeira, cobertura econômica, identidade/autorização, C03/C06/C12, atomicidade/persistência/Atlas, privacidade e regressões.",
+  "focus": [
+    "Revisar contratos e código real: totais, unidades, null/zero/ausência, versões/incarnações, source-of-truth, atomicidade/idempotência e commit/retorno perdido. Não aceitar transação global onde só há commits por domínio.",
+    "Revisar Microsoft callback/sessão/logout/papéis por identidade estável, auth emRequest original, revogação e contextbinding; não usar email/role do cliente como autoridade. Não acessar segredos, tenant ou recursos Azure.",
+    "Examinar NAV-01POST JSON/4096/privateq, gates de download/fontes/relatórios/memória, Atlasappend/commit/restart/scanner e efeito do tombstone161. Escapes any/casts/suppressions ou fixtures permissivas não sanam falha.",
+    "Deduplicar findings conhecidos da190/200; achar bugs novos verificáveis, encaminhar a189/writer responsável e continuar outras partes. Falta de prova fica NOT_PROVEN, não aprovado com ressalva."
+  ],
+  "full_actor_pack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-R2.json",
+  "mandatory_reads": [
+    "AGENTS aplicáveis; START.md,prompts/S0.md para contexto de integração,WORKFLOW.md,execution/COMMON.md noSHAplanejamento; o SEU packJSON COMPLETO e todos os seus mandatory_appendices/proof_bindings/review_assignment/criterion_ids. Não resumir cobertura para caber nem carregar packs dos outros reviewers.",
+    "NormativoUXcbac654784714f68779ae1434d30e6ea8970c4d1 e next30source1d9d49ec26281ffd6486d722a97298596289605d: somente ordens/contratos/surfaces dentro do escopo próprio, completos.",
+    "Código e dependências reais noSHA revisado; receipts189/190/191/200 e sources193–206 pertinentes; declarar versões diferentes sem misturá-las.",
+    "Revisão anterior147 completa em modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r02/preliminary147/ na branchsf-review-integrity. Herdar todos os findings e coverage com seus IDs; revisar o delta causal e critérios antes não cobertos, não repetir todo o passado sem causa."
+  ],
+  "routing": {
+    "integrator": 189,
+    "compiler": 190,
+    "product_ci": 200,
+    "fixture": 199,
+    "authors": [
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206
+    ]
+  },
+  "rules": [
+    "Sessão NOVA/fria sem autoria do produto revisado. Registrar declaração de independência, efetivomodelo/session quando expostos, SHA exato, paths/contratos/critério cobertos. Nome de reviewer e diversidade de modelos não provam independência.",
+    "READ-ONLY em todo produto/source/CI. Gravar só receipts próprios. Não aprovar guardlabel/ignore, alterar oracle/fixture/critério ou corrigir o produto por conta própria. Enviar achados ao writer/189 conforme a lease vigente.",
+    "Não rodar teste/typecheck/build/validator local, não disparar CI. Usar prova real existente e solicitar só check cirúrgico que discrimine hipótese ainda não coberta à200, sem repetir input inalterado.",
+    "Revisão pode começar agora. Este SHA é baseline em desenvolvimento, nãoCaceito: output PRE_FREEZE_REVIEW, nunca FINAL_APPROVAL. Se C for formalmente aceito durante a missão, revisar delta/provas relevantes e todo escopo ainda descoberto antes de emitir qualquer FINAL. Mudança material posterior invalida parte causal da aprovação e exige recheck independente.",
+    "Return findings com idestável, severidadeP0/P1/P2 aplicável, trigger, código/blob/linha, critério, prova, autor e aceite de recheck. Deduplicar falhas já abertas e distinguir bugimplementado de falta de evidência. Nada de lista genérica de bestpractices.",
+    "Enviar findings durante a revisão para acelerar correção. Completar TODO escopo atribuído; entrega tabela critérios PASS/FAIL/NOT_PROVEN e verdictAPPROVE/FIX_FIRST/REJECT comSHA e limites. Não encerrar após um único finding nem inventar PASS por leitura.",
+    "GitHubMCP para remoto; CASexpectedhead/force:false; preservar histórico. Sem gh/push/novo token/devmerge/deploy/Azure/engine/restart/segredos. Comentário é aviso, nãoACKnemwake.",
+    "Ao terminar escope/recursos reais, publicar handoff completo com próximo recheck exato. Não aguardar ocioso por todo produto para começar revisão independente possível. Goal nativa pausada,GLOBAL_RELEASEfalse; nenhum supervisor novo.",
+    "Preservar outputs das revisões146/147/148 e conferir correções já aplicadas antes de repetir achados; nunca apagar finding obrigatório apenas porque mudou autor/modelo."
+  ],
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "previous": 147,
+  "previous_epoch": "pre-r02-e1-browser147",
+  "previous_receipts": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/reviews/native-ui/r02/preliminary147/",
+  "review_mode": "DELTA_AND_RECHECK_OF_EXISTING_PRE_REVIEW_PLUS_UNCOVERED_CRITERIA",
+  "expected_head": "7fa13a079f02696924dadfd393d776bab5bce967"
+}

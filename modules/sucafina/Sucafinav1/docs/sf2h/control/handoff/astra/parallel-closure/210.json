@@ -1,0 +1,1456 @@
+{
+  "schema": "sf2h.evidence-archive-repair.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 210,
+  "title": "Migrar logs históricos preservando provas e consumidores",
+  "branch": "sf-guard-archive",
+  "epoch": "evidence-archive-e1-browser210",
+  "state": "PREPARED_NOT_STARTED",
+  "product_base": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/01-43649352799.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/02-43649823660.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/03-43650319287.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/04-43650994005.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/05-43651791685.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/06-43653108315.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/07-43653855014.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/08-43654981768.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/B0-test-excerpt.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/R1-test-excerpt.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/test-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/test-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/test-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B0-test-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B1-test-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B2-test-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/P03-test-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/R1-test-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4-tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1-tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2-tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3-tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/cleanup-job-132671266536.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/test-job-132670817059.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/bun.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam-output.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-job.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-job.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-job.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/r3-failure-excerpt.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/r1-failure-excerpt.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/r3-failure-excerpt.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.tests.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/client-and-collection.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/nominal-03.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/source-guards.log",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/archive210/**"
+  ],
+  "historical_evidence_anchor": "690a34cdd81c12d7311f3717c19679b950276161",
+  "known_logs": [
+    {
+      "id": "AS-01",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/01-43649352799.log",
+      "blob": "87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+      "bytes": 4272,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/01-43649352799.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ]
+    },
+    {
+      "id": "AS-02",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/02-43649823660.log",
+      "blob": "ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+      "bytes": 2548,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/02-43649823660.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ]
+    },
+    {
+      "id": "AS-03",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/03-43650319287.log",
+      "blob": "bfc6bc6750156ced1e59197a22d3872716ae8d65",
+      "bytes": 3439,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/bfc6bc6750156ced1e59197a22d3872716ae8d65",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/03-43650319287.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ]
+    },
+    {
+      "id": "AS-04",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/04-43650994005.log",
+      "blob": "e456a2ed570611a7990ac0065f85598bdcd60111",
+      "bytes": 3265,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e456a2ed570611a7990ac0065f85598bdcd60111",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/04-43650994005.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ]
+    },
+    {
+      "id": "AS-05",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/05-43651791685.log",
+      "blob": "8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+      "bytes": 5350,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/05-43651791685.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ]
+    },
+    {
+      "id": "AS-06",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/06-43653108315.log",
+      "blob": "4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+      "bytes": 4188,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/06-43653108315.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ]
+    },
+    {
+      "id": "AS-07",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/07-43653855014.log",
+      "blob": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+      "bytes": 2464,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/07-43653855014.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ]
+    },
+    {
+      "id": "AS-08",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/08-43654981768.log",
+      "blob": "8731d2ba584b31a85c8c030a676b850df70ce8b4",
+      "bytes": 1693,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8731d2ba584b31a85c8c030a676b850df70ce8b4",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/08-43654981768.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+        }
+      ]
+    },
+    {
+      "id": "AS-09",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/B0-test-excerpt.log",
+      "blob": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+      "bytes": 2572,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/B0-test-excerpt.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-10",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/R1-test-excerpt.log",
+      "blob": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+      "bytes": 19381,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/R1-test-excerpt.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-11",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/test-output.log",
+      "blob": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+      "bytes": 3378,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/test-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-12",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/test-output.log",
+      "blob": "8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+      "bytes": 8833,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/test-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-13",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/test-output.log",
+      "blob": "065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+      "bytes": 8616,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/test-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-14",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B0-test-output.log",
+      "blob": "342c7129f4bfd11bc4cacdff44e56147ba15d503",
+      "bytes": 8544,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/342c7129f4bfd11bc4cacdff44e56147ba15d503",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B0-test-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-15",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B1-test-output.log",
+      "blob": "8dd8b50207df51748d964edccd74dc266cefc228",
+      "bytes": 2129,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8dd8b50207df51748d964edccd74dc266cefc228",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B1-test-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-16",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B2-test-output.log",
+      "blob": "8d66dbba8fb077552e87ee01f78f07106f95309f",
+      "bytes": 7914,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8d66dbba8fb077552e87ee01f78f07106f95309f",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B2-test-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-17",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/P03-test-output.log",
+      "blob": "42e39293213abf1c84323718acf1817cdda9d164",
+      "bytes": 5291,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/42e39293213abf1c84323718acf1817cdda9d164",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/P03-test-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-18",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/R1-test-output.log",
+      "blob": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+      "bytes": 7700,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/R1-test-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-19",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4-tests.log",
+      "blob": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+      "bytes": 5061,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/985de4515a1b091f71c4fecc2741c3b49a73e565",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4-tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-20",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1-tests.log",
+      "blob": "1b71cd92c92de2cb59ea257915abb6367a54724a",
+      "bytes": 55851,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1b71cd92c92de2cb59ea257915abb6367a54724a",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1-tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-21",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2-tests.log",
+      "blob": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+      "bytes": 24507,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2-tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-22",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3-tests.log",
+      "blob": "b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+      "bytes": 2151,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3-tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-23",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-tests.log",
+      "blob": "b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+      "bytes": 40064,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-24",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-tests.log",
+      "blob": "aeb1c529e74a6411248e32c16f7429b7cad6383f",
+      "bytes": 16232,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/aeb1c529e74a6411248e32c16f7429b7cad6383f",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-25",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-tests.log",
+      "blob": "e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+      "bytes": 14914,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-26",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/cleanup-job-132671266536.log",
+      "blob": "2f4b0d063c560cd3028994472cdabc78829ab65b",
+      "bytes": 2304,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/2f4b0d063c560cd3028994472cdabc78829ab65b",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/cleanup-job-132671266536.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-27",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/test-job-132670817059.log",
+      "blob": "55a6bca3959f2759ff763dfc64614e62235331fb",
+      "bytes": 88508,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/55a6bca3959f2759ff763dfc64614e62235331fb",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/test-job-132670817059.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-28",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam-output.log",
+      "blob": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+      "bytes": 970,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-29",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.log",
+      "blob": "947131337f1c1f5c821116bea961ce309d44f044",
+      "bytes": 1037,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/947131337f1c1f5c821116bea961ce309d44f044",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-30",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/bun.log",
+      "blob": "f84898708ac3db90f5bc392ac20a0bed97042103",
+      "bytes": 3744,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f84898708ac3db90f5bc392ac20a0bed97042103",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/bun.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-31",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error-output.log",
+      "blob": "25a631e7b551a518b5545dcd496100f21193b93e",
+      "bytes": 2698,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/25a631e7b551a518b5545dcd496100f21193b93e",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-32",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.log",
+      "blob": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+      "bytes": 3491,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-33",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main-output.log",
+      "blob": "b67c8061ef612343a3801304a1715efeffa262d0",
+      "bytes": 3294,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b67c8061ef612343a3801304a1715efeffa262d0",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-34",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.log",
+      "blob": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+      "bytes": 4087,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-35",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam-output.log",
+      "blob": "71a2da26f85e3c1af4551aacbbc63b745ee92483",
+      "bytes": 1279,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/71a2da26f85e3c1af4551aacbbc63b745ee92483",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-36",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.log",
+      "blob": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+      "bytes": 1346,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-37",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error-output.log",
+      "blob": "ac7855f087b4566bbd73665cbda703000e48137f",
+      "bytes": 2506,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ac7855f087b4566bbd73665cbda703000e48137f",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-38",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.log",
+      "blob": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+      "bytes": 3299,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a0966c9b3b811b955238cca1fe92414ee1914ae6",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-39",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main-output.log",
+      "blob": "562a28955b912b1fa99103821cbed77d479dbbb4",
+      "bytes": 2526,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/562a28955b912b1fa99103821cbed77d479dbbb4",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-40",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.log",
+      "blob": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+      "bytes": 3319,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-41",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam-output.log",
+      "blob": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+      "bytes": 1279,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam-output.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-42",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.log",
+      "blob": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+      "bytes": 1346,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+          "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+          "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+        }
+      ]
+    },
+    {
+      "id": "AS-43",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-job.log",
+      "blob": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+      "bytes": 89896,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-job.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-44",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-job.log",
+      "blob": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+      "bytes": 98644,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-job.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-45",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-job.log",
+      "blob": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+      "bytes": 72850,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-job.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-46",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/r3-failure-excerpt.log",
+      "blob": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+      "bytes": 16310,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/r3-failure-excerpt.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-47",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/r1-failure-excerpt.log",
+      "blob": "6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+      "bytes": 7563,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/r1-failure-excerpt.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-48",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/r3-failure-excerpt.log",
+      "blob": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+      "bytes": 10169,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/r3-failure-excerpt.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-49",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.tests.log",
+      "blob": "c718f517eacbacc224a9b842b51e93e1d8517832",
+      "bytes": 89377,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c718f517eacbacc224a9b842b51e93e1d8517832",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-50",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.tests.log",
+      "blob": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+      "bytes": 53310,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-51",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.tests.log",
+      "blob": "0c1c59e36aafb156504098adcdb64ce50262d63c",
+      "bytes": 28708,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/0c1c59e36aafb156504098adcdb64ce50262d63c",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-52",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.tests.log",
+      "blob": "509326e2921e600367231470f7fc375a808e15f0",
+      "bytes": 10285,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/509326e2921e600367231470f7fc375a808e15f0",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.tests.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+          "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+          "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+        }
+      ]
+    },
+    {
+      "id": "AS-53",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/client-and-collection.log",
+      "blob": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+      "bytes": 3521,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/client-and-collection.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+          "blob": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+          "blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+          "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08"
+        }
+      ]
+    },
+    {
+      "id": "AS-54",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/nominal-03.log",
+      "blob": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+      "bytes": 3234,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7c6801eed5eb0a3bcee125133734e87ff34319ad",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/nominal-03.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+          "blob": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+          "blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+          "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08"
+        }
+      ]
+    },
+    {
+      "id": "AS-55",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/source-guards.log",
+      "blob": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+      "bytes": 3981,
+      "retrieval": {
+        "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+        "git_blob_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/03784d07d1cad170a7a49529fc6febd5aca9d501",
+        "path_at_W": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/source-guards.log"
+      },
+      "consumers": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+          "blob": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+          "blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+          "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08"
+        }
+      ]
+    }
+  ],
+  "known_consumers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+      "blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+      "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-request-catalog-final.json",
+      "blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+      "blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/documentary-archive-map.json",
+      "blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/final-documentary-archive-readbacks.json",
+      "blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-receipts-01.json",
+      "blob": "b44a45422c5f875b1fa9b00179e7efc4c5fe9f05"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+      "blob": "c0e1c3baff457e94f18e7d7a8c2179e541209d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+      "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08"
+    }
+  ],
+  "review188": "https://github.com/gustavomhss/Orchestra-SF/blob/0730dfa7134ca46df3d89c46801ee200f28e168e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure188/REVIEW-188.md",
+  "actions": [
+    "Ler AGENTS, guardrail-usage, o inventário/proposta188 e a disposição189.188 não demonstrou descarte seguro de nenhum log; NÃO tratar sua proposta zero-delete como autorização de apagar55 evidências.",
+    "Provar por GitHubMCP que cada um dos55 blobs está preservado e recuperável no commit histórico indicado e que a cadeia de ancestrais/refs remotas permanece acessível. Não imprimir/copiar credenciais ou conteúdo sensível dos logs; registrar hashes/IDs/URLs imutáveis.",
+    "Mapear todos os consumidores reais, não apenas os nove metadados conhecidos. Preparar indexnovoappend-only com originalpath/blob/sourcecommit/run/classificação e URI imutável, e a migração completa dos leitores/consumidores necessários. Recibos antigos e planos aprovados são imutáveis; não reescrevê-los. Se um leitor precisar mudar fora da lease, entregar patch INERTE completo para189 com pre/post e verificações esperadas.",
+    "Somente após comprovar recuperação e equivalência para TODOS os consumidores de um log, pode removê-lo da árvore desta branch de produto. A históriaGit permanece íntegra. Se consumidor não puder migrar sem quebrar prova/imutabilidade, preservar o log e registrar o bloqueio causal exato; nunca fingir guardPASS.",
+    "Não renomear logs para extensão que fuja do guard, não mudar regras/allowlists/base, não suprimir findings, não aplicar guard-approved/ignore. O helperF04 scratch.ts pertence à199; NÃO editá-lo/renomeá-lo/excluí-lo. Skips/U15/U39/U40 pertencem aos autores atuais; fora do escopo210.",
+    "Entregar uma mudança completa de arquivo/proveniência: mapping de todos55, consumidores, readbacks de blobs, pre/post/delete autorizados por equivalência demonstrada e qualquer patch externo necessário.189 integra,190 executa guard real e208 revisa evidência de preservação. Nunca transformar snapshot/recibo arquivado em PASS doC atual."
+  ],
+  "routing": {
+    "integrator": 189,
+    "compiler": 190,
+    "product_ci": 200,
+    "independent_review": 208,
+    "fixture": 199
+  },
+  "rules": [
+    "SessãoNOVA;ACK modelo/session se exposto e epoch. Um escritor porpath; preserve tudo fora do allowlist. Sem novo supervisor/plataforma.",
+    "Remote somenteGitHubMCP, expectedheadCAS,force:false. Nenhum teste/typecheck/build/validator local ou CI próprio. Solicitar190 guard só após patch consumido noW real.",
+    "Não fazer commitvazio/progresso artificial, nem alterar produto/engine/infra/auth/financeiro. EvidênciasfinaisC/D devem ficar válidas; candidato ainda nãofreeze não autoriza perder prova histórica.",
+    "Entrega comitada/PR para sf2-stack, handoff compacto com pre/post blobs e efeitos exatos, checksreais/NOT_RUN, recusas/bloqueios. Comentário não éACKnemwake."
+  ],
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "expected_head": "2d7b3a9c3b1ca9726f9b86518ef30297bf1c7380"
+}

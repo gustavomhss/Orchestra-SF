@@ -1,0 +1,66 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "prepared": [
+    {
+      "mission": 207,
+      "actor": "S1-R1",
+      "branch": "sf-review-functional",
+      "epoch": "cold-review-e1-browser207",
+      "expected_head": "83d6c911caf2b8723e73b7f812cab1dc0919bdab",
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "mission": 208,
+      "actor": "S2-R2",
+      "branch": "sf-review-integrity",
+      "epoch": "cold-review-e1-browser208",
+      "expected_head": "7fa13a079f02696924dadfd393d776bab5bce967",
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "mission": 209,
+      "actor": "S3-R3",
+      "branch": "sf-review-runtime",
+      "epoch": "cold-review-e1-browser209",
+      "expected_head": "30b50af302833c69cd10c641fd34bb407f2a5aff",
+      "state": "PREPARED_NOT_STARTED"
+    },
+    {
+      "mission": 210,
+      "actor": "EVIDENCE-ARCHIVE",
+      "branch": "sf-guard-archive",
+      "epoch": "evidence-archive-e1-browser210",
+      "expected_head": "2d7b3a9c3b1ca9726f9b86518ef30297bf1c7380",
+      "state": "PREPARED_NOT_STARTED"
+    }
+  ],
+  "routing": {
+    "sole_integrator": 189,
+    "compiler": 190,
+    "product_ci": 200,
+    "installed_fixture": 199
+  },
+  "review_rule": "Recheck previous146–148 and new integrated deltas; PRE_FREEZE not FINAL approval. Product read-only. Preserve findings; verify acceptedC and later causal deltas independently.",
+  "archive_rule": "188 zero-proven-safe-deletions retained as historical finding.210 must prove immutable Git recovery and consumer equivalence before any deletion; priorreceipts/plans immutable; no guard bypass.",
+  "ready_intake": [
+    193,
+    194,
+    195,
+    197,
+    198,
+    201
+  ],
+  "in_progress_observed": [
+    196,
+    199,
+    202,
+    203,
+    205
+  ],
+  "blocked_positive_runtime": "Actual installed host/principals/provider/skills/Relay not evidenced; coordinate concrete inputs through199, no new synthetic substitutes",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
