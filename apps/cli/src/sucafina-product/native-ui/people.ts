@@ -290,6 +290,8 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfPeo
         value: {
           kind: "ok" as const,
           data, versions, canWrite,
+          admin: actor.roles.includes("admin"),
+          actorCanWrite: actor.canWrite,
           versionFence: JSON.stringify(snapshot.versions),
         },
       }
@@ -322,6 +324,8 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfPeo
         commit: false,
         value: !!actor && actor.id === refreshed.value.stamp.principalRef &&
           dashboardPages(actor, summaries).includes(pageName) &&
+          actor.roles.includes("admin") === outcome.admin &&
+          actor.canWrite === outcome.actorCanWrite &&
           JSON.stringify(snapshot.versions) === outcome.versionFence,
       }
     }, { signal: request.signal })
