@@ -180,7 +180,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     ).catch(() => undefined)
     if (!current(epoch, generation, signal)) return
     if (result?.kind === "response" && result.body.status === "ok") {
-      if (result.body.scope.source.incarnation !== view.active?.incarnation) {
+      if (result.body.snapshot.condition.id !== conditionId || result.body.scope.choiceId !== view.conditions.find((item) => item.conditionId === conditionId)?.choiceId) {
         setView("detailState", "stale")
         return
       }
