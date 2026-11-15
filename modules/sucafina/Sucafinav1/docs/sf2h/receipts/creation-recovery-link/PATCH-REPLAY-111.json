@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.111.static-patch-replay.v1",
+  "branch": "creation-recovery-link",
+  "source_head_before_receipt": "0412990fe8cb1ec01d15a2649ce3282ed6c1d709",
+  "base": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "integration_head_observed": "806278627986f808afe71f53408fe31b77752894",
+  "patch_blob": "205f48bc7ea6b8bac08d339a574f8c4609f94d15",
+  "prepost_manifest_blob": "7063741dbfe2243637eb95048c1dc945a0e70d03",
+  "method": "Pure in-memory line-hunk replay of full unified patch onto four independently fetched C53 source blobs, compared full resulting UTF-8 string to independently fetched Git postimage blob. No local repo tests/builds/commands.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+      "postimage": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "hunks": 3,
+      "preimageMatches": true,
+      "postimageMatches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+      "preimage": "5245f469fab7f23474c4c406ddd1d2f1f43d65a2",
+      "postimage": "c00afe5f9bec072c6236441e1b650327d26853ea",
+      "hunks": 2,
+      "preimageMatches": true,
+      "postimageMatches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "preimage": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "postimage": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+      "hunks": 2,
+      "preimageMatches": true,
+      "postimageMatches": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "preimage": "f03ab621e96cfda23456be73bba2d24f24754d36",
+      "postimage": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+      "hunks": 2,
+      "preimageMatches": true,
+      "postimageMatches": true
+    }
+  ],
+  "result": "4/4 STATIC_REPLAY_MATCH",
+  "not_proven": [
+    "Owner patches applied to product C",
+    "Case-port96 composed",
+    "Runtime HTTP/SQLite/browser Actions results",
+    "Typecheck/guards",
+    "Reviewer91 acceptance"
+  ],
+  "global_release": false
+}
