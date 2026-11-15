@@ -217,6 +217,22 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     }
   }
 
+  function discardCurrent() {
+    const editor = state.editor
+    const snapshot = activeDraft()
+    if (!editor || !snapshot || state.submitting || state.operationState === "unknown") return
+    if (snapshot.dirty && !window.confirm(t(commonKey("navigationDiscard")))) return
+    draft?.discard()
+    owner.ready()?.drafts.discard({
+      surfaceId: "CAP11", identity: editor.identity, editScopeKey: editor.scope,
+    })
+    draft = undefined
+    draftOwner = undefined
+    setState("editor", null)
+    setState("operationState", "idle")
+    setState("errorText", null)
+  }
+
   const changeSelection = (field: "year" | "month", value: number) => {
     // F01 retains drafts across periods; park the UI reference, not the draft.
     if (state.editor) {
@@ -600,6 +616,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             state={state.state}
             messageKey={state.state === "loading" ? commonKey("loading") :
               state.state === "denied" ? commonKey("noAccess") :
+              state.state === "invalid" ? commonKey("needsInput") :
               state.state === "session-expired" ? commonKey("loginAgain") :
               state.state === "conflict" || state.state === "stale" ? commonKey("stale") :
               commonKey("unavailable")}
@@ -745,6 +762,9 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             <button type="button" onClick={() => setState("refresh", (value) => value + 1)}>
               {t(commonKey("retry"))}
             </button>
+            <Show when={state.editor && activeDraft()}>
+              <button type="button" onClick={discardCurrent}>{t(commonKey("discard"))}</button>
+            </Show>
           </Show>
           <Show when={state.operationState === "saved"}>
             <p role="status">{t(commonKey("saved"))}</p>
@@ -862,18 +882,8 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                     <button type="button" onClick={() => setState("editor", null)}>
                       {t(commonKey("close"))}
                     </button>
-                    <button type="button" onClick={() => {
-                      const snapshot = activeDraft()
-                      if (snapshot?.dirty && !window.confirm(t(commonKey("navigationDiscard")))) return
-                      const editor = state.editor
-                      draft?.discard()
-                      if (editor) owner.ready()?.drafts.discard({
-                        surfaceId: "CAP11", identity: editor.identity, editScopeKey: editor.scope,
-                      })
-                      draft = undefined
-                      draftOwner = undefined
-                      setState("editor", null)
-                    }}>{t(commonKey("discard"))}</button>
+                    <button type="button" disabled={state.submitting || state.operationState === "unknown"}
+                      onClick={discardCurrent}>{t(commonKey("discard"))}</button>
                   </div>
                 </form>
               </Show>

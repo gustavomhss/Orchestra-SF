@@ -220,6 +220,22 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const displayedMonth = () => state.page?.selection.month ?? state.month
   const refresh = () => setState("refresh", (value) => value + 1)
 
+  function discardCurrent() {
+    const editor = state.editor
+    const snapshot = activeDraft()
+    if (!editor || !snapshot || state.submitting || state.operationState === "unknown") return
+    if (snapshot.dirty && !window.confirm(t(common("navigationDiscard")))) return
+    draft?.discard()
+    owner.ready()?.drafts.discard({
+      surfaceId: "CAP12", identity: editor.identity, editScopeKey: editor.scope,
+    })
+    draft = undefined
+    draftOwner = undefined
+    setState("editor", null)
+    setState("operationState", "idle")
+    setState("errorText", null)
+  }
+
   const changeSelection = (field: "year" | "month", value: number) => {
     // Keep F01's same-owner draft registry, but never reuse a period editor.
     if (state.editor) {
@@ -660,6 +676,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
             state={state.state}
             messageKey={state.state === "loading" ? common("loading") :
               state.state === "denied" ? common("noAccess") :
+              state.state === "invalid" ? common("needsInput") :
               state.state === "session-expired" ? common("loginAgain") :
               state.state === "not-found" ? common("removed") :
               state.state === "stale" || state.state === "conflict" ? common("stale") :
@@ -848,6 +865,9 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
           <Show when={state.operationState === "conflict"}>
             <p role="alert">{t(common("conflict"))}</p>
             <button type="button" onClick={refresh}>{t(common("retry"))}</button>
+            <Show when={state.editor && activeDraft()}>
+              <button type="button" onClick={discardCurrent}>{t(common("discard"))}</button>
+            </Show>
           </Show>
           <Show when={state.operationState === "saved"}><p role="status">{t(common("saved"))}</p></Show>
           <Show when={state.operationState === "unknown"}><p role="alert">{t(common("operationUnknown"))}</p></Show>
@@ -899,7 +919,8 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                   state={reviewerState()}
                   onConfirm={() => { void submitReviewed() }}
                   onRevise={() => {
-                    if (state.editor!.command.startsWith("delete-")) setState("editor", null)
+                    if (state.editor!.command.startsWith("delete-") && state.operationState !== "conflict")
+                      setState("editor", null)
                     else { setState("editor", "review", false); draft?.setPhase("dirty") }
                   }}
                   onCancel={() => {
@@ -992,20 +1013,8 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                     <button type="button" onClick={() => setState("editor", null)}>
                       {t(common("close"))}
                     </button>
-                    <button type="button" onClick={() => {
-                      const snapshot = activeDraft()
-                      if (snapshot?.dirty && !window.confirm(t(common("navigationDiscard")))) return
-                      const editor = state.editor
-                      draft?.discard()
-                      if (editor) owner.ready()?.drafts.discard({
-                        surfaceId: "CAP12", identity: editor.identity, editScopeKey: editor.scope,
-                      })
-                      draft = undefined
-                      draftOwner = undefined
-                      setState("editor", null)
-                      setState("operationState", "idle")
-                      setState("errorText", null)
-                    }}>{t(common("discard"))}</button>
+                    <button type="button" disabled={state.submitting || state.operationState === "unknown"}
+                      onClick={discardCurrent}>{t(common("discard"))}</button>
                   </div>
                 </form>
               </Show>
