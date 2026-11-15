@@ -143,7 +143,8 @@
     "Implement metadata-only GET /api/sucafina/installations through global Authorization and server.sucafina locationMiddleware; trusted descriptors filtered to current Location.project.id; no directory/principal/role/grant/business data.",
     "Own APP/context/contracts.ts declaring SfSurfaceProps and importing the one SfResolvedRoute type from route contract. Page leaf signature is frozen by COMPONENT-CONTRACTS §1; no grant/client/role supplied through route props.",
     "Publish exact en/pt-BR leaf copy symbols from i18n_exports; provide import/spread fragment for I00 orchestra.ts, no shared registry write.",
-    "Inject the exact SfContextDependencies from CONTRACTS §6.1; never import the runtime createSfTransport factory or aggregate Axx clients in F01. I00 composes F01/F02/S03 atomically for qualification. The server-only context handler receives the original Request."
+    "Inject the exact SfContextDependencies from CONTRACTS §6.1; never import the runtime createSfTransport factory or aggregate Axx clients in F01. I00 composes F01/F02/S03 atomically for qualification. The server-only context handler receives the original Request.",
+    "Implement one atomic requestNativeTransition for sidebar, link, keyboard, back/forward, reload, ConnectionGate: URL A beats selected B, auth+binding revalidate first, then publish URL/global selection/owner. Select=ids discovery works without stale SDK directory; GET context uses exact installation/project/host expectations."
   ],
   "acceptance_cases": [
     {
@@ -159,6 +160,11 @@
     {
       "id": "F01-AC03",
       "expected": "Back/reload preserves non-sensitive filters, period and selection only in the same authorized context.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "F01-77-CTX",
+      "expected": "Explicit deep link A with B selected and directoryA absent; A unavailable does NOT use B; keyboard/history/ConnectionGate and late A response do not leak or navigate Chat; hostId changes require explicit rediscovery.",
       "status": "PLANNED_NOT_RUN"
     }
   ],

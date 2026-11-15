@@ -98,7 +98,8 @@
     "Implement broker.test.ts inside the owned main/sucafina subtree; fixture asserts sender, operation allowlist, owner epoch, cookie partition and upload/download mediation.",
     "Use existing authenticated AppDockSocket per-launch channel for local enrollment: main/CLI request-reply stays outside HTTP and renderer; no token stdout/log/cookie import. Explicit unmanaged loopback chooser parses original open-local.html only as data.",
     "Use the exact four entrypoints and constructor dependencies from CONTRACTS §6.1. Approved connection registry and lifecycle are injected by I00; serverKey received from a renderer never approves or registers a connection.",
-    "Native connection consent uses only COPY-02/SF_DESKTOP_COPY and SF_DESKTOP_COPY_BR in the owned main copy.ts. Cancel is default/cancelId 0; main never imports APP dictionaries. Register and release use exact generation-bound typed channels; a connection can be released before bind."
+    "Native connection consent uses only COPY-02/SF_DESKTOP_COPY and SF_DESKTOP_COPY_BR in the owned main copy.ts. Cancel is default/cancelId 0; main never imports APP dictionaries. Register and release use exact generation-bound typed channels; a connection can be released before bind.",
+    "For remote ids selection, do not require Location.directory from unrelated current SDK owner; registry registration still validates connection+consent, then broker uses loaded installation identity. Auth return marker is dashboard?sf=native-return with opaque one-use ref, not new /auth/native-return exception."
   ],
   "acceptance_cases": [
     {
@@ -114,6 +115,11 @@
     {
       "id": "D01-AC03",
       "expected": "Logout invalidates in-flight results and session state; no secret/cookie enters renderer storage or logs.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "D01-77-LOGIN",
+      "expected": "Remote deep link A loads after prior connection B, login return stays in Session partition and validates original A; no renderer token or URL injection; auth marker expires and cannot be reused.",
       "status": "PLANNED_NOT_RUN"
     }
   ],
