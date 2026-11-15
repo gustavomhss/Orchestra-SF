@@ -56,7 +56,7 @@ Ao terminar código/documentos próprios, o autor entrega `ARTIFACT_READY` e o h
 
 ## 4. Piloto definido
 
-O piloto integra navegação, identidade e transporte, fila Procurement, detalhe e revisão de uma ação canônica admitida, sob dois atores. O mesmo fluxo é exercitado pelo shell web na origem aprovada e pelo desktop através de D01; web verde não qualifica desktop. Harness é entrega de fundação, não tarefa descoberta depois do piloto.
+O piloto integra navegação, identidade e transporte, fila Procurement, detalhe e **duas fases distintas** sob dois atores: P0 salva somente título `pr.title` em draft persistido com CAS/owner fence por U11.title-save (não é aprovação e não tem receipt C12); P1 aprova realmente PR submetida sob holder atual via U13.pr-approval. Ambas exigem o produtor real, estado incerto sem replay, negativo de segundo ator, web e desktop; P0 não substitui P1. O mesmo fluxo é exercitado pelo shell web na origem aprovada e pelo desktop através de D01; web verde não qualifica desktop. Harness é entrega de fundação, não tarefa descoberta depois do piloto.
 
 O piloto verifica a ligação entre peças e calibra layout/latência observados. Não muda produto para MVP, não substitui M31/MI07, não fecha P03 e não dispensa outras jornadas. Ajuste de contrato exige finding e correção central com consumidores afetados; autor não redesenha a assinatura durante a execução.
 

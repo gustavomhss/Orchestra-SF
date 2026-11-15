@@ -10,9 +10,9 @@ Uma projeção nativa nova só existe para a capacidade que hoje está exposta e
 
 ## 2. Bootstrap sem dependência circular
 
-Um único recurso global de descoberta, `GET /api/sucafina/installations`, publica metadados mínimos de instalações registradas por factory confiável, filtrados pelo contexto servidor/projeto autorizado. Descritores usam IDs opacos, origin, mount e revisão de contrato; não retornam directory, principal, papéis, grants, dados SF nem segredos.
+Um único recurso global de descoberta, `GET /api/sucafina/installations`, publica metadados mínimos da instalação da conexão escolhida por factory confiável. A query é união fechada: `select=ids&installationId&projectId` funciona sem Location.directory antigo para deep link A; `select=location&location[directory]` usa somente SDK/LocationMiddleware selecionado. Provedor ausente/IDs não coincidentes não enumeram outras instalações. Nenhum braço usa a seleção persistida B como fallback de A. Descritores usam IDs opacos, origin, mount e revisão de contrato; não retornam directory, principal, papéis, grants, dados SF nem segredos.
 
-O descriptor não autentica ninguém na Sucafina. Depois de selecionar binding válido, o client consulta o contexto SF dentro do mount, com a sessão SF real. Nenhuma inferência de papel vem do login global Orchestra, email, URL, nome ou origem de tenant B2B.
+O descriptor não autentica ninguém na Sucafina. Depois de selecionar binding válido, o client consulta `GET {mount}/api/ui/context` com expectativas obrigatórias `installationId/projectId/hostId`, comparadas antes/depois da admissão privada, com a sessão SF real. Uma troca de host/contexto retorna 409, não dados do owner antigo. Nenhuma inferência de papel vem do login global Orchestra, email, URL, nome ou origem de tenant B2B.
 
 Esse recurso usa a geração pública já existente **uma vez na integração**. Não há novo alvo dedicado de codegen, cópia manual de arquivos gerados nem registro dos dados SF na API global. Os paths e a injeção sem dependência Server→CLI estão fechados em CONTRACTS e nas fichas F01/I00.
 
@@ -30,11 +30,11 @@ O primeiro acesso nativo inicializa somente mapas ausentes pelo bootstrap legít
 
 **Desktop:** `oc://renderer` não compartilha a origem do cookie SF. D01 entrega um broker mínimo main-process, com Session isolada por binding, login real na mesma partition e IPC tipado por operationId. O main calcula destino/origin da configuração validada, usa o catálogo fechado e rejeita URL, header, cookie ou path arbitrário do renderer. Nenhum token/cookie é devolvido à UI. Login Microsoft, local-operator, cancelamento, downloads e revogação têm contratos separados e concretos em CONTRACTS.
 
-O broker é uma capacidade **nova planejada**, não um recurso já encontrado em Platform.fetch. O transporte passa pelas mesmas verificações do servidor. Web verde não prova desktop; ambas as superfícies integram o aceite.
+Retorno de login usa intent opaca single-use (>=128 bits, <=5min) e returnTo já admitido `dashboard?sf=native-return&resume=...`, com safeReturn inalterado; desktop main consome o marcador na Session isolada. Não ampliar `/auth/native-return` nem aceitar URL arbitrária. O broker é uma capacidade **nova planejada**, não um recurso já encontrado em Platform.fetch. O transporte passa pelas mesmas verificações do servidor. Web verde não prova desktop; ambas as superfícies integram o aceite.
 
 ## 5. Identidade de operação e resultados incertos
 
-O host exige `Idempotency-Key` nas chamadas UI não GET/HEAD, incluindo leituras POST. O client cria e conserva a identidade conforme o tipo catalogado da operação; uma leitura nova tem identidade própria, uma reconciliação usa a correlação exigida pelo produtor. Não confundir uma request key com prova de que todo comando é idempotente.
+O host exige `Idempotency-Key` nas chamadas UI não GET/HEAD, incluindo leituras POST. Mutação do cliente nativo contra Application legado usa `X-SF-Native-Owner` fechado, validado **dentro** da transação depois de autenticação e antes de Domain.execute; runtime sem o hook recusa com 503, mismatch com 409 sem commit. Views e Planner monthly são outras portas e precisam revalidar tuple/principal no seu próprio host; browser precheck não conta. O client cria e conserva a identidade conforme o tipo catalogado da operação; uma leitura nova tem identidade própria, uma reconciliação usa a correlação exigida pelo produtor. Não confundir uma request key com prova de que todo comando é idempotente.
 
 Uma mutação é disparada uma vez por intenção confirmada. Resposta perdida conserva a operação pendente. Se há receipt/status canônico, consultá-lo; se o comando só retorna estado, usar a releitura autorizada prevista e manter a incerteza que restar. Não criar recibo sintético, redispatch automático nem inventar aprovação.
 

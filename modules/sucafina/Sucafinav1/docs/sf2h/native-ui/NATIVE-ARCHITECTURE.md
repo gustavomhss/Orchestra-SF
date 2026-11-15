@@ -112,3 +112,8 @@ Uma página bonita com mocks, um iframe, o HTML antigo em innerHTML ou um link e
 F01 entrega o recurso mínimo de descoberta de instalações no HttpApi global, filtrado pelo contexto servidor/projeto; I00 executa a geração canônica uma vez. Isso não amplia o cookie SF nem publica dados de negócio no global. O browser usa a origem aprovada; D01 implementa o broker desktop main-process com Session isolada e catálogo fechado de operações. A API Platform.fetch atual não é tratada como esse broker. Os detalhes e paths estão em CONTRACTS e nas ordens F01/F02/D01/I00.
 
 O integrador é o único writer de registries e composition roots. Os autores entregam exports e fragmentos por allowlist; nenhum consumidor cria um segundo owner resolver, token store, engine, dispatcher ou provider de tema.
+
+
+## 9. Adendo normativo de reconciliação 77 — sem segunda arquitetura
+
+O contrato único está em `execution/CONTRACTS.md`: discovery por `select=ids|location` na conexão explícita (R77-F02), tuple e transição única antes de publicar seleção (F01), return-intent opaco com safeReturn original (F03), owner fence transacional (F04), views v2 sobre o produtor atual (F06), TSV mensal via monthly-edit/monthly-host (F07) e três FINAL com IA/Relay/Atlas (F08). São obrigações de implementação e prova no candidato C; este adendo não cria outra auth, renderer, store, scheduler, dispatcher ou camada financeira. A reconciliação normativa não concede autorização de escrita de produto nem quita os gates.
