@@ -1,0 +1,99 @@
+{
+  "schema": "sf2h.correction-source-manifest.v1",
+  "mission": 158,
+  "epoch": "ux-native-n14-e2-browser158",
+  "branch": "sf-ux-n14",
+  "pr": 146,
+  "finding": "PRE-R01-146-004",
+  "ack": {
+    "commit": "7ff7da570b492a303bb6afd2055647834b0c26ac",
+    "tree": "85caffe7ff2fc6cb8310c32a5ae6d219a423a49c",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/ACK.json",
+    "blob": "0824007749d18093bd6dbdc620bb6e2c2f93ac00"
+  },
+  "source": {
+    "prepared_head": "03b54332774164d9fa2f32000a4130001fb56f62",
+    "prepared_tree": "f182b61209246ff7c9d9d17563f993e06dc05d76",
+    "base_for_material": "7ff7da570b492a303bb6afd2055647834b0c26ac",
+    "material_head": "f308a54c6976edeaba2ed9ecc2a1ff34c8a7fd0c",
+    "material_tree": "28c7191c9136f24669401727c5c1fbc08fb55abe",
+    "files": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/people/overview/index.tsx",
+        "pre_blob": "df71763074fccb7dd6f26efba762dffc32c42c65",
+        "post_blob": "71d5028ed37864ad98cb767687e354a32730cfbd",
+        "effect": "server-authorized CAP07 denied reason; CTA deliberately fail-closed until 132's real route builder"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts",
+        "pre_blob": "e9938385e1422480012c501af5c5ad783ad8dc39",
+        "post_blob": "7f9481c612026115cfff4513e0771eb301ea852a",
+        "effect": "real installed owner keyboard/route/back/focus + separate CAP06-only denied principal"
+      }
+    ],
+    "unchanged_input_blobs": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/index.tsx": "b67ed1ced5497218b1c2c0d0011cafafed46eb72",
+      "packages/app-shell/src/orchestra/chapters/sucafina/people/structure/session.ts": "5404abc6ea17e598eb571b71aaa059d7e2dea433",
+      "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts": "592eef8206c665a1fc908934e258b286fe85609e",
+      "packages/schema/src/sucafina/context.ts": "423050658692902ddb94358574762906fc06ccff",
+      "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts": "dc264d8c97163922134d09285e1c8d3a38027760",
+      "modules/sucafina/Sucafinav1/runtime/application.ts@C60": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts@C60": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+      "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts@sf2-stack": "c70c68fee7eb3e944c432ad636ef9ba30571b425"
+    }
+  },
+  "source_producer": {
+    "observed_candidate": "8094e599e3d18609e269548d24619a3246fbc735",
+    "application_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "people_renderer_blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+    "delta": "NO_PRODUCER_WRITE"
+  },
+  "consumer": {
+    "integrator": 132,
+    "pr": 65,
+    "base_snapshot": "8094e599e3d18609e269548d24619a3246fbc735",
+    "consumer_ack": "PENDING_NOT_CLAIMED",
+    "shared_owner_seam": "native F01 buildSameOwnerHref + authorized transition + return/focus; no public port exposed"
+  },
+  "patches": {
+    "material": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/SOURCE-DELTA.patch",
+    "inert_owner": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction158/OWNER132-UNAPPLIED.patch",
+    "patch_state": "OWNER_PATCH_INERT_NOT_APPLIED"
+  },
+  "contracts": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "surface_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "u03_work_order_blob": "ec744847f11016da6aa622a6ba8655c8d7e04724"
+  },
+  "mapping": {
+    "findings": [
+      "PRE-R01-146-004"
+    ],
+    "criteria": [
+      "U03-AC01 (unchanged)",
+      "U03-AC02 (denied owner/context, positive awaited)",
+      "U03-AC03 (320px navigation/focus requested)",
+      "NAV-01",
+      "READ-01",
+      "COPY-01",
+      "Q02 (requested)"
+    ]
+  },
+  "validation": {
+    "suites": "NOT_RUN",
+    "browser": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "build": "NOT_RUN",
+    "parser": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "codegen": "NOT_RUN",
+    "compiler_owner": 149,
+    "ci_owner": 150
+  },
+  "status": "PARTIAL_SAFE_PRODUCT_AND_CAUSAL_REGRESSIONS; BLOCKED_SHARED_NAVIGATION_PORT_132; NOT_QUALIFIED",
+  "global_release": false,
+  "native_goal": "paused",
+  "correction_fully_closed": false
+}
