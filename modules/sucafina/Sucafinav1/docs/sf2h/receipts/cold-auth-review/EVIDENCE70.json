@@ -1,0 +1,1557 @@
+{
+  "schema": "sf2h.cold-auth-review.evidence.v1",
+  "mission": 70,
+  "opinion": "FIX-FIRST",
+  "repository": "gustavomhss/Orchestra-SF",
+  "review": {
+    "sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "tree": "12594fd5a48f934847db717dd872d51776484296",
+    "code_frozen": true,
+    "not_reviewed_as_integrated": [
+      "proposed52 installation5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+      "future admission53 activation",
+      "future final campaign C"
+    ]
+  },
+  "package": {
+    "commit": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/cold-auth-review.json",
+    "blob": "b4988fd5159b783cf6ff9c3e5c05fb6c81b0436c",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "methodology": {
+    "remote": "GitHub MCP only",
+    "findings": "Code and pinned dependency causal paths; no product request, repro execution or author transcript used as proof.",
+    "receipts": "Used to locate immutable inputs, ownership and outstanding requirements; their claims are not independent execution evidence.",
+    "read_scope": "Targeted security review of the listed integration paths and their invoked authority/transport boundaries; not exhaustive audit of all campaign software.",
+    "source_inspection": "Full files fetched where listed; relevant branches and consumers read. Material equality checks are metadata/byte identity evidence, not behavioral tests.",
+    "cross_review": "Isolation and HTTP findings independently counter-read by identity reviewer; no cutoff or prior visibility gate found that refutes the stated conditions.",
+    "independence": {
+      "reviewer": "/root",
+      "helpers": [
+        "/root/identity_review",
+        "/root/http_review",
+        "/root/isolation_review"
+      ],
+      "authored_product_this_session": false,
+      "model_effective": "GPT-6 Astra Pro (session developer identification)",
+      "provider_model_id": null,
+      "session_id": null,
+      "historical_author_identity_complete": false,
+      "final_campaign_review_count_claimed": 0
+    }
+  },
+  "mandatory_reads": [
+    {
+      "path": "AGENTS.md",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "scope": "applicable repository instructions"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+      "scope": "full instruction document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+      "scope": "full instruction document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "scope": "full instruction document"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-R2.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "dfb48ef567034ebc235d47bb12be030083d3e065",
+      "scope": "complete assigned actor pack"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "scope": "applicable identity, authority, privacy, persistence and independent-review requirements; not all other actor packs"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "scope": "applicable identity, authority, privacy, persistence and independent-review requirements; not all other actor packs"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+      "scope": "applicable identity, authority, privacy, persistence and independent-review requirements; not all other actor packs"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/execution-reconciliation.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "89d3a9ea372c9700eb04267fab6462feb0c0b9d1",
+      "scope": "applicable identity, authority, privacy, persistence and independent-review requirements; not all other actor packs"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/axiom-index.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "129e7d2f7becc6c9f91f8c9efe3eaeab83bef077",
+      "scope": "exact CAMP criteria cited by this review"
+    }
+  ],
+  "criterion_texts": [
+    {
+      "id": "CAMP.INV.02",
+      "entity": "sf2h-integral-20261112",
+      "family": "invariants",
+      "text": "Papéis, escopo de dados, holders, locks, versões esperadas e transições legais são preservados. Tornar uma ação fácil de encontrar não amplia autoridade.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "CAMP.INV.04",
+      "entity": "sf2h-integral-20261112",
+      "family": "invariants",
+      "text": "Nenhum conteúdo restrito reaparece em busca, contagem, comparação, gráfico, comentário, snapshot, exportação, prompt ou resultado de rotina. Ler ou aplicar revalida acesso atual.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "CAMP.INV.06",
+      "entity": "sf2h-integral-20261112",
+      "family": "invariants",
+      "text": "Revisão preservada permanece estável. Atualizar a origem não reescreve a reunião passada; acesso revogado não permite recuperar conteúdo privado por histórico.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "CAMP.CMP.02",
+      "entity": "sf2h-integral-20261112",
+      "family": "completeness_criteria",
+      "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "CAMP.CMP.03",
+      "entity": "sf2h-integral-20261112",
+      "family": "completeness_criteria",
+      "text": "O ciclo antes/durante/depois é coberto para executivo, contribuidor, Finance/HR e requester/buyer/approver, usando as permissões reais em vez de um usuário administrador único.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "coverage": [
+    {
+      "area": "OIDC / tenant / principal / canonical roles",
+      "criteria": [
+        "CAMP.INV.02",
+        "CAMP.CMP.03",
+        "C01",
+        "C08"
+      ],
+      "status": "SOURCE_CONTROLS_OBSERVED; G01_OPEN",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+        "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+        "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+        "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts"
+      ]
+    },
+    {
+      "area": "Opaque encrypted session / expiry / refresh / logout races / CSRF",
+      "criteria": [
+        "mission70.acceptance[0]",
+        "WP10.T03.QLT.40"
+      ],
+      "status": "SOURCE_CONTROLS_OBSERVED; AUTH01_MANDATORY; G01_G02_OPEN",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts"
+      ]
+    },
+    {
+      "area": "Node / Effect body / origin / proxy / HTTP privacy",
+      "criteria": [
+        "C08",
+        "mission70.acceptance[1]"
+      ],
+      "status": "HTTP01_MANDATORY; G01_G02_OPEN",
+      "paths": [
+        "apps/cli/src/sucafina-product/installation.ts",
+        "apps/cli/src/commands/handlers/serve.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "packages/server/src/body-limit.ts",
+        "packages/server/src/routes.ts",
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "bun.lock",
+        "patches/effect@4.0.0-beta.83.patch"
+      ]
+    },
+    {
+      "area": "Cross-user isolation / grants / source projection / replay",
+      "criteria": [
+        "CAMP.INV.02",
+        "CAMP.INV.04",
+        "CAMP.INV.06",
+        "CAMP.CMP.02",
+        "CAMP.CMP.03",
+        "C01",
+        "C03",
+        "C08",
+        "C16",
+        "C17",
+        "AM03"
+      ],
+      "status": "SOURCE_CONTROLS_OBSERVED; ISO01_MANDATORY; NO_FULL_CAMPAIGN_ACCEPTANCE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+        "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "modules/sucafina/Sucafinav1/src/requests.ts",
+        "modules/sucafina/Sucafinav1/src/nav.ts",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+        "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+        "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts"
+      ]
+    },
+    {
+      "area": "Procurement admission activation / human approval boundary",
+      "criteria": [
+        "C01",
+        "C03",
+        "C08",
+        "C12",
+        "CAMP.INV.02"
+      ],
+      "status": "G03_HOLD_INERT; M31_MI07_NOT_CLOSED",
+      "paths": [
+        "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+        "modules/sucafina/Sucafinav1/index.ts",
+        "apps/cli/src/sucafina-product/business-services.ts",
+        "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+        "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts"
+      ]
+    },
+    {
+      "area": "Source fixture / integrated fixture / Node test scope",
+      "criteria": [
+        "WP10.QLT.40",
+        "WP10.T03.CHK.03",
+        "mission70.acceptance[1]"
+      ],
+      "status": "STATIC_IDENTITY_CLOSURE; NO_EXECUTION_BY70",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+        "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+        "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+        "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+        "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts"
+      ]
+    }
+  ],
+  "source_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+      "scope": [
+        "OIDC / tenant / principal / canonical roles"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+      "scope": [
+        "OIDC / tenant / principal / canonical roles"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+      "scope": [
+        "OIDC / tenant / principal / canonical roles"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+      "scope": [
+        "OIDC / tenant / principal / canonical roles"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "scope": [
+        "OIDC / tenant / principal / canonical roles"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "scope": [
+        "Opaque encrypted session / expiry / refresh / logout races / CSRF"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 62,
+          "end": 78
+        },
+        {
+          "start": 119,
+          "end": 142
+        },
+        {
+          "start": 94,
+          "end": 109
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "scope": [
+        "Opaque encrypted session / expiry / refresh / logout races / CSRF"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 366,
+          "end": 388
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/local/entry.ts",
+      "scope": [
+        "Opaque encrypted session / expiry / refresh / logout races / CSRF"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 162,
+          "end": 173
+        },
+        {
+          "start": 123,
+          "end": 123
+        },
+        {
+          "start": 128,
+          "end": 141
+        },
+        {
+          "start": 233,
+          "end": 239
+        }
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/installation.ts",
+      "scope": [
+        "Node / Effect body / origin / proxy / HTTP privacy"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 38,
+          "end": 49
+        }
+      ]
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/commands/handlers/serve.ts",
+      "scope": [
+        "Node / Effect body / origin / proxy / HTTP privacy"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/host-context.ts",
+      "scope": [
+        "Node / Effect body / origin / proxy / HTTP privacy"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 800,
+          "end": 803
+        },
+        {
+          "start": 836,
+          "end": 852
+        }
+      ]
+    },
+    {
+      "path": "packages/server/src/body-limit.ts",
+      "blob": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/server/src/body-limit.ts",
+      "scope": [
+        "Node / Effect body / origin / proxy / HTTP privacy"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 25,
+          "end": 43
+        }
+      ]
+    },
+    {
+      "path": "packages/server/src/routes.ts",
+      "blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/server/src/routes.ts",
+      "scope": [
+        "Node / Effect body / origin / proxy / HTTP privacy"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "scope": [
+        "Node / Effect body / origin / proxy / HTTP privacy"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 90,
+          "end": 103
+        }
+      ]
+    },
+    {
+      "path": "bun.lock",
+      "blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/bun.lock",
+      "scope": [
+        "Node / Effect body / origin / proxy / HTTP privacy"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "patches/effect@4.0.0-beta.83.patch",
+      "blob": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/patches/effect@4.0.0-beta.83.patch",
+      "scope": [
+        "Node / Effect body / origin / proxy / HTTP privacy"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 84,
+          "end": 128
+        },
+        {
+          "start": 456,
+          "end": 507
+        },
+        {
+          "start": 347,
+          "end": 350
+        },
+        {
+          "start": 510,
+          "end": 521
+        },
+        {
+          "start": 60,
+          "end": 86
+        },
+        {
+          "start": 28,
+          "end": 43
+        },
+        {
+          "start": 304,
+          "end": 306
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 473,
+          "end": 487
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 100,
+          "end": 102
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/requests.ts",
+      "blob": "3a7475a2b100739d566e2e5c7eecaa13e59b33b5",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/src/requests.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 3,
+          "end": 8
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/src/nav.ts",
+      "blob": "412d55047a1b6dda686ce1054c15b20307217577",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/src/nav.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 129,
+          "end": 145
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "blob": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/procurement/sources.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "blob": "ab9814817d11c0b477636ee54d1b2763d365f405",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/procurement/source-projection.ts",
+      "scope": [
+        "Cross-user isolation / grants / source projection / replay"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "scope": [
+        "Procurement admission activation / human approval boundary"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 67,
+          "end": 70
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/index.ts",
+      "blob": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/index.ts",
+      "scope": [
+        "Procurement admission activation / human approval boundary"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 12,
+          "end": 32
+        }
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/business-services.ts",
+      "scope": [
+        "Procurement admission activation / human approval boundary"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 651,
+          "end": 660
+        }
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "scope": [
+        "Procurement admission activation / human approval boundary"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 19,
+          "end": 33
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "blob": "7239db74d724e95f007f9815f5e88b5199dd62df",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+      "scope": [
+        "Procurement admission activation / human approval boundary"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 126,
+          "end": 144
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "scope": [
+        "Source fixture / integrated fixture / Node test scope"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 12,
+          "end": 29
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+      "scope": [
+        "Source fixture / integrated fixture / Node test scope"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 19,
+          "end": 27
+        },
+        {
+          "start": 55,
+          "end": 67
+        },
+        {
+          "start": 94,
+          "end": 108
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+      "scope": [
+        "Source fixture / integrated fixture / Node test scope"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 53,
+          "end": 105
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "scope": [
+        "Source fixture / integrated fixture / Node test scope"
+      ],
+      "reader": "/root",
+      "anchors": [
+        {
+          "start": 39,
+          "end": 43
+        },
+        {
+          "start": 91,
+          "end": 104
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "scope": [
+        "Source fixture / integrated fixture / Node test scope"
+      ],
+      "reader": "/root",
+      "anchors": []
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "scope": [
+        "Source fixture / integrated fixture / Node test scope"
+      ],
+      "reader": "/root",
+      "anchors": []
+    }
+  ],
+  "auth_retention_search": {
+    "reviewer": "/root/identity_review",
+    "scope": [
+      {
+        "prefix": "modules/sucafina/Sucafinav1/runtime/",
+        "tree": "09e178bc0fc2d158bc02acc2de4f110e5020123d",
+        "files": 36
+      },
+      {
+        "prefix": "modules/sucafina/Sucafinav1/local/",
+        "tree": "366b3abc728188247d04770d8186ed206803b331",
+        "files": 12
+      }
+    ],
+    "terms": [
+      "authentication_payloads",
+      "expires_at",
+      "secrets.put/get/take/remove",
+      "retention/cleanup/jobs/recovery"
+    ],
+    "observed": "Only table usages in local-store.ts at71,369,375,380,381,386; deletions by key only. No expiry sweep/quota in this inspected set.",
+    "limit": "Not a claim about every repository path or external infrastructure; operator-identity/enroll use per-key secret APIs but finding is scoped to remote Microsoft paths."
+  },
+  "effect_dependency": {
+    "lock": {
+      "path": "bun.lock",
+      "blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/bun.lock",
+      "scope": "effect/platform-node/platform-node-shared4.0.0-beta.83",
+      "reader": "/root"
+    },
+    "lock_lines": [
+      917,
+      1263,
+      1265,
+      2697
+    ],
+    "tag": "effect@4.0.0-beta.83",
+    "annotated_tag": "fd729130449b07247a4df21bbcb7c8b6671356a6",
+    "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+    "tag_url": "https://api.github.com/repos/Effect-TS/effect/git/tags/fd729130449b07247a4df21bbcb7c8b6671356a6",
+    "local_patch": {
+      "path": "patches/effect@4.0.0-beta.83.patch",
+      "blob": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/patches/effect@4.0.0-beta.83.patch",
+      "scope": "Does not modify the HTTP request/NodeStream paths used by finding",
+      "reader": "/root"
+    },
+    "upstream_sources": [
+      {
+        "path": "packages/effect/src/unstable/http/HttpServerRequest.ts",
+        "blob": "83e6c3e6f9d0f12ce2eb4ccec969459f9f99c7a4",
+        "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+        "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/effect/src/unstable/http/HttpServerRequest.ts"
+      },
+      {
+        "path": "packages/platform-node/src/NodeHttpIncomingMessage.ts",
+        "blob": "2461e86c785d6f7435c8e4cc533f450329d9cc44",
+        "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+        "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/platform-node/src/NodeHttpIncomingMessage.ts"
+      },
+      {
+        "path": "packages/platform-node-shared/src/NodeStream.ts",
+        "blob": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+        "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+        "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/platform-node-shared/src/NodeStream.ts"
+      },
+      {
+        "path": "packages/effect/src/unstable/http/HttpMiddleware.ts",
+        "blob": "0d723ccf45491ebca4d2e662bd8479e6f0d2727c",
+        "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+        "url": "https://github.com/Effect-TS/effect/blob/cd7ab658994104bd6fe8f841f1440bea32c387f5/packages/effect/src/unstable/http/HttpMiddleware.ts"
+      }
+    ],
+    "limit": "Source mapping to fixed official release plus local patch inspection; installed package/runtime was not executed by70."
+  },
+  "microsoft_material_closure": {
+    "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+    "source_W": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+    "own_paths_count": 17,
+    "shared_paths_count": 3,
+    "total_material_paths": 20,
+    "owned_paths": [
+      {
+        "path": "docs/guides/sucafina-microsoft-login.md",
+        "source49_blob": "80274ee805a1c3b65dc11d42a3d41c628d66a3b6",
+        "review_blob": "80274ee805a1c3b65dc11d42a3d41c628d66a3b6",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "80274ee805a1c3b65dc11d42a3d41c628d66a3b6",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+        "source49_blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+        "review_blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "source49_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "review_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "source49_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "review_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+        "source49_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+        "review_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+        "source49_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+        "review_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+        "source49_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+        "review_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+        "source49_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+        "review_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+        "source49_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+        "review_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+        "source49_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+        "review_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+        "source49_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+        "review_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "source49_blob": "6aec0d65da787030ddd94fc14b474a05c865a1a3",
+        "review_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+        "equal_to_source": false,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "6aec0d65da787030ddd94fc14b474a05c865a1a3",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+        "source49_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+        "review_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+        "source49_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+        "review_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+        "source49_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+        "review_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+        "source49_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+        "review_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+        "source49_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+        "review_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+        "equal_to_source": true,
+        "read_scope": "identity/material closure; code review scope recorded separately",
+        "source49_W_blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+        "source_manifest_matches_W": true,
+        "equal_W_to_review": true
+      }
+    ],
+    "map": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "scope": "current three-path canonical mapping",
+      "reader": "/root"
+    },
+    "shared_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "mode": "100644",
+        "target_preimage_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
+        "postimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "postimage_sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
+        "bytes": 25080,
+        "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde",
+        "observed_current_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "map_matches_current": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "mode": "100644",
+        "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "bytes": 5315,
+        "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "observed_current_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "map_matches_current": true
+      },
+      {
+        "path": "apps/cli/src/commands/handlers/serve.ts",
+        "mode": "100644",
+        "target_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+        "bytes": 8960,
+        "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+        "observed_current_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "map_matches_current": true
+      }
+    ],
+    "source_manifest": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/mission49-installation-manifest.json",
+      "blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e"
+    },
+    "archive_checks": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/local-entry.preimage.txt",
+        "expected": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "kind": "source_preimage",
+        "observed": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/local-entry.postimage.txt",
+        "expected": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "kind": "source_postimage",
+        "observed": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-installation.preimage.txt",
+        "expected": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "kind": "source_preimage",
+        "observed": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-installation.postimage.txt",
+        "expected": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "kind": "source_postimage",
+        "observed": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-serve.preimage.txt",
+        "expected": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "kind": "source_preimage",
+        "observed": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-serve.postimage.txt",
+        "expected": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "kind": "source_postimage",
+        "observed": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "match": true
+      }
+    ],
+    "fixture": {
+      "source_W_blob": "6aec0d65da787030ddd94fc14b474a05c865a1a3",
+      "current_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "source_behavior": "may import a temporary shared postimage after preimage validation",
+      "current_behavior": "checks original source manifest/pre/post, current map and canonical target, then imports canonical target",
+      "executed_by70": false
+    },
+    "additional_composition_delta": {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "source_W_blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "current_blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    "SHA256_of_archived_author_material_recomputed_by70": false,
+    "source_PASS_transferred": false
+  },
+  "proposed52": {
+    "status": "INERT_NOT_INTEGRATED_NOT_APPROVED",
+    "source_reference": "fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+    "canonical_at_that_ref_is_not_proposed_postimage": true,
+    "proposal_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "proposal_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "observed_lines": [
+      43,
+      62
+    ],
+    "observed": "sanitized.arrayBuffer before Web Request; selective canonical maxBytes error propagation",
+    "current_installation_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "new_map_blob": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+    "new_fixture_blob": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1",
+    "preservation_patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/proposals/microsoft-map-preservation.patch.txt",
+      "blob": "e5185e7522f3e9cf07c7bf4183ce94f5b92fe2a0",
+      "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/proposals/microsoft-map-preservation.patch.txt",
+      "scope": "inert new-map/lookup delta read independently",
+      "reader": "/root"
+    },
+    "conditions": [
+      "complete explicit release52/current authority",
+      "atomic composition of installation, new map, fixture and all dependencies",
+      "historical55 map and source49 archives unchanged",
+      "actual current base/preimages separate from inherited historical metadata",
+      "route limits and real Node POST/binary/abort/HTTP privacy qualification"
+    ],
+    "HTTP01_closed": false
+  },
+  "existing_CI": {
+    "executed_or_dispatched_by70": false,
+    "request_blob": "809d91cce8eac41db2c0fdee8b3c0a80596ce16f",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/entra-client.test.ts",
+        "Sucafinav1/test/local-identity.test.ts",
+        "Sucafinav1/test/local-entry.test.ts",
+        "Sucafinav1/test/microsoft-entra-client.test.ts",
+        "Sucafinav1/test/microsoft-session.test.ts",
+        "Sucafinav1/test/microsoft-configuration.test.ts",
+        "Sucafinav1/test/microsoft-routes.test.ts",
+        "Sucafinav1/test/microsoft-composition.test.ts",
+        "Sucafinav1/test/microsoft-node.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "workflow_url": "https://github.com/gustavomhss/Orchestra-SF/blob/61d531f6be247e26dc66836effc427ba7403fce6/.github/workflows/test-ci.yml",
+    "runs": [
+      {
+        "id": "CI49-01",
+        "producer": "Microsoft49",
+        "candidate_W": {
+          "sha": "63eb9626a437af7df11966fbbb86cbb2d4ad287d",
+          "tree": "796b7f1e2e757ae01c32ff464b24ac9c144ba5d8"
+        },
+        "snapshot_S": {
+          "sha": "8be70804ce551a471a733a38ef0b72fbf3d53921",
+          "tree": "060f3dc5447486a2e6247246c4c705ae2affa662",
+          "sole_parent": "63eb9626a437af7df11966fbbb86cbb2d4ad287d",
+          "only_delta": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "809d91cce8eac41db2c0fdee8b3c0a80596ce16f",
+              "additions": 1,
+              "deletions": 0
+            }
+          ],
+          "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/63eb9626a437af7df11966fbbb86cbb2d4ad287d...8be70804ce551a471a733a38ef0b72fbf3d53921"
+        },
+        "run": {
+          "id": 43655093802,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655093802",
+          "head_sha": "8be70804ce551a471a733a38ef0b72fbf3d53921",
+          "event": "push",
+          "attempt": 1,
+          "branch": "ci-run-linux-microsoft-login-49-63eb9626-01",
+          "conclusion": "failure",
+          "created_at": "2026-11-14T23:48:53Z",
+          "updated_at": "2026-11-14T23:51:13Z",
+          "workflow_id": 416464764,
+          "path": ".github/workflows/test-ci.yml"
+        },
+        "test_job": {
+          "id": 132631762058,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655093802/job/132631762058",
+          "conclusion": "failure"
+        },
+        "jobs_total": 2,
+        "artifacts": {
+          "total_count": 0,
+          "items": [],
+          "scope": "REST page per_page100 complete because total_count0; no archive/hash invented"
+        },
+        "observed_log_summary": {
+          "pass": 159,
+          "fail": 2,
+          "expect_calls": 1198,
+          "tests": 161,
+          "files": 9,
+          "seconds": 26.6,
+          "tool_returned_raw_log_1_based_lines": [
+            1011,
+            1012,
+            1014,
+            1015
+          ],
+          "excerpts": [
+            {
+              "line": 1011,
+              "text": "2026-11-14T23:51:06.0762759Z  159 pass"
+            },
+            {
+              "line": 1012,
+              "text": "2026-11-14T23:51:06.0762903Z  2 fail"
+            },
+            {
+              "line": 1014,
+              "text": "2026-11-14T23:51:06.0763197Z  1198 expect() calls"
+            },
+            {
+              "line": 1015,
+              "text": "2026-11-14T23:51:06.0794049Z Ran 161 tests across 9 files. [26.60s]"
+            }
+          ],
+          "failure_excerpts": [
+            {
+              "line": 826,
+              "text": "2026-11-14T23:50:40.9768436Z (fail) listener privacy blocks tracing before malformed callbacks; capture works without the cloud privacy layer [91.10ms]"
+            },
+            {
+              "line": 868,
+              "text": "2026-11-14T23:50:43.0736385Z error: Cannot find module '@effect/platform-node' from '/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/microsoft-node.test.ts'"
+            }
+          ],
+          "hash_recomputed_by70": false
+        },
+        "observed_by": [
+          "/root: metadata, logs, compares, jobs/artifacts, request/workflow",
+          "/root/http_review: independent W/S/selection/jobs/artifacts"
+        ],
+        "scope_limit": "Source execution only; not reviewed composition7e1a/C27, live Microsoft/B2B, Playwright, typecheck/guards or final campaign acceptance."
+      },
+      {
+        "id": "CI49-02",
+        "producer": "Microsoft49",
+        "candidate_W": {
+          "sha": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+          "tree": "7af26c42a054abe09d0585567953f512c32ebf82"
+        },
+        "snapshot_S": {
+          "sha": "61d531f6be247e26dc66836effc427ba7403fce6",
+          "tree": "adcc98f35895d34c18c0aa0a2d7313bb048e62cf",
+          "sole_parent": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+          "only_delta": [
+            {
+              "path": ".ci-run.json",
+              "status": "added",
+              "blob": "809d91cce8eac41db2c0fdee8b3c0a80596ce16f",
+              "additions": 1,
+              "deletions": 0
+            }
+          ],
+          "compare_url": "https://github.com/gustavomhss/Orchestra-SF/compare/43bddf0a39a815359a2139da003d6fcf1f86447e...61d531f6be247e26dc66836effc427ba7403fce6"
+        },
+        "run": {
+          "id": 43655680707,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655680707",
+          "head_sha": "61d531f6be247e26dc66836effc427ba7403fce6",
+          "event": "push",
+          "attempt": 1,
+          "branch": "ci-run-linux-microsoft-login-49-43bddf0a-02",
+          "conclusion": "success",
+          "created_at": "2026-11-14T23:56:11Z",
+          "updated_at": "2026-11-14T23:58:08Z",
+          "workflow_id": 416464764,
+          "path": ".github/workflows/test-ci.yml"
+        },
+        "test_job": {
+          "id": 132633538531,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655680707/job/132633538531",
+          "conclusion": "success"
+        },
+        "jobs_total": 2,
+        "artifacts": {
+          "total_count": 0,
+          "items": [],
+          "scope": "REST page per_page100 complete because total_count0; no archive/hash invented"
+        },
+        "observed_log_summary": {
+          "pass": 162,
+          "fail": 0,
+          "expect_calls": 1216,
+          "tests": 162,
+          "files": 9,
+          "seconds": 27.02,
+          "tool_returned_raw_log_1_based_lines": [
+            990,
+            991,
+            992,
+            993
+          ],
+          "excerpts": [
+            {
+              "line": 990,
+              "text": "2026-11-14T23:57:57.7353274Z  162 pass"
+            },
+            {
+              "line": 991,
+              "text": "2026-11-14T23:57:57.7353455Z  0 fail"
+            },
+            {
+              "line": 992,
+              "text": "2026-11-14T23:57:57.7353641Z  1216 expect() calls"
+            },
+            {
+              "line": 993,
+              "text": "2026-11-14T23:57:57.7353893Z Ran 162 tests across 9 files. [27.02s]"
+            }
+          ],
+          "failure_excerpts": [],
+          "hash_recomputed_by70": false
+        },
+        "observed_by": [
+          "/root: metadata, logs, compares, jobs/artifacts, request/workflow",
+          "/root/http_review: independent W/S/selection/jobs/artifacts"
+        ],
+        "scope_limit": "Source execution only; not reviewed composition7e1a/C27, live Microsoft/B2B, Playwright, typecheck/guards or final campaign acceptance."
+      }
+    ],
+    "normalized_request_artifact_available": false,
+    "source_results_do_not_qualify_reviewed_composition": true
+  },
+  "inherited_open_requirements": {
+    "basis": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/dependency-closure-final.json",
+    "basis_blob": "9025e3397c3e7232e256d377520e90fa05002603",
+    "state": "NOT_CLOSED_BY70; receipt is requirement index, not independent runtime proof",
+    "ids": [
+      "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+      "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+      "Q57-MIXED-TOMBSTONE-RECREATE",
+      "Q57-MIXED-REVOKE-BETWEEN-READS",
+      "M31/MI07 original financial replacement-before-write approval followed by Apply"
+    ],
+    "final_gates": [
+      "eight final selections",
+      "AM01–AM06",
+      "three FINAL independent reviews",
+      "C-G7/D-G8"
+    ]
+  },
+  "execution": {
+    "product_edits": 0,
+    "tests": 0,
+    "test_dispatches": 0,
+    "CI_dispatches": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "deploy": 0,
+    "Azure": 0,
+    "new_logins": 0,
+    "credentials_read": 0,
+    "product_HTTP_requests": 0,
+    "stack_or_producer_ref_writes": 0
+  },
+  "final_campaign_acceptance": false,
+  "GLOBAL_RELEASE": false,
+  "publication_reconciliation": {
+    "observed_at": "2026-11-15 02:32:51 UTC",
+    "review_branch_head": "f4a9991171357b582c1a72245d8282e3ca059673",
+    "control_head": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "target_stack_head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "target_stack_tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "latest_material_candidate": {
+      "name": "C28",
+      "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d"
+    },
+    "terminal60": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+      "blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+      "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+      "handoff_blob": "85b12d52c641a113c4e9b653fdb6b9f1dea8b9b7",
+      "no_successor_named": true,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json"
+    },
+    "static_delta_summary": {
+      "ahead": 2,
+      "behind": 0,
+      "files_returned": 282,
+      "intersecting_review_source_paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "review_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+          "current_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+          "status": "modified"
+        }
+      ],
+      "source": "GitHub compare pinned_review...target_stack; no execution or new-code approval"
+    },
+    "disposition": "Review remains solely7e1a36e/tree12594fd5. No rebase, stack write or automatic transfer of conclusions to C28. Draft PR to current sf2-stack is documentary.60/S0 receive findings; future correction/integration needs explicit resumed/successor authority.",
+    "opinion_for_C28": "NOT_REVIEWED_BY70"
+  },
+  "completed_at": "2026-11-15 02:34:10 UTC",
+  "prepublication_document_review": {
+    "scope": "Documentation accuracy, not additional FINAL campaign reviews or product execution.",
+    "readers": [
+      "/root/identity_review",
+      "/root/http_review",
+      "/root/isolation_review"
+    ],
+    "required_text_corrections": [
+      {
+        "file": "REVIEW70.md and FINDINGS70.json",
+        "reviewer": "/root/identity_review",
+        "change": "Clarify marker validity versus actual Map retention; expired Map entries remain until a later retire sweep.",
+        "product_change": false
+      },
+      {
+        "file": "REVIEW70.md",
+        "reviewer": "/root/http_review",
+        "change": "Replace malformed reviewer sentence with explicit independent reviewer without authorship.",
+        "product_change": false
+      },
+      {
+        "file": "REVIEW70.md",
+        "reviewer": "/root/isolation_review",
+        "change": "Final writer designation explicitly depends on authorized resumption/succession after60 terminal; request documentary ACK without automatic reactivation.",
+        "product_change": false
+      }
+    ],
+    "technical_findings_withdrawn": 0,
+    "product_edits": 0,
+    "tests": 0,
+    "final_changes_checked_by": "/root",
+    "result": "All identified text corrections incorporated before ref publication; FIX-FIRST unchanged."
+  }
+}
