@@ -1,0 +1,250 @@
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+index 347d1c97952167523f9b2b04f1ab4fac7178cc9a..03576f1ec52d3d3c1f022c91d6c85257fa0491b8 100644
+--- a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+@@ -65,8 +65,11 @@
+       const stored = structuredClone(await input.results.read({ kind: "comparison", resultRef: saved.value.resultRef }, context))
+       if (stored.status !== "ok") return stored
+       if (stored.value.kind !== "comparison" || stored.value.resultRef !== saved.value.resultRef || stored.value.requestDigest !== requestDigest || digestSfValue(stored.value.caseRef) !== digestSfValue(selected.caseRef) || stored.value.resultDigest !== digestSfValue(stored.value.result) || digestSfValue(stored.value.result) !== digestSfValue(comparison.value)) return { status: "stale", reason: "portfolio-comparison-changed" }
++      // Canonical persistence may have already bound this newly written C08.
++      // Observe that binding now; an absent/invalid binding still takes the recovery
++      // path, and the independent read and revalidation below remain mandatory.
++      const previousBinding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
++      if (previousBinding.status !== "ok") {
+-      const previousBinding = resultRef ? await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context) : undefined
+-      if (!previousBinding || previousBinding.status !== "ok") {
+         const binding = await input.bindings.bind({ caseRef: selected.caseRef, resultRef: saved.value.resultRef, request: compare, expectedRules: proofs.value }, context)
+         if (binding.status !== "ok") return binding
+       }
+diff --git a/modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts b/modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..31dc3ce17b22188d60f9524ea01ce60cf3a2d8a1
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts
+@@ -0,0 +1,226 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { createPlannerResultPersistence } from "../../../product/planner/persistence.ts"
++import { createPortfolioAnalysis } from "../../../product/portfolio/analysis.ts"
++import { createWp13AnalysisFixture } from "../wp13/sensitivity-fixture.ts"
++
++test("new comparison binds once; exact retry retains C08 and every analysis observation", async () => {
++  const proof = await createProof("one-binding")
++  try {
++    const first = await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)
++    expect(first.status).toBe("ok")
++    if (first.status !== "ok") throw new Error(JSON.stringify(first))
++    expect(proof.counts.binds).toBe(1)
++    expect(first.value.analysis.scenarioResultRef).toBe(proof.world.selectedRef)
++    expect(first.value.analysis.comparison.baselineResultRef).toBe(proof.world.baselineRef)
++    expect(first.value.analysis.comparison.alternativeResultRef).toBe(proof.world.selectedRef)
++    expect(first.value.constraints.map((criterion) => criterion.ref)).toEqual(proof.world.analysisRequest.portfolio.constraints)
++    const allocated = proof.world.ids.value
++    const durable = await proof.snapshots()
++    proof.resetCounts()
++    expect(await proof.analysis.revalidate(first.value.analysis, proof.context)).toBe(true)
++    // Direct analysis boundaries, excluding the canonical producers' internal calls.
++    expect(proof.counts).toEqual({ binds: 0, bindingReads: 2, comparisonReads: 2, scenarioReads: 4, replays: 1 })
++    expect(await proof.snapshots()).toEqual(durable)
++    console.info("[mission54-discriminant]", JSON.stringify({ firstEvaluationBinds: 1, revalidation: proof.counts }))
++    proof.resetCounts()
++    const retried = await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)
++    expect(retried.status).toBe("ok")
++    if (retried.status !== "ok") throw new Error(JSON.stringify(retried))
++    expect(retried.value).toEqual(first.value)
++    expect(retried.value.analysis.comparisonRef).toBe(first.value.analysis.comparisonRef)
++    expect(proof.counts.binds).toBe(0)
++    expect(proof.world.ids.value).toBe(allocated)
++    expect(await proof.snapshots()).toEqual(durable)
++  } finally { await proof.cleanup() }
++}, 30000)
++
++test("a partial C08 recovers its missing binding once without another result", async () => {
++  const proof = await createProof("partial")
++  try {
++    proof.controls.failNextBind = true
++    expect(await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)).toEqual({ status: "unavailable", reason: "comparison-persisted-but-binding-unavailable" })
++    const comparison = { scenarioRefs: [proof.world.baselineRef, proof.world.selectedRef], criteria: proof.world.analysisRequest.portfolio.constraints }
++    const requestDigest = digestSfValue(comparison)
++    const partial = await proof.world.results.readByRequest({ caseRef: proof.world.caseRef, kind: "comparison", idempotencyKey: "portfolio-comparison:" + proof.key + ":" + requestDigest, requestDigest }, proof.context)
++    expect(partial.status === "ok" && partial.value.state).toBe("found")
++    if (partial.status !== "ok" || partial.value.state !== "found") throw new Error(JSON.stringify(partial))
++    const resultRef = partial.value.result.resultRef
++    const resultDigest = partial.value.result.resultDigest
++    const allocated = proof.world.ids.value
++    expect((await proof.world.comparisonBindings.read({ caseRef: proof.world.caseRef, resultRef }, proof.context)).status).toBe("unavailable")
++    expect(proof.counts.binds).toBe(1)
++    const recovered = await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)
++    expect(recovered.status).toBe("ok")
++    if (recovered.status !== "ok") throw new Error(JSON.stringify(recovered))
++    expect(recovered.value.analysis.comparisonRef).toBe(resultRef)
++    expect(digestSfValue(recovered.value.analysis.comparison)).toBe(resultDigest)
++    expect(proof.world.ids.value).toBe(allocated)
++    expect(proof.counts.binds).toBe(2)
++    const durable = await proof.snapshots()
++    const retried = await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)
++    expect(retried.status).toBe("ok")
++    if (retried.status !== "ok") throw new Error(JSON.stringify(retried))
++    expect(retried.value).toEqual(recovered.value)
++    expect(proof.counts.binds).toBe(2)
++    expect(proof.world.ids.value).toBe(allocated)
++    expect(await proof.snapshots()).toEqual(durable)
++  } finally { await proof.cleanup() }
++}, 30000)
++
++test("a later analysis verification observes a committed canonical rule revision", async () => {
++  const proof = await createProof("rule-revision")
++  try {
++    const evaluated = await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)
++    expect(evaluated.status).toBe("ok")
++    if (evaluated.status !== "ok") throw new Error(JSON.stringify(evaluated))
++    expect(await proof.analysis.revalidate(evaluated.value.analysis, proof.context)).toBe(true)
++    // The fixture convenience reviseRule captures its old bootstrap context.
++    proof.world.ruleOperation.id = "mission54-rule-revision"
++    const changed = await proof.world.rules.register({ caseRef: proof.world.caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: "gte", value: 1, unit: "USD", period: proof.world.analysisRequest.portfolio.scope.horizon, evidenceRefs: [proof.world.evidence], expectedRuleVersion: 1, sensitivity: proof.world.issuedUnits }, proof.context)
++    expect(changed.status).toBe("ok")
++    if (changed.status !== "ok") throw new Error(JSON.stringify(changed))
++    const durable = await proof.snapshots()
++    const allocated = proof.world.ids.value
++    expect(await proof.analysis.revalidate(evaluated.value.analysis, proof.context)).toBe(false)
++    expect(proof.world.ids.value).toBe(allocated)
++    expect(await proof.snapshots()).toEqual(durable)
++    expect(await proof.ui.revalidate(proof.context)).toBe(true)
++  } finally { await proof.cleanup() }
++}, 30000)
++
++test("newly persisted binding reuse refuses UI revocation before its independent final read", async () => {
++  const proof = await createProof("new-binding-revoked")
++  try {
++    const allocated = proof.world.ids.value
++    let revoked = false
++    proof.controls.afterBindingRead = (number) => {
++      // Persistence's final read is first; analysis's new read-before-bind is second.
++      if (number !== 2) return
++      revoked = true
++      proof.ui.finish(proof.context)
++    }
++    const evaluated = await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)
++    expect(evaluated.status).not.toBe("ok")
++    expect(revoked).toBe(true)
++    expect(proof.counts.binds).toBe(1)
++    expect(proof.counts.bindingReads).toBe(3)
++    expect(proof.world.ids.value).toBe(allocated + 1)
++    expect(await proof.ui.revalidate(proof.context)).toBe(false)
++    expect(proof.ui.requestFor(proof.context)).toBeUndefined()
++  } finally { await proof.cleanup() }
++}, 30000)
++
++test("new binding reuse observes a canonical rule CAS committed inside its read callback", async () => {
++  const proof = await createProof("binding-rule-cas")
++  try {
++    let revisionStatus: string | undefined
++    proof.controls.afterBindingRead = async (number) => {
++      if (number !== 2) return
++      proof.world.ruleOperation.id = "mission54-binding-rule-cas"
++      const changed = await proof.world.rules.register({ caseRef: proof.world.caseRef, criterionId: "renewal-difference", metricRef: "planner:known-subtotal-difference", operator: "gte", value: 1, unit: "USD", period: proof.world.analysisRequest.portfolio.scope.horizon, evidenceRefs: [proof.world.evidence], expectedRuleVersion: 1, sensitivity: proof.world.issuedUnits }, proof.context)
++      revisionStatus = changed.status
++    }
++    const evaluated = await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)
++    expect(revisionStatus).toBe("ok")
++    expect(evaluated.status).not.toBe("ok")
++    expect(proof.counts.binds).toBe(1)
++    expect(proof.counts.bindingReads).toBe(3)
++    expect(await proof.ui.revalidate(proof.context)).toBe(true)
++  } finally { await proof.cleanup() }
++}, 30000)
++
++for (const mode of ["finish", "request-header", "replaced-context"] as const) {
++  test("analysis refuses " + mode + " after its second canonical binding observation", async () => {
++    const proof = await createProof("late-" + mode)
++    try {
++      const evaluated = await proof.analysis.evaluate(proof.world.analysisRequest, proof.context)
++      expect(evaluated.status).toBe("ok")
++      if (evaluated.status !== "ok") throw new Error(JSON.stringify(evaluated))
++      const durable = await proof.snapshots()
++      const allocated = proof.world.ids.value
++      const replacement = { ...proof.context, lease: Object.freeze({}) } as typeof proof.context
++      const requestFor = proof.world.host.requestFor
++      const revalidate = proof.world.host.revalidate
++      let changed = false
++      proof.resetCounts()
++      proof.controls.afterBindingRead = (number) => {
++        if (number !== 2) return
++        changed = true
++        if (mode === "finish") proof.ui.finish(proof.context)
++        if (mode === "request-header") proof.world.request.headers.delete("authorization")
++        if (mode === "replaced-context") {
++          proof.world.host.requestFor = (trusted) => requestFor(trusted === proof.context ? replacement : trusted)
++          proof.world.host.revalidate = (trusted) => revalidate(trusted === proof.context ? replacement : trusted)
++        }
++      }
++      expect(await proof.analysis.revalidate(evaluated.value.analysis, proof.context)).toBe(false)
++      expect(changed).toBe(true)
++      expect(proof.counts.bindingReads).toBe(2)
++      expect(proof.counts.replays).toBe(1)
++      expect(proof.world.ids.value).toBe(allocated)
++      expect(await proof.snapshots()).toEqual(durable)
++      expect(await proof.ui.revalidate(proof.context)).toBe(mode === "replaced-context")
++      expect(proof.ui.requestFor(proof.context)).toBe(mode === "replaced-context" ? proof.world.request : undefined)
++      expect(replacement.binding).toBe(proof.context.binding)
++      expect(replacement.lease).not.toBe(proof.context.lease)
++      expect(await proof.ui.revalidate(replacement)).toBe(false)
++      expect(proof.ui.requestFor(replacement)).toBeUndefined()
++    } finally { await proof.cleanup() }
++  }, 30000)
++}
++
++/** Real LocalStore/C08/Planner/rule services with the existing fixture's
++ * synthetic source/metric boundary; every operation uses actual consumed UI admission. */
++async function createProof(label: string) {
++  const world = await createWp13AnalysisFixture()
++  try {
++    const key = "mission54-read-before-bind:" + label
++    const authorization = "mission54:" + label
++    world.request.headers.set("authorization", authorization)
++    const identity = { installationId: world.context.binding.installationId, projectId: world.context.binding.projectId, principalRef: world.context.binding.principalRef, policyVersion: world.context.binding.policyVersion, accessRevision: world.context.binding.accessRevision }
++    const operation = "sf_portfolio_evaluate"
++    const inputDigest = digestSfValue(world.analysisRequest.portfolio)
++    const ui = createSfUiAuthority({
++      authorize: async (request, requestedOperation, requestedDigest) => world.access.allowed && request === world.request && request.headers.get("authorization") === authorization && requestedOperation === operation && requestedDigest === inputDigest ? identity : undefined,
++      commandIdentity: async () => key, createId: () => key + ":request", now: () => Date.parse("2026-11-13T00:00:00Z"),
++    })
++    const admitted = await ui.admit(world.request, operation, inputDigest)
++    if (admitted.status !== "ok") throw new Error(JSON.stringify(admitted))
++    const context = admitted.value
++    if (!await ui.validate(context, operation, inputDigest)) throw new Error("Exact UI admission was not consumed")
++    world.host.requestFor = (trusted) => trusted.kind === "ui" ? ui.requestFor(trusted) : undefined
++    world.host.revalidate = (trusted) => trusted.kind === "ui" ? ui.revalidate(trusted) : Promise.resolve(false)
++    const selected = await world.selection.register({ caseRef: world.caseRef, baselineAlternativeId: "baseline", alternativeId: "selected", criteria: world.analysisRequest.portfolio.constraints, expectedVersion: 0 }, context)
++    if (selected.status !== "ok") throw new Error(JSON.stringify(selected))
++    const counts = { binds: 0, bindingReads: 0, comparisonReads: 0, scenarioReads: 0, replays: 0 }
++    const controls: { failNextBind: boolean; afterBindingRead?: (number: number) => void | Promise<void> } = { failNextBind: false }
++    const results = { ...world.results,
++      read: async (...args: Parameters<typeof world.results.read>) => { counts.comparisonReads++; return world.results.read(...args) },
++      readHistoricalScenario: async (...args: Parameters<typeof world.results.readHistoricalScenario>) => { counts.scenarioReads++; return world.results.readHistoricalScenario(...args) },
++    }
++    const planner = { ...world.plannerWithCriteria, compareScenarios: async (...args: Parameters<typeof world.plannerWithCriteria.compareScenarios>) => { counts.replays++; return world.plannerWithCriteria.compareScenarios(...args) } }
++    const bindings = { ...world.comparisonBindings,
++      bind: async (...args: Parameters<typeof world.comparisonBindings.bind>) => {
++        counts.binds++
++        if (controls.failNextBind) { controls.failNextBind = false; return { status: "unavailable" as const, reason: "injected-before-binding-commit" } }
++        return world.comparisonBindings.bind(...args)
++      },
++      read: async (...args: Parameters<typeof world.comparisonBindings.read>) => {
++        const number = ++counts.bindingReads
++        const value = await world.comparisonBindings.read(...args)
++        if (value.status === "ok") await controls.afterBindingRead?.(number)
++        return value
++      },
++    }
++    const analysis = createPortfolioAnalysis({ planner, results, bindings, persist: createPlannerResultPersistence({ store: results, scenarios: world.scenarios, comparisonBindings: bindings, replay: planner, resolveCase: async () => ({ status: "ok", value: world.caseRef }) }), select: world.selectPortfolio, idempotencyKey: async () => key })
++    const transactionAll = world.store.transactionAll?.bind(world.store)
++    if (!transactionAll) throw new Error("Real multi-surface LocalStore unavailable")
++    return { world, context, ui, key, analysis, counts, controls,
++      resetCounts: () => { counts.binds = 0; counts.bindingReads = 0; counts.comparisonReads = 0; counts.scenarioReads = 0; counts.replays = 0 },
++      snapshots: () => transactionAll(async (snapshots) => ({ commit: false, value: structuredClone(snapshots) })),
++      cleanup: async () => { ui.finish(context); await world.cleanup() },
++    }
++  } catch (error) { await world.cleanup(); throw error }
++}

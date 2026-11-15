@@ -1,0 +1,198 @@
+[
+  {
+    "log_time": "2026-11-15T00:23:20.4493878Z",
+    "label": "renewal-choice-history",
+    "phase": "bootstrap-start",
+    "elapsedMs": 0,
+    "budgetMs": 180000,
+    "counts": {}
+  },
+  {
+    "log_time": "2026-11-15T00:23:20.5084341Z",
+    "label": "renewal-choice-history",
+    "phase": "bootstrap-complete",
+    "elapsedMs": 50,
+    "budgetMs": 180000,
+    "counts": {
+      "c08.read.cases": {
+        "calls": 1,
+        "elapsedMs": 3,
+        "maximumMs": 3
+      }
+    },
+    "stateBytes": 38346,
+    "transactionsBytes": 415,
+    "casesBytes": 37395,
+    "resultBytes": 2,
+    "transactions": 1,
+    "cases": 1,
+    "results": 0
+  },
+  {
+    "log_time": "2026-11-15T00:23:20.5087160Z",
+    "label": "renewal-choice-history",
+    "phase": "prepare:transition-omitted:start",
+    "elapsedMs": 52,
+    "budgetMs": 180000,
+    "counts": {
+      "c08.read.cases": {
+        "calls": 2,
+        "elapsedMs": 4,
+        "maximumMs": 3
+      }
+    },
+    "stateBytes": 38346,
+    "transactionsBytes": 415,
+    "casesBytes": 37395,
+    "resultBytes": 2,
+    "transactions": 1,
+    "cases": 1,
+    "results": 0
+  },
+  {
+    "log_time": "2026-11-15T00:23:25.6138075Z",
+    "label": "renewal-choice-history",
+    "phase": "prepare:transition-omitted:complete",
+    "elapsedMs": 5164,
+    "budgetMs": 180000,
+    "counts": {
+      "c08.read.cases": {
+        "calls": 426,
+        "elapsedMs": 1725,
+        "maximumMs": 16
+      },
+      "host.revalidate": {
+        "calls": 2962,
+        "elapsedMs": 17,
+        "maximumMs": 1
+      },
+      "operation-source": {
+        "calls": 846,
+        "elapsedMs": 33,
+        "maximumMs": 1
+      },
+      "operation-coverage": {
+        "calls": 462,
+        "elapsedMs": 8,
+        "maximumMs": 2
+      },
+      "c08.read.preferences": {
+        "calls": 96,
+        "elapsedMs": 420,
+        "maximumMs": 8
+      },
+      "c08.transaction.preferences": {
+        "calls": 3,
+        "elapsedMs": 50,
+        "maximumMs": 23
+      },
+      "classified-source": {
+        "calls": 39,
+        "elapsedMs": 0,
+        "maximumMs": 0
+      },
+      "classified-coverage": {
+        "calls": 41,
+        "elapsedMs": 789,
+        "maximumMs": 29
+      },
+      "c08.transaction.cases": {
+        "calls": 5,
+        "elapsedMs": 130,
+        "maximumMs": 28
+      },
+      "planner.verifySourceOnly": {
+        "calls": 96,
+        "elapsedMs": 174,
+        "maximumMs": 5
+      },
+      "planner.verifyOperation": {
+        "calls": 96,
+        "elapsedMs": 1198,
+        "maximumMs": 18
+      },
+      "planner.verifySourceProjection": {
+        "calls": 192,
+        "elapsedMs": 131,
+        "maximumMs": 4
+      }
+    },
+    "stateBytes": 484469,
+    "transactionsBytes": 104018,
+    "casesBytes": 53809,
+    "resultBytes": 111960,
+    "transactions": 9,
+    "cases": 1,
+    "results": 5
+  },
+  {
+    "log_time": "2026-11-15T00:26:20.4518394Z",
+    "label": "renewal-choice-history",
+    "phase": "prepare:transition-omitted:complete",
+    "elapsedMs": 180002,
+    "budgetMs": 180000,
+    "status": "deadline-exceeded",
+    "counts": {
+      "c08.read.cases": {
+        "calls": 10024,
+        "elapsedMs": 54691,
+        "maximumMs": 17
+      },
+      "host.revalidate": {
+        "calls": 121982,
+        "elapsedMs": 1349,
+        "maximumMs": 6
+      },
+      "operation-source": {
+        "calls": 32902,
+        "elapsedMs": 1092,
+        "maximumMs": 3
+      },
+      "operation-coverage": {
+        "calls": 17342,
+        "elapsedMs": 17,
+        "maximumMs": 2
+      },
+      "c08.read.preferences": {
+        "calls": 96,
+        "elapsedMs": 420,
+        "maximumMs": 8
+      },
+      "c08.transaction.preferences": {
+        "calls": 3,
+        "elapsedMs": 50,
+        "maximumMs": 23
+      },
+      "classified-source": {
+        "calls": 39,
+        "elapsedMs": 0,
+        "maximumMs": 0
+      },
+      "classified-coverage": {
+        "calls": 41,
+        "elapsedMs": 789,
+        "maximumMs": 29
+      },
+      "c08.transaction.cases": {
+        "calls": 6,
+        "elapsedMs": 160,
+        "maximumMs": 30
+      },
+      "planner.verifySourceOnly": {
+        "calls": 3890,
+        "elapsedMs": 6331,
+        "maximumMs": 7
+      },
+      "planner.verifyOperation": {
+        "calls": 3890,
+        "elapsedMs": 47349,
+        "maximumMs": 21
+      },
+      "planner.verifySourceProjection": {
+        "calls": 7780,
+        "elapsedMs": 5365,
+        "maximumMs": 6
+      }
+    }
+  }
+]

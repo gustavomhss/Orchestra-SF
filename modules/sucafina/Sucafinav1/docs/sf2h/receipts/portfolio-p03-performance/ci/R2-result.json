@@ -1,0 +1,47 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.hosted-result.v1",
+  "mission": 54,
+  "id": "R2",
+  "state": "FAIL",
+  "run": 43657763534,
+  "job": 132640020742,
+  "attempt": 1,
+  "W": "a233ec7e4ed4c55eeca6feb0344b5ec20b4880fb",
+  "W_tree": "37a4862008996b104a18e36c05dde10d838c4d37",
+  "S": "ee77344f24bfc50f33bdcf86d2019e210790dce8",
+  "S_tree": "5d03bd76c63b706912e8ced50b0082bfef32e06c",
+  "request_blob": "4620fe7c5235107089dc8a0ae32b6915cb46e2a9",
+  "request_path": "ci/R2-request.json",
+  "selection": "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+  "tests": 1,
+  "pass": 0,
+  "fail": 1,
+  "errors": 1,
+  "expect_calls": 24,
+  "test_elapsed_ms": 180014.84,
+  "suite_seconds": 180.2,
+  "budget_ms": 180000,
+  "fixture_budget_ms": 180000,
+  "nonce": "4c8717382361e7d548b5faa45d66a15d",
+  "verdict": "not applicable (focused: no declaring test ran)",
+  "omni_proven": false,
+  "cleanup": {
+    "job": 132641284928,
+    "state": "PASS",
+    "snapshot_branch_deleted": true
+  },
+  "changed_from_50": "Qualified analysis read-before-bind implementation plus exact boundary diagnostics, on fixed C20 dependency composition. Not an unchanged repeat.",
+  "qualification_order": {
+    "R1_controls_success_before_R2_dispatch": true
+  },
+  "last_semantic_phase": "omitted:complete",
+  "last_status": "stale after deadline",
+  "unreached": [
+    "successful omitted portfolio",
+    "chosen choice confirmation",
+    "confirmed training40000",
+    "total250000 and simultaneous ceiling/advantage failure",
+    "later original history/replay/revocation assertions"
+  ],
+  "conclusion": "P03 still HELD. Reaching the budget is not a semantic producer failure proof or a full scenario PASS."
+}
