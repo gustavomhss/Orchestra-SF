@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h-m90-source-manifest-v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "native-runtime-finish",
+  "mission": 90,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base": {
+    "commit": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93"
+  },
+  "W": "7f420fab8605997a6b2c5079993bc0f825193091",
+  "W_tree": "34be4e56e8cb72e1472d5fa89e9200a32992c4cc",
+  "PR": 96,
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+      "preimage": null,
+      "postimage": "5dd18a08aff29de94dc51ba8fbce3c6953541ae1",
+      "status": "SOURCE_IMPLEMENTED_NOT_INSTALLED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "preimage": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+      "postimage": "a6e4f6580cf5380d637ae5add2e7317606ccbf38",
+      "status": "SOURCE_IMPLEMENTED_NOT_INSTALLED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+      "preimage": null,
+      "postimage": "17ef0e0f3bc2094e57cf60dc88050bb880128fed",
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+      "preimage": null,
+      "postimage": "79ada67b416fbe453fdf99da2e2582f76501338f",
+      "status": "NOT_RUN"
+    }
+  ],
+  "inherited_64": {
+    "commit": "4d0421669054a131de0df0c95994b45229ab354e",
+    "test_run": 43667749802,
+    "test_job": 132670817059,
+    "tests_pass": 158,
+    "limits": "Component-only synthetic Task/UI/C15; no native installed acceptance."
+  },
+  "exclusions": [
+    "host-context.ts",
+    "contribution.ts",
+    "native-host.ts",
+    "token-gate.ts",
+    "Session/Maestro/Relay/Schedule engines",
+    "permissions/grants/policies",
+    "auth transports",
+    "UI/sidebar"
+  ],
+  "readback": "git blobs pinned; no W/S native run/job evidence",
+  "GLOBAL_RELEASE": false
+}

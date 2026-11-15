@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h.native-runtime-90.test-ci-request.v1",
+  "mission": 90,
+  "dispatcher": 45,
+  "state": "REQUESTED_NOT_RUN",
+  "source": {
+    "branch": "native-runtime-finish",
+    "W": "7f420fab8605997a6b2c5079993bc0f825193091",
+    "W_tree": "34be4e56e8cb72e1472d5fa89e9200a32992c4cc",
+    "base": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "PR": 96
+  },
+  "request": {
+    "interface": "test:ci/request",
+    "package": "sucafina",
+    "cwd": "modules/sucafina",
+    "os": "linux",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+      "./Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+      "./Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "./Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "./Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {},
+    "epic": false
+  },
+  "compilerGuards": [
+    {
+      "cwd": "apps/cli",
+      "command": "bun typecheck",
+      "status": "NOT_RUN"
+    },
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "status": "NOT_RUN"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "status": "NOT_RUN"
+    }
+  ],
+  "workflowPins": {
+    ".github/workflows/test-ci.yml": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "script/test-ci.ts": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+    "script/test-ci-request.ts": "5007e48270b80c83eb719d35cec9e6343206a195"
+  },
+  "observedRuns": [],
+  "snapshot": {
+    "S": null,
+    "tree": null
+  },
+  "run": null,
+  "job": null,
+  "results": {
+    "test": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "installed": "NOT_PROVEN"
+  },
+  "deduplication": "Before dispatch, search in-flight or completed runs with identical W tree, package, exact ordered args, OS, env, request-validator version. Reuse only complete evidence; do not consume foreign proof with different tree or scope.",
+  "authority": "45 sole dispatcher/compiler/guards; 90 does not run local tests, dispatch full epic, or seize 45's branch.",
+  "requiredProof": [
+    "Citable W/S compare and unique CI run/job/attempt IDs",
+    "Actual logs and source/file/typecheck/guard exit status",
+    "Failure attribution vs inherited diagnostics",
+    "Omni positive-control verdict",
+    "No promotion of component green to installed runtime acceptance"
+  ],
+  "disclaimer": "Synthetic UI/C15 fixtures do not prove real hosted Request, Maestro Task, Relay return, reload consumer or AM/C/G7/D/G8."
+}

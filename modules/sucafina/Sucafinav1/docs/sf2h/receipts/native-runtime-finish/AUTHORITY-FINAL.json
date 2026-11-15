@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h-m90-terminal-authority-v1",
+  "mission": 90,
+  "lease": "native-runtime-browser90",
+  "model_observed": "GPT-6",
+  "native_orchestra_session_id": null,
+  "branch": "native-runtime-finish",
+  "source_W": "7f420fab8605997a6b2c5079993bc0f825193091",
+  "W_tree": "34be4e56e8cb72e1472d5fa89e9200a32992c4cc",
+  "PR": 96,
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "status": "SOURCE_PARTIAL_INSTALLED_HOLD",
+  "integrator": 71,
+  "dispatcher": 45,
+  "prev_owner64": "TERMINAL",
+  "changed_native_paths": [
+    "apps/cli/src/sucafina-product/routine-native-origin.ts",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts"
+  ],
+  "changed_tests": [
+    "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts"
+  ],
+  "shared_host_patch": "assembly/host-context.patch",
+  "shared_host_modified": false,
+  "checks": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN"
+  },
+  "installed_acceptance": "NOT_PROVEN",
+  "ACK71": "REQUESTED_NOT_OBSERVED",
+  "GLOBAL_RELEASE": false
+}

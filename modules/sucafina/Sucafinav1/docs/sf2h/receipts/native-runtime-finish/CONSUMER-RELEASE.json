@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h-m90-consumer-release-v1",
+  "mission": 90,
+  "from": "native-runtime-browser90",
+  "to": 71,
+  "branch": "native-runtime-finish",
+  "PR": 96,
+  "source": {
+    "W": "7f420fab8605997a6b2c5079993bc0f825193091",
+    "tree": "34be4e56e8cb72e1472d5fa89e9200a32992c4cc"
+  },
+  "code": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+      "git_blob": "5dd18a08aff29de94dc51ba8fbce3c6953541ae1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "git_blob": "a6e4f6580cf5380d637ae5add2e7317606ccbf38"
+    }
+  ],
+  "tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+      "git_blob": "17ef0e0f3bc2094e57cf60dc88050bb880128fed"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+      "git_blob": "79ada67b416fbe453fdf99da2e2582f76501338f"
+    }
+  ],
+  "host_shared": {
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "preimage": "297a4050323d80648684725f9c7e9a8680aa318f",
+    "postimage": "f03ab621e96cfda23456be73bba2d24f24754d36",
+    "patch": "1b4af11e1aca8aeaff0ba73e393d12fbdbb4e5dd",
+    "status": "UNAPPLIED"
+  },
+  "required_ACK": [
+    "Accepted W/tree and exact blobs",
+    "Current candidate SHA/tree and host patch disposition",
+    "Authentic C15/native human origin and history producer assignment",
+    "45 tests/typecheck/guards receipt",
+    "Installed provider/Task/Relay/reload consumer evidence",
+    "Readiness, watch and remaining release gates"
+  ],
+  "constraints": [
+    "No host/shared writer modifications by90",
+    "No native Session/Task/Relay/Schedule engines modified",
+    "No default announcement/readiness changes",
+    "Do not treat component tests as installed runtime proof",
+    "Do not infer ACK from silence"
+  ],
+  "ACK71": "PENDING",
+  "GLOBAL_RELEASE": false
+}

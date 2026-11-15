@@ -1,0 +1,36 @@
+{
+  "schema": "sf2h-m90-shared-patches-v1",
+  "mission": 90,
+  "integrator": 71,
+  "authority": "PREPARED_UNAPPLIED",
+  "source_W": "7f420fab8605997a6b2c5079993bc0f825193091",
+  "source_tree": "34be4e56e8cb72e1472d5fa89e9200a32992c4cc",
+  "patches": [
+    {
+      "source_path": "apps/cli/src/sucafina-product/host-context.ts",
+      "current_preimage": "297a4050323d80648684725f9c7e9a8680aa318f",
+      "proposed_postimage": "f03ab621e96cfda23456be73bba2d24f24754d36",
+      "patch_blob": "1b4af11e1aca8aeaff0ba73e393d12fbdbb4e5dd",
+      "preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-runtime-finish/assembly/host-context.preimage.txt",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-runtime-finish/assembly/host-context.postimage.txt",
+      "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-runtime-finish/assembly/host-context.patch",
+      "status": "NOT_APPLIED",
+      "purpose": "Complete optional host-private native origin producer subscription, fresh historical discovery fence, revocation/dispose. Requires genuine C15 native producer; default remains OFF. No dynamic tool registration or HTTP result egress."
+    },
+    {
+      "source_path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "current_preimage": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+      "proposed_postimage": "a6e4f6580cf5380d637ae5add2e7317606ccbf38",
+      "patch_blob": "930cde0da539adb8e9d84d2e40068a3f89def372",
+      "preimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-runtime-finish/owned-overlay/registry.preimage.txt",
+      "postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-runtime-finish/owned-overlay/registry.postimage.txt",
+      "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-runtime-finish/owned-overlay/registry.patch",
+      "status": "COMMITTED_OWNED",
+      "purpose": "Original Task registry preserved; fresh historical read-only authority with cancellation and fresh Request."
+    }
+  ],
+  "instructions": "71 applies only the host-context diff after readback to its current candidate; never replace shared host wholesale or infer approval. Registry diff is already committed on mission90 branch; intake is selective and CAS.",
+  "installed": false,
+  "GLOBAL_RELEASE": false,
+  "missing_public_capability": "SfRoutineNativeProducer requires actual C15/human-original Request subscriber and durable principal-origin historical attestation. No existing native public producer implements it."
+}
