@@ -113,7 +113,8 @@ export function SfHotTopicEditor(props: HotTopicEditProps): JSX.Element {
     const idempotencyKey = crypto.randomUUID()
     try {
       const payloadDigest = await digest({ id: props.record?.id, version: props.version ?? 0, fields: proposed })
-      if (!admitted() || active()?.baseVersion !== (props.version ?? 0)) {
+      if (!props.canSave || !valid(value()) || active()?.baseVersion !== (props.version ?? 0) ||
+        active()?.pendingOperation || active()?.conflict) {
         setFeedback("conflict");return
       }
       draft().setPending({ operationRef, idempotencyKey, payloadDigest, expectedVersion: props.version ?? 0 })
