@@ -93,6 +93,7 @@ test.describe("Q01 real actor/context and stale projection fences", () => {
   test("Q01-ISO-LOGOUT purges private UI and does not replay the session", async ({ page, nativeHarness }) => {
     const { target } = nativeHarness.manifest
     await verified(page, nativeHarness)
+    await page.goto(urlFor(target, "/orchestra/sf-home/context"))
     await expect(page.locator('[data-sf-context="authorized"]')).toBeVisible()
     const logout = await page.request.post(target.publicOrigin + target.mount + "/auth/logout", {
       headers: { "Idempotency-Key": randomUUID() }, maxRedirects: 0, maxRetries: 0,

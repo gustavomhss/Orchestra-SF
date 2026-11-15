@@ -88,7 +88,7 @@
       "output": "Q01.complete",
       "path": "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
       "preimage": null,
-      "postimage": "80975b7c557f9dfe883e82ec1a92cb82059338f1",
+      "postimage": "87e3f69baa2ba3fbd3a9224d69d771b95ad2296d",
       "cases": [
         "Q01-ISO-REAL-ACTOR-requester",
         "Q01-ISO-REAL-ACTOR-holder",
@@ -111,7 +111,7 @@
       "output": "Q01.complete",
       "path": "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
       "preimage": null,
-      "postimage": "e73ecdff7aba5d4812a5da59b5666d473f12a27d",
+      "postimage": "dda7b627d4368e14b189fd1c8048f38eec92e142",
       "cases": [
         "Q01-COMPAT-DASHBOARD",
         "Q01-COMPAT-REQUESTS",
@@ -345,6 +345,7 @@
     "requalify_after_integration": true
   },
   "notes": [
-    "Pilot denied actor check permits authorized PR read but must never authorize another holder's approve action; no fake 403"
+    "Pilot denied actor check permits authorized PR read but must never authorize another holder's approve action; no fake 403",
+    "Source-backed selector refinement: logout test opens UI67 actual context where data-sf-context=authorized is declared; compatibility history uses static declared sf-home route; keyboard uses native shell links."
   ]
 }

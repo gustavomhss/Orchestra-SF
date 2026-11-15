@@ -57,7 +57,7 @@ test.describe("Q01 legacy routes remain distinct from the installed native shell
     const { target } = nativeHarness.manifest
     await installedNative(page, nativeHarness)
     const first = nativeUrl(target, "/orchestra/sf-home/context")
-    const second = nativeUrl(target, "/orchestra/sf-home/search", { year: "2027" })
+    const second = nativeUrl(target, "/orchestra/sf-home")
     await page.goto(first)
     await expect(page.locator('[data-sf-context="authorized"]')).toBeVisible()
     await page.goto(second)
@@ -78,7 +78,7 @@ test.describe("Q01 legacy routes remain distinct from the installed native shell
   test("Q01-COMPAT-KEYBOARD native links are keyboard reachable and preserve owner selection", async ({ page, nativeHarness }) => {
     const { target } = nativeHarness.manifest
     await installedNative(page, nativeHarness)
-    const links = page.locator('[data-sf-frame="page"] a[href^="/orchestra/"]')
+    const links = page.locator('a[href^="/orchestra/"]')
     await expect(links, "An installed chapter must expose at least one native keyboard link").not.toHaveCount(0)
     const candidate = links.filter({ visible: true })
     await expect(candidate, "Only a visible, user-activated native link is valid").not.toHaveCount(0)
@@ -86,7 +86,7 @@ test.describe("Q01 legacy routes remain distinct from the installed native shell
       (node as HTMLAnchorElement).getAttribute("href")!).find((value) =>
         value.startsWith("/orchestra/") && !value.startsWith("//")))
     expect(href).toBeTruthy()
-    const link = page.locator('[data-sf-frame="page"] a[href="' + href!.replace(/"/g, '\\"') + '"]') .filter({ visible: true })
+    const link = page.locator('a[href="' + href!.replace(/"/g, '\\"') + '"]').filter({ visible: true })
     await expect(link).toBeVisible()
     await link.focus()
     await expect(link).toBeFocused()
