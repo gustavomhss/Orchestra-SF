@@ -1,0 +1,29 @@
+{
+  "schema": "sf2h.mission122.consumer-ci-request.v1",
+  "state": "NOT_DISPATCHED_OWNER120_ONLY",
+  "source_commit": "4ab69f8ae6b7d734f6b96002e3937f2ba32b0f7e",
+  "required_composed_input": "114 intake of five sources and upstream relations-fixture patch; test/compile candidate W and tree must be pinned by 114",
+  "product_package": "Sucafinav1",
+  "cli_package": "@orchestra/cli",
+  "source_test_targets": [
+    "test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+    "test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+    "test/product/export-artifact-closure/artifact-integrity.test.ts",
+    "test/product/export-artifact-closure/composed-storage.test.ts",
+    "test/product/wp05/portfolio.test.ts",
+    "test/product/installed-bi-closure/numerical-coverage.test.ts"
+  ],
+  "notes": "120 chooses exact canonical S/W request, deduplicates, retains original assertions/runtime; no test:ci invoked by 122. Others in export/BI consumer graph may be required after 114 maps dependencies.",
+  "compiler_owner": 119,
+  "commands_eligible": [
+    "bun typecheck from modules/sucafina/Sucafinav1",
+    "bun typecheck from apps/cli"
+  ],
+  "status_for_122": {
+    "run": null,
+    "job": null,
+    "attempt": null,
+    "results": "NOT_RUN"
+  },
+  "not_full_epic": true
+}

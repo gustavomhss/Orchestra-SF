@@ -1,0 +1,15 @@
+{
+  "schema": "sf2h.mission122.shared-owner-patch.v1",
+  "state": "INERT_NOT_APPLIED",
+  "proposed_to": "114 sole integrator / owner of test/product/wp08/relations-fixture.ts",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+  "pre_sha": "be5780125d823cc73323f16683d52e962d79d5a5",
+  "proposed_post_blob": "d7983764984d04dba911819b004701866810e179",
+  "source_source_commit": "4ab69f8ae6b7d734f6b96002e3937f2ba32b0f7e",
+  "proposed_patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/residual-type-repair/OWNER-RELATIONS-122.patch",
+  "dependency": "C08 canonical historical receipt created by createReviewAnswersFixture depends on createRelationsFixture creationTarget.",
+  "rule": "Do not apply the two consumer test changes without this shared fixture patch; otherwise fail-closed checks correctly reject the legacy workspace target.",
+  "semantics": "Derives sf-workspace:<installationId> and incarnation from the actual admitted/validated trusted UI read binding. Existing receipts and later reads use the same creationTarget. This is not a new grant, policy or oracle.",
+  "grant": "Not within mission122 source write allowlist; propose only, consume by original fixture owner or 114 after exact preimage/lease reconciliation.",
+  "tests": "Not run; product dispatcher120 on composed W/S after owner acceptance. Historical tests must refuse mismatched ref and prove both unavailable and revocation."
+}

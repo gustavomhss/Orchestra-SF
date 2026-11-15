@@ -1,0 +1,122 @@
+diff --git a/apps/cli/src/sucafina-product/bi-services.ts b/apps/cli/src/sucafina-product/bi-services.ts
+index 597b5c3b536c2416d9d7d39c7d4329ce5c4183ff..e818019f23e449468577175d5c78e53dbf0fb9b2 100644
+--- a/apps/cli/src/sucafina-product/bi-services.ts
++++ b/apps/cli/src/sucafina-product/bi-services.ts
+@@ -202,6 +202,7 @@ function createPortfolioCostProjection(input: {
+     const expected = structuredClone(original)
+     if ((request.viewId !== "BI09" && request.viewId !== "BI10") || !selected || !("portfolioResultRef" in selected) || expected.decision?.kind !== "portfolio" ||
+       expected.decision.portfolioResultRef !== selected.portfolioResultRef) return { status: "denied", reason: "portfolio-waterfall-selection-mismatch" }
++    const viewId = request.viewId
+     const portfolioResult = expected.decision.portfolio
+     const matches = portfolioResult.combinations.filter((entry) => entry.analysis?.scenarioResultRef === selected.sourceScenarioRef)
+     if (matches.length !== 1 || !matches[0]?.analysis) return { status: "unavailable", reason: "portfolio-waterfall-combination-ambiguous" }
+@@ -225,7 +226,7 @@ function createPortfolioCostProjection(input: {
+         return { status: "ok", value: {
+           projection: { ...source, decision: { kind: "scenario", scenarioResultRef: selected.sourceScenarioRef, scenario: analysis.scenario,
+             comparisonRef: analysis.comparisonRef, comparison: analysis.comparison } },
+-          presentation: { viewId: request.viewId, series: [], limitations: [] },
++          presentation: { viewId, series: [], limitations: [] },
+         } }
+       },
+     } })
+
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+index 78574180369c9495cbe5e5d3e569bb500fbff277..9c666e7463b49a7c0cdeadb705b3266089d10bfb 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -108,7 +108,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
+           return reply({ status: "denied", reason: "creation-scope-changed" }, 403)
+         const result = await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined)
+         if (!result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+-        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
++        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "provider-conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
+         const output = decodeSfOperationOutput(operation, result.result)
+         if (!output.ok || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "unavailable" }, 503)
+         return reply({ status: "ok", value: output.value, outputRef: result.outputRef }, 200)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts
+index 03c918632f8c7bf40e1b4bbb91e71a6ae3de74ac..37f0705ae3e26354846b53bfb3891185aa8ec96f 100644
+--- a/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts
+@@ -77,9 +77,9 @@ export async function createExportArtifactFixture(options: { maxBytes?: number }
+   const environment = (id = randomUUID()) => ({ at: clock.at, id: () => id, directory: [{ id: owner, name: "Synthetic export owner" }] })
+   await persistence.transaction("dashboard", async (snapshot) => {
+     const project = DashboardPortfolio.domain.execute(snapshot, actor, { page: "All Projects", action: "save", version: 0,
+-      values: { name: "Export66 source project", budget: 1250, spent: 320, status: "In Progress", risk: "Low", notes: note } }, environment("export66-project"))
++      values: { name: "Export66 source project", budget: 1250, spent: 320, status: "In Progress", risk: "Low", notes: note } }, environment("66000000-0000-4000-8000-000000000001"))
+     const privateRow = DashboardPeople.domain.execute(snapshot, actor, { page: "Talent Review", action: "save", version: 0,
+-      values: { name: "SYNTHETIC_UNSELECTED_PRIVATE_66", title: "Private fixture", status: "Active", cls: "Talent", outlook: "Promote", notes: "SYNTHETIC_UNSELECTED_PRIVATE_66_NOTE" } }, environment("export66-private"))
++      values: { name: "SYNTHETIC_UNSELECTED_PRIVATE_66", title: "Private fixture", status: "Active", cls: "Talent", outlook: "Promote", notes: "SYNTHETIC_UNSELECTED_PRIVATE_66_NOTE" } }, environment("66000000-0000-4000-8000-000000000002"))
+     if (!project.ok || !privateRow.ok) throw new Error("Canonical export source seed rejected")
+     return { commit: true, value: undefined }
+   })
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts
+index 88c0cbf4dd0fe2b2dd856ecf7819b0bd613e33f7..c31bbd1d6964eb70a72fc6633a7ef9b969dead92 100644
+--- a/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts
+@@ -1,6 +1,7 @@
+ import { expect, test } from "bun:test"
+ import { createSfReviewHistory } from "../../../../../../apps/cli/src/sucafina-product/review-history.ts"
+ import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
+ import type { SourceRef } from "../../../product/contracts/context.ts"
+ import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+ import type { SfProductStatePort } from "../../../product/contracts/state.ts"
+@@ -15,6 +16,12 @@ import { createReviewAnswersFixture } from "../wp08/review-answers-fixture.ts"
+  */
+ async function createHistoryFixture() {
+   const fixture = await createReviewAnswersFixture()
++  const creationTarget: ReturnType<typeof createSfProductAuthority>["creationTarget"] = {
++    ref: `sf-workspace:${encodeURIComponent(fixture.author.binding.installationId)}`,
++    incarnation: fixture.author.binding.installationId,
++  }
++  if (fixture.creationTarget.ref !== creationTarget.ref || fixture.creationTarget.incarnation !== creationTarget.incarnation)
++    throw new Error("Historical C08 fixture target is not bound to the authenticated installation")
+   const source = fixture.review.sourceRefs.find((ref) => ref.incarnation === fixture.source.target.incarnation)
+   if (!source || fixture.review.sourceRefs.length !== 1) throw new Error("Actual captured source is required")
+   const captured = await fixture.state.read(fixture.request("person"), "reviews", (state) => Object.values(state.transactions).filter((entry) => {
+@@ -47,7 +54,7 @@ async function createHistoryFixture() {
+     }
+     return result
+   } }
+-  const history = createSfReviewHistory({ authority: { host: fixture.host, state, creationTarget: fixture.creationTarget }, persistence, evidence: fixture.evidence })
++  const history = createSfReviewHistory({ authority: { host: fixture.host, state, creationTarget }, persistence, evidence: fixture.evidence })
+   const sources = async (context: TrustedDomainContext, refs: readonly SourceRef[]) => {
+     if (!await fixture.host.revalidate(context)) return false
+     const values = await Promise.all(refs.map((ref) => history.historicalSource(ref, context)))
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts
+index 68973132641e5eb09cce84383156235d87e296d9..93bf104ddcb5810efef3edb6648fdf26627fa979 100644
+--- a/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts
+@@ -2,6 +2,7 @@ import { expect, test } from "bun:test"
+ import { protectSfReviewReads } from "../../../../../../apps/cli/src/sucafina-product/review-read-integrity.ts"
+ import type { SfProductStatePort } from "../../../product/contracts/state.ts"
+ import { object } from "../../../runtime/contract.ts"
++import type { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
+ import { available } from "../wp08/relations-fixture.ts"
+ import { receiptQuestion } from "../wp08/recipient-receipt-fixture.ts"
+ import { createReviewReadBoundaryFixture } from "./review-read-boundary-fixture.ts"
+@@ -12,6 +13,12 @@ import { createReviewReadBoundaryFixture } from "./review-read-boundary-fixture.
+  */
+ async function createInstalledIntegrityFixture(localSnapshotReaders: boolean) {
+   const f = await createReviewReadBoundaryFixture()
++  const creationTarget: ReturnType<typeof createSfProductAuthority>["creationTarget"] = {
++    ref: `sf-workspace:${encodeURIComponent(f.fixture.author.binding.installationId)}`,
++    incarnation: f.fixture.author.binding.installationId,
++  }
++  if (f.fixture.creationTarget.ref !== creationTarget.ref || f.fixture.creationTarget.incarnation !== creationTarget.incarnation)
++    throw new Error("Read integrity C08 fixture target is not bound to the authenticated installation")
+   const raw: { calls: number; unavailableAt?: number; afterRead?: () => Promise<void> } = { calls: 0 }
+   const proof: { calls: number; unavailableAt?: number; afterProof?: () => Promise<void> } = { calls: 0 }
+   const read = f.services.reviews.read.bind(f.services.reviews)
+@@ -28,7 +35,7 @@ async function createInstalledIntegrityFixture(localSnapshotReaders: boolean) {
+     await proof.afterProof?.()
+     return ordinal === proof.unavailableAt ? { status: "unavailable", reason: "test-integrity-proof-unavailable" } : result
+   } }
+-  const scope = protectSfReviewReads({ authority: { host: f.fixture.host, state, creationTarget: f.fixture.creationTarget }, reviews, localSnapshotReaders })
++  const scope = protectSfReviewReads({ authority: { host: f.fixture.host, state, creationTarget }, reviews, localSnapshotReaders })
+   const request = f.fixture.host.requestFor(f.fixture.author)
+   if (!request) throw new Error("Actual admitted C05 Request unavailable")
+   return { f, raw, proof, read: () => scope.run(request, () => reviews.read(f.fixture.review.id, f.fixture.author)),

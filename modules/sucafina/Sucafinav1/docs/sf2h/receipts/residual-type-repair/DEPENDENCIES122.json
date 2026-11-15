@@ -1,0 +1,80 @@
+{
+  "schema": "sf2h.mission122.dependency-closure.v1",
+  "state": "READY_FOR_INTEGRATOR_INTAKE_WITH_EXPLICIT_UPSTREAM_DEPENDENCY",
+  "mission": 122,
+  "source_commit": "4ab69f8ae6b7d734f6b96002e3937f2ba32b0f7e",
+  "lease": "residual-type-repair-e1-browser122",
+  "ack": "1af5cc577b433b1dfdedd9fefa1bcfc52c06e615",
+  "prior_owners": [
+    {
+      "mission": 116,
+      "pr": 112,
+      "head": "3dc622981faa3c40ae9f6fcf81f6d53464618d00",
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "status": "C58_COMPOSED; 122 edits derived from exact new preimage"
+    },
+    {
+      "mission": 118,
+      "pr": 114,
+      "head": "bcd2afbdb745dc8cd60f6e5b84e0c90163b86878",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts"
+      ],
+      "status": "C58_COMPOSED; 122 edits derived from exact new preimage"
+    },
+    {
+      "mission": 52,
+      "pr": 40,
+      "head": "3cce0806f4e958b2282afae5717e4948e270745a",
+      "status": "ENDED_BY_MISSION52_BOUNDED_HANDOFF; no lease takeover assumed"
+    },
+    {
+      "mission": 111,
+      "pr": 109,
+      "head": "bd65179c3ce1da921974c686439d3877f735f852",
+      "status": "C58 HTTP owner patch already composed at blob 78574180369c9495cbe5e5d3e569bb500fbff277; 122 edit preserves scoped creation"
+    }
+  ],
+  "blocked": [
+    {
+      "scope": "Two reports fixture tests",
+      "reason": "Legacy shared original fixture writes C08 receipts to workspace/workspace-inc, unlike canonical product `sf-workspace:<installationId>`; strict consumer tests now fail closed until new owner-owned shared patch is integrated",
+      "proposed_patch": "OWNER-RELATIONS-122.patch",
+      "applied": false
+    }
+  ],
+  "clients": [
+    {
+      "actor": 114,
+      "pr": 65,
+      "action": "Reconfirm source blob SHAs and shared fixture owner, apply five material changes and inert owner patch in composed candidate by CAS; preserve 111/52 concurrent source changes; publish consumer ACK"
+    },
+    {
+      "actor": 119,
+      "pr": 107,
+      "action": "Run hosted Bun typechecks/guards on composed W, inspect full TSGo errors"
+    },
+    {
+      "actor": 120,
+      "pr": 106,
+      "action": "Dedup and dispatch surgical GitHub Actions product tests only after 114 composes the shared fixture and source"
+    }
+  ],
+  "none": [
+    "No test execution by 122",
+    "No second dispatcher",
+    "No checkout or source rewrites under 114",
+    "No dev merge",
+    "No deployment",
+    "No Goal restart",
+    "GLOBAL_RELEASE=false"
+  ],
+  "outstanding": [
+    "114 shared fixture patch intake and source composition",
+    "119 hosted compilation",
+    "120 surgical product Actions",
+    "S0 final gates/reviews"
+  ]
+}

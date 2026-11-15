@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.mission122.prepost.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 122,
+  "base_material": {
+    "sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816"
+  },
+  "ack_commit": "1af5cc577b433b1dfdedd9fefa1bcfc52c06e615",
+  "material_commit": "4ab69f8ae6b7d734f6b96002e3937f2ba32b0f7e",
+  "material_tree": "b7c5fcf93cf7783c18aa1c1ce3c9ccae5f2797cb",
+  "source_authority": "Only five owned source files changed, observed GitHub commit diff and per-path postblobs matched",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "pre": "597b5c3b536c2416d9d7d39c7d4329ce5c4183ff",
+      "post": "e818019f23e449468577175d5c78e53dbf0fb9b2",
+      "diagnostics": [
+        "TS2322:228"
+      ],
+      "semantics": "Capture BI09/BI10 viewId after the producer guard; delayed async readView cannot widen to string"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "pre": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "post": "9c666e7463b49a7c0cdeadb705b3266089d10bfb",
+      "diagnostics": [
+        "TS2367:111"
+      ],
+      "semantics": "Real provider-conflict maps to HTTP409; keep stale409, denied403, needs-input400 and uncertainty503"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts",
+      "pre": "03c918632f8c7bf40e1b4bbb91e71a6ae3de74ac",
+      "post": "37f0705ae3e26354846b53bfb3891185aa8ec96f",
+      "diagnostics": [
+        "TS2345:80",
+        "TS2345:82"
+      ],
+      "semantics": "Two distinct valid synthetic v4 UUID record IDs; installation/project identity and private fixture contents unchanged"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "pre": "88c0cbf4dd0fe2b2dd856ecf7819b0bd613e33f7",
+      "post": "c31bbd1d6964eb70a72fc6633a7ef9b969dead92",
+      "diagnostics": [
+        "TS2322:50"
+      ],
+      "semantics": "Derive exact typed sf-workspace ref from actual admitted installation; fail closed if real receipt target differs; requires shared fixture patch"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "pre": "68973132641e5eb09cce84383156235d87e296d9",
+      "post": "93bf104ddcb5810efef3edb6648fdf26627fa979",
+      "diagnostics": [
+        "TS2322:31"
+      ],
+      "semantics": "Same actual-bound C08 creation target, fail closed on legacy mismatch; requires shared fixture patch"
+    }
+  ],
+  "diagnostic_count": 6,
+  "upstream_inert_patch": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+    "pre_sha": "be5780125d823cc73323f16683d52e962d79d5a5",
+    "proposed_post_blob": "d7983764984d04dba911819b004701866810e179",
+    "applied": false
+  },
+  "verification": {
+    "remote_fetch_postimage": true,
+    "material_commit_diff": true,
+    "local_tests": false,
+    "hosted_typecheck": false,
+    "hosted_product_actions": false,
+    "global_release": false
+  }
+}

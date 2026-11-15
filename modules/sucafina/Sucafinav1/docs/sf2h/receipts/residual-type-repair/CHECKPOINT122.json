@@ -1,0 +1,47 @@
+{
+  "schema": "sf2h.mission122.checkpoint.v1",
+  "mission": 122,
+  "source_commit": "4ab69f8ae6b7d734f6b96002e3937f2ba32b0f7e",
+  "source_tree": "b7c5fcf93cf7783c18aa1c1ce3c9ccae5f2797cb",
+  "ack_commit": "1af5cc577b433b1dfdedd9fefa1bcfc52c06e615",
+  "branch": "residual-type-repair",
+  "lease_epoch": "residual-type-repair-e1-browser122",
+  "status": "SOURCE_PATCH_DELIVERED_DEPENDENCY_PATCH_PENDING_OWNER_ADOPTION",
+  "source_files_modified": 5,
+  "diagnostics_allocated": 6,
+  "shared_producer": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+    "source_edited_by_122": false,
+    "patch": "OWNER-RELATIONS-122.patch",
+    "proposed_post_blob": "d7983764984d04dba911819b004701866810e179",
+    "consumer_tests_fail_closed_until_adoption": true
+  },
+  "checks": {
+    "local": false,
+    "product_ci": false,
+    "compiler": false,
+    "guards": false,
+    "workflow_dispatch": false
+  },
+  "evidence_files": [
+    "ACK122.json",
+    "PATCH122.diff",
+    "OWNER-RELATIONS-122.patch",
+    "OWNER-RELATIONS-122.json",
+    "PREPOST122.json",
+    "DEPENDENCIES122.json",
+    "CI-REQUEST122.json",
+    "HANDOFF122.md",
+    "CHECKPOINT122.json",
+    "AUTHORITY-TERMINAL122.json"
+  ],
+  "consumer_ack": {
+    "integrator114": "PENDING",
+    "product120": "PENDING",
+    "compiler119": "PENDING"
+  },
+  "next": "114 accepts source and upstream fixture patch by CAS, then 119 hosted compiler and 120 surgical Actions, S0 full gates",
+  "global_release": false,
+  "dev_edited": false,
+  "sf2_stack_edited": false
+}
