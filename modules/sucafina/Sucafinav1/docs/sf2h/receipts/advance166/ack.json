@@ -1,0 +1,43 @@
+{
+  "schema": "sf2h.am02.ack.v1",
+  "mission": 166,
+  "proof": "AM02",
+  "phase": "ACK_BEFORE_PROOF_WRITES",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "branch": "sf-am02-proof",
+  "epoch": "proof-am02-e1-browser166",
+  "assigned_actor_pack": "S0-B",
+  "actual_executor": "ChatGPT connected GitHub tool session; NOT native Astra seat",
+  "effective_chat_model": "GPT-6",
+  "native_session_id": null,
+  "native_model_observed": null,
+  "native_host_admission_observed": false,
+  "native_goal": "paused",
+  "source_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "inputs": {
+    "mission_packet_ref": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "mission_packet_blob": "afbc88914a1ffac362e2219b445cdf0d0b6a363e",
+    "canonical_plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "assigned_actor_blob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+    "root_agents_blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/**",
+    "packages/app-shell/e2e/sucafina/native/integrated-proofs/am02/**",
+    "script/sf2h/proofs/am02/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/**"
+  ],
+  "protected": "No edits to runtime, existing specs/tests/helpers, host, CI/dispatcher or integrator branch",
+  "source_paths": [
+    "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure",
+    "modules/sucafina/Sucafinav1/test/product/wp10/integration",
+    "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime",
+    "apps/cli/src/sucafina-product/workbench-http.ts"
+  ],
+  "status": "IN_PROGRESS",
+  "validation": "NOT_RUN",
+  "authoritative_fence": "packet epoch and matching branch HEAD checked; no independent native lease/session verification available",
+  "observed_at": "2026-11-15T22:05:24.333Z"
+}
