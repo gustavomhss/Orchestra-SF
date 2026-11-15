@@ -1,0 +1,677 @@
+--- a/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts
+@@ -5,7 +5,7 @@
+ import type { CostCoverageAssessment, CostCoverageBasis, CostCoverageEntry } from "../contracts/decisions.ts"
+ 
+ /** Coverage classifies evidence; monetary totals remain the responsibility of the domain engine. */
+-export function assessCostCoverage(input: {
++export function assessCostCoverage(incoming: {
+   basis: CostCoverageBasis
+   alternativeId: string
+   alternativeVersion: number
+@@ -16,6 +16,11 @@
+   evidence: readonly BusinessEvidenceResolution[]
+   supports: (entry: Exclude<CostCoverageEntry, { status: "pending" }>, resolutions: readonly BusinessEvidenceResolution[]) => boolean
+ }): CostCoverageAssessment {
++  const resolutions = captureCoverageEvidence(incoming.evidence)
++  const input = {
++    ...structuredClone({ basis: incoming.basis, alternativeId: incoming.alternativeId, alternativeVersion: incoming.alternativeVersion, currency: incoming.currency, horizon: incoming.horizon, components: incoming.components, evidence: resolutions.map((item) => ({ state: item.state, ref: item.ref })) }),
++    ...captureCoverageEntries(incoming.entries, incoming.supports.bind(incoming)),
++  }
+   const categories = requiredSfCostCategories(input.basis)
+   const base = { basisId: input.basis.id, basisVersion: input.basis.version, alternativeId: input.alternativeId, alternativeVersion: input.alternativeVersion, currency: input.currency, horizon: input.horizon, evaluatedSourceRefs: input.evidence.filter((item) => item.state === "fresh").map((item) => item.ref) }
+   if (!categories) return { ...base, entries: [], derivedMissingCategoryIds: [], issues: ["inventory-unavailable"], coverageState: "pending" }
+@@ -31,16 +36,17 @@
+     if (entry.status === "pending") return entry
+     const supported = entry.evidenceRefs.length > 0 && entry.evidenceRefs.every((ref) => input.evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))
+     if (!supported) return { categoryId, status: "pending", reason: "evidence-unavailable" }
+-    if (!input.supports(entry, input.evidence)) return { categoryId, status: "pending", reason: "scope-not-supported" }
++    if (!input.supports(entry, resolutions)) return { categoryId, status: "pending", reason: "scope-not-supported" }
+     if (entry.status === "not-applicable") return entry.justification.trim() ? entry : { categoryId, status: "pending", reason: "missing-justification" }
+     if (new Set(entry.componentRefs).size !== entry.componentRefs.length) return { categoryId, status: "pending", reason: "duplicate-component-ref" }
+     const components = entry.componentRefs.map((ref) => input.components.find((component) => component.id === ref))
+     if (!entry.scopeNote.trim() || !components.length || components.some((component) => !component || component.amount === null || !Number.isFinite(component.amount) || component.currency !== input.currency || component.period.start < input.horizon.start || component.period.end > input.horizon.end || component.evidenceState === "absent" || !component.sourceRefs.length || component.sourceRefs.some((source) => !entry.evidenceRefs.some((ref) => ref.kind === "record" && ref.target.surface === source.surface && ref.target.recordType === source.type && ref.target.recordId === source.id && ref.target.incarnation === source.incarnation && ref.target.version === source.version && ref.target.period !== undefined && ref.target.period.start <= source.period.start && ref.target.period.end >= source.period.end && source.fields.every((field) => ref.kind === "record" && ref.target.fields.includes(field)))))) return { categoryId, status: "pending", reason: "component-unresolved" }
+     return entry
+   })
+-  const included = input.entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
++  const included = entries.flatMap((entry) => entry.status === "included" ? entry.componentRefs : [])
+   // One priced component may cover several categories; coverage rows never add another monetary contribution.
+-  if (input.components.some((component) => !included.includes(component.id))) issues.push("uncategorized-component")
++  // Pending rows cannot retain componentRefs, so only a resolved inventory can establish an orphan.
++  if (entries.every((entry) => entry.status !== "pending") && input.components.some((component) => !included.includes(component.id))) issues.push("uncategorized-component")
+   if (input.entries.some((entry) => !categories.includes(entry.categoryId))) issues.push("unexpected-category")
+   if (new Set(input.components.map((item) => item.id)).size !== input.components.length) issues.push("duplicate-component")
+   if (entries.some((entry) => entry.status === "pending") || issues.length) return { ...base, entries, derivedMissingCategoryIds: missing, issues, coverageState: "pending" }
+@@ -49,6 +55,10 @@
+ 
+ /** Producer output must carry the same assessment and a complete inventory before claiming completeness. */
+ export function validateScenarioCoverage(scenario: import("../contracts/decisions.ts").ScenarioResult, basis: CostCoverageBasis, assessment: CostCoverageAssessment): string | undefined {
++  const captured = structuredClone({ scenario, basis, assessment })
++  scenario = captured.scenario
++  basis = captured.basis
++  assessment = captured.assessment
+   if (digestSfValue(scenario.costCoverage) !== digestSfValue(assessment) || scenario.costCoverage.basisId !== basis.id || scenario.costCoverage.basisVersion !== basis.version || scenario.costCoverage.currency !== scenario.currency || scenario.costCoverage.horizon.start !== scenario.horizon.start || scenario.costCoverage.horizon.end !== scenario.horizon.end || !scenario.costCoverage.alternativeId.trim() || !Number.isSafeInteger(scenario.costCoverage.alternativeVersion) || scenario.costCoverage.alternativeVersion < 1) return "alternative-basis-mismatch"
+   const categories = requiredSfCostCategories(basis)
+   if (assessment.coverageState === "complete" && (!categories || !basis.sourceRefs.length || basis.sourceRefs.some((ref) => !assessment.evaluatedSourceRefs.some((evaluated) => digestSfValue(ref) === digestSfValue(evaluated))) || assessment.issues.length || assessment.derivedMissingCategoryIds.length || assessment.entries.length !== categories.length || new Set(scenario.components.map((component) => component.id)).size !== scenario.components.length || scenario.components.some((component) => !assessment.entries.some((entry) => entry.status === "included" && entry.componentRefs.includes(component.id))) || categories.some((category) => assessment.entries.filter((entry) => entry.categoryId === category).length !== 1) || assessment.entries.some((entry) => !entry.evidenceRefs.length || entry.evidenceRefs.some((ref) => !assessment.evaluatedSourceRefs.some((evaluated) => digestSfValue(ref) === digestSfValue(evaluated))) || (entry.status === "included" ? !entry.componentRefs.length || new Set(entry.componentRefs).size !== entry.componentRefs.length || !entry.scopeNote.trim() || entry.componentRefs.some((ref) => !scenario.components.some((component) => component.id === ref && component.amount !== null && Number.isFinite(component.amount) && component.currency === scenario.currency && component.period.start >= scenario.horizon.start && component.period.end <= scenario.horizon.end && component.evidenceState !== "absent" && component.sourceRefs.length > 0 && component.sourceRefs.every((source) => entry.evidenceRefs.some((evidence) => evidence.kind === "record" && evidence.target.surface === source.surface && evidence.target.recordType === source.type && evidence.target.recordId === source.id && evidence.target.incarnation === source.incarnation && evidence.target.version === source.version && evidence.target.period !== undefined && evidence.target.period.start <= source.period.start && evidence.target.period.end >= source.period.end && source.fields.every((field) => evidence.kind === "record" && evidence.target.fields.includes(field)))))) : !entry.justification.trim())))) return "incomplete-cost-coverage"
+@@ -71,7 +81,7 @@
+ }
+ 
+ /** Reassess the scenario itself; a baseline assessment cannot prove a changed preview. */
+-export async function reassessScenarioCoverage(input: {
++export async function reassessScenarioCoverage(incoming: {
+   scenario: import("../contracts/decisions.ts").ScenarioResult
+   basis: CostCoverageBasis
+   baseline: CostCoverageAssessment
+@@ -80,9 +90,14 @@
+   supports: Parameters<typeof assessCostCoverage>[0]["supports"]
+ }): Promise<import("../contracts/decisions.ts").ScenarioResult | undefined> {
+   try {
++    const input = {
++      ...structuredClone({ scenario: incoming.scenario, basis: incoming.basis, baseline: incoming.baseline }),
++      ...captureCoverageEntries(incoming.entries, incoming.supports.bind(incoming)),
++      resolveEvidence: incoming.resolveEvidence.bind(incoming),
++    }
+     if (input.baseline.basisId !== input.basis.id || input.baseline.basisVersion !== input.basis.version) return undefined
+     const refs = [...input.basis.sourceRefs, ...input.scenario.sourceRefs, ...input.entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)].filter((ref, index, all) => all.findIndex((other) => digestSfValue(other) === digestSfValue(ref)) === index)
+-    const evidence = await input.resolveEvidence(refs)
++    const evidence = captureCoverageEvidence(await input.resolveEvidence(structuredClone(refs)))
+     if (evidence.length !== refs.length || refs.some((ref) => !evidence.some((item) => item.state === "fresh" && digestSfValue(item.ref) === digestSfValue(ref)))) return undefined
+     // A baseline's generated missing-category row is still an omitted input, not a newly supplied answer.
+     const derivedMissingCategories = new Set<string>(input.baseline.derivedMissingCategoryIds)
+@@ -96,4 +111,28 @@
+   }
+ }
+ 
++/** Read evidence identity once without copying the opaque authorized projection. */
++function captureCoverageEvidence(incoming: readonly BusinessEvidenceResolution[]): BusinessEvidenceResolution[] {
++  return incoming.map((item) => {
++    const resolution = { ...item }
++    return { ...resolution, ...structuredClone({ state: resolution.state, ref: resolution.ref }) }
++  })
++}
++
++/** Preserve the original entry capability for supports, while evaluating and returning detached data. */
++function captureCoverageEntries(incoming: readonly CostCoverageEntry[], supports: Parameters<typeof assessCostCoverage>[0]["supports"]) {
++  const originals = Array.from(incoming)
++  const entries = structuredClone(originals)
++  return {
++    entries,
++    supports: (entry: Exclude<CostCoverageEntry, { status: "pending" }>, evidence: readonly BusinessEvidenceResolution[]) => {
++      const original = originals[entries.indexOf(entry)]
++      const expected = digestSfValue(entry)
++      if (!original || original.status === "pending" || digestSfValue(original) !== expected) return false
++      const supported = supports(original, evidence)
++      return supported && digestSfValue(original) === expected
++    },
++  }
++}
++
+ function sameCategories(left: readonly string[], right: readonly string[]) { return left.length === right.length && new Set(left).size === left.length && right.every((category) => left.includes(category)) }
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-coverage.test.ts
+@@ -0,0 +1,170 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { assessCostCoverage, reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
++import { domain } from "../../../runtime/planner.ts"
++import { createWp05ComparisonFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
++import { numericCoverageFixture } from "./numeric-fixture.ts"
++
++const cases = [
++  { training: "omitted", subtotal: 210000, total: null, coverage: "pending", comparison: "conditioned", direct: -30000 },
++  { training: "confirmed", subtotal: 250000, total: 250000, coverage: "complete", comparison: "complete", direct: 10000 },
++  { training: "zero", subtotal: 210000, total: 210000, coverage: "complete", comparison: "complete", direct: -30000 },
++  { training: "null", subtotal: 210000, total: null, coverage: "pending", comparison: "conditioned", direct: -30000 },
++  { training: "bundled", subtotal: 210000, total: 210000, coverage: "complete", comparison: "complete", direct: -30000 },
++] as const
++
++// WP11.T02.CHK.01/.03/.20/.21 and INV.20: amounts come from the actual
++// Planner producer. Existing explicit synthetic N/A declarations are reused;
++// this does not prove an installed applicability producer or human approval.
++for (const expected of cases) test(`C10 numeric ${expected.training} training keeps canonical totals and stable reassessment`, async () => {
++  const value = await numericCoverageFixture(expected.training)
++  try {
++    const { fixture, coverage, scenario, resolveEvidence } = value
++    const before = digestSfValue({ scenario, entries: coverage.entries, assessment: coverage.assessment })
++    expect(scenario).toMatchObject({ knownSubtotal: expected.subtotal, total: expected.total, comparisonStatus: expected.comparison,
++      currency: "USD", horizon: wp05Horizon, costCoverage: { coverageState: expected.coverage, alternativeId: "selected", alternativeVersion: 1,
++        basisId: fixture.basis.id, basisVersion: fixture.basis.version } })
++    expect(fixture.baselineResult.knownSubtotal).toBe(240000)
++    expect(scenario.costCoverage.issues).toEqual([])
++    expect(fixture.comparison.knownDifference).toBe(expected.direct)
++    expect(new Set(scenario.components.map((item) => item.id)).size).toBe(scenario.components.length)
++    expect(scenario.components.filter((item) => item.id === "implementation:11")).toMatchObject([{ amount: 45000, evidenceState: "confirmed" }])
++    const implementation = coverage.entries.find((entry) => entry.categoryId === "implementation")
++    const migration = coverage.entries.find((entry) => entry.categoryId === "migration")
++    if (implementation?.status !== "included" || migration?.status !== "included") throw new Error("Shared quote classification unavailable")
++    expect(migration.componentRefs).toEqual(implementation.componentRefs)
++    expect(scenario.costCoverage.entries.filter((entry) => entry.status === "not-applicable").map((entry) => entry.categoryId).sort()).toEqual(["contract_exit", "internal_costs", "other_relevant_costs"])
++
++    if (expected.training === "omitted") {
++      expect(coverage.entries.some((entry) => entry.categoryId === "training")).toBe(false)
++      expect(scenario.components.some((component) => component.id.startsWith("training:"))).toBe(false)
++      expect(scenario.costCoverage.derivedMissingCategoryIds).toEqual(["training"])
++      expect(scenario.costCoverage.entries).toContainEqual({ categoryId: "training", status: "pending", reason: "missing-category" })
++    }
++    if (expected.training === "confirmed" || expected.training === "zero" || expected.training === "null") {
++      expect(scenario.costCoverage.derivedMissingCategoryIds).toEqual([])
++      expect(scenario.components.find((component) => component.id === "training:11")).toMatchObject({ amount: expected.training === "confirmed" ? 40000 : expected.training === "zero" ? 0 : null,
++        evidenceState: expected.training === "null" ? "absent" : "confirmed" })
++      expect(scenario.costCoverage.entries.find((entry) => entry.categoryId === "training")?.status).toBe(expected.training === "null" ? "pending" : "included")
++    }
++    if (expected.training === "bundled") {
++      const training = coverage.entries.find((entry) => entry.categoryId === "training")
++      if (training?.status !== "included") throw new Error("Bundled training classification unavailable")
++      expect(training.componentRefs).toEqual(implementation.componentRefs)
++      expect(scenario.components.some((component) => component.id.startsWith("training:"))).toBe(false)
++    }
++    if (expected.training === "null") {
++      const withoutEvidence = coverage.assess(coverage.entries.map((entry) => entry.categoryId === "training" && entry.status === "included" ? { ...entry, evidenceRefs: [] } : entry))
++      expect(withoutEvidence.coverageState).toBe("pending")
++      expect(withoutEvidence.entries).toContainEqual({ categoryId: "training", status: "pending", reason: "evidence-unavailable" })
++      expect(scenario.components.find((component) => component.id === "training:11")?.amount).toBeNull()
++    }
++
++    expect(validateScenarioCoverage(scenario, fixture.basis, scenario.costCoverage)).toBeUndefined()
++    const reassessed = await reassessScenarioCoverage({ scenario, basis: fixture.basis, baseline: scenario.costCoverage,
++      entries: scenario.costCoverage.entries, resolveEvidence, supports: coverage.supports })
++    expect(reassessed).toEqual(scenario)
++    if (!reassessed) throw new Error("Canonical no-op reassessment was refused")
++    expect(validateScenarioCoverage(reassessed, fixture.basis, scenario.costCoverage)).toBeUndefined()
++    expect(reassessed.id).toBe(scenario.id)
++    expect(reassessed.version).toBe(scenario.version)
++    expect(reassessed.costCoverage.alternativeVersion).toBe(1)
++    const changedVersion = structuredClone(scenario)
++    changedVersion.costCoverage.alternativeVersion = 2
++    expect(validateScenarioCoverage(changedVersion, fixture.basis, scenario.costCoverage)).toBe("alternative-basis-mismatch")
++    if (expected.training === "confirmed") {
++      expect(validateScenarioCoverage(changedVersion, fixture.basis, changedVersion.costCoverage)).toBeUndefined()
++      const revised = await reassessScenarioCoverage({ scenario: changedVersion, basis: fixture.basis, baseline: scenario.costCoverage,
++        entries: scenario.costCoverage.entries, resolveEvidence, supports: coverage.supports })
++      expect(revised?.costCoverage.alternativeVersion).toBe(2)
++      for (const version of [0, -1, 1.5, Number.MAX_SAFE_INTEGER + 1]) {
++        const invalid = structuredClone(scenario)
++        invalid.costCoverage.alternativeVersion = version
++        expect(validateScenarioCoverage(invalid, fixture.basis, invalid.costCoverage)).toBe("alternative-basis-mismatch")
++      }
++    }
++    expect(digestSfValue({ scenario, entries: coverage.entries, assessment: coverage.assessment })).toBe(before)
++    const persisted = await fixture.results.read({ kind: "scenario", resultRef: fixture.selectedRef }, fixture.context)
++    if (persisted.status !== "ok" || persisted.value.kind !== "scenario") throw new Error("Original C08 scenario unavailable")
++    expect(persisted.value.result).toEqual(fixture.selectedResult)
++    expect(persisted.value.caseRef).toEqual(fixture.caseRef)
++    const decision = await fixture.state.read(fixture.request, "cases", (state) => state.cases[fixture.caseRef.id])
++    expect(decision).toMatchObject({ status: "ok", value: { id: fixture.caseRef.id, incarnation: fixture.caseRef.incarnation, version: fixture.caseRef.version,
++      choices: [], preparedChanges: [], receipts: [] } })
++  } finally { await value.fixture.cleanup() }
++}, 180000)
++
++test("C10 refuses unsupported N/A and component currency, period or source changes", async () => {
++  const value = await numericCoverageFixture("confirmed")
++  try {
++    const { coverage, fixture, scenario } = value
++    const noInventory = assessCostCoverage({ basis: { ...fixture.basis, categoryIds: [] }, alternativeId: scenario.costCoverage.alternativeId,
++      alternativeVersion: scenario.costCoverage.alternativeVersion, currency: scenario.currency, horizon: scenario.horizon,
++      entries: coverage.entries, components: scenario.components, evidence: coverage.evidence, supports: coverage.supports })
++    expect(noInventory).toMatchObject({ coverageState: "pending", entries: [], issues: ["inventory-unavailable"] })
++    const noApplicabilityEvidence = coverage.assess(coverage.entries.map((entry) => entry.categoryId === "contract_exit" && entry.status === "not-applicable"
++      ? { ...entry, evidenceRefs: [] } : entry))
++    expect(noApplicabilityEvidence.coverageState).toBe("pending")
++    expect(noApplicabilityEvidence.entries).toContainEqual({ categoryId: "contract_exit", status: "pending", reason: "evidence-unavailable" })
++    const alteredStatement = coverage.assess(coverage.entries.map((entry) => entry.categoryId === "contract_exit" && entry.status === "not-applicable"
++      ? { ...entry, justification: "An unsupported replacement statement" } : entry))
++    expect(alteredStatement.coverageState).toBe("pending")
++    expect(alteredStatement.entries).toContainEqual({ categoryId: "contract_exit", status: "pending", reason: "scope-not-supported" })
++    const sourceUnavailable = coverage.assess(coverage.entries, coverage.actual.components, coverage.evidence.map((entry) => entry.ref.refId === coverage.statement.refId ? { ...entry, state: "stale" as const } : entry))
++    expect(sourceUnavailable.coverageState).toBe("pending")
++    expect(sourceUnavailable.entries).toContainEqual({ categoryId: "contract_exit", status: "pending", reason: "evidence-unavailable" })
++    for (const fault of ["currency", "period-start", "period-end", "source-version", "source-incarnation"] as const) {
++      const incompatible = structuredClone(scenario)
++      incompatible.components = incompatible.components.map((component) => {
++        if (component.id !== "training:11") return component
++        if (fault === "currency") return { ...component, currency: "EUR" }
++        if (fault === "period-start") return { ...component, period: { ...component.period, start: "2026-11-01" } }
++        if (fault === "period-end") return { ...component, period: { ...component.period, end: "2028-11-30" } }
++        return { ...component, sourceRefs: component.sourceRefs.map((source) => fault === "source-version" ? { ...source, version: source.version + 1 } : { ...source, incarnation: "replaced-source" }) }
++      })
++      const assessment = coverage.assess(coverage.entries, incompatible.components)
++      expect(assessment.coverageState).toBe("pending")
++      expect(assessment.entries).toContainEqual({ categoryId: "training", status: "pending", reason: "component-unresolved" })
++      expect(validateScenarioCoverage(incompatible, fixture.basis, scenario.costCoverage)).toBe("incomplete-cost-coverage")
++    }
++  } finally { await value.fixture.cleanup() }
++}, 180000)
++
++test("C10 source reassessment refuses changed quote bytes and source revocation with an active session", async () => {
++  const value = await numericCoverageFixture("confirmed")
++  try {
++    const { fixture, coverage, scenario, source, resolveEvidence } = value
++    const before = digestSfValue(scenario)
++    const changed = await fixture.store.transaction("planner", async (snapshot) => {
++      const result = domain.execute(snapshot, { id: "fixture-quote-author", roles: ["admin"], canWrite: true, assigned: [], domains: [] },
++        { page: "OPEX", action: "save", id: "training", version: snapshot.versions[`${source.refId}:lines:training`]?.version ?? 0,
++          values: { versionId: source.refId, f10: 40001 } }, { at: "2026-11-13T00:00:00Z", id: () => "numeric-quote-revision", directory: [] })
++      return { commit: result.ok, value: result }
++    })
++    expect(changed.ok).toBe(true)
++    expect((await resolveEvidence([source]))[0]?.state).toBe("stale")
++    const reassess = () => reassessScenarioCoverage({ scenario, basis: fixture.basis, baseline: scenario.costCoverage,
++      entries: scenario.costCoverage.entries, resolveEvidence, supports: coverage.supports })
++    expect(await reassess()).toBeUndefined()
++    fixture.revokeSource(source.refId)
++    expect(await fixture.host.revalidate(fixture.context)).toBe(true)
++    expect((await resolveEvidence([source]))[0]?.state).toBe("revoked")
++    expect(await reassess()).toBeUndefined()
++    expect(await fixture.results.read({ kind: "scenario", resultRef: fixture.selectedRef }, fixture.context)).toEqual({ status: "denied", reason: "result-access-unavailable" })
++    expect(digestSfValue(scenario)).toBe(before)
++  } finally { await value.fixture.cleanup() }
++}, 180000)
++
++test("C10 keeps the real missing-FX Planner amount unavailable rather than zero", async () => {
++  const fixture = await createWp05ComparisonFixture({ mode: "eur-missing-fx" })
++  try {
++    const current = await fixture.planner.compareForecast({ baseRef: fixture.scenario.baseRef, candidateRef: fixture.scenario.baseRef, period: wp05Horizon, currency: "USD" }, fixture.context)
++    if (current.status !== "ok") throw new Error(`Missing-FX projection unavailable: ${current.reason}`)
++    expect(current.value.candidate.values.find((entry) => entry.id === "fx:EUR")).toMatchObject({ value: null, unit: "USD/EUR", evidenceState: "absent" })
++    expect(current.value.candidate.values.find((entry) => entry.id === "line:11:forecast")).toMatchObject({ value: 112000, currency: "EUR", evidenceState: "confirmed" })
++    expect(current.value.candidate.components.find((entry) => entry.id === "line:11")).toMatchObject({ amount: null, currency: "USD", evidenceState: "absent" })
++    expect(current.value.candidate.missing).toContainEqual({ field: "line:11:fx", reason: "missing-fx" })
++    expect(fixture.selectedResult).toMatchObject({ knownSubtotal: null, total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "pending" } })
++    expect(validateScenarioCoverage(fixture.selectedResult, fixture.basis, fixture.selectedResult.costCoverage)).toBeUndefined()
++  } finally { await fixture.cleanup() }
++}, 180000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-fixture.ts
+@@ -0,0 +1,52 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
++import type { PlannerSourceHost } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { createPlannerPort } from "../../../product/planner/port.ts"
++import { createWp05ComparisonFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
++import { renewalCoverage } from "../wp11/renewal-coverage-fixture.ts"
++
++/** Reuse the published synthetic quotes and scope declarations. Planner, SQLite,
++ * C08, classification and the criterion registry are real implementations; the
++ * fixture's grants and N/A statements are not installed human authorization.
++ * The comparison fixture avoids an unrelated persisted sensitivity bootstrap.
++ */
++export async function numericCoverageFixture(training: "bundled" | "omitted" | "confirmed" | "zero" | "null") {
++  const fixture = await createWp05ComparisonFixture({ mode: "renewal-usd", training })
++  try {
++    const coverage = await renewalCoverage(fixture, training)
++    const source = fixture.sourceRefs.find((ref) => ref.refId === fixture.scenario.baseRef)
++    if (!source) throw new Error("Selected numeric quote source unavailable")
++    const resolveEvidence = async (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext = fixture.context): Promise<readonly BusinessEvidenceResolution[]> => Promise.all(refs.map(async (ref): Promise<BusinessEvidenceResolution> => {
++      if (digestSfValue(ref) === digestSfValue(coverage.statement)) {
++        const permitted = await fixture.host.revalidate(call) && (await Promise.all(fixture.basis.sourceRefs.map((item) => fixture.evidence.resolve(item, call)))).every((item) => item.state === "fresh")
++        return { state: permitted ? "fresh" : "revoked", ref, accessRevision: call.binding.accessRevision, checkedAt: "2026-11-13T00:00:00Z" }
++      }
++      const resolved = await fixture.evidence.resolve(ref, call)
++      if (resolved.state !== "fresh" || ref.kind !== "record" || ref.target.recordType !== "planner-version") return resolved
++      // The original fixture grants the exact source identity. Re-read the
++      // actual Planner projection as well, so changed quote bytes are stale.
++      const current = await fixture.planner.compareForecast({ baseRef: ref.refId, candidateRef: ref.refId, period: wp05Horizon, currency: "USD" }, call)
++      if (current.status === "ok") return resolved
++      return { ...resolved, state: current.status === "stale" ? "stale" : "unavailable" }
++    }))
++    const sources: PlannerSourceHost = {
++      ...fixture.sources,
++      resolveForecastCoverage: async (reference, call) => {
++        if (reference !== source.refId) return fixture.sources.resolveForecastCoverage(reference, call)
++        if (!await fixture.host.revalidate(call)) return { status: "denied", reason: "numeric-coverage-authority-unavailable" }
++        const evidence = await resolveEvidence([...fixture.basis.sourceRefs, coverage.statement], call)
++        if (evidence.some((item) => item.state !== "fresh")) return { status: "stale", reason: "numeric-coverage-source-changed" }
++        return { status: "ok", value: { coverageRef: `numeric-coverage:${source.refId}`, basis: fixture.basis,
++          assessment: coverage.assess(coverage.entries, coverage.actual.components, [...evidence]) } }
++      },
++    }
++    const planner = createPlannerPort({ host: fixture.host, sources })
++    const observed = await planner.simulateScenario({ baseRef: source.refId, operations: [], assumptions: [] }, fixture.context)
++    if (observed.status !== "ok") throw new Error(`Canonical source scenario unavailable: ${observed.reason}`)
++    return { fixture, coverage, source, planner, scenario: observed.value, resolveEvidence }
++  } catch (error) {
++    await fixture.cleanup()
++    throw error
++  }
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts
+@@ -0,0 +1,91 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { CostCoverageEntry } from "../../../product/contracts/decisions.ts"
++import { createDecisionBaselineCoverage } from "../../../product/decisions/baseline-coverage.ts"
++import { reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
++import { supportsCoverageClassification } from "../../../product/decisions/coverage-classification.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createPlannerPort, projectPlannerSource } from "../../../product/planner/port.ts"
++import { wp05Horizon } from "../wp05/engine-fixture.ts"
++import { numericCoverageFixture } from "./numeric-fixture.ts"
++
++// Real C08 registration, classification lookup and Planner observation reproduce
++// the persisted included-null -> pending round trip from assessment62. The
++// existing quote declarations and the exact human grant are synthetic boundaries.
++test("C10 persisted null registration survives canonical no-op reassessment without changing its case or classification", async () => {
++  const value = await numericCoverageFixture("null")
++  try {
++    const { fixture, source, coverage, resolveEvidence } = value
++    const writes = new WeakSet<object>()
++    const state = createSfProductState({ persistence: fixture.store, proposalCoverageWrites: writes,
++      createId: () => "mission80-baseline-state", resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }),
++      authorize: async (request) => request === fixture.request ? fixture.context.binding : undefined })
++    const registration = { caseRef: fixture.caseRef, source, basis: fixture.basis, entries: coverage.entries, expectedVersion: 0 }
++    const registrationDigest = digestSfValue(registration)
++    const actor = { id: "finance", roles: ["finance"], canWrite: true, assigned: [], domains: [] }
++    const baseline = createDecisionBaselineCoverage({ state, host: fixture.host,
++      resolveCase: async (call) => {
++        if (call !== fixture.context || !await fixture.host.revalidate(call)) return { status: "denied", reason: "fixture-case-access-unavailable" }
++        const loaded = await state.read(fixture.request, "cases", (current) => current.cases[fixture.caseRef.id])
++        if (loaded.status !== "ok" || !loaded.value) return { status: "unavailable", reason: "fixture-case-unavailable" }
++        const decision = loaded.value
++        return { status: "ok", value: { id: decision.id, incarnation: decision.incarnation, version: decision.version } }
++      },
++      authorizeCase: async (decision, call) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation &&
++        decision.version === fixture.caseRef.version && decision.participants.includes(call.binding.principalRef) && await fixture.host.revalidate(call),
++      authorizeCoverage: async (request, call) => call === fixture.context && digestSfValue(request) === registrationDigest && await fixture.host.revalidate(call),
++      projectForecast: async (reference, _caseRef, call) => {
++        const result = await fixture.planner.compareForecast({ baseRef: reference, candidateRef: reference, period: wp05Horizon, currency: "USD" }, call)
++        return result.status === "ok" ? { status: "ok", value: result.value.candidate } : result
++      },
++      resolveEvidence, supports: coverage.supports,
++      verifySnapshot: (snapshot, request, record, call) => call === fixture.context && digestSfValue(request) === registrationDigest &&
++        [request.source, ...record.basis.sourceRefs, ...record.assessment.evaluatedSourceRefs].every((ref) => {
++          if (digestSfValue(ref) === digestSfValue(coverage.statement)) return true
++          if (ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" ||
++            !fixture.sourceRefs.some((expected) => digestSfValue(expected) === digestSfValue(ref))) return false
++          const projection = projectPlannerSource(snapshot, actor, ref.target.recordId)
++          return !!projection && digestSfValue({ versionId: ref.target.recordId, projection }) === ref.target.projectionDigest
++        }),
++      operationIdentity: (call) => call === fixture.context ? "mission80-persisted-null" : undefined,
++      proposalCoverageWrites: writes, now: () => "2026-11-13T00:00:00Z" })
++    const beforeCase = await state.read(fixture.request, "cases", (current) => current.cases[fixture.caseRef.id])
++    expect(beforeCase.status).toBe("ok")
++    expect(coverage.entries.find((entry) => entry.categoryId === "training")?.status).toBe("included")
++    expect(coverage.actual.components.find((component) => component.id === "training:11")).toMatchObject({ amount: null, evidenceState: "absent" })
++    const registered = await baseline.register(registration, fixture.context)
++    expect(registered.status).toBe("ok")
++    if (registered.status !== "ok") throw new Error(`C08 baseline registration: ${registered.reason}`)
++    const registeredCase = await state.read(fixture.request, "cases", (current) => current.cases[fixture.caseRef.id])
++    if (beforeCase.status !== "ok" || registeredCase.status !== "ok") throw new Error("Persisted case unavailable")
++    expect(registeredCase.value).toEqual(beforeCase.value)
++    const persisted = await baseline.resolveForecastCoverage(registered.value.coverageRef, fixture.context)
++    const classification = await baseline.readClassification(registered.value.coverageRef, fixture.context)
++    if (persisted.status !== "ok" || classification.status !== "ok") throw new Error("Persisted baseline or classification unavailable")
++    // Keep Bun's asymmetric matcher replacement out of the persisted input.
++    expect(structuredClone(persisted.value.assessment)).toMatchObject({ coverageState: "pending", issues: [], derivedMissingCategoryIds: [],
++      entries: expect.arrayContaining([{ categoryId: "training", status: "pending", reason: "component-unresolved" }]) })
++    const preferences = await state.read(fixture.request, "preferences", (current) => current.preferences)
++    expect(preferences.status).toBe("ok")
++    const planner = createPlannerPort({ host: fixture.host, sources: { ...fixture.sources, resolveForecastCoverage: baseline.resolveForecastCoverage } })
++    const observed = await planner.simulateScenario({ baseRef: source.refId, operations: [], assumptions: [] }, fixture.context)
++    if (observed.status !== "ok") throw new Error(`Persisted Planner observation: ${observed.reason}`)
++    expect(observed.value).toMatchObject({ knownSubtotal: 210000, total: null, comparisonStatus: "conditioned", costCoverage: persisted.value.assessment })
++    const entries = structuredClone(persisted.value.assessment.entries)
++    const classifications = new WeakMap<CostCoverageEntry, typeof classification.value>(entries.map((entry) => [entry, classification.value] as const))
++    const before = digestSfValue({ scenario: observed.value, baseline: persisted.value, entries })
++    const reassessed = await reassessScenarioCoverage({ scenario: observed.value, basis: persisted.value.basis,
++      baseline: persisted.value.assessment, entries, resolveEvidence,
++      supports: (entry, evidence) => {
++        const current = classifications.get(entry)
++        return !!current && supportsCoverageClassification(current, entry, evidence)
++      } })
++    expect(reassessed).toEqual(observed.value)
++    if (!reassessed) throw new Error("C08 normalized coverage became unavailable during no-op reassessment")
++    expect(validateScenarioCoverage(reassessed, persisted.value.basis, persisted.value.assessment)).toBeUndefined()
++    expect(digestSfValue({ scenario: observed.value, baseline: persisted.value, entries })).toBe(before)
++    expect(await baseline.readClassification(registered.value.coverageRef, fixture.context)).toEqual(classification)
++    expect(await state.read(fixture.request, "preferences", (current) => current.preferences)).toEqual(preferences)
++    expect(await state.read(fixture.request, "cases", (current) => current.cases[fixture.caseRef.id])).toEqual(registeredCase)
++  } finally { await value.fixture.cleanup() }
++}, 180000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts
+@@ -0,0 +1,27 @@
++import { expect, test } from "bun:test"
++import type { BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
++import { reassessScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
++import { stabilityFixture } from "./stability-fixture.ts"
++
++test("C10 captures each evidence resolution identity once across validation and assessment", async () => {
++  const fixture = stabilityFixture()
++  const observations: { state: number; ref: number }[] = []
++  const result = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
++    baseline: fixture.assessment, entries: fixture.entries, supports: fixture.input.supports,
++    resolveEvidence: async (refs): Promise<readonly BusinessEvidenceResolution[]> => {
++      const resolved = await fixture.resolveEvidence(refs)
++      return resolved.map((item) => {
++        const reads = { state: 0, ref: 0 }
++        observations.push(reads)
++        // The real exact-ref resolver supplies the first observation; getters
++        // expose a subsequent change rather than a permissive positive grant.
++        return { ...item,
++          get state() { return ++reads.state === 1 ? item.state : "stale" },
++          get ref() { reads.ref++; return item.ref },
++        }
++      })
++    } })
++  expect(result).toEqual({ ...fixture.scenario, unresolvedConditions: [] })
++  expect(observations.length).toBeGreaterThan(0)
++  expect(observations.every((reads) => reads.state === 1 && reads.ref === 1)).toBe(true)
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability-fixture.ts
+@@ -0,0 +1,63 @@
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
++import type { DomainProjection } from "../../../product/contracts/context.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { CostCoverageBasis, CostCoverageEntry, ScenarioResult } from "../../../product/contracts/decisions.ts"
++import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
++import { classifyCoverage, supportsCoverageClassification } from "../../../product/decisions/coverage-classification.ts"
++
++/** Component-only synthetic inventory. Classification and matching are the real
++ * producers; these unit fixtures do not claim a persisted human approval,
++ * Planner calculation, financial total, UI admission or installed authority.
++ */
++export function stabilityFixture(amount: number | null = 40000) {
++  const horizon = { start: "2027-01-01", end: "2027-12-31" }
++  const statements = Object.fromEntries(RENEWAL_TRANSITION_CATEGORIES.filter((category) => category !== "training")
++    .map((category) => [category, `Synthetic unit inventory: ${category} has no applicable component.`]))
++  const reference = (id: string, fields: string[], projection: unknown) => {
++    const value = { schema: "sf-evidence-v1", kind: "record", refId: `SYN-C10-STABILITY:${id}`,
++      installationId: "synthetic-install", projectId: "synthetic-project", refDigest: "", evidenceLevel: "observed",
++      target: { surface: "planner", recordType: "synthetic-coverage-inventory", recordId: id, incarnation: `${id}-1`,
++        version: 1, fields, period: horizon, projectionDigest: digestSfValue(projection) } } satisfies Extract<BusinessEvidenceRef, { kind: "record" }>
++    return { ...value, refDigest: digestSfEvidenceRef(value) }
++  }
++  const source = reference("training", ["amount"], { amount })
++  const statement = reference("scope", Object.keys(statements), statements)
++  const basis = { id: "synthetic-coverage-basis", version: 1, decisionType: "renewal-transition-v1",
++    categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: [source, statement] } satisfies CostCoverageBasis
++  const components = [{ id: "training:11", amount, currency: "USD", period: horizon,
++    evidenceState: amount === null ? "absent" as const : "confirmed" as const,
++    sourceRefs: [{ surface: "planner" as const, type: source.target.recordType, id: source.target.recordId,
++      incarnation: source.target.incarnation, version: source.target.version, fields: ["amount"], period: horizon,
++      observedAt: "2026-11-13T00:00:00Z" }] }]
++  const entries: CostCoverageEntry[] = RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "training"
++    ? { categoryId, status: "included", componentRefs: [components[0]!.id], evidenceRefs: [source], scopeNote: "Synthetic training quote only." }
++    : { categoryId, status: "not-applicable", justification: statements[categoryId]!, evidenceRefs: [statement] })
++  const projection = { context: { installationId: source.installationId, projectId: source.projectId, principalRef: "synthetic-finance",
++    accessRevision: "synthetic-access", policyVersion: "synthetic-policy", surface: "planner", period: horizon, currency: "USD",
++    sourceRefs: components[0]!.sourceRefs, capabilities: [] }, version: 1, engineVersion: "synthetic-unit-input-v1",
++    components, values: [], missing: [] } satisfies DomainProjection
++  const classification = classifyCoverage({ caseRef: { id: "synthetic-case", incarnation: "synthetic-case-1", version: 3 },
++    source, basis, entries, expectedVersion: 0 }, projection, 1)
++  const evidence: BusinessEvidenceResolution[] = basis.sourceRefs.map((ref) => ({ state: "fresh", ref,
++    accessRevision: "synthetic-access", checkedAt: "2026-11-13T00:00:00Z" }))
++  const input = { basis, alternativeId: "synthetic-alternative", alternativeVersion: 7, currency: "USD", horizon, entries,
++    components, evidence, supports: (entry, resolved) => supportsCoverageClassification(classification, entry, resolved) } satisfies Parameters<typeof assessCostCoverage>[0]
++  const assessment = assessCostCoverage(input)
++  const scenario = { id: "synthetic-scenario", version: 4, components, currency: "USD", horizon, sourceRefs: basis.sourceRefs,
++    unresolvedConditions: ["scenario-coverage-reassessment-required"], restrictions: ["component-unit-proof-only"],
++    comparisonStatus: "conditioned", costCoverage: assessment, knownSubtotal: amount, total: null } satisfies ScenarioResult
++  const expectedEvidence = structuredClone(evidence)
++  const resolveEvidence = async (refs: readonly BusinessEvidenceRef[]): Promise<readonly BusinessEvidenceResolution[]> => refs.map((ref) => {
++    const found = expectedEvidence.find((item) => digestSfValue(item.ref) === digestSfValue(ref))
++    return found ? structuredClone(found) : { state: "unavailable", ref: structuredClone(ref),
++      accessRevision: "synthetic-access", checkedAt: "2026-11-13T00:00:00Z" }
++  })
++  return { input, source, statement, components, entries, classification, assessment, scenario, resolveEvidence }
++}
++
++export function freezeStabilityInput(value: unknown): void {
++  if (!value || typeof value !== "object" || Object.isFrozen(value)) return
++  Object.values(value).forEach(freezeStabilityInput)
++  Object.freeze(value)
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts
+@@ -0,0 +1,147 @@
++import { expect, test } from "bun:test"
++import type { BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
++import type { CostCoverageEntry, ScenarioResult } from "../../../product/contracts/decisions.ts"
++import { assessCostCoverage, reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
++import { supportsCoverageClassification } from "../../../product/decisions/coverage-classification.ts"
++import { freezeStabilityInput, stabilityFixture } from "./stability-fixture.ts"
++
++test("C10 stability: included null and its normalized pending row reassess identically without zero filling", async () => {
++  const fixture = stabilityFixture(null)
++  const before = structuredClone({ basis: fixture.input.basis, entries: fixture.entries, scenario: fixture.scenario, assessment: fixture.assessment })
++  freezeStabilityInput(fixture.input)
++  freezeStabilityInput(fixture.scenario)
++  freezeStabilityInput(fixture.assessment)
++  // Bun 1.3.14 toMatchObject writes asymmetric matchers into its actual object.
++  // Isolate that assertion subject; the borrowed inputs remain the real data.
++  const assertionSubject = structuredClone(fixture.assessment)
++  expect(assertionSubject).toMatchObject({ coverageState: "pending", issues: [], derivedMissingCategoryIds: [],
++    entries: expect.arrayContaining([{ categoryId: "training", status: "pending", reason: "component-unresolved" }]) })
++  console.info("[mission80 matcher-isolation]", JSON.stringify({ assertionEntriesArray: Array.isArray(assertionSubject.entries), borrowedEntriesArray: Array.isArray(fixture.assessment.entries) }))
++  expect(fixture.assessment).toEqual(before.assessment)
++  const original = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
++    baseline: fixture.assessment, entries: fixture.entries, resolveEvidence: fixture.resolveEvidence, supports: fixture.input.supports })
++  const normalized = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
++    baseline: fixture.assessment, entries: fixture.assessment.entries, resolveEvidence: fixture.resolveEvidence, supports: fixture.input.supports })
++  expect(original).toBeDefined()
++  expect(normalized).toEqual(original)
++  expect(structuredClone(normalized)).toMatchObject({ knownSubtotal: null, total: null, comparisonStatus: "conditioned",
++    components: [expect.objectContaining({ amount: null, evidenceState: "absent" })], costCoverage: fixture.assessment })
++  if (!normalized) throw new Error("Identical null coverage became unavailable")
++  expect(validateScenarioCoverage(normalized, fixture.input.basis, normalized.costCoverage)).toBeUndefined()
++  expect({ basis: fixture.input.basis, entries: fixture.entries, scenario: fixture.scenario, assessment: fixture.assessment }).toEqual(before)
++})
++
++test("C10 stability: a genuinely unassigned component still prevents a complete seal", () => {
++  const fixture = stabilityFixture()
++  expect(fixture.assessment.coverageState).toBe("complete")
++  const components = [...fixture.components, { ...structuredClone(fixture.components[0]!), id: "orphan:11", amount: 17 }]
++  expect(assessCostCoverage({ ...fixture.input, components })).toMatchObject({ coverageState: "pending", issues: ["uncategorized-component"] })
++  expect(validateScenarioCoverage({ ...fixture.scenario, components }, fixture.input.basis, fixture.assessment)).toBe("incomplete-cost-coverage")
++  expect(fixture.components).toHaveLength(1)
++})
++
++test("C10 stability: assessment owns its horizon, entries and all evidence references", () => {
++  const fixture = stabilityFixture()
++  const saved = structuredClone(fixture.assessment)
++  const training = fixture.entries.find((entry) => entry.categoryId === "training")!
++  const assessedTraining = fixture.assessment.entries.find((entry) => entry.categoryId === "training")!
++  expect(fixture.assessment.horizon).not.toBe(fixture.input.horizon)
++  expect(assessedTraining).not.toBe(training)
++  expect(fixture.assessment.evaluatedSourceRefs[0]).not.toBe(fixture.source)
++  if (training.status !== "included" || assessedTraining.status !== "included") throw new Error("Training classification unavailable")
++  expect(assessedTraining.componentRefs).not.toBe(training.componentRefs)
++  expect(assessedTraining.evidenceRefs[0]).not.toBe(training.evidenceRefs[0])
++  fixture.input.horizon.end = "2028-12-31"
++  training.scopeNote = "Changed after assessment"
++  fixture.source.target.version = 2
++  expect(fixture.assessment).toEqual(saved)
++})
++
++test("C10 stability: reassessment detaches the complete scenario DTO from frozen borrowed inputs", async () => {
++  const fixture = stabilityFixture()
++  freezeStabilityInput(fixture.scenario)
++  freezeStabilityInput(fixture.entries)
++  const result = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
++    baseline: fixture.assessment, entries: fixture.entries, resolveEvidence: fixture.resolveEvidence, supports: fixture.input.supports })
++  expect(result).toEqual({ ...fixture.scenario, unresolvedConditions: [] })
++  if (!result) throw new Error("Valid frozen scenario became unavailable")
++  expect(result.horizon).not.toBe(fixture.scenario.horizon)
++  expect(result.components).not.toBe(fixture.scenario.components)
++  expect(result.components[0]).not.toBe(fixture.scenario.components[0])
++  expect(result.components[0]!.sourceRefs[0]).not.toBe(fixture.scenario.components[0]!.sourceRefs[0])
++  expect(result.sourceRefs[0]).not.toBe(fixture.scenario.sourceRefs[0])
++  expect(result.restrictions).not.toBe(fixture.scenario.restrictions)
++  expect(result.costCoverage).not.toBe(fixture.assessment)
++})
++
++test("C10 stability: original entry identity reaches the real classifier and scenario alternative version is preserved", async () => {
++  const fixture = stabilityFixture()
++  const classifications = new WeakMap<CostCoverageEntry, typeof fixture.classification>(fixture.entries.map((entry) => [entry, fixture.classification] as const))
++  const seen: CostCoverageEntry[] = []
++  const supports: typeof fixture.input.supports = (entry, evidence) => {
++    seen.push(entry)
++    const classification = classifications.get(entry)
++    return !!classification && supportsCoverageClassification(classification, entry, evidence)
++  }
++  const assessment = assessCostCoverage({ ...fixture.input, supports })
++  expect(assessment.coverageState).toBe("complete")
++  expect(seen).toEqual(fixture.entries)
++  seen.length = 0
++  // Baseline registrations legitimately have their own generated alternative ID.
++  const baseline = { ...fixture.assessment, alternativeId: "baseline:canonical-generated-id", alternativeVersion: 91 }
++  const result = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
++    baseline, entries: fixture.entries, resolveEvidence: fixture.resolveEvidence, supports })
++  expect(result).toMatchObject({ id: fixture.scenario.id, version: 4,
++    costCoverage: { coverageState: "complete", alternativeId: "synthetic-alternative", alternativeVersion: 7 } })
++  expect(seen).toEqual(fixture.entries)
++  expect(seen.every((entry, index) => entry === fixture.entries[index])).toBe(true)
++  if (!result) throw new Error("Identity-keyed real classification was lost")
++  expect(validateScenarioCoverage(result, fixture.input.basis, result.costCoverage)).toBeUndefined()
++  expect(baseline.alternativeVersion).toBe(91)
++})
++
++test("C10 stability: a scenario getter and borrowed components cannot switch the assessed input during resolution", async () => {
++  const fixture = stabilityFixture()
++  const expected = structuredClone({ ...fixture.scenario, unresolvedConditions: [] })
++  const changed: ScenarioResult = { ...structuredClone(fixture.scenario), id: "other-scenario", version: 99, currency: "EUR",
++    costCoverage: { ...structuredClone(fixture.assessment), alternativeId: "other-alternative", alternativeVersion: 99 } }
++  let current: ScenarioResult = fixture.scenario
++  let reads = 0
++  const result = await reassessScenarioCoverage({ get scenario() { reads++; return current }, basis: fixture.input.basis,
++    baseline: fixture.assessment, entries: fixture.entries, supports: fixture.input.supports,
++    resolveEvidence: async (refs) => {
++      current = changed
++      fixture.components[0]!.amount = 99999
++      return fixture.resolveEvidence(refs)
++    } })
++  expect(result).toEqual(expected)
++  expect(reads).toBe(1)
++  expect(fixture.components[0]!.amount).toBe(99999)
++})
++
++test("C10 stability: an untrusted resolver cannot rewrite the expected evidence through its argument", async () => {
++  const fixture = stabilityFixture()
++  const before = structuredClone({ basis: fixture.input.basis, entries: fixture.entries, scenario: fixture.scenario })
++  const result = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
++    baseline: fixture.assessment, entries: fixture.entries, supports: fixture.input.supports,
++    resolveEvidence: async (refs): Promise<readonly BusinessEvidenceResolution[]> => {
++      // Deliberate hostile response, never the positive fixture resolver.
++      const source = refs.find((ref) => ref.refId === fixture.source.refId)
++      if (!source || source.kind !== "record") throw new Error("Expected requested training evidence")
++      source.target.version += 1
++      return refs.map((ref) => ({ state: "fresh", ref, accessRevision: "synthetic-access", checkedAt: "2026-11-13T00:00:00Z" }))
++    } })
++  expect(result).toBeUndefined()
++  expect({ basis: fixture.input.basis, entries: fixture.entries, scenario: fixture.scenario }).toEqual(before)
++})
++
++test("C10 stability: a classifier cannot approve a different borrowed entry after it returns", () => {
++  const fixture = stabilityFixture()
++  const result = assessCostCoverage({ ...fixture.input, supports: (entry, evidence) => {
++    const accepted = supportsCoverageClassification(fixture.classification, entry, evidence)
++    if (entry.categoryId === "training" && entry.status === "included") entry.scopeNote = "Changed after the real classifier checked it"
++    return accepted
++  } })
++  expect(result.coverageState).toBe("pending")
++  expect(result.entries.find((entry) => entry.categoryId === "training")).toEqual({ categoryId: "training", status: "pending", reason: "scope-not-supported" })
++})

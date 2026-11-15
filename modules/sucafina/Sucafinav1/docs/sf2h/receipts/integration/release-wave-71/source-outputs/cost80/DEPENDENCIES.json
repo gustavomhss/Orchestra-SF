@@ -1,0 +1,220 @@
+{
+  "schema": "sf2h.cost-coverage-closure.dependencies.v1",
+  "mission": 80,
+  "source_base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+  "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+  "W_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+  "rule": "The full W tree is the dependency closure. Critical semantic and execution dependencies are enumerated below. No external overlay, new package or runtime assumption is introduced.",
+  "critical_existing": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "bytes": 3612
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/coverage-inventory.ts",
+      "blob": "e4d72cc7cf5beed1a76a61b1b9a28acfd0d121d8",
+      "bytes": 1110
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "bytes": 7262
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "bytes": 5643
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+      "bytes": 6977
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "bytes": 9660
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "bytes": 3022
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+      "blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+      "bytes": 21444
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+      "blob": "4280c9a249627893eb798eb421711d9e58e50a8f",
+      "bytes": 4495
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "bytes": 12723
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "bytes": 29250
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "bytes": 22226
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "bytes": 26118
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-port.ts",
+      "blob": "fc15d2d9130e23d0a290f5a14f61423152d2c72c",
+      "bytes": 17443
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp05/engine-fixture.ts",
+      "blob": "608b1a95b491740041f8689a41b4a064c7254b24",
+      "bytes": 22570
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-coverage-fixture.ts",
+      "blob": "d1b8c7b91c071ee970ff217c3a2745d84b99486b",
+      "bytes": 5144
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+      "blob": "39c8b0e9138c36d5bd4a92726279633f69381cf6",
+      "bytes": 17482
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+      "blob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+      "bytes": 8975
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+      "blob": "b7b8b59ca121e03aea5ae7e9f0b43bd46390b6a7",
+      "bytes": 6761
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-management.ts",
+      "blob": "5140fee739f874a5c2d8dfeaf95c3bbb3d6ff585",
+      "bytes": 9758
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "bytes": 17689
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-interval.ts",
+      "blob": "351aa6cf8702c759da3c35cbf531f355d04ba742",
+      "bytes": 9797
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-selection.ts",
+      "blob": "64deee2c7570d718686eb2181ff197f4347e6764",
+      "bytes": 13741
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/interval-proof.ts",
+      "blob": "55a701b7be49fb3f550a0b52b580e6f7dc819b31",
+      "bytes": 4817
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "0e812842ad0d534998c182100a8466548d70e915",
+      "bytes": 15748
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+      "bytes": 4757
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "bytes": 25756
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-human-choice-fixture.ts",
+      "blob": "582c69e353bdfd96663c479713ffb9ff6d7585a5",
+      "bytes": 14606
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "bytes": 16513
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "bytes": 5363
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "bytes": 35607
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "bytes": 106735
+    }
+  ],
+  "test_lane": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "blob": "9f078f4e37b758691bcd073e5590f05d5444392a"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "blob": "6f67619958ce0567ea93dd66c53ae3aca242cb95"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "blob": "5007e48270b80c83eb719d35cec9e6343206a195"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "blob": "7000633db2c4f11e3f1aff351cd28c0df9affeca"
+    }
+  ],
+  "source_compare": {
+    "base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "head": "11859ee19d231738b7dce8a88e00866892d61ac9",
+    "ahead_by": 6,
+    "changed_product_files": [
+      "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+    ],
+    "all_other_changes": "New own tests and own receipts only; existing fixtures, legacy tests, contracts, formula engines, owner76 files and workflow unchanged."
+  },
+  "consumer_contracts": {
+    "owner62": "Canonical C10 assessment is repaired; installed BI and transport were not traversed.",
+    "owner52": "Exports and CostCoverageEntry/Assessment/ScenarioResult schemas unchanged. Returned DTOs are detached.",
+    "owner76": "criterion-comparison.ts/result-store.ts/state-provider.ts retain exact source-base blobs above; performance and P03 remain owner76.",
+    "owner71": "Reconcile against actual target. Last observedC38 943b3fc6919eecb55556b05c48f07c9dbba1c530 tree9ad861864150f4690ad1ed3faa1f8c7164130212 still has exact C10 preimagee913189a675bbcfa81a657f58d2255eac3b6dce2. No target write by80."
+  },
+  "positive_classification": "supportsCoverageClassification is used by new positive witnesses, existing renewal fixtures and real C08 classification. Installed N/A is not invented. Legacy coverage-seal tests remain structural-only controls, with their original callback unchanged.",
+  "mandatory_unqualified_dependencies": [
+    "Installed applicability producer/human authority (baseline-not-applicable-proof-unavailable remains)",
+    "74/79 POST journey",
+    "45 compiler/guards actual run",
+    "71 integrated candidate and final global selections"
+  ],
+  "GLOBAL_RELEASE": false,
+  "executed_without_76_overlay": true
+}

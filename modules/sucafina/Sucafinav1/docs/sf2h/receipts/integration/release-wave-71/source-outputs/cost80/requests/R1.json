@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h.cost-coverage-closure.test-request.v1",
+  "mission": 80,
+  "id": "R1",
+  "state": "PLANNED_CAUSAL_REPRODUCTION",
+  "intent": "Run new regressions against unchanged C10 preimage e913189a675bbcfa81a657f58d2255eac3b6dce2; expected failures are not acceptance. Same assertions will be reused after the product correction.",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "expected": {
+    "prepatch_failures": [
+      "normalized included-null assessment divergence",
+      "borrowed output aliases",
+      "scenario input changes during await",
+      "resolver argument mutation",
+      "classification mutation after support"
+    ],
+    "positive_controls": [
+      "uncategorized component still prevents completeness",
+      "original WeakMap entry capability preserved"
+    ]
+  },
+  "browser_journeys": false,
+  "local_product_tests": 0,
+  "GLOBAL_RELEASE": false
+}

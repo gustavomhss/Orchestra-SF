@@ -1,0 +1,90 @@
+{
+  "schema": "sf2h.cost-coverage-closure.actions-result.v1",
+  "mission": 80,
+  "attempt": "R3",
+  "state": "PASS",
+  "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+  "W_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+  "S": "da3097fc435b232ab3dcf77c036f3d3dfb5e0142",
+  "S_tree": "1eb7eaa36f2c69c485a1e5fb3698f2cd51c0af09",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "093217e628d7dd62584cf4f6e89c75a4e0308f9e78a434f9ccb7db2fdd2856da",
+  "ref": "ci-run-linux-astra-wp80-11859ee1-093217e6-r3",
+  "run_id": 43675129605,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675129605",
+  "job_id": 132693485486,
+  "conclusion": "success",
+  "tests": {
+    "pass": 9,
+    "fail": 0,
+    "total": 9,
+    "files": 2,
+    "expect_calls": 53,
+    "duration_seconds": 12.37
+  },
+  "omni_positive_control": {
+    "nonce": "cb237e1791f3119e4625aeec60f0e16f",
+    "verdict": "not applicable",
+    "reason": "focused: no declaring test ran"
+  },
+  "envelope": {
+    "ahead_by": 1,
+    "changed_files": [
+      ".ci-run.json"
+    ],
+    "product_identical": true
+  },
+  "product_blob_unchanged_from_R2": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+  "requalified_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5cff1646d7ab3d2816dc5047dd6274b5db012737"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "efeb097ae13519db036d8adf08548a34959e3fe2"
+    }
+  ],
+  "actual_passes": [
+    "C10 stability: included null and its normalized pending row reassess identically without zero filling [36.36ms]",
+    "C10 stability: a genuinely unassigned component still prevents a complete seal [8.72ms]",
+    "C10 stability: assessment owns its horizon, entries and all evidence references [4.03ms]",
+    "C10 stability: reassessment detaches the complete scenario DTO from frozen borrowed inputs [11.06ms]",
+    "C10 stability: original entry identity reaches the real classifier and scenario alternative version is preserved [16.32ms]",
+    "C10 stability: a scenario getter and borrowed components cannot switch the assessed input during resolution [11.08ms]",
+    "C10 stability: an untrusted resolver cannot rewrite the expected evidence through its argument [5.70ms]",
+    "C10 stability: a classifier cannot approve a different borrowed entry after it returns [8.80ms]",
+    "C10 persisted null registration survives canonical no-op reassessment without changing its case or classification [12032.72ms]"
+  ],
+  "matcher_probe": {
+    "observed": {
+      "assertionEntriesArray": false,
+      "borrowedEntriesArray": true
+    },
+    "meaning": "Confirms exact Bun matcher mutation is confined to a disposable assertion copy; original input equality and all financial/stability expectations remain."
+  },
+  "raw_test_log": {
+    "path": "runs/R3-tests.log",
+    "sha256": "0b76fbd1f936c879993551388bf35d54f80f32475959fcf20b8c683e1476f3b3"
+  },
+  "artifacts": {
+    "count": 0,
+    "mandatory_bun_artifact": false
+  },
+  "GLOBAL_RELEASE": false
+}

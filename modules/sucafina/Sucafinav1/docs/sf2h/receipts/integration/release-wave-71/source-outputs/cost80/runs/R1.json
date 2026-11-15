@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h.cost-coverage-closure.actions-result.v1",
+  "mission": 80,
+  "attempt": "R1",
+  "purpose": "Causal reproduction against unchanged C10 preimage",
+  "state": "OBSERVED_EXPECTED_FAILURE_NOT_ACCEPTANCE_PASS",
+  "W": "e1cd18e93716964aa3359d48839b0ed308ace2b4",
+  "W_tree": "47ac43de8ae226bf54fd19309e8d94821af49cad",
+  "S": "3fcc6ea47da87c27531302cfd9b3bd86d8b7e224",
+  "S_tree": "fee5997b405a67a96a7429dd29d72e697fc6f0dd",
+  "cost_coverage_blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "02ff2b5a9f81188e9b0d992aba0141ce603f732ed471d71c5c73acd360236702",
+  "ref": "ci-run-linux-astra-wp80-e1cd18e9-02ff2b5a-r1",
+  "run_id": 43673699755,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673699755",
+  "job_id": 132689115154,
+  "conclusion": "failure",
+  "tests": {
+    "pass": 2,
+    "fail": 6,
+    "expect_calls": 20,
+    "total": 8,
+    "files": 1
+  },
+  "omni_positive_control": {
+    "nonce": "78c4afb9cfbc47d602f2e2eef7393b50",
+    "verdict": "not applicable",
+    "reason": "focused: no declaring test ran"
+  },
+  "envelope": {
+    "ahead_by": 1,
+    "changed_files": [
+      ".ci-run.json"
+    ],
+    "product_identical": true
+  },
+  "observed_failures": [
+    "included-null assessment vs normalized reassessment",
+    "assessment output aliases borrowed data",
+    "reassessment output aliases frozen scenario DTO",
+    "scenario getter and borrowed component change during resolution",
+    "resolver mutates expected evidence through its argument",
+    "classification approves borrowed entry later mutated by callback"
+  ],
+  "positive_controls": [
+    "resolved inventory with orphan refused",
+    "original-entry identity reaches real classifier; scenario alternative version preserved"
+  ],
+  "raw_test_log": {
+    "path": "runs/R1-tests.log",
+    "sha256": "0c515af2f0535304a83a926f184080f312f21aaf5599ff075c519b33e1125ef9"
+  },
+  "GLOBAL_RELEASE": false
+}

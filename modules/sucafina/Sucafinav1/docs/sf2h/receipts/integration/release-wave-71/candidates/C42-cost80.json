@@ -1,0 +1,253 @@
+{
+  "schema": "sf2h.integration71.candidate.v1",
+  "candidate": "C42",
+  "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+  "parent": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+  "parentTree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
+  "writer": "S0-C-e13-browser71",
+  "source": {
+    "branch": "cost-coverage-fix",
+    "pr": 90,
+    "terminal": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+    "terminal_tree": "1fe25c8ee44a48e8d15946b65091d34843a36832",
+    "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+    "W_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+    "base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "authority_blob": "79bec5d4ed805d3a101ff1bc62ac70558826dc4b",
+    "lease": "cost-coverage-browser80",
+    "lease_status": "ENDED_SOURCE_RELEASED",
+    "release": "EXPLICIT_BOUNDED_SOURCE_RELEASE_CHECKS45_AND_INTEGRATION71_PENDING",
+    "archiveTree": "0e7ae1eb3aea4275f1619f7f7fc874006d0e7729",
+    "archiveBlobs": 21
+  },
+  "files": [
+    {
+      "mission": 80,
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "mode": "100644",
+      "pre": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "post": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+      "kind": "modified",
+      "review_unit": "source80-explicit-terminal-unit"
+    },
+    {
+      "mission": 80,
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-coverage.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "bf06e061b29ae22674e9dadb2a410d4ca74c8469",
+      "kind": "added",
+      "review_unit": "source80-explicit-terminal-unit"
+    },
+    {
+      "mission": 80,
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-fixture.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "394bd5434dfc1286b3b0b4312ed8499f79961124",
+      "kind": "added",
+      "review_unit": "source80-explicit-terminal-unit"
+    },
+    {
+      "mission": 80,
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "efeb097ae13519db036d8adf08548a34959e3fe2",
+      "kind": "added",
+      "review_unit": "source80-explicit-terminal-unit"
+    },
+    {
+      "mission": 80,
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "d60df8ce4762745b0b171420811eec860282a0f1",
+      "kind": "added",
+      "review_unit": "source80-explicit-terminal-unit"
+    },
+    {
+      "mission": 80,
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability-fixture.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "1d01850bf64ded7804e6ce9f3eccf11ce612ff27",
+      "kind": "added",
+      "review_unit": "source80-explicit-terminal-unit"
+    },
+    {
+      "mission": 80,
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "5cff1646d7ab3d2816dc5047dd6274b5db012737",
+      "kind": "added",
+      "review_unit": "source80-explicit-terminal-unit"
+    }
+  ],
+  "review": "reviews/cost80.json",
+  "sourceArchive": "source-outputs/cost80",
+  "completeUnit": "1canonicalC10producer +6newtests/helpers;7paths/13hunks exact",
+  "proof": {
+    "R1": {
+      "run": 43673699755,
+      "pass": 2,
+      "fail": 6,
+      "expects": 20,
+      "kind": "causal red preimage"
+    },
+    "R2": {
+      "run": 43674446763,
+      "pass": 21,
+      "fail": 2,
+      "expects": 301,
+      "kind": "failed workflow;14 unchanged-file witnesses retained"
+    },
+    "R3": {
+      "run": 43675129605,
+      "pass": 9,
+      "fail": 0,
+      "expects": 53,
+      "kind": "all two modified testfiles requalified"
+    },
+    "unique23Witnesses": {
+      "rule": "Union of actual per-file witnesses for identical material inputs; not a claim that failed R2 was a green workflow.",
+      "unchanged_R2_to_R3": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts",
+          "blob": "d60df8ce4762745b0b171420811eec860282a0f1",
+          "count": 1
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-coverage.test.ts",
+          "blob": "bf06e061b29ae22674e9dadb2a410d4ca74c8469",
+          "count": 8
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+          "blob": "b7b8b59ca121e03aea5ae7e9f0b43bd46390b6a7",
+          "count": 3
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+          "blob": "39c8b0e9138c36d5bd4a92726279633f69381cf6",
+          "count": 1
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+          "blob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+          "count": 1
+        }
+      ],
+      "changed_test_files_only": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+          "post_blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+          "post_blob": "efeb097ae13519db036d8adf08548a34959e3fe2"
+        }
+      ],
+      "product_fixtures_configs_unchanged": true,
+      "compare": {
+        "base": "4df32a2de5b1ba27f44c6bf92eaeed9ae412e26a",
+        "head": "11859ee19d231738b7dce8a88e00866892d61ac9",
+        "files": [
+          {
+            "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/checks/REQUEST-45.json",
+            "status": "added",
+            "additions": 93,
+            "deletions": 0,
+            "changes": 93,
+            "previous_filename": null
+          },
+          {
+            "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/requests/R3.ci-run.json",
+            "status": "added",
+            "additions": 1,
+            "deletions": 0,
+            "changes": 1,
+            "previous_filename": null
+          },
+          {
+            "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/runs/R2-tests.log",
+            "status": "added",
+            "additions": 114,
+            "deletions": 0,
+            "changes": 114,
+            "previous_filename": null
+          },
+          {
+            "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/runs/R2.json",
+            "status": "added",
+            "additions": 124,
+            "deletions": 0,
+            "changes": 124,
+            "previous_filename": null
+          },
+          {
+            "filename": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+            "status": "modified",
+            "additions": 2,
+            "deletions": 1,
+            "changes": 3,
+            "previous_filename": null
+          },
+          {
+            "filename": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+            "status": "modified",
+            "additions": 7,
+            "deletions": 2,
+            "changes": 9,
+            "previous_filename": null
+          }
+        ]
+      },
+      "max80_runs_in_flight": 1,
+      "local_product_tests": 0,
+      "local_compiler_guards": 0
+    },
+    "rootVerification": "MCP actual run conclusions/headSHA, snapshot tree/soleWparent, exclusive .ci-run.json compare, exact request JSON and full actual job logs checked. Source W→terminal13receipt deltas only;R2→R3only2testfiles+receipts."
+  },
+  "held": [
+    {
+      "owner": "installed applicability producer",
+      "state": "OPEN",
+      "reason": "baseline-not-applicable-proof-unavailable unchanged; synthetic declarations do not invent human classification"
+    },
+    {
+      "owner": "74/79",
+      "state": "OPEN_OUTSIDE80",
+      "reason": "POST transport not traversed or re-run"
+    },
+    {
+      "owner": 45,
+      "state": "REQUESTED_NO_RESULT_OBSERVED",
+      "reason": "Package typecheck/guards require exact hosted owner45 evidence"
+    },
+    {
+      "owner": 71,
+      "state": "ACK_AND_INTEGRATED_QUALIFICATION_PENDING",
+      "reason": "Source selection does not qualify composed candidate"
+    },
+    {
+      "owner": "S0 final campaign",
+      "state": "OPEN",
+      "reason": "Final eight selections, AM01-AM06, independent reviews, C-G7/D-G8 and installed UI/native/MCP parity remain separate"
+    },
+    "Source-specific23testwitnesses not same-C integrated or installed proof",
+    "P03 full72assertions180000ms remainsFAIL_HELD;89owns follow-up",
+    "62/52installedBI/history/POST and actualhumanN/A stillheld",
+    "All C28 Reports,56historicalpendingIDs/41findings, M31/MI07/native/AM/eight selections/3FINAL unchanged"
+  ],
+  "documentaryReview84": "Independent source/C39 static delta received separately; no final/composed PASS credit",
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "builds": 0,
+    "guards": 0,
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false
+}

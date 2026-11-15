@@ -1,0 +1,41 @@
+{
+  "source": "ad158d6a068811b88c5765e938d44007264e9320",
+  "tree": "d5e4e2f0ec5b8e023f6ecd43c80da75f0b7e116c",
+  "pr": 94,
+  "archive": "7472785fedc7f388c90ca3988e2a160179015189",
+  "scope": "Independent source-scoped auth recheck with append-only C38/C39 static delta; not FINAL",
+  "reviewedTarget": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+  "findings": [
+    {
+      "finding": "M70-AUTH-01",
+      "source": "FIXED",
+      "target_C39": "FIXED",
+      "qualification": "STATIC_RECONCILED_72_PLUS_READONLY59",
+      "candidate_proof": "MISSING_PROOF",
+      "acceptance": "OPEN",
+      "reason": "C38 composed all auth product and readonly59 overlay; no C38/C39 hosted qualification of readonly-composed test or new C exact combination."
+    },
+    {
+      "finding": "M70-ISO-01",
+      "source": "FIXED",
+      "target_C39": "FIXED",
+      "qualification": "STATIC_BLOBS_EXACT_73",
+      "candidate_proof": "MISSING_PROOF",
+      "acceptance": "OPEN",
+      "reason": "No same-C installed HTTP/auth identity privacy matrix yet."
+    },
+    {
+      "finding": "M70-HTTP-01",
+      "source": "FIXED",
+      "target_C39": "OPEN",
+      "qualification": "UNINTEGRATED_74",
+      "candidate_proof": "MISSING_PROOF",
+      "acceptance": "OPEN",
+      "reason": "Old installation and workbench remain, no request-body helper."
+    }
+  ],
+  "allAcceptanceOpen": true,
+  "source_product_edits": 0,
+  "newCINo": true,
+  "requiredLaterDelta": "Any material afterC39, including74 map/transport, requires updated same-candidate recheck; old static verdict not promoted to Cfinal"
+}
