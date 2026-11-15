@@ -1,0 +1,74 @@
+{
+  "schema": "sf2h.compiler163.guards.v1",
+  "mission": 163,
+  "epoch": "compiler-e4-browser163",
+  "campaign": "sf2h-integral-20261112",
+  "compiler_branch": "sf-compiler-checks",
+  "compiler_pr": 107,
+  "integrator": 162,
+  "integrator_pr": 65,
+  "product_tests_owner": 164,
+  "product_tests_pr": 106,
+  "source_sha": "690a34cdd81c12d7311f3717c19679b950276161",
+  "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "workflow_sha": "5491c9300126da663a4097a678b587a5d74dc125",
+  "workflow_blob": "c417627108fcd183ee8d7ab91243ec6795bdc926",
+  "run_id": 43766055614,
+  "job_id": 132971280139,
+  "attempt": 1,
+  "artifact_id": 14182790522,
+  "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522",
+  "global_release": false,
+  "native_goal": "paused",
+  "command": "bun run check:guards --base origin/dev",
+  "exit_code": 1,
+  "base": {
+    "origin_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+  },
+  "counts": {
+    "gate": 66,
+    "warn": 141,
+    "gate_rules": {
+      "agent-scratch": 56,
+      "js-test-skipped": 10
+    },
+    "warn_rules": {
+      "test-timeout-raised": 88,
+      "dep-new-added": 22,
+      "ts-double-cast": 12,
+      "binary-added": 11,
+      "large-file": 4,
+      "test-globalthis": 2,
+      "local-abs-path": 1,
+      "js-empty-catch": 1
+    }
+  },
+  "gate_evidence": {
+    "historical_55_scratch_logs": "55 historical *.log, require independent genuine determination; do not delete/waive to fabricate green",
+    "additional_scratch": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+    "skipped": {
+      "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts": [
+        28,
+        44,
+        80,
+        90,
+        103,
+        119
+      ],
+      "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts": [
+        22,
+        49
+      ],
+      "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts": [
+        22,
+        49
+      ]
+    }
+  },
+  "full_unredacted_log": "guards.log in https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522",
+  "waiver": "NONE",
+  "self_approval": false,
+  "guard_oracle_unchanged": true,
+  "action_to_source": "Report 10 skipped tests to respective suite producers; scratch/log gates to independent reviewer, without suppression; guard failure remains open"
+}

@@ -1,0 +1,94 @@
+{
+  "schema": "sf2h.compiler163.sdk-durable.v1",
+  "mission": 163,
+  "epoch": "compiler-e4-browser163",
+  "campaign": "sf2h-integral-20261112",
+  "compiler_branch": "sf-compiler-checks",
+  "compiler_pr": 107,
+  "integrator": 162,
+  "integrator_pr": 65,
+  "product_tests_owner": 164,
+  "product_tests_pr": 106,
+  "source_sha": "690a34cdd81c12d7311f3717c19679b950276161",
+  "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "workflow_sha": "5491c9300126da663a4097a678b587a5d74dc125",
+  "workflow_blob": "c417627108fcd183ee8d7ab91243ec6795bdc926",
+  "run_id": 43766055614,
+  "job_id": 132971280139,
+  "attempt": 1,
+  "artifact_id": 14182790522,
+  "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522",
+  "global_release": false,
+  "native_goal": "paused",
+  "generator": {
+    "command": "cd packages/client && bun run generate",
+    "exit_code": 0,
+    "mode": "HOSTED_RUNNER_ONLY",
+    "owner": "compiler163",
+    "manual_generated_edits": false
+  },
+  "capture": {
+    "exit_code": 0,
+    "patch_file": "sdk-generated.patch",
+    "patch_bytes": 92878,
+    "patch_sha256": "1e17bfa2e631a6c59a3662a33161549001689c95ae7e88ad009bf3eca9b31e0d",
+    "patch_stat": {
+      "changed": 3,
+      "insertions": 601,
+      "deletions": 521
+    },
+    "archive_sha256": "1ab7ff0768b359e8c91d3f6e66d1f444681e221473a86013ea61d0d7373245ab"
+  },
+  "manifest": {
+    "artifact_member": "sdk-generated-manifest.json",
+    "bytes": 21469,
+    "sha256": "0a7c036a05cf1a08e9554984013dbc6dbfdd22d90df885712ee017fdab7c94ad",
+    "total_files": 56,
+    "unchanged_files": 53,
+    "changed_files": 3,
+    "changed": [
+      {
+        "path": "packages/client/src/generated-effect/client.ts",
+        "change": "MODIFIED",
+        "preimage_blob": "5a0375bc54a838bd4677b856cdbe76d5b4bb860b",
+        "postimage_blob": "5874204ef97d36f5c2fd14aac5e13ee21ca74d53",
+        "post_sha256": "7ee002cbba8174ed1817bc19cf4dac91d30e01b191ca4e7d8e237d84f7d7ad66",
+        "post_bytes": 198309
+      },
+      {
+        "path": "packages/client/src/generated/client.ts",
+        "change": "MODIFIED",
+        "preimage_blob": "b9f507fdde3425c80f5da17b029c790c92d4de34",
+        "postimage_blob": "b59815718bd6755c12761d1102a3149fbc390844",
+        "post_sha256": "ee86605cccacff9244f6ad7c1d47b43e664794e1aa7c09ca2cc5053310c5ad18",
+        "post_bytes": 170142
+      },
+      {
+        "path": "packages/client/src/generated/types.ts",
+        "change": "MODIFIED",
+        "preimage_blob": "85c5075ae725bc227cd3dfdc754af8475533df8a",
+        "postimage_blob": "2f5ca3d1d2b24a0b33a9e41c9cf4aaf8c6c6f1c8",
+        "post_sha256": "e96616c125337a3e0850cbb00809ceb03ba23ef23375a7ab3cc766d91d5cac6e",
+        "post_bytes": 507638
+      }
+    ],
+    "full_all_56_leaf_manifest_in_artifact": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522"
+  },
+  "sources": {
+    "protocol_tree": "7cf9b4b9c4c7d52fb98762897a6f775e7de4facb",
+    "server_tree": "e1f701acd7f54a7dcad8a6e436d8a8975efbdd7c",
+    "schema_tree": "c6a17dfccd8412b87a8d96aa670e43bcaad3bca7",
+    "client_tree": "f76d5ca65fa92e45ed5757914b6b55d8a9d88051",
+    "client_contract_blob": "94f1ddd42964636fbc4b1908c47c51f24dcce226",
+    "generator_script_blob": "99ae2184b9c13f6175d7ba8e3025068bee07ee4f",
+    "context_blob": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+    "protocol_group_blob": "1fe0f77985758d0f5cee037db6a308934c85de0f",
+    "sdk_regression_test_blob": "d0d54dca9245feb151f9f6cf6015f344cfe741e2"
+  },
+  "handoff": {
+    "owner": "162/S0-C-e20-browser162",
+    "status": "GENERATED_PATCH_AVAILABLE_NOT_INTEGRATED_OR_QUALIFIED",
+    "next": "Download sdk-generated.patch from hosted artifact; validate preimages for all 3 leaves on current sf2-stack, reconcile other writers and apply through sole integrator with CAS/force=false; do not hand-edit generated, then request only new causally affected verification",
+    "product_global_pass": false
+  }
+}

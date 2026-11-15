@@ -1,0 +1,369 @@
+{
+  "schema": "sf2h.compiler163.results.v1",
+  "mission": 163,
+  "epoch": "compiler-e4-browser163",
+  "campaign": "sf2h-integral-20261112",
+  "compiler_branch": "sf-compiler-checks",
+  "compiler_pr": 107,
+  "integrator": 162,
+  "integrator_pr": 65,
+  "product_tests_owner": 164,
+  "product_tests_pr": 106,
+  "source_sha": "690a34cdd81c12d7311f3717c19679b950276161",
+  "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "workflow_sha": "5491c9300126da663a4097a678b587a5d74dc125",
+  "workflow_blob": "c417627108fcd183ee8d7ab91243ec6795bdc926",
+  "run_id": 43766055614,
+  "job_id": 132971280139,
+  "attempt": 1,
+  "artifact_id": 14182790522,
+  "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522",
+  "global_release": false,
+  "native_goal": "paused",
+  "tooling": {
+    "runner": "ubuntu-24.04.5",
+    "bun": "1.3.14",
+    "node": "v24.22.2",
+    "run_event": "push",
+    "workflow_id": 419078062,
+    "workflow_job_name": "compiler-composed-163",
+    "runner_setup_action_blob": "e2cda5b54676d4d1c35785aaef7aa69d66944597",
+    "lock_blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+    "workflow_script_copy_source": "git show GITHUB_SHA script/sf2h/final-bundle/{build-artifact.py,verify-e2e-typecheck.mjs}",
+    "fixture_input_register": "REQUEST-163-W690a.json"
+  },
+  "W": {
+    "sha": "690a34cdd81c12d7311f3717c19679b950276161",
+    "tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "integration_base_b45": "b45aa6211c433c6837622617ad02fb2c0c3fe8e4",
+    "base_tree": "4d08c0ea5d03e3bd8f5f066a9e37803e6ce0344a",
+    "later_stack_seen": "6d42d6752497fc37be59c64a72b272a3d0860961",
+    "later_files": "140–142 not part of executed W; no proof transferred",
+    "origin_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+  },
+  "S": {
+    "selection_order": "REQUEST-163-W690a.json",
+    "workflow_sha": "5491c9300126da663a4097a678b587a5d74dc125",
+    "workflow_blob": "c417627108fcd183ee8d7ab91243ec6795bdc926",
+    "runtime_lock_blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "source_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "not_documentation_head": true
+  },
+  "run": {
+    "id": 43766055614,
+    "job": 132971280139,
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "artifact": {
+      "id": 14182790522,
+      "name": "sf-compiler-163",
+      "size_zip_bytes": 401536,
+      "archive_sha256": "1ab7ff0768b359e8c91d3f6e66d1f444681e221473a86013ea61d0d7373245ab",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522"
+    }
+  },
+  "checks": {
+    "selected": 16,
+    "exit_zero": 10,
+    "nonzero": 6,
+    "ordered": [
+      {
+        "order": 1,
+        "name": "e2e-inventory",
+        "cwd": ".",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 2,
+        "name": "guards",
+        "cwd": ".",
+        "exit_code": 1,
+        "status": "FAIL"
+      },
+      {
+        "order": 3,
+        "name": "sdk-generate",
+        "cwd": "packages/client",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 4,
+        "name": "sdk-diff-capture",
+        "cwd": ".",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 5,
+        "name": "typecheck-schema",
+        "cwd": "packages/schema",
+        "exit_code": 2,
+        "status": "FAIL"
+      },
+      {
+        "order": 6,
+        "name": "typecheck-protocol",
+        "cwd": "packages/protocol",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 7,
+        "name": "typecheck-server",
+        "cwd": "packages/server",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 8,
+        "name": "typecheck-client",
+        "cwd": "packages/client",
+        "exit_code": 2,
+        "status": "FAIL"
+      },
+      {
+        "order": 9,
+        "name": "typecheck-sucafina",
+        "cwd": "modules/sucafina",
+        "exit_code": 2,
+        "status": "FAIL"
+      },
+      {
+        "order": 10,
+        "name": "typecheck-core",
+        "cwd": "packages/core",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 11,
+        "name": "typecheck-cli",
+        "cwd": "apps/cli",
+        "exit_code": 2,
+        "status": "FAIL"
+      },
+      {
+        "order": 12,
+        "name": "typecheck-app",
+        "cwd": "packages/app-shell",
+        "exit_code": 1,
+        "status": "FAIL"
+      },
+      {
+        "order": 13,
+        "name": "sf-e2e-showConfig",
+        "cwd": "packages/app-shell",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 14,
+        "name": "sf-e2e-listFiles",
+        "cwd": "packages/app-shell",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 15,
+        "name": "sf-e2e-verify",
+        "cwd": ".",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      },
+      {
+        "order": 16,
+        "name": "spawn-imports",
+        "cwd": ".",
+        "exit_code": 0,
+        "status": "PASS_SCOPED"
+      }
+    ],
+    "skipped_unchanged": [
+      "bundle-build",
+      "bundle-requests",
+      "typecheck-atlas",
+      "atlas-generated-before",
+      "atlas-generate",
+      "atlas-generated-after",
+      "atlas-generated-diff"
+    ],
+    "exclusion_reason": "No corresponding causal input delta; C64 historical proof not carried to W",
+    "product_tests": "NOT_RUN_164_ONLY",
+    "omni_positive_control": "NOT_RUN_NOT_OBSERVED",
+    "full_epic": "NOT_RUN",
+    "final8": "NOT_RUN"
+  },
+  "e2e_compiler": {
+    "status": "PASS_COMPILER_ONLY",
+    "candidate_sha": "690a34cdd81c12d7311f3717c19679b950276161",
+    "product_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "declared_inputs": 124,
+    "compiler_files": 3746,
+    "diagnostics": 0,
+    "source": "e2e-inclusion.json in artifact",
+    "browser_product_tests": "NOT_RUN"
+  },
+  "sdk": {
+    "status": "SDK_GENERATED_WITH_PATCH_OWNER162_MUST_CONSUME",
+    "command_exit": 0,
+    "capture_exit": 0,
+    "generated_modified_files": 3,
+    "generated_total": 56,
+    "patch_sha256": "1e17bfa2e631a6c59a3662a33161549001689c95ae7e88ad009bf3eca9b31e0d",
+    "patch_bytes": 92878,
+    "receipt": "SDK-PREPOST-163.json",
+    "not_integrated": true
+  },
+  "guards": {
+    "status": "FAIL",
+    "exit_code": 1,
+    "gate": 66,
+    "warn": 141,
+    "receipt": "GUARDS-163.json",
+    "waiver": false
+  },
+  "typecheck": {
+    "package_error_occurrences_not_unique": {
+      "schema": 189,
+      "client": 214,
+      "sucafina": 332,
+      "cli": 38,
+      "app": 661
+    },
+    "routed_causes": [
+      {
+        "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+        "occurrences_per_schema_typecheck": 134,
+        "source_owner": "W16/A04 source-contracts (integration133–139 product)",
+        "symptoms": "Effect Schema and constraint/type API incompatibility, TS2551/TS2554/TS2740",
+        "action": "Source author reconcile with installed effect beta.83, do not relax closed schemas"
+      },
+      {
+        "path": "packages/schema/src/sucafina/decisions.ts",
+        "occurrences_per_schema_typecheck": 28,
+        "source_owner": "decisions schema producer",
+        "symptoms": "Schema.minLength/maxLength/pattern/greaterThanOrEqualTo not supported by installed Effect, tuple/map signatures",
+        "action": "Fix actual installed schema API, preserve constraints"
+      },
+      {
+        "path": "packages/schema/src/sucafina/planner.ts",
+        "occurrences_per_schema_typecheck": 23,
+        "source_owner": "W planner source / correction133",
+        "symptoms": "TS API mismatches under effect beta.83",
+        "action": "Source repair then affected recheck"
+      },
+      {
+        "path": "packages/client/src/sucafina/transport.ts",
+        "occurrences_per_client_typecheck": 22,
+        "source_owner": "Client transport producer",
+        "symptoms": "TS2339 missing maxRequestBytes union, status union, TS2367 json/empty, decoder types",
+        "action": "Repair source/metadata contract, not generated files"
+      },
+      {
+        "path": "packages/client/src/sucafina/context.ts",
+        "line": 9,
+        "code": "TS2694",
+        "source_owner": "Client context producer",
+        "symptoms": "SfTransportResult not exported",
+        "action": "Restore correct typed public contract"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/domain.ts",
+        "lines": [
+          9,
+          10
+        ],
+        "code": "TS2307",
+        "source_owner": "domain producer",
+        "symptoms": "Cannot find module ./domain/projection; 10 CLI diagnostics total",
+        "action": "Reconcile true source module ownership/export, not stub"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/people.ts",
+        "line": 150,
+        "code": "TS2339",
+        "source_owner": "native people producer",
+        "symptoms": "status/end fields missing on {id:string}, 26 CLI diagnostics",
+        "action": "Reconcile actual typed adapter"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/decisions/changes/index.tsx",
+        "occurrences_per_app_typecheck": 60,
+        "source_owner": "decisions UI producer",
+        "symptoms": "Incompatible UI/contract types",
+        "action": "Repair producer/consumer contract"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+        "occurrences_per_app_typecheck": 34,
+        "source_owner": "imports UI producer",
+        "symptoms": "Incompatible input types",
+        "action": "Apply source correction without widening admission"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/model.ts",
+        "line": 10,
+        "code": "TS2305",
+        "source_owner": "BI finance producer",
+        "symptoms": "No exported member SfUnit from shared/frame",
+        "action": "Reconcile real source type/export"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+        "line": 68,
+        "code": "TS2339",
+        "source_owner": "context UI producer",
+        "symptoms": "SfContextState has no selection property",
+        "action": "Reconcile native context type"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+        "line": 229,
+        "code": "TS2322",
+        "source_owner": "BI catalog producer",
+        "symptoms": "string not assignable BI01..BI11 literal",
+        "action": "Reconcile strict union"
+      }
+    ],
+    "all_logs": "typecheck-{schema,client,sucafina,cli,app}.log in Action artifact; diagnostic counts include shared transitive repeats, not unique root causes"
+  },
+  "bundle": {
+    "reuse_only": true,
+    "source_builder_blob": "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2",
+    "source_test_ci_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "source_requests_blob": "3ff28507d6ae6b874f021fb8acf5088d61442c80",
+    "source_existing_epic_blob": "b332d777e4465469e9e4869e29f4339a95853d21",
+    "historical_produced_artifact_id": 14171118214,
+    "historical_artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43738074189/artifacts/14171118214",
+    "generated_yaml_bytes": 57314,
+    "generated_yaml_sha256": "c6c0e2583a5be2bb393d3db832232c6625ceb28370bf1f7f815eb3a661b77394",
+    "generated_patch_bytes": 4370,
+    "generated_patch_sha256": "559b5b34a69ace7ee69b641909a4fa7da28d033a4a13980dc4ed950574d2dd03",
+    "drift_status": "OPEN_NOT_INTEGRATED",
+    "not_dispatched": true
+  },
+  "dedup": {
+    "historical_c64_source": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "historical_run": 43738074189,
+    "history_no_crossSHA_pass": true,
+    "duplicate_run_equivalent": false,
+    "rerun_failed_equivalent": false,
+    "extra_dispatcher": false
+  },
+  "restrictions": {
+    "no_local_checks": true,
+    "no_generated_handedit": true,
+    "no_dev_merge": true,
+    "no_deploy": true,
+    "no_azure_change": true,
+    "goal_paused": true,
+    "global_release": false,
+    "guard_waiver": false
+  }
+}
