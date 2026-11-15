@@ -1,0 +1,23 @@
+--- a/apps/cli/src/sucafina-product/extended-browser.ts
++++ b/apps/cli/src/sucafina-product/extended-browser.ts
+@@ -31,6 +31,7 @@
+ }
+ if (root && bootstrap) {
+   const value = JSON.parse(bootstrap.textContent ?? "null")
++  const accessRevision = document.querySelector<HTMLMetaElement>('meta[name="sf-access-revision"]')?.content
+   bootstrap.remove()
+   let closed = false, generation = 0
+   let dispose = () => {}
+@@ -69,7 +70,11 @@
+     const timer = setTimeout(() => controller.abort(), 30_000)
+     try {
+       const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
+-      if (accessDenied(response)) clearPrivate()
++      const echoedAccess = response.headers.get("X-SF-Access-Revision")
++      if (accessDenied(response) || echoedAccess !== null && accessRevision !== undefined && echoedAccess !== accessRevision) {
++        clearPrivate()
++        window.dispatchEvent(new Event("sf-access-revoked"))
++      }
+       await response.body?.cancel()
+     } catch { /* A network failure does not authorize a new render or erase preserved history. */ }
+     finally { clearTimeout(timer); pending.delete(controller); probing = false }

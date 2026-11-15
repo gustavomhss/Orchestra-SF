@@ -808,5 +808,24 @@
   "recommended_own_code_changes_from_observed_diagnostics": [],
   "reviewer_written_paths": [
     "mission48/final/SOURCE-CHECK-TRIAGE.json"
-  ]
+  ],
+  "root_remediation_observation": {
+    "source": "d9e2b517b05526f1ef89abfc357a474ba1e51bfe",
+    "tree": "9f3a58d4756e0f41877f28463c50f44702c85511",
+    "active_product_or_test_changes": 0,
+    "action": "Removed exactly four own raw log artifacts from current source HEAD; immutable d1 source and Git blob references preserve exact historical bytes. No raw log renaming or history rewrite.",
+    "retired_paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/boundary-01.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/causal-02.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03.log",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04.log"
+    ],
+    "preservation_index": "EVIDENCE-INDEX.json",
+    "historical_check01_gate_count": 7,
+    "not_a_rerun": true,
+    "remaining_legacy_paths_count": 3,
+    "remaining_legacy_paths_scope": "Outside mission48 source write paths; no removal by48. Count3 is an expected residual classification, not a hosted result.",
+    "later_same_product_source": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+    "later_source_delta": "Only3 own E2E observability files plus receipts; pending sourceCHECK02."
+  }
 }

@@ -1,9 +1,11 @@
 import { createReviewPreparationBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/browser.ts"
+import { createReviewAgendaDiscoveryBrowser } from "../../../../modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts"
 import { createReviewCollaborationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts"
 import { createMeetingViewFromReads } from "../../../../modules/sucafina/Sucafinav1/product/reviews/meeting.ts"
 import type { ReviewComparisonRead } from "../../../../modules/sucafina/Sucafinav1/product/reviews/comparison-port.ts"
 import type { ReviewCurrentThread } from "../../../../modules/sucafina/Sucafinav1/product/reviews/current-thread.ts"
 import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/contracts/validation.ts"
 import { createReviewPreparationView } from "../../../../modules/sucafina/Sucafinav1/product/reviews/workspace.ts"
 import type { ReviewAgendaItem } from "../../../../modules/sucafina/Sucafinav1/product/reviews/selection.ts"
 import type { PreservedReview, DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
@@ -171,6 +173,7 @@ if (root && bootstrap) {
   } else if (value && typeof value === "object" && Array.isArray(value.items)) {
     const update = value as Partial<SfReviewUpdate> & { items: ReviewAgendaItem[] }
     const client = createReviewPreparationBrowser()
+    const discover = createReviewAgendaDiscoveryBrowser()
     const guarded = async <T>(read: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
       const turn = generation
       if (closed) return { status: "denied", reason: "review-access-changed" }
@@ -180,6 +183,8 @@ if (root && bootstrap) {
       return closed || turn !== generation ? { status: "denied", reason: "review-access-changed" } : result
     }
     const view = createReviewPreparationView({ items: update.items, ...(typeof update.previousReviewRef === "string" ? { previousReviewRef: update.previousReviewRef } : {}),
+      ...(isSfPeriod(value.period) ? { discoveryPeriod: value.period } : {}),
+      discover: (query) => guarded(() => discover(query)),
       client: { ...client, contribution: (payload) => guarded(() => client.contribution(payload)), agenda: (items) => guarded(() => client.agenda(items)),
         preview: (payload) => guarded(() => client.preview(payload)), preserve: (payload) => guarded(() => client.preserve(payload)), report: (payload) => guarded(() => client.report(payload)),
         downloadUrl: (reference) => closed ? undefined : client.downloadUrl(reference) },
@@ -190,11 +195,11 @@ if (root && bootstrap) {
     const confirm = (label: string) => {
       const container = document.createElement("label"), check = document.createElement("input")
       check.type = "checkbox"; checks.push(check); container.append(check, document.createTextNode(label)); choices.append(container, document.createElement("br"))
-      check.addEventListener("change", () => { view.element.inert = checks.some((entry) => !entry.checked) || !update.items.length; message.textContent = view.element.inert ? "Confirme a nova seleção antes de carregar e preservar." : "Carregue a seleção, confira os registros e preserve a sucessora." })
+      check.addEventListener("change", () => { view.element.inert = checks.some((entry) => !entry.checked) || (!!update.previousReviewRef && !update.items.length); message.textContent = view.element.inert ? "Confirme a nova seleção antes de carregar e preservar." : "Carregue a seleção, confira os registros e preserve a sucessora." })
     }
     for (const entry of update.confirmations ?? []) confirm(entry.label)
     for (const entry of update.unavailableSections ?? []) confirm(`Excluir explicitamente o tópico ${entry.title} desta nova pauta. ${entry.reason}`)
-    view.element.inert = checks.length > 0 || !update.items.length
+    view.element.inert = checks.length > 0 || (!!update.previousReviewRef && !update.items.length)
     if (update.previousReviewRef) {
       const previous = document.createElement("a"); previous.href = reviewUrl(update.previousReviewRef).toString(); previous.textContent = "Reabrir a revisão anterior"; choices.append(previous)
       message.textContent = update.items.length ? "A revisão anterior permanecerá preservada. Confirme a seleção de cada tópico para preparar sua sucessora." : "Nenhum tópico pode ser reconstruído com uma seleção exata. Abra a origem e prepare uma nova agenda; nenhum tópico foi substituído automaticamente."

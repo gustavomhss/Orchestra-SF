@@ -1,0 +1,206 @@
+{
+  "id": "E-M48-DIAGNOSTIC-07",
+  "kind": "diagnostic",
+  "run": 43662417996,
+  "job": 132654419258,
+  "cleanup_job": 132655766684,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43662417996",
+  "source": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+  "source_tree": "4b275a76464168b2432cd66c512d65b5ecdcd65f",
+  "W": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+  "W_tree": "bee9af4d7386920ef9356b0e874fee243feb1a38",
+  "S": "1a3c35839d8d5f84155f10fd4148779a0ccb6c1a",
+  "S_tree": "b26c220d3cf58549add36343d5627841d97f2b03",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/reports-support/agenda-transport.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "request_sha256": "1e6da53d110967854023b0d46a57864dc6ebcc6244e39db8fe95943da1d43df3",
+  "request_blob": "70b49a8117513630b084f07d3f16c63f06035dfb",
+  "request_bytes": 252,
+  "request_trailing_lf": false,
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 1,
+  "total": 1,
+  "started": 1,
+  "skip": 0,
+  "selected_files": [
+    "e2e/sucafina/reports-support/agenda-transport.spec.ts"
+  ],
+  "case_results": [
+    {
+      "case_id": "RPT-DIAG-AGENDA-01",
+      "title_from_runtime": "RPT-DIAG-AGENDA-01 observes actual agenda transport and preserves the authorized dossier",
+      "runtime_status": "TIMED_OUT",
+      "runtime_status_raw": "timedOut",
+      "duration_ms": 180023,
+      "start_time": "2026-11-15T01:20:12.421Z",
+      "retry": 0,
+      "log_line": 1083,
+      "runtime_json_pointer": "/suites/0/suites/0/specs/0/tests/0/results/0",
+      "runtime_report_sha256": "8a902af34b848a230bf1fcf323d9b005fe0c68bafc672def70187dc8b4df66d6",
+      "blocking_stage": "The single agenda-transport diagnostic timed out at its 180000 ms case budget. The late requestfailed handler produced the second error at review-flow.ts:391:40; no review-agenda response event is present in the captured observer.",
+      "assertions_reached": "The browser observed the correct same-origin, same-path review-agenda POST. Prepare review is present in the final context. Successful agenda response and authorized dossier preservation were not established.",
+      "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+      "ui_status_context_line": 53,
+      "ui_status_is_proven_cause": false,
+      "context_receipt": {
+        "local_path": "evidence/diagnostic-07-context/sucafina-reports-support-a-3746f-rves-the-authorized-dossier-chromium.md",
+        "bytes": 10690,
+        "sha256": "119014c93e84a56b74707f58d902677ea4d9c3eb9dc20bf3391dfefe433b7b2b"
+      },
+      "error": {
+        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+      },
+      "errors": [
+        {
+          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+        },
+        {
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+            "column": 40,
+            "line": 391
+          },
+          "message": "Error: Actual review-agenda POST transport failed: net::ERR_CONNECTION_REFUSED\n\n   at sucafina/reports-support/review-flow.ts:391\n\n  389 |     const failure = causes(value.failure()?.errorText ?? \"\")\n  390 |     if (relevant(value)) add(\"requestfailed\", { ...destination(value.url()), method: value.method(), ...failure })\n> 391 |     if (matching(value)) rejectFailure(new Error(\"Actual review-agenda POST transport failed: \" +\n      |                                        ^\n  392 |       [...failure.codes, ...failure.categories].join(\", \")))\n  393 |   }\n  394 |   const pageerror = (value: Error) => add(\"pageerror\", {\n    at Page.requestfailed (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:391:40)"
+        }
+      ],
+      "step_errors": [],
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false,
+      "business_journey_completed": false
+    }
+  ],
+  "criterion_acceptance_credit": false,
+  "nominal_journey_credit": false,
+  "log": "evidence/diagnostic-07.log",
+  "log_receipt": {
+    "local_path": "evidence/diagnostic-07.log",
+    "bytes": 101678,
+    "sha256": "19035e04cddfeff39ea173b9d8d68cc12901ccc660c81745e79e079e90e5ceb6"
+  },
+  "runtime_receipt": "evidence/diagnostic-07-runtime/playwright-runtime.json",
+  "runtime_report": {
+    "local_path": "evidence/diagnostic-07-runtime/playwright-runtime.json",
+    "bytes": 9840,
+    "sha256": "8a902af34b848a230bf1fcf323d9b005fe0c68bafc672def70187dc8b4df66d6"
+  },
+  "runtime_request": {
+    "local_path": "evidence/diagnostic-07-runtime/request.json",
+    "bytes": 345,
+    "sha256": "3500bbbea4dd165ec194f17b0e4080a78869e9fa1a15052f6a38fc1bffe427d3"
+  },
+  "selection_receipt": {
+    "local_path": "evidence/diagnostic-07-runtime/playwright-selection.json",
+    "bytes": 2803,
+    "sha256": "5b6a6bc7ac55885d443cffdea37ed0d77c40bdc3e06f16204e6daa91f77177c2"
+  },
+  "runtime_stats": {
+    "startTime": "2026-11-15T01:19:44.136Z",
+    "duration": 213387.704,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 1,
+    "flaky": 0
+  },
+  "runtime_global_errors": [],
+  "duration_ms": 213387.704,
+  "controls": {
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "timeout_ms": 180000
+  },
+  "controls_provenance": "Verified from actual runtime configuration and the individual diagnostic test record; no budget change is implied.",
+  "artifact": {
+    "id": 14140298535,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43662417996/artifacts/14140298535",
+    "archive": {
+      "local_path": "evidence/diagnostic-07.zip",
+      "bytes": 216604,
+      "sha256": "1e52190e8a67dadcb3019a60a1ed029bb70f903660b1a5d1df2c88ac3591e8e7"
+    }
+  },
+  "transport_receipt": {
+    "local_path": "evidence/diagnostic-07-transport.json",
+    "bytes": 961,
+    "sha256": "3d17ee9d2c80cc6d050f00c0a063d71411bc269daac2c4800c901164d2feb389"
+  },
+  "transport_observation": {
+    "before": {
+      "sameOrigin": true,
+      "samePath": true,
+      "route": "dashboard",
+      "mode": "absent"
+    },
+    "after": {
+      "sameOrigin": true,
+      "samePath": true,
+      "route": "dashboard",
+      "mode": "absent"
+    },
+    "expected": {
+      "method": "POST",
+      "mode": "review-agenda"
+    },
+    "elapsedMs": 176250,
+    "entries": [
+      {
+        "kind": "request",
+        "elapsedMs": 40,
+        "sameOrigin": true,
+        "samePath": true,
+        "route": "dashboard",
+        "mode": "review-agenda",
+        "method": "POST",
+        "resource": "fetch"
+      },
+      {
+        "kind": "requestfailed",
+        "elapsedMs": 176249,
+        "sameOrigin": true,
+        "samePath": true,
+        "route": "dashboard",
+        "mode": "review-agenda",
+        "method": "POST",
+        "codes": [
+          "net::ERR_CONNECTION_REFUSED"
+        ],
+        "categories": []
+      }
+    ],
+    "dropped": 0,
+    "cli": "No recognized transport error or repository stack location in the bounded CLI tail."
+  },
+  "causality": {
+    "root_cause": "NOT_ESTABLISHED",
+    "request_observed_ms": 40,
+    "response_event_observed": false,
+    "late_requestfailed_observed_ms": 176249,
+    "observer_duration_ms": 176250,
+    "interpretation_limit": "ERR_CONNECTION_REFUSED was recorded only near the observer/test shutdown, not at initial submission. The trace does not establish initial connection refusal, server death, HTTP response status, authorization loss or a proven cause of the missing response.",
+    "cli_observation": "No recognized transport error or repository stack location in the bounded CLI tail.",
+    "cli_observation_limit": "Only the bounded CLI tail was inspected by the diagnostic; absence of a recognized error there is not proof of process health or a successful request."
+  },
+  "identity_provenance": {
+    "source_W_S_trees_run_jobs": "Exact root-provided identities; no new remote verification by this receipt author.",
+    "runtime_S_and_run": "Matched actual runtime metadata and request envelope.",
+    "request_content": "Compact request is exactly252 bytes without LF; its SHA256 and Git blob equal the supplied identities.",
+    "artifact": "Artifact ID matches log lines1139-1141; local ZIP SHA256 matches root-provided digest.",
+    "transport": "Local transport JSON equals the decoded reports-agenda-transport attachment in the runtime report.",
+    "cleanup_job": "Root-provided cleanup identity; no cleanup outcome is inferred.",
+    "request_only_diff": "No independent remote envelope verification performed by this local receipt author."
+  },
+  "scope": "Actual single W5 diagnostic FAIL0/1 (timedOut180023 ms), separate from all four nominal Reports journeys. Correct review-agenda POST appears at40 ms, no response event is captured, and ERR_CONNECTION_REFUSED appears only at176249 ms near shutdown. Causality remains unproven. All runtime errors and prior results are preserved; no nominal or criterion credit."
+}

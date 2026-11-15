@@ -14,6 +14,8 @@ import { isSfPeriod } from "../../../../modules/sucafina/Sucafinav1/product/cont
 import { createSfExtendedBiOptions } from "./extended-bi-options.ts"
 import { readSfDecisionBiSelection, sfPlannerBiSelection } from "./bi-selections.ts"
 import { createSfExtendedReviewCycle, sfDashboardReviewAgendaItem } from "./extended-review-cycle.ts"
+import { createSfReviewAgendaHttp } from "./review-agenda-services.ts"
+import type { createSfReviewAgendaServices } from "./review-agenda-services.ts"
 import { sfExtendedSourceLinks } from "./extended-source-links.ts"
 import { sameBiProjection } from "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts"
 import type { BusinessContextService } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
@@ -27,6 +29,7 @@ export function createSfExtendedHttp(input: {
   reviews: ReturnType<typeof createSfReviewServices>["application"]
   persistence: SfScopedSourcePort
   reviewEvidence?: Pick<BusinessContextService, "resolve">
+  reviewAgenda?: Pick<ReturnType<typeof createSfReviewAgendaServices>, "discover">
   origin: string
   assets: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
 }) {
@@ -36,7 +39,10 @@ export function createSfExtendedHttp(input: {
   const options = createSfExtendedBiOptions(input)
   const reviewCycle = createSfExtendedReviewCycle(input)
   const decisionNavigation = createSfBiDecisionNavigation(input)
+  const agendaHttp = input.reviewAgenda ? createSfReviewAgendaHttp({ authority, agenda: input.reviewAgenda, origin: input.origin }) : undefined
   const handle = async (request: Request, surface: string): Promise<Response | undefined> => {
+    const discovered = await agendaHttp?.(request, surface)
+    if (discovered) return discovered
     const reviewed = await input.reviews?.http(request, surface)
     if (reviewed) return reviewed
     const url = new URL(request.url)
@@ -236,7 +242,7 @@ export function createSfExtendedHttp(input: {
             items.push(sfDashboardReviewAgendaItem({ ...current.value.agenda.section,
               id: reportsEntry ? `report:${page}` : current.value.agenda.section.id }))
           }
-          data = { items, ...(reportsEntry ? { requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : {}) }
+          data = { items, period, ...(reportsEntry ? { requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : {}) }
         }
       }
       const script = await (mode === "review" ? input.assets.reviews() : input.assets.bi()).catch(() => undefined)

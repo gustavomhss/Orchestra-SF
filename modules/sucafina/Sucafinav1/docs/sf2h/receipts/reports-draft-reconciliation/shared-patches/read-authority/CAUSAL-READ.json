@@ -1,0 +1,86 @@
+{
+  "schema": "sf-mission48-C27-runtime-causal-read-v1",
+  "target": {
+    "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+  },
+  "remote_reads": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/consumer-ack56.json",
+      "via": "github_fetch_commit",
+      "coverage": "complete added-file patch read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-outputs/runtime56/CONSUMER-RELEASE.json",
+      "via": "github_fetch_commit",
+      "coverage": "complete added-file patch read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-outputs/runtime56/DESIGN.json",
+      "via": "github_fetch_commit",
+      "coverage": "complete added-file patch read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-outputs/runtime56/ACCEPTANCE.json",
+      "via": "github_fetch_commit",
+      "coverage": "complete added-file patch read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-outputs/runtime56/metrics/comparison.json",
+      "via": "github_fetch_commit",
+      "coverage": "complete added-file patch read"
+    }
+  ],
+  "code_reads": [
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "via": "github_fetch_file pinned C27",
+      "coverage": "C19-C27 causal delta plus full source retrieved"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "blob": "480dcc9c1b299542552e8a6a2e4e3ce2a659db10",
+      "via": "github_fetch_file pinned C27",
+      "coverage": "C19-C27 causal delta plus full source retrieved"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "blob": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09",
+      "via": "github_fetch_file pinned C27",
+      "coverage": "full contents plus C19-C27 diff"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "via": "github_fetch_file pinned C27",
+      "coverage": "C19-C27 causal delta plus full source retrieved"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-agenda-services.ts",
+      "blob": "1d161deed336cde3753c6f8dd8a7f02854833dca",
+      "via": "github_fetch_file pinned C27",
+      "coverage": "GET/HEAD boundary read in diff; full source retrieved but discovery implementation not exhaustively reviewed"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "blob": "da98ee9b674a1d7b4f3ba2c8a230745c33ccdbd7",
+      "via": "github_fetch_file pinned C27",
+      "coverage": "C19-C27 causal delta plus full source retrieved"
+    }
+  ],
+  "runtime_delta": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "coverage": "complete C27 commit diff read",
+    "production_scope": "fresh copy factories for admitted warm non-target snapshots; target and transactionAll preserved",
+    "transport_modified": false
+  },
+  "causal_conclusion": "No proven resolution of nominal06 transport failure. Runtime56 reduces repeated traversal in a synthetic runtime workload; source receipts explicitly exclude composed acceptance and production latency. Review discovery is GET/HEAD; nominal06 waiter requires POST. serve delta does not change timeout.",
+  "side_effect_limit": "New C27 Agenda39 GET/HEAD admission non-ok collapses to denied; preserved without edits and separately reported to root/qualification.",
+  "runtime_claims": {
+    "local_tests": false,
+    "remote_tests": false,
+    "writes": false,
+    "diagnostic07": "pending at preparation; no result consumed"
+  }
+}

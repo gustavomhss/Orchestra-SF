@@ -507,7 +507,7 @@
      }
 --- a/apps/cli/src/sucafina-product/extended-browser.ts
 +++ b/apps/cli/src/sucafina-product/extended-browser.ts
-@@ -29,6 +29,7 @@
+@@ -31,6 +31,7 @@
  }
  if (root && bootstrap) {
    const value = JSON.parse(bootstrap.textContent ?? "null")
@@ -515,7 +515,7 @@
    bootstrap.remove()
    let closed = false, generation = 0
    let dispose = () => {}
-@@ -67,7 +68,11 @@
+@@ -69,7 +70,11 @@
      const timer = setTimeout(() => controller.abort(), 30_000)
      try {
        const response = await fetch(location.href, { credentials: "same-origin", cache: "no-store", signal: controller.signal })
@@ -1098,7 +1098,7 @@
    const source = createDashboardConfirmationObserver({ host: fixture.host, scopedSources: fixture.persistence, readProjection: (selection, context) => fixture.records.read(selection.reference, context) })
 --- a/apps/cli/src/sucafina-product/extended-http.ts
 +++ b/apps/cli/src/sucafina-product/extended-http.ts
-@@ -31,6 +31,7 @@
+@@ -34,6 +34,7 @@
    assets: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
  }) {
    const { authority, business } = input
@@ -1106,7 +1106,7 @@
    const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
    const options = createSfExtendedBiOptions(input)
    const reviewCycle = createSfExtendedReviewCycle(input)
-@@ -39,8 +40,12 @@
+@@ -45,8 +46,12 @@
      const reviewed = await input.reviews?.http(request, surface)
      if (reviewed) return reviewed
      const url = new URL(request.url)
@@ -1120,7 +1120,7 @@
      if (!["bi", "bi-data", "bi-source", "bi-decision", "bi-options", "review", "review-update", "review-source"].includes(mode ?? "")) return undefined
      const json = (value: unknown, status = 200) => new Response(request.method === "HEAD" ? null : JSON.stringify(value), { status,
        headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
-@@ -66,16 +71,21 @@
+@@ -72,16 +77,21 @@
      const bootstrap = { mode, page: url.searchParams.get("page"), period, viewId, selectionRef: url.searchParams.get("selectionRef"), reviewRef: url.searchParams.get("reviewRef"), baseRef: url.searchParams.get("baseRef"), candidateRef: url.searchParams.get("candidateRef"), currency: url.searchParams.get("currency"), previousReviewRef: url.searchParams.get("previousReviewRef"), sectionId: url.searchParams.get("sectionId"), referenceId: url.searchParams.get("referenceId"), valueId: url.searchParams.get("valueId"), referenceDigest: url.searchParams.get("referenceDigest") }
      const digest = digestSfValue(reportsEntry ? { ...bootstrap, reportTopics, reportYear, requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : mode === "bi-decision" ? { ...bootstrap, snapshot: url.searchParams.get("snapshot"), target: url.searchParams.get("target") } : bootstrap)
      const action = mode?.startsWith("review") ? "sf_review_prepare" : "sf_dashboard_read"
@@ -1145,7 +1145,7 @@
        }
        if (mode === "review-source") {
          const reference = url.searchParams.get("reviewRef"), referenceId = url.searchParams.get("referenceId")
-@@ -203,12 +213,12 @@
+@@ -209,12 +219,12 @@
            data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
          } else if (url.searchParams.has("previousReviewRef")) {
            const updated = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
@@ -1160,7 +1160,7 @@
              if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-update-changed-before-display" }, 409)
              return undefined
            }
-@@ -251,6 +261,14 @@
+@@ -257,6 +267,14 @@
          // or bootstrap as substitutions of the surrounding document.
          .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
        return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })

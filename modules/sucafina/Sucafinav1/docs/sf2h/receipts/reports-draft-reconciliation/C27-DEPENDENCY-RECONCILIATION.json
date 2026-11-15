@@ -1,0 +1,88 @@
+{
+  "schema": "orchestra-sf.reports48.dependency-reconciliation.v1",
+  "state": "PREIMAGES_VERIFIED_PENDING_DIAGNOSIS_AND_OVERLAY_REVIEW",
+  "prior": {
+    "symbol": "C19",
+    "commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c"
+  },
+  "target": {
+    "symbol": "C27",
+    "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+  },
+  "authority": {
+    "requested_consumer": 47,
+    "observed_current_integrator": 57,
+    "epoch": "S0-C-e11-browser57",
+    "ACK57": "https://github.com/gustavomhss/Orchestra-SF/blob/b10c424a6b318879fc30f11d03ba1cfeffda7d1a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/ACK57.json",
+    "ACK57_blob": "2572ec24161d5749987ae92d15405295add10ad6",
+    "lease48": "reports-reconciliation-browser48",
+    "source_writer48_unchanged": true,
+    "stack_write_by48": false,
+    "source_branch_other_writer_observed": false
+  },
+  "readback": {
+    "paths": 46,
+    "changed_preimages": [
+      {
+        "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+        "C19": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+        "C27": "480dcc9c1b299542552e8a6a2e4e3ce2a659db10"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-http.ts",
+        "C19": "d8e0d149e37c640db8957f3e917f867088923d93",
+        "C27": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09"
+      }
+    ],
+    "unchanged_preimages": 44,
+    "method": "Every exact path was independently fetched from immutable C27 using GitHub MCP. NOT_FOUND records distinguish absent files. The 300-file historical comparison was not used as an exhaustive tree proof."
+  },
+  "protocol": {
+    "unchanged": true,
+    "files": {
+      ".github/workflows/test-ci.yml": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "script/test-ci.ts": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "script/test-ci-request.ts": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "script/test-ci-location.ts": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "script/test-ci-package.ts": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "script/module-registry.json": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "packages/app-shell/e2e/playwright.production.config.ts": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "packages/app-shell/playwright.config.ts": "d935c68f5b996c0e53195ec832b969c217fcf858"
+    }
+  },
+  "runtime56": {
+    "source_release": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+    "source_product": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+    "release_state": "QUALIFIED_SOURCE_FOR_COMPOSITION_GATES_PENDING",
+    "scope": "Fresh-copy runtime/local-store implementation; actual source tests remain source evidence. No result transferred to Reports48.",
+    "diagnostic_causality": "NOT_ESTABLISHED. Actual diagnostic07 on W5/C19 timed out after180023ms; request started40ms after observation and no response was observed. ERR_CONNECTION_REFUSED appeared176249ms into observation near test teardown, not evidence of an initial refusal."
+  },
+  "closure_blocker": {
+    "creator_blob": "051be54adbf197a0f4b290ab6bc6aaa9f0f563d5",
+    "unchanged_from_C19": true,
+    "unchanged_failing_fixture_not_rerun": true
+  },
+  "preserve": [
+    "C27 changes outside the explicit Reports48 overlays",
+    "Agenda39 workspace/picker/discovery ownership",
+    "Runtime56 implementation",
+    "Source53/54/55/57 release history",
+    "Workflow/compiler45 ownership",
+    "All actual previous failures and criteria"
+  ],
+  "acceptance": false,
+  "diagnostic07_actual": {
+    "run": 43662417996,
+    "job": 132654419258,
+    "S": "1a3c35839d8d5f84155f10fd4148779a0ccb6c1a",
+    "conclusion": "failure",
+    "pass": 0,
+    "fail": 1,
+    "runtime_status": "TIMED_OUT",
+    "transport_evidence": "evidence/diagnostic-07-transport.json",
+    "candidate_still_C19": true
+  },
+  "requalification_rationale": "C27 contains released read/runtime dependencies and a different installed composition. A single real preparation diagnostic may test their effect before the four nominal journeys; no claim of transport cure is made from the dependency alone."
+}
