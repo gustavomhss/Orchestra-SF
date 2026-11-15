@@ -1,6 +1,6 @@
-name: sf-compiler-composed-163
+name: sf-compiler-composed-190
 
-# Mission 163: surgical hosted compiler/SDK validation with independently pinned coherent product W.
+# Mission 190: causal compiler verification on accepted 173-181 + F01/A12 product snapshot. No SDK re-generation while public API inputs stay identical.
 # This is not an epic or product-test workflow; A45's paths and dispatcher are untouched.
 on:
   push:
@@ -10,16 +10,16 @@ permissions:
   contents: read
 
 concurrency:
-  group: sf-compiler-128
+  group: sf-compiler-190
   cancel-in-progress: false
 
 env:
-  SF_SOURCE_SHA: 690a34cdd81c12d7311f3717c19679b950276161
-  SF_SOURCE_TREE: 07133fe09922121f3cca3bffd6b4463053b48ece
+  SF_SOURCE_SHA: 77e58de895b5157b2a32e3427483bd12f40a7525
+  SF_SOURCE_TREE: 28feb531911172b68a5615e81510a00fda9cb1b8
   SF_PLANNING_SHA: dbf9547211d9b0fade619790de7c19c0869b7c7d
 
 jobs:
-  compiler-composed-163:
+  compiler-composed-190-batch-01:
     if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/sf-compiler-checks' && github.event_name == 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 45
@@ -27,17 +27,17 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: Checkout pinned coherent integrated 162 product W, without stored credentials
+      - name: Checkout pinned coherent integrated 189 product W, without stored credentials
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          ref: 690a34cdd81c12d7311f3717c19679b950276161
+          ref: 77e58de895b5157b2a32e3427483bd12f40a7525
           fetch-depth: 0
           persist-credentials: false
 
       - name: Prove fixed checkout and resolve actual dev/merge-base
         run: |
           set -euo pipefail
-          EVIDENCE="$RUNNER_TEMP/sf-compiler-128"
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-190"
           mkdir -p "$EVIDENCE"
           printf '%s\n' "workflow_commit=$GITHUB_SHA" "source_sha=$SF_SOURCE_SHA" "expected_tree=$SF_SOURCE_TREE" > "$EVIDENCE/identity.txt"
           test "$(git rev-parse HEAD)" = "$SF_SOURCE_SHA"
@@ -46,7 +46,7 @@ jobs:
           git merge-base HEAD origin/dev
           git rev-parse HEAD HEAD^{tree} origin/dev > "$EVIDENCE/revisions.txt"
           git merge-base HEAD origin/dev > "$EVIDENCE/merge-base.txt"
-          printf "%s\\n" "candidate_sha=$SF_SOURCE_SHA" "candidate_tree=$SF_SOURCE_TREE" "selection_kind=compiler163-causal-16" "historic_c64_not_pass=true" > "$EVIDENCE/selection-identity.txt"
+          printf "%s\\n" "candidate_sha=$SF_SOURCE_SHA" "candidate_tree=$SF_SOURCE_TREE" "selection_kind=compiler190-causal-09" "historic_c64_not_pass=true" > "$EVIDENCE/selection-identity.txt"
           git status --porcelain=v1 > "$EVIDENCE/status-before.txt"
           test ! -s "$EVIDENCE/status-before.txt"
           sha256sum bun.lock package.json packages/app-shell/package.json packages/app-shell/tsconfig.json packages/app-shell/tsconfig.sf-e2e.json \
@@ -63,16 +63,26 @@ jobs:
             apps/cli/src/sucafina-product/native-ui/router.ts apps/cli/src/sucafina-product/native-ui/procurement.ts \
             packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx \
             packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx \
-            packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx > "$EVIDENCE/input-sha256.txt"
+            packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx \
+            apps/cli/src/sucafina-product/native-ui/domain.ts apps/cli/src/sucafina-product/native-ui/people.ts \
+            apps/cli/src/sucafina-product/native-ui/routines.ts apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts \
+            apps/cli/src/sucafina-product/native-ui/live-context.ts apps/cli/src/sucafina-product/native-ui/work.ts \
+            apps/cli/src/sucafina-product/host-context.ts apps/desktop/src/main/sucafina/protocol.ts \
+            modules/sucafina/Sucafinav1/product/integration/product-authority.ts \
+            modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts \
+            modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts \
+            modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts \
+            packages/client/src/sucafina/transport.ts packages/client/src/sucafina/work.ts \
+            packages/schema/src/sucafina/operation-registry.ts packages/schema/src/sucafina/work.ts > "$EVIDENCE/input-sha256.txt"
 
       - name: Setup pinned repository Bun and Node runtime
         uses: ./.github/actions/setup-bun
 
-      - name: Import 128 tooling from the workflow commit without changing the product checkout
+      - name: Import existing compiler tooling from the workflow commit without changing product checkout
         run: |
           set -euo pipefail
           TOOL_DIR="$RUNNER_TEMP/sf128-tools"
-          EVIDENCE="$RUNNER_TEMP/sf-compiler-128"
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-190"
           mkdir -p "$TOOL_DIR" "$EVIDENCE"
           git cat-file -e "$GITHUB_SHA^{commit}"
           git show "$GITHUB_SHA:script/sf2h/final-bundle/build-artifact.py" > "$TOOL_DIR/build-artifact.py"
@@ -83,13 +93,13 @@ jobs:
           git status --porcelain=v1 > "$EVIDENCE/status-after-tool-overlay.txt"
           echo "SF128_TOOL_DIR=$TOOL_DIR" >> "$GITHUB_ENV"
 
-      - name: Run only causal SDK, typed, E2E compiler and guards, preserve exits
+      - name: Run only causal package typechecks, E2E compiler and spawn imports; preserve exits
         run: |
           set -uo pipefail
-          EVIDENCE="$RUNNER_TEMP/sf-compiler-128"
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-190"
           mkdir -p "$EVIDENCE"
           : > "$EVIDENCE/exit-codes.tsv"
-          printf "%s\\n" e2e-inventory guards sdk-generate sdk-diff-capture typecheck-schema typecheck-protocol typecheck-server typecheck-client typecheck-sucafina typecheck-core typecheck-cli typecheck-app sf-e2e-showConfig sf-e2e-listFiles sf-e2e-verify spawn-imports > "$EVIDENCE/ordered-selection.txt"
+          printf "%s\\n" e2e-inventory typecheck-schema typecheck-client typecheck-sucafina typecheck-cli sf-e2e-showConfig sf-e2e-listFiles sf-e2e-verify spawn-imports > "$EVIDENCE/ordered-selection.txt"
           bun --version > "$EVIDENCE/bun-version.txt" 2>&1
           node --version > "$EVIDENCE/node-version.txt" 2>&1
           git --version > "$EVIDENCE/git-version.txt" 2>&1
@@ -107,21 +117,13 @@ jobs:
             tail -n 60 "$EVIDENCE/$name.log" || true
             return 0
           }
+          # No SDK generation: Protocol/Server HttpApi, client contract, build/codegen input blobs match 163.
+          # Guard sources/skip sites remain 188/185/186-owned; no unchanged gate rerun on this batch.
           record e2e-inventory . node "$SF128_TOOL_DIR/verify-e2e-typecheck.mjs" --inventory
-          # Capture guard findings against the exact source before codegen modifies the disposable checkout.
-          record guards . bun run check:guards --base origin/dev
-          record sdk-generate packages/client bun run generate
-          record sdk-diff-capture . bash -c 'git add -N -- packages/client/src/generated packages/client/src/generated-effect && git diff --binary -- packages/client/src/generated packages/client/src/generated-effect > "$1/sdk-generated.patch" && git diff --stat -- packages/client/src/generated packages/client/src/generated-effect > "$1/sdk-generated.stat"' _ "$EVIDENCE"
-
           record typecheck-schema packages/schema bun typecheck
-          record typecheck-protocol packages/protocol bun typecheck
-          record typecheck-server packages/server bun typecheck
           record typecheck-client packages/client bun typecheck
           record typecheck-sucafina modules/sucafina bun typecheck
-          record typecheck-core packages/core bun typecheck
           record typecheck-cli apps/cli bun typecheck
-          record typecheck-app packages/app-shell bun typecheck
-
           record sf-e2e-showConfig packages/app-shell bun run typecheck:sf-e2e --showConfig
           record sf-e2e-listFiles packages/app-shell bun run typecheck:sf-e2e --listFiles --pretty false
           config_exit="$(awk '$1 == "sf-e2e-showConfig" {print $2}' "$EVIDENCE/exit-codes.tsv")"
@@ -131,10 +133,9 @@ jobs:
             --config "$EVIDENCE/sf-e2e-showConfig.log" --config-status "$config_exit" \
             --log "$EVIDENCE/sf-e2e-listFiles.log" --typecheck-status "$program_exit" \
             --output "$EVIDENCE/e2e-inclusion.json"
-
-          git status --porcelain=v1 > "$EVIDENCE/status-after-generation.txt"
-          git diff --name-status -- packages/client/src/generated packages/client/src/generated-effect > "$EVIDENCE/sdk-name-status.txt"
           record spawn-imports . bun run check:spawn-imports
+          git status --porcelain=v1 > "$EVIDENCE/status-after-checks.txt"
+          git diff --name-status -- packages/client/src/generated packages/client/src/generated-effect > "$EVIDENCE/sdk-name-status.txt"
 
           printf '%s\n' "source_sha=$SF_SOURCE_SHA" "source_tree=$SF_SOURCE_TREE" \
             "effective_dev=$(git rev-parse origin/dev)" "merge_base=$(git merge-base HEAD origin/dev)" \
@@ -143,14 +144,14 @@ jobs:
             echo 'FAIL: one or more real checks failed (see per-command exit codes)'
             exit 1
           fi
-          test "$(wc -l < "$EVIDENCE/exit-codes.tsv")" -eq 16
-          echo 'PASS: all 16 causal compiler/SDK/typecheck/guard commands returned 0 (not product acceptance)'
+          test "$(wc -l < "$EVIDENCE/exit-codes.tsv")" -eq 9
+          echo 'PASS: all 9 causally selected compiler/typecheck/import commands returned 0 (not product acceptance)'
 
-      - name: Capture SDK pre/postimages and original epic build delta
+      - name: Record SDK not-selected state and preserve original epic provenance
         if: always()
         run: |
           set -uo pipefail
-          EVIDENCE="$RUNNER_TEMP/sf-compiler-128"
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-190"
           mkdir -p "$EVIDENCE"
           node - "$EVIDENCE" <<'NODE'
           const fs = require("node:fs")
@@ -212,10 +213,9 @@ jobs:
             source_sha: process.env.SF_SOURCE_SHA, source_tree: process.env.SF_SOURCE_TREE,
             compiler_wrapper_sha: process.env.GITHUB_SHA, run_id: process.env.GITHUB_RUN_ID,
             attempt: process.env.GITHUB_RUN_ATTEMPT,
-            generation_command: "cd packages/client && bun run generate",
+            generation_command: "NOT_SELECTED_PUBLIC_API_INPUTS_UNCHANGED; historical hosted patch artifact14182790522",
             generation_exit: exits["sdk-generate"] ?? null, capture_exit: exits["sdk-diff-capture"] ?? null,
-            status: exits["sdk-generate"] === 0 && exits["sdk-diff-capture"] === 0
-              ? "GENERATED_SDK_REQUIRES_162_CONSUMPTION" : "FAILED_OR_NOT_OBSERVED_NO_ACCEPTANCE",
+            status: "SDK_NOT_REGENERATED_ON_W; HISTORICAL_PATCH_ARTIFACT14182790522_UNCONSUMED",
             sources: source,
             source_to_consumer: "packages/protocol and packages/server HttpApi -> packages/client/src/contract.ts -> packages/client/script/build.ts -> packages/client/src/generated and generated-effect",
             total_files: files.length,
@@ -249,7 +249,7 @@ jobs:
       - name: Preserve unchanged epic YAML artifact provenance without rebuilding
         if: always()
         run: |
-          EVIDENCE="$RUNNER_TEMP/sf-compiler-128"
+          EVIDENCE="$RUNNER_TEMP/sf-compiler-190"
           mkdir -p "$EVIDENCE"
           printf '%s\\n' 'bundle_status=HISTORICAL_ARTIFACT_REUSE_NOT_CURRENT_PASS' \
             'source_test_ci_blob=3185885e123f9bb13c16c670e4df2fcffab38290' \
@@ -262,7 +262,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: sf-compiler-163
-          path: ${{ runner.temp }}/sf-compiler-128
+          name: sf-compiler-190-w77e-01
+          path: ${{ runner.temp }}/sf-compiler-190
           if-no-files-found: error
           retention-days: 14

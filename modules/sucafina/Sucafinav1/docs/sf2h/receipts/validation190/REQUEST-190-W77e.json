@@ -1,0 +1,128 @@
+{
+  "schema": "sf2h.compiler190.hosted-request.v1",
+  "mission": 190,
+  "epoch": "compiler-e5-browser190",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-compiler-checks",
+  "pr": 107,
+  "request_state": "DISPATCH_REQUEST_COMMIT_BEING_CREATED_NOT_PROOF_OF_RUN",
+  "source": {
+    "owner": 189,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "material_W": "77e58de895b5157b2a32e3427483bd12f40a7525",
+    "tree": "28feb531911172b68a5615e81510a00fda9cb1b8",
+    "first_batch_head": "c8329e971b42e5bf16c6d3e75433d5d08460db10",
+    "first_batch_tree": "471797cdec07d8d2700b1d6910ea497d76a5a725",
+    "source_units": [
+      173,
+      174,
+      175,
+      176,
+      177,
+      178,
+      179,
+      180,
+      181,
+      171,
+      172
+    ],
+    "accepted_batch_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/BATCH-01-CONSUMPTION.json",
+    "handoff_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/HANDOFF-190-191-BATCH-01.json",
+    "historical_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "historical_W_not_rechecked": true
+  },
+  "selection": {
+    "kind": "causal-nine",
+    "ordered": [
+      [
+        "e2e-inventory",
+        ".",
+        "node verify-e2e-typecheck.mjs --inventory"
+      ],
+      [
+        "typecheck-schema",
+        "packages/schema",
+        "bun typecheck"
+      ],
+      [
+        "typecheck-client",
+        "packages/client",
+        "bun typecheck"
+      ],
+      [
+        "typecheck-sucafina",
+        "modules/sucafina",
+        "bun typecheck"
+      ],
+      [
+        "typecheck-cli",
+        "apps/cli",
+        "bun typecheck"
+      ],
+      [
+        "sf-e2e-showConfig",
+        "packages/app-shell",
+        "bun run typecheck:sf-e2e --showConfig"
+      ],
+      [
+        "sf-e2e-listFiles",
+        "packages/app-shell",
+        "bun run typecheck:sf-e2e --listFiles --pretty false"
+      ],
+      [
+        "sf-e2e-verify",
+        ".",
+        "node verify-e2e-typecheck.mjs --config/--log (hosted actual)"
+      ],
+      [
+        "spawn-imports",
+        ".",
+        "bun run check:spawn-imports"
+      ]
+    ],
+    "excluded": {
+      "sdk_generate": "Public Protocol/Server HttpApi, contract, build/codegen inputs unchanged; exact existing 163 artifact pending 189 consumption",
+      "guards": "188 review and 185/186 skip sources not yet consumed at W; 66 historical gates kept pending",
+      "protocol_server_core_atlas_typechecks": "No relevant new producer change and previously PASS only historical W",
+      "app_typecheck": "App-shell direct producers not changed; historic app source issues require source authors",
+      "bundle": "Builder, requests, test-ci and epic input blobs unchanged; historical generated YAML remains unconsumed",
+      "product_browser": "191 exclusive"
+    }
+  },
+  "runtime": {
+    "runner": "ubuntu-24.04",
+    "bun_source": "Pinned repository .github/actions/setup-bun (read actual runner versions from resulting artifact)",
+    "historical_bun": "1.3.14",
+    "historical_node": "v24.22.2",
+    "lock_blob": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "root_package_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2"
+  },
+  "input_blobs": {
+    "packages/app-shell/tsconfig.sf-e2e.json": "93740e51cc01a84c2fd97771aa9ca5707e7e63a1",
+    "script/sf2h/final-bundle/verify-e2e-typecheck.mjs": "9f8ce79ce8a8611451ad550f8807b4fa2a33ea30",
+    ".github/workflows/test-ci.yml": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    ".github/workflows/sf2-epic.yml": "b332d777e4465469e9e4869e29f4339a95853d21",
+    "script/guards/run.ts": "24c89b6fdbce07d778d2d1520ff4680d51c8c0f3",
+    "script/spawn-allowlist.json": "532e0a09e7ca43777ec6f9792f9429bb73148348",
+    "script/sf2h/final-bundle/requests.json": "3ff28507d6ae6b874f021fb8acf5088d61442c80",
+    "packages/protocol/src/groups/sucafina.ts": "1fe0f77985758d0f5cee037db6a308934c85de0f",
+    "packages/schema/src/sucafina/context.ts": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+    "packages/client/src/contract.ts": "94f1ddd42964636fbc4b1908c47c51f24dcce226",
+    "packages/client/script/build.ts": "99ae2184b9c13f6175d7ba8e3025068bee07ee4f",
+    "tooling/httpapi-codegen/src/index.ts": "78a9b9e0521c8128d0896af8bba15ad318e30edf",
+    "apps/cli/src/sucafina-product/native-ui/live-context.ts": "03a47cf080fc5b9751dbadad272c14d17f5cfc34",
+    "apps/cli/src/sucafina-product/native-ui/work.ts": "fde98b609f88d5bdb3ca472bddc4b373092da2a6",
+    "apps/cli/src/sucafina-product/host-context.ts": "afcf56490740a9441e180ae2136674811784b3bd",
+    "packages/client/src/sucafina/transport.ts": "c9fc831156c94f062f0493a14458f84f61f7dff3",
+    "packages/client/src/sucafina/work.ts": "c6092505e5e146775615da2d131f270d681cfc97",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts": "9fc888c5ceba20ca321e90ff8bc8e64e0c3acdad"
+  },
+  "old_guard_gates": 66,
+  "old_guard_warn": 141,
+  "guard_waiver": false,
+  "goal": "paused",
+  "global_release": false,
+  "no_local_checks": true,
+  "not_a_final_C": true
+}
