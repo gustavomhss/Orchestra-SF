@@ -1,0 +1,246 @@
+{
+  "schema": "sf2h.native-positive-closure.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 199,
+  "title": "Fechar o consumo da instalação F04 e a prova desktop D01",
+  "branch": "sf-installed-host",
+  "epoch": "native-closure-e1-browser199",
+  "state": "PREPARED_NOT_STARTED",
+  "product_base": "6607c60d2a2be183d59c2e929b3ff06633e1cb54",
+  "scope_preserved": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39
+  },
+  "previous": [
+    187
+  ],
+  "write_paths": [
+    "packages/app-shell/e2e/sucafina/native/fixture/**",
+    "packages/app-shell/e2e/sucafina/native/fixture.ts",
+    "packages/app-shell/test-browser/sucafina-native/fixture/**",
+    "packages/app-shell/e2e/sucafina/native/integrated-proofs/d01/**",
+    "script/sf2h/proofs/installed/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/**"
+  ],
+  "full_canonical_proofs": [],
+  "criterion_assignments": [],
+  "actor_packs": [],
+  "full_work_orders": [
+    {
+      "id": "F04",
+      "title": "Harness instalado e corpus isolado",
+      "kind": "foundation",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "priority": 1,
+      "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+      "owns": [
+        "packages/app-shell/e2e/sucafina/native/fixture/**",
+        "packages/app-shell/e2e/sucafina/native/fixture.ts",
+        "packages/app-shell/test-browser/sucafina-native/fixture/**"
+      ],
+      "may_write_shared_registry": false,
+      "canonical": {
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "task_refs": [
+          "WP00.T03",
+          "WP10.T01",
+          "WP10.T04"
+        ],
+        "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+      },
+      "surfaces": [],
+      "exports": [
+        "nativeInstalledFixture",
+        "nativeCorpus"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "surface-specs",
+          "source": "surface-manifest.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "ui-frame",
+          "source": "component-locks.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes": {
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport",
+          "ui-frame"
+        ],
+        "producer_exports": [
+          {
+            "order": "F01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F02",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          }
+        ],
+        "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+        "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+        "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+        "operation_refs": [],
+        "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+      },
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F04.json"
+        ],
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "deliver": [
+        "Prepare installed real-domain fixture with distinct actors, server/project/install boundaries, persistent scratch roots and deterministic corpus; no global services.",
+        "Emit exact production-config registration patch to I00 and readiness probes for web/desktop.",
+        "Expose controlled response loss/delay/revocation injections around real producers; never replace financial/ACL/scanner logic with passing stubs.",
+        "Materialize isolated real-producer P0/P1 data: PR draft title and CAS, then submitted PR under current holder; denied second actor, owner transition, unknown response, no fake receipt or mock authority."
+      ],
+      "acceptance_cases": [
+        {
+          "id": "F04-AC01",
+          "expected": "Selected native specs are actually collected; real installation/mount is reachable from production shell.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "F04-AC02",
+          "expected": "Fixture preserves canonical numeric oracles, identities and budgets; every run isolates storage.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "F04-AC03",
+          "expected": "Desktop readiness is recorded separately and requires D01 before desktop pilot qualification.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [],
+        "typecheck_packages": [
+          "packages/app-shell"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "handoff": {
+        "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+        "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+        "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+      }
+    }
+  ],
+  "source_reads": [],
+  "mandatory_reads": [
+    "AGENTS aplicáveis; plano imutável dbf9547211d9b0fade619790de7c19c0869b7c7d START/WORKFLOW/executionCOMMON e o pack próprio COMPLETO/anexos indicados nas referências deste pacote.",
+    "Este pacote COMPLETO e os critérios/provas integrais acima; manter acesso aos anexos canônicos sem colar todos os packs.",
+    "Ler source real e dependências públicas existentes antes de editar, inclusive testes positivos já existentes; continuar cobertura faltante, sem novo planejamento."
+  ],
+  "predecessor_packet_urls": [
+    "https://github.com/gustavomhss/Orchestra-SF/blob/9db5efedd9eaba44735bc4371094a4cd37d384f5/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/187.json"
+  ],
+  "source_handoffs": [
+    {
+      "mission": 187,
+      "branch": "sf-ux-w05",
+      "sha": "96c01020db59d9b4f8d44300638418d67ee11fea"
+    }
+  ],
+  "actions": [
+    "Partir do produto integrado atual e consumir SOMENTE a closure F04 de187@96c01020db59d9b4f8d44300638418d67ee11fea descrita em ARTIFACT.json/HANDOFF-162.md após comparar pre/post; preservar alterações recentes da189. Não reimplementar F01/F02/auth.",
+    "Completar o driver de registro/consumo do manifesto privado para a instalação suportada existente: candidate SHA exato, contextos autenticados Microsoft distintos, provider/serverKey aprovado e rotas/ref/versões reais por seleção. Nenhum cookie/token/segredo/grant deve ir para Git, ferramentas de agente ou artefato público.",
+    "Entregar o contrato e helper consumível de CAP14(U15), CAP04/05(U39/U40) aos autores194/195, sem editar os specs deles. As admissões são revalidadas no produtor atual, nunca por nome de papel/flag/URL inventada.",
+    "Completar a preparação do teste D01 usando Electron empacotado, broker e partition reais por harness existente; teste web não satisfaz desktop. Não iniciar/reiniciar Orchestra local nem provisionar Azure/serviços globais. Hosted runner somente via191.",
+    "Entregar o código completo dos drivers/fixtures e, para recurso externo indisponível, um registro único e preciso de localização/configuração não secreta/ação suportada faltante. Terminar toda preparação possível; não alegar que script ou manifesto provam execução instalada.",
+    "A configuração compartilhada playwright.production.config.ts pertence à189: entregar patch completo inerte, não editar diretamente. Não renomear scratch.ts só para fugir do guard; preservar188 e pedir resolução causal à189/guard owner."
+  ],
+  "routing": {
+    "integrator": 189,
+    "compiler": 190,
+    "sole_ci_dispatcher": 191,
+    "fixture_owner": 199,
+    "journey_owners": [
+      194,
+      195
+    ]
+  },
+  "protected": "Todos os paths fora do allowlist, produto compartilhado/SDK gerado/CI wrappers/infra/engines/guardrules/allowlists. Patches necessários fora do escopo são completos e inertes para189.",
+  "rules": [
+    "Sessão NOVA, uma branch coerente por missão. Herdar produto integrado indicado, preservar todas as entregas existentes. Um writer por path; ler e aceitar epoch antes da escrita; GitHub MCP apenas para remoto, expected-head CAS, force:false.",
+    "As autoridades fonte anteriores listadas são transferidas para estes paths desta missão; a189 continua única integradora. Não declarar processo anterior morto ou token revogado, lifecycle browser não é exposto.",
+    "Não rodar testes/typecheck/builds/validators localmente nem dispare CI.191 é dispatcher único. Final epic e oito seleções somente no candidato aceito, sem reproduzir runs inalterados.",
+    "Entregar implementação+testes/drivers completos, não só correlator, catálogo, inventário ou plano. Reusar APIs/harnesses reais já no produto. Gerar PATCH completo para qualquer integração compartilhada em vez de escrever fora de lease.",
+    "Começar pelos casos executáveis; recurso externo indisponível bloqueia só a prova causal, não todo o trabalho. Registrar o mínimo faltante de forma não secreta. Sem novos acessos/infra/deploy ou reinício do desktop/server.",
+    "Fechar com commits remotos, PR voltada a sf2-stack, handoff compacto pre/post blobs por path, critérios/casos cobertos, validação real ou NOT_RUN, input externo exato, consumers189/191 e seus avisos. Comentário não é ACK nem acorda chat.",
+    "Registrar effective model/session quando exposto. Goal nativa permanece pausada; sem segundo supervisor/watchdog. GLOBAL_RELEASE falso até predicado completo."
+  ],
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "expected_head": "587a4a8c632a2a510c5992cac226743ddcff6caa"
+}
