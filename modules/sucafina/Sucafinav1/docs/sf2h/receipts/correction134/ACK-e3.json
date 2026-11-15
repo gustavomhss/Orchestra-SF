@@ -1,0 +1,70 @@
+{
+  "schema": "sf2h.correction-author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 134,
+  "order": "A04",
+  "seat": "W16",
+  "state": "AUTHORING_ACK_REAL",
+  "lease_epoch": "ux-native-w16-e3",
+  "previous_epoch": "ux-native-w16-e2",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES",
+  "actor": {
+    "actual_model": "GPT-6",
+    "surface": "new ChatGPT conversation/session for mission134",
+    "session_id": null,
+    "session_id_status": "not exposed by the current runtime",
+    "github_commit_actor": "authenticated GitHub connection; Git author set by provider"
+  },
+  "branch": "sf-ux-w16",
+  "pull_request": 135,
+  "observed_head": "8cc74162fe739812ba564ef3c9ed13ad208f62fe",
+  "observed_tree": "e785265fa7ab4521f63e60d314092afdf769844e",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/S0-FENCE.json",
+    "sha": "9cda74f309f78108fa338994c74f936215a7a6f6",
+    "fence_commit": "8cc74162fe739812ba564ef3c9ed13ad208f62fe",
+    "observed_old_head": "27f782f6df1ed5fa1e92bed3c692e05df884c461"
+  },
+  "read_sources": {
+    "package_sha": "93585e0aa2911cfc6324d809d033085799674784",
+    "material": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "source_contracts_preimage": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+    "decisions_preimage": "f648fe7011029920f7915ee9225b066da30be4c9",
+    "test_preimage": "c530f05ffe4afa96e4b489eda62764dbdf37d572",
+    "consumer_source_contracts_preimage": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+    "producer_business_context": "102c849084980ae52223809d33bdeea36a58536b",
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "contracts": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "finding": {
+    "source": "compiler128 native run 43738115971 job 132885115197",
+    "error": "TS1005 in decisions/source-contracts.ts:16:262",
+    "candidate_cause": "malformed closure of document.target.segment.textDigest Readonly object generic; inspect source-equivalent type before correction"
+  },
+  "write_paths": [
+    "packages/schema/src/sucafina/decisions.ts",
+    "packages/schema/src/sucafina/decisions/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/**"
+  ],
+  "authority": {
+    "integrator": 132,
+    "compiler": 128,
+    "product_ci": 129,
+    "global_release": false,
+    "goal": "paused",
+    "old_actor": "stop future writes upon reading S0 fence, no runtime termination inferred"
+  },
+  "constraints": {
+    "remote_git_only": true,
+    "git_cas": true,
+    "force": false,
+    "reset": false,
+    "merge": false,
+    "local_tests": false,
+    "dispatcher": false,
+    "deploy": false,
+    "synthetic_permissions": false
+  }
+}
