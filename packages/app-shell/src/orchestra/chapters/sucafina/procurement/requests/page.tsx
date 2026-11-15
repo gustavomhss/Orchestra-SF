@@ -10,7 +10,6 @@ import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
-import type { SfDraftState } from "../../shared/draft"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
 import { SfRequisitionForm, SfPurchaseOrderForm } from "./forms"
 import { SF_U11_REMAINING_COPY } from "./copy"
@@ -65,7 +64,7 @@ const actionKey: Record<SfRequestCommand, Key> = {
 function fieldsOf(values: SfPrEdit | SfPoEdit | undefined, kind: EditKind): readonly SfReviewField[] {
   if (!values) return []
   const fields = kind === "pr" ? PR_FIELDS : PO_FIELDS
-  return fields.filter((field) => Object.hasOwn(values, field)).map((field) => {
+  return fields.filter((field) => Object.prototype.hasOwnProperty.call(values, field)).map((field) => {
     const actual = (values as Record<string, unknown>)[field]
     return {
       path: kind + "." + field,
