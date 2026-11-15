@@ -88,7 +88,7 @@ export function createStoredPlannerScenarioHost(input: {
       if (entry.status !== "ok") { result.push(structuredClone(entry)); continue }
       const current = await observeCase(entry.value.stored, finalCases, context)
       if (current.status !== "ok") { result.push(current); continue }
-      result.push(digestSfValue(current.value.case) === entry.value.caseDigest ? { status: "ok", value: structuredClone(entry.value.value) } : { status: "stale", reason: "case-changed" })
+      result.push(digestSfValue(current.value.case) === entry.value.caseDigest ? { status: "ok", value: entry.value.value } : { status: "stale", reason: "case-changed" })
     }
     return result
   }

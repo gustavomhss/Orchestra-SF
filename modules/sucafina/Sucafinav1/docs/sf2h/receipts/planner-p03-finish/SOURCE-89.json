@@ -1,0 +1,39 @@
+{
+  "schema": "sf2h.planner-p03-finish.source-manifest.v1",
+  "mission": 89,
+  "stage": "material-first-qualification",
+  "base_branch_sha": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+  "ack_sha": "a4152b4201e83fc9985748955452e631fe61bfab",
+  "product": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "pre": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "post": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "origin": "exact producer material76 W1, 58 prior hosted selected passes, 1131 fewer digests, 11 fewer clones; not P03 closure"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "pre": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "post": "pending computed immutable blob",
+      "origin": "external candidate76; final detached private envelope; estimated 135-141ms, no P03 closure"
+    }
+  ],
+  "testFiles": [
+    "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/calculation-sources.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-cost.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts",
+    "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-probe.ts",
+    "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/stored-final-detachment.test.ts"
+  ],
+  "originalP03": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "git_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "expect_lines": 72,
+    "budget_ms": 180000,
+    "changed": false
+  },
+  "limits": "This branch does not claim to have fixed the dominant cross-owner caller/replay cost. Use targeted proof first; no identical original P03 rerun until causal improvement.",
+  "GLOBAL_RELEASE": false
+}
