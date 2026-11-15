@@ -1,0 +1,57 @@
+{
+  "schema": "sf2h.integration.reconciled-consumption.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 189,
+  "epoch": "S0-C-e21-browser189",
+  "source_mission": 161,
+  "source_sha": "1ba45ae10641aab50e8ddd8377dd8e2714b74aa4",
+  "source_leaf_blob": "0c11d6ede57c9d40bf6b1a1a5480d1efa3e7e48d",
+  "source_inert_shared_patch_blob": "34644970e6dfdf70ca5550f104326ae2d7eab346",
+  "integration_commit": "b36de3e0b3aee61c0de25ef3cc5440a48e3c307d",
+  "product_tree": "81066b53bf8f344ba6d849ea8d29876f361a2576",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "source_pre_blob": "345468efaa797288d83ec0e0ca60350c6ddd55db",
+      "consumer_pre_blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+      "source_post_blob": "0c11d6ede57c9d40bf6b1a1a5480d1efa3e7e48d",
+      "consumer_post_blob": "b22f8c528d394549475106736a96727be7277152",
+      "reconciliation": "Source 161 prepare prelude matched target exact; replaced only bounded reserveSession-to-collect preparation block, introduced optional deny-only settlement and reclaim helper; retained all other preexisting code. Did not bring older Maestro/95 branch history."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+      "consumer_pre_blob": "0502f30e054e40049df1283c00d4f5af1545f7c2",
+      "consumer_post_blob": "85c745581cc327646dadbf4df344b51409c8655e",
+      "reconciliation": "Inert 161 owner seam applied to exact preimage: terminal prevents further token receipt; transaction checks persisted matching reservation, never creates one, advances revision/preferences; failed vs cancelled CAS monotonic."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "consumer_pre_blob": "afcf56490740a9441e180ae2136674811784b3bd",
+      "consumer_post_blob": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+      "reconciliation": "Exact root-private settlePreparation callback composed with existing A12/F01 host; no original Request clone, grant, new controller or side effect other than persistent terminal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-host-provider/lifecycle.test.ts",
+      "consumer_pre_blob": null,
+      "source_post_blob": "89f6bbe2fa429be861eab0bb27777ae947f533c2",
+      "consumer_post_blob": "89f6bbe2fa429be861eab0bb27777ae947f533c2",
+      "scope": "component-only, NOT installed native runtime proof"
+    }
+  ],
+  "consumer_readback": "4_OF_4_MATCH",
+  "review": {
+    "authority": "root-private, deny-only; no new human ability or grant",
+    "persistence": "original reservation persists; never deleted/renewed; terminal transition checked under serialized transaction and owner identity; cleanup only verified matching Session",
+    "limitations": [
+      "native-host Source161 base diverged because prior Maestro/95 history is not part of C; bounded semantic transplant, not exact source file",
+      "preparation cleanup and terminal cases need hosted typecheck, code review and fault injection",
+      "review does not assert verification or full runtime proof"
+    ],
+    "evidence": "STATIC_SOURCE_REVIEW_ONLY"
+  },
+  "compiler190": "Typecheck native-host/session.remove/Effect4, evidence transaction generics, API composition with A12/F01; inspect sdk output compatibility",
+  "product191": "Real lifecycle fault injection and C08/C15 durable marker/restart tests, no fake provider",
+  "status": "MATERIAL_ONLY_NOT_HOSTED_PROVEN",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
