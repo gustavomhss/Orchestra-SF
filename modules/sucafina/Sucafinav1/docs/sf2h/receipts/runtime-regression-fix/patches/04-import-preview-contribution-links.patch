@@ -1,0 +1,38 @@
+diff --git a/modules/sucafina/Sucafinav1/product/ui/contribution-body.ts b/modules/sucafina/Sucafinav1/product/ui/contribution-body.ts
+index 42878a8eb5eb6e33c0140559e6390d537c3000f0..0000000 100644
+--- a/modules/sucafina/Sucafinav1/product/ui/contribution-body.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/contribution-body.ts
+@@ -2,17 +2,22 @@
+ import { esc } from "../../src/screen-shell.ts"
+ 
+ const list = (items: readonly string[]) => items.length ? `<ul>${items.map((item) => `<li>${esc(item)}</li>`).join("")}</ul>` : "<p>None recorded.</p>"
+-const coverage = (refs: readonly string[], state: string) => `<p>Cost coverage references</p>${list(refs)}${state === "complete" ? "" : "<p>Review the unresolved coverage with the responsible owner before treating this comparison as complete.</p>"}`
+-
+-/** Display persisted outputs without deriving financial values or granting actions. */
+-export function contributionBody(output: ContributionEnvelope): string {
+-  if (output.state !== "ready") return ""
+-  switch (output.kind) {
+-    case "IntentFrame": return `<p>${esc(output.payload.objective)} · ${esc(output.payload.horizon.start)} – ${esc(output.payload.horizon.end)} · ${esc(output.payload.currency)}</p>${output.payload.analysisBasis === "import-preview" ? "<p>Import preview; not applied.</p>" : ""}<p>Criteria</p>${list(output.payload.criteria.map((criterion) => `${criterion.description}${criterion.required ? " (required)" : ""}`))}${list(output.payload.gaps.map((gap) => gap.reason))}`
+-    case "AnalysisPlan": return `<p>${esc(output.payload.objective)}</p>${list(output.payload.steps.map((step) => step.expectedOutputTypes.join(", ")))}${list(output.payload.gaps.map((gap) => gap.reason))}`
+-    case "DecisionBrief": return `<p>${esc(output.payload.objective)}</p>${list(output.payload.conditions.map((item) => item.reason))}`
+-    case "QuestionProposal": return `<p>${esc(output.payload.question)}</p><p>${output.payload.recipientRef ? `Recipient: ${esc(output.payload.recipientRef)}` : "Recipient not selected"}</p>`
+-    case "FinancialAnalysis": return `<p>${esc(output.payload.explanation)}</p><p>Comparison: ${esc(output.payload.comparison.comparisonStatus)} · ${output.payload.comparison.comparisonStatus === "complete" ? "Difference" : "Known difference"}: ${(output.payload.comparison.comparisonStatus === "complete" ? output.payload.completeDifference : output.payload.knownDifference) ?? "Unavailable"}</p>${coverage(output.payload.comparison.costCoverageRefs, output.payload.comparison.comparisonStatus)}${output.payload.analysisBasis === "import-preview" ? "<p>Import preview; not applied.</p>" : ""}${list(output.payload.gaps)}`
++// Only the persisted, host-authorized C04 selection may supply the link. This
++// is navigation to a guarded route, never a client-side preview reconstruction.
++const importPreviewLink = (ref: string): string => typeof ref === "string" && ref.trim()
++  ? `<p><a href="/sucafina/planner?importPreviewRef=${esc(encodeURIComponent(ref))}" data-import-preview-link>View selected import preview</a></p>`
++  : ""
++const coverage = (refs: readonly string[], state: string) => `<p>Cost coverage references</p>${list(refs)}${state === "complete" ? "" : "<p>Review the unresolved coverage with the responsible owner before treating this comparison as complete.</p>"}`
++
++/** Display persisted outputs without deriving financial values or granting actions. */
++export function contributionBody(output: ContributionEnvelope): string {
++  if (output.state !== "ready") return ""
++  switch (output.kind) {
++    case "IntentFrame": return `<p>${esc(output.payload.objective)} · ${esc(output.payload.horizon.start)} – ${esc(output.payload.horizon.end)} · ${esc(output.payload.currency)}</p>${output.payload.analysisBasis === "import-preview" ? `<p>Import preview; not applied.</p>${importPreviewLink(output.payload.importPreviewRef)}` : ""}<p>Criteria</p>${list(output.payload.criteria.map((criterion) => `${criterion.description}${criterion.required ? " (required)" : ""}`))}${list(output.payload.gaps.map((gap) => gap.reason))}`
++    case "AnalysisPlan": return `<p>${esc(output.payload.objective)}</p>${list(output.payload.steps.map((step) => step.expectedOutputTypes.join(", ")))}${list(output.payload.gaps.map((gap) => gap.reason))}`
++    case "DecisionBrief": return `<p>${esc(output.payload.objective)}</p>${list(output.payload.conditions.map((item) => item.reason))}`
++    case "QuestionProposal": return `<p>${esc(output.payload.question)}</p><p>${output.payload.recipientRef ? `Recipient: ${esc(output.payload.recipientRef)}` : "Recipient not selected"}</p>`
++    case "FinancialAnalysis": return `<p>${esc(output.payload.explanation)}</p><p>Comparison: ${esc(output.payload.comparison.comparisonStatus)} · ${output.payload.comparison.comparisonStatus === "complete" ? "Difference" : "Known difference"}: ${(output.payload.comparison.comparisonStatus === "complete" ? output.payload.completeDifference : output.payload.knownDifference) ?? "Unavailable"}</p>${coverage(output.payload.comparison.costCoverageRefs, output.payload.comparison.comparisonStatus)}${output.payload.analysisBasis === "import-preview" ? `<p>Import preview; not applied.</p>${importPreviewLink(output.payload.importPreviewRef)}` : ""}${list(output.payload.gaps)}`
+     case "AlternativeDraft": {
+       const result = output.payload.proposal.result
+       return `<p>Proposal only; not applied.</p><p>${esc(output.payload.proposal.title)}</p><p>Comparison: ${esc(result.comparisonStatus)} · ${result.comparisonStatus === "complete" ? "Total" : "Known subtotal"}: ${(result.comparisonStatus === "complete" ? result.total : result.knownSubtotal) ?? "Unavailable"} ${esc(result.currency)}</p><p>${esc(result.horizon.start)} – ${esc(result.horizon.end)}</p>${coverage([output.payload.coverageRef], result.comparisonStatus)}${list(result.unresolvedConditions)}`
