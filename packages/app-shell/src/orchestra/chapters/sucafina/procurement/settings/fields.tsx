@@ -1,5 +1,5 @@
 import { For, Show, type JSX } from "solid-js"
-import { useSfPresentation, sfCommonKey } from "../../shared/frame"
+import { useSfPresentation, sfCommonKey } from "../../shared/frame/presentation"
 import type { SfCopyKey } from "../../shared/frame"
 import type { Settings } from "./model"
 
