@@ -1,0 +1,21 @@
+{
+  "package": "app",
+  "packageSelector": "packages/app",
+  "directory": "packages/app-shell",
+  "runner": "playwright",
+  "args": [
+    "e2e/sucafina/operations.spec.ts"
+  ],
+  "env": {
+    "ORCHESTRA_CHANNEL": "prod"
+  },
+  "config": "e2e/playwright.production.config.ts",
+  "operationsScanner": {
+    "campaign": "sf2h-integral-20261112",
+    "mission": 75,
+    "sourceBranch": "sf2-stack",
+    "productSha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "requestSha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+    "selection": "journeys"
+  }
+}
