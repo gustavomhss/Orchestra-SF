@@ -221,16 +221,55 @@ export function createSfNativeAuthorityProducer(input: {
     await admission(context, request, action, payload) &&
     await input.generation().catch(() => undefined) === generation &&
     !request.signal.aborted
+  /** Uses the existing C09 private preference-CAS writer, not a second Task ledger.
+   * Persist BEFORE model dispatch. A receipt without a committed origin is not evidence.
+   */
   const receiptFor = (request: Request, context: TrustedUiContext, sessionID: SessionSchema.ID, caseRef: CaseRef,
     action: "routines.admit" | "routines.run", payload: unknown, generation: number) =>
-    async (receipt: import("./token-count.ts").SfTokenCountReceipt) => {
-      // There is no C09 token receipt writer for the native Maestro yet. This callback
-      // MUST fail closed; token-gate aborts provider egress instead of treating a trace as proof.
-      void receipt
+    (receipt: SfTokenCountReceipt) => Effect.tryPromise(async () => {
+      const valid = receipt.schema === "sf-token-count-v1" &&
+        receipt.oracle === "https://api.openai.com/v1/responses/input_tokens" &&
+        !!receipt.model && /^[a-f0-9]{64}$/.test(receipt.inputDigest) &&
+        /^[a-f0-9]{64}$/.test(receipt.requestDigest) &&
+        Number.isSafeInteger(receipt.inputTokens) && receipt.inputTokens >= 0 &&
+        Number.isSafeInteger(receipt.maxOutputTokens) && receipt.maxOutputTokens > 0 &&
+        receipt.contextBudgetTokens === input.policy.contextBudgetTokens &&
+        receipt.inputTokens + receipt.maxOutputTokens <= receipt.contextBudgetTokens
+      if (!valid || !await tokensCurrent(context, request, sessionID, caseRef, action, payload, generation))
+        throw new Error("SF_NATIVE_MAESTRO_RECEIPT_INVALID")
+      const before = await input.authority.state.read(request, "preferences", () => null)
+      if (before.status !== "ok") throw new Error("SF_NATIVE_MAESTRO_RECEIPT_STORAGE_UNAVAILABLE")
+      const attemptId = randomUUID()
+      const work = async (state: SfProductState, actor: SfStateAuthority) => {
+        const raw = object(state.preferences[keyOf(sessionID)])
+        const row = state.cases[caseRef.id]
+        const old = Array.isArray(raw.tokenReceipts) ? raw.tokenReceipts : []
+        if (raw.schema !== "sf-native-maestro-origin-v1" || raw.sessionID !== sessionID ||
+          raw.principalRef !== actor.principalRef || raw.accessRevision !== actor.accessRevision ||
+          raw.policyVersion !== actor.policyVersion || raw.scopeDigest !== digestSfValue(scope) ||
+          digestSfValue(raw.caseRef) !== digestSfValue(caseRef) ||
+          !row || row.incarnation !== caseRef.incarnation || row.version !== caseRef.version ||
+          !row.participants.includes(actor.principalRef) || !Array.isArray(raw.tokenReceipts) ||
+          old.length >= 128)
+          throw new Error("SF_NATIVE_MAESTRO_RECEIPT_ORIGIN_CHANGED")
+        state.preferences[keyOf(sessionID)] = { ...raw,
+          tokenReceipts: [...old, { attemptId, generation, receipt }] }
+        return { commit: true, value: true }
+      }
+      input.authority.nativeEvidenceWrites.add(work)
+      try {
+        const result = await input.authority.state.transaction(request, {
+          namespace: "preferences", expectedStorageVersion: before.storageVersion,
+          targetRef: encodeCaseRef(caseRef), targetIncarnation: caseRef.incarnation,
+          idempotencyKey: "native-maestro-token:" + sessionID + ":" + attemptId,
+          commandDigest: digestSfValue({ sessionID, attemptId, generation, receipt }),
+        }, work)
+        if (result.status !== "ok" || result.value !== true)
+          throw new Error("SF_NATIVE_MAESTRO_RECEIPT_NOT_DURABLE")
+      } finally { input.authority.nativeEvidenceWrites.delete(work) }
       if (!await tokensCurrent(context, request, sessionID, caseRef, action, payload, generation))
         throw new Error("SF_NATIVE_MAESTRO_RECEIPT_AUTHORITY_CHANGED")
-      throw new Error("SF_NATIVE_MAESTRO_TOKEN_RECEIPT_DURABLE_WRITER_UNAVAILABLE")
-    }
+    })
   const admit = async (request: Request, value: Readonly<{ caseRef: CaseRef; objective: string }>): Promise<PortResult<{ sessionID: SessionSchema.ID }>> => {
     if (!ready() || acquiring.has(request) || !value?.objective?.trim() || value.objective.length > 30_000 ||
       !validCase(value.caseRef)) return { status: "denied", reason: "native-maestro-start-unavailable" }
@@ -265,9 +304,11 @@ export function createSfNativeAuthorityProducer(input: {
           return ids.length === 1 && await tokensCurrent(context!, request, ids[0]!, value.caseRef,
             "routines.admit", value, generation)
         }),
-        persistReceipt: async () => {
-          throw new Error("SF_NATIVE_MAESTRO_TOKEN_RECEIPT_UNAVAILABLE")
-        },
+        persistReceipt: (receipt) => Effect.suspend(() => {
+          const ids = [...pending.keys()]
+          if (ids.length !== 1) return Effect.fail(new Error("SF_NATIVE_MAESTRO_SESSION_UNAVAILABLE"))
+          return receiptFor(request, context!, ids[0]!, value.caseRef, "routines.admit", value, generation)(receipt)
+        }),
       }
       const result = await Effect.runPromise(host.admitMaestro(plan), { signal: request.signal }).catch(() => undefined)
       if (result?.status !== "ok") return result ?? { status: "unavailable", reason: "native-maestro-admission-failed" }
@@ -325,7 +366,7 @@ export function createSfNativeAuthorityProducer(input: {
         revalidate: () => Effect.tryPromise(async () =>
           !signal.aborted && await tokensCurrent(context!, request, value.sessionID, value.intent.caseRef,
             "routines.run", value.intent, generation)),
-        persistReceipt: () => Effect.fail(new Error("SF_NATIVE_MAESTRO_TOKEN_RECEIPT_UNAVAILABLE")),
+        persistReceipt: receiptFor(request, context, value.sessionID, value.intent.caseRef, "routines.run", value.intent, generation),
       }), { signal: request.signal }).catch(() => undefined)
       if (bound?.status !== "ok") return { status: "denied", reason: "native-maestro-rebind-or-budget-unavailable" }
       active.set(value.sessionID, { request, close: release })
