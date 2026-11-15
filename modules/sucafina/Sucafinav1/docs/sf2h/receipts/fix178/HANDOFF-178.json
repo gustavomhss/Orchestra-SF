@@ -1,0 +1,170 @@
+{
+  "schema": "sf2h.native-fix178.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 178,
+  "order": "A10",
+  "epoch": "native-fix-e1-browser178",
+  "branch": "sf-ux-a10",
+  "pr": 138,
+  "base_branch": "sf2-stack",
+  "actor": "ChatGPT / GPT-6 (GitHub connector)",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "status": "ARTIFACT_READY_SOURCE_ONLY",
+  "evidence_status": "POSTPATCH_NOT_RUN",
+  "native_goal": "paused",
+  "global_release": false,
+  "fence": {
+    "state": "CONFIRMED",
+    "previous_epoch": "ux-native-a10-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "fence_blob": "da24e2b67a86106097dec95783c8edfd7fa4d1fc"
+  },
+  "upstream": {
+    "initial_head": "e7a8296ee2afadd94c6b875fe5c263351ee60062",
+    "initial_tree": "bf32e880aee994331d42b3b1e37780bfa75e4629",
+    "ack_commit": "ee6060013a317f58f1e581115090a3e7223d3523",
+    "ack_blob": "b54ac75888ebce9fbcd9837ece5d170eab3eee7b",
+    "code_commit": "3e5a2358d72b0b96127fbd7e00c3107160592755",
+    "code_tree": "60561cdffca058060779dbd21d71cbeebaadc6ec",
+    "test_commit": "5f6c19844799bbc6915c2521b44a13f42f2dfa97",
+    "tree_after_test": "488e6653a709f5498c4cb3150e4650ee98f1c0fb",
+    "full_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/PATCH-178.diff",
+    "full_patch_blob": "e7b15084f1e99dc9002ba0a9818b34b980679db0",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/people.ts",
+        "pre_blob": "6b76597dadb57f5530348059ef79b04e324712dc",
+        "post_blob": "239fd5a86aa541dd6990c9d870148d5753d72dbb",
+        "commit": "3e5a2358d72b0b96127fbd7e00c3107160592755"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts",
+        "pre_blob": "7df1e268540e6f3ab1c79b2961fcb7def12966a8",
+        "post_blob": "0f5d05fba397355585e8a96013387f146f4208f5",
+        "commit": "5f6c19844799bbc6915c2521b44a13f42f2dfa97"
+      }
+    ]
+  },
+  "consumer": {
+    "sole_owner": 162,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "observed_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "original_failure_w": "690a34cdd81c12d7311f3717c19679b950276161",
+    "original_failure_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "pre_blobs": {
+      "apps/cli/src/sucafina-product/native-ui/people.ts": "6b76597dadb57f5530348059ef79b04e324712dc",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts": "7df1e268540e6f3ab1c79b2961fcb7def12966a8"
+    },
+    "post_head": null,
+    "post_tree": null,
+    "post_blobs": null,
+    "state": "PENDING_EXACT_BLOB_CONSUMPTION_BY_162",
+    "shared_seam": "NO_SHARED_SEAM_CHANGES; if consumer drift discovered, reconcile source-only code with actual prior state without overwriting author changes"
+  },
+  "producer_pins": {
+    "people_domain": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+    "contract_runtime": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+    "people_schema": "6e462e00f39d7ca866ca76fd88582b98a2415f92",
+    "people_client": "57278f55bb2b36a69c93653c54bb7b8129b1e41f",
+    "public_state": "97d5062f42def4199cb16c1ae4502fdd982da68c",
+    "source_application": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "consumer_router": "17db52d914ca49934953e1161461b03856eb29c5",
+    "frozen_host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "frozen_execution_protocol": "0151a8e6cbb0da2118e058142af801ba7cf72094"
+  },
+  "findings": {
+    "compiler": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "source_w": "690a34cdd81c12d7311f3717c19679b950276161",
+      "results_blob": "157ffdabe6002e7013782465868a1f0663090243",
+      "people_diagnostics": 26,
+      "conclusion": "FAIL_BEFORE_PATCH"
+    },
+    "categories": [
+      {
+        "cause": "TS2339 projection inferred id-only rows and dropped status/start/end/type/cls/name/leaderId",
+        "resolution": "Read actual producer and decode exact whitelisted rows with closed SfPeopleTopic/SfPeopleLeader/SfPeopleMember/SfPeopleCio schemas; typed generic projectRows; numeric leaderId 0 retained.",
+        "status": "ADDRESSED_SOURCE_PENDING_163"
+      },
+      {
+        "cause": "TS18048 data.hotTopics/leaders/members possibly undefined",
+        "resolution": "Return explicit discriminated structural union of four canonical SfPeoplePageData schema Types; versions logic narrows using property guards.",
+        "status": "ADDRESSED_SOURCE_PENDING_163"
+      },
+      {
+        "cause": "TS2345 persistence.transaction callback inferred only denied",
+        "resolution": "Provide actual transaction<SfPeoplePageOutcome> generic with denied|ok discriminants, real fields and no cast.",
+        "status": "ADDRESSED_SOURCE_PENDING_163"
+      },
+      {
+        "cause": "TS18046 outcome unknown",
+        "resolution": "Same tagged SfPeoplePageOutcome makes outcome.kind deny/ok narrow and preserves owner/auth/cas fences.",
+        "status": "ADDRESSED_SOURCE_PENDING_163"
+      }
+    ],
+    "browser": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "findings_blob": "c185d38925d8bb013e05362d34bdc5a1c473ffd2",
+      "scope": "F03/S01/S02/S05; not A10",
+      "conclusion": "FAIL_OTHER_WORK_NOT_PROOF"
+    }
+  },
+  "acceptance": {
+    "A10-AC01": {
+      "status": "SOURCE_READY_NOT_RUN",
+      "resolution": "Source producer whitelists and closed decode preserve optional fields, numeric 0 leaderId, omit private Talent for nonadmin; visible-only versions include CAS 0; no fake zero/empty/grant."
+    },
+    "A10-AC02": {
+      "status": "SOURCE_READY_NOT_RUN",
+      "resolution": "Existing 15 SfPeople closed operation IDs and client excess property rejection unchanged; decoder now rejects invalid source field enums/types, added 2 negative assertions in existing malformed-source test."
+    },
+    "A10-AC03": {
+      "status": "SOURCE_READY_NOT_RUN",
+      "resolution": "Same original Request, roleMap admission, page visibility, context recheck, owner stamp, versionFence and fresh transaction unchanged. No retry or mutation introduced."
+    }
+  },
+  "hosted_proof": {
+    "postpatch_typecheck": "NOT_RUN_BY_ORDER_163_ONLY",
+    "postpatch_product_tests": "NOT_RUN_BY_ORDER_164_ONLY",
+    "postpatch_sdk": "NOT_RUN_BY_ORDER_163_ONLY",
+    "postpatch_guards": "NOT_RUN_BY_ORDER_163_ONLY",
+    "postpatch_browser": "NOT_RUN_BY_ORDER_164_ONLY",
+    "new_material_w": null,
+    "global_qualification": "NOT_RUN"
+  },
+  "handoff": {
+    "162": {
+      "pr": 65,
+      "required": "Consume exact two source post_blobs after comparing live consumer preimages; retain current shared seam; no wholesale merge; record new consumer commit/tree/path blobs and source ACK, then expose new material W for 163 and 164."
+    },
+    "163": {
+      "pr": 107,
+      "required": "After 162 actual postimage/new material W, dedup previous failed input W690; run existing hosted compiler selection with bun typecheck in apps/cli and affected packages/schema, packages/client, plus SDK/guards according to authorized existing compiler request; publish error lines and actual blobs. Never direct local typecheck or modify generated outputs in source branch."
+    },
+    "164": {
+      "pr": 106,
+      "required": "After 162 actual postimage/new W and required readiness, dedup run input, run hosted surgical existing modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts via existing Bun test-ci single dispatcher, broaden only for actual affected consumers, retain original assertions/fixtures/timeouts; publish test job and material SHA. Browser run43766970018 is not People proof."
+    }
+  },
+  "no_actions": [
+    "NO_LOCAL_TEST",
+    "NO_LOCAL_TYPECHECK",
+    "NO_LOCAL_PARSER",
+    "NO_LOCAL_BUILD",
+    "NO_DISPATCH",
+    "NO_FORCE_PUSH",
+    "NO_RESET",
+    "NO_NEW_BRANCH",
+    "NO_DEV_MERGE",
+    "NO_DEPLOY",
+    "NO_AZURE",
+    "NO_ENGINE_CHANGE",
+    "NO_GLOBAL_RELEASE"
+  ],
+  "terminal": "WRITE_COMPLETE_ACK+SOURCE_PATCH+TEST_PATCH+FULL_INERT_DIFF; awaiting 162 integration and 163/164 qualification. Source lease transfers for subsequent work only on explicit new epoch/owner."
+}
