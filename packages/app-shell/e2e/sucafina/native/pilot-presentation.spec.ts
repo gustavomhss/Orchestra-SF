@@ -161,7 +161,7 @@ test("Q02-P0P1-P1-WEB — holder reviews real submitted PR, amount/version and a
   await openPilotRecord(page, target.shellOrigin, pilot.approvals, pilot.p1)
   // P1 is NOT title-save: it needs a submitted PR, real holder and original amount.
   await expect(page.getByRole("main")).toContainText(pilot.p1)
-  await expect(page.getByRole("main")).toContainText(/32,000|32\\.000|32000/)
+  await expect(page.getByRole("main")).toContainText(/32,000|32\.000|32000/)
   const review = page.getByRole("button", { name: /Review decision|Revisar decisão/ })
   await expect(review).toBeEnabled()
   await review.click()
