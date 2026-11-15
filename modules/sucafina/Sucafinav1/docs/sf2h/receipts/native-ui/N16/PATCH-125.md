@@ -25,6 +25,6 @@ import { SfPerformanceView } from "@/orchestra/chapters/sucafina/operations/perf
 
 ## Selective integration / divergence
 
-A branch autora iniciou em `526e7204b310756e552196bbf3d64037dbbf047c`, HEAD produto `7ac5d020914ddeb73b6c3071f79b792490616ae9`. A base atual `sf2-stack` divergiu, e contém mudanças anteriores incompatíveis com merge integral sem reconciliação. Não mesclar a PR inteira sem a composição/patch selection por125. A única autoria nova são os 14 arquivos em `SOURCE-POSTIMAGES-e1.json` mais receipts N16.
+A branch autora iniciou em `526e7204b310756e552196bbf3d64037dbbf047c`, HEAD produto `3d0a76d1767a59f519e5fb189954e015dbc1a0d4`. A base atual `sf2-stack` divergiu, e contém mudanças anteriores incompatíveis com merge integral sem reconciliação. Não mesclar a PR inteira sem a composição/patch selection por125. A única autoria nova são os 14 arquivos em `SOURCE-POSTIMAGES-e1.json` mais receipts N16.
 
 Gate: 120 roda hosted E2E instalado, 119 compiler e guardas só após 125 compor o mesmo C. `sf2-stack`, `dev`, deploy, Goal ficam fora da autoridade N16.

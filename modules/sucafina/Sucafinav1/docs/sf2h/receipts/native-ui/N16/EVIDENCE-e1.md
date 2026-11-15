@@ -1,6 +1,6 @@
 # N16 U28/U30/U31 — Critérios/evidência (autoria, não qualificação)
 
-Source pin C60: `af479f68c22ef1d1e9ac100a81a820f8b0273338`. Head de produto `7ac5d020914ddeb73b6c3071f79b792490616ae9`. Lease `ux-native-n16-e1`.
+Source pin C60: `af479f68c22ef1d1e9ac100a81a820f8b0273338`. Head de produto `3d0a76d1767a59f519e5fb189954e015dbc1a0d4`. Lease `ux-native-n16-e1`.
 
 | Critério | Evidência de produto | Estado de prova |
 |---|---|---|
@@ -23,3 +23,7 @@ Source pin C60: `af479f68c22ef1d1e9ac100a81a820f8b0273338`. Head de produto `7ac
 5. O PR contra sf2-stack inclui overlay anterior da campanha no diff; 125 faz cherry-pick/integração seletiva por blobs em SOURCE-POSTIMAGES, não merge cego.
 
 **Resultado honesto:** ARTIFACT_READY somente para autoria. NOT_RUN: compiler, lint, E2E, host, screenshots/reflow, CI. Não é aprovação nem global release.
+
+## Cold review de paridade do produtor
+
+N16 preservou `ownerId`, `leaderId`, `role`, `actions`, `color`, `description`, `statusQ1..Q4` e `q1..q4/target` com semântica escalar de origem na edição. Edição de novos riscos requer os fatores e status antes de enviar; host/CI permanecem NOT_RUN.

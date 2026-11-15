@@ -1,6 +1,6 @@
 # N16 → 125: terminal handoff de autoria
 
-**ARTIFACT_READY, integração não autorizada a N16.** Origem `526e7204b310756e552196bbf3d64037dbbf047c`, postimage HEAD `7ac5d020914ddeb73b6c3071f79b792490616ae9`; owner/epoch `ux-native-n16-e1`.
+**ARTIFACT_READY, integração não autorizada a N16.** Origem `526e7204b310756e552196bbf3d64037dbbf047c`, postimage HEAD `3d0a76d1767a59f519e5fb189954e015dbc1a0d4`; owner/epoch `ux-native-n16-e1`.
 
 Entrega: U28 `SfLocalAdministrationView` (UI69), U30 `SfRisksView` e `SfStakeholdersView` (CAP13/15), U31 `SfPerformanceView` (CAP16), 3 folhas i18n EN/BR, CSS, 3 specs hosted, além de drafts/reviews em folhas exclusivas. A01 typed client e F01 atual, sem stubs/POST paralelo.
 
@@ -12,4 +12,8 @@ Entrega: U28 `SfLocalAdministrationView` (UI69), U30 `SfRisksView` e `SfStakehol
 - A diferença PR vs sf2-stack inclui material herdado, não autoria N16. **NÃO MERGE DIRETO**, seleção controlada dos commits/paths. Nenhuma alteração em protected_paths/compartilhados por N16.
 - Sem testes locais, resets, force, branch estrangeira, deploy, merge dev ou reativação da Goal. PR para revisão, sem autorização para release.
 
-PR N16: verificar lista de PR abertas após publicação do receipt; 125 recebe links e objetos remotos da mesma branch.
+PR N16 entregue: https://github.com/gustavomhss/Orchestra-SF/pull/166 (DRAFT; NÃO MERGE DIRETO). Notificação explícita à integradora: https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6898443369.
+
+## Cold review final C60/A01
+
+Campos adicionais preservados: riscos ownerId/leaderId, stakeholders role/actions, CAP16 color/description/statusQ1..Q4 e q1..q4/target com escalares de origem, papéis owner/coowner. Risco exige seleção de impacto/probabilidade/status. Logs de erro não imprimem objetos potencialmente privados. Autor não executou testes nem compilador.
