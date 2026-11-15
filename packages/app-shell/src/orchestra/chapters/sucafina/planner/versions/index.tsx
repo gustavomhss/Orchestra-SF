@@ -158,8 +158,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
   }
   const begin = (action: CommandAction, version: PlannerVersion | null, first = false) => {
     if (!allowed(version, action, first)) return
-    if (action === "save" && !first && screen.draft?.snapshot().availability === "active" &&
-      !screen.draft.snapshot().dirty) return
+    if (action === "save" && !first && screen.draft?.snapshot().dirty !== true) return
     const revision = first ? page()?.versions["versions:first"]?.version ?? 0
       : version && currentCas(version, action)
     if (revision === undefined) return
@@ -314,6 +313,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
           created.id !== verified.versionId && created.year === reviewed?.version?.year &&
           (!reviewed?.copyNameProvided || created.name === reviewed?.proposed.name)
       : verified.action === "official" ? !!projected?.official && projected.locked &&
+          current.versions["officials:" + projected.year]?.version !== undefined &&
           current.versions["officials:" + projected.year]?.version !== verified.expected
       : verified.action === "lock" ? !!projected?.locked && revision !== undefined && revision !== verified.expected
       : verified.action === "unlock" ? !!projected && !projected.locked &&
@@ -451,8 +451,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
           </div>,
         }]}
         primaryAction={{
-          id: "save", labelKey: key("sf.u46.save"), tone: "primary", disabled: !editable ||
-            screen.draft?.snapshot().availability !== "active" || !screen.draft.snapshot().dirty,
+          id: "save", labelKey: key("sf.u46.save"), tone: "primary", disabled: !editable || screen.draft?.snapshot().dirty !== true,
           busy: screen.busy, onInvoke: () => begin("save", item),
         }}
         secondaryActions={actions.filter((item) => item.tone !== "danger")}

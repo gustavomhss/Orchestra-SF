@@ -122,3 +122,64 @@ test("U46 — comparison is read-only and refuses a cross-year default", async (
     body: await page.screenshot({ fullPage: true }), contentType: "image/png",
   })
 })
+
+test("U46 — an empty installed planner can review its first version without dispatch", async ({ page, nativeHarness }) => {
+  test.setTimeout(180_000)
+  const target = nativeHarness.manifest.target
+  await page.goto(new URL(target.chapterHref, target.shellOrigin).toString())
+  await nativeHarness.proveWeb(page.locator('[data-sf-frame="page"]'))
+  const requestUrl = new URL(href(target, "versions"))
+  requestUrl.pathname += "/new"
+  const writes: string[] = []
+  page.on("request", (request) => {
+    if (request.method() === "POST" && new URL(request.url()).pathname === target.mount + "/planner")
+      writes.push(request.url())
+  })
+  await page.goto(requestUrl.toString())
+  const surface = page.locator('[data-sf-surface="CAP23"]')
+  await expect(surface).toBeVisible()
+  const first = surface.getByRole("button", { name: /Create first version/i })
+  test.skip(await first.count() === 0, "Requires an authorized real installation with zero planner versions")
+  await expect(first).toBeEnabled()
+  await first.click()
+  const review = surface.locator('[data-component="sf-change-review"]')
+  await expect(review).toBeVisible()
+  await expect(review.getByRole("button", { name: /Confirm/i })).toBeEnabled()
+  expect(writes).toEqual([])
+  await review.getByRole("button", { name: /Cancel review|Cancelar revisão/ }).click()
+  expect(writes).toEqual([])
+})
+
+test("U46 — comparison controls reflow at 320 CSSpx and 200% text without a command", async ({ page, nativeHarness }, info) => {
+  test.setTimeout(180_000)
+  const target = nativeHarness.manifest.target
+  await page.goto(new URL(target.chapterHref, target.shellOrigin).toString())
+  await nativeHarness.proveWeb(page.locator('[data-sf-frame="page"]'))
+  const writes: string[] = []
+  page.on("request", (request) => {
+    if (request.method() === "POST" && new URL(request.url()).pathname === target.mount + "/planner")
+      writes.push(request.url())
+  })
+  await page.goto(href(target, "compare"))
+  const surface = page.locator('[data-sf-surface="CAP23-compare"]')
+  await expect(surface).toBeVisible()
+  const source = surface.locator("#sf-u46-base")
+  const candidate = surface.locator("#sf-u46-candidate")
+  for (const width of [320, 768, 1024, 1280, 1440]) {
+    await page.setViewportSize({ width, height: 850 })
+    await expect(source).toBeVisible()
+    await expect(candidate).toBeVisible()
+    await expect.poll(async () => surface.evaluate((element) =>
+      element.scrollWidth <= element.clientWidth), {
+      message: "Comparison content reflows; wide monthly tables scroll in their own container",
+    }).toBe(true)
+  }
+  await page.evaluate(() => { document.documentElement.style.fontSize = "200%" })
+  await page.setViewportSize({ width: 320, height: 800 })
+  await expect.poll(async () => surface.evaluate((element) =>
+    element.scrollWidth <= element.clientWidth)).toBe(true)
+  expect(writes).toEqual([])
+  await info.attach("u46-installed-comparison-200pct.png", {
+    body: await page.screenshot({ fullPage: true }), contentType: "image/png",
+  })
+})
