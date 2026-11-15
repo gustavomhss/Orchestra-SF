@@ -133,4 +133,11 @@ describe("A01 domain source projection — source-boundary qualification", () =>
     expect(JSON.stringify(projectSfDomainVersions("CAP14", versions))).not.toContain("principal")
     expect(JSON.stringify(projectSfDomainVersions("CAP14", versions))).not.toContain("bank")
   })
+  test("malformed authorized source collections are unavailable, never synthetic empty successes", () => {
+    expect(() => projectSfDomainData("CAP10", { projects: [null] }, 2026)).toThrow("Malformed authorized source collection")
+    expect(() => projectSfDomainData("CAP14", { contracts: "invalid" }, 2026)).toThrow("Malformed authorized source collection")
+    expect(() => projectSfDomainData("CAP16", { itperf: { items: [false] } }, 2026)).toThrow("Malformed authorized source collection")
+    expect(() => projectSfDomainData("CAP04", { budgetLineIds: "not-an-array" }, 2026)).toThrow("Malformed authorized budget line scope")
+    expect(projectSfDomainData("CAP10", { projects: [] }, 2026)).toEqual({ projects: [] })
+  })
 })

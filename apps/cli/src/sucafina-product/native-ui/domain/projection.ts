@@ -1,6 +1,6 @@
 import { computeBudgetTotals } from "../../../../../../modules/sucafina/Sucafinav1/src/dashboard-accounts.ts"
 import type { BudgetData } from "../../../../../../modules/sucafina/Sucafinav1/src/dashboard-accounts.ts"
-import { object, rows } from "../../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
+import { rows } from "../../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
 
 /** Server-only projection: public fieldsets returned by the pinned Domain.view producers. */
 export const SF_DOMAIN_PAGES = {
@@ -32,25 +32,35 @@ const signalFields = ["id", "page", "recordId", "fact", "rule", "date"] as const
 const budgetVersionKeys = ["opexOwners", "opexEntries", "capexProjects", "capexEntries", "budgetYtd", "budgetCurrentMonth", "revenueByYear", "itUsersMonthly", "costPerUserBenchmarks", "deviations"] as const
 
 const has = (value: Record<string, unknown>, key: string): boolean => Object.hasOwn(value, key)
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  value !== null && typeof value === "object" && !Array.isArray(value)
+const isRecordList = (value: unknown): value is Record<string, unknown>[] =>
+  Array.isArray(value) && value.every(isRecord)
+const requiredRecord = (value: unknown): Record<string, unknown> => {
+  if (!isRecord(value)) throw new Error("Malformed authorized source object")
+  return value
+}
 const pick = (source: Record<string, unknown>, keys: readonly string[]) =>
   Object.fromEntries(keys.filter((key) => has(source, key)).map((key) => [key, source[key]]))
 
-const projectRows = (value: unknown, keys: readonly string[]) =>
-  rows(value).map((row) => pick(row, keys))
+const projectRows = (value: unknown, keys: readonly string[]) => {
+  if (!isRecordList(value)) throw new Error("Malformed authorized source collection")
+  return rows(value).map((row) => pick(row, keys))
+}
 
 function sanitizedFinance(source: Record<string, unknown>): BudgetData | undefined {
-  if (!["opexOwners", "opexEntries", "capexProjects", "capexEntries"].every((key) => Array.isArray(source[key]))) return undefined
+  if (!["opexOwners", "opexEntries", "capexProjects", "capexEntries"].every((key) => isRecordList(source[key]))) return undefined
   const owners = (value: unknown) => rows(value).map((row) => {
     const id = row.id
     const budget = row.budget
     if (typeof id !== "string" && typeof id !== "number") return undefined
-    if (budget !== undefined && (typeof budget !== "number" || !Number.isFinite(budget))) return undefined
-    return { id, ...(budget !== undefined ? { budget } : {}) }
+    if (budget !== undefined && budget !== null && (typeof budget !== "number" || !Number.isFinite(budget))) return undefined
+    return { id, ...(typeof budget === "number" ? { budget } : {}) }
   })
   const entries = (value: unknown) => rows(value).map((row) => {
     if (typeof row.year !== "number" || !Number.isInteger(row.year) || typeof row.month !== "number" || !Number.isInteger(row.month)) return undefined
     const amountFields = ["budget", "actual", "forecast"] as const
-    if (amountFields.some((field) => row[field] !== undefined && (typeof row[field] !== "number" || !Number.isFinite(row[field])))) return undefined
+    if (amountFields.some((field) => row[field] !== undefined && row[field] !== null && (typeof row[field] !== "number" || !Number.isFinite(row[field])))) return undefined
     return {
       year: Number(row.year), month: Number(row.month),
       ...(typeof row.ownerId === "string" || typeof row.ownerId === "number" ? { ownerId: row.ownerId } : {}),
@@ -81,16 +91,16 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
     if (budget) data.totals = computeBudgetTotals(budget, year)
   }
   if (cap === "CAP01") {
-    if (has(source, "executive")) data.executive = pick(object(source.executive), executiveFields)
+    if (has(source, "executive")) data.executive = pick(requiredRecord(source.executive), executiveFields)
     for (const field of ["executiveByYear", "executiveMonths", "opsDefaultMonth"] as const) {
       if (!has(source, field)) continue
-      const values = object(source[field])
+      const values = requiredRecord(source[field])
       data[field] = field === "executiveByYear"
-        ? Object.fromEntries(Object.entries(values).map(([key, val]) => [key, pick(object(val), executiveFields)]))
+        ? Object.fromEntries(Object.entries(values).map(([key, val]) => [key, pick(requiredRecord(val), executiveFields)]))
         : field === "executiveMonths"
           ? Object.fromEntries(Object.entries(values).map(([key, val]) => [key, {
-              ...pick(object(val), executiveMonthFields),
-              ...(has(object(val), "kpis") ? { kpis: projectRows(object(val).kpis, ["key", "value", "status", "sourceYear", "sourceMonth"]) } : {}),
+              ...pick(requiredRecord(val), executiveMonthFields),
+              ...(has(requiredRecord(val), "kpis") ? { kpis: projectRows(requiredRecord(val).kpis, ["key", "value", "status", "sourceYear", "sourceMonth"]) } : {}),
             }]))
           : Object.fromEntries(Object.entries(values).filter(([, val]) => Number.isInteger(val)))
     }
@@ -99,8 +109,8 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
     if (has(source, "signals")) data.signals = projectRows(source.signals, signalFields)
   }
   if (cap === "CAP03") {
-    if (has(source, "budgetCurrentMonth")) data.budgetCurrentMonth = object(source.budgetCurrentMonth)
-    if (has(source, "revenueByYear")) data.revenueByYear = object(source.revenueByYear)
+    if (has(source, "budgetCurrentMonth")) data.budgetCurrentMonth = requiredRecord(source.budgetCurrentMonth)
+    if (has(source, "revenueByYear")) data.revenueByYear = requiredRecord(source.revenueByYear)
   }
   if (cap === "CAP04" || cap === "CAP05") {
     const own = cap === "CAP04" ? "opex" : "capex"
@@ -108,17 +118,19 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
     const entries = cap === "CAP04" ? "opexEntries" : "capexEntries"
     if (has(source, owners)) data[owners] = projectRows(source[owners], budgetOwnerFields)
     if (has(source, entries)) data[entries] = projectRows(source[entries], budgetEntryFields)
-    if (has(source, "budgetLineIds") && Array.isArray(source.budgetLineIds)) data.budgetLineIds =
-      source.budgetLineIds.filter((line): line is string =>
-        typeof line === "string" && line.startsWith(`${owners}:`))
+    if (has(source, "budgetLineIds")) {
+      if (!Array.isArray(source.budgetLineIds) || !source.budgetLineIds.every((line) => typeof line === "string"))
+        throw new Error("Malformed authorized budget line scope")
+      data.budgetLineIds = source.budgetLineIds.filter((line): line is string => line.startsWith(`${owners}:`))
+    }
     if (has(source, "deviations")) data.deviations = Object.fromEntries(
-      Object.entries(object(source.deviations)).filter(([key]) => key.startsWith(`${own}-`))
-        .map(([key, value]) => [key, pick(object(value), ["flag", "text"])]),
+      Object.entries(requiredRecord(source.deviations)).filter(([key]) => key.startsWith(`${own}-`))
+        .map(([key, value]) => [key, pick(requiredRecord(value), ["flag", "text"])]),
     )
-    if (has(source, "budgetYtd") && has(object(source.budgetYtd), own))
+    if (has(source, "budgetYtd") && has(requiredRecord(source.budgetYtd), own))
       data.budgetYtd = { [own]: Object.fromEntries(
-        Object.entries(object(object(source.budgetYtd)[own]))
-          .map(([key, value]) => [key, pick(object(value), ["amount", "months", "perMonth", "at"])]),
+        Object.entries(requiredRecord(requiredRecord(source.budgetYtd)[own]))
+          .map(([key, value]) => [key, pick(requiredRecord(value), ["amount", "months", "perMonth", "at"])]),
       ) }
   }
   return data
@@ -149,7 +161,7 @@ function publicPortfolio(source: Record<string, unknown>, cap: SfDomainCapabilit
   }
   if (cap === "CAP16") {
     if (!has(source, "itperf")) return undefined
-    const performance = object(source.itperf)
+    const performance = requiredRecord(source.itperf)
     return { itperf: {
       ...pick(performance, ["name", "year"]),
       ...(has(performance, "items") ? { items: rows(performance.items).map((item) => ({
