@@ -1,0 +1,16 @@
+.sf-bi-figure { display: grid; gap: 1rem; min-inline-size: 0; }
+.sf-bi-series { min-inline-size: 0; margin: 0; border: 1px solid var(--border, currentColor); border-radius: .5rem; padding: clamp(.5rem, 1.5vw, 1rem); }
+.sf-bi-series figcaption { display: flex; align-items: baseline; flex-wrap: wrap; gap: .5rem 1.25rem; overflow-wrap: anywhere; }
+.sf-bi-unit { font-size: .85em; opacity: .8; }
+.sf-bi-svg { inline-size: 100%; block-size: auto; max-block-size: 38rem; overflow: visible; }
+.sf-bi-axis-label, .sf-bi-axis-value { font-size: 12px; fill: currentColor; }
+.sf-bi-axis-value { font-variant-numeric: tabular-nums; }
+.sf-bi-source-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-start: .5rem; }
+.sf-bi-source-actions button { max-inline-size: 100%; white-space: normal; overflow-wrap: anywhere; text-align: start; min-block-size: 2.75rem; }
+.sf-bi-plan, .sf-bi-limitations { min-inline-size: 0; padding: .75rem; border: 1px solid var(--border, currentColor); border-radius: .5rem; overflow-wrap: anywhere; }
+.sf-bi-steps { padding-inline-start: 1.5rem; display: grid; gap: .5rem; }
+.sf-bi-steps li { display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem 1rem; }
+.sf-bi-steps li strong { flex-basis: 100%; }
+.sf-bi-steps button { min-block-size: 2.75rem; }
+.sf-bi-limitations ul { margin: .5rem 0 0; padding-inline-start: 1.5rem; }
+@media (max-width: 35rem) { .sf-bi-series { padding: .5rem; } .sf-bi-steps li { display: list-item; } .sf-bi-steps span { display: block; } }
