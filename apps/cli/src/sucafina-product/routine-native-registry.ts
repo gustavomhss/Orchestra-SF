@@ -1,10 +1,14 @@
-import { Context, Effect } from "effect"
+import { Context, Effect, Schema } from "effect"
+import { isDeepStrictEqual } from "node:util"
+import { AgentV2 } from "@orchestra/core/agent"
+import { SessionSchema } from "@orchestra/core/session/schema"
 import { ToolSafety } from "@orchestra/core/tool-safety"
 import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
-import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import type { TrustedDomainContext, TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { SfRoutineNativeOwnerBinding, SfRoutineNativeOwnerPort } from "./routine-native-adapter.ts"
 import { withSfRoutineNativeAbort } from "./routine-native-dispatch.ts"
 import type { SfRoutineNativeOwnerHook } from "./routine-native-governance.ts"
+import { observeSfRoutineNative } from "./routine-native-origin.ts"
 import { captureSfRoutineNativeOwner } from "./routine-native-owner.ts"
 import { sameSfRoutineNativeOwner } from "./routine-native-input.ts"
 import type { SfRoutineNativeRuntimeResources } from "./routine-native-runtime.ts"
@@ -34,6 +38,25 @@ type Entry = {
   readonly close: () => void
 }
 
+/** Supplied ONLY by a trusted producer that re-verifies durable native origin evidence after reload.
+ * Native records/plan.owner/IDs do not issue this attestation and are never accepted as its substitute.
+ * It conveys read-only authority; it cannot bind a running Task or authorize model continuation.
+ */
+export type SfRoutineNativeHistoricalAuthority = Readonly<{
+  authoritySessionID: SessionSchema.ID
+  signal: AbortSignal
+  current: (context: TrustedUiContext, request: Request) => Promise<boolean>
+}>
+
+type ReadEntry = {
+  readonly context: TrustedUiContext
+  readonly request: Request
+  readonly binding: SfRoutineNativeOwnerBinding
+  readonly generation: number
+  readonly current: () => Promise<boolean>
+  readonly close: () => void
+}
+
 // Effect-local and host-only. It carries the actual authenticated Request, never decoded identifiers.
 const CurrentRequest = Context.Reference<RequestScope | undefined>("sucafina/routine-native-request", {
   defaultValue: () => undefined,
@@ -51,6 +74,8 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
   // These are cancellable acquisitions in this same registry, never issued ownership capabilities.
   const acquiring = new Set<{ request: Request; close: () => void }>()
   const entries = new Map<string, Entry>()
+  const readEntries = new Map<Request, ReadEntry>()
+  const acquiringReads = new Map<Request, () => void>()
   const issued = new Set<string>()
   const invalidGenerations = new Set<number>()
   const now = input.now ?? Date.now
@@ -194,35 +219,134 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
     }), () => Effect.sync(close))
   })
 
+  /**
+   * Fresh UI Request -> read-only native historical projection. Unlike withRequest, this does not
+   * acquire Task owner authority or revive an already settled CapabilityInvocation frame. The host
+   * must first resolve durable principal/native-origin evidence through an independent canonical
+   * producer and supply its live attestation; the current host does not yet expose that producer.
+   *
+   * The existing adapter's readAdmission/readRun/readExecution/readArtifact execute within consume,
+   * rechecking case/source/publication through their canonical readers. prepare/start cannot run:
+   * historical owner has no Task invocation. No new run database, Task dispatch, or synthetic grant.
+   */
+  const withReauthenticatedRead = async <A>(
+    context: TrustedUiContext, request: Request, evidence: SfRoutineNativeHistoricalAuthority,
+    consume: () => Promise<A>,
+  ): Promise<A | undefined> => {
+    if (disposed || context?.kind !== "ui" || request.signal.aborted || evidence.signal.aborted ||
+      input.requestFor(context) !== request || !Schema.is(SessionSchema.ID)(evidence.authoritySessionID) ||
+      readEntries.has(request) || acquiringReads.has(request) || readEntries.size + acquiringReads.size >= 100)
+      return undefined
+    const resources = input.resources()
+    const beganAt = now()
+    const expires = Date.parse(context.binding.expiresAt)
+    if (!resources?.current() || !Number.isFinite(expires) || expires <= beganAt) return undefined
+    const until = Math.min(expires, beganAt + 300_000)
+    const monotonicUntil = performance.now() + until - beganAt
+    const contextDigest = digestSfValue(context.binding)
+    const identityDigest = digestSfValue(resources.identity)
+    const headersDigest = digestSfValue([...request.headers])
+    const cancellation = new AbortController()
+    const signal = AbortSignal.any([request.signal, evidence.signal, cancellation.signal])
+    let active = true
+    let timer: ReturnType<typeof setTimeout> | undefined
+    let entry: ReadEntry | undefined
+    const close = () => {
+      if (!active) return
+      active = false
+      acquiringReads.delete(request)
+      if (readEntries.get(request) === entry) readEntries.delete(request)
+      if (timer !== undefined) clearTimeout(timer)
+      request.signal.removeEventListener("abort", close)
+      evidence.signal.removeEventListener("abort", close)
+      cancellation.abort()
+    }
+    const sync = () => active && !disposed && input.resources() === resources && resources.current() &&
+      input.requestFor(context) === request && !signal.aborted && now() < until && performance.now() < monotonicUntil &&
+      context.kind === "ui" && digestSfValue(context.binding) === contextDigest &&
+      digestSfValue(resources.identity) === identityDigest && digestSfValue([...request.headers]) === headersDigest &&
+      context.binding.installationId === resources.identity.installationId &&
+      context.binding.projectId === resources.identity.projectId
+
+    acquiringReads.set(request, close)
+    try {
+      const generation = await observeSfRoutineNative(input.generation, signal)
+      if (!sync() || generation === undefined || !Number.isSafeInteger(generation) ||
+        generation < 0 || invalidGenerations.has(generation) || !await observeSfRoutineNative(() => input.authorize(context), signal) ||
+        !await observeSfRoutineNative(() => evidence.current(context, request), signal) || !sync()) return undefined
+      const sessionCurrent = async () => {
+        const session = await observeSfRoutineNative(() => Effect.runPromise(resources.store.get(evidence.authoritySessionID)), signal)
+        return !!session && !session.time.archived && session.projectID === resources.identity.projectId &&
+          (session.agent === undefined || session.agent === AgentV2.defaultID) &&
+          isDeepStrictEqual(session.location, resources.identity.location)
+      }
+      if (!await sessionCurrent() || !sync()) return undefined
+      const current = async () => {
+        if (!sync() || invalidGenerations.has(generation) || await observeSfRoutineNative(input.generation, signal) !== generation ||
+          !await sessionCurrent() || !await observeSfRoutineNative(() => input.authorize(context), signal) ||
+          !await observeSfRoutineNative(() => evidence.current(context, request), signal) || !sync()) {
+          close()
+          return false
+        }
+        return true
+      }
+      const binding = Object.freeze({ request, authoritySessionID: evidence.authoritySessionID } satisfies SfRoutineNativeOwnerBinding)
+      entry = { context, request, binding, generation, current, close }
+      if (readEntries.has(request) || !sync()) return undefined
+      readEntries.set(request, entry)
+      acquiringReads.delete(request)
+      timer = setTimeout(close, Math.max(0, until - now()))
+      request.signal.addEventListener("abort", close, { once: true })
+      evidence.signal.addEventListener("abort", close, { once: true })
+      if (!await current()) return undefined
+      const result = await observeSfRoutineNative(consume, signal, 30_000)
+      return await current() ? result : undefined
+    } finally {
+      close()
+    }
+  }
+
   const owners: SfRoutineNativeOwnerPort & { available: () => boolean } = Object.freeze({
-    available: () => !disposed && [...entries.values()].some((entry) => entry.scope.sync()),
+    available: () => !disposed && ([...entries.values()].some((entry) => entry.scope.sync()) ||
+      [...readEntries.values()].some((entry) => !entry.request.signal.aborted)),
     resolve: async (context, request) => {
       const found = [...entries.values()].filter((entry) => entry.scope.context === context && entry.scope.request === request)
-      if (found.length !== 1) return undefined
-      const entry = found[0]!
-      return await entry.current() && entriesHas(entry) ? entry.binding : undefined
+      const historical = readEntries.get(request)
+      if (found.length > 1 || (found.length && historical)) return undefined
+      if (found.length === 1) {
+        const entry = found[0]!
+        return await entry.current() && entriesHas(entry) ? entry.binding : undefined
+      }
+      return historical?.context === context && await historical.current() && readEntries.get(request) === historical
+        ? historical.binding : undefined
     },
   })
   const entriesHas = (entry: Entry) => [...entries.values()].includes(entry) && entry.scope.sync()
 
   return {
-    owners, withRequest, run,
+    owners, withRequest, withReauthenticatedRead, run,
     revoke: (request: Request) => {
       for (const acquisition of [...acquiring]) if (acquisition.request === request) acquisition.close()
       for (const scope of [...scopes]) if (scope.request === request) scope.close()
+      readEntries.get(request)?.close()
+      acquiringReads.get(request)?.()
     },
     invalidateGeneration: (generation: number) => {
       invalidGenerations.add(generation)
       // An acquisition has not established its generation yet; none may span a rotation.
       for (const acquisition of [...acquiring]) acquisition.close()
+      for (const close of [...acquiringReads.values()]) close()
       for (const scope of [...scopes]) if (scope.generation === generation) scope.close()
+      for (const entry of [...readEntries.values()]) if (entry.generation === generation) entry.close()
     },
     dispose: () => {
       if (disposed) return
       disposed = true
       for (const acquisition of [...acquiring]) acquisition.close()
+      for (const close of [...acquiringReads.values()]) close()
       for (const scope of [...scopes]) scope.close()
       for (const entry of [...entries.values()]) entry.close()
+      for (const entry of [...readEntries.values()]) entry.close()
     },
   }
 }
