@@ -1,0 +1,171 @@
+{
+  "schema": "sf2h.native-ui.A08.shared-patches.v1",
+  "mission": "UX-A08",
+  "only_owner": "114",
+  "status": "INERT_PROPOSAL_NO_SHARED_WRITES",
+  "base_preimages": "sf-ux-a08 source branch, current before patch document",
+  "files": [
+    {
+      "path": "packages/schema/package.json",
+      "owner": "114",
+      "apply_state": "INERT_NOT_APPLIED",
+      "preimage_blob": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a",
+      "preimage_utf8": "{\n  \"$schema\": \"https://json.schemastore.org/package.json\",\n  \"name\": \"@orchestra/schema\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./actions\": \"./src/actions.ts\",\n    \"./actions/command\": \"./src/actions/command.ts\",\n    \"./actions/identity\": \"./src/actions/identity.ts\",\n    \"./actions/operation\": \"./src/actions/operation.ts\",\n    \"./actions/resource\": \"./src/actions/resource.ts\",\n    \"./actions/run\": \"./src/actions/run.ts\",\n    \"./actions/workflow\": \"./src/actions/workflow.ts\",\n    \"./agent\": \"./src/agent.ts\",\n    \"./agent-file\": \"./src/agent-file.ts\",\n    \"./atlas-knowledge\": \"./src/atlas-knowledge.ts\",\n    \"./atlas-review\": \"./src/atlas-review.ts\",\n    \"./atlas-screen\": \"./src/atlas-screen.ts\",\n    \"./atlas-setup\": \"./src/atlas-setup.ts\",\n    \"./behavior\": \"./src/behavior.ts\",\n    \"./board\": \"./src/board.ts\",\n    \"./board-queue\": \"./src/board-queue.ts\",\n    \"./capability\": \"./src/capability.ts\",\n    \"./catalog\": \"./src/catalog.ts\",\n    \"./command\": \"./src/command.ts\",\n    \"./config-mcp\": \"./src/config-mcp.ts\",\n    \"./config-maestro\": \"./src/config-maestro.ts\",\n    \"./connection\": \"./src/connection.ts\",\n    \"./credential\": \"./src/credential.ts\",\n    \"./durable-event-manifest\": \"./src/durable-event-manifest.ts\",\n    \"./elf\": \"./src/elf.ts\",\n    \"./event\": \"./src/event.ts\",\n    \"./event-manifest\": \"./src/event-manifest.ts\",\n    \"./file-diff\": \"./src/file-diff.ts\",\n    \"./filesystem\": \"./src/filesystem.ts\",\n    \"./filesystem-watcher\": \"./src/filesystem-watcher.ts\",\n    \"./hook-glob\": \"./src/hook-glob.ts\",\n    \"./hook-match\": \"./src/hook-match.ts\",\n    \"./ide-event\": \"./src/ide-event.ts\",\n    \"./identifier\": \"./src/identifier.ts\",\n    \"./index\": \"./src/index.ts\",\n    \"./installation-event\": \"./src/installation-event.ts\",\n    \"./integration\": \"./src/integration.ts\",\n    \"./integration-id\": \"./src/integration-id.ts\",\n    \"./lean-coverage\": \"./src/lean-coverage.ts\",\n    \"./lean-dashboard\": \"./src/lean-dashboard.ts\",\n    \"./lean-engine\": \"./src/lean-engine.ts\",\n    \"./lean-metrics\": \"./src/lean-metrics.ts\",\n    \"./llm\": \"./src/llm.ts\",\n    \"./location\": \"./src/location.ts\",\n    \"./lsp-event\": \"./src/lsp-event.ts\",\n    \"./maestro-context\": \"./src/maestro-context.ts\",\n    \"./maestro-event\": \"./src/maestro-event.ts\",\n    \"./mcp\": \"./src/mcp.ts\",\n    \"./mcp-event\": \"./src/mcp-event.ts\",\n    \"./model\": \"./src/model.ts\",\n    \"./models-dev\": \"./src/models-dev.ts\",\n    \"./permission\": \"./src/permission.ts\",\n    \"./permission-saved\": \"./src/permission-saved.ts\",\n    \"./plugin\": \"./src/plugin.ts\",\n    \"./project\": \"./src/project.ts\",\n    \"./project-copy\": \"./src/project-copy.ts\",\n    \"./project-directories\": \"./src/project-directories.ts\",\n    \"./project-id\": \"./src/project-id.ts\",\n    \"./prompt\": \"./src/prompt.ts\",\n    \"./prompt-context\": \"./src/prompt-context.ts\",\n    \"./prompt-input\": \"./src/prompt-input.ts\",\n    \"./provider\": \"./src/provider.ts\",\n    \"./pty\": \"./src/pty.ts\",\n    \"./pty-ticket\": \"./src/pty-ticket.ts\",\n    \"./inbox\": \"./src/inbox.ts\",\n    \"./guardrail\": \"./src/guardrail.ts\",\n    \"./meeting\": \"./src/meeting.ts\",\n    \"./pull-request\": \"./src/pull-request.ts\",\n    \"./question\": \"./src/question.ts\",\n    \"./rag-studio\": \"./src/rag-studio.ts\",\n    \"./reference\": \"./src/reference.ts\",\n    \"./relay-arm\": \"./src/relay-arm.ts\",\n    \"./relay-authoring\": \"./src/relay-authoring.ts\",\n    \"./relay-external\": \"./src/relay-external.ts\",\n    \"./relay-hook\": \"./src/relay-hook.ts\",\n    \"./relay-ledger\": \"./src/relay-ledger.ts\",\n    \"./relay-run\": \"./src/relay-run.ts\",\n    \"./relay-sprint\": \"./src/relay-sprint.ts\",\n    \"./research\": \"./src/research.ts\",\n    \"./research-event\": \"./src/research-event.ts\",\n    \"./revert\": \"./src/revert.ts\",\n    \"./review-precision-event\": \"./src/review-precision-event.ts\",\n    \"./scheduled-task\": \"./src/scheduled-task.ts\",\n    \"./schema\": \"./src/schema.ts\",\n    \"./server-event\": \"./src/server-event.ts\",\n    \"./session\": \"./src/session.ts\",\n    \"./session-compaction-event\": \"./src/session-compaction-event.ts\",\n    \"./session-delivery\": \"./src/session-delivery.ts\",\n    \"./session-event\": \"./src/session-event.ts\",\n    \"./session-id\": \"./src/session-id.ts\",\n    \"./session-activity\": \"./src/session-activity.ts\",\n    \"./session-input\": \"./src/session-input.ts\",\n    \"./session-message\": \"./src/session-message.ts\",\n    \"./session-status-event\": \"./src/session-status-event.ts\",\n    \"./session-subagent-models\": \"./src/session-subagent-models.ts\",\n    \"./session-todo\": \"./src/session-todo.ts\",\n    \"./skill\": \"./src/skill.ts\",\n    \"./tui-event\": \"./src/tui-event.ts\",\n    \"./upstream-attribution\": \"./src/upstream-attribution.ts\",\n    \"./vcs\": \"./src/vcs.ts\",\n    \"./vcs-event\": \"./src/vcs-event.ts\",\n    \"./workspace\": \"./src/workspace.ts\",\n    \"./workspace-event\": \"./src/workspace-event.ts\",\n    \"./workspace-id\": \"./src/workspace-id.ts\",\n    \"./worktree-event\": \"./src/worktree-event.ts\",\n    \"./capability-artifact-management\": \"./src/capability-artifact-management.ts\",\n    \"./capability-management\": \"./src/capability-management.ts\",\n    \"./capability-schedule-management\": \"./src/capability-schedule-management.ts\",\n    \"./capability-setup\": \"./src/capability-setup.ts\",\n    \"./lsp\": \"./src/lsp.ts\"\n  },\n  \"scripts\": {\n    \"test\": \"bun test ./test --preload ../../script/test-guard.ts --timeout 30000 --only-failures\",\n    \"typecheck\": \"tsgo --noEmit\"\n  },\n  \"dependencies\": {\n    \"effect\": \"catalog:\"\n  },\n  \"devDependencies\": {\n    \"@tsconfig/bun\": \"catalog:\",\n    \"@types/bun\": \"catalog:\",\n    \"@typescript/native-preview\": \"catalog:\"\n  }\n}\n",
+      "proposed_postimage_utf8": "{\n  \"$schema\": \"https://json.schemastore.org/package.json\",\n  \"name\": \"@orchestra/schema\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./actions\": \"./src/actions.ts\",\n    \"./actions/command\": \"./src/actions/command.ts\",\n    \"./actions/identity\": \"./src/actions/identity.ts\",\n    \"./actions/operation\": \"./src/actions/operation.ts\",\n    \"./actions/resource\": \"./src/actions/resource.ts\",\n    \"./actions/run\": \"./src/actions/run.ts\",\n    \"./actions/workflow\": \"./src/actions/workflow.ts\",\n    \"./agent\": \"./src/agent.ts\",\n    \"./agent-file\": \"./src/agent-file.ts\",\n    \"./atlas-knowledge\": \"./src/atlas-knowledge.ts\",\n    \"./atlas-review\": \"./src/atlas-review.ts\",\n    \"./atlas-screen\": \"./src/atlas-screen.ts\",\n    \"./atlas-setup\": \"./src/atlas-setup.ts\",\n    \"./behavior\": \"./src/behavior.ts\",\n    \"./board\": \"./src/board.ts\",\n    \"./board-queue\": \"./src/board-queue.ts\",\n    \"./capability\": \"./src/capability.ts\",\n    \"./catalog\": \"./src/catalog.ts\",\n    \"./command\": \"./src/command.ts\",\n    \"./config-mcp\": \"./src/config-mcp.ts\",\n    \"./config-maestro\": \"./src/config-maestro.ts\",\n    \"./connection\": \"./src/connection.ts\",\n    \"./credential\": \"./src/credential.ts\",\n    \"./durable-event-manifest\": \"./src/durable-event-manifest.ts\",\n    \"./elf\": \"./src/elf.ts\",\n    \"./event\": \"./src/event.ts\",\n    \"./event-manifest\": \"./src/event-manifest.ts\",\n    \"./file-diff\": \"./src/file-diff.ts\",\n    \"./filesystem\": \"./src/filesystem.ts\",\n    \"./filesystem-watcher\": \"./src/filesystem-watcher.ts\",\n    \"./hook-glob\": \"./src/hook-glob.ts\",\n    \"./hook-match\": \"./src/hook-match.ts\",\n    \"./ide-event\": \"./src/ide-event.ts\",\n    \"./identifier\": \"./src/identifier.ts\",\n    \"./index\": \"./src/index.ts\",\n    \"./installation-event\": \"./src/installation-event.ts\",\n    \"./integration\": \"./src/integration.ts\",\n    \"./integration-id\": \"./src/integration-id.ts\",\n    \"./lean-coverage\": \"./src/lean-coverage.ts\",\n    \"./lean-dashboard\": \"./src/lean-dashboard.ts\",\n    \"./lean-engine\": \"./src/lean-engine.ts\",\n    \"./lean-metrics\": \"./src/lean-metrics.ts\",\n    \"./llm\": \"./src/llm.ts\",\n    \"./location\": \"./src/location.ts\",\n    \"./lsp-event\": \"./src/lsp-event.ts\",\n    \"./maestro-context\": \"./src/maestro-context.ts\",\n    \"./maestro-event\": \"./src/maestro-event.ts\",\n    \"./mcp\": \"./src/mcp.ts\",\n    \"./mcp-event\": \"./src/mcp-event.ts\",\n    \"./model\": \"./src/model.ts\",\n    \"./models-dev\": \"./src/models-dev.ts\",\n    \"./permission\": \"./src/permission.ts\",\n    \"./permission-saved\": \"./src/permission-saved.ts\",\n    \"./plugin\": \"./src/plugin.ts\",\n    \"./project\": \"./src/project.ts\",\n    \"./project-copy\": \"./src/project-copy.ts\",\n    \"./project-directories\": \"./src/project-directories.ts\",\n    \"./project-id\": \"./src/project-id.ts\",\n    \"./prompt\": \"./src/prompt.ts\",\n    \"./prompt-context\": \"./src/prompt-context.ts\",\n    \"./prompt-input\": \"./src/prompt-input.ts\",\n    \"./provider\": \"./src/provider.ts\",\n    \"./pty\": \"./src/pty.ts\",\n    \"./pty-ticket\": \"./src/pty-ticket.ts\",\n    \"./inbox\": \"./src/inbox.ts\",\n    \"./guardrail\": \"./src/guardrail.ts\",\n    \"./meeting\": \"./src/meeting.ts\",\n    \"./pull-request\": \"./src/pull-request.ts\",\n    \"./question\": \"./src/question.ts\",\n    \"./rag-studio\": \"./src/rag-studio.ts\",\n    \"./reference\": \"./src/reference.ts\",\n    \"./relay-arm\": \"./src/relay-arm.ts\",\n    \"./relay-authoring\": \"./src/relay-authoring.ts\",\n    \"./relay-external\": \"./src/relay-external.ts\",\n    \"./relay-hook\": \"./src/relay-hook.ts\",\n    \"./relay-ledger\": \"./src/relay-ledger.ts\",\n    \"./relay-run\": \"./src/relay-run.ts\",\n    \"./relay-sprint\": \"./src/relay-sprint.ts\",\n    \"./research\": \"./src/research.ts\",\n    \"./research-event\": \"./src/research-event.ts\",\n    \"./revert\": \"./src/revert.ts\",\n    \"./review-precision-event\": \"./src/review-precision-event.ts\",\n    \"./scheduled-task\": \"./src/scheduled-task.ts\",\n    \"./schema\": \"./src/schema.ts\",\n    \"./sucafina/bi\": \"./src/sucafina/bi.ts\",\n    \"./server-event\": \"./src/server-event.ts\",\n    \"./session\": \"./src/session.ts\",\n    \"./session-compaction-event\": \"./src/session-compaction-event.ts\",\n    \"./session-delivery\": \"./src/session-delivery.ts\",\n    \"./session-event\": \"./src/session-event.ts\",\n    \"./session-id\": \"./src/session-id.ts\",\n    \"./session-activity\": \"./src/session-activity.ts\",\n    \"./session-input\": \"./src/session-input.ts\",\n    \"./session-message\": \"./src/session-message.ts\",\n    \"./session-status-event\": \"./src/session-status-event.ts\",\n    \"./session-subagent-models\": \"./src/session-subagent-models.ts\",\n    \"./session-todo\": \"./src/session-todo.ts\",\n    \"./skill\": \"./src/skill.ts\",\n    \"./tui-event\": \"./src/tui-event.ts\",\n    \"./upstream-attribution\": \"./src/upstream-attribution.ts\",\n    \"./vcs\": \"./src/vcs.ts\",\n    \"./vcs-event\": \"./src/vcs-event.ts\",\n    \"./workspace\": \"./src/workspace.ts\",\n    \"./workspace-event\": \"./src/workspace-event.ts\",\n    \"./workspace-id\": \"./src/workspace-id.ts\",\n    \"./worktree-event\": \"./src/worktree-event.ts\",\n    \"./capability-artifact-management\": \"./src/capability-artifact-management.ts\",\n    \"./capability-management\": \"./src/capability-management.ts\",\n    \"./capability-schedule-management\": \"./src/capability-schedule-management.ts\",\n    \"./capability-setup\": \"./src/capability-setup.ts\",\n    \"./lsp\": \"./src/lsp.ts\"\n  },\n  \"scripts\": {\n    \"test\": \"bun test ./test --preload ../../script/test-guard.ts --timeout 30000 --only-failures\",\n    \"typecheck\": \"tsgo --noEmit\"\n  },\n  \"dependencies\": {\n    \"effect\": \"catalog:\"\n  },\n  \"devDependencies\": {\n    \"@tsconfig/bun\": \"catalog:\",\n    \"@types/bun\": \"catalog:\",\n    \"@typescript/native-preview\": \"catalog:\"\n  }\n}\n"
+    },
+    {
+      "path": "packages/client/package.json",
+      "owner": "114",
+      "apply_state": "INERT_NOT_APPLIED",
+      "preimage_blob": "4cd0244e98ff18b5e65d3c2808196705095b6691",
+      "preimage_utf8": "{\n  \"$schema\": \"https://json.schemastore.org/package.json\",\n  \"name\": \"@orchestra/client\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./effect\": \"./src/effect.ts\",\n    \"./contract\": \"./src/contract.ts\"\n  },\n  \"scripts\": {\n    \"generate\": \"bun run script/build.ts\",\n    \"check:generated\": \"bun run generate && git diff --exit-code -- src/generated src/generated-effect\",\n    \"test\": \"bun test --timeout 5000\",\n    \"typecheck\": \"tsgo --noEmit\"\n  },\n  \"dependencies\": {\n    \"@orchestra/schema\": \"workspace:*\",\n    \"@orchestra/protocol\": \"workspace:*\"\n  },\n  \"peerDependencies\": {\n    \"effect\": \"4.0.0-beta.83\"\n  },\n  \"peerDependenciesMeta\": {\n    \"effect\": {\n      \"optional\": true\n    }\n  },\n  \"devDependencies\": {\n    \"@effect/platform-node\": \"catalog:\",\n    \"@orchestra/httpapi-codegen\": \"workspace:*\",\n    \"@tsconfig/bun\": \"catalog:\",\n    \"@types/bun\": \"catalog:\",\n    \"@typescript/native-preview\": \"catalog:\",\n    \"effect\": \"catalog:\"\n  }\n}\n",
+      "proposed_postimage_utf8": "{\n  \"$schema\": \"https://json.schemastore.org/package.json\",\n  \"name\": \"@orchestra/client\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./effect\": \"./src/effect.ts\",\n    \"./sucafina/bi\": \"./src/sucafina/bi.ts\",\n    \"./contract\": \"./src/contract.ts\"\n  },\n  \"scripts\": {\n    \"generate\": \"bun run script/build.ts\",\n    \"check:generated\": \"bun run generate && git diff --exit-code -- src/generated src/generated-effect\",\n    \"test\": \"bun test --timeout 5000\",\n    \"typecheck\": \"tsgo --noEmit\"\n  },\n  \"dependencies\": {\n    \"@orchestra/schema\": \"workspace:*\",\n    \"@orchestra/protocol\": \"workspace:*\"\n  },\n  \"peerDependencies\": {\n    \"effect\": \"4.0.0-beta.83\"\n  },\n  \"peerDependenciesMeta\": {\n    \"effect\": {\n      \"optional\": true\n    }\n  },\n  \"devDependencies\": {\n    \"@effect/platform-node\": \"catalog:\",\n    \"@orchestra/httpapi-codegen\": \"workspace:*\",\n    \"@tsconfig/bun\": \"catalog:\",\n    \"@types/bun\": \"catalog:\",\n    \"@typescript/native-preview\": \"catalog:\",\n    \"effect\": \"catalog:\"\n  }\n}\n"
+    }
+  ],
+  "registry_fragment": {
+    "owner": "114",
+    "path": "packages/schema/src/sucafina/operation-registry.ts",
+    "preimage_status": "composed by 114; not present on A08 source branch",
+    "method": "Add exact four entries following frozen contract-catalog, not a second A08 registry",
+    "operations": [
+      {
+        "operationId": "bi.bi-data",
+        "fixedQuery": {
+          "sf": "bi-data"
+        },
+        "schemaExport": "SfBiBiData",
+        "sourceSuccess": "{request,projection,presentation,receipt,navigation?}",
+        "family": "bi",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "effect": "read",
+        "responseMode": "json",
+        "automaticRetry": false
+      },
+      {
+        "operationId": "bi.bi-source",
+        "fixedQuery": {
+          "sf": "bi-source"
+        },
+        "schemaExport": "SfBiBiSource",
+        "sourceSuccess": "{links}",
+        "family": "bi",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "effect": "read",
+        "responseMode": "json",
+        "automaticRetry": false
+      },
+      {
+        "operationId": "bi.bi-decision",
+        "fixedQuery": {
+          "sf": "bi-decision"
+        },
+        "schemaExport": "SfBiBiDecision",
+        "sourceSuccess": "{status:'ok',value:SfBiNavigationDetail}",
+        "family": "bi",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "effect": "read",
+        "responseMode": "json",
+        "automaticRetry": false
+      },
+      {
+        "operationId": "bi.bi-options",
+        "fixedQuery": {
+          "sf": "bi-options"
+        },
+        "schemaExport": "SfBiBiOptions",
+        "sourceSuccess": "{status:'ok',value:SfBiOptions}",
+        "family": "bi",
+        "method": "GET",
+        "pathTemplate": "{mount}/dashboard",
+        "effect": "read",
+        "responseMode": "json",
+        "automaticRetry": false
+      }
+    ]
+  },
+  "bindings_fragment": {
+    "owner": "114",
+    "path": "packages/schema/src/sucafina/index.ts",
+    "preimage_status": "composed by 114; not present on A08 source branch",
+    "import_exact": "import { SfBiBiData, SfBiBiSource, SfBiBiDecision, SfBiBiOptions } from './bi'",
+    "entries": [
+      {
+        "key": "bi.bi-data",
+        "decodeInput": "SfBiBiData.input",
+        "decodeOutput": "SfBiBiData.output"
+      },
+      {
+        "key": "bi.bi-source",
+        "decodeInput": "SfBiBiSource.input",
+        "decodeOutput": "SfBiBiSource.output"
+      },
+      {
+        "key": "bi.bi-decision",
+        "decodeInput": "SfBiBiDecision.input",
+        "decodeOutput": "SfBiBiDecision.output"
+      },
+      {
+        "key": "bi.bi-options",
+        "decodeInput": "SfBiBiOptions.input",
+        "decodeOutput": "SfBiBiOptions.output"
+      }
+    ],
+    "codec_rule": "Each SfOperationCodec must call the referenced source Schema input/output with onExcessProperty:'error' and return {status:'ok',value} or {status:'invalid'}. Never dynamically load a leaf nor use Schema.Unknown/Any/JSON fallback. The F02 transport and desktop broker receive the same admitted map."
+  },
+  "transport_composition": {
+    "owner": "114/F02/D01",
+    "method": "GET",
+    "producer": "apps/cli/src/sucafina-product/extended-http.ts",
+    "producer_blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+    "no_server_projection": "A08 has NO missing HTML-only seam. Existing admitted JSON handlers are called with the Request received from F02. No duplicate server forwarder or reconstructing Request.",
+    "allowed_queries": {
+      "bi.bi-data": [
+        "sf",
+        "page",
+        "viewId",
+        "selectionRef",
+        "start",
+        "end",
+        "baseRef",
+        "candidateRef",
+        "currency"
+      ],
+      "bi.bi-source": [
+        "sf",
+        "selectionRef",
+        "viewId",
+        "start",
+        "end",
+        "valueId",
+        "referenceDigest"
+      ],
+      "bi.bi-decision": [
+        "sf",
+        "selectionRef",
+        "viewId",
+        "start",
+        "end",
+        "snapshot",
+        "target"
+      ],
+      "bi.bi-options": [
+        "sf",
+        "page",
+        "viewId",
+        "start",
+        "end"
+      ]
+    },
+    "no_automatic_retry": true,
+    "no_redirect": true,
+    "keep_authority": "Producer's authorize/validate, selected case, fresh access scope, revalidation and C16 proof stay exclusively server-owned; JSON 403/409 is not coerced into an empty success."
+  },
+  "cautions": [
+    "PR #142 was opened from the existing pre-populated UX branch; its GitHub merge diff includes inherited cohort changes. DO NOT MERGE THE WHOLE PR; 114 must consume only A08 blobs (and these inert patches after owner release).",
+    "Do not claim runnable client before F02 schema/transport and exports are integrated; 119 typecheck and 120 hosted CI only after the same candidate includes dependencies.",
+    "A08 has no CLI leaf because the four existing JSON routes already supply typed HTTP and the locked server_leaf_policy explicitly forbids a duplicate forwarder."
+  ]
+}
