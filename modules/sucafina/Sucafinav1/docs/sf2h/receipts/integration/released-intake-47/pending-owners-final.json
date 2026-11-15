@@ -1,0 +1,1670 @@
+{
+  "schema": "sf2h.mission47.pending-addendum-finalized-draft.v1",
+  "mission": 47,
+  "status": "TERMINAL_MATERIAL_INTAKE_COMPLETE_C20_QUALIFICATION_OPEN",
+  "inheritance": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "terminal42": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/pending-owners-final.json",
+    "blob": "66c0443af3c39af9a4ef419002e3cd7f0b824478",
+    "url": "https://github.com/gustavomhss/Orchestra-SF/blob/217b4295e2aeb00bc2f4accb9fb893451b9795e9/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/pending-owners-final.json",
+    "complete_source_read": true,
+    "inherited_items": 50,
+    "current_dispositions42": 50,
+    "new_items42": 6,
+    "source_rule": "All complete records, nested evidence, inherited dispositions, upstream requirements, budgets and no-waiver rules at this immutable blob remain normative by reference. Compact notes do not replace or weaken them. Each of the56 IDs receives an additive state47 only.",
+    "local_copy": {
+      "path": "/workspace/scratch/8fd84ac583a8/pending42-root.json",
+      "sha256": "8ef0bb1f9a0cdfb115d435cbf68136dd94cd0df3817c9f7b05a397bf2f414a92",
+      "git_blob": "9d3bddcd76dd0539ccc32638e3f7b19aeeec2018",
+      "semantic_sha256": "4872d40b6b4af903559cd81de89c2e7724eca0c8f4cfb4f3ffe1307cf6f2363d",
+      "note": "Root supplied a parsed/reserialized copy. Its local Git blob differs from the original remote blob; no byte-identity claim is made. Original remote pin was supplied and verified by root."
+    },
+    "record_digest_rule": "SHA256 of UTF-8 JSON with recursively sorted keys, no formatting whitespace and unescaped Unicode. Inherited rows hash {inherited:<item>,disposition42:<current42 record>}; new42 rows hash the original item.",
+    "upstream": {
+      "commit": "bf81f9776b6ba5fb6267828a9a029d7e8d6f5587",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/pending-owners-final.json",
+      "blob": "6a35eb7217770453d38b22a2879cd70a19a100e0",
+      "inherited_count": 50,
+      "rule": "All50 original records below are preserved byte-value-equivalent. Current mission42 dispositions are additive by id; historical source failures, obligations and upstream inheritance remain in force.",
+      "upstream": {
+        "commit": "3c0b7df201559223ddf1631c182a409af700ff38",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closed-output-intake-23/pending-owners-final.json",
+        "blob": "a579c6a1bbe32683cd224833178b9580b6df582b",
+        "prior_mandatory_items": 20,
+        "rule": "All20 prior items and their upstream inheritance remain in force; static assembly/provenance resolution does not close functional criteria.",
+        "upstream": {
+          "commit": "d8ab1d3321a76870ed3092ba043fe1b5781a2c23",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/bundle-integrator-20261114/pending-owners-03.json",
+          "blob": "dfd32bb87a987d7784e65018e0dabe30732d5abc",
+          "rule": "All prior mandatory scope and findings are retained; this append-only record updates current dispositions and assigns later explicit owners. No item is waived by source closure.",
+          "mission23_increment1": "increment-01.json",
+          "supersedes_for_current_status": "pending-owners-01.json"
+        }
+      }
+    }
+  },
+  "frozen_scope": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "resident_profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39,
+    "AM": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ]
+  },
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "snapshot47": {
+    "source": "Root47 immutable GitHub MCP source reads, complete CAS candidate lineage and full per-commit readbacks.",
+    "latest_published_candidate": {
+      "symbol": "C20",
+      "commit": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+      "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+      "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a"
+    },
+    "candidates": [
+      {
+        "key": "FINANCE34",
+        "stage": "PUBLISHED",
+        "candidate": "C13",
+        "commit": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+        "tree": "26830e38d957219cb4af04050d7bdb0f9b79b4f6",
+        "source_release": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+        "active_paths": 6,
+        "qualification": "NOT_RUN_ON_COMPOSED_CANDIDATE",
+        "identity_note": "Exact commit/tree supplied by root in the C19 update."
+      },
+      {
+        "key": "BI38",
+        "stage": "PUBLISHED",
+        "candidate": "C14",
+        "commit": "03ce926754d7ac0039fbb38470229f13c1623696",
+        "observed_commit_prefix": "03ce9267",
+        "tree": "33f79e84d434c58210d2e5a55ca0d2f90a355b57",
+        "source_release": "0fa2bad41da484f47cd2576be20e713dbd1f45cc",
+        "active_paths": 10,
+        "readback_paths_reported_by_root": 40,
+        "qualification": "NOT_RUN_ON_COMPOSED_CANDIDATE",
+        "identity_note": "Exact commit/tree supplied by root in the C19 update; prior40-path readback retained."
+      },
+      {
+        "key": "PROCUREMENT37",
+        "stage": "PUBLISHED",
+        "candidate": "C15",
+        "commit": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364",
+        "tree": "272ee66e2ae582723d54f3c7cdaf5677ef175aa0",
+        "source_release": "ab2a967125b3c767067797a27b919466020fbd82",
+        "active_paths": 24,
+        "receipt_paths": 58,
+        "record_paths": 2,
+        "readback_paths_reported_by_root": 84,
+        "qualification": "NOT_RUN_ON_COMPOSED_CANDIDATE",
+        "financial_approval": "MANDATORY_HOLD"
+      },
+      {
+        "key": "DECISIONS44",
+        "stage": "PUBLISHED",
+        "candidate": "C16",
+        "commit": "6cc6e94535e48d43f17794e6c6e4d171dfdab18c",
+        "tree": "f1f6c4beae37491b97fd8fb06b9e09578e64d2ad",
+        "source_release": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+        "active_paths": 4,
+        "receipt_paths": 20,
+        "qualification": "NOT_RUN_ON_COMPOSED_CANDIDATE"
+      },
+      {
+        "key": "NATIVE41_PRIVATE",
+        "stage": "PUBLISHED_PRIVATE_ONLY",
+        "candidate": "C17",
+        "commit": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+        "tree": "d0c1cb97ed12cc90b922b5fcb5aafd1f4a7df85d",
+        "source_release": "61af072c7385feba8c89ba6044ca09a90941213d",
+        "active_paths": 8,
+        "receipt_paths": 21,
+        "qualification": "NOT_RUN_ON_COMPOSED_CANDIDATE",
+        "real_admission": "HELD"
+      },
+      {
+        "key": "PORTFOLIO43",
+        "stage": "PUBLISHED_ADAPTED",
+        "candidate": "C18",
+        "commit": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+        "tree": "8563e04f8751ed786ccdbc086ed6566c410af3fe",
+        "source_release": "6feaf8deab0df1d1e409da9e475340a449fd694e",
+        "adaptation": "Preserve both existing post-reservation tests and add changed-order coverage under two new test names; append README explanation.",
+        "qualification": "NOT_RUN_ON_COMPOSED_CANDIDATE",
+        "final_CAS_failure": "PRESERVED_OPEN",
+        "active_paths": 10,
+        "receipt_paths": 76,
+        "complete_patch_artifacts": 1,
+        "preserved_blobs": 28,
+        "readback_paths_reported_by_root": 89
+      },
+      {
+        "key": "MEMORY40",
+        "stage": "PUBLISHED_MATERIAL",
+        "candidate": "C19",
+        "commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
+        "parent": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+        "source_release": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+        "source_tree": "d4205024bef7dde26fb1b883ea3403f2fd2c40e2",
+        "source_W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+        "source_W_tree": "f80bf7b2bc24966a9709ed2ab16bae6c93d24b94",
+        "active_paths": 6,
+        "source_receipt_inventory_count": 24,
+        "paths": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+            "preimage": "6e0aba2f7aa058cef1b35ecd0c963312e98ef993",
+            "postimage": "390bce2594e39a28defce1d47fafa0d7291e940e",
+            "adapted": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+            "preimage": "91e8bc8f5d80f83b7756b4647c790cc5e5936d59",
+            "postimage": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+            "adapted": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-fixture.ts",
+            "preimage": null,
+            "postimage": "fadeb3063fa26a586957947802781ac2b64ff546",
+            "adapted": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+            "preimage": null,
+            "postimage": "d135761aae1ab1323859e0f92f441555fa61b634",
+            "adapted": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+            "preimage": null,
+            "postimage": "3bc4442bd2fdd52867ed25d4f321689c1cffe274",
+            "adapted": false
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/replay-fences.test.ts",
+            "preimage": null,
+            "postimage": "5cecd0a6b33c712ef393afe9a11c28e0a5782d5a",
+            "adapted": false
+          }
+        ],
+        "qualification": "NOT_RUN_ON_COMPOSED_CANDIDATE",
+        "source_proof_scope": "Recorded source-only original35/C17 closure and focused Memory40 proof do not qualify C19, MI07 or native AM05.",
+        "preserved_35_helpers": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+            "blob": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+            "preserved": true
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-restart-reader.ts",
+            "blob": "65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+            "preserved": true
+          }
+        ],
+        "compatible_current_dependencies": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+            "current_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+            "disposition": "KEEP_CURRENT_COMPATIBLE_DIFFERENT_BLOB"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+            "current_blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+            "disposition": "KEEP_CURRENT_COMPATIBLE_DIFFERENT_BLOB"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decision-memory/recall.ts",
+            "current_blob": "2d8524b42448ea63a7dd9ab0e9337c90540dc383",
+            "disposition": "KEEP_CURRENT_COMPATIBLE_DIFFERENT_BLOB"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "current_blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+            "disposition": "KEEP_CURRENT_COMPATIBLE_DIFFERENT_BLOB"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+            "current_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+            "disposition": "KEEP_CURRENT_COMPATIBLE_DIFFERENT_BLOB"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+            "current_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+            "disposition": "KEEP_CURRENT_COMPATIBLE_DIFFERENT_BLOB"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+            "current_blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+            "disposition": "KEEP_CURRENT_COMPATIBLE_DIFFERENT_BLOB"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/host-context.ts",
+            "current_blob": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+            "disposition": "KEEP_CURRENT_COMPATIBLE_DIFFERENT_BLOB"
+          }
+        ],
+        "runtime_acceptance": false
+      },
+      {
+        "key": "CURRENT_CHOICE46",
+        "stage": "PUBLISHED_COMPLETE_COHORT",
+        "candidate": "C20",
+        "commit": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+        "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+        "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+        "source_release": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+        "active_paths": 15,
+        "owned_paths": 9,
+        "shared_paths": 6,
+        "receipt_paths": 29,
+        "record_paths": 2,
+        "readback_paths": 46,
+        "qualification": "NOT_RUN_ON_COMPOSED_CANDIDATE",
+        "financial_approval": "MANDATORY_HOLD",
+        "real_native_admission": "HOLD"
+      }
+    ],
+    "held_or_unreleased": [
+      {
+        "key": "NATIVE41_HOST_HELD",
+        "stage": "HOLD",
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "source_release": "61af072c7385feba8c89ba6044ca09a90941213d",
+        "proposed_preimage": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+        "current_procurement_postimage": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+        "reason": "Actual authenticated admission/continuation/readiness absent. Source41 preimage2bf differs from C20 b19c; any future genuine native release needs complete current reconciliation.",
+        "current_final_host": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+        "latest_host_change": "CurrentChoice46/C20 preserves Procurement HTTP, no Native41 host activation"
+      },
+      {
+        "key": "REPORTS36_HELD",
+        "stage": "HOLD_SEMANTIC_CONTRADICTION",
+        "active_paths_held": 14,
+        "correction_owner": 48,
+        "consumption": false
+      },
+      {
+        "key": "REPORTS48",
+        "stage": "PREPARED_NOT_RELEASED",
+        "consumption": false,
+        "terminal_census_source": "See exact immutable observations in source-census-final.json",
+        "head": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+        "evidence_blob": "0b1d66ca5171d6555a1176a236e3a5fb833b41c7"
+      },
+      {
+        "key": "AGENDA39",
+        "stage": "IN_PROGRESS_EXPLICIT_RELEASE_FALSE",
+        "consumption": false,
+        "terminal_census_source": "See exact immutable observations in source-census-final.json",
+        "head": "cb092403e7234a4b6294cfa6819448d1a3917d0c",
+        "authority_blob": "bec15551ab2572389477c61fd7f671f3eca0b02b"
+      },
+      {
+        "key": "COMPILER45",
+        "stage": "UNCHANGED_OBSERVED_NO_NEW_ACK_RELEASE_OR_COMPOSED_PROOF",
+        "consumption": false,
+        "terminal_census_source": "See exact immutable observations in source-census-final.json",
+        "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b"
+      },
+      {
+        "key": "PORTFOLIO50",
+        "stage": "ACTIVE_R2_IN_PROGRESS_ACK_REQUEST_NO_EXPLICIT_RELEASE",
+        "branch": "astra-wp13",
+        "head": "561be4643ef901870ba5a6734791129444213ee7",
+        "observed": "Complete bounded final authority/manifest review found a reviewable material ACK request but no explicit scoped release; authority active and R2 in progress.",
+        "consumption": false,
+        "source": "Parent/root later terminal census",
+        "prior_control_state": "Prepared successor50; later active source ACK observed; explicit release absent at bounded cutoff.",
+        "scope": "Continue recorded Portfolio43/C18 failures without weakening original post-reservation/final-CAS oracles."
+      },
+      {
+        "key": "MEMORY51",
+        "stage": "ACTIVE_BOUNDED_CONTINUATION_NO_NEW_EXPLICIT_RELEASE",
+        "head": "f2794784551e25ce2a2f56f408506cd790fae976",
+        "observed_state": "ACTIVE_BOUNDED_CONTINUATION",
+        "manifest_status": "NOT_RUN_AT_PUBLICATION",
+        "material_observed": "Receipts only",
+        "consumption": false,
+        "source": "Parent/root reported agent observation",
+        "control_history": {
+          "earlier_status": "PREPARED",
+          "current_observed_status": "ACTIVE_BOUNDED_CONTINUATION"
+        },
+        "scope": "MI07 continuation; no51 snapshot or result consumed."
+      },
+      {
+        "key": "DECISIONS52",
+        "stage": "ACK_ACTIVE_BOUNDED_SUCCESSION_NO_NEW_RELEASE",
+        "branch": "astra-wp11",
+        "head": "19a69145e2b4e938c1abf50985488fdb714a4e56",
+        "ack_file": "ACK52.json",
+        "ack_blob": "ee4f18cc45421f300b453b7c385d677b77001ea5",
+        "epoch": "decisions-installed-browser52",
+        "observed_state": "ACK52_ACTIVE_BOUNDED_SUCCESSION",
+        "consumption": false,
+        "source": "Parent/root later terminal census",
+        "control_history": {
+          "earlier_status": "PREPARED",
+          "current_observed_status": "ACK52_ACTIVE_BOUNDED_SUCCESSION"
+        },
+        "scope": "Installed Decisions journeys; no new source release or passing composed evidence."
+      }
+    ],
+    "terminal_control_census": {
+      "initial_pin": "bd045542ebb287cd5f25ce36e676ce90cbce320f",
+      "observed_control": "f2383d1248a130e05a9e6667516023ecea70389e",
+      "observed_at": "2026-11-14T23:28:41Z",
+      "mission47_blob": "cfaf9936eab091c3e43d3608986b118b59af3f90",
+      "mission47_unchanged": true,
+      "COMMON_blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5",
+      "COMMON_unchanged": true,
+      "complete_compare": {
+        "commits": [
+          "89549a407993b78fb2f2f9892beb01a911f984d7",
+          "06a9cebf6c15969f9e255a4c05ffbf6b61fbb535",
+          "f2383d1248a130e05a9e6667516023ecea70389e"
+        ],
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/decisions-installed-journeys.json",
+            "blob": "2b70fb1706cec24aa1aa36e916cfc42a87305dd0",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/memory-history-closure.json",
+            "blob": "c4bdd8f41eaf7c1130ca98d5c8ee0c7b1d1af188",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/microsoft-entra-login.json",
+            "blob": "74d9605c3fec282fd453072ff08af8eb9290a603",
+            "status": "added"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-final-history.json",
+            "blob": "97def2dd8b0c9f8dc10dd9e295d755ee636257ec",
+            "status": "added"
+          }
+        ]
+      },
+      "new_delegations": [
+        {
+          "mission": 49,
+          "id": "microsoft-entra-login",
+          "state": "BRANCH_PREPARED_SESSION_NOT_STARTED",
+          "scope": "Isolated microsoft-login; no tenant/Azure actions by47; require eventual explicit release before intake."
+        },
+        {
+          "mission": 50,
+          "id": "portfolio-final-history",
+          "branch": "astra-wp13",
+          "state": "Source ACK50 active at a97b78d, no delivery",
+          "scope": "Owns proof.ts final-CAS and P03; current in-progress code not consumed."
+        },
+        {
+          "mission": 51,
+          "id": "memory-history-closure",
+          "branch": "astra-wp10",
+          "state": "PREPARED_NOT_STARTED in control; live writer not inferred",
+          "scope": "MI07 long-history follow-up preserving released40 and original35."
+        },
+        {
+          "mission": 52,
+          "id": "decisions-installed-journeys",
+          "branch": "astra-wp11",
+          "state": "PREPARED_NOT_STARTED in control; live writer not inferred",
+          "scope": "All five installed Decisions journeys on actual composition; financial criterion mandatory."
+        }
+      ],
+      "authority_conclusion": "All four changes are additions only and explicitly retain47 as sole sf2-stack writer,45 checks,S0 final epic/acceptance. No control tree merged, no new47 lease supersession observed."
+    },
+    "prior_observations_preserved": [
+      {
+        "key": "MEMORY40",
+        "prior_record": {
+          "key": "MEMORY40",
+          "stage": "ACK_ONLY_NO_QUALIFIED_RELEASE",
+          "consumption": false
+        },
+        "superseded_for_current_intake_state_by": "Explicit release1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90 consumed as C19. Historical pending42/state42 records remain unchanged."
+      }
+    ],
+    "late_arriving_release_outside_C19_cut": {
+      "mission": 46,
+      "release": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "reported_scope": {
+        "owned_paths": 9,
+        "shared_paths": 6,
+        "shared_patch_version": "v3",
+        "shared_patch_base": "C17"
+      },
+      "stage": "EXPLICIT_RELEASE_RECEIVED_ROOT_REVIEW_AND_C20_PENDING",
+      "consumed_in_this_draft": false,
+      "rule": "Root requested this finalized C19 draft as the preserved base. Earlier46 no-release dispositions describe the pre-arrival census only; root must update46/current candidate after reviewing and publishing C20. This notice records the later explicit release without claiming integration."
+    },
+    "finalization": {
+      "all_material_published": true,
+      "last_candidate": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+      "eight_increment_records_verified": true,
+      "source_census": "source-census-final.json",
+      "inheritance": {
+        "source_commit": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+        "source_blob": "66c0443af3c39af9a4ef419002e3cd7f0b824478",
+        "expected": 56,
+        "actual": 56,
+        "missing": [],
+        "wrong_state42": [],
+        "semantic_preservation": true
+      },
+      "terminal_commit_rule": "Containing documentation-only child of exact C20; resolved SHA recorded in PR65 and completion message; this is not qualified D."
+    }
+  },
+  "invariant_groups": {
+    "ALL": {
+      "invariants": [
+        "All mandatory requirements and historical evidence in the exact pending42 source remain in force. This addendum changes current routing and integration state only.",
+        "No functional criterion, AM proof, campaign review, C/G7, D/G8 or final acceptance is closed here. A published material increment is not a qualified candidate.",
+        "Source results retain original W/S/run identities and failures. No source green is transferred to an integrated candidate.",
+        "Mission47/root was the sole sf2-stack writer through this terminal; its lease ends explicitly in AUTHORITY.json. No producer branch edits, CI dispatch, merge into dev, deploy or Azure work. Any successor reconciles target/control and publishes a new ACK.45 owns checks;S0 epic/final acceptance.",
+        "An unpublished or in-progress snapshot cannot be consumed. Any later delivery needs explicit release, complete patch/preimages/dependencies/behavior review and a new exact candidate identity."
+      ]
+    },
+    "FINANCE34": {
+      "owner": "Finance34 / PR42; Compiler45 for composed checks; S0 for qualification",
+      "integration_refs": [
+        "FINANCE34"
+      ],
+      "invariants": [
+        "C13 contains the compatible six-path Finance34 persistence increment; prior C12/Atlas/Finance material remains intact.",
+        "FIN-IND-005 source closure is scoped to its original source run. Integrated long-journey qualification remains open, including 15000/15001, durable history, authorized replay and reopen within the original 180000/300000 ms budgets.",
+        "Preserve source S5 44 PASS/0 FAIL/4 filtered/396 assertions, S4 inherited failure/skips and K2 failures at their exact identities. The original failed deadline is not erased."
+      ]
+    },
+    "C12": {
+      "owner": "C12/32 and canonical Finance/Procurement receipt producers; Compiler45/S0 qualification",
+      "integration_refs": [
+        "PRIOR_C12"
+      ],
+      "invariants": [
+        "Final32 supplement and fixture remain integrated. Keep fixture blob33650407123163ea881eca9d4940fde364b27c54 and the composed Apply behavior; no wholesale source replacement or new Apply.",
+        "Preserve one actual effect and authoritative original receipt; no redispatch without receipt, normal review/CAS and original-intent recovery.",
+        "I-OPS-02, first-save, lost-register, actual domain-commit/case-reconciliation gap, wrong actor/incarnation/revocation negatives and AM04 remain open.",
+        "Keep W2 aggregate FAIL, W3 single PASS and W4 22 PASS evidence separate. Intake-only fixture release resolution remains resolved; runtime acceptance remains open."
+      ]
+    },
+    "MEMORY40": {
+      "owner": "Compiler45/S0 for C19 qualification; Memory40/PR29 is released source provenance; MI07 continuation belongs to51",
+      "integration_refs": [
+        "MEMORY40"
+      ],
+      "invariants": [
+        "Memory40 release1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90 has been consumed as C19 in six exact complete postimages. This replaces the prior ACK-only intake state, without changing pending42 or creating integrated functional acceptance.",
+        "Public original reopens the case and linked canonical records, reauthorizes every source and compares immutable capture/ref/record with final C08/source observations. Settled replay reopens the case and sources and revalidates within the final protected read before any scanner/append/write.",
+        "The private factory-local call scope requires the same Request, headers, binding, opaque lease and digest. Installed caseForEvidence uses the private integrity path to avoid recursion through public readOriginal. This correction is statically consumed; the old proposal35 remains an inert historical proposal.",
+        "Source F02 W1b2a58c687af47558d215e195a1e1abdf9f40df5 / S33d829f96c2f4cad74d7610da089c4aa1162d4ba / run43650471583 reports18 PASS/0 FAIL/311 expects. The unchanged original35 tests on separate C10-based W9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732 / S57882fd8ecabb9b3a9e458ea644c81260fbf514a / run43651719591 report2 PASS/0 FAIL/95 expects. Both remain source-scoped.",
+        "Retain earlier B01 0 PASS/2 FAIL/37 expects, F01 15 PASS/260 expects, CHECK1 inherited/own diagnostics and CHECK2 FAIL13 inherited/0 own. Later recorded source success never erases failures or transfers green to C19.",
+        "MI07 remains an inherited timeout before the historical tail with original225000/240000 ms budgets. Memory51 is the bounded successor and no51 result is consumed. Native AM05, real native witness and actual admission remain open/held.",
+        "Keep current stronger case-port, recall/case-recall, state-provider, Finance34 local-store, C12/Procurement receipt behavior and host-context; the six-file release does not replace its eight differing current dependencies."
+      ],
+      "source_proofs": {
+        "source_F02": {
+          "W": "1b2a58c687af47558d215e195a1e1abdf9f40df5",
+          "S": "33d829f96c2f4cad74d7610da089c4aa1162d4ba",
+          "run": 43650471583,
+          "job": 132617571523,
+          "reported": "18PASS0FAIL311expects710.19s",
+          "omni": "18declared36spawns0delegated"
+        },
+        "original35_recorded_C10_closure": {
+          "base": "0c395c462ce0fae67cb274c45ccb06884877d7cd",
+          "W": "9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732",
+          "S": "57882fd8ecabb9b3a9e458ea644c81260fbf514a",
+          "run": 43651719591,
+          "job": 132621440454,
+          "reported": "2PASS0FAIL95expects75.19s",
+          "process": "parent4120 child4170 exit0; authorizedok1match; outsider/revoked/replacedunavailable; auditunchanged; nativefalse"
+        },
+        "CHECK2": {
+          "S": "3022e0945a79f5bd9faf26c4f6a4f3be903e428a",
+          "run": 43649819285,
+          "job": 132615552942,
+          "reported": "FAIL13inherited0own; otherchecksPASS_SOURCE_ONLY"
+        },
+        "retained": "B01 0PASS2FAIL37; F01 15PASS260; CHECK1 13inherited+3own",
+        "independent_metadata_checks": "Run/job S+conclusions checked; bothW→Sonly.ci-run.json; C10→35Wexactly4overlays",
+        "green_transferred": false
+      },
+      "source_review": "/workspace/scratch/8fd84ac583a8/memory40-review-compact.json"
+    },
+    "PORTFOLIO43": {
+      "owner": "Portfolio50 follow-up for unresolved functional findings; Portfolio43/C18 remains source/integration provenance; Compiler45/S0 qualification",
+      "integration_refs": [
+        "PORTFOLIO43"
+      ],
+      "invariants": [
+        "C18 published ten adapted paths from release6feaf8deab0df1d1e409da9e475340a449fd694e, with two additional test names, additive README,76 receipts and complete patch. Root confirmed89-path readback and28 preserved blobs. This is material integration only; recorded functional failures remain open.",
+        "P01 and the19 KEEP_CURRENT paths remain preserved. The two existing post-reservation tests and their original bodies/oracles must remain; any additional changed-order coverage uses new test names.",
+        "Preserve recorded final-CAS FAIL and P02 history/P03 semantic holds. New tests, receipt-scope reconciliation or source component PASS cannot close those failures.",
+        "Use canonical createSfPreparedApply scopes containing cases, receipts and domainSurface. Do not forge scopeDigest, weaken Apply, replace expected ok with unavailable or drop uniqueness/original-receipt/no-redispatch obligations.",
+        "CurrentChoice46 is separately integrated at C20 with qualification open; P01–P04 do not close its requirements.",
+        "Unresolved follow-up is now assigned to50; its current in-progress snapshot is not a new release and is not consumed."
+      ]
+    },
+    "CURRENT_CHOICE46": {
+      "owner": "CurrentChoice46 released source;45 composed checks;S0 final acceptance",
+      "integration_refs": [
+        "CURRENT_CHOICE46"
+      ],
+      "invariants": [
+        "Releasefc6d96d49bdae2e22fef796cd9eebbb384381d4b explicitly ended source46. C20 integrates nine owned and six shared-v3 paths together, all15 preimages and40hunks exact; shared-v1/v2 remain archived historical artifacts.",
+        "The private fence binds exact frozen context/Request/headers/command/identity; reauthorizes host and recaptures all three current snapshots before commit and egress. No cached authority or different current dependency was substituted.",
+        "Canonical Planner preparation/result/coverage/Atlas continuity precedes a separate exact human promotion. Historical choices and original C12 four read-fence oracles remain. Final promotion is atomic; prior authorized independent producer writes may remain durable.",
+        "Core32PASS plus supplement4PASS contain34unique names with2overlap, not one34-test run. W2failure and131externaltypecheckFAIL retained. Source fixtures use an injected decisions.edit preparation callback; sharedhost uses planner.preview, whose actual grant/HTTP/UI path remains unqualified.",
+        "No candidate tests/typechecks/guards/AM/browser checks were executed. All numeric250000/-10000/15000/min20000, omission/zero/not-applicable, consumer/native requirements remain mandatory; CurrentChoice is not financial approval or Apply."
+      ]
+    },
+    "OPERATIONS": {
+      "owner": "Operations24 plus actual scanner/environment owners; Compiler45/S0 qualification",
+      "integration_refs": [
+        "PRIOR_OPERATIONS24"
+      ],
+      "invariants": [
+        "Previously consumed Operations24/C7 material remains. Seven auxiliary cases and five original nominal UI journeys still require proof on the actual integrated candidate.",
+        "Preserve approved-scanner requirements, C06 material behavior, formats, native/AM and human-timing obligations. An unavailable real scanner remains fail-closed.",
+        "The revision49 provenance correction remains an intake-only resolution; historical wrong-tree records remain alongside their correction."
+      ]
+    },
+    "REPORTS48": {
+      "owner": "Reports48 / PR27 with Collaboration/WP08, actual recipient/source authority owners; Compiler45/S0 qualification",
+      "integration_refs": [
+        "REPORTS36_HELD",
+        "REPORTS48"
+      ],
+      "invariants": [
+        "The old14-target Reports36 payload remains held. Reports48 head2fbb07c89581d1b30cbb23a1046805c3bcaea4a3 has COMPOSITION-PLAN PREPARED_NOT_RELEASED; no corrected release consumed. Independent accepted shared changes do not activate that old payload.",
+        "The correction must separate actual denied/scope changes from authorized digest drift or storage unavailability. Preserve draft plus pending intent/idempotency key in recoverable states; purge private data on actual revocation.",
+        "Retain the source four FAILED_SETUP results and zero completed journeys. Current router's static equivalence is not executed nominal proof.",
+        "Distinct legitimate recipient and protected nonplain C05 leases remain missing. Directory lookup, self-enrollment or another invented principal supplies no grant.",
+        "Preserve all86 canonical criteria, four original reports.spec.ts nominals, current exact identity/source pins, confirmations/reuse/revocation, native/UI/MCP parity, visual and timing obligations."
+      ]
+    },
+    "CHECKS45": {
+      "owner": "Compiler45 / astra-compose PR32 with diagnostic/source owners; S0 final dispatcher and acceptance",
+      "integration_refs": [
+        "COMPILER45"
+      ],
+      "invariants": [
+        "No new45 ACK, release or current composed proof is observed in this snapshot. All composed tests, typechecks, generation/spawn/guard gates remain NOT_RUN.",
+        "Bind true product W/tree/config to the existing authorized lane. Preserve full nominal roots, helper imports, showConfig/listFiles/exit codes and all existing check requirements.",
+        "Historical source failures remain failures. No ignore, suppression, narrowed graph, increased timeout or waiver is introduced; mission47 dispatches nothing."
+      ]
+    },
+    "DECISIONS44": {
+      "owner": "Decisions52 active bounded installed-journey successor; Decisions44/C16 remains source/integration provenance; Compiler45/S0 qualification",
+      "integration_refs": [
+        "DECISIONS44"
+      ],
+      "invariants": [
+        "C16 published the complete released four-path unit: three owned paths plus the shared installation-fixture cookie patch. This is integrated implementation, not passing browser qualification.",
+        "Retain all five original nominal journeys and timeouts; strict single-cookie policy keeps exact name/handle shape and four unique attributes. The changed assertions match the existing locked creation contract.",
+        "Source browser0 PASS/5 FAIL before UI, focused cookie2 PASS/29 assertions and source130 TS/43 GATE/18 WARN keep their original identities; none qualify the integrated candidate.",
+        "Rebind from source C11 to actual later composition, preserve final32 fixture and existing C12/Atlas material, and qualify all consumer/CAS/history/recovery paths.",
+        "Installed-journey continuation is now52, observed ACK active but without new release; future proof must be rebound to actual current C19/dependencies."
+      ]
+    },
+    "PROCUREMENT37": {
+      "owner": "Procurement37 / PR23; root47 integrated C15; Compiler45/S0 qualification",
+      "integration_refs": [
+        "PROCUREMENT37"
+      ],
+      "invariants": [
+        "C15 published the complete24-path Procurement37 unit. This is integrated implementation, not functional closure.",
+        "Preserve the read-only pre-choice producer, actual producer identity/source witness, persisted result/replay, C10 coverage and typed controls; no financial mutation at preparation.",
+        "Qualification still needs actual promotion/replay/reload, numeric POST/registry, source/case/actor snapshot drift, Planner preservation and downstream BI/Decisions compatibility."
+      ]
+    },
+    "FINANCIAL_APPROVAL": {
+      "owner": "S0/WP00 policy and contract owner with Procurement/C12 canonical command owners",
+      "integration_refs": [
+        "PROCUREMENT37"
+      ],
+      "invariants": [
+        "M31-FINANCIAL-APPROVAL remains mandatory and unsatisfied after Procurement37 integration.",
+        "Existing save/submit/approve lifecycle does not provide canonical detached approval of an unwritten replacement amount. Resolve canonical edit/submit/approve order or a separately authorized typed contract.",
+        "Never treat human choice or a checkbox as financial approval, approve an old amount, implement another Apply or weaken domain policy. Keep the financial nominal mandatory."
+      ]
+    },
+    "NATIVE41": {
+      "owner": "Native41 / PR30; actual authenticated native admission and Schedule owners; S0 qualification",
+      "integration_refs": [
+        "NATIVE41_PRIVATE",
+        "NATIVE41_HOST_HELD"
+      ],
+      "invariants": [
+        "C17 published eight private component/test paths. Shared native host activation remains held. Current host evolved through Procurement37/C15 and CurrentChoice46/C20 to b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b, preserving prior route wiring; source41 oldpreimage2bf requires complete future reconciliation.",
+        "Never derive Request-to-native Maestro ownership from user/model IDs, retained inputs, a fabricated registry or a resident sf_maestro session.",
+        "The actual chain requires current publication/plan/input, exact source/case, governed review/approval/authorization/arm, canonical Task invocation, provider/Relay terminal result and authorized consumer after reload.",
+        "Source87 component passes use synthetic admission/frame/history and a nonexecuting Task; they do not prove actual native model/reviewer/Task/Relay/Schedule or AM02/AM06.",
+        "Native watch remains unavailable/unadvertised without real Schedule admission. Preserve missing upstream knowledge, background authority/cancellation/business-artifact limitations and fail-closed readiness."
+      ]
+    },
+    "FINAL_QUALIFICATION": {
+      "owner": "S0 with Compiler45, authorized native owners and three fresh independent final reviewers",
+      "integration_refs": [
+        "ALL_PUBLISHED_CANDIDATES"
+      ],
+      "invariants": [
+        "All eight minimum recipes, additional inherited suites and canonical gates, AM01–AM06,39 operations/eight packs/18 skills/five profiles, scanner/restart/consumer proofs and three independent FINAL verdicts must refer to the same accepted candidate.",
+        "Helper reviews are not campaign final reviews. C/G7 and evidential D/G8 remain mandatory; no campaign release or acceptance is granted here."
+      ]
+    },
+    "ATLAS35": {
+      "owner": "Compiler45/S0 qualification and native acceptance; Atlas35/Memory40 source provenance; Memory51 for MI07",
+      "integration_refs": [
+        "PRIOR_ATLAS35",
+        "MEMORY40",
+        "MEMORY51"
+      ],
+      "invariants": [
+        "The original two Atlas35 test/helper paths remain unchanged and consumed from C12 through C19; preserve their earlier process-restart evidence with distinct PIDs and persisted capture.",
+        "Memory40 records a later C10-based reproduction of those unchanged original35 tests with2 PASS/0 FAIL/95 expects at W9902a8f2a3c3ca0b11bae17c7c369fdb0ed22732 / S57882fd8ecabb9b3a9e458ea644c81260fbf514a, run43651719591. Earlier C17/B01 failures remain historical evidence at their original identities.",
+        "C19 statically consumes Memory40's correction, but source-only original35/C17 success is not a C19 result, does not close MI07 and does not establish native AM05. nativeSessionWitness remains false; actual native admission stays held."
+      ]
+    },
+    "BI38": {
+      "owner": "BI38 / astra-wp05 PR24; root47 integrated C14; Compiler45/S0 qualification",
+      "integration_refs": [
+        "BI38"
+      ],
+      "invariants": [
+        "C14 published the ten-path BI38 unit with canonical producer-derived waterfall and source/case/scenario/version/period/currency bindings.",
+        "Keep tables, sensitivity, unknown costs, exact canonical arithmetic and Finance/Procurement producer boundaries; no residual repair or false zero.",
+        "Source adapter17 PASS, three load failures,28 test bodies not executed, Omni MISSING_NOT_PASS and typecheck334 FAIL remain scoped to source. Installed rendering, BI10 and full8+3/literal training40000 obligations remain open."
+      ]
+    },
+    "AGENDA39": {
+      "owner": "Agenda39 / review-agenda with Reports48 consumer; root47 after explicit release",
+      "integration_refs": [
+        "AGENDA39"
+      ],
+      "invariants": [
+        "No terminal release is observed; release:false/in-progress material remains unconsumed.",
+        "Preserve real authorized multi-topic/domain/period discovery, selection, preview, capture/reload; recoverable selections persist and revoked sources purge.",
+        "Shared host/router/browser and reports.spec.ts dependencies require complete released patches. Reports consumer is now48; no ninth final CI recipe is introduced."
+      ]
+    },
+    "MEMORY51": {
+      "owner": "Memory51 / bounded continuation for MI07, observed active; Compiler45/S0 qualification",
+      "integration_refs": [
+        "MEMORY40",
+        "MEMORY51"
+      ],
+      "invariants": [
+        "Historical control preparation is preserved; later headf2794784551e25ce2a2f56f408506cd790fae976 is observed ACTIVE_BOUNDED_CONTINUATION with receipts only and MI07 manifest NOT_RUN_AT_PUBLICATION.",
+        "The original MI07 timeout before the historical tail remains open, with225000/240000 ms budgets and historical/restart-to-recall-to-UI obligations intact.",
+        "C19/Memory40's focused source successes and original35 source reproduction do not close MI07. No51 snapshot, implementation or result is consumed without explicit release of an exact coherent scope."
+      ]
+    },
+    "PORTFOLIO50": {
+      "owner": "Portfolio50 / bounded follow-up, observed active; root47 only after explicit coherent release; Compiler45/S0 qualification",
+      "integration_refs": [
+        "PORTFOLIO43",
+        "PORTFOLIO50"
+      ],
+      "invariants": [
+        "C18's adapted Portfolio43 intake remains preserved. Follow-up50 head561be4643ef901870ba5a6734791129444213ee7 is R2 IN_PROGRESS with manifest v2/ACK request. Full authority and all new receipts were read; no explicit scoped release was demonstrated. No50 material is consumed.",
+        "Retain final-CAS FAIL, P02 historical/P03 semantic holds, P01,19 KEEP_CURRENT, both original post-reservation tests and added coverage under new names. A follow-up must resolve the real producer/contract behavior without weakening the old oracles.",
+        "Any consumable50 release requires explicit release semantics, full patch/preimages/dependencies and actual new candidate identity. CurrentChoice46 remains separate."
+      ]
+    },
+    "DECISIONS52": {
+      "owner": "Decisions52 / astra-wp11 PR40, active bounded successor for installed journeys, with canonical producers; Compiler45/S0 qualification",
+      "integration_refs": [
+        "DECISIONS44",
+        "DECISIONS52",
+        "MEMORY40"
+      ],
+      "invariants": [
+        "Prepared control is retained as history. Later ACK52_ACTIVE_BOUNDED_SUCCESSION is observed at19a69145e2b4e938c1abf50985488fdb714a4e56; ACK52.json blobee4f18cc45421f300b453b7c385d677b77001ea5, epochdecisions-installed-browser52. There is no new52 release or passing composed evidence.",
+        "C16's four-path Decisions44 unit remains integrated through C19. The successor must bind the actual current candidate and changed Memory40 dependencies while preserving all five original nominal journeys and timeouts.",
+        "M31-FINANCIAL-APPROVAL remains mandatory and unsatisfied; human choice is not financial approval. No skipped nominal, source-green transfer or weaker oracle is introduced.",
+        "Source44 failed browser/check results and its focused cookie PASS retain original identities; ACK, active authority or plan alone supplies no runtime credit."
+      ]
+    }
+  },
+  "preserved_intake_only_resolutions42": [
+    "M29-ATLAS-003 released test/helper intake only",
+    "C12-POSTTERMINAL-FIXTURE-A20 explicit final supplement intake only"
+  ],
+  "coverage": {
+    "expected_inherited": 50,
+    "expected_new42": 6,
+    "actual_inherited": 50,
+    "actual_new42": 6,
+    "unique_ids": 56,
+    "missing_ids": [],
+    "extra_ids": [],
+    "dropped_dispositions": 0
+  },
+  "functional_criteria_closed_by_this_addendum": 0,
+  "gates": {
+    "tests": "NOT_RUN_ON_COMPOSED_CANDIDATES",
+    "typecheck": "NOT_RUN_ON_COMPOSED_CANDIDATES",
+    "guards": "NOT_RUN_ON_COMPOSED_CANDIDATES",
+    "generation_spawn": "NOT_RUN_ON_COMPOSED_CANDIDATES",
+    "CI": "NOT_DISPATCHED_BY_MISSION47",
+    "AM": "NOT_RUN_ON_COMPOSED_CANDIDATES",
+    "C_G7": "NOT_ACCEPTED",
+    "D_G8": "NOT_RUN_NOT_CLAIMED",
+    "source_green_is_not_bundle_green": true,
+    "final_check_owner": "45/S0",
+    "final_acceptance_owner": "S0",
+    "global_release": false
+  },
+  "actions_by_this_agent": {
+    "origin": "Delegated draft converted to root terminal record",
+    "inherited_draft_actions": {
+      "remote_queries": 0,
+      "remote_writes": 0,
+      "CI_dispatches": 0,
+      "product_execution": 0,
+      "tests": 0,
+      "typechecks": 0,
+      "guards": 0,
+      "builds": 0,
+      "local_activity": "Read and transform already fetched local JSON/text only; create a new finalized draft and change summary without modifying prior pending42 or prior47 files."
+    },
+    "root_remote_writes": "Only GitHub MCP sf2-stack CAS and PR65 metadata; no producer refs",
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "AM": 0
+  },
+  "item_disposition_rule": "Each record below is an additive routing/integration update only. ALL invariants apply to every ID; owner_group resolves to invariant_groups[owner_group].owner. Full original records and their mission42 dispositions remain inherited by exact matching id in the pinned source. No functional closure is created.",
+  "inherited_ids": [
+    "FIN-IND-005",
+    "FIN22-LEGACY-FIXTURE-ASSEMBLY",
+    "C12-RECOVERY",
+    "C12-FINANCE-ORACLE-COMPATIBILITY",
+    "MEMORY-INTEGRITY",
+    "MEMORY-HISTORY-MI07",
+    "C17-BETWEEN-OBSERVATIONS",
+    "WP13-SEMANTIC-UNION",
+    "WP13-P02-C12-RECEIPT-SCOPE",
+    "CURRENT-CHOICE-COHORT",
+    "E2E-OPERATIONS",
+    "OPERATIONS24-REVISION49-PROVENANCE",
+    "OPERATIONS24-REAL-SCANNER",
+    "E2E-DECISIONS",
+    "DECISIONS-COVERAGE-CAS-GRAPH",
+    "C05-INSTALLED-CLOSURE",
+    "E2E-REPORTS",
+    "TYPECHECK-GUARDS",
+    "ROUTINES-NATIVE-ADMISSION",
+    "NATIVE-AM-REVIEW",
+    "REPORTS25-DRAFT-LOSS-ON-ACTION-ERROR",
+    "M29-ATLAS-003",
+    "REPORTS25-distinct-legitimate-recipient",
+    "REPORTS25-nonplain-c05-source-lease",
+    "REPORTS25-real-composition-w-and-actions",
+    "REPORTS25-reports-e2e-typecheck",
+    "REPORTS25-canonical-reports-evidence",
+    "ROUTINES30-real-request-maestro-task-owner",
+    "ROUTINES30-publication-plan-human-admission",
+    "ROUTINES30-native-provider-and-return-after-reload",
+    "ROUTINES30-knowledge-upstream",
+    "ROUTINES30-native-watch",
+    "ROUTINES30-background-cancel-business-artifact",
+    "ROUTINES30-composed-validation",
+    "M31-BOOTSTRAP",
+    "M31-COVERAGE",
+    "M31-NUMERIC-RULE",
+    "M31-PROCUREMENT-EVIDENCE",
+    "M31-HISTORICAL-READ",
+    "M31-PRECHOICE-PROCUREMENT",
+    "M31-FINANCIAL-APPROVAL",
+    "M31-C12-PROOF",
+    "M31-CRITERIA-REMAINDERS",
+    "M31-NATIVE",
+    "M31-CHECKS",
+    "M31-CHECK-LANES",
+    "M33-DEC31-SHARED-PERIOD-QUALIFICATION",
+    "C12-POSTTERMINAL-FIXTURE-A20",
+    "M27-BI09-WATERFALL-MOUNT",
+    "M27-C05-FIRST-AGENDA"
+  ],
+  "new42_ids": [
+    "M35-C17-ORIGINAL-REVALIDATION",
+    "M40-PROPOSAL35-RECURSION",
+    "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+    "REPORTS36-SOURCE-NOMINAL-FAILED-SETUP",
+    "M45-COMPOSED-COMPILER-QUALIFICATION",
+    "M44-CANDIDATE-REBIND"
+  ],
+  "items_by_id": {
+    "FIN-IND-005": {
+      "state42": "FINANCE34_ACTIVE_NO_RELEASE",
+      "state47": "C13_INTEGRATED_LONG_JOURNEY_ACCEPTANCE_OPEN",
+      "owner_group": "FINANCE34",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "FINANCE34"
+      ],
+      "next47": "Qualify the preserved long journey on the actual integrated candidate; source-only FIN-IND-005 closure is not integrated acceptance."
+    },
+    "FIN22-LEGACY-FIXTURE-ASSEMBLY": {
+      "state42": "CARRIED_FORWARD_WITHOUT_FUNCTIONAL_CLOSURE",
+      "state47": "LEGACY_ASSEMBLY_PRESERVED_QUALIFICATION_OPEN",
+      "owner_group": "FINANCE34",
+      "integration_stage": "PRIOR_INTAKE_RETAINED",
+      "invariant_groups": [
+        "FINANCE34"
+      ],
+      "next47": "Retain the explicit legacy fixture and compatible provider composition; qualify isolation/materialization without wholesale replacement."
+    },
+    "C12-RECOVERY": {
+      "state42": "FINAL32_SUPPLEMENT_AND_FIXTURE_CONSUMED_C12_FUNCTIONAL_OPEN",
+      "state47": "FINAL32_PRESERVED_FUNCTIONAL_RECOVERY_OPEN",
+      "owner_group": "C12",
+      "integration_stage": "PRIOR_INTAKE_RETAINED",
+      "invariant_groups": [
+        "C12"
+      ],
+      "next47": "Prove original-intent recovery, one effect and the authoritative receipt on the actual later candidate."
+    },
+    "C12-FINANCE-ORACLE-COMPATIBILITY": {
+      "state42": "FINAL32_SUPPLEMENT_AND_FIXTURE_CONSUMED_C12_FUNCTIONAL_OPEN",
+      "state47": "C12_FINANCE_ORACLES_PRESERVED_COMPOSED_PROOF_OPEN",
+      "owner_group": "C12",
+      "integration_stage": "PRIOR_INTAKE_RETAINED",
+      "invariant_groups": [
+        "C12",
+        "FINANCE34"
+      ],
+      "next47": "Retain positive unrelated-edit and negative material-choice/admission-window/duplicate-identity/revocation oracles."
+    },
+    "MEMORY-INTEGRITY": {
+      "state42": "MEMORY40_ACTIVE_RUNTIME_FINDINGS_OPEN",
+      "state47": "C19_MEMORY40_SIX_PATHS_INTEGRATED_COMPOSED_INTEGRITY_PROOF_OPEN",
+      "owner_group": "MEMORY40",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "MEMORY40"
+      ],
+      "next47": "Qualify the consumed original/recall/settled-replay fences on actual C19. Preserve all prior corruption, authority, revocation, stale-preserve and reopen obligations; source-only passes do not grant acceptance."
+    },
+    "MEMORY-HISTORY-MI07": {
+      "state42": "MEMORY40_ACTIVE_RUNTIME_FINDINGS_OPEN",
+      "state47": "MI07_HISTORICAL_TIMEOUT_OPEN_MEMORY51_ACTIVE_NO_QUALIFIED_RELEASE",
+      "owner_group": "MEMORY51",
+      "integration_stage": "PRIOR_TIMEOUT_RETAINED_SUCCESSOR_ACTIVE_NOT_CONSUMED",
+      "invariant_groups": [
+        "MEMORY51",
+        "MEMORY40"
+      ],
+      "next47": "Memory51 must finish the unchanged historical/restart-to-recall-to-UI obligations within original225000/240000 ms budgets and explicitly release qualified material/evidence. Receipts-only NOT_RUN publication and C19 source proofs do not close MI07."
+    },
+    "C17-BETWEEN-OBSERVATIONS": {
+      "state42": "MEMORY40_ACTIVE_RUNTIME_FINDINGS_OPEN",
+      "state47": "C19_MEMORY40_AUTHORITY_FENCES_INTEGRATED_COMPOSED_OBSERVATION_PROOF_OPEN",
+      "owner_group": "MEMORY40",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "MEMORY40"
+      ],
+      "next47": "Qualify exact Request/header/binding/opaque-lease identity and current independent observations on actual C19. Keep source results scoped to their W/S; no permission cache or intra-observation-only substitute."
+    },
+    "WP13-SEMANTIC-UNION": {
+      "state42": "PORTFOLIO43_ACTIVE_P02_P03_P04_HELD_P01_RETAINED",
+      "state47": "C18_RETAINED_PORTFOLIO50_ACTIVE_FOLLOWUP_NOT_CONSUMED_SEMANTIC_HOLDS_OPEN",
+      "owner_group": "PORTFOLIO50",
+      "integration_stage": "PUBLISHED_ADAPTED_MATERIAL",
+      "invariant_groups": [
+        "PORTFOLIO43",
+        "PORTFOLIO50"
+      ],
+      "next47": "Portfolio50 must resolve recorded functional failures and provide an explicit qualified release. Preserve C18/P01/KEEP_CURRENT, original post-reservation tests, added names and all final-CAS/history/semantic obligations; R2 progress is not consumed."
+    },
+    "WP13-P02-C12-RECEIPT-SCOPE": {
+      "state42": "PORTFOLIO43_ACTIVE_P02_P03_P04_HELD_P01_RETAINED",
+      "state47": "C18_SCOPE_RECONCILIATION_RETAINED_PORTFOLIO50_ACTIVE_FINAL_CAS_FAIL_OPEN",
+      "owner_group": "PORTFOLIO50",
+      "integration_stage": "PUBLISHED_ADAPTED_MATERIAL",
+      "invariant_groups": [
+        "PORTFOLIO43",
+        "C12",
+        "PORTFOLIO50"
+      ],
+      "next47": "Route remaining canonical scope/history/final-CAS behavior to50 without weakening success, receipt, uniqueness or no-redispatch oracles. Preserve C18 and require explicit complete release before any next intake."
+    },
+    "CURRENT-CHOICE-COHORT": {
+      "state42": "HELD_NEW_EXPLICIT_OWNER46_PREPARED",
+      "state47": "C20_COMPLETE_COHORT_INTEGRATED_QUALIFICATION_OPEN",
+      "owner_group": "CURRENT_CHOICE46",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "CURRENT_CHOICE46"
+      ],
+      "next47": "Qualify exact C20 driver/provider/Memory40, actual planner.preview prepare/review/promotion, final joint fence and lost-response recovery via authorized45/S0 lanes. Preserve all mandatory full numeric and financial approval criteria."
+    },
+    "E2E-OPERATIONS": {
+      "state42": "CARRIED_FORWARD_WITHOUT_FUNCTIONAL_CLOSURE",
+      "state47": "OPERATIONS_NOMINAL_AND_AUXILIARY_PROOF_OPEN",
+      "owner_group": "OPERATIONS",
+      "integration_stage": "PRIOR_INTAKE_RETAINED",
+      "invariant_groups": [
+        "OPERATIONS",
+        "CHECKS45"
+      ],
+      "next47": "Qualify all seven auxiliary cases and five original nominal journeys on the actual candidate."
+    },
+    "OPERATIONS24-REVISION49-PROVENANCE": {
+      "state42": "CARRIED_FORWARD_WITHOUT_FUNCTIONAL_CLOSURE",
+      "state47": "PRIOR_INTAKE_PROVENANCE_RESOLUTION_PRESERVED",
+      "owner_group": "OPERATIONS",
+      "integration_stage": "PRIOR_INTAKE_RETAINED",
+      "invariant_groups": [
+        "OPERATIONS"
+      ],
+      "next47": "Retain the exact revision49 tree and additive provenance correction; do not convert provenance resolution into functional closure."
+    },
+    "OPERATIONS24-REAL-SCANNER": {
+      "state42": "CARRIED_FORWARD_WITHOUT_FUNCTIONAL_CLOSURE",
+      "state47": "APPROVED_REAL_SCANNER_POSITIVE_PROOF_MISSING",
+      "owner_group": "OPERATIONS",
+      "integration_stage": "RESOURCE_HOLD",
+      "invariant_groups": [
+        "OPERATIONS"
+      ],
+      "next47": "An approved actual scanner capability and positive upload/import verdict provenance remain required."
+    },
+    "E2E-DECISIONS": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "C16_UNIT_RETAINED_DECISIONS52_ACK_ACTIVE_FIVE_NOMINALS_NOT_QUALIFIED",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "DECISIONS44",
+        "PROCUREMENT37",
+        "FINANCIAL_APPROVAL",
+        "DECISIONS52"
+      ],
+      "next47": "Decisions52 must bind actual current C19 and qualify all five original installed journeys without weakening timeouts/oracles or financial approval. No new52 release or composed PASS is observed."
+    },
+    "DECISIONS-COVERAGE-CAS-GRAPH": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "C15_C16_RETAINED_DECISIONS52_ACTIVE_COMPOSED_CONSUMER_CAS_PROOF_OPEN",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "DECISIONS44",
+        "PROCUREMENT37",
+        "CHECKS45",
+        "DECISIONS52"
+      ],
+      "next47": "Use actual C19/dependencies for installed consumer/CAS/bootstrap/history qualification under52/45/S0; active ACK supplies no proof and all graph/oracle requirements persist."
+    },
+    "C05-INSTALLED-CLOSURE": {
+      "state42": "REPORTS36_RELEASE_RECEIVED_RESOURCE_BLOCKERS_RETAINED",
+      "state47": "RECIPIENT_AND_NONPLAIN_SOURCE_LEASES_BLOCKED",
+      "owner_group": "REPORTS48",
+      "integration_stage": "RESOURCE_AND_SEMANTIC_HOLD",
+      "invariant_groups": [
+        "REPORTS48"
+      ],
+      "next47": "Require actual recipient/source ACL authority, synchronous checkAtCommit and protected producer leases; no invented principal or grant."
+    },
+    "E2E-REPORTS": {
+      "state42": "REPORTS36_SOURCE_4_FAILED_SETUP_ATOMIC_ACTIVATION_HELD",
+      "state47": "REPORTS36_ALL14_HELD_REPORTS48_ACK_ONLY",
+      "owner_group": "REPORTS48",
+      "integration_stage": "HELD_NO_CORRECTED_RELEASE",
+      "invariant_groups": [
+        "REPORTS48"
+      ],
+      "next47": "Keep four failed-setup nominals and all criteria open until a complete corrected release and actual candidate qualification."
+    },
+    "TYPECHECK-GUARDS": {
+      "state42": "COMPOSED_COMPILER45_PREPARED_CURRENT_GATES_NOT_RUN",
+      "state47": "ALL_COMPOSED_CHECKS_NOT_RUN_OWNER45",
+      "owner_group": "CHECKS45",
+      "integration_stage": "NO_NEW_ACK_OR_PROOF",
+      "invariant_groups": [
+        "CHECKS45"
+      ],
+      "next47": "Prepare exact candidate references for45; no borrowed green, suppression or narrowed graph."
+    },
+    "ROUTINES-NATIVE-ADMISSION": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "C17_PRIVATE8_INTEGRATED_REAL_ADMISSION_BLOCKED",
+      "owner_group": "NATIVE41",
+      "integration_stage": "PRIVATE_MATERIAL_PUBLISHED_HOST_HELD",
+      "invariant_groups": [
+        "NATIVE41"
+      ],
+      "next47": "Hold shared host activation until an actual authenticated Request-to-native Maestro/Task capability exists."
+    },
+    "NATIVE-AM-REVIEW": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "ALL_NATIVE_AM_AND_FINAL_REVIEW_GATES_OPEN",
+      "owner_group": "FINAL_QUALIFICATION",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "FINAL_QUALIFICATION",
+        "NATIVE41"
+      ],
+      "next47": "Require the same-candidate complete suite/AM coverage and three fresh independent final verdicts; helper review supplies no credit."
+    },
+    "REPORTS25-DRAFT-LOSS-ON-ACTION-ERROR": {
+      "state42": "RELEASED36_IMPLEMENTATION_ARCHIVED_INERT_SEMANTIC_HOLD",
+      "state47": "RECOVERABLE_DRAFT_AND_INTENT_PRESERVATION_OPEN",
+      "owner_group": "REPORTS48",
+      "integration_stage": "HELD_NO_CORRECTED_RELEASE",
+      "invariant_groups": [
+        "REPORTS48"
+      ],
+      "next47": "Preserve drafts and pending identity/key on recoverable failures while still purging genuine revoked private content."
+    },
+    "M29-ATLAS-003": {
+      "state42": "RELEASED35_TEST_HELPER_CONSUMED_C12_COMPONENT_PASS_PRESERVED",
+      "state47": "ATLAS35_HELPERS_PRESERVED_C19_FIX_CONSUMED_SOURCE_PASS_ONLY_AM05_OPEN",
+      "owner_group": "ATLAS35",
+      "integration_stage": "PRIOR_HELPERS_RETAINED_AND_C19_MATERIAL_PUBLISHED",
+      "invariant_groups": [
+        "ATLAS35",
+        "MEMORY40",
+        "MEMORY51"
+      ],
+      "next47": "Keep unchanged original35 helpers, earlier failures and later recorded source2 PASS reproduction distinct. Neither component restart nor C19 intake closes MI07/native AM05; qualify actual current candidate."
+    },
+    "REPORTS25-distinct-legitimate-recipient": {
+      "state42": "REPORTS36_RELEASE_RECEIVED_RESOURCE_BLOCKERS_RETAINED",
+      "state47": "DISTINCT_LEGITIMATE_RECIPIENT_STILL_BLOCKED",
+      "owner_group": "REPORTS48",
+      "integration_stage": "RESOURCE_HOLD",
+      "invariant_groups": [
+        "REPORTS48"
+      ],
+      "next47": "Require a real current caller/recipient/source ACL provider; local directory/enrollment does not establish a second authorized person."
+    },
+    "REPORTS25-nonplain-c05-source-lease": {
+      "state42": "REPORTS36_RELEASE_RECEIVED_RESOURCE_BLOCKERS_RETAINED",
+      "state47": "NONPLAIN_C05_PROTECTED_SOURCE_LEASES_BLOCKED",
+      "owner_group": "REPORTS48",
+      "integration_stage": "RESOURCE_HOLD",
+      "invariant_groups": [
+        "REPORTS48"
+      ],
+      "next47": "Keep comments, outcomes, decisions, sensitivity, calculations, documents and non-Dashboard sources fail-closed without actual producer leases."
+    },
+    "REPORTS25-real-composition-w-and-actions": {
+      "state42": "REPORTS36_SOURCE_4_FAILED_SETUP_ATOMIC_ACTIVATION_HELD",
+      "state47": "REPORTS_ACTUAL_COMPOSITION_AND_NOMINAL_RUN_OPEN",
+      "owner_group": "REPORTS48",
+      "integration_stage": "HELD_NO_CORRECTED_RELEASE",
+      "invariant_groups": [
+        "REPORTS48",
+        "CHECKS45"
+      ],
+      "next47": "Any material corrected Reports composition requires a new exact W; source overlay results do not qualify it."
+    },
+    "REPORTS25-reports-e2e-typecheck": {
+      "state42": "NOT_RUN_PROPOSAL_INERT_OWNER45",
+      "state47": "REPORTS_E2E_COMPILER_GRAPH_PROOF_NOT_RUN",
+      "owner_group": "CHECKS45",
+      "integration_stage": "NO_NEW_ACK_OR_PROOF",
+      "invariant_groups": [
+        "CHECKS45",
+        "REPORTS48"
+      ],
+      "next47": "Retain Reports and concurrent nominal roots/helper imports; exact existing and scoped E2E compiler checks remain required."
+    },
+    "REPORTS25-canonical-reports-evidence": {
+      "state42": "REPORTS36_SOURCE_4_FAILED_SETUP_ATOMIC_ACTIVATION_HELD",
+      "state47": "ALL86_REPORTS_CRITERIA_UNAPPROVED",
+      "owner_group": "REPORTS48",
+      "integration_stage": "HELD_NO_CORRECTED_RELEASE",
+      "invariant_groups": [
+        "REPORTS48"
+      ],
+      "next47": "Retain selective Talent, external leases, rendering, parity, distinct recipient and human-timing obligations."
+    },
+    "ROUTINES30-real-request-maestro-task-owner": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "AUTHENTICATED_NATIVE_OWNER_CAPABILITY_BLOCKED",
+      "owner_group": "NATIVE41",
+      "integration_stage": "PRIVATE_MATERIAL_PUBLISHED_HOST_HELD",
+      "invariant_groups": [
+        "NATIVE41"
+      ],
+      "next47": "A private registry component alone cannot supply actual trusted Request-to-Maestro ownership."
+    },
+    "ROUTINES30-publication-plan-human-admission": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "REAL_PUBLICATION_PLAN_HUMAN_ADMISSION_MISSING",
+      "owner_group": "NATIVE41",
+      "integration_stage": "PRIVATE_MATERIAL_PUBLISHED_HOST_HELD",
+      "invariant_groups": [
+        "NATIVE41"
+      ],
+      "next47": "Require current plan/publication, retained input, exact case/source, governed approval/arm and recorded actual Task invocation."
+    },
+    "ROUTINES30-native-provider-and-return-after-reload": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "REAL_PROVIDER_RELAY_RETURN_AFTER_RELOAD_NOT_RUN",
+      "owner_group": "NATIVE41",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "NATIVE41"
+      ],
+      "next47": "Prove actual provider, Task/Relay terminal checkpoint/audit and authorized consumer after reload."
+    },
+    "ROUTINES30-knowledge-upstream": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "UPSTREAM_KNOWLEDGE_CAPABILITY_UNAVAILABLE_WHEN_REQUIRED",
+      "owner_group": "NATIVE41",
+      "integration_stage": "RESOURCE_HOLD",
+      "invariant_groups": [
+        "NATIVE41"
+      ],
+      "next47": "Keep SF_ROUTINE_KNOWLEDGE_PORT_UNAVAILABLE for recipes requiring the absent authenticated capability."
+    },
+    "ROUTINES30-native-watch": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "REAL_SCHEDULE_ADMISSION_UNAVAILABLE",
+      "owner_group": "NATIVE41",
+      "integration_stage": "RESOURCE_HOLD",
+      "invariant_groups": [
+        "NATIVE41"
+      ],
+      "next47": "Keep sf_watch_prepare unadvertised; memory.prepareWatch is not native Schedule admission."
+    },
+    "ROUTINES30-background-cancel-business-artifact": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "BACKGROUND_CANCEL_BUSINESS_ARTIFACT_NOT_SUPPLIED",
+      "owner_group": "NATIVE41",
+      "integration_stage": "RESOURCE_HOLD",
+      "invariant_groups": [
+        "NATIVE41"
+      ],
+      "next47": "Do not claim Request-independent background authority, typed cancellation or a model business artifact as an execution receipt."
+    },
+    "ROUTINES30-composed-validation": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "NATIVE_COMPOSED_VALIDATION_NOT_RUN",
+      "owner_group": "NATIVE41",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "NATIVE41",
+        "CHECKS45"
+      ],
+      "next47": "Private component source passes do not validate the held shared host or complete native chain."
+    },
+    "M31-BOOTSTRAP": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "C16_COOKIE_FIX_INTEGRATED_BOOTSTRAP_QUALIFICATION_OPEN",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "DECISIONS44",
+        "DECISIONS52"
+      ],
+      "next47": "Retain historical duplicate-ACL failure and newer source cookie failure; C16's fixture correction requires actual bootstrap qualification."
+    },
+    "M31-COVERAGE": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "COVERAGE_IMPLEMENTATION_RETAINED_REAL_UI_PROOF_OPEN",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "DECISIONS44",
+        "PROCUREMENT37",
+        "DECISIONS52"
+      ],
+      "next47": "Preserve absent/pending/confirmed-zero distinctions and current source/actor bindings through the real coverage UI."
+    },
+    "M31-NUMERIC-RULE": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "C15_NUMERIC_PRODUCER_INTEGRATED_HUMAN_FLOW_OPEN",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "PROCUREMENT37",
+        "DECISIONS44",
+        "DECISIONS52"
+      ],
+      "next47": "Qualify real metric delegation, human rule registration/recomparison/choice, sensitivity/current-source/CAS checks and null handling."
+    },
+    "M31-PROCUREMENT-EVIDENCE": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "C15_PROCUREMENT_PRODUCER_INTEGRATED_EVIDENCE_PROOF_OPEN",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "PROCUREMENT37",
+        "DECISIONS44",
+        "DECISIONS52"
+      ],
+      "next47": "Qualify ordered coverage/procurement reads with authorized durable individual references and full projections; missing stays unavailable."
+    },
+    "M31-HISTORICAL-READ": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "C19_MEMORY_CORRECTION_INTEGRATED_DECISIONS52_HISTORY_JOURNEY_PROOF_OPEN",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "DECISIONS44",
+        "MEMORY40",
+        "FINANCE34",
+        "DECISIONS52"
+      ],
+      "next47": "C19 includes40's original/recall/replay correction. Real Workbench cases.read historical captures and source-change/restart journeys still need current-candidate evidence under52 and canonical memory/history owners."
+    },
+    "M31-PRECHOICE-PROCUREMENT": {
+      "state42": "PROCUREMENT37_ACTIVE_NO_QUALIFIED_RELEASE",
+      "state47": "C15_COMPLETE24_INTEGRATED_PRECHOICE_FUNCTIONAL_PROOF_OPEN",
+      "owner_group": "PROCUREMENT37",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "PROCUREMENT37"
+      ],
+      "next47": "The complete producer is now integrated; promotion/replay/reload, C10 and downstream behavior still need actual candidate proof."
+    },
+    "M31-FINANCIAL-APPROVAL": {
+      "state42": "PROCUREMENT37_ACTIVE_NO_QUALIFIED_RELEASE",
+      "state47": "MANDATORY_FINANCIAL_APPROVAL_NOT_SATISFIED",
+      "owner_group": "FINANCIAL_APPROVAL",
+      "integration_stage": "MANDATORY_POLICY_CONTRACT_HOLD",
+      "invariant_groups": [
+        "FINANCIAL_APPROVAL"
+      ],
+      "next47": "S0/WP00 and canonical domain owners must resolve compatible financial approval; retain the financial nominal and existing C12 Apply."
+    },
+    "M31-C12-PROOF": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "ACTUAL_EFFECT_RECEIPT_AND_COMMIT_GAP_PROOF_OPEN",
+      "owner_group": "C12",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "C12",
+        "DECISIONS44",
+        "DECISIONS52"
+      ],
+      "next47": "Prove original-response-loss recovery, concurrent edit, fresh admission and wrong-actor/incarnation/revocation negatives."
+    },
+    "M31-CRITERIA-REMAINDERS": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "LITERAL_WP11_CRITERIA_AND_OMITTED_CATEGORY_PROOF_OPEN",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "DECISIONS44",
+        "PROCUREMENT37",
+        "DECISIONS52"
+      ],
+      "next47": "Complete literal criteria and bindings; a pre-registered pending-category row is not a truly omitted-category oracle."
+    },
+    "M31-NATIVE": {
+      "state42": "NATIVE41_ACTIVE_CAPABILITY_AND_ACCEPTANCE_OPEN",
+      "state47": "PROVIDER_REVIEWER_RESTART_PROOF_UNAVAILABLE",
+      "owner_group": "NATIVE41",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "NATIVE41",
+        "FINAL_QUALIFICATION"
+      ],
+      "next47": "Require actual canonical native evidence; helper review, HTTP admission, fresh page and browser reload do not substitute."
+    },
+    "M31-CHECKS": {
+      "state42": "COMPOSED_COMPILER45_PREPARED_CURRENT_GATES_NOT_RUN",
+      "state47": "SOURCE_FAILURES_RETAINED_COMPOSED_CHECKS_NOT_RUN",
+      "owner_group": "CHECKS45",
+      "integration_stage": "NO_NEW_ACK_OR_PROOF",
+      "invariant_groups": [
+        "CHECKS45"
+      ],
+      "next47": "Resolve source and historical evidence diagnostics under their owners, preserving failures without waivers."
+    },
+    "M31-CHECK-LANES": {
+      "state42": "COMPOSED_COMPILER45_PREPARED_CURRENT_GATES_NOT_RUN",
+      "state47": "EXISTING_SCOPED_LANES_RETAINED_COMPOSED_RUN_NOT_RUN",
+      "owner_group": "CHECKS45",
+      "integration_stage": "NO_NEW_ACK_OR_PROOF",
+      "invariant_groups": [
+        "CHECKS45"
+      ],
+      "next47": "Use authorized existing lanes on actual W/config; no workflow ref borrowing or graph relaxation."
+    },
+    "M33-DEC31-SHARED-PERIOD-QUALIFICATION": {
+      "state42": "DECISIONS44_ACTIVE_C11_IMPLEMENTATION_RETAINED_PROOF_OPEN",
+      "state47": "CONCURRENT_SHARED_PERIOD_CONTINUITY_UNPROVEN",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "STATIC_FINDING_OPEN",
+      "invariant_groups": [
+        "PROCUREMENT37",
+        "DECISIONS44",
+        "DECISIONS52"
+      ],
+      "next47": "Qualify simultaneous Work/Decisions views with different periods; preserve fail-closed fences and distinguish static risk from observed runtime failure."
+    },
+    "C12-POSTTERMINAL-FIXTURE-A20": {
+      "state42": "INTAKE_HOLD_RESOLVED_EXPLICIT_RELEASE_CONSUMED_C12_VALIDATION_OPEN",
+      "state47": "PRIOR_FIXTURE_RELEASE_INTAKE_RESOLVED_VALIDATION_OPEN",
+      "owner_group": "C12",
+      "integration_stage": "PRIOR_INTAKE_RETAINED",
+      "invariant_groups": [
+        "C12"
+      ],
+      "next47": "Keep the explicitly released final32 fixture already in C12; do not reopen provenance or claim new functional acceptance."
+    },
+    "M27-BI09-WATERFALL-MOUNT": {
+      "state42": "BI38_ACTIVE_NO_RELEASE",
+      "state47": "C14_COMPLETE10_INTEGRATED_INSTALLED_BI09_PROOF_OPEN",
+      "owner_group": "BI38",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "BI38"
+      ],
+      "next47": "Qualify installed producer-derived rendering and consumers; BI10 and literal inherited numerical criteria remain open."
+    },
+    "M27-C05-FIRST-AGENDA": {
+      "state42": "AGENDA39_ACTIVE_RELEASE_FALSE",
+      "state47": "AGENDA39_IN_PROGRESS_RELEASE_FALSE_NOT_CONSUMED",
+      "owner_group": "AGENDA39",
+      "integration_stage": "NO_RELEASE",
+      "invariant_groups": [
+        "AGENDA39"
+      ],
+      "next47": "Require explicit complete release and reconcile shared wiring with Reports48; do not consume snapshots."
+    },
+    "M35-C17-ORIGINAL-REVALIDATION": {
+      "state42": "MANDATORY_SOURCE_RUNTIME_FAIL_OPEN",
+      "state47": "C19_REVALIDATION_FIX_CONSUMED_RECORDED_SOURCE_C17_PASS_COMPOSED_PROOF_OPEN",
+      "owner_group": "MEMORY40",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "MEMORY40"
+      ],
+      "next47": "Preserve original35/C17 failures and later distinct source-only2 PASS closure at its recorded C10-based W/S. Qualify C19's complete original/recall/replay behavior; MI07 and native AM05 remain open."
+    },
+    "M40-PROPOSAL35-RECURSION": {
+      "state42": "OWNER_STATIC_FINDING_OPEN_NO_QUALIFIED_RELEASE",
+      "state47": "C19_MEMORY40_NON_RECURSIVE_CORRECTION_CONSUMED_STATICALLY",
+      "owner_group": "MEMORY40",
+      "integration_stage": "PUBLISHED_MATERIAL_STATIC_CORRECTION_ONLY",
+      "invariant_groups": [
+        "MEMORY40"
+      ],
+      "next47": "Keep proposal35 inert as history. C19 consumes40's factory-local integrity path that avoids public readOriginal recursion. This is a static implementation/intake correction, not integrated runtime acceptance; preserve earlier source failures.",
+      "resolution_scope": "STATIC_IMPLEMENTATION_AND_INTAKE_ONLY_NO_FUNCTIONAL_CLOSURE"
+    },
+    "M42-R36-AMBIGUOUS-THREAD-READ-PURGE": {
+      "state42": "HOLD_SEMANTIC_CONTRADICTION",
+      "state47": "ALL14_REPORTS36_HELD_REPORTS48_ACK_ONLY",
+      "owner_group": "REPORTS48",
+      "integration_stage": "HELD_NO_CORRECTED_RELEASE",
+      "invariant_groups": [
+        "REPORTS48"
+      ],
+      "next47": "Only a corrected explicitly released atomic unit may distinguish recoverable drift/storage failure from actual revoked scope and remove the intake hold."
+    },
+    "REPORTS36-SOURCE-NOMINAL-FAILED-SETUP": {
+      "state42": "SOURCE_FAIL_PRESERVED_CURRENT_ROUTER_STATICALLY_EQUIVALENT",
+      "state47": "SOURCE_FOUR_FAILED_SETUP_RETAINED_COMPOSED_PROOF_OPEN",
+      "owner_group": "REPORTS48",
+      "integration_stage": "QUALIFICATION_NOT_RUN",
+      "invariant_groups": [
+        "REPORTS48",
+        "CHECKS45"
+      ],
+      "next47": "Static router equivalence requires no overwrite but closes no nominal; qualify exact new composition after semantic/resource prerequisites."
+    },
+    "M45-COMPOSED-COMPILER-QUALIFICATION": {
+      "state42": "PREPARED_AUTHORITY_NO_DELIVERY_OBSERVED",
+      "state47": "PREPARED45_NO_NEW_ACK_RELEASE_OR_COMPOSED_PROOF",
+      "owner_group": "CHECKS45",
+      "integration_stage": "NO_NEW_ACK_OR_PROOF",
+      "invariant_groups": [
+        "CHECKS45"
+      ],
+      "next47": "45 must bind actual W/tree/config and deliver scoped diagnostics/checks;47 does not dispatch or borrow workflows."
+    },
+    "M44-CANDIDATE-REBIND": {
+      "state42": "CANDIDATE_REFERENCE_RECONCILIATION_REQUIRED",
+      "state47": "C19_CURRENT_PRODUCT_DECISIONS52_REBIND_QUALIFICATION_PENDING",
+      "owner_group": "DECISIONS52",
+      "integration_stage": "PUBLISHED_MATERIAL",
+      "invariant_groups": [
+        "DECISIONS44",
+        "C12",
+        "ATLAS35",
+        "DECISIONS52"
+      ],
+      "next47": "Keep44/C16 release and final32/Atlas provenance;52 must explicitly bind current C19 and changed Memory40 dependencies. Its active ACK is not proof that source44 runs executed against C19."
+    }
+  },
+  "source_record_digests": {
+    "FIN-IND-005": "df27d0e4a14f9b0679cf78b8a301ed73931e502a8e5238dcfd3b236fa952d1ae",
+    "FIN22-LEGACY-FIXTURE-ASSEMBLY": "444423bc6cf2fcf447d3f4580ff39384037ca17a1334ed1d00ad7e05d3169a6a",
+    "C12-RECOVERY": "6fb7cd8724b7741b5978bdd9c0ca6abd48951de72e71d147917054f67ee5f011",
+    "C12-FINANCE-ORACLE-COMPATIBILITY": "a6ec8e1d4a93fe4ec7fb3dbe2d3b65f0b1d2734b097b1926c1e283e01f8c0866",
+    "MEMORY-INTEGRITY": "9f5ae30675376ce17e534b9bba3e6edbc6607d2be1a0f2602b5b1f6842b5caf2",
+    "MEMORY-HISTORY-MI07": "23d041243c2f8cd9a53833bafd4909c3ad7e20d8fcc35097dda794d4a04a7055",
+    "C17-BETWEEN-OBSERVATIONS": "87f1afc04e4d5515380f5b1ab4417ef745fa3e04bc1abbb1b32ef0c513bd95c1",
+    "WP13-SEMANTIC-UNION": "cf4a7aa05f3f28fb1fd247d354784cbcab6d7d944e11ac44f91cee79dee0eba3",
+    "WP13-P02-C12-RECEIPT-SCOPE": "2240879b4c5f5983c7e3831ab9c76031464ad5c802a2bc20efa2e085caa11774",
+    "CURRENT-CHOICE-COHORT": "1684557fdc1f9121de2c2e4773af8b4531b45c528e62eaadf4362c905a9b775b",
+    "E2E-OPERATIONS": "aca278e69319d787d778cf590f7660c970daa7493783d6bdbdc5410af6f10ec1",
+    "OPERATIONS24-REVISION49-PROVENANCE": "a99f70d893056904209e0bc1aaf878619f2a56956938e90593a178d3c990d326",
+    "OPERATIONS24-REAL-SCANNER": "8db51b7a9a49bc5bc9d267553b1b6025ab539fbdc1e6da402451bad4a06ed630",
+    "E2E-DECISIONS": "c32964c9df2a9770de1d67b52621bc3bb08f89bfd2eca8bbf7624fe479308988",
+    "DECISIONS-COVERAGE-CAS-GRAPH": "2cd912a36eb20b2186a51d5b64440143d4cf33adaf24597fbf0d8d2cf0b12ddf",
+    "C05-INSTALLED-CLOSURE": "d382ef76fb237cce47df34941f80970d9453faf3b9d090e4fbd4ebf89d0a9a2b",
+    "E2E-REPORTS": "8f63f52e9ea2db4d420d70c5ac9ced7612e06e21029983ae9d3b82f7649bd974",
+    "TYPECHECK-GUARDS": "6feb236b46407183f0ca5baade7b1734159da864f538d92e8cd5fc7ba789bec9",
+    "ROUTINES-NATIVE-ADMISSION": "b0841fecd2e51857880a2248564a695eeea1221dc7cb115fca262a665ce43a03",
+    "NATIVE-AM-REVIEW": "a0a8931190bc8dc0dbbfb0ce062bdbb996a10170381e47a2e119f867348afd39",
+    "REPORTS25-DRAFT-LOSS-ON-ACTION-ERROR": "35c6736db5925691b2cb76846f6d779fdeaa963fa9eb0d71eeb4b890a6a7a3f4",
+    "M29-ATLAS-003": "5bc6a648b29d79765b78fc5c71454143fb86e44c8dfa33332a5513ed16d5252c",
+    "REPORTS25-distinct-legitimate-recipient": "6b2b7cabee7bff5c21bf7f61f9d8b1527ec1e2436e823014db4dfd6c4b89dda2",
+    "REPORTS25-nonplain-c05-source-lease": "6f57f3a6ce5458dd99f496ba9faaf716d295318d0c19dae990f44bf912214bc5",
+    "REPORTS25-real-composition-w-and-actions": "9afcb0ca0c0a613a5c0636c1d80bfe9cc3653587f8f20c92115f2cf31285ba7e",
+    "REPORTS25-reports-e2e-typecheck": "05dbe34d21164707c9b554599f3723b3865c0387c525ddd97dbf40778e8846dc",
+    "REPORTS25-canonical-reports-evidence": "0e9ab23ab5ecf82f115047171fd64de9f62b225070f35d4872f679c60c4eb91c",
+    "ROUTINES30-real-request-maestro-task-owner": "da2992932d861a6a52ecfdf75105fc87f4946f1cc40f4119eef2faa1fd389035",
+    "ROUTINES30-publication-plan-human-admission": "b8fbfa31825a764f03b0cd9cccf97d243bf4ee985e6f45a7653d2db77b6ea4a1",
+    "ROUTINES30-native-provider-and-return-after-reload": "d9a73154bd0697a080c9766899fd58801ef0777ebee635a7b18a7beb1698f080",
+    "ROUTINES30-knowledge-upstream": "99ea03fc923cf0f9ffe10d069d578f90ffb517cab374a14ffadec382fa82adb3",
+    "ROUTINES30-native-watch": "1c79a28a2dd5d02add903416fc82a071b4ecd980a3de53d47be525802dc925dd",
+    "ROUTINES30-background-cancel-business-artifact": "1bda636615bbf4715b8b97c00daf77f6326e2a077dbf55c652e8e8af434d1e43",
+    "ROUTINES30-composed-validation": "81f81e5ee0d0660d284ba63a7d8c8144307d94f0aaebb7f46db305dc38ad40f0",
+    "M31-BOOTSTRAP": "53911a1ab0f3786d0a5a6f51c46eaa483d0b6448ec018e25e72e03b47968fe38",
+    "M31-COVERAGE": "107ddbcf714fa2a388c3e4c04d3b70d163e62225fcd11c147cb07ecf2614a018",
+    "M31-NUMERIC-RULE": "bef0f5fd7d145d02ee7ec8db15d6a13d21a22e874be2670c670b997d0faf64bc",
+    "M31-PROCUREMENT-EVIDENCE": "f80c6a23974032a2cf6c300dd1066f506f045ef0337a7408aa07b3d50b5a9204",
+    "M31-HISTORICAL-READ": "51c2c123190c09f4f5dc769e5c40eb79546bbef98f9ac3a702889b4692c9be8d",
+    "M31-PRECHOICE-PROCUREMENT": "4c049e713e7675ab5656be3e580aa385d6ad4bd9da816f6e15bb8e7c9623ce43",
+    "M31-FINANCIAL-APPROVAL": "13308cb1ac8c8dc60ad5a1c4f3c3d82b4bc3d4b61bf43d8696a9711801ff321d",
+    "M31-C12-PROOF": "6818169d854d004ae44e211c52f6d0da6936cc4020831d73bacbddc1d58de737",
+    "M31-CRITERIA-REMAINDERS": "42e3477716f757637727e5c5a315c5b385c10bebe34cbaacdc4eceedd7c2f57e",
+    "M31-NATIVE": "5db613b63e272c590e6a3ba4cd6f588c904c25d6b7562a50737b781ba5b69094",
+    "M31-CHECKS": "9dc79003e7dc7587c4a7b15d69e409c1be2143d61af415333a9f6861df846c53",
+    "M31-CHECK-LANES": "988f39fb1c2764fc1fc86c772ba6e1aeb591c1c8baea8f0cc67600bb08aab74b",
+    "M33-DEC31-SHARED-PERIOD-QUALIFICATION": "ed3e3ea8e610004cbaa4e15eaf2339aff1448b2db05089a245f25d5cfae74b8d",
+    "C12-POSTTERMINAL-FIXTURE-A20": "63a6e66c099b51f5c05ed2b3adedb57d56291a23dfcbd2501d8b6fd38fe53566",
+    "M27-BI09-WATERFALL-MOUNT": "d91d705dee35c18d412b31b6d9a8b9d4b304fc4eb0cea6167cc61918b6928b04",
+    "M27-C05-FIRST-AGENDA": "56a01b6d58fecf7a9c467f29d842c2b1e38e40e33fb40c86f6c1cb46be6982ca",
+    "M35-C17-ORIGINAL-REVALIDATION": "9c31125e162ae62e1ee126fcd70550bed2bf5a3e37401771677fcf179a5dbd73",
+    "M40-PROPOSAL35-RECURSION": "1ee83677dc65a59a774ae5463ddcd28d66b48d0e7623c96b925f6f0da245fa5d",
+    "M42-R36-AMBIGUOUS-THREAD-READ-PURGE": "7cf0c052b7d65a48dccc7e964a584c9abe7697f28e5a564e3fa6c786b613bc60",
+    "REPORTS36-SOURCE-NOMINAL-FAILED-SETUP": "4b679bae3dfdee6f3f92cbab3df9a83eb94cc38df2ec186c50acffd1636ec9ec",
+    "M45-COMPOSED-COMPILER-QUALIFICATION": "2f9199ae6c8d0cefa3819d24293534b589d0151349b670893c75b430a0069312",
+    "M44-CANDIDATE-REBIND": "d77454d4f3e6c9d92fbc9b4636dac6804485eb8444c6bb34dcaabef832dd943a"
+  },
+  "local_update_provenance": {
+    "predecessor_file": "/workspace/scratch/8fd84ac583a8/pending47-addendum-draft.json",
+    "predecessor_sha256": "7929f7080bfde589254b698d7659ad20e9bebcc1bdad6b9fbaf12abd565413a0",
+    "source_review_file": "/workspace/scratch/8fd84ac583a8/memory40-review-compact.json",
+    "method": "Read-only consumption of prior local documents and root-supplied publication/census identities; no remote calls or product execution.",
+    "preserved": "All56 IDs, all56 state42 values, source record digests, immutable pending42 reference, frozen scope, prior resolutions and functional gate flags."
+  },
+  "successor_authority_history": {
+    "Memory51": {
+      "historical_control": "PREPARED",
+      "later_observation": "ACTIVE_BOUNDED_CONTINUATION",
+      "head": "f2794784551e25ce2a2f56f408506cd790fae976",
+      "manifest": "NOT_RUN_AT_PUBLICATION",
+      "new_release_consumed": false
+    },
+    "Decisions52": {
+      "historical_control": "PREPARED",
+      "later_observation": "ACK52_ACTIVE_BOUNDED_SUCCESSION",
+      "head": "19a69145e2b4e938c1abf50985488fdb714a4e56",
+      "ack_blob": "ee4f18cc45421f300b453b7c385d677b77001ea5",
+      "new_release_consumed": false
+    },
+    "Portfolio50": {
+      "historical_control": "ACTIVE_NO_RELEASE_OBSERVED",
+      "later_observation": "ACTIVE_R2_IN_PROGRESS_MANIFEST_V2_ACK_REQUEST; COMPLETE_FORMAL_REVIEW_NO_EXPLICIT_RELEASE",
+      "head": "561be4643ef901870ba5a6734791129444213ee7",
+      "new_release_consumed": false
+    }
+  },
+  "recorded_at": "2026-11-15 00:04:05 UTC",
+  "terminal_update": {
+    "last_material": {
+      "symbol": "C20",
+      "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+      "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+      "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+      "increment": 8,
+      "sources": [
+        46
+      ]
+    },
+    "all56_state42_preserved": true,
+    "root_finalization_complete": true,
+    "no_functional_criterion_closed": true,
+    "source46_new_explicit_release_received_and_consumed_after_C19": true
+  },
+  "new47_finding_index": [
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "owner": "S0/WP00 with Procurement/C12",
+      "status": "MANDATORY_NOT_SATISFIED",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "M41-AUTHENTICATED-NATIVE-ADMISSION",
+      "owner": "S0 / authentic native Request-to-Maestro admission, continuation and readiness owner",
+      "status": "HOLD_REAL_ADMISSION",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "M41-WATCH-SCHEDULE",
+      "owner": "S0 / actual Schedule admission owner",
+      "status": "HOLD",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "owner": "Reports48 with Collaboration/WP08",
+      "status": "HOLD_OLD14_TARGET_BUNDLE",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "WP13-P02-HISTORY-FINAL-CAS",
+      "owner": "Portfolio50",
+      "status": "SOURCE_FAIL_RETAINED_NEW_OWNER_ACTIVE_NO_RELEASE",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "WP13-P03-SEMANTIC-SOURCE-TIMEOUT",
+      "owner": "Portfolio50 with Finance persistence owner / S0",
+      "status": "OPEN",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "M47-P43-HANDOFF-FAULT-BOUNDARY",
+      "owner": "S0 / C12 and Portfolio contract owners; Portfolio50 for its authorized scope",
+      "status": "PRESERVATION_ADAPTATION_PUBLISHED_C18_CONTRACT_OPEN",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "M35-C17-ORIGINAL-REVALIDATION",
+      "owner": "Memory51 for continued history;45 composed checks;S0 acceptance",
+      "status": "SOURCE40_FIX_CONSUMED_C19_COMPOSED_NOT_RUN",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "MI07",
+      "owner": "Memory51",
+      "status": "INHERITED_TIMEOUT_OPEN",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "DECISIONS-FIVE-INSTALLED-JOURNEYS",
+      "owner": "Decisions52 / Compiler45 / S0",
+      "status": "OPEN",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "BI38-INSTALLED-FULL-NUMERIC",
+      "owner": "BI38 / canonical financial owners;45/S0 qualification",
+      "status": "OPEN",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "M47-CHECKS-EXACT-CANDIDATE",
+      "owner": "Compiler45; source diagnostic owners; S0 final dispatcher",
+      "status": "NOT_RUN",
+      "details": "finding-routing-final.json"
+    },
+    {
+      "id": "M46-COMPOSED-C",
+      "owner": "session45 checks; integration47 composition; S0 final acceptance",
+      "status": "PENDING",
+      "details": "increment-08.json"
+    },
+    {
+      "id": "M46-SHARED-UI",
+      "owner": "integration47/session45/S0",
+      "status": "NOT_RUN_ON_COMPOSED_C",
+      "details": "increment-08.json"
+    },
+    {
+      "id": "M46-NUMERIC-LITERAL",
+      "owner": "canonical financial owners/S0",
+      "status": "PARTIAL",
+      "details": "increment-08.json"
+    },
+    {
+      "id": "M46-TYPECHECK-EXTERNAL",
+      "owner": "respective owners/session45",
+      "status": "SOURCE_FAILURE_NOT_CANDIDATE_GREEN",
+      "details": "increment-08.json"
+    },
+    {
+      "id": "M46-NATIVE-RESIDENT",
+      "owner": "native/resident owners/S0",
+      "status": "NOT_RUN_HOLD_RETAINED",
+      "details": "increment-08.json"
+    }
+  ]
+}

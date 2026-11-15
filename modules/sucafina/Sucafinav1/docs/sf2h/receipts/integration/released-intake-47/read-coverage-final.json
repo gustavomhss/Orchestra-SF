@@ -1,0 +1,1534 @@
+{
+  "schema": "sf2h.released-intake-47.read-coverage.v1",
+  "mission": 47,
+  "control": {
+    "initial_pin": "bd045542ebb287cd5f25ce36e676ce90cbce320f",
+    "observed_control": "f2383d1248a130e05a9e6667516023ecea70389e",
+    "observed_at": "2026-11-14T23:28:41Z",
+    "mission47_blob": "cfaf9936eab091c3e43d3608986b118b59af3f90",
+    "mission47_unchanged": true,
+    "COMMON_blob": "ad53f26697738fc410648b198a79b6bfe6e7bac5",
+    "COMMON_unchanged": true,
+    "complete_compare": {
+      "commits": [
+        "89549a407993b78fb2f2f9892beb01a911f984d7",
+        "06a9cebf6c15969f9e255a4c05ffbf6b61fbb535",
+        "f2383d1248a130e05a9e6667516023ecea70389e"
+      ],
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/decisions-installed-journeys.json",
+          "blob": "2b70fb1706cec24aa1aa36e916cfc42a87305dd0",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/memory-history-closure.json",
+          "blob": "c4bdd8f41eaf7c1130ca98d5c8ee0c7b1d1af188",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/microsoft-entra-login.json",
+          "blob": "74d9605c3fec282fd453072ff08af8eb9290a603",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-final-history.json",
+          "blob": "97def2dd8b0c9f8dc10dd9e295d755ee636257ec",
+          "status": "added"
+        }
+      ]
+    },
+    "new_delegations": [
+      {
+        "mission": 49,
+        "id": "microsoft-entra-login",
+        "state": "BRANCH_PREPARED_SESSION_NOT_STARTED",
+        "scope": "Isolated microsoft-login; no tenant/Azure actions by47; require eventual explicit release before intake."
+      },
+      {
+        "mission": 50,
+        "id": "portfolio-final-history",
+        "branch": "astra-wp13",
+        "state": "Source ACK50 active at a97b78d, no delivery",
+        "scope": "Owns proof.ts final-CAS and P03; current in-progress code not consumed."
+      },
+      {
+        "mission": 51,
+        "id": "memory-history-closure",
+        "branch": "astra-wp10",
+        "state": "PREPARED_NOT_STARTED in control; live writer not inferred",
+        "scope": "MI07 long-history follow-up preserving released40 and original35."
+      },
+      {
+        "mission": 52,
+        "id": "decisions-installed-journeys",
+        "branch": "astra-wp11",
+        "state": "PREPARED_NOT_STARTED in control; live writer not inferred",
+        "scope": "All five installed Decisions journeys on actual composition; financial criterion mandatory."
+      }
+    ],
+    "authority_conclusion": "All four changes are additions only and explicitly retain47 as sole sf2-stack writer,45 checks,S0 final epic/acceptance. No control tree merged, no new47 lease supersession observed.",
+    "closing_ref_unchanged": {
+      "head": "f2383d1248a130e05a9e6667516023ecea70389e",
+      "observed_at": "2026-11-14 23:44:46 UTC"
+    }
+  },
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": {
+    "path": "execution/actors/S0-C.json",
+    "git_blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "complete_pack_read": "Distributed root/helper complete reading; no claim that one reader reread every byte.",
+    "root_full_sections": [
+      "provenance",
+      "job_id",
+      "actor",
+      "session",
+      "assignment",
+      "branch_provenance",
+      "common",
+      "write_authority",
+      "allocation",
+      "physical_slot",
+      "work_packages",
+      "contracts",
+      "incoming_outgoing_handoffs",
+      "task_output_dependencies",
+      "consumer_edges",
+      "coverage",
+      "dependency_context",
+      "review_assignment",
+      "review_sources_read_only",
+      "reference_context_rule",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "code_sources",
+      "source_receipt_index",
+      "workflow",
+      "coverage_source",
+      "numeric_oracles",
+      "selection_pointers",
+      "criterion_ids",
+      "completion",
+      "resident_packaging"
+    ],
+    "helper_full_sections": {
+      "finance34_intake": [
+        "resident",
+        "resident_ui",
+        "resident_handoff_interfaces",
+        "resident_gate_requirements",
+        "resident_packaging",
+        "mandatory_appendices"
+      ],
+      "bi_decisions_intake": [
+        "proof_bindings",
+        "evidence",
+        "execution_proofs",
+        "ci_plan",
+        "mandatory_appendices"
+      ]
+    }
+  },
+  "root_read": [
+    "Applicable root AGENTS; complete ancestor/descendant inventories for selected source scope",
+    "Pinned START.md,WORKFLOW.md,execution/COMMON.md",
+    "Complete mission47 and rolling COMMON",
+    "Terminal42 HANDOFF,AUTHORITY,pending-owners-final,finding-routing-final,source-census-final",
+    "All eight selected releases/complete material patch records/preimages/dependencies and findings through delegated specialist intake",
+    "CurrentChoice46 explicit terminal release, full source+shared v3 manifests, handoff, normative mission packet, root fence/host/egress review and complete delegated patch/dependency/criteria review."
+  ],
+  "residency_read": {
+    "schema": "sf2h.m47.s0c-resident-pack-reading.v1",
+    "reviewer": "root/finance34_intake",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "actor_path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+    "actor_blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "scope": "Complete resident and resident_ui objects, plus adjacent resident handoff/gate/packaging and all three mandatory appendix files",
+    "read_full_keys": [
+      "resident",
+      "resident_ui",
+      "reference_context_rule",
+      "resident_handoff_interfaces",
+      "resident_gate_requirements",
+      "resident_packaging",
+      "mandatory_appendices"
+    ],
+    "coverage": {
+      "resident_characters_compact": 100563,
+      "resident_ui_characters_compact": 20385,
+      "profiles": 5,
+      "scoped_skills": 9,
+      "packs": 8,
+      "scoped_operations": 33,
+      "integrated_proofs": 6,
+      "global_scope": "5profiles/18skills/8packs/39operations/6AM unchanged; actor scoped subset must not be mistaken for global reduction."
+    },
+    "annexes": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "full_read": true,
+        "characters": 41053
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "full_read": true,
+        "characters": 13825
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+        "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+        "full_read": true,
+        "characters": 11845
+      }
+    ],
+    "constraints": [
+      "Runtime Request is the original authenticated Request object held privately; no actor-ID credential reconstruction. Exact installation/project/location/session/run/case/principal/profile binding; Tool.Context checked, lease captures operation/input digest/callId/generation/expiry and is consumed.",
+      "Native41 unavailable admission remains needs-input/denied/HOLD. sf_routine_run requires current real C07 admission. Never forge service principal, advertise nonexistent operations or treat catalog as functional proof.",
+      "HostBoundEntryMode is trusted context. interactive prepare/run needs current admission; routine-result blocks prepare/run including direct/retry recursion. Human response ends prior run and starts versioned continuation.",
+      "Financial choice records historical rationale/basis/coverage; no financial approval or domain application inferred. PreparedChangeSet preserves approval requirements; missing-category remains pending. Values must come from canonical engines.",
+      "Source changes never rewrite historical choice or preserved review. Revocation removes restricted data/links; recoverable stale/conflict preserves confirmed work. Current disclosure must distinguish absence,zero,FX/pending,complete.",
+      "Skill source and injected content SHA256 digests, verified SessionV2.skill message and dedicated model/run are mandatory for runtime admission. Catalog presence, parse-only fixture or helper review cannot satisfy AM evidence.",
+      "Operations use same dispatchSfCapability/real domain producer and current Request/roleMap snapshots for UI/native/MCP. Profile+skill+principal+operation intersection applies even direct harness calls. Provider name collision fails without connection to replacement.",
+      "Relevant output persisted through C09/C08/C11, not per-persona ledger or chat-only; requires output/version/source/scope/provenance and observed real consumer after reload.",
+      "AM01-06/G7 and exact candidate checks remain open; implementation/refactor source PASS does not qualify integrated candidate. Reviewer needs distinct run/session and no inherited analysis history.",
+      "Atlas scopes require explicit host-derived owner/kind, current field-level authorization before recall and egress, no raw Atlas owner in arguments. Any revoked field suppresses entire record/title/count. Ledger remains canonical.",
+      "Atlas protected namespace __sfProductV1.atlas remains excluded from business exports/audit, private snapshots preserve atomic C08 single-callback commit and idempotency. Factories real and DurableMemory synchronous within outer async transaction; commit receipt only after outer durable commit.",
+      "Atlas scanner clean/hit/could-not-run distinct; unavailable fails HOLD, not clean. No always-clean/stub scanners.",
+      "Atlas packaging remains exact9paths ownerS0-A; no hand-written generated code, scanner in business bundle, changed guard/allowlist, raw factory exports from native-bound, global alias or copied constant. Compiler45 executes canonical generation/checks under mission47 scope; this reading grants no write ownership."
+    ],
+    "effect_on_finance34": "Performance patch preserves C08 locks/CAS/scope/fresh snapshots and does not change public contract or approval/admission/Atlas rules. Source original44PASS remains source evidence only.",
+    "execution": {
+      "remote_writes": 0,
+      "product_tests": 0,
+      "CI": 0
+    }
+  },
+  "proof_read": {
+    "schema": "mission47-delegated-normative-reading-v1",
+    "actor": "/root/bi_decisions_intake",
+    "scope": "Read-only assigned proof/evidence/CI portions; does not claim unassigned full actor pack sections or campaign independent reviewer status",
+    "planningRef": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+    "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "fullyReadSections": [
+      "proof_bindings",
+      "evidence",
+      "execution_proofs",
+      "ci_plan",
+      "mandatory_appendices"
+    ],
+    "proofBindings": {
+      "count": 155,
+      "byEntity": {
+        "WP10": 25,
+        "WP14": 23,
+        "WP10.T02": 17,
+        "WP10.T04": 22,
+        "WP14.T01": 14,
+        "WP14.T02": 15,
+        "WP14.T03": 8,
+        "WP14.T04": 14,
+        "WP14.T05": 17
+      },
+      "byFamily": {
+        "dod": 24,
+        "invariants": 24,
+        "quality_standards": 24,
+        "completeness_criteria": 23,
+        "success_criteria": 23,
+        "check": 37
+      },
+      "byEvidence": {
+        "E01": 47,
+        "E16": 86,
+        "E17": 47,
+        "E18": 59,
+        "E12": 96,
+        "E15": 27
+      },
+      "allPlanningStatuses": "NOT_RUN",
+      "criterionIds": [
+        "WP10.DOD.01",
+        "WP10.DOD.02",
+        "WP10.DOD.10",
+        "WP10.DOD.40",
+        "WP10.DOD.60",
+        "WP10.INV.01",
+        "WP10.INV.02",
+        "WP10.INV.10",
+        "WP10.INV.40",
+        "WP10.INV.60",
+        "WP10.QLT.01",
+        "WP10.QLT.02",
+        "WP10.QLT.10",
+        "WP10.QLT.40",
+        "WP10.QLT.60",
+        "WP10.CMP.01",
+        "WP10.CMP.02",
+        "WP10.CMP.10",
+        "WP10.CMP.40",
+        "WP10.CMP.60",
+        "WP10.SUC.01",
+        "WP10.SUC.02",
+        "WP10.SUC.10",
+        "WP10.SUC.40",
+        "WP10.SUC.60",
+        "WP14.DOD.01",
+        "WP14.DOD.02",
+        "WP14.DOD.20",
+        "WP14.DOD.10",
+        "WP14.DOD.40",
+        "WP14.INV.01",
+        "WP14.INV.02",
+        "WP14.INV.20",
+        "WP14.INV.10",
+        "WP14.INV.40",
+        "WP14.QLT.01",
+        "WP14.QLT.02",
+        "WP14.QLT.20",
+        "WP14.QLT.10",
+        "WP14.QLT.40",
+        "WP14.CMP.01",
+        "WP14.CMP.20",
+        "WP14.CMP.10",
+        "WP14.CMP.40",
+        "WP14.SUC.01",
+        "WP14.SUC.20",
+        "WP14.SUC.10",
+        "WP14.SUC.40",
+        "WP10.T02.DOD.01",
+        "WP10.T02.DOD.10",
+        "WP10.T02.INV.01",
+        "WP10.T02.INV.10",
+        "WP10.T02.QLT.01",
+        "WP10.T02.QLT.10",
+        "WP10.T02.CMP.01",
+        "WP10.T02.CMP.10",
+        "WP10.T02.SUC.01",
+        "WP10.T02.SUC.10",
+        "WP10.T02.CHK.01",
+        "WP10.T02.CHK.02",
+        "WP10.T02.CHK.03",
+        "WP10.T02.CHK.04",
+        "WP10.T02.CHK.05",
+        "WP10.T02.CHK.10",
+        "WP10.T02.CHK.11",
+        "WP10.T04.DOD.01",
+        "WP10.T04.DOD.10",
+        "WP10.T04.DOD.40",
+        "WP10.T04.INV.01",
+        "WP10.T04.INV.10",
+        "WP10.T04.INV.40",
+        "WP10.T04.QLT.01",
+        "WP10.T04.QLT.10",
+        "WP10.T04.QLT.40",
+        "WP10.T04.CMP.01",
+        "WP10.T04.CMP.10",
+        "WP10.T04.CMP.40",
+        "WP10.T04.SUC.01",
+        "WP10.T04.SUC.10",
+        "WP10.T04.SUC.40",
+        "WP10.T04.CHK.01",
+        "WP10.T04.CHK.02",
+        "WP10.T04.CHK.03",
+        "WP10.T04.CHK.10",
+        "WP10.T04.CHK.11",
+        "WP10.T04.CHK.40",
+        "WP10.T04.CHK.41",
+        "WP14.T01.DOD.01",
+        "WP14.T01.DOD.20",
+        "WP14.T01.INV.01",
+        "WP14.T01.INV.20",
+        "WP14.T01.QLT.01",
+        "WP14.T01.QLT.20",
+        "WP14.T01.CMP.01",
+        "WP14.T01.CMP.20",
+        "WP14.T01.SUC.01",
+        "WP14.T01.SUC.20",
+        "WP14.T01.CHK.01",
+        "WP14.T01.CHK.02",
+        "WP14.T01.CHK.03",
+        "WP14.T01.CHK.20",
+        "WP14.T02.DOD.01",
+        "WP14.T02.DOD.10",
+        "WP14.T02.INV.01",
+        "WP14.T02.INV.10",
+        "WP14.T02.QLT.01",
+        "WP14.T02.QLT.10",
+        "WP14.T02.CMP.01",
+        "WP14.T02.CMP.10",
+        "WP14.T02.SUC.01",
+        "WP14.T02.SUC.10",
+        "WP14.T02.CHK.01",
+        "WP14.T02.CHK.02",
+        "WP14.T02.CHK.03",
+        "WP14.T02.CHK.10",
+        "WP14.T02.CHK.11",
+        "WP14.T03.DOD.01",
+        "WP14.T03.INV.01",
+        "WP14.T03.QLT.01",
+        "WP14.T03.CMP.01",
+        "WP14.T03.SUC.01",
+        "WP14.T03.CHK.01",
+        "WP14.T03.CHK.02",
+        "WP14.T03.CHK.03",
+        "WP14.T04.DOD.01",
+        "WP14.T04.DOD.10",
+        "WP14.T04.INV.01",
+        "WP14.T04.INV.10",
+        "WP14.T04.QLT.01",
+        "WP14.T04.QLT.10",
+        "WP14.T04.CMP.01",
+        "WP14.T04.CMP.10",
+        "WP14.T04.SUC.01",
+        "WP14.T04.SUC.10",
+        "WP14.T04.CHK.01",
+        "WP14.T04.CHK.02",
+        "WP14.T04.CHK.03",
+        "WP14.T04.CHK.10",
+        "WP14.T05.DOD.01",
+        "WP14.T05.DOD.40",
+        "WP14.T05.INV.01",
+        "WP14.T05.INV.40",
+        "WP14.T05.QLT.01",
+        "WP14.T05.QLT.40",
+        "WP14.T05.CMP.01",
+        "WP14.T05.CMP.40",
+        "WP14.T05.SUC.01",
+        "WP14.T05.SUC.40",
+        "WP14.T05.CHK.01",
+        "WP14.T05.CHK.02",
+        "WP14.T05.CHK.03",
+        "WP14.T05.CHK.04",
+        "WP14.T05.CHK.05",
+        "WP14.T05.CHK.06",
+        "WP14.T05.CHK.40"
+      ],
+      "newCandidatePasses": 0
+    },
+    "evidence": {
+      "requiredFieldCount": 48,
+      "requiredFields": [
+        "criterion_id",
+        "entity_id",
+        "scope",
+        "status",
+        "candidate_sha",
+        "actor_or_role",
+        "fixture_id",
+        "entrypoint_or_action",
+        "expected",
+        "observed",
+        "evidence_uri",
+        "reviewer",
+        "verified_at",
+        "product_candidate_sha",
+        "ci_snapshot_sha",
+        "ci_request_hash",
+        "contract_version",
+        "producer_refs",
+        "consumer_entrypoint",
+        "execution_actor",
+        "logical_owner",
+        "writer_lease",
+        "contract_versions",
+        "profile_id",
+        "profile_version",
+        "skill_ids",
+        "skill_versions",
+        "skill_digests",
+        "source_paths",
+        "bundle_digest",
+        "effective_model",
+        "native_session_id",
+        "case_id",
+        "case_version",
+        "case_incarnation",
+        "mcp_server_generation",
+        "mcp_operation",
+        "domain_port",
+        "domain_call_id",
+        "runtime_build_sha",
+        "atlas_engine_baseline",
+        "atlas_boundary_version",
+        "business_schema_version",
+        "scanner_binary_version",
+        "access_revision",
+        "expected_selection",
+        "selected_files",
+        "measured_duration_seconds"
+      ],
+      "allowedStatus": [
+        "NOT_RUN",
+        "PASS",
+        "FAIL",
+        "BLOCKED"
+      ],
+      "packages": [
+        {
+          "id": "E01",
+          "title": "Contratos montagem e integridade",
+          "owners": [
+            "WP00",
+            "WP10"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E10",
+          "title": "Decisão e execução",
+          "owners": [
+            "WP11",
+            "WP01"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E11",
+          "title": "IA real e portfólio",
+          "owners": [
+            "WP12",
+            "WP13"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E12",
+          "title": "Memória e reavaliação",
+          "owners": [
+            "WP14",
+            "WP11"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E13",
+          "title": "Relay real",
+          "owners": [
+            "WP09"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E14",
+          "title": "Schedule e retomada",
+          "owners": [
+            "WP09"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E15",
+          "title": "Documentos e injeção",
+          "owners": [
+            "WP06",
+            "WP12"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E16",
+          "title": "Integração e regressão",
+          "owners": [
+            "WP10"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E17",
+          "title": "Reviews independentes",
+          "owners": [
+            "WP10"
+          ],
+          "status": "NOT_RUN"
+        },
+        {
+          "id": "E18",
+          "title": "Entrega e proveniência",
+          "owners": [
+            "WP10"
+          ],
+          "status": "NOT_RUN"
+        }
+      ],
+      "constraints": [
+        "An applicable missing field prevents PASS; nonapplicable fields require explicit reason.",
+        "CI requires exact SHA and real run; interaction actual entrypoint/actor; export artifact plus inspection; routine actual run/receipt/input. Screenshot alone does not prove calculations, access, or persistence.",
+        "Product candidateC and strictly evidential descendantD differ. Evidence inD retains originalC/S/hash; D needs its ownG8 guard and full envelope/ancestry/diff review. No test ofC relabelled asD.",
+        "Observed controlled30second/maintenance evaluations need evaluator/context/time. User research or authorized actual usage is not fabricated; no new external analytics/access."
+      ]
+    },
+    "executionProofs": [
+      {
+        "id": "AM01",
+        "title": "Perfil e skill reais",
+        "proof_packages": [
+          "E11",
+          "E16"
+        ],
+        "owner_tasks": [
+          "WP12.T01",
+          "WP12.T02",
+          "WP12.T03",
+          "WP10.T06"
+        ],
+        "execution_actor": "S4",
+        "reviewer": "S3-R3",
+        "cases": [
+          {
+            "id": "AM01-FINANCE",
+            "profile_id": "sf_finance",
+            "skills": [
+              "sf-explicar-forecast",
+              "sf-comparar-cenarios",
+              "sf-avaliar-sensibilidade",
+              "sf-produzir-bi-contextual"
+            ],
+            "expected_consumed_outputs": "FinancialAnalysis/ScenarioComparison/SensitivityResult e BI consumidos WP01/WP05/WP11; totais iguais a C02/C10.",
+            "actors": [
+              "S4"
+            ],
+            "first_integration_window": [
+              55,
+              75
+            ],
+            "final_candidate_window": [
+              75,
+              95
+            ],
+            "status": "NOT_RUN",
+            "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+            "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+            "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-finance.json"
+          },
+          {
+            "id": "AM01-PROCUREMENT",
+            "profile_id": "sf_procurement",
+            "skills": [
+              "sf-comparar-sourcing",
+              "sf-revisar-condicoes-contratuais",
+              "sf-preparar-compra",
+              "sf-extrair-evidencias"
+            ],
+            "expected_consumed_outputs": "CommercialComparison/CommercialGap/EvidenceCandidate/PreparedChange visíveis no caso e UI; extração confirmada preserva fonte.",
+            "actors": [
+              "S4"
+            ],
+            "first_integration_window": [
+              55,
+              75
+            ],
+            "final_candidate_window": [
+              75,
+              95
+            ],
+            "status": "NOT_RUN",
+            "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+            "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+            "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-procurement.json"
+          },
+          {
+            "id": "AM01-PORTFOLIO",
+            "profile_id": "sf_portfolio",
+            "skills": [
+              "sf-revisar-dependencias",
+              "sf-compor-portfolio",
+              "sf-reavaliar-compromissos",
+              "sf-consultar-memoria-decisoria"
+            ],
+            "expected_consumed_outputs": "DeliveryAssessment/DependencyConflict/PortfolioComparison/ReconsiderationProposal e precedente com diferenças atuais.",
+            "actors": [
+              "S4"
+            ],
+            "first_integration_window": [
+              55,
+              75
+            ],
+            "final_candidate_window": [
+              75,
+              95
+            ],
+            "status": "NOT_RUN",
+            "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+            "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+            "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-portfolio.json"
+          },
+          {
+            "id": "AM01-MAESTRO",
+            "profile_id": "sf_maestro",
+            "skills": [
+              "sf-enquadrar-decisao",
+              "sf-preparar-revisao-executiva",
+              "sf-coordenar-perguntas",
+              "sf-produzir-material-reuniao"
+            ],
+            "expected_consumed_outputs": "IntentFrame/AnalysisPlan/DecisionBrief/QuestionProposal e relatório real, fontes recuperáveis e perguntas à identidade conhecida.",
+            "actors": [
+              "S4"
+            ],
+            "first_integration_window": [
+              55,
+              75
+            ],
+            "final_candidate_window": [
+              75,
+              95
+            ],
+            "status": "NOT_RUN",
+            "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+            "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+            "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-maestro.json"
+          },
+          {
+            "id": "AM01-REVIEWER",
+            "profile_id": "sf_reviewer",
+            "skills": [
+              "sf-contestar-decisao",
+              "sf-revisar-evidencias"
+            ],
+            "expected_consumed_outputs": "CritiqueReport/ClaimIssue/UnresolvedCondition em execução distinta; resposta humana altera objeto/viabilidade em vez de só reescrever texto.",
+            "actors": [
+              "S4"
+            ],
+            "first_integration_window": [
+              55,
+              75
+            ],
+            "final_candidate_window": [
+              75,
+              95
+            ],
+            "status": "NOT_RUN",
+            "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+            "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+            "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-reviewer.json"
+          }
+        ],
+        "required_coverage": {
+          "profiles": 5,
+          "skills": 18,
+          "every_source_loaded": true,
+          "every_skill_contributed_output": true,
+          "independent_reviewer_run": true
+        },
+        "early_gate": "GNATIVE18-20 cobre umperfil/umaskill; nunca é equivalente à cobertura completa.",
+        "status": "NOT_RUN",
+        "integration_deadline": 75,
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "recheck_window": [
+          103,
+          118
+        ],
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am01.json"
+      },
+      {
+        "id": "AM02",
+        "title": "Paridade UI/agente/MCP nos oito packs",
+        "proof_packages": [
+          "E01",
+          "E16"
+        ],
+        "owner_tasks": [
+          "WP10.T06",
+          "WP10.T01"
+        ],
+        "execution_actor": "S0-B",
+        "reviewer": "S3-R3",
+        "pack_matrix": [
+          {
+            "pack": "Performance",
+            "operations": [
+              "sf_dashboard_read",
+              "sf_kpi_explain",
+              "sf_bi_view",
+              "sf_source_get"
+            ],
+            "producer_tasks": [
+              "WP02.T01",
+              "WP05.T04",
+              "WP10.T07"
+            ],
+            "latest_functional_output_minute": 55,
+            "proof_by_minute": 75,
+            "owner_task": "WP10.T06",
+            "proof_executor": "S0-B",
+            "independent_reviewer": "S3-R3",
+            "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+            "status": "NOT_RUN"
+          },
+          {
+            "pack": "Planning",
+            "operations": [
+              "sf_forecast_compare",
+              "sf_scenario_simulate",
+              "sf_scenario_compare",
+              "sf_sensitivity_evaluate",
+              "sf_portfolio_evaluate"
+            ],
+            "producer_tasks": [
+              "WP03.T01",
+              "WP03.T05",
+              "WP13.T02",
+              "WP13.T03"
+            ],
+            "latest_functional_output_minute": 72,
+            "proof_by_minute": 75,
+            "owner_task": "WP10.T06",
+            "proof_executor": "S0-B",
+            "independent_reviewer": "S3-R3",
+            "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+            "status": "NOT_RUN"
+          },
+          {
+            "pack": "Procurement",
+            "operations": [
+              "sf_request_read",
+              "sf_supplier_read",
+              "sf_contract_read",
+              "sf_sourcing_compare"
+            ],
+            "producer_tasks": [
+              "WP04.T01",
+              "WP04.T03",
+              "WP04.T05"
+            ],
+            "latest_functional_output_minute": 72,
+            "proof_by_minute": 75,
+            "owner_task": "WP10.T06",
+            "proof_executor": "S0-B",
+            "independent_reviewer": "S3-R3",
+            "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+            "status": "NOT_RUN"
+          },
+          {
+            "pack": "Decisions",
+            "operations": [
+              "sf_case_read",
+              "sf_case_draft",
+              "sf_alternative_draft",
+              "sf_change_prepare",
+              "sf_receipt_get"
+            ],
+            "producer_tasks": [
+              "WP11.T01",
+              "WP11.T02",
+              "WP11.T03",
+              "WP11.T04"
+            ],
+            "latest_functional_output_minute": 72,
+            "proof_by_minute": 75,
+            "owner_task": "WP10.T06",
+            "proof_executor": "S0-B",
+            "independent_reviewer": "S3-R3",
+            "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+            "status": "NOT_RUN"
+          },
+          {
+            "pack": "Collaboration",
+            "operations": [
+              "sf_work_list",
+              "sf_question_prepare",
+              "sf_answer_read",
+              "sf_relation_read",
+              "sf_handoff_prepare"
+            ],
+            "producer_tasks": [
+              "WP08.T01",
+              "WP08.T02",
+              "WP08.T04",
+              "WP08.T05",
+              "WP08.T06"
+            ],
+            "latest_functional_output_minute": 72,
+            "proof_by_minute": 75,
+            "owner_task": "WP10.T06",
+            "proof_executor": "S0-B",
+            "independent_reviewer": "S3-R3",
+            "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+            "status": "NOT_RUN"
+          },
+          {
+            "pack": "Documents & Reports",
+            "operations": [
+              "sf_document_extract",
+              "sf_import_preview",
+              "sf_review_prepare",
+              "sf_report_prepare",
+              "sf_artifact_get"
+            ],
+            "producer_tasks": [
+              "WP06.T02",
+              "WP06.T05",
+              "WP07.T04"
+            ],
+            "latest_functional_output_minute": 72,
+            "proof_by_minute": 75,
+            "owner_task": "WP10.T06",
+            "proof_executor": "S0-B",
+            "independent_reviewer": "S3-R3",
+            "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+            "status": "NOT_RUN"
+          },
+          {
+            "pack": "Knowledge / Atlas SF",
+            "operations": [
+              "sf_context_get",
+              "sf_knowledge_search",
+              "sf_evidence_get",
+              "sf_decision_recall",
+              "sf_freshness_check"
+            ],
+            "producer_tasks": [
+              "WP10.T07",
+              "WP14.T02",
+              "WP14.T03",
+              "WP14.T04"
+            ],
+            "latest_functional_output_minute": 68,
+            "proof_by_minute": 75,
+            "owner_task": "WP10.T06",
+            "proof_executor": "S0-B",
+            "independent_reviewer": "S3-R3",
+            "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+            "status": "NOT_RUN"
+          },
+          {
+            "pack": "Routines",
+            "operations": [
+              "sf_routine_catalog",
+              "sf_routine_prepare",
+              "sf_routine_run",
+              "sf_routine_status",
+              "sf_routine_result",
+              "sf_watch_prepare"
+            ],
+            "producer_tasks": [
+              "WP09.T01",
+              "WP09.T07",
+              "WP09.T06"
+            ],
+            "latest_functional_output_minute": 72,
+            "proof_by_minute": 75,
+            "owner_task": "WP10.T06",
+            "proof_executor": "S0-B",
+            "independent_reviewer": "S3-R3",
+            "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+            "status": "NOT_RUN"
+          }
+        ],
+        "checks": [
+          "Usar o mesmo principal, caso, versão, porta e autorização nos caminhos UI, agente e MCP. actor/role/project forjados não alteram a concessão.",
+          "Ligar o callID da bridge à chamada do domínio, à versão e ao resultado ou recibo. Stub ou engine paralelo falham.",
+          "Listar contratos e concessões dos oito packs em T+20; exercer sua funcionalidade real até T+75. Discovery não equivale a execução.",
+          "Conferir 39 rotas positivas nomeadas por perfil/skill/operação e SkillLoadReceipt. Chamada direta do harness passa pelo wrapper C16 com binding real; nunca usar ausência de skill como autorização alternativa."
+        ],
+        "status": "NOT_RUN",
+        "integration_deadline": 75,
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "recheck_window": [
+          103,
+          118
+        ],
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am02.json",
+        "operation_routes_ref": "resident_ai.operation_call_routes",
+        "streaming_policy": "Exercer cada rota pronta com insumos reais, SkillLoadReceipt e consumidor. Fechar todas as39 rotas/packs em G4 e repetir a cobertura exigida no mesmo C final; não esperar um pack completo para descobrir sua primeira falha."
+      },
+      {
+        "id": "AM03",
+        "title": "Isolamento, revogação e conflito de provider",
+        "proof_packages": [
+          "E11",
+          "E12",
+          "E15",
+          "E16"
+        ],
+        "owner_tasks": [
+          "WP10.T06",
+          "WP10.T07"
+        ],
+        "execution_actor": "S0-B/S0-A",
+        "reviewer": "S3-R3",
+        "checks": [
+          "Duas sessões e dois atores com o mesmo perfil e contextos distintos não cruzam dados, contagens ou cache.",
+          "case/session/installation/project/location incorretos e grant/actor/role forjados são recusados na chamada direta.",
+          "Revogação entre discovery e execution ou entre search e detail alcança memória, fonte, prompt, BI, relatório e link.",
+          "Provider sucafina-workbench homônimo, objeto ou generation substituídos e sessão reaberta após reinício não ampliam acesso. Exigir novo binding autenticado.",
+          "Operação fora das concessões do perfil é recusada mesmo sem passar por discovery."
+        ],
+        "status": "NOT_RUN",
+        "integration_deadline": 75,
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "recheck_window": [
+          103,
+          118
+        ],
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am03.json"
+      },
+      {
+        "id": "AM04",
+        "title": "Escolha, aplicação e resposta perdida",
+        "proof_packages": [
+          "E10",
+          "E16"
+        ],
+        "owner_tasks": [
+          "WP11.T03",
+          "WP11.T04",
+          "WP10.T01"
+        ],
+        "execution_actor": "S4-A/S0",
+        "reviewer": "S2-R2",
+        "checks": [
+          "O modelo prepara. Escolha, aplicação e aprovação usam as ações autorizadas e os comandos do domínio.",
+          "Interromper após o commit no domínio e antes do retorno ou da reconciliação no caso. O retry produz um efeito e recupera o recibo persistido atomicamente.",
+          "O mesmo idempotencyKey e digest retornam o resultado autorizado. Chave repetida com conteúdo diferente falha.",
+          "Revalidar base e autoridade em cada domínio e explicar o estado parcial. Não declarar transação global."
+        ],
+        "status": "NOT_RUN",
+        "integration_deadline": 75,
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "recheck_window": [
+          103,
+          118
+        ],
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am04.json"
+      },
+      {
+        "id": "AM05",
+        "title": "Evidência e Atlas persistente real",
+        "proof_packages": [
+          "E12",
+          "E15",
+          "E16"
+        ],
+        "owner_tasks": [
+          "WP06.T05",
+          "WP14.T05",
+          "WP14.T02",
+          "WP10.T07"
+        ],
+        "execution_actor": "S0-A/S0-C",
+        "reviewer": "S3-R3",
+        "checks": [
+          "Resolver o import @orchestra/atlas-boundary/business-memory-ports e instrumentar createMemoryEmit, createMemoryRead e DurableMemory com o digest de engine/boundary. Ler apenas o ledger SF não passa.",
+          "Resolver BusinessEvidenceRef para documento/trecho/hash, registro/encarnação/versão e cálculo/recibo. Fonte ausente ou referência invalidada devem ser reconhecidas.",
+          "Exercer append, commit, read, reinício e nova leitura. A entrada autorizada e o contexto original devem persistir. Append ainda sem commit não aparece como sucesso.",
+          "Dois atores com o mesmo perfil, owner omitido ou forjado, sessão/caso incorretos e um canary privado não ampliam o acesso.",
+          "Revalidar e invalidar após revogação ou mudança de encarnação. O precedente recuperado explica pertinência e diferenças atuais.",
+          "Registrar binary path e versão do scanner real. Exercitar clean, secret-canary, timeout e ausência. Hit ou indisponibilidade não fazem append; indisponibilidade retorna scanner-unavailable. Não aceitar scanner simulado como prova real.",
+          "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou.",
+          "Empacotamento: business-memory-ports tem factories reais e zero imports de spawning; scanner vem de native-memory já admitido. Verificar AST, a aresta external exata, quatro digests gerados, exports bound preservados e check:spawn-imports do candidato com guard/allowlist inalterados."
+        ],
+        "status": "NOT_RUN",
+        "integration_deadline": 75,
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "recheck_window": [
+          103,
+          118
+        ],
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am05.json"
+      },
+      {
+        "id": "AM06",
+        "title": "Rotina real e retorno ao produto",
+        "proof_packages": [
+          "E11",
+          "E13",
+          "E14",
+          "E16"
+        ],
+        "owner_tasks": [
+          "WP09.T01",
+          "WP09.T07",
+          "WP09.T06",
+          "WP12.T04"
+        ],
+        "execution_actor": "S3-C/S4",
+        "reviewer": "S3-R3",
+        "checks": [
+          "Exercer admissão/publicação pinada, Relay, perfil/skill, operação SF, run/result e UI, com IDs e versões reais.",
+          "Falha, retry e intervenção ficam visíveis. O run pode terminar com pergunta; a resposta ocorre no produto. Não inventar espera humana interna ao run.",
+          "Retomar na nova versão sem duplicar proposta ou efeito. Schedule usa recorrência, dono e timezone atuais e não aprova negócio por conta própria.",
+          "Revogação e cancelamento afetam resultado e agenda. O progresso e a proveniência de C11 chegam à mesa.",
+          "sf_maestro/sf-preparar-revisao-executiva percorre catalog/prepare com pedido humano, run só com admissão C07 atual, status/result e consumo na pauta. Em routine-result, prepare/run são recusados; nenhuma chamada recursiva é criada."
+        ],
+        "status": "NOT_RUN",
+        "integration_deadline": 75,
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "recheck_window": [
+          103,
+          118
+        ],
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am06.json"
+      }
+    ],
+    "ci": {
+      "status": "PLANNED_NOT_RUN",
+      "recipes": [
+        {
+          "id": "CI-SF",
+          "scope": "Suite completa do módulo Sucafina, inclusive casos novos",
+          "request": {
+            "package": "sucafina",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "modules/sucafina",
+          "required": true
+        },
+        {
+          "id": "CI-CLI",
+          "scope": "Suite completa do pacote CLI cujo composition root foi alterado",
+          "request": {
+            "package": "cli",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "apps/cli",
+          "required": true
+        },
+        {
+          "id": "CI-APP-SRC",
+          "scope": "Suíte Bun do app na árvore src, com condição solid; args vazios respeitam bunfig test.root=./src.",
+          "request": {
+            "package": "app",
+            "runner": "bun",
+            "args": []
+          },
+          "directory": "packages/app-shell",
+          "required": true,
+          "renamed_from": "CI-APP",
+          "selected_roots": [
+            "packages/app-shell/src"
+          ],
+          "not_covered": [
+            "packages/app-shell/test-browser"
+          ]
+        },
+        {
+          "id": "CI-APP-BROWSER",
+          "scope": "Suíte Bun da árvore test-browser do app; workflow usa condição browser, happydom e controleomni.",
+          "request": {
+            "package": "app",
+            "runner": "bun",
+            "args": [
+              "test-browser"
+            ]
+          },
+          "directory": "packages/app-shell",
+          "selected_roots": [
+            "packages/app-shell/test-browser"
+          ],
+          "required": true
+        },
+        {
+          "id": "CI-ATLAS-BUSINESS",
+          "scope": "Suíte completa da boundary alterada, incluindo import/export das duas portas, preservação dos exports bound e negativos de AST no teste business-memory-ports; geração/AST/check:spawn-imports/typecheck são gates estáticos explícitos adicionais.",
+          "request": {
+            "package": "atlas-boundary",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "30000"
+            ]
+          },
+          "directory": "modules/atlas/boundary",
+          "planned_files": [
+            "modules/atlas/boundary/test/business-memory-ports.test.ts"
+          ],
+          "required": true,
+          "selection_source": "script/module-registry.json alias atlas-boundary -> modules/atlas/boundary e package name @orchestra/atlas-boundary, resolvidos por script/test-ci-package.ts.",
+          "timeout_semantics": "Timeout por teste reproduz script test existente. Não é estimativa de duração do job; args sem filtro mantêm suíte completa e omni scope=suite."
+        },
+        {
+          "id": "CI-UI-OPERATIONS",
+          "scope": "UI real das 28 capacidades, edição, import e colaboração",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/operations.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell",
+          "planned_files": [
+            "packages/app-shell/e2e/sucafina/operations.spec.ts"
+          ],
+          "required": true
+        },
+        {
+          "id": "CI-UI-DECISIONS",
+          "scope": "Caso, portfólio, memória e estados as síncronos pela UI real",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/decisions.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell",
+          "planned_files": [
+            "packages/app-shell/e2e/sucafina/decisions.spec.ts"
+          ],
+          "required": true
+        },
+        {
+          "id": "CI-UI-REPORTS",
+          "scope": "Reunião, documentos e exportações com conteúdo completo",
+          "request": {
+            "package": "app",
+            "runner": "playwright",
+            "config": "e2e/playwright.production.config.ts",
+            "args": [
+              "e2e/sucafina/reports.spec.ts"
+            ]
+          },
+          "directory": "packages/app-shell",
+          "planned_files": [
+            "packages/app-shell/e2e/sucafina/reports.spec.ts"
+          ],
+          "required": true
+        }
+      ],
+      "staticGates": [
+        {
+          "id": "BUILD-ATLAS",
+          "cwd": "modules/atlas/boundary",
+          "command": "bun run generate",
+          "owner_task": "WP10.T07",
+          "gate": "ATLAS-PACKAGE/T20",
+          "purpose": "Produzir os dois pares JS/d.ts pelo gerador canônico e executar a admissão AST do bundle; zero novo site spawning. Nenhum algoritmo ou teste de produto é executado por esta correção de planejamento.",
+          "receipt_required": [
+            "candidate_sha",
+            "command",
+            "exit_status",
+            "generated_files",
+            "generated_digests"
+          ]
+        },
+        {
+          "id": "CHECK-ATLAS-GENERATED",
+          "cwd": "modules/atlas/boundary",
+          "command": "bun run check:generated",
+          "owner_task": "WP10.T07",
+          "gate": "G4/G7",
+          "purpose": "Verifica reproducibilidade/frescor dos artefatos gerados da árvore candidata; não presumir que bun test executa esse script.",
+          "receipt_required": [
+            "candidate_sha",
+            "command",
+            "exit_status",
+            "stdout_digest"
+          ]
+        },
+        {
+          "id": "TYPECHECK-ATLAS",
+          "cwd": "modules/atlas/boundary",
+          "command": "bun typecheck",
+          "owner_task": "WP10.T07",
+          "gate": "G4/G7",
+          "purpose": "Script existente tsgo --noEmit do pacote; não usar tsc diretamente."
+        },
+        {
+          "id": "GUARDS",
+          "cwd": ".",
+          "command": "bun run check:guards --base origin/dev",
+          "owner_task": "WP10.T04",
+          "gate": "G7 em C; G8 em D",
+          "purpose": "Gate exigido por AGENTS no checkout real do candidato; workflow atual não fornece dispatch de guards. Disponibilidade/readiness do executor é registrada em G0, sem inventar verde ou alterar workflow. WP10.T04 verifica C para G7. WP10.T05/S0 repete este mesmo comando em D para G8 após verificar o envelope; identifica o SHA efetivamente examinado e não edita D para incluir resultado autorreferente."
+        },
+        {
+          "id": "CHECK-SPAWNS",
+          "cwd": ".",
+          "command": "bun run check:spawn-imports",
+          "owner_task": "WP10.T07",
+          "execution_actor": "S0-A",
+          "gate": "ATLAS-PACKAGE/T20 + G4/G7",
+          "purpose": "Executar o guard existente na árvore candidata após geração; nenhum novo site de spawning, computed import, edição de allowlist ou substituição do comando. Nome lógico check:spawns; script real check:spawn-imports.",
+          "receipt_required": [
+            "candidate_sha",
+            "command",
+            "exit_status",
+            "guard_source_digest",
+            "allowlist_digest",
+            "generated_artifact_digests",
+            "stdout_digest"
+          ],
+          "status": "NOT_RUN"
+        }
+      ],
+      "requiredTypechecks": [
+        "bun typecheck em modules/sucafina",
+        "bun typecheck em apps/cli",
+        "bun typecheck em packages/app-shell",
+        "bun typecheck em modules/atlas/boundary",
+        "bun run check:guards --base origin/dev na raiz"
+      ],
+      "evidenceFields": [
+        "product_candidate_sha",
+        "product_tree_hash",
+        "ci_snapshot_sha",
+        "ci_snapshot_parent",
+        "request_hash",
+        "normalized_request",
+        "expected_selection",
+        "selected_files",
+        "selected_test_count",
+        "run_id",
+        "run_url",
+        "attempt",
+        "job_ids",
+        "job_head_sha",
+        "queue_seconds",
+        "setup_seconds",
+        "test_seconds",
+        "artifact_seconds",
+        "conclusion",
+        "omni_control",
+        "artifacts"
+      ],
+      "receiptRules": [
+        "Cada snapshot Sj descende do candidato C e muda somente .ci-run.json. Conferir a correspondência da árvore de produto com C.",
+        "CI-APP-SRC e CI-APP-BROWSER têm recibos separados no mesmo C. Nenhum resultado Playwright substitui essas seleções.",
+        "Confirmar head_sha=Sj, evento push e branch ci-run-linux-*. Ler run, jobs e artifacts pelo ID real; não usar o wrapper limitado a eventos de PR.",
+        "Conferir o controle omni pela regra nativa do job. Guardar verdict e identificadores, sem incluir credenciais ou dados desnecessários.",
+        "Zero testes, seleção incompleta ou artefato ausente não produzem PASS.",
+        "Alterar o produto, seus testes, configurações, skills, fixtures, contratos ou guias normativos cria novo candidato C e exige novos snapshots, gates afetados e cobertura cumulativa obrigatória do C aceito. Preservar provas antigas com o SHA original; não trocar seu rótulo para o novo candidato. Adições estritamente evidenciais podem formar D somente pelo envelope execution.candidate_delivery; não são reteste nem mudança do produto C.",
+        "Oito seleções mínimas e adicionais obrigatórias do epic, AM01–AM06 e pareceres finais referem-se ao mesmo C. Um resultado já válido em C pode ser indexado em D sem novo run; resultado de outro candidato não recebe o SHA de C.",
+        "Guardrails são verificados em C/G7 e novamente em D/G8. D exige ancestralidade, diff completo append-only admitido, ausência de novos inputs de build/test/runtime e hashes preservados; publicar o resultado do guard de D fora do próprio D evita autorreferência."
+      ],
+      "invalidationMatrix": [
+        {
+          "change": "Contratos C01–C17, schema, enum, export ou semântica de port",
+          "incremental": "Produtor, todos consumidores transitivos e provas que dependem desses contratos",
+          "final": "Novo candidato C; seleções obrigatórias e AM afetadas com identidade atual"
+        },
+        {
+          "change": "Motor financeiro, inventário de custo, confirmação material, FX ou versionamento",
+          "incremental": "Oráculos financeiros/CONFIRM-SCOPE, Planner, BI, Procurement/decisão/portfólio e rotinas consumidoras",
+          "final": "CI-SF e consumidores obrigatórios; AM01/AM02/AM04/AM06 conforme dependência; matriz final integral preservada"
+        },
+        {
+          "change": "Identity/access, binding, MCP bridge, capabilities, source revocation ou incarnation",
+          "incremental": "Todos caminhos de entrada e egress atingidos; positivos e negativos; UI, export, fonte, Atlas e MCP",
+          "final": "Requalificar AM02/AM03 e demais AM que atravessam a fronteira alterada; desconhecido invalida todas"
+        },
+        {
+          "change": "Profile/skill source, workflow, template ou carregamento",
+          "incremental": "Witnesses das skills e perfis alterados, grants, outputs e consumidores; reviewer se sua independência/inputs mudaram",
+          "final": "AM01 e rotas AM02/AM06 atingidas; provar digests atuais no mesmo C"
+        },
+        {
+          "change": "Atlas generator, entry, artifacts, scanner linkage, schema, store, resolver ou outbox",
+          "incremental": "Generate/check:generated/typecheck/spawn, boundary suite e consumidores; scanner/restart/idempotency/ACL quando afetados",
+          "final": "CI-ATLAS-BUSINESS e AM05; AM03 e demais consumidores conforme dependência"
+        },
+        {
+          "change": "UI shell, shared component, route, styling, keyboard ou viewport behavior",
+          "incremental": "APP-SRC/APP-BROWSER pertinentes e Playwright de todos consumidores; estados, acessibilidade e regressões visuais afetados",
+          "final": "As seleções finais completas continuam obrigatórias; alteração puramente visual não invalida aritmética imutável como nova observação, mas não dispensa o candidato final"
+        },
+        {
+          "change": "Fixture, oracle, test source, request args ou selection config",
+          "incremental": "Reexecutar seleção correspondente; resultado anterior não testa a nova asserção ou fixture",
+          "final": "Proibir união de seleções parciais como se uma seleção completa tivesse executado"
+        },
+        {
+          "change": "Root lock/package, module resolver, compiler, runtime, workflow ou test validator",
+          "incremental": "Expandir por dependências e ambiente efetivo; unknown => expansão conservadora",
+          "final": "Reestabelecer requests, geração/typecheck e seleções obrigatórias sob configuração observada"
+        },
+        {
+          "change": "Modelo, scanner binário, política de acesso ou estado externo usado na prova",
+          "incremental": "Requalificar provas live afetadas e registrar identidade/versão atual; cache de código não prova estado externo",
+          "final": "AMs e gate ambiental pertinentes em C; nenhum segredo no request"
+        },
+        {
+          "change": "Recibo/parecer puramente evidencial dentro de paths previamente admitidos",
+          "incremental": "Conferir integridade e diff; não reexecutar produto pela gravação da própria evidência",
+          "final": "Somente pela regra explícita C→D: C permanece candidato testado, D arquiva evidência; guards em D. Qualquer mudança fora do envelope cria C novo"
+        }
+      ],
+      "ownershipReconciliation": "Historical exclusive-dispatch windows are planning rules; current mission47 instruction forbids dispatch, session45 handles checks, S0 retains final acceptance. No workflow, ref, validator or CI move by this reviewer.",
+      "constraints": [
+        "Eight minimum recipes remain required, plus all additional epic/AGENTS affected-package gates. This is not a claim to a global Orchestra suite.",
+        "APP-SRC and APP-BROWSER are distinct full Bun selections; Playwright cannot replace them. Each Playwright job uses one worker.",
+        "Exact source, validator, runtime, config, fixture and selection identity is part of deduplication. Adopt only the same key with complete observed selection, valid Omni, intact artifacts and no later invalidation.",
+        "Setup or runner failure remains BLOCKED; test failure goes to the change owner. Prior regression needs reproducible comparison and attribution without a gate waiver. Zero tests, mismatched selection or missing artifacts cannot PASS.",
+        "Changes to product, tests, fixtures, config, skills, contracts or normative guides create a new C. Run affected consumers and retain cumulative required coverage of the same final C. A union of partial selections never substitutes for a full run.",
+        "Native/live proof uses the actual configured host, model, scanner and Atlas on the same C. Deterministic source checks cannot replace AM proofs.",
+        "Review findings go immediately to the active writer; reviewers do not edit product. Three final independent reviewers must be fresh after builders close. This helper review is not that campaign gate."
+      ]
+    },
+    "appendices": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+        "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+        "read": "FULL",
+        "characters": 13825
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+        "blob": "033737b1051b23443e633df7874c550629bf55a1",
+        "read": "FULL",
+        "characters": 41053
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/atlas-packaging.md",
+        "blob": "907750ae7c945e5f303480cc6e14f11bb1696eb9",
+        "read": "FULL",
+        "characters": 11845
+      }
+    ],
+    "appendixImplications": {
+      "productAcceptance": [
+        "C06 keeps immutable observed scope/version separate from current validity. The fingerprint excludes irrelevant global version and timestamps, and includes material data, absence and dependencies. Material changes cause stale state; revocation causes unavailable state; history is not rewritten.",
+        "C10 inventory cannot be reduced. An omitted category derives missing-category; explicit sourced zero remains distinct from unknown. A component is counted once even if it covers multiple categories. Reconciled arithmetic does not imply complete coverage.",
+        "Literal numeric cases remain: renewal 240000; base 210000; cost 235000 when implementation is 70000; subtotal 210000 with training omitted; total 250000, difference -10000 and threshold 15000 after training 40000 is confirmed; total 210000 with explicit zero. A conditioned human choice is not approval and survives later producer recalculation.",
+        "Digital PDF, DOCX and text extraction belongs to WP06; WP09 consumes the same C14 evidenceRef. A candidate is not a confirmed fact. Revocation, updates and removal remain visible.",
+        "Eighteen skills require version, digest, actual loading, effective model, persisted output and an actual consumer after reload. Catalogue presence, chat or a trace alone fails. Thirty-nine positive operation routes retain typed producers, grants and negative cases."
+      ],
+      "residentRuntime": [
+        "The private per-call bridge requires actual Request authority, exact session, case, incarnation, profile, skill and current grants. Its consumed CallLease binds operation, payload digest, callId, generation and expiry of at most five minutes. Actor arguments cannot grant authority.",
+        "One logical sucafina-workbench has eight packs and 39 operations. Homonymous providers and substituted objects or generations cause conflicts. There is no global actor or provider-by-name fallback. Authentication is revalidated before and after the domain call and at egress.",
+        "The Revisor must run in a fresh SessionV2, without a fork of the analysis. Reusing the available model is allowed; reusing the same run is not independent review.",
+        "Atlas uses actual task/project templates, derived business owners and opaque evidence references. It does not fabricate engineering PRs or repository-store claims. The engine receives an authorized store facade; revoked entries are suppressed entirely and returns are revalidated.",
+        "Synchronous DurableMemory append stages the snapshot; the asynchronous SF transaction commit establishes durability. No success is declared before commit. Idempotent retry, reading after restart and current ACL remain required.",
+        "The real scanner distinguishes clean, hit and could-not-run. Unavailability cannot permit append; an always-clean mock is not proof. Native admission cannot be fabricated.",
+        "Real C07 routine admission is required. The routine-result entry mode denies prepare/run to prevent recursion. The model cannot choose its authority or entry mode."
+      ],
+      "atlasPackaging": [
+        "The business-memory subpath exposes real factories, validators, fold and types, without scanners, spawning, dynamic imports or computed hiding. Native-memory preserves its bound exports and adds scanner exports without exposing unbound factories.",
+        "The canonical generator externalizes only the business-memory-ports descriptor, the exact normalized memory-emit.ts importer and literal ./scanner.js specifier to the public native-memory subpath. A missing or changed edge fails generation.",
+        "Nine Atlas paths belong exclusively to WP10.T07/S0-A; canonical generation produces four artifacts. Generated bytes receive no manual postprocessing; guards and allowlists are not weakened.",
+        "AST admission, generate, check:generated, typecheck and check:spawn-imports must run on the actual candidate with four artifact digests and guard/allowlist digests. Missing proof remains HOLD; AM05 scanner, commit, restart and ACL requirements remain."
+      ]
+    },
+    "reviewActions": {
+      "remoteWrites": 0,
+      "dispatches": 0,
+      "productExecutions": 0,
+      "tests": 0,
+      "typechecks": 0,
+      "guards": 0,
+      "builds": 0
+    }
+  },
+  "E2E_applicable_guidance": {
+    "requiredBy": "packages/app-shell/e2e/AGENTS.md",
+    "repository": "microsoft/playwright",
+    "docs": [
+      {
+        "path": "docs/src/best-practices-js.md",
+        "blob": "02e1e4db6baea68e725040646396e09a29584420",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/actionability.md",
+        "blob": "848df596771406a7c4d7b2e6120f95b01330a756",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/test-assertions-js.md",
+        "blob": "97eb22aa6c5839c4f83be974fef260221d6494e2",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/locators.md",
+        "blob": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/network.md",
+        "blob": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4",
+        "fullRead": true
+      },
+      {
+        "path": "docs/src/browser-contexts.md",
+        "blob": "d34759c18549026d7cba3558ce8357d6e441c4c7",
+        "fullRead": true
+      }
+    ],
+    "applied": "Semantic exact locators, awaited web assertions, retained isolated real fixture, no mutation retries or increased timeouts."
+  },
+  "helper_scope": "All helpers read-only remotely. Static reviewers do not count as E17/campaign FINAL reviewers.",
+  "execution": "No product code, tests, checks or CI executed by47.",
+  "additional_current_choice46": {
+    "source": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+    "source_mission_packet": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+    "full_root_control_read": true,
+    "source_semantics": "Exact partial source scope only; GLOBAL_RELEASE preserved predicate is not target authorization.",
+    "review_completion": "COMPLETE_ROOT_AND_THREE_READONLY_HELPERS",
+    "exact_shared_reconstruction": {
+      "files": 6,
+      "hunks": 14,
+      "owned_files": 9,
+      "owned_hunks": 26
+    },
+    "criteria": {
+      "pack_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "criteria_blob": "1aef092ccd979fa1fc2af8d890869187c52298d6",
+      "literal_count": 83,
+      "literal_ids_and_texts_and_canonical_status_exact": true,
+      "canonical_pointers_resolved_to_exact_objects": true,
+      "cohort_counts": {
+        "PARTIAL": 38,
+        "OUTSIDE_MISSION": 28,
+        "VERIFIED_WITHIN_COHORT": 12,
+        "DEPENDENCY_EVIDENCE_ONLY": 5
+      },
+      "canonical_global_pass_count": 0,
+      "all_integrated_C_status": "NOT_RUN",
+      "all_canonical_status": "NOT_RUN",
+      "overrides": 0,
+      "preserved_predicate_note": "source-release.preserved.GLOBAL_RELEASE=true records predicate preservation; it does not grant GLOBAL_RELEASE.",
+      "scope_catalog_entries_read": 18,
+      "mandatory_numeric_ids": [
+        "WP11.T02.CHK.21",
+        "WP11.T03.CHK.20"
+      ]
+    },
+    "source_evidence_review": {
+      "status": "EXPLICIT_RELEASE_EVIDENCE_COHERENT; C19_DEPENDENCIES_RECONCILED; C20_UNQUALIFIED",
+      "dependencies": {
+        "source_pins_match_exact_release": 14,
+        "source_runtime_identical_to_C19": 6,
+        "source_runtime_changed_in_C19": 8,
+        "test_support_unique_exact": 2,
+        "candidate_pins_exact": 9,
+        "shared_runtime_pins_exact": 7
+      }
+    }
+  },
+  "last_material": {
+    "symbol": "C20",
+    "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+    "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+    "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "increment": 8,
+    "sources": [
+      46
+    ]
+  }
+}

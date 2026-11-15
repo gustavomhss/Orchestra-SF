@@ -3,8 +3,8 @@
   "mission": 47,
   "actor": "S0-C",
   "epoch": "S0-C-e9-browser47",
-  "state": "ACCEPTED_SUCCESSION_INTAKE_ACTIVE",
-  "recorded_at": "2026-11-14T23:12:07Z",
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "recorded_at": "2026-11-15 00:04:05 UTC",
   "campaign": "sf2h-integral-20261112",
   "T0": "2026-11-13T04:01:10Z",
   "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
@@ -29,7 +29,7 @@
       "tree": "18217d590d6c009f6a9a4381c18124a359799d88"
     }
   },
-  "reconciliation": "Target and control reread immediately before this ACK. Target still exact terminal42; no newer target commit/authority. Mission47 explicitly supersedes COMMON's historical sole42 writer. PR65 open/draft; no PR conversation comments. No authority inferred from elapsed time or silence.",
+  "reconciliation": "Initial target exactly matched terminal42 before ACK. All eight material publications descend through one CAS chain with complete ref/parent/tree/file readbacks. Closing control f2383d retained47 authority unchanged; source ownership reconciled at exact release pins. Source observation window is bounded in source-census-final.json.",
   "sole_remote_writer": "Root47 on sf2-stack only",
   "helpers": {
     "finance34": "/root/finance34_intake",
@@ -38,28 +38,34 @@
     "scope": "Read-only source/patch/contract review; no remote writes or execution; not FINAL campaign reviewers or source owners."
   },
   "released_inputs": {
-    "Finance34": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
-    "Procurement37": "ab2a967125b3c767067797a27b919466020fbd82",
-    "BI38": "0fa2bad41da484f47cd2576be20e713dbd1f45cc",
-    "Native41": "61af072c7385feba8c89ba6044ca09a90941213d",
-    "Decisions44": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49"
+    "34": "3117cae7e113b7aa0a8286963dcd7bc918994f3f",
+    "37": "ab2a967125b3c767067797a27b919466020fbd82",
+    "38": "0fa2bad41da484f47cd2576be20e713dbd1f45cc",
+    "40": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+    "41": "61af072c7385feba8c89ba6044ca09a90941213d",
+    "43": "6feaf8deab0df1d1e409da9e475340a449fd694e",
+    "44": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+    "46": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b"
   },
-  "intake_status": "Complete release/patch/preimage/dependency/behavior review in progress; this authority ACK admits no product change and grants no source PASS to target.",
+  "intake_status": "EIGHT_MATERIAL_CANDIDATES_C13_TO_C20_PUBLISHED; SELECTIVE_RELEASED_INTAKE_COMPLETE; QUALIFICATION_OPEN",
   "preserved_holds": [
-    "Reports36 all14 active targets remain held for M42-R36-AMBIGUOUS-THREAD-READ-PURGE; correction owner48.",
-    "M31-FINANCIAL-APPROVAL remains mandatory; human choice is not approval.",
-    "Native installed admission/watch remains held without genuine Request-to-Maestro/session/Task capability.",
-    "CurrentChoice46, Agenda39, Memory40, Portfolio43, Compiler45 and Reports48 require exact explicit source release."
+    "Reports36 old14-target payload HOLD;48 correction unreleased at bounded cutoff.",
+    "M31-FINANCIAL-APPROVAL mandatory unsatisfied; human CurrentChoice promotion does not approve financial effect.",
+    "Native real authenticated admission/continuation/readiness and watch Schedule HOLD.",
+    "Portfolio43 final-CAS/P03 and original post-reservation contract remain open;50 ACK request/R2 in progress lacks explicit release.",
+    "Memory MI07 original long-history timeout remains open with51; original35 source closure does not qualify native AM05 or current candidate.",
+    "Agenda39, Reports48, Portfolio50, Memory51 and Decisions52 in-progress snapshots not consumed;45 exact composed proof not observed."
   ],
   "publication": {
     "branch": "sf2-stack",
     "pr": 65,
-    "expected_parent": "217b4295e2aeb00bc2f4accb9fb893451b9795e9",
+    "expected_parent": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+    "expected_parent_tree": "b51fce068f7cee96e6f22013d729087643e3b684",
     "remote": "GitHub MCP",
-    "CAS": true,
-    "force": false,
+    "ref_advances": "CAS expected_sha, force:false",
     "merge_sources": false,
-    "merge_control": false
+    "merge_control": false,
+    "scope": "Own terminal receipts only; PR65 description refreshed after exact readback."
   },
   "execution": {
     "tests": "NOT_RUN",
@@ -85,5 +91,31 @@
     "three_FINAL_reviews": "OPEN",
     "GLOBAL_RELEASE": false
   },
-  "next": "Finish intake and publish coherent material candidates with exact source/pre/post manifest, dependencies and consumer ACK. Do not wait for unrelated active sessions."
+  "next": "45 receives exact C20, eight manifest/dependency records and inherited gates.52 installed Decisions,51 MI07,50 Portfolio,48 Reports and actual policy/native owners retain their open work. S0 retains epic/final acceptance. Any later source intake requires explicit release and new reconciled writer authority.",
+  "accepted_at": "2026-11-14T23:12:07Z",
+  "initial_ack": {
+    "commit": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+    "tree": "3e7658b3cdd46d0331f2c0b5446bcf60b55f134d",
+    "blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "predecessor_reconciled_before_publication": true
+  },
+  "latest_material": {
+    "symbol": "C20",
+    "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+    "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+    "parent": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "increment": 8,
+    "sources": [
+      46
+    ]
+  },
+  "terminal_commit_rule": "This AUTHORITY and HANDOFF are in the documentation-only child of exact C20. Resolve that containing Git commit/tree; exact values are recorded after readback in PR65 and final completion. No recursive self-SHA is fabricated.",
+  "terminal_files": "Ten own integration receipts; all81 current material paths and320 archived source blobs remain unchanged from C20.",
+  "lease": {
+    "epoch": "S0-C-e9-browser47",
+    "state": "ENDED",
+    "ends_at": "Successful CAS of the containing terminal documentation commit on sf2-stack",
+    "further_product_writes": false,
+    "continuation_rule": "A later integration owner must reconcile this terminal HEAD and control then publish an explicit successor ACK. No source branch is assigned to47. Readback and PR65 metadata closure do not extend product-write authority."
+  }
 }
