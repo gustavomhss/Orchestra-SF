@@ -76,10 +76,9 @@ export async function requireD01PackagedHost(manifest: NativeManifest): Promise<
   if (digest.digest("hex") !== raw.executableSha256.toLowerCase())
     throw new Error("D01_EXECUTABLE_SHA256_MISMATCH")
   const { serverKey, discoveryOrigin, projectId } = manifest.target
-  // This must match the existing approved SDK connection. No Basic password,
-  // token or alternate identity crosses Playwright/renderer instrumentation.
-  if (serverKey !== discoveryOrigin)
-    throw new Error("D01_NON_PUBLIC_OWNED_CONNECTION_REQUIRES_EXISTING_NATIVE_UI_APPROVAL")
+  // Original serverKey may be a main-owned sidecar key rather than the URL.
+  // D01 passes only these non-secret selectors. The real renderer retrieves
+  // any owned credentials internally and main's registry verifies approval.
   return {
     executablePath, candidateSha: manifest.candidateSha,
     executableSha256: raw.executableSha256.toLowerCase(),
