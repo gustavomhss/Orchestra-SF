@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.111.ci-request-to-107.v1",
+  "source_branch": "creation-recovery-link",
+  "source_code_commit": "d4a4543ba0863b6669976858944e5691cd3414ec",
+  "source_tree": "6c0774005309dc3af12078e56faa24892e4708e8",
+  "campaign": "sf2h-integral-20261112",
+  "consumer": "107",
+  "state": "PREPARED_NOT_DISPATCHED",
+  "preconditions": [
+    "Mission96 case-port and decision-create source blobs adopted on a composed C candidate",
+    "Owner four-path patch applied at current actual preimages by rightful owners",
+    "Adapter111 and both new tests carried into the exact candidate snapshot",
+    "No equivalent request already in flight or terminal for same W/tree/config/selection",
+    "Actor107/101 dispatcher and handoff reconciled; no second dispatcher"
+  ],
+  "workflow": ".github/workflows/test-ci.yml",
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "platform": "linux",
+  "selections": [
+    {
+      "id": "111-http-c08-sqlite",
+      "args": [
+        "Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+        "Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts"
+      ],
+      "env": {},
+      "requires": "96+111 actual source with host adoption"
+    },
+    {
+      "id": "111-browser-wp01",
+      "args": [
+        "Sucafinav1/test/product/wp01/browser-startup.test.ts",
+        "Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+        "Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+        "Sucafinav1/test/product/wp01/browser-lifecycle.test.ts"
+      ],
+      "env": {},
+      "requires": "Linux Bun named selection only, one physical pooled browser, startup first/finalizer last"
+    }
+  ],
+  "additional_required_proofs": [
+    "Installed 52 normal and contextual pages and POST/GET in the same host service, no separate permissive fixture",
+    "Auth across actors, revocation, policy, and source/operation fences, no disclosure at egress",
+    "No new UUID/re-POST during pending state; 2 distinct matching deliberate intent keys",
+    "Recheck 91 after integration",
+    "Package bun typecheck via108; guards via108"
+  ],
+  "dedupe": [
+    "W source tree",
+    "exact selection order",
+    "runner and OS",
+    "test-ci workflow",
+    "tests/fixtures/config",
+    "request digest"
+  ],
+  "observed": {
+    "W": "d4a4543ba0863b6669976858944e5691cd3414ec",
+    "S": null,
+    "run": null,
+    "job": null,
+    "http": null,
+    "c08": null,
+    "sqlite": null,
+    "browser": null,
+    "actions": null,
+    "verdict": "NOT_RUN"
+  },
+  "global_release": false
+}

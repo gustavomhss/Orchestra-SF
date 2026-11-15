@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.111.verification.v1",
+  "branch": "creation-recovery-link",
+  "source_commit": "d4a4543ba0863b6669976858944e5691cd3414ec",
+  "source_tree": "6c0774005309dc3af12078e56faa24892e4708e8",
+  "base": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "owned": {
+    "adapter": {
+      "path": "apps/cli/src/sucafina-product/creation-recovery-http.ts",
+      "blob": "96a83583afef331274ce1ea9f5c2877175434433"
+    },
+    "http_c08_test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts",
+      "blob": "46ab9222309a5856e931d033261f3438b1ce939b"
+    },
+    "browser_test": {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+      "blob": "913e205486854fe581065fc7013e954868b0d45e"
+    }
+  },
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-recovery-link/OWNER-52-106-C53.patch",
+    "blob": "205f48bc7ea6b8bac08d339a574f8c4609f94d15",
+    "manifest_blob": "7063741dbfe2243637eb95048c1dc945a0e70d03",
+    "static_preimage_checks": "4/4 C53 source blobs matched source96 owner manifest",
+    "static_postimages": "4 new full proposed Git blobs created; not installed",
+    "patch_apply_in_owner_repo": "NOT_RUN"
+  },
+  "validation": {
+    "typecheck": "NOT_RUN (108)",
+    "guards": "NOT_RUN (108)",
+    "http": "NOT_RUN (107)",
+    "c08_sqlite": "NOT_RUN (107)",
+    "browser": "NOT_RUN (107)",
+    "host_installed": "NOT_COMPOSED",
+    "review91": "PENDING",
+    "consumer_ACK": "PENDING"
+  },
+  "constraints": {
+    "no_local_tests": true,
+    "no_dispatch_by111": true,
+    "no_shared_owner_path_writes": true,
+    "no_merge": true,
+    "no_deploy": true,
+    "no_azure": true
+  },
+  "status": "SOURCE_READY_NOT_VERIFIED",
+  "global_release": false
+}

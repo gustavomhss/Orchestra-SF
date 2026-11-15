@@ -1,0 +1,64 @@
+{
+  "schema": "sf2h.111.criteria.v1",
+  "finding": "R1-91-001",
+  "implementationStatus": "SOURCE_READY",
+  "proofStatus": "NOT_RUN",
+  "checks": [
+    {
+      "id": "111.C1",
+      "requirement": "Authenticated original-key GET scoped to live principal/installation/project/policy",
+      "source": "creation-recovery-http.ts + proposed normal/contextual host-form bindings",
+      "observed": "source-only; test authored",
+      "qualification": "MISSING_PROOF"
+    },
+    {
+      "id": "111.C2",
+      "requirement": "Live C08 ledger and case reader two observations, preserve versions/incarnation/revocation",
+      "source": "case-port96 recoverCreation + recovery-http.test.ts",
+      "observed": "source-only",
+      "qualification": "MISSING_PROOF"
+    },
+    {
+      "id": "111.C3",
+      "requirement": "One intention one C08 mutation after lost ACK/reload/restart",
+      "source": "recovery-browser.test.ts + recovery-http.test.ts",
+      "observed": "source-only",
+      "qualification": "MISSING_PROOF"
+    },
+    {
+      "id": "111.C4",
+      "requirement": "Other actor/revocation/changed policy never recover original case",
+      "source": "HTTP unit+browser tests and reviewed auth service",
+      "observed": "source-only",
+      "qualification": "MISSING_PROOF"
+    },
+    {
+      "id": "111.C5",
+      "requirement": "Two deliberately identical decisions produce distinct original UUIDs and receipts",
+      "source": "HTTP unit+browser tests",
+      "observed": "source-only",
+      "qualification": "MISSING_PROOF"
+    },
+    {
+      "id": "111.C6",
+      "requirement": "Normal and contextual host52 installed HTTP/UI retain key; no browser secrets or CDP outputRef",
+      "source": "proposed 4 hunks, browser pending lookup via contextual form",
+      "observed": "Contextual POST via genuine issued evidence NOT exercised; owner composition pending",
+      "qualification": "BLOCKED_HOST52_COMPOSITION"
+    },
+    {
+      "id": "111.C7",
+      "requirement": "GitHub Actions107 actual product runs, compiler108, independent91 recheck",
+      "source": "CI-REQUEST-107.json",
+      "observed": "No W/S/job/run observed for 111",
+      "qualification": "NOT_RUN"
+    }
+  ],
+  "unmodified_campaign": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "global_release": false
+}
