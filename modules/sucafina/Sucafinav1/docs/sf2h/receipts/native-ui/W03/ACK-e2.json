@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.native-ui.author-successor-ack.v1",
+  "mission_id": "UX20-W03-R2",
+  "seat": "W03",
+  "order": "F02",
+  "output": "F02",
+  "actor": "new user-invoked ChatGPT successor, W03 e2",
+  "effective_model": "GPT-6",
+  "requested_model_label": "Astra",
+  "github_actor": "gustavomhss",
+  "session_id": null,
+  "session_id_reason": "Browser conversation session ID not exposed by available tools",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w03",
+  "pr": 122,
+  "lease_epoch": "ux-native-w03-e2",
+  "prior_epoch": "ux-native-w03-e1",
+  "prior_epoch_status": "REVOKED_FOR_FUTURE_ACCEPTANCE",
+  "successor_fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/S0-FENCE-e2.json",
+  "fence_sha": "b44099f05b470ea783bf0f5aa2e69862f78ea62e",
+  "verified_head": "b44099f05b470ea783bf0f5aa2e69862f78ea62e",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "contracts": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "contract_blob": "94553a3119826ef1c44271966233dd58042ddd70"
+  },
+  "source": {
+    "identity_path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+    "identity_current_blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+    "identity_old_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+    "delta": "C58 current revocation durability/fence retained; historical source not restored"
+  },
+  "prior_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/HANDOFF.md",
+  "preserved_proposals": [
+    "common.ts.txt",
+    "transport.ts.txt",
+    "router.ts.txt",
+    "transport.test.ts.txt"
+  ],
+  "exclusive_targets": [
+    "packages/schema/src/sucafina/common.ts",
+    "packages/client/src/sucafina/transport.ts",
+    "apps/cli/src/sucafina-product/native-ui/router.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts"
+  ],
+  "target_preimages": {
+    "common": null,
+    "transport": null,
+    "router": null,
+    "test": null
+  },
+  "authoring_authority": "S0-UX19-AUTHORING-ADMISSION-8852ed4a060f6eb3b49c142b894852d0af49740f",
+  "integrator": "114/S0-C-e17-browser114/PR65",
+  "ci_owner": "120/PR106",
+  "compiler_owner": "119/PR107",
+  "status": "ACK_E2_PUBLISHED_AUTHORING",
+  "global_release": false,
+  "restrictions": {
+    "shared_paths": false,
+    "local_tests": false,
+    "force": false,
+    "reset": false,
+    "merge": false,
+    "deploy": false,
+    "goal_resume": false
+  },
+  "qualification": "NOT_RUN; authoring on immutable contracts; F01/I00/D01 producer composition pending"
+}
