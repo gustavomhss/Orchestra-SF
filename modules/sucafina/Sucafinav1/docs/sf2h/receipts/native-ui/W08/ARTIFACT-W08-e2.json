@@ -1,0 +1,157 @@
+{
+  "schema": "sf2h.native-ui.artifact-handoff.v1",
+  "mission_id": "UX20-W08-R2",
+  "seat": "W08",
+  "output": "S03",
+  "terminal_state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+  "actor": "GPT-6 / GitHub connector user gustavomhss",
+  "session_id": null,
+  "epoch": "ux-native-w08-e2",
+  "branch": "sf-ux-w08",
+  "pr": 123,
+  "fence_head": "e3b1940b7ffe5dd5c7b96fdfcb4c0d1805b1d940",
+  "ack_commit": "b756c6ce4f5cb1d4e77bdfb1a841b2f222e238a3",
+  "product_commits": [
+    "cb987ca6d9d5f02afd1588af1efc3ab84ac82dcf",
+    "85391432a6a8d9ac17d285f665d6b364b44b72db"
+  ],
+  "material_head": "85391432a6a8d9ac17d285f665d6b364b44b72db",
+  "material_tree": "c2ccd39adc980222cfbfe8db71b3a72b9627cd81",
+  "all_target_preimages": "ABSENT at initial fenced HEAD; checked remotely",
+  "files": [
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/index.ts",
+      "preimage": null,
+      "postimage": "be374a69825b2f1bae7589ba5b46cb633371b1eb",
+      "proposal": "d91f4e75cd0ab6fd4df61422eae452dba7566faf",
+      "export": [
+        "createSfDraft",
+        "SfDraftInput",
+        "SfDraftController",
+        "SfDraftState"
+      ],
+      "purpose": "owner-scoped ephemeral draft, exact pending CAS, quarantine/revocation"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+      "preimage": null,
+      "postimage": "25cc846b83a3c89cc1b1f90aeb2daff5d82865ee",
+      "proposal": "08d69a11cf5ba19ce2777f3815143a993ab7dff2",
+      "export": [
+        "SfChangeReview",
+        "SfReviewFieldList",
+        "SfEffectList"
+      ],
+      "purpose": "producer-admitted review, no producer mutation in child"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/s03.css",
+      "preimage": null,
+      "postimage": "c824658aefddab52631c09209bc48183c6e8c3f0",
+      "proposal": "c824658aefddab52631c09209bc48183c6e8c3f0",
+      "export": [],
+      "purpose": "responsive Orchestra/Mx presentation tokens"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/index.tsx",
+      "preimage": null,
+      "postimage": "e8ac63822a4de506b4453121b363c5e4b30e8f65",
+      "proposal": "598ee9b6404f37021a23e74fe4f9d48487b2ac78",
+      "export": [
+        "SfReceiptView",
+        "SfProducerOutcome",
+        "SfReceiptViewProps"
+      ],
+      "purpose": "producer receipts only, refetch confirmation separate, reconcile read only"
+    },
+    {
+      "target": "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+      "preimage": null,
+      "postimage": "776a4726a0ffb9222998cdfb28f0f0631ff85f82",
+      "proposal": "b4ae99ceac85c9ebc6e694029fd70c7f71951a9d",
+      "export": [
+        "SF_S03_COPY",
+        "SF_S03_COPY_BR"
+      ],
+      "purpose": "S03 own bilingual leaf; new editorial keys require I00 approval"
+    },
+    {
+      "target": "packages/app-shell/test-browser/sucafina-native/s03.test.ts",
+      "preimage": null,
+      "postimage": "fbc5e62bf762f92433536ede01e6ab2e67408f00",
+      "proposal": "5dcbb19a9173b6b18ec71008c6ab439426c6004d",
+      "export": [],
+      "purpose": "seven tests written; none executed; two new CAS guards"
+    }
+  ],
+  "source_pins": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4"
+  },
+  "contract_blobs": {
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+    "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "EXECUTION-PROTOCOL.md - branch documentary drift": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "criteria-trace.json": "1dba83d77882073af587c031d63299ed472905e8"
+  },
+  "tested": "NOT_RUN",
+  "compiler": "NOT_RUN",
+  "tests_written": 7,
+  "runner_120": "NOT_DISPATCHED",
+  "compiler_119": "NOT_DISPATCHED",
+  "acceptance": [
+    "S03-AC01 implementation written, not qualified",
+    "S03-AC02 no parallel data service or private producer import; integration proof pending"
+  ],
+  "canonical_tasks": [
+    "WP01.T03",
+    "WP11.T04"
+  ],
+  "canonical_proof": "PENDING_INTEGRATION_AND_QUALIFICATION",
+  "integration_dependencies": [
+    "F01 public schema/context and registry",
+    "F02 operation identity common/transport",
+    "F03 visual components and public SfSource type",
+    "I00 composition, bilingual dictionary registration and editorial review"
+  ],
+  "copy_status": "New sf.s03.* editorial leaf is not in surface-manifest COPY-01; I00 must explicitly review before publishing dictionary",
+  "shared_owner": "114 only; no shared registries edited",
+  "shared_patch_ref": "SHARED-PATCHES-W08-e2.md",
+  "handoff_ref": "HANDOFF-W08-e2.md",
+  "ci_request": {
+    "owner": "120",
+    "selection": [
+      "packages/app-shell/test-browser/sucafina-native/s03.test.ts"
+    ],
+    "when": "after same-C F01/F02/F03/I00 composition",
+    "dedup": "candidate tree+selection+runtime+configuration"
+  },
+  "compiler_request": {
+    "owner": "119",
+    "packages": [
+      "packages/app-shell"
+    ],
+    "guards": true,
+    "when": "after same-C composition"
+  },
+  "constraints": {
+    "no_local_tests": true,
+    "no_merge": true,
+    "no_deploy": true,
+    "no_force": true,
+    "no_native_goal_resume": true,
+    "global_release": false
+  },
+  "merge_policy": "Never merge PR123 as a whole: cohort ancestor includes unrelated overlay; 114 imports exact six product leaf files after preimage checks",
+  "lease": "e2 authoring terminal ARTIFACT_READY: handed off to114; any correction requires bounded successor/renewed owner lease",
+  "consumer_ack": "PENDING_114"
+}
