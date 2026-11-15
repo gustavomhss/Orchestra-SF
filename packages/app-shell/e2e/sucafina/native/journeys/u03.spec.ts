@@ -77,7 +77,7 @@ test.describe("N14 U03 / CAP06-CAP07", () => {
       if (sourceVersion !== undefined) expect(sourceVersion).toBeGreaterThanOrEqual(0)
     }
     if (!response.value.allowedActionIds.includes("saveMember")) {
-      await expect(page.getByRole("button", { name: "Add member" })).toBeDisabled()
+      await expect(page.locator('[data-sf-action="add-member"] button')).toBeDisabled()
       await expect(memberTable.getByRole("button", { name: "Save member" })).toHaveCount(0)
       expect(data.members.every((item) => !Object.hasOwn(item, "cls") &&
         !Object.hasOwn(item, "outlook") && !Object.hasOwn(item, "notes"))).toBe(true)
