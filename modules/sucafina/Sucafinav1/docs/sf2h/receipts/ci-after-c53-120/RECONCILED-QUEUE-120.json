@@ -1,0 +1,109 @@
+{
+  "schema": "sf2h.product-ci120.queue.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 120,
+  "pr": 106,
+  "branch": "sf-ci-validation",
+  "lease": "product-ci-browser120",
+  "last_material_observed": "C57",
+  "entries": [
+    {
+      "id": "C53-firstsave",
+      "state": "TERMINAL_C53_SUCCESS_NO_RETEST",
+      "run": 43707908864,
+      "reason": "No new impact on specific first-save source paths"
+    },
+    {
+      "id": "C53-P03",
+      "state": "BLOCKED_CAUSAL_99",
+      "run": 43682515795,
+      "reason": "No proven P03 root patch99"
+    },
+    {
+      "id": "111-C54-HTTP",
+      "state": "C54_PASS_ONLY",
+      "run": 43724650284,
+      "review91": "OPEN",
+      "installed_beyond_scope": false
+    },
+    {
+      "id": "96+111-C54-BROWSER",
+      "state": "C54_FAIL_WP01_ORDER",
+      "run": 43724652351,
+      "next_owner": "96/111/WP01/114"
+    },
+    {
+      "id": "115-C56-NATIVE",
+      "state": "C56_PASS_COMPONENT_ONLY",
+      "run": 43725299343,
+      "native_installed_C15": false,
+      "Task_release": false
+    },
+    {
+      "id": "116-C55-TYPES",
+      "state": "COMPOSED_IN_C55_AND_C56_TYPECHECK_119_OPEN",
+      "source": "b2b56c8e4583cc01ddad9b30733c45003fbd982d",
+      "next": "Use 119 compiler and 120 focused affected consumer selection after 117/118 stable"
+    },
+    {
+      "id": "117-C57-MATCHERS",
+      "state": "COMPOSED_C57_TESTS_PENDING",
+      "source": "4a6757694987261b93df3a7359c38c411c683ba7",
+      "count": 18,
+      "executable_test_files": 17,
+      "next": "120 surgical selector after 118 integration ready"
+    },
+    {
+      "id": "118-FIXTURE-TYPES",
+      "state": "SOURCE_118_WRITING_NOT_YET_COMPOSED",
+      "count": 33,
+      "next": "114 exact blob composition then 120 run tests incl known WP00 strict oracle"
+    },
+    {
+      "id": "102-W102-LAYOUT",
+      "state": "W102_SOURCE_PASS_NORMAL_EMPTY_WIDE_LONG",
+      "run": 43724653941,
+      "count": 9,
+      "composed": false
+    },
+    {
+      "id": "102-W102-READER",
+      "state": "W102_SOURCE_READER_PASS_NORMAL_VISUAL_PENDING",
+      "run": 43725105940,
+      "artifact": 14166480115,
+      "pdfs": 12,
+      "pngs": 121,
+      "composed": false
+    },
+    {
+      "id": "95+110-C15",
+      "state": "BLOCKED_OWNER95_TASK_ADMISSION_AND_HOST_COMPOSITION",
+      "next": "No component PASS as installed native proof"
+    },
+    {
+      "id": "119-COMPILER",
+      "state": "OWNED_BY_119_NOT_120",
+      "next": "Do not duplicate"
+    },
+    {
+      "id": "99+109-P03",
+      "state": "CAUSAL_FIX_NOT_PUBLISHED_FOR_ORIGINAL_TEST"
+    },
+    {
+      "id": "R1_R2_R3_FINAL",
+      "state": "PENDING_INDEPENDENT_RECHECK"
+    },
+    {
+      "id": "EPIC_AM01_AM06_G7_G8",
+      "state": "NOT_ADMITTED"
+    }
+  ],
+  "dedup": {
+    "unique_real_runs": 6,
+    "already_executed_C53": 2,
+    "unrunnable_attempts": 5
+  },
+  "no_local_tests": true,
+  "no_product_or_workflow_mutations": true,
+  "GLOBAL_RELEASE": false
+}

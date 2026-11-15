@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.product-ci120.failures.v1",
+  "pr": 106,
+  "mission": 120,
+  "failures": [
+    {
+      "id": "CI120-C54-WP01-ORDER",
+      "severity": "BLOCKER_BROWSER_96_111",
+      "W": "3f4643d993c71b0edd197e8c3a1090bfd5ba533a",
+      "S": "9055563c33dd2ad77cdb685d8a03cb3f956838ed",
+      "run": 43724652351,
+      "job": 132843876161,
+      "attempt": 1,
+      "status": "OPEN",
+      "cause": "WP01 lifecycle finalized/sealed shared browser pool before 96/111 tests despite requested ordering; Bun test ordering not guaranteed",
+      "failure_suites": [
+        "wp01/browser-lifecycle.test.ts",
+        "creation-reload-fix/creation-browser.test.ts",
+        "creation-recovery-link/recovery-browser.test.ts"
+      ],
+      "pass": 1,
+      "fail": 3,
+      "oracles_unmodified": true,
+      "owner_comments": [
+        {
+          "pr": 103,
+          "id": 6896160594
+        },
+        {
+          "pr": 109,
+          "id": 6896161040
+        },
+        {
+          "pr": 65,
+          "id": 6896162024
+        }
+      ],
+      "next": "Owner96/111 + WP01 fixture/lifecycle owner coordinate CI runnable selection; no blind retry on identical W selection"
+    },
+    {
+      "id": "CI120-W102-READER-PARTIAL",
+      "severity": "SELECTION_NOT_PRODUCT",
+      "W": "104bf61f67da9740024f38427c1580ba29f36e99",
+      "S": "0aa67f82447876054c2a755762a8d654c5704e1b",
+      "run": 43724656327,
+      "job": 132843888810,
+      "attempt": 1,
+      "status": "CLOSED_BY_EXPANDED_SOURCE_SELECTION",
+      "functional_pass": 3,
+      "reader_fail": "5 mandatory source case IDs absent due single file request",
+      "fixed_by_run": 43725105940,
+      "artifact": 14165118618,
+      "owner_comments": [
+        {
+          "pr": 105,
+          "id": 6896161540
+        },
+        {
+          "pr": 65,
+          "id": 6896162024
+        }
+      ]
+    },
+    {
+      "id": "CI120-W102-RENDER-FOUR-SCENARIOS",
+      "severity": "UNPROVEN_VISUAL",
+      "W": "104bf61f67da9740024f38427c1580ba29f36e99",
+      "source_layout_run": 43724653941,
+      "reader_run": 43725105940,
+      "status": "OPEN",
+      "cause": "Existing reader trigger matches only export-artifact-closure/*test.ts; print-layout fixture scenario tests do not activate PDF renderer. Existing reader renders normal XLSX only, no page-to-sheet matching.",
+      "owner_comments": [
+        {
+          "pr": 105,
+          "id": 6896255330
+        },
+        {
+          "pr": 65,
+          "id": 6896254828
+        }
+      ],
+      "next": "Owner102 + independent91/93 agree hosted reader coverage for all nine originals normal,empty,wide,long; do not claim visual PASS"
+    }
+  ],
+  "no_workflow_or_product_edits": true,
+  "global_release": false
+}
