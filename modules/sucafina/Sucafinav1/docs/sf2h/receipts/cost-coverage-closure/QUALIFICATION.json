@@ -1,0 +1,201 @@
+{
+  "schema": "sf2h.cost-coverage-closure.qualification.v1",
+  "mission": 80,
+  "state": "BOUNDED_SOURCE_TEST_SELECTION_PASS_COMPILER45_PENDING",
+  "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+  "W_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+  "unique_selected_tests": 23,
+  "unique_passed_tests": 23,
+  "unresolved_selected_test_failures": 0,
+  "source_product_blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+  "runs": [
+    {
+      "attempt": "R1",
+      "run": 43673699755,
+      "job": 132689115154,
+      "conclusion": "failure",
+      "pass": 2,
+      "fail": 6,
+      "role": "causal preimage reproduction; never acceptance PASS"
+    },
+    {
+      "attempt": "R2",
+      "run": 43674446763,
+      "job": 132691397685,
+      "conclusion": "failure",
+      "pass": 21,
+      "fail": 2,
+      "role": "14 unchanged-file passes reused; seven other passes requalified with their changed file; two matcher-contaminated failures retained in audit"
+    },
+    {
+      "attempt": "R3",
+      "run": 43675129605,
+      "job": 132693485486,
+      "conclusion": "success",
+      "pass": 9,
+      "fail": 0,
+      "role": "All nine tests in the two corrected assertion-isolation files pass"
+    }
+  ],
+  "deduplication": {
+    "rule": "Union of actual per-file witnesses for identical material inputs; not a claim that failed R2 was a green workflow.",
+    "unchanged_R2_to_R3": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts",
+        "blob": "d60df8ce4762745b0b171420811eec860282a0f1",
+        "count": 1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-coverage.test.ts",
+        "blob": "bf06e061b29ae22674e9dadb2a410d4ca74c8469",
+        "count": 8
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/coverage-seal.test.ts",
+        "blob": "b7b8b59ca121e03aea5ae7e9f0b43bd46390b6a7",
+        "count": 3
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-implementation-quote.test.ts",
+        "blob": "39c8b0e9138c36d5bd4a92726279633f69381cf6",
+        "count": 1
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-history.test.ts",
+        "blob": "cbce0fa5bc9cff4131ce540e98e05db70574015b",
+        "count": 1
+      }
+    ],
+    "changed_test_files_only": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+        "post_blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+        "post_blob": "efeb097ae13519db036d8adf08548a34959e3fe2"
+      }
+    ],
+    "product_fixtures_configs_unchanged": true,
+    "compare": {
+      "base": "4df32a2de5b1ba27f44c6bf92eaeed9ae412e26a",
+      "head": "11859ee19d231738b7dce8a88e00866892d61ac9",
+      "files": [
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/checks/REQUEST-45.json",
+          "status": "added",
+          "additions": 93,
+          "deletions": 0,
+          "changes": 93,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/requests/R3.ci-run.json",
+          "status": "added",
+          "additions": 1,
+          "deletions": 0,
+          "changes": 1,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/runs/R2-tests.log",
+          "status": "added",
+          "additions": 114,
+          "deletions": 0,
+          "changes": 114,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/runs/R2.json",
+          "status": "added",
+          "additions": 124,
+          "deletions": 0,
+          "changes": 124,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+          "status": "modified",
+          "additions": 2,
+          "deletions": 1,
+          "changes": 3,
+          "previous_filename": null
+        },
+        {
+          "filename": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+          "status": "modified",
+          "additions": 7,
+          "deletions": 2,
+          "changes": 9,
+          "previous_filename": null
+        }
+      ]
+    },
+    "max80_runs_in_flight": 1,
+    "local_product_tests": 0,
+    "local_compiler_guards": 0
+  },
+  "numeric_witnesses": [
+    {
+      "training": "omitted",
+      "known_subtotal": 210000,
+      "total": null,
+      "advantage_known": 30000,
+      "complete_difference": null,
+      "coverage": "pending",
+      "comparison": "conditioned",
+      "derivation": "missing-category from literal absent training row"
+    },
+    {
+      "training": "confirmed40000",
+      "known_subtotal": 250000,
+      "total": 250000,
+      "advantage": -10000,
+      "coverage": "complete",
+      "comparison": "complete",
+      "solver_limit": 15000
+    },
+    {
+      "training": "confirmed0",
+      "known_subtotal": 210000,
+      "total": 210000,
+      "coverage": "complete",
+      "comparison": "complete"
+    },
+    {
+      "training": "null",
+      "known_subtotal": 210000,
+      "total": null,
+      "coverage": "pending",
+      "comparison": "conditioned"
+    },
+    {
+      "training": "shared",
+      "known_subtotal": 210000,
+      "total": 210000,
+      "coverage": "complete",
+      "comparison": "complete",
+      "note": "Same implementation component covers migration/training; no extra contribution"
+    },
+    {
+      "implementation": 70000,
+      "total": 235000,
+      "advantage": 5000,
+      "coverage": "complete"
+    },
+    {
+      "baseline_solver_limit": 55000,
+      "after_training_solver_limit": 15000,
+      "original_choice_digest_preserved": true,
+      "same_case_id_and_incarnation": true,
+      "restart_and_authorized_collaborator": true
+    }
+  ],
+  "limits": [
+    "Synthetic quote declarations and human grants are explicit fixture boundaries",
+    "Installed N/A, BI/POST/native/global acceptance not established",
+    "Owner45 compiler/guards have no result yet",
+    "Integrator71 must intake/qualify actual composed target"
+  ],
+  "GLOBAL_RELEASE": false
+}

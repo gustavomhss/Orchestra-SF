@@ -5,8 +5,8 @@
   "state": "REQUESTED_NOT_RUN_BY80",
   "PR": 90,
   "candidate": {
-    "W": "4df32a2de5b1ba27f44c6bf92eaeed9ae412e26a",
-    "tree": "a721dced9fa8566cc13dfb451911fe4f69d47858",
+    "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+    "tree": "83331236901857301f3e6747ebb4291cb98ecb34",
     "branch": "cost-coverage-fix",
     "source_base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900"
   },
@@ -54,9 +54,9 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
-      "bytes": 8139,
-      "sha256": "fa9eb18472b3bb0ed650e0d8b3181d24da9d9b1f62976d3ccf74765ba1f052d8",
-      "blob": "a7d58f6fe27a33e48fa6438f30f8a2c977c72f9e"
+      "bytes": 8233,
+      "sha256": "9faeb96e437af3bd3d8eae7577ecce46943c7eb106814eb1d9c19234c1fea1df",
+      "blob": "efeb097ae13519db036d8adf08548a34959e3fe2"
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts",
@@ -72,9 +72,9 @@
     },
     {
       "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
-      "bytes": 9804,
-      "sha256": "b3ec94367e8bdf0d38d0541ebc0baa0480bb742595500e5acaa948c4b9778768",
-      "blob": "32dd80e500aabb7d7bc746925a7591acad5a1508"
+      "bytes": 10295,
+      "sha256": "5be43374dde51576022a800d5edce4ff57239e8e3b07ef07a7d4db6ec59b98a7",
+      "blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737"
     }
   ],
   "generated_protocol_change": false,
@@ -82,12 +82,22 @@
   "owner76_files_changed": false,
   "surgical_tests": {
     "R1": 43673699755,
-    "R1_conclusion": "expected causal failure: 6 fail/2 controls pass",
+    "R1_conclusion": "expected causal failure6/2",
     "R2": 43674446763,
-    "R2_state": "IN_PROGRESS_AT_REQUEST",
-    "R2_S": "55c1e430ef06aee1692eba2e49ae1d8299ebe4cf",
-    "rule": "Test evidence is separate from compiler/guards."
+    "R2_conclusion": "21pass2matcherfail;14unchanged-filepassesreused",
+    "R3": 43675129605,
+    "R3_conclusion": "9pass0fail;allchangedfilesqualified",
+    "source_selection": {
+      "unique_tests": 23,
+      "passed": 23
+    },
+    "rule": "Test proof does not substitute compiler/guards."
   },
   "limits": "No local product tests/compiler/guards. No compiler/guard PASS without owner45 exact input evidence.",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "revision": 2,
+  "supersedes": {
+    "candidate_W": "4df32a2de5b1ba27f44c6bf92eaeed9ae412e26a",
+    "reason": "Only two test assertion subjects isolated; product blob unchanged; no duplicate check request for identical product."
+  }
 }

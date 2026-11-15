@@ -1,0 +1,129 @@
+{
+  "schema": "sf2h.cost-coverage-closure.terminal.v1",
+  "mission": 80,
+  "state": "EXPLICIT_BOUNDED_SOURCE_RELEASE_CHECKS45_AND_INTEGRATION71_PENDING",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source": {
+    "branch": "cost-coverage-fix",
+    "PR": 90,
+    "base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+    "tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+    "product_preimage": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+    "product_postimage": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+    "terminal_envelope": "The immutable commit containing this receipt adds delivery evidence only; exact E SHA/tree are published in PR90 and the71 handoff comment."
+  },
+  "target_observation": {
+    "branch": "sf2-stack",
+    "C": "C38",
+    "sha": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+    "tree": "9ad861864150f4690ad1ed3faa1f8c7164130212",
+    "cost_coverage_preimage_matches": true,
+    "rule": "71 must recheck live target and preimages at intake."
+  },
+  "authority": {
+    "owner": 80,
+    "lease_epoch": "cost-coverage-browser80",
+    "state": "ENDED_SOURCE_RELEASED",
+    "root_sole_remote_writer": true,
+    "session_id": null,
+    "model_effective_receipt": null,
+    "model_declared_by_host": "GPT-6 Astra Pro",
+    "no_further_source_writes_planned": true,
+    "target_integrator": 71,
+    "target_lease": "S0-C-e13-browser71",
+    "owner80_target_write": false,
+    "consumer71_intake": "Explicitly released complete source unit;71 retains sole target integration authority and must preserve remaining gates."
+  },
+  "released_unit": {
+    "product_files": 1,
+    "new_test_fixture_files": 6,
+    "complete_patch": "patch/CODE-AND-TESTS.patch",
+    "manifest": "PATCH-MANIFEST.json",
+    "dependencies": "DEPENDENCIES.json",
+    "criteria": "CRITERIA.json",
+    "qualification": "QUALIFICATION.json",
+    "review": "REVIEW80.json",
+    "checks45": "checks/REQUEST-45.json",
+    "rule": "Integrate the complete declared unit, preserve unchanged contracts/formulas and apply only against matching preimages."
+  },
+  "behavior": {
+    "canonical_null_reassessment_stable": true,
+    "owned_detached_DTOs": true,
+    "original_entry_capability_preserved": true,
+    "resolver_expected_refs_independent": true,
+    "source_changes_and_revocation_refused": true,
+    "null_zero_omitted_NA_shared_distinct": true,
+    "FX_currency_period_source_alternative_version_qualified": true,
+    "solver_55000_15000_actual_pass": true,
+    "same_case_and_original_choice_digest_actual_pass": true
+  },
+  "evidence": {
+    "R1": {
+      "run": 43673699755,
+      "conclusion": "failure",
+      "pass": 2,
+      "fail": 6,
+      "role": "causal red on preimage"
+    },
+    "R2": {
+      "run": 43674446763,
+      "conclusion": "failure",
+      "pass": 21,
+      "fail": 2,
+      "role": "14 exact unchanged-file passing witnesses reused; matcher failures retained"
+    },
+    "R3": {
+      "run": 43675129605,
+      "conclusion": "success",
+      "pass": 9,
+      "fail": 0,
+      "role": "requalifyallchangedtestfiles"
+    },
+    "unique_test_selection": {
+      "pass": 23,
+      "unresolved_fail": 0
+    },
+    "no_local_product_tests": true,
+    "no_POST_or_P03_rerun": true
+  },
+  "consumer_compatibility": {
+    "52": "Canonical exports/schema unchanged; case/ChoiceRecord history preserved by original legacy test",
+    "62": "Bounded C10 dependency and numeric/history proof; installed BI holds not erased",
+    "71": "Explicit bounded source release; request exact intake ACK and integrated qualification",
+    "76": "No edits to criterion-comparison/result-store/state-provider; no claim to close P03"
+  },
+  "remaining_mandatory": [
+    {
+      "owner": "installed applicability producer",
+      "state": "OPEN",
+      "reason": "baseline-not-applicable-proof-unavailable unchanged; synthetic declarations do not invent human classification"
+    },
+    {
+      "owner": "74/79",
+      "state": "OPEN_OUTSIDE80",
+      "reason": "POST transport not traversed or re-run"
+    },
+    {
+      "owner": 45,
+      "state": "REQUESTED_NO_RESULT_OBSERVED",
+      "reason": "Package typecheck/guards require exact hosted owner45 evidence"
+    },
+    {
+      "owner": 71,
+      "state": "ACK_AND_INTEGRATED_QUALIFICATION_PENDING",
+      "reason": "Source selection does not qualify composed candidate"
+    },
+    {
+      "owner": "S0 final campaign",
+      "state": "OPEN",
+      "reason": "Final eight selections, AM01-AM06, independent reviews, C-G7/D-G8 and installed UI/native/MCP parity remain separate"
+    }
+  ],
+  "ack71": "REQUESTED_IN_HANDOFF_NOT_YET_OBSERVED",
+  "integrated_candidate_qualified": false,
+  "full_campaign_qualification": false,
+  "GLOBAL_RELEASE": false
+}

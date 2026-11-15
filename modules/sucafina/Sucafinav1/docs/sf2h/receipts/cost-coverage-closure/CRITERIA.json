@@ -1,0 +1,366 @@
+{
+  "schema": "sf2h.cost-coverage-closure.criteria.v1",
+  "mission": 80,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source62": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+  "canonical_C10_contract": "classification is separate from Planner monetary calculation; no schemas/formulas/financial policy changed",
+  "qualification": "BOUNDED_SOURCE_TEST_SELECTION_PASS_COMPILER45_PENDING",
+  "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+  "W_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+  "tests": {
+    "N": {
+      "file": "cost-coverage-closure/numeric-coverage.test.ts",
+      "count": 8,
+      "run": 43674446763,
+      "status": "PASS"
+    },
+    "S": {
+      "file": "cost-coverage-closure/stability.test.ts",
+      "count": 8,
+      "run": 43675129605,
+      "status": "PASS"
+    },
+    "P": {
+      "file": "cost-coverage-closure/persisted-stability.test.ts",
+      "count": 1,
+      "run": 43675129605,
+      "status": "PASS"
+    },
+    "R": {
+      "file": "cost-coverage-closure/resolution-stability.test.ts",
+      "count": 1,
+      "run": 43674446763,
+      "status": "PASS"
+    },
+    "V": {
+      "file": "wp11/coverage-seal.test.ts",
+      "count": 3,
+      "run": 43674446763,
+      "status": "PASS_STRUCTURAL_ONLY_LEGACY_CALLBACK_NOT_AUTHORIZATION_PROOF"
+    },
+    "I": {
+      "file": "wp11/renewal-implementation-quote.test.ts",
+      "count": 1,
+      "run": 43674446763,
+      "status": "PASS"
+    },
+    "H": {
+      "file": "wp11/renewal-choice-history.test.ts",
+      "count": 1,
+      "run": 43674446763,
+      "status": "PASS"
+    }
+  },
+  "criteria": [
+    {
+      "id": "WP11.DOD.01",
+      "text": "Caso e escolhas sobrevivem a reinício e são compartilhados conforme autorização.",
+      "tests": [
+        "H"
+      ],
+      "scope": "SQLite reopen/restart, same choice read by authorized collaborator, outsider/revocation denied.",
+      "remaining": [
+        "Installed identity bridge beyond fixture grants"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.INV.20",
+      "text": "Soma reconciliada não prova cobertura. Categoria ausente/pending não vira zero; escolha preserva a condição conhecida na época.",
+      "tests": [
+        "N",
+        "S",
+        "P",
+        "H",
+        "V"
+      ],
+      "scope": "Reconciled sum does not imply coverage; unknown not zero; choice retains original financial condition.",
+      "remaining": [
+        "All downstream consumers"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "tests": [
+        "N",
+        "S",
+        "P",
+        "R"
+      ],
+      "scope": "Canonical versions/digests and explicit refusal; original capability identity and detached DTOs; changed evidence invalidates.",
+      "remaining": [
+        "All interfaces outside the C10 slice"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.CMP.20",
+      "text": "Cobrir categoria incluída, inaplicável suportada, pendente, inteiramente omitida, zero confirmado e custo posterior que inverte a comparação.",
+      "tests": [
+        "N",
+        "H"
+      ],
+      "scope": "Included, synthetic supported N/A, pending, omitted, confirmed0 and later inversion covered by actual producers.",
+      "remaining": [
+        "Positive N/A installed"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.CHK.01",
+      "text": "AI-RENEWAL com inventário completo e fontes sintéticas confirmadas: 240000 vs 60000+45000+105000 = 210000; diferença 30000; implantação 70000 produz 235000 e diferença 5000. Taxas/migração/treinamento explicitamente cobertos ou inaplicáveis não são somados duas vezes.",
+      "tests": [
+        "N:bundled",
+        "I"
+      ],
+      "scope": "Planner 240000 vs210000/advantage30000 and implementation70000 ->235000/advantage5000; shared component counted once.",
+      "remaining": [
+        "Installed authorized applicability producer"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.CHK.02",
+      "text": "Operação que substituiria contribuição já vinculada troca o componente uma vez; o teste com inclusão duplicada é recusado ou reconciliado pelo domínio.",
+      "tests": [
+        "I"
+      ],
+      "scope": "Real replacement changes one linked contribution; duplicate inclusion remains refused.",
+      "remaining": [],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.CHK.03",
+      "text": "Moeda sem FX, custo de saída pending e desconto hipotético mantêm comparação conditioned. Valor 0 confirmado difere de null, categoria omitted e declaração not-applicable sem evidência; nenhum estado desconhecido é promovido a zero.",
+      "tests": [
+        "N",
+        "I",
+        "V"
+      ],
+      "scope": "Absent FX, omitted/null/confirmed0, literal N/A without evidence, unsupported N/A, pending exit and hypothetical discount remain qualified states.",
+      "remaining": [
+        "Installed consumers are not traversed"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.CHK.20",
+      "text": "AI-RENEWAL-OMITTED-CATEGORY remove training da entrada, sem linha, sem pending pré-cadastrado e com implementação explicitamente sem treinamento: validador deriva missing-category e knownSubtotal 210000; completeDifference/total coberto ficam indisponíveis e a comparação é conditioned em todos os consumidores.",
+      "tests": [
+        "N:omitted",
+        "H"
+      ],
+      "scope": "Literal omitted training, no line/pending seed; derived missing-category; known210000 with total/completeDifference null.",
+      "remaining": [
+        "All UI/BI/critique/portfolio/routine consumers"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.CHK.21",
+      "text": "Na mesma variante, confirmar novo componente training=40000 com fonte torna cobertura completa, total 250000, diferença -10000 e teto de implantação15000. A comparação de custo se inverte, condição mínima 20000 falha e a escolha original mantém subtotal 210000/ressalva pending/versões.",
+      "tests": [
+        "N:confirmed",
+        "H"
+      ],
+      "scope": "Same durable case revised to training40000, total250000, advantage-10000, criterionfailed, solver15000, original ChoiceRecord digest preserved.",
+      "remaining": [
+        "Installed human authority boundary"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.INV.01",
+      "text": "Simulação não altera oficial/actual/compra; ausência não vira zero e hipótese não vira compromisso.",
+      "tests": [
+        "N",
+        "S",
+        "P",
+        "I",
+        "H"
+      ],
+      "scope": "Inputs/snapshots/choices stay unchanged, unknown is not zero, hypothetical state is not a commitment; no prepared changes or receipts.",
+      "remaining": [
+        "All installed official/actual/procurement flows"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.INV.20",
+      "text": "Nenhuma categoria some por não ter linha; cobertura não soma parcelas nem inventa valor, imposto ou fato confirmado.",
+      "tests": [
+        "N",
+        "S",
+        "P",
+        "I"
+      ],
+      "scope": "Categories do not disappear, null/omission is explicit, no extra monetary contribution from coverage, no fabricated tax or confirmation.",
+      "remaining": [],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.QLT.01",
+      "text": "Todo total pode ser reconciliado aos componentes com moeda, período e origem; campos inválidos têm erro específico.",
+      "tests": [
+        "N",
+        "I",
+        "S"
+      ],
+      "scope": "Producer totals; currency, period, source version/incarnation and alternative-version boundaries.",
+      "remaining": [
+        "Whole-product invalid-field matrix"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.QLT.20",
+      "text": "Cada categoria mostra referência de parcela, motivo suportado de inaplicabilidade ou pergunta pendente; subtotal e total ficam distintos.",
+      "tests": [
+        "N",
+        "P"
+      ],
+      "scope": "C10 DTO contains supported components/N-A or a pending reason; subtotal and total remain distinct.",
+      "remaining": [
+        "Installed rendering/navigation of every category"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.CMP.01",
+      "text": "Cobrir mesma base, base incompatível, operação inválida, alternativa incompleta e mudança de critério.",
+      "tests": [
+        "N",
+        "I",
+        "H"
+      ],
+      "scope": "Same basis, incompatible currency/period, invalid/duplicate operation, incomplete alternative and revised source under same criterion.",
+      "remaining": [
+        "Dedicated semantic criterion-edit transition"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T02.CMP.20",
+      "text": "Cobrir inventário ausente, categoria omitida, not-applicable sem suporte, zero confirmado, fonte revogada, inclusão compartilhada e custo posterior inversor.",
+      "tests": [
+        "N",
+        "S",
+        "H"
+      ],
+      "scope": "Absent inventory, omitted category, unsupported N/A including empty evidence, confirmed zero, revoked source, shared contribution and later inversion.",
+      "remaining": [
+        "Installed applicability and presentation"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T03.CHK.01",
+      "text": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+      "tests": [
+        "H"
+      ],
+      "scope": "Original persisted choice survives source revision and later read/restart with exact digest.",
+      "remaining": [
+        "A second replacement ChoiceRecord is not created by this selection"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    },
+    {
+      "id": "WP11.T03.CHK.20",
+      "text": "Registrar escolha condicionada na variante de treinamento omitido; confirmar treinamento 40000 depois conserva a escolha/subtotal/ressalva originais e apresenta nova alternativa250000/diferença -10000 sem reescrever a razão histórica ou autoalterar a escolha.",
+      "tests": [
+        "H"
+      ],
+      "scope": "Original210000/pending choice and historical reason retained; revised250000/-10000 visible as current alternative without rewriting choice.",
+      "remaining": [
+        "Installed human identity/session proof"
+      ],
+      "source_witness_status": "PASS_BOUNDED_SOURCE",
+      "full_criterion_acceptance": "NOT_GRANTED_BY80"
+    }
+  ],
+  "mission80_acceptance_3": {
+    "state": "PASS_BOUNDED_SOURCE",
+    "witnesses": [
+      "S1/P real included-null ->normalized-pending stability",
+      "S2 real orphan still refused",
+      "S3/S4 detached outputs and frozen inputs",
+      "S5 original entry capability and independent scenario alternative version",
+      "S6 getter observed once before await",
+      "S7 hostile resolver cannot mutate expected ref set",
+      "S8 callback entry mutation refused",
+      "R evidence accessor state/ref observed once",
+      "N changed quote bytes and source revocation refused"
+    ]
+  },
+  "consumer62": [
+    {
+      "id": "WP05.T05.CHK.01",
+      "numeric_dependency": "PASS solver55000 from real exact producer in H",
+      "installed_BI": "OPEN_NOT_RUN_BY80"
+    },
+    {
+      "id": "WP05.T05.CHK.20",
+      "numeric_dependency": "PASS same-case210000pending->250000complete and advantage30000->-10000",
+      "chart_and_table": "OPEN_NOT_RUN_BY80"
+    },
+    {
+      "id": "WP05.T05.INV.20",
+      "coverage_dependency": "PASS no zero-fill unknown",
+      "rendering": "OPEN_NOT_RUN_BY80"
+    },
+    {
+      "id": "WP05.T05.CMP.20",
+      "domain_variants": "PASS omitting/pending/zero/revoked/revision",
+      "presentation": "OPEN_NOT_RUN_BY80"
+    }
+  ],
+  "mandatory_holds": [
+    {
+      "owner": "installed applicability producer",
+      "state": "OPEN",
+      "reason": "baseline-not-applicable-proof-unavailable unchanged; synthetic declarations do not invent human classification"
+    },
+    {
+      "owner": "74/79",
+      "state": "OPEN_OUTSIDE80",
+      "reason": "POST transport not traversed or re-run"
+    },
+    {
+      "owner": 45,
+      "state": "REQUESTED_NO_RESULT_OBSERVED",
+      "reason": "Package typecheck/guards require exact hosted owner45 evidence"
+    },
+    {
+      "owner": 71,
+      "state": "ACK_AND_INTEGRATED_QUALIFICATION_PENDING",
+      "reason": "Source selection does not qualify composed candidate"
+    },
+    {
+      "owner": "S0 final campaign",
+      "state": "OPEN",
+      "reason": "Final eight selections, AM01-AM06, independent reviews, C-G7/D-G8 and installed UI/native/MCP parity remain separate"
+    }
+  ],
+  "full_criterion_acceptance": false,
+  "integrated_candidate_qualified": false,
+  "GLOBAL_RELEASE": false
+}
