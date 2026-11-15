@@ -283,6 +283,17 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
   const canApply = () => (props.paste.phase === "review" || props.paste.phase === "partial")
     && readyRows().length > 0 && writable()
 
+  const monthLabel = (monthId: SfCellCoordinate["month"]) => {
+    const month = props.months.find((item) => item.id === monthId)
+    return month ? t(month.labelKey) : t("sf.s02.month")
+  }
+  const formatValue = (value: number, fractionDigits: number) =>
+    Number.isInteger(fractionDigits) && fractionDigits >= 0 && fractionDigits <= 20
+      ? new Intl.NumberFormat(language.intl(), {
+          minimumFractionDigits: fractionDigits,
+          maximumFractionDigits: fractionDigits,
+        }).format(value)
+      : String(value)
   const unitLabel = (unit: SfUnit) => {
     if (unit.kind === "currency") return unit.code
     if (unit.kind === "percent") return "%"
@@ -296,7 +307,7 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
       return <span class="sf-s02-cell-absence">{t("sf.s02.missing")}</span>
     const amount = value.kind === "known" ? value.value : value.value
     return <>
-      <span class="sf-s02-cell-amount">{String(amount)}</span>
+      <span class="sf-s02-cell-amount">{formatValue(amount, cell.fractionDigits)}</span>
       <span class="sf-s02-cell-unit">{unitLabel(value.unit)}</span>
       <Show when={value.kind === "inherited"}>
         <span class="sf-s02-cell-source">{t("sf.s02.inherited")}</span>
@@ -502,8 +513,7 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
                     <ul>
                       <For each={row.cells}>{(cell) =>
                         <li>
-                          <span>{t(COPY_MEASURE[cell.coordinate.measure])} — {t(props.months.find((month) =>
-                            month.id === cell.coordinate.month)?.labelKey ?? ("sf.s02.month" as typeof props.months[number]["labelKey"]))}</span>
+                          <span>{t(COPY_MEASURE[cell.coordinate.measure])} — {monthLabel(cell.coordinate.month)}</span>
                           <code>{cell.rawText === "" ? t("sf.s02.paste.blank") : cell.rawText}</code>
                           <Show when={cell.issue}>{(issue) => <span role="status">{message(issue())}</span>}</Show>
                         </li>

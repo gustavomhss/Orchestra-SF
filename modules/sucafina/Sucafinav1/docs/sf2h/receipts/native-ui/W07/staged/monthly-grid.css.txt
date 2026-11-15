@@ -257,6 +257,10 @@
     padding-inline-start: 0;
     list-style: none;
   }
+  .sf-s02-mobile-select[aria-pressed="true"] {
+    background: var(--mx-enabled);
+    border-color: var(--mx-blue);
+  }
   .sf-s02-mobile-row li {
     display: flex;
     flex-direction: column;
