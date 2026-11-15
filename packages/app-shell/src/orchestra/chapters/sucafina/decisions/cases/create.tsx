@@ -167,12 +167,11 @@ export function SfCreateCase(props: Readonly<{
         props.onCreated()
         return
       }
-      if (result.kind === "response" && result.status < 500 &&
-        result.body.status !== "ok" && ["denied", "needs-input", "invalid", "conflict", "stale"].includes(result.body.status)) {
-        try { localStorage.removeItem(slot) } catch (error) { console.error("Sucafina creation rejection cleanup failed", error) }
+      if (result.kind === "response" && result.body.status !== "ok") {
+        // A 409/400 is not authoritative proof that an earlier creation
+        // could not commit. Retain the same original correlation for review.
         setForm({
-          phase: result.body.status === "needs-input" || result.body.status === "invalid" ? "invalid" : "unavailable",
-          hasPending: false,
+          phase: "unknown", hasPending: true,
           message: result.body.status === "denied" ? "sf.ui33.createDenied" : "sf.ui33.createConflict",
         })
         return
