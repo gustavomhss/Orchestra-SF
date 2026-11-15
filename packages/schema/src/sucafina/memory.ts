@@ -1,6 +1,5 @@
 import { Schema } from "effect"
 import { optional } from "../schema.ts"
-import type { SfOperation } from "./common.ts"
 
 // This leaf is a closed projection of memory-http.ts, not an Atlas store or a
 // second materiality engine. All permissions and source-digest checks remain in
@@ -366,7 +365,7 @@ export const SfIntelligenceMemoryCatalog = {
     }).annotate(closed),
     Failure,
   ]),
-} satisfies SfOperation<undefined, unknown>
+} as const
 
 export const SfIntelligenceMemoryConditions = {
   operationId: "intelligence.memory-conditions",
@@ -385,7 +384,7 @@ export const SfIntelligenceMemoryConditions = {
     }).annotate(closed),
     Failure,
   ]),
-} satisfies SfOperation<Schema.Schema.Type<typeof CaseQuery>, unknown>
+} as const
 
 export const SfIntelligenceMemorySignals = {
   operationId: "intelligence.memory-signals",
@@ -406,7 +405,7 @@ export const SfIntelligenceMemorySignals = {
     }).annotate(closed),
     Failure,
   ]),
-} satisfies SfOperation<Schema.Schema.Type<typeof CaseQuery>, unknown>
+} as const
 
 export const SfIntelligenceMemoryMateriality = {
   operationId: "intelligence.memory-materiality",
@@ -423,7 +422,7 @@ export const SfIntelligenceMemoryMateriality = {
     }).annotate(closed),
     Failure,
   ]),
-} satisfies SfOperation<unknown, unknown>
+} as const
 
 export const SfIntelligenceMemoryOutcome = {
   operationId: "intelligence.memory-outcome",
@@ -466,19 +465,19 @@ export const SfIntelligenceMemoryOutcome = {
     }).annotate(closed),
     Failure,
   ]),
-} satisfies SfOperation<unknown, unknown>
+} as const
 
 export const SfIntelligenceMemoryCondition = {
   operationId: "intelligence.memory-condition",
   input: ConditionSelection,
   output: Schema.Union([OkMutation, Failure]),
-} satisfies SfOperation<Schema.Schema.Type<typeof ConditionSelection>, unknown>
+} as const
 
 export const SfIntelligenceMemoryOutcomeSelection = {
   operationId: "intelligence.memory-outcome-selection",
   input: OutcomeSelection,
   output: Schema.Union([OkMutation, Failure]),
-} satisfies SfOperation<Schema.Schema.Type<typeof OutcomeSelection>, unknown>
+} as const
 
 // These seven literal bindings are the entire memory authorization surface.
 // F02/I00 supply the sole transport, registry metadata and admitted codec map.
