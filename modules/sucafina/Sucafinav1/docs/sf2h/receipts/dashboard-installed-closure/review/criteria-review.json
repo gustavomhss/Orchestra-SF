@@ -1,0 +1,684 @@
+{
+  "schema": "sf2h.mission67.criteria-read-review.v1",
+  "task": "Read-only criterion/history audit for mission67",
+  "repo": "gustavomhss/Orchestra-SF",
+  "source": {
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "mission": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "branch": "dashboard-installed-proof",
+    "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+  },
+  "read": {
+    "actor": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S1-B.json",
+    "actorBlob": "02d1ac8d4e01e52574b726df446c6b72057abb7e",
+    "actorChars": 325767,
+    "completeSections": true,
+    "wpCount": 1,
+    "taskCount": 4,
+    "criterionCount": 78,
+    "contracts": 17,
+    "actorWpExactlyMatchesWpMirror": true,
+    "appendices": [
+      "specs/product-acceptance.md (whole body)",
+      "specs/resident-runtime.md (normative sections1-6 and operation coverage; primary-source bibliography is pointers)"
+    ],
+    "rootIndependentlyReading": [
+      "AGENTS.md",
+      "START.md",
+      "WORKFLOW.md",
+      "execution/COMMON.md",
+      "WP02 criteria",
+      "current code"
+    ]
+  },
+  "evidenceRules": [
+    "Source PASS belongs only to recorded W/S/run/job. It does not qualify installed C27/current candidate.",
+    "All78 literal criteria remain mandatory; resident tags .10/.18 are not blanket exclusions because several include domain authority and output provenance independently testable.",
+    "AM/native, final8selections, finalreviews, C/G7/D/G8 and globalacceptance remain with their assigned owners.",
+    "Retained fail titles and assertions/timeouts may not be weakened, replaced by negative-only proof, or claimed closed by component success.",
+    "Only user-authorized current mission paths; historic WP02 broad ownership does not expand mission67 grant."
+  ],
+  "mandatoryFocus": [
+    {
+      "area": "Retirada somente da escrita; retenção legítima",
+      "criteria": [
+        "WP02.QLT.02",
+        "WP02.T02.CHK.02",
+        "WP02.T02.QLT.02",
+        "WP02.T02.SUC.02",
+        "WP02.CMP.02"
+      ],
+      "required": "Same principal+case+physical source/current read retains local edits, write remains disabled; current scoped ref may change with canWrite. Must prove continuity via trusted producer. No inference by id/title/value. Deny/replaced/principal change purges."
+    },
+    {
+      "area": "Confirmação e cancelamento",
+      "criteria": [
+        "WP02.T02.DOD.02",
+        "WP02.T02.INV.02",
+        "WP02.INV.02",
+        "WP02.CMP.02"
+      ],
+      "contracts": [
+        "C03",
+        "C06",
+        "C08"
+      ],
+      "required": "Explicit human action and original sourceversion/scope/actor/grant. Distinguish observedSourceVersion from evaluatedSourceVersion and expectedStorageVersion. Material race conflicts preserving draft, irrelevant race only accepts after scope equality and fresh CAS. Cancel does not mutate source."
+    },
+    {
+      "area": "Sinais e destinos reais",
+      "criteria": [
+        "WP02.QLT.01",
+        "WP02.T01.DOD.02",
+        "WP02.T01.SUC.02",
+        "WP02.T03.CHK.01",
+        "WP02.T03.CHK.02",
+        "WP02.T03.CHK.03",
+        "WP02.T03.QLT.01",
+        "WP02.T03.QLT.03",
+        "WP02.T03.SUC.01"
+      ],
+      "required": "Eligible explicit rules with facts/origins/periods; no completed-overdue or missing-renewal false signal; stable ordering and no duplicates. Signal opens correct canonical record/filter in installed UI. Executive and operations periods/current-headcount are distinct."
+    },
+    {
+      "area": "CRUD/CAS/reopen",
+      "criteria": [
+        "WP02.SUC.01",
+        "WP02.T02.CHK.01",
+        "WP02.T02.CHK.02",
+        "WP02.T02.CHK.03",
+        "WP02.T02.CHK.04",
+        "WP02.T02.INV.01",
+        "WP02.T02.QLT.01",
+        "WP02.T02.SUC.01"
+      ],
+      "required": "Real C08/SQLite and server, canonical commands and original versions; monthly/year scope, preview==effect, no mutation on cancel; preserve drafts/context and unauthorized rows. Reopen must read actual durable result."
+    },
+    {
+      "area": "HotTopic identity/receipt/history",
+      "criteria": [
+        "WP02.T04.CHK.01",
+        "WP02.T04.CHK.02",
+        "WP02.T04.CHK.03",
+        "WP02.T04.DOD.01",
+        "WP02.T04.CMP.01",
+        "WP02.T04.CMP.02",
+        "WP02.T04.QLT.01",
+        "WP02.T04.QLT.02",
+        "WP02.T04.SUC.01",
+        "WP02.T04.SUC.02"
+      ],
+      "required": "Same idempotencykey+payload one effect and original receipt; different intents/same title distinct; current ACL/source required on retry; delete/recreate cannot inherit correlation/confirmation."
+    },
+    {
+      "area": "Revogação e async tardio",
+      "criteria": [
+        "WP02.INV.02",
+        "WP02.INV.10",
+        "WP02.T01.CHK.02",
+        "WP02.T01.INV.02",
+        "WP02.T01.INV.18",
+        "WP02.T04.INV.02",
+        "WP02.T04.CMP.02"
+      ],
+      "required": "Reader revoked before final egress gets no values/fingerprint/links; browser generation prevents late authorized responses restoring purged data; unrelated user/record state intact; protected historical audit remains."
+    }
+  ],
+  "confirmationOracle": {
+    "id": "CONFIRM-SCOPE",
+    "kind": "normative-state-oracle",
+    "contract": "C06",
+    "inputs": {
+      "sourceRef": {
+        "surface": "planner",
+        "type": "forecast-line",
+        "id": "synthetic-line-A",
+        "incarnation": "incarnation-A"
+      },
+      "observedSourceVersion": 7,
+      "fields": [
+        "amount",
+        "justification"
+      ],
+      "period": "2027-01-01..2027-01-31",
+      "scopeDefinitionVersion": 1,
+      "source_v7": {
+        "2027-01": {
+          "amount": 100,
+          "justification": "Jan confirmado"
+        },
+        "2027-02": {
+          "amount": 200,
+          "justification": "Fev base"
+        },
+        "currency": "USD"
+      },
+      "materialDependencies": [],
+      "audit": {
+        "authorId": "synthetic-author-A",
+        "confirmedAt": "2026-11-13T10:00:00Z",
+        "auditRef": "synthetic-confirmation-A"
+      }
+    },
+    "branch_semantics": "Cada branch começa de v7, salvo indicação; versões iguais em branches diferentes não são a mesma história. Comparar fingerprints produzidos do escopo autorizado, não hashes globais da entidade.",
+    "branches": [
+      {
+        "id": "FEB_ONLY",
+        "sourceVersion": 8,
+        "change": {
+          "2027-02.amount": 250
+        },
+        "expected": {
+          "sameScopeFingerprint": true,
+          "state": "valid",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "newReviewRequests": 0,
+          "newMyWorkItems": 0,
+          "historicalAuditUnchanged": true
+        }
+      },
+      {
+        "id": "JAN_MATERIAL",
+        "sourceVersion": 8,
+        "change": {
+          "2027-01.amount": 120
+        },
+        "expected": {
+          "sameScopeFingerprint": false,
+          "state": "stale",
+          "reason": "material-change",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "newCanonicalReviewRequests": 1,
+          "repeatRunAdditionalRequests": 0,
+          "historicalAuditUnchanged": true
+        }
+      },
+      {
+        "id": "DEPENDENCY_CHANGE",
+        "scope_variant": "Neste branch a definição autorizada inclui dependency fx-Jan, rate1.00; em v8 muda para1.10. A declaração é explícita antes da confirmação.",
+        "change": {
+          "materialDependencies.fx-Jan.rate": 1.1
+        },
+        "expected": {
+          "sameScopeFingerprint": false,
+          "state": "stale",
+          "reason": "dependency-change",
+          "newCanonicalReviewRequests": 1
+        }
+      },
+      {
+        "id": "RACE_MATERIAL",
+        "change_between_read_and_confirm": {
+          "2027-01.amount": 120
+        },
+        "expected": {
+          "confirmationCommand": "conflict",
+          "confirmationCommitted": false,
+          "draftPreserved": true
+        }
+      },
+      {
+        "id": "RACE_IRRELEVANT",
+        "change_between_read_and_confirm": {
+          "2027-02.amount": 250
+        },
+        "expected": {
+          "confirmationCommand": "accepted-only-after-scope-equality-check",
+          "observedSourceVersion": 7,
+          "evaluatedSourceVersion": 8,
+          "state": "valid",
+          "claimReviewedFebruary": false
+        }
+      },
+      {
+        "id": "ACCESS_REVOKED",
+        "change": "Consumidor perde acesso pertinente antes da leitura/reuso.",
+        "expected": {
+          "state": "unavailable",
+          "reason": "access-unavailable",
+          "restrictedValuesExposed": false,
+          "restrictedFingerprintExposed": false,
+          "restrictedLinksExposed": false,
+          "newRequestToUnauthorizedActor": false,
+          "protectedAuditPreserved": true
+        }
+      },
+      {
+        "id": "REPLACED",
+        "change": {
+          "sourceRef.incarnation": "incarnation-B"
+        },
+        "expected": {
+          "state": "stale-or-unavailable-according-to-current-projection",
+          "valid": false,
+          "reasonWhenReadable": "source-replaced",
+          "idReuseRestoresValidity": false,
+          "historicalAuditUnchanged": true
+        }
+      },
+      {
+        "id": "SOURCE_REMOVED",
+        "change": "Fonte removida.",
+        "expected": {
+          "valid": false,
+          "state": "stale-if-removal-readable-otherwise-unavailable",
+          "reasonWhenReadable": "source-removed",
+          "historicalAuditUnchanged": true
+        }
+      },
+      {
+        "id": "ACCESS_RESTORED",
+        "previous_branch": "ACCESS_REVOKED",
+        "change": "Acesso retorna; resolver consulta fonte e dependências atuais.",
+        "expected": {
+          "automaticReuseFromCache": false,
+          "validOnlyIfSameIncarnationAndSameScope": true
+        }
+      },
+      {
+        "id": "ABSENT_VS_ZERO",
+        "scope_variant": "Um campo confirmado é ausente; outro é zero observado.",
+        "expected": {
+          "absenceStillVisible": true,
+          "zeroStillDistinct": true,
+          "sourceAgeUnchanged": true,
+          "confirmationDoesNotFillData": true
+        }
+      }
+    ],
+    "required_consumers": [
+      "WP08.T03",
+      "WP08.T04",
+      "WP09.T02",
+      "WP09.T03"
+    ],
+    "evidence_packages": [
+      "E09",
+      "E13"
+    ],
+    "implementation_test_status": "NOT_RUN"
+  },
+  "historicalSource": {
+    "docHead": "9d65ea8fcd8ce6ea1249dc669e0fcc248b540241",
+    "branch": "astra-interface",
+    "pr": 31,
+    "W16": "f4ed6dfd82502bcebc091b9be6ce74d4eccf89b7",
+    "criteriaPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/criteria/WP02.json",
+    "findingsRoot": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP02/astra-interface/findings/",
+    "findings": [
+      {
+        "id": "WP02-F04-new-draft-source-continuity",
+        "file": "write-scope-continuity-w9.md",
+        "detail": "Only write authority withdrawn changes scoped C17 incarnation while physical source/current read remain. Old UI cannot prove continuity, purges positive draft.",
+        "W": "01633144c83fb1080e6d985ef226b8db2aa131cb",
+        "S": "7f9657d7217ba5ceccdbf09b9ed5ec0cf866169c",
+        "run": 43586466170,
+        "job": 132421925833,
+        "status": "FAIL",
+        "test": "Dashboard contextual draft retains edits when current write authority is withdrawn",
+        "testFile": "test/product/wp02/host-workbench.test.ts",
+        "notObserved": "Unsaved operator wording,dirty=true,no-writes tail did not execute after message timeout",
+        "seam": "reauthorizeDraftSource(originalEvidenceRef) privately resolves persisted original scope, same principal and physical incarnation/no tombstone, current field access and current projection; final fence/egress required"
+      },
+      {
+        "id": "WP02-F01-new-draft-outcome-lookup",
+        "file": "drafts-and-source-continuity.md",
+        "status": "Historical static unresolved seam; mission65 overlap",
+        "detail": "First committed save response lost before draftRef needs read-only authorized outcome lookup by original opaque intent; no inference by title/target/position"
+      },
+      {
+        "id": "WP02-F02-CREATE-incarnation",
+        "file": "drafts-and-source-continuity.md",
+        "status": "Historical static unresolved seam",
+        "detail": "Correlation CREATE must bind canonical targetIncarnation in same commit; no postcommit bind or guessed incarnation; replay after canonical delete/recreate must refuse"
+      },
+      {
+        "id": "WP02-F03/C12-reload",
+        "file": "c12-reload-w10.md",
+        "status": "FAIL",
+        "W": "0c3d98dd1263a305ce294c78ad5939cdda110a78",
+        "S": "91938040fb95c0e2fdfd3e0e8f149a9ec05ae19e",
+        "run": 43587346579,
+        "job": 132424575339,
+        "aggregate": "33PASS1FAIL",
+        "test": "Dashboard recovers the same C12 application receipt after a committed response is lost and the page reloads",
+        "detail": "Actual HTTP200 applied domain+receipt; response lost, reload then discovery message timeout. Same receipt/version/no-second-effect tail not executed. Current composition may already fix upstream; preserve original proof and coordinate65."
+      },
+      {
+        "id": "D06_DASHBOARD_CAPTURE_SCOPE_PAGE",
+        "file": "dashboard-capture-scope-w12.md",
+        "status": "Historical own correction with later source-scoped PASS",
+        "detail": "Budget Overview record scope must remain original persisted page, not canonical OPEX Detail. Page is part of scoped source identity. Domain/raw ID equality not enough. Capture positive differs from WholeReview C05 failure."
+      }
+    ]
+  },
+  "pending57": {
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/pending-owners-final.json",
+    "blob": "de84f6269706a16644c99012518f4073ada48ab3",
+    "dashboardSpecificFinding": false,
+    "note": "No named Dashboard obligation in57 pending index; the terminal31 F04 remains known independent history and must not disappear by omission."
+  },
+  "criteria": [
+    {
+      "id": "WP02.DOD.01",
+      "text": "As 16 capacidades estão acessíveis por suas chaves publicadas, com leitura, manutenção permitida e delegação explícita de importação/relatório aos seus owners."
+    },
+    {
+      "id": "WP02.DOD.02",
+      "text": "As portas C02/C03/C04/C06 executam comportamento de domínio verificável; a composição no app é entregue para prova real do WP10, sem ser declarada concluída por mocks."
+    },
+    {
+      "id": "WP02.DOD.10",
+      "text": "As entregas residentes atribuídas a WP02 têm produção, consumo e provas reais completos."
+    },
+    {
+      "id": "WP02.INV.01",
+      "text": "Mesmos dados e contexto produzem os valores do motor aprovado; qualquer correção de semântica exige a decisão correspondente do WP00, sem mudança silenciosa."
+    },
+    {
+      "id": "WP02.INV.02",
+      "text": "A leitura mantém restrições de talento e de função; PMO, CAPEX e contratos continuam entidades distintas, e Hot Topics continua a ação operacional canônica."
+    },
+    {
+      "id": "WP02.INV.10",
+      "text": "WP02 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial."
+    },
+    {
+      "id": "WP02.QLT.01",
+      "text": "Indicadores mostram competência, origem e condição de ausência; sinais explicam sua regra e abrem o registro correspondente."
+    },
+    {
+      "id": "WP02.QLT.02",
+      "text": "A manutenção distingue leitura e edição, conserva a posição/contexto do usuário e explica validação ou conflito sem apagar o rascunho."
+    },
+    {
+      "id": "WP02.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos."
+    },
+    {
+      "id": "WP02.CMP.01",
+      "text": "O inventário cobre Executive, Hot Topics, as três páginas de orçamento, as três de pessoas, as duas de projetos, Operations, Security, Risks, Contracts, Stakeholders e Performance."
+    },
+    {
+      "id": "WP02.CMP.02",
+      "text": "As provas contemplam leitor autorizado e recusado, registro existente e ausente, período independente, dados incompletos e edição concorrente."
+    },
+    {
+      "id": "WP02.CMP.10",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes."
+    },
+    {
+      "id": "WP02.SUC.01",
+      "text": "Um contribuidor autorizado atualiza registros do seu domínio e consegue observar a projeção correspondente sem redigitar o mesmo dado."
+    },
+    {
+      "id": "WP02.SUC.02",
+      "text": "André parte de um sinal para sua evidência ou registro e distingue o período observado de um retrato histórico que não existe."
+    },
+    {
+      "id": "WP02.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado."
+    },
+    {
+      "id": "WP02.T01.CHK.01",
+      "text": "Com orçamento anual 1200 e override de janeiro 200, a projeção deve reconciliar 1300 de orçamento efetivo; remover uma entrada não pode fazê-la aparecer como coleta observada de valor zero."
+    },
+    {
+      "id": "WP02.T01.CHK.02",
+      "text": "Ler os mesmos membros como admin e como não admin: cls, outlook e notes privados devem desaparecer da resposta não autorizada, inclusive componentes e sinais derivados."
+    },
+    {
+      "id": "WP02.T01.CHK.03",
+      "text": "Solicitar cada uma das 16 chaves e uma chave inválida: todas as válidas devolvem o domínio/contexto previsto; a inválida não produz uma tela vazia com aparência de sucesso."
+    },
+    {
+      "id": "WP02.T01.CHK.04",
+      "text": "Budget100 e valor120 produzem razão120% e sinal correspondente, mesmo se a barra for limitada visualmente; budgetzero/ausente tem tratamento explícito."
+    },
+    {
+      "id": "WP02.T01.CHK.05",
+      "text": "Tickets com saldo inicial20, abertos10 e fechados15 mostram backlog15 e variação−5; sem saldo inicial a projeção não fabrica backlogzero."
+    },
+    {
+      "id": "WP02.T01.CHK.18",
+      "text": "Executar sf_dashboard_read, sf_kpi_explain pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino."
+    },
+    {
+      "id": "WP02.T01.DOD.01",
+      "text": "A leitura C02 devolve as 16 capacidades com valores produzidos pelos motores existentes e referência suficiente para abrir o registro."
+    },
+    {
+      "id": "WP02.T01.DOD.02",
+      "text": "Cada sinal devolvido contém a regra que o tornou elegível e os registros que o sustentam."
+    },
+    {
+      "id": "WP02.T01.DOD.18",
+      "text": "Descritores C16 de sf_dashboard_read, sf_kpi_explain são implementados e consumidos por T06 com referências reais."
+    },
+    {
+      "id": "WP02.T01.INV.01",
+      "text": "Ausência de entrada e zero informado permanecem distinguíveis mesmo quando um total legado usa fallback aritmético."
+    },
+    {
+      "id": "WP02.T01.INV.02",
+      "text": "Nenhum campo restrito ou decisão inferida é acrescentado à projeção autorizada."
+    },
+    {
+      "id": "WP02.T01.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo."
+    },
+    {
+      "id": "WP02.T01.QLT.01",
+      "text": "Valores agregados trazem componentes reconciliáveis e indicação do contexto temporal utilizado."
+    },
+    {
+      "id": "WP02.T01.QLT.02",
+      "text": "Moeda não especificada na origem é declarada como tal, sem converter o prefixo legado de dólar em uma taxa ou moeda presumida."
+    },
+    {
+      "id": "WP02.T01.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP."
+    },
+    {
+      "id": "WP02.T01.CMP.01",
+      "text": "A projeção cobre dados financeiros, pessoas, projetos, operação, segurança, riscos, contratos, stakeholders, performance e ações."
+    },
+    {
+      "id": "WP02.T01.CMP.02",
+      "text": "Há resultados definidos para coleção vazia, referência inexistente, ator sem leitura e contexto de período incompatível."
+    },
+    {
+      "id": "WP02.T01.CMP.18",
+      "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível."
+    },
+    {
+      "id": "WP02.T01.SUC.01",
+      "text": "Um consumidor recompõe o total financeiro da prova a partir dos componentes publicados sem implementar outra fórmula."
+    },
+    {
+      "id": "WP02.T01.SUC.02",
+      "text": "O consumidor identifica por que um risco, ação vencida ou renovação foi sinalizado sem consultar texto inventado."
+    },
+    {
+      "id": "WP02.T01.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais."
+    },
+    {
+      "id": "WP02.T02.CHK.01",
+      "text": "Aplicar Year amount e Annual Entry na mesma fixture: cada prévia deve coincidir com sua aplicação real, inclusive distribuição, arredondamento e células não alteradas; os dois comandos não podem ser tratados como equivalentes."
+    },
+    {
+      "id": "WP02.T02.CHK.02",
+      "text": "Submeter edição com versão antiga após atualização de outro ator: o registro persistido não é sobrescrito, o conflito identifica a diferença e a entrada local permanece recuperável."
+    },
+    {
+      "id": "WP02.T02.CHK.03",
+      "text": "Editar uma linha financeira atribuída e outra não atribuída ao mesmo domain leader: só a primeira é aceita; uma edição de mês não altera o ano vizinho."
+    },
+    {
+      "id": "WP02.T02.CHK.04",
+      "text": "Para os quatro tipos Dashboard, comparar estado simulado e aplicação autorizada do mesmo comando: campos/meses atingidos, ignorados e remoções coincidem; simular não grava, coleção auxiliar não vira domínio e entrada não autorizada não é prévia de sucesso."
+    },
+    {
+      "id": "WP02.T02.DOD.01",
+      "text": "A edição contextual alcança os mesmos campos e comandos autorizados da baseline, sem exigir formulário expandido para ler indicadores."
+    },
+    {
+      "id": "WP02.T02.DOD.02",
+      "text": "Operações amplas mostram os registros afetados antes da confirmação e apresentam o resultado efetivamente aplicado."
+    },
+    {
+      "id": "WP02.T02.INV.01",
+      "text": "Campos fora do comando, permissões e períodos não selecionados não são alterados."
+    },
+    {
+      "id": "WP02.T02.INV.02",
+      "text": "A prévia usa a mesma regra do comando real e uma base desatualizada não é aplicada silenciosamente."
+    },
+    {
+      "id": "WP02.T02.QLT.01",
+      "text": "O editor mantém registro, período e posição de trabalho identificáveis antes e depois de salvar."
+    },
+    {
+      "id": "WP02.T02.QLT.02",
+      "text": "Erros apontam o campo ou conflito e conservam os valores digitados para correção."
+    },
+    {
+      "id": "WP02.T02.CMP.01",
+      "text": "Os editores cobrem orçamento, ações, pessoas, projetos/marcos, operações, segurança, riscos, contratos, stakeholders e performance conforme suas permissões reais."
+    },
+    {
+      "id": "WP02.T02.CMP.02",
+      "text": "Importação e exportação permanecem acessíveis por portas para WP06/WP07, sem uma segunda implementação dentro do WP02."
+    },
+    {
+      "id": "WP02.T02.CMP.03",
+      "text": "Os quatro tipos de importação Dashboard têm produtor puro nomeado e contraprova de permissão/remoção; a preservação de instalação/referências privadas segue a preparação WP06."
+    },
+    {
+      "id": "WP02.T02.SUC.01",
+      "text": "O usuário altera três valores e uma justificativa de um período sem perder o contexto e sem modificar valores alheios."
+    },
+    {
+      "id": "WP02.T02.SUC.02",
+      "text": "Um conflito concorrente pode ser compreendido e corrigido sem redigitar o rascunho inteiro."
+    },
+    {
+      "id": "WP02.T03.CHK.01",
+      "text": "Abrir executivo com mês próprio distinto do mês de operações e com headcount de estado atual: cada bloco deve declarar sua referência, sem se apresentar como snapshot histórico único."
+    },
+    {
+      "id": "WP02.T03.CHK.02",
+      "text": "Abrir um sinal e um projeto filtrado na vista de revisão: o destino conserva registro e filtro; a vista All Projects alcança o mesmo conjunto canônico sem duplicar projetos."
+    },
+    {
+      "id": "WP02.T03.CHK.03",
+      "text": "Usar risco elevado, data de renovação ausente e ação vencida concluída: só os sinais elegíveis por regra explícita aparecem, sem classificar automaticamente qualquer deles como decisão do CIO."
+    },
+    {
+      "id": "WP02.T03.DOD.01",
+      "text": "Executive Dashboard oferece fatos revisáveis com evidência e destinos; Portfolio e All Projects apresentam trabalhos distintos sobre os mesmos registros."
+    },
+    {
+      "id": "WP02.T03.DOD.02",
+      "text": "Os destinos de todas as capacidades permanecem publicados para a composição de navegação."
+    },
+    {
+      "id": "WP02.T03.INV.01",
+      "text": "Uma vista resumida não exclui, copia nem muda o estado de registros para produzir sua apresentação."
+    },
+    {
+      "id": "WP02.T03.INV.02",
+      "text": "Mudanças de período ou filtro não ampliam leitura nem fabricam um histórico inexistente."
+    },
+    {
+      "id": "WP02.T03.QLT.01",
+      "text": "Cada sinal mostra fato, motivo de inclusão, período e origem; sinais equivalentes do mesmo fato não se multiplicam sem justificativa."
+    },
+    {
+      "id": "WP02.T03.QLT.02",
+      "text": "A leitura prioriza informação e mantém manutenção em detalhe, sem ocultar a ação autorizada correspondente."
+    },
+    {
+      "id": "WP02.T03.QLT.03",
+      "text": "Sinais numerosos são ordenados por prazo, dependência ou condição verificável, com total/cobertura e prioridade fixada pelo usuário; não usar score executivo opaco."
+    },
+    {
+      "id": "WP02.T03.CMP.01",
+      "text": "A revisão contempla finanças, entrega, operação, segurança, riscos e compromissos, com estados vazios ou sem dados explícitos."
+    },
+    {
+      "id": "WP02.T03.CMP.02",
+      "text": "Portfolio conserva acesso a marcos/watchlist e All Projects conserva busca, filtros e manutenção da coleção única."
+    },
+    {
+      "id": "WP02.T03.SUC.01",
+      "text": "O usuário chega de um sinal ao registro correto em uma ação e reconhece o período que está revisando."
+    },
+    {
+      "id": "WP02.T03.SUC.02",
+      "text": "O mesmo projeto aparece uma única vez no cadastro mesmo quando participa de vários recortes executivos."
+    },
+    {
+      "id": "WP02.T04.CHK.01",
+      "text": "Reenviar a mesma intenção/correlação após uma resposta perdida: deve retornar a mesma referência e existir somente um Hot Topic; intenções diferentes não podem ser fundidas apenas porque têm o mesmo título."
+    },
+    {
+      "id": "WP02.T04.CHK.02",
+      "text": "Tentar encaminhar como contributor sem escrita de Hot Topics e como domain leader autorizado: a primeira tentativa não cria ação; a segunda preserva owner, prazo e contexto permitido."
+    },
+    {
+      "id": "WP02.T04.CHK.03",
+      "text": "Concluir a ação por seu comando canônico e reler pela referência: todos os consumidores recebem o estado concluído; uma projeção antiga não reabre nem duplica a ação."
+    },
+    {
+      "id": "WP02.T04.DOD.01",
+      "text": "A porta devolve referência de um Hot Topic real, com correlação de reenvio e resultado de escrita verificável."
+    },
+    {
+      "id": "WP02.T04.DOD.02",
+      "text": "As provas e o handoff distinguem a porta de domínio implementada da composição do host ainda reservada ao WP10."
+    },
+    {
+      "id": "WP02.T04.INV.01",
+      "text": "Encaminhar não aprova compra, não muda orçamento e não cria uma tarefa operacional fora de Hot Topics."
+    },
+    {
+      "id": "WP02.T04.INV.02",
+      "text": "O contexto anexado respeita leitura e escrita atuais; conteúdo de talento restrito não é copiado automaticamente para uma ação mais ampla."
+    },
+    {
+      "id": "WP02.T04.QLT.01",
+      "text": "O resultado informa criada, já existente, recusada ou em conflito, com referência utilizável quando houver ação."
+    },
+    {
+      "id": "WP02.T04.QLT.02",
+      "text": "Correlação identifica a intenção explícita; igualdade de nomes de pessoas ou registros não serve como identidade."
+    },
+    {
+      "id": "WP02.T04.CMP.01",
+      "text": "Criação, reenvio, leitura, atualização e conclusão usam a mesma identidade canônica de ação."
+    },
+    {
+      "id": "WP02.T04.CMP.02",
+      "text": "Há tratamento observável para ator sem capacidade, origem não legível, referência removida e versão concorrente."
+    },
+    {
+      "id": "WP02.T04.SUC.01",
+      "text": "Uma intenção reenviada produz uma única ação operacional e pode ser aberta no Hot Topics existente."
+    },
+    {
+      "id": "WP02.T04.SUC.02",
+      "text": "O consumidor acompanha a conclusão pela referência original, sem manter um status operacional independente."
+    }
+  ],
+  "execution": {
+    "productTests": 0,
+    "remoteWrites": 0,
+    "localProductEdits": 0,
+    "findingsAreCurrentRuntimeProof": false
+  }
+}
+
