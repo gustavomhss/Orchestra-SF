@@ -1,0 +1,195 @@
+{
+  "schema": "sf2h.causal-fix184.artifact.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 184,
+  "order": "S05",
+  "epoch": "native-fix-e1-browser184",
+  "branch": "sf-ux-w10",
+  "pr": 119,
+  "actor": {
+    "requested_model": "Astra",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_reason": "not exposed",
+    "github_identity": "not claimed as runtime identity"
+  },
+  "authority": {
+    "integrator": {
+      "mission": 162,
+      "branch": "sf2-stack",
+      "pr": 65
+    },
+    "compiler": {
+      "mission": 163,
+      "pr": 107
+    },
+    "hosted_product_tests": {
+      "mission": 164,
+      "pr": 106
+    },
+    "native_goal": "paused",
+    "global_release": false
+  },
+  "fence": {
+    "original_prepared_head": "fd69ed12f556470dfbc1ff4d9096ccf3d04ef8c7",
+    "original_prepared_tree": "c72dda1e682ed698533730f5e4920351aebad889",
+    "previous_epoch": "ux-native-w10-e1",
+    "state": "REVOKED_FOR_FUTURE_WRITES_ON_PACKET_PATHS",
+    "force": false,
+    "no_reset": true
+  },
+  "author": {
+    "ack": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/ACK.json",
+      "commit": "756919ab72214b29882ccecb13bd83ce4256c1a9",
+      "tree": "bab8445ec69faf5c2c7af8d6390227e8f3f37797",
+      "blob": "ae552dd337e461b55b1099f2c92e69e7a008d07b"
+    },
+    "source_fix_commit": "779b887ff66b3a22d27153548fc7d50f0312ea5d",
+    "source_fix_tree": "6fae0e10d8d8823228bbc78f80d643c00e18c3a2",
+    "literal_CRLF_test_fix_commit": "ee13ca9c8f86b69e2cab60734ea8947cbf241fb8",
+    "source_ready_tree": "8d6488459206443dae58bc7d278d711ade15c02b",
+    "files": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+        "author_pre_blob": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+        "consumer_pre_blob": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+        "post_blob": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+        "change": "SfThread controlled textarea DOM reconciles exact owner draft when state/draft changes; preserves original pure callbacks and incarnation/version fence"
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+        "author_pre_blob": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+        "consumer_pre_blob": "f7d032d5fdded022f40270727035577ae08228db",
+        "post_blob": "5d02157e04299a299cd3c4fada3dd19913a59598",
+        "change": "Use real post140 withBrowserPlatform in browser fixture; preserve strict whitespace assertion and add same test owner isolation + normalized DOM newline vs original CRLF payload"
+      }
+    ],
+    "untouched": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/types.ts",
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/collaboration.css",
+      "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts"
+    ]
+  },
+  "consumer": {
+    "branch": "sf2-stack",
+    "status": "NOT_YET_CONSUMED",
+    "observed_pre_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "observed_pre_tree": "5cee64807f55d0ec169801795712844051c47e16",
+    "observed_pre_blobs": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts": "f7d032d5fdded022f40270727035577ae08228db"
+    },
+    "expected_post_blobs": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts": "5d02157e04299a299cd3c4fada3dd19913a59598"
+    },
+    "post_head": "PENDING_162",
+    "post_tree": "PENDING_162",
+    "other_dependency_preimages": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx": "a7aa673097db18283fe9384d5091617154a40dd0",
+      "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15"
+    },
+    "seam": "162 must use exact preimage-CAS and only owned product blobs; do not merge PR119 branch ancestry or overwrite post140 platform fixture/imports"
+  },
+  "causal_analysis": {
+    "failure": "S05 thread strict assertion at browser test line 156: DOM textarea.value became 'new comment' although props.draft was '  Keep whitespace  '",
+    "root": "Unaccepted native input mutates textarea DOM. Existing onEditDraft fixture logs but does not update the controlled props. Changes to outcome-unknown and unavailable do not change props.draft, so SolidJS value binding does not restore the stale DOM value.",
+    "repair": "One component createEffect reads props.state + props.draft, reconciles existing native textarea DOM to exact current authorized controlled draft when either changes; clears stale DOM on denied/session-expired. No copied store, no automatic write.",
+    "identity": "U44 consumer owns and purges draft/projection/pending on owner/generation/accessRevision/route changes; S05 postFence remains scoped to threadRef+incarnation+version. New-owner subscenario updates threadRef, incarnation, version, draft and messages; not a second owner cache.",
+    "result": "No trim, no synthesized receipt, no retry/replay POST; onReconcileRead alone delegates read to owner; persisted outcome remains unknown until authoritative read/receipt."
+  },
+  "checks": {
+    "historical_browser": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "product_W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "status": "FAIL",
+      "s05": "4/5 PASS; 1 FAIL controlled textarea, line 156"
+    },
+    "historical_compiler": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "product_W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "status": "FAIL; transitive schema/client/app failures and guards, not proof of source patch"
+    },
+    "after_fix": {
+      "component_browser": "NOT_RUN",
+      "app_shell_typecheck": "NOT_RUN",
+      "guards": "NOT_RUN",
+      "sdk": "NOT_RUN",
+      "invariant_proof": "NOT_RUN",
+      "reason": "No local parser, test, validation, typecheck, build, or extra dispatcher; 162 must first consume a materially new coherent W."
+    }
+  },
+  "acceptance": {
+    "cases": [
+      {
+        "id": "S05-AC01",
+        "status": "SOURCE_FIXED_NOT_HOSTED_PROVEN",
+        "evidence": "identity, incarnation/version, current owner draft, no extra post and private purge maintain frozen props"
+      },
+      {
+        "id": "S05-AC02",
+        "status": "SOURCE_FIXED_NOT_HOSTED_PROVEN",
+        "evidence": "pure S05 component and exact U44 consumer; no private producer import, parallel component, or new backend"
+      }
+    ],
+    "tasks": [
+      "WP08.T01",
+      "WP08.T02",
+      "WP08.T03",
+      "WP08.T06"
+    ],
+    "surfaces": [
+      "UI51",
+      "UI52",
+      "UI53"
+    ],
+    "unchanged": "all campaign/WP criteria and relevant closed contracts; no oracle weakened or criteria waived"
+  },
+  "frozen_contract_blobs": {
+    "S05 work order": "4c0ac7f6ea42a16c137c1ea361ef0fd3b407b50c",
+    "component signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "component contracts": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "host signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "contract catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "component locks": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "surface manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "execution protocol": "0151a8e6cbb0da2118e058142af801ba7cf72094"
+  },
+  "next_requests": {
+    "integrator162": {
+      "condition": "verify current branch HEAD, writer lease and exact current preimages; consume only two file blobs",
+      "action": "CAS-apply source 3127ace8fc21958b3e434fea6e8e8d08b917cc4e -> b528b13c89ee5f66c398e0c7fc2b6cf1aa996639 and composed test f7d032d5fdded022f40270727035577ae08228db -> 5d02157e04299a299cd3c4fada3dd19913a59598; preserve current PlatformProvider fixture and U44 A13 logic; publish new coherent consumer W SHA/tree + ACK with original/pre/post."
+    },
+    "compiler163": {
+      "condition": "only after integrator162 publishes new coherent W/tree; dedup W/S and causal source changes",
+      "directory": "packages/app-shell",
+      "command": "bun typecheck",
+      "guards": "bun run check:guards --base origin/dev",
+      "sdk": "no generation request unless invalidation matrix demands it; do not rerun unchanged failed W or issue overall green on old W"
+    },
+    "productCI164": {
+      "condition": "only after integrator162 materializes both exact post blobs in new W",
+      "directory": "packages/app-shell",
+      "runner": "bun",
+      "args": [
+        "./test-browser/sucafina-native/s05.test.ts"
+      ],
+      "workflow": ".github/workflows/test-ci.yml",
+      "selection_policy": "exact changed spec + invalidated consumers on a new W, no duplicate of 43766970018; do not reexecute S02 already green on historical W."
+    }
+  },
+  "restrictions": {
+    "no_branch_or_controller": true,
+    "no_force_reset": true,
+    "no_local_checks": true,
+    "no_direct_dispatch": true,
+    "no_merge_deploy_Azure": true,
+    "no_schema_fixture_timeout_assertion_relaxation": true,
+    "no_live_secrets": true
+  },
+  "terminal_status": "ARTIFACT_READY_PENDING_162_CONSUMPTION_AND_163_164_QUALIFICATION",
+  "global_release": false
+}
