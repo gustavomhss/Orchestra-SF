@@ -90,7 +90,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
     !!state.page && !!destination()?.canRead &&
     destination()!.allowedActionIds.includes(action) &&
     state.page.allowedActionIds.includes(action) &&
-    !state.page.data.selectedVersion?.locked && !state.busy && !state.uncertainty
+    !state.busy && !state.uncertainty
   const currentVersion = () => state.page?.data.selectedVersion?.id ?? ""
   const cas = (name: string) => state.page?.versions[name]?.version
   const pos = () => state.page?.data.positions.find((p) =>
@@ -173,7 +173,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
           const handle = drafts.get(JSON.stringify([next.selection.year, next.data.selectedVersion?.id ?? "", row.id]))
           handle?.receiveRemote({ baseVersion: row.revision, value: toPositionForm(row) })
         }
-        setState({ page: next, phase: next.data.positions.length ? "ready" : "empty", error: "", uncertainty: false })
+        setState({ page: next, phase: next.data.positions.length ? "ready" : "empty", error: "" })
       } catch (error) {
         if (!abort.signal.aborted) {
           console.error("N19 Headcount read failed", error instanceof Error ? error.name : "unknown")
@@ -209,6 +209,14 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
     if (version === undefined || !Number.isSafeInteger(version) || version < 0 || state.busy) return
     const action = kind.endsWith("delete") ? "delete" : kind === "sync" ? "sync" : "save"
     if (!allowed(action)) return
+    if (kind === "position-save") {
+      const snapshot = pos() && positionDraft(pos()!)?.snapshot()
+      if (!snapshot || snapshot.availability !== "active" || snapshot.conflict ||
+          snapshot.pendingOperation || snapshot.baseVersion !== version) {
+        setState({ phase: "conflict", error: t("sf.common.conflict") })
+        return
+      }
+    }
     const review = { kind, version, operationRef: crypto.randomUUID() as SfOperationRef,
       ...(kind === "position-save" || kind === "position-delete" || kind === "rate-save" || kind === "rate-delete" ? { id } : {}),
     } as Review
