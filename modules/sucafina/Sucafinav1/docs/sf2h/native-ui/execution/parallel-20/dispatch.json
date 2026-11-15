@@ -143,7 +143,111 @@
         "R77-F08"
       ],
       "prompt": "PAPEL REAL: sessão independente C00, sole integration authority, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/I00.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output I00. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nVocê é único integrador I00: reconcilie 8 achados da revisão77, live stack, lançamentos e release/ACK dos owners; teste validação documental e declare somente GO por output com permissão real; mantenha uma fila de 78 ordens, injete componentes, codegen uma vez e seleções pelo dispatcher 45. Não vire segundo controller nem decida regras que não constem dos contratos.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/navigation.ts",
+        "packages/app-shell/src/orchestra/chapter-route.tsx",
+        "packages/app-shell/src/orchestra/sidebar.tsx",
+        "packages/app-shell/src/app.tsx",
+        "packages/app-shell/src/orchestra/chapters/sucafina/entrypoints/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/route-manifest.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/index.ts",
+        "packages/app-shell/src/i18n/orchestra.ts",
+        "packages/schema/src/sucafina/index.ts",
+        "packages/schema/src/sucafina.ts",
+        "packages/client/src/sucafina/index.ts",
+        "packages/client/src/sucafina.ts",
+        "apps/cli/src/sucafina-product/native-ui/index.ts",
+        "apps/cli/src/sucafina-product/installation.ts",
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts",
+        "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "packages/app-shell/e2e/playwright.production.config.ts",
+        "apps/desktop/src/main/ipc.ts",
+        "apps/desktop/src/preload/index.ts",
+        "apps/desktop/src/preload/types.ts",
+        "apps/desktop/src/renderer/index.tsx",
+        "packages/app-shell/src/context/platform.tsx",
+        "packages/protocol/src/api.ts",
+        "packages/server/src/handlers.ts",
+        "packages/server/src/routes.ts",
+        "apps/cli/src/commands/handlers/serve.ts",
+        "apps/desktop/src/main/index.ts",
+        "apps/desktop/src/main/owned-serve.ts",
+        "apps/desktop/src/main/dock-channel.ts",
+        "packages/client/src/generated/**",
+        "packages/client/src/generated-effect/**",
+        "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "packages/schema/package.json",
+        "packages/client/package.json",
+        "packages/app-shell/src/context/server.tsx",
+        "packages/schema/src/sucafina/operation-registry.ts",
+        "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "packages/app-shell/src/context/layout-route.ts",
+        "packages/app-shell/src/context/language.tsx",
+        "packages/app-shell/src/orchestra/shell/navigation-commands.tsx",
+        "packages/app-shell/src/orchestra/compact-navigation.ts",
+        "packages/app-shell/src/orchestra/shell/mobile-navigation.tsx"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "surface-specs",
+        "transport"
+      ],
+      "depend_on_real_integration": [],
+      "depend_on_qualification": [],
+      "affected_test_files": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/I00.json"
+        ],
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "ctx",
+        "surface-specs",
+        "transport"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/operation-registry.ts",
+          "symbol": "SfOperationRegistry",
+          "signature": "CONTRACTS §6.1–6.2 and host-signatures; complete closed metadata only, zero family imports."
+        },
+        {
+          "path": "packages/schema/src/sucafina/index.ts",
+          "symbol": "SfNativeOperationBindings",
+          "signature": "Readonly candidate-admitted codec bindings per host-signatures; only actual included schemas, injected into transport/broker. Missing binding returns contract-unavailable before network, no fallback."
+        }
+      ]
     },
     {
       "seat": "W01",
@@ -160,8 +264,82 @@
         "R77-F02",
         "R77-F03"
       ],
-      "prompt": "PAPEL REAL: sessão independente W01, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/D01.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output D01. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para D01. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\nIdentidade/owner: select=ids funciona sem directory da conexão B, context exige hostId, auth return-intent one-use com safeReturn original, desktop partition real; mutation fence original dentro da transação.\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W01, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/D01.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output D01. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para D01. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\nIdentidade/owner: select=ids funciona sem directory da conexão B, context exige hostId, auth return-intent one-use com safeReturn original, desktop partition real; mutation fence original dentro da transação.\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: apps/desktop/src/main/sucafina/**; apps/desktop/src/preload/sucafina.ts; apps/desktop/src/renderer/sucafina.ts; apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts.\nLOCKS AUTORIA: ctx, transport. INTEGRAÇÃO POSTERIOR: F02.",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "apps/desktop/src/main/sucafina/**",
+        "apps/desktop/src/preload/sucafina.ts",
+        "apps/desktop/src/renderer/sucafina.ts",
+        "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "transport"
+      ],
+      "depend_on_real_integration": [
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F02"
+      ],
+      "affected_test_files": [
+        "apps/desktop/src/main/sucafina/broker.test.ts"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/D01.json"
+        ],
+        "contracts": [
+          "ctx",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "ctx",
+        "transport"
+      ],
+      "entrypoints": [
+        {
+          "path": "apps/desktop/src/main/sucafina/index.ts",
+          "symbol": "createSfDesktopBroker",
+          "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+        },
+        {
+          "path": "apps/desktop/src/preload/sucafina.ts",
+          "symbol": "createSfDesktopPreloadCapability",
+          "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+        },
+        {
+          "path": "apps/desktop/src/renderer/sucafina.ts",
+          "symbol": "createSfDesktopCapability",
+          "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/desktop-enrollment.ts",
+          "symbol": "attachSfNativeEnrollment",
+          "signature": "CONTRACTS.md §6.1 exact named constructor and dependencies; auth/session invariants in §4"
+        }
+      ]
     },
     {
       "seat": "W02",
@@ -179,8 +357,109 @@
         "R77-F02",
         "R77-F05"
       ],
-      "prompt": "PAPEL REAL: sessão independente W02, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F01.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output F01. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para F01. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\nIdentidade/owner: select=ids funciona sem directory da conexão B, context exige hostId, auth return-intent one-use com safeReturn original, desktop partition real; mutation fence original dentro da transação.\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W02, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F01.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output F01. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para F01. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\nIdentidade/owner: select=ids funciona sem directory da conexão B, context exige hostId, auth return-intent one-use com safeReturn original, desktop partition real; mutation fence original dentro da transação.\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: packages/app-shell/src/orchestra/chapters/sucafina/context/**; packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/**; packages/schema/src/sucafina/context.ts; packages/client/src/sucafina/context.ts; packages/app-shell/test-browser/sucafina-native/context.test.ts; packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts; packages/protocol/src/groups/sucafina.ts; packages/server/src/sucafina-installations.ts; packages/server/src/handlers/sucafina.ts; apps/cli/src/sucafina-product/native-ui/context.ts.\nLOCKS AUTORIA: ctx, transport, ui-change-review, ui-frame. INTEGRAÇÃO POSTERIOR: F03.",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/context/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/**",
+        "packages/schema/src/sucafina/context.ts",
+        "packages/client/src/sucafina/context.ts",
+        "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+        "packages/protocol/src/groups/sucafina.ts",
+        "packages/server/src/sucafina-installations.ts",
+        "packages/server/src/handlers/sucafina.ts",
+        "apps/cli/src/sucafina-product/native-ui/context.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "transport",
+        "ui-change-review",
+        "ui-frame"
+      ],
+      "depend_on_real_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "affected_test_files": [
+        "packages/app-shell/test-browser/sucafina-native/context.test.ts"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F01.json"
+        ],
+        "contracts": [
+          "ctx",
+          "transport",
+          "ui-change-review",
+          "ui-frame"
+        ],
+        "surfaces": [
+          "UI67"
+        ],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/entry",
+          "contract-catalog.json#/sources/identity",
+          "contract-catalog.json#/sources/server-routes"
+        ]
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "ctx",
+        "transport",
+        "ui-change-review",
+        "ui-frame"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "symbol": "SfContextProvider",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "symbol": "useSfContext",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+          "symbol": "SfContextPage",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/context.ts",
+          "symbol": "createSfContextHandler",
+          "signature": "(deps: Omit<SfNativeHostDependencies, \"readContext\">) => { readonly readContext: (request: Request) => Promise<SfContextResult>; readonly handle: (request: Request) => Promise<Response> }",
+          "type_source": "apps/cli/src/sucafina-product/native-ui/router.ts; server-only type import"
+        },
+        {
+          "path": "packages/client/src/sucafina/context.ts",
+          "symbol": "createSfContextClient",
+          "signature": "CONTRACTS.md §6.1; only ctx.context. Discovery uses the normal generated SDK method; no duplicate wrapper and no login/logout JSON methods."
+        }
+      ]
     },
     {
       "seat": "W03",
@@ -198,8 +477,95 @@
         "R77-F03",
         "R77-F04"
       ],
-      "prompt": "PAPEL REAL: sessão independente W03, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F02.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output F02. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para F02. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\nIdentidade/owner: select=ids funciona sem directory da conexão B, context exige hostId, auth return-intent one-use com safeReturn original, desktop partition real; mutation fence original dentro da transação.\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W03, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F02.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output F02. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para F02. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\nIdentidade/owner: select=ids funciona sem directory da conexão B, context exige hostId, auth return-intent one-use com safeReturn original, desktop partition real; mutation fence original dentro da transação.\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: packages/client/src/sucafina/transport.ts; packages/client/src/sucafina/transport/**; packages/schema/src/sucafina/common.ts; apps/cli/src/sucafina-product/native-ui/router.ts; apps/cli/src/sucafina-product/native-ui/transport/**; modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts.\nLOCKS AUTORIA: ctx, domain-read, transport. INTEGRAÇÃO POSTERIOR: F01.",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/client/src/sucafina/transport.ts",
+        "packages/client/src/sucafina/transport/**",
+        "packages/schema/src/sucafina/common.ts",
+        "apps/cli/src/sucafina-product/native-ui/router.ts",
+        "apps/cli/src/sucafina-product/native-ui/transport/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "depend_on_real_integration": [
+        "F01"
+      ],
+      "depend_on_qualification": [
+        "F01"
+      ],
+      "affected_test_files": [
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F02.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/identity"
+        ]
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "ctx",
+        "domain-read",
+        "transport"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "symbol": "createSfTransport",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+          "symbol": "mountSfNativeProjections",
+          "signature": "CONTRACTS.md §6.1 exact public signature"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+          "symbol": "SfNativeHostDependencies",
+          "signature": "CONTRACTS.md §6.1 server-only readonly type; never exported to Schema/Client"
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "symbol": "SfTransport",
+          "signature": "host-signatures.ts; Client transport interface, Schema/common owns only the pure DTO/result/operation shapes."
+        },
+        {
+          "path": "packages/client/src/sucafina/transport.ts",
+          "symbol": "createSfAuthActions",
+          "signature": "CONTRACTS.md §6.1 exact auth/navigation signature; no generic JSON login handler."
+        }
+      ]
     },
     {
       "seat": "W04",
@@ -213,8 +579,84 @@
       "status": "WAITING_SOURCE_AND_OWNER_PREFLIGHT",
       "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F03.json",
       "review_findings_to_reconcile": [],
-      "prompt": "PAPEL REAL: sessão independente W04, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F03.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output F03. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para F03. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W04, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F03.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output F03. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para F03. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/**; packages/app-shell/src/orchestra/chapters/sucafina/shared/states/**; packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts; packages/app-shell/test-browser/sucafina-native/page-frame.test.ts.\nLOCKS AUTORIA: surface-specs, ui-frame. INTEGRAÇÃO POSTERIOR: .",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-common.ts",
+        "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts"
+      ],
+      "authoring_locks": [
+        "surface-specs",
+        "ui-frame"
+      ],
+      "depend_on_real_integration": [],
+      "depend_on_qualification": [],
+      "affected_test_files": [
+        "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F03.json"
+        ],
+        "contracts": [
+          "surface-specs",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "surface-specs",
+        "ui-frame"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfPageFrame",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "symbol": "SfStatePanel",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfContextBar",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfChartFrame",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "symbol": "SfRunState",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ]
     },
     {
       "seat": "W05",
@@ -231,8 +673,69 @@
         "R77-F02",
         "R77-F03"
       ],
-      "prompt": "PAPEL REAL: sessão independente W05, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F04.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output F04. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para F04. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W05, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F04.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output F04. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para F04. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: packages/app-shell/e2e/sucafina/native/fixture/**; packages/app-shell/e2e/sucafina/native/fixture.ts; packages/app-shell/test-browser/sucafina-native/fixture/**.\nLOCKS AUTORIA: ctx, surface-specs, transport, ui-frame. INTEGRAÇÃO POSTERIOR: F01, F02.",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/app-shell/e2e/sucafina/native/fixture/**",
+        "packages/app-shell/e2e/sucafina/native/fixture.ts",
+        "packages/app-shell/test-browser/sucafina-native/fixture/**"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "surface-specs",
+        "transport",
+        "ui-frame"
+      ],
+      "depend_on_real_integration": [
+        "F01",
+        "F02"
+      ],
+      "depend_on_qualification": [
+        "F01",
+        "F02"
+      ],
+      "affected_test_files": [],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts"
+        ],
+        "local": [
+          "work-orders/F04.json"
+        ],
+        "contracts": [
+          "ctx",
+          "surface-specs",
+          "transport",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "ctx",
+        "surface-specs",
+        "transport",
+        "ui-frame"
+      ],
+      "entrypoints": []
     },
     {
       "seat": "W06",
@@ -246,8 +749,77 @@
       "status": "WAITING_SOURCE_AND_OWNER_PREFLIGHT",
       "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S01.json",
       "review_findings_to_reconcile": [],
-      "prompt": "PAPEL REAL: sessão independente W06, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S01.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output S01. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para S01. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W06, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S01.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output S01. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para S01. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**; packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/**; packages/app-shell/src/i18n/orchestra-chapters/sf-s01.ts; packages/app-shell/test-browser/sucafina-native/s01.test.ts.\nLOCKS AUTORIA: ui-frame, ui-table. INTEGRAÇÃO POSTERIOR: F03.",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s01.ts",
+        "packages/app-shell/test-browser/sucafina-native/s01.test.ts"
+      ],
+      "authoring_locks": [
+        "ui-frame",
+        "ui-table"
+      ],
+      "depend_on_real_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "affected_test_files": [
+        "packages/app-shell/test-browser/sucafina-native/s01.test.ts"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S01.json"
+        ],
+        "contracts": [
+          "ui-frame",
+          "ui-table"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "ui-frame",
+        "ui-table"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+          "symbol": "SfDataTable",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "symbol": "SfListDetail",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "symbol": "SfRecordDetail",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ]
     },
     {
       "seat": "W07",
@@ -263,8 +835,66 @@
       "review_findings_to_reconcile": [
         "R77-F07"
       ],
-      "prompt": "PAPEL REAL: sessão independente W07, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S02.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output S02. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para S02. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\nGrid/adapter TSV: coordenada UI mês 0..11 → produtor 1..12 uma única vez; preview e apply pelo monthly-edit/monthly-host, CAS por linha, parcial sem repetir linhas aplicadas, entrada 320px, sem motor financeiro no client.\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W07, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S02.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output S02. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para S02. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\nGrid/adapter TSV: coordenada UI mês 0..11 → produtor 1..12 uma única vez; preview e apply pelo monthly-edit/monthly-host, CAS por linha, parcial sem repetir linhas aplicadas, entrada 320px, sem motor financeiro no client.\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**; packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts; packages/app-shell/test-browser/sucafina-native/s02.test.ts.\nLOCKS AUTORIA: ui-frame, ui-grid. INTEGRAÇÃO POSTERIOR: F03.",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+        "packages/app-shell/test-browser/sucafina-native/s02.test.ts"
+      ],
+      "authoring_locks": [
+        "ui-frame",
+        "ui-grid"
+      ],
+      "depend_on_real_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "affected_test_files": [
+        "packages/app-shell/test-browser/sucafina-native/s02.test.ts"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S02.json"
+        ],
+        "contracts": [
+          "ui-frame",
+          "ui-grid"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "ui-frame",
+        "ui-grid"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+          "symbol": "SfMonthlyGrid",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ]
     },
     {
       "seat": "W08",
@@ -280,8 +910,85 @@
       "review_findings_to_reconcile": [
         "R77-F05"
       ],
-      "prompt": "PAPEL REAL: sessão independente W08, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S03.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output S03. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para S03. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W08, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S03.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output S03. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para S03. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/**; packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/**; packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/**; packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts; packages/app-shell/test-browser/sucafina-native/s03.test.ts.\nLOCKS AUTORIA: ctx, transport, ui-change-review, ui-frame. INTEGRAÇÃO POSTERIOR: F03.",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+        "packages/app-shell/test-browser/sucafina-native/s03.test.ts"
+      ],
+      "authoring_locks": [
+        "ctx",
+        "transport",
+        "ui-change-review",
+        "ui-frame"
+      ],
+      "depend_on_real_integration": [
+        "F03"
+      ],
+      "depend_on_qualification": [
+        "F03"
+      ],
+      "affected_test_files": [
+        "packages/app-shell/test-browser/sucafina-native/s03.test.ts"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S03.json"
+        ],
+        "contracts": [
+          "ctx",
+          "transport",
+          "ui-change-review",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "ctx",
+        "transport",
+        "ui-change-review",
+        "ui-frame"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/index.ts",
+          "symbol": "createSfDraft",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "symbol": "SfChangeReview",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/index.tsx",
+          "symbol": "SfReceiptView",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ]
     },
     {
       "seat": "W09",
@@ -295,8 +1002,78 @@
       "status": "WAITING_SOURCE_AND_OWNER_PREFLIGHT",
       "mission_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S04.json",
       "review_findings_to_reconcile": [],
-      "prompt": "PAPEL REAL: sessão independente W09, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S04.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output S04. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para S04. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.",
-      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+      "prompt": "PAPEL REAL: sessão independente W09, complete work-order, UX nativa Sucafina.\nREPO gustavomhss/Orchestra-SF. PR99 base de execução documental ux-20-dispatch@cbac654784714f68779ae1434d30e6ea8970c4d1; PR76 sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a; canônico dbf9547211d9b0fade619790de7c19c0869b7c7d; PR91 review77@16712630025cad3de647f2ea49ecbcdb2cc854fa como achados de origem, NÃO autoridade concorrente.\nLeia AGENTS aplicáveis, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/EXECUTION-PROTOCOL.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/README.md, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/manifest.json, modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/S04.json e exatos required_reads/contratos/locks de sua ficha. Primeiro leia HEAD real e campos de launch-record publicados por C00 para seu output S04. Se não existir GO **explicitamente autorizado** por S0/71, SHA/tree material e fonte pinados, contrato/assinaturas atuais FROZEN, ator/branch/lease com owns sem colisão, responda BLOCKED_AUTHORIZATION em vez de escrever, testar ou criar branch.\nDepois de GO, leia delta de preimages e altere SOMENTE owns da ficha para S04. Não edite registry/ACL/SQL/produtores ou paths de outro writer; forneça patch compartilhado inerte com pre/post SHA ao I00. Contratos determinam assinaturas, fields, auth, copy e erros: divergência vira BLOCKED_CONTRACT para a parte afetada, nunca solução improvisada. Um artefato compilável futuro não significa integrado; não crie stubs, mocks permissivos, engine financeira paralela nem schema Any.\n\nEntrega obrigatória ARTIFACT_READY: HEAD/tree/blobs pre/post, identidade/lease, exports e fragmento de I00, evidências reais e NOT_RUN separados, blockers/consumers e ACK/lease terminal. Só integrar/qualificar no mesmo candidato real C via 45. Sem merge, full-suite não autorizada, Azure, ou GLOBAL_RELEASE por conta própria.\nEXCLUSIVIDADE DE PATHS: packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/**; packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/**; packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts; packages/app-shell/test-browser/sucafina-native/s04.test.ts.\nLOCKS AUTORIA: files, ui-evidence, ui-frame. INTEGRAÇÃO POSTERIOR: F03, A06.",
+      "normative_design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "owns_exact_or_prefix": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts",
+        "packages/app-shell/test-browser/sucafina-native/s04.test.ts"
+      ],
+      "authoring_locks": [
+        "files",
+        "ui-evidence",
+        "ui-frame"
+      ],
+      "depend_on_real_integration": [
+        "F03",
+        "A06"
+      ],
+      "depend_on_qualification": [
+        "F03",
+        "A06"
+      ],
+      "affected_test_files": [
+        "packages/app-shell/test-browser/sucafina-native/s04.test.ts"
+      ],
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "component-signatures.ts",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/S04.json"
+        ],
+        "contracts": [
+          "files",
+          "ui-evidence",
+          "ui-frame"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": []
+      },
+      "stop_policies": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "contract_refs": [
+        "files",
+        "ui-evidence",
+        "ui-frame"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx",
+          "symbol": "SfEvidencePanel",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx",
+          "symbol": "SfAttachmentField",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ]
     },
     {
       "seat": "W10",
