@@ -361,6 +361,15 @@ test("CAP14 real owner-scoped 320px reflow and keyboard reachability", async ({ 
     await expect(surface(page).getByRole("searchbox")).toBeVisible()
     await expect(surface(page).getByRole("searchbox")).toBeEnabled()
   }
+  // U15-AC03 also requires 200% text and 400% reflow at 320 CSS px.
+  // Use the installed chapter; never substitute a screenshot or fixture UI.
+  for (const [width, scale] of [[768, "200%"], [320, "400%"]] as const) {
+    await page.setViewportSize({ width, height: 800 })
+    await page.evaluate((size) => { document.documentElement.style.fontSize = size }, scale)
+    await expect(surface(page).getByRole("searchbox")).toBeVisible()
+    await expect(surface(page).getByRole("searchbox")).toBeEnabled()
+    expect(await surface(page).evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
+  }
   await page.keyboard.press("Tab")
   await expect(page.locator(":focus")).toHaveCount(1)
 })
