@@ -1,0 +1,1340 @@
+{
+  "mission": 52,
+  "run_id": 43658424202,
+  "job_id": 132642097195,
+  "cleanup_job_id": 132643078435,
+  "attempt": 1,
+  "W": "13203d7b6d9e0b27ad23c6b046f770c779c35687",
+  "W_tree": "cb1875110b02a16ed2bf4a501a92b921493aa897",
+  "candidate": "isolated-C20-plus-eight-owned-P2-helpers-and-shared-installation-V2",
+  "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+  "base_label": "C20",
+  "S": "ab6caae944aad804c1bd6286270a78b74734d0a7",
+  "S_tree": "9f1d388996dc73274e037bf6479cc59eb8451a23",
+  "shared_candidate": {
+    "path": "apps/cli/src/sucafina-product/installation.ts",
+    "blob": "2e51c6741dae8b4ae2bd24b07b3bd1acb2eaa25c",
+    "integrated": false
+  },
+  "owned_blobs": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "blob": "de8671b4482339791b8f03bd5616c13d50dc4a87"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+      "blob": "007c27ebfd79a28cf051864305d9692c1d6b2409"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+      "blob": "10b59adfce7d8fb5143f49c9df9a0d7321425018"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "blob": "903b48594ff95e0d1f78539982adcf75eb3b9272"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "blob": "377ad1ea3c961fbf0cbb6522403074bc1fce6d78"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "blob": "9fe64294027cf6805ff8e7ba4b7cfac83455de85"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "blob": "13ab9556628ebc118e0afc2470833bbdbfa9dd25"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf"
+    }
+  ],
+  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "run_conclusion": "failure",
+  "artifact_id": 14138064554,
+  "artifact_sha256": "e1c4f381f39405abf702022deaeb4179f9425fedd1b8e2785b7119cf890aa3cb",
+  "artifact_bytes": 1784963,
+  "latest_stack_observed": {
+    "sha": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+    "label": "C21",
+    "readback": "2026-11-15T00:29:35Z",
+    "qualified_by_this_run": false,
+    "delta": "Agenda39 production/test additions; installation, Decisions, Planner, Procurement/config/local/runtime paths unchanged vsC20"
+  },
+  "stats": {
+    "startTime": "2026-11-15T00:31:43.820Z",
+    "duration": 87009.385,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  },
+  "selected": 5,
+  "executed": 5,
+  "passed": 1,
+  "failed": 4,
+  "timed_out": 0,
+  "skipped": 0,
+  "flaky": 0,
+  "retries": 0,
+  "cases": [
+    {
+      "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 12,
+      "configured_budget_ms": 180000,
+      "runtime_status": "failed",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 8542,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create two actual Planner versions through human controls",
+          "duration": 1429
+        }
+      ],
+      "reached": [
+        "real installed Planner Versions UI",
+        "created and renamed baseline version through UI",
+        "selected exact actorId via accessible Owner combobox",
+        "saved OPEX line annual1200 USD in2027",
+        "copied baseline to distinct candidate version and renamed it through UI",
+        "revised candidate OPEX line annual2400 USD through UI",
+        "all six Planner commands: five save and one copy HTTP200/ok=true",
+        "planner-sources-created-through-ui recorded exact distinct version identities",
+        "one UI sf_case_draft POST for initial-alternatives decision",
+        "workbench-command response HTTP200/application-json",
+        "product navigated to workbench-case GET200",
+        "DOM rendered draftVersion1 with initial-alternatives objective and required known-subtotal criterion"
+      ],
+      "not_reached": [
+        "reading creation response body in test",
+        "JSON domain status/outputRef assertions",
+        "evidence attachment",
+        "initial alternatives",
+        "comparison/cost coverage",
+        "human choice/history",
+        "source change/history preservation"
+      ],
+      "failure": {
+        "message": "Error: response.json: Protocol error (Network.getResponseBody): No resource with given identifier found",
+        "stack": "Error: response.json: Protocol error (Network.getResponseBody): No resource with given identifier found\n    at readReply (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:120:42)\n    at read (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:111:102)\n    at Page.responded (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts:13:27)",
+        "location": {
+          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+          "column": 42,
+          "line": 120
+        },
+        "snippet": "   at sucafina/decisions-support/journey.ts:120\n\n  118 |   // A legacy HTML page returned with 200 must never satisfy a domain-command assertion.\n  119 |   expect(contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain(\"application/json\")\n> 120 |   const result = asRecord(await response.json())\n      |                                          ^\n  121 |   observations.push({ mode: record.mode, status: result.status, reason: result.reason, outputRef: result.outputRef })\n  122 |   expect(response.status(), `Domain response for ${record.mode}`).toBe(200)\n  123 |   expect(result.status, `Domain outcome for ${record.mode}`).toBe(\"ok\")"
+      },
+      "proof_limits": [
+        {
+          "type": "proof-limit",
+          "description": "Human choice and historical C10 coverage with pending costs; this path has no executable Procurement operation and does not accept financial approval, C12 Apply, native model or AM proofs"
+        }
+      ],
+      "observations": [
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "copy",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-sources-created-through-ui",
+          "baselineVersion": "8499aef8-eace-4dc5-b0f8-de1b7aaf55d8",
+          "candidateVersion": "4b2e38d4-ce70-4c4f-a648-22dc518e35cf",
+          "baselineAnnualInput": 1200,
+          "candidateAnnualInput": 2400,
+          "currency": "USD",
+          "year": 2027
+        },
+        {
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "body_completed": false,
+      "requests": [
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "25051b25-d14d-4b71-b8cd-2c3e45e3b761"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "1c75eb1c-81c3-4ec8-9c8c-f446cc33ddda"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "dca52a75-d3aa-4d12-855b-291d9a3c6e8c"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "2f1dd83b-74f4-4d36-a715-19df71482a8a"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "7613fddc-42f0-4890-99bc-3f8f7deb748b"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "878126b8-dc21-464a-af7d-39cf821ecf7b"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "e2b2885b-f934-4a00-a815-8dfbd312f94e"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "1a7de359-726c-4434-805b-1ca7c7a6c5e2"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "74f3caf0-dd06-42a7-a7dd-8e6954bcf598"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "dd006da0-44c7-491d-a52d-df55bac0c748"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "163ebc16-a267-45d0-adb1-ae279b7a4cca"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "cdca5b79-78cd-492c-9274-f76cf2325889"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-command",
+          "operation": "sf_case_draft",
+          "idempotencyKey": "f1732cbc-7673-4fc1-a80b-9400cadb2a9e"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        }
+      ],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        }
+      ],
+      "domain_body_visibility": "NOT_READ_TEST_BODY_RETRIEVAL_FAILED",
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "bytes": 10019,
+          "sha256": "d64e5712ed996debb0be33b0748e14d2f04befd56af31cff92d68949cb473bfa",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+            "attachment_name": "decisions-observations.json",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain",
+          "bytes": 781,
+          "sha256": "78ce3461585a3570f29c4329a8155116041213f5365b848b01a4e641a524bbc8",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+            "attachment_name": "wp03-real-cli.log",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "bytes": 63793,
+          "sha256": "3fddc46e20710211b8c9a82bddb872aaec60438d817bc525f91ad493ac14e381",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "bytes": 350770,
+          "sha256": "3943d5093727fbe45af1496505a88dc1cb9301e13622f91585453db2f51168a6",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "bytes": 18558,
+          "sha256": "f977e13238d870f61497e7362f17451140a64a61054271fa0330b443639957cc",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md"
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 21,
+      "configured_budget_ms": 180000,
+      "runtime_status": "failed",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 15448,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create the real requisition through its human form",
+          "duration": 10068,
+          "error": {
+            "message": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: 1\nReceived: 0\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 10000ms\n  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n    14 × locator resolved to 0 elements\n       - unexpected value \"0\"\n",
+            "stack": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: 1\nReceived: 0\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 10000ms\n  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n    14 × locator resolved to 0 elements\n       - unexpected value \"0\"\n\n    at createRequisition (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts:7:22)\n    at procurementClosureJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:11:21)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:26:5\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:68:5)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+              "column": 22,
+              "line": 7
+            },
+            "snippet": "   at sucafina/decisions-support/procurement-source.ts:7\n\n   5 |   await page.goto(`${origin}/sucafina/procurement?page=Requests`)\n   6 |   const form = page.locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n>  7 |   await expect(form).toHaveCount(1)\n     |                      ^\n   8 |   const title = \"CI Decisions — explicit requisition proposal\"\n   9 |   await form.getByLabel(\"Title\", { exact: true }).fill(title)\n  10 |   await form.getByLabel(\"Type\", { exact: true }).selectOption(\"service\")"
+          }
+        }
+      ],
+      "reached": [
+        "real installed Procurement Requests navigation",
+        "GET /sucafina/procurement HTTP503 JSON",
+        "unavailable/procurement-queue-unavailable visible instead of creation form"
+      ],
+      "not_reached": [
+        "requisition creation",
+        "public Procurement proposal",
+        "numeric criterion rule",
+        "formal approval incompatibility boundary",
+        "Apply/C12 receipt and recovery"
+      ],
+      "failure": {
+        "message": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: 1\nReceived: 0\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 10000ms\n  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n    14 × locator resolved to 0 elements\n       - unexpected value \"0\"\n",
+        "stack": "Error: expect(locator).toHaveCount(expected) failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: 1\nReceived: 0\nTimeout:  10000ms\n\nCall log:\n  - Expect \"toHaveCount\" with timeout 10000ms\n  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n    14 × locator resolved to 0 elements\n       - unexpected value \"0\"\n\n    at createRequisition (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts:7:22)\n    at procurementClosureJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:11:21)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:26:5\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:68:5)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+        "location": {
+          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+          "column": 22,
+          "line": 7
+        },
+        "snippet": "   at sucafina/decisions-support/procurement-source.ts:7\n\n   5 |   await page.goto(`${origin}/sucafina/procurement?page=Requests`)\n   6 |   const form = page.locator('form[data-command=\"create\"][data-page=\"Requests\"]')\n>  7 |   await expect(form).toHaveCount(1)\n     |                      ^\n   8 |   const title = \"CI Decisions — explicit requisition proposal\"\n   9 |   await form.getByLabel(\"Title\", { exact: true }).fill(title)\n  10 |   await form.getByLabel(\"Type\", { exact: true }).selectOption(\"service\")"
+      },
+      "proof_limits": [
+        {
+          "type": "dependency",
+          "description": "Public typed Procurement alternative authoring, authorized composite producer, numeric criterion rule and a domain financial approval compatible with the prepared change are mandatory. Missing controls fail; no fixture inserts them."
+        },
+        {
+          "type": "proof-limit",
+          "description": "Consumes the published C12 Apply and recovery; selection and confirmation alone do not prove financial approval, native provider/critique or restart."
+        }
+      ],
+      "observations": [],
+      "body_completed": false,
+      "requests": [],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/procurement",
+          "mode": null,
+          "httpStatus": 503,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "domain_body_visibility": null,
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "bytes": 713,
+          "sha256": "46898ac16a5bd0ca69c3ca4a1c8ffb05ede88f1257de702835f91ab395c98bf7",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+            "attachment_name": "decisions-observations.json",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain",
+          "bytes": 272,
+          "sha256": "cdca6e6bc3fb814cbec46479d432dbb0a8b75931a3dfb49ee4065fc12590ae37",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+            "attachment_name": "wp03-real-cli.log",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "bytes": 9983,
+          "sha256": "00e43d7f14bee553e9a5c7b32ece32a8eb22d1cd2ae6bb70996639c1717399dc",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "bytes": 43482,
+          "sha256": "11badc6e991634bceb0447964827cf023702921d884c39ad81012be2f13fd2d2",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "bytes": 8745,
+          "sha256": "b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md"
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 35,
+      "configured_budget_ms": 180000,
+      "runtime_status": "failed",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 7255,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "enter the installed Workbench from the dashboard",
+          "duration": 364
+        },
+        {
+          "title": "submit one explicit human intention",
+          "duration": 2225,
+          "error": {
+            "message": "Error: response.json: Protocol error (Network.getResponseBody): No resource with given identifier found",
+            "stack": "Error: response.json: Protocol error (Network.getResponseBody): No resource with given identifier found\n    at readReply (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:120:42)\n    at read (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:111:102)\n    at Page.responded (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts:13:27)",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+              "column": 42,
+              "line": 120
+            },
+            "snippet": "   at sucafina/decisions-support/journey.ts:120\n\n  118 |   // A legacy HTML page returned with 200 must never satisfy a domain-command assertion.\n  119 |   expect(contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain(\"application/json\")\n> 120 |   const result = asRecord(await response.json())\n      |                                          ^\n  121 |   observations.push({ mode: record.mode, status: result.status, reason: result.reason, outputRef: result.outputRef })\n  122 |   expect(response.status(), `Domain response for ${record.mode}`).toBe(200)\n  123 |   expect(result.status, `Domain outcome for ${record.mode}`).toBe(\"ok\")"
+          }
+        }
+      ],
+      "reached": [
+        "real installed Workbench navigation",
+        "one UI sf_case_draft POST",
+        "workbench-command response HTTP200/application-json",
+        "product navigated to workbench-case GET200",
+        "DOM rendered draftVersion1/objective/criteria"
+      ],
+      "not_reached": [
+        "reading creation response body in test",
+        "JSON domain status/outputRef assertions",
+        "editing case",
+        "reopening edited case"
+      ],
+      "failure": {
+        "message": "Error: response.json: Protocol error (Network.getResponseBody): No resource with given identifier found",
+        "stack": "Error: response.json: Protocol error (Network.getResponseBody): No resource with given identifier found\n    at readReply (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:120:42)\n    at read (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:111:102)\n    at Page.responded (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts:13:27)",
+        "location": {
+          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+          "column": 42,
+          "line": 120
+        },
+        "snippet": "   at sucafina/decisions-support/journey.ts:120\n\n  118 |   // A legacy HTML page returned with 200 must never satisfy a domain-command assertion.\n  119 |   expect(contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain(\"application/json\")\n> 120 |   const result = asRecord(await response.json())\n      |                                          ^\n  121 |   observations.push({ mode: record.mode, status: result.status, reason: result.reason, outputRef: result.outputRef })\n  122 |   expect(response.status(), `Domain response for ${record.mode}`).toBe(200)\n  123 |   expect(result.status, `Domain outcome for ${record.mode}`).toBe(\"ok\")"
+      },
+      "proof_limits": [],
+      "observations": [
+        {
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "body_completed": false,
+      "requests": [
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "b116b383-8bd1-493c-a4a8-525eac1f242f"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "1a29e959-1990-4afb-b4f0-5b17e3f0a487"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-command",
+          "operation": "sf_case_draft",
+          "idempotencyKey": "f052448e-2f53-4f46-9fb0-eba4e2a5c44e"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        }
+      ],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        }
+      ],
+      "domain_body_visibility": "NOT_READ_TEST_BODY_RETRIEVAL_FAILED",
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "bytes": 2419,
+          "sha256": "a0823387dd7aaa9048fdd69057e32cac1387b0301fa31758a52a5a6b1b20426f",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+            "attachment_name": "decisions-observations.json",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain",
+          "bytes": 781,
+          "sha256": "79ab67249a5308a2b6aec4046cec6df7d29ea80407c89223eb8a212c6cae6c72",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+            "attachment_name": "wp03-real-cli.log",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "bytes": 62518,
+          "sha256": "6bda043e9a4563c6b9ac5018a66ac1a4743f00b2e8a0bceda204ce621b9518e0",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/test-failed-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "bytes": 139825,
+          "sha256": "06396ac4d6273256c0096a549003d4ec997cc5971380f757c666c8e43fc191b5",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "bytes": 18538,
+          "sha256": "f8f0a3c9b26a9c0afef420fadff933eb56509969f99204cd2f1ac1d49bbeaa09",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-a974e-able-case-through-Workbench-chromium/error-context.md"
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 87,
+      "configured_budget_ms": 180000,
+      "runtime_status": "failed",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 7201,
+      "retry": 0,
+      "steps": [],
+      "reached": [
+        "real installed Workbench navigation",
+        "one UI sf_case_draft POST",
+        "workbench-command response HTTP200/application-json",
+        "product navigated to workbench-case GET200",
+        "DOM rendered draftVersion1/objective/criteria"
+      ],
+      "not_reached": [
+        "reading creation response body in test",
+        "JSON domain status/outputRef assertions",
+        "initial alternatives catalog",
+        "catalog JSON/HTML separation assertions"
+      ],
+      "failure": {
+        "message": "Error: response.json: Protocol error (Network.getResponseBody): No resource with given identifier found",
+        "stack": "Error: response.json: Protocol error (Network.getResponseBody): No resource with given identifier found\n    at readReply (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:120:42)\n    at read (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:111:102)\n    at Page.responded (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts:13:27)",
+        "location": {
+          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+          "column": 42,
+          "line": 120
+        },
+        "snippet": "   at sucafina/decisions-support/journey.ts:120\n\n  118 |   // A legacy HTML page returned with 200 must never satisfy a domain-command assertion.\n  119 |   expect(contentType, `Expected the installed Decisions handler for ${record.mode}`).toContain(\"application/json\")\n> 120 |   const result = asRecord(await response.json())\n      |                                          ^\n  121 |   observations.push({ mode: record.mode, status: result.status, reason: result.reason, outputRef: result.outputRef })\n  122 |   expect(response.status(), `Domain response for ${record.mode}`).toBe(200)\n  123 |   expect(result.status, `Domain outcome for ${record.mode}`).toBe(\"ok\")"
+      },
+      "proof_limits": [
+        {
+          "type": "dependency",
+          "description": "WP10: installed decision-list/decision-portfolio-catalog and a public UI producer for initial C09/C10 alternatives"
+        }
+      ],
+      "observations": [
+        {
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "body_completed": false,
+      "requests": [
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "538be234-c2c8-4201-89b5-75d092b18fb7"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "99857149-e79b-48a9-adf0-68652ab6d740"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-command",
+          "operation": "sf_case_draft",
+          "idempotencyKey": "bdd3bbae-bf3c-49d0-8e30-b0a99133adb0"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        }
+      ],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        }
+      ],
+      "domain_body_visibility": "NOT_READ_TEST_BODY_RETRIEVAL_FAILED",
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "bytes": 2425,
+          "sha256": "ff6ed1e9885f0f563d560f60336d0b7b03400137690ff6fda7158ce5c7a40bab",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+            "attachment_name": "decisions-observations.json",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain",
+          "bytes": 781,
+          "sha256": "a9348256da08826cf6fae824a936df9d18e4902177757f452579685118ffd197",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+            "attachment_name": "wp03-real-cli.log",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "bytes": 62518,
+          "sha256": "6bda043e9a4563c6b9ac5018a66ac1a4743f00b2e8a0bceda204ce621b9518e0",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/test-failed-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "bytes": 137175,
+          "sha256": "a88bd45a9051d346cc010afca9ec9c9761a093f40d166cd90f57067458873e74",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "bytes": 18544,
+          "sha256": "0a7b33156d1da27c20ac314a87fb79b8040ede9b5883afc8846a4e24e0a6d7bf",
+          "artifact_member": "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-1bbc9-isions-catalog-not-HTML-200-chromium/error-context.md"
+        }
+      ]
+    },
+    {
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "file": "sucafina/decisions.spec.ts",
+      "line": 135,
+      "configured_budget_ms": 180000,
+      "runtime_status": "passed",
+      "test_status": "expected",
+      "expected_status": "passed",
+      "duration_ms": 8387,
+      "retry": 0,
+      "steps": [],
+      "reached": [
+        "real UI creation request with original objective/horizon/currency/criteria",
+        "original committed response intercepted via CDP: HTTP200/application-json/status=ok/outputRef",
+        "original response deliberately dropped; browser requestfailed net::ERR_CONNECTION_RESET",
+        "uncertain form preserved and locked original objective/criteria",
+        "exactly one creation mutation",
+        "same durable case found through Workbench authorized read",
+        "same caseRef/version1/objective/criteria verified",
+        "reload reverified the same durable case",
+        "creation mutation count remained1"
+      ],
+      "not_reached": [],
+      "failure": null,
+      "proof_limits": [
+        {
+          "type": "proof-limit",
+          "description": "Creation confirmation C09 only; not a financial Apply receipt/retry proof under C12 or AM04"
+        }
+      ],
+      "observations": [
+        {
+          "stage": "creation-response-dropped",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "stage": "lost-response-draft-preserved",
+          "caseRef": "case:a85a53ca-a19f-44e0-b2da-8619056fec3b:0c83740f-8444-47cd-ad6b-b3c2ad28d43c",
+          "creationSubmits": 1
+        },
+        {
+          "stage": "lost-response-reconciled",
+          "caseRef": "case:a85a53ca-a19f-44e0-b2da-8619056fec3b:0c83740f-8444-47cd-ad6b-b3c2ad28d43c",
+          "creationSubmits": 1
+        }
+      ],
+      "body_completed": true,
+      "requests": [
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "1b2fc564-37f4-44a4-9463-1b4bca8823de"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "c50c9363-e129-4a6b-93fe-f605170cdb6c"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-command",
+          "operation": "sf_case_draft",
+          "idempotencyKey": "30d3fd5b-1d24-4f0d-81fe-840932f6f67e"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "1a7338aa-89c1-4317-b4ff-4e8daaf341a9"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "0a0ca6f1-628c-47a6-9aab-6aed01ac0d90"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "5d5112f3-fe76-4f51-bd04-90adeea9916f"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "ffe6770a-278d-4cb4-96f1-acd85ab75903"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "04a9206b-d8d1-4695-a266-8f842baa7054"
+        }
+      ],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "requestfailed",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-command",
+          "error": "net::ERR_CONNECTION_RESET"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 400,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "domain_body_visibility": null,
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json",
+          "bytes": 4876,
+          "sha256": "d7123b0c422648c24272f7647941320a520c55e493353657a3183faaaf5d4058",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+            "attachment_name": "decisions-observations.json",
+            "encoding": "base64"
+          }
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain",
+          "bytes": 781,
+          "sha256": "d7f3247ef0e2e730b02af50df406aadc4539b76df6293fdc3507938c2294a93f",
+          "embedded_source": {
+            "artifact_member": "test-ci-evidence/playwright-runtime.json",
+            "case_title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+            "attachment_name": "wp03-real-cli.log",
+            "encoding": "base64"
+          }
+        }
+      ]
+    }
+  ],
+  "report_files": {
+    "playwright-runtime.json": {
+      "path": "test-ci-evidence/playwright-runtime.json",
+      "bytes": 76743,
+      "sha256": "103035ce0dbc8a92dda1863536bcc47f18eb7aa8af58fda34a8bddf539769c38"
+    },
+    "playwright-selection.json": {
+      "path": "test-ci-evidence/playwright-selection.json",
+      "bytes": 5017,
+      "sha256": "e393695ebec6e864bf400ccd3e98c527cd4e30b33726cd8ee9312d1e27c13d31"
+    },
+    "request.json": {
+      "path": "test-ci-evidence/request.json",
+      "bytes": 322,
+      "sha256": "93c17219a435c778dcdff98cc22601cd45428b04e326886cb43bc811a5d2dce2"
+    }
+  },
+  "limits": [
+    "This run qualifies only isolated W13203d7b6d9e0b27ad23c6b046f770c779c35687 overC20; no shared source/stack integration is claimed.",
+    "P2 eager response-event body reading did not resolve Network.getResponseBody loss in three creation journeys.",
+    "J1 exact combobox correction allowed actor selection, both original Planner sources and their1200/2400 USD values. No evidence/alternative/comparison/choice stage was reached after creation-body assertion failed.",
+    "J1/J3/J4 DOMs show created durable draftVersion1, but JSON body/status/outputRef test assertions failed; all three nominal journeys remain failed.",
+    "J5 ERR_CONNECTION_RESET is the deliberate CDP response-loss hook, not a spontaneous transport failure.",
+    "J5 proves C09 creation recovery only; no financial approval,C12 Apply orAM04 proof.",
+    "Financial formal approval incompatibility remains unobserved because Requests GET503 precedes creation.",
+    "All five original titles, configured budgets180000ms, zero retries and zero runtime skips are preserved.",
+    "No local product test or test redispatch was performed by this audit agent."
+  ],
+  "schema": "sf2-mission52-installed-nominal-v1",
+  "candidate_binding": {
+    "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+    "baseTree": "b51fce068f7cee96e6f22013d729087643e3b684",
+    "W": "13203d7b6d9e0b27ad23c6b046f770c779c35687",
+    "Wtree": "cb1875110b02a16ed2bf4a501a92b921493aa897",
+    "S": "ab6caae944aad804c1bd6286270a78b74734d0a7",
+    "Stree": "9f1d388996dc73274e037bf6479cc59eb8451a23",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "unchanged_root_entries": 43,
+    "only_extra": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "size": 229,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+    },
+    "source": "1a475ee1ca6b270d7dad8368560cbd9966d7f8ab",
+    "sourceTree": "27be5e258a3369f84191745bf75815155e1ad18f",
+    "latest_stack_observed": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+    "fixed_base_reason": "Controlled P2/V2 causal qualification on C20; C21 Agenda delta and successor authority are separately reconciled."
+  },
+  "evidence_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43658424202",
+  "owned_source": "1a475ee1ca6b270d7dad8368560cbd9966d7f8ab",
+  "case_order_is_spec_order": true
+}
