@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h.microsoft49-composition.v1",
+  "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+  "source_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
+  "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+  "target_base": "c3e9bd367fe04cab3f9e19e8bcb77fe951632839",
+  "source_tests_do_not_qualify_composition": true,
+  "validation": "NOT_RUN. Exact candidate mapping composed by mission71 from terminal74 over C43 with auth72 entry preserved. Source74 Node/Bun results do not qualify this composition or the installed product. Mission45 retains compiler/generation/spawn/guards; S0 retains final campaigns and acceptance.",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "target_preimage_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "postimage_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "postimage_sha256": "addaab0dca8ce1addcb155808a841c4ac05a55e6dbe630ee874fa69f5f3067fb",
+      "bytes": 25564,
+      "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
+      "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "mode": "100644",
+      "target_preimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "postimage_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+      "postimage_sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
+      "bytes": 9786,
+      "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+      "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "mode": "100644",
+      "target_preimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+      "bytes": 8960,
+      "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+      "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
+    }
+  ],
+  "composition_mission": 71,
+  "previous_composition": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json",
+    "blob": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24",
+    "preserved_byte_for_byte": true
+  },
+  "target_base_tree": "fbe7567127db5ecee19afd1440ea78eefdb01d10",
+  "previous_composition_lineage": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+      "preserved_byte_for_byte": true
+    }
+  ],
+  "source74": {
+    "terminal": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+    "work": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+    "work_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+    "whole_candidate_validation": "NOT_RUN",
+    "owner25MiB_policy_applied": false
+  }
+}

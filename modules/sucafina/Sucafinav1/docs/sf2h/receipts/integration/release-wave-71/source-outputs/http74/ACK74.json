@@ -1,0 +1,83 @@
+{
+  "schema": "sf2h.mission74.ack.v1",
+  "mission": 74,
+  "finding": "M70-HTTP-01",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "state": "ACKNOWLEDGED_OWN_PATHS_ONLY",
+  "branch": "http-body-limit-fix",
+  "base_sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "base_tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+  "control_sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "lease_epoch": "http-limit-browser74",
+  "session_id": null,
+  "model_effective": null,
+  "assistant_configured_identity": "GPT-6 Astra Pro",
+  "identity_limits": "Provider execution receipt and stable conversation session ID are not exposed. /root is a local collaboration path, not a native campaign session ID.",
+  "consumer": 71,
+  "integrator_authority": "60 explicitly ended; mission71 is the sole authorized successor after its ACK. sf2-stack observed at faa30fddb7e7b61696b66fd069f51cf18c51125f. This ACK grants no target write authority.",
+  "write_paths": [
+    "apps/cli/src/sucafina-product/installation.ts",
+    "modules/sucafina/Sucafinav1/product/interface/http.ts",
+    "modules/sucafina/Sucafinav1/runtime/request-body.ts (newboundedexistingtransporthelper)",
+    "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/"
+  ],
+  "excluded": [
+    "72 authentication/local-entry paths",
+    "73 runtime/application.ts and procurement",
+    "52 decisions HTTP/UI",
+    "server/Effect/Node engines",
+    "historical Microsoft49/55 material and shared fixture (complete inert composition patch only)"
+  ],
+  "criterion_ids": [
+    "M70-HTTP-01",
+    "M74.AC01-stream-bytes",
+    "M74.AC02-abort-identity",
+    "M74.AC03-auth-privacy",
+    "M74.AC04-composition",
+    "M74.AC05-scoped-api",
+    "WP10.T02.INV.01",
+    "WP10.T02.INV.10",
+    "WP10.T02.QLT.10",
+    "WP10.T04.CHK.01",
+    "WP10.T04.CHK.02",
+    "WP10.T04.CHK.03",
+    "WP10.T04.INV.01",
+    "WP10.T04.INV.10",
+    "WP10.T04.QLT.01",
+    "WP10.T04.SUC.01",
+    "CAMP.INV.02",
+    "CAMP.INV.04",
+    "CAMP.INV.07"
+  ],
+  "reading": {
+    "mission_blob": "1176bf646537ddbff208e6c52301a12aae70b6ff",
+    "AGENTS_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "START_blob": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW_blob": "043205bee6031b4517a98591b3588fca0ab12925",
+    "COMMON_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "actor_pack_blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "appendices": [
+      "specs/product-acceptance.md",
+      "specs/resident-runtime.md",
+      "specs/atlas-packaging.md"
+    ],
+    "note": "Full source package retrieved; parallel reading/review of reference fields preserves the fixed pack. Root and collaborators read the applicable code and constraints before product edits. No further AGENTS in the edited CLI/SF subtrees."
+  },
+  "transport_plan": [
+    "Count incoming bytes before consumer buffering; Workbench 65536.",
+    "Use supported public Node/Effect APIs and one Request throughout authentication/admission/dispatch.",
+    "Keep 413 delivery and cleanup compatible; no token/body/callback logging.",
+    "Preserve binary domain authorization and limits. Existing global 16MiB vs contract25MiB conflict requires an explicit owner composition patch; no silent global raise.",
+    "Direct scoped tests plus source evidence do not qualify integrated candidate or Microsoft B2B."
+  ],
+  "checks": {
+    "tests": "NOT_RUN; existing test-ci request interface, one in-flight74, MCP W/S snapshot and dedup",
+    "compiler_and_guards": "45 exclusively; exact requests will be published, no workflow/ref takeover",
+    "local_product_tests": 0,
+    "full_epic": false
+  },
+  "GLOBAL_RELEASE": false
+}

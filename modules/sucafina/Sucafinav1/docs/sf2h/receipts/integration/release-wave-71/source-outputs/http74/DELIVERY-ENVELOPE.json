@@ -1,0 +1,258 @@
+{
+  "schema": "sf2h.mission74.delivery-envelope.v1",
+  "state": "EXPECTED_RECEIPT_ONLY_DELTA_SUBJECT_TO_CAS_READBACK",
+  "parent_source_W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "parent_source_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+  "material_blobs_preserved": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts",
+      "blob": "7d0ccfe23def8601eb152b8cbe45ddb1df40456d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts",
+      "blob": "c8865ac73ae4932ba79c8e90c38ce5ee78b3486c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs",
+      "blob": "1323d00bed4eb829140bf76d0c74b08435071beb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "blob": "878b41f8b050c1d37d55df44028845f1093ac5df"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "blob": "49ad5f84d98804f7ff5836c2b24044b6b1a0b294"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts",
+      "blob": "b4f4360d23ee709c36582f060d4ca4382d1e11d5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+      "blob": "869a66168c1b43189b2291f50a80742761ce6043"
+    }
+  ],
+  "expected_receipt_delta": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/DEPENDENCY-CLOSURE.json",
+      "bytes": 188653,
+      "characters": 188653,
+      "blob": "afb2824e74fe733dbbc3616e7380b8a892eaf073",
+      "sha256": "2cc478454dff7de7e28ee8357914b51e1cca139fb5ada118353d2311a27f1a61"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/HANDOFF-71.json",
+      "bytes": 12887,
+      "characters": 12881,
+      "blob": "eea9092ac6a68198b78e08bf00d8dafd1f46ea20",
+      "sha256": "5433d7626a06e31b7e508ab53977e538910d5d265ce6fb49e401a9b5a3bbb4e6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/HANDOFF.md",
+      "bytes": 6275,
+      "characters": 6166,
+      "blob": "8833a07e53768f119748c5727186104b8e17b49b",
+      "sha256": "12826f36f596efa69255760acf0dc6b321ed4807cd4d3321c7d9099bb646629e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/INDEX.json",
+      "bytes": 12585,
+      "characters": 12579,
+      "blob": "6d1fc5af0bd32b2f30bd31dbb3643b9ae075aa4d",
+      "sha256": "7bca81cba9da5bceda158f7d57593e0a39fbbf2616fdaa608242601d5462bdcd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/REVIEW74.json",
+      "bytes": 25426,
+      "characters": 25424,
+      "blob": "176e22b2b88d623ffcb7d6a1ce514936bc988a54",
+      "sha256": "56c1e9722097e27fc67f9d695402cce88e758299243dfbb137fb05bd20b08d9d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/TERMINAL74.json",
+      "bytes": 1120,
+      "characters": 1120,
+      "blob": "9ea8ff78e383c863abe4fc8e2f537d58ac310a34",
+      "sha256": "1491d91b4b5f3150b3a6ef334d62341258a1dba6e095f209412d5c5c870d522e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/REQUEST-45.json",
+      "bytes": 9099,
+      "characters": 9099,
+      "blob": "9e04546c30dd348fe07b3f74931a6b2bac8aee98",
+      "sha256": "db8f33ef0e4e9e16b787266d9dcc37d400381286004eb144607f597c554da06d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-01.json",
+      "bytes": 7639,
+      "characters": 7639,
+      "blob": "00ec5619fecc5a3ec6a09fc54a49d1e1f4a6a205",
+      "sha256": "298a61419b77a87c2c90250a4829b4672bb1907edec1110afe76324d8bbc411d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-01.log.txt",
+      "bytes": 6118,
+      "characters": 6118,
+      "blob": "8e6061619261939c99bea087cda462ad8028774d",
+      "sha256": "57218060239cd65f9570fcd47c42769ba41a235a8cb431d39bfb61632144de22"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-02.json",
+      "bytes": 6844,
+      "characters": 6844,
+      "blob": "241d468a689deef91bef6fd8f96f3d1535bf0916",
+      "sha256": "dd67b8b4cea9450dded54c9c7f4768162f3ff8acd09b86b8f9f5478188859fa1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-02.log.txt",
+      "bytes": 6052,
+      "characters": 6020,
+      "blob": "8ae34749ab13d445735042e4a496593d132a3983",
+      "sha256": "c85b1694ab081efef95176d354ae50f4779d750b1c8c2cfd35d34758370bd279"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-03.json",
+      "bytes": 7169,
+      "characters": 7169,
+      "blob": "274b71f62b8ff63821525d6193b8cec3b992d650",
+      "sha256": "3b7b9319895fbfce9728eeb0b208a03b55cce7faaa5ce3439a5a1f4c0363a385"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-03.log.txt",
+      "bytes": 4410,
+      "characters": 4410,
+      "blob": "11ab4d9354f02cbe8f2e89adaf70fdd5fb35f23b",
+      "sha256": "5bbc70ef028fd318d2e76fca4b497fe4baa3b7296566e4f8a54e1a0525232d73"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-04.json",
+      "bytes": 6711,
+      "characters": 6711,
+      "blob": "075a0508236da80ac1a8dcabecf1b1b2d825397f",
+      "sha256": "0e8ea2c56bb89541b25eaebc6d883e25ba83eb24b88a0ddaaed84dd6ba249cfb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-04.log.txt",
+      "bytes": 1806,
+      "characters": 1776,
+      "blob": "7061f3c7a23eb67f797e67a315be8c5cf01bed40",
+      "sha256": "e18dd6f18908cfe1feb4367cf52a54f946c0d0730cc95df4edc7cfcf557b10fc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-05.json",
+      "bytes": 7702,
+      "characters": 7700,
+      "blob": "9bd082b047b4c8f9ca799f89baf71672072e6477",
+      "sha256": "1af679c31dd6bd32c7f22ee70cceed7c02efbfeb8c37961559fca20cd12d62c2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-05.log.txt",
+      "bytes": 952,
+      "characters": 928,
+      "blob": "960fb5247c62e38d55ac73d0c29b8066206dd844",
+      "sha256": "59e55fac29867815b4498d0fd49953d3f9edd130a823b6d5e0f8baefe540d152"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-06.json",
+      "bytes": 8519,
+      "characters": 8519,
+      "blob": "0d3f0e7c3e1942e87cba3b4ee86fdb9978682f62",
+      "sha256": "7dd376d7c6b0717702c9575dfc5cd43eee04f185590a3cef7f675bb11748fa35"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/RUN-06.log.txt",
+      "bytes": 3255,
+      "characters": 3255,
+      "blob": "e32ad26aceb8df3f53e4c0d77d11c60afd304b03",
+      "sha256": "c1cf9e4b340ccfbbc7a0e4d2b001a7a4bd0de8ebfe6b0fb6d2bf47148cb08fa6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/request-bun.json",
+      "bytes": 436,
+      "characters": 436,
+      "blob": "f37fadf144b8256932693a65d4477c19655eb39c",
+      "sha256": "a19093cc48a0aa4db01a1e2c060c5e924616b36f69faedbfee63f1d5a90a31d6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/checks/request-node.json",
+      "bytes": 189,
+      "characters": 189,
+      "blob": "21cfb7efb92362a97eb1d7f0325f6ad54e3d6204",
+      "sha256": "2ed756e2426e7e8d824af847fcb83cd4a3e6c3ebcf0c261566f5f8f17afbd8c9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/OWNER-WITH-MAP-MANIFEST.json.txt",
+      "bytes": 7832,
+      "characters": 7832,
+      "blob": "6887ae0f17ebf6d31531220307be6a09fdd6bb7a",
+      "sha256": "89cc7a1e894b2803d84617a752fea6fa6f22c1abd448ede2681188894234a13a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/README-WITH-MAP.txt",
+      "bytes": 2065,
+      "characters": 2063,
+      "blob": "cc5c18f7832924b5dea498bc53701f4965178158",
+      "sha256": "33eaf403405f5780485b3d20f26e9ea10425ebe2150840f6e655680437058152"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/integration-fixture-74.preimage.ts.txt",
+      "bytes": 3615,
+      "characters": 3615,
+      "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+      "sha256": "6d8ba7820763c2461dccb118020352e11b05389a27fe8f322fcc6519b9e3594c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/integration-fixture-with-map.ts.txt",
+      "bytes": 3633,
+      "characters": 3633,
+      "blob": "88f622aa755c9b747d03588ed10db7f9cbac497d",
+      "sha256": "e2c03e64b2833413d512313b9d38f9b46814ef67d3a28fd9dfc8e8f4001e1c8d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/microsoft49-composition-74-25mib.json.txt",
+      "bytes": 2411,
+      "characters": 2411,
+      "blob": "41e1b329fa2135d3dc0801da002bd9fb18df0926",
+      "sha256": "5a91a877690a334ad7e6f983d3f992615b806644d342787e970a18875531fa2b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/owner-with-map.patch.txt",
+      "bytes": 9624,
+      "characters": 9624,
+      "blob": "11be474e4a0dec88fced5408258308319668c387",
+      "sha256": "871e87c8d3e3e2c90790f2762a4e932c20463f7fc1f22615b3b664a274eb71aa"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/source74-complete.manifest.json.txt",
+      "bytes": 7896,
+      "characters": 7896,
+      "blob": "3f8aa856de3d8e76037f19ed8621159b2d0e9c6b",
+      "sha256": "b489fedba7ddb89cb86f6d96e294f6a1cfe5926c3ba2ee9e902c02ee50c8b49a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/source74-complete.patch.txt",
+      "bytes": 85530,
+      "characters": 85492,
+      "blob": "c806c83724238d676c53036412704b960cd6d059",
+      "sha256": "a0dbebbd5f3cece5cb4cbf141cd8f83b74c685c1233f7a9ef617bed8744f92a5"
+    }
+  ],
+  "restriction": "Every entry lies in own receipt namespace. Composition artifacts remain .txt inert proposals; active runtime/test/config/fixture blobs must be byte-identical toW5. This envelope file is the one additional receipt, omitted from its own hash inventory to avoid self-reference.",
+  "actual_delivery_commit": "Recorded after CAS/readback in PR85 and pinnedhandoffPR65.",
+  "tests_at_delivery_head": "Not executed; R5/R6 executedW5 via separateS request envelopes.",
+  "guard_delivery": "REQUESTED_NOT_RUN owner45",
+  "GLOBAL_RELEASE": false
+}

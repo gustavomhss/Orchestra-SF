@@ -1,0 +1,508 @@
+{
+  "schema": "sf2h.mission74.independent-static-review.v1",
+  "mission": 74,
+  "finding": "M70-HTTP-01",
+  "state": "ADVISORY_STATIC_NO_NEW_BLOCKER",
+  "authored_at_utc": "2026-11-15 03:47:48 UTC",
+  "signed_by": {
+    "agent_path": "/root/http_review",
+    "model_effective": "unknown",
+    "session_id": null,
+    "signature_kind": "agent-authored receipt; no cryptographic or platform identity attestation claimed"
+  },
+  "review_scope": "Independent read-only source and test review within mission74, including earlier findings returned to the writer; authorship of inert receipt artifacts only. This is not one of the final fresh campaign reviewer slots.",
+  "authorship_exclusions": {
+    "product_authorship": false,
+    "test_authorship": false,
+    "implementation_advice_given": true,
+    "receipt_authorship": [
+      "composition/source74-complete.patch.txt",
+      "composition/source74-complete.manifest.json.txt",
+      "REVIEW74.json"
+    ]
+  },
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "http-body-limit-fix",
+    "base_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "reviewed_commit": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+    "tree_reported_by_writer": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+    "identity_readback": "All ten source postimage blobs fetched through GitHub MCP at reviewed_commit; locally authored artifacts bind those exact bytes.",
+    "product_blobs_unchanged_from_R1_R2_W": "6b09183d6cb6a269fcf0eb4a8cc30844754c81bf",
+    "previous_reviewed_commit": "298c7a72c5d3bb93a4236b6ab6497ca4452aaf67",
+    "W4_to_W5_delta": "Only listener.node-smoke.mjs changed; product and other test blobs are identical."
+  },
+  "reviewed_file_identities": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "role": "product",
+      "blob_sha": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+      "sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
+      "bytes": 9786
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "role": "product",
+      "blob_sha": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+      "sha256": "948b190b53a725c673ac9a57cdf587d20a3f0c2ec351db4af1fc46fd7dd6fab1",
+      "bytes": 25782
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "role": "product",
+      "blob_sha": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+      "sha256": "ca824aaed4746dcfab581e14d67aacc3e3e513ba18fa1e8f35c3e835d367019c",
+      "bytes": 5077
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs",
+      "role": "test",
+      "blob_sha": "1323d00bed4eb829140bf76d0c74b08435071beb",
+      "sha256": "13aa52e1dc36575cd7a0dea7eb886eebbcaef4e6081045e7fa98928097598dbb",
+      "bytes": 11518
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "role": "test",
+      "blob_sha": "878b41f8b050c1d37d55df44028845f1093ac5df",
+      "sha256": "bcb25ff735101fc23c38afb31c05641687e26c5e16303dcf50929af9e4caff9c",
+      "bytes": 16881
+    }
+  ],
+  "verdict": {
+    "static": "No additional static blocker found in the reviewed mission74 implementation and W5 listener-test changes.",
+    "runtime_by_reviewer": "NOT_RUN",
+    "compiler_by_reviewer": "NOT_RUN",
+    "guards_by_reviewer": "NOT_RUN",
+    "integration": "NOT_QUALIFIED",
+    "acceptance": "NOT_QUALIFIED",
+    "GLOBAL_RELEASE": false,
+    "source_hosted_behavior_observed": "R5_NODE_SCOPED_PASS; R6_BUN_SCOPED_PASS"
+  },
+  "reviewed_properties": [
+    "Bytes are counted incrementally before forwarding over-budget chunks or collecting an entire Workbench body. Empty chunks do not grow the Workbench accumulator; malformed UTF-8 is rejected.",
+    "One request stream is consumed. The Web Request is created before application entry and preserved through Workbench admission and dispatch; the bounded helper does not clone after authentication.",
+    "Public NodeHttpServerRequest.toIncomingMessage and NodeStream.fromReadable with closeOnDone:false separate reader cancellation from premature socket destruction, allowing a complete private 400/413 response.",
+    "Abort/disconnect cancellation is wired to the request stream; cancellation does not await an arbitrary producer cancellation promise; listeners and owned reader locks are released.",
+    "Host/origin/proxy checks, Microsoft transport sanitization, no-store/nosniff responses and private error messages remain at the existing boundaries.",
+    "Workbench and delegated workbench-* paths use at most65536bytes. Other streams use the host MaxBodySize service with finite fallback; exact contract routing preserves the domain25MiB allowance while honoring a lower explicit host budget.",
+    "W5 tests preserve incomplete-body complete=false assertions while observing physical socket close/destruction and data/readable listener cleanup. Strict IncomingMessage.destroyed/aborted/close is required for disconnect during an active request, not every answered incomplete request. The Bun raw client waits for remote EOF without sending body EOF."
+  ],
+  "harness_diagnostics": [
+    {
+      "id": "R1_CLIENT_FRAMING",
+      "run_id": 43672107164,
+      "job_id": 132684203598,
+      "W": "6b09183d6cb6a269fcf0eb4a8cc30844754c81bf",
+      "S": "49fd588c41d5e58e7253ef7b1599a5d9d85e3b05",
+      "observed": "Bun1.3.14 returned400 with empty bytes for the one-chunk malformed JSON stimulus while the valid65536-byte case succeeded; the job had12 pass and3 fail.",
+      "diagnosis": "Source-supported client-harness framing issue: Bun defers the first write, and write/end in one tick takes send/startFetch(customBody). The old test imposed Transfer-Encoding:chunked on this non-duplex fast path. Removing the manual header leaves framing to the client and preserves the explicit real-chunked/no-Content-Length assertions in the multi-chunk valid case.",
+      "confidence_boundary": "No packet capture or runtime reproduction was executed by this reviewer. The matching invalid-input case passed in R3 after the harness correction.",
+      "source_ids": [
+        "bun-client"
+      ]
+    },
+    {
+      "id": "R1_RESPONSE_LIFECYCLE",
+      "run_id": 43672107164,
+      "job_id": 132684203598,
+      "observed": "Two tests timed out waiting for IncomingMessage.close after their functional413/upload assertions.",
+      "diagnosis": "Bun ServerResponse.end detaches the socket and clears socket._httpMessage; NodeHTTPServerSocket close handling finds the request through that field. Therefore response completion can omit the server IncomingMessage.close event in this shim. Revised Bun tests observe response finish/close, reader-listener cleanup and raw-peer EOF for early refusals. The subsequent R4 investigation showed that Node24 also requires a socket-based resource oracle after an early response; strict request destruction remains only for disconnect during active consumption.",
+      "source_ids": [
+        "bun-server"
+      ]
+    },
+    {
+      "id": "R2_NODE_JSON_IMPORT_BOUNDARY",
+      "run_id": 43672317792,
+      "job_id": 132684855603,
+      "W": "6b09183d6cb6a269fcf0eb4a8cc30844754c81bf",
+      "S": "5375e7802c765059927e45e086cd5f34e6c8016d",
+      "observed": "Node24.22.2 reported ERR_IMPORT_ATTRIBUTE_MISSING for product/contracts/freeze-v1.json before HTTP behavior;0 pass,3 fail.",
+      "diagnosis": "The Microsoft installation import graph reaches legacy bare JSON imports. The current Node probe uses the real local installation/Node/Effect bridge without importing that graph. It adds no custom loader, mock transport or product rewrite. Microsoft identity/privacy remains a separate Bun domain test.",
+      "coverage_limit": "This review does not establish that the complete Microsoft graph imports or runs directly under Node24."
+    },
+    {
+      "id": "R3_BUN_LOCAL_COMPLETE_FLAG",
+      "run_id": 43672712025,
+      "job_id": 132686076424,
+      "W": "8bb8322e97adcbc2f10cd1af2a4190cd3bf9c2b6",
+      "S": "410e8d5258c7e3946061977bf4d83536e5b23f36",
+      "observed": "Actual job log:14 pass,1 fail,330 expect calls. The sole failure was listener.test.ts line186 expecting complete=false and receiving true after full413 JSON and remote EOF assertions.",
+      "diagnosis": "For an unconsumed request, Bun ServerResponse.end calls request._dump. That resumes reading with _dumped=true; _read calls emitEOFIncomingMessage, whose next-tick callback sets complete=true without proof that the declared request body arrived.",
+      "W4_change": "Keep CL65537 with no sent body, remote EOF, full413 JSON, zero readableLength, no application entry/writes, and response/reader cleanup in Bun. Assert complete=false strictly on real Node24 for both chunked excess and excessive declared length. No product change accompanies this correction.",
+      "source_ids": [
+        "bun-server",
+        "bun-incoming",
+        "bun-internal"
+      ]
+    },
+    {
+      "id": "R4_NODE_REQUEST_LIFECYCLE",
+      "run_id": 43672975800,
+      "job_id": 132686883458,
+      "W": "298c7a72c5d3bb93a4236b6ab6497ca4452aaf67",
+      "S": "dc3cac158c4f2d63ef47e7f061ec4865f8381a09",
+      "observed": "Actual log:1 pass,0 failed assertions,2 tests cancelled at20000ms. The active disconnect/abort test passed. No intermediate stage diagnostics locate the timed-out awaits or establish completed413 assertions in R4.",
+      "diagnosis": "Node24 resOnFinish removes an answered request from state.incoming before closing the socket. socketOnClose destroys only requests still queued. A partially consumed request is already _consuming and is not dumped; Readable.autoDestroy runs after end, which need not occur for an intentionally incomplete body. NodeStream closeOnDone:false removes its listeners without destroying the IncomingMessage. Thus an unanswered event wait on req.close can hang after the physical resource is already closed.",
+      "memory_boundary": "freeParser/cleanParser clear parser.socket/incoming/outgoing on socket close. A remaining callback on the request or a non-destroyed request object retained by the test does not by itself establish a live reader/socket leak.",
+      "W5_change": "Capture the real socket at the request event, await its close with a3000ms discriminating diagnostic, and require socket.destroyed plus data/readable listener counts zero. Keep complete=false for early rejections and strict IncomingMessage.destroyed/aborted/close for disconnect during consumption. Do not raise test deadlines or call product destroy solely to satisfy flags.",
+      "confidence_boundary": "Diagnosis is supported by pinned Node/Effect sources and the successful R5 result after the test-only oracle correction; no runtime was executed by this reviewer.",
+      "source_ids": [
+        "node-server",
+        "node-incoming",
+        "node-readable",
+        "node-common",
+        "effect-node-stream"
+      ]
+    }
+  ],
+  "primary_sources": {
+    "bun-client": {
+      "repository": "oven-sh/bun",
+      "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "tag_readback": "bun-v1.3.14",
+      "path": "src/js/node/_http_client.ts",
+      "blob_sha": "552c5e6143822d939d59637a5a5f0de6156576bb",
+      "symbols": [
+        "startFetchAfterFirstWriteNT",
+        "pushChunk",
+        "startFetch",
+        "send"
+      ],
+      "line_ranges": [
+        [
+          103,
+          122
+        ],
+        [
+          344,
+          363
+        ],
+        [
+          600,
+          607
+        ]
+      ],
+      "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/js/node/_http_client.ts",
+      "read_via": "GitHub MCP"
+    },
+    "bun-server": {
+      "repository": "oven-sh/bun",
+      "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "tag_readback": "bun-v1.3.14",
+      "path": "src/js/node/_http_server.ts",
+      "blob_sha": "462b6019f341827b0a05dd5b24062152e79982ea",
+      "symbols": [
+        "NodeHTTPServerSocket.#onClose",
+        "ServerResponse.end",
+        "ServerResponse.detachSocket"
+      ],
+      "line_ranges": [
+        [
+          911,
+          925
+        ],
+        [
+          1393,
+          1405
+        ],
+        [
+          1536,
+          1544
+        ]
+      ],
+      "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/js/node/_http_server.ts",
+      "read_via": "GitHub MCP"
+    },
+    "bun-incoming": {
+      "repository": "oven-sh/bun",
+      "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "tag_readback": "bun-v1.3.14",
+      "path": "src/js/node/_http_incoming.ts",
+      "blob_sha": "83de7a47c71e9bdfdc7cb2cdd3af7f947e88db22",
+      "symbols": [
+        "IncomingMessagePrototype._dump",
+        "IncomingMessagePrototype._read"
+      ],
+      "line_ranges": [
+        [
+          209,
+          258
+        ]
+      ],
+      "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/js/node/_http_incoming.ts",
+      "read_via": "GitHub MCP"
+    },
+    "bun-internal": {
+      "repository": "oven-sh/bun",
+      "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "tag_readback": "bun-v1.3.14",
+      "path": "src/js/internal/http.ts",
+      "blob_sha": "ecd92d4c4f011773c125a9ac64accaf2ca68793a",
+      "symbols": [
+        "emitEOFIncomingMessageOuter",
+        "emitEOFIncomingMessage"
+      ],
+      "line_ranges": [
+        [
+          187,
+          194
+        ]
+      ],
+      "url": "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/js/internal/http.ts",
+      "read_via": "GitHub MCP"
+    },
+    "effect-node-stream": {
+      "repository": "Effect-TS/effect",
+      "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+      "path": "packages/platform-node-shared/src/NodeStream.ts",
+      "blob_sha": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+      "symbols": [
+        "fromReadable",
+        "readableToPullUnsafe"
+      ],
+      "reviewed_public_contract": "closeOnDone:false removes reader listeners at scope cleanup without destroying the underlying IncomingMessage.",
+      "read_via": "GitHub MCP in prior review turn"
+    },
+    "node-server": {
+      "repository": "nodejs/node",
+      "commit": "f7f273a9bb6445f6f7fb6349105e7532972045fb",
+      "version": "v24.22.2",
+      "path": "lib/_http_server.js",
+      "blob_sha": "205f64447b0fc24600285d4a120a69a7b6538a88",
+      "symbols": [
+        "socketOnClose",
+        "abortIncoming",
+        "clearIncoming",
+        "resOnFinish"
+      ],
+      "line_ranges": [
+        [
+          911,
+          922
+        ],
+        [
+          1083,
+          1092
+        ],
+        [
+          1096,
+          1129
+        ]
+      ],
+      "url": "https://github.com/nodejs/node/blob/f7f273a9bb6445f6f7fb6349105e7532972045fb/lib/_http_server.js",
+      "read_via": "GitHub MCP in the R4 review turn"
+    },
+    "node-incoming": {
+      "repository": "nodejs/node",
+      "commit": "f7f273a9bb6445f6f7fb6349105e7532972045fb",
+      "version": "v24.22.2",
+      "path": "lib/_http_incoming.js",
+      "blob_sha": "13ff5b6b30fc470575141c11841e9f92338a8d60",
+      "symbols": [
+        "IncomingMessage._read",
+        "IncomingMessage._destroy",
+        "IncomingMessage._dump"
+      ],
+      "line_ranges": [
+        [
+          258,
+          305
+        ],
+        [
+          497,
+          523
+        ]
+      ],
+      "url": "https://github.com/nodejs/node/blob/f7f273a9bb6445f6f7fb6349105e7532972045fb/lib/_http_incoming.js",
+      "read_via": "GitHub MCP in the R4 review turn"
+    },
+    "node-readable": {
+      "repository": "nodejs/node",
+      "commit": "f7f273a9bb6445f6f7fb6349105e7532972045fb",
+      "version": "v24.22.2",
+      "path": "lib/internal/streams/readable.js",
+      "blob_sha": "c213af3f97f633757b4f06680050803e0dc0627d",
+      "symbols": [
+        "endReadableNT",
+        "autoDestroy"
+      ],
+      "line_ranges": [
+        [
+          1771,
+          1800
+        ]
+      ],
+      "url": "https://github.com/nodejs/node/blob/f7f273a9bb6445f6f7fb6349105e7532972045fb/lib/internal/streams/readable.js",
+      "read_via": "GitHub MCP in the R4 review turn"
+    },
+    "node-common": {
+      "repository": "nodejs/node",
+      "commit": "f7f273a9bb6445f6f7fb6349105e7532972045fb",
+      "version": "v24.22.2",
+      "path": "lib/_http_common.js",
+      "blob_sha": "d5e7bdedee39fb14f7839991bd2c81fd31c78363",
+      "symbols": [
+        "freeParser",
+        "cleanParser"
+      ],
+      "line_ranges": [
+        [
+          188,
+          209
+        ],
+        [
+          286,
+          298
+        ]
+      ],
+      "url": "https://github.com/nodejs/node/blob/f7f273a9bb6445f6f7fb6349105e7532972045fb/lib/_http_common.js",
+      "read_via": "GitHub MCP in the R4 review turn"
+    }
+  },
+  "mandatory_gates_and_limits": [
+    {
+      "owner": "45",
+      "state": "REQUIRED_NOT_QUALIFIED_BY_THIS_REVIEW",
+      "requirement": "Run the authorized scoped compiler/typecheck/guard workflow for the actual source and integration candidate. No local product check was substituted."
+    },
+    {
+      "owner": "71",
+      "state": "REQUIRED_NOT_QUALIFIED_BY_THIS_REVIEW",
+      "requirement": "Reconcile target preimages, leases and source authority; integrate the complete source/map composition, refresh actual Microsoft material hashes as needed, and independently recheck the integrated candidate. Source receipts do not qualify the target stack."
+    },
+    {
+      "owner": "52/71 authorized server policy owner",
+      "state": "INERT_PROPOSAL_PENDING_AUTHORIZED_INTEGRATION",
+      "requirement": "The existing global Content-Length16MiB middleware can reject valid contract uploads in16–25MiB before this route. The owner-25mib patch changes BodyLimit/routes/serve through a trusted installation-scoped policy; it requires separate authorization, compiler/transport qualification and Microsoft map refresh. It has not been applied by74."
+    },
+    {
+      "owner": "authorized procurement/domain policy owner",
+      "state": "POLICY_COMPATIBILITY_GAP",
+      "requirement": "A configured procurement cap above16MiB may exceed the newly enforced generic transport default. This review does not claim compatibility for every dynamic cap; resolve the trusted policy contract before asserting it."
+    },
+    {
+      "owner": "Node/Microsoft runtime owner",
+      "state": "COVERAGE_LIMIT",
+      "requirement": "Node24 probe covers the local installation boundary; canonical Microsoft identity/privacy is tested separately in Bun. Legacy bare JSON imports remain outside74 and prevent claiming full Microsoft Node24 execution."
+    },
+    {
+      "owner": "71/S0 final campaign",
+      "state": "REQUIRED_NOT_REPLACED",
+      "requirement": "Keep the final eight selections, six AM, independent fresh reviews and C-G7/D-G8 acceptance gates. This advisory source review replaces none of them."
+    }
+  ],
+  "additional_claim_limits": [
+    "Bridge enforcement bounds bytes actually consumed. An arbitrary handler that ignores its body can perform effects before valid EOF; no universal no-write-before-EOF claim is made for every SfInstallation.handler.",
+    "A short Content-Length delimits the HTTP message. Tests reject the truncated JSON case; they do not prove detection of every trailing byte or subsequent pipelined message as part of that same body.",
+    "The canonical binary-domain fixture proves an authorized upload above65536bytes with exact retained bytes and scanner refusal, not the unintegrated25MiB policy boundary or a live malware-scanner service.",
+    "The existing binary application readBytes consumer can retain a closed Web reader lock. Universal WebBody.locked=false is not asserted; this out-of-scope application.ts behavior is not rewritten.",
+    "Upstream private implementation symbols were read only to diagnose Bun behavior. Mission74 production code uses public Effect/Node APIs, not those private symbols.",
+    "The Node probe destroys its client after response end. Its socket oracle proves physical cleanup after the complete response; it does not alone prove server-initiated closure without client cooperation. The separate Bun raw-wire cases require remote EOF before client destruction."
+  ],
+  "artifacts": {
+    "complete_source_patch": {
+      "path": "composition/source74-complete.patch.txt",
+      "blob_sha": "c806c83724238d676c53036412704b960cd6d059",
+      "sha256": "a0dbebbd5f3cece5cb4cbf141cd8f83b74c685c1233f7a9ef617bed8744f92a5",
+      "bytes": 85530
+    },
+    "complete_source_manifest": {
+      "path": "composition/source74-complete.manifest.json.txt",
+      "blob_sha": "3f8aa856de3d8e76037f19ed8621159b2d0e9c6b",
+      "sha256": "b489fedba7ddb89cb86f6d96e294f6a1cfe5926c3ba2ee9e902c02ee50c8b49a",
+      "bytes": 7896
+    }
+  },
+  "execution_accounting": {
+    "reviewer_product_tests": 0,
+    "reviewer_typechecks": 0,
+    "reviewer_guards": 0,
+    "reviewer_builds": 0,
+    "reviewer_ci_dispatches": 0,
+    "reviewer_github_writes": 0,
+    "reviewer_product_or_test_writes": 0,
+    "permitted_operations": [
+      "Read local and GitHub source",
+      "Read actual existing hosted job logs",
+      "Compute content identities and unified source diff",
+      "Write the three own-receipt artifacts only"
+    ]
+  },
+  "hosted_runtime_observations": [
+    {
+      "id": "R5_NODE_SCOPED",
+      "state": "PASS_SCOPED_NODE_TRANSPORT",
+      "execution_coordinator": "/root",
+      "execution_environment": "GitHub Actions; Node24.22.2; ubuntu-24.04",
+      "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+      "S": "4185f64af08e01c885c471db0988a2da3c951841",
+      "run_id": 43673455601,
+      "job_id": 132688348708,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673455601/job/132688348708",
+      "result": {
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0
+      },
+      "reviewer_observation": "Read the author RUN-05.json receipt and actual hosted job log through GitHub MCP. The reviewer did not dispatch or execute the test.",
+      "source_binding_basis": "Author RUN-05.json binds W/S; all ten W source blobs were separately read through GitHub MCP by the reviewer.",
+      "qualified_scope": "The three selected real Node/Effect local-installation listener tests: incremental Workbench/general budgets, complete private body-error responses, Host/origin boundaries, binary octets, physical socket/reader cleanup and active-request disconnect identity/abort.",
+      "excluded_claims": [
+        "Whole Microsoft import graph under Node24",
+        "Canonical domain/auth journeys under Node24",
+        "Integrated stack qualification",
+        "25MiB owner policy integration",
+        "Compiler/guard gates",
+        "Global release",
+        "Omni runtime proof"
+      ]
+    },
+    {
+      "id": "R6_BUN_SCOPED",
+      "state": "PASS_SCOPED_AUTHENTICATED_CONSUMERS",
+      "execution_coordinator": "/root",
+      "execution_environment": "GitHub Actions; Bun1.3.14; ubuntu-24.04; production NodeHttpServer through Bun node:http compatibility",
+      "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+      "S": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+      "run_id": 43673697145,
+      "job_id": 132689107232,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673697145/job/132689107232",
+      "result": {
+        "tests": 15,
+        "pass": 15,
+        "fail": 0,
+        "expect_calls": 341,
+        "actual_selected_files": [
+          "./Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+          "./Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts",
+          "./Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+          "./Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts"
+        ],
+        "omni": {
+          "scope": "declared",
+          "nonce": "7386bedfeda3e2beeac88c372e91d7ba",
+          "nonce_matches_job_environment": true,
+          "verdict": "not applicable",
+          "detail": "focused: no declaring test ran"
+        }
+      },
+      "reviewer_observation": "Read the author RUN-06.json receipt and actual hosted job log through GitHub MCP:15 pass,0 fail,341 expect calls across4 selected files. The reviewer did not dispatch or execute the tests.",
+      "source_binding_basis": "Author RUN-06.json binds W/S; source is the same previously reviewed W5, with unchanged product/test bytes.",
+      "qualified_scope": "The four selected Workbench, binary-domain, actual listener and Microsoft bridge test files on this source: byte limits and malformed/truncated input, original request/command identity, authenticated domain effects and binary preservation, socket/reader cleanup, Host/origin/proxy and Microsoft cookie/privacy boundaries.",
+      "excluded_claims": [
+        "Whole Microsoft graph under Node24",
+        "Live Microsoft tenant/provider or live malware-scanner qualification",
+        "Integrated stack qualification",
+        "25MiB owner policy integration",
+        "Compiler/guard gates",
+        "Global release",
+        "Omni spawning coverage"
+      ],
+      "omni_boundary": "The real focused-run verdict is not applicable, not a spawning PASS; nonce7386bedfeda3e2beeac88c372e91d7ba is bound in the author run receipt."
+    }
+  ]
+}

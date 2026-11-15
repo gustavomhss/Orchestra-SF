@@ -1,0 +1,289 @@
+diff --git a/apps/cli/src/sucafina-product/installation.ts b/apps/cli/src/sucafina-product/installation.ts
+index 21236af83e4de879242fd298d9e15a9923f3bf41..8a62babdccaa4bcecbfc64e385b728315208a7c1 100644
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -1,10 +1,11 @@
+ import path from "node:path"
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
++import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect, Layer } from "effect"
++import { Effect, Layer, Option, Stream } from "effect"
+ import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+-import { createSfHostRuntime } from "./host-context"
++import { limitRequestBody, requestBodyLength, RequestBodyError } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
+ import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
+ 
+ export type SfInstallation = {
+@@ -18,6 +19,7 @@
+ /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
+ export async function loadSfInstallation(file: string, origin: string) {
+   if (!path.isAbsolute(file) || new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ABSOLUTE_PATH_AND_ORIGIN_REQUIRED")
++  const { createSfHostRuntime } = await import("./host-context")
+   const module = await import(pathToFileURL(await realpath(file)).href)
+   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
+   const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime })
+@@ -37,21 +39,80 @@
+   const privacy = transport ? Layer.succeed(HttpMiddleware.TracerDisabledWhen)(() => true) : Layer.empty
+   const route = Effect.gen(function* () {
+     const incoming = yield* HttpServerRequest.HttpServerRequest
+-    if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+-    // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
++    if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return rejectIncoming(incoming, 403)
++    // Forwarded hints are removed before either Node URL conversion or Microsoft admission.
+     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
+-    const web = yield* HttpServerRequest.toWeb(sanitized)
+-    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
+-    const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+-    if (!request) return HttpServerResponse.empty({ status: 403 })
+-    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
+-    return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+-  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
++    const source = sanitized.source instanceof Request ? sanitized.source : undefined
++    const url = source ? new URL(source.url) : Option.getOrUndefined(HttpServerRequest.toURL(sanitized))
++    if (!url || url.origin !== requestOrigin) return rejectIncoming(incoming, 403)
++    if ((incoming.method === "GET" || incoming.method === "HEAD") && (sanitized.headers["transfer-encoding"] !== undefined || Number(sanitized.headers["content-length"]) > 0)) return rejectIncoming(incoming, 400)
++    const configured = yield* HttpServerRequest.MaxBodySize
++    const maximum = Number(configured ?? 16 * 1024 * 1024)
++    const mode = url.searchParams.get("sf")
++    // Keep the domain's 25MiB contract stream budget, while honoring smaller explicit host limits.
++    const limit = mode === "workbench" || mode?.startsWith("workbench-")
++      ? Math.min(maximum, 65536)
++      : incoming.method === "POST" && url.pathname === `${installation.mount}/dashboard` && !url.searchParams.has("sf") && url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract"
++        ? maximum === 16 * 1024 * 1024 ? 25 * 1024 * 1024 : Math.min(maximum, 25 * 1024 * 1024)
++        : maximum
++    const response = yield* Effect.tryPromise({
++      try: async (signal) => {
++        // Reject the hint before creating a stream/fiber or allocating from caller-controlled sizes.
++        const declared = (() => {
++          try { return requestBodyLength(sanitized.headers["content-length"] ?? null, limit) }
++          catch (error) {
++            if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
++            throw error
++          }
++        })()
++        const boundSignal = source ? AbortSignal.any([signal, source.signal]) : signal
++        if (boundSignal.aborted) {
++          if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
++          return bodyFailure(400)
++        }
++        const raw = incoming.method === "GET" || incoming.method === "HEAD" ? null : source ? source.body : Stream.toReadableStream(
++          NodeStream.fromReadable<Uint8Array, RequestBodyError>({
++            evaluate: () => NodeHttpServerRequest.toIncomingMessage(sanitized),
++            // Cancelling the reader must not destroy the socket before the 413 response is flushed.
++            closeOnDone: false,
++            onError: () => new RequestBodyError(400),
++          }), { strategy: { highWaterMark: 0 } },
++        )
++        const bounded = limitRequestBody(raw, { limit, declared, signal: boundSignal })
++        try {
++          if (bounded.failure()) return bodyFailure(bounded.failure()!.status)
++          const web = new Request(url, { method: incoming.method, headers: sanitized.headers, body: bounded.body, signal: boundSignal, redirect: source?.redirect ?? "follow", ...(bounded.body ? { duplex: "half" } : {}) })
++          const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
++          const result = request ? await installation.handler(request).catch(() => new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })) : new Response(null, { status: 403 })
++          // Some domain parsers classify reader errors themselves. Only this private budget can override them.
++          const failure = bounded.failure()
++          if (failure) return bodyFailure(failure.status)
++          const reply = result ?? new Response(null, { status: request ? 404 : 403 })
++          if (bounded.complete()) return reply
++          const closed = new Response(reply.body, reply)
++          closed.headers.set("connection", "close")
++          return closed
++        } finally { bounded.dispose() }
++      },
++      catch: (error) => error instanceof RequestBodyError ? error : "installation-unavailable" as const,
++    }).pipe(Effect.catch((error) => Effect.succeed(error instanceof RequestBodyError ? bodyFailure(error.status) : new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", connection: "close" } }))))
++    return HttpServerResponse.fromWeb(response)
++  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503, headers: { "cache-control": "no-store", "x-content-type-options": "nosniff", connection: "close" } }))))
+   // The listener must install privacy before HttpRouter.serve, outside the request route.
+   // Effect registers a trailing wildcard at both the subtree and its base path.
+   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+ }
+ 
++function bodyFailure(status: 400 | 413) {
++  return Response.json({ status: "invalid" }, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", connection: "close" } })
++}
++
++function rejectIncoming(request: HttpServerRequest.HttpServerRequest, status: 400 | 403) {
++  const source = request.source
++  if (source instanceof Request && source.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
++  return HttpServerResponse.empty({ status, headers: { "cache-control": "no-store", "x-content-type-options": "nosniff", connection: "close" } })
++}
++
+ function readTransport(value: unknown, origin: string): MicrosoftTransport | undefined {
+   if (value === undefined) return undefined
+   if (!value || typeof value !== "object" || Object.keys(value).length !== 4 ||
+diff --git a/modules/sucafina/Sucafinav1/runtime/request-body.ts b/modules/sucafina/Sucafinav1/runtime/request-body.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b3cca2a473258633bd00c9c29de7189cb52a5ce
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/runtime/request-body.ts
+@@ -0,0 +1,144 @@
++/** Public errors contain no body, URL, cookie or upstream failure details. */
++export class RequestBodyError extends Error {
++  readonly status: 400 | 413
++
++  constructor(status: 400 | 413) {
++    super(status === 413 ? "Request body too large" : "Invalid request body")
++    this.name = "RequestBodyError"
++    this.status = status
++  }
++}
++
++/** Validate the hint without allocating from it; the stream must still match it. */
++export function requestBodyLength(value: string | null, limit: number): number | undefined {
++  if (!Number.isSafeInteger(limit) || limit < 0) throw new Error("Finite request body limit required")
++  if (value === null) return undefined
++  if (!/^[0-9]+$/.test(value)) throw new RequestBodyError(400)
++  const length = Number(value)
++  if (length > limit || !Number.isSafeInteger(length)) throw new RequestBodyError(413)
++  return length
++}
++
++/** One lazy reader, zero read-ahead and a byte budget checked before enqueueing. */
++export function limitRequestBody(source: ReadableStream<Uint8Array> | null, input: {
++  limit: number
++  declared?: number
++  signal: AbortSignal
++}) {
++  const state = {
++    bytes: 0,
++    ended: false,
++    complete: !source,
++    failure: undefined as RequestBodyError | undefined,
++    reader: undefined as ReadableStreamDefaultReader<Uint8Array> | undefined,
++    controller: undefined as ReadableStreamDefaultController<Uint8Array> | undefined,
++  }
++  const release = (cancel: boolean) => {
++    input.signal.removeEventListener("abort", aborted)
++    const reader = state.reader
++    state.reader = undefined
++    // Cancel closes pending reads synchronously. Do not await an arbitrary source's cancel hook.
++    if (reader) {
++      if (cancel) void reader.cancel().catch(() => undefined)
++      reader.releaseLock()
++      return
++    }
++    if (cancel && source && !source.locked) void source.cancel().catch(() => undefined)
++  }
++  const reject = (status: 400 | 413) => {
++    if (state.ended) return
++    state.ended = true
++    state.failure = new RequestBodyError(status)
++    state.controller?.error(state.failure)
++    release(true)
++  }
++  const aborted = () => reject(400)
++  const body = source ? new ReadableStream<Uint8Array>({
++    start(controller) {
++      state.controller = controller
++      input.signal.addEventListener("abort", aborted, { once: true })
++      if (input.signal.aborted) aborted()
++    },
++    async pull(controller) {
++      if (state.ended) return
++      try {
++        const reader = state.reader ??= source.getReader()
++        for (;;) {
++          const chunk = await reader.read()
++          if (state.ended) return
++          if (input.signal.aborted) return reject(400)
++          if (chunk.done) {
++            if (input.declared !== undefined && state.bytes !== input.declared) return reject(400)
++            state.ended = true
++            state.complete = true
++            release(false)
++            controller.close()
++            return
++          }
++          if (!(chunk.value instanceof Uint8Array)) return reject(400)
++          if (!chunk.value.byteLength) continue
++          if (chunk.value.byteLength > input.limit - state.bytes) return reject(413)
++          if (input.declared !== undefined && chunk.value.byteLength > input.declared - state.bytes) return reject(400)
++          state.bytes += chunk.value.byteLength
++          controller.enqueue(chunk.value)
++          return
++        }
++      } catch {
++        reject(400)
++      }
++    },
++    cancel() {
++      if (state.ended) return
++      state.ended = true
++      release(true)
++    },
++  }, { highWaterMark: 0 }) : null
++  if (!source && input.declared) state.failure = new RequestBodyError(400)
++  return {
++    body,
++    failure: () => state.failure,
++    complete: () => state.complete,
++    dispose() {
++      if (state.ended) return
++      state.ended = true
++      state.controller?.error(new RequestBodyError(400))
++      release(true)
++    },
++  }
++}
++
++/** Read the existing Request once; no cloning after authentication or command binding. */
++export async function readRequestBody(request: Request, limit: number): Promise<Uint8Array> {
++  const declared = (() => {
++    try {
++      return requestBodyLength(request.headers.get("content-length"), limit)
++    } catch (error) {
++      if (request.body && !request.body.locked) void request.body.cancel().catch(() => undefined)
++      throw error
++    }
++  })()
++  const bounded = limitRequestBody(request.body, { limit, declared, signal: request.signal })
++  const reader = bounded.body?.getReader()
++  const chunks: Uint8Array[] = []
++  const size = { bytes: 0 }
++  try {
++    if (bounded.failure()) throw bounded.failure()
++    if (request.signal.aborted) throw new RequestBodyError(400)
++    if (!reader) return new Uint8Array()
++    for (;;) {
++      const chunk = await reader.read()
++      if (chunk.done) break
++      size.bytes += chunk.value.byteLength
++      chunks.push(chunk.value)
++    }
++    const bytes = new Uint8Array(size.bytes)
++    chunks.reduce((offset, chunk) => {
++      bytes.set(chunk, offset)
++      return offset + chunk.byteLength
++    }, 0)
++    return bytes
++  } finally {
++    reader?.releaseLock()
++    bounded.dispose()
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+index 164c8208067d9feaa2c720adfd9e8bf27e272715..eb7322e915c61594a6cf1a05d562dc39ad7b6c38 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -1,4 +1,5 @@
+ import { procurementAlternativesForm, procurementAlternativesScript } from "../ui/procurement-alternatives.ts"
++import { readRequestBody, RequestBodyError } from "../../runtime/request-body.ts"
+ import type { SfHostServices } from "../contracts/host-context.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+@@ -91,9 +92,9 @@
+       if (request.method !== "POST") return reply({ status: "denied" }, 405)
+       if (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1 || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "invalid" }, 400)
+-      const body = await request.text()
+-      if (new TextEncoder().encode(body).byteLength > 65536) return reply({ status: "invalid" }, 413)
+-      const parsed: unknown = await Promise.resolve().then(() => JSON.parse(body)).catch(() => undefined)
++      const bytes = await readRequestBody(request, 65536).catch((error: unknown) => error instanceof RequestBodyError ? error : new RequestBodyError(400))
++      if (bytes instanceof RequestBodyError) return reply({ status: "invalid" }, bytes.status)
++      const parsed: unknown = await Promise.resolve().then(() => JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))).catch(() => undefined)
+       if (!parsed || typeof parsed !== "object" || Array.isArray(parsed) || Object.keys(parsed).some((key) => !["operation", "input"].includes(key)) || !("operation" in parsed) || !("input" in parsed)) return reply({ status: "invalid" }, 400)
+       const operation = parsed.operation
+       if (operation !== "sf_case_draft" && operation !== "sf_question_prepare" && operation !== "sf_change_prepare") return reply({ status: "denied" }, 403)

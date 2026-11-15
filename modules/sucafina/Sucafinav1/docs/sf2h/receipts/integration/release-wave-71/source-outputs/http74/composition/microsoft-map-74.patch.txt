@@ -1,0 +1,63 @@
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..cd6a91c9f6fb11972220a11728300b6d7cdded6b
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json
+@@ -0,0 +1,44 @@
++{
++  "schema": "sf2h.microsoft49-composition.v1",
++  "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
++  "source_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
++  "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
++  "target_base": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
++  "source_tests_do_not_qualify_composition": true,
++  "validation": "NOT_RUN. Mission45 owns compiler/generation/spawn/guards; product CI/AM remain with S0 or explicitly authorized qualifiers. This file and the original archived source artifacts are material test inputs.",
++  "files": [
++    {
++      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
++      "mode": "100644",
++      "target_preimage_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
++      "postimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
++      "postimage_sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
++      "bytes": 25080,
++      "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
++      "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
++      "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
++    },
++    {
++      "path": "apps/cli/src/sucafina-product/installation.ts",
++      "mode": "100644",
++      "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
++      "postimage_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
++      "postimage_sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
++      "bytes": 9786,
++      "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
++      "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
++      "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
++    },
++    {
++      "path": "apps/cli/src/commands/handlers/serve.ts",
++      "mode": "100644",
++      "target_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
++      "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
++      "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
++      "bytes": 8960,
++      "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
++      "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
++      "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
++    }
++  ]
++}
+diff --git a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
+index bf99964856dca491e5ccf922f76a5e3e1fb6b22b..6517ff7b77fcb48bd0c471352d3906ddd43157f0 100644
+--- a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
+@@ -20,7 +20,7 @@
+   const postimage = await readFile(path.join(receipts, entry.postimage))
+   const canonical = await readFile(path.join(repository, target))
+   if (sha256(preimage) !== entry.preimage_sha256 || blob(preimage) !== entry.source_blob || sha256(postimage) !== entry.postimage_sha256 || blob(postimage) !== entry.postimage_blob) throw new Error("Integration artifact drift")
+-  const composition = JSON.parse(await readFile(path.join(intake, "microsoft49-composition.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
++  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
+   if (composition.schema !== "sf2h.microsoft49-composition.v1" || composition.source_release !== "74ba5b7f71182e531049b8c56fe304c3bec4c3db" || composition.source_manifest_blob !== blob(manifestBytes) || !Array.isArray(composition.files) || composition.files.length !== manifest.files.length || new Set(composition.files.map((file) => file.path)).size !== manifest.files.length || composition.files.some((file) => !manifest.files.some((source) => source.path === file.path && source.postimage_blob === file.source_postimage_blob && source.postimage_sha256 === file.source_postimage_sha256))) throw new Error("Integration composition mapping drift")
+   const installed = composition.files.find((file) => file.path === target)
+   if (!installed || blob(canonical) !== installed.postimage_blob || sha256(canonical) !== installed.postimage_sha256) throw new Error("Integration installed source drift requires owner reconciliation")

@@ -1,0 +1,300 @@
+{
+  "schema": "sf2h.mission74.evidence-index.v1",
+  "mission": 74,
+  "finding": "M70-HTTP-01",
+  "source": {
+    "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+    "tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "branch": "http-body-limit-fix",
+    "PR": 85
+  },
+  "observed_at": "2026-11-15 03:47:11 UTC",
+  "state": "SOURCE_SCOPED_TESTS_PASS_INTEGRATION_GATES_OPEN",
+  "final_results": {
+    "Node": {
+      "run": 43673455601,
+      "job": 132688348708,
+      "S": "4185f64af08e01c885c471db0988a2da3c951841",
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0
+    },
+    "Bun": {
+      "run": 43673697145,
+      "job": 132689107232,
+      "S": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+      "pass": 15,
+      "fail": 0,
+      "expect_calls": 341,
+      "omni": "not applicable; nonce bound to job"
+    }
+  },
+  "all_runs": [
+    {
+      "sequence": 1,
+      "kind": "bun",
+      "W": "6b09183d6cb6a269fcf0eb4a8cc30844754c81bf",
+      "W_tree": "66ed5597470d4a5729b8ef536fe8e96996677c7a",
+      "S": "49fd588c41d5e58e7253ef7b1599a5d9d85e3b05",
+      "S_tree": "90316c5ca652c159807dbb0a6dfa30b93d6d3cac",
+      "run": 43672107164,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672107164",
+      "attempt": 1,
+      "conclusion": "failure",
+      "test_job": 132684203598,
+      "receipt": "checks/RUN-01.json"
+    },
+    {
+      "sequence": 2,
+      "kind": "node",
+      "W": "6b09183d6cb6a269fcf0eb4a8cc30844754c81bf",
+      "W_tree": "66ed5597470d4a5729b8ef536fe8e96996677c7a",
+      "S": "5375e7802c765059927e45e086cd5f34e6c8016d",
+      "S_tree": "bc45bc9fae54326517e822d8d2e110c712146a32",
+      "run": 43672317792,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672317792",
+      "attempt": 1,
+      "conclusion": "failure",
+      "test_job": 132684855603,
+      "receipt": "checks/RUN-02.json"
+    },
+    {
+      "sequence": 3,
+      "kind": "bun",
+      "W": "8bb8322e97adcbc2f10cd1af2a4190cd3bf9c2b6",
+      "W_tree": "852245912e74f21a2b43df63c20c2e1651dc82fd",
+      "S": "410e8d5258c7e3946061977bf4d83536e5b23f36",
+      "S_tree": "d9aa2a20f02ff53be6b3fa4d143a9420aeccad39",
+      "run": 43672712025,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672712025",
+      "attempt": 1,
+      "conclusion": "failure",
+      "test_job": 132686076424,
+      "receipt": "checks/RUN-03.json"
+    },
+    {
+      "sequence": 4,
+      "kind": "node",
+      "W": "298c7a72c5d3bb93a4236b6ab6497ca4452aaf67",
+      "W_tree": "70f48a8c0331b7cee33358336e5eeb3d71cacc66",
+      "S": "dc3cac158c4f2d63ef47e7f061ec4865f8381a09",
+      "S_tree": "cf38227f173bf5b77fdf5d0fcf79561666dbf422",
+      "run": 43672975800,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672975800",
+      "attempt": 1,
+      "conclusion": "failure",
+      "test_job": 132686883458,
+      "receipt": "checks/RUN-04.json"
+    },
+    {
+      "sequence": 5,
+      "kind": "node",
+      "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+      "W_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+      "S": "4185f64af08e01c885c471db0988a2da3c951841",
+      "S_tree": "c641e7e4b054260c33d75bcf6ec498b97f34cf7f",
+      "run": 43673455601,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673455601",
+      "attempt": 1,
+      "conclusion": "success",
+      "test_job": 132688348708,
+      "receipt": "checks/RUN-05.json"
+    },
+    {
+      "sequence": 6,
+      "kind": "bun",
+      "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+      "W_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+      "S": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+      "S_tree": "8956a7b86c3dfd0d21ba0e89fe6581c4a75d1d11",
+      "run": 43673697145,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673697145",
+      "attempt": 1,
+      "conclusion": "success",
+      "test_job": 132689107232,
+      "receipt": "checks/RUN-06.json"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "M70-HTTP-01",
+      "state": "IMPLEMENTED_AND_SCOPED_TESTS_PASS",
+      "evidence": [
+        "checks/RUN-05.json",
+        "checks/RUN-06.json"
+      ],
+      "claim": "Byte budget enforced before forwarding each chunk to consumers, including absent CL and chunked input. Product bytes unchanged since first publication; helper and actual Node bridge qualified on finalW."
+    },
+    {
+      "id": "M74.AC01-stream-bytes",
+      "state": "PASS_SCOPED_WITH_EXPLICIT_BUSINESS_POLICY_HOLDS",
+      "evidence": [
+        "checks/RUN-05.json",
+        "checks/RUN-06.json"
+      ],
+      "claim": "Workbench65536; valid/invalidJSON, malformedUTF8, multibyte excess, missing/lying/excessiveCL, valid bounded binary. H74-25MIB/H74-PROCUREMENT prevent a universal all-size business claim."
+    },
+    {
+      "id": "M74.AC02-abort-identity",
+      "state": "PASS_SELECTED_CONSUMERS",
+      "evidence": [
+        "checks/RUN-05.json",
+        "checks/RUN-06.json"
+      ],
+      "claim": "One raw consumer; cancel/error/disconnect release readers/sockets. Same Request crosses actual authentication/admission/command/dispatcher. Invalid/oversized/truncated tested command/upload consumers leave durable state unchanged.",
+      "limit": "A generic handler that ignores its body cannot classify an unread oversized stream before its own side effects. Zero-write proof is scoped to tested body-consuming commands/uploads."
+    },
+    {
+      "id": "M74.AC03-auth-privacy",
+      "state": "PASS_COMPONENT_SCOPE",
+      "evidence": [
+        "checks/RUN-06.json"
+      ],
+      "claim": "Canonical Microsoft identity/entry, fixed origin and proxy fences, cookies, CSRF/logout, private error responses and zero spans tested under Bun's real NodeHttpServer adapter. OIDC/Graph peer is synthetic; noAzure/B2B/native claim."
+    },
+    {
+      "id": "M74.AC04-composition",
+      "state": "COMPLETE_PATCHES_READY_FOR_71",
+      "evidence": [
+        "composition/source74-complete.manifest.json.txt",
+        "composition/COMPOSITION-MANIFEST.json.txt",
+        "composition/owner-25mib/OWNER-WITH-MAP-MANIFEST.json.txt"
+      ],
+      "claim": "Exact pre/post blobs, SHA256, full patches, shared-map/fixture and server-policy dependencies provided inertly. No72/73/52 reserved live paths changed."
+    },
+    {
+      "id": "M74.AC05-scoped-api",
+      "state": "SCOPE_AUDIT_PASS_COMPILER_GUARDS_PENDING",
+      "evidence": [
+        "DEPENDENCY-CLOSURE.json",
+        "checks/REQUEST-45.json"
+      ],
+      "claim": "Only3 authorized product files; noProtocol/HttpApi/package/lock/workflow/engine change. Existing publicEffect/Node APIs used; client generation not triggered."
+    },
+    {
+      "id": "WP10.T02.INV.01",
+      "state": "SOURCE_SCOPE_SUPPORTED",
+      "evidence": [
+        "checks/RUN-06.json"
+      ],
+      "claim": "Canonical domain/auth/persistence and fail-closed component scanner; synthetic boundaries explicit, no hidden elevated identity."
+    },
+    {
+      "id": "WP10.T02.INV.10",
+      "state": "SOURCE_SCOPE_SUPPORTED",
+      "evidence": [
+        "checks/RUN-05.json",
+        "checks/RUN-06.json"
+      ],
+      "claim": "New actual hosted executions tied to finalW, not historical reviewer/catalog proof."
+    },
+    {
+      "id": "WP10.T02.QLT.10",
+      "state": "SOURCE_SCOPE_SUPPORTED",
+      "evidence": [
+        "INDEX.json",
+        "composition/source74-complete.manifest.json.txt"
+      ],
+      "claim": "Handlers, versions, hashes, runs/jobs and consumer actions bound."
+    },
+    {
+      "id": "WP10.T04.CHK.01",
+      "state": "SOURCE_ENVELOPE_AUDITED_DELIVERY_GUARD_PENDING",
+      "claim": "EachS has oneW parent and only.ci-run.json delta; later receipt publication must preserve allW material blobs. Any material candidate change requires affected rerun."
+    },
+    {
+      "id": "WP10.T04.CHK.02",
+      "state": "PASS_SOURCE_SELECTIONS",
+      "claim": "FinalNode3 andBun15 collected and executed; nozero-test green."
+    },
+    {
+      "id": "WP10.T04.CHK.03",
+      "state": "COMPLIED",
+      "claim": "No local product tests; all6runs use existing hostedtest-ci via MCP snapshots, maxone74inflight."
+    },
+    {
+      "id": "WP10.T04.INV.01",
+      "state": "GLOBAL_UX_NOT_CLAIMED",
+      "claim": "SourceCI does not qualify fullUX/installedjourneys/required independentcampaignreviews."
+    },
+    {
+      "id": "WP10.T04.INV.10",
+      "state": "COMPLIED_SOURCE_DIFF",
+      "claim": "NoCI/validator/engine change, skip, suppressed finding or increased deadline."
+    },
+    {
+      "id": "WP10.T04.QLT.01",
+      "state": "COMPLIED_SOURCE_SCOPE",
+      "claim": "Reruns addressed concrete framing/lifecycle/import failures; priorfailedruns retained. Evidence-only delivery does not invent a productexecution."
+    },
+    {
+      "id": "WP10.T04.SUC.01",
+      "state": "TRACEABLE_SOURCE_RESULTS",
+      "claim": "INDEX binds everyW/S/run/job/attempt; final18passed cases belong toW5 only; previousfails/cancels remain inRUN01–04."
+    },
+    {
+      "id": "CAMP.INV.02",
+      "state": "PRESERVED_NO_CAMPAIGN_ACCEPTANCE_CLAIM",
+      "claim": "Immutable plan and T0 retained; no campaign-wide PASS."
+    },
+    {
+      "id": "CAMP.INV.04",
+      "state": "PRESERVED_NO_CAMPAIGN_ACCEPTANCE_CLAIM",
+      "claim": "Path leases and singlewriter boundaries retained;71 remainssoleintegrator."
+    },
+    {
+      "id": "CAMP.INV.07",
+      "state": "PRESERVED_NO_CAMPAIGN_ACCEPTANCE_CLAIM",
+      "claim": "Capabilities and native/Microsoft/external prerequisites are not fabricated; GLOBAL_RELEASE=false."
+    }
+  ],
+  "artifacts": {
+    "source_patch": "composition/source74-complete.patch.txt",
+    "source_manifest": "composition/source74-complete.manifest.json.txt",
+    "primary_composition": "composition/compose-74.patch.txt",
+    "map_only": "composition/microsoft-map-74.patch.txt",
+    "complete_owner_supplement": "composition/owner-25mib/owner-with-map.patch.txt",
+    "dependencies": "DEPENDENCY-CLOSURE.json",
+    "review": "REVIEW74.json",
+    "handoff": "HANDOFF-71.json",
+    "compiler_request": "checks/REQUEST-45.json"
+  },
+  "holds": [
+    {
+      "id": "H74-45",
+      "owner": 45,
+      "state": "REQUESTED_NOT_RUN",
+      "requirement": "bun typecheck in apps/cli and modules/sucafina; bun run check:guards --base origin/dev with exact real dev/merge-base. Source tests and static review do not replace these checks.",
+      "concrete_payload": "checks/REQUEST-45.json"
+    },
+    {
+      "id": "H74-MAP",
+      "owner": 71,
+      "state": "COMPLETE_INERT_PATCH_NOT_APPLIED",
+      "requirement": "Compose the complete10-path source unit and the new Microsoft map/fixture lookup atomically, preserving all49/55 archive/schema/count/source-pair/canonical-hash fences. Recheck the mapped Microsoft suites on the exact composed tree.",
+      "concrete_payload": "composition/microsoft-map-74.patch.txt"
+    },
+    {
+      "id": "H74-25MIB",
+      "owner": "71 plus server/CLI path owners",
+      "state": "COMPLETE_INERT_OWNER_PATCH_NOT_QUALIFIED",
+      "requirement": "Inherited global Content-Length preflight rejects contracts above16MiB before the handler's25MiB business limit. Apply/review the explicit finite installation policy and exact corresponding serve map before claiming declared16–25MiB preservation. Qualify declared/chunked25MiB/+1, malformed selectors, unrelated routes and explicit lower caps.",
+      "concrete_payload": "composition/owner-25mib/owner-with-map.patch.txt",
+      "source_behavior": "W preserves the25MiB contract stream budget when inherited host limit is16MiB; explicit lower limits still prevail. Global declared-length preflight is unchanged."
+    },
+    {
+      "id": "H74-PROCUREMENT",
+      "owner": "71 and73/domain/installation owners",
+      "state": "POLICY_ALIGNMENT_REQUIRED",
+      "requirement": "Procurement's trusted uploadCap/maxFileSize may exceed16MiB. Source74 respects the finite host budget; it does not claim that arbitrary larger configured business budgets pass. Choose and expose a finite trusted installation policy from the canonical settings/owner before qualifying that range; do not invent an unbounded/global override."
+    },
+    {
+      "id": "H74-COMPOSED",
+      "owner": "71,45,S0 and required independent reviewers",
+      "state": "NOT_RUN",
+      "requirement": "Source green is not integrated C proof. Exact-candidate checks, all applicable Microsoft/map rechecks, final eight selections, AM01–06, independent reviews and C/G7,D/G8 remain mandatory."
+    }
+  ],
+  "GLOBAL_RELEASE": false
+}

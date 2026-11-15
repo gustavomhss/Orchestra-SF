@@ -1,0 +1,175 @@
+{
+  "schema": "sf2h.http-body-limit-fix.compiler-request.v1",
+  "mission": 74,
+  "consumer": 45,
+  "state": "REQUESTED_NOT_RUN",
+  "W": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "W_tree": "a98e7957251da2aa6ca65ad63aab4301d14eb32c",
+  "branch": "http-body-limit-fix",
+  "PR": 85,
+  "commands": [
+    {
+      "cwd": "apps/cli",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_ref": "origin/dev",
+      "base_observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "base_observation_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/dev",
+      "base_rule": "Resolve and record the actual origin/dev commit and merge-base on the hosted runner. If dev changed since this observation, record the new exact base and invalidate any dedup key that depended on the old base. Never substitute the candidate as guard base."
+    }
+  ],
+  "scope": "M70-HTTP-01; finalW5 contains3 authorized product paths and7 test/fixture paths. Productblobs unchanged sinceb0f52c02; alltests now qualified atW5. No Protocol/HttpApi/config/package/workflow change.",
+  "authority": {
+    "owner": 45,
+    "source": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/composed-compiler-gates.json",
+    "control_sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "source_blob": "7ca93a297e5ed4d17af5ad832aac4f07154a92de",
+    "lease_epoch": "composed-checks-browser45",
+    "limits": "45 owns the hosted compiler/guard interface.74 does not take astra-check-compose, astra-check-wp09 or another owner's fixed ref, create a new check workflow, alter a validator, run local product checks or dispatch the epic. Package bun typecheck only; never tsc directly.",
+    "current_integrator": 71,
+    "final_epic_and_acceptance": "S0"
+  },
+  "observed_interface": {
+    "observed_at": "2026-11-15 03:24:09 UTC",
+    "branch": "astra-compose",
+    "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "PR": 32,
+    "PR_state": "open draft",
+    "published_scoped_interface": "NOT_OBSERVED",
+    "workflow_inventory": [
+      ".github/workflows/astra-compose-check.yml",
+      ".github/workflows/sf2-epic.yml",
+      ".github/workflows/test-ci.yml"
+    ],
+    "missing_scoped_workflow": ".github/workflows/sf2-scoped-check.yml",
+    "existing_fixed_workflow": {
+      "path": ".github/workflows/astra-compose-check.yml",
+      "blob": "e7a815a797e960e826af4268dd381cb4c5df6ffc",
+      "trigger_ref": "astra-check-compose",
+      "envelope": ".astra-compose-check.json",
+      "admitted_keys": [
+        "productSha",
+        "devSha"
+      ],
+      "optional_delivery_key": "candidateSha",
+      "limitation": "Owner-only fixed ref and broad canonical check selection; it has no scoped command selector. It is not authority for74 to move that ref or to dispatch checks itself.45 must select or publish its authorized interface.",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/d317873c18bf224c4c1f4d3425179d12ad53e81b/.github/workflows/astra-compose-check.yml"
+    },
+    "request_transport": "A pinned REQUEST-45.json and PR32 conversation handoff, following mission64. This JSON is an owner request, not a .ci-run.json or workflow dispatch envelope.",
+    "latest_conversation_observed": {
+      "total_comments": 74,
+      "latest_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888494345",
+      "latest_at": "2026-11-15T03:21:51Z",
+      "summary": "72,73 and75 requested compiler/guards;75 subsequently updated W2 to W3. No new owner45 scoped-interface publication or admission for74 was observed in the PR timeline.",
+      "related_requests": [
+        "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888426195",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888435744",
+        "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888457115"
+      ]
+    }
+  },
+  "recent_check_runs_observed": [
+    {
+      "run": 43604348151,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43604348151",
+      "branch": "astra-check-compose",
+      "S": "771cf5896aa504620ab35a2e44cca2606b7e18c3",
+      "job": 132475647040,
+      "completed_at": "2026-11-14T14:23:58Z",
+      "conclusion": "failure",
+      "step_results": {
+        "sucafina_typecheck": "failure",
+        "cli_typecheck": "success",
+        "atlas_generation": "success",
+        "atlas_typecheck": "success",
+        "spawn_imports": "success",
+        "guards": "success"
+      },
+      "use": "Historical only; this is not W74 and cannot qualify it."
+    },
+    {
+      "run": 43650142544,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650142544",
+      "branch": "astra-check-wp09",
+      "S": "b333525a854cf64099ea8c6601d4da9bb52c8c1e",
+      "job": 132616555993,
+      "completed_at": "2026-11-14T22:51:32Z",
+      "conclusion": "failure",
+      "step_results": {
+        "sucafina_typecheck": "failure",
+        "guards": "success"
+      },
+      "use": "Foreign candidate and fixed ref; not reusable for74."
+    }
+  ],
+  "required_evidence": [
+    "Exact executed W/tree, request snapshot S where applicable, parent/diff relation, command/cwd, compiler/config/runtime/dependency identities and each exit status.",
+    "Actual nonempty compiler program and program/config provenance, including the changed source and relevant tests selected by the canonical package script.",
+    "Diagnostics attributed to exact file/line/code/root cause and source owner, distinguishing introduced from inherited without converting a failing package to PASS.",
+    "Actual GitHub run/job/attempt URLs, logs/artifacts and digests; missing execution remains NOT_RUN and missing required evidence prevents PASS.",
+    "Actual hosted origin/dev SHA and merge-base; guards run against the real dev base without waivers or fabricated approvals."
+  ],
+  "deduplication": "Before admission, compare the exact finalized product tree, commands/cwds, workflow/validator identities, effective runtime/config/dependencies and actual dev base against existing and in-flight requests. Reattach only a truly matching run with complete evidence; do not duplicate an in-flight key or transfer an older green.",
+  "generation": "NOT_REQUESTED: no public Protocol/Server HttpApi, Atlas generation surface, workflow, package dependency or compiler configuration change in product74. The separate server/CLI owner25MiB proposal is inert and excluded from W.",
+  "source_tests": {
+    "status": "PASS_SCOPED_NOT_COMPILER_PROOF",
+    "Node": {
+      "run": 43673455601,
+      "job": 132688348708,
+      "S": "4185f64af08e01c885c471db0988a2da3c951841",
+      "pass": 3,
+      "fail": 0,
+      "cancelled": 0
+    },
+    "Bun": {
+      "run": 43673697145,
+      "job": 132689107232,
+      "S": "7c631e5811c8dd8d28f12a606e275eee19ac3c26",
+      "pass": 15,
+      "fail": 0,
+      "expect_calls": 341,
+      "omni": "not applicable; nonce bound to job"
+    },
+    "receipts": [
+      "checks/RUN-05.json",
+      "checks/RUN-06.json"
+    ],
+    "prior_failures_preserved": [
+      "RUN-01",
+      "RUN-02",
+      "RUN-03",
+      "RUN-04"
+    ]
+  },
+  "composition_limit": "The new Microsoft map/fixture and the separate BodyLimit/routes/serve owner proposal are inert artifacts in this source.71 must compose authorized complete releases, preserve historical49/55 and reconcile any52 transport proposal before requesting checks for its actual candidate. Source74 checks cannot certify that composition, AM01-06, C/G7 or D/G8.",
+  "template": {
+    "source": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-admission-closure/checks/REQUEST-45.json",
+    "commit": "4d0421669054a131de0df0c95994b45229ab354e",
+    "blob": "29799daa727e872a99d4881f651286445a8fec91",
+    "comment_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888007959"
+  },
+  "publication": {
+    "state": "REQUESTED_NOT_RUN",
+    "initial_request_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888604049",
+    "prior_update_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888628258",
+    "final_update": "A final pinnedW5/receipt-envelope update is sent to PR32 after terminal CAS readback; deduplicate any already-admitted work."
+  },
+  "GLOBAL_RELEASE": false,
+  "proof_limits": [
+    "Compiler and guards have not executed for this W.",
+    "No local product tests/checks, no takeover of owner45 workflow/ref.",
+    "No skip, ignored diagnostic, synthetic approval or broad suite.",
+    "Source tests are separate from compiler/guard acceptance; GLOBAL_RELEASE=false."
+  ],
+  "delivery_guard": {
+    "state": "REQUESTED_NOT_RUN",
+    "rule": "Also run requiredguard for the actual evidence-only terminal delivery commit supplied in PR32/PR85 after CAS. Verify its delta fromW5 is restricted to ownreceipt paths and preserves every product/test/config/fixture blob."
+  }
+}

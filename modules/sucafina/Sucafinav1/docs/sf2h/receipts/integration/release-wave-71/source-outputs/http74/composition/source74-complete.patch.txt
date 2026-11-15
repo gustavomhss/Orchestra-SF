@@ -1,0 +1,1420 @@
+diff --git a/apps/cli/src/sucafina-product/installation.ts b/apps/cli/src/sucafina-product/installation.ts
+index 21236af83e4de879242fd298d9e15a9923f3bf41..8a62babdccaa4bcecbfc64e385b728315208a7c1 100644
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -1,10 +1,11 @@
+ import path from "node:path"
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
++import { NodeHttpServerRequest, NodeStream } from "@effect/platform-node"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect, Layer } from "effect"
++import { Effect, Layer, Option, Stream } from "effect"
+ import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+-import { createSfHostRuntime } from "./host-context"
++import { limitRequestBody, requestBodyLength, RequestBodyError } from "../../../../modules/sucafina/Sucafinav1/runtime/request-body.ts"
+ import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
+ 
+ export type SfInstallation = {
+@@ -18,6 +19,7 @@
+ /** Explicit trusted-code factory, selected by the owner; never derived from an HTTP request. */
+ export async function loadSfInstallation(file: string, origin: string) {
+   if (!path.isAbsolute(file) || new URL(origin).origin !== origin) throw new Error("SF_INSTALLATION_ABSOLUTE_PATH_AND_ORIGIN_REQUIRED")
++  const { createSfHostRuntime } = await import("./host-context")
+   const module = await import(pathToFileURL(await realpath(file)).href)
+   if (typeof module.default !== "function") throw new Error("SF_INSTALLATION_FACTORY_REQUIRED")
+   const value: unknown = await module.default({ origin, createHostRuntime: createSfHostRuntime })
+@@ -37,19 +39,78 @@
+   const privacy = transport ? Layer.succeed(HttpMiddleware.TracerDisabledWhen)(() => true) : Layer.empty
+   const route = Effect.gen(function* () {
+     const incoming = yield* HttpServerRequest.HttpServerRequest
+-    if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+-    // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
++    if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return rejectIncoming(incoming, 403)
++    // Forwarded hints are removed before either Node URL conversion or Microsoft admission.
+     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
+-    const web = yield* HttpServerRequest.toWeb(sanitized)
+-    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
+-    const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+-    if (!request) return HttpServerResponse.empty({ status: 403 })
+-    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
+-    return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+-  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
++    const source = sanitized.source instanceof Request ? sanitized.source : undefined
++    const url = source ? new URL(source.url) : Option.getOrUndefined(HttpServerRequest.toURL(sanitized))
++    if (!url || url.origin !== requestOrigin) return rejectIncoming(incoming, 403)
++    if ((incoming.method === "GET" || incoming.method === "HEAD") && (sanitized.headers["transfer-encoding"] !== undefined || Number(sanitized.headers["content-length"]) > 0)) return rejectIncoming(incoming, 400)
++    const configured = yield* HttpServerRequest.MaxBodySize
++    const maximum = Number(configured ?? 16 * 1024 * 1024)
++    const mode = url.searchParams.get("sf")
++    // Keep the domain's 25MiB contract stream budget, while honoring smaller explicit host limits.
++    const limit = mode === "workbench" || mode?.startsWith("workbench-")
++      ? Math.min(maximum, 65536)
++      : incoming.method === "POST" && url.pathname === `${installation.mount}/dashboard` && !url.searchParams.has("sf") && url.searchParams.getAll("upload").length === 1 && url.searchParams.get("upload") === "contract"
++        ? maximum === 16 * 1024 * 1024 ? 25 * 1024 * 1024 : Math.min(maximum, 25 * 1024 * 1024)
++        : maximum
++    const response = yield* Effect.tryPromise({
++      try: async (signal) => {
++        // Reject the hint before creating a stream/fiber or allocating from caller-controlled sizes.
++        const declared = (() => {
++          try { return requestBodyLength(sanitized.headers["content-length"] ?? null, limit) }
++          catch (error) {
++            if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
++            throw error
++          }
++        })()
++        const boundSignal = source ? AbortSignal.any([signal, source.signal]) : signal
++        if (boundSignal.aborted) {
++          if (source?.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
++          return bodyFailure(400)
++        }
++        const raw = incoming.method === "GET" || incoming.method === "HEAD" ? null : source ? source.body : Stream.toReadableStream(
++          NodeStream.fromReadable<Uint8Array, RequestBodyError>({
++            evaluate: () => NodeHttpServerRequest.toIncomingMessage(sanitized),
++            // Cancelling the reader must not destroy the socket before the 413 response is flushed.
++            closeOnDone: false,
++            onError: () => new RequestBodyError(400),
++          }), { strategy: { highWaterMark: 0 } },
++        )
++        const bounded = limitRequestBody(raw, { limit, declared, signal: boundSignal })
++        try {
++          if (bounded.failure()) return bodyFailure(bounded.failure()!.status)
++          const web = new Request(url, { method: incoming.method, headers: sanitized.headers, body: bounded.body, signal: boundSignal, redirect: source?.redirect ?? "follow", ...(bounded.body ? { duplex: "half" } : {}) })
++          const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
++          const result = request ? await installation.handler(request).catch(() => new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })) : new Response(null, { status: 403 })
++          // Some domain parsers classify reader errors themselves. Only this private budget can override them.
++          const failure = bounded.failure()
++          if (failure) return bodyFailure(failure.status)
++          const reply = result ?? new Response(null, { status: request ? 404 : 403 })
++          if (bounded.complete()) return reply
++          const closed = new Response(reply.body, reply)
++          closed.headers.set("connection", "close")
++          return closed
++        } finally { bounded.dispose() }
++      },
++      catch: (error) => error instanceof RequestBodyError ? error : "installation-unavailable" as const,
++    }).pipe(Effect.catch((error) => Effect.succeed(error instanceof RequestBodyError ? bodyFailure(error.status) : new Response(null, { status: 503, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", connection: "close" } }))))
++    return HttpServerResponse.fromWeb(response)
++  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503, headers: { "cache-control": "no-store", "x-content-type-options": "nosniff", connection: "close" } }))))
+   // The listener must install privacy before HttpRouter.serve, outside the request route.
+   // Effect registers a trailing wildcard at both the subtree and its base path.
+   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
++}
++
++function bodyFailure(status: 400 | 413) {
++  return Response.json({ status: "invalid" }, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff", connection: "close" } })
++}
++
++function rejectIncoming(request: HttpServerRequest.HttpServerRequest, status: 400 | 403) {
++  const source = request.source
++  if (source instanceof Request && source.body && !source.body.locked) void source.body.cancel().catch(() => undefined)
++  return HttpServerResponse.empty({ status, headers: { "cache-control": "no-store", "x-content-type-options": "nosniff", connection: "close" } })
+ }
+ 
+ function readTransport(value: unknown, origin: string): MicrosoftTransport | undefined {
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+index 164c8208067d9feaa2c720adfd9e8bf27e272715..eb7322e915c61594a6cf1a05d562dc39ad7b6c38 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -1,4 +1,5 @@
+ import { procurementAlternativesForm, procurementAlternativesScript } from "../ui/procurement-alternatives.ts"
++import { readRequestBody, RequestBodyError } from "../../runtime/request-body.ts"
+ import type { SfHostServices } from "../contracts/host-context.ts"
+ import { digestSfValue } from "../contracts/canonical.ts"
+ import { decodeSfOperationInput, decodeSfOperationOutput } from "../contracts/schema-admission.ts"
+@@ -91,9 +92,9 @@
+       if (request.method !== "POST") return reply({ status: "denied" }, 405)
+       if (request.headers.get("origin") !== input.origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1 || !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "invalid" }, 400)
+-      const body = await request.text()
+-      if (new TextEncoder().encode(body).byteLength > 65536) return reply({ status: "invalid" }, 413)
+-      const parsed: unknown = await Promise.resolve().then(() => JSON.parse(body)).catch(() => undefined)
++      const bytes = await readRequestBody(request, 65536).catch((error: unknown) => error instanceof RequestBodyError ? error : new RequestBodyError(400))
++      if (bytes instanceof RequestBodyError) return reply({ status: "invalid" }, bytes.status)
++      const parsed: unknown = await Promise.resolve().then(() => JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))).catch(() => undefined)
+       if (!parsed || typeof parsed !== "object" || Array.isArray(parsed) || Object.keys(parsed).some((key) => !["operation", "input"].includes(key)) || !("operation" in parsed) || !("input" in parsed)) return reply({ status: "invalid" }, 400)
+       const operation = parsed.operation
+       if (operation !== "sf_case_draft" && operation !== "sf_question_prepare" && operation !== "sf_change_prepare") return reply({ status: "denied" }, 403)
+diff --git a/modules/sucafina/Sucafinav1/runtime/request-body.ts b/modules/sucafina/Sucafinav1/runtime/request-body.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5b3cca2a473258633bd00c9c29de7189cb52a5ce
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/runtime/request-body.ts
+@@ -0,0 +1,144 @@
++/** Public errors contain no body, URL, cookie or upstream failure details. */
++export class RequestBodyError extends Error {
++  readonly status: 400 | 413
++
++  constructor(status: 400 | 413) {
++    super(status === 413 ? "Request body too large" : "Invalid request body")
++    this.name = "RequestBodyError"
++    this.status = status
++  }
++}
++
++/** Validate the hint without allocating from it; the stream must still match it. */
++export function requestBodyLength(value: string | null, limit: number): number | undefined {
++  if (!Number.isSafeInteger(limit) || limit < 0) throw new Error("Finite request body limit required")
++  if (value === null) return undefined
++  if (!/^[0-9]+$/.test(value)) throw new RequestBodyError(400)
++  const length = Number(value)
++  if (length > limit || !Number.isSafeInteger(length)) throw new RequestBodyError(413)
++  return length
++}
++
++/** One lazy reader, zero read-ahead and a byte budget checked before enqueueing. */
++export function limitRequestBody(source: ReadableStream<Uint8Array> | null, input: {
++  limit: number
++  declared?: number
++  signal: AbortSignal
++}) {
++  const state = {
++    bytes: 0,
++    ended: false,
++    complete: !source,
++    failure: undefined as RequestBodyError | undefined,
++    reader: undefined as ReadableStreamDefaultReader<Uint8Array> | undefined,
++    controller: undefined as ReadableStreamDefaultController<Uint8Array> | undefined,
++  }
++  const release = (cancel: boolean) => {
++    input.signal.removeEventListener("abort", aborted)
++    const reader = state.reader
++    state.reader = undefined
++    // Cancel closes pending reads synchronously. Do not await an arbitrary source's cancel hook.
++    if (reader) {
++      if (cancel) void reader.cancel().catch(() => undefined)
++      reader.releaseLock()
++      return
++    }
++    if (cancel && source && !source.locked) void source.cancel().catch(() => undefined)
++  }
++  const reject = (status: 400 | 413) => {
++    if (state.ended) return
++    state.ended = true
++    state.failure = new RequestBodyError(status)
++    state.controller?.error(state.failure)
++    release(true)
++  }
++  const aborted = () => reject(400)
++  const body = source ? new ReadableStream<Uint8Array>({
++    start(controller) {
++      state.controller = controller
++      input.signal.addEventListener("abort", aborted, { once: true })
++      if (input.signal.aborted) aborted()
++    },
++    async pull(controller) {
++      if (state.ended) return
++      try {
++        const reader = state.reader ??= source.getReader()
++        for (;;) {
++          const chunk = await reader.read()
++          if (state.ended) return
++          if (input.signal.aborted) return reject(400)
++          if (chunk.done) {
++            if (input.declared !== undefined && state.bytes !== input.declared) return reject(400)
++            state.ended = true
++            state.complete = true
++            release(false)
++            controller.close()
++            return
++          }
++          if (!(chunk.value instanceof Uint8Array)) return reject(400)
++          if (!chunk.value.byteLength) continue
++          if (chunk.value.byteLength > input.limit - state.bytes) return reject(413)
++          if (input.declared !== undefined && chunk.value.byteLength > input.declared - state.bytes) return reject(400)
++          state.bytes += chunk.value.byteLength
++          controller.enqueue(chunk.value)
++          return
++        }
++      } catch {
++        reject(400)
++      }
++    },
++    cancel() {
++      if (state.ended) return
++      state.ended = true
++      release(true)
++    },
++  }, { highWaterMark: 0 }) : null
++  if (!source && input.declared) state.failure = new RequestBodyError(400)
++  return {
++    body,
++    failure: () => state.failure,
++    complete: () => state.complete,
++    dispose() {
++      if (state.ended) return
++      state.ended = true
++      state.controller?.error(new RequestBodyError(400))
++      release(true)
++    },
++  }
++}
++
++/** Read the existing Request once; no cloning after authentication or command binding. */
++export async function readRequestBody(request: Request, limit: number): Promise<Uint8Array> {
++  const declared = (() => {
++    try {
++      return requestBodyLength(request.headers.get("content-length"), limit)
++    } catch (error) {
++      if (request.body && !request.body.locked) void request.body.cancel().catch(() => undefined)
++      throw error
++    }
++  })()
++  const bounded = limitRequestBody(request.body, { limit, declared, signal: request.signal })
++  const reader = bounded.body?.getReader()
++  const chunks: Uint8Array[] = []
++  const size = { bytes: 0 }
++  try {
++    if (bounded.failure()) throw bounded.failure()
++    if (request.signal.aborted) throw new RequestBodyError(400)
++    if (!reader) return new Uint8Array()
++    for (;;) {
++      const chunk = await reader.read()
++      if (chunk.done) break
++      size.bytes += chunk.value.byteLength
++      chunks.push(chunk.value)
++    }
++    const bytes = new Uint8Array(size.bytes)
++    chunks.reduce((offset, chunk) => {
++      bytes.set(chunk, offset)
++      return offset + chunk.byteLength
++    }, 0)
++    return bytes
++  } finally {
++    reader?.releaseLock()
++    bounded.dispose()
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7d0ccfe23def8601eb152b8cbe45ddb1df40456d
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts
+@@ -0,0 +1,53 @@
++import { expect, test } from "bun:test"
++import { rows } from "../../../runtime/contract.ts"
++import { binaryFixture } from "./binary-fixture.ts"
++import { streamedBody } from "./workbench-fixture.ts"
++
++test("Authorized binary domain upload preserves exact bytes, CAS and SQLite with a fail-closed component scanner", async () => {
++  const f = await binaryFixture("http://localhost:43174")
++  const upload = (bytes: Uint8Array, version = 3, cookie = f.cookie) => {
++    const input = streamedBody(bytes, 1021)
++    const request = new Request(`${f.origin}${f.uploadPath(version)}`, {
++      method: "POST", body: input.stream, headers: { cookie, origin: f.origin, "content-type": "image/bmp" }, duplex: "half",
++    })
++    return { input, response: f.handler(request) }
++  }
++  try {
++    expect(f.accepted.byteLength).toBeGreaterThan(65536)
++    const initial = await f.state()
++    const altered = new Uint8Array(f.accepted)
++    altered[altered.length - 1] = altered[altered.length - 1]! ^ 1
++    const rejected = upload(altered)
++    expect((await rejected.response)?.status).toBe(422)
++    expect(f.scans).toHaveLength(1)
++    expect(f.scans[0]?.accepted).toBe(false)
++    expect(await f.state()).toEqual(initial)
++
++    const valid = upload(f.accepted)
++    const response = await valid.response
++    expect(response?.status).toBe(200)
++    expect(await response!.json()).toMatchObject({ ok: true })
++    expect(valid.input.observed.bytes).toBe(f.accepted.byteLength)
++    expect(valid.input.observed.ended).toBe(true)
++    expect(f.scans).toHaveLength(2)
++    expect(f.scans[1]).toEqual({ digest: f.acceptedDigest, type: "image/bmp", bytes: f.accepted.byteLength, accepted: true })
++    const committed = await f.state()
++    expect(committed.files).toHaveLength(1)
++    expect(committed.files[0]?.bytes).toEqual(f.accepted)
++    expect(rows(committed.snapshot.data.contracts)[0]?.vendor).toBe("Binary fixture vendor")
++    expect(committed.snapshot.versions["contracts:binary-c1"]?.version).toBe(4)
++    expect(committed.snapshot.versions.dataset?.version).toBe(8)
++    expect(committed.snapshot.audit).toHaveLength(1)
++
++    const conflict = upload(f.accepted)
++    expect((await conflict.response)?.status).toBe(409)
++    expect(await f.state()).toEqual(committed)
++    expect((await f.logout())?.status).toBe(204)
++    const scansBefore = f.scans.length
++    const denied = upload(f.accepted, 4)
++    expect((await denied.response)?.status).toBe(403)
++    expect(denied.input.observed.pulls).toBe(0)
++    expect(f.scans).toHaveLength(scansBefore)
++    expect(await f.state()).toEqual(committed)
++  } finally { await f.close() }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c8865ac73ae4932ba79c8e90c38ce5ee78b3486c
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts
+@@ -0,0 +1,74 @@
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import path from "node:path"
++import { createHash, randomBytes, randomUUID } from "node:crypto"
++import { createModule } from "../../../index.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
++import { rows } from "../../../runtime/contract.ts"
++
++/** A valid 256x128 24-bit BMP, larger than the Workbench budget and containing arbitrary binary octets. */
++export function binaryUploadBytes() {
++  const bytes = new Uint8Array(54 + 256 * 128 * 3)
++  const header = new DataView(bytes.buffer)
++  bytes.set([0x42, 0x4d])
++  header.setUint32(2, bytes.byteLength, true)
++  header.setUint32(10, 54, true)
++  header.setUint32(14, 40, true)
++  header.setInt32(18, 256, true)
++  header.setInt32(22, 128, true)
++  header.setUint16(26, 1, true)
++  header.setUint16(28, 24, true)
++  header.setUint32(34, 256 * 128 * 3, true)
++  for (let offset = 54; offset < bytes.byteLength; offset++) bytes[offset] = offset % 256
++  return bytes
++}
++
++/** Real upload/domain/SQLite/auth; scanner is an explicit exact-digest component fixture, not malware qualification. */
++export async function binaryFixture(origin: string) {
++  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-body-binary-74-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  try {
++    const accepted = binaryUploadBytes()
++    const acceptedDigest = createHash("sha256").update(accepted).digest("hex")
++    const scans: { digest: string; type: string; bytes: number; accepted: boolean }[] = []
++    const operator = { installationId: randomUUID(), uid: 1000, name: "Binary upload test operator" }
++    const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
++    await store.transaction("dashboard", async (snapshot) => {
++      snapshot.data.contracts = [{ id: "binary-c1", vendor: "Binary fixture vendor" }]
++      snapshot.versions["contracts:binary-c1"] = { version: 3, by: "fixture-initializer" }
++      snapshot.versions.dataset = { version: 7, by: "fixture-initializer" }
++      return { commit: true, value: undefined }
++    })
++    const handler = createModule("/sucafina", {
++      persistence: store, authenticate: identity.authenticate,
++      environment: async (request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) }),
++      assets: { persistence: store, services: {
++        signingKey: randomBytes(32),
++        scan: async (bytes, type) => {
++          const digest = createHash("sha256").update(bytes).digest("hex")
++          const allowed = digest === acceptedDigest && bytes.byteLength === accepted.byteLength && type === "image/bmp"
++          scans.push({ digest, type, bytes: bytes.byteLength, accepted: allowed })
++          return allowed
++        },
++      } },
++      maxJsonBytes: 100000,
++    })
++    const response = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
++    const cookie = response?.headers.get("set-cookie")?.split(";")[0]
++    if (response?.status !== 303 || !cookie) throw new Error("Binary fixture enrollment failed")
++    return {
++      origin, cookie, handler, scans, accepted, acceptedDigest,
++      uploadPath: (version = 3) => `/sucafina/dashboard?${new URLSearchParams({ page: "Vendor Contracts", upload: "contract", record: "binary-c1", recordVersion: String(version), name: "binary.bmp" })}`,
++      async state() {
++        return store.transaction("dashboard", async (snapshot, blobs) => ({ commit: false, value: {
++          snapshot: structuredClone(snapshot),
++          files: await Promise.all(rows(snapshot.data.assets).map(async (asset) => ({ key: asset.key, bytes: typeof asset.key === "string" ? await blobs.get(asset.key) : undefined }))),
++        } }))
++      },
++      logout: () => identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } })),
++      async close() { await store.dispose(); await rm(directory, { recursive: true, force: true }) },
++    }
++  } catch (error) { await store.dispose(); await rm(directory, { recursive: true, force: true }); throw error }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs
+new file mode 100644
+index 0000000000000000000000000000000000000000..1323d00bed4eb829140bf76d0c74b08435071beb
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.node-smoke.mjs
+@@ -0,0 +1,207 @@
++import assert from "node:assert/strict"
++import { test } from "node:test"
++import { createServer, request } from "node:http"
++import { createHash } from "node:crypto"
++import { createRequire } from "node:module"
++import { pathToFileURL } from "node:url"
++
++const cli = createRequire(new URL("../../../../../../apps/cli/package.json", import.meta.url))
++const { Effect, FileSystem, Layer } = await import(pathToFileURL(cli.resolve("effect")).href)
++const { HttpRouter, HttpServer, HttpServerRequest } = await import(pathToFileURL(cli.resolve("effect/unstable/http")).href)
++const { NodeHttpServer } = await import(pathToFileURL(cli.resolve("@effect/platform-node")).href)
++const { composeSfInstallation } = await import(new URL("../../../../../../apps/cli/src/sucafina-product/installation.ts", import.meta.url).href)
++
++/** Real Node/Effect/production bridge with the local installation boundary.
++ * Microsoft identity/privacy is exercised separately by microsoft-bridge.test.ts on the existing Bun domain graph.
++ * That graph's bare JSON imports require Bun; this probe neither rewrites them nor supplies a substitute loader.
++ */
++async function listener(run, maximum = 16 * 1024 * 1024, signal) {
++  const server = createServer()
++  const received = []
++  const resources = new Map()
++  server.on("request", (incoming) => {
++    received.push(incoming)
++    const socket = incoming.socket
++    const events = { socketClosed: false, requestClosed: false }
++    const closed = new Promise((resolve) => socket.once("close", () => { events.socketClosed = true; resolve() }))
++    incoming.once("close", () => { events.requestClosed = true })
++    resources.set(incoming, { socket, closed, events })
++  })
++  const observed = { requests: [], completed: [], aborted: Promise.withResolvers(), reading: Promise.withResolvers() }
++  try {
++    await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
++      const bound = yield* HttpServer.HttpServer
++      assert.equal(bound.address._tag, "TcpAddress")
++      const origin = `http://127.0.0.1:${bound.address.port}`
++      const installation = yield* Effect.promise(() => composeSfInstallation({
++        mount: "/sucafina",
++        dispose() {},
++        async handler(incoming) {
++          observed.requests.push(incoming)
++          assert.equal(new URL(incoming.url).origin, origin)
++          assert.equal(incoming.headers.get("host"), new URL(origin).host)
++          const url = new URL(incoming.url)
++          if (url.pathname.endsWith("/unread")) return new Response(null, { status: 403 })
++          if (url.pathname.endsWith("/throw")) throw new Error("private-body-token-must-not-escape")
++          if (url.pathname.endsWith("/abort")) {
++            incoming.signal.addEventListener("abort", () => observed.aborted.resolve(incoming), { once: true })
++            observed.reading.resolve(incoming)
++          }
++          try {
++            const bytes = new Uint8Array(await incoming.arrayBuffer())
++            if (url.searchParams.get("sf")?.startsWith("workbench")) JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))
++            observed.completed.push({ request: incoming, bytes: bytes.length, digest: createHash("sha256").update(bytes).digest("hex") })
++            return Response.json({ bytes: bytes.length, digest: createHash("sha256").update(bytes).digest("hex") })
++          } catch {
++            // A real consumer may swallow a reader error. The bridge must still return its own 413.
++            return Response.json({ status: "invalid" }, { status: 400 })
++          }
++        },
++      }, origin))
++      const budget = HttpRouter.middleware((effect) => effect.pipe(Effect.provideService(HttpServerRequest.MaxBodySize, FileSystem.Size(maximum))), { global: true })
++      yield* Layer.build(HttpRouter.serve(Layer.merge(installation.layer, budget), { disableLogger: true, disableListenLog: true }).pipe(
++        Layer.provide(installation.privacy),
++      ))
++      yield* Effect.addFinalizer(() => Effect.sync(() => server.closeAllConnections()))
++      yield* Effect.promise(() => run({ origin, observed, received, resources }))
++    })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))), { signal })
++  } finally { server.closeAllConnections() }
++}
++
++function send(f, body, { path = "/sucafina/dashboard?sf=workbench-command", headers = {}, end = true } = {}) {
++  return new Promise((resolve, reject) => {
++    const outgoing = request(f.origin + path, {
++      method: "POST",
++      headers: { host: new URL(f.origin).host, origin: f.origin, "content-type": "application/json", connection: "close", ...headers },
++    }, (response) => {
++      const chunks = []
++      response.on("data", (chunk) => chunks.push(chunk))
++      response.on("error", reject)
++      response.on("end", () => {
++        resolve({ status: response.statusCode, headers: response.headers, body: Buffer.concat(chunks).toString("utf8") })
++        outgoing.destroy()
++      })
++    })
++    outgoing.on("error", reject)
++    outgoing.setTimeout(3000, () => outgoing.destroy(new Error("HTTP body response did not finish")))
++    if (body?.length) outgoing.write(body)
++    if (end) outgoing.end()
++    else outgoing.flushHeaders()
++  })
++}
++
++async function released(f, incoming) {
++  const resource = f.resources.get(incoming)
++  let timer
++  try {
++    // Node removes an answered request from its incoming queue before closing the socket.
++    // An incomplete request need not emit close itself; the real socket and reader must be released.
++    await Promise.race([resource.closed, new Promise((_, reject) => {
++      timer = setTimeout(() => reject(new Error(`Node resources still active: ${JSON.stringify({
++        request: f.received.indexOf(incoming), complete: incoming.complete, destroyed: incoming.destroyed,
++        readableEnded: incoming.readableEnded, socketDestroyed: resource.socket.destroyed,
++        dataListeners: incoming.listenerCount("data"), readableListeners: incoming.listenerCount("readable"),
++      })}`)), 3000)
++    })])
++    await new Promise(setImmediate)
++    assert.equal(resource.events.socketClosed, true)
++    assert.equal(resource.socket.destroyed, true)
++    assert.equal(incoming.listenerCount("data"), 0)
++    assert.equal(incoming.listenerCount("readable"), 0)
++  } finally { clearTimeout(timer) }
++}
++
++test("Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency and private error responses", { timeout: 20000 }, async (t) => {
++  t.diagnostic(`Runtime ${process.release.name} ${process.version}; production NodeHttpServer and SF composition`)
++  assert.equal(process.versions.bun, undefined)
++  await listener(async (f) => {
++    const json = JSON.stringify({ objective: "Revisão ☕ 😀" })
++    const exact = Buffer.from(json + " ".repeat(65536 - Buffer.byteLength(json)))
++    const good = await send(f, exact)
++    assert.equal(good.status, 200)
++    assert.equal(JSON.parse(good.body).bytes, 65536)
++    assert.equal(f.observed.completed.length, 1)
++    assert.equal(f.observed.completed[0].request, f.observed.requests[0])
++
++    const bad = await send(f, Buffer.from("{"))
++    assert.equal(bad.status, 400)
++    assert.equal(bad.body, '{"status":"invalid"}')
++    const over = Buffer.from(JSON.stringify({ objective: "☕".repeat(24000) }))
++    assert.ok(over.length > 65536)
++    const oversized = await send(f, over, { end: false })
++    assert.equal(oversized.status, 413)
++    assert.equal(oversized.body, '{"status":"invalid"}')
++    assert.equal(oversized.headers["cache-control"], "no-store")
++    assert.equal(oversized.headers["x-content-type-options"], "nosniff")
++    assert.equal(oversized.headers.connection, "close")
++    assert.equal(f.observed.completed.length, 1)
++    assert.equal(f.received.at(-1).complete, false)
++
++    const calls = f.observed.requests.length
++    const declared = await send(f, null, { headers: { "content-length": "65537" }, end: false })
++    assert.equal(declared.status, 413)
++    assert.equal(declared.body, '{"status":"invalid"}')
++    assert.equal(f.observed.requests.length, calls)
++    assert.equal(f.received.at(-1).headers["content-length"], "65537")
++    assert.equal(f.received.at(-1).complete, false)
++    await released(f, f.received.at(-1))
++    const tooShortJson = await send(f, Buffer.from('{"ok":true}'), { headers: { "content-length": "2" } })
++    assert.equal(tooShortJson.status, 400)
++    assert.equal(f.observed.completed.length, 1)
++
++    // Delegated Workbench consumers receive the same 64KiB transport budget.
++    const delegated = await send(f, over, { path: "/sucafina/planner?sf=workbench-analysis", end: false })
++    assert.equal(delegated.status, 413)
++    const unread = await send(f, Buffer.from("pending"), { path: "/sucafina/unread", end: false })
++    assert.equal(unread.status, 403)
++    assert.equal(unread.headers.connection, "close")
++    const thrown = await send(f, Buffer.from("pending"), { path: "/sucafina/throw", end: false })
++    assert.equal(thrown.status, 503)
++    assert.equal(thrown.body.includes("private-body-token"), false)
++    assert.equal(thrown.headers["cache-control"], "no-store")
++
++    const denied = await send(f, null, { headers: { host: "evil.example" } })
++    assert.equal(denied.status, 403)
++    const forged = await send(f, null, { headers: { "x-forwarded-proto": "https" } })
++    assert.equal(forged.status, 403)
++    for (const incoming of f.received) await released(f, incoming)
++  }, undefined, t.signal)
++})
++
++test("Node runtime: global stream budget cuts off chunked data and preserves binary octets", { timeout: 20000 }, async (t) => {
++  await listener(async (f) => {
++    const bytes = Buffer.from(Array.from({ length: 1024 }, (_, index) => index % 256))
++    const good = await send(f, bytes, { path: "/sucafina/binary", headers: { "content-type": "application/octet-stream", "content-length": String(bytes.length) } })
++    assert.equal(good.status, 200)
++    assert.equal(JSON.parse(good.body).digest, createHash("sha256").update(bytes).digest("hex"))
++    const oversized = await send(f, Buffer.alloc(4097), { path: "/sucafina/binary", end: false })
++    assert.equal(oversized.status, 413)
++    // An explicit smaller host budget also applies to contract uploads.
++    const contract = await send(f, Buffer.alloc(4097), { path: "/sucafina/dashboard?upload=contract", end: false })
++    assert.equal(contract.status, 413)
++    assert.equal(f.observed.completed.length, 1)
++    for (const incoming of f.received) await released(f, incoming)
++  }, 4096, t.signal)
++})
++
++test("Node runtime: disconnected/truncated input aborts the original Request and releases its reader", { timeout: 10000 }, async (t) => {
++  await listener(async (f) => {
++    const outgoing = request(f.origin + "/sucafina/abort", { method: "POST", headers: { host: new URL(f.origin).host, "content-length": "4096", connection: "close" } })
++    outgoing.on("error", () => {})
++    outgoing.write(Buffer.from("truncated"))
++    const active = await f.observed.reading.promise
++    outgoing.destroy()
++    const aborted = await f.observed.aborted.promise
++    assert.equal(aborted, active)
++    assert.equal(active.signal.aborted, true)
++    await new Promise(setImmediate)
++    await new Promise(setImmediate)
++    assert.equal(f.observed.completed.length, 0)
++    assert.equal(f.received[0].complete, false)
++    assert.equal(f.received[0].listenerCount("readable"), 0)
++    await released(f, f.received[0])
++    assert.equal(f.received[0].destroyed, true)
++    assert.equal(f.received[0].aborted, true)
++    assert.equal(f.resources.get(f.received[0]).events.requestClosed, true)
++  }, undefined, t.signal)
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..878b41f8b050c1d37d55df44028845f1093ac5df
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts
+@@ -0,0 +1,263 @@
++import { beforeAll, expect, test } from "bun:test"
++import { createServer, request, type IncomingHttpHeaders, type IncomingMessage, type ServerResponse } from "node:http"
++import { connect } from "node:net"
++import { createRequire } from "node:module"
++import { pathToFileURL } from "node:url"
++import path from "node:path"
++import { Effect, Layer } from "effect"
++import { HttpRouter, HttpServer } from "effect/unstable/http"
++import { BodyLimit } from "../../../../../../packages/server/src/body-limit.ts"
++import { composeSfInstallation } from "../../../../../../apps/cli/src/sucafina-product/installation.ts"
++import { binaryFixture } from "./binary-fixture.ts"
++import { draftBody, workbenchFixture } from "./workbench-fixture.ts"
++
++type NodeServer = { layer: (evaluate: () => ReturnType<typeof createServer>, options: { host: string; port: number }) => Layer.Layer<HttpServer.HttpServer, unknown> }
++let NodeHttpServer: NodeServer
++beforeAll(async () => {
++  // Resolve the actual CLI adapter without adding a new module dependency or importing a source postimage.
++  const cli = createRequire(path.resolve(import.meta.dir, "../../../../../../apps/cli/package.json"))
++  const platform = await import(pathToFileURL(cli.resolve("@effect/platform-node")).href) as { NodeHttpServer: NodeServer }
++  NodeHttpServer = platform.NodeHttpServer
++})
++
++type Incoming = { source: IncomingMessage; closed: Promise<void>; response: ServerResponse; responseClosed: Promise<void>; events: { finish: boolean; close: boolean }; index: number }
++type Listener = { origin: string; port: number; incoming: Incoming[]; web: Request[]; server: ReturnType<typeof createServer> }
++type Application = { handler: (request: Request) => Promise<Response | undefined>; close: () => Promise<void> }
++
++async function withListener<F extends Application>(make: (origin: string) => Promise<F>, run: (fixture: F, listener: Listener) => Promise<void>) {
++  const server = createServer()
++  const incoming: Incoming[] = []
++  const web: Request[] = []
++  // Observe lifecycle only; adding a data handler here would change the body consumer under test.
++  server.on("request", (source, response) => {
++    const closed = new Promise<void>((resolve) => source.once("close", resolve))
++    const events = { finish: false, close: false }
++    response.once("finish", () => { events.finish = true })
++    const responseClosed = new Promise<void>((resolve) => response.once("close", () => { events.close = true; resolve() }))
++    incoming.push({ source, closed, response, responseClosed, events, index: incoming.length })
++  })
++  try {
++    await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
++      const service = yield* HttpServer.HttpServer
++      if (service.address._tag !== "TcpAddress") throw new Error("Expected ephemeral TCP listener")
++      const port = service.address.port
++      const origin = `http://127.0.0.1:${port}`
++      const f = yield* Effect.acquireRelease(Effect.promise(() => make(origin)), (f) => Effect.promise(() => f.close()))
++      const installation = yield* Effect.promise(() => composeSfInstallation({
++        mount: "/sucafina", handler: (request: Request) => { web.push(request); return f.handler(request) }, dispose: f.close,
++      }, origin))
++      yield* Layer.build(HttpRouter.serve(Layer.mergeAll(BodyLimit.layer, installation.layer), { disableLogger: true, disableListenLog: true }).pipe(Layer.provide(installation.privacy)))
++      // Close live sockets before the scoped Node server waits for its own shutdown.
++      yield* Effect.addFinalizer(() => Effect.sync(() => server.closeAllConnections?.()))
++      yield* Effect.promise(() => run(f, { origin, port, incoming, web, server }))
++    })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))), { signal: AbortSignal.timeout(25000) })
++  } finally { server.closeAllConnections?.() }
++}
++
++const workbenchPath = "/sucafina/dashboard?sf=workbench-command"
++const chunks = (bytes: Uint8Array, size = 4093) => Array.from({ length: Math.ceil(bytes.byteLength / size) }, (_, index) => bytes.slice(index * size, (index + 1) * size))
++const domainHeaders = (f: { origin: string; cookie: string }, type = "application/json") => ({ origin: f.origin, cookie: f.cookie, "content-type": type })
++
++function post(origin: string, pathname: string, headers: Record<string, string>, body: readonly Uint8Array[]) {
++  return new Promise<{ status: number; headers: IncomingHttpHeaders; bytes: Buffer }>((resolve, reject) => {
++    const outgoing = request(`${origin}${pathname}`, { method: "POST", agent: false, headers: { connection: "close", ...headers } }, (response) => {
++      const result: Buffer[] = []
++      response.on("data", (chunk: Buffer) => result.push(chunk))
++      response.once("error", reject)
++      response.once("end", () => resolve({ status: response.statusCode!, headers: response.headers, bytes: Buffer.concat(result) }))
++    })
++    outgoing.setTimeout(8000, () => outgoing.destroy(new Error("HTTP body listener response timed out")))
++    outgoing.once("error", reject)
++    for (const chunk of body) outgoing.write(chunk)
++    outgoing.end()
++  })
++}
++
++/** No terminating chunk or client EOF is sent. A full-buffering adapter cannot answer this request. */
++function answerWithoutEof(listener: Listener, head: string, body: readonly Uint8Array[] = []) {
++  return new Promise<string>((resolve, reject) => {
++    const socket = connect(listener.port, "127.0.0.1")
++    let received = ""
++    let answered = false
++    let remoteEof = false
++    const timer = setTimeout(() => finish(new Error("Expected the complete response and remote EOF before body EOF")), 8000)
++    const finish = (error?: Error) => {
++      if (answered) return
++      answered = true
++      clearTimeout(timer)
++      if (error) { socket.destroy(); reject(error); return }
++      if (remoteEof && socket.destroyed && received.includes("\r\n\r\n")) resolve(received)
++      else reject(new Error(`Remote response was incomplete: ${JSON.stringify({ bytes: received.length, remoteEof, destroyed: socket.destroyed })}`))
++    }
++    socket.on("data", (bytes) => { received += bytes.toString("latin1") })
++    socket.once("end", () => { remoteEof = true })
++    socket.once("error", () => finish(new Error("Socket failed before the complete remote response")))
++    socket.once("close", () => finish())
++    socket.once("connect", () => { socket.write(head); for (const bytes of body) socket.write(bytes) })
++  })
++}
++
++function rawHead(listener: Listener, pathname: string, headers: Record<string, string>) {
++  return `POST ${pathname} HTTP/1.1\r\nHost: ${new URL(listener.origin).host}\r\nConnection: close\r\n${Object.entries(headers).map(([name, value]) => `${name}: ${value}\r\n`).join("")}\r\n`
++}
++
++function lifecycle(request: Incoming) {
++  return JSON.stringify({ index: request.index, complete: request.source.complete, destroyed: request.source.destroyed,
++    readableEnded: request.source.readableEnded, dataListeners: request.source.listenerCount("data"), readableListeners: request.source.listenerCount("readable"),
++    responseFinished: request.response.writableFinished, responseClosed: request.events.close })
++}
++
++async function responded(request: Incoming) {
++  let timer: ReturnType<typeof setTimeout> | undefined
++  try {
++    // Bun 1.3.14 detaches the response socket before its remote close and may omit IncomingMessage.close.
++    // Observe the response's actual finish/close and the adapter's reader cleanup; Node24 separately requires request destruction.
++    await Promise.race([request.responseClosed, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Response was not released: ${lifecycle(request)}`)), 8000) })])
++    await new Promise<void>((resolve) => setImmediate(resolve))
++    expect(request.events.finish).toBe(true)
++    expect(request.events.close).toBe(true)
++    expect(request.response.writableFinished).toBe(true)
++    expect(request.source.listenerCount("data")).toBe(0)
++    expect(request.source.listenerCount("readable")).toBe(0)
++  } finally { clearTimeout(timer) }
++}
++
++async function released(request: Incoming) {
++  let timer: ReturnType<typeof setTimeout> | undefined
++  try {
++    await Promise.race([request.closed, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error(`Incoming request was not released: ${lifecycle(request)}`)), 8000) })])
++    await new Promise<void>((resolve) => setImmediate(resolve))
++    expect(request.source.destroyed).toBe(true)
++    expect(request.source.listenerCount("data")).toBe(0)
++    expect(request.source.listenerCount("readable")).toBe(0)
++  } finally { clearTimeout(timer) }
++}
++
++test("Actual Node/Effect listener accepts the 65536-byte Workbench boundary and rejects malformed bodies without new effects", async () => {
++  await withListener(async (origin) => { const f = await workbenchFixture(origin); return { ...f, handler: f.app } }, async (f, listener) => {
++    const json = JSON.stringify(draftBody("Node café ☕ 😀"))
++    const bytes = new TextEncoder().encode(json + " ".repeat(65536 - new TextEncoder().encode(json).byteLength))
++    const valid = await post(listener.origin, workbenchPath, { ...domainHeaders(f), "idempotency-key": "listener-valid-74" }, chunks(bytes, 7))
++    expect(valid.status).toBe(200)
++    expect(JSON.parse(valid.bytes.toString()).value.objective).toBe("Node café ☕ 😀")
++    expect(valid.headers["cache-control"]).toBe("no-store")
++    expect(f.observed.dispatches).toHaveLength(1)
++    expect(f.observed.dispatches[0]?.request).toBe(listener.web[0])
++    expect(f.observed.authentication).toContain(listener.web[0]!)
++    expect(listener.incoming[0]?.source.headers["content-length"]).toBeUndefined()
++    expect(listener.incoming[0]?.source.headers["transfer-encoding"]).toBe("chunked")
++    const before = await f.snapshot()
++    const invalidUtf8 = new TextEncoder().encode(JSON.stringify(draftBody("x")))
++    const objectiveOffset = Buffer.from(invalidUtf8).indexOf('"objective":"x"') + '"objective":"'.length
++    invalidUtf8[objectiveOffset] = 0xff
++    for (const body of [new TextEncoder().encode("{"), invalidUtf8]) {
++      const invalid = await post(listener.origin, workbenchPath, { ...domainHeaders(f), "idempotency-key": "listener-invalid-74" }, chunks(body, 3))
++      expect(invalid.status).toBe(400)
++      expect(invalid.bytes.toString()).toBe('{"status":"invalid"}')
++      expect(JSON.parse(invalid.bytes.toString())).toEqual({ status: "invalid" })
++      expect(await f.snapshot()).toEqual(before)
++    }
++    expect(f.observed.admissions).toHaveLength(1)
++    expect(f.observed.commands).toHaveLength(1)
++    expect(f.observed.dispatches).toHaveLength(1)
++    for (const request of listener.incoming) { await responded(request); expect(request.source.complete).toBe(true) }
++  })
++}, 30000)
++
++test("Actual Node/Effect listener refuses chunked UTF-8 excess and a false length before EOF and releases readers", async () => {
++  await withListener(async (origin) => { const f = await workbenchFixture(origin); return { ...f, handler: f.app } }, async (f, listener) => {
++    const before = await f.snapshot()
++    const json = JSON.stringify(draftBody("☕".repeat(24000)))
++    const bytes = new TextEncoder().encode(json)
++    expect(json.length).toBeLessThan(65536)
++    expect(bytes.byteLength).toBeGreaterThan(65536)
++    const frames = chunks(bytes).map((chunk) => Buffer.concat([Buffer.from(`${chunk.byteLength.toString(16)}\r\n`), chunk, Buffer.from("\r\n")]))
++    const excess = await answerWithoutEof(listener, rawHead(listener, workbenchPath, { ...domainHeaders(f), "transfer-encoding": "chunked", "idempotency-key": "listener-excess-74" }), frames)
++    expect(excess).toMatch(/^HTTP\/1\.1 413/)
++    expect(excess.toLowerCase()).toContain("connection: close")
++    expect(excess.toLowerCase()).toContain("cache-control: no-store")
++    expect(excess.slice(excess.indexOf("\r\n\r\n") + 4)).toContain('{"status":"invalid"}')
++    expect(listener.incoming[0]?.source.complete).toBe(false)
++    await responded(listener.incoming[0]!)
++
++    const declared = await answerWithoutEof(listener, rawHead(listener, workbenchPath, { ...domainHeaders(f), "content-length": "65537" }))
++    expect(declared).toMatch(/^HTTP\/1\.1 413/)
++    expect(declared.slice(declared.indexOf("\r\n\r\n") + 4)).toContain('{"status":"invalid"}')
++    // Bun's response cleanup calls _dump(), which marks local EOF/complete even though no body was sent.
++    expect(listener.incoming[1]?.source.headers["content-length"]).toBe("65537")
++    expect(listener.incoming[1]?.source.readableLength).toBe(0)
++    await responded(listener.incoming[1]!)
++    expect(listener.web).toHaveLength(1) // An excessive declared hint never enters the application.
++    expect(f.observed.admissions).toHaveLength(0)
++    expect(f.observed.commands).toHaveLength(0)
++    expect(f.observed.dispatches).toHaveLength(0)
++    expect(await f.snapshot()).toEqual(before)
++  })
++}, 30000)
++
++test("Actual Node/Effect listener rejects a short declared body and aborts a truncated upload without writes or readers", async () => {
++  await withListener(async (origin) => { const f = await workbenchFixture(origin); return { ...f, handler: f.app } }, async (f, listener) => {
++    const before = await f.snapshot()
++    const bytes = new TextEncoder().encode(JSON.stringify(draftBody()))
++    // HTTP framing admits only two bytes; the domain receives invalid JSON instead of trusting the extra wire bytes.
++    const short = await answerWithoutEof(listener, rawHead(listener, workbenchPath, { ...domainHeaders(f), "content-length": "2", "idempotency-key": "listener-short-74" }), [bytes])
++    expect(short).toMatch(/^HTTP\/1\.1 400/)
++    await released(listener.incoming[0]!)
++
++    const admitted = new Promise<void>((resolve) => listener.server.once("request", () => resolve()))
++    const socket = connect(listener.port, "127.0.0.1")
++    socket.on("error", () => {}) // The intentional peer disconnect is the stimulus, not a client failure.
++    try {
++      await new Promise<void>((resolve, reject) => { socket.once("connect", resolve); socket.once("error", reject) })
++      socket.write(rawHead(listener, workbenchPath, { ...domainHeaders(f), "content-length": String(bytes.byteLength + 100), "idempotency-key": "listener-truncated-74" }))
++      socket.write(bytes.slice(0, Math.floor(bytes.byteLength / 2)))
++      await admitted
++      await new Promise<void>((resolve) => setImmediate(resolve))
++      socket.destroy()
++      await released(listener.incoming[1]!)
++      expect(listener.incoming[1]?.source.complete).toBe(false)
++      expect(listener.incoming[1]?.source.aborted).toBe(true)
++      expect(f.observed.admissions).toHaveLength(0)
++      expect(f.observed.commands).toHaveLength(0)
++      expect(f.observed.dispatches).toHaveLength(0)
++      expect(await f.snapshot()).toEqual(before)
++    } finally { socket.destroy() }
++  })
++}, 30000)
++
++test("Actual Node/Effect listener preserves an authorized binary upload above 65536 bytes and scanner refusal leaves SQLite unchanged", async () => {
++  await withListener(binaryFixture, async (f, listener) => {
++    const before = await f.state()
++    const altered = new Uint8Array(f.accepted)
++    altered[altered.length - 1] = altered[altered.length - 1]! ^ 1
++    const refused = await post(listener.origin, f.uploadPath(), domainHeaders(f, "image/bmp"), chunks(altered, 1021))
++    expect(refused.status).toBe(422)
++    expect(f.scans).toHaveLength(1)
++    expect(f.scans[0]?.accepted).toBe(false)
++    expect(await f.state()).toEqual(before)
++
++    expect(f.accepted.byteLength).toBeGreaterThan(65536)
++    const accepted = await post(listener.origin, f.uploadPath(), domainHeaders(f, "image/bmp"), chunks(f.accepted, 1021))
++    expect(accepted.status).toBe(200)
++    expect(JSON.parse(accepted.bytes.toString())).toMatchObject({ ok: true })
++    expect(f.scans).toHaveLength(2)
++    expect(f.scans[1]).toEqual({ digest: f.acceptedDigest, type: "image/bmp", bytes: f.accepted.byteLength, accepted: true })
++    const committed = await f.state()
++    expect(committed.files).toHaveLength(1)
++    expect(committed.files[0]?.bytes).toEqual(f.accepted)
++    expect(committed.snapshot.versions["contracts:binary-c1"]?.version).toBe(4)
++    expect(committed.snapshot.versions.dataset?.version).toBe(8)
++    expect(committed.snapshot.audit).toHaveLength(1)
++
++    const stale = await post(listener.origin, f.uploadPath(), domainHeaders(f, "image/bmp"), chunks(f.accepted))
++    expect(stale.status).toBe(409)
++    expect(await f.state()).toEqual(committed)
++    expect((await f.logout())?.status).toBe(204)
++    const scansBefore = f.scans.length
++    const forbidden = await post(listener.origin, f.uploadPath(4), domainHeaders(f, "image/bmp"), chunks(f.accepted))
++    expect(forbidden.status).toBe(403)
++    expect(f.scans).toHaveLength(scansBefore)
++    expect(await f.state()).toEqual(committed)
++    for (const request of listener.incoming) await responded(request)
++  })
++}, 30000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..49ad5f84d98804f7ff5836c2b24044b6b1a0b294
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts
+@@ -0,0 +1,131 @@
++import { beforeAll, expect, spyOn, test } from "bun:test"
++import { createServer } from "node:http"
++import { writeFile } from "node:fs/promises"
++import { createRequire } from "node:module"
++import { pathToFileURL } from "node:url"
++import path from "node:path"
++import { Effect, Layer, Tracer } from "effect"
++import { HttpRouter, HttpServer } from "effect/unstable/http"
++import { BodyLimit } from "../../../../../../packages/server/src/body-limit.ts"
++import { composeSfInstallation } from "../../../../../../apps/cli/src/sucafina-product/installation.ts"
++import { createMicrosoftInstallation } from "../../../local/entry.ts"
++import { microsoftFixture } from "../../microsoft-login/oidc-fixture.ts"
++import { ingressOrigin, privateFixture, publicOrigin } from "../../microsoft-login/private-fixture.ts"
++
++type NodeServer = { layer: (evaluate: () => ReturnType<typeof createServer>, options: { host: string; port: number }) => Layer.Layer<HttpServer.HttpServer, unknown> }
++let NodeHttpServer: NodeServer
++beforeAll(async () => {
++  const cli = createRequire(path.resolve(import.meta.dir, "../../../../../../apps/cli/package.json"))
++  const platform = await import(pathToFileURL(cli.resolve("@effect/platform-node")).href) as { NodeHttpServer: NodeServer }
++  NodeHttpServer = platform.NodeHttpServer
++})
++
++test("The bounded Node/Effect bridge preserves Microsoft proxy, login cookies, CSRF, logout and callback privacy", async () => {
++  // The real identity validates PKCE/JWKS/JWT and stores encrypted sessions; the OIDC/Graph peer alone is synthetic.
++  // This component test is not evidence for Azure deployment, a provisioned B2B guest or native host qualification.
++  const f = await privateFixture()
++  const provider = await microsoftFixture()
++  const server = createServer()
++  const requests: Request[] = []
++  const spans: Tracer.NativeSpan[] = []
++  const tracer = Tracer.make({ span(options) { const span = new Tracer.NativeSpan(options); spans.push(span); return span } })
++  const logs: unknown[][] = []
++  const spies = [spyOn(console, "log"), spyOn(console, "warn"), spyOn(console, "error")]
++  for (const spy of spies) spy.mockImplementation((...values: unknown[]) => { logs.push(values) })
++  try {
++    await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
++      const http = yield* HttpServer.HttpServer
++      if (http.address._tag !== "TcpAddress") throw new Error("Expected ephemeral TCP listener")
++      const listener = `http://127.0.0.1:${http.address.port}`
++      yield* Effect.promise(() => writeFile(f.file, JSON.stringify({ ...f.config, listenerOrigin: listener })))
++      const application = yield* Effect.acquireRelease(
++        Effect.promise(() => createMicrosoftInstallation({ origin: listener }, f.file, f.environment, { fetch: provider.fetch, now: () => new Date(provider.clock.value) })),
++        (application) => Effect.promise(async () => { await application.dispose() }),
++      )
++      const installation = yield* Effect.promise(() => composeSfInstallation({ ...application, handler: (request: Request) => {
++        requests.push(request)
++        return application.handler(request)
++      } }, listener))
++      yield* Layer.build(HttpRouter.serve(Layer.mergeAll(BodyLimit.layer, installation.layer), { disableLogger: true, disableListenLog: true }).pipe(
++        Layer.provide(installation.privacy), Layer.provide(Layer.succeed(Tracer.Tracer)(tracer)),
++      ))
++      yield* Effect.addFinalizer(() => Effect.sync(() => server.closeAllConnections?.()))
++      yield* Effect.promise(async () => {
++        const request = (pathname: string, options: { method?: string; headers?: Record<string, string>; body?: string } = {}) => fetch(`${listener}${pathname}`, {
++          redirect: "manual", method: options.method, body: options.body,
++          headers: { host: new URL(ingressOrigin).host, connection: "close", forwarded: "proto=https;host=forged.example", "x-forwarded-proto": "https", "x-forwarded-host": "forged.example", ...options.headers },
++        })
++        const begin = await request("/sucafina/auth/login?returnTo=%2Fsucafina%2Fdashboard")
++        expect(begin.status).toBe(303)
++        expect(begin.headers.get("cache-control")).toBe("no-store")
++        const location = begin.headers.get("location")!
++        const authorization = new URL(location)
++        expect(authorization.searchParams.get("redirect_uri")).toBe(`${publicOrigin}/sucafina/auth/callback`)
++        const login = begin.headers.getSetCookie()[0]!
++        expect(login).toMatch(/(?:^|;\s*)Secure(?:;|$)/)
++        expect(login).toContain("HttpOnly")
++        expect(login).toContain("SameSite=Lax")
++        const code = await provider.issueCode(location)
++        const completed = await request(`/sucafina/auth/callback?state=${authorization.searchParams.get("state")}&code=${code}`, { headers: { cookie: login.split(";")[0]! } })
++        expect(completed.status).toBe(303)
++        expect(completed.headers.get("cache-control")).toBe("no-store")
++        expect(completed.headers.get("location")).toBe("/sucafina/dashboard")
++        const session = completed.headers.getSetCookie().find((cookie) => cookie.includes("_session="))!
++        expect(session).toStartWith("__Secure-")
++        expect(session).toMatch(/(?:^|;\s*)Secure(?:;|$)/)
++        expect(session).toContain("HttpOnly")
++        expect(session).toContain("SameSite=Lax")
++        const cookie = session.split(";")[0]!
++        const authenticated = await request("/sucafina/dashboard", { headers: { cookie } })
++        expect(authenticated.status).toBe(401) // Authenticated guest, with no initialized product role map.
++        await authenticated.arrayBuffer()
++
++        const rejectedLogout = await request("/sucafina/auth/logout", { method: "POST", headers: { cookie, origin: "https://forged.example" } })
++        expect(rejectedLogout.status).toBe(403)
++        await rejectedLogout.arrayBuffer()
++        const stillAuthenticated = await request("/sucafina/dashboard", { headers: { cookie } })
++        expect(stillAuthenticated.status).toBe(401)
++        await stillAuthenticated.arrayBuffer()
++
++        const marker = "synthetic-private-url-token-74"
++        const excessive = await request(`/sucafina/dashboard?sf=workbench-command&code=${marker}`, {
++          method: "POST", headers: { cookie, origin: publicOrigin, "content-type": "application/json", "content-length": "65537" }, body: "x".repeat(65537),
++        })
++        expect(excessive.status).toBe(413)
++        expect(excessive.headers.get("cache-control")).toBe("no-store")
++        expect(excessive.headers.get("x-content-type-options")).toBe("nosniff")
++        const rejection = await excessive.text()
++        expect(rejection).toBe('{"status":"invalid"}')
++        expect(rejection).not.toContain(provider.account.name)
++        expect(rejection).not.toContain(marker)
++
++        const wrongHost = await request("/sucafina/status", { headers: { host: "forged.example", "x-forwarded-host": new URL(ingressOrigin).host } })
++        expect(wrongHost.status).toBe(403)
++        await wrongHost.arrayBuffer()
++        expect(requests.length).toBeGreaterThan(0)
++        for (const admitted of requests) {
++          expect(new URL(admitted.url).origin).toBe(publicOrigin)
++          expect(admitted.headers.get("host")).toBe(new URL(publicOrigin).host)
++          expect(admitted.headers.has("forwarded")).toBe(false)
++          expect([...admitted.headers.keys()].some((name) => name.startsWith("x-forwarded-"))).toBe(false)
++        }
++        const logout = await request("/sucafina/auth/logout", { method: "POST", headers: { cookie, origin: publicOrigin } })
++        expect(logout.status).toBe(204)
++        expect(logout.headers.get("cache-control")).toBe("no-store")
++        const cleared = logout.headers.getSetCookie()
++        expect(cleared).toHaveLength(2)
++        expect(cleared.every((value) => value.includes("Max-Age=0") && /(?:^|;\s*)Secure(?:;|$)/.test(value) && value.includes("HttpOnly"))).toBe(true)
++        const signedOut = await request("/sucafina/dashboard", { headers: { cookie } })
++        expect(signedOut.status).toBe(303)
++        expect(signedOut.headers.get("location")).toStartWith("/sucafina/auth/login")
++        expect(spans).toHaveLength(0)
++        const output = logs.map((values) => values.map(String).join(" ")).join("\n")
++        for (const secret of [marker, code, authorization.searchParams.get("state")!, cookie, provider.account.name, "synthetic-access-", "synthetic-refresh-"]) expect(output).not.toContain(secret)
++      })
++    })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))), { signal: AbortSignal.timeout(25000) })
++  } finally {
++    for (const spy of spies) spy.mockRestore()
++    server.closeAllConnections?.()
++    await f.close()
++  }
++}, 30000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..b4f4360d23ee709c36582f060d4ca4382d1e11d5
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts
+@@ -0,0 +1,114 @@
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import path from "node:path"
++import { randomBytes, randomUUID } from "node:crypto"
++import { Location } from "@orchestra/core/location"
++import { AbsolutePath } from "@orchestra/core/schema"
++import { createModule } from "../../../index.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
++import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
++import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
++import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
++import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
++import { createDecisionCapabilities } from "../../../product/decisions/capabilities.ts"
++import { dispatchSfCapability } from "../../../product/host-binding/capability-dispatch.ts"
++import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../product/contracts/schema-admission.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { SfHostServices } from "../../../product/contracts/host-context.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { createSfWorkbenchHttp } from "../../../product/interface/http.ts"
++import { createFixtureBusiness } from "../wp02/business-services-fixture.ts"
++
++/** Actual operator authentication, SQLite, C08 authority and case dispatcher. No native/Microsoft claim. */
++export async function workbenchFixture(origin = "http://localhost:43174") {
++  const directory = await mkdtemp(path.join(await realpath(tmpdir()), "sf-http-body-74-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(directory)
++  const observed = {
++    authentication: [] as Request[],
++    commands: [] as { request: Request; operation: string; inputDigest: string; commandId: string }[],
++    admissions: [] as Request[],
++    dispatches: [] as { context: TrustedDomainContext; request: Request | undefined; operation: string; input: unknown }[],
++  }
++  const persistence = { ...store, ...createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, projectScope: createSfSourceScopeProjector(() => "2026-11-13T08:00:00Z"), createId: randomUUID }) }
++  const operator = { installationId: randomUUID(), uid: 1000, name: "Body limit test operator" }
++  const identity = createOperatorIdentity({ origin, mount: "/sucafina", operator, secrets: store.secrets, key: randomBytes(32) })
++  const location = Location.Ref.make({ directory: AbsolutePath.make(directory) })
++  const environment = async (request: Request) => ({ at: "2026-11-13T08:00:00Z", id: randomUUID, directory: await identity.directory(request) })
++  const proposalCoverageWrites = new WeakSet<object>(), dashboardHostWrites = new WeakSet<object>()
++  const authenticate: typeof identity.authenticate = (request, context) => {
++    observed.authentication.push(request)
++    return identity.authenticate(request, context)
++  }
++  const authority = createSfProductAuthority({
++    identity: () => ({ installationId: operator.installationId, projectId: "body-limit-project", hostId: "body-limit-host", location }),
++    installationId: operator.installationId, origin, policyVersion: "body-limit-policy", persistence,
++    proposalCoverageWrites, dashboardHostWrites, authenticate, environment,
++    grants: [{ principalRef: `macos:${operator.installationId}:${operator.uid}`, namespaces: ["cases"], operations: ["sf_case_draft", "sf_case_read"] }],
++    createId: randomUUID, now: Date.now,
++    commandIdentity: async (request, operation, inputDigest) => {
++      const key = request.headers.get("idempotency-key")
++      if (!key) return undefined
++      const commandId = digestSfValue({ operation, key })
++      observed.commands.push({ request, operation, inputDigest, commandId })
++      return commandId
++    },
++    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
++    providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
++  })
++  try {
++    for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
++    const business = await createFixtureBusiness({ authority, persistence, proposalCoverageWrites, dashboardHostWrites })
++    try {
++      const descriptors = createDecisionCapabilities({ cases: business.cases, requiredAuthority: { read: [], draft: [], receipt: [], alternative: [], change: [] }, createReceipt: authority.authority.receiptFor })
++      const dispatch: SfHostServices["dispatch"] = async (operation, payload, context) => {
++        const result = await dispatchSfCapability({ operation, payload, context, descriptors, authority: authority.authority,
++          validateInput: (_descriptor, value) => operation === "sf_case_read" ? decodeSfOperationInput("sf_case_read", value).ok : operation === "sf_case_draft" && decodeSfOperationInput("sf_case_draft", value).ok,
++          validateOutput: (_descriptor, result) => result.status !== "ok" || (operation === "sf_case_read" ? decodeSfOperationOutput("sf_case_read", result.result).ok : operation === "sf_case_draft" && decodeSfOperationOutput("sf_case_draft", result.result).ok),
++        })
++        observed.dispatches.push({ context, request: authority.authority.requestFor(context), operation, input: structuredClone(payload) })
++        return result
++      }
++      const services = { ...authority, ui: { ...authority.ui, admit: (...args: Parameters<typeof authority.ui.admit>) => {
++        observed.admissions.push(args[0])
++        return authority.ui.admit(...args)
++      } }, dispatch } as SfHostServices
++      const product = createSfWorkbenchHttp({ origin, mount: "/sucafina", runtime: () => services })
++      const app = createModule("/sucafina", { persistence, authenticate, environment, product, maxJsonBytes: 100000 })
++      const enrolled = await identity.handle(new Request(`${origin}/sucafina/auth/local?code=${await identity.enroll()}`))
++      const cookie = enrolled?.headers.get("set-cookie")?.split(";")[0]
++      if (enrolled?.status !== 303 || !cookie) throw new Error("Body fixture enrollment failed")
++      return {
++        origin, cookie, observed, authority, product, app,
++        request: (body: BodyInit | null, options: { headers?: HeadersInit; signal?: AbortSignal } = {}) => new Request(`${origin}/sucafina/dashboard?sf=workbench-command`, {
++          method: "POST", headers: { cookie, origin, "content-type": "application/json", "idempotency-key": randomUUID(), ...Object.fromEntries(new Headers(options.headers)) },
++          body, signal: options.signal, ...(body instanceof ReadableStream ? { duplex: "half" } : {}),
++        }),
++        snapshot: () => store.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) })),
++        logout: () => identity.handle(new Request(`${origin}/sucafina/auth/logout`, { method: "POST", headers: { cookie, origin } })),
++        async close() { business.dispose(); await store.dispose(); await rm(directory, { recursive: true, force: true }) },
++      }
++    } catch (error) { business.dispose(); throw error }
++  } catch (error) { await store.dispose(); await rm(directory, { recursive: true, force: true }); throw error }
++}
++
++export function draftBody(objective = "Review renewal") {
++  return { operation: "sf_case_draft", input: { objective, horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["Cost"], sourceRefs: [] } }
++}
++
++/** Explicitly pull-driven, so over-budget tests observe whether the producer was stopped early. */
++export function streamedBody(bytes: Uint8Array, chunkSize = 4096) {
++  const observed = { pulls: 0, bytes: 0, cancelled: 0, ended: false }
++  const stream = new ReadableStream<Uint8Array>({
++    pull(controller) {
++      observed.pulls++
++      const chunk = bytes.slice(observed.bytes, observed.bytes + chunkSize)
++      observed.bytes += chunk.byteLength
++      controller.enqueue(chunk)
++      if (observed.bytes === bytes.byteLength) { observed.ended = true; controller.close() }
++    },
++    cancel() { observed.cancelled++ },
++  }, { highWaterMark: 0 })
++  return { stream, observed }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..869a66168c1b43189b2291f50a80742761ce6043
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts
+@@ -0,0 +1,249 @@
++import { expect, test } from "bun:test"
++import { object } from "../../../runtime/contract.ts"
++import { limitRequestBody } from "../../../runtime/request-body.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { draftBody, streamedBody, workbenchFixture } from "./workbench-fixture.ts"
++
++test("Workbench accepts exactly 65536 UTF-8 bytes once and retains the original authenticated Request and command", async () => {
++  const f = await workbenchFixture()
++  try {
++    for (const [index, objective] of ["Review renewal", "Revisão ☕ café 😀"].entries()) {
++      const key = `body-limit-exact-${index}`
++      const payload = draftBody(objective)
++      const json = JSON.stringify(payload)
++      const bytes = new TextEncoder().encode(json + " ".repeat(65536 - new TextEncoder().encode(json).byteLength))
++      expect(bytes.byteLength).toBe(65536)
++      const input = streamedBody(bytes, 7) // UTF-8 characters cross chunk boundaries.
++      const request = f.request(input.stream, { headers: { "idempotency-key": key } })
++      const response = await f.product(request, "dashboard")
++      expect(response?.status).toBe(200)
++      expect(response?.headers.get("cache-control")).toBe("no-store")
++      expect(response?.headers.get("x-content-type-options")).toBe("nosniff")
++      const result = await response!.json()
++      expect(result.status).toBe("ok")
++      expect(result.value.objective).toBe(objective)
++      expect(result.outputRef).toStartWith("case:")
++      expect(input.observed.bytes).toBe(65536)
++      expect(input.observed.ended).toBe(true)
++      expect(input.observed.cancelled).toBe(0)
++      expect(request.bodyUsed).toBe(true)
++      expect(request.body?.locked).toBe(false)
++      expect(f.observed.admissions.at(-1)).toBe(request)
++      expect(f.observed.commands.at(-1)).toEqual({ request, operation: "sf_case_draft", inputDigest: digestSfValue(payload.input), commandId: digestSfValue({ operation: "sf_case_draft", key }) })
++      expect(f.observed.dispatches.at(-1)?.request).toBe(request)
++      expect(f.observed.dispatches.at(-1)?.input).toEqual(payload.input)
++      expect(f.observed.authentication.filter((value) => value === request).length).toBeGreaterThan(0)
++      const retried = await f.product(f.request(JSON.stringify(payload), { headers: { "idempotency-key": key } }), "dashboard")
++      expect(retried?.status).toBe(200)
++      expect((await retried!.json()).outputRef).toBe(result.outputRef)
++    }
++    const stored = await f.snapshot()
++    const cases = Object.values(object(object(stored.data.__sfProductV1).cases)).map(object)
++    expect(cases).toHaveLength(2)
++    expect(cases.map((entry) => entry.objective).sort()).toEqual(["Review renewal", "Revisão ☕ café 😀"].sort())
++  } finally { await f.close() }
++})
++
++test("Workbench cuts off oversized multibyte streams without Content-Length or with an understated budget before admission", async () => {
++  const f = await workbenchFixture()
++  try {
++    const before = await f.snapshot()
++    const payload = JSON.stringify(draftBody("☕".repeat(24000)))
++    expect(payload.length).toBeLessThan(65536)
++    const bytes = new TextEncoder().encode(payload)
++    expect(bytes.byteLength).toBeGreaterThan(65536)
++    for (const headers of [{}, { "content-length": "65536" }]) {
++      const input = streamedBody(bytes)
++      const request = f.request(input.stream, { headers })
++      const response = await f.product(request, "dashboard")
++      expect(response?.status).toBe(413)
++      expect(await response!.json()).toEqual({ status: "invalid" })
++      expect(response?.headers.get("cache-control")).toBe("no-store")
++      expect(input.observed.bytes).toBeLessThan(bytes.byteLength)
++      expect(input.observed.bytes).toBeLessThanOrEqual(65536 + 4096)
++      expect(input.observed.cancelled).toBe(1)
++      expect(input.observed.ended).toBe(false)
++      expect(request.body?.locked).toBe(false)
++      expect(await f.snapshot()).toEqual(before)
++    }
++    expect(f.observed.admissions).toHaveLength(0)
++    expect(f.observed.commands).toHaveLength(0)
++    expect(f.observed.dispatches).toHaveLength(0)
++  } finally { await f.close() }
++})
++
++test("Workbench rejects an excessive declared length without pulling the body and leaves SQLite unchanged", async () => {
++  const f = await workbenchFixture()
++  try {
++    const before = await f.snapshot()
++    const input = streamedBody(new TextEncoder().encode(JSON.stringify(draftBody())))
++    const request = f.request(input.stream, { headers: { "content-length": "65537" } })
++    const response = await f.product(request, "dashboard")
++    expect(response?.status).toBe(413)
++    expect(await response!.json()).toEqual({ status: "invalid" })
++    expect(input.observed.pulls).toBe(0)
++    expect(input.observed.cancelled).toBe(1)
++    expect(request.body?.locked).toBe(false)
++    expect(f.observed.admissions).toHaveLength(0)
++    expect(f.observed.dispatches).toHaveLength(0)
++    expect(await f.snapshot()).toEqual(before)
++  } finally { await f.close() }
++})
++
++test("Workbench refuses invalid, empty, truncated and length-mismatched bodies without dispatching writes", async () => {
++  const f = await workbenchFixture()
++  try {
++    const before = await f.snapshot()
++    const valid = JSON.stringify(draftBody())
++    const samples: { body: BodyInit | null; length?: string }[] = [
++      { body: "{" }, { body: null }, { body: valid.slice(0, -1) },
++      { body: valid, length: String(new TextEncoder().encode(valid).byteLength + 10) },
++      { body: valid, length: "2" }, { body: valid, length: "invalid" },
++    ]
++    for (const sample of samples) {
++      const request = f.request(sample.body, { headers: sample.length === undefined ? {} : { "content-length": sample.length } })
++      const response = await f.product(request, "dashboard")
++      expect(response?.status).toBe(400)
++      expect(await response!.json()).toEqual({ status: "invalid" })
++      expect(request.body?.locked ?? false).toBe(false)
++      expect(await f.snapshot()).toEqual(before)
++    }
++    expect(f.observed.admissions).toHaveLength(0)
++    expect(f.observed.commands).toHaveLength(0)
++    expect(f.observed.dispatches).toHaveLength(0)
++  } finally { await f.close() }
++})
++
++test("Workbench refuses malformed UTF-8 inside otherwise valid JSON without admission or durable effects", async () => {
++  const f = await workbenchFixture()
++  try {
++    const before = await f.snapshot()
++    const json = JSON.stringify(draftBody("x"))
++    const bytes = new TextEncoder().encode(json)
++    const objectiveOffset = json.indexOf('"objective":"x"') + '"objective":"'.length
++    expect(objectiveOffset).toBeGreaterThan(0)
++    bytes[objectiveOffset] = 0xff // A replacing decoder would accept this as a different objective.
++    const input = streamedBody(bytes, 3)
++    const request = f.request(input.stream)
++    const response = await f.product(request, "dashboard")
++    expect(response?.status).toBe(400)
++    expect(await response!.json()).toEqual({ status: "invalid" })
++    expect(input.observed.bytes).toBe(bytes.byteLength)
++    expect(request.body?.locked).toBe(false)
++    expect(f.observed.admissions).toHaveLength(0)
++    expect(f.observed.commands).toHaveLength(0)
++    expect(f.observed.dispatches).toHaveLength(0)
++    expect(await f.snapshot()).toEqual(before)
++  } finally { await f.close() }
++})
++
++test("The byte bounder filters empty chunks before buffering and Workbench still accepts the interleaved body", async () => {
++  const bytes = new TextEncoder().encode(JSON.stringify(draftBody("Empty chunks remain harmless")))
++  const half = Math.floor(bytes.byteLength / 2)
++  const interleaved = () => {
++    const observed = { pulls: 0, cancelled: 0 }
++    const stream = new ReadableStream<Uint8Array>({
++      pull(controller) {
++        const step = observed.pulls++
++        if (step === 386) controller.close()
++        else if (step === 128) controller.enqueue(bytes.slice(0, half))
++        else if (step === 257) controller.enqueue(bytes.slice(half))
++        else controller.enqueue(new Uint8Array())
++      },
++      cancel() { observed.cancelled++ },
++    }, { highWaterMark: 0 })
++    return { stream, observed }
++  }
++  const input = interleaved()
++  const bounded = limitRequestBody(input.stream, { limit: bytes.byteLength, signal: new AbortController().signal })
++  const reader = bounded.body!.getReader()
++  try {
++    expect(await reader.read()).toEqual({ done: false, value: bytes.slice(0, half) })
++    expect(await reader.read()).toEqual({ done: false, value: bytes.slice(half) })
++    expect((await reader.read()).done).toBe(true)
++    expect(input.observed.pulls).toBe(387)
++    expect(input.observed.cancelled).toBe(0)
++    expect(bounded.complete()).toBe(true)
++    expect(bounded.failure()).toBeUndefined()
++    expect(input.stream.locked).toBe(false)
++  } finally { reader.releaseLock(); bounded.dispose() }
++
++  const f = await workbenchFixture()
++  try {
++    const actual = interleaved()
++    const request = f.request(actual.stream)
++    const response = await f.product(request, "dashboard")
++    expect(response?.status).toBe(200)
++    expect((await response!.json()).value.objective).toBe("Empty chunks remain harmless")
++    expect(actual.observed.pulls).toBe(387)
++    expect(actual.observed.cancelled).toBe(0)
++    expect(request.body?.locked).toBe(false)
++    expect(f.observed.dispatches).toHaveLength(1)
++    expect(f.observed.dispatches[0]?.request).toBe(request)
++    expect(Object.values(object(object((await f.snapshot()).data.__sfProductV1).cases))).toHaveLength(1)
++  } finally { await f.close() }
++}, 10000)
++
++test("Workbench read failure is private and releases the body without admitting a command", async () => {
++  const f = await workbenchFixture()
++  try {
++    const before = await f.snapshot()
++    const stream = new ReadableStream<Uint8Array>({ pull(controller) { controller.error(new Error("synthetic-token-74-must-not-escape")) } }, { highWaterMark: 0 })
++    const request = f.request(stream)
++    const response = await f.product(request, "dashboard")
++    expect(response?.status).toBe(400)
++    expect(await response!.text()).toBe('{"status":"invalid"}')
++    expect(request.body?.locked).toBe(false)
++    expect(f.observed.admissions).toHaveLength(0)
++    expect(f.observed.dispatches).toHaveLength(0)
++    expect(await f.snapshot()).toEqual(before)
++  } finally { await f.close() }
++})
++
++test("Workbench abort cancels a stalled reader, unlocks it and leaves no durable effect", async () => {
++  const f = await workbenchFixture()
++  const abort = new AbortController()
++  const waiting = Promise.withResolvers<void>()
++  const observation = { pulls: 0, cancelled: 0 }
++  const stream = new ReadableStream<Uint8Array>({
++    pull(controller) {
++      observation.pulls++
++      if (observation.pulls === 1) { controller.enqueue(new TextEncoder().encode('{"operation":')); return }
++      waiting.resolve()
++    },
++    cancel() { observation.cancelled++ },
++  }, { highWaterMark: 0 })
++  try {
++    const before = await f.snapshot()
++    const request = f.request(stream, { signal: abort.signal })
++    const pending = f.product(request, "dashboard")
++    await waiting.promise
++    abort.abort()
++    const response = await pending
++    expect(response?.status).toBe(400)
++    expect(await response!.json()).toEqual({ status: "invalid" })
++    expect(observation.cancelled).toBe(1)
++    expect(request.signal.aborted).toBe(true)
++    expect(request.body?.locked).toBe(false)
++    expect(f.observed.admissions).toHaveLength(0)
++    expect(f.observed.dispatches).toHaveLength(0)
++    expect(await f.snapshot()).toEqual(before)
++  } finally { abort.abort(); if (!stream.locked) await stream.cancel().catch(() => {}); await f.close() }
++}, 10000)
++
++test("Body protection preserves CSRF and current authentication refusals without creating cases", async () => {
++  const f = await workbenchFixture()
++  try {
++    const before = await f.snapshot()
++    const payload = JSON.stringify(draftBody())
++    const wrongOrigin = await f.product(f.request(payload, { headers: { origin: "https://other.example" } }), "dashboard")
++    expect(wrongOrigin?.status).toBe(403)
++    const crossSite = await f.product(f.request(payload, { headers: { "sec-fetch-site": "cross-site" } }), "dashboard")
++    expect(crossSite?.status).toBe(403)
++    expect((await f.logout())?.status).toBe(204)
++    const loggedOut = await f.product(f.request(payload), "dashboard")
++    expect(loggedOut?.status).toBe(403)
++    expect(f.observed.dispatches).toHaveLength(0)
++    expect(await f.snapshot()).toEqual(before)
++  } finally { await f.close() }
++})

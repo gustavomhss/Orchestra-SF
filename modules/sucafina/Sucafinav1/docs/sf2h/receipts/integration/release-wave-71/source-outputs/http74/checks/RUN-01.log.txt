@@ -1,0 +1,59 @@
+bun test v1.3.14 (0d9b296a)
+2026-11-15T03:24:38.3323605Z 
+2026-11-15T03:24:38.3324137Z Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts:
+2026-11-15T03:24:39.1053301Z (pass) Workbench accepts exactly 65536 UTF-8 bytes once and retains the original authenticated Request and command [213.54ms]
+2026-11-15T03:24:39.1325966Z (pass) Workbench cuts off oversized multibyte streams without Content-Length or with an understated budget before admission [27.27ms]
+2026-11-15T03:24:39.1598136Z (pass) Workbench rejects an excessive declared length without pulling the body and leaves SQLite unchanged [27.28ms]
+2026-11-15T03:24:39.1888441Z (pass) Workbench refuses invalid, empty, truncated and length-mismatched bodies without dispatching writes [29.03ms]
+2026-11-15T03:24:39.2124286Z (pass) Workbench refuses malformed UTF-8 inside otherwise valid JSON without admission or durable effects [23.58ms]
+2026-11-15T03:24:39.2526525Z (pass) The byte bounder filters empty chunks before buffering and Workbench still accepts the interleaved body [40.21ms]
+2026-11-15T03:24:39.2751781Z (pass) Workbench read failure is private and releases the body without admitting a command [22.53ms]
+2026-11-15T03:24:39.3048036Z (pass) Workbench abort cancels a stalled reader, unlocks it and leaves no durable effect [29.65ms]
+2026-11-15T03:24:39.3316358Z (pass) Body protection preserves CSRF and current authentication refusals without creating cases [26.80ms]
+2026-11-15T03:24:39.3316712Z 
+2026-11-15T03:24:39.3316944Z Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts:
+2026-11-15T03:24:39.3672177Z (pass) Authorized binary domain upload preserves exact bytes, CAS and SQLite with a fail-closed component scanner [31.90ms]
+2026-11-15T03:24:39.3672626Z 
+2026-11-15T03:24:39.3672877Z Sucafinav1/test/product/http-body-limit-fix/listener.test.ts:
+2026-11-15T03:24:39.5483917Z 125 |     const objectiveOffset = Buffer.from(invalidUtf8).indexOf('"objective":"x"') + '"objective":"'.length
+2026-11-15T03:24:39.5484735Z 126 |     invalidUtf8[objectiveOffset] = 0xff
+2026-11-15T03:24:39.5485346Z 127 |     for (const body of [new TextEncoder().encode("{"), invalidUtf8]) {
+2026-11-15T03:24:39.5486472Z 128 |       const invalid = await post(listener.origin, workbenchPath, { ...domainHeaders(f), "idempotency-key": "listener-invalid-74" }, chunks(body, 3))
+2026-11-15T03:24:39.5487387Z 129 |       expect(invalid.status).toBe(400)
+2026-11-15T03:24:39.5488080Z 130 |       expect(JSON.parse(invalid.bytes.toString())).toEqual({ status: "invalid" })
+2026-11-15T03:24:39.5488441Z                         ^
+2026-11-15T03:24:39.5489034Z SyntaxError: JSON Parse error: Unexpected EOF
+2026-11-15T03:24:39.5490060Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts:130:19)
+2026-11-15T03:24:39.5491369Z (fail) Actual Node/Effect listener accepts the 65536-byte Workbench boundary and rejects malformed bodies without new effects [175.85ms]
+2026-11-15T03:24:47.5952167Z  97 | }
+2026-11-15T03:24:47.5952438Z  98 | 
+2026-11-15T03:24:47.5952709Z  99 | async function released(request: Incoming) {
+2026-11-15T03:24:47.5953099Z 100 |   let timer: ReturnType<typeof setTimeout> | undefined
+2026-11-15T03:24:47.5953382Z 101 |   try {
+2026-11-15T03:24:47.5954005Z 102 |     await Promise.race([request.closed, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Incoming request was not released")), 8000) })])
+2026-11-15T03:24:47.5954682Z                                                                                                                       ^
+2026-11-15T03:24:47.5955284Z error: Incoming request was not released
+2026-11-15T03:24:47.5955873Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts:102:113)
+2026-11-15T03:24:47.5957034Z (fail) Actual Node/Effect listener refuses chunked UTF-8 excess and a false length before EOF and releases readers [8046.88ms]
+2026-11-15T03:24:47.6394470Z (pass) Actual Node/Effect listener rejects a short declared body and aborts a truncated upload without writes or readers [44.10ms]
+2026-11-15T03:24:55.6960194Z  97 | }
+2026-11-15T03:24:55.6960619Z  98 | 
+2026-11-15T03:24:55.6961064Z  99 | async function released(request: Incoming) {
+2026-11-15T03:24:55.6961689Z 100 |   let timer: ReturnType<typeof setTimeout> | undefined
+2026-11-15T03:24:55.6962116Z 101 |   try {
+2026-11-15T03:24:55.6965608Z 102 |     await Promise.race([request.closed, new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Incoming request was not released")), 8000) })])
+2026-11-15T03:24:55.6966600Z                                                                                                                       ^
+2026-11-15T03:24:55.6967202Z error: Incoming request was not released
+2026-11-15T03:24:55.6968107Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts:102:113)
+2026-11-15T03:24:55.6969580Z (fail) Actual Node/Effect listener preserves an authorized binary upload above 65536 bytes and scanner refusal leaves SQLite unchanged [8056.60ms]
+2026-11-15T03:24:55.6970291Z 
+2026-11-15T03:24:55.6970529Z Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts:
+2026-11-15T03:24:55.8722605Z (pass) The bounded Node/Effect bridge preserves Microsoft proxy, login cookies, CSRF, logout and callback privacy [150.83ms]
+2026-11-15T03:24:55.8725434Z 
+2026-11-15T03:24:55.8726408Z omni positive control [f4cb6ce735353859e53f22b0a1732d1e]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-15T03:24:55.8727034Z  12 pass
+2026-11-15T03:24:55.8727212Z  3 fail
+2026-11-15T03:24:55.8727397Z  282 expect() calls
+2026-11-15T03:24:55.8727651Z Ran 15 tests across 4 files. [17.55s]
+2026-11-15T03:24:55.8895672Z ##[error]Process completed with exit code 1.
+2026-11-15T03:24:55.9462803Z

@@ -1,0 +1,81 @@
+diff --git a/packages/server/src/body-limit.ts b/packages/server/src/body-limit.ts
+index f55e2c264aade5a27c9f1abcccf3c5a9c661f226..fff47ebb99a8265d49b49bc2c2e1f2473d23c5e2 100644
+--- a/packages/server/src/body-limit.ts
++++ b/packages/server/src/body-limit.ts
+@@ -1,10 +1,16 @@
+ export * as BodyLimit from "./body-limit"
+ 
+-import { Effect, FileSystem } from "effect"
++import { Context, Effect, FileSystem } from "effect"
+ import { HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ 
+ const MiB = 1024 * 1024
+ 
++/** A trusted embedding installation may select a finite limit; HTTP arguments cannot install this policy. */
++export const InstallationLimit = Context.Reference<(request: HttpServerRequest.HttpServerRequest) => number | undefined>(
++  "orchestra/http/InstallationLimit",
++  { defaultValue: () => () => undefined },
++)
++
+ /** Most routes carry small JSON; relay documents and config are the largest of them. */
+ export const DEFAULT_LIMIT = 16 * MiB
+ 
+@@ -31,7 +37,12 @@
+   (effect) =>
+     Effect.gen(function* () {
+       const request = yield* HttpServerRequest.HttpServerRequest
+-      const limit = limitFor(request.url.split("?", 1)[0])
++      const installationLimit = yield* InstallationLimit
++      const configured = installationLimit(request)
++      if (configured !== undefined && (!Number.isSafeInteger(configured) || configured <= 0)) {
++        return HttpServerResponse.empty({ status: 500, headers: { "cache-control": "no-store", connection: "close" } })
++      }
++      const limit = configured ?? limitFor(request.url.split("?", 1)[0])
+       const declared = Number(request.headers["content-length"])
+       if (declared > limit) return tooLarge(limit)
+       return yield* effect.pipe(
+diff --git a/packages/server/src/routes.ts b/packages/server/src/routes.ts
+index ccd11b2b4e6a59d4bb90019883b4de1ee90596dd..79b3de68654ffeb0c7c117374da88e37bf04a0e3 100644
+--- a/packages/server/src/routes.ts
++++ b/packages/server/src/routes.ts
+@@ -50,6 +50,9 @@
+ import type { CapabilityOperatorContract } from "@orchestra/core/capability/operator/contract"
+ import type { CapabilityConnectionSetupContract } from "@orchestra/core/capability/connection/setup-contract"
+ 
++/** Explicit embedding policy; ordinary server routes retain their default finite body limits. */
++export const InstallationBodyLimit = BodyLimit.InstallationLimit
++
+ const applicationServices = LayerNode.group([
+   Database.node,
+   EventV2.node,
+diff --git a/apps/cli/src/commands/handlers/serve.ts b/apps/cli/src/commands/handlers/serve.ts
+index 1356a4c3099d10c62e470142209ced0f8033a6e1..131358924c1130b1c77440e6ed6baf61059861a2 100644
+--- a/apps/cli/src/commands/handlers/serve.ts
++++ b/apps/cli/src/commands/handlers/serve.ts
+@@ -12,7 +12,7 @@
+ import { writeSync } from "node:fs"
+ import path from "node:path"
+ import { WebUi } from "@orchestra/server/web-ui"
+-import { createRoutes } from "@orchestra/server/routes"
++import { createRoutes, InstallationBodyLimit } from "@orchestra/server/routes"
+ import { AppDockSocket } from "@orchestra/app-dock/socket-transport"
+ import { Commands } from "../commands"
+ import { ProductHost } from "../../host"
+@@ -164,6 +164,17 @@
+       disableLogger: true,
+     }).pipe(
+       Layer.provide(installation?.privacy ?? Layer.empty),
++      Layer.provide(installation ? Layer.succeed(InstallationBodyLimit, (request) => {
++        // Only the explicitly loaded SF mount receives its existing 25 MiB contract-upload budget.
++        // Domain authentication, grants, content validation and scanning still run in that installation.
++        if (request.method !== "POST") return undefined
++        const url = new URL(request.url, "http://installation.invalid")
++        return url.pathname === `${installation.mount}/dashboard` &&
++          !url.searchParams.has("sf") && url.searchParams.getAll("upload").length === 1 &&
++          url.searchParams.get("upload") === "contract"
++          ? 25 * 1024 * 1024
++          : undefined
++      }) : Layer.empty),
+       Layer.provideMerge(NodeHttpServer.layer(() => server, { port, host: hostname })),
+       Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
+     ),

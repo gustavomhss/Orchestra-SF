@@ -1,0 +1,31 @@
+bun test v1.3.14 (0d9b296a)
+2026-11-15T03:46:21.4336483Z 
+2026-11-15T03:46:21.4336808Z Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts:
+2026-11-15T03:46:22.0723003Z (pass) Workbench accepts exactly 65536 UTF-8 bytes once and retains the original authenticated Request and command [161.53ms]
+2026-11-15T03:46:22.0907651Z (pass) Workbench cuts off oversized multibyte streams without Content-Length or with an understated budget before admission [18.52ms]
+2026-11-15T03:46:22.1031712Z (pass) Workbench rejects an excessive declared length without pulling the body and leaves SQLite unchanged [12.40ms]
+2026-11-15T03:46:22.1234709Z (pass) Workbench refuses invalid, empty, truncated and length-mismatched bodies without dispatching writes [20.29ms]
+2026-11-15T03:46:22.1411432Z (pass) Workbench refuses malformed UTF-8 inside otherwise valid JSON without admission or durable effects [17.67ms]
+2026-11-15T03:46:22.1669419Z (pass) The byte bounder filters empty chunks before buffering and Workbench still accepts the interleaved body [25.67ms]
+2026-11-15T03:46:22.1787318Z (pass) Workbench read failure is private and releases the body without admitting a command [11.91ms]
+2026-11-15T03:46:22.1935454Z (pass) Workbench abort cancels a stalled reader, unlocks it and leaves no durable effect [14.82ms]
+2026-11-15T03:46:22.2100484Z (pass) Body protection preserves CSRF and current authentication refusals without creating cases [16.50ms]
+2026-11-15T03:46:22.2100782Z 
+2026-11-15T03:46:22.2100970Z Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts:
+2026-11-15T03:46:22.2376606Z (pass) Authorized binary domain upload preserves exact bytes, CAS and SQLite with a fail-closed component scanner [24.13ms]
+2026-11-15T03:46:22.2376931Z 
+2026-11-15T03:46:22.2377122Z Sucafinav1/test/product/http-body-limit-fix/listener.test.ts:
+2026-11-15T03:46:22.3874030Z (pass) Actual Node/Effect listener accepts the 65536-byte Workbench boundary and rejects malformed bodies without new effects [145.06ms]
+2026-11-15T03:46:22.4205640Z (pass) Actual Node/Effect listener refuses chunked UTF-8 excess and a false length before EOF and releases readers [33.13ms]
+2026-11-15T03:46:22.4474985Z (pass) Actual Node/Effect listener rejects a short declared body and aborts a truncated upload without writes or readers [26.90ms]
+2026-11-15T03:46:22.4826231Z (pass) Actual Node/Effect listener preserves an authorized binary upload above 65536 bytes and scanner refusal leaves SQLite unchanged [35.13ms]
+2026-11-15T03:46:22.4826819Z 
+2026-11-15T03:46:22.4827339Z Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts:
+2026-11-15T03:46:22.5966589Z (pass) The bounded Node/Effect bridge preserves Microsoft proxy, login cookies, CSRF, logout and callback privacy [91.43ms]
+2026-11-15T03:46:22.5969999Z 
+2026-11-15T03:46:22.5970776Z omni positive control [7386bedfeda3e2beeac88c372e91d7ba]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-15T03:46:22.5971477Z  15 pass
+2026-11-15T03:46:22.5971667Z  0 fail
+2026-11-15T03:46:22.5971862Z  341 expect() calls
+2026-11-15T03:46:22.5972148Z Ran 15 tests across 4 files. [1170.00ms]
+2026-11-15T03:46:22.6570173Z

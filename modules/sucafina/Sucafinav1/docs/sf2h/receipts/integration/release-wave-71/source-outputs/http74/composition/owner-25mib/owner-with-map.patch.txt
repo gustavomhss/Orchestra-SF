@@ -1,0 +1,143 @@
+diff --git a/packages/server/src/body-limit.ts b/packages/server/src/body-limit.ts
+index f55e2c264aade5a27c9f1abcccf3c5a9c661f226..fff47ebb99a8265d49b49bc2c2e1f2473d23c5e2 100644
+--- a/packages/server/src/body-limit.ts
++++ b/packages/server/src/body-limit.ts
+@@ -1,9 +1,15 @@
+ export * as BodyLimit from "./body-limit"
+ 
+-import { Effect, FileSystem } from "effect"
++import { Context, Effect, FileSystem } from "effect"
+ import { HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ 
+ const MiB = 1024 * 1024
++
++/** A trusted embedding installation may select a finite limit; HTTP arguments cannot install this policy. */
++export const InstallationLimit = Context.Reference<(request: HttpServerRequest.HttpServerRequest) => number | undefined>(
++  "orchestra/http/InstallationLimit",
++  { defaultValue: () => () => undefined },
++)
+ 
+ /** Most routes carry small JSON; relay documents and config are the largest of them. */
+ export const DEFAULT_LIMIT = 16 * MiB
+@@ -31,7 +37,12 @@
+   (effect) =>
+     Effect.gen(function* () {
+       const request = yield* HttpServerRequest.HttpServerRequest
+-      const limit = limitFor(request.url.split("?", 1)[0])
++      const installationLimit = yield* InstallationLimit
++      const configured = installationLimit(request)
++      if (configured !== undefined && (!Number.isSafeInteger(configured) || configured <= 0)) {
++        return HttpServerResponse.empty({ status: 500, headers: { "cache-control": "no-store", connection: "close" } })
++      }
++      const limit = configured ?? limitFor(request.url.split("?", 1)[0])
+       const declared = Number(request.headers["content-length"])
+       if (declared > limit) return tooLarge(limit)
+       return yield* effect.pipe(
+diff --git a/packages/server/src/routes.ts b/packages/server/src/routes.ts
+index ccd11b2b4e6a59d4bb90019883b4de1ee90596dd..79b3de68654ffeb0c7c117374da88e37bf04a0e3 100644
+--- a/packages/server/src/routes.ts
++++ b/packages/server/src/routes.ts
+@@ -49,6 +49,9 @@
+ import { ServerCapabilityVerification } from "./capability-verification"
+ import type { CapabilityOperatorContract } from "@orchestra/core/capability/operator/contract"
+ import type { CapabilityConnectionSetupContract } from "@orchestra/core/capability/connection/setup-contract"
++
++/** Explicit embedding policy; ordinary server routes retain their default finite body limits. */
++export const InstallationBodyLimit = BodyLimit.InstallationLimit
+ 
+ const applicationServices = LayerNode.group([
+   Database.node,
+diff --git a/apps/cli/src/commands/handlers/serve.ts b/apps/cli/src/commands/handlers/serve.ts
+index 1356a4c3099d10c62e470142209ced0f8033a6e1..131358924c1130b1c77440e6ed6baf61059861a2 100644
+--- a/apps/cli/src/commands/handlers/serve.ts
++++ b/apps/cli/src/commands/handlers/serve.ts
+@@ -12,7 +12,7 @@
+ import { writeSync } from "node:fs"
+ import path from "node:path"
+ import { WebUi } from "@orchestra/server/web-ui"
+-import { createRoutes } from "@orchestra/server/routes"
++import { createRoutes, InstallationBodyLimit } from "@orchestra/server/routes"
+ import { AppDockSocket } from "@orchestra/app-dock/socket-transport"
+ import { Commands } from "../commands"
+ import { ProductHost } from "../../host"
+@@ -164,6 +164,17 @@
+       disableLogger: true,
+     }).pipe(
+       Layer.provide(installation?.privacy ?? Layer.empty),
++      Layer.provide(installation ? Layer.succeed(InstallationBodyLimit, (request) => {
++        // Only the explicitly loaded SF mount receives its existing 25 MiB contract-upload budget.
++        // Domain authentication, grants, content validation and scanning still run in that installation.
++        if (request.method !== "POST") return undefined
++        const url = new URL(request.url, "http://installation.invalid")
++        return url.pathname === `${installation.mount}/dashboard` &&
++          !url.searchParams.has("sf") && url.searchParams.getAll("upload").length === 1 &&
++          url.searchParams.get("upload") === "contract"
++          ? 25 * 1024 * 1024
++          : undefined
++      }) : Layer.empty),
+       Layer.provideMerge(NodeHttpServer.layer(() => server, { port, host: hostname })),
+       Layer.provide(AppNodeBuilder.build(LayerNode.group([Credential.node, PermissionSaved.node, ClaudeCodeAccount.node]))),
+     ),
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/microsoft49-composition-74-25mib.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/microsoft49-composition-74-25mib.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..41e1b329fa2135d3dc0801da002bd9fb18df0926
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/microsoft49-composition-74-25mib.json
+@@ -0,0 +1,44 @@
++{
++  "schema": "sf2h.microsoft49-composition.v1",
++  "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
++  "source_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
++  "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
++  "target_base": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
++  "source_tests_do_not_qualify_composition": true,
++  "validation": "NOT_RUN. Mission45 owns compiler/generation/spawn/guards; product CI/AM remain with S0 or explicitly authorized qualifiers. This file and the original archived source artifacts are material test inputs.",
++  "files": [
++    {
++      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
++      "mode": "100644",
++      "target_preimage_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
++      "postimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
++      "postimage_sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
++      "bytes": 25080,
++      "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
++      "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
++      "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
++    },
++    {
++      "path": "apps/cli/src/sucafina-product/installation.ts",
++      "mode": "100644",
++      "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
++      "postimage_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
++      "postimage_sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
++      "bytes": 9786,
++      "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
++      "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
++      "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
++    },
++    {
++      "path": "apps/cli/src/commands/handlers/serve.ts",
++      "mode": "100644",
++      "target_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
++      "postimage_blob": "131358924c1130b1c77440e6ed6baf61059861a2",
++      "postimage_sha256": "4360982e33319b71e5f045bbf3a1edc4241289eae9689d9c3e5b9a4e76b72d3b",
++      "bytes": 9696,
++      "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
++      "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
++      "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
++    }
++  ]
++}
+diff --git a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
+index 6517ff7b77fcb48bd0c471352d3906ddd43157f0..88f622aa755c9b747d03588ed10db7f9cbac497d 100644
+--- a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
+@@ -20,7 +20,7 @@
+   const postimage = await readFile(path.join(receipts, entry.postimage))
+   const canonical = await readFile(path.join(repository, target))
+   if (sha256(preimage) !== entry.preimage_sha256 || blob(preimage) !== entry.source_blob || sha256(postimage) !== entry.postimage_sha256 || blob(postimage) !== entry.postimage_blob) throw new Error("Integration artifact drift")
+-  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
++  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/http-body-limit-fix/composition/owner-25mib/microsoft49-composition-74-25mib.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
+   if (composition.schema !== "sf2h.microsoft49-composition.v1" || composition.source_release !== "74ba5b7f71182e531049b8c56fe304c3bec4c3db" || composition.source_manifest_blob !== blob(manifestBytes) || !Array.isArray(composition.files) || composition.files.length !== manifest.files.length || new Set(composition.files.map((file) => file.path)).size !== manifest.files.length || composition.files.some((file) => !manifest.files.some((source) => source.path === file.path && source.postimage_blob === file.source_postimage_blob && source.postimage_sha256 === file.source_postimage_sha256))) throw new Error("Integration composition mapping drift")
+   const installed = composition.files.find((file) => file.path === target)
+   if (!installed || blob(canonical) !== installed.postimage_blob || sha256(canonical) !== installed.postimage_sha256) throw new Error("Integration installed source drift requires owner reconciliation")
