@@ -183,7 +183,9 @@ test("Actual Node/Effect listener refuses chunked UTF-8 excess and a false lengt
     const declared = await answerWithoutEof(listener, rawHead(listener, workbenchPath, { ...domainHeaders(f), "content-length": "65537" }))
     expect(declared).toMatch(/^HTTP\/1\.1 413/)
     expect(declared.slice(declared.indexOf("\r\n\r\n") + 4)).toContain('{"status":"invalid"}')
-    expect(listener.incoming[1]?.source.complete).toBe(false)
+    // Bun's response cleanup calls _dump(), which marks local EOF/complete even though no body was sent.
+    expect(listener.incoming[1]?.source.headers["content-length"]).toBe("65537")
+    expect(listener.incoming[1]?.source.readableLength).toBe(0)
     await responded(listener.incoming[1]!)
     expect(listener.web).toHaveLength(1) // An excessive declared hint never enters the application.
     expect(f.observed.admissions).toHaveLength(0)

@@ -114,11 +114,16 @@ test("Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency 
     assert.equal(oversized.headers["x-content-type-options"], "nosniff")
     assert.equal(oversized.headers.connection, "close")
     assert.equal(f.observed.completed.length, 1)
+    assert.equal(f.received.at(-1).complete, false)
 
     const calls = f.observed.requests.length
     const declared = await send(f, null, { headers: { "content-length": "65537" }, end: false })
     assert.equal(declared.status, 413)
+    assert.equal(declared.body, '{"status":"invalid"}')
     assert.equal(f.observed.requests.length, calls)
+    assert.equal(f.received.at(-1).headers["content-length"], "65537")
+    assert.equal(f.received.at(-1).complete, false)
+    await released(f.received.at(-1))
     const tooShortJson = await send(f, Buffer.from('{"ok":true}'), { headers: { "content-length": "2" } })
     assert.equal(tooShortJson.status, 400)
     assert.equal(f.observed.completed.length, 1)
