@@ -10,7 +10,7 @@ import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext } from "../../context/contracts"
 
 type Phase = "editing" | "reviewing" | "submitting" | "unknown" | "confirmed" | "invalid" | "unavailable"
-const PENDING_PREFIX = "sf:case-create:pending:v1:"
+const PENDING_PREFIX = "sf:n24:case-create:pending:v1:"
 const KEY_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 
 async function scopedPrefix(context: SfContext): Promise<string> {
@@ -56,13 +56,15 @@ export function SfCreateCase(props: Readonly<{
     hasPending: false,
   })
   let generation = 0
+  let commandAbort: AbortController | undefined
+  onCleanup(() => commandAbort?.abort())
   createEffect(() => {
     const context = props.context()
     const ticket = ++generation
-    setForm({ readyPrefix: "", hasPending: false, createdRef: "", phase: "editing", message: "" })
+    setForm({ objective: "", start: "", end: "", currency: "", criteria: "", readyPrefix: "", hasPending: false, createdRef: "", phase: "editing", message: "" })
     if (!context) return
     let alive = true
-    onCleanup(() => { alive = false })
+    onCleanup(() => { alive = false; commandAbort?.abort() })
     void scopedPrefix(context).then((prefix) => {
       if (!alive || ticket !== generation) return
       const keys = pendingKeys(prefix)
@@ -128,6 +130,7 @@ export function SfCreateCase(props: Readonly<{
       return
     }
     const actor = context.stamp
+    const ticket = generation
     const request = {
       operation: "sf_case_draft" as const,
       input: {
@@ -140,10 +143,12 @@ export function SfCreateCase(props: Readonly<{
     }
     setForm({ phase: "submitting", hasPending: true, message: "" })
     const abort = new AbortController()
+    commandAbort = abort
     try {
       const result = await createSfDecisionsClient(transport)["decisions.command.sf_case_draft"](
         request, { signal: abort.signal, idempotencyKey },
       )
+      if (ticket !== generation) return
       const sameOwner = props.context()?.stamp
       if (!sameOwner || sameOwner.installationId !== actor.installationId ||
         sameOwner.projectId !== actor.projectId || sameOwner.principalRef !== actor.principalRef ||
@@ -174,8 +179,11 @@ export function SfCreateCase(props: Readonly<{
       }
       setForm({ phase: "unknown", message: result.kind === "response" ? "sf.ui33.createNoRef" : "sf.ui33.createUnknown" })
     } catch (error) {
+      if (ticket !== generation) return
       console.error("Sucafina decision creation result uncertain", error)
       setForm({ phase: "unknown", message: "sf.ui33.createUnknown" })
+    } finally {
+      if (commandAbort === abort) commandAbort = undefined
     }
   }
   const busy = () => form.phase === "submitting"
