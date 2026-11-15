@@ -202,6 +202,7 @@ function createPortfolioCostProjection(input: {
     const expected = structuredClone(original)
     if ((request.viewId !== "BI09" && request.viewId !== "BI10") || !selected || !("portfolioResultRef" in selected) || expected.decision?.kind !== "portfolio" ||
       expected.decision.portfolioResultRef !== selected.portfolioResultRef) return { status: "denied", reason: "portfolio-waterfall-selection-mismatch" }
+    const viewId = request.viewId
     const portfolioResult = expected.decision.portfolio
     const matches = portfolioResult.combinations.filter((entry) => entry.analysis?.scenarioResultRef === selected.sourceScenarioRef)
     if (matches.length !== 1 || !matches[0]?.analysis) return { status: "unavailable", reason: "portfolio-waterfall-combination-ambiguous" }
@@ -225,7 +226,7 @@ function createPortfolioCostProjection(input: {
         return { status: "ok", value: {
           projection: { ...source, decision: { kind: "scenario", scenarioResultRef: selected.sourceScenarioRef, scenario: analysis.scenario,
             comparisonRef: analysis.comparisonRef, comparison: analysis.comparison } },
-          presentation: { viewId: request.viewId, series: [], limitations: [] },
+          presentation: { viewId, series: [], limitations: [] },
         } }
       },
     } })

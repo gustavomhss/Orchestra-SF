@@ -103,7 +103,10 @@ export async function createRelationsFixture(options: { threadHistoryWrites?: We
     const current = result?.status === "ok" ? "evidence" in result.value ? result.value.evidence : result.value : undefined
     return { state: current && digestSfValue(current) === digestSfValue(ref) ? "fresh" : "unavailable", ref, accessRevision: context.binding.accessRevision, checkedAt: clock.at }
   }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
-  const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
+  const creationTarget: Readonly<{ ref: `sf-workspace:${string}`; incarnation: string }> = {
+    ref: `sf-workspace:${encodeURIComponent(read.binding.installationId)}`,
+    incarnation: read.binding.installationId,
+  }
   const state = createSfProductState({ threadHistoryWrites: options.threadHistoryWrites, persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => gate.active && candidate.headers.get("actor") === person.id ? { principalRef: person.id, accessRevision: "access", policyVersion: "policy" } : undefined })
   const authority = createCollaborationAuthority({ host, evidence })
   const mutationFence = createCollaborationMutationFence(host)
