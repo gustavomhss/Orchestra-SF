@@ -91,7 +91,15 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
           issue("unavailable", "sf.u25.error")
           return
         }
-        const sections = result.body.value.items.filter((item) => item.kind === "dashboard")
+        // The installed report producer uses "report:<page>" as its agenda
+        // section identity to distinguish the same dashboard slot across pages.
+        // Reuse that documented identity pattern; the selectionRef, period and
+        // recordRefs remain untouched producer-supplied authorization inputs.
+        const candidates = result.body.value.items.filter((item) => item.kind === "dashboard")
+        const sections = candidates.map((item) => ({
+          ...item, id: candidates.length === 1 ? "report:" + page.trim() :
+            "report:" + page.trim() + ":" + item.id,
+        }))
         // Refresh never strips already-selected sections merely because this read
         // is unavailable. Only an authoritative owner revocation clears them.
         setStore({ available: sections, status: sections.length ? "ready" : "empty", message: "", sourcePage: page })
