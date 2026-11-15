@@ -1,0 +1,39 @@
+{
+  "schema": "sf2h.integrator-succession-fence.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "authority": "S0 supervisor; explicit user instruction that every continuation uses a NEW browser session",
+  "logical_actor": "S0-C / C00 / I00",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "previous_epoch": "S0-C-e17-browser114",
+  "previous_authority_state": "REVOKED_BY_S0_FOR_USER_REQUESTED_SUCCESSION",
+  "next_epoch": "S0-C-e18-browser125",
+  "next_mission": 125,
+  "observed_head": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+  "material": {
+    "id": "C58",
+    "sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816",
+    "state": "NOT_FROZEN_NOT_ACCEPTED"
+  },
+  "previous_checkpoint": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after106-114/QUEUE-114-C58.json",
+  "runtime_termination_claimed": false,
+  "runtime_session_id": null,
+  "limitation": "114 last queue says RUNNING; browser runtime status/ID not exposed. Silence is not termination. This is explicit S0 revocation and CAS/epoch fencing, not a claim of process kill, credential revocation or terminal ACK114.",
+  "fencing": {
+    "branch_CAS_expected_head": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+    "force": false,
+    "accept_only_new_epoch_after_actual_ACK": true,
+    "previous_114_must_cease_writes_if_resumed": true,
+    "late_old_epoch_output": "quarantine for reconciliation, never overwrite or accept as current authority",
+    "new_actor_rule": "Check current HEAD and this fence. If unexpected predecessor activity occurs, suspend overlap and reconcile before edits; no blind reset/force."
+  },
+  "routing": {
+    "sole_integrator_successor": "125 / S0-C-e18-browser125",
+    "product_ci": "120 unchanged",
+    "compiler": "119 unchanged"
+  },
+  "native_goal": "paused; no native controller or old writer resumed",
+  "global_release": false
+}
