@@ -1,16 +1,16 @@
-import { expect } from "@playwright/test"
-import { nativeInstalledFixture as test } from "../fixture"
+import { expect, type Page } from "@playwright/test"
+import { nativeInstalledFixture as test, type InstalledNativeHarness } from "../fixture"
 
 /** Requires 120's *real* CAP28-admin session and private installed manifest.
  * No request interception, fake installation, mock permission, or local runner.
  * The fixture itself refuses execution outside the authorized Actions runner. */
 async function openInstalledSettings(
-  page: Parameters<Parameters<typeof test>[2]>[0]["page"],
-  manifest: { target: { shellOrigin: string; chapterHref: string } },
+  page: Page,
+  nativeHarness: InstalledNativeHarness,
 ) {
-  const target = new URL(manifest.target.chapterHref, manifest.target.shellOrigin)
+  const target = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
   await page.goto(target.toString())
-  // Prove the existing installed chapter before exercising the CAP28 route.
+  await nativeHarness.proveWeb(page.locator('[data-sf-frame="page"]'))
   // CAP28 registration remains the integrator's responsibility.
   const settingsRoute = new URL(target.toString())
   settingsRoute.pathname = "/orchestra/sf-procurement/settings"
@@ -22,7 +22,7 @@ async function openInstalledSettings(
 
 test.describe("N21 / U36 native installed CAP28", () => {
   test("reads original settings with owner-scoped source and usable 320/768/1280 reflow", async ({ page, nativeHarness }) => {
-    const surface = await openInstalledSettings(page, nativeHarness.manifest)
+    const surface = await openInstalledSettings(page, nativeHarness)
     await expect(surface.getByRole("group", { name: "General policy" })).toBeVisible()
     await expect(surface.getByRole("group", { name: "Approval matrix" })).toBeVisible()
     await expect(surface.getByRole("group", { name: "Currencies" })).toBeVisible()
@@ -42,7 +42,7 @@ test.describe("N21 / U36 native installed CAP28", () => {
   })
 
   test("draft review never persists until exact CAP28 save confirmation", async ({ page, nativeHarness }) => {
-    const surface = await openInstalledSettings(page, nativeHarness.manifest)
+    const surface = await openInstalledSettings(page, nativeHarness)
     const currency = surface.getByLabel("Currency", { exact: true })
     const original = await currency.inputValue()
     const proposed = original === "USD" ? "EUR" : "USD"
@@ -59,7 +59,7 @@ test.describe("N21 / U36 native installed CAP28", () => {
   })
 
   test("reset is review-only and cannot invent canonical defaults", async ({ page, nativeHarness }) => {
-    const surface = await openInstalledSettings(page, nativeHarness.manifest)
+    const surface = await openInstalledSettings(page, nativeHarness)
     await surface.getByRole("button", { name: "Reset settings" }).click()
     const review = surface.locator('[data-component="sf-change-review"]')
     await expect(review).toBeVisible()
