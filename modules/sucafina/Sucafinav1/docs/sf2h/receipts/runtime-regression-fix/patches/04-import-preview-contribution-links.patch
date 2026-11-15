@@ -20,7 +20,7 @@ index 42878a8eb5eb6e33c0140559e6390d537c3000f0..0000000 100644
 +// Only the persisted, host-authorized C04 selection may supply the link. This
 +// is navigation to a guarded route, never a client-side preview reconstruction.
 +const importPreviewLink = (ref: string): string => typeof ref === "string" && ref.trim()
-+  ? `<p><a href="/sucafina/planner?importPreviewRef=${esc(encodeURIComponent(ref))}" data-import-preview-link>View selected import preview</a></p>`
++  ? `<p><a href="/sucafina/planner?sf=imports&amp;importPreviewRef=${esc(encodeURIComponent(ref))}" data-import-preview-link>View selected import preview</a></p>`
 +  : ""
 +const coverage = (refs: readonly string[], state: string) => `<p>Cost coverage references</p>${list(refs)}${state === "complete" ? "" : "<p>Review the unresolved coverage with the responsible owner before treating this comparison as complete.</p>"}`
 +
