@@ -1,0 +1,147 @@
+{
+  "schema": "sf2h.causal-fix173.terminal-handoff.v1",
+  "mission": 173,
+  "order": "A04",
+  "epoch": "native-fix-e1-browser173",
+  "actor": {
+    "model": "GPT-6",
+    "requested": "Astra",
+    "session_id": null,
+    "session_id_status": "not exposed"
+  },
+  "branch": "sf-ux-w16",
+  "pr": 135,
+  "goal": "paused",
+  "global_release": false,
+  "lease": "SOURCE_AUTHOR_TERMINAL_RELEASED",
+  "ACK": {
+    "commit": "e69586fb81d4458606110df5d73411cef10b9561",
+    "blob": "41d57c161c1a268c4193c6a906f27f6377c02eb0"
+  },
+  "source": {
+    "commit": "b409b491a5faea7311c38a740a3f8bd6712d9f66",
+    "tree": "d45f98c23614058d2ecd0cc5dba538820010900a",
+    "state": "ARTIFACT_READY"
+  },
+  "consumer": {
+    "owner": 162,
+    "pr": 65,
+    "branch": "sf2-stack",
+    "observed_sha": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "observed_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "source_post_blobs_integrated": false,
+    "post_sha": "NOT_YET_CREATED",
+    "post_tree": "NOT_YET_CREATED"
+  },
+  "full_inert_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/PATCH-173.diff",
+    "blob": "6788d317f32536754b770826783ddf74d65560cc"
+  },
+  "checkpoint": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/CHECKPOINT-173.json",
+    "blob": "33acd3556e32944d3c1418d100f8ad71f8f6cb90"
+  },
+  "source_files": [
+    {
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "pre": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "post": "1a77ff23bee415941916467d75c81304a4aab382"
+    },
+    {
+      "path": "packages/schema/src/sucafina/decisions.ts",
+      "pre": "f648fe7011029920f7915ee9225b066da30be4c9",
+      "post": "6c1d974d807e84c244b601ae03a1402ecf27e405"
+    }
+  ],
+  "unchanged_test": {
+    "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "blob": "6183175ebce968280b61668085d27771697a4b64",
+    "previous_cases": 11,
+    "postimage_run": "NOT_RUN"
+  },
+  "root_cause": "Installed Effect4 beta.83 removed old Schema.minLength/pattern/numeric combinators; Union/Literal/Tuple take array, Schema.Schema<T> takes one generic. Old code failed hosted typecheck and decisions import before tests.",
+  "actual_historical_failures": {
+    "compiler163": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "result": "FAILURE_TYPECHECK",
+      "all_external_errors": "OPEN"
+    },
+    "ci164_decisions": {
+      "run": 43765725305,
+      "job": 132970248049,
+      "result": "IMPORT_FAILURE_ZERO_DECISIONS_TESTS"
+    },
+    "ci164_browser": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "result": "F03_S01_S05_FAIL",
+      "not_decisions_proof": true
+    },
+    "postimage173": {
+      "compiler": "NOT_RUN",
+      "surgical_test": "NOT_RUN",
+      "local_test": "NOT_RUN_PROHIBITED"
+    }
+  },
+  "exact_requests": {
+    "mission162": {
+      "owner": "ONLY_INTEGRATOR",
+      "branch": "sf2-stack",
+      "pr": 65,
+      "when": "NOW, subject to preimage/HEAD reconciliation",
+      "request": "Read current sf2-stack HEAD/tree; recheck both exact old source blob SHA-1s; apply only two-file PATCH-173.diff by own CAS force=false; do not merge historical PR135; preserve all other author paths and no shared seam edit from 173. Read back new consumer C/tree plus both expected source postblobs, publish actual ACK.",
+      "expected_post": {
+        "packages/schema/src/sucafina/decisions/source-contracts.ts": "1a77ff23bee415941916467d75c81304a4aab382",
+        "packages/schema/src/sucafina/decisions.ts": "6c1d974d807e84c244b601ae03a1402ecf27e405"
+      }
+    },
+    "mission163": {
+      "owner": "ONLY_COMPILER_SDK_GUARDS",
+      "branch": "sf-compiler-checks",
+      "pr": 107,
+      "after": "162 integrates and publishes same C/tree+postblobs",
+      "request": "Dedup against real run43766055614 by W/tree/request/runtime/config/fixtures. Hosted affected bun typechecks packages/schema plus transitive packages/client, apps/cli, modules/sucafina as needed; SDK and guards only causally invalidated. Record W/S/run/job/result. Do not rerun unchanged input or issue another dispatcher."
+    },
+    "mission164": {
+      "owner": "ONLY_PRODUCT_CI",
+      "branch": "sf-ci-validation",
+      "pr": 106,
+      "after": "162 integrates and publishes same C/tree+postblobs",
+      "request": "Use existing test-ci request, only modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts with unchanged Bun, Linux, --timeout 120000. Dedup W/tree/selector/runtime/config/fixtures; preserve strict 11 current tests/negative assertions. Record snapshot S/run/job/attempt/results. Do not repeat five previously green specs or unrelated browser failures on unchanged W."
+    }
+  },
+  "acceptance": [
+    {
+      "id": "A04-AC01",
+      "status": "SOURCE_READY_NOT_HOSTED_QUALIFIED"
+    },
+    {
+      "id": "A04-AC02",
+      "status": "SOURCE_READY_NOT_HOSTED_QUALIFIED"
+    },
+    {
+      "id": "A04-AC03",
+      "status": "NO_TRANSPORT_CHANGE_NOT_HOSTED_QUALIFIED"
+    }
+  ],
+  "unresolved": [
+    "162 consumer C/tree not yet integrated",
+    "new code not typechecked on hosted compiler163",
+    "new code has no hosted decisions tests 164",
+    "other owner compiler errors and 66 guards gates/141 warnings remain open",
+    "browser F03/S01/S05 separate failures",
+    "AM01-06, independent finals and same-C release checks remain pending"
+  ],
+  "terminal": {
+    "state": "ARTIFACT_READY_HANDOFF",
+    "integrated": false,
+    "qualified": false,
+    "no_extra_dispatch": true,
+    "no_local_validation": true,
+    "no_force_merge_deploy": true,
+    "goal": "paused",
+    "global_release": false
+  }
+}

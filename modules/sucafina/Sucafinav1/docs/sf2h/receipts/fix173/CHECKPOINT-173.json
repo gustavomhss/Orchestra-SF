@@ -1,0 +1,189 @@
+{
+  "schema": "sf2h.causal-fix173.checkpoint.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 173,
+  "order": "A04",
+  "epoch": "native-fix-e1-browser173",
+  "actor": {
+    "actual_model": "GPT-6",
+    "requested_model": "Astra",
+    "session_id": null,
+    "session_id_status": "not exposed"
+  },
+  "fence": {
+    "previous_epoch": "ux-native-w16-e3",
+    "previous_future_write_authority": "REVOKED_CURRENT_PATHS",
+    "previous_runtime_termination_claimed": false
+  },
+  "source": {
+    "branch": "sf-ux-w16",
+    "pr": 135,
+    "initial_commit": "c18ccbbf7c69c2df731019cc40832b2b337200e7",
+    "initial_tree": "0127a0cc446c2c7731018beda3b51ad35514107b",
+    "ack_commit": "e69586fb81d4458606110df5d73411cef10b9561",
+    "ack_tree": "455e7aa81fe06b556deb00b5597d746ec2fb21b3",
+    "product_commit": "b409b491a5faea7311c38a740a3f8bd6712d9f66",
+    "product_tree": "d45f98c23614058d2ecd0cc5dba538820010900a",
+    "cas": {
+      "expected_head": "e69586fb81d4458606110df5d73411cef10b9561",
+      "force": false,
+      "succeeded": true
+    }
+  },
+  "consumer": {
+    "owner": 162,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_commit": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "observed_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "integrated": false,
+    "post_commit": null,
+    "post_tree": null,
+    "post_blobs": "PENDING_162"
+  },
+  "files": [
+    {
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "source_pre": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "source_post": "1a77ff23bee415941916467d75c81304a4aab382",
+      "consumer_pre": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "consumer_post": "PENDING_162",
+      "lines_changed": 133
+    },
+    {
+      "path": "packages/schema/src/sucafina/decisions.ts",
+      "source_pre": "f648fe7011029920f7915ee9225b066da30be4c9",
+      "source_post": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+      "consumer_pre": "f648fe7011029920f7915ee9225b066da30be4c9",
+      "consumer_post": "PENDING_162",
+      "lines_changed": 26
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "source_pre": "6183175ebce968280b61668085d27771697a4b64",
+      "source_post": "6183175ebce968280b61668085d27771697a4b64",
+      "consumer_pre": "6183175ebce968280b61668085d27771697a4b64",
+      "consumer_post": "UNCHANGED",
+      "existing_tests": 11
+    },
+    {
+      "path": "packages/client/src/sucafina/decisions.ts",
+      "owner": "readonly transitive consumer",
+      "consumer_pre": "0ab758609ad3d2a338216413f431973437882fd2",
+      "consumer_post": "UNCHANGED"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+      "owner": "readonly transitive consumer",
+      "consumer_pre": "52b77cbaedbf36880edcbd6fd73ddb61e5472b79",
+      "consumer_post": "UNCHANGED"
+    }
+  ],
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/PATCH-173.diff",
+    "blob": "6788d317f32536754b770826783ddf74d65560cc",
+    "mode": "INERT_FULL_PATCH",
+    "application_owner": 162
+  },
+  "actual_api": {
+    "version": "effect4.0.0-beta.83",
+    "source": "https://raw.githubusercontent.com/Effect-TS/effect/effect%404.0.0-beta.83/packages/effect/src/Schema.ts",
+    "read_and_confirmed": [
+      "Schema.check(Schema.isMinLength(...))",
+      "Schema.check(Schema.isMaxLength(...))",
+      "Schema.check(Schema.isPattern(...))",
+      "Schema.check(Schema.isGreaterThanOrEqualTo(...))",
+      "Schema.Union([members])",
+      "Schema.Literals([literalValues])",
+      "Schema.Tuple([elements])",
+      "Schema.Schema<T> one parameter and Schema.Top",
+      "Schema.suspend still supports lazy recursive schema",
+      "Schema.Record(key,value) exists, no Record calls in this source"
+    ]
+  },
+  "edits": {
+    "source_contracts": {
+      "minLength": 62,
+      "pattern": 19,
+      "greaterThanOrEqualTo": 7,
+      "Union": 34,
+      "variadic_Literal": 10,
+      "changed_lines": 133,
+      "hunks": 25
+    },
+    "decisions": {
+      "minLength": 1,
+      "maxLength": 1,
+      "pattern": 3,
+      "greaterThanOrEqualTo": 2,
+      "Union": 8,
+      "Tuple": 2,
+      "variadic_Literal": 8,
+      "generic_Schema_arguments": 3,
+      "changed_lines": 26,
+      "hunks": 4
+    }
+  },
+  "historical_evidence": {
+    "compiler163": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "attempt": 1,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+      "result": "FAILURE",
+      "source_contracts_diagnostics": 134,
+      "decisions_diagnostics": 28,
+      "SDK": "GENERATED_NOT_CONSUMED",
+      "guards": "66_GATE_141_WARN_OPEN"
+    },
+    "product164_decisions": {
+      "run": 43765725305,
+      "job": 132970248049,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "result": "FAILURE_IMPORT_Schema.minLength",
+      "decisions_tests_executed": 0,
+      "other_tests_passed": 40
+    },
+    "product164_browser": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "result": "FAILURE_F03_S01_S05",
+      "relation": "NOT_DECISIONS_QUALIFICATION"
+    },
+    "postimage_173": {
+      "local_tests": "NOT_RUN_PROHIBITED",
+      "typecheck": "NOT_RUN_163_OWNS",
+      "hosted_decisions": "NOT_RUN_164_OWNS"
+    }
+  },
+  "preserved": [
+    "21 operation IDs and fixed routes",
+    "exact limits and SHA256 digests",
+    "recursive evidence and 134 syntactic repair",
+    "previous 11 regression specs and oracle",
+    "same authority/CAS/owner/source inputs",
+    "no any, unknown, casts, mocks, Effect upgrades, stubs, test/fixture changes"
+  ],
+  "acceptance": [
+    {
+      "id": "A04-AC01",
+      "result": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "id": "A04-AC02",
+      "result": "SOURCE_READY_NOT_QUALIFIED"
+    },
+    {
+      "id": "A04-AC03",
+      "result": "TRANSPORT_UNCHANGED_NOT_QUALIFIED"
+    }
+  ],
+  "status": {
+    "source": "ARTIFACT_READY",
+    "integrated": false,
+    "qualified": false,
+    "goal": "paused",
+    "global_release": false
+  }
+}
