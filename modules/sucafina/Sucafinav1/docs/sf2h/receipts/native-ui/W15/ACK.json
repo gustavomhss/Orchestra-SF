@@ -1,0 +1,83 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "mission_id": "UX20-W15",
+  "order": "A02",
+  "output": "A02",
+  "actor": "New ChatGPT GPT-6 session, user-invoked W15",
+  "requested_label": "Astra",
+  "effective_model": "GPT-6",
+  "github_actor": "gustavomhss",
+  "session_id": null,
+  "session_id_reason": "not exposed to ChatGPT through the active GitHub connector",
+  "branch": "sf-ux-w15",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "shared_cohort_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "shared_cohort_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+  "locked_contract_blobs": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+  },
+  "source_pins": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "application": {
+      "current": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "historical": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "semantic_delta": "C58 added Procurement quote/signed-po download visibility checks and export reauthorization; no planner command/monthly schema modification; no restore"
+    },
+    "planner_http": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+    "forecast_http": "b814872f18556d1137820cfb33c46048066a1c6e",
+    "renderer_planner": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+    "monthly_edit": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+    "monthly_host": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5"
+  },
+  "contract_families": [
+    "ctx",
+    "planner",
+    "transport"
+  ],
+  "catalog_owned_operations": 39,
+  "allowlist": [
+    "packages/schema/src/sucafina/planner.ts",
+    "packages/client/src/sucafina/planner.ts",
+    "apps/cli/src/sucafina-product/native-ui/planner.ts",
+    "packages/schema/src/sucafina/planner/**",
+    "packages/client/src/sucafina/planner/**",
+    "apps/cli/src/sucafina-product/native-ui/planner/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W15/**"
+  ],
+  "integration_owner": "114/S0-C-e17-browser114/sf2-stack/PR65",
+  "testing_owner": "120/PR106",
+  "compiler_owner": "119/PR107",
+  "lease": {
+    "epoch": "ux-native-w15-e1",
+    "state": "ACK_PUBLISHED_AWAITING_114_PER_OUTPUT_ADMISSION",
+    "user_authorization": "explicit W15 instruction",
+    "not_claimed": "No independent 114 per-output grant or current integrated producer baseline has been verified"
+  },
+  "dependencies": {
+    "authoring": "FROZEN ctx/planner/transport",
+    "integration": [
+      "F01",
+      "F02"
+    ],
+    "qualification": [
+      "F01",
+      "F02"
+    ],
+    "missing_producer_behaviour": "No stubs or synthetic receipts"
+  },
+  "restrictions": {
+    "no_local_tests": true,
+    "no_merge": true,
+    "no_deploy": true,
+    "no_azure": true,
+    "no_generated_edits": true,
+    "no_shared_path_edits": true
+  },
+  "status": "PREFLIGHT_ACK_NOT_ARTIFACT_READY"
+}
