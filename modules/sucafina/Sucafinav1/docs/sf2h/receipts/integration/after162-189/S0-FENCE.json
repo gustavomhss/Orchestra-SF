@@ -1,0 +1,28 @@
+{
+  "schema": "sf2h.integration-validation-transfer.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission": 189,
+  "branch": "sf2-stack",
+  "pr": 65,
+  "kind": "integration",
+  "previous_mission": 162,
+  "previous_epoch": "S0-C-e20-browser162",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+  "next_epoch": "S0-C-e21-browser189",
+  "previous_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "authority": "S0 under explicit user instruction deploy new continuation sessions now",
+  "reason": "Transfer soleintegration/validation authority preserving full predecessor product/results and supplied sourcequeue; not an inference of death from silence.",
+  "runtime_termination_claimed": false,
+  "limitation": "Browser process/session lifecycle and token revocation unavailable. Administrativeepoch+CASfence only. Anylatewrites/runmustbe reconciled beforeeffects, never reset/force or duplicateCI.",
+  "inflight_runs_observed": 0,
+  "queued_runs_observed": 0,
+  "routing": {
+    "integrator": 189,
+    "compiler": 190,
+    "product_ci": 191
+  },
+  "native_goal": "paused",
+  "global_release": false,
+  "state": "PREPARED_NOT_STARTED"
+}
