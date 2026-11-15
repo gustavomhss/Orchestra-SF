@@ -103,7 +103,7 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
   if (coverage) content.unshift({ title: "Coverage", images: [], table: [], figureCaption: "", lines: [...coverage] })
   const name = options.title.replace(/[^a-z0-9]+/gi, "_") || "Review"
   if (options.format === "docx") {
-    const { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType } = await import("docx")
+    const { Document, Packer, Paragraph, HeadingLevel, ImageRun, Footer, PageNumber, TextRun, AlignmentType, Table, TableRow, TableCell, WidthType, TableLayoutType, LineRuleType } = await import("docx")
     const document = new Document({
       title: options.title,
       creator: "Sucafina",
@@ -117,7 +117,14 @@ export async function renderPreservedReview(review: PreservedReview, options: { 
         properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1000, right: 1000, bottom: 1000, left: 1000 } } },
         footers: { default: new Footer({ children: [new Paragraph({ alignment: AlignmentType.RIGHT, children: [new TextRun("Preserved review · Page "), new TextRun({ children: [PageNumber.CURRENT] }), new TextRun(" of "), new TextRun({ children: [PageNumber.TOTAL_PAGES] })] })] }) },
         children: [
-      new Paragraph({ text: options.title, heading: HeadingLevel.TITLE }),
+      new Paragraph({
+        text: options.title,
+        heading: HeadingLevel.TITLE,
+        // The built-in 28pt Title must not inherit the 14pt body line box:
+        // atLeast expands for wrapped opaque IDs and Unicode/fallback glyphs.
+        spacing: { before: 0, after: 240, line: 760, lineRule: LineRuleType.AT_LEAST },
+        widowControl: true,
+      }),
       new Paragraph(`Review ${review.id} v${review.version} · ${review.createdAt}`),
       new Paragraph("This material contains the selected preserved sections in order. Human agenda notes and comments are identified separately from captured values. Each section keeps its own period and coverage."),
       ...content.flatMap((section) => [

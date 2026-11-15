@@ -66,9 +66,16 @@ export async function createReport(
   if (options.format === "docx") {
     const script = wordScript(title, options.year, environment.at, topics.map((selected) => ({ ...selected, bullets: selected.table.length ? selected.table.map((row) => row.join(" · ")) : selected.bullets })))
     if (!script.ok) return { ok: false, status: 422, errors: ["Select at least one topic."] }
-    const { Document, Packer, Paragraph, HeadingLevel, Footer, PageNumber, TextRun, AlignmentType } = await import("docx")
+    const { Document, Packer, Paragraph, HeadingLevel, Footer, PageNumber, TextRun, AlignmentType, LineRuleType } = await import("docx")
     const paragraphs = [
-      new Paragraph({ text: script.title, heading: HeadingLevel.TITLE }),
+      new Paragraph({
+        text: script.title,
+        heading: HeadingLevel.TITLE,
+        // The built-in 28pt Title must not inherit the 14pt body line box:
+        // atLeast expands for wrapped opaque IDs and Unicode/fallback glyphs.
+        spacing: { before: 0, after: 240, line: 760, lineRule: LineRuleType.AT_LEAST },
+        widowControl: true,
+      }),
       new Paragraph(script.line),
       new Paragraph("A review of the selected IT dashboard topics and their recorded figures."),
       new Paragraph(`Selection order: ${options.topics.join(" → ")}. Annual and monthly measures use FY ${options.year}; record lists show the authorized state captured at ${environment.at}.`),
