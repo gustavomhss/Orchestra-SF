@@ -1,0 +1,145 @@
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -69,6 +69,9 @@
+ import { createSfRoutineNativeAdapter } from "./routine-native-adapter.ts"
+ import { createSfRoutineNativeAdmission, type SfRoutineNativeAdmissionOrigin } from "./routine-native-admission.ts"
+ import { createSfRoutineNativeOwnerRegistry } from "./routine-native-registry.ts"
++import type { SfRoutineNativeHistoricalAuthority } from "./routine-native-registry.ts"
++import { createSfRoutineNativeOrigin } from "./routine-native-origin.ts"
++import type { SfRoutineNativeOriginalAdmission } from "./routine-native-origin.ts"
+ import { createSfRoutineNativeGovernance } from "./routine-native-governance.ts"
+ import { createSfRoutineNativeRuntime } from "./routine-native-runtime.ts"
+ import { createSfDashboardHttp } from "./dashboard-http.ts"
+@@ -80,6 +83,7 @@
+ import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
+ import { createSfTokenGate } from "./token-gate.ts"
+ import { createSfNativeHostContribution } from "./native-host.ts"
++import { createSfNativeAuthorityProducer, createSfNativeMaestroHttp } from "./native-authority-provider.ts"
+ import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
+ import { createSfNativeExecution } from "./native-execution.ts"
+ import type { SfStoppedRun } from "./native-execution.ts"
+@@ -94,7 +98,7 @@
+ import { sfAnalysisPrompt, withoutObservationTimes } from "./analysis-verifier.ts"
+ import { sfAnalysisSourcesAuthorized, sfHistoricalMemoryRequested, sfMemoryEvidence } from "./analysis-memory-evidence.ts"
+ import type { BusinessPorts, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedDomainContext, TrustedExecutionBinding, TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+-import type { TrustedDomainContext, TrustedExecutionBinding } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import type { SfNativeRunRecord } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
+ import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+ import type { SfNativeHostApi, SfLoadedSkillObservation } from "./native-host.ts"
+@@ -103,11 +107,24 @@
+ /** Resolves placement in the application's existing graph before it accepts HTTP. No second Session coordinator. */
+ export const createSfHostRuntime: CreateSfHostRuntime = (input) => createSfHostRuntimeWithRoutineNative(input)
+ 
++/**
++ * NOT IMPLEMENTED by the current native engine. This host-private interface must be supplied by a
++ * genuine native owner, after the original SF human Request/intent and native C15/Permission admission.
++ * No caller-supplied ID, resident sf_maestro or promise of future admission can implement it.
++ */
++export type SfRoutineNativeProducer = Readonly<{
++  ready: () => boolean
++  subscribe: (accept: (source: SfRoutineNativeOriginalAdmission) => Promise<(() => void) | undefined>) => () => void
++  historical: (context: TrustedUiContext, request: Request) => Promise<SfRoutineNativeHistoricalAuthority | undefined>
++}>
++
++/** Private composition seam. Both owner arguments are absent in the default host. */
+-/** Private composition seam. The origin is an installed authenticated capability, never HTTP/model IDs. */
+ export const createSfHostRuntimeWithRoutineNative = async (
+   input: Parameters<CreateSfHostRuntime>[0],
+   nativeRoutineOrigin?: () => SfRoutineNativeAdmissionOrigin | undefined,
++  nativeRoutineProducer?: SfRoutineNativeProducer,
+ ): Promise<SfHostRuntime> => {
++  if (nativeRoutineOrigin && nativeRoutineProducer) throw new Error("SF_ROUTINE_NATIVE_ORIGIN_CONFLICT")
+   if (!input.installationId.trim() || !path.isAbsolute(input.directory) || path.resolve(input.directory) !== input.directory) throw new Error("SF_HOST_PLACEMENT_INVALID")
+   const directory = AbsolutePath.make(input.directory)
+   const bundle = await createResidentAiBundle({ root: input.sourceRoot, manifestPath: path.join(input.sourceRoot, "manifests/resident.json") })
+@@ -197,8 +214,18 @@
+       return !!proof && authority.authorizeNative(proof.value.admission, binding)
+     },
+   })
++  // Cold-start C09 markers classify unbound native Maestro as SF-owned: deny only, never recover a grant.
++  let nativeMaestroProducer: ReturnType<typeof createSfNativeAuthorityProducer> | undefined
++  const gate = createSfTokenGate({ upstream: ClaudeCodeHost.node, isSfOwned: (id) => Effect.tryPromise(async () =>
++    await evidence.isSfOwned(id) || await nativeMaestroProducer?.isDurablyOwned(id) === true) })
+-  const gate = createSfTokenGate({ upstream: ClaudeCodeHost.node, isSfOwned: (id) => Effect.tryPromise(() => evidence.isSfOwned(id)) })
+   const native = createSfNativeHostContribution({ registry: authority.native,
++    maestro: {
++      gate,
++      authorize: (request, context, action, intent) => Effect.tryPromise(async () =>
++        authority.host.requestFor(context) === request &&
++        await authority.authority.revalidateDomainContext(context) &&
++        await authority.human.authorize(context, action, intent)),
++    },
+     onReady: (api) => { state.api = api; return () => { if (state.api === api) state.api = undefined } },
+     onSkillLoaded: (value) => {
+       if (!identity() || observed.has(value.session.id) || !selectionMatches(value.admission.selected)) throw new Error("SF_SKILL_OBSERVATION_INVALID")
+@@ -317,8 +344,27 @@
+   const routineOwners = createSfRoutineNativeOwnerRegistry({ resources: routineRuntime.resources,
+     requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
+     generation: async () => await state.models?.() ? state.generation : undefined })
++  // Real SF-native authority originates here. Task children still need an atomic C15 hook;
++  // absent from the public TaskGovernance.Admission. Keep execution and watch on HOLD.
++  if (!nativeRoutineOrigin && !nativeRoutineProducer) nativeMaestroProducer = createSfNativeAuthorityProducer({
++    authority, identity, nativeHost: () => state.api, persistence: input.persistence,
++    generation: async () => await state.models?.() ? state.generation : undefined,
++    model: async () => (await state.models?.())?.find((model) => model.providerID === "openai"),
++    policy: { tools: ["task"], contextBudgetTokens: 24_000, toolCallBudget: 12 },
++    enabled: () => false, // Task child C15 issuer NOT installed
++  })
++  const installedNativeProducer = nativeRoutineProducer ?? nativeMaestroProducer
++  const nativeMaestroHttp = createSfNativeMaestroHttp({
++    origin: input.origin, mount: input.mount, producer: () => nativeMaestroProducer,
++  })
++  const routineOriginBridge = createSfRoutineNativeOrigin({ ready: () => installedNativeProducer?.ready() === true,
++    resources: routineRuntime.resources, requestFor: authority.host.requestFor,
++    authorize: authority.authority.revalidateDomainContext,
++    authorizeIntent: (context, intent) => authority.human.authorize(context, "routines.run", intent),
++    generation: async () => await state.models?.() ? state.generation : undefined })
++  const unsubscribeNativeOrigin = installedNativeProducer?.subscribe(routineOriginBridge.admit)
+   const routineAdmission = createSfRoutineNativeAdmission({ resources: routineRuntime.resources, registry: routineOwners,
++    governance: routineGovernance, origin: () => installedNativeProducer ? routineOriginBridge.origin : nativeRoutineOrigin?.(),
+-    governance: routineGovernance, origin: () => nativeRoutineOrigin?.(),
+     requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
+     authorizeIntent: (context, intent) => authority.human.authorize(context, "routines.run", intent),
+     generation: async () => await state.models?.() ? state.generation : undefined,
+@@ -329,6 +375,15 @@
+     publication: routinePublication.publication, governance: routineGovernance, resolveCase: business.resolveCase, ...routineInputs })
+   const routineServices = createSfRoutineServices({ authority: authority.authority, publication: routinePublication.publication,
+     native: routineNative.native, resolveCase: business.resolveCase, prepareWatch: memory.prepareWatch, ...routineInputs })
++  const reauthenticatedRoutineHistory = async <A>(context: TrustedUiContext, read: () => Promise<A>): Promise<A | undefined> => {
++    const request = authority.host.requestFor(context)
++    if (!installedNativeProducer || !request || request.signal.aborted) return undefined
++    // The installed producer must read durable principal/native-origin evidence independently; plan.owner
++    // and client IDs are not an attestation. The default host never supplies this source.
++    const evidence = await installedNativeProducer.historical(context, request).catch(() => undefined)
++    if (!evidence) return undefined
++    return routineOwners.withReauthenticatedRead(context, request, evidence, read)
++  }
+   // The existing watch function has no native Schedule admission. It remains unadvertised.
+   // Task-backed descriptors install only after the actual Location bindings and private owner capability exist.
+   const sourcingInputs = createSfSourcingInputs({ authority, business })
+@@ -834,7 +889,7 @@
+       yield* Effect.addFinalizer(() => Effect.gen(function* () {
+         if (state.identity !== identity) return
+         // Revoke Request/native capabilities synchronously before any asynchronous shutdown can yield.
++        unsubscribeNativeOrigin?.(); nativeMaestroProducer?.dispose(); routineOriginBridge.dispose(); routineAdmission.dispose(); routineOwners.dispose()
+-        routineAdmission.dispose(); routineOwners.dispose()
+         yield* Effect.promise(() => Promise.allSettled([...executions.values()].map((execution) => execution.shutdown())))
+         executions.clear()
+         routineRuntime.dispose(); routineGovernance.dispose()
+@@ -851,8 +906,12 @@
+       choices: (request) => readSfImportAnalysisChoices(request, services) } : undefined })
+   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
+     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
++    analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
++    routineRuns: { discoverRuns: async (context) =>
++      context.kind !== "ui" || !installedNativeProducer ? routineServices.routineRuns.discoverRuns(context)
++        : (await reauthenticatedRoutineHistory(context, () => routineServices.routineRuns.discoverRuns(context))
++          ?? { status: "denied" as const, reason: "native-routine-historical-origin-unavailable" }) },
++    productHttp: async (request, surface) => await nativeMaestroHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+-    analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
+-    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+     prepare: async (request) => {
+       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }

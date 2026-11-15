@@ -1,0 +1,40 @@
+{
+  "schema": "sf-test-ci-request-v1",
+  "mission": 95,
+  "sourceW": {
+    "sha": "0f9804c108f5412e2423f9fb976743e547ca0feb",
+    "tree": "3a71988cfb3ea408f0d84ad08d635d1c98c9c92d"
+  },
+  "testCiRequest": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/native-host-provider/producer.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "additional": [
+    {
+      "cwd": "apps/cli",
+      "cmd": "bun typecheck"
+    },
+    {
+      "cwd": "modules/sucafina",
+      "cmd": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "cmd": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "authority": "45 only via existing test:ci/request",
+  "state": "REQUESTED_NOT_RUN",
+  "execution": null,
+  "run": null,
+  "job": null,
+  "dedup": "W/tree/config/args/base",
+  "globalRelease": false
+}
