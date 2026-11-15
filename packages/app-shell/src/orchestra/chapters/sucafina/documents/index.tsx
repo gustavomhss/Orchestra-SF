@@ -229,6 +229,16 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     setState({ matches, status: matches.matches.length ? "ready" : "filtered-empty", busy: false })
   }
   const selected = () => state.candidates.find((item) => item.id === state.selectedCandidateId)
+  const openSearchSource = async (ref: Matches["matches"][number]["documentRef"]) => {
+    const api = client()
+    if (!api || !permitted("files.document-open")) { setState("status", "unavailable"); return }
+    const token = fence()
+    setState({ selectedCandidateId: "", opened: undefined, status: "loading", busy: true })
+    const result = await api["files.document-open"]({ surface: state.surface, ref }, { signal: token.signal })
+    const source = accept(token, unpack(result))
+    if (!source || !current(token)) return
+    setState({ opened: source, status: "ready", busy: false })
+  }
   const openEvidence = async (candidate: Evidence) => {
     const api = client()
     if (!api || !permitted("files.document-open") ||
@@ -267,7 +277,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   const confirm = async () => {
     const api = client()
     const candidate = selected()
-    if (!api || !candidate || candidate.status !== "extracted" ||
+    if (!api || !candidate || !state.opened || candidate.status !== "extracted" ||
       !permitted("files.document-confirm") || state.phase !== "confirm-review" || state.busy) return
     const token = fence()
     setState({ busy: true, phase: "confirming", status: "loading" })
@@ -296,6 +306,12 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
     const token = fence()
     setState({ selectedCandidateId: candidate.id, targets: [], selectedTarget: "",
       preview: undefined, status: "loading", busy: true })
+    if (!permitted("files.document-open")) { fail("unavailable"); return }
+    const opened = accept(token, unpack(await api["files.document-open"]({
+      surface: state.surface, ref: candidate.ref,
+    }, { signal: token.signal })))
+    if (!opened || !current(token)) return
+    setState("opened", opened)
     const result = await api["files.document-scenario-targets"]({
       surface: state.surface, ref: candidate.ref,
     }, { signal: token.signal })
@@ -380,14 +396,25 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
   const scenarioView = () => props.surfaceId === "UI60"
   const showCandidates = () => evidence() || scenarioView() || (catalog() && props.route.kind === "detail")
   const preview = () => state.preview
-  const canSelect = (item: Evidence) => item.fileRef === state.documentRef &&
-    item.ref.target.documentId === state.documentRef && !state.busy
+  const canSelect = (item: Evidence) => item.ref.target.documentId === state.documentRef && !state.busy
   return (
     <SfPageFrame titleKey={key(title())} context={[]} tabs={[]} activeTab={null}
       secondaryActions={[]} density="comfortable" layout="work" onLayoutMode={() => undefined}>
       <section class="sf-files" data-sf-leaf="u24" data-sf-surface={props.surfaceId}
         data-sf-phase={state.phase} data-sf-read-state={state.status}>
         <SfStatePanel state={state.status} messageKey={key(message())} onRetryRead={refresh}>
+          <Show when={!catalog() || props.route.kind === "detail"}>
+            <div class="sf-files-fields">
+              <label>{t("sf.u24.source")}
+                <select value={state.surface} disabled={state.busy}
+                  onChange={(e) => { fence(); clearSelection(); setState("surface", e.currentTarget.value as FileSurface); void loadRouteCandidates() }}>
+                  <option value="procurement">Procurement</option><option value="dashboard">Dashboard</option>
+                </select>
+              </label>
+              <button type="button" class="mx-btn" disabled={state.busy}
+                onClick={refresh}>{t("sf.u24.reconcile")}</button>
+            </div>
+          </Show>
           <Show when={catalog() && props.route.kind !== "detail"}>
             <div class="sf-files-fields">
               <label>{t("sf.u24.source")}
@@ -436,18 +463,21 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                       <p>{t("sf.u24.score")}: {match.lexicalScore}</p>
                       <p>{match.documentRef.refId}</p>
                       <button type="button" class="mx-btn" disabled={state.busy}
-                        onClick={() => { void openEvidence({
-                          id: match.documentRef.refId, fileRef: state.documentRef,
-                          version: match.documentRef.target.revision,
-                          location: "", textRange: match.documentRef.target.segment,
-                          fieldCandidate: "", value: null, status: "stale",
-                          ref: match.documentRef,
-                        }) }}>
+                        onClick={() => { void openSearchSource(match.documentRef) }}>
                         {t("sf.u24.openOriginal")}
                       </button>
                     </article>}</For>
                   <For each={matches().limitations}>{(item) => <p role="status">{item}</p>}</For>
                   <Show when={matches().matches.length === 0}><p>{t("sf.u24.noMatches")}</p></Show>
+                  <Show when={state.opened && !state.selectedCandidateId}>
+                    <section class="sf-files-section" data-sf-search-source="authorized">
+                      <h3>{state.opened!.title}</h3>
+                      <p>{state.opened!.location}</p>
+                      <blockquote>{state.opened!.excerpt}</blockquote>
+                      <Show when={safeHref()}>{(href) =>
+                        <a href={href()} rel="noopener noreferrer">{t("sf.u24.openOriginal")}</a>}</Show>
+                    </section>
+                  </Show>
                 </section>}</Show>
             </form>
           </Show>
@@ -466,7 +496,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
                       {" "}{candidate.unit ?? ""} · {candidate.status} · {candidate.version}
                     </button>
                     <Show when={evidence() && candidate.status === "extracted"}>
-                      <button type="button" class="mx-btn" disabled={state.busy || !canSelect(candidate)}
+                      <button type="button" class="mx-btn" disabled={state.busy || !canSelect(candidate) || state.selectedCandidateId !== candidate.id || !state.opened}
                         onClick={() => {
                           setState({ selectedCandidateId: candidate.id, phase: "confirm-review", preview: undefined })
                         }}>{t("sf.ui59.primary")}</button>
