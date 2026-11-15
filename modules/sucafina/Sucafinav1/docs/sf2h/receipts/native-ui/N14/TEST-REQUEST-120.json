@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.n14.hosted-tests.request.v1",
+  "slot": "N14",
+  "epoch": "ux-native-n14-e1",
+  "owner": 120,
+  "status": "REQUESTED_NOT_RUN",
+  "branch": "sf-ux-n14",
+  "target": "sf2-stack",
+  "pr": 146,
+  "scope": [
+    "U03-AC01",
+    "U03-AC02",
+    "U03-AC03",
+    "U47-AC01",
+    "U47-AC02",
+    "U47-AC03"
+  ],
+  "specs": [
+    "packages/app-shell/e2e/sucafina/native/journeys/u03.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u47.spec.ts"
+  ],
+  "preconditions": [
+    "125 has integrated real F01/F02/A10/F03/S03 exports into candidate",
+    "125 has mounted CAP06/07/08 and copy",
+    "isolated real installed owner and project",
+    "typed workbook preview/download positive contract remains separate gate until available"
+  ],
+  "constraints": [
+    "No browser-mocked producer, bypassed scanner, fake source identities, synthetic receipts",
+    "Run surgical test only after unit end and compiler owner 119 acceptance",
+    "Real browser 200%/400% zoom required separately; CSS reflow and font scaling cannot claim zoom",
+    "Record exact compiled snapshot, failures, screenshots without private actor data"
+  ],
+  "requests": [
+    "Compare CAP06 metrics to producer, preserve observed zero",
+    "CAP07 CIO/leader/member CAS, delete affected member versions, readonly actor",
+    "CAP08 source-authorized cls/outlook/notes and per-record versions",
+    "Block import/export positives pending named source preview/download bytes",
+    "Late response, owner switch/revoke and outcome-unknown semantics"
+  ]
+}
