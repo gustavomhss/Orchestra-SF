@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h.docx-author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 130,
+  "actor": "browser130-new-session",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "session_id_note": "No host session identifier exposed to this model; no invented backend/session handle",
+  "status": "ACK130_AUTHORSHIP_ADMITTED",
+  "date_utc": "2026-11-15",
+  "authority": {
+    "branch": "docx-continuation-fix",
+    "lease_epoch": "docx-e2-browser130",
+    "expected_head": "a6153b63fd31ca20178db46ea72b0175ec589018",
+    "predecessor_mission": 124,
+    "predecessor_reservation": "REVOKED_BY_S0",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/docx-continuation130/S0-FENCE.json",
+    "fence_commit": "a6153b63fd31ca20178db46ea72b0175ec589018",
+    "predecessor_runtime_termination": "NOT_ASSERTED"
+  },
+  "source": {
+    "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+    "blob_sha": "7010c9e5ec1f5300388408573b5ace1273662070"
+  },
+  "inputs": {
+    "packet_ref": "d5c9e73b367303a42d27334ee6f76394422f9d1d",
+    "packet_blob": "42b3234d4b38b2039d5128c9ef2f84d5139791c4",
+    "predecessor_packet_blob": "d5d3db582fcbcc9b5dcc10783a50e80bfb967610",
+    "finding": "VIS112-001",
+    "finding_pr": 108,
+    "finding_head": "ae6fdd332ae8484f71caa5d9315883305729ce8d",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "planning_start_blob": "522782bb7e113124a937d7ef17313032be9d6850",
+    "planning_workflow_blob": "043205bee6031b4517a98591b3588fca0ab12925",
+    "planning_common_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "actor_S2_blob": "b49bca8162d815500a8bc2645b566dd8f12911e7"
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+    "modules/sucafina/Sucafinav1/test/product/docx-continuation130/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/docx-continuation130/**"
+  ],
+  "forbidden": [
+    "product changes outside DOCX table flow",
+    "local tests",
+    "new CI dispatcher",
+    "new reader",
+    "renderer runtime local",
+    "dev merge",
+    "deploy",
+    "Goal resume",
+    "global release"
+  ],
+  "routing": {
+    "integrator": 125,
+    "compiler": 128,
+    "dispatcher": 129,
+    "independent_reviewer": 131
+  },
+  "validation": "NOT_RUN",
+  "visual_finding": "OPEN"
+}
