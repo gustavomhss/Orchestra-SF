@@ -1,0 +1,43 @@
+{
+  "schema": "sf2h.repair202.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 202,
+  "title": "Fechar tipagem F01 do contexto vivo e seus testes",
+  "branch": "sf-context-types",
+  "epoch": "compiler-source-e1-browser202",
+  "observed_live_head_before_write": "9a2ca9055c8cf7f82deb5fa2d711383e5729b2da",
+  "expected_head": "9a2ca9055c8cf7f82deb5fa2d711383e5729b2da",
+  "product_base": "4426445c05823ed4932b8a8e35391df024bf74f3",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "s0_fence": {
+    "mission_source": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/202.json@f552f02336a4de85e7c62ca1e19baed23d17ae8b",
+    "sole_integrator_authority": "189/S0-C-e21-browser189; previous 162 future-writing authority revoked administratively",
+    "integrator_fence": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/189.json@f552f02336a4de85e7c62ca1e19baed23d17ae8b",
+    "compiler": "190/PR107",
+    "sole_product_ci": "200/PR106",
+    "native_goal": "paused",
+    "GLOBAL_RELEASE": false,
+    "predecessor_termination_claimed": false,
+    "competing_controller_created": false
+  },
+  "effective_model": "GPT-6",
+  "effective_model_source": "current ChatGPT model identity (not a claimed Astra runtime)",
+  "session_id": null,
+  "session_exposed": false,
+  "actual_actor": "ChatGPT; user-issued mission202 in this conversation",
+  "ack": "Accepted exclusive mission202 source and receipt paths, immutable criteria, no tests/typechecks/CI locally, remote GitHub MCP CAS only",
+  "source_preimages": {
+    "apps/cli/src/sucafina-product/native-ui/live-context.ts": "03a47cf080fc5b9751dbadad272c14d17f5cfc34",
+    "apps/cli/src/sucafina-product/native-ui/context.ts": "940f8fc612f7dee3a3c412075a8e16d3d6e21410",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts": "9fc888c5ceba20ca321e90ff8bc8e64e0c3acdad"
+  },
+  "evidence": {
+    "compiler_run": 43772959867,
+    "job": 132992733158,
+    "artifact": 14185067705,
+    "findings": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation190/FINDINGS-190-W77e.md",
+    "w77e_is_stale": true
+  },
+  "status": "ACK_ONLY; implementation and validation not yet claimed"
+}
