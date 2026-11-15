@@ -1,0 +1,470 @@
+{
+  "schema": "sf2h-guard55-evidence-preservation-v1",
+  "mission": 119,
+  "status": "OPEN_REVIEWER_DECISION_REQUIRED",
+  "source_commit": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "source_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "historical_run": 43708496555,
+  "historical_job": 132794704289,
+  "historical_artifact": 14158854987,
+  "origin_dev_at_run": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "merge_base_at_run": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf",
+  "guard_rule": {
+    "id": "agent-scratch",
+    "kind": "changed-paths",
+    "severity": "gate",
+    "statuses": [
+      "A",
+      "R",
+      "C"
+    ],
+    "glob": "**/*.log",
+    "clearedBy": "approval",
+    "rule_blob": "71ce321c30465faaf957a08256bd6b7d007d4173",
+    "rule_source": "script/guards/rules/agent-scratch.toml",
+    "policy_source": ".orchestra/skills/guardrail-usage/SKILL.md",
+    "rule_catalog": "docs/guardrail/catalog.md"
+  },
+  "groups": [
+    {
+      "group": "final-intake-55",
+      "tree_sha": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+      "count": 8,
+      "bytes": 27219
+    },
+    {
+      "group": "release-wave-71",
+      "tree_sha": "7ffe50c1a1fb9eea13ca7b933691921a05b69a51",
+      "count": 44,
+      "bytes": 837283
+    },
+    {
+      "group": "rolling-intake-42",
+      "tree_sha": "231f2b7c3ae7279b3071d7e95bacaeda317053d0",
+      "count": 3,
+      "bytes": 10736
+    }
+  ],
+  "total": {
+    "paths": 55,
+    "bytes": 875238
+  },
+  "evidence_preservation": {
+    "source_receipts_retained": true,
+    "log_git_blobs_unchanged": true,
+    "remove_or_rename_to_hide": false,
+    "ignore_comments": false,
+    "change_rule_or_warn_flip": false,
+    "self_approval": false,
+    "approval_label_added": false
+  },
+  "proposed_decision": {
+    "owner": "Maestro or independent authorized reviewer of integrated PR #65",
+    "action": "Review each source output log at the exact commit/blob; determine whether all 55 are canonical evidence that cannot be dropped. If approved, apply guardrail-approved:agent-scratch to PR #65 with explicit rationale referencing the immutable manifest; otherwise keep guard FAIL and request a reviewed evidence-preserving policy resolution.",
+    "post_decision": "Obtain actual authorized guard CI result for the same candidate and exact origin/dev/merge-base; no PASS inferred from label alone."
+  },
+  "artifacts": [
+    {
+      "group": "final-intake-55",
+      "source_manifest": "source-output-manifest-final.json",
+      "source_manifest_blob": "b782ed8a26f5571ea86750696a924145d3cc1997"
+    },
+    {
+      "group": "release-wave-71",
+      "source_manifest": "source-census-final.json",
+      "source_manifest_blob": "ca5890ed5addf5924a572dd089fedb001729743b"
+    },
+    {
+      "group": "rolling-intake-42",
+      "source_manifest": "source-census-final.json",
+      "source_manifest_blob": "0f51b1c0c8c78fbcdd6a3078da6f025f58bd98f5"
+    }
+  ],
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/01-43649352799.log",
+      "mode": "100644",
+      "blob_sha": "87a2c34edeb9720f4a7abec675f2bee4dfee7033",
+      "bytes": 4272,
+      "group": "final-intake-55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/02-43649823660.log",
+      "mode": "100644",
+      "blob_sha": "ba1e4185352c9e65a2e916f58faeb4559ee0a141",
+      "bytes": 2548,
+      "group": "final-intake-55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/03-43650319287.log",
+      "mode": "100644",
+      "blob_sha": "bfc6bc6750156ced1e59197a22d3872716ae8d65",
+      "bytes": 3439,
+      "group": "final-intake-55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/04-43650994005.log",
+      "mode": "100644",
+      "blob_sha": "e456a2ed570611a7990ac0065f85598bdcd60111",
+      "bytes": 3265,
+      "group": "final-intake-55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/05-43651791685.log",
+      "mode": "100644",
+      "blob_sha": "8a037b834a94cc1d432c1d55afe62d1170c7fac0",
+      "bytes": 5350,
+      "group": "final-intake-55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/06-43653108315.log",
+      "mode": "100644",
+      "blob_sha": "4c157c62f09ae8b9bc14e21580b67119cb58ec25",
+      "bytes": 4188,
+      "group": "final-intake-55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/07-43653855014.log",
+      "mode": "100644",
+      "blob_sha": "82cc6d0b8a6e579cdc526b22089cbec14e90f5e7",
+      "bytes": 2464,
+      "group": "final-intake-55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/agenda39/actions/08-43654981768.log",
+      "mode": "100644",
+      "blob_sha": "8731d2ba584b31a85c8c030a676b850df70ce8b4",
+      "bytes": 1693,
+      "group": "final-intake-55"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/B0-test-excerpt.log",
+      "mode": "100644",
+      "blob_sha": "f5b4c0f0322e6fdf92f05fe7162b6c5a16ec632b",
+      "bytes": 2572,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/auth72/ci/R1-test-excerpt.log",
+      "mode": "100644",
+      "blob_sha": "8dbd5c76c44e04af2ada77665f8804b1415b3b7a",
+      "bytes": 19381,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/b0/test-output.log",
+      "mode": "100644",
+      "blob_sha": "f493122efd5174196b6574dcdd6fd5e18ebd8ed0",
+      "bytes": 3378,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r1/test-output.log",
+      "mode": "100644",
+      "blob_sha": "8b5d4f7262372f0d08e823fcf6f9427c7035893c",
+      "bytes": 8833,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/c12-65/validation/r2/test-output.log",
+      "mode": "100644",
+      "blob_sha": "065349a1681ed5f50f1faf547e1d02fa0bb104e4",
+      "bytes": 8616,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B0-test-output.log",
+      "mode": "100644",
+      "blob_sha": "342c7129f4bfd11bc4cacdff44e56147ba15d503",
+      "bytes": 8544,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B1-test-output.log",
+      "mode": "100644",
+      "blob_sha": "8dd8b50207df51748d964edccd74dc266cefc228",
+      "bytes": 2129,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/B2-test-output.log",
+      "mode": "100644",
+      "blob_sha": "8d66dbba8fb077552e87ee01f78f07106f95309f",
+      "bytes": 7914,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/P03-test-output.log",
+      "mode": "100644",
+      "blob_sha": "42e39293213abf1c84323718acf1817cdda9d164",
+      "bytes": 5291,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/canonical-read76/ci/R1-test-output.log",
+      "mode": "100644",
+      "blob_sha": "3ed29a77c883fa3e7fb6d8a680bbb64dfe6f5a59",
+      "bytes": 7700,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80-terminal-delta/runs/R4-tests.log",
+      "mode": "100644",
+      "blob_sha": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+      "bytes": 5061,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R1-tests.log",
+      "mode": "100644",
+      "blob_sha": "1b71cd92c92de2cb59ea257915abb6367a54724a",
+      "bytes": 55851,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R2-tests.log",
+      "mode": "100644",
+      "blob_sha": "d5535c5a5fdbe34dbef7057c2032b44e20ccb241",
+      "bytes": 24507,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/cost80/runs/R3-tests.log",
+      "mode": "100644",
+      "blob_sha": "b41da686b893a2bd8f536c6671e8377a15ed8e3e",
+      "bytes": 2151,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R1-tests.log",
+      "mode": "100644",
+      "blob_sha": "b0ae8fae2396c2dc66ab36035cab598ede4911fc",
+      "bytes": 40064,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R2-tests.log",
+      "mode": "100644",
+      "blob_sha": "aeb1c529e74a6411248e32c16f7429b7cad6383f",
+      "bytes": 16232,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/exports66/ci/R3-tests.log",
+      "mode": "100644",
+      "blob_sha": "e2c4ca00cbcf91e6c9809fb125220fb739d91970",
+      "bytes": 14914,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/cleanup-job-132671266536.log",
+      "mode": "100644",
+      "blob_sha": "2f4b0d063c560cd3028994472cdabc78829ab65b",
+      "bytes": 2304,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/native64/checks/run64/test-job-132670817059.log",
+      "mode": "100644",
+      "blob_sha": "55a6bca3959f2759ff763dfc64614e62235331fb",
+      "bytes": 88508,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error-output.log",
+      "mode": "100644",
+      "blob_sha": "ac7855f087b4566bbd73665cbda703000e48137f",
+      "bytes": 2506,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-error.log",
+      "mode": "100644",
+      "blob_sha": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+      "bytes": 3299,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main-output.log",
+      "mode": "100644",
+      "blob_sha": "562a28955b912b1fa99103821cbed77d479dbbb4",
+      "bytes": 2526,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/clamd-main.log",
+      "mode": "100644",
+      "blob_sha": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+      "bytes": 3319,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam-output.log",
+      "mode": "100644",
+      "blob_sha": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+      "bytes": 1279,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-terminal-delta/ci/R4/scanner/freshclam.log",
+      "mode": "100644",
+      "blob_sha": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+      "bytes": 1346,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam-output.log",
+      "mode": "100644",
+      "blob_sha": "5f7a289e3dcbb9194c48f8b856f39bf5f2c17a2e",
+      "bytes": 970,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R2/scanner/freshclam.log",
+      "mode": "100644",
+      "blob_sha": "947131337f1c1f5c821116bea961ce309d44f044",
+      "bytes": 1037,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/bun.log",
+      "mode": "100644",
+      "blob_sha": "f84898708ac3db90f5bc392ac20a0bed97042103",
+      "bytes": 3744,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error-output.log",
+      "mode": "100644",
+      "blob_sha": "25a631e7b551a518b5545dcd496100f21193b93e",
+      "bytes": 2698,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-error.log",
+      "mode": "100644",
+      "blob_sha": "a059a0a6fc7bc2fd73b58750091842a1a4af5cb8",
+      "bytes": 3491,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main-output.log",
+      "mode": "100644",
+      "blob_sha": "b67c8061ef612343a3801304a1715efeffa262d0",
+      "bytes": 3294,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/clamd-main.log",
+      "mode": "100644",
+      "blob_sha": "1b94fbb66cf26b06f2dbe82e3a0dea27ad2a3e58",
+      "bytes": 4087,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam-output.log",
+      "mode": "100644",
+      "blob_sha": "71a2da26f85e3c1af4551aacbbc63b745ee92483",
+      "bytes": 1279,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/operations75-W4/ci/R3/scanner/freshclam.log",
+      "mode": "100644",
+      "blob_sha": "6aa6f3410f8e6090bcc2b257667df333c0d6c9aa",
+      "bytes": 1346,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R1-job.log",
+      "mode": "100644",
+      "blob_sha": "7f0108e35ccfc246cbc7e0b6d6a9a14804bbe3ce",
+      "bytes": 89896,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R2-job.log",
+      "mode": "100644",
+      "blob_sha": "8f929a49425b523ebdd7f6a820c7f67b79b0f0c6",
+      "bytes": 98644,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/runtime59/ci/R3-job.log",
+      "mode": "100644",
+      "blob_sha": "5a6b2b6a84a9f5c4361dd1649932611beecccae9",
+      "bytes": 72850,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/collaboration-case-verifier/r3-failure-excerpt.log",
+      "mode": "100644",
+      "blob_sha": "33dd7c03c77503c44fc0b9374ab2403c6e3bf3f5",
+      "bytes": 16310,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/import-preview-link/r1-failure-excerpt.log",
+      "mode": "100644",
+      "blob_sha": "6c0eaa12e5d48204194107a9f04a20a73ff4b638",
+      "bytes": 7563,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/owner-proposals/sourcing-case-evidence/r3-failure-excerpt.log",
+      "mode": "100644",
+      "blob_sha": "d82b5e58e771bc9e62abf34a9600d804b3f06cf2",
+      "bytes": 10169,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R1.tests.log",
+      "mode": "100644",
+      "blob_sha": "c718f517eacbacc224a9b842b51e93e1d8517832",
+      "bytes": 89377,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R2.tests.log",
+      "mode": "100644",
+      "blob_sha": "20e84b27f05a9f0590ff447a624cda86b4e9c0f9",
+      "bytes": 53310,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R3.tests.log",
+      "mode": "100644",
+      "blob_sha": "0c1c59e36aafb156504098adcdb64ce50262d63c",
+      "bytes": 28708,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/workbench68/runs/R4.tests.log",
+      "mode": "100644",
+      "blob_sha": "509326e2921e600367231470f7fc375a808e15f0",
+      "bytes": 10285,
+      "group": "release-wave-71"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/client-and-collection.log",
+      "mode": "100644",
+      "blob_sha": "88ddc0fae6c8c7cf77e28bae0eb224a6fd75c478",
+      "bytes": 3521,
+      "group": "rolling-intake-42"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/nominal-03.log",
+      "mode": "100644",
+      "blob_sha": "7c6801eed5eb0a3bcee125133734e87ff34319ad",
+      "bytes": 3234,
+      "group": "rolling-intake-42"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/source-outputs/reports36/evidence/source-guards.log",
+      "mode": "100644",
+      "blob_sha": "03784d07d1cad170a7a49529fc6febd5aca9d501",
+      "bytes": 3981,
+      "group": "rolling-intake-42"
+    }
+  ]
+}
