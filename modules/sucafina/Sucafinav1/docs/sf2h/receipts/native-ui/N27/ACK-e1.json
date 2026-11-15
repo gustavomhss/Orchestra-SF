@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h.native-ui.launch30-author-ack.v1",
+  "slot": "N27",
+  "actor": "ChatGPT GPT-6",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_exposure": "not provided by ChatGPT host",
+  "lease_epoch": "ux-native-n27-e1",
+  "state": "ACK_AUTHORIZED_LEAF_AUTHORING",
+  "branch": "sf-ux-n27",
+  "verified_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "work_orders": [
+    "U23",
+    "U24"
+  ],
+  "surfaces": [
+    "UI55",
+    "UI56",
+    "UI57",
+    "UI68",
+    "UI58",
+    "UI59",
+    "UI60"
+  ],
+  "source_preflight": {
+    "application": {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "delta": "same as C58; changed since historical; actual C60 reviewed"
+    },
+    "imports": {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+    },
+    "document-scenario": {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts",
+      "blob": "d6926db6f770692e4d2ccbe9f425bf389a9f5c95"
+    },
+    "documents": {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a"
+    }
+  },
+  "frozen_contracts": {
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surfaces": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "components": "818728d0a47c3f4c826943a7ab7262b4faac6a24"
+  },
+  "constraints": {
+    "no_local_tests": true,
+    "no_shared_writes": true,
+    "no_new_dispatcher": true,
+    "no_deploy": true,
+    "no_merge": true
+  },
+  "ack_notes": "S0 grants exclusive leaf authoring; producer A06 and shared F01/F02/F03/S01/S03/S04 integration remain gated by integrator125, CI120, compiler119."
+}
