@@ -24,7 +24,26 @@
       "bindingsPath": "packages/schema/src/sucafina/index.ts",
       "bindingsExport": "SfNativeOperationBindings",
       "composition": "metadata complete; canonical codecs only for admitted C subset, injected F02/D01; absent contract-unavailable before network; pilot ctx+A03, final all305 including dedicated auth/SDK"
-    }
+    },
+    "nativeOwnerFence": {
+      "scope": "All native-initiated legacy mutations; not legacy callers without header",
+      "header": "X-SF-Native-Owner",
+      "shape": "base64url strict JSON installationId,projectId,hostId,principalRef only",
+      "boundedDecodedBytes": 2048,
+      "consumer": "F02/D01",
+      "integrationOwner": "I00",
+      "application": "nativeCommandPrecondition after authenticate and before Domain.execute within same transaction",
+      "otherPorts": "views and planner.monthly verify actor/tuple in their original host transaction",
+      "onHeaderWithoutFence": "503 no commit",
+      "mismatch": "409 no commit",
+      "neverGrant": true,
+      "sourceStatus": "PLANNED_NOT_IMPLEMENTED"
+    },
+    "discoveryReconciliation": {
+      "F01_F02": "select=ids without directory selected in B; no fallback B; exact loaded identity A; hostId context expectation",
+      "contractRef": "CONTRACTS.md#21-discovery-mínimo"
+    },
+    "planningAuthority": "No catalog addition is working producer until I00 maps exact codec to real current SHA; absent binding is contract-unavailable before network. All modifications are documentary."
   },
   "families": {
     "ctx": {
@@ -1441,22 +1460,48 @@
       "method": "GET",
       "pathTemplate": "/api/sucafina/installations",
       "sourceRef": "server-routes",
-      "sourceSelector": "NEW SucafinaHandler under global Authorization then LocationMiddleware",
+      "sourceSelector": "NEW SucafinaHandler under global Authorization; discriminated select=ids avoids LocationMiddleware and compares trusted loaded runtime identity; select=location uses existing LocationMiddleware",
       "inputRef": {
         "contractRef": "CONTRACTS.md#21-discovery-mínimo",
-        "type": "SfInstallationDiscoveryInput",
+        "type": "SfInstallationSelector",
         "body": "absent",
         "pathParams": {},
         "query": {
-          "location[directory]": "required existing Location.Ref directory from selected SDK owner",
-          "location[workspace]": "optional existing Location.Ref workspace"
+          "discriminator": "select",
+          "variants": [
+            {
+              "select": "ids",
+              "required": [
+                "installationId",
+                "projectId"
+              ],
+              "forbidden": [
+                "location[directory]",
+                "location[workspace]"
+              ],
+              "source": "selected serverKey connection + trusted loaded installation runtime, not persisted Location"
+            },
+            {
+              "select": "location",
+              "required": [
+                "location[directory]"
+              ],
+              "optional": [
+                "location[workspace]"
+              ],
+              "source": "selected SDK Location.Ref + LocationMiddleware"
+            }
+          ]
         },
         "unknownKeys": "reject",
-        "duplicates": "reject"
+        "duplicates": "reject",
+        "unavailable": "empty list without cross-install enumeration"
       },
       "outputRef": {
         "contractRef": "CONTRACTS.md#21-discovery-mínimo",
-        "type": "SfInstallationList"
+        "type": "SfInstallationList",
+        "hostId": "current runtime identity",
+        "maxResultsForIds": 1
       },
       "schemaExport": "SfCtxInstallations",
       "clientMethod": "ctx.installations",
@@ -1475,15 +1520,21 @@
       "method": "GET",
       "pathTemplate": "{mount}/api/ui/context",
       "sourceRef": "entry",
-      "sourceSelector": "NEW native router after identity.prepare + legitimate bootstrap, before business()",
+      "sourceSelector": "NEW native router after identity.prepare + per-surface legitimate bootstrap; compare expected installation/project/host before and after SF admission; same prepared Request",
       "inputRef": {
         "contractRef": "CONTRACTS.md#22-contexto-autenticado-sf",
-        "type": "undefined",
+        "type": "SfExpectedContextBinding",
         "body": "absent",
-        "query": {},
+        "query": {
+          "installationId": "required",
+          "projectId": "required",
+          "hostId": "required"
+        },
         "pathParams": {},
         "mount": "bound descriptor only",
-        "unknownKeys": "reject"
+        "unknownKeys": "reject",
+        "duplicates": "reject",
+        "mismatch": "409 generic before private projection"
       },
       "outputRef": {
         "contractRef": "CONTRACTS.md#22-contexto-autenticado-sf",
@@ -1506,13 +1557,28 @@
       "method": "GET",
       "pathTemplate": "{mount}/auth/login",
       "sourceRef": "identity",
-      "sourceSelector": "identity.handle: login + safeReturn bridge",
+      "sourceSelector": "identity.handle: original login and safeReturn to dashboard marker; I00 return-intents private map and same-origin one-use bridge",
       "inputRef": {
         "contractRef": "CONTRACTS.md#42-microsoft-login-e-retorno",
         "type": "SfResolvedRoute",
-        "wire": "GET auth/login with only returnTo produced by validated native-return bridge; local-operator uses section4.3 enrollment, not this informational endpoint",
+        "wire": "Two-stage auth lifecycle: POST {mount}/api/ui/return-intents closed route metadata (Origin, <=4096 bytes) -> existing GET auth/login returnTo={mount}/dashboard?sf=native-return&resume=<opaqueRef>; no new auth safeReturn path; desktop uses same Session",
         "body": "absent",
-        "decoder": "none-navigation"
+        "decoder": "none-navigation",
+        "returnIntent": {
+          "owner": "I00",
+          "request": {
+            "chapterId": "frozen",
+            "routeId": "frozen",
+            "encodedRef": "optional",
+            "query": "allowlisted"
+          },
+          "ttlSeconds": 300,
+          "maxPendingPerInstallation": 256,
+          "minEntropyBits": 128,
+          "oneUse": true,
+          "noPersist": true,
+          "headDoesNotConsume": true
+        }
       },
       "outputRef": {
         "contractRef": "host-signatures.ts",
@@ -6001,7 +6067,15 @@
         "page": "Requests",
         "action": "save"
       },
-      "maxRequestBytes": 2097152
+      "maxRequestBytes": 2097152,
+      "pilotTitleSave": {
+        "phase": "P0",
+        "subset": "Requests existing PR draft/pr_rejected, values.pr.title only",
+        "expectedVersion": "view.versions['requests:'+id].version, not C02 projectionVersion",
+        "ownerHeader": "X-SF-Native-Owner and in-transaction fence",
+        "idempotency": "not durable receipt C12; outcome-unknown on lost response",
+        "not": "approval/submit_pr"
+      }
     },
     "domain.command.CAP25.submit_pr": {
       "family": "procurement",
@@ -7682,7 +7756,20 @@
       "fixedBodyDiscriminator": {
         "action": "preview"
       },
-      "maxRequestBytes": 65536
+      "maxRequestBytes": 65536,
+      "tsvRange": {
+        "source": [
+          "modules/sucafina/Sucafinav1/product/planner/monthly-edit.ts",
+          "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts"
+        ],
+        "clientOwner": "A02/S02/U07",
+        "rendererMonths": "0..11 map +1 to producer 1..12 once",
+        "batch": "MonthlyRequest.drafts by row with revision/cells raw text",
+        "preview": "previewMonthlyDrafts returns per-row validation and domain simulation",
+        "apply": "partial per-row CAS commit through current monthly host; only failed rows retained for explicit retry",
+        "noClientFinancialArithmetic": true,
+        "originalTextRetained": true
+      }
     },
     "planner.monthly.apply": {
       "family": "planner",
@@ -7718,7 +7805,20 @@
       "fixedBodyDiscriminator": {
         "action": "apply"
       },
-      "maxRequestBytes": 65536
+      "maxRequestBytes": 65536,
+      "tsvRange": {
+        "source": [
+          "modules/sucafina/Sucafinav1/product/planner/monthly-edit.ts",
+          "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts"
+        ],
+        "clientOwner": "A02/S02/U07",
+        "rendererMonths": "0..11 map +1 to producer 1..12 once",
+        "batch": "MonthlyRequest.drafts by row with revision/cells raw text",
+        "preview": "previewMonthlyDrafts returns per-row validation and domain simulation",
+        "apply": "partial per-row CAS commit through current monthly host; only failed rows retained for explicit retry",
+        "noClientFinancialArithmetic": true,
+        "originalTextRetained": true
+      }
     },
     "planner.forecast.prepare": {
       "family": "planner",
@@ -7883,7 +7983,18 @@
       "fixedBodyDiscriminator": {
         "action": "list"
       },
-      "maxRequestBytes": 65536
+      "maxRequestBytes": 65536,
+      "versionedV2Extension": {
+        "status": "PRODUCER_PATCH_REQUIRED_BEFORE_V2_ADMISSION",
+        "schemaVersion": 2,
+        "source": "CONTRACTS.md#56-views-pessoais-v2-e-entrada-preferida--r77-f06",
+        "path": "same existing POST and action",
+        "legacyPreserved": true,
+        "producer": "product/interface/personal-views.ts",
+        "bindingOwner": "A12",
+        "noPrematureReady": true,
+        "wire": "tagged legacy|native|unavailable entries, landing version; legacy list stays array"
+      }
     },
     "views.open": {
       "family": "domain-read",
@@ -7919,7 +8030,18 @@
       "fixedBodyDiscriminator": {
         "action": "open"
       },
-      "maxRequestBytes": 65536
+      "maxRequestBytes": 65536,
+      "versionedV2Extension": {
+        "status": "PRODUCER_PATCH_REQUIRED_BEFORE_V2_ADMISSION",
+        "schemaVersion": 2,
+        "source": "CONTRACTS.md#56-views-pessoais-v2-e-entrada-preferida--r77-f06",
+        "path": "same existing POST and action",
+        "legacyPreserved": true,
+        "producer": "product/interface/personal-views.ts",
+        "bindingOwner": "A12",
+        "noPrematureReady": true,
+        "wire": "tagged reauthorized destination; no cross-owner open"
+      }
     },
     "views.save": {
       "family": "domain-read",
@@ -7955,7 +8077,18 @@
       "fixedBodyDiscriminator": {
         "action": "save"
       },
-      "maxRequestBytes": 65536
+      "maxRequestBytes": 65536,
+      "versionedV2Extension": {
+        "status": "PRODUCER_PATCH_REQUIRED_BEFORE_V2_ADMISSION",
+        "schemaVersion": 2,
+        "source": "CONTRACTS.md#56-views-pessoais-v2-e-entrada-preferida--r77-f06",
+        "path": "same existing POST and action",
+        "legacyPreserved": true,
+        "producer": "product/interface/personal-views.ts",
+        "bindingOwner": "A12",
+        "noPrematureReady": true,
+        "wire": "tagged input kind=view|landing; view CAS or scoped preferred-view CAS"
+      }
     },
     "views.remove": {
       "family": "domain-read",
@@ -7991,7 +8124,18 @@
       "fixedBodyDiscriminator": {
         "action": "remove"
       },
-      "maxRequestBytes": 65536
+      "maxRequestBytes": 65536,
+      "versionedV2Extension": {
+        "status": "PRODUCER_PATCH_REQUIRED_BEFORE_V2_ADMISSION",
+        "schemaVersion": 2,
+        "source": "CONTRACTS.md#56-views-pessoais-v2-e-entrada-preferida--r77-f06",
+        "path": "same existing POST and action",
+        "legacyPreserved": true,
+        "producer": "product/interface/personal-views.ts",
+        "bindingOwner": "A12",
+        "noPrematureReady": true,
+        "wire": "v2 remove CAS; legacy unchanged"
+      }
     },
     "decisions.command.sf_case_draft": {
       "family": "decisions",
@@ -12621,7 +12765,13 @@
       "path": "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
       "commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
       "blob": "4f246d4b1e6090d509d8bed554d3556b50e61386",
-      "symbol": "handleSfViews"
+      "symbol": "handleSfViews",
+      "nativeV2SourceExtension": {
+        "path": "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+        "status": "PLANNED_NOT_IMPLEMENTED",
+        "owner": "existing producer owner -> I00 after explicit release/ACK",
+        "policy": "single preferences store and same ACL/CAS; opt-in v2 never changes legacy wire without schemaVersion"
+      }
     },
     "choice": {
       "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
