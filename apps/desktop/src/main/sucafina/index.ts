@@ -136,9 +136,9 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
   const registry = createSfConnectionRegistry({
     app: deps.electron.app, dialog: deps.electron.dialog,
     ownedConnection: deps.ownedConnection, validOwner,
-    onReplaced: async (connection) => {
+    onReplaced: async (connection, reason) => {
       await Promise.all([...bindings.values()].filter((item) => item.connection === connection)
-        .map((item) => retire(item, "owner-changed")))
+        .map((item) => retire(item, reason)))
     },
   })
 
@@ -190,7 +190,9 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     const codec = deps.operations["ctx.installations"]
     if (!codec) return { status: "unavailable", reason: "contract-mismatch" } as const
     const encoded = { select: "ids", projectId: selection.projectId, installationId: selection.installationId }
-    if (codec.decodeInput(encoded).status !== "ok") return { status: "unavailable", reason: "contract-mismatch" } as const
+    try {
+      if (codec.decodeInput(encoded).status !== "ok") return { status: "unavailable", reason: "contract-mismatch" } as const
+    } catch { return { status: "unavailable", reason: "contract-mismatch" } as const }
     // Fresh, approved global connection only. OAuth browser cookies are never imported here.
     const discoverySession = deps.electron.session.fromPartition("sf-native-discovery-" + randomUUID())
     try {
@@ -380,19 +382,33 @@ export function createSfDesktopBroker(deps: SfDesktopBrokerDependencies): Readon
     const binding = use(event, raw)
     if (!binding || !isRecord(raw) || !closed(raw, ["bindingHandle", "generation"]))
       return { status: "cleared", remote: "unavailable" } as const
-    // Revoke main-owned generation and cancel every result before contacting remote logout.
-    await retire(binding, "logout", true)
+    // Invalidate every binding sharing this ephemeral jar. Old handles cannot
+    // race a fresh login or get a response while logout is in flight.
+    const peers = [...bindings.values()].filter((item) => item.partition === binding.partition)
+    await Promise.all(peers.map((item) => retire(item, "logout", true)))
+    await purges.get(binding.partition)?.catch(() => undefined)
+    let unlock: () => void = () => undefined
+    const barrier = new Promise<void>((resolve) => { unlock = resolve })
+    purges.set(binding.partition, barrier)
     let remote: "confirmed" | "unavailable" = "unavailable"
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), 30_000)
     try {
       const reply = await requestSfHttp({
         net: deps.electron.net, session: binding.session, origin: binding.descriptor.publicOrigin,
         url: binding.descriptor.publicOrigin + binding.descriptor.mount + "/auth/logout",
-        method: "POST", mode: "empty", maxResponseBytes: 1024,
+        method: "POST", mode: "empty", maxResponseBytes: 1024, signal: controller.signal,
         headers: { Origin: binding.descriptor.publicOrigin, "Idempotency-Key": randomUUID(), Accept: "application/json" },
       })
       if (reply.status === 204) remote = "confirmed"
-    } catch { /* remote status does not restore local session */ }
-    finally { await purge(binding).catch(() => undefined) }
+    } catch { /* remote status does not restore the locally revoked session */ }
+    finally {
+      clearTimeout(timeout)
+      await binding.session.clearStorageData().catch(() => undefined)
+      await binding.session.clearCache().catch(() => undefined)
+      unlock()
+      if (purges.get(binding.partition) === barrier) purges.delete(binding.partition)
+    }
     return { status: "cleared", remote }
   }
 

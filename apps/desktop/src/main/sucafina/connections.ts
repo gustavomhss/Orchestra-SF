@@ -66,7 +66,7 @@ export function createSfConnectionRegistry(options: Readonly<{
   dialog: Pick<typeof import("electron").dialog, "showMessageBox">
   ownedConnection: () => Pick<SfConnectionCandidate, "serverKey" | "baseUrl" | "credentials"> | undefined
   validOwner: (owner: SfDesktopOwner) => boolean
-  onReplaced: (connection: SfApprovedConnection) => Promise<void>
+  onReplaced: (connection: SfApprovedConnection, reason: "owner-changed" | "server-removed") => Promise<void>
 }>) {
   const approved = new Map<string, SfApprovedConnection>()
   const pending = new Set<number>()
@@ -77,11 +77,11 @@ export function createSfConnectionRegistry(options: Readonly<{
     const entry = approved.get(recordKey(owner, serverKey, projectId))
     if (entry && entry.owner.frame === owner.frame && entry.owner.sender === owner.sender) return entry
   }
-  const drop = async (entry: SfApprovedConnection) => {
+  const drop = async (entry: SfApprovedConnection, reason: "owner-changed" | "server-removed" = "owner-changed") => {
     const key = recordKey(entry.owner, entry.candidate.serverKey, entry.candidate.projectId)
     if (approved.get(key) !== entry) return
     approved.delete(key)
-    await options.onReplaced(entry)
+    await options.onReplaced(entry, reason)
   }
   return Object.freeze({
     get,
@@ -122,11 +122,11 @@ export function createSfConnectionRegistry(options: Readonly<{
     },
     async remove(owner: SfDesktopOwner, serverKey: string, projectId: string, generation: number) {
       const entry = get(owner, serverKey, projectId)
-      if (entry && entry.generation === generation) await drop(entry)
+      if (entry && entry.generation === generation) await drop(entry, "server-removed")
     },
     async invalidateServer(serverKey: string) {
       for (const entry of [...approved.values()]) {
-        if (entry.candidate.serverKey === serverKey) await drop(entry)
+        if (entry.candidate.serverKey === serverKey) await drop(entry, "server-removed")
       }
     },
     async invalidateOwner(owner: SfDesktopOwner) {
