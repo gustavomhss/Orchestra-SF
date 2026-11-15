@@ -1,4 +1,5 @@
 import { For, Show, createEffect, onCleanup, type JSX } from "solid-js"
+import { A } from "@solidjs/router"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { createSfFilesClient } from "@orchestra/client/sucafina/files"
@@ -6,6 +7,7 @@ import type { SfFilesOperationOutput } from "@orchestra/schema/sucafina/files"
 import type { SfTransportResult } from "@orchestra/schema/sucafina/common"
 import type { SfSurfaceProps } from "../context/contracts"
 import { useSfContext } from "../context"
+import { encodeSfRouteRef } from "../navigation-state"
 import { SfPageFrame } from "../shared/frame"
 import type { SfCopyKey, SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
@@ -192,6 +194,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const token = fence()
     setState({ busy: true, status: "loading" })
     const result = await refreshReference(route.params.manifestId, state.surface, token)
+    if (current(token) && result && route.kind === "review" && result.manifest.state === "preview" && !result.receipt)
+      setState("phase", "reviewing")
     if (current(token) && !result) setState("busy", false)
   }
   const prepare = async () => {
@@ -251,7 +255,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       !permitted("files.import-apply")) return
     const token = fence()
     setState({ phase: "submitting", busy: true, status: "ready" })
-    const fresh = await refreshReference(manifest.id, manifest.context.surface, token)
+    const source = manifest.context.surface
+    if (source !== "planner" && source !== "dashboard") { failure({ state: "invalid" }); return }
+    const fresh = await refreshReference(manifest.id, source, token)
     if (!fresh || !current(token)) return
     if (fresh.manifest.version !== manifest.version || fresh.digest !== reference.digest ||
       fresh.manifest.state !== "preview" || fresh.manifest.domainApplied || fresh.receipt) {
@@ -286,7 +292,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     if (!ref) return
     const token = fence()
     setState({ busy: true, status: "loading" })
-    const fresh = await refreshReference(ref, state.manifest?.context.surface ?? state.surface, token)
+    const source = state.manifest?.context.surface ?? state.surface
+    if (source !== "planner" && source !== "dashboard") { failure({ state: "invalid" }); return }
+    const fresh = await refreshReference(ref, source, token)
     if (!current(token)) return
     if (!fresh) { setState("busy", false); return }
     if (fresh.receipt) setState({ phase: "receipt", status: "ready" })
@@ -505,6 +513,16 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
               <Show when={isImport()}>
                 <button type="button" class="mx-btn" disabled={state.busy}
                   onClick={cancelPreview}>{t("sf.u23.cancel")}</button>
+              </Show>
+              <Show when={isReference() && props.surfaceId === "UI56" && state.manifest?.state === "preview" && !state.reference?.receipt}>
+                <A class="mx-btn" href={"/orchestra/sf-imports/" + encodeSfRouteRef(state.manifest!.id) + "/review"}>
+                  {t("sf.ui56.primary")}
+                </A>
+              </Show>
+              <Show when={isImport() && state.reference?.receipt}>
+                <A class="mx-btn" href={"/orchestra/sf-imports/" + encodeSfRouteRef(state.manifest!.id) + "/receipt"}>
+                  {t("sf.ui57.primary")}
+                </A>
               </Show>
               <Show when={isImport() || props.route.kind === "review"}>
                 <button type="button" class="mx-btn primary" disabled={!canApply()}
