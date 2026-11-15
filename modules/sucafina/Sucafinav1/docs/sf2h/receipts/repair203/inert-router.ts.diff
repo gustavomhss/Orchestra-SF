@@ -2,7 +2,7 @@ diff --git a/apps/cli/src/sucafina-product/native-ui/router.ts b/apps/cli/src/su
 index 17db52d..2c71817 100644
 --- a/apps/cli/src/sucafina-product/native-ui/router.ts
 +++ b/apps/cli/src/sucafina-product/native-ui/router.ts
-@@ -72,9 +72,14 @@
+@@ -73,7 +73,12 @@
      // No URL rewrite/new Request, no body pre-read, no authority from an ID.
      if (request.method !== route.method) return new Response(null, {
        status: 405, headers: { Allow: route.method, "Cache-Control": "no-store" },
