@@ -1,5 +1,8 @@
-import { expect, type Page, type Request } from "@playwright/test"
-import { armLostResponse, nativeInstalledFixture, type InstalledNativeHarness } from "../fixture.ts"
+import { expect, type Browser, type Page, type Request, type Response } from "@playwright/test"
+import {
+  armLostResponse, nativeDashboardCommandTarget, nativeInstalledFixture,
+  observeNativeBinding, requireNativeJourney, type InstalledNativeHarness,
+} from "../fixture.ts"
 
 const test = nativeInstalledFixture
 
@@ -42,25 +45,112 @@ function installedScenarioURL(harness: InstalledNativeHarness, scenario: Scenari
   return url.href
 }
 
-// Authentication is F04's real server/session context, not a storageState,
-// cookie, role grant, response stub or caller-supplied principal header.
+// The positive path needs BOTH the current CAP14 admission and the installed
+// chapter. A visible component by itself cannot establish a producer grant.
 async function proveInstalledActor(
-  page: Page,
-  harness: InstalledNativeHarness,
-  actor: "requester" | "denied",
+  page: Page, harness: InstalledNativeHarness, intent: "read" | "edit",
 ) {
   const installed = new URL(harness.manifest.target.chapterHref, harness.manifest.target.shellOrigin)
   await page.goto(installed.href)
-  const proof = await harness.proveWeb(surface(page))
-  if (proof.principalRef !== harness.manifest.actors[actor])
-    throw new Error("F04_U15_REAL_" + actor.toUpperCase() + "_SESSION_IDENTITY_MISMATCH")
+  const admission = await harness.requireJourney({ actor: "requester", capabilityId: "CAP14", intent })
+  const observed = await harness.proveWeb(surface(page))
+  if (admission.principalRef !== harness.manifest.actors.requester ||
+      observed.principalRef !== admission.principalRef ||
+      observed.candidateSha !== harness.manifest.candidateSha)
+    throw new Error("F04_U15_REAL_REQUESTER_SESSION_IDENTITY_MISMATCH")
+  return admission
 }
 
-function isContractMutation(request: Request) {
+type CommandTarget = ReturnType<typeof nativeDashboardCommandTarget>
+function isContractMutation(request: Request, target: CommandTarget) {
   const url = new URL(request.url())
-  return request.method() === "POST" &&
-    url.pathname.endsWith("/dashboard") &&
-    url.searchParams.get("page") === "Vendor Contracts"
+  return request.method() === target.method && url.origin === target.origin &&
+    url.pathname === target.pathname &&
+    Object.entries(target.query ?? {}).every(([name, value]) => {
+      const selected = url.searchParams.getAll(name)
+      return selected.length === 1 && selected[0] === value
+    })
+}
+function isAuthorizedCAP14Read(response: Response, harness: InstalledNativeHarness) {
+  const url = new URL(response.url())
+  return response.request().method() === "GET" && response.ok() &&
+    url.origin === harness.manifest.target.publicOrigin &&
+    url.pathname === harness.manifest.target.mount + "/api/ui/pages/CAP14"
+}
+function nextAuthorizedRead(page: Page, harness: InstalledNativeHarness) {
+  return page.waitForResponse((response) => isAuthorizedCAP14Read(response, harness))
+}
+function asRecord(value: unknown): Record<string, unknown> | undefined {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown> : undefined
+}
+
+/** Bind a UI-selected record to its actual producer ID and contracts:id CAS
+ * version; an ambiguous/absent source fixture is an explicit failure. */
+function sourceRecord(
+  envelope: unknown, selection: Readonly<{ id?: string; vendor?: string }>,
+) {
+  const root = asRecord(envelope)
+  const value = asRecord(root?.value)
+  const data = asRecord(value?.data)
+  const versions = asRecord(value?.versions)
+  if (root?.status !== "ok" || value?.capabilityId !== "CAP14" ||
+      !Array.isArray(data?.contracts) || !versions ||
+      (selection.id === undefined && selection.vendor === undefined))
+    throw new Error("F04_U15_REAL_CAP14_SOURCE_PROJECTION_REQUIRED")
+  const matches = (data.contracts as unknown[]).map(asRecord).filter((row) => {
+    if (!row || (typeof row.id !== "string" && typeof row.id !== "number") ||
+        typeof row.vendor !== "string") return false
+    return (selection.id === undefined || String(row.id) === selection.id) &&
+      (selection.vendor === undefined || row.vendor === selection.vendor)
+  })
+  if (matches.length !== 1)
+    throw new Error("F04_U15_UNIQUE_REAL_CONTRACT_REF_REQUIRED")
+  const record = matches[0]!
+  const id = String(record.id)
+  const version = versions["contracts:" + id]
+  if (typeof version !== "number" || !Number.isSafeInteger(version) || version < 0)
+    throw new Error("F04_U15_REAL_SOURCE_CAS_VERSION_REQUIRED")
+  return { id, version, vendor: record.vendor as string }
+}
+
+/** F04 does not manufacture or transfer cookies. The authorized runner must
+ * retain a distinct, already Microsoft-authenticated browser context for
+ * holder or dashboardAdmin in this SAME Playwright browser. No new context,
+ * storageState, header, token, manual grant or API impersonation is created. */
+async function requireSecondAdmittedEditor(
+  browser: Browser, requester: Page, harness: InstalledNativeHarness,
+) {
+  let foundIdentityWithoutSave = false
+  for (const context of browser.contexts()) {
+    if (context === requester.context()) continue
+    const other = await context.newPage()
+    let binding: Awaited<ReturnType<typeof observeNativeBinding>>
+    try {
+      binding = await observeNativeBinding(other, harness.manifest.target)
+    } catch {
+      await other.close()
+      continue
+    }
+    const actor = (["holder", "dashboardAdmin"] as const).find((candidate) =>
+      harness.manifest.actors[candidate] === binding.stamp.principalRef)
+    if (!actor) {
+      await other.close()
+      continue
+    }
+    try {
+      await requireNativeJourney({
+        page: other, manifest: harness.manifest, actor, capabilityId: "CAP14", intent: "edit",
+      })
+      return { page: other, actor }
+    } catch {
+      foundIdentityWithoutSave = true
+      await other.close()
+    }
+  }
+  throw new Error(foundIdentityWithoutSave
+    ? "F04_U15_DISTINCT_REAL_ACTOR_LACKS_CAP14_SAVE_ADMISSION"
+    : "F04_U15_DISTINCT_AUTHENTICATED_EDITOR_BROWSER_CONTEXT_REQUIRED_FROM_187")
 }
 function surface(page: Page) {
   return page.locator('[data-component="sf-vendor-contracts"]')
@@ -68,9 +158,8 @@ function surface(page: Page) {
 
 test("CAP14 real authorized list reads Dashboard contracts and keeps filters on filtered-empty", async ({ page, nativeHarness }) => {
   const url = installedScenarioURL(nativeHarness, "list")
-  await proveInstalledActor(page, nativeHarness, "requester")
-  const responses = page.waitForResponse((response) =>
-    response.request().method() === "GET" && response.url().includes("/api/ui/pages/CAP14") && response.ok())
+  await proveInstalledActor(page, nativeHarness, "read")
+  const responses = nextAuthorizedRead(page, nativeHarness)
   await page.goto(url)
   const read = await (await responses).json()
   expect(read).toMatchObject({ status: "ok", value: { capabilityId: "CAP14" } })
@@ -85,30 +174,32 @@ test("CAP14 real authorized list reads Dashboard contracts and keeps filters on 
 
 test("CAP14 real edit uses source version and only dashboard save; confirms after authorized reread", async ({ page, nativeHarness }) => {
   const url = installedScenarioURL(nativeHarness, "editable")
-  await proveInstalledActor(page, nativeHarness, "requester")
+  await proveInstalledActor(page, nativeHarness, "edit")
+  const target = nativeDashboardCommandTarget(nativeHarness.manifest, "CAP14")
   const writes: Request[] = []
-  page.on("request", (request) => { if (isContractMutation(request)) writes.push(request) })
-  const beforeRead = page.waitForResponse((response) =>
-    response.url().includes("/api/ui/pages/CAP14") && response.request().method() === "GET" && response.ok())
+  page.on("request", (request) => { if (isContractMutation(request, target)) writes.push(request) })
+  const beforeRead = nextAuthorizedRead(page, nativeHarness)
   await page.goto(url)
   const source = await (await beforeRead).json()
-  const vendor = surface(page).locator('[data-field="vendor"] input').first()
+  const vendor = surface(page).locator('[data-field="vendor"] input')
   await expect(vendor).toBeEditable()
   const original = await vendor.inputValue()
+  const record = sourceRecord(source, { vendor: original })
   const nextVendor = original + " u15 isolated e2e"
   await vendor.fill(nextVendor)
   await surface(page).getByRole("button", { name: /Review contract change|Revisar alteração contratual/ }).click()
   const submit = surface(page).getByRole("button", { name: /Confirm|Confirmar/ })
   await expect(submit).toBeEnabled()
-  const commandResponse = page.waitForResponse((response) => isContractMutation(response.request()))
+  const commandResponse = page.waitForResponse((response) => isContractMutation(response.request(), target))
   await submit.click()
   const response = await commandResponse
   expect(response.status()).toBe(200)
   expect(await response.json()).toMatchObject({ ok: true })
   const body = response.request().postDataJSON()
-  expect(body).toMatchObject({ page: "Vendor Contracts", action: "save",
-    values: { vendor: nextVendor }, version: expect.any(Number) })
-  expect(body.version).toBe(source.value.versions["contracts:" + body.id])
+  expect(body).toMatchObject({
+    page: "Vendor Contracts", action: "save", id: record.id,
+    values: { vendor: nextVendor }, version: record.version,
+  })
   expect(body.values).not.toHaveProperty("docs")
   expect(body.values).not.toHaveProperty("createdAt")
   expect(body.values).not.toHaveProperty("updatedAt")
@@ -116,63 +207,144 @@ test("CAP14 real edit uses source version and only dashboard save; confirms afte
   expect(writes).toHaveLength(1)
   expect(response.request().headers()["idempotency-key"]).toEqual(expect.any(String))
   await expect(surface(page).getByRole("status")).toContainText(/verified|verificado/)
+  const reread = nextAuthorizedRead(page, nativeHarness)
   await page.reload()
+  const after = sourceRecord(await (await reread).json(), { id: record.id })
+  expect(after.version).toBeGreaterThan(record.version)
+  expect(after.vendor).toBe(nextVendor)
   await expect(surface(page).getByText(nextVendor).first()).toBeVisible()
 })
 
 test("CAP14 real denied second actor displays no unauthorized contract values or write control", async ({ page, nativeHarness }) => {
   const url = installedScenarioURL(nativeHarness, "denied")
-  await proveInstalledActor(page, nativeHarness, "denied")
+  const installed = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
+  await page.goto(installed.href)
+  // Negative proof is the real principal + denied CAP14 destination, NOT a
+  // visible authorized chapter. The native UI may hide the whole surface.
+  const denied = await requireNativeJourney({
+    page, manifest: nativeHarness.manifest, actor: "denied", capabilityId: "CAP14", intent: "denied",
+  })
+  expect(denied.canRead).toBe(false)
+  const target = nativeDashboardCommandTarget(nativeHarness.manifest, "CAP14")
   const writes: Request[] = []
-  page.on("request", (request) => { if (isContractMutation(request)) writes.push(request) })
+  page.on("request", (request) => { if (isContractMutation(request, target)) writes.push(request) })
   await page.goto(url)
-  await expect(surface(page)).toBeVisible()
-  await expect(surface(page).locator('[data-field="vendor"] input')).toHaveCount(0)
+  await expect(surface(page).locator(
+    '.sf-u15-layout, .sf-u15-list, .sf-u15-read, .sf-u15-edit, [data-field], [data-component="sf-change-review"]',
+  )).toHaveCount(0)
+  await expect(surface(page).getByRole("button", { name: /Review contract change|Revisar alteração contratual/ })).toHaveCount(0)
   expect(writes).toHaveLength(0)
 })
 
-test("CAP14 real version conflict cannot be shown saved", async ({ page, nativeHarness }) => {
+test("CAP14 real version conflict cannot be shown saved", async ({ page, browser, nativeHarness }) => {
   const url = installedScenarioURL(nativeHarness, "stale")
-  await proveInstalledActor(page, nativeHarness, "requester")
+  await proveInstalledActor(page, nativeHarness, "edit")
+  const target = nativeDashboardCommandTarget(nativeHarness.manifest, "CAP14")
+  const requesterPosts: Request[] = []
+  page.on("request", (request) => { if (isContractMutation(request, target)) requesterPosts.push(request) })
+  const initialRead = nextAuthorizedRead(page, nativeHarness)
   await page.goto(url)
-  const vendor = surface(page).locator('[data-field="vendor"] input').first()
+  const initialSource = await (await initialRead).json()
+  const vendor = surface(page).locator('[data-field="vendor"] input')
   await expect(vendor).toBeEditable()
-  await vendor.fill((await vendor.inputValue()) + " stale")
+  const original = await vendor.inputValue()
+  const base = sourceRecord(initialSource, { vendor: original })
+  await vendor.fill(original + " stale requester")
   await surface(page).getByRole("button", { name: /Review contract change|Revisar alteração contratual/ }).click()
-  const responsePromise = page.waitForResponse((response) => isContractMutation(response.request()))
-  await surface(page).getByRole("button", { name: /Confirm|Confirmar/ }).click()
-  expect((await responsePromise).status()).toBe(409)
-  await expect(surface(page).getByText(/verified after saving|verificado após o salvamento/)).toHaveCount(0)
+  await expect(surface(page).getByRole("button", { name: /Confirm|Confirmar/ })).toBeEnabled()
+  expect(requesterPosts).toHaveLength(0)
+
+  // An actual second Microsoft principal commits a different value to the SAME
+  // source id/version before the original review is confirmed. A URL or local
+  // client mutation alone is not a producer CAS advance.
+  const second = await requireSecondAdmittedEditor(browser, page, nativeHarness)
+  try {
+    const secondRead = nextAuthorizedRead(second.page, nativeHarness)
+    await second.page.goto(url)
+    const secondSource = await (await secondRead).json()
+    const otherVendor = surface(second.page).locator('[data-field="vendor"] input')
+    await expect(otherVendor).toBeEditable()
+    const otherCurrent = await otherVendor.inputValue()
+    const current = sourceRecord(secondSource, { vendor: otherCurrent })
+    expect(current.id).toBe(base.id)
+    expect(current.version).toBe(base.version)
+
+    const secondValue = otherCurrent + " u15 concurrent CAS"
+    await otherVendor.fill(secondValue)
+    await surface(second.page).getByRole("button", { name: /Review contract change|Revisar alteração contratual/ }).click()
+    const secondSubmit = surface(second.page).getByRole("button", { name: /Confirm|Confirmar/ })
+    await expect(secondSubmit).toBeEnabled()
+    const committed = second.page.waitForResponse((response) => isContractMutation(response.request(), target))
+    const committedRead = nextAuthorizedRead(second.page, nativeHarness)
+    await secondSubmit.click()
+    const secondResponse = await committed
+    expect(secondResponse.status()).toBe(200)
+    expect(await secondResponse.json()).toMatchObject({ ok: true })
+    expect(secondResponse.request().postDataJSON()).toMatchObject({
+      page: "Vendor Contracts", action: "save", id: base.id,
+      version: base.version, values: { vendor: secondValue },
+    })
+    const advanced = sourceRecord(await (await committedRead).json(), { id: base.id })
+    expect(advanced.version).toBeGreaterThan(base.version)
+    expect(advanced.vendor).toBe(secondValue)
+
+    // The stale review still carries base.version. Require a real 409, not
+    // a client-side failure or a synthetic conflict response.
+    const staleResponse = page.waitForResponse((response) => isContractMutation(response.request(), target))
+    await surface(page).getByRole("button", { name: /Confirm|Confirmar/ }).click()
+    const conflict = await staleResponse
+    expect(conflict.status()).toBe(409)
+    expect(conflict.request().postDataJSON()).toMatchObject({
+      page: "Vendor Contracts", action: "save", id: base.id, version: base.version,
+    })
+    expect(requesterPosts).toHaveLength(1)
+    await expect(surface(page).getByText(/verified after saving|verificado após o salvamento/)).toHaveCount(0)
+  } finally {
+    await second.page.close()
+  }
 })
 
 test("CAP14 real lost response does not automatically replay the command", async ({ page, nativeHarness }) => {
   const url = installedScenarioURL(nativeHarness, "lost")
-  await proveInstalledActor(page, nativeHarness, "requester")
+  await proveInstalledActor(page, nativeHarness, "edit")
+  const target = nativeDashboardCommandTarget(nativeHarness.manifest, "CAP14")
+  expect(target.query?.page).toBe("Vendor Contracts")
   const writes: Request[] = []
-  page.on("request", (request) => { if (isContractMutation(request)) writes.push(request) })
+  page.on("request", (request) => { if (isContractMutation(request, target)) writes.push(request) })
+  const beforeRead = nextAuthorizedRead(page, nativeHarness)
   await page.goto(url)
-  const vendor = surface(page).locator('[data-field="vendor"] input').first()
+  const source = await (await beforeRead).json()
+  const vendor = surface(page).locator('[data-field="vendor"] input')
   await expect(vendor).toBeEditable()
-  await vendor.fill((await vendor.inputValue()) + " response loss")
+  const original = await vendor.inputValue()
+  const base = sourceRecord(source, { vendor: original })
+  const nextVendor = original + " response loss"
+  await vendor.fill(nextVendor)
   await surface(page).getByRole("button", { name: /Review contract change|Revisar alteração contratual/ }).click()
-  // The command path is the frozen A01 {mount}/dashboard endpoint. F04's
-  // fault seam forwards the REAL request and drops only response delivery.
-  const command = new URL(nativeHarness.manifest.target.mount + "/dashboard",
-    nativeHarness.manifest.target.publicOrigin)
-  const responseLoss = await armLostResponse(page, {
-    origin: command.origin, pathname: command.pathname, method: "POST",
-  })
+  // F04 forwards the single original Vendor Contracts POST to the real producer
+  // and discards only the transport response, never forges a business outcome.
+  const responseLoss = await armLostResponse(page, target)
   try {
     await surface(page).getByRole("button", { name: /Confirm|Confirmar/ }).click()
     await expect(surface(page).getByRole("alert")).toContainText(/not retry|não reenvie/)
     expect(writes).toHaveLength(1)
+    const sent = writes[0]!.postDataJSON()
+    expect(sent).toMatchObject({
+      page: "Vendor Contracts", action: "save", id: base.id,
+      version: base.version, values: { vendor: nextVendor },
+    })
     const observed = responseLoss.observations()
+    expect(observed.attempts).toBe(1)
     expect(observed.producerStatus).toBe(200)
-    const authorizedReread = page.waitForResponse((response) =>
-      response.request().method() === "GET" && response.url().includes("/api/ui/pages/CAP14"))
+    // Reconcile by NEW authorized CAP14 GET, not by repeating the POST or
+    // trusting the intercepted 2xx as a durable commit.
+    const reread = nextAuthorizedRead(page, nativeHarness)
     await surface(page).getByRole("button", { name: /Refresh source|Atualizar fonte/ }).click()
-    expect((await authorizedReread).ok()).toBe(true)
+    const result = sourceRecord(await (await reread).json(), { id: base.id })
+    expect(result.version).toBeGreaterThan(base.version)
+    expect(result.vendor).toBe(nextVendor)
     expect(writes).toHaveLength(1)
+    await expect(surface(page).getByText(nextVendor).first()).toBeVisible()
   } finally {
     await responseLoss.dispose()
   }
@@ -180,7 +352,7 @@ test("CAP14 real lost response does not automatically replay the command", async
 
 test("CAP14 real owner-scoped 320px reflow and keyboard reachability", async ({ page, nativeHarness }) => {
   const url = installedScenarioURL(nativeHarness, "list")
-  await proveInstalledActor(page, nativeHarness, "requester")
+  await proveInstalledActor(page, nativeHarness, "read")
   await page.goto(url)
   await expect(surface(page)).toBeVisible()
   for (const width of [320, 768, 1024, 1280, 1440]) {
@@ -188,6 +360,15 @@ test("CAP14 real owner-scoped 320px reflow and keyboard reachability", async ({ 
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
     await expect(surface(page).getByRole("searchbox")).toBeVisible()
     await expect(surface(page).getByRole("searchbox")).toBeEnabled()
+  }
+  // U15-AC03 also requires 200% text and 400% reflow at 320 CSS px.
+  // Use the installed chapter; never substitute a screenshot or fixture UI.
+  for (const [width, scale] of [[768, "200%"], [320, "400%"]] as const) {
+    await page.setViewportSize({ width, height: 800 })
+    await page.evaluate((size) => { document.documentElement.style.fontSize = size }, scale)
+    await expect(surface(page).getByRole("searchbox")).toBeVisible()
+    await expect(surface(page).getByRole("searchbox")).toBeEnabled()
+    expect(await surface(page).evaluate((element) => element.scrollWidth <= element.clientWidth + 1)).toBe(true)
   }
   await page.keyboard.press("Tab")
   await expect(page.locator(":focus")).toHaveCount(1)

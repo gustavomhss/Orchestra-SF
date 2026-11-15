@@ -202,7 +202,8 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
 
   test("V2 requests are unavailable before transport without touching the V1 path", async () => {
     const { client, calls } = recordingClient()
-    const unavailable = { kind: "transport-error", reason: "contract-unavailable" }
+    const unavailable = { kind: "transport-error", reason: "contract-unavailable" } satisfies
+      Awaited<ReturnType<typeof client["views.remove"]>>
     expect(await client["views.list"]({ surface: "dashboard", action: "list", input: {
       schemaVersion: 2,
     } } as never, { signal })).toEqual(unavailable)
@@ -228,7 +229,7 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
     const output = { status: "ok", value: {
       item, details: [{ label: "Current validity", value: "stale" }],
       links: [{ label: "Open decision", url: "/sf/dashboard?sf=case" }],
-    } }
+    } } satisfies Schema.Schema.Type<typeof SfProjectionWorkItem.Output>
     const input = { selectionRef: "selection-1", actionRef: "sf-signal:one", start: "2026-01-01", end: "2026-12-31" }
     expect(Schema.decodeUnknownSync(SfProjectionWorkItem.Input)(input)).toEqual(input)
     expect(Schema.decodeUnknownSync(SfProjectionWorkItem.Output)(output)).toEqual(output)

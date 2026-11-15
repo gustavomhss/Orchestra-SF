@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test"
 import type { Page } from "@playwright/test"
-import { nativeInstalledFixture } from "../fixture.ts"
+import { nativeDashboardCommandTarget, nativeInstalledFixture, nativeJourneyEntryHref, observeNativeBinding, requireNativeJourney } from "../fixture.ts"
 import type { InstalledNativeHarness } from "../fixture.ts"
 
 /**
@@ -9,7 +9,6 @@ import type { InstalledNativeHarness } from "../fixture.ts"
  * fails explicitly. No authorization flags, mocked grants, fake responses,
  * replayed mutations or browser storage-state exports.
  */
-const path = "/orchestra/sf-dashboard/capex?year=2026"
 const surfaceId = "CAP05"
 const title = "CAPEX Projects"
 const recordName = "Project name"
@@ -26,26 +25,50 @@ const recordName = "Project name"
 async function requireAdmittedSurface(
   page: Page,
   nativeHarness: InstalledNativeHarness,
-  requireSave: boolean,
+  intent: "read" | "edit",
 ) {
   const { manifest } = nativeHarness
   const { target } = manifest
-  const requested = new URL(path, target.shellOrigin)
+  const href = nativeJourneyEntryHref(target, surfaceId, 2026)
+  const requested = new URL(href)
   if (target.chapterHref !== requested.pathname + requested.search) {
     throw new Error("F04_" + surfaceId + "_REAL_CHAPTER_BINDING_REQUIRED")
   }
 
-  await page.goto(requested.toString())
-  const surface = page.locator('[data-sf-budget="' + surfaceId + '"]')
-  const observed = await nativeHarness.proveWeb(surface)
-  if (observed.candidateSha !== manifest.candidateSha ||
-      ![manifest.actors.requester, manifest.actors.holder].includes(observed.principalRef)) {
-    throw new Error("F04_" + surfaceId + "_POSITIVE_ACTOR_NOT_AUTHENTICATED")
+  await page.goto(href)
+  // Select the actor from the currently authenticated producer principal, not
+  // from a role name, a flag, or a presumed admin storage state. The real F04
+  // fixture must supply this very BrowserContext with an admitted session.
+  const current = await observeNativeBinding(page, target)
+  const actor = (["requester", "holder", "dashboardAdmin"] as const).find(
+    (candidate) => manifest.actors[candidate] === current.stamp.principalRef,
+  )
+  if (!actor) throw new Error("F04_" + surfaceId + "_REAL_DASHBOARD_ACTOR_REQUIRED")
+  const admitted = await requireNativeJourney({
+    page, manifest, actor, capabilityId: surfaceId, intent, year: 2026,
+  })
+  if (admitted.proofClass !== "INSTALLED_CURRENT_CONTEXT_PRECONDITION_ONLY" ||
+      admitted.href !== href || admitted.candidateSha !== manifest.candidateSha ||
+      !admitted.canRead || (intent === "edit" && !admitted.canSave) ||
+      admitted.principalRef !== current.stamp.principalRef ||
+      admitted.policyVersion !== current.stamp.policyVersion ||
+      admitted.accessRevision !== current.stamp.accessRevision) {
+    throw new Error("F04_" + surfaceId + "_CURRENT_JOURNEY_ADMISSION_CHANGED")
   }
 
-  // F04 proves the installed host and current principal. Admission of this
-  // specific financial capability/action is verified again against the real
-  // producer, with the authenticated browser's original request context.
+  const surface = page.locator('[data-sf-budget="' + surfaceId + '"]')
+  const observed = await nativeHarness.proveWeb(surface)
+  if (observed.candidateSha !== admitted.candidateSha ||
+      observed.principalRef !== admitted.principalRef ||
+      observed.installationId !== target.installationId ||
+      observed.projectId !== target.projectId ||
+      observed.hostId !== target.hostId) {
+    throw new Error("F04_" + surfaceId + "_INSTALLED_PRINCIPAL_CHANGED")
+  }
+
+  // A capability grant is insufficient if the actual domain-read adapter is
+  // unavailable. Re-read the original SfContext in this same browser context;
+  // abort on a policy/access revision change, never infer save from a button.
   const contextURL = new URL(target.mount + "/api/ui/context", target.publicOrigin)
   contextURL.search = new URLSearchParams({
     installationId: target.installationId,
@@ -56,28 +79,27 @@ async function requireAdmittedSurface(
     maxRedirects: 0, maxRetries: 0,
   })
   if (response.status() !== 200) {
-    throw new Error("F04_" + surfaceId + "_REAL_CONTEXT_UNAVAILABLE")
+    throw new Error("F04_" + surfaceId + "_REAL_CONTEXT_UNAVAILABLE_" + response.status())
   }
   const envelope = asRecord(await response.json())
   const context = asRecord(envelope?.value)
   const stamp = asRecord(context?.stamp)
   if (envelope?.status !== "ok" || context?.contractRevision !== "sf-native-ui/1" ||
+      context?.authMode !== "microsoft" ||
       stamp?.installationId !== target.installationId ||
       stamp?.projectId !== target.projectId ||
       stamp?.hostId !== target.hostId ||
-      stamp?.principalRef !== observed.principalRef ||
-      typeof stamp?.policyVersion !== "string" || !stamp.policyVersion ||
-      typeof stamp?.accessRevision !== "string" || !stamp.accessRevision) {
+      stamp?.principalRef !== admitted.principalRef ||
+      stamp?.policyVersion !== admitted.policyVersion ||
+      stamp?.accessRevision !== admitted.accessRevision) {
     throw new Error("F04_" + surfaceId + "_REAL_CONTEXT_STAMP_MISMATCH")
   }
 
-  const destinations = context.destinations
-  const availability = context.availability
-  const destination = Array.isArray(destinations)
-    ? destinations.map(asRecord).find((entry) => entry?.capabilityId === surfaceId)
+  const destination = Array.isArray(context.destinations)
+    ? context.destinations.map(asRecord).find((entry) => entry?.capabilityId === surfaceId)
     : undefined
-  const resource = Array.isArray(availability)
-    ? availability.map(asRecord).find((entry) =>
+  const resource = Array.isArray(context.availability)
+    ? context.availability.map(asRecord).find((entry) =>
         entry?.family === "domain-read" && entry.resource === surfaceId)
     : undefined
   const operations = resource?.operations
@@ -85,13 +107,13 @@ async function requireAdmittedSurface(
     Array.isArray(operations) && operations.map(asRecord).some((entry) =>
       entry?.operationId === id && entry.state === "ready" && entry.operational === true)
   if (destination?.surface !== "dashboard" || destination.page !== title ||
-      destination.canRead !== true ||
-      !readyOperation("domain.page." + surfaceId)) {
+      destination.canRead !== true || !readyOperation("domain.page." + surfaceId)) {
     throw new Error("F04_" + surfaceId + "_REAL_READ_GRANT_REQUIRED")
   }
-  if (requireSave && (!Array.isArray(destination.allowedActionIds) ||
-      !destination.allowedActionIds.includes("save") ||
-      !readyOperation("domain.command." + surfaceId + ".save"))) {
+  if (intent === "edit" &&
+      (!Array.isArray(destination.allowedActionIds) ||
+       !destination.allowedActionIds.includes("save") ||
+       !readyOperation("domain.command." + surfaceId + ".save"))) {
     throw new Error("F04_" + surfaceId + "_REAL_SAVE_GRANT_REQUIRED")
   }
   return surface
@@ -103,10 +125,9 @@ function asRecord(value: unknown): Record<string, unknown> | undefined {
     : undefined
 }
 
-
 nativeInstalledFixture.describe("N13 CAP05 · installed native Dashboard", () => {
   nativeInstalledFixture("reads the source through A01 with owner-scoped state, filter-empty and source metadata", async ({ page, nativeHarness }) => {
-    const surface = await requireAdmittedSurface(page, nativeHarness, false)
+    const surface = await requireAdmittedSurface(page, nativeHarness, "read")
     await expect(surface).toBeVisible()
     await expect(surface.getByRole("heading", { name: title })).toBeVisible()
     // A projection must reach a terminal state before making an empty-state claim.
@@ -116,7 +137,9 @@ nativeInstalledFixture.describe("N13 CAP05 · installed native Dashboard", () =>
     await expect(search).toBeEnabled()
     await search.fill("__N13_Nonexistent_Record_2026__")
     await expect(surface.locator('[data-sf-state="filtered-empty"]')).toBeVisible()
+    await expect(search).toHaveValue("__N13_Nonexistent_Record_2026__")
     await search.fill("")
+    await expect(search).toHaveValue("")
     await expect(page.locator('[data-sf-budget="' + surfaceId + '"]')).toHaveCount(1)
     // A missing budget is not asserted as numeric zero, and no financial total
     // is calculated in this journey. Source records are compared by identity.
@@ -124,19 +147,24 @@ nativeInstalledFixture.describe("N13 CAP05 · installed native Dashboard", () =>
     await expect(table).toBeVisible()
     const refs = await table.locator("tbody tr[data-sf-row]").evaluateAll((rows) =>
       rows.map((row) => row.getAttribute("data-sf-row")))
+    if (!refs.length) throw new Error("F04_" + surfaceId + "_REAL_SOURCE_RECORD_REQUIRED")
     expect(refs.every(Boolean)).toBe(true)
     expect(new Set(refs).size).toBe(refs.length)
   })
 
   nativeInstalledFixture("new record is a draft until explicit, version-bound change review", async ({ page, nativeHarness }) => {
-    const surface = await requireAdmittedSurface(page, nativeHarness, true)
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const producer = nativeDashboardCommandTarget(nativeHarness.manifest, surfaceId)
     const financialPosts: string[] = []
     page.on("request", (request) => {
       const url = new URL(request.url())
-      if (request.method() === "POST" &&
-          url.origin === nativeHarness.manifest.target.publicOrigin &&
-          url.pathname === nativeHarness.manifest.target.mount + "/dashboard") {
-        financialPosts.push(request.method())
+      if (request.method() === producer.method &&
+          url.origin === producer.origin && url.pathname === producer.pathname &&
+          Object.entries(producer.query ?? {}).every(([key, value]) => {
+            const matches = url.searchParams.getAll(key)
+            return matches.length === 1 && matches[0] === value
+          })) {
+        financialPosts.push(request.url())
       }
     })
     const primary = surface.getByRole("button", { name: "New CAPEX project", exact: true })
@@ -163,11 +191,13 @@ nativeInstalledFixture.describe("N13 CAP05 · installed native Dashboard", () =>
   })
 
   nativeInstalledFixture("320–1440 viewports, 200% typography and 400% reflow keep surface controls reachable", async ({ page, nativeHarness }) => {
-    const surface = await requireAdmittedSurface(page, nativeHarness, false)
+    const surface = await requireAdmittedSurface(page, nativeHarness, "read")
     await expect(surface).toBeVisible()
     for (const width of [320, 768, 1024, 1280, 1440]) {
       await page.setViewportSize({ width, height: 900 })
       await expect(surface).toBeVisible()
+      await expect(surface.getByRole("button", { name: "New CAPEX project", exact: true })).toBeVisible()
+      await expect(surface.locator(".sf-budget-owners").getByRole("searchbox", { name: "Name" })).toBeVisible()
       const bounds = await surface.evaluate((element) => ({
         client: element.clientWidth,
         scroll: element.scrollWidth,
@@ -181,6 +211,8 @@ nativeInstalledFixture.describe("N13 CAP05 · installed native Dashboard", () =>
     await page.setViewportSize({ width: 320, height: 900 })
     await page.evaluate(() => { document.documentElement.style.fontSize = "400%" })
     await expect(surface.getByRole("heading", { name: title })).toBeVisible()
+    await expect(surface.getByRole("button", { name: "New CAPEX project", exact: true })).toBeVisible()
+    await expect(surface.locator(".sf-budget-owners").getByRole("searchbox", { name: "Name" })).toBeVisible()
     // Horizontal scrolling is allowed inside the named month-grid region,
     // never by silently clipping or hiding the write/review controls.
     const viewport = await surface.evaluate((element) => ({

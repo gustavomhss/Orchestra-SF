@@ -1,0 +1,115 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "actor": "S0/current thread",
+  "state": "PROPOSED_PRODUCT_COMPOSITION_NOT_ACCEPTED_C",
+  "source_base": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "inputs": {
+    "176": "2baa39cef66153d75a363958fe716d80ed1c2081",
+    "177": "dc4beff8175629b1d62cd972d8393b7cd817054c",
+    "193": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063",
+    "194": "72c5d2afcbdc202605614a18c5ba472aafc34574",
+    "195": "679e17ecdfec23ab53ce4b23206594874617528d",
+    "197": "3ec7a4ca7db735c08f1f63e164734a0bda245ac7",
+    "198": "34a00f196de20de359b53f51fbe9007442f8cea4",
+    "201": "cb7a19356da4e9ba33c902264a1b4aa25639d976"
+  },
+  "changes": [
+    {
+      "mission": 193,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "pre": "6183175ebce968280b61668085d27771697a4b64",
+      "post": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481"
+    },
+    {
+      "mission": 194,
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+      "pre": "1d59507133649d2ca57c0c30e2507193f35181fd",
+      "post": "01e56d1ac9cb3930f2c0486e15328e136a0a3e04"
+    },
+    {
+      "mission": 195,
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "pre": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+      "post": "285db9bfdd046366f8fd814991f9f0724eff445f"
+    },
+    {
+      "mission": 195,
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "pre": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+      "post": "83ee904b4ecf79248410a7714bb63ed7baf4aaf5"
+    },
+    {
+      "mission": 197,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/functional-boundaries.test.ts",
+      "pre": null,
+      "post": "530b1d6618218f11cefa699e3e6def1bd8f96270"
+    },
+    {
+      "mission": 197,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/domain-recovery-functional.test.ts",
+      "pre": null,
+      "post": "1fbabb2be4bd2540f1f280cf432630e6dd3f486d"
+    },
+    {
+      "mission": 197,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/receipt-key-collision.test.ts",
+      "pre": null,
+      "post": "4a7100ca6d4a3c109924674fc6d6ae8c4e79aee0"
+    },
+    {
+      "mission": 198,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/authorized-original-replay.test.ts",
+      "pre": null,
+      "post": "fa68d8c5c1982b5fe27c1c6a2a79987a0e2cb5d2"
+    },
+    {
+      "mission": 198,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/c08-rollback.test.ts",
+      "pre": null,
+      "post": "733664e6ba3da70fa63f8e83c9c37f4fde5f928c"
+    },
+    {
+      "mission": 198,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/native-terminal-unavailable.test.ts",
+      "pre": null,
+      "post": "86d6d945d6474139c9445e8c99cff963ac924278"
+    },
+    {
+      "mission": 198,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/schedule-native-retry.test.ts",
+      "pre": null,
+      "post": "15e5ad520c3624b62c5f11c463113d720c98a9c8"
+    },
+    {
+      "mission": 201,
+      "path": "packages/schema/src/sucafina/work.ts",
+      "pre": "3b3f87ed7c74a3e7965fbb8d3d00776d2ebba61a",
+      "post": "b60e2b7f9d0a4137d3fd2ea5d0f0e9aa298a7c97"
+    },
+    {
+      "mission": 201,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+      "pre": "18d330c2980cc18bb35cd4976c8635ec94295828",
+      "post": "1ccd3e4b2181e927321d95d5ab4afe6788aa6a99"
+    },
+    {
+      "mission": 177,
+      "path": "apps/cli/src/sucafina-product/native-ui/domain/projection.ts",
+      "pre": null,
+      "post": "eae532dae73f282d9cefd66228da15fc26b63040"
+    },
+    {
+      "mission": 176,
+      "path": "apps/cli/src/sucafina-product/native-ui/operations/projection.ts",
+      "pre": null,
+      "post": "02b5f163387aaee657336f5544003ab123af5dd4"
+    }
+  ],
+  "verification": "All15 consumer preimages and15 source postimages independently read throughGitHubMCP",
+  "product_branch": "sf-closure-bundle",
+  "existing_product_branch_untouched": "sf2-stack/189",
+  "checks": "NOT_RUN",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

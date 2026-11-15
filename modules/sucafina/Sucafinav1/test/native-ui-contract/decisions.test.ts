@@ -11,8 +11,10 @@ const digest = "a".repeat(64)
 const selected = { caseRef, choiceId: "choice-1", changeId: "change-1" } as const
 const signal = new AbortController().signal
 
-function accepts<A, I, R>(schema: Schema.Schema<A, I, R>, value: unknown) {
-  return Schema.decodeUnknownEither(schema)(value, { onExcessProperty: "error" })._tag === "Right"
+function accepts<S extends Schema.Top>(schema: S, value: unknown) {
+  // A04's source schemas are validation-only; toType retains their checks
+  // without claiming services erased by recursive Schema.Schema<T> declarations.
+  return Schema.decodeUnknownExit(Schema.toType(schema), { onExcessProperty: "error" })(value)._tag === "Success"
 }
 
 describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qualifies)", () => {
