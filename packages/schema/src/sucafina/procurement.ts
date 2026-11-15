@@ -2,12 +2,12 @@ import { Schema } from "effect"
 
 // A03 public boundary. All values below are projected from the current authorized
 // Procurement producer; nothing here performs currency, approval or policy logic.
-const NonEmpty = Schema.String.pipe(Schema.minLength(1))
-const NonNegativeInteger = Schema.Number.pipe(Schema.int(), Schema.greaterThanOrEqualTo(0))
-const PositiveInteger = Schema.Number.pipe(Schema.int(), Schema.greaterThanOrEqualTo(1))
+const NonEmpty = Schema.NonEmptyString
+const NonNegativeInteger = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0))
+const PositiveInteger = Schema.Int.check(Schema.isGreaterThan(0))
 const Amount = Schema.NullOr(Schema.Finite)
-const NumericInput = Schema.Union(Schema.Finite, Schema.String, Schema.Null)
-const BooleanInput = Schema.Union(Schema.Boolean, Schema.Literals(["true", "false", "on"]))
+const NumericInput = Schema.Union([Schema.Finite, Schema.String, Schema.Null]
+const BooleanInput = Schema.Union([Schema.Boolean, Schema.Literals(["true", "false", "on"])]
 const Version = Schema.Struct({ version: NonNegativeInteger, by: Schema.String })
 const Period = Schema.Struct({ start: Schema.String, end: Schema.String })
 const CaseRef = Schema.Struct({ id: NonEmpty, incarnation: NonEmpty, version: PositiveInteger })
@@ -48,10 +48,11 @@ const Quote = Schema.Struct({
   total: Schema.optional(Amount),
   description: Schema.optional(Schema.String),
   notes: Schema.optional(Schema.String),
-  attachments: Schema.optional(Schema.Array(Schema.String)),
-  scores: Schema.optional(Schema.Record({ key: Schema.String, value: NumericInput })),
-  cscores: Schema.optional(Schema.Record({ key: Schema.String, value: NumericInput })),
+  attachments: Schema.optional(Schema.Array(Schema.Struct({ id: Schema.optional(Schema.String), name: Schema.optional(Schema.String) }))),
+  scores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record({ key: Schema.String, value: NumericInput })]),
+  cscores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record({ key: Schema.String, value: NumericInput })]),
   techPass: Schema.optional(BooleanInput),
+  qty: Schema.optional(NumericInput), unitPrice: Schema.optional(NumericInput),
 })
 const Requisition = Schema.Struct({
   title: Schema.optional(Schema.String),
@@ -148,7 +149,7 @@ export const SfProcurementSupplier = Schema.Struct({
   riskRating: Schema.optional(Schema.String), dueDiligence: Schema.optional(BooleanInput),
   sanctionsDate: Schema.optional(Schema.String), nda: Schema.optional(BooleanInput),
   dpa: Schema.optional(BooleanInput), certifications: Schema.optional(Schema.Array(Schema.String)),
-  categories: Schema.optional(Schema.Union(Schema.String, Schema.Array(Schema.String))),
+  categories: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)]),
   contacts: Schema.optional(Schema.Array(SupplierContact)),
   commercial: Schema.optional(SupplierSection), compliance: Schema.optional(SupplierSection),
   notes: Schema.optional(Schema.String),
@@ -175,9 +176,9 @@ export const SfProcurementSettings = Schema.Struct({
   criteria: Schema.optional(Schema.Array(Criterion)),
   commCriteria: Schema.optional(Schema.Array(Criterion)),
   requireActiveSupplier: Schema.optional(BooleanInput),
-  paymentTerms: Schema.optional(Schema.Union(Schema.String, Schema.Array(Schema.String))),
-  categories: Schema.optional(Schema.Union(Schema.String, Schema.Array(Schema.String))),
-  incoterms: Schema.optional(Schema.Union(Schema.String, Schema.Array(Schema.String))),
+  paymentTerms: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)]),
+  categories: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)]),
+  incoterms: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)]),
   billingAddress: Schema.optional(Schema.String),
   defaultDeliveryAddress: Schema.optional(Schema.String),
   fxUpdated: Schema.optional(Schema.String),
@@ -197,16 +198,23 @@ const PageSelection = Schema.Struct({
 const RequestVersion = Schema.Record({ key: Schema.String, value: Version })
 const DirectoryEntry = Schema.Struct({ id: Schema.String, name: Schema.String })
 const PublicSettings = SfProcurementSettings
-const PageFailure = Schema.Union(
+const PageFailure = Schema.Union([
   Schema.Struct({ status: Schema.Literal("unauthenticated") }),
   Schema.Struct({ status: Schema.Literal("denied") }),
   Schema.Struct({ status: Schema.Literal("unavailable"), reason: Schema.String }),
   Schema.Struct({ status: Schema.Literal("needs-input"), reason: Schema.String }),
   Schema.Struct({ status: Schema.Literal("stale"), reason: Schema.String }),
-)
+]
 const DashboardData = Schema.Struct({
   requests: Schema.Array(SfProcurementRequest),
   formSettings: PublicSettings,
+  metrics: Schema.Struct({
+    edits: Schema.Literal(false),
+    open: NonNegativeInteger,
+    issued: Schema.Struct({ OPEX: Schema.Finite, CAPEX: Schema.Finite }),
+    approved: Schema.Struct({ OPEX: Schema.Finite, CAPEX: Schema.Finite }),
+    unavailable: Schema.Array(Schema.String),
+  }),
 })
 const RequestsData = Schema.Struct({
   requests: Schema.Array(SfProcurementRequest),
@@ -233,7 +241,7 @@ const SettingsData = Schema.Struct({
 function pageOutput<Capability extends "CAP24" | "CAP25" | "CAP26" | "CAP27" | "CAP28", Data>(
   capabilityId: Capability, data: Schema.Schema<Data>,
 ) {
-  return Schema.Union(
+  return Schema.Union([
     Schema.Struct({
       status: Schema.Literal("ok"), context: Stamp,
       value: Schema.Struct({
@@ -242,22 +250,22 @@ function pageOutput<Capability extends "CAP24" | "CAP25" | "CAP26" | "CAP27" | "
       }),
     }),
     PageFailure,
-  )
+  ]
 }
 const Failure = Schema.Struct({
   ok: Schema.Literal(false),
   status: Schema.Literals([400, 403, 404, 409, 422, 503]),
   errors: Schema.optional(Schema.Array(Schema.String)),
   fieldErrors: Schema.optional(Schema.Array(Schema.Struct({ field: Schema.String, message: Schema.String }))),
-  stored: Schema.optional(Schema.NullOr(Schema.Union(
+  stored: Schema.optional(Schema.NullOr(Schema.Union([
     SfProcurementRequest, SfProcurementSupplier, SfProcurementSettings,
-  ))),
+  ])),
   by: Schema.optional(Schema.String), currentVersionCAS: Schema.optional(NonNegativeInteger),
 })
-const CommandResult = Schema.Union(
+const CommandResult = Schema.Union([
   Schema.Struct({ ok: Schema.Literal(true), warnings: Schema.optional(Schema.Array(Schema.String)) }),
   Failure,
-)
+]
 const EmptyValues = Schema.Struct({})
 const PrValues = Schema.Struct({ pr: Requisition })
 const SourcingValues = Schema.Struct({ sourcing: Sourcing })
@@ -274,14 +282,14 @@ export const SfProcurementTitleSave = Schema.Struct({
 })
 const CommandValues = {
   Requests: {
-    create: PrValues, save: Schema.Union(PrValues, SourcingValues, PoValues),
+    create: PrValues, save: Schema.Union([PrValues, SourcingValues, PoValues],
     submit_pr: PrValues, submit_sourcing: SourcingValues,
     select_quote: QuoteSelectionValues, submit_po: PoValues,
     approve: ApprovalValues, reject: ReasonValues,
     issue: EmptyValues, cancel: ReasonValues, delete: EmptyValues,
   },
   "My approvals": {
-    create: PrValues, save: Schema.Union(PrValues, SourcingValues, PoValues),
+    create: PrValues, save: Schema.Union([PrValues, SourcingValues, PoValues],
     submit_pr: PrValues, submit_sourcing: SourcingValues,
     select_quote: QuoteSelectionValues, submit_po: PoValues,
     approve: ApprovalValues, reject: ReasonValues,
@@ -294,24 +302,24 @@ const CommandValues = {
   },
   Settings: { save: SettingsValues, reset: EmptyValues },
 } as const
-function domainCommand<Page extends keyof typeof CommandValues,
-  Action extends keyof (typeof CommandValues)[Page] & string>(page: Page, action: Action) {
+function domainCommand<Page extends string, Action extends string, Values>(
+  page: Page, action: Action, values: Schema.Schema<Values>,
+) {
   return Schema.Struct({
     page: Schema.Literal(page), action: Schema.Literal(action),
     id: Schema.optional(Schema.String), version: NonNegativeInteger,
-    values: CommandValues[page][action] as Schema.Schema<unknown>,
-    confirmed: Schema.optional(Schema.Boolean),
+    values, confirmed: Schema.optional(Schema.Boolean),
   })
 }
-const PortFailure = Schema.Union(
+const PortFailure = Schema.Union([
   Schema.Struct({
     status: Schema.Literals(["needs-input", "stale", "denied", "unavailable", "conflict", "provider-conflict", "failed"]),
     reason: Schema.String,
   }),
   Schema.Struct({ status: Schema.Literal("invalid") }),
-)
+]
 function portOutput<Value>(value: Schema.Schema<Value>) {
-  return Schema.Union(Schema.Struct({ status: Schema.Literal("ok"), value }), PortFailure)
+  return Schema.Union([Schema.Struct({ status: Schema.Literal("ok"), value }), PortFailure]
 }
 const SourcingComparisonInput = Schema.Struct({
   request: Schema.Struct({ requestRef: NonEmpty, version: NonNegativeInteger, stage: Schema.String }),
@@ -331,31 +339,32 @@ const SourcingComparisonInput = Schema.Struct({
 })
 const ScenarioSelection = Schema.Struct({
   caseRef: CaseRef,
-  sourceDigest: Schema.String.pipe(Schema.pattern(/^[a-f0-9]{64}$/)),
+  sourceDigest: Schema.String.check(Schema.isPattern(/^[a-f0-9]{64}$/)),
   costInventory: Schema.Literal("renewal-transition-v1"),
-  operation: Schema.Union(
+  operation: Schema.Union([
     Schema.Struct({ kind: Schema.Literal("baseline") }),
     Schema.Struct({
       kind: Schema.Literal("replace"), target: Schema.Literal("PR.estAmount"),
-      amount: Schema.Finite.pipe(Schema.greaterThanOrEqualTo(0)),
-      currency: Schema.String.pipe(Schema.pattern(/^[A-Z]{3}$/)),
+      amount: Schema.Finite.check(Schema.isGreaterThanOrEqualTo(0)),
+      currency: Schema.String.check(Schema.isPattern(/^[A-Z]{3}$/)),
       period: Period,
     }),
-  ),
+  ],
+})
+const ScenarioAuthority = Schema.Struct({
+  installationId: NonEmpty, projectId: NonEmpty, principalRef: NonEmpty,
+  accessRevision: Schema.String, policyVersion: Schema.String,
 })
 const ScenarioControls = Schema.Struct({
   caseRef: CaseRef,
-  authority: Schema.Struct({
-    installationId: NonEmpty, projectId: NonEmpty, principalRef: NonEmpty,
-    accessRevision: Schema.String, policyVersion: Schema.String,
-  }),
+  authority: ScenarioAuthority,
   sources: Schema.Array(Schema.Struct({
     sourceDigest: Schema.String, source: EvidenceRecord, label: Schema.String,
     currency: Schema.String, period: Period,
   })),
   financialApproval: Schema.Literal("blocked"), financialApprovalReason: Schema.String,
 })
-const CostCoverageEntry = Schema.Union(
+const CostCoverageEntry = Schema.Union([
   Schema.Struct({
     status: Schema.Literal("included"), categoryId: Schema.String,
     componentRefs: Schema.Array(Schema.String),
@@ -369,7 +378,7 @@ const CostCoverageEntry = Schema.Union(
     status: Schema.Literal("pending"), categoryId: Schema.String,
     reason: Schema.String, questionRef: Schema.optional(Schema.String),
   }),
-)
+]
 const Coverage = Schema.Struct({
   basisId: Schema.String, basisVersion: NonNegativeInteger,
   alternativeId: Schema.String, alternativeVersion: NonNegativeInteger,
@@ -407,16 +416,19 @@ const ScenarioPreview = Schema.Struct({
   request: Schema.Struct({
     baseRef: Schema.String,
     operations: Schema.Array(Schema.Struct({
-      kind: Schema.Literals(["baseline", "replace"]), target: Schema.optional(Schema.String),
+      kind: Schema.Literals(["replace", "defer", "include", "exclude"]),
+      targetRef: Schema.String, replacementRef: Schema.optional(Schema.String),
+      amount: Schema.optional(Schema.Finite), currency: Schema.optional(Schema.String),
+      period: Schema.optional(Period),
     })),
     assumptions: Schema.Array(Schema.Struct({
-      id: Schema.String, value: Schema.Union(Schema.String, Schema.Number, Schema.Boolean, Schema.Null),
+      id: Schema.String, value: Schema.Union([Schema.String, Schema.Number, Schema.Boolean, Schema.Null],
       evidenceRefs: Schema.Array(EvidenceRecord),
       state: Schema.Literals(["confirmed", "estimated", "hypothetical", "absent"]),
     })),
   }),
   caseRef: CaseRef,
-  authority: ScenarioControls.fields.authority,
+  authority: ScenarioAuthority,
   source: EvidenceRecord,
   financialApproval: Schema.Literal("blocked"), financialApprovalReason: Schema.String,
 })
@@ -428,40 +440,40 @@ export const SfProcurementSchemas = {
 
 export const SfDomainPageCap24 = { operationId: "domain.page.CAP24", input: PageSelection, output: pageOutput("CAP24", DashboardData) } as const
 export const SfDomainPageCap25 = { operationId: "domain.page.CAP25", input: PageSelection, output: pageOutput("CAP25", RequestsData) } as const
-export const SfDomainCommandCap25Create = { operationId: "domain.command.CAP25.create", input: domainCommand("Requests", "create"), output: CommandResult } as const
-export const SfDomainCommandCap25Save = { operationId: "domain.command.CAP25.save", input: domainCommand("Requests", "save"), output: CommandResult } as const
-export const SfDomainCommandCap25SubmitPr = { operationId: "domain.command.CAP25.submit_pr", input: domainCommand("Requests", "submit_pr"), output: CommandResult } as const
-export const SfDomainCommandCap25SubmitSourcing = { operationId: "domain.command.CAP25.submit_sourcing", input: domainCommand("Requests", "submit_sourcing"), output: CommandResult } as const
-export const SfDomainCommandCap25SelectQuote = { operationId: "domain.command.CAP25.select_quote", input: domainCommand("Requests", "select_quote"), output: CommandResult } as const
-export const SfDomainCommandCap25SubmitPo = { operationId: "domain.command.CAP25.submit_po", input: domainCommand("Requests", "submit_po"), output: CommandResult } as const
-export const SfDomainCommandCap25Approve = { operationId: "domain.command.CAP25.approve", input: domainCommand("Requests", "approve"), output: CommandResult } as const
-export const SfDomainCommandCap25Reject = { operationId: "domain.command.CAP25.reject", input: domainCommand("Requests", "reject"), output: CommandResult } as const
-export const SfDomainCommandCap25Issue = { operationId: "domain.command.CAP25.issue", input: domainCommand("Requests", "issue"), output: CommandResult } as const
-export const SfDomainCommandCap25Cancel = { operationId: "domain.command.CAP25.cancel", input: domainCommand("Requests", "cancel"), output: CommandResult } as const
-export const SfDomainCommandCap25Delete = { operationId: "domain.command.CAP25.delete", input: domainCommand("Requests", "delete"), output: CommandResult } as const
+export const SfDomainCommandCap25Create = { operationId: "domain.command.CAP25.create", input: domainCommand("Requests", "create", CommandValues["Requests"]["create"]), output: CommandResult } as const
+export const SfDomainCommandCap25Save = { operationId: "domain.command.CAP25.save", input: domainCommand("Requests", "save", CommandValues["Requests"]["save"]), output: CommandResult } as const
+export const SfDomainCommandCap25SubmitPr = { operationId: "domain.command.CAP25.submit_pr", input: domainCommand("Requests", "submit_pr", CommandValues["Requests"]["submit_pr"]), output: CommandResult } as const
+export const SfDomainCommandCap25SubmitSourcing = { operationId: "domain.command.CAP25.submit_sourcing", input: domainCommand("Requests", "submit_sourcing", CommandValues["Requests"]["submit_sourcing"]), output: CommandResult } as const
+export const SfDomainCommandCap25SelectQuote = { operationId: "domain.command.CAP25.select_quote", input: domainCommand("Requests", "select_quote", CommandValues["Requests"]["select_quote"]), output: CommandResult } as const
+export const SfDomainCommandCap25SubmitPo = { operationId: "domain.command.CAP25.submit_po", input: domainCommand("Requests", "submit_po", CommandValues["Requests"]["submit_po"]), output: CommandResult } as const
+export const SfDomainCommandCap25Approve = { operationId: "domain.command.CAP25.approve", input: domainCommand("Requests", "approve", CommandValues["Requests"]["approve"]), output: CommandResult } as const
+export const SfDomainCommandCap25Reject = { operationId: "domain.command.CAP25.reject", input: domainCommand("Requests", "reject", CommandValues["Requests"]["reject"]), output: CommandResult } as const
+export const SfDomainCommandCap25Issue = { operationId: "domain.command.CAP25.issue", input: domainCommand("Requests", "issue", CommandValues["Requests"]["issue"]), output: CommandResult } as const
+export const SfDomainCommandCap25Cancel = { operationId: "domain.command.CAP25.cancel", input: domainCommand("Requests", "cancel", CommandValues["Requests"]["cancel"]), output: CommandResult } as const
+export const SfDomainCommandCap25Delete = { operationId: "domain.command.CAP25.delete", input: domainCommand("Requests", "delete", CommandValues["Requests"]["delete"]), output: CommandResult } as const
 export const SfDomainPageCap26 = { operationId: "domain.page.CAP26", input: PageSelection, output: pageOutput("CAP26", ApprovalsData) } as const
-export const SfDomainCommandCap26Approve = { operationId: "domain.command.CAP26.approve", input: domainCommand("My approvals", "approve"), output: CommandResult } as const
-export const SfDomainCommandCap26Reject = { operationId: "domain.command.CAP26.reject", input: domainCommand("My approvals", "reject"), output: CommandResult } as const
-export const SfDomainCommandCap26Create = { operationId: "domain.command.CAP26.create", input: domainCommand("My approvals", "create"), output: CommandResult } as const
-export const SfDomainCommandCap26Save = { operationId: "domain.command.CAP26.save", input: domainCommand("My approvals", "save"), output: CommandResult } as const
-export const SfDomainCommandCap26SubmitPr = { operationId: "domain.command.CAP26.submit_pr", input: domainCommand("My approvals", "submit_pr"), output: CommandResult } as const
-export const SfDomainCommandCap26SubmitSourcing = { operationId: "domain.command.CAP26.submit_sourcing", input: domainCommand("My approvals", "submit_sourcing"), output: CommandResult } as const
-export const SfDomainCommandCap26SelectQuote = { operationId: "domain.command.CAP26.select_quote", input: domainCommand("My approvals", "select_quote"), output: CommandResult } as const
-export const SfDomainCommandCap26SubmitPo = { operationId: "domain.command.CAP26.submit_po", input: domainCommand("My approvals", "submit_po"), output: CommandResult } as const
-export const SfDomainCommandCap26Issue = { operationId: "domain.command.CAP26.issue", input: domainCommand("My approvals", "issue"), output: CommandResult } as const
-export const SfDomainCommandCap26Cancel = { operationId: "domain.command.CAP26.cancel", input: domainCommand("My approvals", "cancel"), output: CommandResult } as const
-export const SfDomainCommandCap26Delete = { operationId: "domain.command.CAP26.delete", input: domainCommand("My approvals", "delete"), output: CommandResult } as const
+export const SfDomainCommandCap26Approve = { operationId: "domain.command.CAP26.approve", input: domainCommand("My approvals", "approve", CommandValues["My approvals"]["approve"]), output: CommandResult } as const
+export const SfDomainCommandCap26Reject = { operationId: "domain.command.CAP26.reject", input: domainCommand("My approvals", "reject", CommandValues["My approvals"]["reject"]), output: CommandResult } as const
+export const SfDomainCommandCap26Create = { operationId: "domain.command.CAP26.create", input: domainCommand("My approvals", "create", CommandValues["My approvals"]["create"]), output: CommandResult } as const
+export const SfDomainCommandCap26Save = { operationId: "domain.command.CAP26.save", input: domainCommand("My approvals", "save", CommandValues["My approvals"]["save"]), output: CommandResult } as const
+export const SfDomainCommandCap26SubmitPr = { operationId: "domain.command.CAP26.submit_pr", input: domainCommand("My approvals", "submit_pr", CommandValues["My approvals"]["submit_pr"]), output: CommandResult } as const
+export const SfDomainCommandCap26SubmitSourcing = { operationId: "domain.command.CAP26.submit_sourcing", input: domainCommand("My approvals", "submit_sourcing", CommandValues["My approvals"]["submit_sourcing"]), output: CommandResult } as const
+export const SfDomainCommandCap26SelectQuote = { operationId: "domain.command.CAP26.select_quote", input: domainCommand("My approvals", "select_quote", CommandValues["My approvals"]["select_quote"]), output: CommandResult } as const
+export const SfDomainCommandCap26SubmitPo = { operationId: "domain.command.CAP26.submit_po", input: domainCommand("My approvals", "submit_po", CommandValues["My approvals"]["submit_po"]), output: CommandResult } as const
+export const SfDomainCommandCap26Issue = { operationId: "domain.command.CAP26.issue", input: domainCommand("My approvals", "issue", CommandValues["My approvals"]["issue"]), output: CommandResult } as const
+export const SfDomainCommandCap26Cancel = { operationId: "domain.command.CAP26.cancel", input: domainCommand("My approvals", "cancel", CommandValues["My approvals"]["cancel"]), output: CommandResult } as const
+export const SfDomainCommandCap26Delete = { operationId: "domain.command.CAP26.delete", input: domainCommand("My approvals", "delete", CommandValues["My approvals"]["delete"]), output: CommandResult } as const
 export const SfDomainPageCap27 = { operationId: "domain.page.CAP27", input: PageSelection, output: pageOutput("CAP27", SuppliersData) } as const
-export const SfDomainCommandCap27Create = { operationId: "domain.command.CAP27.create", input: domainCommand("Suppliers", "create"), output: CommandResult } as const
-export const SfDomainCommandCap27Save = { operationId: "domain.command.CAP27.save", input: domainCommand("Suppliers", "save"), output: CommandResult } as const
-export const SfDomainCommandCap27Activate = { operationId: "domain.command.CAP27.activate", input: domainCommand("Suppliers", "activate"), output: CommandResult } as const
-export const SfDomainCommandCap27Block = { operationId: "domain.command.CAP27.block", input: domainCommand("Suppliers", "block"), output: CommandResult } as const
-export const SfDomainCommandCap27Inactivate = { operationId: "domain.command.CAP27.inactivate", input: domainCommand("Suppliers", "inactivate"), output: CommandResult } as const
-export const SfDomainCommandCap27Delete = { operationId: "domain.command.CAP27.delete", input: domainCommand("Suppliers", "delete"), output: CommandResult } as const
-export const SfDomainCommandCap27ChangeBank = { operationId: "domain.command.CAP27.change-bank", input: domainCommand("Suppliers", "change-bank"), output: CommandResult } as const
+export const SfDomainCommandCap27Create = { operationId: "domain.command.CAP27.create", input: domainCommand("Suppliers", "create", CommandValues["Suppliers"]["create"]), output: CommandResult } as const
+export const SfDomainCommandCap27Save = { operationId: "domain.command.CAP27.save", input: domainCommand("Suppliers", "save", CommandValues["Suppliers"]["save"]), output: CommandResult } as const
+export const SfDomainCommandCap27Activate = { operationId: "domain.command.CAP27.activate", input: domainCommand("Suppliers", "activate", CommandValues["Suppliers"]["activate"]), output: CommandResult } as const
+export const SfDomainCommandCap27Block = { operationId: "domain.command.CAP27.block", input: domainCommand("Suppliers", "block", CommandValues["Suppliers"]["block"]), output: CommandResult } as const
+export const SfDomainCommandCap27Inactivate = { operationId: "domain.command.CAP27.inactivate", input: domainCommand("Suppliers", "inactivate", CommandValues["Suppliers"]["inactivate"]), output: CommandResult } as const
+export const SfDomainCommandCap27Delete = { operationId: "domain.command.CAP27.delete", input: domainCommand("Suppliers", "delete", CommandValues["Suppliers"]["delete"]), output: CommandResult } as const
+export const SfDomainCommandCap27ChangeBank = { operationId: "domain.command.CAP27.change-bank", input: domainCommand("Suppliers", "change-bank", CommandValues["Suppliers"]["change-bank"]), output: CommandResult } as const
 export const SfDomainPageCap28 = { operationId: "domain.page.CAP28", input: PageSelection, output: pageOutput("CAP28", SettingsData) } as const
-export const SfDomainCommandCap28Save = { operationId: "domain.command.CAP28.save", input: domainCommand("Settings", "save"), output: CommandResult } as const
-export const SfDomainCommandCap28Reset = { operationId: "domain.command.CAP28.reset", input: domainCommand("Settings", "reset"), output: CommandResult } as const
+export const SfDomainCommandCap28Save = { operationId: "domain.command.CAP28.save", input: domainCommand("Settings", "save", CommandValues["Settings"]["save"]), output: CommandResult } as const
+export const SfDomainCommandCap28Reset = { operationId: "domain.command.CAP28.reset", input: domainCommand("Settings", "reset", CommandValues["Settings"]["reset"]), output: CommandResult } as const
 export const SfProcurementSourcingPrepare = { operationId: "procurement.sourcing.prepare", input: Schema.Struct({ caseRef: CaseRef, requestRef: NonEmpty }), output: portOutput(SourcingComparisonInput) } as const
 export const SfProcurementProcurementScenarioControls = { operationId: "procurement.procurement-scenario-controls", input: Schema.Struct({ case: NonEmpty, version: PositiveInteger }), output: portOutput(ScenarioControls) } as const
 export const SfProcurementProcurementScenarioPreview = { operationId: "procurement.procurement-scenario-preview", input: ScenarioSelection, output: portOutput(ScenarioPreview) } as const
