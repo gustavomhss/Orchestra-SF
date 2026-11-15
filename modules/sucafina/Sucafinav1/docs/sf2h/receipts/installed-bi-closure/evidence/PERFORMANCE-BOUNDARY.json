@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.installed-bi.performance-boundary.v1",
+  "mission": 62,
+  "state": "REPRODUCED_LATENCY_WITH_STATIC_FANOUT_DIAGNOSIS",
+  "evidence": [
+    "evidence/R1-RESULT.json",
+    "evidence/R3-RESULT.json",
+    "evidence/R5-RESULT.json"
+  ],
+  "observations": {
+    "R1": {
+      "completed_BI_dispatch_ms": [
+        67936,
+        69037,
+        69375,
+        70950
+      ],
+      "comparison_phase_ms_range": [
+        30026,
+        55771
+      ],
+      "portfolio_select_ms": [
+        32836,
+        33695
+      ],
+      "portfolio_persist_aborted_after_ms": 96544
+    },
+    "R3": {
+      "omitted_comparison_phase_ms": 135461,
+      "other_comparison_abort_ms": [
+        135420,
+        134651,
+        137456
+      ],
+      "threshold_omitted_abort_ms": 136493,
+      "threshold_confirmed_abort_ms": 133862,
+      "choice_http_abort_ms": 135187
+    },
+    "R5": {
+      "BI10_dispatch_ms": 80644,
+      "canonical_pair_ms": 3430,
+      "test_total_ms": 125978.23
+    }
+  },
+  "phase_caveat": "comparison.persist includes portfolio.compare and calculations.persist. These timings are inclusive observations, not exclusive cost attribution or a p95 sample.",
+  "static_fanout": {
+    "reviewer": "/root/bi_static_review",
+    "consumer": "dispatchBiPresentation performs descriptor/readBiView and readBiPresentation/readBiView; scenario costs receive six full readView observations including reads, description and projection revalidation.",
+    "preserved_read_guarantees": "Each readView observes sources and the canonical historical-baseline/current-candidate pair twice and checks receipts/projection/authority/source identities.",
+    "existing_scope": "callScope.run already wraps nominal dispatch. callScope.read covers a restricted DomainProjection proof and refuses operations/criteria/sensitivity/inverse selections outside its contract. readPortfolioSnapshot ends before the next consumer callback."
+  },
+  "disposition": {
+    "owned_small_fix": "No contract-preserving small reduction was identified in scenario.ts/bi-services.ts. No WeakMap presentation cache, removed observation, weaker revalidate or memoized authority was introduced.",
+    "next_owner": "Canonical producer/runtime owner76 after activation, with59 lineage, through71 after ACK; scoped consumer changes need their own owner if required.",
+    "minimum_investigation": "Attribute exact public-call multiplicity and clone/lookup/criterion/source costs with bounded measurements. Any reusable completed presentation proof must be private to one consumed invocation, immutable, cover all historical/current refs and dependencies, and preserve every independent freshness/admission/final observation. Unsupported capabilities must retain the conservative path.",
+    "do_not_retry": "No unchanged failure snapshot replay or timeout/fixture reduction. Original temporal cross-view and Portfolio tests remain intact and failed.",
+    "independent_progress": "New focused BI10 proof and actual Chromium renderer tests passed R5; these do not fix slow canonical persistence or certify installed full journeys."
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,342 @@
+{
+  "schema": "sf2h.installed-bi.run-result.v1",
+  "id": "R5",
+  "recorded_at": "2026-11-15T02:58:21Z",
+  "run": 43669861192,
+  "job": 132677292514,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669861192",
+  "W": "015254f8c377bb38cbfceb68db5ac0cb67ce8760",
+  "W_tree": "6f219795e02b7d6f5bab24ceb9df809d1db7f95e",
+  "S": "a69deefc1664c509f5f9d6cc8249800c1fe18ec8",
+  "S_tree": "a285d2f138b7fa0673bcc471cf1653b8ff157e3a",
+  "status": "PASS_LIMITED_SCOPE",
+  "counts": {
+    "pass": 4,
+    "fail": 0,
+    "expect_calls": 39,
+    "files": 2,
+    "duration_seconds": 144.26
+  },
+  "tests": [
+    "(pass) focused BI10 dispatch reconciles canonical period and cost plans on its persisted pair [125978.23ms]",
+    "(pass) C02 renderer BI10 crops observed dates, retains unknown dates and never prorates supplied amounts [16618.55ms]",
+    "(pass) C02 renderer restores only a valid visual crop and reports its changes without changing the authorized horizon [469.71ms]",
+    "(pass) C02 renderer restores the exact origin before the first value control and falls back only to visible controls [445.11ms]"
+  ],
+  "errors": [],
+  "phases": [
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 1
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 33,
+      "elapsedMs": 33,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 42
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 16,
+      "elapsedMs": 58,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 58
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 21,
+      "elapsedMs": 79,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 79
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 10,
+      "elapsedMs": 89,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 89
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 16,
+      "elapsedMs": 105,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 113
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 407,
+      "elapsedMs": 520,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 523
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 440,
+      "elapsedMs": 962,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 963
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 3010,
+      "elapsedMs": 3973,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3973
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2428,
+      "elapsedMs": 6401,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 6405
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 35488,
+      "elapsedMs": 41893,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "BI10.dispatch",
+      "state": "started",
+      "elapsedMs": 41894
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "BI10.dispatch",
+      "state": "returned",
+      "phaseMs": 80644,
+      "elapsedMs": 122538,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "canonical.pair",
+      "state": "started",
+      "elapsedMs": 122538
+    },
+    {
+      "fixture": "bi62-focused-canonical-bi10",
+      "phase": "canonical.pair",
+      "state": "returned",
+      "phaseMs": 3430,
+      "elapsedMs": 125968,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-dates",
+      "phase": "renderer.bundle",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi62-contract-renderer-dates",
+      "phase": "renderer.bundle",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 11,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-dates",
+      "phase": "renderer.chromium",
+      "state": "started",
+      "elapsedMs": 11
+    },
+    {
+      "fixture": "bi62-contract-renderer-dates",
+      "phase": "renderer.chromium",
+      "state": "returned",
+      "phaseMs": 13715,
+      "elapsedMs": 13726,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-dates",
+      "phase": "renderer.date-crop",
+      "state": "started",
+      "elapsedMs": 16048
+    },
+    {
+      "fixture": "bi62-contract-renderer-dates",
+      "phase": "renderer.date-crop",
+      "state": "returned",
+      "phaseMs": 459,
+      "elapsedMs": 16508,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-visual-period",
+      "phase": "renderer.bundle",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi62-contract-renderer-visual-period",
+      "phase": "renderer.bundle",
+      "state": "returned",
+      "phaseMs": 5,
+      "elapsedMs": 5,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-visual-period",
+      "phase": "renderer.chromium",
+      "state": "started",
+      "elapsedMs": 5
+    },
+    {
+      "fixture": "bi62-contract-renderer-visual-period",
+      "phase": "renderer.chromium",
+      "state": "returned",
+      "phaseMs": 102,
+      "elapsedMs": 108,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-visual-period",
+      "phase": "renderer.visual-state",
+      "state": "started",
+      "elapsedMs": 212
+    },
+    {
+      "fixture": "bi62-contract-renderer-visual-period",
+      "phase": "renderer.visual-state",
+      "state": "returned",
+      "phaseMs": 196,
+      "elapsedMs": 408,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-focus",
+      "phase": "renderer.bundle",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi62-contract-renderer-focus",
+      "phase": "renderer.bundle",
+      "state": "returned",
+      "phaseMs": 3,
+      "elapsedMs": 3,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-focus",
+      "phase": "renderer.chromium",
+      "state": "started",
+      "elapsedMs": 3
+    },
+    {
+      "fixture": "bi62-contract-renderer-focus",
+      "phase": "renderer.chromium",
+      "state": "returned",
+      "phaseMs": 99,
+      "elapsedMs": 103,
+      "aborted": false
+    },
+    {
+      "fixture": "bi62-contract-renderer-focus",
+      "phase": "renderer.exact-origin-focus",
+      "state": "started",
+      "elapsedMs": 228
+    },
+    {
+      "fixture": "bi62-contract-renderer-focus",
+      "phase": "renderer.exact-origin-focus",
+      "state": "returned",
+      "phaseMs": 163,
+      "elapsedMs": 392,
+      "aborted": false
+    }
+  ],
+  "artifacts": [],
+  "omni": "not applicable (focused: no declaring test ran); zero spawn/delegation; no Omni proof",
+  "normalization": "Bounded relevant failure excerpts, exact distinct test names and structured phase events; no full raw log.",
+  "qualification": {
+    "passed": [
+      "The real authenticated BI10 service dispatch reconciles its presentation, values, components, refs, version/context and pending totals with the canonical producer on the same persisted pair.",
+      "Actual view.ts bundle renders in Chromium: observed-date crop, unknown date visibility, zero/null distinction and whole monetary values.",
+      "Validated restored visual crop, callbacks, immutable inputs and canonical/visual-period separation.",
+      "Exact-origin focus restoration and visible fallback behavior."
+    ],
+    "limits": [
+      "The renderer's C02-shaped payload is explicitly synthetic and unpersisted; this is not an installed authority or Portfolio proof.",
+      "The unchanged original two-dispatch BI09/BI10 comparison still failed R1; this narrower test does not replace it.",
+      "No full installed CLI BI journey, native200% zoom, p95 acceptance, source-host reload integration, external timeline patch or campaignG7/G8 credit."
+    ],
+    "observed_BI10_dispatch_ms": 80644,
+    "observed_canonical_pair_ms": 3430
+  },
+  "GLOBAL_RELEASE": false
+}

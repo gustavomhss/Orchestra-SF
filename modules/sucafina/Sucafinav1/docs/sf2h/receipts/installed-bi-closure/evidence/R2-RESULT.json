@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h.installed-bi.run-result.v1",
+  "id": "R2",
+  "recorded_at": "2026-11-15T02:53:50Z",
+  "run": 43668401496,
+  "job": 132672804084,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668401496",
+  "W": "2c89ceae38b215363d35ae0877e691665b02f2a5",
+  "W_tree": "85c32d46b511e4725d30c1908b451d59411fbfed",
+  "S": "ca62a60f0a0fcf63017782c232d1972c3ad50789",
+  "S_tree": "1392b23781943d6dce8f14e1132704cd2c6d7fa9",
+  "status": "FAIL",
+  "counts": {
+    "pass": 0,
+    "fail": 1,
+    "skipped": 0,
+    "flaky": 0,
+    "workers": 1,
+    "retries": 0
+  },
+  "test_result": {
+    "status": "timedOut",
+    "duration_ms": 180064,
+    "error": "Test timeout of 180000ms exceeded",
+    "failed_step": "save real Planner inputs and canonical scenarios, comparisons and portfolio"
+  },
+  "artifact": {
+    "id": 14142569799,
+    "name": "playwright-ubuntu-24.04-1",
+    "size": 329706,
+    "sha256": "96a56b7aac2eed69622d880fa84bb6bcbad18e3fe084e4e878368db61e3cf0ac",
+    "expires_at": "2026-11-22",
+    "screenshot": {
+      "path": "packages/app-shell/e2e/test-results/sucafina-bi-installed-inst-86b20-urces-and-current-authority-chromium/test-failed-1.png",
+      "sha256": "00365e0a481f257a5b8b11a7809d66e7cbde85f5e9ecbe06432d00b45878f9d6"
+    },
+    "context": {
+      "path": "packages/app-shell/e2e/test-results/sucafina-bi-installed-inst-86b20-urces-and-current-authority-chromium/error-context.md",
+      "sha256": "7cebf63532b331381110c3a44bcd131ee203b853061edb6266384e9542ec602e"
+    }
+  },
+  "actual_observations": {
+    "snapshot": "ca62a60f0a0fcf63017782c232d1972c3ad50789",
+    "title": "BI62 installed BI09 and BI10 preserve the literal training quote, real sources and current authority",
+    "completed": false,
+    "objective": "BI62 · renewal versus transition with separately quoted training",
+    "observations": [],
+    "pageErrors": [],
+    "boundary": "Real CLI, factory, HTTP, generated extended asset, persisted domain and browser. Two independent decisions preserve the omitted and resolved training quotes; this is not a same-revision ChoiceRecord journey. Inverse comparisons are persisted through canonical portfolio preview; only direct portfolios are persisted. Responsive geometry and captures are recorded without claiming native 200% zoom. Native visual migration, provider execution and financial approval are outside this proof."
+  },
+  "visual_review": {
+    "reviewer": "/root",
+    "surface": "Actual Chromium rendered Planner at real CLI installation",
+    "visible": "Versions table empty; Create first version and Inspect current record without resending controls; save outcome unknown status; saved views unavailable.",
+    "expected": "A persisted first Planner version, followed by the real quote/scenario preparation",
+    "result": "FAIL before BI setup completes",
+    "BI_waterfall_timeline_drilldowns_reload_responsive_logout": "NOT_REACHED",
+    "native_zoom_200": "NOT_RUN"
+  },
+  "causal_status": "First UI save never produced the response awaited by the fixture; cause is under investigation. No claim that this is a BI rendering defect or a locator defect.",
+  "GLOBAL_RELEASE": false
+}

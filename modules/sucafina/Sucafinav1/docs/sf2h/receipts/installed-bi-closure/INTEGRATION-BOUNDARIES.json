@@ -1,0 +1,166 @@
+{
+  "schema": "sf2h.installed-bi.integration-boundaries.v1",
+  "mission": 62,
+  "source_W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+  "source_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+  "tested_material_heads": [
+    {
+      "id": "R1",
+      "W": "e816e5856af8f086402a501242b786488a2c6270",
+      "S": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+      "state": "FAIL"
+    },
+    {
+      "id": "R2",
+      "W": "2c89ceae38b215363d35ae0877e691665b02f2a5",
+      "S": "ca62a60f0a0fcf63017782c232d1972c3ad50789",
+      "state": "FAIL"
+    },
+    {
+      "id": "R3",
+      "W": "f6be2b49218498fb49852b088ba91896c3f94bb5",
+      "S": "ee74a29004e0fd49ebac324f528d9d1949be46ac",
+      "state": "FAIL"
+    },
+    {
+      "id": "R4",
+      "W": "2b18f271a95d37716ed1a1a9f7bd0a15056c643c",
+      "S": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+      "state": "FAIL"
+    },
+    {
+      "id": "R5",
+      "W": "015254f8c377bb38cbfceb68db5ac0cb67ce8760",
+      "S": "a69deefc1664c509f5f9d6cc8249800c1fe18ec8",
+      "state": "PASS_LIMITED_SCOPE"
+    },
+    {
+      "id": "R6",
+      "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+      "S": "d87d0883bcc087b13cffc6a45649745616b46f34",
+      "state": "FAIL"
+    }
+  ],
+  "target_preimage_verification": {
+    "head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "material_candidate": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "paths": [
+      {
+        "path": "apps/cli/src/sucafina-product/bi-services.ts",
+        "expected": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+        "observed": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+        "expected": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+        "observed": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "expected": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+        "observed": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+        "expected": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "proposal": "external/multi-source-timeline",
+        "observed": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+        "expected": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "proposal": "external/missing-coverage-fixture",
+        "observed": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "matches": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "expected": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+        "proposal": "external/browser-selection",
+        "observed": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+        "expected": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "proposal": "external/legacy-bi10-test",
+        "observed": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "matches": true
+      }
+    ],
+    "scope": "Seven existing targets match exact preimages. This is static applicability, not integrated qualification."
+  },
+  "owned_unit": {
+    "material_paths": 17,
+    "product_paths": 3,
+    "test_and_helper_paths": 14,
+    "manifest": "SOURCE-MANIFEST.json",
+    "complete_patch": "owned-overlay/complete.patch.txt",
+    "closure": "DEPENDENCY-CLOSURE.json",
+    "meaning": "Prepare the complete source unit; no narrow cherry-pick that omits its tests or new exports."
+  },
+  "external_units": [
+    {
+      "id": "browser-selection",
+      "required_for": "Installed refresh/reload, exact source focus and removal of stale source destinations",
+      "manifest": "external/browser-selection/MANIFEST.json",
+      "application": "INERT; owner integration only",
+      "depends_on": "Owned view.ts BiVisualState and BiFocusTarget exports"
+    },
+    {
+      "id": "multi-source-timeline",
+      "required_for": "BI10 keyboard chooser and exact-origin navigation for multiple sources",
+      "manifest": "external/multi-source-timeline/MANIFEST.json",
+      "application": "INERT; owner integration only",
+      "depends_on": "Existing source-navigation chooser and owned timeline crop"
+    },
+    {
+      "id": "legacy-bi10-test",
+      "required_for": "Make the former absent-BI10 expectation match the newly connected canonical period producer",
+      "manifest": "external/legacy-bi10-test/MANIFEST.json",
+      "application": "INERT; owner integration only",
+      "limits": "R1 did not reach the obsolete expectation; this proposal does not fix its deadline."
+    },
+    {
+      "id": "missing-coverage-fixture",
+      "required_for": "Declare only known components as included in the legacy null-cost fixture while retaining raw nulls",
+      "manifest": "external/missing-coverage-fixture/MANIFEST.json",
+      "application": "INERT; owner integration only",
+      "limits": "C10 reassessment stability issue remains separately open for52/59; no canonical producer change by62."
+    }
+  ],
+  "missing_external_prerequisites": [
+    {
+      "id": "HTTP-POST",
+      "observed": "R2/R4/R6 fail before BI; tiny real POSTs never produce response headers, while GETs respond.",
+      "contract": "evidence/HTTP-INGRESS-CONTRACT.json",
+      "next_owner": "74 after actual activation; consumer71 after ACK, preserving PR65/60 route",
+      "action": "Diagnose first incomplete listener/body/admission stage; preserve all origin, byte, privacy and authority guards. No speculative patch supplied."
+    },
+    {
+      "id": "CANONICAL-COST",
+      "observed": "R1/R3 deadlines in canonical persistence/solver/ChoiceRecord and long BI observations; inclusive phase timings only.",
+      "contract": "evidence/PERFORMANCE-BOUNDARY.json",
+      "next_owner": "76 after activation with59 lineage; consumer71 after ACK",
+      "action": "Prove and implement a safe producer improvement before rerunning unchanged inputs; no cache of authority or removal of independent observations."
+    },
+    {
+      "id": "GENERATED-BUNDLE",
+      "observed": "The installed extended entry bundles dynamically. The legacy generated BI entry needs canonical regeneration after view changes.",
+      "next_owner": "45/authorized integration writer",
+      "action": "Use the canonical build-bi generator and --check; do not hand-edit generated output."
+    }
+  ],
+  "non_substitutions": [
+    "No rebase/reset to C28 or entire-source-branch merge.",
+    "No native sidebar implementation or claim of native product proof.",
+    "No source PASS transfer to the named composed candidate.",
+    "No final eight CI selections, three independent final reviews, AM or C-G7/D-G8 waiver.",
+    "No declared numeric oracle substituted by a simplified fixture or a fabricated result."
+  ],
+  "GLOBAL_RELEASE": false
+}

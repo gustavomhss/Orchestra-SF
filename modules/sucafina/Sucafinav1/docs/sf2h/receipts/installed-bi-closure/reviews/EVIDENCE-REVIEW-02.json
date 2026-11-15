@@ -1,0 +1,626 @@
+{
+  "schema": "sf2h.installed-bi.evidence-review.v1",
+  "id": "EVIDENCE-REVIEW-02",
+  "state": "NARROW_DOCUMENTARY_REVIEW_COMPLETE_WITH_RUNTIME_HOLD",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "installed-bi-proof",
+  "review_scope": "Documentary correspondence of normalized R1-R6 results and CI request identities, the inert missing-coverage fixture proposal/C10 diagnostic, the frozen CRITERIA-01 trace and its append-only R6 delta. No independent final source/functionality/performance or campaign acceptance gate.",
+  "reviewer": {
+    "identity": "ChatGPT tool agent",
+    "orchestration_task": "/root/bi_static_review",
+    "runtime_agent_id": null,
+    "runtime_agent_id_status": "NOT_EXPOSED",
+    "native_or_resident_profile_identity": "NOT_CLAIMED"
+  },
+  "authorship_exclusions": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "git_blob_sha1": "9fae52985c3e940845cbd746d850da8f52b8f68f",
+      "reason": "Authored by this reviewer. Its code and assertions are excluded from independent acceptance. R5 outcome correspondence may be checked as documentary evidence only."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/reviews/STATIC-REVIEW-01.json",
+      "git_blob_sha1": "0bfd0d2e68904ba2412db6dc83484b76302b3b5d",
+      "reason": "Prior receipt authored by this reviewer, left immutable. This review does not independently certify that receipt, retrofit its historical NOT_OBSERVED states or extend its scope to later tests."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/reviews/EVIDENCE-REVIEW-02.json",
+      "reason": "This document is the reviewer's only new artifact for the evidence-review assignment; it is not its own independent acceptance."
+    }
+  ],
+  "independence_limits": [
+    "Other authors remain distinct: /root owns normalized run receipts and canonical-presentation.test.ts; /root/bi_criteria_review owns CRITERIA-01 and its numerical/history tests; /root/bi_ci_recon owns installed browser fixture/probes. No author is converted into an independent acceptance reviewer by this mapping.",
+    "This reviewer did not run tests, builds, typechecks, servers or browser interactions. Existing Actions results are observed through receipts, retained artifacts and GitHub MCP metadata.",
+    "No claim of reading complete raw job logs: normalized bounded failure excerpts, test-result lines and structured phase events were examined; R2/R4/R6 retained Playwright JSON/attachments were cross-checked.",
+    "Review of an inert proposal does not apply it, grant external-path authority or prove its runtime effect."
+  ],
+  "reviewed_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R1-RESULT.json",
+      "bytes": 60887,
+      "git_blob_sha1": "4b13c7bc222d41ba2e4837e047c2b30eb2a603bd",
+      "sha256": "934617241a9a8b0e744b73d41d18803046c798fd407ac8fb7f8f0f49328a4181"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R2-RESULT.json",
+      "bytes": 3169,
+      "git_blob_sha1": "2dd0a64d82aa361c6370aa5c04fbf8c978bbc072",
+      "sha256": "628d7c7b077f01aafe9f2578cd3f53eca3fea7bce1da762959834078ec610592"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R3-RESULT.json",
+      "bytes": 42509,
+      "git_blob_sha1": "97534871f9246ed07ebb4ad082c79239e3f3f707",
+      "sha256": "eb9c2be83151e3b389ca535df5c9e557a1a22a5384564c964846645aa91c937c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R4-RESULT.json",
+      "bytes": 8414,
+      "git_blob_sha1": "168bab4fccfa859c9433f7b63c904d31e7591726",
+      "sha256": "4546f64286b14d02a211bc5f7c7b171a5e4cd4e751c7f06c5d35208bd39a2322"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R5-RESULT.json",
+      "bytes": 9605,
+      "git_blob_sha1": "ad9a024cbd10cf7a50d1faa1c01f2252cd4b4f37",
+      "sha256": "13a4c27cdb5ec1d4a7f14d76567579526a3f4b9afaaf93cb382d9a9d70c46aa6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/MANIFEST.json",
+      "bytes": 4265,
+      "git_blob_sha1": "6ec5d7e983ea52b2957c6bc95ee6d5cabd41570f",
+      "sha256": "dd85fb3495dfbedf7fc3ab76f5dbd9a5f233a7d061feb14b27d8adc253a1effb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/C10-DIAGNOSTIC.json",
+      "bytes": 5183,
+      "git_blob_sha1": "229f40271d350b8329a3e3184d955861acb1e0aa",
+      "sha256": "ba4e0423e4201e174871b2c6315463b1f3cb33732a24594c294ae92d511f38c1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/preimage.txt",
+      "bytes": 12854,
+      "git_blob_sha1": "807a51590a516d62e9586ce7475ecf4599cd2642",
+      "sha256": "68a7e9907742347875b636b72b838b8532612f8669fc85eacd5be589f4abe83b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/postimage.txt",
+      "bytes": 13109,
+      "git_blob_sha1": "4499037e904567643fad0cb92fbccf223e2e81bd",
+      "sha256": "99f82905d0edeba091d53d7dc7acf2d5089c4011cc286521b807d05981c27f25"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/change.patch.txt",
+      "bytes": 1620,
+      "git_blob_sha1": "04407104a25549a55990a491f6cd7ff91c0365ee",
+      "sha256": "264d2e383a8382e77c9822073cadd89f912d53769617627d78c65ec7daa78125"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-01.json",
+      "bytes": 197084,
+      "git_blob_sha1": "3c7aaffd922a26d2a559c7e7d2ee2bd2f069d188",
+      "sha256": "aa834f971f60eda92ffbfe9564260bfbad0dbadfbd2422d1331285e1c68f3e25"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R6-RESULT.json",
+      "bytes": 3809,
+      "git_blob_sha1": "eb1c43d3947bb94be65d53bc1a35c876c0620e80",
+      "sha256": "4c67c2ba039cd652d525b179214b2e4293e2af3c8cd2b6603e77279b7ac6b87f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/CI-REQUESTS-02.json",
+      "bytes": 7299,
+      "git_blob_sha1": "e4965ed5bdf9e53c7a8ff82a3ae9a354fe834a81",
+      "sha256": "8b12519a013d770d25fd1ece8f363f8e6112ab9db12380d535a98415b76d73ad"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-DELTA-R6.json",
+      "bytes": 7699,
+      "git_blob_sha1": "6184487c32cb868ec714095fde0d0b0f7db9662e",
+      "sha256": "f942cb870f425593a2e2d37838291f31a102ef888aed0dc1df83e6bc9ba54fac"
+    }
+  ],
+  "github_metadata_observations": [
+    {
+      "id": "R1",
+      "run_id": 43667093423,
+      "run_attempt": 1,
+      "remote_status": "completed",
+      "remote_conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667093423",
+      "W": "e816e5856af8f086402a501242b786488a2c6270",
+      "S": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+      "S_tree": "4a24a7429752128b46061aff59072bbe3ee98cd5",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "git_blob_sha1": "f1752350bc9c9489024256119929c4f329064184"
+        }
+      ],
+      "verification": "GitHub MCP GET run and snapshot commit; conclusion/S match the normalized receipt, snapshot parent is W, and the only snapshot delta is .ci-run.json."
+    },
+    {
+      "id": "R2",
+      "run_id": 43668401496,
+      "run_attempt": 1,
+      "remote_status": "completed",
+      "remote_conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668401496",
+      "W": "2c89ceae38b215363d35ae0877e691665b02f2a5",
+      "S": "ca62a60f0a0fcf63017782c232d1972c3ad50789",
+      "S_tree": "1392b23781943d6dce8f14e1132704cd2c6d7fa9",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "git_blob_sha1": "19d315cd742c4df33ef3f5b2895daa901395de61"
+        }
+      ],
+      "verification": "GitHub MCP GET run and snapshot commit; conclusion/S match the normalized receipt, snapshot parent is W, and the only snapshot delta is .ci-run.json."
+    },
+    {
+      "id": "R3",
+      "run_id": 43668513417,
+      "run_attempt": 1,
+      "remote_status": "completed",
+      "remote_conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668513417",
+      "W": "f6be2b49218498fb49852b088ba91896c3f94bb5",
+      "S": "ee74a29004e0fd49ebac324f528d9d1949be46ac",
+      "S_tree": "8108634a31bf11eb3eb5c1bbf7ffd0f34c0e3f07",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "git_blob_sha1": "237ff2e158d48f0ebd649b3a970c3adf977c96a0"
+        }
+      ],
+      "verification": "GitHub MCP GET run and snapshot commit; conclusion/S match the normalized receipt, snapshot parent is W, and the only snapshot delta is .ci-run.json."
+    },
+    {
+      "id": "R4",
+      "run_id": 43669699195,
+      "run_attempt": 1,
+      "remote_status": "completed",
+      "remote_conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669699195",
+      "W": "2b18f271a95d37716ed1a1a9f7bd0a15056c643c",
+      "S": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+      "S_tree": "0e159594aebdd34b9f31fd163858ec374e96adb5",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "git_blob_sha1": "d69c7bbb38ec247c62e467aa551441df92e0c5c8"
+        }
+      ],
+      "verification": "GitHub MCP GET run and snapshot commit; conclusion/S match the normalized receipt, snapshot parent is W, and the only snapshot delta is .ci-run.json."
+    },
+    {
+      "id": "R5",
+      "run_id": 43669861192,
+      "run_attempt": 1,
+      "remote_status": "completed",
+      "remote_conclusion": "success",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669861192",
+      "W": "015254f8c377bb38cbfceb68db5ac0cb67ce8760",
+      "S": "a69deefc1664c509f5f9d6cc8249800c1fe18ec8",
+      "S_tree": "a285d2f138b7fa0673bcc471cf1653b8ff157e3a",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "git_blob_sha1": "4104a1b00bfaac6ac1da0a288e5c1e9e9d14a9ec"
+        }
+      ],
+      "verification": "GitHub MCP GET run and snapshot commit; conclusion/S match the normalized receipt, snapshot parent is W, and the only snapshot delta is .ci-run.json."
+    },
+    {
+      "id": "R6",
+      "run_id": 43670652989,
+      "run_attempt": 1,
+      "remote_status": "completed",
+      "remote_conclusion": "failure",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670652989",
+      "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+      "S": "d87d0883bcc087b13cffc6a45649745616b46f34",
+      "S_tree": "09a1d1890d58c15479eddf3f9f00de0987e8f0ff",
+      "snapshot_delta": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "git_blob_sha1": "19d315cd742c4df33ef3f5b2895daa901395de61"
+        }
+      ],
+      "verification": "GitHub MCP GET run and snapshot commit; parent W/S/tree agree with receipt. Added .ci-run.json has the same blob as R2, while W7 changes the observer helper. This is not an unchanged snapshot replay."
+    }
+  ],
+  "run_correspondence": [
+    {
+      "id": "R1",
+      "result": "FAIL",
+      "counts": {
+        "pass": 41,
+        "fail": 10,
+        "expect_calls": 182,
+        "files": 6,
+        "duration_seconds": 1164.56
+      },
+      "checks": [
+        "51 unique normalized test lines;41 pass/10 fail;10 failure excerpts.",
+        "Eight cooperative deadlines and two fast promotion503 failures remain failures.",
+        "Original installed BI09/BI10 comparison, Portfolio paths and legacy visual assertions are not promoted by successful intermediate phases."
+      ],
+      "limits": [
+        "Phase comparison.persist includes compare and persist; it is not an isolated function profile.",
+        "No unique producer cause, p95 result, timeout fix or performance acceptance is inferred."
+      ]
+    },
+    {
+      "id": "R2",
+      "result": "FAIL",
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "skipped": 0,
+        "retries": 0
+      },
+      "checks": [
+        "Retained Playwright result timedOut/duration180064ms matches the receipt.",
+        "Decoded bi62-installed-observations.json matches actual_observations exactly.",
+        "Empty observations and initial Planner save failure mean BI stages were NOT_REACHED."
+      ],
+      "limits": [
+        "No BI visual/keyboard/reload/source-return/native-zoom success."
+      ]
+    },
+    {
+      "id": "R3",
+      "result": "FAIL",
+      "counts": {
+        "pass": 2,
+        "fail": 7,
+        "expect_calls": 70,
+        "files": 4,
+        "duration_seconds": 1158.05
+      },
+      "checks": [
+        "Nine distinct test lines and seven error excerpts match counts.",
+        "The source-currency and forecast-replacement tests are the two observed passes.",
+        "Four training bodies stop during comparison/inverse persistence, both exact thresholds stop in the solver, and history stops during ChoiceRecord creation."
+      ],
+      "limits": [
+        "No observed 55000/15000 certification,210000-to250000/inverse/shared-price training result or historical-choice outcome from the failed bodies.",
+        "FX and forecast subsets do not establish full numeric oracle acceptance or rendered installed consumers."
+      ]
+    },
+    {
+      "id": "R4",
+      "result": "FAIL_REAL_POST_BOUNDARY",
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "skipped": 0,
+        "retries": 0
+      },
+      "checks": [
+        "Retained Playwright failed/duration25343ms matches the receipt.",
+        "HTTP attachment matches actual_observations exactly; one save attempt is recorded.",
+        "GETs answer200; browser POSTs receive no headers before abort; read-only APIRequest POST with Content-Length28 also times out.",
+        "Screenshot shows empty Versions and inspection-without-resend control; full unknown-save text is corroborated by structured observations/context."
+      ],
+      "limits": [
+        "No exact server instruction or subsystem is localized.",
+        "No mutation replay is justified by the unknown outcome.",
+        "GET of empty Versions does not establish that a mutation could never commit later.",
+        "The helper correction in W7 was not executed in R4."
+      ]
+    },
+    {
+      "id": "R5",
+      "result": "PASS_LIMITED_SCOPE",
+      "counts": {
+        "pass": 4,
+        "fail": 0,
+        "expect_calls": 39,
+        "files": 2,
+        "duration_seconds": 144.26
+      },
+      "checks": [
+        "Four unique pass lines, zero error excerpts and remote Actions success correspond to the receipt.",
+        "The authenticated canonical BI10 test is separate from three synthetic C02 renderer tests.",
+        "The receipt correctly preserves R1's original actual BI09+BI10 dispatch failure."
+      ],
+      "limits": [
+        "The three renderer tests are reviewer-authored; only documentary correspondence is reviewed here, not their independent code acceptance.",
+        "No installed CLI BI journey, Portfolio completion, external timeline integration, host reload, native200percent zoom, p95 or G7/G8 credit."
+      ]
+    },
+    {
+      "id": "R6",
+      "result": "FAIL_REAL_POST_BOUNDARY_RETAINED",
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "skipped": 0,
+        "retries": 0
+      },
+      "checks": [
+        "Retained Playwright failed/duration16434ms and remote Actions failure match the receipt.",
+        "Decoded observations match the receipt exactly: Versions/save, version0, net::ERR_ABORTED, unconfirmed and retried=false.",
+        "The same nominal R2 spec and identical CI request bytes run on changed helper W7; the original 180000ms budget remains.",
+        "CLI log records disposed 20ms after SIGTERM; remote cleanup job132680462879 completed successfully on the same snapshot."
+      ],
+      "limits": [
+        "This establishes the changed diagnostic behavior and cleanup, not a repaired POST or completed installed BI journey.",
+        "No quote/scenario/BI stage is reached. Intended full-test attachment text is explicitly qualified by completed=false and the two actual observations.",
+        "Exact failing server instruction remains unlocalized; no mutation retry is authorized."
+      ]
+    }
+  ],
+  "retained_artifact_checks": [
+    {
+      "run": "R2",
+      "artifact": "artifact.zip",
+      "sha256": "96a56b7aac2eed69622d880fa84bb6bcbad18e3fe084e4e878368db61e3cf0ac",
+      "result": "MATCH"
+    },
+    {
+      "run": "R4",
+      "artifact": "artifact.zip",
+      "sha256": "20992ebe6f7df91c5426c08f010f48525ce192548ccabe9fad140b0c9d5a66da",
+      "result": "MATCH"
+    },
+    {
+      "run": "R4",
+      "artifact": "bi62-first-save-http.json",
+      "sha256": "58a12a242fe122c9e4ba0539ec9588c37a03ba73205f818aeb7aedea514662d6",
+      "result": "MATCH"
+    },
+    {
+      "run": "R4",
+      "artifact": "wp03-real-cli.log",
+      "sha256": "edd8f8d864ee1ff2eeaebe0c09456a0481efd229a2eff6868796044fb70b32e2",
+      "result": "MATCH"
+    },
+    {
+      "run": "R4",
+      "artifact": "bi62-first-save.png",
+      "sha256": "00365e0a481f257a5b8b11a7809d66e7cbde85f5e9ecbe06432d00b45878f9d6",
+      "result": "MATCH; image viewed; same screenshot digest recorded for R2."
+    },
+    {
+      "run": "R6",
+      "artifact": "artifact.zip",
+      "sha256": "29beb21989ae918e05c543dc33a76184f12962558097902404eb945f70b8fdb0",
+      "result": "MATCH"
+    },
+    {
+      "run": "R6",
+      "artifact": "bi62-installed-observations.json",
+      "sha256": "9b25ea6b0e07078c397e14a20e0cb6852c6197468a4a925221607179a43e4507",
+      "result": "MATCH"
+    },
+    {
+      "run": "R6",
+      "artifact": "wp03-real-cli.log",
+      "sha256": "5e4583caef1ab4ebbf77b22ff2a70a8fb3e169a949a0eeb182d328703aea2ee9",
+      "result": "MATCH"
+    },
+    {
+      "run": "R6",
+      "artifact": "test-failed-1.png",
+      "sha256": "00365e0a481f257a5b8b11a7809d66e7cbde85f5e9ecbe06432d00b45878f9d6",
+      "result": "MATCH; same image digest as inspected R4 screenshot."
+    }
+  ],
+  "external_missing_coverage_review": {
+    "disposition": "INERT_PROPOSAL_DOCUMENTARILY_CONSISTENT; NOT_APPLIED; NOT_RUN",
+    "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+    "preimage": "807a51590a516d62e9586ce7475ecf4599cd2642",
+    "postimage": "4499037e904567643fad0cb92fbccf223e2e81bd",
+    "patch_sha256": "264d2e383a8382e77c9822073cadd89f912d53769617627d78c65ec7daa78125",
+    "checks": [
+      "Preimage/postimage/patch byte counts, Git blobs and SHA256 values agree with MANIFEST.",
+      "Applying the single unified-diff hunk in memory reproduces the exact postimage; no target file was changed.",
+      "At W7 the actual external fixture still has the preimage blob, confirming the proposed change remains unapplied.",
+      "The delta changes only the included human classification when missing=true; raw null component remains in source/scenario, and all calculations, admissions, assertions and budgets remain unchanged.",
+      "C10 downgrade and input.entries-based uncategorized issue derivation, persistence of assessment.entries, and exact prepareNoop comparison are present in the pinned source."
+    ],
+    "causal_limit": "The failure and503 are observed. The internal C10 issue-list chain is a code-supported inference, not an instrumented reproduction. The proposal is not a canonical producer fix and cannot fix independent slow-dispatch deadlines.",
+    "source_refs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+        "blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+        "blob": "4280c9a249627893eb798eb421711d9e58e50a8f"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+        "blob": "fd5e40da9a982d445259606629b7dbdf581b42af"
+      }
+    ],
+    "source_ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+  },
+  "budget_and_source_integrity": {
+    "inspected_candidate": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "inspected_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+    "W7_parent": "015254f8c377bb38cbfceb68db5ac0cb67ce8760",
+    "W7_only_delta": {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "blob": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2",
+      "scope": "Static observer-helper delta: typed exact form/page/action/id/version matching; requestfailed/unknown UI detection; no retry; event handlers removed in finally."
+    },
+    "unchanged_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+        "blob": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "same_as": "fixed product base"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts",
+        "blob": "b04f95fe9159af96308115598effda649534d57b",
+        "same_as": "fixed product base",
+        "budgets": "105000 cooperative default /120000 outer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+        "blob": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "same_as": "fixed product base",
+        "budgets": "105000 cooperative default /120000 outer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+        "blob": "252b519f6dfaee461323d3b16407fc6f5849e668",
+        "same_as": "R1 W e816e5856af8f086402a501242b786488a2c6270",
+        "budgets": "165000 cooperative /180000 outer"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "blob": "3eb140557b597156baf52578d8981d332e52aef3",
+        "same_as": "fixed product base"
+      }
+    ],
+    "limit": "Checks establish the listed source identities and budgets only. Earlier results are not relabeled as runs of W7. R6 observes helper failure handling, not a passing installed product or a complete final source gate.",
+    "product_blob_identity_W1_equals_W7": [
+      {
+        "path": "apps/cli/src/sucafina-product/bi-services.ts",
+        "blob": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+        "blob": "4d165428dc731e59c2faf01a4e47b352e691dfbc"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "blob": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21"
+      }
+    ]
+  },
+  "criteria_trace_review": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-01.json",
+    "planning_ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "planning_mcp_blob": "972e8a3c6146aa8937e7f7061a04594a70dbe9ed",
+    "verified": {
+      "criterion_ids_exact": 108,
+      "criterion_texts_and_planning_status_exact": 108,
+      "proof_bindings_exact": 108,
+      "numeric_oracles_literal_exact": 7,
+      "witnesses": 35,
+      "missing_witness_references": 0,
+      "witness_test_lines_missing_from_receipts": 0,
+      "run_W_S_counts_status_mismatches": 0,
+      "criterion_status_counts": {
+        "BLOCKED": 59,
+        "NOT_RUN": 49
+      },
+      "criterion_PASS": 0,
+      "numeric_oracle_PASS": 0
+    },
+    "reviewed_content": "All108 authored coverage/limit mappings, all35 witness scopes/limits, the seven oracle coverage qualifications, run metadata, authorship exclusions and non-acceptance gates.",
+    "limits": [
+      "Authored numerical targets that timed out are not results.",
+      "The null-training fixture explicitly supplies pending and is not the exact included-without-evidence normative control; positive N/A remains distinct from zero.",
+      "R5's producer proof and synthetic renderer proof are distinct; their combination does not establish one installed rendered trajectory.",
+      "Resident/AM01-AM06/native/MCP/C17 full union, native zoom, controlled user tasks, p95 and G7/G8 remain unproved.",
+      "Prepared successor routes are recorded conditionally; this review grants no lease or ACK and does not reactivate60."
+    ],
+    "final_blob": "3c7aaffd922a26d2a559c7e7d2ee2bd2f069d188",
+    "final_sha256": "aa834f971f60eda92ffbfe9564260bfbad0dbadfbd2422d1331285e1c68f3e25",
+    "append_only_delta": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-DELTA-R6.json",
+      "blob": "6184487c32cb868ec714095fde0d0b0f7db9662e",
+      "sha256": "f942cb870f425593a2e2d37838291f31a102ef888aed0dc1df83e6bc9ba54fac",
+      "checks": [
+        "Base trace hash/blob match corrected frozen CRITERIA-01.",
+        "R6 receipt hash, W/S/trees/counts/result/artifact and observation rows agree exactly.",
+        "All affected criterion IDs exist in the108-entry base trace.",
+        "Adds one failure witness and updates pending to observed FAIL, without criterion or oracle status changes."
+      ],
+      "base_witnesses": 35,
+      "added_witnesses": 1,
+      "criterion_status_changes": [],
+      "oracle_status_changes": []
+    }
+  },
+  "local_activity": {
+    "product_tests": 0,
+    "builds": 0,
+    "typechecks": 0,
+    "servers": 0,
+    "CUA_sessions": 0,
+    "remote_mutations": 0,
+    "permitted_activity": "Read pinned GitHub metadata/source and existing local evidence; inspect retained screenshot; parse JSON, compare text and compute hashes; apply proposal diff in memory; write this new receipt only."
+  },
+  "product_mutation_by_this_review": false,
+  "independent_final_source_gate": false,
+  "independent_final_functional_gate": false,
+  "independent_final_performance_gate": false,
+  "native_execution_claimed": false,
+  "G7": false,
+  "G8": false,
+  "GLOBAL_RELEASE": false,
+  "recorded_at": "2026-11-15T03:11:39Z",
+  "ci_request_review": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/CI-REQUESTS-02.json",
+    "requests": 6,
+    "remote_runs_completed": 6,
+    "attempts": "Each run attempt1",
+    "checks": [
+      "All six snapshot commits directly parent the recorded W and add only .ci-run.json.",
+      "Recorded S/tree/run links agree with GitHub MCP metadata.",
+      "R2 and R6 use identical request blob19d315cd742c4df33ef3f5b2895daa901395de61; W7 materially changes only the nominal helper.",
+      "R4 and R5 have distinct diagnostic/focal targets; their results do not replace original failed tests.",
+      "The three product blobs are identical between W1 and W7; no result is relabeled as a later integrated candidate."
+    ],
+    "limit": "This is correspondence review of the selected requests, not approval to dispatch more runs or validation of a whole CI/compiler gate."
+  },
+  "cutoff": {
+    "latest_source_W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "latest_reviewed_result": "R6",
+    "later_receipt_rule": "Later source or evidence updates require a new review scope; this receipt is not retroactive approval."
+  },
+  "findings": [
+    {
+      "id": "EVIDENCE-02-F01",
+      "classification": "DOCUMENTARY_CORRECTION",
+      "status": "CORRECTED_BEFORE_SEAL",
+      "path": "CRITERIA-01.json#/criteria[criterion_id=WP05.T05.CHK.01]/coverage_specific",
+      "finding": "The initial trace associated omitted-training55000 with133862ms, which belongs to the confirmed-training15000 solver phase.",
+      "evidence": "R3 installed-bi-threshold-omitted canonical.exact-threshold phaseMs136493; installed-bi-threshold-confirmed phaseMs133862.",
+      "resolution": "Mapper changed only the55000 duration to136493ms. Reverting that one text substitution reproduces the initial SHA256a4579a2814c5bfc3a5b86c313d59031cfb67b74e16dab9dcdde559cbb9f78da2, independently confirming that no other byte changed.",
+      "remaining_product_effect": "None; both solver tests remain FAIL with no threshold certification."
+    },
+    {
+      "id": "EVIDENCE-02-O01",
+      "classification": "PRESERVED_EVIDENCE_BOUNDARY",
+      "status": "DOCUMENTED",
+      "finding": "R5's four passes have limited scope and do not erase R1's original cross-view/Portfolio failure or R2/R4/R6 installed-browser boundary.",
+      "resolution": "Receipts and criteria keep those distinctions and authorship exclusions explicit."
+    },
+    {
+      "id": "EVIDENCE-02-O02",
+      "classification": "PRESERVED_CAUSAL_LIMIT",
+      "status": "DOCUMENTED",
+      "finding": "Slow phases and the POST hang are observed, but a unique internal producer/server instruction is not proved.",
+      "resolution": "No speculative cache, guard weakening, timeout increase or mutation replay is credited as a fix."
+    }
+  ],
+  "unresolved_documentary_findings": [],
+  "open_product_evidence_boundaries": [
+    "Original installed BI09/BI10 cross-view and Portfolio tests retain R1 failures.",
+    "Training/inverse/threshold/history assertions retain R3 failures before their outcomes.",
+    "Real installed POST boundary retains R2/R4/R6 failure; no BI surface is reached.",
+    "C10 canonical stability and the inert fixture proposal remain unverified by a corrective runtime run.",
+    "External browser-selection and timeline proposals remain owner work and do not gain integration credit here.",
+    "Full108 criteria,7 numeric oracles,resident/native/C17/zoom/p95 and campaign release gates are not accepted by this document."
+  ]
+}
+

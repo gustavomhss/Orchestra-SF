@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.installed-bi.next-validation.v1",
+  "mission": 62,
+  "state": "PREPARED_NOT_DISPATCHED",
+  "source_head": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+  "consumer": "60/PR65 then71 after ACK;45 compiler and S0 finalacceptance",
+  "requests": [
+    {
+      "owner": "authorized integration/test owner",
+      "prerequisite": "Actual released HTTP correction plus accepted browser/timeline patches and a named composed candidate; resolve relevant canonical runtime cost first.",
+      "recipe": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/bi-installed/installed-bi.spec.ts",
+          "e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "purpose": "Reach and inspect actual installed BI09/10,40000 quote,inverse,source navigation,visual crop,reload,Portfolio and access revocation. Regression tests remain ordinary assertions; no skip/failing annotation."
+    },
+    {
+      "owner": "authorized integration/test owner",
+      "prerequisite": "Material canonical producer/runtime improvement and accepted legacy fixture/BI10 expectation patches.",
+      "recipe": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+          "Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+          "Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts"
+        ],
+        "env": {}
+      },
+      "purpose": "Complete unchanged failed cross-view/Portfolio/null/rendering and literal training/history/threshold assertions within their existing budgets."
+    }
+  ],
+  "compiler_request": "COMPILER45-REQUEST-02.json",
+  "rules": [
+    "No unchanged replay while the known prerequisites remain unfixed.",
+    "Check the exact active request lane, deduplicate run history, publish a W→S snapshot with only.ci-run.json.",
+    "Every new material candidate needs its own qualification; keep prior source failures and PASS identities.",
+    "Keep native zoom200%,p95,C17/AM/fullcampaigngates open until real required observations."
+  ],
+  "GLOBAL_RELEASE": false
+}

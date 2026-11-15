@@ -1,0 +1,2473 @@
+diff --git a/apps/cli/src/sucafina-product/bi-services.ts b/apps/cli/src/sucafina-product/bi-services.ts
+index 280627cbb683c2f401a8c37f90b6c727f9de7b94..4f7d24f93838fd6e19ed0403b4b3bbdf644b3575 100644
+--- a/apps/cli/src/sucafina-product/bi-services.ts
++++ b/apps/cli/src/sucafina-product/bi-services.ts
+@@ -129,15 +129,15 @@
+       },
+     } },
+     procurement: { views: ["BI05", "BI06"], host: { list: business.procurement.list, revalidate } },
+-    scenario: { views: scenarioCosts ? ["BI10", "BI11"] : ["BI09", "BI10", "BI11"], host: scenarioHost },
+-    ...(scenarioCosts ? { projectedScenario: { views: ["BI09"] as const, host: scenarioCosts } } : {}),
++    scenario: { views: scenarioCosts ? ["BI11"] : ["BI09", "BI10", "BI11"], host: scenarioHost },
++    ...(scenarioCosts ? { projectedScenario: { views: ["BI09", "BI10"] as const, host: scenarioCosts } } : {}),
+     ...(portfolioProjection ? { portfolio: { views: ["BI09", "BI10"] as const, host: { readProjection: portfolioProjection,
+       revalidate: (request: BiViewRequest, call: TrustedDomainContext, _bundle?: unknown, projection?: DomainProjection) => revalidate(request, call, projection),
+       resolve: async (request: BiViewRequest) => {
+         const selected = readSfDecisionBiSelection(request.selectionRef)
+         return selected && "portfolioResultRef" in selected ? { status: "ok" as const, value: { portfolioResultRef: selected.portfolioResultRef,
+           present: () => decisionPresentation(request),
+-          ...(request.viewId === "BI09" && portfolioCosts ? { project: (projection: DomainProjection, call: TrustedDomainContext) => portfolioCosts(request, projection, call) } : {}),
++          ...((request.viewId === "BI09" || request.viewId === "BI10") && portfolioCosts ? { project: (projection: DomainProjection, call: TrustedDomainContext) => portfolioCosts(request, projection, call) } : {}),
+         } }
+           : { status: "needs-input" as const, reason: "portfolio-bi-selection-unavailable" }
+       },
+@@ -185,7 +185,7 @@
+   }
+   return { ...factory, dispatchPresentation, caseFor, readForReview, unavailable: [
+     ...(!scenarioCosts || (portfolioProjection && !portfolioCosts) ? ["decision-bi-waterfall-plan-unavailable"] : []),
+-    "decision-bi-timeline-plan-unavailable",
++    ...(!scenarioCosts || (portfolioProjection && !portfolioCosts) ? ["decision-bi-timeline-plan-unavailable"] : []),
+   ] }
+ }
+ 
+@@ -200,7 +200,7 @@
+   return async (incoming: BiViewRequest, original: DomainProjection, context: TrustedDomainContext): Promise<PortResult<PortfolioBiBundle>> => {
+     const request = structuredClone(incoming), selected = readSfDecisionBiSelection(request.selectionRef)
+     const expected = structuredClone(original)
+-    if (request.viewId !== "BI09" || !selected || !("portfolioResultRef" in selected) || expected.decision?.kind !== "portfolio" ||
++    if ((request.viewId !== "BI09" && request.viewId !== "BI10") || !selected || !("portfolioResultRef" in selected) || expected.decision?.kind !== "portfolio" ||
+       expected.decision.portfolioResultRef !== selected.portfolioResultRef) return { status: "denied", reason: "portfolio-waterfall-selection-mismatch" }
+     const portfolioResult = expected.decision.portfolio
+     const matches = portfolioResult.combinations.filter((entry) => entry.analysis?.scenarioResultRef === selected.sourceScenarioRef)
+@@ -225,7 +225,7 @@
+         return { status: "ok", value: {
+           projection: { ...source, decision: { kind: "scenario", scenarioResultRef: selected.sourceScenarioRef, scenario: analysis.scenario,
+             comparisonRef: analysis.comparisonRef, comparison: analysis.comparison } },
+-          presentation: { viewId: "BI09", series: [], limitations: [] },
++          presentation: { viewId: request.viewId, series: [], limitations: [] },
+         } }
+       },
+     } })
+diff --git a/modules/sucafina/Sucafinav1/product/analytics/scenario.ts b/modules/sucafina/Sucafinav1/product/analytics/scenario.ts
+index c116831c71e2df3e30c6b058f4eff8d26ce6ce07..4d165428dc731e59c2faf01a4e47b352e691dfbc 100644
+--- a/modules/sucafina/Sucafinav1/product/analytics/scenario.ts
++++ b/modules/sucafina/Sucafinav1/product/analytics/scenario.ts
+@@ -71,7 +71,7 @@
+   }
+ }
+ 
+-/** Mount the canonical cost producer over persisted C08 observations. Earlier
++/** Mount the canonical cost and period producers over persisted C08 observations. Earlier
+  * baseline case versions remain historical; their identities are never rewritten. */
+ export function createScenarioCostBiHost(input: {
+   host: DomainPortHost
+@@ -84,7 +84,7 @@
+   type View = { projection: DomainProjection; presentation: BiPresentation }
+   const readView = (incoming: BiViewRequest, context: TrustedDomainContext): Promise<PortResult<View>> => readPortfolioSnapshot<PortResult<View>>(input.host, context, incoming, async () => {
+     const request = structuredClone(incoming)
+-    if (request.viewId !== "BI09") return { status: "unavailable", reason: "unsupported-cost-view" }
++    if (request.viewId !== "BI09" && request.viewId !== "BI10") return { status: "unavailable", reason: "unsupported-cost-view" }
+     if (!await input.host.revalidate(context)) return { status: "denied", reason: "scenario-cost-authority-unavailable" }
+     const readSource = async () => {
+       const forwarded = structuredClone(request)
+@@ -124,7 +124,7 @@
+     const observed = await observe()
+     if (observed.status !== "ok") return observed
+     // All financial values, deltas and running endpoints come from this producer.
+-    const planned = plannerScenarioBiPresentation(projection, observed.value.pair, "BI09")
++    const planned = plannerScenarioBiPresentation(projection, observed.value.pair, request.viewId)
+     if (planned.status !== "ok") return planned
+     const again = await readSource()
+     if (again.status !== "ok") return again
+diff --git a/modules/sucafina/Sucafinav1/product/analytics/view.ts b/modules/sucafina/Sucafinav1/product/analytics/view.ts
+index 85480f85cf36f20ab7ba7ac7e142d457653ae292..b131fb28a385105f0e8ef5b337ffa4e5bca15f21 100644
+--- a/modules/sucafina/Sucafinav1/product/analytics/view.ts
++++ b/modules/sucafina/Sucafinav1/product/analytics/view.ts
+@@ -26,8 +26,16 @@
+   openCase?: (reference: string) => void
+ }
+ 
++/** Display choices never change the producer's authorized period or values. */
++export type BiVisualState = {
++  period?: BiViewRequest["period"]
++  onPeriodChange?: (period: BiViewRequest["period"]) => void
++}
++
++export type BiFocusTarget = { valueId: string; originDigest?: string }
++
+ /** The projection must be freshly authorized by its producer before rendering. */
+-export function renderBiView(request: BiViewRequest, projection: DomainProjection, open: (selection: BiSelection) => void, presentation?: BiPresentation, navigation?: BiDecisionNavigation, filters?: BiFilterControls) {
++export function renderBiView(request: BiViewRequest, projection: DomainProjection, open: (selection: BiSelection) => void, presentation?: BiPresentation, navigation?: BiDecisionNavigation, filters?: BiFilterControls, visualState?: BiVisualState) {
+   const section = document.createElement("section")
+   section.style.minWidth = "0"
+   section.style.overflowWrap = "anywhere"
+@@ -122,13 +130,15 @@
+   controls.append(legend)
+   const start = document.createElement("input")
+   start.type = "date"
+-  start.value = data.context.period.start
++  const crop = visualState?.period && isSfPeriod(visualState.period) && visualState.period.start >= data.context.period.start && visualState.period.end <= data.context.period.end
++    ? visualState.period : data.context.period
++  start.value = crop.start
+   start.min = data.context.period.start
+   start.max = data.context.period.end
+   start.setAttribute("aria-label", "Início do período")
+   const end = document.createElement("input")
+   end.type = "date"
+-  end.value = data.context.period.end
++  end.value = crop.end
+   end.min = data.context.period.start
+   end.max = data.context.period.end
+   end.setAttribute("aria-label", "Fim do período")
+@@ -195,28 +205,31 @@
+       return
+     }
+     const period = { start: start.value, end: end.value }
++    visualState?.onPeriodChange?.({ ...period })
+     const openSelected = (selection: BiSelection) => open({ ...selection, visualPeriod: period })
+     status.textContent = ""
+     chart.replaceChildren()
+     body.replaceChildren()
+     const chooseSource = createBiSourceChooser(chart, openSelected)
+-    const undatedIds = new Set((request.viewId === "BI08" || request.viewId === "BI10") && semantic?.status === "ok" ? presentation?.timeline?.items.flatMap((item) => {
+-      const row = data.rows.find((value) => value.id === item.dateValueId)
+-      return row && (typeof row.value !== "string" || !isSfPeriod({ start: row.value, end: row.value })) ? [row.id] : []
+-    }) : [])
++    const timeline = semantic?.status === "ok" && (request.viewId === "BI08" || request.viewId === "BI10") ? presentation?.timeline : undefined
++    const timelineIds = new Set(timeline?.items.map((item) => item.dateValueId))
+     const selectedIdsInPeriod = new Set(brushPeriod(data.rows, period.start, period.end).map((row) => row.id))
+-    const selected = data.rows.filter((row) => selectedIdsInPeriod.has(row.id) || undatedIds.has(row.id))
++    // A milestone is selected by its observed date, not by the broader financial
++    // component interval. Unknown dates remain visible without inventing a date.
++    const selected = data.rows.filter((row) => timelineIds.has(row.id)
++      ? row.evidenceState === "absent" || typeof row.value !== "string" || !isSfPeriod({ start: row.value, end: row.value }) || (row.value >= period.start && row.value <= period.end)
++      : selectedIdsInPeriod.has(row.id))
+     if (!selected.length) status.textContent = "Nenhum dado disponível neste período."
+     const waterfall = semantic?.status === "ok" && (request.viewId === "BI02" || request.viewId === "BI09") ? presentation?.waterfall : undefined
+     if (waterfall) {
+       const ids = new Set(selected.map((row) => row.id))
+       chart.append(renderWaterfall({ ...projection, values: projection.values.filter((value) => ids.has(value.id)) }, request.selectionRef, waterfall, openSelected))
+     }
+-    const timeline = semantic?.status === "ok" && (request.viewId === "BI08" || request.viewId === "BI10") ? presentation?.timeline : undefined
+     if (timeline) {
+-      const timelineIds = new Set(timeline.items.map((item) => item.dateValueId))
+-      const ids = new Set([...selected.map((row) => row.id), ...projection.values.filter((value) => timelineIds.has(value.id) && (value.evidenceState === "absent" || typeof value.value !== "string" || !isSfPeriod({ start: value.value, end: value.value }))).map((value) => value.id)])
++      const ids = new Set(selected.map((row) => row.id))
+       chart.append(renderTimeline({ ...projection, values: projection.values.filter((value) => ids.has(value.id)) }, request.selectionRef, { ...timeline, items: timeline.items.filter((item) => ids.has(item.dateValueId)) }, openSelected, period))
++      if (selected.some((row) => !timelineIds.has(row.id) && (row.period.start < period.start || row.period.end > period.end)))
++        status.textContent = "Os valores de períodos parcialmente selecionados permanecem integrais na tabela, sem repartição estimada."
+     }
+     const groups: { unit: string; seriesId: string; role: string; scaleKey: string; currency?: string; rows: typeof selected }[] = []
+     const selectedById = new Map(selected.map((row) => [row.id, row] as const))
+@@ -434,10 +447,13 @@
+ }
+ 
+ /** The host calls this after returning from a detail screen. */
+-export function restoreBiFocus(container: HTMLElement, selection: BiSelection | string) {
++export function restoreBiFocus(container: HTMLElement, selection: BiSelection | BiFocusTarget | string) {
+   const valueId = typeof selection === "string" ? selection : selection.valueId
++  const origin = typeof selection === "string" ? undefined : "reference" in selection ? selection.reference?.refDigest : selection.originDigest
++  const values = Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId)
+   const candidates = [
+-    ...Array.from(container.querySelectorAll("[data-bi-focus]")).filter((element) => element.getAttribute("data-bi-focus") === valueId),
++    ...(origin ? values.filter((element) => element.getAttribute("data-bi-origin") === origin) : []),
++    ...values,
+     ...Array.from(container.querySelectorAll("[data-bi-focus-fallback]")),
+   ]
+   for (const target of candidates) {
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..e2638923ca123b918b99e2cb4e6b703147f7119b 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts
+@@ -0,0 +1,70 @@
++import { expect, test } from "bun:test"
++import { resolveTimeline } from "../../../product/analytics/milestones.ts"
++import { sameBiContext } from "../../../product/analytics/projection.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { plannerScenarioBiPresentation } from "../../../product/planner/scenario-bi.ts"
++import { ok, waterfallFixture } from "../bi-cost-waterfall/fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++
++// This focused proof isolates the new BI10 wiring against both canonical plans.
++// temporal-contract.test.ts remains unchanged and still owns the two-dispatch
++// cross-view assertion; its observed R1 failure is not replaced by this test.
++// No timeout is raised and no actual BI09 dispatch result is claimed here.
++test("focused BI10 dispatch reconciles canonical period and cost plans on its persisted pair", async () => {
++  const deadline = compositionTestDeadline("bi62-focused-canonical-bi10", 165_000)
++  try {
++    const fixture = await waterfallFixture(deadline)
++    const temporal = ok(await deadline.phase("BI10.dispatch", () => fixture.dispatch("BI10")), "Installed temporal presentation")
++    const decision = temporal.projection.decision
++    if (decision?.kind !== "scenario") throw new Error("BI10 lost its persisted scenario")
++    expect(fixture.baseline.caseRef.version).toBeLessThan(fixture.candidate.caseRef.version)
++    expect(decision.scenarioResultRef).toBe(fixture.candidate.resultRef)
++    expect(decision.comparisonRef).toBe(fixture.comparisonRef)
++    expect(decision.comparison.baselineResultRef).toBe(fixture.baseline.resultRef)
++    expect(decision.scenario).toEqual(fixture.caseValue.alternatives[1]!.result)
++    expect(decision.scenario).toMatchObject({ total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "pending" } })
++
++    const scenarios = fixture.business.plannerProduct.scenarios
++    if (!scenarios) throw new Error("Canonical scenario resolver unavailable")
++    const pair = ok(await deadline.phase("canonical.pair", () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, async () => {
++      const baseline = await scenarios.resolve(fixture.baseline.resultRef, fixture.call)
++      if (baseline.status !== "ok") return baseline
++      const candidate = await scenarios.resolve(fixture.candidate.resultRef, fixture.call)
++      if (candidate.status !== "ok") return candidate
++      return { status: "ok", value: { baseline: baseline.value, candidate: candidate.value } }
++    })), "Actual canonical pair")
++    const canonical = ok(plannerScenarioBiPresentation({ ...pair.candidate.projection, decision,
++      ...(temporal.projection.comparison ? { comparison: temporal.projection.comparison } : {}) }, pair, "BI10"), "Canonical period presentation")
++    const cost = ok(plannerScenarioBiPresentation({ ...pair.candidate.projection, decision,
++      ...(temporal.projection.comparison ? { comparison: temporal.projection.comparison } : {}) }, pair, "BI09"), "Canonical cost presentation for the same pair")
++    expect(decision).toEqual(cost.projection.decision)
++    expect(temporal.projection.components).toEqual(cost.projection.components)
++    expect(temporal.projection.version).toBe(cost.projection.version)
++    expect(temporal.projection.engineVersion).toBe(cost.projection.engineVersion)
++    expect(sameBiContext(temporal.projection.context, cost.projection.context)).toBe(true)
++    expect(temporal.presentation).toEqual(canonical.presentation)
++    expect(temporal.projection.values).toEqual(canonical.projection.values)
++    expect(temporal.projection.components).toEqual(canonical.projection.components)
++    expect(temporal.presentation.waterfall).toBeUndefined()
++    expect(cost.presentation.waterfall).toBeDefined()
++    expect(cost.presentation.timeline).toBeUndefined()
++    expect(temporal.presentation.series.map((series) => series.id)).toEqual(["period-before", "period-after", "period-difference"])
++    const plan = temporal.presentation.timeline
++    if (!plan?.items.length) throw new Error("Installed BI10 still has no period timeline")
++    const resolved = resolveTimeline(temporal.projection, plan)
++    if (resolved.status !== "ok") throw new Error(`Canonical timeline rejected: ${resolved.reason}`)
++    expect(new Set(resolved.items.map((item) => item.date))).toEqual(new Set([fixture.period.start, fixture.period.end]))
++    expect(resolved.items.every((item) => item.state === "unknown")).toBe(true)
++    const references = [...pair.baseline.result.sourceRefs, ...pair.candidate.result.sourceRefs,
++      ...pair.baseline.result.costCoverage.evaluatedSourceRefs, ...pair.candidate.result.costCoverage.evaluatedSourceRefs]
++    for (const item of resolved.items) {
++      expect(item.source.unit).toBe("date")
++      expect(item.source.period).toEqual(fixture.period)
++      expect(item.source.sourceRefs.length).toBeGreaterThan(0)
++      expect(item.source.sourceRefs.every((reference) => references.some((current) => digestSfValue(current) === digestSfValue(reference)))).toBe(true)
++    }
++    expect(temporal.presentation.limitations.some((text) => text.includes("adiar um valor não elimina a obrigação"))).toBe(true)
++    expect(temporal.projection.values.find((value) => value.id === "scenario:candidate-complete-total")?.value).toBeNull()
++    expect(temporal.projection.values.find((value) => value.id === "scenario:complete-difference")?.value).toBeNull()
++  } finally { await deadline.close() }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..ea90f631cc445b0a1a4b82594ce062ea7d93fe82 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts
+@@ -0,0 +1,142 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { CostCoverageEntry, DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { BiViewRequest, ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { PortResult } from "../../../product/contracts/ports.ts"
++import type { BaselineCoverageRequest } from "../../../product/decisions/baseline-coverage.ts"
++import { createSfBiServices } from "../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
++import { sfDecisionBiSelection } from "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
++import { ok } from "../bi-cost-waterfall/fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { financialCompositionFixture } from "../wp10/integration/financial-composition-fixture.ts"
++
++export const trainingHorizon = { start: "2027-01-01", end: "2027-12-31" }
++export type TrainingQuote = "omitted" | "confirmed" | "zero" | "null"
++
++/** Literal source declarations, then real source issuance, human coverage,
++ * HTTP promotion, canonical comparison and C08 persistence. No financial result,
++ * complete coverage, binding, inverse value or stored reference is seeded.
++ * Ancillary categories have an explicit zero quote; migration shares the
++ * implementation price. Training is explicitly outside that price. This does
++ * not impersonate a not-applicable producer, which the installed host lacks.
++ */
++export async function trainingFixture(deadline: ReturnType<typeof compositionTestDeadline>, training: TrainingQuote) {
++  const fixture = await deadline.phase("fixture.initialize", async () => {
++    const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
++    deadline.own(() => value.dispose())
++    return value
++  })
++  const { authority, business, portfolio, persistence } = fixture
++  const rows = [
++    [{ id: "renewal", name: "Final renewal service price including taxes", amount: 240000 },
++      { id: "covered-zero", name: "Explicit zero additional overlap, implementation, migration, training, exit and internal costs", amount: 0 }],
++    [{ id: "bridge", name: "Final bridge service price including taxes", amount: 60000 },
++      { id: "implementation", name: "Final implementation and migration price including taxes, excluding training", amount: 45000 },
++      { id: "new-service", name: "Final new service price including taxes", amount: 105000 },
++      { id: "covered-zero", name: "Explicit zero contract exit, internal and other relevant costs", amount: 0 },
++      ...(training === "omitted" ? [] : [{ id: "training", name: "Separately priced training", amount: training === "confirmed" ? 40000 : training === "zero" ? 0 : null }])],
++  ]
++  const monthly = (amount: number | null) => Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0)
++  await persistence.transaction("planner", async (snapshot) => {
++    snapshot.data.versions = rows.map((lines, index) => ({ id: `installed-training-${index}-${training}`,
++      name: index ? `Transition: training ${training}` : "Renewal quote", year: 2027, closed: 0,
++      lines: lines.map((line) => ({ id: line.id, name: line.name, sec: "opex", el: "licenses", cur: "USD",
++        b: monthly(line.amount), a: Array(12).fill(null), f: monthly(line.amount) })),
++      fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++    return { commit: true, value: undefined }
++  })
++  await persistence.transaction("procurement", async (snapshot) => {
++    snapshot.data.store = { requests: {}, suppliers: [], settings: { currency: "USD" } }
++    return { commit: true, value: undefined }
++  })
++  await persistence.initializeSources("planner")
++  const call = await fixture.read()
++  deadline.own(() => authority.ui.finish(call))
++  const sources: BaselineCoverageRequest["source"][] = []
++  const forecasts: Awaited<ReturnType<typeof business.planner.compareForecast>>[] = []
++  for (const index of [0, 1]) {
++    const issued = ok(await deadline.phase(`source.${index}`, () => business.plannerProduct.issueSource(`installed-training-${index}-${training}`, call)), "Issue training source")
++    sources.push(issued.evidence)
++    forecasts.push(await deadline.phase(`forecast.${index}`, () => business.planner.compareForecast({
++      baseRef: issued.evidence.refId, candidateRef: issued.evidence.refId, period: trainingHorizon, currency: "USD",
++    }, call)))
++  }
++  const initialRef = { id: "installed-training-case", incarnation: `installed-training-${training}`, version: 1 }
++  const basis: BaselineCoverageRequest["basis"] = { id: "installed-training-renewal", version: 1, decisionType: "renewal-transition-v1",
++    categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: sources }
++  const initial: DecisionCase = { ...initialRef, state: "draft", objective: "Compare declared renewal and transition quotes", horizon: trainingHorizon, currency: "USD",
++    criteria: [], participants: ["person"], sourceRefs: sources, alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++  const seeded = await authority.state.transaction(fixture.request("training-empty-case"), { namespace: "cases", expectedStorageVersion: 0,
++    targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
++    idempotencyKey: "training-empty-case", commandDigest: digestSfValue(initial) }, async (state) => {
++    state.cases[initial.id] = initial
++    return { commit: true, value: true }
++  })
++  if (seeded.status !== "ok") throw new Error(`Empty training case: ${JSON.stringify(seeded)}`)
++  const coverageRequests: BaselineCoverageRequest[] = []
++  const coverageRefs: string[] = []
++  for (const [index, source] of sources.entries()) {
++    const forecast = ok(forecasts[index]!, "Training source forecast")
++    const componentRefs = (line: string) => forecast.baseline.components.filter((component) => component.id.startsWith(`${line}:`)).map((component) => component.id)
++    const entries = RENEWAL_TRANSITION_CATEGORIES.flatMap((categoryId): CostCoverageEntry[] => {
++      if (index === 1 && categoryId === "training" && training === "omitted") return []
++      if (index === 1 && categoryId === "training" && training === "null")
++        return [{ categoryId, status: "pending", reason: "missing-value-and-evidence" }]
++      const line = index === 0 ? categoryId === "service" || categoryId === "taxes" ? "renewal" : "covered-zero"
++        : categoryId === "service" ? "new-service" : categoryId === "service_overlap" ? "bridge"
++          : categoryId === "implementation" || categoryId === "migration" ? "implementation"
++            : categoryId === "training" ? "training" : "covered-zero"
++      return [{ categoryId, status: "included", componentRefs: categoryId === "taxes" && index === 1
++        ? forecast.baseline.components.filter((component) => training !== "null" || !component.id.startsWith("training:")).map((component) => component.id)
++        : componentRefs(line), evidenceRefs: [source],
++        scopeNote: categoryId === "taxes" ? "All supplied prices are final including taxes; no second monetary contribution"
++          : categoryId === "migration" && index === 1 ? "Migration shares the implementation component, whose price excludes training"
++            : line === "covered-zero" ? "The separate source quote explicitly confirms zero additional charges for this category"
++              : `Human classification of the explicit ${line} quote` }]
++    })
++    const coverage: BaselineCoverageRequest = { caseRef: initialRef, source, basis, expectedVersion: 0, entries }
++    coverageRequests.push(coverage)
++    const human = ok(await authority.human.admit(fixture.request(`training-coverage-${index}`), "decisions.coverage", coverage), "Admit training coverage")
++    try {
++      const registered = ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, initialRef, {}, () =>
++        business.baselineCoverage.register(coverage, human))), "Register training coverage")
++      coverageRefs.push(registered.coverageRef)
++    } finally { authority.human.finish(human) }
++  }
++  const scenarios: ScenarioRequest[] = sources.map((source) => ({ baseRef: source.refId, operations: [], assumptions: [] }))
++  const mutationHttp = portfolio.http({ origin: "https://example.test", mount: "/product" })
++  const promote = async (index: number, caseRef: typeof initialRef) => {
++    const payload = { caseRef, title: index ? `Transition with ${training} training` : "Renewal", scenario: scenarios[index]!, coverageRef: coverageRefs[index]! }
++    const response = await deadline.phase(`promotion.${index}`, () => mutationHttp(new Request("https://example.test/product/planner?sf=decision-promote", {
++      method: "POST", signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": `training-promote-${index}` }, body: JSON.stringify(payload),
++    }), "planner"))
++    if (response?.status !== 200) throw new Error(`Training promotion ${index}: ${response?.status} ${response ? await response.text() : "no response"}`)
++    const receipt = ok(await response.json() as PortResult<{ caseRef: typeof initialRef; resultRef?: string }>, "Persist training scenario")
++    if (!receipt.resultRef) throw new Error("Training promotion did not persist its scenario")
++    return { caseRef: receipt.caseRef, resultRef: receipt.resultRef }
++  }
++  const baseline = await promote(0, initialRef)
++  const candidate = await promote(1, baseline.caseRef)
++  const snapshot = await authority.state.read(fixture.request(), "cases", (state) => state.cases[initialRef.id])
++  if (snapshot.status !== "ok" || !snapshot.value || snapshot.value.alternatives.length !== 2) throw new Error("Training alternatives unavailable")
++  const caseValue = snapshot.value
++  const compare = (inverse: boolean) => deadline.phase(inverse ? "advantage.persist" : "comparison.persist", () => business.withCase(call, candidate.caseRef, {}, async () => {
++    const selected = await portfolio.compare({ caseRef: candidate.caseRef, baselineAlternativeId: caseValue.alternatives[inverse ? 1 : 0]!.id,
++      alternativeId: caseValue.alternatives[inverse ? 0 : 1]!.id, criteria: [] }, call)
++    if (selected.status !== "ok") return selected
++    return business.calculations.persist({ kind: "comparison", request: selected.value.request, result: selected.value.comparison },
++      inverse ? "training-advantage-comparison" : "training-direct-comparison", call)
++  }))
++  const comparison = ok(await compare(false), "Persist canonical direct comparison")
++  const advantage = ok(await compare(true), "Persist canonical inverse comparison")
++  const selectionRef = sfDecisionBiSelection({ scenarioResultRef: candidate.resultRef, comparisonRef: comparison.resultRef, advantageComparisonRef: advantage.resultRef })
++  const bi = createSfBiServices({ authority, business, portfolio })
++  const dispatch = async (viewId = "BI09", selected = selectionRef) => {
++    const request: BiViewRequest = { viewId, selectionRef: selected, period: trainingHorizon }
++    const context = ok(await authority.ui.admit(fixture.request(), "sf_bi_view", digestSfValue(request)), "Admit training BI")
++    try { return await bi.dispatchPresentation(request, context) }
++    finally { authority.ui.finish(context) }
++  }
++  return { ...fixture, call, sources, basis, coverageRequests, coverageRefs, caseRef: candidate.caseRef, caseValue,
++    baseline, candidate, comparison, advantage, selectionRef, bi, dispatch }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4f74fd8a45d748fd3a7c3e785e2b9a77643fc776 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts
+@@ -0,0 +1,107 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { BiViewRequest } from "../../../product/contracts/operations.ts"
++import { plannerSourceActor, projectPlannerSource } from "../../../product/planner/port.ts"
++import { roleMap } from "../../../runtime/admin.ts"
++import { createSfBiServices } from "../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
++import { sfPlannerBiSelection } from "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
++import { ok } from "../bi-cost-waterfall/fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { financialCompositionFixture } from "../wp10/integration/financial-composition-fixture.ts"
++
++// FX01/FX03 source declarations and literal expectations. The real Planner
++// produces every total and difference. Its current projection has no annual
++// budget-minus-outlook margin field, so the -2000/+4000 margins remain a C02
++// producer gap; this test does not manufacture them by summing or negating BI.
++test("installed BI01/BI02 preserve the canonical 590000 to 602000 and 596000 forecast replacements", async () => {
++  const deadline = compositionTestDeadline("installed-bi-forecast-replacement", 165_000)
++  try {
++    const fixture = await deadline.phase("fixture.initialize", async () => {
++      const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
++      deadline.own(() => value.dispose())
++      return value
++    })
++    const period = { start: "2027-01-01", end: "2027-12-31" }
++    const budget = [40000, 45000, 45000, 50000, 50000, 50000, 50000, 50000, 50000, 50000, 60000, 60000]
++    const actual = [40000, 40000, 45000, 45000, 45000, 45000, 45000, 45000, 50000, null, null, null]
++    const versions = [
++      { id: "installed-forecast-baseline", license: 72000, fullYear: 590000, november: 112000, difference: 0 },
++      { id: "installed-forecast-fx01", license: 84000, fullYear: 602000, november: 124000, difference: 12000 },
++      { id: "installed-forecast-fx03", license: 78000, fullYear: 596000, november: 118000, difference: 6000 },
++    ]
++    await fixture.persistence.transaction("planner", async (snapshot) => {
++      snapshot.data.versions = versions.map((version) => ({ id: version.id, name: version.id, year: 2027, closed: 9,
++        lines: [
++          { id: "other", name: "Other costs and closed actuals", sec: "opex", el: "licenses", cur: "USD", b: budget, a: actual,
++            f: [null, null, null, null, null, null, null, null, null, 38000, 40000, 40000] },
++          { id: "license", name: "November license quote", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(0),
++            a: [0, 0, 0, 0, 0, 0, 0, 0, 0, null, null, null],
++            f: Array.from({ length: 12 }, (_, month) => month === 10 ? version.license : 0) },
++        ], fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++      return { commit: true, value: undefined }
++    })
++    await fixture.persistence.initializeSources("planner")
++    const call = await fixture.read()
++    deadline.own(() => fixture.authority.ui.finish(call))
++    const sources: Extract<BusinessEvidenceRef, { kind: "record" }>[] = []
++    for (const version of versions) sources.push(ok(await deadline.phase(`source.${version.id}`, () =>
++      fixture.business.plannerProduct.issueSource(version.id, call)), "Issue actual forecast source").evidence)
++
++    // Read the same authenticated canonical projection covered by each source
++    // digest. This observes annual budget/actual totals without test arithmetic.
++    const transport = fixture.authority.host.requestFor(call)
++    if (!transport) throw new Error("Authenticated forecast source request unavailable")
++    await deadline.phase("source.canonical-summaries", () => fixture.persistence.transaction("planner", async (snapshot) => {
++      const principal = await fixture.authority.host.authenticate(transport, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
++      const actor = plannerSourceActor(snapshot, principal, call.binding.principalRef)
++      if (!actor) throw new Error("Authenticated forecast source actor unavailable")
++      for (const [index, version] of versions.entries()) {
++        const projection = projectPlannerSource(snapshot, actor, version.id)
++        expect(projection).toMatchObject({ year: 2027, closed: 9, summary: { total: 600000, actualYTD: 400000, fullYear: version.fullYear } })
++        expect(digestSfValue({ versionId: version.id, projection })).toBe(sources[index]!.target.projectionDigest)
++      }
++      return { commit: false, value: undefined }
++    }))
++
++    const bi = createSfBiServices({ authority: fixture.authority, business: fixture.business, portfolio: fixture.portfolio })
++    for (const index of [1, 2]) {
++      const version = versions[index]!
++      const comparison = { baseRef: sources[0]!.refId, candidateRef: sources[index]!.refId, period, currency: "USD" }
++      const canonical = ok(await deadline.phase(`forecast.${version.id}`, () => fixture.business.planner.compareForecast(comparison, call)), "Canonical forecast replacement")
++      expect(canonical.knownDifference).toBe(version.difference)
++      expect(canonical.completeDifference).toBeNull()
++      expect(canonical.comparison.comparisonStatus).toBe("conditioned")
++      expect(canonical.sourceRefs).toEqual([sources[0], sources[index]])
++      for (const viewId of ["BI01", "BI02"] as const) {
++        const request: BiViewRequest = { viewId, selectionRef: sfPlannerBiSelection(comparison), period }
++        const admitted = ok(await fixture.authority.ui.admit(fixture.request(), "sf_bi_view", digestSfValue(request)), "Admit forecast BI")
++        try {
++          const output = ok(await deadline.phase(`${viewId}.${version.id}`, () => bi.dispatchPresentation(request, admitted)), "Installed forecast presentation")
++          expect(output.projection.components).toEqual(canonical.candidate.components)
++          expect(output.projection.missing).toEqual(canonical.candidate.missing)
++          expect(output.projection.context).toMatchObject({ currency: "USD", period })
++          if (viewId === "BI01") {
++            expect(output.projection.values).toEqual(canonical.candidate.values)
++            const months = (measure: string) => Array.from({ length: 12 }, (_, month) =>
++              output.projection.values.find((value) => value.id === `month:${month + 1}:${measure}`)?.value)
++            expect(months("budget")).toEqual(budget)
++            expect(months("actual")).toEqual(actual)
++            expect(months("outlook")).toEqual([40000, 40000, 45000, 45000, 45000, 45000, 45000, 45000, 50000, 38000, version.november, 40000])
++            expect(output.projection.values.find((value) => value.id === "license:11:forecast")).toMatchObject({
++              value: version.license, currency: "USD", sourceRefs: [sources[index]], drilldown: sources[index], evidenceState: "confirmed",
++            })
++            expect(output.projection.values.find((value) => value.id === "license:10:forecast")?.value).toBe(0)
++            expect(output.projection.values.find((value) => value.id === "license:10:actual")?.value).toBeNull()
++          } else {
++            expect(output.presentation.waterfall).toMatchObject({ reconciliation: "reconciled", finalValueId: "difference:candidate-total" })
++            expect(output.projection.values.find((value) => value.id === "difference:baseline")).toMatchObject({ value: 590000, sourceRefs: canonical.sourceRefs })
++            expect(output.projection.values.find((value) => value.id === "difference:candidate-total")?.value).toBe(version.fullYear)
++            expect(output.projection.values.filter((value) => value.id.startsWith("difference:component:") && value.value !== 0)
++              .map((value) => value.value)).toEqual([version.difference])
++          }
++        } finally { fixture.authority.ui.finish(admitted) }
++      }
++    }
++  } finally { await deadline.close() }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7968ddcc8ec4d1268cb34f6ce0222799dc89228d 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts
+@@ -0,0 +1,200 @@
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
++import type { CostCoverageEntry, DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { PortResult } from "../../../product/contracts/ports.ts"
++import type { BaselineCoverageRequest } from "../../../product/decisions/baseline-coverage.ts"
++import { plannerSourceActor, projectPlannerSource } from "../../../product/planner/port.ts"
++import { roleMap } from "../../../runtime/admin.ts"
++import { domain } from "../../../runtime/planner.ts"
++import { ok } from "../bi-cost-waterfall/fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { financialCompositionFixture } from "../wp10/integration/financial-composition-fixture.ts"
++import { trainingHorizon, type TrainingQuote } from "./fixture.ts"
++
++/** Literal source declarations, then real source issuance, human coverage,
++ * HTTP promotion and C08 persistence, with a human criterion in the empty case. No financial result,
++ * complete coverage, binding, inverse value or stored reference is seeded.
++ * Ancillary categories have an explicit zero quote; migration shares the
++ * implementation price. Training is explicitly outside that price. This does
++ * not impersonate a not-applicable producer, which the installed host lacks.
++ */
++export async function trainingHistoryFixture(deadline: ReturnType<typeof compositionTestDeadline>, training: TrainingQuote = "omitted") {
++  const fixture = await deadline.phase("fixture.initialize", async () => {
++    const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
++    deadline.own(() => value.dispose())
++    return value
++  })
++  const { authority, business, portfolio, persistence } = fixture
++  const rows = [
++    [{ id: "renewal", name: "Final renewal service price including taxes", amount: 240000 },
++      { id: "covered-zero", name: "Explicit zero additional overlap, implementation, migration, training, exit and internal costs", amount: 0 }],
++    [{ id: "bridge", name: "Final bridge service price including taxes", amount: 60000 },
++      { id: "implementation", name: "Final implementation and migration price including taxes, excluding training", amount: 45000 },
++      { id: "new-service", name: "Final new service price including taxes", amount: 105000 },
++      { id: "covered-zero", name: "Explicit zero contract exit, internal and other relevant costs", amount: 0 },
++      ...(training === "omitted" ? [] : [{ id: "training", name: "Separately priced training", amount: training === "confirmed" ? 40000 : training === "zero" ? 0 : null }])],
++  ]
++  const monthly = (amount: number | null) => Array.from({ length: 12 }, (_, month) => month === 10 ? amount : 0)
++  await persistence.transaction("planner", async (snapshot) => {
++    snapshot.data.versions = rows.map((lines, index) => ({ id: `installed-training-${index}-${training}`,
++      name: index ? `Transition: training ${training}` : "Renewal quote", year: 2027, closed: 0,
++      lines: lines.map((line) => ({ id: line.id, name: line.name, sec: "opex", el: "licenses", cur: "USD",
++        b: monthly(line.amount), a: Array(12).fill(null), f: monthly(line.amount) })),
++      fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++    return { commit: true, value: undefined }
++  })
++  await persistence.transaction("procurement", async (snapshot) => {
++    snapshot.data.store = { requests: {}, suppliers: [], settings: { currency: "USD" } }
++    return { commit: true, value: undefined }
++  })
++  await persistence.initializeSources("planner")
++  const call = await fixture.read()
++  deadline.own(() => authority.ui.finish(call))
++  const sources: BaselineCoverageRequest["source"][] = []
++  const forecasts: Awaited<ReturnType<typeof business.planner.compareForecast>>[] = []
++  for (const index of [0, 1]) {
++    const issued = ok(await deadline.phase(`source.${index}`, () => business.plannerProduct.issueSource(`installed-training-${index}-${training}`, call)), "Issue training source")
++    sources.push(issued.evidence)
++    forecasts.push(await deadline.phase(`forecast.${index}`, () => business.planner.compareForecast({
++      baseRef: issued.evidence.refId, candidateRef: issued.evidence.refId, period: trainingHorizon, currency: "USD",
++    }, call)))
++  }
++  const initialRef = { id: "installed-training-case", incarnation: `installed-training-${training}`, version: 1 }
++  const basis: BaselineCoverageRequest["basis"] = { id: "installed-training-renewal", version: 1, decisionType: "renewal-transition-v1",
++    categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: sources }
++  const initial: DecisionCase = { ...initialRef, state: "draft", objective: "Compare declared renewal and transition quotes", horizon: trainingHorizon, currency: "USD",
++    criteria: [{ id: "minimum-known-advantage", description: "Known transition cost must remain at least 20000 USD below renewal", required: true }], participants: ["person"], sourceRefs: sources, alternatives: [], costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++  const seeded = await authority.state.transaction(fixture.request("training-empty-case"), { namespace: "cases", expectedStorageVersion: 0,
++    targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
++    idempotencyKey: "training-empty-case", commandDigest: digestSfValue(initial) }, async (state) => {
++    state.cases[initial.id] = initial
++    return { commit: true, value: true }
++  })
++  if (seeded.status !== "ok") throw new Error(`Empty training case: ${JSON.stringify(seeded)}`)
++  const coverageRequests: BaselineCoverageRequest[] = []
++  const coverageRefs: string[] = []
++  for (const [index, source] of sources.entries()) {
++    const forecast = ok(forecasts[index]!, "Training source forecast")
++    const componentRefs = (line: string) => forecast.baseline.components.filter((component) => component.id.startsWith(`${line}:`)).map((component) => component.id)
++    const entries = RENEWAL_TRANSITION_CATEGORIES.flatMap((categoryId): CostCoverageEntry[] => {
++      if (index === 1 && categoryId === "training" && training === "omitted") return []
++      if (index === 1 && categoryId === "training" && training === "null")
++        return [{ categoryId, status: "pending", reason: "missing-value-and-evidence" }]
++      const line = index === 0 ? categoryId === "service" || categoryId === "taxes" ? "renewal" : "covered-zero"
++        : categoryId === "service" ? "new-service" : categoryId === "service_overlap" ? "bridge"
++          : categoryId === "implementation" || categoryId === "migration" ? "implementation"
++            : categoryId === "training" ? "training" : "covered-zero"
++      return [{ categoryId, status: "included", componentRefs: categoryId === "taxes" && index === 1
++        ? forecast.baseline.components.filter((component) => training !== "null" || !component.id.startsWith("training:")).map((component) => component.id)
++        : componentRefs(line), evidenceRefs: [source],
++        scopeNote: categoryId === "taxes" ? "All supplied prices are final including taxes; no second monetary contribution"
++          : categoryId === "migration" && index === 1 ? "Migration shares the implementation component, whose price excludes training"
++            : line === "covered-zero" ? "The separate source quote explicitly confirms zero additional charges for this category"
++              : `Human classification of the explicit ${line} quote` }]
++    })
++    const coverage: BaselineCoverageRequest = { caseRef: initialRef, source, basis, expectedVersion: 0, entries }
++    coverageRequests.push(coverage)
++    const human = ok(await authority.human.admit(fixture.request(`training-coverage-${index}`), "decisions.coverage", coverage), "Admit training coverage")
++    try {
++      const registered = ok(await deadline.phase(`coverage.${index}`, () => business.withCase(human, initialRef, {}, () =>
++        business.baselineCoverage.register(coverage, human))), "Register training coverage")
++      coverageRefs.push(registered.coverageRef)
++    } finally { authority.human.finish(human) }
++  }
++  const scenarios: ScenarioRequest[] = sources.map((source) => ({ baseRef: source.refId, operations: [], assumptions: [] }))
++  const mutationHttp = portfolio.http({ origin: "https://example.test", mount: "/product" })
++  const promote = async (index: number, caseRef: typeof initialRef) => {
++    const payload = { caseRef, title: index ? `Transition with ${training} training` : "Renewal", scenario: scenarios[index]!, coverageRef: coverageRefs[index]! }
++    const response = await deadline.phase(`promotion.${index}`, () => mutationHttp(new Request("https://example.test/product/planner?sf=decision-promote", {
++      method: "POST", signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": `training-promote-${index}` }, body: JSON.stringify(payload),
++    }), "planner"))
++    if (response?.status !== 200) throw new Error(`Training promotion ${index}: ${response?.status} ${response ? await response.text() : "no response"}`)
++    const receipt = ok(await response.json() as PortResult<{ caseRef: typeof initialRef; resultRef?: string }>, "Persist training scenario")
++    if (!receipt.resultRef) throw new Error("Training promotion did not persist its scenario")
++    return { caseRef: receipt.caseRef, resultRef: receipt.resultRef }
++  }
++  const baseline = await promote(0, initialRef)
++  const candidate = await promote(1, baseline.caseRef)
++  const snapshot = await authority.state.read(fixture.request(), "cases", (state) => state.cases[initialRef.id])
++  if (snapshot.status !== "ok" || !snapshot.value || snapshot.value.alternatives.length !== 2) throw new Error("Training alternatives unavailable")
++  const caseValue = snapshot.value
++  const registerRule = async (caseRef = candidate.caseRef, evidenceRefs: BaselineCoverageRequest["basis"]["sourceRefs"] = sources, expectedRuleVersion = 0) => {
++    const rule = { caseRef, criterionId: "minimum-known-advantage", metricRef: "planner:known-subtotal-difference", operator: "lte" as const,
++      value: -20000, unit: "USD", period: trainingHorizon, evidenceRefs, expectedRuleVersion }
++    const human = ok(await authority.human.admit(fixture.request(`training-minimum-rule-${caseRef.version}`), "decisions.criteria", rule), "Admit minimum advantage rule")
++    try { return ok(await deadline.phase("criterion.register", () => business.withCase(human, caseRef, {}, () => portfolio.rules.register(rule, human))), "Register minimum advantage rule") }
++    finally { authority.human.finish(human) }
++  }
++  return { ...fixture, call, sources, basis, coverageRequests, coverageRefs, scenarios, caseRef: candidate.caseRef, caseValue,
++    baseline, candidate, mutationHttp, registerRule }
++}
++
++/** Enter a later raw quote through Planner's copy/save commands. Keep the old
++ * source intact; coverage and alternative revisions go through human APIs. */
++export async function resolveTrainingAfterChoice(fixture: Awaited<ReturnType<typeof trainingHistoryFixture>>,
++  deadline: ReturnType<typeof compositionTestDeadline>, caseRef: BaselineCoverageRequest["caseRef"]) {
++  if (fixture.caseValue.alternatives[1]!.result.components.some((component) => component.id.startsWith("training:")))
++    throw new Error("History revision requires genuinely omitted training")
++  const original = fixture.sources[1]!
++  const transport = fixture.request("training-confirmed-quote")
++  const environment = await fixture.authority.host.environment(transport)
++  const versionId = await deadline.phase("source.copy-and-confirm-training", () => fixture.persistence.transaction("planner", async (snapshot) => {
++    const principal = await fixture.authority.host.authenticate(transport, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
++    const actor = plannerSourceActor(snapshot, principal, "person")
++    if (!actor) throw new Error("Authenticated quote author unavailable")
++    const before = projectPlannerSource(snapshot, actor, original.target.recordId)
++    if (!before) throw new Error("Original quote unavailable")
++    const copied = domain.execute(snapshot, actor, { page: "Versions", action: "copy", id: original.target.recordId,
++      version: snapshot.versions[`versions:${original.target.recordId}`]?.version ?? 0, values: { name: "Transition with separately confirmed training" } }, environment)
++    if (!copied.ok || typeof copied.value !== "string") throw new Error(`Planner quote copy rejected: ${JSON.stringify(copied)}`)
++    const values = { versionId: copied.value, el: "licenses", cur: "USD", annual: 0,
++      f0: 0, f1: 0, f2: 0, f3: 0, f4: 0, f5: 0, f6: 0, f7: 0, f8: 0, f9: 0, f10: 40000, f11: 0 }
++    const saved = domain.execute(snapshot, actor, { page: "OPEX", action: "save", id: "training",
++      version: snapshot.versions[`${copied.value}:lines:training`]?.version ?? 0, values }, environment)
++    if (!saved.ok) throw new Error(`Planner training quote rejected: ${JSON.stringify(saved)}`)
++    if (digestSfValue(projectPlannerSource(snapshot, actor, original.target.recordId)) !== digestSfValue(before))
++      throw new Error("Training quote revision modified the original source")
++    return { commit: true, value: copied.value }
++  }))
++  const source = ok(await deadline.phase("source.issue-training-revision", () => fixture.business.plannerProduct.issueSource(versionId, fixture.call)), "Issue revised actual source").evidence
++  const basis: BaselineCoverageRequest["basis"] = { ...fixture.basis, version: fixture.basis.version + 1, sourceRefs: [...fixture.sources, source] }
++  const forecast = ok(await deadline.phase("forecast.training-revision", () => fixture.business.withCase(fixture.call, caseRef, {}, () =>
++    fixture.business.planner.compareForecast({ baseRef: source.refId, candidateRef: source.refId, period: trainingHorizon, currency: "USD" }, fixture.call))), "Project revised training source")
++  const trainingRefs = forecast.candidate.components.filter((component) => component.id.startsWith("training:")).map((component) => component.id)
++  if (trainingRefs.length !== 12) throw new Error("Revised quote did not supply its annual training components")
++  const candidateEntries: CostCoverageEntry[] = fixture.coverageRequests[1]!.entries.map((entry) => entry.status === "included"
++    ? { ...entry, evidenceRefs: [source], componentRefs: entry.categoryId === "taxes" ? [...entry.componentRefs, ...trainingRefs] : entry.componentRefs }
++    : entry)
++  candidateEntries.push({ categoryId: "training", status: "included", componentRefs: trainingRefs, evidenceRefs: [source],
++    scopeNote: "The later separate quote confirms 40000 in November and zero training charges in the other months" })
++  const requests: BaselineCoverageRequest[] = [
++    { ...fixture.coverageRequests[0]!, caseRef, basis, expectedVersion: 1 },
++    { caseRef, source, basis, entries: candidateEntries, expectedVersion: 0 },
++  ]
++  const coverageRefs: string[] = []
++  for (const [index, request] of requests.entries()) {
++    const human = ok(await fixture.authority.human.admit(fixture.request(`history-coverage-revision-${index}`), "decisions.coverage", request), "Admit revised coverage")
++    try {
++      coverageRefs.push(ok(await deadline.phase(`coverage.revision.${index}`, () => fixture.business.withCase(human, caseRef, {}, () =>
++        fixture.business.baselineCoverage.register(request, human))), "Register revised coverage").coverageRef)
++    } finally { fixture.authority.human.finish(human) }
++  }
++  let current = caseRef
++  const promoted: { caseRef: typeof caseRef; resultRef: string }[] = []
++  for (const index of [0, 1]) {
++    const alternative = fixture.caseValue.alternatives[index]!
++    const scenario: ScenarioRequest = index === 0 ? alternative.scenario : { baseRef: source.refId, operations: [], assumptions: [] }
++    const request = { caseRef: current, title: alternative.title, scenario, coverageRef: coverageRefs[index]!,
++      alternativeRef: { id: alternative.id, version: alternative.version } }
++    const response = await deadline.phase(`promotion.revision.${index}`, () => fixture.mutationHttp(new Request("https://example.test/product/planner?sf=decision-promote", {
++      method: "POST", signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": `history-promote-revision-${index}` }, body: JSON.stringify(request),
++    }), "planner"))
++    if (response?.status !== 200) throw new Error(`History revision ${index}: ${response?.status} ${response ? await response.text() : "no response"}`)
++    const receipt = ok(await response.json() as PortResult<{ caseRef: typeof caseRef; resultRef?: string }>, "Persist revised alternative")
++    if (!receipt.resultRef) throw new Error("Revised alternative was not persisted")
++    current = receipt.caseRef
++    promoted.push({ caseRef: receipt.caseRef, resultRef: receipt.resultRef })
++  }
++  return { caseRef: current, baseline: promoted[0]!, candidate: promoted[1]!, source, basis, forecast: forecast.candidate }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0bb7805d0a510a5a9c6076d14f8f7354e7880f0e 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts
+@@ -0,0 +1,117 @@
++import { expect, test } from "bun:test"
++import { resolveWaterfall } from "../../../product/analytics/waterfall.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BaselineCoverageRequest } from "../../../product/decisions/baseline-coverage.ts"
++import { sfDecisionBiSelection } from "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
++import { ok } from "../bi-cost-waterfall/fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { trainingFixture, trainingHorizon } from "./fixture.ts"
++
++const cases = [
++  { training: "omitted", subtotal: 210000, total: null, direct: -30000, advantage: 30000, status: "conditioned", coverage: "pending" },
++  { training: "confirmed", subtotal: 250000, total: 250000, direct: 10000, advantage: -10000, status: "complete", coverage: "complete" },
++  { training: "zero", subtotal: 210000, total: 210000, direct: -30000, advantage: 30000, status: "complete", coverage: "complete" },
++  { training: "null", subtotal: 210000, total: null, direct: -30000, advantage: 30000, status: "conditioned", coverage: "pending" },
++] as const
++
++for (const expected of cases) test(`installed BI09 preserves literal ${expected.training} training, shared coverage and its persisted inverse`, async () => {
++  const deadline = compositionTestDeadline(`installed-bi-training-${expected.training}`, 165_000)
++  try {
++    const fixture = await trainingFixture(deadline, expected.training)
++    const original = structuredClone(fixture.caseValue)
++    const output = ok(await deadline.phase("BI09.training", () => fixture.dispatch()), "Training comparison presentation")
++    const decision = output.projection.decision
++    if (decision?.kind !== "scenario" || !output.presentation.waterfall) throw new Error("Training waterfall unavailable")
++    expect(decision.scenarioResultRef).toBe(fixture.candidate.resultRef)
++    expect(decision.comparisonRef).toBe(fixture.comparison.resultRef)
++    expect(decision.scenario).toEqual(original.alternatives[1]!.result)
++    expect(original.alternatives[0]!.result).toMatchObject({ knownSubtotal: 240000, total: 240000, comparisonStatus: "complete" })
++    expect(decision.scenario).toMatchObject({ knownSubtotal: expected.subtotal, total: expected.total,
++      comparisonStatus: expected.status, currency: "USD", horizon: trainingHorizon, costCoverage: { coverageState: expected.coverage } })
++    expect(decision.comparison).toMatchObject({ baselineResultRef: fixture.baseline.resultRef, alternativeResultRef: fixture.candidate.resultRef,
++      knownDifference: expected.direct, completeDifference: expected.status === "complete" ? expected.direct : null, comparisonStatus: expected.status })
++    expect(output.projection.components).toEqual(decision.scenario.components)
++    expect(output.projection.values.find((value) => value.id === "scenario:candidate-known-subtotal")?.value).toBe(expected.subtotal)
++    expect(output.projection.values.find((value) => value.id === "scenario:candidate-complete-total")?.value).toBe(expected.total)
++    expect(output.projection.values.find((value) => value.id === "scenario:known-difference")?.value).toBe(expected.direct)
++    expect(output.projection.values.find((value) => value.id === "scenario:complete-difference")?.value).toBe(expected.status === "complete" ? expected.direct : null)
++
++    // Advantage has its own persisted inverse observation. BI never changes the
++    // sign of the canonical alternative-minus-baseline comparison.
++    expect(output.projection.comparison?.comparisonRef).toBe(fixture.advantage.resultRef)
++    expect(output.projection.comparison?.values.find((value) => value.id === "scenario:advantage-known-difference")?.value).toBe(expected.advantage)
++    const inverse = ok(await deadline.phase("advantage.read", () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
++      fixture.business.results.read({ kind: "comparison", resultRef: fixture.advantage.resultRef }, fixture.call))), "Read persisted inverse")
++    if (inverse.kind !== "comparison") throw new Error("Inverse reference did not address a comparison")
++    expect(inverse.caseRef).toEqual(fixture.caseRef)
++    expect(inverse.result).toMatchObject({ baselineResultRef: fixture.candidate.resultRef, alternativeResultRef: fixture.baseline.resultRef,
++      knownDifference: expected.advantage, completeDifference: expected.status === "complete" ? expected.advantage : null })
++    expect(output.projection.comparison?.values.find((value) => value.id === "scenario:advantage-known-difference")?.value).toBe(inverse.result.knownDifference)
++
++    const coverage = decision.scenario.costCoverage
++    const implementation = coverage.entries.find((entry) => entry.categoryId === "implementation")
++    const migration = coverage.entries.find((entry) => entry.categoryId === "migration")
++    if (implementation?.status !== "included" || migration?.status !== "included") throw new Error("Shared implementation scope unavailable")
++    expect(migration.componentRefs).toEqual(implementation.componentRefs)
++    expect(implementation.componentRefs).toHaveLength(12)
++    expect(decision.scenario.components.filter((component) => component.id === "implementation:11")).toEqual([
++      expect.objectContaining({ amount: 45000, currency: "USD", evidenceState: "confirmed" }),
++    ])
++    expect(new Set(decision.scenario.components.map((component) => component.id)).size).toBe(decision.scenario.components.length)
++    if (expected.training !== "null") expect(coverage.issues).toEqual([])
++    expect(decision.scenario.sourceRefs).toEqual(original.alternatives[1]!.result.sourceRefs)
++    const training = coverage.entries.find((entry) => entry.categoryId === "training")
++    const supplied = fixture.coverageRequests[1]!.entries.find((entry) => entry.categoryId === "training")
++    if (expected.training === "omitted") {
++      expect(supplied).toBeUndefined()
++      expect(decision.scenario.components.some((component) => component.id.startsWith("training:"))).toBe(false)
++      expect(coverage.derivedMissingCategoryIds).toEqual(["training"])
++      expect(training).toEqual({ categoryId: "training", status: "pending", reason: "missing-category" })
++    } else {
++      expect(supplied?.status).toBe(expected.training === "null" ? "pending" : "included")
++      expect(coverage.derivedMissingCategoryIds).toEqual([])
++      expect(decision.scenario.components.find((component) => component.id === "training:11")).toMatchObject({
++        amount: expected.training === "confirmed" ? 40000 : expected.training === "zero" ? 0 : null,
++        currency: "USD", evidenceState: expected.training === "null" ? "absent" : "confirmed",
++      })
++      if (expected.training === "null") expect(training).toEqual({ categoryId: "training", status: "pending", reason: "missing-value-and-evidence" })
++      else {
++        if (training?.status !== "included") throw new Error("Confirmed training lost coverage")
++        expect(training.componentRefs).toContain("training:11")
++        expect(training.evidenceRefs).toEqual([fixture.sources[1]!])
++      }
++    }
++    const waterfall = resolveWaterfall(output.projection, output.presentation.waterfall)
++    if (waterfall.status !== "ok") throw new Error(`Training waterfall: ${waterfall.reason}`)
++    expect(waterfall.reconciliation).toBe(expected.training === "null" ? "unavailable" : "reconciled")
++    if (expected.training !== "null") {
++      expect(waterfall.initial).toBe(240000)
++      expect(waterfall.final).toBe(expected.subtotal)
++    }
++    expect(output.presentation.waterfall.segments.every((segment) => /^difference:component:\d+$/.test(segment.componentValueId))).toBe(true)
++
++    if (expected.training === "omitted") {
++      const forged = sfDecisionBiSelection({ scenarioResultRef: fixture.candidate.resultRef,
++        comparisonRef: fixture.comparison.resultRef, advantageComparisonRef: fixture.comparison.resultRef })
++      const refused = await fixture.dispatch("BI09", forged)
++      expect(refused.status).not.toBe("ok")
++      expect(refused).not.toHaveProperty("value")
++      // An unsupported N/A statement must not close the missing category or
++      // turn the already stored 210000 known subtotal into a complete total.
++      const request: BaselineCoverageRequest = { ...fixture.coverageRequests[1]!, caseRef: fixture.caseRef, expectedVersion: 1,
++        entries: [...fixture.coverageRequests[1]!.entries, { categoryId: "training", status: "not-applicable",
++          justification: "Claim without an installed applicability producer", evidenceRefs: [fixture.sources[1]!] }] }
++      const human = ok(await fixture.authority.human.admit(fixture.request("training-unproven-na"), "decisions.coverage", request), "Admit N/A counterexample")
++      try {
++        const result = await fixture.business.withCase(human, fixture.caseRef, {}, () => fixture.business.baselineCoverage.register(request, human))
++        expect(result).toEqual({ status: "needs-input", reason: "baseline-not-applicable-proof-unavailable" })
++        expect(result).not.toHaveProperty("value")
++      } finally { fixture.authority.human.finish(human) }
++    }
++    const unchanged = await fixture.authority.state.read(fixture.request(), "cases", (state) => state.cases[fixture.caseRef.id])
++    if (unchanged.status !== "ok") throw new Error("Original case unavailable after BI")
++    expect(digestSfValue(unchanged.value)).toBe(digestSfValue(original))
++    expect(unchanged.value?.choices).toEqual([])
++    expect(unchanged.value?.preparedChanges).toEqual([])
++  } finally { await deadline.close() }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..70a79f8fa451cf7dd93d58414f1d9d78dd8655a9 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts
+@@ -0,0 +1,129 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { SensitivityRequest } from "../../../product/contracts/operations.ts"
++import type { PortResult } from "../../../product/contracts/ports.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { createPlannerExactThreshold } from "../../../product/planner/exact-threshold.ts"
++import { comparePlannerPreview } from "../../../product/planner/preview-comparison.ts"
++import { ok } from "../bi-cost-waterfall/fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { trainingHorizon } from "./fixture.ts"
++import { resolveTrainingAfterChoice, trainingHistoryFixture } from "./history-fixture.ts"
++
++for (const expected of [
++  { training: "omitted", threshold: 55000, originalSubtotal: 210000, coverage: "pending" },
++  { training: "confirmed", threshold: 15000, originalSubtotal: 250000, coverage: "complete" },
++] as const) test(`canonical ${expected.training} training sensitivity certifies ${expected.threshold} from installed persisted sources`, async () => {
++  const deadline = compositionTestDeadline(`installed-bi-threshold-${expected.training}`, 165_000)
++  try {
++    const fixture = await trainingHistoryFixture(deadline, expected.training)
++    await fixture.registerRule()
++    const scenarios = fixture.business.plannerProduct.scenarios
++    const units = fixture.portfolio.units
++    if (!scenarios || !units) throw new Error("Installed Planner sensitivity producers unavailable")
++    const preview: Parameters<typeof createPlannerExactThreshold>[0]["preview"] = (request, context) => comparePlannerPreview({
++      host: fixture.authority.host, sources: fixture.business.plannerSources, scenarios, planner: fixture.portfolio.planner,
++    }, request, context)
++    const exact = createPlannerExactThreshold({ units, preview })
++    const request: SensitivityRequest = { scenarioRef: fixture.candidate.resultRef,
++      parameterBounds: { parameterRef: "implementation:11", minimum: 10000, maximum: 70000, steps: 2 },
++      criterion: { id: "minimum-known-advantage", operator: "lte", value: -20000 } }
++    const before = await fixture.authority.state.read(fixture.request(), "cases", (state) => ({
++      decision: state.cases[fixture.caseRef.id], results: state.decisionResults,
++    }))
++    if (before.status !== "ok") throw new Error("Persisted threshold inputs unavailable")
++    const certified = ok(await deadline.phase("canonical.exact-threshold", () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
++      exact(request, fixture.baseline.resultRef, fixture.call))), "Canonical known-subtotal threshold")
++    // The canonical solver returns the last accepted IEEE input, including a
++    // sub-cent rounding plateau. No test or BI code implements the equation.
++    expect(certified.value).toBeCloseTo(expected.threshold, 8)
++    expect(certified.evidenceRefs.length).toBeGreaterThan(0)
++    expect(certified.evidenceRefs.every((reference) => fixture.sources.some((source) => digestSfValue(source) === digestSfValue(reference)))).toBe(true)
++    const selected = fixture.caseValue.alternatives[1]!
++    const at = async (amount: number) => ok(await deadline.phase(`canonical.preview.${amount}`, () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, () =>
++      preview({ baselineRef: fixture.baseline.resultRef, scenario: { ...selected.scenario, operations: [{ kind: "replace", targetRef: "implementation:11",
++        amount, currency: "USD", period: { start: "2027-11-01", end: "2027-11-30" } }] } }, fixture.call))), "Canonical boundary preview")
++    const boundary = await at(expected.threshold)
++    const exceeded = await at(expected.threshold + 1)
++    expect(boundary.sample.knownSubtotal).toBe(220000)
++    expect(boundary.metric).toMatchObject({ value: -20000, unit: "USD", period: trainingHorizon, state: "conditioned" })
++    expect(exceeded.sample.knownSubtotal).toBe(220001)
++    expect(exceeded.metric.value).toBe(-19999)
++    expect(boundary.sample.total).toBeNull()
++    expect(boundary.comparison.completeDifference).toBeNull()
++    expect(selected.result).toMatchObject({ knownSubtotal: expected.originalSubtotal, costCoverage: { coverageState: expected.coverage } })
++    expect(fixture.caseValue.alternatives[0]!.result.knownSubtotal).toBe(240000)
++    const after = await fixture.authority.state.read(fixture.request(), "cases", (state) => ({
++      decision: state.cases[fixture.caseRef.id], results: state.decisionResults,
++    }))
++    if (after.status !== "ok") throw new Error("Threshold source records unavailable after preview")
++    expect(after.value).toEqual(before.value)
++    // The human rule and exact solver use installed results. These transient
++    // previews remain conditioned and are not persisted as a BI11 result.
++  } finally { await deadline.close() }
++}, 180_000)
++
++test("a real human ChoiceRecord remains historical when a later training quote revises the same installed case", async () => {
++  const deadline = compositionTestDeadline("installed-bi-training-choice-history", 165_000)
++  try {
++    const fixture = await trainingHistoryFixture(deadline)
++    await fixture.registerRule()
++    const alternative = fixture.caseValue.alternatives[1]!
++    const request = { caseRef: fixture.caseRef, alternativeId: alternative.id, alternativeVersion: alternative.version,
++      comparison: { scenarioRefs: [fixture.baseline.resultRef, fixture.candidate.resultRef], criteria: ["minimum-known-advantage"] },
++      criteria: ["minimum-known-advantage"], reason: "Human chooses the conditioned transition while the separately excluded training quote is pending; no application is authorized" }
++    const response = await deadline.phase("choice.http", () => fixture.mutationHttp(new Request("https://example.test/product/planner?sf=decision-choose", {
++      method: "POST", signal: deadline.signal, headers: { origin: "https://example.test", "content-type": "application/json", "x-operation": "history-human-choice" }, body: JSON.stringify(request),
++    }), "planner"))
++    if (response?.status !== 200) throw new Error(`Human choice rejected: ${response?.status} ${response ? await response.text() : "no response"}`)
++    const chosenReceipt = ok(await response.json() as PortResult<{ caseRef: typeof fixture.caseRef }>, "Persist human choice")
++    const readCase = (caseRef: typeof fixture.caseRef) => fixture.business.withCase(fixture.call, caseRef, {}, () =>
++      fixture.business.cases.read({ caseRef: encodeCaseRef(caseRef) }, fixture.call))
++    const chosen = ok(await deadline.phase("choice.authorized-read", () => readCase(chosenReceipt.caseRef)), "Read actual chosen case")
++    expect(chosen.case.state).toBe("chosen")
++    expect(chosen.case.choices).toHaveLength(1)
++    const original = structuredClone(chosen.case.choices[0]!)
++    expect(original.result).toEqual(alternative.result)
++    expect(original).toMatchObject({ alternativeId: alternative.id, alternativeVersion: 1, basisVersion: 1, comparisonStatus: "conditioned",
++      result: { knownSubtotal: 210000, total: null, costCoverage: { coverageState: "pending", derivedMissingCategoryIds: ["training"] } },
++      comparison: { baselineResultRef: fixture.baseline.resultRef, alternativeResultRef: fixture.candidate.resultRef,
++        knownDifference: -30000, completeDifference: null, comparisonStatus: "conditioned" } })
++    expect(original.values).toEqual([{ criterionRef: "minimum-known-advantage", value: -30000, unit: "USD", currency: "USD", horizon: trainingHorizon }])
++    expect(original.result.components.some((component) => component.id.startsWith("training:"))).toBe(false)
++    const originalDigest = digestSfValue(original)
++
++    const revised = await resolveTrainingAfterChoice(fixture, deadline, chosenReceipt.caseRef)
++    expect(revised.caseRef.id).toBe(chosenReceipt.caseRef.id)
++    expect(revised.caseRef.incarnation).toBe(chosenReceipt.caseRef.incarnation)
++    expect(revised.caseRef.version).toBeGreaterThan(chosenReceipt.caseRef.version)
++    expect(revised.source.refDigest).not.toBe(fixture.sources[1]!.refDigest)
++    expect(revised.forecast.components.find((component) => component.id === "training:11")).toMatchObject({ amount: 40000, currency: "USD", evidenceState: "confirmed" })
++    await fixture.registerRule(revised.caseRef, revised.basis.sourceRefs, 1)
++    const current = ok(await deadline.phase("revision.authorized-read", () => readCase(revised.caseRef)), "Read actual reconsidered case")
++    const candidate = current.case.alternatives.find((entry) => entry.id === alternative.id)
++    expect(current.case.state).toBe("reconsidering")
++    expect(candidate).toMatchObject({ id: alternative.id, version: 2,
++      result: { knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { basisVersion: 2, coverageState: "complete" } } })
++    expect(candidate?.scenario).toEqual({ baseRef: revised.source.refId, operations: [], assumptions: [] })
++    const compared = ok(await deadline.phase("revision.canonical-comparison", () => fixture.business.withCase(fixture.call, revised.caseRef, {}, () =>
++      fixture.portfolio.compare({ caseRef: revised.caseRef, baselineAlternativeId: fixture.caseValue.alternatives[0]!.id,
++        alternativeId: alternative.id, criteria: ["minimum-known-advantage"] }, fixture.call))), "Compare revised current alternatives")
++    expect(compared.comparison).toMatchObject({ baselineResultRef: revised.baseline.resultRef, alternativeResultRef: revised.candidate.resultRef,
++      knownDifference: 10000, completeDifference: 10000, comparisonStatus: "complete" })
++    expect(compared.comparison.criterionResults).toContainEqual(expect.objectContaining({ criterionId: "minimum-known-advantage", state: "failed" }))
++    expect(current.case.choices).toHaveLength(1)
++    expect(current.case.choices[0]).toEqual(original)
++    expect(digestSfValue(current.case.choices[0])).toBe(originalDigest)
++    expect(current.case.choices[0]!.result.sourceRefs).toEqual(original.result.sourceRefs)
++    expect(current.case.choices[0]!.costCoverage).toEqual(original.costCoverage)
++    expect(current.case.preparedChanges).toEqual([])
++    expect(current.case.receipts).toEqual([])
++    const oldSource = ok(await deadline.phase("source.original-readback", () => fixture.business.plannerProduct.issueSource(fixture.sources[1]!.target.recordId, fixture.call)), "Read original source identity")
++    expect(oldSource.evidence).toEqual(fixture.sources[1]!)
++    const historical = ok(await deadline.phase("scenario.historical-read", () => fixture.business.withCase(fixture.call, revised.caseRef, {}, () =>
++      fixture.business.results.readHistoricalScenario({ resultRef: fixture.candidate.resultRef }, fixture.call))), "Read original C08 scenario")
++    if (historical.kind !== "scenario") throw new Error("Historical reference no longer addresses a scenario")
++    expect(historical.result).toEqual(original.result)
++    expect(historical.caseRef).toEqual(fixture.candidate.caseRef)
++  } finally { await deadline.close() }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..86841b85c918cf50a7e16a6215d79d0d58adcd51 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts
+@@ -0,0 +1,61 @@
++import { expect, test } from "bun:test"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BiViewRequest } from "../../../product/contracts/operations.ts"
++import { createSfBiServices } from "../../../../../../apps/cli/src/sucafina-product/bi-services.ts"
++import { sfPlannerBiSelection } from "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
++import { ok } from "../bi-cost-waterfall/fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { financialCompositionFixture } from "../wp10/integration/financial-composition-fixture.ts"
++
++test("installed BI01 preserves the real EUR quote and canonical 1.08 conversion while missing FX stays absent", async () => {
++  const deadline = compositionTestDeadline("installed-bi-currency-source", 165_000)
++  try {
++    const fixture = await deadline.phase("fixture.initialize", async () => {
++      const value = await financialCompositionFixture({ signal: deadline.signal, beforeEnvironment: async () => deadline.check() })
++      deadline.own(() => value.dispose())
++      return value
++    })
++    const period = { start: "2027-11-01", end: "2027-11-30" }
++    const amount = Array.from({ length: 12 }, (_, month) => month === 10 ? 28000 : 0)
++    await fixture.persistence.transaction("planner", async (snapshot) => {
++      snapshot.data.versions = [1.08, null].map((rate, index) => ({ id: `installed-fx-${index}`, name: rate === null ? "EUR quote without FX evidence" : "EUR quote at declared FX", year: 2027, closed: 0,
++        lines: [{ id: "foreign", name: "Quoted EUR service", sec: "opex", el: "licenses", cur: "EUR", b: amount, a: Array(12).fill(null), f: amount }],
++        fx: [{ cur: "EUR", rate }], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++      return { commit: true, value: undefined }
++    })
++    await fixture.persistence.initializeSources("planner")
++    const call = await fixture.read()
++    deadline.own(() => fixture.authority.ui.finish(call))
++    const bi = createSfBiServices({ authority: fixture.authority, business: fixture.business, portfolio: fixture.portfolio })
++    for (const index of [0, 1]) {
++      const issued = ok(await deadline.phase(`source.${index}`, () => fixture.business.plannerProduct.issueSource(`installed-fx-${index}`, call)), "Issue actual FX source")
++      const comparison = { baseRef: issued.evidence.refId, candidateRef: issued.evidence.refId, period, currency: "USD" }
++      const canonical = ok(await deadline.phase(`forecast.${index}`, () => fixture.business.planner.compareForecast(comparison, call)), "Canonical FX forecast")
++      const request: BiViewRequest = { viewId: "BI01", selectionRef: sfPlannerBiSelection(comparison), period }
++      const admitted = ok(await fixture.authority.ui.admit(fixture.request(), "sf_bi_view", digestSfValue(request)), "Admit currency BI")
++      try {
++        const output = ok(await deadline.phase(`BI01.${index}`, () => bi.dispatchPresentation(request, admitted)), "Installed currency presentation")
++        expect(output.projection.components).toEqual(canonical.candidate.components)
++        expect(output.projection.values).toEqual(canonical.candidate.values)
++        expect(output.projection.missing).toEqual(canonical.candidate.missing)
++        expect(output.projection.version).toBe(canonical.candidate.version)
++        expect(output.projection.engineVersion).toBe(canonical.candidate.engineVersion)
++        expect(output.projection.context).toMatchObject({ currency: "USD", period })
++        expect(output.projection.values.find((value) => value.id === "foreign:11:forecast")).toMatchObject({
++          value: 28000, currency: "EUR", evidenceState: "confirmed", sourceRefs: [issued.evidence],
++        })
++        expect(output.projection.values.find((value) => value.id === "fx:EUR")).toMatchObject({
++          value: index === 0 ? 1.08 : null, unit: "USD/EUR", evidenceState: index === 0 ? "confirmed" : "absent", sourceRefs: [issued.evidence],
++        })
++        const component = output.projection.components.find((component) => component.id === "foreign:11")
++        expect(component).toMatchObject({ currency: "USD", evidenceState: index === 0 ? "confirmed" : "absent" })
++        if (index === 0) expect(component?.amount).toBeCloseTo(30240, 8)
++        else expect(component?.amount).toBeNull()
++        if (index === 1) {
++          expect(output.projection.missing.some((missing) => missing.reason === "missing-fx")).toBe(true)
++          expect(output.projection.values.find((value) => value.id === "foreign:11:outlook-usd")?.value).toBeNull()
++        }
++      } finally { fixture.authority.ui.finish(admitted) }
++    }
++  } finally { await deadline.close() }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..252b519f6dfaee461323d3b16407fc6f5849e668 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts
+@@ -0,0 +1,125 @@
++import { expect, test } from "bun:test"
++import { resolveTimeline } from "../../../product/analytics/milestones.ts"
++import { sameBiContext } from "../../../product/analytics/projection.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { plannerScenarioBiPresentation } from "../../../product/planner/scenario-bi.ts"
++import { sfDecisionBiSelection } from "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts"
++import { ok, waterfallFixture } from "../bi-cost-waterfall/fixture.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++
++test("installed BI10 uses the canonical period producer over the same persisted pair as BI09", async () => {
++  const deadline = compositionTestDeadline("installed-bi10-canonical-pair", 165_000)
++  try {
++    const fixture = await waterfallFixture(deadline)
++    const temporal = ok(await deadline.phase("BI10.dispatch", () => fixture.dispatch("BI10")), "Installed temporal presentation")
++    const cost = ok(await deadline.phase("BI09.dispatch", () => fixture.dispatch("BI09")), "Installed cost presentation")
++    const decision = temporal.projection.decision
++    if (decision?.kind !== "scenario") throw new Error("BI10 lost its persisted scenario")
++    expect(fixture.baseline.caseRef.version).toBeLessThan(fixture.candidate.caseRef.version)
++    expect(decision).toEqual(cost.projection.decision)
++    expect(decision.scenarioResultRef).toBe(fixture.candidate.resultRef)
++    expect(decision.comparisonRef).toBe(fixture.comparisonRef)
++    expect(decision.comparison.baselineResultRef).toBe(fixture.baseline.resultRef)
++    expect(decision.scenario).toEqual(fixture.caseValue.alternatives[1]!.result)
++    expect(decision.scenario).toMatchObject({ total: null, comparisonStatus: "conditioned", costCoverage: { coverageState: "pending" } })
++    expect(temporal.projection.components).toEqual(cost.projection.components)
++    expect(temporal.projection.version).toBe(cost.projection.version)
++    expect(temporal.projection.engineVersion).toBe(cost.projection.engineVersion)
++    expect(sameBiContext(temporal.projection.context, cost.projection.context)).toBe(true)
++
++    const scenarios = fixture.business.plannerProduct.scenarios
++    if (!scenarios) throw new Error("Canonical scenario resolver unavailable")
++    const pair = ok(await deadline.phase("canonical.pair", () => fixture.business.withCase(fixture.call, fixture.caseRef, {}, async () => {
++      const baseline = await scenarios.resolve(fixture.baseline.resultRef, fixture.call)
++      if (baseline.status !== "ok") return baseline
++      const candidate = await scenarios.resolve(fixture.candidate.resultRef, fixture.call)
++      if (candidate.status !== "ok") return candidate
++      return { status: "ok", value: { baseline: baseline.value, candidate: candidate.value } }
++    })), "Actual canonical pair")
++    const canonical = ok(plannerScenarioBiPresentation({ ...pair.candidate.projection, decision,
++      ...(temporal.projection.comparison ? { comparison: temporal.projection.comparison } : {}) }, pair, "BI10"), "Canonical period presentation")
++    expect(temporal.presentation).toEqual(canonical.presentation)
++    expect(temporal.projection.values).toEqual(canonical.projection.values)
++    expect(temporal.projection.components).toEqual(canonical.projection.components)
++    expect(temporal.presentation.waterfall).toBeUndefined()
++    expect(cost.presentation.waterfall).toBeDefined()
++    expect(cost.presentation.timeline).toBeUndefined()
++    expect(temporal.presentation.series.map((series) => series.id)).toEqual(["period-before", "period-after", "period-difference"])
++    const plan = temporal.presentation.timeline
++    if (!plan?.items.length) throw new Error("Installed BI10 still has no period timeline")
++    const resolved = resolveTimeline(temporal.projection, plan)
++    if (resolved.status !== "ok") throw new Error(`Canonical timeline rejected: ${resolved.reason}`)
++    expect(new Set(resolved.items.map((item) => item.date))).toEqual(new Set([fixture.period.start, fixture.period.end]))
++    expect(resolved.items.every((item) => item.state === "unknown")).toBe(true)
++    const references = [...pair.baseline.result.sourceRefs, ...pair.candidate.result.sourceRefs,
++      ...pair.baseline.result.costCoverage.evaluatedSourceRefs, ...pair.candidate.result.costCoverage.evaluatedSourceRefs]
++    for (const item of resolved.items) {
++      expect(item.source.unit).toBe("date")
++      expect(item.source.period).toEqual(fixture.period)
++      expect(item.source.sourceRefs.length).toBeGreaterThan(0)
++      expect(item.source.sourceRefs.every((reference) => references.some((current) => digestSfValue(current) === digestSfValue(reference)))).toBe(true)
++    }
++    expect(temporal.presentation.limitations.some((text) => text.includes("adiar um valor não elimina a obrigação"))).toBe(true)
++    expect(temporal.projection.values.find((value) => value.id === "scenario:candidate-complete-total")?.value).toBeNull()
++    expect(temporal.projection.values.find((value) => value.id === "scenario:complete-difference")?.value).toBeNull()
++  } finally { await deadline.close() }
++}, 180_000)
++
++test("installed BI10 preserves the persisted Portfolio envelope and equivalent scenario timeline", async () => {
++  const deadline = compositionTestDeadline("installed-bi10-portfolio", 165_000)
++  try {
++    const fixture = await waterfallFixture(deadline)
++    const selected = await fixture.preparePortfolio()
++    const equivalent = sfDecisionBiSelection({ scenarioResultRef: selected.analysis.scenarioResultRef, comparisonRef: selected.analysis.comparisonRef })
++    const scenario = ok(await deadline.phase("BI10.scenario", () => fixture.dispatch("BI10", equivalent)), "Equivalent stored scenario")
++    const portfolio = ok(await deadline.phase("BI10.portfolio", () => fixture.dispatch("BI10", selected.selectionRef)), "Stored Portfolio timeline")
++    expect(portfolio.projection.decision).toEqual({ kind: "portfolio", portfolioResultRef: selected.bundle.portfolioResultRef, portfolio: selected.bundle.portfolio })
++    expect(portfolio.presentation.timeline).toBeDefined()
++    expect(portfolio.presentation.timeline).toEqual(scenario.presentation.timeline)
++    expect(portfolio.presentation.series).toEqual(scenario.presentation.series)
++    expect(portfolio.presentation.waterfall).toBeUndefined()
++    expect(portfolio.projection.values).toEqual(scenario.projection.values)
++    expect(portfolio.projection.components).toEqual(scenario.projection.components)
++    expect(sameBiContext(portfolio.projection.context, scenario.projection.context)).toBe(true)
++    expect(portfolio.projection.version).toBe(scenario.projection.version)
++    expect(portfolio.projection.engineVersion).toBe(scenario.projection.engineVersion)
++    const forged = sfDecisionBiSelection({ portfolioResultRef: selected.bundle.portfolioResultRef, sourceScenarioRef: fixture.baseline.resultRef })
++    const refused = await deadline.phase("BI10.foreign-scenario", () => fixture.dispatch("BI10", forged))
++    expect(refused.status).not.toBe("ok")
++    expect(refused).not.toHaveProperty("value")
++  } finally { await deadline.close() }
++}, 180_000)
++
++test("installed BI10 withholds changed scope, selection and current source without inventing BI11 sensitivity", async () => {
++  const deadline = compositionTestDeadline("installed-bi10-current-read", 165_000)
++  try {
++    const fixture = await waterfallFixture(deadline)
++    const initial = ok(await deadline.phase("BI10.current", () => fixture.dispatch("BI10")), "Current timeline")
++    expect(initial.presentation.timeline?.items.length).toBeGreaterThan(0)
++    for (const [label, selected, period] of [
++      ["wrong-candidate", sfDecisionBiSelection({ scenarioResultRef: fixture.baseline.resultRef, comparisonRef: fixture.comparisonRef }), fixture.period],
++      ["missing-comparison", sfDecisionBiSelection({ scenarioResultRef: fixture.candidate.resultRef, comparisonRef: "not-a-persisted-comparison" }), fixture.period],
++      ["wrong-period", fixture.selectionRef, { start: "2026-02-01", end: "2026-02-28" }],
++    ] as const) {
++      const refused = await deadline.phase(`BI10.${label}`, () => fixture.dispatch("BI10", selected, period))
++      expect(refused.status).not.toBe("ok")
++      expect(refused).not.toHaveProperty("value")
++    }
++    const sensitivity = await fixture.dispatch("BI11")
++    expect(sensitivity.status).not.toBe("ok")
++    expect(sensitivity).not.toHaveProperty("value")
++    await fixture.persistence.transaction("planner", async (snapshot) => {
++      const versions = snapshot.data.versions as { id: string; lines: { id: string; f: (number | null)[] }[] }[]
++      const service = versions.find((version) => version.id === "waterfall-v1")?.lines.find((line) => line.id === "service")
++      if (!service) throw new Error("Current source missing")
++      service.f[0] = 81
++      return { commit: true, value: undefined }
++    })
++    const stale = await deadline.phase("BI10.source-changed", () => fixture.dispatch("BI10"))
++    expect(stale.status).not.toBe("ok")
++    expect(stale).not.toHaveProperty("value")
++    // A previously returned value remains a historical observation; a refresh
++    // must not return it as the current source after the source revision.
++    expect(initial.projection.decision?.kind).toBe("scenario")
++  } finally { await deadline.close() }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..9fae52985c3e940845cbd746d850da8f52b8f68f 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts
+@@ -0,0 +1,206 @@
++import { test } from "bun:test"
++import { chromium, expect, type Page } from "@playwright/test"
++import path from "node:path"
++import type { BiSelection } from "../../../product/analytics/catalog.ts"
++import type { BiPresentation, DomainProjection, Period } from "../../../product/contracts/context.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { BiViewRequest } from "../../../product/contracts/operations.ts"
++import type { BiFocusTarget } from "../../../product/analytics/view.ts"
++import { captureChromiumCleanup } from "../wp07/chromium-cleanup.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++
++// Renderer contract only: literal, synthetic C02-shaped input, never an installed
++// result, authority receipt, persisted financial result, native proof or G7 pass.
++// The actual view.ts bundle renders in Chromium. No network, producer, financial
++// calculation or installed host is mocked, executed or claimed by this fixture.
++const horizon: Period = { start: "2027-01-01", end: "2027-12-31" }
++const november: Period = { start: "2027-11-01", end: "2027-11-30" }
++const originA = "a".repeat(64), originB = "b".repeat(64)
++type Payload = { request: BiViewRequest; projection: DomainProjection; presentation: BiPresentation }
++type BrowserState = { payload: Payload; changes: Period[]; opened: BiSelection[] }
++type RendererWindow = Window & { syntheticBiRenderer: BrowserState }
++
++function syntheticPayload(): Payload {
++  const reference = (id: string, refDigest: string): BusinessEvidenceRef => ({
++    schema: "sf-evidence-v1", refId: `synthetic-renderer:${id}`, installationId: "synthetic-renderer-only",
++    projectId: "synthetic-c02-contract", refDigest, evidenceLevel: "observed", kind: "record",
++    target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `synthetic-${id}`,
++      version: 1, fields: ["date"], period: { ...horizon }, projectionDigest: "c".repeat(64) },
++  })
++  const first = reference("origin-a", originA), second = reference("origin-b", originB)
++  return {
++    request: { viewId: "BI10", selectionRef: "synthetic-renderer-contract-only", period: { ...horizon } },
++    projection: {
++      context: { installationId: "synthetic-renderer-only", projectId: "synthetic-c02-contract", principalRef: "synthetic-no-authority",
++        accessRevision: "synthetic-revision", policyVersion: "synthetic-policy", surface: "planner", period: { ...horizon },
++        currency: "USD", sourceRefs: [], capabilities: [] },
++      version: 1, engineVersion: "synthetic-renderer-payload-no-engine", components: [], missing: [],
++      decision: { kind: "portfolio", portfolioResultRef: "synthetic-unpersisted-envelope", portfolio: {
++        combinations: [], evidenceRefs: [], limitations: ["Synthetic renderer contract; no installed portfolio or authority proof."] } },
++      values: [
++        { id: "synthetic:outside-date", value: "2027-01-15", unit: "date", period: { ...horizon }, granularity: "record", sourceRefs: [first], drilldown: first, evidenceState: "confirmed" },
++        { id: "synthetic:inside-date", value: "2027-11-15", unit: "date", period: { ...horizon }, granularity: "record", sourceRefs: [first], drilldown: first, evidenceState: "confirmed" },
++        { id: "synthetic:unknown-date", value: null, unit: "date", period: { ...horizon }, granularity: "record", sourceRefs: [first], drilldown: first, evidenceState: "absent" },
++        { id: "synthetic:whole-period-value", value: 200, currency: "USD", period: { ...horizon }, granularity: "year", sourceRefs: [first, second], drilldown: null, evidenceState: "confirmed" },
++        { id: "synthetic:explicit-zero", value: 0, currency: "USD", period: { ...horizon }, granularity: "year", sourceRefs: [first], drilldown: first, evidenceState: "confirmed" },
++      ],
++    },
++    presentation: { viewId: "BI10", series: [], limitations: ["Synthetic C02 renderer payload; amounts are literal supplied values."], timeline: { items: [
++      { label: "Synthetic January milestone", dateValueId: "synthetic:outside-date", state: "planned" },
++      { label: "Synthetic November milestone", dateValueId: "synthetic:inside-date", state: "planned" },
++      { label: "Synthetic unknown date", dateValueId: "synthetic:unknown-date", state: "unknown" },
++    ] } },
++  }
++}
++
++async function rendererPage(deadline: ReturnType<typeof compositionTestDeadline>) {
++  const built = await deadline.phase("renderer.bundle", () => Bun.build({
++    entrypoints: [path.resolve(import.meta.dir, "../../../product/analytics/view.ts")], target: "browser", format: "esm",
++  }))
++  if (!built.success || !built.outputs[0]) throw new Error("Actual BI view renderer bundle failed")
++  const moduleUrl = `data:text/javascript;base64,${Buffer.from(await built.outputs[0].text()).toString("base64")}`
++  const browser = await deadline.phase("renderer.chromium", async () => {
++    const value = await chromium.launch({ channel: "chrome", headless: true, args: ["--no-sandbox"] })
++    let close: (() => Promise<void>) | undefined
++    deadline.own(() => close ? close() : value.close())
++    close = await captureChromiumCleanup(value)
++    return value
++  })
++  const page = await browser.newPage({ viewport: { width: 1024, height: 900 } })
++  const errors: string[] = []
++  page.on("pageerror", (error) => errors.push(error.message))
++  await page.goto("about:blank")
++  return { page, moduleUrl, errors }
++}
++
++async function render(page: Page, moduleUrl: string, payload: Payload, period?: Period) {
++  await page.evaluate(async ({ moduleUrl, payload, period }) => {
++    const renderer = await import(moduleUrl) as typeof import("../../../product/analytics/view.ts")
++    // Catch attempted mutation of any supplied context, value, origin or plan.
++    const freeze = (value: unknown): void => {
++      if (!value || typeof value !== "object") return
++      for (const child of Object.values(value)) freeze(child)
++      Object.freeze(value)
++    }
++    freeze(payload)
++    const state: BrowserState = { payload, changes: [], opened: [] }
++    ;(window as RendererWindow).syntheticBiRenderer = state
++    const node = renderer.renderBiView(payload.request, payload.projection, (selection) => state.opened.push(selection), payload.presentation,
++      undefined, undefined, { period, onPeriodChange: (next) => state.changes.push(next) })
++    node.id = "synthetic-bi-renderer"
++    document.body.replaceChildren(node)
++  }, { moduleUrl, payload, period })
++}
++
++function dataRow(page: Page, id: string) {
++  return page.getByRole("table", { name: "Dados e referências", exact: true }).getByRole("row").filter({ has: page.getByRole("cell", { name: id, exact: true }) })
++}
++
++async function focus(page: Page, moduleUrl: string, target: BiFocusTarget | string) {
++  return page.evaluate(async ({ moduleUrl, target }) => {
++    const renderer = await import(moduleUrl) as typeof import("../../../product/analytics/view.ts")
++    const root = document.getElementById("synthetic-bi-renderer")
++    if (!root) throw new Error("Synthetic renderer root missing")
++    return renderer.restoreBiFocus(root, target)
++  }, { moduleUrl, target })
++}
++
++test("C02 renderer BI10 crops observed dates, retains unknown dates and never prorates supplied amounts", async () => {
++  const deadline = compositionTestDeadline("bi62-contract-renderer-dates", 105_000)
++  try {
++    const { page, moduleUrl, errors } = await rendererPage(deadline)
++    const payload = syntheticPayload()
++    await deadline.phase("renderer.date-crop", async () => {
++      await render(page, moduleUrl, payload)
++      const dated = page.getByRole("list", { name: "Marcos com data", exact: true })
++      await expect(dated.getByRole("listitem")).toHaveCount(2)
++      await page.getByLabel("Início do período", { exact: true }).fill(november.start)
++      await page.getByLabel("Fim do período", { exact: true }).fill(november.end)
++      await page.getByRole("button", { name: "Aplicar filtro", exact: true }).click()
++      await expect(dated.getByRole("listitem")).toHaveCount(1)
++      await expect(dated).toContainText("Synthetic November milestone")
++      await expect(dataRow(page, "synthetic:outside-date")).toHaveCount(0)
++      await expect(dataRow(page, "synthetic:inside-date")).toHaveCount(1)
++      await expect(page.getByRole("list", { name: "Marcos sem data", exact: true })).toContainText("Synthetic unknown date: unknown; data indisponível")
++      await expect(dataRow(page, "synthetic:unknown-date").locator("td").nth(1)).toHaveText("Indisponível")
++      await expect(page.getByRole("group", { name: "Marcos no horizonte; a lista informa estado, data e origem", exact: true }).locator("circle")).toHaveCount(1)
++      await expect(dataRow(page, "synthetic:whole-period-value").locator("td").nth(1)).toHaveText("200")
++      await expect(dataRow(page, "synthetic:explicit-zero").locator("td").nth(1)).toHaveText("0")
++      await expect(page.getByRole("status")).toContainText("permanecem integrais na tabela, sem repartição estimada")
++      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([horizon, november])
++      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.payload)).toEqual(payload)
++    })
++    expect(errors).toEqual([])
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("C02 renderer restores only a valid visual crop and reports its changes without changing the authorized horizon", async () => {
++  const deadline = compositionTestDeadline("bi62-contract-renderer-visual-period", 105_000)
++  try {
++    const { page, moduleUrl, errors } = await rendererPage(deadline)
++    const payload = syntheticPayload()
++    await deadline.phase("renderer.visual-state", async () => {
++      await render(page, moduleUrl, payload, november)
++      await expect(page.getByLabel("Início do período", { exact: true })).toHaveValue(november.start)
++      await expect(page.getByLabel("Fim do período", { exact: true })).toHaveValue(november.end)
++      await expect(page.getByLabel("Arrastar início do período", { exact: true })).toHaveAttribute("aria-valuetext", november.start)
++      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([november])
++      await dataRow(page, "synthetic:inside-date").getByRole("button", { name: "Abrir origem", exact: true }).click()
++      const state = await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer)
++      expect(state.opened).toHaveLength(1)
++      expect(state.opened[0]).toMatchObject({ valueId: "synthetic:inside-date", visualPeriod: november, context: { period: horizon } })
++      expect(state.payload).toEqual(payload)
++      // An invalid apply leaves both the currently drawn data and callback unchanged.
++      await page.getByLabel("Início do período", { exact: true }).fill("2028-01-01")
++      await page.getByRole("button", { name: "Aplicar filtro", exact: true }).click()
++      await expect(page.getByRole("status")).toContainText("Escolha um período válido dentro da seleção autorizada")
++      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([november])
++      await expect(dataRow(page, "synthetic:inside-date")).toHaveCount(1)
++      for (const invalid of [
++        { start: "2026-12-31", end: "2027-11-30" },
++        { start: "2027-11-30", end: "2027-11-01" },
++        { start: "2027-02-30", end: "2027-03-01" },
++      ]) {
++        await render(page, moduleUrl, payload, invalid)
++        await expect(page.getByLabel("Início do período", { exact: true })).toHaveValue(horizon.start)
++        await expect(page.getByLabel("Fim do período", { exact: true })).toHaveValue(horizon.end)
++        expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([horizon])
++      }
++      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.payload)).toEqual(payload)
++    })
++    expect(errors).toEqual([])
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("C02 renderer restores the exact origin before the first value control and falls back only to visible controls", async () => {
++  const deadline = compositionTestDeadline("bi62-contract-renderer-focus", 105_000)
++  try {
++    const { page, moduleUrl, errors } = await rendererPage(deadline)
++    await deadline.phase("renderer.exact-origin-focus", async () => {
++      await render(page, moduleUrl, syntheticPayload())
++      const valueId = "synthetic:whole-period-value"
++      const row = dataRow(page, valueId)
++      const first = row.locator(`[data-bi-origin="${originA}"]`), second = row.locator(`[data-bi-origin="${originB}"]`)
++      await expect(first).toBeVisible()
++      await expect(second).toBeVisible()
++      expect(await focus(page, moduleUrl, { valueId, originDigest: originB })).toBe(true)
++      await expect(second).toBeFocused()
++      await page.keyboard.press("Enter")
++      const opened = await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.opened)
++      expect(opened).toHaveLength(1)
++      expect(opened[0]?.reference?.refDigest).toBe(originB)
++      // A fresh render can omit an origin; a retained selector cannot invent it.
++      await second.evaluate((element) => element.remove())
++      expect(await focus(page, moduleUrl, { valueId, originDigest: originB })).toBe(true)
++      await expect(first).toBeFocused()
++      await first.evaluate((element) => { element.setAttribute("hidden", "") })
++      expect(await focus(page, moduleUrl, { valueId, originDigest: originB })).toBe(true)
++      await expect(page.getByRole("button", { name: "Aplicar filtro", exact: true })).toBeFocused()
++      expect(await focus(page, moduleUrl, "synthetic:missing-value")).toBe(true)
++      await expect(page.getByRole("button", { name: "Aplicar filtro", exact: true })).toBeFocused()
++      await page.locator("#synthetic-bi-renderer").evaluate((element) => { element.setAttribute("hidden", "") })
++      expect(await focus(page, moduleUrl, valueId)).toBe(false)
++    })
++    expect(errors).toEqual([])
++  } finally { await deadline.close() }
++}, 120_000)
+diff --git a/packages/app-shell/e2e/sucafina/bi-installed/browser.ts b/packages/app-shell/e2e/sucafina/bi-installed/browser.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0d4f44d31a1444f561305cde175be58064584c6a 100644
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/bi-installed/browser.ts
+@@ -0,0 +1,91 @@
++import { expect, type Page, type Response } from "@playwright/test"
++import { asRecord } from "../decisions-support/journey"
++import { horizon, records, type InstalledBiCorpus } from "./installed-fixture"
++
++export async function showScenario(page: Page, origin: string, corpus: InstalledBiCorpus, kind: "missing" | "resolved", viewId: "BI09" | "BI10") {
++  const comparison = corpus.comparisons[kind]
++  const inverse = kind === "missing" ? corpus.comparisons.missingInverse : corpus.comparisons.resolvedInverse
++  return showBi(page, origin, viewId, (label) => label.includes(`cenário ${corpus.scenarioRefs[kind]}`) && label.includes(`comparação ${comparison}`) && label.includes(`vantagem ${inverse}`))
++}
++
++export async function showBi(page: Page, origin: string, viewId: "BI09" | "BI10", choose: (label: string) => boolean) {
++  const pending = page.waitForResponse(responseFor("bi-options", viewId))
++  const response = await page.goto(`${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "bi", viewId, start: horizon.start, end: horizon.end })}`)
++  expect(response?.status()).toBe(200)
++  expect(response?.headers()["content-type"]).toContain("text/html")
++  expect(response?.headers()["content-security-policy"]).toContain("script-src")
++  const optionsResponse = await pending
++  expect(optionsResponse.status()).toBe(200)
++  const options = asRecord(await optionsResponse.json())
++  expect(options.status).toBe("ok")
++  const selected = records(asRecord(options.value).choices).filter((choice) => choose(String(choice.label)))
++  expect(selected, "The exact saved producer identities must be available under current authority").toHaveLength(1)
++  const selection = page.getByLabel("Dados para visualizar", { exact: true })
++  await selection.selectOption(String(selected[0]!.selectionRef))
++  await expect(selection).toHaveValue(String(selected[0]!.selectionRef))
++  const data = page.waitForResponse((response) => responseFor("bi-data", viewId)(response) && new URL(response.url()).searchParams.get("selectionRef") === selected[0]!.selectionRef)
++  await page.getByRole("button", { name: "Atualizar visualização", exact: true }).click()
++  const result = await biReply(await data)
++  expect(asRecord(result.request)).toMatchObject({ selectionRef: selected[0]!.selectionRef, viewId, period: horizon })
++  expect(asRecord(result.presentation).viewId).toBe(viewId)
++  await expect(page.getByRole("table", { name: "Dados e referências", exact: true })).toBeVisible()
++  await expect(page.getByRole("heading", { name: viewId === "BI09" ? "Quais parcelas sustentam a alternativa?" : "Qual data altera custo ou viabilidade?", exact: true })).toBeVisible()
++  return result
++}
++
++export async function biReply(response: Response) {
++  expect(response.status()).toBe(200)
++  expect(response.headers()["content-type"]).toContain("application/json")
++  const result = asRecord(await response.json())
++  expect(asRecord(asRecord(result.projection).context)).toMatchObject({ period: horizon, currency: "USD" })
++  expect(records(asRecord(result.projection).values).length).toBeGreaterThan(0)
++  return result
++}
++
++export function responseFor(mode: string, viewId: string) {
++  return (response: Response) => {
++    const url = new URL(response.url())
++    return response.request().method() === "GET" && url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode && url.searchParams.get("viewId") === viewId
++  }
++}
++
++export function dataRow(page: Page, id: string) {
++  return page.getByRole("table", { name: "Dados e referências", exact: true }).getByRole("row").filter({ has: page.getByRole("cell", { name: id, exact: true }) })
++}
++
++export async function expectValue(page: Page, id: string, value: string) {
++  const row = dataRow(page, id)
++  await expect(row).toHaveCount(1)
++  await expect(row.getByRole("cell")).toHaveCount(7)
++  await expect(row.getByRole("cell").nth(1)).toHaveText(value)
++}
++
++export async function expectAdvantage(page: Page, projection: Record<string, unknown>, comparisonRef: string, amount: number, state: "Completa" | "Condicionada") {
++  const comparison = asRecord(projection.comparison)
++  expect(comparison.comparisonRef).toBe(comparisonRef)
++  expect(records(comparison.values).find((value) => value.id === "scenario:advantage-known-difference")?.value).toBe(amount)
++  const table = page.getByRole("table", { name: "Vantagem fornecida pela comparação persistida", exact: true })
++  await expect(table.locator("tbody > tr")).toHaveCount(1)
++  await expect(table.locator("tbody > tr").getByRole("cell").nth(1)).toHaveText(String(amount))
++  await expect(table.locator("tbody > tr").getByRole("cell").nth(4)).toHaveText(state)
++  await expect(page.getByRole("img", { name: `Vantagem conhecida (referência − alternativa): ${amount} USD; ${state}`, exact: true })).toBeVisible()
++}
++
++export async function expectWaterfall(page: Page, result: Record<string, unknown>, initial: number, final: number) {
++  const table = page.getByRole("table", { name: "Composição e origens", exact: true })
++  const plan = asRecord(asRecord(result.presentation).waterfall)
++  const segments = records(plan.segments)
++  await expect(table.getByRole("columnheader")).toHaveText(["Componente", "Início", "Contribuição", "Fim", "Origem"])
++  await expect(table.locator("tbody > tr")).toHaveCount(segments.length + 2)
++  await expect(table.locator("tbody > tr").nth(0).getByRole("cell").nth(3)).toHaveText(String(initial))
++  await expect(table.locator("tbody > tr").nth(segments.length + 1).getByRole("cell").nth(3)).toHaveText(String(final))
++  const chart = page.getByRole("group", { name: "Waterfall de componentes; valores e fontes estão na tabela equivalente", exact: true })
++  await expect(chart).toBeVisible()
++  await expect(chart.locator("[data-bi-value]")).toHaveCount(segments.length + 2)
++  const values = records(asRecord(result.projection).values)
++  for (const [index, segment] of segments.entries()) {
++    const amount = values.find((value) => value.id === segment.componentValueId)!.value
++    expect(typeof amount).toBe("number")
++    await expect(table.locator("tbody > tr").nth(index + 1).getByRole("cell").nth(2)).toHaveText(Number(amount) > 0 ? `+${amount}` : String(amount))
++  }
++}
+diff --git a/packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts b/packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..7b4d56e8c56fc2f661e00e37c270a2fbd61b691e 100644
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts
+@@ -0,0 +1,146 @@
++import { expect, test } from "@playwright/test"
++import { asRecord } from "../decisions-support/journey"
++import { startPlannerInstallation } from "../wp03/installation-fixture"
++import { horizon, prepareInstalledBi, records, type InstalledBiCorpus } from "./installed-fixture"
++import { biReply, dataRow, expectValue, responseFor, showScenario } from "./browser"
++
++// These are the acceptance probes for the two inert proposals handed to the
++// owners of extended-bi-browser.ts and milestones.ts. They are ordinary tests,
++// with no expected-failure annotation, skipped assertions or replacement host.
++test.use({ trace: "off", video: "off" })
++test.describe.configure({ retries: 0 })
++
++let installation: Awaited<ReturnType<typeof startPlannerInstallation>> | undefined
++let corpus: InstalledBiCorpus
++
++test.beforeAll(async ({ browser }, info) => {
++  test.setTimeout(180_000)
++  const host = await startPlannerInstallation(info)
++  installation = host
++  const context = await browser.newContext()
++  const observations: Record<string, unknown>[] = []
++  try {
++    await context.addCookies([host.cookie])
++    corpus = await prepareInstalledBi(await context.newPage(), host, observations)
++  } catch (error) {
++    await host.stop()
++    installation = undefined
++    throw error
++  } finally {
++    await info.attach("bi62-regression-canonical-setup.json", { body: JSON.stringify({
++      snapshot: process.env.GITHUB_SHA ?? null, observations,
++      boundary: "Synthetic Planner source inputs saved through real UI; real enrollment, factory, domain persistence and HTTP. No generated results or authority are seeded.",
++    }, null, 2), contentType: "application/json" })
++    await context.close()
++  }
++})
++
++test.afterAll(async () => {
++  if (installation) { await installation.stop(); installation = undefined }
++})
++
++test("BI62 external browser proposal preserves the human date crop across a real reload", async ({ page }, info) => {
++  test.setTimeout(180_000)
++  const host = installation!
++  const observations: Record<string, unknown>[] = []
++  try {
++    await page.context().addCookies([host.cookie])
++    const result = await showScenario(page, host.origin, corpus, "resolved", "BI10")
++    const projection = asRecord(result.projection)
++    const items = records(asRecord(asRecord(result.presentation).timeline).items)
++    const values = records(projection.values)
++    const visible = items.filter((item) => values.some((value) => value.id === item.dateValueId &&
++      typeof value.value === "string" && value.value >= "2027-11-01" && value.value <= "2027-11-30"))
++    expect(visible.length).toBeGreaterThan(0)
++    expect(visible.length).toBeLessThan(items.length)
++    const panel = page.locator("[data-sf-bi]")
++    await panel.getByLabel("Início do período", { exact: true }).fill("2027-11-01")
++    await panel.getByLabel("Fim do período", { exact: true }).fill("2027-11-30")
++    await panel.getByRole("button", { name: "Aplicar filtro", exact: true }).click()
++    await expect(panel.getByRole("list", { name: "Marcos com data", exact: true }).getByRole("listitem")).toHaveCount(visible.length)
++    const selectionRef = await page.getByLabel("Dados para visualizar", { exact: true }).inputValue()
++    const pending = page.waitForResponse(responseFor("bi-data", "BI10"))
++    await page.reload()
++    const reloaded = await biReply(await pending)
++    expect(asRecord(reloaded.request)).toMatchObject({ selectionRef, period: horizon })
++    expect(asRecord(reloaded.projection).decision).toEqual(projection.decision)
++    observations.push({ stage: "real-reload", selectionRef, authorizedPeriod: horizon,
++      requestedVisualPeriod: { start: "2027-11-01", end: "2027-11-30" },
++      observedVisualPeriod: { start: await panel.getByLabel("Início do período", { exact: true }).inputValue(),
++        end: await panel.getByLabel("Fim do período", { exact: true }).inputValue() } })
++    await expect(panel.getByLabel("Início do período", { exact: true })).toHaveValue("2027-11-01")
++    await expect(panel.getByLabel("Fim do período", { exact: true })).toHaveValue("2027-11-30")
++    await expect(panel.getByRole("list", { name: "Marcos com data", exact: true }).getByRole("listitem")).toHaveCount(visible.length)
++    for (const item of visible) await expect(dataRow(page, String(item.dateValueId))).toBeVisible()
++    for (const item of items.filter((item) => !visible.includes(item))) await expect(dataRow(page, String(item.dateValueId))).toHaveCount(0)
++    await expectValue(page, "scenario:candidate-known-subtotal", "250000")
++    await expectValue(page, "scenario:known-difference", "10000")
++  } finally {
++    await info.attach("bi62-reload-crop-observations.json", { body: JSON.stringify(observations, null, 2), contentType: "application/json" })
++    await info.attach("bi62-reload-crop.png", { body: await page.screenshot(), contentType: "image/png" })
++  }
++})
++
++test("BI62 external timeline proposal lets the keyboard choose between both real source versions", async ({ page }, info) => {
++  test.setTimeout(180_000)
++  const host = installation!
++  const observations: Record<string, unknown>[] = []
++  try {
++    await page.context().addCookies([host.cookie])
++    const result = await showScenario(page, host.origin, corpus, "resolved", "BI10")
++    const values = records(asRecord(result.projection).values)
++    const items = records(asRecord(asRecord(result.presentation).timeline).items)
++    // The copied renewal line becomes the bridge line. Both source versions
++    // establish its November difference, so neither origin may be guessed.
++    const candidates = items.flatMap((item) => {
++      const value = values.find((entry) => entry.id === item.dateValueId)!
++      const refs = records(value.sourceRefs)
++      const versions = refs.filter((ref) => ref.kind === "record").map((ref) => asRecord(ref.target).recordId)
++      return value.value === "2027-11-01" && value.drilldown === null && versions.includes(corpus.plans.baseline.id) && versions.includes(corpus.plans.resolved.id)
++        ? [{ item, value, refs: refs.filter((ref, index) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index) }] : []
++    })
++    expect(candidates).toHaveLength(1)
++    const { item, value, refs } = candidates[0]!
++    expect(refs.length).toBeGreaterThan(1)
++    const selected = refs.filter((ref) => ref.kind === "record" && asRecord(ref.target).recordId === corpus.plans.resolved.id)
++    expect(selected).toHaveLength(1)
++    const chart = page.getByRole("group", { name: "Marcos no horizonte; a lista informa estado, data e origem", exact: true })
++    const mark = chart.locator(`[data-bi-focus="${String(item.dateValueId)}"]`)
++    observations.push({ stage: "multi-source-milestone", valueId: value.id, date: value.value,
++      sourceDigests: refs.map((ref) => ref.refDigest), accessibleMarkCount: await mark.count() })
++    await expect(mark).toHaveCount(1)
++    await expect(mark).toHaveAttribute("role", "button")
++    await expect(mark).toHaveAttribute("tabindex", "0")
++    await mark.focus()
++    await expect(mark).toBeFocused()
++    await mark.press("Enter")
++    const chooser = page.getByRole("group", { name: `Escolher origem de ${String(item.label)}`, exact: true })
++    await expect(chooser).toBeVisible()
++    await expect(chooser.locator("button[data-bi-origin]")).toHaveCount(refs.length)
++    await chooser.getByRole("button", { name: "Cancelar escolha de origem", exact: true }).press("Escape")
++    await expect(chooser).toBeHidden()
++    await expect(mark).toBeFocused()
++    await mark.press("Space")
++    await expect(chooser).toBeVisible()
++    const pending = page.waitForResponse(responseFor("bi-source", "BI10"))
++    await chooser.locator(`button[data-bi-origin="${String(selected[0]!.refDigest)}"]`).press("Enter")
++    const response = await pending
++    expect(response.status()).toBe(200)
++    expect(new URL(response.url()).searchParams.get("referenceDigest")).toBe(selected[0]!.refDigest)
++    const destinations = records(asRecord(await response.json()).links).filter((link) => {
++      const url = new URL(String(link.url), host.origin)
++      return url.pathname === "/sucafina/planner" && url.searchParams.get("version") === corpus.plans.resolved.id
++    })
++    expect(destinations).toHaveLength(1)
++    const nav = page.getByRole("navigation", { name: "Origens autorizadas do valor", exact: true })
++    const destination = nav.getByRole("link", { name: String(destinations[0]!.label), exact: true })
++    await expect(destination).toBeVisible()
++    await destination.press("Enter")
++    await expect(page).toHaveURL((url) => url.pathname === "/sucafina/planner" && url.searchParams.get("version") === corpus.plans.resolved.id)
++    await expect(page.getByRole("heading", { name: "Overview", exact: true, level: 1 })).toBeVisible()
++    observations.push({ stage: "chosen-source-opened", versionId: corpus.plans.resolved.id, action: "keyboard" })
++  } finally {
++    await info.attach("bi62-timeline-origins-observations.json", { body: JSON.stringify(observations, null, 2), contentType: "application/json" })
++    await info.attach("bi62-timeline-origins.png", { body: await page.screenshot(), contentType: "image/png" })
++  }
++})
+diff --git a/packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts b/packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..a4ad8e253fb190ef3c9360768d70ffd84f673752 100644
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts
+@@ -0,0 +1,254 @@
++import { expect, test } from "@playwright/test"
++import { asRecord } from "../decisions-support/journey"
++import { startPlannerInstallation } from "../wp03/installation-fixture"
++import { horizon, objective, prepareInstalledBi, records } from "./installed-fixture"
++import { biReply, dataRow, expectAdvantage, expectValue, expectWaterfall, responseFor, showBi, showScenario } from "./browser"
++
++// The actual private enrollment and HttpOnly session must not enter retained
++// network traces. Screenshots and observations contain synthetic business data.
++test.use({ trace: "off", video: "off" })
++test.describe.configure({ retries: 0 })
++
++test("BI62 installed BI09 and BI10 preserve the literal training quote, real sources and current authority", async ({ page, browser }, info) => {
++  test.setTimeout(180_000)
++  const installation = await startPlannerInstallation(info)
++  const observations: Record<string, unknown>[] = []
++  const errors: string[] = []
++  page.on("pageerror", (error) => errors.push(error.message))
++  let completed = false
++  try {
++    await page.context().addCookies([installation.cookie])
++    const corpus = await test.step("save real Planner inputs and canonical scenarios, comparisons and portfolio", () => prepareInstalledBi(page, installation, observations))
++
++    await test.step("show the omitted-training gap without changing it into a complete total or zero", async () => {
++      const before = await showScenario(page, installation.origin, corpus, "missing", "BI09")
++      const projection = asRecord(before.projection), decision = asRecord(projection.decision)
++      const scenario = asRecord(decision.scenario), comparison = asRecord(decision.comparison)
++      expect(scenario.knownSubtotal).toBe(210000)
++      expect(scenario.total).toBeNull()
++      expect(comparison.knownDifference).toBe(-30000)
++      expect(comparison.completeDifference).toBeNull()
++      await expectValue(page, "scenario:candidate-known-subtotal", "210000")
++      await expectValue(page, "scenario:candidate-complete-total", "Indisponível")
++      await expectValue(page, "scenario:known-difference", "-30000")
++      await expectValue(page, "scenario:complete-difference", "Indisponível")
++      await expect(page.locator("[data-sf-bi]")).toContainText("training")
++      await expectWaterfall(page, before, 240000, 210000)
++      await expectAdvantage(page, projection, corpus.comparisons.missingInverse, 30000, "Condicionada")
++      observations.push({ stage: "installed-training-unquoted", scenarioResultRef: corpus.scenarioRefs.missing,
++        comparisonRef: corpus.comparisons.missing, knownSubtotal: scenario.knownSubtotal, total: scenario.total,
++        knownDifference: comparison.knownDifference, inverseKnownDifference: 30000 })
++      await info.attach("bi62-training-unquoted.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
++    })
++
++    let resolved: Record<string, unknown> = {}
++    await test.step("render the separate 40000 training quote and the canonical inversion of advantage", async () => {
++      resolved = await showScenario(page, installation.origin, corpus, "resolved", "BI09")
++      const projection = asRecord(resolved.projection), decision = asRecord(projection.decision)
++      const scenario = asRecord(decision.scenario), comparison = asRecord(decision.comparison)
++      expect(scenario.knownSubtotal).toBe(250000)
++      expect(scenario.total).toBe(250000)
++      expect(comparison.knownDifference).toBe(10000)
++      expect(comparison.completeDifference).toBe(10000)
++      const training = records(scenario.components).filter((component) => String(component.id).startsWith(`${corpus.plans.resolved.lines.training}:`) && component.amount === 40000)
++      expect(training).toHaveLength(1)
++      expect(training[0]!.period).toEqual({ start: "2027-11-01", end: "2027-11-30" })
++      const coverage = asRecord(scenario.costCoverage)
++      expect(records(coverage.entries).find((entry) => entry.categoryId === "training")).toMatchObject({ status: "included" })
++      await expectValue(page, "scenario:baseline-known-subtotal", "240000")
++      await expectValue(page, "scenario:candidate-known-subtotal", "250000")
++      await expectValue(page, "scenario:candidate-complete-total", "250000")
++      await expectValue(page, "scenario:known-difference", "10000")
++      await expectValue(page, "scenario:complete-difference", "10000")
++      await expectWaterfall(page, resolved, 240000, 250000)
++      const plan = asRecord(asRecord(resolved.presentation).waterfall)
++      const values = records(projection.values)
++      const quoted = records(plan.segments).filter((segment) => values.some((value) => value.id === segment.componentValueId && value.value === 40000))
++      expect(quoted).toHaveLength(1)
++      const mark = page.getByRole("group", { name: "Waterfall de componentes; valores e fontes estão na tabela equivalente", exact: true }).locator(`[data-bi-value="${String(quoted[0]!.componentValueId)}"]`)
++      await expect(mark).toBeVisible()
++      await expect(mark.locator("title")).toContainText("+40000 USD")
++      await expectAdvantage(page, projection, corpus.comparisons.resolvedInverse, -10000, "Completa")
++      const previousViewport = page.viewportSize()
++      for (const width of [320, 768, 1440]) {
++        await page.setViewportSize({ width, height: 900 })
++        await expectValue(page, "scenario:candidate-complete-total", "250000")
++        const chart = page.getByRole("group", { name: "Waterfall de componentes; valores e fontes estão na tabela equivalente", exact: true })
++        await expect(chart).toBeVisible()
++        const bounds = await chart.boundingBox()
++        expect(bounds).not.toBeNull()
++        expect(bounds!.width).toBeGreaterThan(0)
++        const geometry = await page.evaluate(() => ({ viewport: window.innerWidth, document: document.documentElement.scrollWidth }))
++        observations.push({ stage: "installed-responsive-measurement", requestedWidth: width, ...geometry, chart: bounds,
++          horizontalOverflow: geometry.document > geometry.viewport, nativeZoom: "not-executed" })
++        await info.attach(`bi62-viewport-${width}.png`, { body: await page.screenshot(), contentType: "image/png" })
++      }
++      if (previousViewport) await page.setViewportSize(previousViewport)
++      const trainingValue = values.find((value) => value.id === quoted[0]!.componentValueId)!
++      const markOrigins = trainingValue.drilldown ? [asRecord(trainingValue.drilldown)]
++        : records(trainingValue.sourceRefs).filter((ref, index, refs) => refs.findIndex((other) => other.refDigest === ref.refDigest) === index)
++      const trainingOrigin = markOrigins.filter((ref) => ref.kind === "record" && asRecord(ref.target).recordId === corpus.plans.resolved.id)
++      expect(trainingOrigin).toHaveLength(1)
++      await expect(mark).toHaveAttribute("role", "button")
++      await expect(mark).toHaveAttribute("tabindex", "0")
++      await mark.focus()
++      await expect(mark).toBeFocused()
++      const sourceRequest = page.waitForResponse(responseFor("bi-source", "BI09"))
++      await mark.press("Enter")
++      if (markOrigins.length > 1) {
++        const chooser = page.locator("[data-bi-source-chooser]:visible")
++        await expect(chooser).toHaveCount(1)
++        await chooser.locator(`button[data-bi-origin="${String(trainingOrigin[0]!.refDigest)}"]`).press("Enter")
++      }
++      const sourceResponse = await sourceRequest
++      expect(sourceResponse.status()).toBe(200)
++      const destinations = records(asRecord(await sourceResponse.json()).links)
++      expect(destinations.some((link) => new URL(String(link.url), installation.origin).searchParams.get("version") === corpus.plans.resolved.id)).toBe(true)
++      await expect(page.getByRole("navigation", { name: "Origens autorizadas do valor", exact: true })).toBeVisible()
++      observations.push({ stage: "waterfall-mark-keyboard-origin", valueId: quoted[0]!.componentValueId,
++        sourceDigest: trainingOrigin[0]!.refDigest, action: "Enter", authorizedDestinationCount: destinations.length })
++      observations.push({ stage: "installed-training-40000", training: 40000, knownSubtotal: scenario.knownSubtotal, total: scenario.total,
++        knownDifference: comparison.knownDifference, inverseKnownDifference: -10000,
++        scenarioResultRef: corpus.scenarioRefs.resolved, comparisonRef: corpus.comparisons.resolved })
++      await info.attach("bi62-training-40000.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
++    })
++
++    await test.step("reopen the selected persisted result after a real page reload", async () => {
++      const selected = await page.getByLabel("Dados para visualizar", { exact: true }).inputValue()
++      const pending = page.waitForResponse(responseFor("bi-data", "BI09"))
++      await page.reload()
++      const again = await biReply(await pending)
++      await expect(page.getByLabel("Dados para visualizar", { exact: true })).toHaveValue(selected)
++      expect(asRecord(again.request).selectionRef).toBe(selected)
++      expect(asRecord(again.projection).decision).toEqual(asRecord(resolved.projection).decision)
++      await expectValue(page, "scenario:candidate-complete-total", "250000")
++      await expectWaterfall(page, again, 240000, 250000)
++    })
++
++    await test.step("open a reauthorized source and follow its real Planner destination", async () => {
++      const row = dataRow(page, "scenario:candidate-known-subtotal")
++      const sourceValue = records(asRecord(resolved.projection).values).find((value) => value.id === "scenario:candidate-known-subtotal")!
++      const source = records(sourceValue.sourceRefs).filter((ref) => ref.kind === "record" && asRecord(ref.target).recordId === corpus.plans.resolved.id)
++      expect(source).toHaveLength(1)
++      const origins = row.locator(`button[data-bi-origin="${String(source[0]!.refDigest)}"]`)
++      await expect(origins).toHaveCount(1)
++      const pending = page.waitForResponse(responseFor("bi-source", "BI09"))
++      await origins.click()
++      const response = await pending
++      expect(response.status()).toBe(200)
++      const body = asRecord(await response.json())
++      const links = records(body.links)
++      const matching = links.filter((link) => {
++        const url = new URL(String(link.url), installation.origin)
++        return url.pathname === "/sucafina/planner" && url.searchParams.get("version") === corpus.plans.resolved.id
++      })
++      expect(matching).toHaveLength(1)
++      const nav = page.getByRole("navigation", { name: "Origens autorizadas do valor", exact: true })
++      const destination = nav.getByRole("link", { name: String(matching[0]!.label), exact: true })
++      await expect(destination).toBeVisible()
++      await destination.click()
++      await expect(page).toHaveURL((url) => url.pathname === "/sucafina/planner" && url.searchParams.get("version") === corpus.plans.resolved.id)
++      await expect(page.getByRole("button", { name: "Sign out", exact: true })).toBeEnabled()
++      // The destination is the actual saved Planner version, not a fabricated
++      // callback or an echo of the chart's displayed amount.
++      await expect(page.getByRole("heading", { name: "Overview", exact: true, level: 1 })).toBeVisible()
++      observations.push({ stage: "real-source-destination", surface: "planner", versionId: corpus.plans.resolved.id })
++    })
++
++    await test.step("show real dates and crop marks and rows to November without prorating costs", async () => {
++      const timeline = await showScenario(page, installation.origin, corpus, "resolved", "BI10")
++      const projection = asRecord(timeline.projection)
++      expect(asRecord(projection.context).period).toEqual(horizon)
++      const items = records(asRecord(asRecord(timeline.presentation).timeline).items)
++      expect(items.length).toBeGreaterThan(0)
++      const panel = page.locator("[data-sf-bi]")
++      await expect(panel.getByRole("heading", { name: "Datas e marcos fornecidos pelo domínio", exact: true })).toBeVisible()
++      await expect(panel.getByRole("group", { name: "Marcos no horizonte; a lista informa estado, data e origem", exact: true }).locator("circle")).toHaveCount(items.length)
++      await panel.getByLabel("Início do período", { exact: true }).fill("2027-11-01")
++      await panel.getByLabel("Fim do período", { exact: true }).fill("2027-11-30")
++      await panel.getByRole("button", { name: "Aplicar filtro", exact: true }).click()
++      const values = records(projection.values)
++      const expectedDates = items.filter((item) => values.some((value) => value.id === item.dateValueId && typeof value.value === "string" && value.value >= "2027-11-01" && value.value <= "2027-11-30"))
++      expect(expectedDates.length).toBeGreaterThan(0)
++      expect(expectedDates.length).toBeLessThan(items.length)
++      await expect(panel.getByRole("list", { name: "Marcos com data", exact: true }).getByRole("listitem")).toHaveCount(expectedDates.length)
++      for (const item of expectedDates) await expect(dataRow(page, String(item.dateValueId))).toBeVisible()
++      for (const item of items.filter((item) => !expectedDates.includes(item))) await expect(dataRow(page, String(item.dateValueId))).toHaveCount(0)
++      await expectValue(page, "scenario:candidate-known-subtotal", "250000")
++      await expect(panel.getByRole("status").filter({ hasText: "Os valores de períodos parcialmente selecionados permanecem integrais" })).toBeVisible()
++      observations.push({ stage: "installed-BI10-period-crop", authorizedPeriod: horizon, displayPeriod: { start: "2027-11-01", end: "2027-11-30" }, visibleDates: expectedDates.length, originalDates: items.length })
++      await info.attach("bi62-dates-november.png", { body: await page.screenshot({ fullPage: true }), contentType: "image/png" })
++    })
++
++    await test.step("consume the same persisted portfolio in both BI views", async () => {
++      for (const viewId of ["BI09", "BI10"] as const) {
++        const portfolio = await showBi(page, installation.origin, viewId, (label) => label.includes(`portfolio ${corpus.portfolioResultRef}`))
++        const decision = asRecord(asRecord(portfolio.projection).decision)
++        expect(decision.kind).toBe("portfolio")
++        expect(decision.portfolioResultRef).toBe(corpus.portfolioResultRef)
++        const combinations = records(asRecord(decision.portfolio).combinations)
++        expect(combinations).toHaveLength(1)
++        expect(asRecord(combinations[0]!.analysis).scenarioResultRef).toBe(corpus.scenarioRefs.resolved)
++        await expect(page.getByRole("button", { name: `Abrir portfólio ${corpus.portfolioResultRef}`, exact: true })).toBeVisible()
++        if (viewId === "BI09") await expectWaterfall(page, portfolio, 240000, 250000)
++        else await expect(page.getByRole("heading", { name: "Datas e marcos fornecidos pelo domínio", exact: true })).toBeVisible()
++      }
++      const pending = page.waitForResponse(responseFor("bi-decision", "BI10"))
++      await page.getByRole("button", { name: `Abrir portfólio ${corpus.portfolioResultRef}`, exact: true }).click()
++      expect((await pending).status()).toBe(200)
++      const detail = page.getByRole("region", { name: "Detalhe da análise", exact: true })
++      await expect(detail).toBeVisible()
++      await expect(detail).toContainText(corpus.portfolioResultRef)
++      await expect(detail.getByRole("button", { name: "Voltar à análise", exact: true })).toBeEnabled()
++      await detail.getByRole("button", { name: "Voltar à análise", exact: true }).click()
++      await expect(detail).toHaveCount(0)
++      await expect(page.getByRole("button", { name: `Abrir portfólio ${corpus.portfolioResultRef}`, exact: true })).toBeFocused()
++      observations.push({ stage: "installed-portfolio-views-and-authorized-detail", portfolioResultRef: corpus.portfolioResultRef, views: ["BI09", "BI10"] })
++    })
++
++    await test.step("deny a period with no saved result and remove the old projection", async () => {
++      const pending = page.waitForResponse((response) => responseFor("bi-options", "BI10")(response) && new URL(response.url()).searchParams.get("start") === "2027-02-01")
++      await page.getByLabel("Início", { exact: true }).fill("2027-02-01")
++      await page.getByLabel("Início", { exact: true }).press("Tab")
++      expect((await pending).status()).toBe(200)
++      const panel = page.locator("[data-sf-bi]")
++      await expect(panel.getByRole("table")).toHaveCount(0)
++      await expect(panel.getByRole("button", { name: "Atualizar visualização", exact: true })).toBeDisabled()
++      await expect(panel.getByLabel("Dados para visualizar", { exact: true }).getByRole("option")).toHaveCount(1)
++      await expect(panel.getByRole("status")).toContainText("Nenhum conjunto de resultados preservados")
++    })
++
++    await test.step("revoke the actual session and clear every protected BI surface", async () => {
++      await showScenario(page, installation.origin, corpus, "resolved", "BI09")
++      const selectionRef = await page.getByLabel("Dados para visualizar", { exact: true }).inputValue()
++      const oldCredentials = await browser.newContext()
++      try {
++        await oldCredentials.addCookies([installation.cookie])
++        const dataUrl = `${installation.origin}/sucafina/dashboard?${new URLSearchParams({ sf: "bi-data", viewId: "BI09", selectionRef, start: horizon.start, end: horizon.end })}`
++        expect((await oldCredentials.request.get(dataUrl)).status()).toBe(200)
++        const logout = await page.request.post(`${installation.origin}/sucafina/auth/logout`, { headers: { origin: installation.origin } })
++        expect(logout.status()).toBe(204)
++        const pending = page.waitForResponse(responseFor("bi-options", "BI09"))
++        await page.getByRole("button", { name: "Recarregar escolhas autorizadas", exact: true }).click()
++        expect([401, 403]).toContain((await pending).status())
++        const panel = page.locator("[data-sf-bi]")
++        await expect(panel.getByRole("status")).toHaveText("O acesso mudou. Abra novamente os dados autorizados.")
++        await expect(panel.getByRole("table")).toHaveCount(0)
++        await expect(panel.locator("svg")).toHaveCount(0)
++        await expect(panel.getByRole("region", { name: "Detalhe da análise", exact: true })).toHaveCount(0)
++        await expect(panel.getByRole("navigation").getByRole("link")).toHaveCount(0)
++        await expect(panel.getByLabel("Dados para visualizar", { exact: true }).getByRole("option")).toHaveCount(1)
++        expect([401, 403]).toContain((await oldCredentials.request.get(dataUrl)).status())
++        observations.push({ stage: "real-session-revoked", retiredCookieDenied: true, protectedTables: 0, protectedMarks: 0, protectedDestinations: 0 })
++      } finally { await oldCredentials.close() }
++    })
++    expect(errors).toEqual([])
++    completed = true
++  } finally {
++    try {
++      await info.attach("bi62-installed-observations.json", { body: JSON.stringify({ snapshot: process.env.GITHUB_SHA ?? null,
++        title: info.title, completed, objective, observations, pageErrors: errors,
++        boundary: "Real CLI, factory, HTTP, generated extended asset, persisted domain and browser. Two independent decisions preserve the omitted and resolved training quotes; this is not a same-revision ChoiceRecord journey. Inverse comparisons are persisted through canonical portfolio preview; only direct portfolios are persisted. Responsive geometry and captures are recorded without claiming native 200% zoom. Native visual migration, provider execution and financial approval are outside this proof." }, null, 2), contentType: "application/json" })
++    } finally { await installation.stop() }
++  }
++})
+diff --git a/packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts b/packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..05af4d2dbd4cd30f7a674ca20aefce67bb72dba2 100644
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts
+@@ -0,0 +1,418 @@
++import { expect, type Locator, type Page, type Request, type Response } from "@playwright/test"
++import { randomUUID } from "node:crypto"
++import { asRecord, caseIdentity, clickCommand, enterWorkbench, fillDecision } from "../decisions-support/journey"
++
++export const horizon = { start: "2027-01-01", end: "2027-12-31" }
++export const objective = "BI62 · renewal versus transition with separately quoted training"
++const criterion = "Known subtotal difference must be at most 50000 USD; unquoted costs remain unresolved."
++const categories = ["service", "service_overlap", "implementation", "contract_exit", "migration", "taxes", "training", "internal_costs", "other_relevant_costs"]
++const names = { baseline: "BI62 renewal 240000", missing: "BI62 transition with training unquoted", resolved: "BI62 transition with training 40000" }
++const lineNames = { renewal: "BI62 final renewal including taxes", bridge: "BI62 final bridge including taxes", implementation: "BI62 implementation and migration excluding training", service: "BI62 final new service including taxes", zero: "BI62 explicitly quoted zero ancillary charges", training: "BI62 separately quoted training 40000" }
++
++type CaseRef = { id: string; incarnation: string; version: number }
++type Plan = { id: string; name: string; lines: Record<string, string> }
++type Alternative = { id: string; title: string; resultRef: string }
++export type InstalledBiCorpus = {
++  caseRef: CaseRef
++  caseSelector: string
++  plans: { baseline: Plan; missing: Plan; resolved: Plan }
++  alternatives: { baseline: Alternative; missing: Alternative; resolved: Alternative }
++  comparisons: { missing: string; missingInverse: string; resolved: string; resolvedInverse: string }
++  baselines: { missing: Alternative; resolved: Alternative }
++  caseRefs: { missing: CaseRef; resolved: CaseRef }
++  portfolioResultRef: string
++  scenarioRefs: { missing: string; resolved: string }
++}
++
++/** Only source inputs are synthetic. The existing Planner UI saves them, and
++ * normal authenticated HTTP commands issue sources, classify coverage, promote
++ * scenarios and persist every comparison/portfolio. No result, reference,
++ * grant, provider, response, route handler or installation store is replaced.
++ */
++export async function prepareInstalledBi(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]): Promise<InstalledBiCorpus> {
++  const plans = await preparePlanner(page, installation, observations)
++  // BI only enumerates current case revisions. Independent decisions prove the
++  // two quotes without relabeling a historical scenario as a current revision.
++  const missing = await preparePair(page, installation, { baseline: plans.baseline, candidate: plans.missing }, "missing", observations)
++  const resolved = await preparePair(page, installation, { baseline: plans.baseline, candidate: plans.resolved }, "resolved", observations)
++  return { caseRef: resolved.caseRef, caseSelector: resolved.caseSelector, plans,
++    caseRefs: { missing: missing.caseRef, resolved: resolved.caseRef },
++    baselines: { missing: missing.baseline, resolved: resolved.baseline },
++    alternatives: { baseline: resolved.baseline, missing: missing.candidate, resolved: resolved.candidate },
++    comparisons: { missing: missing.comparisonRef, missingInverse: missing.inverseComparisonRef,
++      resolved: resolved.comparisonRef, resolvedInverse: resolved.inverseComparisonRef },
++    portfolioResultRef: resolved.portfolioResultRef,
++    scenarioRefs: { missing: missing.candidate.resultRef, resolved: resolved.candidate.resultRef } }
++}
++
++async function preparePair(page: Page, installation: { origin: string; actorId: string }, plans: { baseline: Plan; candidate: Plan }, trainingState: "missing" | "resolved", observations: Record<string, unknown>[]) {
++  const caseObjective = `${objective} · ${trainingState}`
++  await enterWorkbench(page, installation.origin)
++  const create = await fillDecision(page, caseObjective)
++  await create.getByLabel("Criteria, one per line", { exact: true }).fill(criterion)
++  const created = await clickCommand(page, create.getByRole("button", { name: "Create decision", exact: true }), "workbench-command", observations)
++  expect(typeof created.outputRef).toBe("string")
++  const caseSelector = created.outputRef as string
++  const identity = caseIdentity(caseSelector)
++  await expect(page.getByRole("region", { name: "Decision", exact: true }).getByRole("heading", { name: caseObjective, exact: true })).toBeVisible()
++
++  await page.getByText("Edit decision", { exact: true }).click()
++  const edit = page.locator("form[data-decision-edit]")
++  await expect(edit).toHaveAttribute("data-sf-edit-ready", "true")
++  await edit.getByRole("button", { name: "Find Planner sources", exact: true }).click()
++  const sourceChoice = edit.getByLabel("Planner source", { exact: true })
++  for (const [index, plan] of Object.values(plans).entries()) {
++    const option = sourceChoice.getByRole("option").filter({ hasText: plan.id })
++    await expect(option).toHaveCount(1)
++    await sourceChoice.selectOption({ label: (await option.textContent())!.trim() })
++    await edit.getByRole("button", { name: "Inspect selected source", exact: true }).click()
++    await expect(edit.locator("[data-source-preview]")).toHaveAttribute("data-state", "ready")
++    await expect(edit.locator("[data-source-preview]")).toContainText(plan.name)
++    await expect(edit.locator("[data-source-preview]")).toContainText("USD")
++    await edit.getByRole("button", { name: "Attach source to draft", exact: true }).click()
++    await expect(edit.locator("[data-decision-sources] > li")).toHaveCount(index + 1)
++  }
++  const attached = await clickCommand(page, edit.getByRole("button", { name: "Save decision", exact: true }), "decision-edit", observations)
++  let caseRef = readCaseRef(asRecord(attached.value).caseRef)
++  expect(caseRef).toEqual({ ...identity, version: 2 })
++
++  const controls = await readControls(page, installation.origin, caseSelector)
++  const selected = asRecord(controls.selected)
++  const decision = asRecord(selected.decision)
++  const sources = records(selected.forecasts).map((entry) => asRecord(entry.source))
++  expect(sources).toHaveLength(2)
++  const bases = records(decision.costCoverageBases).filter((basis) => basis.decisionType === "renewal-transition-v1")
++  expect(bases).toHaveLength(1)
++  const basis = bases[0]!
++  expect(basis.categoryIds).toEqual(categories)
++  const coverage = new Map<string, { source: Record<string, unknown>; ref: string }>()
++
++  for (const [sourceKind, plan] of Object.entries(plans)) {
++    const found = sources.filter((source) => asRecord(source.target).recordId === plan.id)
++    expect(found).toHaveLength(1)
++    const source = found[0]!
++    const inspected = await readControls(page, installation.origin, caseSelector, String(source.refDigest))
++    const forecast = asRecord(asRecord(inspected.selected).forecast)
++    expect(forecast.source).toEqual(source)
++    expect(forecast.expectedVersion).toBe(0)
++    const projection = asRecord(forecast.projection)
++    const components = records(projection.components)
++    const refs = (line: string) => components.filter((component) => String(component.id).startsWith(`${plan.lines[line]}:`)).map((component) => String(component.id))
++    for (const id of Object.values(plan.lines)) expect(components.filter((component) => String(component.id).startsWith(`${id}:`))).toHaveLength(12)
++    // One source line may establish two coverage categories without becoming a
++    // second monetary contribution. The source explicitly includes taxes and
++    // migration, and explicitly excludes training from implementation.
++    const entries = categories.flatMap((categoryId) => {
++      if (sourceKind === "candidate" && trainingState === "missing" && categoryId === "training") return []
++      const line = sourceKind === "baseline" ? ["service", "taxes"].includes(categoryId) ? "renewal" : "zero"
++        : categoryId === "service" ? "service" : categoryId === "service_overlap" ? "bridge"
++          : ["implementation", "migration"].includes(categoryId) ? "implementation"
++            : categoryId === "training" ? "training" : "zero"
++      return [{ categoryId, status: "included", componentRefs: sourceKind !== "baseline" && categoryId === "taxes" ? components.map((component) => String(component.id)) : refs(line),
++        evidenceRefs: [source], scopeNote: categoryId === "taxes" ? "Every quoted source amount is final including taxes; this classification adds no second amount."
++          : categoryId === "migration" && sourceKind !== "baseline" ? "Migration is included in the implementation quote, which excludes training."
++            : line === "zero" ? "The source explicitly quotes zero additional charges for this category."
++              : `Human classification of the separately quoted ${line} source.` }]
++    })
++    const registered = await command(page, installation.origin, "decision-coverage", { caseRef, source, basis, entries, expectedVersion: 0 }, observations)
++    expect(typeof registered.coverageRef).toBe("string")
++    expect(registered.version).toBe(1)
++    coverage.set(sourceKind, { source, ref: String(registered.coverageRef) })
++  }
++
++  const promoted: Record<string, { resultRef: string; title: string }> = {}
++  for (const [sourceKind, plan] of Object.entries(plans)) {
++    const current = coverage.get(sourceKind)!
++    const result = await command(page, installation.origin, "decision-promote", { caseRef, title: plan.name,
++      scenario: { baseRef: current.source.refId, operations: [], assumptions: [] }, coverageRef: current.ref }, observations)
++    const next = readCaseRef(result.caseRef)
++    expect(next).toEqual({ ...caseRef, version: caseRef.version + 1 })
++    expect(typeof result.resultRef).toBe("string")
++    promoted[sourceKind] = { title: plan.name, resultRef: String(result.resultRef) }
++    caseRef = next
++  }
++  const current = asRecord((await readControls(page, installation.origin, caseSelector)).selected)
++  expect(current.caseRef).toEqual(caseRef)
++  const savedCase = asRecord(current.decision)
++  const alternatives = Object.fromEntries(Object.entries(promoted).map(([sourceKind, value]) => {
++    const matches = records(savedCase.alternatives).filter((entry) => entry.title === value.title)
++    expect(matches).toHaveLength(1)
++    const result = asRecord(matches[0]!.result)
++    expect(result.knownSubtotal).toBe(sourceKind === "baseline" ? 240000 : trainingState === "missing" ? 210000 : 250000)
++    expect(result.total).toBe(sourceKind === "candidate" && trainingState === "missing" ? null : sourceKind === "baseline" ? 240000 : 250000)
++    expect(result.comparisonStatus).toBe(sourceKind === "candidate" && trainingState === "missing" ? "conditioned" : "complete")
++    observations.push({ stage: "scenario-persisted", trainingState, sourceKind, resultRef: value.resultRef, knownSubtotal: result.knownSubtotal,
++      total: result.total, comparisonStatus: result.comparisonStatus, costCoverage: result.costCoverage })
++    return [sourceKind, { ...value, id: String(matches[0]!.id) }]
++  })) as { baseline: Alternative; candidate: Alternative }
++  const criteria = records(savedCase.criteria)
++  expect(criteria).toHaveLength(1)
++  const criterionId = String(criteria[0]!.id)
++  const rules = records(current.rules).filter((rule) => rule.id === criterionId)
++  expect(rules).toHaveLength(1)
++  expect(rules[0]!.expectedVersion).toBe(0)
++  await command(page, installation.origin, "decision-criteria", { caseRef, criterionId, metricRef: "planner:known-subtotal-difference",
++    operator: "lte", value: 50000, unit: "USD", period: horizon, evidenceRefs: sources, expectedRuleVersion: 0 }, observations)
++
++  const catalog = await command(page, installation.origin, "decision-portfolio-catalog", { purpose: "catalog", caseRefs: [caseRef] }, observations)
++  const catalogCases = records(catalog.cases)
++  expect(catalogCases).toHaveLength(1)
++  expect(catalogCases[0]!.caseRef).toEqual(caseRef)
++  const candidates = records(catalogCases[0]!.alternatives)
++  const matching = candidates.filter((entry) => entry.alternativeId === alternatives.candidate.id)
++  expect(matching).toHaveLength(1)
++  const inverseCandidate = candidates.filter((entry) => entry.alternativeId === alternatives.baseline.id)
++  expect(inverseCandidate).toHaveLength(1)
++  // The normal installed preview persists its C08 comparison and binding. It
++  // does not persist an inverse portfolio or rewrite a historical scenario.
++  const inverse = await evaluatePair(page, installation.origin, caseRef, alternatives.candidate, alternatives.baseline,
++    criterionId, inverseCandidate[0]!.candidateRef, trainingState === "missing" ? 30000 : -10000,
++    trainingState === "missing" ? null : -10000, observations, false)
++  const comparison = await evaluatePair(page, installation.origin, caseRef, alternatives.baseline, alternatives.candidate,
++    criterionId, matching[0]!.candidateRef, trainingState === "missing" ? -30000 : 10000, trainingState === "missing" ? null : 10000, observations)
++  expect(typeof comparison.portfolioResultRef).toBe("string")
++  return { caseRef, caseSelector, ...alternatives, comparisonRef: comparison.comparisonRef,
++    inverseComparisonRef: inverse.comparisonRef, portfolioResultRef: String(comparison.portfolioResultRef) }
++}
++
++async function evaluatePair(page: Page, origin: string, caseRef: CaseRef, base: Alternative, candidate: Alternative,
++  criterionId: string, candidateRef: unknown, knownDifference: number, completeDifference: number | null, observations: Record<string, unknown>[], persistPortfolio = true) {
++  const selected = await command(page, origin, "decision-portfolio-selection", { caseRef }, observations)
++  expect(typeof selected.version).toBe("number")
++  await command(page, origin, "decision-select-portfolio", { caseRef, baselineAlternativeId: base.id,
++    alternativeId: candidate.id, criteria: [criterionId], expectedVersion: selected.version }, observations)
++  const saved = await command(page, origin, persistPortfolio ? "decision-portfolio-evaluate" : "decision-portfolio-preview", { caseRef,
++    request: { scope: { horizon, currency: "USD" }, candidateRefs: [candidateRef], operations: [], constraints: [criterionId], priorities: [], explorationLimit: 4 } }, observations)
++  if (persistPortfolio) {
++    expect(saved.caseRef).toEqual(caseRef)
++    expect(typeof saved.portfolioResultRef).toBe("string")
++  } else expect(typeof saved.evaluationDigest).toBe("string")
++  const combinations = records(asRecord(saved.portfolio).combinations)
++  expect(combinations).toHaveLength(1)
++  const analysis = asRecord(combinations[0]!.analysis)
++  const comparison = asRecord(analysis.comparison)
++  expect(analysis.scenarioResultRef).toBe(candidate.resultRef)
++  expect(comparison.baselineResultRef).toBe(base.resultRef)
++  expect(comparison.alternativeResultRef).toBe(candidate.resultRef)
++  expect(comparison.knownDifference).toBe(knownDifference)
++  expect(comparison.completeDifference).toBe(completeDifference)
++  expect(typeof analysis.comparisonRef).toBe("string")
++  observations.push({ stage: persistPortfolio ? "canonical-comparison-and-portfolio-persisted" : "canonical-inverse-comparison-persisted-via-preview", caseRef, comparisonRef: analysis.comparisonRef,
++    portfolioResultRef: persistPortfolio ? saved.portfolioResultRef : null, baselineResultRef: base.resultRef, alternativeResultRef: candidate.resultRef,
++    knownDifference: comparison.knownDifference, completeDifference: comparison.completeDifference })
++  return { comparisonRef: String(analysis.comparisonRef), portfolioResultRef: persistPortfolio ? String(saved.portfolioResultRef) : undefined }
++}
++
++async function preparePlanner(page: Page, installation: { origin: string; actorId: string }, observations: Record<string, unknown>[]) {
++  const url = (name: string, version?: string) => `${installation.origin}/sucafina/planner?${new URLSearchParams({ page: name, ...(version ? { version } : {}) })}`
++  const versionRow = (id: string) => page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${id}"]`) })
++  const manager = page.getByRole("dialog", { name: "Manage record", exact: true })
++  await page.goto(url("Versions"))
++  await plannerCommand(page, page.getByRole("button", { name: "Create first version", exact: true }), "save", observations)
++  const first = page.locator('form[data-page="Versions"][data-command="save"]:not([data-record=""])')
++  await expect(first).toHaveCount(1)
++  const baseline: Plan = { id: (await first.getAttribute("data-record"))!, name: names.baseline, lines: {} }
++  await versionRow(baseline.id).getByRole("button", { name: "Manage", exact: true }).click()
++  await manager.getByLabel("Name", { exact: true }).fill(baseline.name)
++  await manager.getByLabel("Year", { exact: true }).fill("2027")
++  await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
++  await page.goto(url("OPEX", baseline.id))
++  baseline.lines.renewal = await addLine(page, lineNames.renewal, 240000, installation.actorId, observations)
++  baseline.lines.zero = await addLine(page, lineNames.zero, 0, installation.actorId, observations)
++  await explicitForecast(page, installation.origin, { [lineNames.renewal]: 240000, [lineNames.zero]: 0 })
++
++  const copy = async (source: Plan, name: string): Promise<Plan> => {
++    await page.goto(url("Versions"))
++    await versionRow(source.id).getByRole("button", { name: "Manage", exact: true }).click()
++    await plannerCommand(page, manager.getByRole("button", { name: "copy", exact: true }), "copy", observations)
++    const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name: `${source.name} — Copy`, exact: true }) })
++    await expect(row).toHaveCount(1)
++    const id = (await row.locator('form[data-page="Versions"][data-command="save"]').getAttribute("data-record"))!
++    expect(id).not.toBe(source.id)
++    await row.getByRole("button", { name: "Manage", exact: true }).click()
++    await manager.getByLabel("Name", { exact: true }).fill(name)
++    await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
++    await page.goto(url("OPEX", id))
++    return { id, name, lines: {} }
++  }
++  const missing = await copy(baseline, names.missing)
++  const renewal = page.getByRole("row").filter({ has: page.getByRole("cell", { name: lineNames.renewal, exact: true }) })
++  await renewal.getByRole("button", { name: "Manage", exact: true }).click()
++  await manager.getByLabel("Name", { exact: true }).fill(lineNames.bridge)
++  await manager.getByLabel("Annual budget", { exact: true }).fill("60000")
++  await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
++  missing.lines.bridge = await lineId(page, lineNames.bridge)
++  missing.lines.zero = await lineId(page, lineNames.zero)
++  missing.lines.implementation = await addLine(page, lineNames.implementation, 45000, installation.actorId, observations)
++  missing.lines.service = await addLine(page, lineNames.service, 105000, installation.actorId, observations)
++  await explicitForecast(page, installation.origin, { [lineNames.bridge]: 60000, [lineNames.implementation]: 45000, [lineNames.service]: 105000, [lineNames.zero]: 0 })
++
++  const resolved = await copy(missing, names.resolved)
++  for (const key of ["bridge", "zero", "implementation", "service"] as const) resolved.lines[key] = await lineId(page, lineNames[key])
++  resolved.lines.training = await addLine(page, lineNames.training, 0, installation.actorId, observations)
++  await explicitForecast(page, installation.origin, { [lineNames.bridge]: 60000, [lineNames.implementation]: 45000, [lineNames.service]: 105000, [lineNames.zero]: 0, [lineNames.training]: 40000 })
++  observations.push({ stage: "planner-inputs-saved-through-ui", horizon, currency: "USD", plans: { baseline, missing, resolved },
++    declaredAmounts: { renewal: 240000, bridge: 60000, implementationIncludingMigration: 45000, newService: 105000, trainingNovember: 40000, otherQuotedCharges: 0 } })
++  return { baseline, missing, resolved }
++}
++
++/** Declare every monthly forecast, including zeros. A budget inherited through
++ * a null forecast is estimated and cannot establish complete cost coverage.
++ * Clipboard paste is the existing human bulk-edit interaction, not DOM mutation.
++ */
++async function explicitForecast(page: Page, origin: string, amounts: Record<string, number>) {
++  const monthly = page.locator("section").filter({ has: page.getByRole("heading", { name: "Edit monthly values together", exact: true }) })
++  await expect(monthly).toHaveCount(1)
++  await monthly.getByRole("combobox", { name: "Measure", exact: true }).selectOption("forecast")
++  const labels = (await monthly.getByRole("rowheader").allTextContents()).map((label) => label.trim())
++  expect(labels.slice().sort()).toEqual(Object.keys(amounts).map((name) => `licenses · ${name}`).sort())
++  const matrix = labels.map((label) => Array.from({ length: 12 }, (_, month) => month === 10 ? amounts[label.slice("licenses · ".length)] : 0))
++  await page.context().grantPermissions(["clipboard-read", "clipboard-write"], { origin })
++  await page.evaluate((text) => navigator.clipboard.writeText(text), matrix.map((row) => row.join("\t")).join("\n"))
++  await monthly.getByRole("textbox", { name: `${labels[0]} forecast month 1`, exact: true }).focus()
++  await page.keyboard.press("Control+V")
++  for (const [index, label] of labels.entries()) {
++    await expect(monthly.getByRole("textbox", { name: `${label} forecast month 1`, exact: true })).toHaveValue("0")
++    await expect(monthly.getByRole("textbox", { name: `${label} forecast month 11`, exact: true })).toHaveValue(String(matrix[index]![10]))
++    await expect(monthly.getByRole("textbox", { name: `${label} forecast month 12`, exact: true })).toHaveValue("0")
++  }
++  for (const [label, action] of [["Preview changes", "preview"], ["Save changes", "apply"]] as const) {
++    const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).searchParams.get("sf") === "workbench-planner" && response.request().postDataJSON()?.action === action)
++    await monthly.getByRole("button", { name: label, exact: true }).click()
++    const response = await pending
++    expect(response.status()).toBe(200)
++    const result = asRecord(await response.json())
++    expect(result.status).toBe("ok")
++    const rows = records(asRecord(result.value).rows)
++    expect(rows).toHaveLength(labels.length)
++    if (action === "apply") for (const row of rows) {
++      expect(row.errors).toEqual([])
++      expect(asRecord(row.result).ok).toBe(true)
++    }
++    await expect(monthly.getByRole("status")).toContainText(action === "preview" ? "Preview complete" : "Changes saved")
++  }
++  await page.reload()
++  await monthly.getByRole("combobox", { name: "Measure", exact: true }).selectOption("forecast")
++  for (const [index, label] of labels.entries()) for (let month = 1; month <= 12; month++)
++    await expect(monthly.getByRole("textbox", { name: `${label} forecast month ${month}`, exact: true })).toHaveValue(String(matrix[index]![month - 1]))
++}
++
++async function lineId(page: Page, name: string) {
++  const row = page.getByRole("row").filter({ has: page.getByRole("cell", { name, exact: true }) })
++  await expect(row).toHaveCount(1)
++  const form = row.locator('form[data-page="OPEX"][data-command="save"]').filter({ has: page.getByLabel("Name", { exact: true }) })
++  await expect(form).toHaveCount(1)
++  await expect(form).toHaveAttribute("data-record", /\S+/)
++  return (await form.getAttribute("data-record"))!
++}
++
++async function addLine(page: Page, name: string, amount: number, actorId: string, observations: Record<string, unknown>[]) {
++  const form = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Name", { exact: true }) })
++  await expect(form).toHaveCount(1)
++  await form.getByLabel("Name", { exact: true }).fill(name)
++  await form.getByLabel("Owner", { exact: true }).selectOption(actorId)
++  await form.getByLabel("Element", { exact: true }).selectOption("licenses")
++  await expect(form.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await form.getByLabel("Annual budget", { exact: true }).fill(String(amount))
++  await plannerCommand(page, form.getByRole("button", { name: "Save", exact: true }), "save", observations)
++  return lineId(page, name)
++}
++
++async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
++  await expect(button).toBeEnabled()
++  const intent = await button.evaluate((element) => {
++    const form = element.closest<HTMLFormElement>("form[data-command]")
++    if (!form) throw new Error("Planner command form is unavailable")
++    return { page: form.dataset.page, action: form.dataset.command, record: form.dataset.record ?? "", version: form.dataset.version }
++  })
++  expect(intent.action).toBe(action)
++  // runtime/ui.form always supplies data-version; screen-shell serializes its
++  // numeric value. An absent token is not an equivalent command or safe replay.
++  expect(intent.version, "Planner command form must expose its canonical version token").toMatch(/^(0|[1-9]\d*)$/)
++  expect(Number.isSafeInteger(Number(intent.version))).toBe(true)
++  const observed: { response?: Response; failure?: string; unknown: boolean } = { unknown: false }
++  const matches = (request: Request) => {
++    if (request.method() !== "POST" || new URL(request.url()).pathname !== "/sucafina/planner") return false
++    try {
++      const payload: unknown = request.postDataJSON()
++      if (!payload || typeof payload !== "object" || Array.isArray(payload)) return false
++      const body = payload as Record<string, unknown>
++      return body.action === action && body.page === intent.page && (body.id ?? "") === intent.record &&
++        typeof body.version === "number" && String(body.version) === intent.version
++    } catch { return false }
++  }
++  const onResponse = (response: Response) => {
++    if (!matches(response.request())) return
++    observed.response = response
++    observations.push({ stage: "planner-command-response", ...intent, httpStatus: response.status(), contentType: response.headers()["content-type"] ?? null })
++  }
++  const onFailed = (request: Request) => {
++    if (!matches(request)) return
++    observed.failure = request.failure()?.errorText ?? "request-failed"
++    observations.push({ stage: "planner-command-request-failed", ...intent, failure: observed.failure })
++  }
++  page.on("response", onResponse)
++  page.on("requestfailed", onFailed)
++  try {
++    await button.click()
++    // R4 proved that the shell can abort this request at 10s without receiving
++    // headers. A response-only wait would then consume the entire 180s test.
++    // Observe the real terminal network/UI state; never retry this mutation.
++    await expect.poll(async () => {
++      if (observed.failure) return "request-failed"
++      if (observed.response) return "response"
++      observed.unknown = await page.locator("form[data-command]").evaluateAll((forms, expected) => forms.some((element) => {
++        const form = element as HTMLFormElement
++        return form.dataset.page === expected.page && form.dataset.command === expected.action &&
++          (form.dataset.record ?? "") === expected.record && form.dataset.version === expected.version && form.dataset.resultUncertain === "true"
++      }), intent)
++      return observed.unknown ? "outcome-unknown" : "pending"
++    }, { message: `Planner ${intent.page}/${action} must produce a response or an explicit transport/UI outcome`, timeout: 15_000 }).not.toBe("pending")
++    if (observed.failure || observed.unknown) {
++      observations.push({ stage: "planner-command-unconfirmed", ...intent, outcome: observed.failure ? "request-failed" : "outcome-unknown", retried: false })
++      throw new Error(`Planner ${intent.page}/${action} was not confirmed (${observed.failure ?? "UI outcome unknown"}); the command was not resent.`)
++    }
++    const response = observed.response!
++    expect(response.status()).toBe(200)
++    expect(response.headers()["content-type"]).toContain("application/json")
++    expect(asRecord(await response.json()).ok).toBe(true)
++    observations.push({ stage: "planner-command", action, httpStatus: response.status() })
++  } finally {
++    page.off("response", onResponse)
++    page.off("requestfailed", onFailed)
++  }
++}
++
++async function readControls(page: Page, origin: string, reference: string, source?: string) {
++  const response = await page.request.get(`${origin}/sucafina/dashboard?${new URLSearchParams({ sf: "decision-controls", case: reference, format: "json", ...(source ? { source } : {}) })}`)
++  expect(response.status()).toBe(200)
++  expect(response.headers()["content-type"]).toContain("application/json")
++  const body = asRecord(await response.json())
++  expect(body.status).toBe("ok")
++  return asRecord(body.value)
++}
++
++async function command(page: Page, origin: string, mode: string, payload: object, observations: Record<string, unknown>[]) {
++  const response = await page.request.post(`${origin}/sucafina/dashboard?${new URLSearchParams({ sf: mode })}`, {
++    headers: { origin, "idempotency-key": randomUUID() }, data: payload,
++  })
++  expect(response.headers()["content-type"], mode).toContain("application/json")
++  const body = asRecord(await response.json())
++  observations.push({ stage: "installed-command", mode, httpStatus: response.status(), status: body.status, reason: body.reason })
++  expect(response.status(), `${mode}: ${String(body.reason ?? body.status)}`).toBe(200)
++  expect(body.status, mode).toBe("ok")
++  return asRecord(body.value)
++}
++
++function readCaseRef(value: unknown): CaseRef {
++  const ref = asRecord(value)
++  expect(typeof ref.id).toBe("string")
++  expect(typeof ref.incarnation).toBe("string")
++  expect(Number.isSafeInteger(ref.version)).toBe(true)
++  return ref as CaseRef
++}
++
++export function records(value: unknown): Record<string, unknown>[] {
++  expect(Array.isArray(value)).toBe(true)
++  return (value as unknown[]).map(asRecord)
++}
+diff --git a/packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts b/packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4c47530ddb4da2df200a65cd7f5a812bb6186d08 100644
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts
+@@ -0,0 +1,146 @@
++import { expect, test, type Request, type Response } from "@playwright/test"
++import { randomUUID } from "node:crypto"
++import { startPlannerInstallation } from "../wp03/installation-fixture"
++
++// R2 stopped before BI: the first Planner save never produced an observable
++// response. This probe preserves that exact UI command and captures its HTTP
++// outcome. It neither resends an uncertain mutation nor replaces the ingress.
++test.use({ trace: "off", video: "off" })
++test.describe.configure({ retries: 0 })
++
++test("BI62 installed Planner first save exposes its real HTTP outcome before BI setup", async ({ page }, info) => {
++  test.setTimeout(180_000)
++  const installation = await startPlannerInstallation(info)
++  const observations: Record<string, unknown>[] = []
++  const began = Date.now()
++  const requests = new Map<Request, number>()
++  const responses = new Map<Request, Response>()
++  const lifecycle: { outcome?: { state: "finished" | "failed"; request: Request } } = {}
++  let commandCount = 0
++  let problem: unknown
++  const url = `${installation.origin}/sucafina/planner?page=Versions`
++  const describe = (request: Request) => {
++    const target = new URL(request.url())
++    if (target.origin !== installation.origin || !target.pathname.startsWith("/sucafina/") || target.pathname.includes("/auth/")) return undefined
++    let body: unknown
++    try { body = request.postDataJSON() } catch { body = undefined }
++    const command = body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : undefined
++    return { method: request.method(), path: target.pathname, page: target.searchParams.get("page"), mode: target.searchParams.get("sf"),
++      action: typeof command?.action === "string" ? command.action : null,
++      bodyBytes: request.postDataBuffer()?.byteLength ?? 0,
++      contentType: request.headers()["content-type"] ?? null, contentLength: request.headers()["content-length"] ?? null }
++  }
++  const isFirstSave = (request: Request) => {
++    const value = describe(request)
++    return value?.method === "POST" && value.path === "/sucafina/planner" && value.page === "Versions" && value.mode === null && value.action === "save"
++  }
++  page.on("request", (request) => {
++    const value = describe(request)
++    if (!value) return
++    const id = requests.size + 1
++    requests.set(request, id)
++    if (isFirstSave(request)) commandCount++
++    observations.push({ event: "request", id, elapsedMs: Date.now() - began, ...value })
++  })
++  page.on("response", (response) => {
++    const request = response.request(), id = requests.get(request)
++    if (id === undefined) return
++    responses.set(request, response)
++    observations.push({ event: "response-headers", id, elapsedMs: Date.now() - began, status: response.status(),
++      contentType: response.headers()["content-type"] ?? null, contentLength: response.headers()["content-length"] ?? null,
++      transferEncoding: response.headers()["transfer-encoding"] ?? null })
++  })
++  page.on("requestfinished", (request) => {
++    const id = requests.get(request)
++    if (id === undefined) return
++    observations.push({ event: "request-finished", id, elapsedMs: Date.now() - began, timing: request.timing() })
++    if (isFirstSave(request)) lifecycle.outcome = { state: "finished", request }
++  })
++  page.on("requestfailed", (request) => {
++    const id = requests.get(request)
++    if (id === undefined) return
++    observations.push({ event: "request-failed", id, elapsedMs: Date.now() - began,
++      failure: redact(request.failure()?.errorText ?? "unknown"), timing: request.timing() })
++    if (isFirstSave(request)) lifecycle.outcome = { state: "failed", request }
++  })
++  page.on("console", (message) => {
++    if (message.type() === "error" || message.type() === "warning")
++      observations.push({ event: "browser-console", elapsedMs: Date.now() - began, type: message.type(), message: redact(message.text()) })
++  })
++  page.on("pageerror", (error) => observations.push({ event: "page-error", elapsedMs: Date.now() - began, message: redact(error.message) }))
++
++  try {
++    await page.context().addCookies([installation.cookie])
++    await test.step("open the real empty Planner and submit Create first version once", async () => {
++      const opened = await page.goto(url)
++      expect(opened?.status()).toBe(200)
++      await expect(page.getByRole("heading", { name: "Versions", exact: true, level: 1 })).toBeVisible()
++      const form = page.locator('form[data-page="Versions"][data-command="save"][data-record=""]')
++      await expect(form).toHaveCount(1)
++      await expect(form).toHaveAttribute("data-bound", "true")
++      const button = form.getByRole("button", { name: "Create first version", exact: true })
++      await expect(button).toBeEnabled()
++      await button.click()
++      // The shipped shell aborts its own save at 10s. Observe completion OR
++      // failure, instead of waiting for a response to an already aborted request.
++      try { await expect.poll(() => lifecycle.outcome?.state ?? "pending", { message: "first Planner save finishes or fails at the real HTTP boundary", timeout: 15_000 }).toMatch(/^(finished|failed)$/) }
++      catch (error) { problem = error; observations.push({ event: "first-save-outcome-not-observed", elapsedMs: Date.now() - began }) }
++      observations.push({ event: "rendered-outcome", commandCount, state: lifecycle.outcome?.state ?? "not-observed",
++        notice: redact(await page.locator("#notice").innerText()),
++        savedViews: redact(await page.locator("[data-personal-views]").getByRole("status").innerText()),
++        uncertain: await form.evaluateAll((forms) => forms[0]?.getAttribute("data-result-uncertain") ?? null),
++        knownVersionIds: await page.locator('form[data-page="Versions"][data-command="save"]:not([data-record=""])').evaluateAll((forms) => forms.map((element) => element.getAttribute("data-record"))) })
++    })
++
++    await test.step("read current state without resending the save", async () => {
++      try {
++        const current = await page.request.get(url, { timeout: 10_000 })
++        const text = await current.text()
++        observations.push({ event: "read-only-current-Planner", status: current.status(), contentType: current.headers()["content-type"] ?? null,
++          knownVersionIds: [...text.matchAll(/<form data-command="save" data-page="Versions" data-record="([^"]*)"/g)].map((match) => match[1]).filter(Boolean) })
++      } catch (error) { observations.push({ event: "read-only-current-Planner-failed", error: redact(String(error)) }) }
++      // Personal views uses POST for its read-only list, so this records whether
++      // the same real body-bearing ingress also answers its normal read command.
++      try {
++        const current = await page.request.post(`${installation.origin}/sucafina/planner?sf=workbench-views`, {
++          headers: { origin: installation.origin, "idempotency-key": randomUUID() }, data: { action: "list", input: {} }, timeout: 10_000,
++        })
++        const body: unknown = await current.json()
++        const value = body && typeof body === "object" && !Array.isArray(body) ? body as Record<string, unknown> : {}
++        observations.push({ event: "read-only-personal-views", status: current.status(), contentType: current.headers()["content-type"] ?? null,
++          resultStatus: value.status, reason: typeof value.reason === "string" ? redact(value.reason) : null,
++          entryCount: Array.isArray(value.value) ? value.value.length : null })
++      } catch (error) { observations.push({ event: "read-only-personal-views-failed", error: redact(String(error)) }) }
++    })
++
++    expect(commandCount, "The uncertain mutation must not be repeated").toBe(1)
++    if (problem) throw problem
++    expect(lifecycle.outcome?.state, "The installed first-save request must complete, not fail in browser transport").toBe("finished")
++    const response = lifecycle.outcome ? responses.get(lifecycle.outcome.request) : undefined
++    expect(response, "The completed first save must have HTTP response headers").toBeDefined()
++    expect(response!.status()).toBe(200)
++    expect(response!.headers()["content-type"]).toContain("application/json")
++    const body: { ok?: unknown; value?: unknown } = await response!.json()
++    observations.push({ event: "first-save-result", ok: body.ok, recordId: typeof body.value === "string" ? body.value : null })
++    expect(body.ok).toBe(true)
++    expect(typeof body.value).toBe("string")
++    const row = page.getByRole("row").filter({ has: page.locator(`form[data-page="Versions"][data-command="save"][data-record="${String(body.value)}"]`) })
++    await expect(row).toBeVisible()
++  } finally {
++    // Preserve transport/UI observations while the live page and host still
++    // exist. The unchanged shared fixture then emits its redacted CLI log.
++    try {
++      await info.attach("bi62-first-save-http.json", { body: JSON.stringify({ snapshot: process.env.GITHUB_SHA ?? null,
++        commandCount, observations, boundary: "Real CLI/factory/enrollment/Planner UI; one save attempt; subsequent requests only read current state. No route, body, authority or domain result is replaced." }, null, 2), contentType: "application/json" })
++      await info.attach("bi62-first-save.png", { body: await page.screenshot(), contentType: "image/png" })
++    } finally { await installation.stop() }
++  }
++})
++
++function redact(value: string) {
++  return value.slice(0, 4000)
++    .replace(/([?&](?:code|token|password|secret)=)[^&#\s"'<>]*/gi, "$1[redacted]")
++    .replace(/(sucafina_operator_[a-f0-9]{24}=)[^;\s"']*/gi, "$1[redacted]")
++    .replace(/((?:authorization|set-cookie|cookie)\s*[:=]\s*)[^\r\n]*/gi, "$1[redacted]")
++    .replace(/\b[a-f0-9]{32,}\b/gi, "[redacted-hex]")
++}

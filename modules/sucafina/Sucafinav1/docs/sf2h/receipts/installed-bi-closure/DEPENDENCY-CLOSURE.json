@@ -1,0 +1,1258 @@
+{
+  "schema": "sf2h.installed-bi.dependency-closure.v1",
+  "mission": 62,
+  "source_head": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+  "source_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+  "index_roots": [
+    {
+      "path": "apps/cli/src/sucafina-product",
+      "sha": "a596c9a703dd9e5745a34c030939cebf8ec7d358",
+      "entries": 159
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product",
+      "sha": "ce0b76296070d8e2960c2aabff7dc300a40e7a04",
+      "entries": 19
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product",
+      "sha": "b718a68e286714d8f15252e3702b3f016065e795",
+      "entries": 44
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina",
+      "sha": "d4cd03e9251318a6151dc78280f276f9e466d001",
+      "entries": 75
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime",
+      "sha": "09e178bc0fc2d158bc02acc2de4f110e5020123d",
+      "entries": 36
+    }
+  ],
+  "method": "Static direct imports from every material source/test file, resolved against non-truncated GitHub MCP subtree indexes at the exact source head. Inherited transitive implementations are pinned by that source tree, not claimed newly compiled.",
+  "direct_edges": 156,
+  "repository_edges": 140,
+  "unresolved_edges": 0,
+  "edges": [
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+      "blob": "87e36883d92f6982cc8765337f8802ffacd6e52c"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/analytics/consumer.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/consumer.ts",
+      "blob": "117c0fc6191b9d7797a4e08db19e90c3079fe129"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "blob": "9cc4cc81538a7247cd87893f958acf5665194eb5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+      "blob": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "blob": "4d165428dc731e59c2faf01a4e47b352e691dfbc"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts",
+      "blob": "da697797e33a54f8d7c3c3ecc0d7f16d516c68c3"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/dashboard/bi.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/dashboard/bi.ts",
+      "blob": "8a88163e8fed6c356af8b433f81ef6f0f78098c6"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/bi-difference.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/bi-difference.ts",
+      "blob": "86ef1b9781ee46bc8cb30eeabc66870332094e7d"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/planner/bi.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/bi.ts",
+      "blob": "4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/portfolio/projection.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/portfolio/projection.ts",
+      "blob": "266c97092d1c0f91f5694879883bd7839c081626"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "./bi-call-scope.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+      "blob": "8f7b3ebb09bdaacfcad25d653e3ff333956d35f6"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "./bi-selections.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "./business-services.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "0181267b67b74a8df338999ddb7745cfee42bb29"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/bi-services.ts",
+      "specifier": "./portfolio-services.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "blob": "881ce4672d9d0e641d1cc849663c0980c118774d"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../contracts/context.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../contracts/ports.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../contracts/sf-execution.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../decisions/result-store.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../planner/scenario-bi.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../planner/scenario-comparison-port.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "../portfolio/read-snapshot.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "./capabilities.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+      "blob": "87e36883d92f6982cc8765337f8802ffacd6e52c"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "./projection.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "./semantics.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "specifier": "./stored-scenario.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "../contracts/business-context.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "../contracts/context.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "../contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "../contracts/validation.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+      "blob": "44e79b3009076e9fae595e79a8c72a8f3918f14b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./advantage-view.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts",
+      "blob": "47b271f492292956a8d8696cc32cd999e9878661"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./catalog.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/catalog.ts",
+      "blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./decision-view.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+      "blob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./filter-controls.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/filter-controls.ts",
+      "blob": "a14260ed5b85d1a24f12bcc30270260ed8b95499"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./geometry.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/geometry.ts",
+      "blob": "cd80e819efc282d58aceb957c6f914187dc07752"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./milestones.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "blob": "f8311d1e9774c6320739e9a672c5822e08109f54"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./portfolio-view.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/portfolio-view.ts",
+      "blob": "35c94e7274127926cef17aa40664db075074d4d4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./projection.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./semantics.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+      "blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./source-navigation.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+      "blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "specifier": "./waterfall.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "blob": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "specifier": "../../../product/analytics/milestones.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "blob": "f8311d1e9774c6320739e9a672c5822e08109f54"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "specifier": "../../../product/analytics/projection.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "specifier": "../../../product/planner/scenario-bi.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "specifier": "../bi-cost-waterfall/fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "blob": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "specifier": "bun:test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/bi-services.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-services.ts",
+      "blob": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../../../product/contracts/decisions.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../../../product/contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../../../product/contracts/ports.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../../../product/decisions/baseline-coverage.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+      "blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../bi-cost-waterfall/fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "blob": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "specifier": "../wp10/integration/financial-composition-fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/bi-services.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-services.ts",
+      "blob": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../../../product/contracts/business-context.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../../../product/contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../../../product/planner/port.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../../../runtime/admin.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "blob": "64cfaf1fcada712548c5f28a12be12aff37f9620"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../bi-cost-waterfall/fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "blob": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "../wp10/integration/financial-composition-fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "specifier": "bun:test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../../../product/contracts/decisions.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../../../product/contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../../../product/contracts/ports.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../../../product/decisions/baseline-coverage.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+      "blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../../../product/planner/port.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../../../runtime/admin.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+      "blob": "64cfaf1fcada712548c5f28a12be12aff37f9620"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../../../runtime/planner.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../bi-cost-waterfall/fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "blob": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "../wp10/integration/financial-composition-fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "specifier": "./fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "blob": "ea90f631cc445b0a1a4b82594ce062ea7d93fe82"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "specifier": "../../../product/analytics/waterfall.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "blob": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "specifier": "../../../product/decisions/baseline-coverage.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+      "blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "specifier": "../bi-cost-waterfall/fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "blob": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "specifier": "./fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "blob": "ea90f631cc445b0a1a4b82594ce062ea7d93fe82"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "specifier": "bun:test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "../../../product/contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "../../../product/contracts/ports.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "../../../product/decisions/case-port.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "../../../product/planner/exact-threshold.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "../../../product/planner/preview-comparison.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+      "blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "../bi-cost-waterfall/fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "blob": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "./fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "blob": "ea90f631cc445b0a1a4b82594ce062ea7d93fe82"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "./history-fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "blob": "7968ddcc8ec4d1268cb34f6ce0222799dc89228d"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "specifier": "bun:test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/bi-services.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-services.ts",
+      "blob": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "specifier": "../../../product/contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "specifier": "../bi-cost-waterfall/fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "blob": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "specifier": "../wp10/integration/financial-composition-fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "specifier": "bun:test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/bi-selections.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "apps/cli/src/sucafina-product/bi-selections.ts",
+      "blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "specifier": "../../../product/analytics/milestones.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "blob": "f8311d1e9774c6320739e9a672c5822e08109f54"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "specifier": "../../../product/analytics/projection.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+      "blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "specifier": "../../../product/contracts/canonical.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "specifier": "../../../product/planner/scenario-bi.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "specifier": "../bi-cost-waterfall/fixture.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "blob": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "specifier": "bun:test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "../../../product/analytics/catalog.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/catalog.ts",
+      "blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "../../../product/analytics/view.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "blob": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "../../../product/contracts/business-context.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "blob": "102c849084980ae52223809d33bdeea36a58536b"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "../../../product/contracts/context.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+      "blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "../../../product/contracts/operations.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "../wp07/chromium-cleanup.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp07/chromium-cleanup.ts",
+      "blob": "26a07dfe8d5a5c1986535aea0c857bfd9faffda5"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "../wp10/integration/composition-test-deadline.ts",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+      "blob": "3eb140557b597156baf52578d8981d332e52aef3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "@playwright/test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "bun:test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "specifier": "node:path",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+      "specifier": "../decisions-support/journey",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "blob": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+      "specifier": "./installed-fixture",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "blob": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+      "specifier": "@playwright/test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+      "specifier": "../decisions-support/journey",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "blob": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+      "specifier": "../wp03/installation-fixture",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "blob": "8c015003e850561c5ee7fb430203fed4b06feaaf"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+      "specifier": "./browser",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+      "blob": "0d4f44d31a1444f561305cde175be58064584c6a"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+      "specifier": "./installed-fixture",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "blob": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+      "specifier": "@playwright/test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "specifier": "../decisions-support/journey",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "blob": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "specifier": "../wp03/installation-fixture",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "blob": "8c015003e850561c5ee7fb430203fed4b06feaaf"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "specifier": "./browser",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+      "blob": "0d4f44d31a1444f561305cde175be58064584c6a"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "specifier": "./installed-fixture",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "blob": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "specifier": "@playwright/test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "specifier": "../decisions-support/journey",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "blob": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "specifier": "@playwright/test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "specifier": "node:crypto",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts",
+      "specifier": "../wp03/installation-fixture",
+      "kind": "repository",
+      "status": "EXACT_BLOB_PRESENT",
+      "target": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "blob": "8c015003e850561c5ee7fb430203fed4b06feaaf"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts",
+      "specifier": "@playwright/test",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    },
+    {
+      "from": "packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts",
+      "specifier": "node:crypto",
+      "kind": "package-or-runtime",
+      "status": "EXISTING_PACKAGE_OR_BUILTIN; compiler45 remains required"
+    }
+  ],
+  "missing": [],
+  "compiler": "Owner45 package typechecks, canonical generated bundle and guards remain required on the actual composed candidate.",
+  "GLOBAL_RELEASE": false
+}

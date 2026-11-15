@@ -1,0 +1,2063 @@
+{
+  "schema": "sf2h.installed-bi.run-result.v1",
+  "id": "R1",
+  "run": 43667093423,
+  "job": 132668780585,
+  "W": "e816e5856af8f086402a501242b786488a2c6270",
+  "S": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+  "status": "FAIL",
+  "tests": [
+    "(fail) installed BI10 uses the canonical period producer over the same persisted pair as BI09 [165036.89ms]",
+    "(fail) installed BI10 preserves the persisted Portfolio envelope and equivalent scenario timeline [165009.29ms]",
+    "(pass) installed BI10 withholds changed scope, selection and current source without inventing BI11 sensitivity [111457.99ms]",
+    "(pass) waterfall resolves the supplied 100 +20 -5 composition without changing its table or envelope [0.55ms]",
+    "(pass) waterfall reports a tampered delta without repairing it or inserting a residual [0.19ms]",
+    "(pass) waterfall keeps the producer's inconsistent final endpoint explicit without a balancing component [0.08ms]",
+    "(pass) waterfall reports discontinuous supplied endpoints even when both deltas individually match [0.10ms]",
+    "(pass) waterfall retains negative endpoints and cancelling contributions [0.19ms]",
+    "(pass) waterfall retains a confirmed zero contribution [0.12ms]",
+    "(pass) waterfall keeps absent baseline unavailable instead of substituting zero [0.13ms]",
+    "(pass) waterfall keeps absent first-contribution unavailable instead of substituting zero [0.02ms]",
+    "(pass) waterfall keeps absent first-end unavailable instead of substituting zero [0.02ms]",
+    "(pass) waterfall keeps absent candidate-total unavailable instead of substituting zero [0.03ms]",
+    "(pass) waterfall does not treat an absent zero observation as a confirmed cost [0.06ms]",
+    "(pass) waterfall accepts the producer's finite floating-point addition without subtractive reconstruction [0.05ms]",
+    "(pass) waterfall withholds incompatible currency without converting the supplied values [0.08ms]",
+    "(pass) waterfall withholds incompatible unit without converting the supplied values [0.06ms]",
+    "(pass) waterfall withholds incompatible horizon without converting the supplied values [0.07ms]",
+    "(pass) waterfall cannot invent a missing referenced observation [0.05ms]",
+    "(pass) waterfall refuses duplicate value identities rather than choosing one observation [0.02ms]",
+    "(pass) waterfall preserves the producer's unavailable reconciliation claim [0.11ms]",
+    "(pass) waterfall preserves the producer's unreconciled reconciliation claim [0.03ms]",
+    "(pass) portfolio projection seam preserves the original envelope and isolates callback output [0.85ms]",
+    "(pass) portfolio projection seam keeps the existing presentation path when project is absent [0.19ms]",
+    "(pass) portfolio projection seam withholds an input-mutating projector [0.20ms]",
+    "(pass) portfolio projection seam refuses changed currency [0.24ms]",
+    "(pass) portfolio projection seam refuses changed horizon [0.17ms]",
+    "(pass) portfolio projection seam refuses changed scope [0.15ms]",
+    "(pass) portfolio projection seam refuses changed version [0.15ms]",
+    "(pass) portfolio projection seam refuses changed engine [0.14ms]",
+    "(pass) portfolio projection seam refuses changed persisted result [0.16ms]",
+    "(pass) portfolio projection seam refuses changed missing costs [0.17ms]",
+    "(pass) portfolio projection seam refuses a presentation for a different BI view [0.27ms]",
+    "(pass) portfolio projection seam rereads and refuses a changed original source [0.34ms]",
+    "(pass) portfolio projection seam treats reread observation time as non-material [0.29ms]",
+    "(pass) portfolio projection seam propagates source revocation on the final read without a result [0.27ms]",
+    "(pass) portfolio projection seam pins the original reader across the projector await [0.30ms]",
+    "(pass) portfolio projection seam refuses a request changed while its callback was awaited [0.22ms]",
+    "(pass) portfolio projection seam refuses a binding changed by the projector [0.19ms]",
+    "(fail) installed BI09 mounts the canonical waterfall for sequential human promotions and preserves pending totals [105018.17ms]",
+    "(fail) installed BI09 preserves a complete comparison supported by separate confirmed costs for every category [105030.05ms]",
+    "(fail) installed BI09 keeps real zero and opposing contributions when the known difference cancels [105010.88ms]",
+    "(fail) installed BI09 preserves missing costs as null without manufacturing a closing residual [2617.46ms]",
+    "(fail) installed BI09 consumes the equivalent persisted Portfolio analysis without replacing its decision [105077.31ms]",
+    "(pass) installed BI09 rejects changed selections, scope, result identity, authority and cancellation [52290.12ms]",
+    "(fail) installed BI09 rejects current source mutation and leaves BI10 and BI11 contracts intact [105069.99ms]",
+    "(fail) installed BI09 renders persisted components, equivalent table and exact origins with keyboard access [107885.23ms]",
+    "(fail) installed BI09 renderer keeps unavailable endpoints and table rows without drawing null as zero [2532.49ms]",
+    "(pass) BI decision destinations read the actual recorded scenario, comparison, sensitivity sample and cost coverage [15891.53ms]",
+    "(pass) BI decision destinations reject a foreign association, changed physical ref, changed authority and revoked source [15928.20ms]",
+    "(pass) BI decision HTTP rejects duplicate selectors and unassociated results through actual UI admission [26.90ms]"
+  ],
+  "errors": [
+    {
+      "line": 840,
+      "text": "4 |   const cancellation = new AbortController()\n5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)\n                                ^\nerror: installed-bi10-canonical-pair exceeded its 165000ms cooperative deadline\n      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)\n      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts:12:7\n(fail) installed BI10 uses the canonical period producer over the same persisted pair as BI09 [165036.89ms]\nSF_COMPOSITION_PHASE {\"fixture\":\"installed-bi10-portfolio\",\"phase\":\"fixture.initialize\",\"state\":\"started\",\"elapsedMs\":0}"
+    },
+    {
+      "line": 874,
+      "text": "4 |   const cancellation = new AbortController()\n5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)\n                                ^\nerror: installed-bi10-portfolio exceeded its 165000ms cooperative deadline\n      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)\n      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts:62:12\n(fail) installed BI10 preserves the persisted Portfolio envelope and equivalent scenario timeline [165009.29ms]\nSF_COMPOSITION_PHASE {\"fixture\":\"installed-bi10-current-read\",\"phase\":\"fixture.initialize\",\"state\":\"started\",\"elapsedMs\":0}"
+    },
+    {
+      "line": 981,
+      "text": "4 |   const cancellation = new AbortController()\n5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)\n                                ^\nerror: bi09-installed-persisted-pair exceeded its 105000ms cooperative deadline\n      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)\n      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts:17:20\n(fail) installed BI09 mounts the canonical waterfall for sequential human promotions and preserves pending totals [105018.17ms]\nSF_COMPOSITION_PHASE {\"fixture\":\"bi09-complete-covered-costs\",\"phase\":\"fixture.initialize\",\"state\":\"started\",\"elapsedMs\":0}"
+    },
+    {
+      "line": 1013,
+      "text": "4 |   const cancellation = new AbortController()\n5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)\n                                ^\nerror: bi09-complete-covered-costs exceeded its 105000ms cooperative deadline\n      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)\n      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts:66:50\n(fail) installed BI09 preserves a complete comparison supported by separate confirmed costs for every category [105030.05ms]\nSF_COMPOSITION_PHASE {\"fixture\":\"bi09-zero-cancellation\",\"phase\":\"fixture.initialize\",\"state\":\"started\",\"elapsedMs\":0}"
+    },
+    {
+      "line": 1045,
+      "text": "4 |   const cancellation = new AbortController()\n5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)\n                                ^\nerror: bi09-zero-cancellation exceeded its 105000ms cooperative deadline\n      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)\n      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts:97:14\n(fail) installed BI09 keeps real zero and opposing contributions when the known difference cancels [105010.88ms]\nSF_COMPOSITION_PHASE {\"fixture\":\"bi09-missing-cost\",\"phase\":\"fixture.initialize\",\"state\":\"started\",\"elapsedMs\":0}"
+    },
+    {
+      "line": 1072,
+      "text": "115 |     }), \"planner\"))\n116 |     if (response?.status !== 200) throw new Error(`Actual human promotion ${index}: ${response?.status} ${response ? await response.text() : \"no response\"}`)\n                                                  ^\nerror: Actual human promotion 0: 503 {\"status\":\"unavailable\",\"reason\":\"promotion-coverage-authority-unavailable\"}\n      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts:116:45)\n      at async waterfallFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts:121:26)\n      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts:127:27)\n(fail) installed BI09 preserves missing costs as null without manufacturing a closing residual [2617.46ms]"
+    },
+    {
+      "line": 1107,
+      "text": "4 |   const cancellation = new AbortController()\n5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)\n                                ^\nerror: bi09-portfolio-equivalence exceeded its 105000ms cooperative deadline\n      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)\n      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts:133:11\n(fail) installed BI09 consumes the equivalent persisted Portfolio analysis without replacing its decision [105077.31ms]\nSF_COMPOSITION_PHASE {\"fixture\":\"bi09-selection-authority\",\"phase\":\"fixture.initialize\",\"state\":\"started\",\"elapsedMs\":0}"
+    },
+    {
+      "line": 1160,
+      "text": "4 |   const cancellation = new AbortController()\n5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)\n                                ^\nerror: bi09-source-and-other-views exceeded its 105000ms cooperative deadline\n      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)\n      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts:242:19\n(fail) installed BI09 rejects current source mutation and leaves BI10 and BI11 contracts intact [105069.99ms]\n"
+    },
+    {
+      "line": 1201,
+      "text": "4 |   const cancellation = new AbortController()\n5 |   const deadlineError = new Error(`${name} exceeded its ${budgetMs}ms cooperative deadline`)\n                                ^\nerror: bi09-installed-browser exceeded its 105000ms cooperative deadline\n      at compositionTestDeadline (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:5:29)\n      at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts:20:11\n(fail) installed BI09 renders persisted components, equivalent table and exact origins with keyboard access [107885.23ms]\nSF_COMPOSITION_PHASE {\"fixture\":\"bi09-missing-browser\",\"phase\":\"fixture.initialize\",\"state\":\"started\",\"elapsedMs\":0}"
+    },
+    {
+      "line": 1228,
+      "text": "115 |     }), \"planner\"))\n116 |     if (response?.status !== 200) throw new Error(`Actual human promotion ${index}: ${response?.status} ${response ? await response.text() : \"no response\"}`)\n                                                  ^\nerror: Actual human promotion 0: 503 {\"status\":\"unavailable\",\"reason\":\"promotion-coverage-authority-unavailable\"}\n      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts:116:45)\n      at async waterfallFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts:121:26)\n      at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts:113:27)\n(fail) installed BI09 renderer keeps unavailable endpoints and table rows without drawing null as zero [2532.49ms]"
+    }
+  ],
+  "phases": [
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 1
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 36,
+      "elapsedMs": 37,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 46
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 65,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 65
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 22,
+      "elapsedMs": 88,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 88
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 324,
+      "elapsedMs": 412,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 412
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 15,
+      "elapsedMs": 427,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 608
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 380,
+      "elapsedMs": 987,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 990
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 405,
+      "elapsedMs": 1395,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 1395
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2748,
+      "elapsedMs": 4144,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 4144
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2196,
+      "elapsedMs": 6340,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 6343
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 31561,
+      "elapsedMs": 37904,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "BI10.dispatch",
+      "state": "started",
+      "elapsedMs": 37905
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "BI10.dispatch",
+      "state": "returned",
+      "phaseMs": 70950,
+      "elapsedMs": 108856,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "BI09.dispatch",
+      "state": "started",
+      "elapsedMs": 108856
+    },
+    {
+      "fixture": "installed-bi10-canonical-pair",
+      "phase": "BI09.dispatch",
+      "state": "returned",
+      "phaseMs": 56177,
+      "elapsedMs": 165032,
+      "aborted": true
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 13,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 26
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 10,
+      "elapsedMs": 35,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 35
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 12,
+      "elapsedMs": 47,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 47
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 8,
+      "elapsedMs": 55,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 55
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 66,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 71
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 309,
+      "elapsedMs": 379,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 382
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 375,
+      "elapsedMs": 756,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 756
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2621,
+      "elapsedMs": 3377,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3377
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2065,
+      "elapsedMs": 5442,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 5444
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 30177,
+      "elapsedMs": 35622,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "portfolio.select",
+      "state": "started",
+      "elapsedMs": 35627
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "portfolio.select",
+      "state": "returned",
+      "phaseMs": 32836,
+      "elapsedMs": 68463,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 68463
+    },
+    {
+      "fixture": "installed-bi10-portfolio",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 96544,
+      "elapsedMs": 165007,
+      "aborted": true
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 13,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 10,
+      "elapsedMs": 29,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 29
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 48,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 48
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 8,
+      "elapsedMs": 56,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 56
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 66,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 71
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 310,
+      "elapsedMs": 381,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 383
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 380,
+      "elapsedMs": 763,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 763
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2598,
+      "elapsedMs": 3362,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3362
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2156,
+      "elapsedMs": 5518,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 5521
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 30906,
+      "elapsedMs": 36427,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.current",
+      "state": "started",
+      "elapsedMs": 36427
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.current",
+      "state": "returned",
+      "phaseMs": 69375,
+      "elapsedMs": 105803,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.wrong-candidate",
+      "state": "started",
+      "elapsedMs": 105803
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.wrong-candidate",
+      "state": "returned",
+      "phaseMs": 600,
+      "elapsedMs": 106403,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.missing-comparison",
+      "state": "started",
+      "elapsedMs": 106403
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.missing-comparison",
+      "state": "returned",
+      "phaseMs": 586,
+      "elapsedMs": 106989,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.wrong-period",
+      "state": "started",
+      "elapsedMs": 106989
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.wrong-period",
+      "state": "returned",
+      "phaseMs": 4062,
+      "elapsedMs": 111051,
+      "aborted": false
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.source-changed",
+      "state": "started",
+      "elapsedMs": 111356
+    },
+    {
+      "fixture": "installed-bi10-current-read",
+      "phase": "BI10.source-changed",
+      "state": "returned",
+      "phaseMs": 99,
+      "elapsedMs": 111455,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 14,
+      "elapsedMs": 14,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 20
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 29,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 29
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 40,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 40
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 8,
+      "elapsedMs": 48,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 48
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 59,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 64
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 310,
+      "elapsedMs": 374,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 376
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 375,
+      "elapsedMs": 751,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 751
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2532,
+      "elapsedMs": 3284,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3284
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2093,
+      "elapsedMs": 5376,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 5379
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 30580,
+      "elapsedMs": 35959,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "BI09.dispatch",
+      "state": "started",
+      "elapsedMs": 35960
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "BI09.dispatch",
+      "state": "returned",
+      "phaseMs": 69037,
+      "elapsedMs": 104997,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "canonical.pair",
+      "state": "started",
+      "elapsedMs": 104997
+    },
+    {
+      "fixture": "bi09-installed-persisted-pair",
+      "phase": "canonical.pair",
+      "state": "returned",
+      "phaseMs": 19,
+      "elapsedMs": 105015,
+      "aborted": true
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 12,
+      "elapsedMs": 12,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 10,
+      "elapsedMs": 28,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 28
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 41,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 41
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 51,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 51
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 63,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 68
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 503,
+      "elapsedMs": 571,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 577
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 661,
+      "elapsedMs": 1238,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 1239
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 4884,
+      "elapsedMs": 6123,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 6123
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 5363,
+      "elapsedMs": 11485,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 11491
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 55771,
+      "elapsedMs": 67263,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "BI09.dispatch",
+      "state": "started",
+      "elapsedMs": 67263
+    },
+    {
+      "fixture": "bi09-complete-covered-costs",
+      "phase": "BI09.dispatch",
+      "state": "returned",
+      "phaseMs": 37764,
+      "elapsedMs": 105027,
+      "aborted": true
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 13,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 27,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 27
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 38,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 38
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 12,
+      "elapsedMs": 50,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 50
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 12,
+      "elapsedMs": 62,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 66
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 325,
+      "elapsedMs": 391,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 393
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 365,
+      "elapsedMs": 758,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 758
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2661,
+      "elapsedMs": 3419,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3419
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2145,
+      "elapsedMs": 5565,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 5567
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 31235,
+      "elapsedMs": 36802,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "BI09.dispatch",
+      "state": "started",
+      "elapsedMs": 36803
+    },
+    {
+      "fixture": "bi09-zero-cancellation",
+      "phase": "BI09.dispatch",
+      "state": "returned",
+      "phaseMs": 68206,
+      "elapsedMs": 105009,
+      "aborted": true
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 13,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 10,
+      "elapsedMs": 29,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 29
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 12,
+      "elapsedMs": 41,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 41
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 8,
+      "elapsedMs": 49,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 49
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 60,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 65
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 335,
+      "elapsedMs": 400,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 403
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 386,
+      "elapsedMs": 789,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 789
+    },
+    {
+      "fixture": "bi09-missing-cost",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 1826,
+      "elapsedMs": 2615,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 10,
+      "elapsedMs": 10,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 15
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 8,
+      "elapsedMs": 23,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 23
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 34,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 34
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 7,
+      "elapsedMs": 42,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 42
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 52,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 57
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 325,
+      "elapsedMs": 382,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 385
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 379,
+      "elapsedMs": 764,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 764
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2583,
+      "elapsedMs": 3347,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3347
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2091,
+      "elapsedMs": 5438,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 5441
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 31199,
+      "elapsedMs": 36640,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "portfolio.select",
+      "state": "started",
+      "elapsedMs": 36647
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "portfolio.select",
+      "state": "returned",
+      "phaseMs": 33695,
+      "elapsedMs": 70342,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "portfolio.persist",
+      "state": "started",
+      "elapsedMs": 70342
+    },
+    {
+      "fixture": "bi09-portfolio-equivalence",
+      "phase": "portfolio.persist",
+      "state": "returned",
+      "phaseMs": 34733,
+      "elapsedMs": 105075,
+      "aborted": true
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 13,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 28,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 28
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 39,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 39
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 8,
+      "elapsedMs": 47,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 47
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 58,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 63
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 322,
+      "elapsedMs": 385,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 387
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 367,
+      "elapsedMs": 754,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 754
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2587,
+      "elapsedMs": 3341,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3341
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2137,
+      "elapsedMs": 5478,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 5481
+    },
+    {
+      "fixture": "bi09-selection-authority",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 30637,
+      "elapsedMs": 36118,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 12,
+      "elapsedMs": 13,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 18
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 27,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 27
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 38,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 38
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 8,
+      "elapsedMs": 46,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 46
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 58,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 63
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 309,
+      "elapsedMs": 371,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 374
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 370,
+      "elapsedMs": 743,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 744
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2594,
+      "elapsedMs": 3338,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3338
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2072,
+      "elapsedMs": 5410,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 5416
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 30674,
+      "elapsedMs": 36089,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "BI10.dispatch",
+      "state": "started",
+      "elapsedMs": 36090
+    },
+    {
+      "fixture": "bi09-source-and-other-views",
+      "phase": "BI10.dispatch",
+      "state": "returned",
+      "phaseMs": 68912,
+      "elapsedMs": 105002,
+      "aborted": true
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 26,
+      "elapsedMs": 26,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 32
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 40,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 40
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 51,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 51
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 7,
+      "elapsedMs": 58,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 58
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 11,
+      "elapsedMs": 69,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 74
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 319,
+      "elapsedMs": 393,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 398
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 376,
+      "elapsedMs": 774,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 774
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 2493,
+      "elapsedMs": 3267,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "promotion.1",
+      "state": "started",
+      "elapsedMs": 3268
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "promotion.1",
+      "state": "returned",
+      "phaseMs": 2057,
+      "elapsedMs": 5325,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "comparison.persist",
+      "state": "started",
+      "elapsedMs": 5328
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "comparison.persist",
+      "state": "returned",
+      "phaseMs": 30026,
+      "elapsedMs": 35353,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "BI09.dispatch",
+      "state": "started",
+      "elapsedMs": 35354
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "BI09.dispatch",
+      "state": "returned",
+      "phaseMs": 67936,
+      "elapsedMs": 103290,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "browser.bundle",
+      "state": "started",
+      "elapsedMs": 103290
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "browser.bundle",
+      "state": "returned",
+      "phaseMs": 4,
+      "elapsedMs": 103294,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "browser.launch",
+      "state": "started",
+      "elapsedMs": 103295
+    },
+    {
+      "fixture": "bi09-installed-browser",
+      "phase": "browser.launch",
+      "state": "returned",
+      "phaseMs": 4376,
+      "elapsedMs": 107671,
+      "aborted": true
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "fixture.initialize",
+      "state": "started",
+      "elapsedMs": 0
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "fixture.initialize",
+      "state": "returned",
+      "phaseMs": 12,
+      "elapsedMs": 13,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "source.0",
+      "state": "started",
+      "elapsedMs": 18
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "source.0",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 28,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "forecast.0",
+      "state": "started",
+      "elapsedMs": 28
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "forecast.0",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 41,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "source.1",
+      "state": "started",
+      "elapsedMs": 41
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "source.1",
+      "state": "returned",
+      "phaseMs": 9,
+      "elapsedMs": 50,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "forecast.1",
+      "state": "started",
+      "elapsedMs": 50
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "forecast.1",
+      "state": "returned",
+      "phaseMs": 13,
+      "elapsedMs": 63,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "coverage.0",
+      "state": "started",
+      "elapsedMs": 70
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "coverage.0",
+      "state": "returned",
+      "phaseMs": 350,
+      "elapsedMs": 420,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "coverage.1",
+      "state": "started",
+      "elapsedMs": 422
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "coverage.1",
+      "state": "returned",
+      "phaseMs": 358,
+      "elapsedMs": 780,
+      "aborted": false
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "promotion.0",
+      "state": "started",
+      "elapsedMs": 780
+    },
+    {
+      "fixture": "bi09-missing-browser",
+      "phase": "promotion.0",
+      "state": "returned",
+      "phaseMs": 1750,
+      "elapsedMs": 2530,
+      "aborted": false
+    }
+  ],
+  "summary": [
+    "omni positive control [bd98ea8b5e07efecde7e9dc4219c8822]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    " 41 pass",
+    " 10 fail",
+    " 182 expect() calls",
+    "Ran 51 tests across 6 files. [1164.56s]"
+  ],
+  "artifacts": [],
+  "recorded_at": "2026-11-15T02:53:50Z",
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667093423",
+  "W_tree": "cdabe4987907730ead3cf429fa8a81d080bcc4a8",
+  "S_tree": "4a24a7429752128b46061aff59072bbe3ee98cd5",
+  "counts": {
+    "pass": 41,
+    "fail": 10,
+    "expect_calls": 182,
+    "files": 6,
+    "duration_seconds": 1164.56
+  },
+  "normalization": "Bun repeats failed names in its final summary. Exact repeated test lines were deduplicated; 51 distinct tests match its authoritative 41/10 totals. Entries are bounded relevant log excerpts and structured phase events, not a full raw log.",
+  "classification": {
+    "cooperative_deadline_failures": 8,
+    "promotion_503_failures": 2,
+    "missing_promotion_reason": "promotion-coverage-authority-unavailable",
+    "obsolete_BI10_empty_assertion": "NOT_REACHED; not attributed as a runtime failure",
+    "installed_visual_assertions": "NOT_REACHED in either selected legacy rendering test",
+    "omni": "not applicable: zero spawn/delegation; no Omni proof"
+  },
+  "observed_costs": {
+    "BI_dispatch_completed_ms": [
+      67936,
+      69037,
+      69375,
+      70950
+    ],
+    "source_ms_range": [
+      7,
+      324
+    ],
+    "simple_forecast_ms_range": [
+      11,
+      22
+    ],
+    "comparison_persist_phase_ms_range": [
+      30026,
+      55771
+    ],
+    "comparison_phase_caveat": "Phase contains portfolio.compare then calculations.persist; it is not a profile of just one function.",
+    "portfolio_select_ms": [
+      32836,
+      33695
+    ],
+    "portfolio_persist_timeout_lower_bound_ms": 96544,
+    "temporal_nominal": {
+      "fixture_ms": 37904,
+      "BI10_dispatch_ms": 70950,
+      "after_BI10_elapsed_ms": 108856,
+      "BI09_aborted_after_ms": 56177,
+      "canonical_pair": "NOT_REACHED"
+    }
+  },
+  "disposition": {
+    "runtime": "HOLD; retain deadlines and actual failures. Repeated BI observations and slow comparison/Portfolio persistence need owner59/60 investigation.",
+    "coverage": "Separate static C10 stability finding and an inert external fixture correction are required; no canonical calculations changed by62.",
+    "replay": "No unchanged replay. New runs require an identified source/input or diagnostic change."
+  },
+  "GLOBAL_RELEASE": false
+}

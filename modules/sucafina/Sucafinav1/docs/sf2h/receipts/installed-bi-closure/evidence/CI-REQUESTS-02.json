@@ -1,0 +1,178 @@
+{
+  "schema": "sf2h.installed-bi.ci-requests-final.v1",
+  "mission": 62,
+  "recorded_at": "2026-11-15T03:09:00Z",
+  "source_W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+  "source_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+  "source_product_note": "The three product blobs have been unchanged since W1. Tests/harness were added or corrected at distinct W heads. No result is relabeled as a run of another W or an integrated candidate.",
+  "requests": [
+    {
+      "id": "R1",
+      "W": "e816e5856af8f086402a501242b786488a2c6270",
+      "S": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+      "W_tree": "cdabe4987907730ead3cf429fa8a81d080bcc4a8",
+      "S_tree": "4a24a7429752128b46061aff59072bbe3ee98cd5",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts",
+          "Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts",
+          "Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+          "Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts",
+          "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts"
+        ],
+        "env": {}
+      },
+      "run": 43667093423,
+      "job": 132668780585,
+      "attempt": 1,
+      "state": "FAIL",
+      "result_receipt": "evidence/R1-RESULT.json",
+      "snapshot_proof": "MCP-verified direct parent W and exactly one added .ci-run.json; product content unchanged.",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667093423"
+    },
+    {
+      "id": "R2",
+      "W": "2c89ceae38b215363d35ae0877e691665b02f2a5",
+      "S": "ca62a60f0a0fcf63017782c232d1972c3ad50789",
+      "W_tree": "85c32d46b511e4725d30c1908b451d59411fbfed",
+      "S_tree": "1392b23781943d6dce8f14e1132704cd2c6d7fa9",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/bi-installed/installed-bi.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "run": 43668401496,
+      "job": 132672804084,
+      "attempt": 1,
+      "state": "FAIL",
+      "result_receipt": "evidence/R2-RESULT.json",
+      "snapshot_proof": "MCP-verified direct parent W and exactly one added .ci-run.json; product content unchanged.",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668401496"
+    },
+    {
+      "id": "R3",
+      "W": "f6be2b49218498fb49852b088ba91896c3f94bb5",
+      "S": "ee74a29004e0fd49ebac324f528d9d1949be46ac",
+      "W_tree": "9cec50c94a490515ec9e7854e6cc753c1191c864",
+      "S_tree": "8108634a31bf11eb3eb5c1bbf7ffd0f34c0e3f07",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts"
+        ],
+        "env": {}
+      },
+      "run": 43668513417,
+      "job": 132673142397,
+      "attempt": 1,
+      "state": "FAIL",
+      "result_receipt": "evidence/R3-RESULT.json",
+      "snapshot_proof": "MCP-verified direct parent W and exactly one added .ci-run.json; product content unchanged.",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668513417"
+    },
+    {
+      "id": "R4",
+      "W": "2b18f271a95d37716ed1a1a9f7bd0a15056c643c",
+      "S": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+      "W_tree": "afcfe4031cc78e69bc15a2956bd62f632f7dc722",
+      "S_tree": "0e159594aebdd34b9f31fd163858ec374e96adb5",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "run": 43669699195,
+      "job": 132676784075,
+      "attempt": 1,
+      "state": "FAIL",
+      "result_receipt": "evidence/R4-RESULT.json",
+      "snapshot_proof": "MCP-verified direct parent W and exactly one added .ci-run.json; product content unchanged.",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669699195"
+    },
+    {
+      "id": "R5",
+      "W": "015254f8c377bb38cbfceb68db5ac0cb67ce8760",
+      "S": "a69deefc1664c509f5f9d6cc8249800c1fe18ec8",
+      "W_tree": "6f219795e02b7d6f5bab24ceb9df809d1db7f95e",
+      "S_tree": "a285d2f138b7fa0673bcc471cf1653b8ff157e3a",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts"
+        ],
+        "env": {}
+      },
+      "run": 43669861192,
+      "job": 132677292514,
+      "attempt": 1,
+      "state": "PASS_LIMITED_SCOPE",
+      "result_receipt": "evidence/R5-RESULT.json",
+      "snapshot_proof": "MCP-verified direct parent W and exactly one added .ci-run.json; product content unchanged.",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669861192"
+    },
+    {
+      "id": "R6",
+      "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+      "S": "d87d0883bcc087b13cffc6a45649745616b46f34",
+      "W_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+      "S_tree": "09a1d1890d58c15479eddf3f9f00de0987e8f0ff",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/bi-installed/installed-bi.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "run": 43670652989,
+      "job": 132679720158,
+      "attempt": 1,
+      "state": "FAIL",
+      "result_receipt": "evidence/R6-RESULT.json",
+      "snapshot_proof": "MCP-verified direct parent W and exactly one added .ci-run.json; product content unchanged.",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670652989"
+    }
+  ],
+  "dispatched": 6,
+  "running": 0,
+  "unchanged_retries": 0,
+  "changes_for_followup_runs": {
+    "R4": "New real installed HTTP probe, distinguishing request failure and read-only GET/POST controls.",
+    "R5": "New focused canonical and actual Chromium renderer targets; original failed tests remain unchanged.",
+    "R6": "Changed installed command observer now captures real failed request and terminates without replay; known POST failure retained."
+  },
+  "compiler_or_guard_dispatches_by62": 0,
+  "local_product_execution": 0,
+  "workflow_or_guard_edits": 0,
+  "GLOBAL_RELEASE": false
+}

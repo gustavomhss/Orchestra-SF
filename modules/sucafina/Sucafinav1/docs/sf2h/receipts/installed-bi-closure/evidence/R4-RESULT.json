@@ -1,0 +1,226 @@
+{
+  "schema": "sf2h.installed-bi.run-result.v1",
+  "id": "R4",
+  "recorded_at": "2026-11-15T02:58:21Z",
+  "run": 43669699195,
+  "job": 132676784075,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669699195",
+  "W": "2b18f271a95d37716ed1a1a9f7bd0a15056c643c",
+  "W_tree": "afcfe4031cc78e69bc15a2956bd62f632f7dc722",
+  "S": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+  "S_tree": "0e159594aebdd34b9f31fd163858ec374e96adb5",
+  "status": "FAIL_REAL_POST_BOUNDARY",
+  "counts": {
+    "pass": 0,
+    "fail": 1,
+    "skipped": 0,
+    "flaky": 0,
+    "workers": 1,
+    "retries": 0
+  },
+  "test_result": {
+    "status": "failed",
+    "duration_ms": 25343,
+    "error": "The installed first-save request must complete, not fail in browser transport; expected finished, received failed"
+  },
+  "artifact": {
+    "id": 14142789407,
+    "name": "playwright-ubuntu-24.04-1",
+    "size": 405771,
+    "sha256": "20992ebe6f7df91c5426c08f010f48525ce192548ccabe9fad140b0c9d5a66da",
+    "expires_at": "2026-11-22T02:54:18Z",
+    "screenshot": {
+      "path": "embedded attachment bi62-first-save.png",
+      "sha256": "00365e0a481f257a5b8b11a7809d66e7cbde85f5e9ecbe06432d00b45878f9d6"
+    },
+    "http_observations_sha256": "58a12a242fe122c9e4ba0539ec9588c37a03ba73205f818aeb7aedea514662d6",
+    "cli_log_sha256": "edd8f8d864ee1ff2eeaebe0c09456a0481efd229a2eff6868796044fb70b32e2"
+  },
+  "actual_observations": {
+    "snapshot": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+    "commandCount": 1,
+    "observations": [
+      {
+        "event": "request",
+        "id": 1,
+        "elapsedMs": 14,
+        "method": "GET",
+        "path": "/sucafina/planner",
+        "page": "Versions",
+        "mode": null,
+        "action": null,
+        "bodyBytes": 0,
+        "contentType": null,
+        "contentLength": null
+      },
+      {
+        "event": "response-headers",
+        "id": 1,
+        "elapsedMs": 58,
+        "status": 200,
+        "contentType": "text/html; charset=utf-8",
+        "contentLength": null,
+        "transferEncoding": "chunked"
+      },
+      {
+        "event": "request",
+        "id": 2,
+        "elapsedMs": 76,
+        "method": "GET",
+        "path": "/sucafina/notifications",
+        "page": null,
+        "mode": null,
+        "action": null,
+        "bodyBytes": 0,
+        "contentType": null,
+        "contentLength": null
+      },
+      {
+        "event": "request",
+        "id": 3,
+        "elapsedMs": 76,
+        "method": "POST",
+        "path": "/sucafina/planner",
+        "page": null,
+        "mode": "workbench-views",
+        "action": "list",
+        "bodyBytes": 28,
+        "contentType": "application/json",
+        "contentLength": null
+      },
+      {
+        "event": "request-finished",
+        "id": 1,
+        "elapsedMs": 98,
+        "timing": {
+          "startTime": 1794711236765.386,
+          "domainLookupStart": 0.375,
+          "domainLookupEnd": 0.384,
+          "connectStart": 0.384,
+          "secureConnectionStart": -1,
+          "connectEnd": 0.544,
+          "requestStart": 0.673,
+          "responseStart": 42.295,
+          "responseEnd": 44.015
+        }
+      },
+      {
+        "event": "response-headers",
+        "id": 2,
+        "elapsedMs": 108,
+        "status": 200,
+        "contentType": "application/json",
+        "contentLength": null,
+        "transferEncoding": "chunked"
+      },
+      {
+        "event": "request-finished",
+        "id": 2,
+        "elapsedMs": 108,
+        "timing": {
+          "startTime": 1794711236820.8599,
+          "domainLookupStart": -1,
+          "domainLookupEnd": -1,
+          "connectStart": -1,
+          "secureConnectionStart": -1,
+          "connectEnd": -1,
+          "requestStart": 0.195,
+          "responseStart": 16.211,
+          "responseEnd": 17.116
+        }
+      },
+      {
+        "event": "request",
+        "id": 4,
+        "elapsedMs": 194,
+        "method": "POST",
+        "path": "/sucafina/planner",
+        "page": "Versions",
+        "mode": null,
+        "action": "save",
+        "bodyBytes": 77,
+        "contentType": "application/json",
+        "contentLength": null
+      },
+      {
+        "event": "request-failed",
+        "id": 3,
+        "elapsedMs": 10072,
+        "failure": "net::ERR_ABORTED",
+        "timing": {
+          "startTime": 0,
+          "domainLookupStart": -1,
+          "domainLookupEnd": -1,
+          "connectStart": -1,
+          "secureConnectionStart": -1,
+          "connectEnd": -1,
+          "requestStart": -1,
+          "responseStart": -1,
+          "responseEnd": -1
+        }
+      },
+      {
+        "event": "request-failed",
+        "id": 4,
+        "elapsedMs": 10195,
+        "failure": "net::ERR_ABORTED",
+        "timing": {
+          "startTime": 0,
+          "domainLookupStart": -1,
+          "domainLookupEnd": -1,
+          "connectStart": -1,
+          "secureConnectionStart": -1,
+          "connectEnd": -1,
+          "requestStart": -1,
+          "responseStart": -1,
+          "responseEnd": -1
+        }
+      },
+      {
+        "event": "rendered-outcome",
+        "commandCount": 1,
+        "state": "failed",
+        "notice": "The save response was lost or could not be verified. Its outcome is unknown. Your edits remain here; this command will not be sent again without a confirmed outcome.",
+        "savedViews": "Saved views are unavailable. Refresh saved views to try again.",
+        "uncertain": "true",
+        "knownVersionIds": []
+      },
+      {
+        "event": "read-only-current-Planner",
+        "status": 200,
+        "contentType": "text/html; charset=utf-8",
+        "knownVersionIds": []
+      },
+      {
+        "event": "read-only-personal-views-failed",
+        "error": "TimeoutError: apiRequestContext.post: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - → POST http://localhost:4110/sucafina/planner?sf=workbench-views\u001b[22m\n\u001b[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/147.0.7727.15 Safari/537.36\u001b[22m\n\u001b[2m    - accept: */*\u001b[22m\n\u001b[2m    - accept-encoding: gzip,deflate,br\u001b[22m\n\u001b[2m    - origin: http://localhost:4110\u001b[22m\n\u001b[2m    - idempotency-key: fcd99e10-786f-4262-909a-493d57c94ce9\u001b[22m\n\u001b[2m    - content-type: application/json\u001b[22m\n\u001b[2m    - content-length: 28\u001b[22m\n\u001b[2m    - cookie: [redacted]\n"
+      }
+    ],
+    "boundary": "Real CLI/factory/enrollment/Planner UI; one save attempt; subsequent requests only read current state. No route, body, authority or domain result is replaced."
+  },
+  "observed_boundary": {
+    "single_mutation_attempt": 1,
+    "GET_versions": "HTTP200; about44ms total; actual HTML rendered",
+    "GET_notifications": "HTTP200; about17ms total",
+    "browser_POST_views": "28byte JSON body; no response headers; aborted after about10000ms",
+    "browser_POST_save": "77byte JSON body; no response headers; aborted after about10000ms",
+    "browser_failure": "net::ERR_ABORTED",
+    "subsequent_GET_versions": "HTTP200; harness found no saved-version IDs",
+    "subsequent_APIRequest_POST_views": "Read-only list with explicit Content-Length28 also timed out after10000ms",
+    "CLI": "Alive; shutdown started and disposed17ms after SIGTERM, with no additional application error in its retained log"
+  },
+  "visual_review": {
+    "reviewer": "/root",
+    "result": "Same real empty Versions screen, Create first version and Inspect current record without resending, unknown-save outcome and unavailable saved views. No BI stage reached.",
+    "screenshot_reviewed": true
+  },
+  "causal_limits": [
+    "Failure is shared by body-bearing POSTs through the real listener, not merely the Playwright response predicate or a browser-only CSP symptom.",
+    "R4 does not locate the exact failing server instruction; no speculative runtime patch was applied.",
+    "Content-Length absence alone cannot explain the observed APIRequest POST, which supplied Content-Length28.",
+    "R2 helper waited only for a response after the application had aborted; the new helper will observe request failure/unknown UI without retransmitting.",
+    "This run did not test that subsequent helper correction."
+  ],
+  "route": "Runtime/listener owners51/59 through60 or an explicitly authorized successor; authority/authentication/body safety rules unchanged",
+  "GLOBAL_RELEASE": false
+}

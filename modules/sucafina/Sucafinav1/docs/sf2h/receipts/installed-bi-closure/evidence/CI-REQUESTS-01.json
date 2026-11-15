@@ -1,0 +1,116 @@
+{
+  "schema": "sf2h.installed-bi.ci-requests.v1",
+  "recorded_at": "2026-11-15T02:37:12Z",
+  "mission": 62,
+  "branch": "installed-bi-proof",
+  "source_head": "f6be2b49218498fb49852b088ba91896c3f94bb5",
+  "source_tree": "9cec50c94a490515ec9e7854e6cc753c1191c864",
+  "state": "REQUESTS_RUNNING_RESULTS_NOT_YET_OBSERVED",
+  "protocol": {
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "validator": "script/test-ci-request.ts",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "transport": "GitHub MCP create_tree/create_commit/create_branch; source branch CAS expected head and force false",
+    "snapshot_rule": "Each S is a direct child of its W; observed compare is ahead1/behind0 and sole added path .ci-run.json.",
+    "no_epic_dispatch": true,
+    "no_check_workflow_ref_changes": true
+  },
+  "runs": [
+    {
+      "id": "R1",
+      "W": "e816e5856af8f086402a501242b786488a2c6270",
+      "W_tree": "cdabe4987907730ead3cf429fa8a81d080bcc4a8",
+      "S": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+      "S_tree": "4a24a7429752128b46061aff59072bbe3ee98cd5",
+      "branch": "ci-run-linux-m62-contracts-r1",
+      "run_id": 43667093423,
+      "job_id": 132668780585,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts",
+          "Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts",
+          "Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+          "Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts",
+          "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts"
+        ],
+        "env": {}
+      },
+      "purpose": "Existing BI09 canonical, portfolio binding, render module and navigation contracts plus new BI10 temporal contract. Rendering.test uses about:blank; it is not the CLI-installed browser proof.",
+      "observed_status": "in_progress",
+      "observed_conclusion": null,
+      "cases_executed": "NOT_YET_OBSERVED",
+      "known_legacy_expectation": "presentation.test.ts still expects empty BI10; no write authority outside new prefix. Complete owner proposal is external/legacy-bi10-test; failure must not be hidden."
+    },
+    {
+      "id": "R2",
+      "W": "2c89ceae38b215363d35ae0877e691665b02f2a5",
+      "W_tree": "85c32d46b511e4725d30c1908b451d59411fbfed",
+      "S": "ca62a60f0a0fcf63017782c232d1972c3ad50789",
+      "S_tree": "1392b23781943d6dce8f14e1132704cd2c6d7fa9",
+      "branch": "ci-run-linux-m62-installed-r2",
+      "run_id": 43668401496,
+      "job_id": 132672804084,
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "config": "e2e/playwright.production.config.ts",
+        "args": [
+          "e2e/sucafina/bi-installed/installed-bi.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      },
+      "purpose": "Actual CLI installation, human source input, canonical HTTP/factory/asset/browser, stored comparisons/portfolio, tables, date filter, source, reload and session revocation.",
+      "observed_status": "in_progress",
+      "observed_conclusion": null,
+      "cases_executed": "NOT_YET_OBSERVED"
+    },
+    {
+      "id": "R3",
+      "W": "f6be2b49218498fb49852b088ba91896c3f94bb5",
+      "W_tree": "9cec50c94a490515ec9e7854e6cc753c1191c864",
+      "S": "ee74a29004e0fd49ebac324f528d9d1949be46ac",
+      "S_tree": "8108634a31bf11eb3eb5c1bbf7ffd0f34c0e3f07",
+      "branch": "ci-run-linux-m62-numerical-r3",
+      "run_id": 43668513417,
+      "job_id": 132673142397,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+          "Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts"
+        ],
+        "env": {}
+      },
+      "purpose": "New literal training omitted/40000/zero/null, EUR FX, canonical thresholds, same-case immutable human choice, forecast replacement. Nine test bodies are declared; execution count awaits logs.",
+      "observed_status": "in_progress",
+      "observed_conclusion": null,
+      "cases_executed": "NOT_YET_OBSERVED"
+    }
+  ],
+  "dedup": {
+    "same_request_reruns": 0,
+    "scopes": "R1/R2/R3 have disjoint selected test filenames. Independent jobs use isolated Actions installations; no identical W/request was dispatched twice. Existing unrelated campaign jobs and the current own runs were read before dispatch.",
+    "source_pass_is_integrated_proof": false
+  },
+  "local_execution": {
+    "product_tests": 0,
+    "builds": 0,
+    "servers": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "artifact_processing": "Only MCP source materialization, text edits, diffs and Git blob hashes."
+  },
+  "GLOBAL_RELEASE": false
+}
