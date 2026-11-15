@@ -1,0 +1,143 @@
+{
+  "schema": "sf2h.correction-author-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 138,
+  "title": "Procurement — callbacks e estados de autoridade",
+  "work_order": "A03",
+  "branch": "sf-ux-w11",
+  "pr": 130,
+  "state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+  "lease": {
+    "epoch": "ux-native-w11-e2",
+    "ack_commit": "ca7e37db97b68e85578688e90ed771fcac151cb6",
+    "previous": "ux-native-w11-e1 REVOKED_FOR_FUTURE_WRITES",
+    "actor": "new ChatGPT conversation, GPT-6",
+    "session_id": null,
+    "session_exposure": "not provided by runtime",
+    "after_handoff": "NO_FUTURE_WRITES_WITHOUT_NEW_FENCE"
+  },
+  "original_packet": "40d425d6727dd9672a1f2a5830da03e59252cdfd:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/138.json",
+  "s0_fence": {
+    "commit": "aced7bb2255ebe680cf8c4639f74851aa76446ad",
+    "blob": "31c89551e42db9fea11830cfe825d736adbbc511",
+    "observed_head_before_ack": "aced7bb2255ebe680cf8c4639f74851aa76446ad",
+    "native_goal": "paused",
+    "global_release": false
+  },
+  "artifact": {
+    "base_after_ack": "ca7e37db97b68e85578688e90ed771fcac151cb6",
+    "source_head_after_code": "24f1518bcd16cf6525cea30258d914f7d7068c8a",
+    "source_tree_after_code": "7fc7cc8831ad03dfb9ebb4778d6b66e1e47fd90e",
+    "commits": [
+      {
+        "sha": "ca7e37db97b68e85578688e90ed771fcac151cb6",
+        "role": "real new actor ACK"
+      },
+      {
+        "sha": "d7987835465e40670d3e0476759b7e0efaf87fb2",
+        "role": "explicit discriminated union for transaction outcome; regression suite"
+      },
+      {
+        "sha": "24f1518bcd16cf6525cea30258d914f7d7068c8a",
+        "role": "unavailable producer regression"
+      }
+    ],
+    "patch_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction138/PATCHES.diff",
+    "evidence_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction138/EVIDENCE.json",
+    "preimages": {
+      "apps/cli/src/sucafina-product/native-ui/procurement.ts": "0751e4861ab025a7bfc0f132fb24409fd29f8198",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts": "75df2cfc7a28cb6e0f545d7ac91a63b165a6a511"
+    },
+    "postimages": {
+      "apps/cli/src/sucafina-product/native-ui/procurement.ts": "59013743317453a390e8092b2c8a49713eaf17cc",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts": "a2554957371a7fc1dcaa63a41ad2815f95252e45"
+    },
+    "changed_paths": [
+      "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts"
+    ],
+    "shared_modified": [],
+    "generated_modified": [],
+    "non_granted_modified": []
+  },
+  "consumer_admission": {
+    "owner": "132 / sf2-stack PR65 / S0-C-e19-browser132",
+    "observed_consumer_head": "7c802b8feddac6b397d7f49419ed27856d2000fd",
+    "consumer_preimages": {
+      "apps/cli/src/sucafina-product/native-ui/procurement.ts": "0751e4861ab025a7bfc0f132fb24409fd29f8198",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts": "75df2cfc7a28cb6e0f545d7ac91a63b165a6a511"
+    },
+    "consumer_preimages_verified_at_observation": true,
+    "source_v_consumer": "Both product/test blobs identical at observation; apply exact patch per path with fresh CAS on current consumer, not branch-wide merge",
+    "consumer_ack": "PENDING_REAL_132_ACK",
+    "source_lease": "TRANSFER_AFTER_HANDOFF"
+  },
+  "contracts": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "CONTRACTS": "94553a3119826ef1c44271966233dd58042ddd70",
+    "COMPONENT_CONTRACTS": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "execution_protocol_observed": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "source_c64": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "families": [
+      "ctx",
+      "procurement",
+      "transport"
+    ],
+    "operation_ids_unchanged": 39
+  },
+  "producer_preimages": {
+    "application": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "procurement": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "scenario": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+    "sourcing": "de85660b664826163c2e157ec382b97a425bb10d"
+  },
+  "invariants_preserved": [
+    "Source roleMap and authenticate inside original Persistence.transaction; original Request never rewritten",
+    "Every read callback returns commit=false with sealed authority outcomes",
+    "F01 bound principal and CAP28 admin role checked in current transaction",
+    "Source current(snapshot,actor), domain.view and selection fieldsets preserved",
+    "Re-read F01 ContextResult before response; compare stamp and allowedActionIds",
+    "CAS versions/permissions and approval/holder/money/supplier bank restrictions untouched",
+    "Prepared source finish() still in finally; no retry or substitute backend",
+    "No any/casts/ts-ignore, widened schema, weakened assertions, new dispatcher or manual generated code"
+  ],
+  "blockers": {
+    "integrator_132": "PENDING_PER_OUTPUT_ADMISSION_AND_CONSUMER_ACK",
+    "compiler_128": "PENDING_INTEGRATED_COMPILER_RUN",
+    "product_ci_129": "PENDING_COHERENT_SURGICAL_ACTIONS",
+    "validation": "NOT_RUN_NEW_PATCH",
+    "other_C64_errors": "Unrelated decisions/source-contracts, F02 router and app-shell table findings remain outside write_paths; check owners and current compiler evidence"
+  },
+  "next_actions": [
+    "132: confirm current sf2-stack blob preimages or reconcile owner changes, consume exact PATCHES.diff; publish immutable consumer ACK",
+    "128: after 132 composes coherent candidate, run CLI typecheck and guards/SDK generation only where public protocol changes demand; report run/job/commit",
+    "129: after 132 admission, execute surgical hosted procurement native-ui contract test plus transitive F01/F02 consumers; preserve genuine action artifacts",
+    "Do not mark QUALIFIED, GLOBAL_RELEASE or revive native Goal until independent passes and admission"
+  ],
+  "tests": {
+    "local_tests": "NOT_RUN_BY_INSTRUCTION",
+    "local_typecheck": "NOT_RUN_BY_INSTRUCTION",
+    "local_parser": "NOT_RUN_BY_INSTRUCTION",
+    "new_dispatcher": "NOT_CREATED",
+    "new_hosted_128_run": "NOT_RUN_PENDING_132_INTEGRATION",
+    "new_hosted_129_run": "NOT_RUN_PENDING_132_INTEGRATION",
+    "legacy_compiler_run": "FAILED_C64_SOURCE_EVIDENCE_ONLY_NOT_PROOF_OF_PATCH",
+    "proven_passes": 0,
+    "post_patch_ci_verdict": "NOT_PROVEN"
+  },
+  "safety": {
+    "local_tests": false,
+    "local_parser": false,
+    "local_typecheck": false,
+    "force": false,
+    "reset": false,
+    "merge": false,
+    "deploy": false,
+    "dev_merge": false,
+    "goal_reactivation": false,
+    "other_authors_preserved": true
+  }
+}

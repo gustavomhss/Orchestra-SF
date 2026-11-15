@@ -1,0 +1,85 @@
+{
+  "schema": "sf2h.correction-author-evidence.v1",
+  "mission": 138,
+  "lease_epoch": "ux-native-w11-e2",
+  "source_compiler": {
+    "run_id": 43738074189,
+    "job_id": 132884987559,
+    "artifact_id": 14171118214,
+    "sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "findings": [
+      {
+        "id": "C64-CLI-TS2345",
+        "file": "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+        "line_before": 333,
+        "cause": "Persistence.transaction<T> inferred T from first unauthenticated callback return, excluding later outcome arms",
+        "fix": "Explicit ProcurementPageOutcome<Stamp> parameter with all closed source results"
+      },
+      {
+        "id": "C64-CLI-TS2367",
+        "file": "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+        "line_before": 375,
+        "cause": "Downstream result was wrongly inferred as unauthenticated, so ok appeared impossible",
+        "fix": "Discriminated status union retained for guarded response handling"
+      }
+    ]
+  },
+  "added_regressions": {
+    "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts",
+    "test_name": "projection transaction preserves every authority outcome, no-commit and post-read admission",
+    "cases": [
+      {
+        "setup": "authorized admin, current source/context",
+        "expected": "HTTP200 with original CAP28 source projection; no-store; exactly two context checks"
+      },
+      {
+        "setup": "principal absent inside producer transaction",
+        "expected": "HTTP401 unauthenticated; no post-read or payload leak"
+      },
+      {
+        "setup": "viewer role for CAP28",
+        "expected": "HTTP403 denied; no privileged settings"
+      },
+      {
+        "setup": "prepared source current=false",
+        "expected": "HTTP409 stale, reason procurement-source-changed"
+      },
+      {
+        "setup": "required source domain contribution absent",
+        "expected": "HTTP503 unavailable, reason procurement-domain-unavailable"
+      },
+      {
+        "setup": "post-projection context returns denied",
+        "expected": "HTTP403 denied after producer read, no released data"
+      },
+      {
+        "setup": "post-projection accessRevision changes",
+        "expected": "HTTP409 stale, no released data"
+      }
+    ],
+    "assertions": [
+      "Every transaction returns commit=false (7 total)",
+      "Every acquired productView calls finish() (7 total)",
+      "Original Request and sameStamp recheck remain unchanged",
+      "Existing schema, source CAS, approval prohibition and transport one-shot assertions are retained"
+    ],
+    "scope": "Unit adapter with injected host/context fixture and real procurement domain, not real identity, concurrency, durable storage or installed UI proof"
+  },
+  "findings_to_acceptance": {
+    "A03-AC01": "DTO/selectors/versions/zero/null paths unchanged; existing tests preserved, execution NOT_RUN",
+    "A03-AC02": "Unknown-action validators and privileged fieldset remain; new viewer denial regression; execution NOT_RUN",
+    "A03-AC03": "Typed callback propagates source stale, denied and changed accessRevision; all no-commit and finish; execution NOT_RUN",
+    "M31/MI07": "Original owner, holder, CAS and producer authority preserved; installed proof remains pending"
+  },
+  "execution": {
+    "local_tests": "NOT_RUN_BY_INSTRUCTION",
+    "local_typecheck": "NOT_RUN_BY_INSTRUCTION",
+    "local_parser": "NOT_RUN_BY_INSTRUCTION",
+    "new_dispatcher": "NOT_CREATED",
+    "new_hosted_128_run": "NOT_RUN_PENDING_132_INTEGRATION",
+    "new_hosted_129_run": "NOT_RUN_PENDING_132_INTEGRATION",
+    "legacy_compiler_run": "FAILED_C64_SOURCE_EVIDENCE_ONLY_NOT_PROOF_OF_PATCH",
+    "proven_passes": 0,
+    "post_patch_ci_verdict": "NOT_PROVEN"
+  }
+}
