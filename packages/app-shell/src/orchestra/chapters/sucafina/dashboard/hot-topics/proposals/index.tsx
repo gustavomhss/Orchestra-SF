@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
+import { Show, createEffect, createMemo, createSignal, onCleanup } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import { useNavigate } from "@solidjs/router"
@@ -152,7 +152,7 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
   const suggestedPreparation = createMemo(() =>
     store.workbench?.preparations.find((item) => item.draftRef === chosenDraft()?.draftRef))
   const readState = () => store.state === "ready" && !chosenChange() && !chosenDraft()
-    ? "unavailable" as const : store.state
+    ? "not-found" as const : store.state
 
   createEffect(() => {
     const generation = context.generation()
@@ -228,11 +228,13 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
     const pending = suggestedPreparation(), ready = current()
     if (!pending || !ready || !store.workbench?.permissions.prepare ||
       !isAdmitted("dashboard.dashboard-hot-topic-prepare") || store.preparationBusy) return
+    const generation = context.generation()
     setStore("preparationBusy", true)
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-prepare"]({
         caseRef: pending.caseRef, choiceId: pending.choiceId, draftRef: pending.draftRef,
       }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() })
+      if (context.generation() !== generation || current()?.transport !== ready.transport) return
       if (response.kind !== "response" || response.body.status !== "ok") {
         setStore("outcome", response.kind !== "response" ? "unknown" : "rejected")
         return
@@ -250,12 +252,14 @@ export function SfHotTopicProposalView(props: SfSurfaceProps<"UI54">): JSX.Eleme
       store.outcome === "unknown" || !store.workbench?.permissions.apply ||
       !isAdmitted("dashboard.dashboard-hot-topic-apply") ||
       currentReview.state !== "planned" || change.state !== "planned") return
+    const generation = context.generation()
     setStore("applyBusy", true)
     try {
       const response = await createSfDomainClient(ready.transport)["dashboard.dashboard-hot-topic-apply"]({
         caseRef: change.caseRef, choiceId: change.choiceId, changeId: change.changeId,
         reviewDigest: currentReview.reviewDigest,
       }, { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() })
+      if (context.generation() !== generation || current()?.transport !== ready.transport) return
       if (response.kind !== "response") {setStore("outcome", "unknown");return}
       if (response.body.status !== "ok") {setStore("outcome", "rejected");return}
       setStore("outcome", "applied")
