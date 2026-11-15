@@ -150,7 +150,9 @@
     "installed_harness": "NOT_RUN",
     "visual_screenshots": "NOT_CAPTURED",
     "passed_assertions": 0,
-    "claimed_qualified": false
+    "claimed_qualified": false,
+    "git_diff_from_launch": "11 added N30 allowlist files, 0 outside",
+    "pr_diff_to_sf2_stack": "203 at creation; 192 unrelated preparation files due base divergence; NOT SAFE TO MERGE until base synced"
   },
   "dependencies": [
     {
@@ -177,6 +179,11 @@
       "owner": "120",
       "state": "PENDING",
       "gate": "Surgical installed journeys and visual/accessibility proofs"
+    },
+    {
+      "owner": "125",
+      "state": "BLOCKED_BASE_ANCESTRY",
+      "gate": "Integrate launch 526e7204 with sf2-stack without discarding protected preparation docs"
     }
   ],
   "blocked_contracts": [
@@ -200,5 +207,25 @@
     "120"
   ],
   "merge": "NO_MERGE",
-  "deploy": "NO_DEPLOY"
+  "deploy": "NO_DEPLOY",
+  "pr": {
+    "number": 156,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/156",
+    "created": true,
+    "merge_state_at_creation": "NOT_MERGEABLE",
+    "diff_author_scope": "11 newly added paths relative to initial authorized N30 HEAD",
+    "ancestry_blocker": {
+      "compare": "sf2-stack...sf-ux-n30",
+      "merge_base": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "launch_commit": "526e7204b310756e552196bbf3d64037dbbf047c",
+      "base_commit_observed": "a15434ab558a650137f2472c7d59e6ae1e98e72a",
+      "base_behind_launch": true,
+      "pr_changed_files_observed": 203,
+      "n30_authored_paths": 11,
+      "preparation_files_not_authored_by_n30": 192,
+      "resolution_owner": "125",
+      "resolution": "Integrate/retain launch preparation commit 526e7204 into sf2-stack before accepting N30 diff. Do not force-rebase N30 or discard protected preparation files; recompare after base convergence.",
+      "qualifier": "Counts describe current PR three-dot compare, not changes authored by N30."
+    }
+  }
 }
