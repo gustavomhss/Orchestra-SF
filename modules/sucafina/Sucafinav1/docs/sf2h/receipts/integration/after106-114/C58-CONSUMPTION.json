@@ -1,0 +1,396 @@
+{
+  "schema": "sf2h.integration114.C58.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 114,
+  "lease": "S0-C-e17-browser114",
+  "state": "C58_COMPOSED_UNTESTED_NOT_FROZEN",
+  "material": {
+    "candidate": "C58",
+    "sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816",
+    "parent": "23f91b44f84c9bf61249844d9a7eac2782d1bce0",
+    "prior": "C57@9dddec6a0a1825a2080569d94605e7dccb5cd056",
+    "file_count": 33
+  },
+  "source": {
+    "mission": 118,
+    "sourceW": "27f8af1a8e4ded554449cc61fee0257a76fe281c",
+    "sourceTree": "4de95e901af88bb13081febc1edb6566b07e9e95",
+    "branch": "fixture-type-repair",
+    "pr": 114,
+    "sourceHandoff": "bcd2afbdb745dc8cd60dc5432803476464691c518",
+    "prepost_blob": "b3c2ecdb2c5efb29dc275128146596ff433690cf",
+    "handoff_blob": "50be976d9541358688fd2797c12c6554cbcfce61",
+    "source_status": "SOURCE_PATCH_COMPLETE_PENDING_CI_AND_INTEGRATION",
+    "batches": [
+      "A",
+      "B1",
+      "B2",
+      "C",
+      "D"
+    ]
+  },
+  "per_file": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+      "batch": "A",
+      "pre": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+      "post": "e0eeb12408c292395d5d6621b2dc831740289692",
+      "baseline": "98:72 TS2322, 99:70 TS2322",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "batch": "A",
+      "pre": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+      "post": "17422dc0c812b22da51cc3bd6b57bb9e9ab01966",
+      "baseline": "27:3 TS2322, 74:3 TS2322",
+      "status": "modified",
+      "add": 4,
+      "del": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts",
+      "batch": "A",
+      "pre": "2bf73c9b16a502ba9b858227697d0b509e3a7d60",
+      "post": "e39a569201bff1daf590c3323acc8de60d32cf1f",
+      "baseline": "135:62 TS7006, 135:72 TS7006",
+      "status": "modified",
+      "add": 2,
+      "del": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.test.ts",
+      "batch": "A",
+      "pre": "8cccdc2a4fab35115e01f5e3e6b87ee9878464a5",
+      "post": "986de13f9658d364b99a8460dc214b8a3633cc43",
+      "baseline": "27:59 TS7006, 27:69 TS7006, 36:61 TS7006, 36:71 TS7006",
+      "status": "modified",
+      "add": 4,
+      "del": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.ts",
+      "batch": "A",
+      "pre": "a2b3917c8a186ae3ea024bd2df50b0a919550bc1",
+      "post": "6f7dd187e3f311d7317442f05201f311587fbef8",
+      "baseline": "85:54 TS7006, 85:64 TS7006",
+      "status": "modified",
+      "add": 3,
+      "del": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts",
+      "batch": "A",
+      "pre": "d941eaf91e301ff530a174c1e92192237e3d3ef0",
+      "post": "03c918632f8c7bf40e1b4bbb91e71a6ae3de74ac",
+      "baseline": "79:141 TS2345, 81:200 TS2345",
+      "status": "modified",
+      "add": 2,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts",
+      "batch": "A",
+      "pre": "7d0ccfe23def8601eb152b8cbe45ddb1df40456d",
+      "post": "2044835954009e55b8ba751022539596fa878d4d",
+      "baseline": "11:111 TS2353",
+      "status": "modified",
+      "add": 3,
+      "del": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts",
+      "batch": "A",
+      "pre": "c8865ac73ae4932ba79c8e90c38ce5ee78b3486c",
+      "post": "1c7d2b14701911a9db2516f62b11bed3403adfbb",
+      "baseline": "65:54 TS7006, 65:64 TS7006",
+      "status": "modified",
+      "add": 3,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+      "batch": "C",
+      "pre": "869a66168c1b43189b2291f50a80742761ce6043",
+      "post": "0a1cb6665c8df14609dbc95b201028de1f273526",
+      "baseline": "57:49 TS2322",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "batch": "A",
+      "pre": "9fae52985c3e940845cbd746d850da8f52b8f68f",
+      "post": "5e6ac478a5369f7b4e3fe1473069b3ad06e9c7dd",
+      "baseline": "87:7 TS2352, 130:41 TS2352, 131:41 TS2352, 147:41 TS2352, 149:48 TS2352, 157:41 TS2352, 167:43 TS2352, 169:41 TS2352, 189:49 TS2352",
+      "status": "modified",
+      "add": 12,
+      "del": 10
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+      "batch": "A",
+      "pre": "566e765f201d1a45677c0c52c75eb92ecb16d482",
+      "post": "14e6ff5807ff2599fe8cc7793d22864c25af6652",
+      "baseline": "124:26 TS2345",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+      "batch": "A",
+      "pre": "76ce8b8fb5d7e17ddc33002d239771a7260a9e65",
+      "post": "b2a9cc8fe662bd6f774166d6f0f57c4f0c39fde4",
+      "baseline": "132:94 TS2339",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "batch": "B2",
+      "pre": "24dda67176121efe50f91148d6b2291a4f975d4b",
+      "post": "0d0bbf003d3ed35e71492fe2bf477b01a4ac4550",
+      "baseline": "131:43 TS2345, 135:54 TS2322",
+      "status": "modified",
+      "add": 4,
+      "del": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+      "batch": "B2",
+      "pre": "3c735804c3956fc5df98113f8f76050da35c74b0",
+      "post": "269831f1e6b269586bdc71bb6169b7adb573fe86",
+      "baseline": "28:11 TS2769, 39:64 TS2345",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "batch": "B2",
+      "pre": "291e72cf1c356d76f1671ec971eac5b44a70edd0",
+      "post": "88c0cbf4dd0fe2b2dd856ecf7819b0bd613e33f7",
+      "baseline": "50:83 TS2322",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "batch": "B2",
+      "pre": "65dd8c157ad31d288ee0f9142e1b41e08221de7c",
+      "post": "68973132641e5eb09cce84383156235d87e296d9",
+      "baseline": "31:82 TS2322",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts",
+      "batch": "B2",
+      "pre": "529f6b98b6215f750912ac87161555eb2d9a555d",
+      "post": "8c6555129f5a1846e2b353515a0e86ecd03676c7",
+      "baseline": "13:44 TS2345, 55:44 TS2345, 135:44 TS2345, 184:44 TS2345",
+      "status": "modified",
+      "add": 4,
+      "del": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts",
+      "batch": "B1",
+      "pre": "5d0feb74e3a41424afa5c94ef09178dac80caecf",
+      "post": "91205e4a9d58290733a4ce4ea511d00ed96734b9",
+      "baseline": "131:40 TS2741",
+      "status": "modified",
+      "add": 6,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "batch": "B2",
+      "pre": "fc4d57604c21ab5d007f747a908b17b67027ffd6",
+      "post": "637cef4b9fb9ec24b3f279035a6a7f1c644d7cc1",
+      "baseline": "60:55 TS2339, 60:93 TS2339",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "batch": "B2",
+      "pre": "e22020011f464a2cc7277d4fe0f9a999c5587d38",
+      "post": "70f1f6e634c92cd23a271d653ede0bf305bd22a7",
+      "baseline": "116:5 TS2740, 117:35 TS2740",
+      "status": "modified",
+      "add": 8,
+      "del": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts",
+      "batch": "B2",
+      "pre": "d239f1056f97a85f4caafac772ee79921806289a",
+      "post": "333cb8751dea4833ce0f127d9d924e2c790b3e2e",
+      "baseline": "183:75 TS2339, 183:109 TS2339",
+      "status": "modified",
+      "add": 6,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "batch": "B1",
+      "pre": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+      "post": "268c49a2bedbaf85eab24de01bbed2fb71f3c8cc",
+      "baseline": "388:65 TS2322, 394:40 TS2741",
+      "status": "modified",
+      "add": 7,
+      "del": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "batch": "B2",
+      "pre": "4087659570356188c546b59ba112dfd33a2a189c",
+      "post": "9c2895e47b9e49b742f1ebdcdc67abc9c7a0b6fc",
+      "baseline": "130:47 TS2339, 166:47 TS2339, 205:45 TS2339, 324:37 TS2554",
+      "status": "modified",
+      "add": 4,
+      "del": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+      "batch": "B1",
+      "pre": "68dda95afd92154dc426ef40479648c21576de01",
+      "post": "ca0e83b316f368be5ede080f881db86743bd0435",
+      "baseline": "79:42 TS2741",
+      "status": "modified",
+      "add": 6,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+      "batch": "B1",
+      "pre": "552284d39866ad866e5f30dfdba7f765537f6507",
+      "post": "2308b7ebbf791e792894c1d2ac777b70e17d83b1",
+      "baseline": "83:42 TS2741",
+      "status": "modified",
+      "add": 6,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "batch": "B1",
+      "pre": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+      "post": "7652cb023376e2321662acae5e46ac530f491d81",
+      "baseline": "79:42 TS2741",
+      "status": "modified",
+      "add": 6,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "batch": "B1",
+      "pre": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+      "post": "ab57b52bd0901c5e396f070c1ff444f3ba7d7b9f",
+      "baseline": "44:42 TS2741",
+      "status": "modified",
+      "add": 6,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "batch": "B1",
+      "pre": "712cce53626fca058f0e66dbfafb6fb09cccc9cf",
+      "post": "e0ff844b564285cb6503a7c491a568c8c64e43c1",
+      "baseline": "76:42 TS2741",
+      "status": "modified",
+      "add": 6,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "batch": "D",
+      "pre": "d4f8162b24dd9c4e97aff176e2dc4410b079271a",
+      "post": "d5ff9678845709429a80f04d98f552ef1b45c1fe",
+      "baseline": "87:30 TS2339",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+      "batch": "A",
+      "pre": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "post": "617d60edb2602803c4f27e336cf6dc1a9591f1e5",
+      "baseline": "33:64 TS2769, 84:170 TS2322",
+      "status": "modified",
+      "add": 4,
+      "del": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts",
+      "batch": "A",
+      "pre": "789bd248dff04f61119fd7bef5108754f14af423",
+      "post": "694bf7f659b5b26eb8a1441db38699223af00e3d",
+      "baseline": "226:9 TS2741",
+      "status": "modified",
+      "add": 1,
+      "del": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "batch": "A",
+      "pre": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9",
+      "post": "75f8fe05373865d0497184a9c710a382ff06a737",
+      "baseline": "277:41 TS2322",
+      "status": "modified",
+      "add": 1,
+      "del": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts",
+      "batch": "A",
+      "pre": "ad6a5cea4e1eb5eb5e1b7faeea5ed2091f9f73f1",
+      "post": "7c34d4f11d490e0697fb4d45d40dbc3b5e1c618a",
+      "baseline": "38:60 TS2322, 41:60 TS2322, 41:76 TS7006, 41:81 TS7006",
+      "status": "modified",
+      "add": 2,
+      "del": 2
+    }
+  ],
+  "patch": "C58-INCREMENTAL.patch",
+  "typecheck": "NOT_RUN_ON_C58",
+  "Actions": "NOT_RUN_ON_C58",
+  "independent_review": "PENDING",
+  "guardrails": {
+    "no_source_oracle_weakened": true,
+    "no_product_source_modified": true,
+    "strict_assertions_stay": true,
+    "disjoint_from117": true,
+    "preimages_verified_against_C57_tree": true,
+    "source_postimages_verified_against_118_tree": true,
+    "CAS_force_false": true
+  },
+  "finding": {
+    "id": "WP00-JOURNEY-ORACLE-MISSING-FIELDS",
+    "severity": "CONTRACT_DATA_MISMATCH",
+    "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+    "test": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+    "expected": "eight J01-J08 have fixtureBindings nonempty and executionStatus NOT_RUN",
+    "actual": "oracles have id/title/actors/given/when/then, no fixtureBindings nor executionStatus",
+    "resolution": "REQUIRES_AUTHENTIC_WP00_ORACLE_DATA_AUTHORITY; DO NOT MODIFY_FROZEN_ORACLE_OR_WEAKEN_TEST",
+    "proof": "SOURCE_STATIC_PENDING_ACTIONS"
+  },
+  "global_release": false,
+  "conditions": [
+    "119 compiler/guards",
+    "120 33 tests surgical or scoped selection",
+    "WP00 oracle ownership decision",
+    "reviewers final 3",
+    "eight final selections/epic/AM01–06/G7/G8"
+  ]
+}
