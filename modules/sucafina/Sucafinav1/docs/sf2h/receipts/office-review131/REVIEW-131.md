@@ -66,3 +66,8 @@ Composed and after-drift PPTX each have 29 actual hosted pages. Existing page-mo
 
 Owned actions: 102/125 address XLSX layout; 130 owns DOCX correction and tests; 129 provides genuine deduplicated hosted render artifacts when material is available; 128 compile gate; 125 consumes source and returns a uniquely identified composed candidate for independent recheck. This session wrote only receipts in office-review131 and did not request, run or approve other work. Global release remains false.
 
+
+
+## Additional genuine Office control — legacy-egress-control DOCX, p1/1
+
+The W102 corpus also includes a third original DOCX, legacy-egress-control-Egress_report.docx (SHA256 fdc5ef5f115f42533b42ae38525e0f4a49811380c72d6139281e89fdd313f944), with one genuine hosted PDF page (SHA256 75ca9643d795764307fc6af68f4bac3b6f2cc2d8f931b8b850a883d493b39). Its actual PNG page 1 was inspected: title Egress report, FY2026 presenter-script metadata, one synthetic authorized Hot Topics & Actions record, key figure Records: 1, and Page 1 of 1 footer are visible, with no page-boundary overflow or obvious title collision. **Visual verdict: limited PASS only for this positive synthetic 1-page export; functional late authorization/revocation egress remains OUT OF SCOPE / NOT_PROVEN**. Presence of an authorized marker cannot substitute for negative 403/409 tests. The page belongs to an original DOCX case, not the JSON derived reader file-0005.
