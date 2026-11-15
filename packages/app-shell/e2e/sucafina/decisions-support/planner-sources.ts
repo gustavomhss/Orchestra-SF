@@ -27,9 +27,9 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   const line = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Name", { exact: true }) })
   await expect(line).toHaveCount(1)
   await line.getByLabel("Name", { exact: true }).fill(sourceNames.line)
-  await line.getByLabel("Owner", { exact: true }).selectOption(actorId)
-  await line.getByLabel("Element", { exact: true }).selectOption("licenses")
-  await expect(line.getByLabel("Currency", { exact: true })).toHaveValue("USD")
+  await line.getByRole("combobox", { name: "Owner", exact: true }).selectOption({ value: actorId })
+  await line.getByRole("combobox", { name: "Element", exact: true }).selectOption({ value: "licenses" })
+  await expect(line.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
   await line.getByLabel("Annual budget", { exact: true }).fill("1200")
   await plannerCommand(page, line.getByRole("button", { name: "Save", exact: true }), "save", observations)
   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
@@ -52,7 +52,7 @@ export async function createPlannerSources(page: Page, origin: string, actorId: 
   const copiedLine = page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
   await expect(copiedLine).toHaveCount(1)
   await copiedLine.getByRole("button", { name: "Manage", exact: true }).click()
-  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
+  await expect(manager.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
   await manager.getByLabel("Annual budget", { exact: true }).fill("2400")
   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
@@ -69,7 +69,7 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
   await row.getByRole("button", { name: "Manage", exact: true }).click()
   const manager = page.getByRole("dialog", { name: "Manage record", exact: true })
   await expect(manager.getByLabel("Annual budget", { exact: true })).toHaveValue("2400")
-  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
+  await expect(manager.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
   await manager.getByLabel("Annual budget", { exact: true }).fill(String(annualBudget))
   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
@@ -80,11 +80,12 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
 
 async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
   await expect(button).toBeEnabled()
-  const response = await clickForResponse(page, button, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action)
-  expect(response.status()).toBe(200)
-  expect(response.headers()["content-type"]).toContain("application/json")
-  const result = asRecord(await response.json())
-  expect(result.ok).toBe(true)
-  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
-  return result
+  return clickForResponse(page, button, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action, async (response) => {
+    expect(response.status()).toBe(200)
+    expect(response.headers()["content-type"]).toContain("application/json")
+    const result = asRecord(await response.json())
+    expect(result.ok).toBe(true)
+    observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
+    return result
+  })
 }

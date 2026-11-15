@@ -108,8 +108,7 @@ export async function fillDecision(page: Page, objective: string) {
 
 export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
   await expect(button).toBeEnabled()
-  const response = await clickForResponse(page, button, (request) => isCommand(request, mode, method))
-  return readReply(response, observations)
+  return clickForResponse(page, button, (request) => isCommand(request, mode, method), (response) => readReply(response, observations))
 }
 
 export async function readReply(response: Response, observations: Record<string, unknown>[]) {
