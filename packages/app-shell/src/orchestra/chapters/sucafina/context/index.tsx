@@ -1,4 +1,5 @@
 import { createContext, createEffect, onCleanup, useContext, type JSX } from "solid-js"
+import { useLanguage } from "@/context/language"
 import { createStore } from "solid-js/store"
 import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
@@ -8,7 +9,7 @@ import type {
   SfOwnerIdentity, SfSurfaceProps,
 } from "./contracts"
 import type { SfInstallationDescriptor, SfOwnerKey, SfOwnerSelection } from "@orchestra/schema/sucafina/context"
-import type { SfTransport } from "@orchestra/sdk-next/sucafina/transport"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 
 const Context = createContext<SfContextHandle>()
 type Active = Readonly<{
@@ -232,6 +233,7 @@ export function useSfContext(): SfContextHandle {
 /** Context leaf: never renders a private projection outside the ready owner. */
 export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
   const owner = useSfContext()
+  const language = useLanguage()
   const key = (value: string) => value as Parameters<typeof SfStatePanel>[0]["messageKey"]
   const ready = () => {
     const state = owner.state()
@@ -276,10 +278,10 @@ export function SfContextPage(_props: SfSurfaceProps<"UI67">): JSX.Element {
       >
         {ready() && (
           <dl data-sf-context="authorized" aria-live="polite">
-            <dt data-sf-copy="sf.ui67.server">{"Server"}</dt><dd>{ready()!.owner.serverKey}</dd>
-            <dt data-sf-copy="sf.ui67.project">{"Project"}</dt><dd>{ready()!.binding.projectId}</dd>
-            <dt data-sf-copy="sf.ui67.installation">{"Installation"}</dt><dd>{ready()!.binding.installationId}</dd>
-            <dt data-sf-copy="sf.ui67.identity">{"Identity"}</dt><dd>{ready()!.context.stamp.principalRef}</dd>
+            <dt data-sf-copy="sf.ui67.server">{language.t("sf.ui67.server")}</dt><dd>{ready()!.owner.serverKey}</dd>
+            <dt data-sf-copy="sf.ui67.project">{language.t("sf.ui67.project")}</dt><dd>{ready()!.binding.projectId}</dd>
+            <dt data-sf-copy="sf.ui67.installation">{language.t("sf.ui67.installation")}</dt><dd>{ready()!.binding.installationId}</dd>
+            <dt data-sf-copy="sf.ui67.identity">{language.t("sf.ui67.identity")}</dt><dd>{ready()!.context.stamp.principalRef}</dd>
           </dl>
         )}
       </SfStatePanel>
