@@ -1,0 +1,148 @@
+{
+  "schema": "sf2h.integration100.terminal_authority.v1",
+  "mission": 100,
+  "actor": "S0-C-e14-browser100",
+  "model_effective": "GPT-6",
+  "github_actor": "gustavomhss",
+  "session_id": null,
+  "original_lease": "S0-C-e13-browser71",
+  "original_lease_ended": true,
+  "status": "EXPLICIT_LEASE_END_EXTERNAL_BLOCKERS_DEMONSTRATED",
+  "lease_state": "ENDED_BY_INTEGRATOR100",
+  "new_integrator_appointee": null,
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "expected_terminal_parent": "5c18d53364d25d10c62c94a797a8c1c7c3c6db89",
+  "expected_terminal_tree": "9df42adc84d44902b5b9c026f06c278d44677e72",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "material_candidate": {
+    "id": "C51",
+    "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+    "state": "NOT_FROZEN_NOT_RUN"
+  },
+  "commit_sequence": {
+    "ACK100": "01efff55ee289cd897f912b9ae96c893b966e658",
+    "C46": "738c5cc9ddae72916bf3d3a9cce9fca4a8b111e3",
+    "C47": "b02ac1251c754620c5d8ab98cfd0c1d51315da27",
+    "C48": "10ac98d3f7d426a32ae6087137f9ae1d80e46ee0",
+    "C49": "1c0004563b157f0dbc3fb72c40a2f2a63facba66",
+    "C50": "acd33532db53e77e96fa1c06a827940b593d5ae9",
+    "C51": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "checkpoint": "38124138d21289a3bd20c86cd8d4e9c78c157417",
+    "P03_delta": "5c18d53364d25d10c62c94a797a8c1c7c3c6db89"
+  },
+  "material_units_accepted": [
+    94,
+    87,
+    88,
+    90,
+    97,
+    98
+  ],
+  "material_unique_paths": 21,
+  "already_integrated_not_reapplied": [
+    76,
+    89
+  ],
+  "source_ack_comments": [
+    6889770343,
+    6889770680,
+    6889771034,
+    6889771368,
+    6889771743,
+    6889772085
+  ],
+  "owner_routes": {
+    "CI_dispatcher": 45,
+    "epic_acceptance": "S0",
+    "WP14": 81,
+    "Decisions_UI": 52,
+    "Reports_UI": 48,
+    "UX20": "user",
+    "R1": 91,
+    "R2": 92,
+    "R3": 93
+  },
+  "immutable_counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "blockers": [
+    {
+      "owner": 95,
+      "status": "ACTIVE_NO_EXPLICIT_C15_PRODUCER_RELEASE",
+      "impact": "native90 ready OFF, no installed runtime proof"
+    },
+    {
+      "owner": "96+52",
+      "status": "SOURCE_PROPOSAL_REQUIRES_SHARED_HOST_PATCH_REBASE",
+      "impact": "C49 host blob f03ab621; source96 patch preimage 297a4050; UI workflow absent"
+    },
+    {
+      "owner": 52,
+      "status": "FIRST_SAVE_UI87_AND_CREATION_UI96_UNRELEASED",
+      "impact": "C08 browser/reload not installed proof"
+    },
+    {
+      "owner": 99,
+      "status": "ORIGINAL_P03_FAIL_RUN_43681302722",
+      "job": 132712328135,
+      "impact": "Cannot accept causal closure; run R1 source successes not transferable"
+    },
+    {
+      "owner": 45,
+      "status": "C47_C51_NO_DIRECT_ACTIONS_RUNS_TYPECHECK_GUARDS_OR_8_SELECTIONS",
+      "impact": "No gate qualification"
+    },
+    {
+      "owner": "S0/91-93",
+      "status": "EPIC_AM_FINAL_REVIEWS_P03_M31_MI07_VISUAL_OPEN",
+      "impact": "GLOBAL_RELEASE forbidden"
+    }
+  ],
+  "current_gates": {
+    "P03": "FAIL_OPEN",
+    "M31": "OPEN",
+    "MI07": "OPEN",
+    "native": "OFF",
+    "VIS88_001": "OPEN_PENDING_REAL_PNG",
+    "VIS88_010": "OPEN_PENDING_ORIGINAL_TEST",
+    "final_eight": "NOT_RUN_ON_SINGLE_C",
+    "G7": "OPEN",
+    "G8": "OPEN",
+    "AM01_AM06": "NOT_PROVEN",
+    "R1_R2_R3": "PRELIMINARY_RECHECK_REQUESTED",
+    "GLOBAL_RELEASE": false
+  },
+  "written_receipts": [
+    "CONSUMPTION-100.json",
+    "GATE-QUEUE-100.json",
+    "PENDING-OWNERS-100.json",
+    "CHECKPOINT-100.md",
+    "GATE-QUEUE-100-DELTA-P03.json",
+    "PENDING-OWNERS-100-DELTA-P03.json",
+    "CHECKPOINT-100-DELTA-P03.md",
+    "AUTHORITY-TERMINAL-100.json",
+    "HANDOFF-TERMINAL-100.md"
+  ],
+  "prohibited_actions": {
+    "product_tests_local": 0,
+    "CI_dispatches": 0,
+    "typechecks_local": 0,
+    "guards_local": 0,
+    "dev_merge": 0,
+    "force": 0,
+    "deploy": 0,
+    "Azure": 0,
+    "restart": 0,
+    "engine_changes": 0,
+    "producer_branch_writes": 0
+  },
+  "successor_rule": "S0 explicit successor lease must reconcile final HEAD, pending owner ACKs, CI and source SHA/preimages before any mutation; no silent takeover.",
+  "next_exact_action": "S0 assigns successor after 95 genuine terminal producer or 52/96 host-adoption release or 99 corrected original P03 PASS; CI45 may separately qualify bounded C material with owned snapshot and dedup, then independent rechecks and S0 future C final."
+}
