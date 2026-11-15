@@ -30,6 +30,7 @@ test("WP07.T04.CHK.02 newly generated DOCX and PPTX keep captured values after c
       expect(download.status).toBe(200)
       const bytes = new Uint8Array(await download.arrayBuffer())
       const opened = await inspectOfficeBytes(bytes, format)
+      if (typeof stored.digest !== "string") throw new Error("Committed Office artifact omitted its digest")
       expect(opened.sha256).toBe(stored.digest)
       for (const value of values) {
         expect(opened.compact).toContain(`${value.id}:${value.value === null ? "unavailable" : String(value.value)}${value.unit ?? ""}${value.currency ?? ""}`.replace(/\s+/g, ""))
