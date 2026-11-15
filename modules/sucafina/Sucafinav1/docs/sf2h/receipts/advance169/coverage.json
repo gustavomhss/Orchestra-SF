@@ -1,0 +1,603 @@
+{
+  "schema": "sf2h.am05.proof-coverage.v1",
+  "mission": 169,
+  "epoch": "proof-am05-e1-browser169",
+  "kind": "qualification",
+  "actor_pack": "S0-A",
+  "baseline": {
+    "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+    "tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "package_commit": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "package_blob": "48c66d29bf648864c48c42cfcfe7b0a7a35d7793",
+    "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+    "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "guarantee": "Mappings are exact source/selection inventory, NOT positive runtime proof. Scenario execution, scanner identity, native model, user grants and reviewed outputs remain unobserved until trusted CI receipts.",
+  "existing_or_new_sources": {
+    "new-scanner-write-gates": {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+      "blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+      "nature": "new executable proof (actual pinned scanner, real Atlas write door, no-append on hit/timeout/absence, clean staged append)"
+    },
+    "scanner-probe": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts",
+      "blob": "03b4d7673aa3c40761b0568f6704d78b588a28bc",
+      "nature": "existing real binary path/version/clean/benign RSA canary/absence"
+    },
+    "atlas-recovery": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+      "blob": "b4af8ec1ca2b944f89bdfea23fd339c510154182",
+      "nature": "existing C08 transaction, source fence, commit/receipt, actual sqlite reopen, no scanner on reopen, authorized read, revocation"
+    },
+    "source-access-atlas": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+      "blob": "75f8fe05373865d0497184a9c710a382ff06a737",
+      "nature": "existing original post-reopen/actor continuity, documentary RAG proof and blob revocation with actual gitleaks"
+    },
+    "source-access-document": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/source-access-document.test.ts",
+      "blob": "6afd17d18f236840e4e97db29a89bbbc011987f9",
+      "nature": "existing confirmed document ref, current ACL/source RAG read"
+    },
+    "atlas-projection": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+      "blob": "c2efe0e5054b4a33a35daae1d5353ff730434577",
+      "nature": "existing canonical owner/kind/task/project, ledger event/digest/foreign refs negatives"
+    },
+    "invalidation": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp14/invalidation.test.ts",
+      "blob": "90e6dd5f1b87b03f6fe2440703443b64507ed375",
+      "nature": "existing ref/incarnation/replaced, canceled, document segment/calc material invalidation"
+    },
+    "memory-identity": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+      "blob": "ea72668c00f4bd9d4fd4f902c803f3631b2268e3",
+      "nature": "existing protected owner/capture corruption and source replacement/denied cross-owner recall"
+    },
+    "memory-authority": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+      "blob": "50fe5f69fbba4cff3ff6291e46553f3de9ca9df2",
+      "nature": "existing C08/Request/last auth revalidation and revoke"
+    },
+    "memory-revocation-tail": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/revocation-tail.test.ts",
+      "blob": "b737b7f797b880c3e2664f65747ef2bc2c18156f",
+      "nature": "existing real memory producer/verifier output revocation tails"
+    },
+    "atlas-record-integrity": {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+      "blob": "d745826c18ca2fc36e1f19b40f51249b471c86ea",
+      "nature": "existing raw and private consumer rejects scanner/ledger tampering"
+    },
+    "pending-replay": {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts",
+      "blob": "c5f9e443286e055d0d84dd734fb9b0626267b084",
+      "nature": "existing committed A versus pending B, no second publication effect"
+    },
+    "recall-groups": {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "blob": "c5f1305c1b7f10a79cfb11971d3c579978d34d1",
+      "nature": "existing group/call/selection binding/revalidation"
+    },
+    "boundary-exports": {
+      "path": "modules/atlas/boundary/test/business-memory-ports.test.ts",
+      "blob": "22d2bad87dd87cfb7dd7b2c08c0da6ca75da6238",
+      "nature": "existing AST canonical packaging admission, exact external edge and exports"
+    }
+  },
+  "eight_canonical_checks": [
+    {
+      "id": "P01:boundary",
+      "canonical_text": "Resolver o import @orchestra/atlas-boundary/business-memory-ports e instrumentar createMemoryEmit, createMemoryRead e DurableMemory com o digest de engine/boundary. Ler apenas o ledger SF não passa.",
+      "scenario_ids": [
+        "boundary-exports",
+        "atlas-recovery",
+        "atlas-projection",
+        "new-scanner-write-gates"
+      ],
+      "expected": "createMemoryEmit/createMemoryRead/DurableMemory and engine-boundary import; real runtime output required",
+      "observed": null,
+      "status": "NOT_RUN",
+      "product_candidate_sha": null,
+      "ci_run_id": null,
+      "evidence_uri": null,
+      "why_not_pass": "No authorized GitHub Actions execution or scanner/model/session evidence has been received for integrated C."
+    },
+    {
+      "id": "P02:evidence",
+      "canonical_text": "Resolver BusinessEvidenceRef para documento/trecho/hash, registro/encarnação/versão e cálculo/recibo. Fonte ausente ou referência invalidada devem ser reconhecidas.",
+      "scenario_ids": [
+        "source-access-document",
+        "source-access-atlas",
+        "atlas-projection",
+        "invalidation"
+      ],
+      "expected": "BusinessEvidenceRef document/section/hash, record incarnation, calculations/receipts; ACL negatives",
+      "observed": null,
+      "status": "NOT_RUN",
+      "product_candidate_sha": null,
+      "ci_run_id": null,
+      "evidence_uri": null,
+      "why_not_pass": "No authorized GitHub Actions execution or scanner/model/session evidence has been received for integrated C."
+    },
+    {
+      "id": "P03:commit-restart",
+      "canonical_text": "Exercer append, commit, read, reinício e nova leitura. A entrada autorizada e o contexto original devem persistir. Append ainda sem commit não aparece como sucesso.",
+      "scenario_ids": [
+        "atlas-recovery",
+        "source-access-atlas",
+        "pending-replay"
+      ],
+      "expected": "append is not commit, trusted SF C08 commit/outbox, reopen and read with authorized original",
+      "observed": null,
+      "status": "NOT_RUN",
+      "product_candidate_sha": null,
+      "ci_run_id": null,
+      "evidence_uri": null,
+      "why_not_pass": "No authorized GitHub Actions execution or scanner/model/session evidence has been received for integrated C."
+    },
+    {
+      "id": "P04:isolation",
+      "canonical_text": "Dois atores com o mesmo perfil, owner omitido ou forjado, sessão/caso incorretos e um canary privado não ampliam o acesso.",
+      "scenario_ids": [
+        "atlas-recovery",
+        "memory-identity",
+        "memory-authority",
+        "recall-groups"
+      ],
+      "expected": "same-profile actors/cases, scoped owner, forbidden forged owner, no cross-principal source leak",
+      "observed": null,
+      "status": "NOT_RUN",
+      "product_candidate_sha": null,
+      "ci_run_id": null,
+      "evidence_uri": null,
+      "why_not_pass": "No authorized GitHub Actions execution or scanner/model/session evidence has been received for integrated C."
+    },
+    {
+      "id": "P05:revocation",
+      "canonical_text": "Revalidar e invalidar após revogação ou mudança de encarnação. O precedente recuperado explica pertinência e diferenças atuais.",
+      "scenario_ids": [
+        "source-access-atlas",
+        "memory-revocation-tail",
+        "invalidation",
+        "atlas-record-integrity"
+      ],
+      "expected": "current source revalidation, stale/replaced/incarnation, matching context and differences",
+      "observed": null,
+      "status": "NOT_RUN",
+      "product_candidate_sha": null,
+      "ci_run_id": null,
+      "evidence_uri": null,
+      "why_not_pass": "No authorized GitHub Actions execution or scanner/model/session evidence has been received for integrated C."
+    },
+    {
+      "id": "P06:scanner-real",
+      "canonical_text": "Registrar binary path e versão do scanner real. Exercitar clean, secret-canary, timeout e ausência. Hit ou indisponibilidade não fazem append; indisponibilidade retorna scanner-unavailable. Não aceitar scanner simulado como prova real.",
+      "scenario_ids": [
+        "scanner-probe",
+        "new-scanner-write-gates",
+        "atlas-recovery"
+      ],
+      "expected": "actual pinned gitleaks version/path, clean, benign canary, timeout/absence; no append on refuse",
+      "observed": null,
+      "status": "NOT_RUN",
+      "product_candidate_sha": null,
+      "ci_run_id": null,
+      "evidence_uri": null,
+      "why_not_pass": "No authorized GitHub Actions execution or scanner/model/session evidence has been received for integrated C."
+    },
+    {
+      "id": "P07:idempotent-response-loss",
+      "canonical_text": "Falha de commit ou resposta perdida preserva consistência do log/ledger e retomada idempotente. A função síncrona append não significa que o commit assíncrono terminou.",
+      "scenario_ids": [
+        "atlas-recovery",
+        "pending-replay",
+        "atlas-record-integrity"
+      ],
+      "expected": "single Atlas publication event, receipt replay post-restart, no false success before C08 commit",
+      "observed": null,
+      "status": "NOT_RUN",
+      "product_candidate_sha": null,
+      "ci_run_id": null,
+      "evidence_uri": null,
+      "why_not_pass": "No authorized GitHub Actions execution or scanner/model/session evidence has been received for integrated C."
+    },
+    {
+      "id": "P08:packaging",
+      "canonical_text": "Empacotamento: business-memory-ports tem factories reais e zero imports de spawning; scanner vem de native-memory já admitido. Verificar AST, a aresta external exata, quatro digests gerados, exports bound preservados e check:spawn-imports do candidato com guard/allowlist inalterados.",
+      "scenario_ids": [
+        "boundary-exports"
+      ],
+      "expected": "AST exact external to native-memory, four generated output digests, preserved bound APIs and spawning guard",
+      "observed": null,
+      "status": "NOT_RUN",
+      "product_candidate_sha": null,
+      "ci_run_id": null,
+      "evidence_uri": null,
+      "why_not_pass": "No authorized GitHub Actions execution or scanner/model/session evidence has been received for integrated C."
+    }
+  ],
+  "criterion_assignments": [
+    {
+      "entity_id": "WP06",
+      "criterion_ids": [
+        "WP06.DOD.40",
+        "WP06.INV.40",
+        "WP06.QLT.40",
+        "WP06.CMP.40",
+        "WP06.SUC.40"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+      "check_ids": [
+        "P02:evidence",
+        "P05:revocation"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    },
+    {
+      "entity_id": "WP06.T05",
+      "criterion_ids": [
+        "WP06.T05.DOD.40",
+        "WP06.T05.INV.40",
+        "WP06.T05.QLT.40",
+        "WP06.T05.CMP.40",
+        "WP06.T05.SUC.40",
+        "WP06.T05.CHK.40"
+      ],
+      "proof_packages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+      "check_ids": [
+        "P02:evidence",
+        "P05:revocation"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    },
+    {
+      "entity_id": "WP14",
+      "criterion_ids": [
+        "WP14.DOD.40",
+        "WP14.INV.40",
+        "WP14.QLT.40",
+        "WP14.CMP.40",
+        "WP14.SUC.40"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+      "check_ids": [
+        "P01:boundary",
+        "P02:evidence",
+        "P04:isolation",
+        "P05:revocation"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    },
+    {
+      "entity_id": "WP14.T05",
+      "criterion_ids": [
+        "WP14.T05.DOD.40",
+        "WP14.T05.INV.40",
+        "WP14.T05.QLT.40",
+        "WP14.T05.CMP.40",
+        "WP14.T05.SUC.40",
+        "WP14.T05.CHK.40"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+      "check_ids": [
+        "P01:boundary",
+        "P02:evidence",
+        "P04:isolation"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    },
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+      "check_ids": [
+        "P01:boundary",
+        "P02:evidence",
+        "P03:commit-restart",
+        "P04:isolation",
+        "P05:revocation",
+        "P06:scanner-real",
+        "P07:idempotent-response-loss",
+        "P08:packaging"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    },
+    {
+      "entity_id": "WP10.T07",
+      "criterion_ids": [
+        "WP10.T07.DOD.40",
+        "WP10.T07.INV.40",
+        "WP10.T07.QLT.40",
+        "WP10.T07.CMP.40",
+        "WP10.T07.SUC.40",
+        "WP10.T07.CHK.40",
+        "WP10.T07.CHK.41"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+      "check_ids": [
+        "P01:boundary",
+        "P02:evidence",
+        "P03:commit-restart",
+        "P04:isolation",
+        "P05:revocation",
+        "P06:scanner-real",
+        "P07:idempotent-response-loss",
+        "P08:packaging"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    },
+    {
+      "entity_id": "WP10.T03",
+      "criterion_ids": [
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência.",
+      "check_ids": [
+        "P01:boundary",
+        "P02:evidence",
+        "P03:commit-restart",
+        "P04:isolation",
+        "P05:revocation",
+        "P06:scanner-real",
+        "P07:idempotent-response-loss",
+        "P08:packaging"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    },
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.CMP.60",
+        "WP10.DOD.60",
+        "WP10.INV.60",
+        "WP10.QLT.60",
+        "WP10.SUC.60"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Código/artefatos reais, identidade do scanner e resultado de geração/AST/spawn gate no mesmo candidato; sem dispensa.",
+      "check_ids": [
+        "P01:boundary",
+        "P02:evidence",
+        "P03:commit-restart",
+        "P04:isolation",
+        "P05:revocation",
+        "P06:scanner-real",
+        "P07:idempotent-response-loss",
+        "P08:packaging"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    },
+    {
+      "entity_id": "WP10.T07",
+      "criterion_ids": [
+        "WP10.T07.CHK.60",
+        "WP10.T07.CHK.61",
+        "WP10.T07.CHK.62",
+        "WP10.T07.CMP.60",
+        "WP10.T07.DOD.60",
+        "WP10.T07.INV.60",
+        "WP10.T07.QLT.60",
+        "WP10.T07.SUC.60"
+      ],
+      "proof_packages": [
+        "E12",
+        "E15",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM05"
+      ],
+      "receipt_rule": "Código/artefatos reais, identidade do scanner e resultado de geração/AST/spawn gate no mesmo candidato; sem dispensa.",
+      "check_ids": [
+        "P01:boundary",
+        "P02:evidence",
+        "P03:commit-restart",
+        "P04:isolation",
+        "P05:revocation",
+        "P06:scanner-real",
+        "P07:idempotent-response-loss",
+        "P08:packaging"
+      ],
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "ci_request_hash": null,
+      "evidence_uri": null,
+      "verified_at": null,
+      "reviewer_result": null
+    }
+  ],
+  "canonical_evidence_required_fields": [
+    "criterion_id",
+    "entity_id",
+    "scope",
+    "status",
+    "candidate_sha",
+    "actor_or_role",
+    "fixture_id",
+    "entrypoint_or_action",
+    "expected",
+    "observed",
+    "evidence_uri",
+    "reviewer",
+    "verified_at",
+    "product_candidate_sha",
+    "ci_snapshot_sha",
+    "ci_request_hash",
+    "contract_version",
+    "producer_refs",
+    "consumer_entrypoint",
+    "execution_actor",
+    "logical_owner",
+    "writer_lease",
+    "contract_versions",
+    "profile_id",
+    "profile_version",
+    "skill_ids",
+    "skill_versions",
+    "skill_digests",
+    "source_paths",
+    "bundle_digest",
+    "effective_model",
+    "native_session_id",
+    "case_id",
+    "case_version",
+    "case_incarnation",
+    "mcp_server_generation",
+    "mcp_operation",
+    "domain_port",
+    "domain_call_id",
+    "runtime_build_sha",
+    "atlas_engine_baseline",
+    "atlas_boundary_version",
+    "business_schema_version",
+    "scanner_binary_version",
+    "access_revision",
+    "expected_selection",
+    "selected_files",
+    "measured_duration_seconds"
+  ],
+  "empirical_receipts": [],
+  "native_model": null,
+  "native_session_id": null,
+  "authenticated_principal_ref": null,
+  "provider_generation": null,
+  "full_AM05_status": "NOT_RUN",
+  "qualifies_final_review": false,
+  "global_release": false,
+  "goal": "paused"
+}

@@ -1,0 +1,194 @@
+{
+  "schema": "sf2h.am05.requests.v1",
+  "mission": 169,
+  "epoch": "proof-am05-e1-browser169",
+  "source_branch": "sf-am05-proof",
+  "depends_on": "162 integrates EXACT C blobs into sf2-stack; then 164 obtains coherent accepted C SHA/tree; do not dispatch pre-integration",
+  "sole_integrator": {
+    "mission": 162,
+    "epoch": "S0-C-e20-browser162",
+    "pr": 65
+  },
+  "compiler": {
+    "mission": 163,
+    "pr": 107,
+    "request_kind": "after integrated C",
+    "source_hashes": {
+      "modules/atlas/boundary/script/build.ts": "69d8473a2dd08704d7aaf8bf36a2930cb8de3e31",
+      "modules/atlas/boundary/src/generated/native-memory.js": "820a3010be24a817edae7ff26299919d448ad4bf",
+      "modules/atlas/boundary/src/generated/native-memory.d.ts": "bc73667c5513e622ff2b5f4f553605fb3532b395",
+      "modules/atlas/boundary/src/generated/business-memory-ports.js": "cfc144ffec16c1eec41b7350ae8c8d47452088c0",
+      "modules/atlas/boundary/src/generated/business-memory-ports.d.ts": "7331e839a166dd9690610b99ec6b595aec50c6e5",
+      "modules/atlas/boundary/src/business-memory-entry.ts": "06f8085df12d57baf7973d0df500da3e366dc29a",
+      "modules/atlas/packages/adapter-io/src/native-bound.ts": "fb3d542eb22e9b8dc9a139ce1ff98189812d6e0d",
+      "script/spawn-allowlist.json": "532e0a09e7ca43777ec6f9792f9429bb73148348"
+    },
+    "commands_exact": [
+      "bun run --cwd modules/atlas/boundary generate",
+      "bun run --cwd modules/atlas/boundary check:generated",
+      "bun run --cwd modules/atlas/boundary typecheck",
+      "bun run check:spawn-imports"
+    ],
+    "required_outputs": [
+      "observed integrated C SHA/tree",
+      "actual generated 4 output SHA1/SHA256 digests",
+      "real native-memory bound exports + business-memory-ports factories",
+      "TypeScript AST exact memory-emit.ts literal ./scanner.js resolved external only to @orchestra/atlas-boundary/native-memory",
+      "zero spawning-module imports in new business bundle",
+      "unchanged spawn guard/allowlist hashes",
+      "failure logs / gate disposition"
+    ],
+    "status": "NOT_RUN"
+  },
+  "hosted_ci": {
+    "mission": 164,
+    "pr": 106,
+    "protocol": "existing bun run test:ci; 164 is sole dispatcher",
+    "dispatch_status": "NOT_REQUESTED_TO_RUN_PREINTEGRATION",
+    "ordered_requests": [
+      {
+        "id": "AM05-SCAN",
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+          "Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts"
+        ],
+        "os": "linux",
+        "timeout_ms": 300000,
+        "reason": "actual pinned real scanner: timeout/hit/no-append + existing clean/canary/absence",
+        "request_template": {
+          "package": "sucafina",
+          "packageSelector": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts",
+            "Sucafinav1/test/product/wp10/atlas-business/scanner-probe.test.ts"
+          ],
+          "env": {}
+        },
+        "status": "NOT_RUN",
+        "actual_run": null,
+        "ci_snapshot_sha": null,
+        "actual_request_hash": null
+      },
+      {
+        "id": "AM05-DURABLE",
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+          "Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
+        ],
+        "os": "linux",
+        "timeout_ms": 300000,
+        "reason": "C08 durable commit/reopen/replay, actual scanner, authorizations, source/projection after restart",
+        "request_template": {
+          "package": "sucafina",
+          "packageSelector": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/wp10/atlas-business/atlas-recovery.test.ts",
+            "Sucafinav1/test/product/wp14/source-access-atlas.test.ts"
+          ],
+          "env": {}
+        },
+        "status": "NOT_RUN",
+        "actual_run": null,
+        "ci_snapshot_sha": null,
+        "actual_request_hash": null
+      },
+      {
+        "id": "AM05-EVIDENCE-ACL",
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp14/source-access-document.test.ts",
+          "Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+          "Sucafinav1/test/product/wp14/invalidation.test.ts",
+          "Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+          "Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+          "Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+          "Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts"
+        ],
+        "os": "linux",
+        "timeout_ms": 300000,
+        "reason": "no duplicated tests: document hash/ref/owner, revoked source, tamper and partial pending publication",
+        "request_template": {
+          "package": "sucafina",
+          "packageSelector": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/wp14/source-access-document.test.ts",
+            "Sucafinav1/test/product/wp14/atlas-projection.test.ts",
+            "Sucafinav1/test/product/wp14/invalidation.test.ts",
+            "Sucafinav1/test/product/wp10/memory-integrity/identity.test.ts",
+            "Sucafinav1/test/product/wp10/memory-integrity/authority.test.ts",
+            "Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+            "Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts"
+          ],
+          "env": {}
+        },
+        "status": "NOT_RUN",
+        "actual_run": null,
+        "ci_snapshot_sha": null,
+        "actual_request_hash": null
+      },
+      {
+        "id": "AM05-ATLAS-PACKAGE",
+        "package": "atlas-boundary",
+        "directory": "modules/atlas/boundary",
+        "runner": "bun",
+        "args": [
+          "test/business-memory-ports.test.ts"
+        ],
+        "os": "linux",
+        "timeout_ms": 300000,
+        "reason": "existing AST/external/exports admission, paired with generator/check:spawn-imports performed by 163",
+        "request_template": {
+          "package": "atlas-boundary",
+          "packageSelector": "atlas-boundary",
+          "directory": "modules/atlas/boundary",
+          "runner": "bun",
+          "args": [
+            "test/business-memory-ports.test.ts"
+          ],
+          "env": {}
+        },
+        "status": "NOT_RUN",
+        "actual_run": null,
+        "ci_snapshot_sha": null,
+        "actual_request_hash": null
+      }
+    ],
+    "dedup_fields": [
+      "accepted candidate C SHA",
+      "candidate tree SHA",
+      "ordered selector files",
+      "runner",
+      "OS",
+      "runtime configuration",
+      "fixtures and upstream producer digests"
+    ],
+    "required_results": [
+      "authenticated GitHub Actions run URL/id",
+      "candidate C SHA/tree and .ci-run.json digest",
+      "scanner path/version if actual binary invoked",
+      "executable, model, admission and grant identity if an actual native positive is claimed",
+      "test logs, exact counts/durations and failures",
+      "source/consumer traces and verified receipt association"
+    ],
+    "status": "NOT_RUN"
+  },
+  "original_existing_tests_are_reused_not_copied": true,
+  "new_test_files": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts"
+  ],
+  "global_release": false
+}
