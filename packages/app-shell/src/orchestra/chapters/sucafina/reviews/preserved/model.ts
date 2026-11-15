@@ -5,6 +5,9 @@ import type { SfUiState } from "../../shared/frame"
 export type PreservedReview = Schema.Schema.Type<typeof SfReviewPreserved>
 export type PreservedSection = PreservedReview["sections"][number]
 export type ReviewProjection = Schema.Schema.Type<typeof SfReviewDomainProjection>
+export type PreservedValue = ReviewProjection["values"][number]
+export type PreservedComponent = ReviewProjection["components"][number]
+export type PreservedSourceRef = PreservedSection["sourceRefs"][number]
 
 /** Public review content is a producer-owned JSON value, not an editable or numeric model. */
 export function readPreservedProjection(content: unknown): ReviewProjection | undefined {
@@ -21,22 +24,37 @@ export function reviewReadState(reply: { kind: "transport-error"; reason: string
   return "unavailable"
 }
 
+/** Equality of decoded, source-authored material. This never computes or normalizes financial numbers. */
+export function sameSourceMaterial(previous: unknown, current: unknown): boolean {
+  return JSON.stringify(previous) === JSON.stringify(current)
+}
+
+/** Unknown scopes are not comparable, even if section identifiers happen to match. */
 export function comparableReviewSections(previous: PreservedReview, current: PreservedReview): boolean {
-  if (previous.sections.length !== current.sections.length) return false
+  if (!previous.sections.length || previous.sections.length !== current.sections.length) return false
+  const first = readPreservedProjection(previous.sections[0].content)
+  if (!first) return false
+  const previousIds = new Set(previous.sections.map((section) => section.id))
   const currentById = new Map(current.sections.map((section) => [section.id, section]))
-  if (currentById.size !== current.sections.length) return false
+  if (previousIds.size !== previous.sections.length || currentById.size !== current.sections.length) return false
   return previous.sections.every((before) => {
     const after = currentById.get(before.id)
     if (!after || before.period.start !== after.period.start || before.period.end !== after.period.end) return false
     const left = readPreservedProjection(before.content), right = readPreservedProjection(after.content)
-    if (!left || !right || left.context.currency !== right.context.currency ||
-        left.context.surface !== right.context.surface || left.engineVersion !== right.engineVersion) return false
+    if (!left || !right ||
+        left.context.installationId !== first.context.installationId ||
+        left.context.projectId !== first.context.projectId ||
+        left.context.installationId !== right.context.installationId ||
+        left.context.projectId !== right.context.projectId ||
+        left.context.currency !== right.context.currency ||
+        left.context.surface !== right.context.surface ||
+        left.engineVersion !== right.engineVersion) return false
     return left.context.period.start === right.context.period.start &&
       left.context.period.end === right.context.period.end
   })
 }
 
-/** Compare source-authored scalars literally; no FX, totals, percentages or guessed zeros. */
+/** Compare literal values, evidence metadata and per-value ancestry independently; never infer FX or totals. */
 export function preservedValueRows(previous: PreservedSection, current: PreservedSection) {
   const before = readPreservedProjection(previous.content), after = readPreservedProjection(current.content)
   if (!before || !after) return []
@@ -44,8 +62,47 @@ export function preservedValueRows(previous: PreservedSection, current: Preserve
   const b = new Map(after.values.map((entry) => [entry.id, entry]))
   return [...new Set([...a.keys(), ...b.keys()])].flatMap((id) => {
     const left = a.get(id), right = b.get(id)
-    return left?.value === right?.value && left?.evidenceState === right?.evidenceState &&
-      left?.unit === right?.unit && left?.currency === right?.currency ? [] :
-      [{ id, before: left, after: right }]
+    const valueChanged = left?.value !== right?.value
+    const numericChanged = valueChanged && typeof left?.value === "number" && typeof right?.value === "number"
+    const attributesChanged = left?.unit !== right?.unit || left?.currency !== right?.currency ||
+      left?.evidenceState !== right?.evidenceState || left?.granularity !== right?.granularity ||
+      !sameSourceMaterial(left?.period, right?.period)
+    const provenanceChanged = !sameSourceMaterial(left?.sourceRefs, right?.sourceRefs) ||
+      !sameSourceMaterial(left?.drilldown, right?.drilldown)
+    return valueChanged || attributesChanged || provenanceChanged
+      ? [{ id, before: left, after: right, valueChanged, numericChanged, attributesChanged, provenanceChanged }]
+      : []
   })
+}
+
+/** Producer-authored projection components have their own currency, evidence state and source lineage. */
+export function preservedComponentRows(previous: PreservedSection, current: PreservedSection) {
+  const before = readPreservedProjection(previous.content), after = readPreservedProjection(current.content)
+  if (!before || !after) return []
+  const a = new Map(before.components.map((entry) => [entry.id, entry]))
+  const b = new Map(after.components.map((entry) => [entry.id, entry]))
+  return [...new Set([...a.keys(), ...b.keys()])].flatMap((id) => {
+    const left = a.get(id), right = b.get(id)
+    const valueChanged = left?.amount !== right?.amount
+    const numericChanged = valueChanged && typeof left?.amount === "number" && typeof right?.amount === "number"
+    const attributesChanged = left?.currency !== right?.currency ||
+      left?.evidenceState !== right?.evidenceState || !sameSourceMaterial(left?.period, right?.period)
+    const provenanceChanged = !sameSourceMaterial(left?.sourceRefs, right?.sourceRefs)
+    return valueChanged || attributesChanged || provenanceChanged
+      ? [{ id, before: left, after: right, valueChanged, numericChanged, attributesChanged, provenanceChanged }]
+      : []
+  })
+}
+
+/** A source-only revision is a real difference, but is not a financial delta. */
+export function preservedSectionHasChanges(previous: PreservedSection, current: PreservedSection): boolean {
+  const before = readPreservedProjection(previous.content), after = readPreservedProjection(current.content)
+  if (!before || !after) return true
+  return previous.title !== current.title || previous.count !== current.count ||
+    !sameSourceMaterial(previous.sourceRefs, current.sourceRefs) ||
+    before.version !== after.version ||
+    !sameSourceMaterial(before.context.sourceRefs, after.context.sourceRefs) ||
+    !sameSourceMaterial(before.missing, after.missing) ||
+    preservedValueRows(previous, current).length > 0 ||
+    preservedComponentRows(previous, current).length > 0
 }

@@ -50,3 +50,105 @@ test("U32 compares two producer-reopened reviews without inventing totals", asyn
   // Compatible snapshots show only saved source fields and recorded versions.
   // An incompatible result is explicit; neither path calculates financial deltas.
 })
+
+/**
+ * Host-backed causal regressions. CI150 provisions reauthorized, distinct persisted reviews
+ * and their exact environment references; these are not mock payloads or local-run assertions.
+ * The installed provider must prove the data identities before reporting any PASS.
+ */
+async function openAuthorizedPair(
+  page: import("@playwright/test").Page,
+  target: { shellOrigin: string; chapterHref: string },
+  previous: string,
+  current: string,
+) {
+  expect(previous).not.toBe(current)
+  await page.goto(nativeUrl(target, "/orchestra/sf-reviews/compare"))
+  const comparison = page.locator('[data-sf-surface="UI49"]')
+  await expect(comparison).toBeVisible()
+  const fields = comparison.getByRole("textbox")
+  await expect(fields).toHaveCount(2)
+  await fields.nth(0).fill(previous)
+  await fields.nth(1).fill(current)
+  await comparison.getByRole("button", { name: /Read and compare authorized reviews|Ler e comparar revisões autorizadas/ }).click()
+  return comparison
+}
+
+for (const boundary of ["INSTALLATION", "PROJECT"] as const) {
+  test(`U32 does not join preserved financial values across ${boundary.toLowerCase()} scopes`, async ({ page, nativeHarness }) => {
+    const previous = requiredRef(`SF_N28_${boundary}_BEFORE_REVIEW_REF`)
+    const current = requiredRef(`SF_N28_${boundary}_AFTER_REVIEW_REF`)
+    const comparison = await openAuthorizedPair(page, nativeHarness.manifest.target, previous, current)
+    // Both independently readable but different scopes => incompatible; a revoked read => denied.
+    await expect(page.locator('[data-sf-comparison-compatibility="incompatible"], [data-sf-surface="UI49"][data-sf-compare-state="denied"]')).toBeVisible()
+    await expect(comparison.locator("[data-sf-comparison-diff]")).toHaveCount(0)
+  })
+}
+
+test("U32 labels currency and evidence changes without attributing an FX or numeric change", async ({ page, nativeHarness }) => {
+  const comparison = await openAuthorizedPair(page, nativeHarness.manifest.target,
+    requiredRef("SF_N28_CURRENCY_BEFORE_REVIEW_REF"), requiredRef("SF_N28_CURRENCY_AFTER_REVIEW_REF"))
+  await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
+    "data-sf-comparison-compatibility", "compatible")
+  const id = requiredRef("SF_N28_CURRENCY_VALUE_ID")
+  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: comparison.getByText(id, { exact: true }) })
+  await expect(row).toHaveCount(1)
+  await expect(row).toHaveAttribute("data-change-value", "false")
+  await expect(row).toHaveAttribute("data-change-numeric", "false")
+  await expect(row).toHaveAttribute("data-change-attributes", "true")
+  const cells = row.locator("td")
+  await expect(cells.nth(0)).toContainText("100")
+  await expect(cells.nth(0)).toContainText("USD")
+  await expect(cells.nth(0)).toContainText("confirmed")
+  await expect(cells.nth(1)).toContainText("100")
+  await expect(cells.nth(1)).toContainText("EUR")
+  await expect(cells.nth(1)).toContainText("estimated")
+  await expect(row).toContainText(/Declared source completeness|Completude declarada da origem/)
+})
+
+test("U32 distinguishes zero, explicit null and an absent value without coercion", async ({ page, nativeHarness }) => {
+  const comparison = await openAuthorizedPair(page, nativeHarness.manifest.target,
+    requiredRef("SF_N28_ZERO_BEFORE_REVIEW_REF"), requiredRef("SF_N28_ZERO_AFTER_REVIEW_REF"))
+  await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
+    "data-sf-comparison-compatibility", "compatible")
+  const id = requiredRef("SF_N28_ZERO_VALUE_ID")
+  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: comparison.getByText(id, { exact: true }) })
+  await expect(row).toHaveCount(1)
+  await expect(row).toHaveAttribute("data-change-value", "true")
+  await expect(row).toHaveAttribute("data-change-numeric", "false")
+  const cells = row.locator("td")
+  await expect(cells.nth(0).locator("strong")).toHaveText("0")
+  await expect(cells.nth(1)).toContainText(/Explicit null value|Valor nulo explícito/)
+})
+
+test("U32 surfaces source-only revision, incarnation and observation without a value change", async ({ page, nativeHarness }) => {
+  const comparison = await openAuthorizedPair(page, nativeHarness.manifest.target,
+    requiredRef("SF_N28_SOURCE_BEFORE_REVIEW_REF"), requiredRef("SF_N28_SOURCE_AFTER_REVIEW_REF"))
+  await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
+    "data-sf-comparison-compatibility", "compatible")
+  const id = requiredRef("SF_N28_SOURCE_VALUE_ID")
+  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: comparison.getByText(id, { exact: true }) })
+  await expect(row).toHaveCount(1)
+  await expect(row).toHaveAttribute("data-change-value", "false")
+  await expect(row).toHaveAttribute("data-change-numeric", "false")
+  await expect(row).toHaveAttribute("data-change-source", "true")
+  await expect(row).toContainText(/Source provenance changed|Proveniência da origem alterada/)
+  await expect(row).toContainText(/Source revision|Revisão da origem/)
+  await expect(row).toContainText(/Source incarnation|Encarnação da origem/)
+  await expect(comparison.locator("[data-sf-comparison-diff]")).toBeVisible()
+})
+
+test("U32 also preserves an explicit null followed by recorded zero", async ({ page, nativeHarness }) => {
+  const comparison = await openAuthorizedPair(page, nativeHarness.manifest.target,
+    requiredRef("SF_N28_NULL_BEFORE_REVIEW_REF"), requiredRef("SF_N28_NULL_AFTER_REVIEW_REF"))
+  await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
+    "data-sf-comparison-compatibility", "compatible")
+  const id = requiredRef("SF_N28_NULL_VALUE_ID")
+  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: comparison.getByText(id, { exact: true }) })
+  await expect(row).toHaveCount(1)
+  await expect(row).toHaveAttribute("data-change-value", "true")
+  await expect(row).toHaveAttribute("data-change-numeric", "false")
+  const cells = row.locator("td")
+  await expect(cells.nth(0)).toContainText(/Explicit null value|Valor nulo explícito/)
+  await expect(cells.nth(1).locator("strong")).toHaveText("0")
+})

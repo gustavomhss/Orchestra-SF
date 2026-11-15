@@ -17,3 +17,10 @@
   .sf-n28-scroll:focus-visible { outline: 2px solid currentColor; }
   .sf-n28-dual { grid-template-columns: 1fr; }
 }
+
+/* Scope-qualified U32 comparison: preserve readable source and evidence details on narrow screens. */
+.sf-n28-source-list { margin: .25rem 0; padding-inline-start: 1.25rem; overflow-wrap: anywhere; }
+.sf-n28-source-list > li + li { margin-block-start: .35rem; }
+.sf-n28-compare-value { display: grid; gap: .25rem; min-width: 12rem; overflow-wrap: anywhere; }
+.sf-n28-change-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-block-start: .25rem; }
+.sf-n28-change-tags span { font-size: .8em; font-weight: 500; }
