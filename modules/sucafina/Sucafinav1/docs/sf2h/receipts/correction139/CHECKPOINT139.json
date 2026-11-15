@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h.correction-author-checkpoint.v1",
+  "mission": 139,
+  "branch": "sf-ux-w06",
+  "pr": 125,
+  "epoch": "ux-native-w06-e2",
+  "stage": "SOURCE_CORRECTION_COMMITTED_HANDOFF_OFFERED",
+  "ack_commit": "4f6ff9d93b06d18acf9e50e0f0909007312702c9",
+  "code_commit": "b694342c38a9877619f4cd5a4fab97106a0d14c0",
+  "head_before_receipts": "b694342c38a9877619f4cd5a4fab97106a0d14c0",
+  "postimages": {
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx": "5523d9cc6680f8461e4f2a5ef31c687a7432dfbd",
+    "packages/app-shell/test-browser/sucafina-native/s01.test.ts": "65c74a68a7658706b18e70c5f98e52a419910fb3"
+  },
+  "patch_blob": "031d53dce25ae94c7b7e0a51b46fd1eaf8f50f1b",
+  "pending": [
+    "132 real consumer admission/integration",
+    "128 hosted compiler+SDK",
+    "129 hosted surgical CI"
+  ],
+  "statuses": {
+    "source": "ARTIFACT_READY",
+    "integrated": false,
+    "qualified": false,
+    "source_tests": "NOT_RUN",
+    "global_release": false,
+    "native_goal": "paused"
+  },
+  "no_drift_resolution_claim": true,
+  "old_epoch_revoked": true,
+  "no_extra_dispatcher": true,
+  "no_local_testing": true,
+  "protected_paths_untouched": true
+}

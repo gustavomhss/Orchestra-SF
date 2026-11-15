@@ -1,0 +1,158 @@
+{
+  "schema": "sf2h.correction-author-result.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 139,
+  "order": "S01",
+  "finding": "Compiler128 TS2657: adjacent JSX children in SfDataTable rowActions For callback",
+  "epoch": "ux-native-w06-e2",
+  "actor": "ChatGPT via authorized GitHub connector",
+  "actual_model": "GPT-6",
+  "session_id": "not-exposed",
+  "state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+  "native_goal": "paused",
+  "global_release": false,
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w06",
+  "pr": 125,
+  "base": "sf2-stack",
+  "git": {
+    "inherited_head": "fa7a4d2f51b10d47668406b2bc3bb2f91895b1a9",
+    "ack_commit": "4f6ff9d93b06d18acf9e50e0f0909007312702c9",
+    "code_commit": "b694342c38a9877619f4cd5a4fab97106a0d14c0",
+    "code_tree": "81d54c4a10fe921e74cf58178f98de419c476c73",
+    "remote_write": "GitHub create_tree/create_commit/update_ref expected_sha force:false; all history retained",
+    "consumer_observation": {
+      "head": "fc8840207377a363d4e6844aab496b4f1521f83c",
+      "source_material": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+      "note": "Observed preimages only. 132 must recheck consumer current HEAD and own CAS."
+    }
+  },
+  "authority": {
+    "s0_fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/S0-FENCE.json",
+    "fence_sha": "12fd8c2df494ca090b59afb4ee64fd2658c36a50",
+    "ack": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/ACK139.json",
+    "previous_epoch": "ux-native-w06-e1",
+    "previous_authority": "REVOKED_FUTURE_WRITES",
+    "scope": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**",
+      "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/**"
+    ],
+    "shared_writer": 132,
+    "compiler": 128,
+    "product_ci": 129
+  },
+  "changed_paths": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+      "source_preimage": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+      "material_C64_preimage": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+      "observed_consumer_preimage": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+      "source_postimage": "5523d9cc6680f8461e4f2a5ef31c687a7432dfbd",
+      "change": "Wrap existing action button + conditional reason span in Solid JSX fragment, no behavior/props/contract change"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "source_preimage": "f0323b6b0711f7b034686214b1371747351a492d",
+      "observed_consumer_preimage": "f0323b6b0711f7b034686214b1371747351a492d",
+      "source_postimage": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+      "change": "Extend existing fixture with optional reason/busy gates and add explicit DOM/authority keyboard regression"
+    }
+  ],
+  "complete_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction139/PATCH139-S01.patch",
+    "blob": "031d53dce25ae94c7b7e0a51b46fd1eaf8f50f1b",
+    "base_product_blobs": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+      "packages/app-shell/test-browser/sucafina-native/s01.test.ts": "f0323b6b0711f7b034686214b1371747351a492d"
+    },
+    "result_product_blobs": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx": "5523d9cc6680f8461e4f2a5ef31c687a7432dfbd",
+      "packages/app-shell/test-browser/sucafina-native/s01.test.ts": "65c74a68a7658706b18e70c5f98e52a419910fb3"
+    },
+    "applied_on_source": true,
+    "applied_on_consumer": false
+  },
+  "source_evidence": {
+    "run": 43738074189,
+    "job": 132884987559,
+    "observed_error": "src/orchestra/chapters/sucafina/shared/table/index.tsx(226,31): error TS2657: JSX expressions must have one parent element.",
+    "proof": "read actual GitHub Actions job logs for compiler 128",
+    "prior_product_ci_run": 43738907064,
+    "prior_product_ci_job": 132887516559,
+    "prior_ci_qualification": "FAILED historic C64; not rerun for mission139",
+    "known_other_source_failures": [
+      "check:guards failed in historic compiler job",
+      "packages/client generation failed: Input schema must be a struct: server.sucafina.sucafina.installations.query"
+    ],
+    "note": "Other findings are not claimed fixed by the narrow S01 correction."
+  },
+  "regression": {
+    "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+    "added_case": "row action reason and button remain sibling elements with intact authority and keyboard gates",
+    "checks": [
+      "No reason when omitted",
+      "Optional i18n reason is sibling after the native button, without additional wrapper",
+      "Reason visible and title accessible",
+      "Disabled reason blocks callback",
+      "Reason removal updates DOM/title",
+      "Keyboard focus and opaque ref-b callback preserved",
+      "busy sets disabled and aria-busy, no duplicate call",
+      "outcome-unknown disables action",
+      "denied purges private rows/action DOM"
+    ],
+    "preexisting_cases_unchanged": [
+      "opaque row identity, native semantics, sort/page and explicit gestures",
+      "single detail owner-scoped filter/scroll/focus restoration",
+      "empty vs filtered-empty and denied/session-expired purge"
+    ],
+    "state": "AUTHORED_NOT_EXECUTED",
+    "test_result": "NOT_RUN"
+  },
+  "acceptance": [
+    {
+      "id": "S01-AC01",
+      "status": "SPEC_EXTENDED_NOT_RUN",
+      "notes": "Preserves stable row identity, accessible native table and authorized actions"
+    },
+    {
+      "id": "S01-AC02",
+      "status": "SPEC_UNCHANGED_NOT_RUN",
+      "notes": "No parallel component, backend or private source copies"
+    },
+    {
+      "id": "WP01.T02",
+      "status": "IMPLEMENTATION_DELTA_ONLY_UNQUALIFIED"
+    }
+  ],
+  "contracts": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ui_frame": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "ui_table": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "signatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "changed": false
+  },
+  "validations": {
+    "local_tests": "NOT_RUN_BY_POLICY",
+    "local_parser": "NOT_RUN_BY_POLICY",
+    "local_typecheck": "NOT_RUN_BY_POLICY",
+    "local_guards": "NOT_RUN_BY_POLICY",
+    "new_hosted_compiler": "NOT_RUN_WAITING_FOR_132_COHERENT_INTEGRATION_AND_128",
+    "new_hosted_product_ci": "NOT_RUN_WAITING_FOR_132_COHERENT_INTEGRATION_AND_129",
+    "sdk_generation": "NOT_RUN_OWNER_128",
+    "CI_status": "NOT_QUALIFIED"
+  },
+  "handoff": {
+    "integrator": 132,
+    "action": "Recheck consumer HEAD/preimages and independently accept exact two-file patch on coherent candidate, never entire W06 PR",
+    "compiler": 128,
+    "action_compiler": "After 132 integration, execute existing hosted packages/app-shell bun typecheck and real packages/client bun run generate/guards as applicable",
+    "product_ci": 129,
+    "action_ci": "After 132 coherent unit, run selected packages/app-shell/test-browser/sucafina-native/s01.test.ts through existing canonical hosted lane",
+    "consumer_ack": "NOT_OBSERVED",
+    "accepted_integration": "NOT_OBSERVED",
+    "terminal": "ARTIFACT_READY_HANDOFF_OFFERED_TO_132; not lease-released by inferred silence",
+    "restrictions": "No local execution, extra dispatcher, reset/force, dev merge, deploy, Goal reactivation or shared file writes"
+  }
+}

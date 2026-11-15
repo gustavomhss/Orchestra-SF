@@ -1,0 +1,125 @@
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx
+index eec796343345a7ce7b3d30f4b86055000b6847c2..5523d9cc6680f8461e4f2a5ef31c687a7432dfbd 100644
+--- a/packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx
+@@ -223,23 +223,25 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
+                         <div class="sf-s01-row-actions" role="group" aria-label={copy.t(sfS01Key("sf.s01.rowActions"))}>
+                           <For each={actions(row)}>
+                             {(action) => (
+-                              <button
+-                                type="button"
+-                                class={"mx-btn" + (action.tone === "danger" ? " danger" : "")}
+-                                data-sf-action={action.id}
+-                                disabled={action.disabled || action.busy || (props.state !== "ready" && props.state !== "partial")}
+-                                aria-busy={action.busy}
+-                                title={action.reason ? copy.message(action.reason) : undefined}
+-                                onClick={() => {
+-                                  if (!action.disabled && !action.busy && (props.state === "ready" || props.state === "partial"))
+-                                    props.onRowAction({ recordRef: recordRef(), actionId: action.id })
+-                                }}
+-                              >
+-                                {copy.t(action.labelKey)}
+-                              </button>
+-                              <Show when={action.reason}>
+-                                {(reason) => <span class="sf-s01-action-reason">{copy.message(reason())}</span>}
+-                              </Show>
++                              <>
++                                <button
++                                  type="button"
++                                  class={"mx-btn" + (action.tone === "danger" ? " danger" : "")}
++                                  data-sf-action={action.id}
++                                  disabled={action.disabled || action.busy || (props.state !== "ready" && props.state !== "partial")}
++                                  aria-busy={action.busy}
++                                  title={action.reason ? copy.message(action.reason) : undefined}
++                                  onClick={() => {
++                                    if (!action.disabled && !action.busy && (props.state === "ready" || props.state === "partial"))
++                                      props.onRowAction({ recordRef: recordRef(), actionId: action.id })
++                                  }}
++                                >
++                                  {copy.t(action.labelKey)}
++                                </button>
++                                <Show when={action.reason}>
++                                  {(reason) => <span class="sf-s01-action-reason">{copy.message(reason())}</span>}
++                                </Show>
++                              </>
+                             )}
+                           </For>
+                         </div>
+
+diff --git a/packages/app-shell/test-browser/sucafina-native/s01.test.ts b/packages/app-shell/test-browser/sucafina-native/s01.test.ts
+index f0323b6b0711f7b034686214b1371747351a492d..65c74a68a7658706b18e70c5f98e52a419910fb3 100644
+--- a/packages/app-shell/test-browser/sucafina-native/s01.test.ts
++++ b/packages/app-shell/test-browser/sucafina-native/s01.test.ts
+@@ -55,6 +55,8 @@ if (process.env.SF_S01_DOM !== "1") {
+       page: { kind: "offset", index: 0, size: 2, total: null } as SfPage,
+       layoutMode: "single" as SfLayoutMode,
+       disabledAction: true,
++      actionReason: false,
++      busyAction: false,
+     })
+     const columns: readonly SfColumn<RecordRow>[] = [
+       { id: "label", labelKey: key("sf.s01.listLabel"), align: "start", widthPolicy: { kind: "flex", minPx: 120, weight: 1 },
+@@ -73,7 +75,8 @@ if (process.env.SF_S01_DOM !== "1") {
+       columns,
+       captionKey: key("sf.s01.listLabel"),
+       rowActions: () => [{ id: "approve", labelKey: key("sf.common.approve"), tone: "secondary",
+-        disabled: state.disabledAction, busy: false }],
++        disabled: state.disabledAction, busy: state.busyAction,
++        reason: state.actionReason ? { key: key("sf.common.noAccess") } : undefined }],
+       onSort(sort) { events.push("sort:" + (sort.kind === "field" ? sort.direction : "none")); update("sort", sort) },
+       onPage(page) {
+         events.push("page:" + (page.kind === "offset" ? page.index : page.direction))
+@@ -155,6 +158,53 @@ if (process.env.SF_S01_DOM !== "1") {
+     } finally { view.done() }
+   })
+ 
++  test("row action reason and button remain sibling elements with intact authority and keyboard gates", () => {
++    const view = fixture()
++    try {
++      const group = (ref: string) => view.host.querySelector<HTMLElement>(
++        'tr[data-sf-row="' + ref + '"] .sf-s01-row-actions',
++      )!
++      const action = (ref: string) => group(ref).querySelector<HTMLButtonElement>(
++        'button[data-sf-action="approve"]',
++      )!
++      expect(group("ref-a").querySelector(".sf-s01-action-reason")).toBeNull()
++      view.update("actionReason", true)
++
++      const deniedReason = group("ref-a").querySelector<HTMLElement>(".sf-s01-action-reason")!
++      expect(group("ref-a").getAttribute("role")).toBe("group")
++      expect(group("ref-a").children).toHaveLength(2)
++      expect(group("ref-a").children[0]).toBe(action("ref-a"))
++      expect(group("ref-a").children[1]).toBe(deniedReason)
++      expect(deniedReason.textContent).toContain("You do not have access")
++      expect(action("ref-a").title).toContain("You do not have access")
++      expect(action("ref-a").disabled).toBe(true)
++      action("ref-a").click()
++      expect(view.events).toEqual([])
++
++      view.update("actionReason", false)
++      expect(group("ref-a").querySelector(".sf-s01-action-reason")).toBeNull()
++      expect(action("ref-a").title).toBe("")
++      view.update("disabledAction", false)
++      action("ref-b").focus()
++      expect(document.activeElement).toBe(action("ref-b"))
++      action("ref-b").click()
++      expect(view.events).toEqual(["action:ref-b:approve"])
++
++      view.update("busyAction", true)
++      expect(action("ref-b").disabled).toBe(true)
++      expect(action("ref-b").getAttribute("aria-busy")).toBe("true")
++      action("ref-b").click()
++      expect(view.events).toEqual(["action:ref-b:approve"])
++      view.update("busyAction", false)
++      view.update("ui", "outcome-unknown")
++      expect(action("ref-b").disabled).toBe(true)
++      action("ref-b").click()
++      expect(view.events).toEqual(["action:ref-b:approve"])
++      view.update("ui", "denied")
++      expect(view.host.querySelector(".sf-s01-row-actions")).toBeNull()
++    } finally { view.done() }
++  })
++
+   test("single detail retains same-owner list, filter DOM, scroll and returns focus to the same ref", async () => {
+     const view = fixture(true)
+     try {
