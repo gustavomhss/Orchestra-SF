@@ -1,0 +1,354 @@
+{
+  "schema": "sf2h.compiler128.results.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 128,
+  "epoch": "compiler-e2-browser128",
+  "authority": "ACK128.json",
+  "integrator": {
+    "mission": 125,
+    "branch": "sf2-stack",
+    "pr": 65
+  },
+  "compiler": {
+    "branch": "sf-compiler-checks",
+    "pr": 107,
+    "workflow_sha": "b7d04113f6904a65d5fb37a8cd7e7acd229783a0",
+    "workflow_tree": "38e941ab03098116e996d24e69bd645b73146684"
+  },
+  "source": {
+    "candidate": "C64",
+    "sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+    "origin_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+  },
+  "run": {
+    "id": 43738074189,
+    "job": 132884987559,
+    "attempt": 1,
+    "platform": "ubuntu-24.04",
+    "bun": "1.3.14",
+    "status": "completed",
+    "conclusion": "failure",
+    "artifact_id": 14171118214,
+    "artifact_name": "sf-compiler-128",
+    "artifact_bytes": 371517,
+    "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43738074189/artifacts/14171118214",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43738074189/job/132884987559",
+    "zip_sha256": "a5d461c04472046a6944f1ff27ded9fe5f66586f5ca8884fafd81c676e71d078"
+  },
+  "global_release": false,
+  "counts": {
+    "checks": 23,
+    "pass": 15,
+    "fail": 8
+  },
+  "commands": [
+    {
+      "name": "bundle-build",
+      "cwd": ".",
+      "exit_code": 1,
+      "status": "FAIL"
+    },
+    {
+      "name": "bundle-requests",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "e2e-inventory",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "guards",
+      "cwd": ".",
+      "exit_code": 1,
+      "status": "FAIL"
+    },
+    {
+      "name": "sdk-generate",
+      "cwd": "packages/client",
+      "exit_code": 1,
+      "status": "FAIL"
+    },
+    {
+      "name": "sdk-diff-capture",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "typecheck-atlas",
+      "cwd": "modules/atlas/boundary",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "typecheck-schema",
+      "cwd": "packages/schema",
+      "exit_code": 2,
+      "status": "FAIL"
+    },
+    {
+      "name": "typecheck-protocol",
+      "cwd": "packages/protocol",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "typecheck-server",
+      "cwd": "packages/server",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "typecheck-client",
+      "cwd": "packages/client",
+      "exit_code": 2,
+      "status": "FAIL"
+    },
+    {
+      "name": "typecheck-sucafina",
+      "cwd": "modules/sucafina",
+      "exit_code": 2,
+      "status": "FAIL"
+    },
+    {
+      "name": "typecheck-core",
+      "cwd": "packages/core",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "typecheck-cli",
+      "cwd": "apps/cli",
+      "exit_code": 2,
+      "status": "FAIL"
+    },
+    {
+      "name": "typecheck-app",
+      "cwd": "packages/app-shell",
+      "exit_code": 1,
+      "status": "FAIL"
+    },
+    {
+      "name": "sf-e2e-showConfig",
+      "cwd": "packages/app-shell",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "sf-e2e-listFiles",
+      "cwd": "packages/app-shell",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "sf-e2e-verify",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "atlas-generated-before",
+      "cwd": "modules/atlas/boundary",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "atlas-generate",
+      "cwd": "modules/atlas/boundary",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "atlas-generated-after",
+      "cwd": "modules/atlas/boundary",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "atlas-generated-diff",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS"
+    },
+    {
+      "name": "spawn-imports",
+      "cwd": ".",
+      "exit_code": 0,
+      "status": "PASS"
+    }
+  ],
+  "runtime_evidence": {
+    "exit_codes_tsv_sha256": "33826751a173049cd71d40ea5bf90d4f8e49a825d0de7fdf53b78a2fe78ae605"
+  },
+  "sdk": {
+    "status": "FAIL_GENERATOR",
+    "command": "cd packages/client && bun run generate",
+    "exit": 1,
+    "capture_exit": 0,
+    "changed_generated_files": 0,
+    "previous_generated_files": 56,
+    "runner_manifest_sha256": "6b9afca16629ba55186b6d3d31736da9166b8705b3ae540cf46f3be761fb67fb",
+    "sdk_prepost_receipt": "SDK-PREPOST128-C64.json",
+    "cause": "GenerationError: Input schema must be a struct: server.sucafina.sucafina.installations.query",
+    "source_owner": "W02/F01",
+    "patch": "empty (0 bytes) - not accepted by125"
+  },
+  "bundle": {
+    "status": "BUNDLE_DRIFT",
+    "exit": 1,
+    "source_test_ci_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "generated_yml_bytes": 57314,
+    "generated_yml_sha256": "c6c0e2583a5be2bb393d3db832232c6625ceb28370bf1f7f815eb3a661b77394",
+    "existing_yml_bytes": 54846,
+    "existing_yml_sha256": "5c87488dbb717ad4e5a410aa69cc0cb15264465512d8546838497c2ae58301b8",
+    "patch_bytes": 4370,
+    "patch_sha256": "559b5b34a69ace7ee69b641909a4fa7da28d033a4a13980dc4ed950574d2dd03",
+    "artifact_members": [
+      "sf2-epic.generated.yml",
+      "sf2-epic.generated.patch",
+      "sf2-epic.before.yml"
+    ],
+    "instruction": "125 consumes generated YAML after source/preimage review; DO NOT run epic"
+  },
+  "typecheck": {
+    "unique_diagnostics": 6,
+    "diagnostics": [
+      {
+        "owner": "W16/A04",
+        "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+        "line": 16,
+        "column": 262,
+        "code": "TS1005",
+        "summary": "';' expected; shared parser failure repeats in schema/client/sucafina"
+      },
+      {
+        "owner": "W11/A03",
+        "path": "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+        "line": 333,
+        "column": 84,
+        "code": "TS2345",
+        "summary": "Transaction callback result is incompatible with inferred typed signature"
+      },
+      {
+        "owner": "W11/A03",
+        "path": "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+        "line": 375,
+        "column": 11,
+        "code": "TS2367",
+        "summary": "unauthenticated vs ok types have no overlap"
+      },
+      {
+        "owner": "W03/F02",
+        "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+        "line": 57,
+        "column": 16,
+        "code": "TS2339",
+        "summary": "metadata union lacks maxRequestBytes at access 1"
+      },
+      {
+        "owner": "W03/F02",
+        "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+        "line": 57,
+        "column": 72,
+        "code": "TS2339",
+        "summary": "metadata union lacks maxRequestBytes at access 2"
+      },
+      {
+        "owner": "W06/S01",
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+        "line": 226,
+        "column": 31,
+        "code": "TS2657",
+        "summary": "JSX expressions must have one parent element"
+      }
+    ],
+    "unabridged_logs": "typecheck-*.log in artifact",
+    "statuses": {
+      "packages/schema": 2,
+      "packages/protocol": 0,
+      "packages/server": 0,
+      "packages/client": 2,
+      "modules/sucafina": 2,
+      "packages/core": 0,
+      "apps/cli": 2,
+      "packages/app-shell": 1,
+      "modules/atlas/boundary": 0
+    },
+    "repeat_note": "TS1005 in schema repeats in packages/client and modules/sucafina"
+  },
+  "e2e": {
+    "command": "real bun run typecheck:sf-e2e --showConfig / --listFiles plus canonical verifier",
+    "status": "PASS_COMPILER_ONLY",
+    "files": 3697,
+    "declared_roots": 78,
+    "transitive_sources": 1346,
+    "diagnostics": 0,
+    "product_tests": "NOT_RUN_BY_128"
+  },
+  "atlas": {
+    "typecheck": "PASS",
+    "generated_before": "PASS",
+    "generate": "PASS",
+    "generated_after": "PASS",
+    "diff": "PASS"
+  },
+  "spawn_imports": "PASS",
+  "guards": {
+    "status": "FAIL",
+    "exit": 1,
+    "command": "bun run check:guards --base origin/dev",
+    "rule": "agent-scratch",
+    "gates": 56,
+    "warnings": 115,
+    "groups": {
+      "historical_55": {
+        "count": 55,
+        "predecessor_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/gate-tooling-repair/GUARD55-MANIFEST.json",
+        "status": "OPEN_INDEPENDENT_REVIEW"
+      },
+      "new_1": {
+        "path": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+        "owner": "W05/F04",
+        "reason": "Scratch or tool-output file added; genuine review required"
+      }
+    },
+    "warning_categories": {
+      "test-timeout-raised": 73,
+      "dep-new-added": 22,
+      "binary-added": 11,
+      "large-file": 4,
+      "test-globalthis": 2,
+      "js-empty-catch": 1,
+      "local-abs-path": 1,
+      "ts-double-cast": 1
+    },
+    "guards_log_sha256": "0bde4013731b9f603c3eee0c8f369eda36aa0e2b7caeae436d6ab34a6d1a3869",
+    "waivers": "NONE",
+    "self_approval": false,
+    "rule_modified": false
+  },
+  "historical_119": {
+    "source_sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "run_id": 43726143757,
+    "checks": 17,
+    "pass": 13,
+    "fail": 4,
+    "status": "HISTORICAL_NO_CROSS_SHA_ACCEPTANCE"
+  },
+  "restrictions": {
+    "product_tests": "NOT_RUN_129_OWNS",
+    "epic_execution": "NOT_RUN",
+    "dev_merge": false,
+    "deploy": false,
+    "goal_restarted": false,
+    "manual_generated_edits": false,
+    "protected_paths_preserved": true
+  },
+  "checkpoint": "HOLD_ON_C64_SOURCE_AND_GUARDS"
+}

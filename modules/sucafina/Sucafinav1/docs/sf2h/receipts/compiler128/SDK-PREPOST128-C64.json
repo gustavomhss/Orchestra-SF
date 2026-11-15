@@ -1,0 +1,507 @@
+{
+  "schema": "sf2h.compiler128.sdk-prepost-durable.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 128,
+  "source": {
+    "candidate": "C64",
+    "sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+    "origin_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+    "merge_base": "9e4f3d35833f9b2cea6abdf58f42331f3973d9bf"
+  },
+  "workflow_commit": "b7d04113f6904a65d5fb37a8cd7e7acd229783a0",
+  "run_id": 43738074189,
+  "artifact_id": 14171118214,
+  "authentic_runner_manifest": {
+    "artifact_member": "sdk-generated-manifest.json",
+    "bytes": 21470,
+    "sha256": "6b9afca16629ba55186b6d3d31736da9166b8705b3ae540cf46f3be761fb67fb"
+  },
+  "generation": {
+    "cwd": "packages/client",
+    "command": "bun run generate",
+    "exit_code": 1,
+    "result": "FAIL",
+    "cause": "GenerationError: Input schema must be a struct: server.sucafina.sucafina.installations.query",
+    "origin": {
+      "owner": "W02/F01",
+      "path": "packages/protocol/src/groups/sucafina.ts",
+      "contract": "packages/schema/src/sucafina/context.ts:SfInstallationSelector (Schema.Union)",
+      "generator": "tooling/httpapi-codegen/src/index.ts:761",
+      "boundary": "Input query must satisfy generator's struct contract; preserve strict selection and fail-closed policy"
+    }
+  },
+  "capture": {
+    "command": "git add -N -- generated paths, git diff --binary (ephemeral runner)",
+    "exit_code": 0,
+    "patch": "sdk-generated.patch",
+    "patch_bytes": 0,
+    "patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "status": "NO_VALID_GENERATED_DELTA"
+  },
+  "files": {
+    "count": 56,
+    "changed": 0,
+    "prepost": [
+      {
+        "path": "packages/client/src/generated-effect/.httpapi-codegen.json",
+        "mode": "100644",
+        "preimage_blob": "4caf4225fe4d24c569bcdc5b4c4310580cea4bbb",
+        "postimage_blob": "4caf4225fe4d24c569bcdc5b4c4310580cea4bbb",
+        "change": "UNCHANGED",
+        "bytes": 300
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsBindings.ts",
+        "mode": "100644",
+        "preimage_blob": "a6b3c71fd7450b25087a36ad980032ff3b53cb64",
+        "postimage_blob": "a6b3c71fd7450b25087a36ad980032ff3b53cb64",
+        "change": "UNCHANGED",
+        "bytes": 6681
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsJobs.ts",
+        "mode": "100644",
+        "preimage_blob": "4f54d55de7afcb498a3a0bb3bf73fd7837cb8eb7",
+        "postimage_blob": "4f54d55de7afcb498a3a0bb3bf73fd7837cb8eb7",
+        "change": "UNCHANGED",
+        "bytes": 4060
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsOperations.ts",
+        "mode": "100644",
+        "preimage_blob": "d0887ffa894462e89f33d8b87cfd87b9a66fda32",
+        "postimage_blob": "d0887ffa894462e89f33d8b87cfd87b9a66fda32",
+        "change": "UNCHANGED",
+        "bytes": 3186
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsPipelines.ts",
+        "mode": "100644",
+        "preimage_blob": "f7f514270d32430155ab062d5eecf4d5e5e6f65b",
+        "postimage_blob": "f7f514270d32430155ab062d5eecf4d5e5e6f65b",
+        "change": "UNCHANGED",
+        "bytes": 2246
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsResources.ts",
+        "mode": "100644",
+        "preimage_blob": "217435ccaf6bbe29b6474e6953d7d4c6adb4e109",
+        "postimage_blob": "217435ccaf6bbe29b6474e6953d7d4c6adb4e109",
+        "change": "UNCHANGED",
+        "bytes": 3166
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsRuns.ts",
+        "mode": "100644",
+        "preimage_blob": "72b803313a9fe886ae91ff3a24558ac565098499",
+        "postimage_blob": "72b803313a9fe886ae91ff3a24558ac565098499",
+        "change": "UNCHANGED",
+        "bytes": 10321
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsSource.ts",
+        "mode": "100644",
+        "preimage_blob": "19b2ab5748bf8d1af85d550fa7902fb6536a7105",
+        "postimage_blob": "19b2ab5748bf8d1af85d550fa7902fb6536a7105",
+        "change": "UNCHANGED",
+        "bytes": 3983
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsTransfers.ts",
+        "mode": "100644",
+        "preimage_blob": "c1451ac93fbe18efa24b0016743bbf02c12d3f90",
+        "postimage_blob": "c1451ac93fbe18efa24b0016743bbf02c12d3f90",
+        "change": "UNCHANGED",
+        "bytes": 1638
+      },
+      {
+        "path": "packages/client/src/generated-effect/actionsWorkflows.ts",
+        "mode": "100644",
+        "preimage_blob": "0fe8b54c063470506a33c01ba441fd66ea67a3c4",
+        "postimage_blob": "0fe8b54c063470506a33c01ba441fd66ea67a3c4",
+        "change": "UNCHANGED",
+        "bytes": 5290
+      },
+      {
+        "path": "packages/client/src/generated-effect/client-error.ts",
+        "mode": "100644",
+        "preimage_blob": "b8731eec8a26bd7bb8a76d16c67666e6db5af3d1",
+        "postimage_blob": "b8731eec8a26bd7bb8a76d16c67666e6db5af3d1",
+        "change": "UNCHANGED",
+        "bytes": 453
+      },
+      {
+        "path": "packages/client/src/generated-effect/client.ts",
+        "mode": "100644",
+        "preimage_blob": "5a0375bc54a838bd4677b856cdbe76d5b4bb860b",
+        "postimage_blob": "5a0375bc54a838bd4677b856cdbe76d5b4bb860b",
+        "change": "UNCHANGED",
+        "bytes": 197274
+      },
+      {
+        "path": "packages/client/src/generated-effect/index.ts",
+        "mode": "100644",
+        "preimage_blob": "b8a3ff4a7c601b739c159b176fac11cfc773f713",
+        "postimage_blob": "b8a3ff4a7c601b739c159b176fac11cfc773f713",
+        "change": "UNCHANGED",
+        "bytes": 83
+      },
+      {
+        "path": "packages/client/src/generated-effect/research.ts",
+        "mode": "100644",
+        "preimage_blob": "f5eef3ece3a301907a8e49cd2bba1af9e308df71",
+        "postimage_blob": "f5eef3ece3a301907a8e49cd2bba1af9e308df71",
+        "change": "UNCHANGED",
+        "bytes": 1124
+      },
+      {
+        "path": "packages/client/src/generated-effect/schedules.ts",
+        "mode": "100644",
+        "preimage_blob": "fd8ed926ac1a1bf2538f6ff7785ccc486706df0e",
+        "postimage_blob": "fd8ed926ac1a1bf2538f6ff7785ccc486706df0e",
+        "change": "UNCHANGED",
+        "bytes": 4437
+      },
+      {
+        "path": "packages/client/src/generated/.httpapi-codegen.json",
+        "mode": "100644",
+        "preimage_blob": "190f92c2c10e6b0126e10ef23b217ef33688dd68",
+        "postimage_blob": "190f92c2c10e6b0126e10ef23b217ef33688dd68",
+        "change": "UNCHANGED",
+        "bytes": 1086
+      },
+      {
+        "path": "packages/client/src/generated/actionsBindings-types.ts",
+        "mode": "100644",
+        "preimage_blob": "6c9308e444bb53cc959e64f6a0c3f653112a1148",
+        "postimage_blob": "6c9308e444bb53cc959e64f6a0c3f653112a1148",
+        "change": "UNCHANGED",
+        "bytes": 10187
+      },
+      {
+        "path": "packages/client/src/generated/actionsBindings.ts",
+        "mode": "100644",
+        "preimage_blob": "69eb34d13e88b50c0cfa0ef9be2b1b9ba14c1571",
+        "postimage_blob": "69eb34d13e88b50c0cfa0ef9be2b1b9ba14c1571",
+        "change": "UNCHANGED",
+        "bytes": 4975
+      },
+      {
+        "path": "packages/client/src/generated/actionsJobs-types-part-1.ts",
+        "mode": "100644",
+        "preimage_blob": "05768a45de38d645eff9a50a92c54cbf1b7a9d59",
+        "postimage_blob": "05768a45de38d645eff9a50a92c54cbf1b7a9d59",
+        "change": "UNCHANGED",
+        "bytes": 8864
+      },
+      {
+        "path": "packages/client/src/generated/actionsJobs-types-part-2.ts",
+        "mode": "100644",
+        "preimage_blob": "53c84ff2bd0a1608f1ccb60ed82b833f0376f74c",
+        "postimage_blob": "53c84ff2bd0a1608f1ccb60ed82b833f0376f74c",
+        "change": "UNCHANGED",
+        "bytes": 6732
+      },
+      {
+        "path": "packages/client/src/generated/actionsJobs-types.ts",
+        "mode": "100644",
+        "preimage_blob": "29a4a69128ff587fe0bd61c5013d3204c424daf7",
+        "postimage_blob": "29a4a69128ff587fe0bd61c5013d3204c424daf7",
+        "change": "UNCHANGED",
+        "bytes": 297
+      },
+      {
+        "path": "packages/client/src/generated/actionsJobs.ts",
+        "mode": "100644",
+        "preimage_blob": "7210e376c7ef0a687a872f0625e3eb21af14abb6",
+        "postimage_blob": "7210e376c7ef0a687a872f0625e3eb21af14abb6",
+        "change": "UNCHANGED",
+        "bytes": 2748
+      },
+      {
+        "path": "packages/client/src/generated/actionsOperations-types-part-1.ts",
+        "mode": "100644",
+        "preimage_blob": "153398e818b605facd17ad6164e3ff2be5af196f",
+        "postimage_blob": "153398e818b605facd17ad6164e3ff2be5af196f",
+        "change": "UNCHANGED",
+        "bytes": 9387
+      },
+      {
+        "path": "packages/client/src/generated/actionsOperations-types-part-2.ts",
+        "mode": "100644",
+        "preimage_blob": "6a0e37e6ea6b8797a868ce3bc1ab8fdb73a37984",
+        "postimage_blob": "6a0e37e6ea6b8797a868ce3bc1ab8fdb73a37984",
+        "change": "UNCHANGED",
+        "bytes": 8228
+      },
+      {
+        "path": "packages/client/src/generated/actionsOperations-types.ts",
+        "mode": "100644",
+        "preimage_blob": "d7f5a34c3a3e399a40394b6ee20347f3b38ea16c",
+        "postimage_blob": "d7f5a34c3a3e399a40394b6ee20347f3b38ea16c",
+        "change": "UNCHANGED",
+        "bytes": 306
+      },
+      {
+        "path": "packages/client/src/generated/actionsOperations.ts",
+        "mode": "100644",
+        "preimage_blob": "265354e2c7b1e688b13d6edec713ad9e13b1b965",
+        "postimage_blob": "265354e2c7b1e688b13d6edec713ad9e13b1b965",
+        "change": "UNCHANGED",
+        "bytes": 2277
+      },
+      {
+        "path": "packages/client/src/generated/actionsPipelines-types.ts",
+        "mode": "100644",
+        "preimage_blob": "52c53a0e3bc70626be4ebd3699ff4895be3c1058",
+        "postimage_blob": "52c53a0e3bc70626be4ebd3699ff4895be3c1058",
+        "change": "UNCHANGED",
+        "bytes": 7919
+      },
+      {
+        "path": "packages/client/src/generated/actionsPipelines.ts",
+        "mode": "100644",
+        "preimage_blob": "f9414ff883b740ba3f2e6dd5385a26335829336f",
+        "postimage_blob": "f9414ff883b740ba3f2e6dd5385a26335829336f",
+        "change": "UNCHANGED",
+        "bytes": 1638
+      },
+      {
+        "path": "packages/client/src/generated/actionsResources-types-part-1.ts",
+        "mode": "100644",
+        "preimage_blob": "6bcdc3a070d723eedac22a647998725ad6fcd7e8",
+        "postimage_blob": "6bcdc3a070d723eedac22a647998725ad6fcd7e8",
+        "change": "UNCHANGED",
+        "bytes": 8777
+      },
+      {
+        "path": "packages/client/src/generated/actionsResources-types-part-2.ts",
+        "mode": "100644",
+        "preimage_blob": "353faa495f500a78c63ca94da6a9ece93f7cdc64",
+        "postimage_blob": "353faa495f500a78c63ca94da6a9ece93f7cdc64",
+        "change": "UNCHANGED",
+        "bytes": 4985
+      },
+      {
+        "path": "packages/client/src/generated/actionsResources-types.ts",
+        "mode": "100644",
+        "preimage_blob": "c31d9b9c9d933a3591fc13b1fb68311c6159b406",
+        "postimage_blob": "c31d9b9c9d933a3591fc13b1fb68311c6159b406",
+        "change": "UNCHANGED",
+        "bytes": 224
+      },
+      {
+        "path": "packages/client/src/generated/actionsResources.ts",
+        "mode": "100644",
+        "preimage_blob": "be20543ed573f2cf164f97a1b7108ae9de2a6153",
+        "postimage_blob": "be20543ed573f2cf164f97a1b7108ae9de2a6153",
+        "change": "UNCHANGED",
+        "bytes": 1870
+      },
+      {
+        "path": "packages/client/src/generated/actionsRuns-types-part-1.ts",
+        "mode": "100644",
+        "preimage_blob": "ba01c7b40723473cabc3fd51037bdf0ca5297a71",
+        "postimage_blob": "ba01c7b40723473cabc3fd51037bdf0ca5297a71",
+        "change": "UNCHANGED",
+        "bytes": 14076
+      },
+      {
+        "path": "packages/client/src/generated/actionsRuns-types-part-2.ts",
+        "mode": "100644",
+        "preimage_blob": "66d237b4309977b6d6b62e5d1bebdb2e2da67e98",
+        "postimage_blob": "66d237b4309977b6d6b62e5d1bebdb2e2da67e98",
+        "change": "UNCHANGED",
+        "bytes": 11416
+      },
+      {
+        "path": "packages/client/src/generated/actionsRuns-types-part-3.ts",
+        "mode": "100644",
+        "preimage_blob": "b8729ac914096c0402c9e93e81a589f7c34dbe13",
+        "postimage_blob": "b8729ac914096c0402c9e93e81a589f7c34dbe13",
+        "change": "UNCHANGED",
+        "bytes": 11377
+      },
+      {
+        "path": "packages/client/src/generated/actionsRuns-types-part-4.ts",
+        "mode": "100644",
+        "preimage_blob": "654af85886fe6f2fd9e81122f0c1bf5082e93ed9",
+        "postimage_blob": "654af85886fe6f2fd9e81122f0c1bf5082e93ed9",
+        "change": "UNCHANGED",
+        "bytes": 2972
+      },
+      {
+        "path": "packages/client/src/generated/actionsRuns-types.ts",
+        "mode": "100644",
+        "preimage_blob": "ac81f449bb7b504ef8e1f5046d21955239891e56",
+        "postimage_blob": "ac81f449bb7b504ef8e1f5046d21955239891e56",
+        "change": "UNCHANGED",
+        "bytes": 678
+      },
+      {
+        "path": "packages/client/src/generated/actionsRuns.ts",
+        "mode": "100644",
+        "preimage_blob": "5a662bd9169a5fae3bf7d3a6cead5fbd95be3f33",
+        "postimage_blob": "5a662bd9169a5fae3bf7d3a6cead5fbd95be3f33",
+        "change": "UNCHANGED",
+        "bytes": 6243
+      },
+      {
+        "path": "packages/client/src/generated/actionsSource-types.ts",
+        "mode": "100644",
+        "preimage_blob": "4e30056eb7042899c1096042a632e98b2fbacbb7",
+        "postimage_blob": "4e30056eb7042899c1096042a632e98b2fbacbb7",
+        "change": "UNCHANGED",
+        "bytes": 10688
+      },
+      {
+        "path": "packages/client/src/generated/actionsSource.ts",
+        "mode": "100644",
+        "preimage_blob": "bf1228c44b7fa74e7b6d83806ef9e48e594c404a",
+        "postimage_blob": "bf1228c44b7fa74e7b6d83806ef9e48e594c404a",
+        "change": "UNCHANGED",
+        "bytes": 2746
+      },
+      {
+        "path": "packages/client/src/generated/actionsTransfers-types.ts",
+        "mode": "100644",
+        "preimage_blob": "10adfa0bcf66bb2160c5044889053ae454686e16",
+        "postimage_blob": "10adfa0bcf66bb2160c5044889053ae454686e16",
+        "change": "UNCHANGED",
+        "bytes": 3281
+      },
+      {
+        "path": "packages/client/src/generated/actionsTransfers.ts",
+        "mode": "100644",
+        "preimage_blob": "a8bda0b50f29f032d11eb73a805a3f008fd91ab4",
+        "postimage_blob": "a8bda0b50f29f032d11eb73a805a3f008fd91ab4",
+        "change": "UNCHANGED",
+        "bytes": 1084
+      },
+      {
+        "path": "packages/client/src/generated/actionsWorkflows-types-part-1.ts",
+        "mode": "100644",
+        "preimage_blob": "01098e7eed6565371db4281d7c3d563823de2a6e",
+        "postimage_blob": "01098e7eed6565371db4281d7c3d563823de2a6e",
+        "change": "UNCHANGED",
+        "bytes": 9667
+      },
+      {
+        "path": "packages/client/src/generated/actionsWorkflows-types-part-2.ts",
+        "mode": "100644",
+        "preimage_blob": "8b3aa0f673769a5a78b2a9e27cdc05123be1cad6",
+        "postimage_blob": "8b3aa0f673769a5a78b2a9e27cdc05123be1cad6",
+        "change": "UNCHANGED",
+        "bytes": 6832
+      },
+      {
+        "path": "packages/client/src/generated/actionsWorkflows-types.ts",
+        "mode": "100644",
+        "preimage_blob": "dee7e21645ac92948bdc94c00705ed33e3d1c280",
+        "postimage_blob": "dee7e21645ac92948bdc94c00705ed33e3d1c280",
+        "change": "UNCHANGED",
+        "bytes": 421
+      },
+      {
+        "path": "packages/client/src/generated/actionsWorkflows.ts",
+        "mode": "100644",
+        "preimage_blob": "4800ad697716802787596d40e795cdb028c15eac",
+        "postimage_blob": "4800ad697716802787596d40e795cdb028c15eac",
+        "change": "UNCHANGED",
+        "bytes": 3466
+      },
+      {
+        "path": "packages/client/src/generated/client-error.ts",
+        "mode": "100644",
+        "preimage_blob": "c278f0ddc806e3b47ff66f9d6d4b12095d73aaca",
+        "postimage_blob": "c278f0ddc806e3b47ff66f9d6d4b12095d73aaca",
+        "change": "UNCHANGED",
+        "bytes": 319
+      },
+      {
+        "path": "packages/client/src/generated/client.ts",
+        "mode": "100644",
+        "preimage_blob": "b9f507fdde3425c80f5da17b029c790c92d4de34",
+        "postimage_blob": "b9f507fdde3425c80f5da17b029c790c92d4de34",
+        "change": "UNCHANGED",
+        "bytes": 169430
+      },
+      {
+        "path": "packages/client/src/generated/errors.ts",
+        "mode": "100644",
+        "preimage_blob": "e233a1322f370be65aec97873489d5305d52b6c8",
+        "postimage_blob": "e233a1322f370be65aec97873489d5305d52b6c8",
+        "change": "UNCHANGED",
+        "bytes": 10738
+      },
+      {
+        "path": "packages/client/src/generated/index.ts",
+        "mode": "100644",
+        "preimage_blob": "8f420039bd548a21207ad6727a74efd8dad3db40",
+        "postimage_blob": "8f420039bd548a21207ad6727a74efd8dad3db40",
+        "change": "UNCHANGED",
+        "bytes": 131
+      },
+      {
+        "path": "packages/client/src/generated/request.ts",
+        "mode": "100644",
+        "preimage_blob": "3f4791f495716ce7446ba634a32648b594092be4",
+        "postimage_blob": "3f4791f495716ce7446ba634a32648b594092be4",
+        "change": "UNCHANGED",
+        "bytes": 341
+      },
+      {
+        "path": "packages/client/src/generated/research-types.ts",
+        "mode": "100644",
+        "preimage_blob": "82590faedfd51d605ea53e0beec599eda45263ea",
+        "postimage_blob": "82590faedfd51d605ea53e0beec599eda45263ea",
+        "change": "UNCHANGED",
+        "bytes": 3830
+      },
+      {
+        "path": "packages/client/src/generated/research.ts",
+        "mode": "100644",
+        "preimage_blob": "4aa456ae526652f014d8b80be17e7a94ee17b564",
+        "postimage_blob": "4aa456ae526652f014d8b80be17e7a94ee17b564",
+        "change": "UNCHANGED",
+        "bytes": 906
+      },
+      {
+        "path": "packages/client/src/generated/schedules-types.ts",
+        "mode": "100644",
+        "preimage_blob": "cefc796325346b65cbbdcdef63f2f89c45fd67d2",
+        "postimage_blob": "cefc796325346b65cbbdcdef63f2f89c45fd67d2",
+        "change": "UNCHANGED",
+        "bytes": 9431
+      },
+      {
+        "path": "packages/client/src/generated/schedules.ts",
+        "mode": "100644",
+        "preimage_blob": "377bd856db524963d7174b3d27892a6f74e8766a",
+        "postimage_blob": "377bd856db524963d7174b3d27892a6f74e8766a",
+        "change": "UNCHANGED",
+        "bytes": 3207
+      },
+      {
+        "path": "packages/client/src/generated/types.ts",
+        "mode": "100644",
+        "preimage_blob": "85c5075ae725bc227cd3dfdc754af8475533df8a",
+        "postimage_blob": "85c5075ae725bc227cd3dfdc754af8475533df8a",
+        "change": "UNCHANGED",
+        "bytes": 506095
+      }
+    ]
+  },
+  "provenance": "Preimage Git blobs from exact C64 Git trees; postimage identity cross-checked with authenticated runner's 56-leaf sdk-generated-manifest.json and 0-byte diff. Per-file post SHA256 and bytes available in archived original JSON.",
+  "source_to_consumer": [
+    "packages/protocol/src/groups/sucafina.ts",
+    "packages/schema/src/sucafina/context.ts",
+    "packages/server/src/handlers/sucafina.ts",
+    "packages/client/src/contract.ts",
+    "packages/client/script/build.ts",
+    "packages/client/src/generated/**",
+    "packages/client/src/generated-effect/**"
+  ],
+  "next": "125 coordinates upstream product fix; 128 reruns only on new exact integrated source; never manually edit generated."
+}
