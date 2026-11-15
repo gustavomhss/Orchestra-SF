@@ -1,0 +1,277 @@
+{
+  "schema": "sf2h.repair202.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 202,
+  "epoch": "compiler-source-e1-browser202",
+  "state": "ARTIFACT_READY_SOURCE_NOT_INTEGRATED_OR_QUALIFIED",
+  "branch": "sf-context-types",
+  "source_commit": "3b0d6e5c08b11dd2a152b2f455e80113f1188755",
+  "ack_commit": "ada6f419b4a33278722b978ce1e5ca1cf768a49a",
+  "prepared_head": "9a2ca9055c8cf7f82deb5fa2d711383e5729b2da",
+  "source_tree": "d4c83d87bfcc4f79f065e776981251b46d1abf34",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair202/S0-FENCE.json",
+    "blob": "0eadcf7fe1085e50c1340873b6a7bae631f93494",
+    "source202": "f552f02336a4de85e7c62ca1e19baed23d17ae8b",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_not_exposed": true,
+    "predecessor_termination_claimed": false,
+    "integrator": 189,
+    "compiler": 190,
+    "ci": 200,
+    "goal": "paused",
+    "GLOBAL_RELEASE": false
+  },
+  "changes": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+      "pre_blob": "03a47cf080fc5b9751dbadad272c14d17f5cfc34",
+      "post_blob": "1406e7aa7b4832ccf923cf02f1789b6a1defccce",
+      "cause": [
+        "TS7006 at historical line99: annotate admitted action as string without changing source.actions literal allowlist and CAP-specific membership",
+        "TS2322 at historical line152: preserve each frozen family/resource pair with Schema.is(SfResourceAvailability) runtime discriminant guard before append; mismatching pair fails closed",
+        "Revalidate availability before final SfContextSchema check; original Request, triple admit, stamp, principalRef/policyVersion/accessRevision, binding identity and operational probes preserved"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts",
+      "pre_blob": "9fc888c5ceba20ca321e90ff8bc8e64e0c3acdad",
+      "post_blob": "aa0feb2c58be8276dfdf3256693a22dda17f64e0",
+      "cause": [
+        "18 hosted TS2769 overload diagnostics from const mismatch and identities inferred to {status:string,reason:string}; keep exact expected values but type both literals as const",
+        "Preserve all 16 negative/contract test cases and assertions; add one CAP26 vs CAP25-only submit_pr denial negative fixture (17th test, not an installed-native witness)"
+      ]
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/context.ts",
+      "pre_blob": "940f8fc612f7dee3a3c412075a8e16d3d6e21410",
+      "post_blob": "940f8fc612f7dee3a3c412075a8e16d3d6e21410",
+      "status": "READ_ONLY_UNCHANGED; existing 189-installed wiring/reader preserved"
+    }
+  ],
+  "already_integrated_no_repatch": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob_at_source": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+      "behavior": "createSfLiveContext({original Request admitted via authority.readContextAdmission, identity binding, authMode, destinations mapped from ACL-approved pages})",
+      "writer": "189-only",
+      "change": "NONE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob_at_source": "8dcafe957590c47f342786e6fb79cd231fe69714",
+      "behavior": "createSfContextHandler(nativeDependenciesBase)",
+      "change": "NONE"
+    },
+    {
+      "path": "packages/schema/src/sucafina/context.ts",
+      "blob_at_source": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+      "change": "NONE; strict 70-arm family/resource union retained"
+    },
+    {
+      "path": "packages/schema/src/sucafina/common.ts",
+      "blob_at_source": "f486d0bdb266935791059514c11c34372204623f",
+      "change": "NONE; operation IDs remain frozen"
+    }
+  ],
+  "criteria": {
+    "original_work_order": "F01",
+    "canonical_task_refs": [
+      "WP01.T01",
+      "WP01.T03",
+      "WP00.T02",
+      "WP10.T01"
+    ],
+    "cases": [
+      {
+        "id": "F01-77-CTX",
+        "status": "SOURCE_NEGATIVE_WRITTEN;INTEGRATED_QUALIFICATION_NOT_RUN",
+        "evidence": "original binding query, fail closed on mismatch/rebind/late responses; no fallback"
+      },
+      {
+        "id": "F01-AC01",
+        "status": "NOT_RUN",
+        "reason": "real installed owner change/purge requires qualification"
+      },
+      {
+        "id": "F01-AC02",
+        "status": "NOT_RUN",
+        "reason": "dirty unmount UI/human decision requires C and browser integration"
+      },
+      {
+        "id": "F01-AC03",
+        "status": "NOT_RUN",
+        "reason": "back/reload same-owner UI behavior requires C and browser integration"
+      }
+    ],
+    "synthetic_boundary_tests": 17,
+    "original_negative_tests_preserved": 16,
+    "no_native_positive_admission_claimed": true,
+    "operational_when_no_producer": "all operations unavailable except current admitted ctx.context",
+    "authorization_guards": [
+      "original Request identity preserved across awaits",
+      "principalRef authenticated from private authority, never client",
+      "same installation/project/host live binding object across awaits",
+      "policyVersion and accessRevision checked before/after reads",
+      "no foreign-owner leak, revoked/changed binding rejected",
+      "closed CAP/page/action membership",
+      "no readiness from method/catalog presence",
+      "HEAD no readContext side effects"
+    ]
+  },
+  "diagnostics": {
+    "historical_w": "77e58de895b5157b2a32e3427483bd12f40a7525",
+    "historical_tree": "28feb531911172b68a5615e81510a00fda9cb1b8",
+    "run": 43772959867,
+    "job": 132992733158,
+    "artifact": 14185067705,
+    "artifact_sha256": "10cc10bd1d742c06ce8cd87ea8d7b2b14dbb80fada9551c826e3f6383f70d547",
+    "findings_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation190/FINDINGS-190-W77e.md",
+    "source_own": [
+      {
+        "file": "live-context.ts",
+        "line": 99,
+        "code": "TS7006"
+      },
+      {
+        "file": "live-context.ts",
+        "line": 152,
+        "code": "TS2322"
+      }
+    ],
+    "tests_own": [
+      {
+        "file": "live-context.test.ts",
+        "line": 35,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 45,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 54,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 55,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 56,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 57,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 58,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 95,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 108,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 119,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 131,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 144,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 154,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 176,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 186,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 198,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 208,
+        "code": "TS2769"
+      },
+      {
+        "file": "live-context.test.ts",
+        "line": 221,
+        "code": "TS2769"
+      }
+    ],
+    "others_not_202": [
+      "Work201: work.test.ts line41/51/52/102/208/211/214/217/234, plus packages/schema/src/sucafina/work.ts:21 TS2345; owner201",
+      "Client transport/bindings/people and SDK, Domain W14 projection, runtime workbooks and related transitive package occurrences: not writer202; do not claim this patch fixes them"
+    ],
+    "browser_run": 43773852118,
+    "browser_result": "7PASS_1FAIL_NOT_INSTALLED_NATIVE_POSITIVE",
+    "historic_candidate_not_current_product": true
+  },
+  "validation": {
+    "local_tests": "NOT_RUN_USER_PROHIBITED",
+    "local_typecheck": "NOT_RUN_USER_PROHIBITED",
+    "build": "NOT_RUN_USER_PROHIBITED",
+    "validators": "NOT_RUN_USER_PROHIBITED",
+    "new_ci_dispatch": "NOT_RUN_NO_202_DISPATCH_AUTHORITY",
+    "hosted_compiler_of_new_blobs": "NOT_RUN",
+    "hosted_tests_of_new_blobs": "NOT_RUN",
+    "runtime_native_positive": "NOT_RUN",
+    "browser_integration": "NOT_RUN",
+    "historical_w77e": "FAIL_ON_OLD_TREE_NON_TRANSFERABLE",
+    "global_release": false
+  },
+  "consumers": {
+    "integrator189": {
+      "branch": "sf2-stack",
+      "pr": 65,
+      "action": "CAS-consume exactly the two new code/test blobs on current preimages; do not reapply 171/172 or modify host/context/schema; register C/tree and direct consumer ACK. If preimage drift, reconcile semantically, never force."
+    },
+    "compiler190": {
+      "branch": "sf-compiler-checks",
+      "pr": 107,
+      "action": "AFTER 189 acceptance of same exact C/tree, deduplicate prior W and run hosted bun typecheck in apps/cli and modules/sucafina with dependent Schema result annotated. Report TS7006/TS2322/18 TS2769 absent/present against new blobs, preserve unrelated 201 diagnostics; no duplicate dispatch or generated SDK."
+    },
+    "product_ci200": {
+      "branch": "sf-ci-validation",
+      "pr": 106,
+      "action": "AFTER 189 same C/tree and actual runner/fixtures, own single dispatcher test:ci selection: sucafina test/native-ui-contract/live-context.test.ts linux; separate app-shell test-browser/sucafina-native/context.test.ts only if installed harness/qualified runtime supplied; dedup by W/tree+ordered selectors+OS/config/fixtures, retain run/job/attempt, fail/skip not PASS."
+    }
+  },
+  "shared_patch_for_189": "NONE_REQUIRED: current host-context wired and untouched; missing real operational probes are external positive evidence dependency, not a reason to fabricate readiness",
+  "status_note": "Source output ARTIFACT_READY, NOT INTEGRATED, NOT QUALIFIED, no FINAL or release. Comments on PRs are notices, not chat ACK/wake."
+}

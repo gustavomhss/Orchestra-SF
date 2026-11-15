@@ -1,0 +1,10 @@
+# Missão 202 — requests cirúrgicos pós-consumo 189
+
+**Fonte:** `sf-context-types` código `3b0d6e5c08b11dd2a152b2f455e80113f1188755`; blobs F01 `1406e7aa7b4832ccf923cf02f1789b6a1defccce`, testes `aa0feb2c58be8276dfdf3256693a22dda17f64e0`. **Validação nova: NOT_RUN.**
+
+1. **189 / PR65 (única integradora):** consumir por CAS os dois blobs exatos na `sf2-stack` atual; preimages `03a47cf080fc5b9751dbadad272c14d17f5cfc34` / `9fc888c5ceba20ca321e90ff8bc8e64e0c3acdad`. Reconciliar qualquer drift, sem force/reset. `context.ts` `940f8fc612f7dee3a3c412075a8e16d3d6e21410` permanece intacto, assim como `host-context.ts`, `product-authority.ts`, schema, entry e SDK. A ponte 171/172 foi integrada; nenhuma atualização compartilhada necessária.
+2. **190 / PR107 (após ACK 189 e SHA de C/tree):** executar hospedado somente `bun typecheck` de `apps/cli` e `modules/sucafina` (dedupe por W/tree), identificar os dois erros `TS7006:99`, `TS2322:152` e os 18 `TS2769` dos testes; não absorver nem corrigir os 9 casos de `work.test.ts`/Schema Work201 ou erros de outros writers. Relatar run/job/attempt, fonte e novos blobs. Não gerar SDK porque nenhum contrato público mudou.
+3. **200 / PR106 (após mesmo ACK 189; dispatcher exclusivo):** selecionar `bun run test:ci sucafina test/native-ui-contract/live-context.test.ts --os linux` no runner existente, apenas esses 17 casos contratuais, sem reexecução indevida. Depois, se houver instalação/identidades F04 reais, seleção separada `packages/app-shell/test-browser/sucafina-native/context.test.ts` e prova nativa positiva; jamais contabilizar 17 fixtures como a última. Chave W/tree+selectors ordenados+OS/config+fixtures/inputs. Capturar job/run/attempt e triagem de PASS/FAIL/SKIP.
+4. **Evidência de origem, não sucesso novo:** run 43772959867 / job 132992733158 / artifact 14185067705. Browser 43773852118 teve 7 PASS e 1 FAIL, não prova nativa instalada. `F01-77-CTX` continua pendente de qualificação; `F01-AC01/02/03` NOT_RUN.
+
+A Goal nativa continua pausada; `GLOBAL_RELEASE=false`. Publicar comentário não desperta outros chats e não concede ACK de consumidor.
