@@ -358,11 +358,19 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
         if(status===401||status===403)setUi("page",null)
         return
       }
-      currentDraft.discard()
+      // Only the original explicit 200/ok response confirms this command;
+      // neither a queue move nor a changed amount is a synthetic receipt.
+      currentDraft.confirmSave({kind:"confirmed-without-projection",
+        operationRef,resultVersion:null})
+      host.ready()?.drafts.discard({
+        surfaceId:"CAP26",
+        identity:{kind:"record",recordRef:intent.source.requestRef as SfRef},
+        editScopeKey:"CAP26:remaining-decision" as SfEditScopeKey,
+      })
       setUi("review",null)
       setUi("phase","verifying")
-      // The original producer can advance to a new approval level or to a
-      // rejected stage. A command acknowledgement is NOT a receipt.
+      // A later approval level must be loaded under a fresh current holder,
+      // version and server-side action admission, not the old decision draft.
       await refresh(token,intent.source.requestRef)
       if(authority()===token)setUi("phase","producer-confirmed")
     }catch{

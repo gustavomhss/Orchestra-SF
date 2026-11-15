@@ -22,7 +22,7 @@ import "./sourcing.css"
 type PageRead =
   | Readonly<{kind:"ok";page:Cap25PageOk}>
   | Readonly<{kind:"unavailable"|"denied"|"session-expired"|"stale"|"not-found"|"invalid"}>
-type Phase = "idle" | "reviewing" | "checking" | "submitting" | "outcome-unknown" | "producer-confirmed" | "conflict" | "failed"
+type Phase = "idle" | "reviewing" | "checking" | "submitting" | "outcome-unknown" | "verifying" | "producer-confirmed" | "conflict" | "failed"
 type Intent = Readonly<{
   action: SourcingAction
   requestRef: string
@@ -38,7 +38,7 @@ const m = (key:SfU12CopyKey):SfMessage => ({key:k(key)})
 const data = (text:string):SfText => ({kind:"data",text})
 const asString = (v:unknown):string => v == null ? "" : typeof v === "string" ? v : String(v)
 const truth = (v:unknown) => v === true || v === "true" || v === "on"
-const active = (v:Phase) => ["reviewing","checking","submitting","outcome-unknown"].includes(v)
+const active = (v:Phase) => ["reviewing","checking","submitting","verifying","outcome-unknown"].includes(v)
 const toView = (v:unknown) => ({kind:"text" as const,text:data(v == null || v === "" ? "—" : asString(v))})
 const scoreValue = (scores:QuoteEdit["scores"], index:number) =>
   Array.isArray(scores) ? scores[index] : scores && typeof scores === "object" ? scores[String(index)] : undefined
@@ -289,7 +289,7 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
     if(!intent||!can(intent.action)||intent.token!==authority())
       return {kind:"blocked",labelKey:k("sf.u12.readOnly"),reasons:[m("sf.u12.readOnly")]} as const
     return {kind:"admitted",labelKey:k("sf.u12.confirm"),purpose:
-      intent.action==="select_quote"?"select":"submit" as "select"|"submit"|"save",
+      (intent.action==="select_quote"?"select":intent.action==="save"?"save":"submit") as "select"|"submit"|"save",
       binding:{kind:"catalog-command",operationId:
         ("domain.command.CAP25."+intent.action) as
         "domain.command.CAP25.save"|"domain.command.CAP25.select_quote"|"domain.command.CAP25.submit_sourcing",
@@ -370,13 +370,22 @@ export function SfSourcingView(props:SfSurfaceProps<"CAP25">):JSX.Element {
         if(code===401||code===403)setUi("page",null)
         return
       }
-      setUi("phase","producer-confirmed")
       setUi("review",null)
       setUi("sourceWarnings",response.body.warnings??[])
-      controllerDraft?.discard()
-      // A successful POST is not a receipt; a fresh authorized read displays
-      // the actual stage, submitted FX snapshot, quote IDs and version.
-      await refresh(token,intent.requestRef)
+      setUi("phase","verifying")
+      // The producer returned an explicit success, not a receipt. Close the
+      // exact pending draft fence only with that acknowledgement, and use a
+      // later authorized projection only when its version actually advanced.
+      const confirmedPage=await refresh(token,intent.requestRef)
+      if(controller.signal.aborted||authority()!==token)return
+      const confirmedRecord=confirmedPage?uniqueRequest(confirmedPage,intent.requestRef):null
+      const confirmedVersion=confirmedPage?requestVersion(confirmedPage,intent.requestRef):null
+      if(confirmedRecord&&confirmedVersion!==null&&confirmedVersion!==intent.version)
+        controllerDraft?.confirmSave({kind:"projected",operationRef:intentRef,
+          baseVersion:confirmedVersion,value:editableSourcing(confirmedRecord)})
+      else controllerDraft?.confirmSave({kind:"confirmed-without-projection",
+        operationRef:intentRef,resultVersion:confirmedVersion})
+      setUi("phase","producer-confirmed")
     }catch{
       if(!controller.signal.aborted&&authority()===token){
         controllerDraft?.setPhase("outcome-unknown")

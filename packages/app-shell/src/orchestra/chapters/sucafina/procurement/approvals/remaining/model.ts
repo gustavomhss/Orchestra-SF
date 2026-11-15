@@ -55,7 +55,7 @@ export function findPendingApproval(page:Cap26PageOk,ref:string):Lookup {
   const baseCurrency=typeof submittedCurrency==="string"&&/^[A-Z]{3}$/.test(submittedCurrency)
     ? submittedCurrency : null
   const actions=(["approve","reject"] as const).filter((action)=>
-    groups[0]!=="others"&&page.value.allowedActionIds.includes(action))
+    groups[0]!=="others"&&baseCurrency!==null&&page.value.allowedActionIds.includes(action))
   const holderName=holderId===null?null:page.value.data.directory.find((person)=>person.id===holderId)?.name??null
   const revision=JSON.stringify({request,version,approval,stage,current:current.step,
     groups,allowedActionIds:page.value.allowedActionIds,stamp:page.context,

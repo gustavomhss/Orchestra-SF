@@ -33,7 +33,7 @@ type Intent = Readonly<{
   value: SupplierEdit
   intentRef: SfIntentRef
 }>
-type Phase = "idle" | "reviewing" | "checking" | "submitting" | "outcome-unknown" | "producer-confirmed" | "conflict" | "failed"
+type Phase = "idle" | "reviewing" | "checking" | "submitting" | "outcome-unknown" | "verifying" | "producer-confirmed" | "conflict" | "failed"
 const k = (value: SfU14CopyKey) => value as SfCopyKey
 const m = (value: SfU14CopyKey): SfMessage => ({ key: k(value) })
 const data = (text: string): SfText => ({ kind: "data", text })
@@ -47,7 +47,7 @@ const value = (item: unknown): SfDisplayValue => {
 const display = (item: unknown) => typeof item === "string" ? item : item == null ? "" : String(item)
 const fieldKey = (field: string) => k(("sf.u14.field." + field) as SfU14CopyKey)
 const bankSet = new Set<string>(bankFields)
-const active = (phase: Phase) => phase === "reviewing" || phase === "checking" || phase === "submitting" || phase === "outcome-unknown"
+const active = (phase: Phase) => phase === "reviewing" || phase === "checking" || phase === "submitting" || phase === "verifying" || phase === "outcome-unknown"
 
 export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
   const host = useSfContext()
@@ -394,13 +394,26 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     const requestBody = { page: "Suppliers", action: intent.action, id: intent.ref ?? undefined,
       version: intent.version,
       values: ["create","save","change-bank"].includes(intent.action) ? { supplier: intent.value } : {} }
-    const bytes = new Uint8Array(await crypto.subtle.digest(
-      "SHA-256", new TextEncoder().encode(JSON.stringify(requestBody)),
-    ))
-    const payloadDigest = Array.from(bytes, (item) => item.toString(16).padStart(2,"0")).join("")
+    let payloadDigest: string
+    try {
+      const bytes = new Uint8Array(await crypto.subtle.digest(
+        "SHA-256", new TextEncoder().encode(JSON.stringify(requestBody)),
+      ))
+      payloadDigest = Array.from(bytes, (item) => item.toString(16).padStart(2,"0")).join("")
+    } catch {
+      setUi("phase","failed")
+      setUi("error","unavailable")
+      sending = false
+      return
+    }
     if (controller.signal.aborted || token !== authority()) { sending = false; return }
-    controllerDraft?.setPending({operationRef:opRef,idempotencyKey,payloadDigest,expectedVersion:intent.ref ? intent.version : null})
-    controllerDraft?.setPhase("submitting")
+    // A status action never consumes the general or privileged bank draft.
+    const editsDraft = intent.action === "create" || intent.action === "save" || intent.action === "change-bank"
+    if (editsDraft) {
+      controllerDraft?.setPending({operationRef:opRef,idempotencyKey,payloadDigest,
+        expectedVersion:intent.ref ? intent.version : null})
+      controllerDraft?.setPhase("submitting")
+    }
     setUi("phase", "submitting")
     try {
       const client = createSfProcurementClient(host.ready()!.transport)
@@ -438,19 +451,41 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
         if (status === 401 || status === 403) setUi("page", null)
         return
       }
-      // The source acknowledges a command, not an explicit receipt. A fresh
-      // read is required before another action can be prepared.
-      setUi("phase", "producer-confirmed")
+      // A successful producer acknowledgement can close only this exact
+      // operation fence. Neither a hidden bank value nor a new supplier ID
+      // is reconstructed from the submitted request.
       setUi("confirmedMessage", response.body.warnings?.join("; ") ?? null)
       setUi("review", null)
-      controllerDraft?.discard()
+      setUi("phase", "verifying")
+      if (editsDraft && intent.action !== "save") {
+        controllerDraft?.confirmSave({kind:"confirmed-without-projection",
+          operationRef:opRef,resultVersion:null})
+        host.ready()?.drafts.discard({
+          surfaceId:"CAP27",
+          identity:intent.ref
+            ? {kind:"record",recordRef:intent.ref as SfRef}
+            : {kind:"new",newIntentRef:"CAP27:supplier-create" as SfIntentRef},
+          editScopeKey:(intent.action==="change-bank"?"CAP27:bank":"CAP27:general") as SfEditScopeKey,
+        })
+      }
       if (intent.action === "create" || intent.action === "delete") {
         setUi("selected", null)
         setUi("mode", "detail")
       } else if (intent.action === "change-bank") {
         setUi("mode", "detail")
       }
-      await refresh(token)
+      const confirmedPage=await refresh(token)
+      if(controller.signal.aborted||authority()!==token)return
+      if(intent.action==="save"&&controllerDraft) {
+        const confirmed=confirmedPage&&intent.ref?uniqueSupplier(confirmedPage,intent.ref):null
+        const confirmedVersion=confirmedPage&&intent.ref?supplierVersion(confirmedPage,intent.ref):null
+        if(confirmed&&confirmedVersion!==null&&confirmedVersion!==intent.version)
+          controllerDraft.confirmSave({kind:"projected",operationRef:opRef,
+            baseVersion:confirmedVersion,value:supplierEdit(confirmed)})
+        else controllerDraft.confirmSave({kind:"confirmed-without-projection",
+          operationRef:opRef,resultVersion:confirmedVersion})
+      }
+      setUi("phase", "producer-confirmed")
     } catch {
       if (!controller.signal.aborted && token === authority()) {
         controllerDraft?.setPhase("outcome-unknown")
