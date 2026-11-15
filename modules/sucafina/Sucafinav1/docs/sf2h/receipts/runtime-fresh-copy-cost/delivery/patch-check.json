@@ -1,0 +1,259 @@
+{
+  "schema": "runtime-fresh-copy-cost-patch-check/v1",
+  "status": "PASS",
+  "generated_at_utc": "2026-11-15T00:54:37.776009+00:00",
+  "validation_kind": "local text-artifact reconstruction; no product execution",
+  "source_candidate_sha_provided_by_coordinator": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+  "expected_blob_identities_verified": {
+    "runtime": {
+      "pre": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "post": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    "foreign_oracle": {
+      "pre": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+      "post": "0ac3c01f77c013d05ee8fecb69c401acd126b942"
+    }
+  },
+  "input_stability_checked": true,
+  "foreign_patch_matches_exact_supplied_pre_and_post": true,
+  "results": {
+    "runtime.patch": {
+      "status": "PASS",
+      "validation": "textual patch reconstruction only",
+      "patch_sha256": "80946f6552a2ecce1a67eb209c11cb4920e4d6ea00becfe38f74f15bf9a4f8e4",
+      "patch_bytes": 9128,
+      "commands": [
+        {
+          "argv": [
+            "git",
+            "apply",
+            "--check",
+            "-"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "apply",
+            "-"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "partial_tree_only": true,
+      "preimage_file_count": 1,
+      "postimage_file_count": 1,
+      "no_unexpected_files": true,
+      "reconstructed_postimages": {
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts": {
+          "blob_sha1": "666259511ad459629ef52f48aca20b231b0dff4b",
+          "sha256": "1f4b260f41c1d6aa521f9e127c912cdaff5aac903525de7a8d49b3d145b0f192",
+          "bytes": 32899,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        }
+      }
+    },
+    "source-and-tests.patch": {
+      "status": "PASS",
+      "validation": "textual patch reconstruction only",
+      "patch_sha256": "0df965702e12171ebebf0a5e13daad0db93410d0059a5b7b3a1721eae79c24b5",
+      "patch_bytes": 69860,
+      "commands": [
+        {
+          "argv": [
+            "git",
+            "apply",
+            "--check",
+            "-"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "apply",
+            "-"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "partial_tree_only": true,
+      "preimage_file_count": 1,
+      "postimage_file_count": 8,
+      "no_unexpected_files": true,
+      "reconstructed_postimages": {
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts": {
+          "blob_sha1": "666259511ad459629ef52f48aca20b231b0dff4b",
+          "sha256": "1f4b260f41c1d6aa521f9e127c912cdaff5aac903525de7a8d49b3d145b0f192",
+          "bytes": 32899,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts": {
+          "blob_sha1": "5834b18e408db1015636479f28edee21ec0c4901",
+          "sha256": "2f98f2ebb15569807476c7de8749984d493c12fcc1234a570d9ce59549ad8b0b",
+          "bytes": 3235,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts": {
+          "blob_sha1": "0a46c9113127542c43aed60951514a7397b5fdb6",
+          "sha256": "900b1d820a4c47d90419f36df9a4373442c629593139d5d85f24e2bbe42a2896",
+          "bytes": 15583,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts": {
+          "blob_sha1": "fbf54acc8bc81a9afa27a5299bca305946597e98",
+          "sha256": "b7cecc84c15cad7098472b9e8f834024bca86a91374545c7e5c97c3dfdd3d806",
+          "bytes": 3147,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts": {
+          "blob_sha1": "a03d190f04a488ac3a7f508b7a521bcd67be63a5",
+          "sha256": "28aaa18983b223fe549786a94c88614eedf63eda694eae0cf980b3c5d51c45fc",
+          "bytes": 11459,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts": {
+          "blob_sha1": "d2311405a63c142566fd20f0b84cd6797a60f286",
+          "sha256": "dc5632446258cf37b04419cabe9adeb07796175e9c7ff2ec6ca20610edca6b7b",
+          "bytes": 9950,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts": {
+          "blob_sha1": "d6f54942abbef1d9df3d5e73313083ab971f8347",
+          "sha256": "155b6b5056a9b58296105956adcc23aa9af2b2bc78d9985a9bde5b9c3b1d1a63",
+          "bytes": 7727,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts": {
+          "blob_sha1": "dbca223c910c74662b4a42150146d666a42f154d",
+          "sha256": "c009403c6e5c172f98d6a6bb6d5875bc366e5c84b13d49479cde7a008165b6f0",
+          "bytes": 5559,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        }
+      }
+    },
+    "composition-with-oracle.patch": {
+      "status": "PASS",
+      "validation": "textual patch reconstruction only",
+      "patch_sha256": "d7319e6c1b3b234e0adcad0ca6a075271f53f7d2fafc6401675d7a8df18a7a57",
+      "patch_bytes": 71253,
+      "commands": [
+        {
+          "argv": [
+            "git",
+            "apply",
+            "--check",
+            "-"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "argv": [
+            "git",
+            "apply",
+            "-"
+          ],
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      ],
+      "partial_tree_only": true,
+      "preimage_file_count": 2,
+      "postimage_file_count": 9,
+      "no_unexpected_files": true,
+      "reconstructed_postimages": {
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts": {
+          "blob_sha1": "666259511ad459629ef52f48aca20b231b0dff4b",
+          "sha256": "1f4b260f41c1d6aa521f9e127c912cdaff5aac903525de7a8d49b3d145b0f192",
+          "bytes": 32899,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts": {
+          "blob_sha1": "5834b18e408db1015636479f28edee21ec0c4901",
+          "sha256": "2f98f2ebb15569807476c7de8749984d493c12fcc1234a570d9ce59549ad8b0b",
+          "bytes": 3235,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts": {
+          "blob_sha1": "0a46c9113127542c43aed60951514a7397b5fdb6",
+          "sha256": "900b1d820a4c47d90419f36df9a4373442c629593139d5d85f24e2bbe42a2896",
+          "bytes": 15583,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts": {
+          "blob_sha1": "fbf54acc8bc81a9afa27a5299bca305946597e98",
+          "sha256": "b7cecc84c15cad7098472b9e8f834024bca86a91374545c7e5c97c3dfdd3d806",
+          "bytes": 3147,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts": {
+          "blob_sha1": "a03d190f04a488ac3a7f508b7a521bcd67be63a5",
+          "sha256": "28aaa18983b223fe549786a94c88614eedf63eda694eae0cf980b3c5d51c45fc",
+          "bytes": 11459,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts": {
+          "blob_sha1": "d2311405a63c142566fd20f0b84cd6797a60f286",
+          "sha256": "dc5632446258cf37b04419cabe9adeb07796175e9c7ff2ec6ca20610edca6b7b",
+          "bytes": 9950,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts": {
+          "blob_sha1": "d6f54942abbef1d9df3d5e73313083ab971f8347",
+          "sha256": "155b6b5056a9b58296105956adcc23aa9af2b2bc78d9985a9bde5b9c3b1d1a63",
+          "bytes": 7727,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts": {
+          "blob_sha1": "dbca223c910c74662b4a42150146d666a42f154d",
+          "sha256": "c009403c6e5c172f98d6a6bb6d5875bc366e5c84b13d49479cde7a008165b6f0",
+          "bytes": 5559,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        },
+        "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts": {
+          "blob_sha1": "0ac3c01f77c013d05ee8fecb69c401acd126b942",
+          "sha256": "ae490f6f7a0fb47313011123c6d3dc5c5a97fbb07dec0ba43a6276ff96f1a6e5",
+          "bytes": 15836,
+          "mode": "100644",
+          "byte_equal_to_expected": true
+        }
+      }
+    }
+  },
+  "limitations": [
+    "Textual reconstruction is not a product test, compiler check, guard run, or proof of composed stack compatibility.",
+    "No remote reads or writes, product execution, dependency installation, or test dispatch occurred during this packaging pass.",
+    "Foreign oracle patch is not included in runtime.patch or source-and-tests.patch and is not applied on mission56 source branch.",
+    "a55 remains the sole stack integrator; a54 retains Portfolio/P03 validation. This package does not claim P03 resolution.",
+    "Partial-tree application validates exact preimages, patch mechanics, modes, postimages and expected path set; it does not validate applicability after unrelated changes to the integration base."
+  ]
+}

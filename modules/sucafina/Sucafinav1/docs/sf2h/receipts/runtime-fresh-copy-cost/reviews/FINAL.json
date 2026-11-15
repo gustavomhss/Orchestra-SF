@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h.runtime-fresh-copy-cost.final-reviews.v1",
+  "W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+  "state": "PASS_LIMITED",
+  "reviews": [
+    {
+      "reviewer": "review_runtime_proposal",
+      "role": "read-only independent runtime/proposal review",
+      "finding": "No source semantic blocker found. Finance34 mutable-target validation, transactionAll and fences preserved; warm-only captured union remains one initial memo budget. Lazy retained plans may survive scope closure within that bound.",
+      "evidence": "Verified W1 runtime/tests and full R1 log; 65 pass / 1 filtered / 0 fail / 24522 expect. Reviewed exact replacement retaining19 assertions. Did not re-read B0 in this final review.",
+      "remote_writes": 0,
+      "test_runs": 0
+    },
+    {
+      "reviewer": "design_runtime_tests",
+      "role": "test author and separate B0/R1 log review; not independent of authored functional tests",
+      "finding": "Read complete B0/R1 logs; workload, persisted hashes, order, digest and cost test identical. B0 fails only final structural oracle224000; R1 selected scope passes. Host/image differences and extra earlier R1 tests prevent guaranteed timing speedup attribution.",
+      "remote_writes": 0,
+      "test_runs": 0
+    },
+    {
+      "reviewer": "read_pack_ci",
+      "role": "full-pack/CI reader, cost-test author and text-package validator; not independent of cost-test authorship",
+      "finding": "Three complete patches reconstruct exact postimages/modes/path sets via git apply --check/apply in scratch partial trees. Full S0-C and three appendices read. No product executed locally.",
+      "remote_writes": 0,
+      "test_runs": 0
+    }
+  ],
+  "limitations": [
+    "Not compiler/guards approval",
+    "No full unfiltered legacy-file PASS",
+    "No composed/P03/global acceptance"
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts": [
+    "(pass) fresh dashboard root keeps mutable target observations and every non-target graph independent [20.08ms]",
+    "(pass) fresh planner root keeps mutable target observations and every non-target graph independent [9.13ms]",
+    "(pass) fresh procurement root keeps mutable target observations and every non-target graph independent [7.87ms]",
+    "(pass) transactionAll copies all live mutable graphs and separates aliases across surfaces [8.63ms]",
+    "(pass) a warm root still rejects invalid target values without evaluating accessors or invoking nested work [11.79ms]",
+    "(pass) non-target copies remain fresh when valid snapshots exceed the plan depth or missing-value limits [20.57ms]",
+    "(pass) warm copies retain metadata validation for versions, audit and private blob generations [6.93ms]"
+  ],
+  "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts": [
+    "(pass) fresh copies preserve staged blob generations and false rollback across reopen [8.08ms]",
+    "(pass) fresh copies preserve staged blob generations and throw rollback across reopen [6.04ms]",
+    "(pass) fresh copies preserve staged blob generations and abort rollback across reopen [6.45ms]",
+    "(pass) fresh non-target reads cannot hide a caught nested-commit and the root rolls back [7.50ms]",
+    "(pass) fresh non-target reads cannot hide a caught nested-blob and the root rolls back [6.93ms]",
+    "(pass) fresh non-target reads cannot hide a caught captured-parent-blob and the root rolls back [6.76ms]",
+    "(pass) fresh non-target reads cannot hide a caught secret-write and the root rolls back [7.21ms]",
+    "(pass) an outstanding non-target reader prevents commit and cannot complete through a closed root [7.14ms]",
+    "(pass) aborting a nested read closes its observations while the unrevoked parent remains usable [6.45ms]",
+    "(pass) closed readers and captured handles cannot borrow a later root generation [7.38ms]",
+    "(pass) dispose drains an admitted root with retained plans and refuses later admissions [6.39ms]"
+  ],
+  "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts": [
+    "(pass) retained copies do not hide commits from another real SQLite handle or survive reopen as aliases [8.73ms]",
+    "(pass) a changed or deleted non-target SQL row is observed before callback and cannot reuse stale plans [7.51ms]",
+    "(pass) one root retains captured non-target plans safely when admission evicts them from the bounded memo [97.94ms]"
+  ],
+  "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts": [
+    "(pass) non-target state reads keep both real authorization callbacks and reject final lease revocation [9.01ms]",
+    "(pass) non-target state reads keep final Request abort and never turn old copies into authority [5.43ms]"
+  ],
+  "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts": [
+    "(pass) one root emits fresh demanded sibling graphs while nested and current snapshots remain independent staged copies [5.29ms]"
+  ],
+  "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts": [
+    "(pass) real SQLite fresh-copy workload preserves load while warm non-target copies avoid descriptor traversal [1876.47ms]"
+  ],
+  "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts": [
+    "(pass) snapshot materialization bypasses oversized payloads without changing their bytes or special values [107.55ms]",
+    "(pass) snapshot materialization enforces its aggregate bound across all three SQLite surfaces [52.20ms]",
+    "(pass) snapshot materialization depth limit falls back to the valid legacy decoder [4.89ms]",
+    "(pass) snapshot materialization fixups limit falls back to the valid legacy decoder [8.93ms]",
+    "(pass) snapshot materialization nodes limit falls back to the valid legacy decoder [248.02ms]"
+  ],
+  "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts": [
+    "(pass) snapshot materialization preserves v1 values, property order and owned undefined across warm reads and reopen [5.73ms]",
+    "(pass) warm snapshot outputs and declined callbacks never become the next observation [5.93ms]",
+    "(pass) warm materialization observes changed SQL bytes with identical versions and payload length, deletion and restoration [6.41ms]",
+    "(pass) changed malformed payloads reject before callback after a valid warm observation [10.40ms]",
+    "(pass) warm snapshot abort rolls back snapshot and blob mutations without publishing a materialization [4.79ms]",
+    "(pass) warm snapshot throw rolls back snapshot and blob mutations without publishing a materialization [4.59ms]",
+    "(pass) warm snapshot invalid rolls back snapshot and blob mutations without publishing a materialization [3.93ms]",
+    "(pass) warm nested reads copy staged values and nested write poison survives a caught child rejection [4.02ms]",
+    "(pass) warm observations cannot validate later accessor or inherited-prototype writes [3.40ms]",
+    "(pass) independently warmed stores serialize fresh same-version CAS and never replay callbacks [26.26ms]",
+    "(pass) warm snapshots do not cache credential reads, expiry or returned secret byte arrays [7.04ms]"
+  ],
+  "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts": [
+    "(pass) warm root Planner skips unrequested Dashboard materialization while cold admission and transactionAll retain validation [17.44ms]",
+    "(pass) new invalid unrequested SQL payloads reject before root Planner callback on cold and warm stores [24.11ms]",
+    "(pass) ended root scopes reject deferred sibling access before any lazy materialization [4.04ms]",
+    "(pass) a captured Dashboard plan survives eviction while other surfaces are observed during the same admission [36.40ms]",
+    "(pass) missing sibling rows invalidate old plans and restore only after a fresh SQL observation [7.30ms]",
+    "(pass) independent writers cannot replace an admitted sibling observation and the next root sees their commit [26.09ms]"
+  ],
+  "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts": [
+    "(pass) nested reads see staged same-surface state and the same transaction's cross-surface blobs without sharing snapshot writes [7.04ms]",
+    "(pass) nested commit write is refused and poisons the outer commit even when caught [4.63ms]",
+    "(pass) nested blob write is refused and poisons the outer commit even when caught [4.11ms]",
+    "(pass) nested outer-blob write is refused and poisons the outer commit even when caught [3.69ms]",
+    "(pass) nested secret write is refused and poisons the outer commit even when caught [3.71ms]",
+    "(pass) aborted nested work rolls back outer state and inherited closed scopes cannot reenter [4.71ms]",
+    "(pass) independent stores retain independent scopes while another outer writer waits [6.67ms]",
+    "(pass) outer commit refuses an unjoined nested read and closes the inherited scope [3.82ms]",
+    "(pass) nested blob capability expires at its callback boundary even while its parent remains open [4.66ms]",
+    "(pass) a nested callback cannot turn a caught write refusal into a successful read [3.93ms]",
+    "(pass) an external async caller cannot mutate captured outer blobs during a nested read [4.01ms]"
+  ],
+  "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts": [
+    "(pass) C08 case selection detaches its result before the final authority callback and across requests [4.09ms]",
+    "(pass) C08 opaque and wrapped selectors retain detached mutable callbacks on success, throw and rejection [5.39ms]",
+    "(pass) C08 selectors observe a mutable or accessor binding after admission instead of a captured authority [5.86ms]",
+    "(pass) C08 selectors cannot reuse access across principals, Request identity, header mutation or revocation [5.00ms]",
+    "(pass) C08 selected reads retain cancellation and cannot commit a caught nested-write attempt [5.02ms]",
+    "(pass) C08 case selectors preserve missing, inherited, legacy and malformed state outcomes [12.50ms]",
+    "(pass) C08 case selectors preserve accessor counts and omitted parent cases without an extra observation [5.47ms]"
+  ]
+}

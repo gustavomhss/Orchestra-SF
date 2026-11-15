@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h.runtime-fresh-copy-cost.authority.v1",
+  "mission": 56,
+  "epoch": "runtime-copy-browser56",
+  "state": "TERMINATED_SOURCE_QUALIFIED_GATES_PENDING",
+  "lease": "ENDED",
+  "effective_on": "Publication of this file in the terminal CAS commit on runtime-read-cost; exact receipt commit/tree reported by remote readback in PR71 and consumer comments.",
+  "parent_receipt_head": "073c8f7933a1b54b7cd97415d3341d1d446aa8eb",
+  "product_W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+  "product_tree": "f629c4cd1e73c090de2e820c4c1a214b8ca99e9e",
+  "source_branch": "runtime-read-cost",
+  "PR": 71,
+  "sole_remote_writer": "Root56",
+  "source_tests": {
+    "state": "PASS_SELECTED_SCOPE",
+    "run": 43660001174,
+    "job": 132646961999,
+    "pass": 65,
+    "filtered": 1,
+    "fail": 0,
+    "assertions": 24522
+  },
+  "baseline_control": {
+    "state": "EXPECTED_STRUCTURAL_ORACLE_FAIL",
+    "run": 43659727318,
+    "job": 132646107638
+  },
+  "owned_runs_active": 0,
+  "owned_runs_queued": 0,
+  "CI_dispatches": 2,
+  "local_product_tests": 0,
+  "epic": 0,
+  "P03": 0,
+  "helper_authority": "Read/scratch-only helpers complete; no helper remote source lease.",
+  "reconciliation": {
+    "source_head": "073c8f7933a1b54b7cd97415d3341d1d446aa8eb",
+    "product_W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+    "product_tree": "f629c4cd1e73c090de2e820c4c1a214b8ca99e9e",
+    "stack_head": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "stack_runtime_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+    "stack_external_oracle_blob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+    "stack_ACK55_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "portfolio_terminal": "651738f8ebcf003a4c66517a72f0ebd9a7c95050"
+  },
+  "consumers": "CONSUMER-RELEASE.json",
+  "remaining": [
+    "45 typecheck and guards NOT_RUN",
+    "55/54 ACKs requested, not received",
+    "55 selective composition and its own verification",
+    "Original P03 remains held; no speedup conclusion"
+  ],
+  "campaign": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "T0": "2026-11-13T04:01:10Z"
+  },
+  "GLOBAL_RELEASE": false,
+  "stack_write": false,
+  "dev_merge": false,
+  "deploy": false,
+  "Azure_changes": false,
+  "continuation": "No ongoing56 source/test writer. New source work needs a new explicit mission/succession; owners55/54/45 keep their respective scope, no transfer by silence.",
+  "control_branch_writes": false
+}

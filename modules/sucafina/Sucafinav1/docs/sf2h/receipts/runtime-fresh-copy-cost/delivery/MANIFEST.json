@@ -1,0 +1,282 @@
+{
+  "schema": "runtime-fresh-copy-cost-patch-package/v1",
+  "status": "SOURCE_QUALIFIED_FOR_SELECTIVE_COMPOSITION_GATES_PENDING",
+  "mission": 56,
+  "source_branch": "runtime-read-cost",
+  "product_candidate_tree_sha": "f629c4cd1e73c090de2e820c4c1a214b8ca99e9e",
+  "candidate_association": "Root56 verified runtime and seven test blob identities against W1 using GitHub MCP; packaging helper reconstructed all postimages textually.",
+  "source_path_count": 8,
+  "optional_composition_path_count": 9,
+  "integration_authority": "a55",
+  "portfolio_and_p03_authority": "a54",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "scope": "source",
+      "operation": "modify",
+      "mode": "100644",
+      "preimage": {
+        "blob_sha1": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+        "sha256": "4f16fe7291f763ffba129ba024e6ee0b001d05b6769d0445f049c8869fc54311",
+        "bytes": 31405
+      },
+      "postimage": {
+        "blob_sha1": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "sha256": "1f4b260f41c1d6aa521f9e127c912cdaff5aac903525de7a8d49b3d145b0f192",
+        "bytes": 32899
+      },
+      "included_on_mission56_source_branch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+      "scope": "source",
+      "operation": "add",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha1": "5834b18e408db1015636479f28edee21ec0c4901",
+        "sha256": "2f98f2ebb15569807476c7de8749984d493c12fcc1234a570d9ce59549ad8b0b",
+        "bytes": 3235
+      },
+      "included_on_mission56_source_branch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+      "scope": "source",
+      "operation": "add",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha1": "0a46c9113127542c43aed60951514a7397b5fdb6",
+        "sha256": "900b1d820a4c47d90419f36df9a4373442c629593139d5d85f24e2bbe42a2896",
+        "bytes": 15583
+      },
+      "included_on_mission56_source_branch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+      "scope": "source",
+      "operation": "add",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha1": "fbf54acc8bc81a9afa27a5299bca305946597e98",
+        "sha256": "b7cecc84c15cad7098472b9e8f834024bca86a91374545c7e5c97c3dfdd3d806",
+        "bytes": 3147
+      },
+      "included_on_mission56_source_branch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+      "scope": "source",
+      "operation": "add",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha1": "a03d190f04a488ac3a7f508b7a521bcd67be63a5",
+        "sha256": "28aaa18983b223fe549786a94c88614eedf63eda694eae0cf980b3c5d51c45fc",
+        "bytes": 11459
+      },
+      "included_on_mission56_source_branch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+      "scope": "source",
+      "operation": "add",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha1": "d2311405a63c142566fd20f0b84cd6797a60f286",
+        "sha256": "dc5632446258cf37b04419cabe9adeb07796175e9c7ff2ec6ca20610edca6b7b",
+        "bytes": 9950
+      },
+      "included_on_mission56_source_branch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+      "scope": "source",
+      "operation": "add",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha1": "d6f54942abbef1d9df3d5e73313083ab971f8347",
+        "sha256": "155b6b5056a9b58296105956adcc23aa9af2b2bc78d9985a9bde5b9c3b1d1a63",
+        "bytes": 7727
+      },
+      "included_on_mission56_source_branch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+      "scope": "source",
+      "operation": "add",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": {
+        "blob_sha1": "dbca223c910c74662b4a42150146d666a42f154d",
+        "sha256": "c009403c6e5c172f98d6a6bb6d5875bc366e5c84b13d49479cde7a008165b6f0",
+        "bytes": 5559
+      },
+      "included_on_mission56_source_branch": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+      "scope": "composition-only",
+      "operation": "modify",
+      "mode": "100644",
+      "preimage": {
+        "blob_sha1": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+        "sha256": "762e27c9e868f44fc5ac6c0d0758240e99ad5d67ee2025883d8fc7ced43c5d31",
+        "bytes": 15837
+      },
+      "postimage": {
+        "blob_sha1": "0ac3c01f77c013d05ee8fecb69c401acd126b942",
+        "sha256": "ae490f6f7a0fb47313011123c6d3dc5c5a97fbb07dec0ba43a6276ff96f1a6e5",
+        "bytes": 15836
+      },
+      "included_on_mission56_source_branch": false
+    }
+  ],
+  "patches": {
+    "runtime.patch": {
+      "sha256": "80946f6552a2ecce1a67eb209c11cb4920e4d6ea00becfe38f74f15bf9a4f8e4",
+      "bytes": 9128,
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts"
+      ],
+      "path_count": 1,
+      "added_lines": 48,
+      "removed_lines": 21,
+      "contains_foreign_oracle_change": false,
+      "validation": "PASS: git apply --check and byte-identical reconstruction in scratch partial tree"
+    },
+    "source-and-tests.patch": {
+      "sha256": "0df965702e12171ebebf0a5e13daad0db93410d0059a5b7b3a1721eae79c24b5",
+      "bytes": 69860,
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts"
+      ],
+      "path_count": 8,
+      "added_lines": 1202,
+      "removed_lines": 21,
+      "contains_foreign_oracle_change": false,
+      "validation": "PASS: git apply --check and byte-identical reconstruction in scratch partial tree"
+    },
+    "composition-with-oracle.patch": {
+      "sha256": "d7319e6c1b3b234e0adcad0ca6a075271f53f7d2fafc6401675d7a8df18a7a57",
+      "bytes": 71253,
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts"
+      ],
+      "path_count": 9,
+      "added_lines": 1204,
+      "removed_lines": 23,
+      "contains_foreign_oracle_change": true,
+      "validation": "PASS: git apply --check and byte-identical reconstruction in scratch partial tree"
+    }
+  },
+  "composition_note": {
+    "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+    "applied_to_mission56_branch": false,
+    "status": "OWNER_ADOPTION_REQUIRED_FOR_UNFILTERED_LEGACY_REGRESSION",
+    "reason": "Existing Finance34 cost oracle counts one cached native Dashboard materialization. Fresh non-target graphs now use four native materializations for two nested reads and two currentSnapshots observations. The patch changes that work oracle and test title; semantic assertions remain unchanged.",
+    "source_branch_replacement_test": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+    "qualification": "19-assertion equivalent owned replacement executed in R1; foreign postimage itself was not installed or executed in W1."
+  },
+  "qualification": {
+    "text_patch_validation": "PASS",
+    "product_tests_executed_by_packaging_helper": false,
+    "source_R1": {
+      "schema": "sf2h.runtime-fresh-copy-cost.hosted-result.v1",
+      "mission": 56,
+      "id": "R1",
+      "state": "PASS_SELECTED_SOURCE_SCOPE",
+      "run": 43660001174,
+      "job": 132646961999,
+      "attempt": 1,
+      "W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+      "W_tree": "f629c4cd1e73c090de2e820c4c1a214b8ca99e9e",
+      "S": "f74ed163aa647ba0f4c85fa5968f161bc3a0e4fb",
+      "S_tree": "ecc72500dfa0ba52004ea306d0f241b150e19662",
+      "request_blob": "b2ed56cfc170f4544ba04eb194ac3a78a44a152e",
+      "runtime_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "cost_test_blob": "0a46c9113127542c43aed60951514a7397b5fdb6",
+      "pass": 65,
+      "fail": 0,
+      "filtered": 1,
+      "assertions": 24522,
+      "files": 11,
+      "bun_suite_seconds": 3.04,
+      "cost_test_ms": 1876.47,
+      "selection": {
+        "own_functional": 23,
+        "own_cost": 1,
+        "own_replacement": 1,
+        "existing_selected": 40
+      },
+      "filter": {
+        "old_exact_title": "one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies",
+        "reason": "Implementation-specific nativeDashboard==1 oracle. Original file unchanged. Owned replacement preserves all19 assertions and expects four fresh native materializations.",
+        "replacement_blob": "dbca223c910c74662b4a42150146d666a42f154d",
+        "original_preblob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+        "full_legacy_file_unfiltered_pass": false
+      },
+      "nonce": "3c3a6d7ed9042adddafb8504602305df",
+      "omni": "not applicable (focused: no declaring test ran); no omni spawn proof",
+      "request_only_snapshot": true,
+      "cleanup_job": 132647410824,
+      "cleanup_conclusion": "success",
+      "local_product_tests": 0,
+      "P03": 0,
+      "epic": 0,
+      "typecheck": "NOT_RUN_REQUESTED_45",
+      "guards": "NOT_RUN_REQUESTED_45",
+      "GLOBAL_RELEASE": false
+    },
+    "baseline_B0": {
+      "run": 43659727318,
+      "job": 132646107638,
+      "state": "EXPECTED_STRUCTURAL_ORACLE_FAIL"
+    },
+    "typecheck": "NOT_RUN_REQUESTED_45",
+    "guards": "NOT_RUN_REQUESTED_45",
+    "P03": "NOT_EXECUTED_BY_56",
+    "composed": "NOT_QUALIFIED",
+    "GLOBAL_RELEASE": false
+  },
+  "limits": [
+    "Textual reconstruction is not a product test, compiler check, guard run, or proof of composed stack compatibility.",
+    "No remote reads or writes, product execution, dependency installation, or test dispatch occurred during this packaging pass.",
+    "Foreign oracle patch is not included in runtime.patch or source-and-tests.patch and is not applied on mission56 source branch.",
+    "a55 remains the sole stack integrator; a54 retains Portfolio/P03 validation. This package does not claim P03 resolution.",
+    "Partial-tree application validates exact preimages, patch mechanics, modes, postimages and expected path set; it does not validate applicability after unrelated changes to the integration base."
+  ],
+  "base_sha": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "PR": "https://github.com/gustavomhss/Orchestra-SF/pull/71",
+  "observed_target_preimages": {
+    "source_head": "073c8f7933a1b54b7cd97415d3341d1d446aa8eb",
+    "product_W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+    "product_tree": "f629c4cd1e73c090de2e820c4c1a214b8ca99e9e",
+    "stack_head": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "stack_runtime_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+    "stack_external_oracle_blob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+    "stack_ACK55_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "portfolio_terminal": "651738f8ebcf003a4c66517a72f0ebd9a7c95050"
+  },
+  "path_accounting": "Eight code/test/helper paths applied on mission56 branch. External oracle represented only as inert receipt artifacts. All other changed paths are within own receipt namespace.",
+  "product_W": "b6b8f664c3ba6766891731267177ba541dbe47b6"
+}
