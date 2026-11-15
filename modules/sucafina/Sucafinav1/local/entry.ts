@@ -19,6 +19,7 @@ import { createLocalIdentity } from "../runtime/local-identity.ts"
 import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
 import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
 import { scanLocalFile } from "../runtime/local-scanner.ts"
+import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
 import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
 import { enumerateSfSources } from "../product/integration/source-inventory.ts"
 import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
@@ -32,7 +33,7 @@ import { AsyncLocalStorage } from "node:async_hooks"
 import { digestSfValue } from "../product/contracts/canonical.ts"
 import freeze from "../product/contracts/freeze-v1.json"
 import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
-import type { CreateSfHostRuntime } from "../product/contracts/host-context.ts"
+import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
 
 /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
 export default async function installation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }) {
@@ -50,7 +51,17 @@ export async function createLocalInstallation(context: { origin: string; createH
   const now = () => new Date().toISOString()
   const projectScope = createSfSourceScopeProjector(now)
   const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
-  const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
+  let runtime: SfHostRuntime | undefined
+  const currentChoiceFence = createCurrentChoiceFence({ persistence: driver,
+    host: () => {
+      const host = runtime?.services?.()?.host
+      if (!host) throw new Error("SF_CURRENT_CHOICE_HOST_UNAVAILABLE")
+      return host
+    },
+    identity: () => runtime?.identity(),
+    operationIdentity: (call) => call.kind === "ui" ? runtime?.services?.()?.ui.operationIdentity(call) : undefined,
+  })
+  const store = { ...currentChoiceFence.persistence, ...createSfSourcePersistence({ persistence: currentChoiceFence.persistence, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
   const restoration = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID, purpose: "business-restore" })
   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
   const status = (request: Request) => {
@@ -91,8 +102,8 @@ export async function createLocalInstallation(context: { origin: string; createH
   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
-  const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
-    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+  runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
+    mount: config.mount, persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
     grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
       operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
@@ -117,7 +128,7 @@ export async function createLocalInstallation(context: { origin: string; createH
       const productHtml = getSfProductHtml(runtime?.services?.())
       const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page, presentationRequest.getStore()) ?? decorateSfProductHtml(html, surface, page)
       // Keep WP06 document/import navigation while composing WP04's fenced page projection.
-      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a>`), surface)
+      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a><a href="?sf=current-choice">Escolha vigente</a>`), surface)
     },
     maxJsonBytes: 2 * 1024 * 1024,
     assets,

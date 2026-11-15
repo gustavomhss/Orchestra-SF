@@ -1,0 +1,1135 @@
+{
+  "schema": "sf2h.released-intake-47.increment.v1",
+  "mission": 47,
+  "epoch": "S0-C-e9-browser47",
+  "increment": 8,
+  "candidate_symbol": "C20",
+  "candidate_identity": "Containing commit/tree (C20); exact resolved identity in terminal47 checkpoint and PR65.",
+  "expected_parent": {
+    "commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c"
+  },
+  "prior_material": {
+    "symbol": "C19",
+    "sha": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
+    "parent": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "increment": 7,
+    "sources": [
+      40
+    ]
+  },
+  "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+  "input": {
+    "mission": 46,
+    "branch": "astra-finance",
+    "pr": 35,
+    "release": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+    "release_tree": "e7ddd007e9d3f2b1f24b0a077845e9c6e37e9707",
+    "product": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+    "product_tree": "73beb3558437a2b8671f7d88aad4332304af2d75",
+    "lease": "current-choice-browser46",
+    "authority": "RELEASED_NO_FURTHER_SOURCE_WRITES_WITHOUT_NEW_AUTHORITY",
+    "explicit_release": true,
+    "release_blob": "daa9cdb116461c812a0725cbc6358e61e97ed194",
+    "terminal_blob": "5bf71c59d9abf2cdd96f062865c67d1a5bc19df1",
+    "handoff_blob": "11e5c31a6217b9e3f8959c424375fec564c3c519",
+    "source_consumer": 42,
+    "reconciled_consumer": 47,
+    "shared_base": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "source_shared_status": "NOT_APPLIED_NOT_TYPECHECKED_NOT_RUNTIME_TESTED"
+  },
+  "decision": "ACCEPT_COMPLETE_NINE_OWNED_AND_SIX_SHARED_V3_AS_COHERENT_UNIT",
+  "material_paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "mode": "100644",
+      "preimage": "c27e908140ba34ffea39078a78626f47943a8444",
+      "postimage": "db487cd1b6263835302e9bcf80499d18531aa592",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "source_blob": "db487cd1b6263835302e9bcf80499d18531aa592",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+      "mode": "100644",
+      "preimage": "2441642f59179516da09c9f9780b1b4764f6fd83",
+      "postimage": "6333d208823355d26b2c02259859a13e0eae9b19",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+      "source_blob": "6333d208823355d26b2c02259859a13e0eae9b19",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "mode": "100644",
+      "preimage": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+      "postimage": "349d7bb7bde86d8e4fc8e605a9c981ff4b0ab6ae",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "source_blob": "349d7bb7bde86d8e4fc8e605a9c981ff4b0ab6ae",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "mode": "100644",
+      "preimage": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+      "postimage": "b2f96bec220a6ec2f674057546541d5a700e969e",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "source_blob": "b2f96bec220a6ec2f674057546541d5a700e969e",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "mode": "100644",
+      "preimage": "87e24342ee27b98e26b29a69a2f8de6b7bf7206c",
+      "postimage": "e3b25caeece77ca1d755bc64e8253ca003179793",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "source_blob": "e3b25caeece77ca1d755bc64e8253ca003179793",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "dd5c155115190cf4af4ab76ec37970e3df268253",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts",
+      "source_blob": "dd5c155115190cf4af4ab76ec37970e3df268253",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "1f7e6cb2716cb2b17084ab599219f7651961e485",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+      "source_blob": "1f7e6cb2716cb2b17084ab599219f7651961e485",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+      "source_blob": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "084f7050ca7f45fe22962207f706a5e0d71e3a93",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+      "source_blob": "084f7050ca7f45fe22962207f706a5e0d71e3a93",
+      "disposition": "CONSUME_COMPLETE_RELEASED_OWNED_POSTIMAGE",
+      "group": "owned",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "369c71b4505360a9742b4b9a64585438f63cec47",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+      "source_blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+      "disposition": "APPLY_COMPLETE_RECONSTRUCTED_SHARED_V3_POSTIMAGE",
+      "group": "shared",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/current-choice-services.ts",
+      "mode": "100644",
+      "preimage": null,
+      "postimage": "c2ef2828e824a46d67d7c6e79012656a092a3c82",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+      "source_blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+      "disposition": "APPLY_COMPLETE_RECONSTRUCTED_SHARED_V3_POSTIMAGE",
+      "group": "shared",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "mode": "100644",
+      "preimage": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+      "postimage": "e9d3a80f3a592c224f9e3e5d936f72fdf3e81ec7",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+      "source_blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+      "disposition": "APPLY_COMPLETE_RECONSTRUCTED_SHARED_V3_POSTIMAGE",
+      "group": "shared",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "mode": "100644",
+      "preimage": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+      "postimage": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+      "source_blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+      "disposition": "APPLY_COMPLETE_RECONSTRUCTED_SHARED_V3_POSTIMAGE",
+      "group": "shared",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "preimage": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "postimage": "cfbf61fec81e273133c7a2675f1028fa147adad7",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+      "source_blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+      "disposition": "APPLY_COMPLETE_RECONSTRUCTED_SHARED_V3_POSTIMAGE",
+      "group": "shared",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "mode": "100644",
+      "preimage": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "postimage": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+      "source_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+      "source_blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+      "disposition": "APPLY_COMPLETE_RECONSTRUCTED_SHARED_V3_POSTIMAGE",
+      "group": "shared",
+      "full_patch_reconstruction_exact": true,
+      "preimage_current_C19_match": true
+    }
+  ],
+  "source_receipts": {
+    "source_commit": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+    "source_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort",
+    "source_tree": "790cb7d95361a66b7ef3092e735acedb77a5153c",
+    "target_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/current46",
+    "count": 29,
+    "files": [
+      {
+        "path": "ACK-46.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "9522f6cf4fe493ea370af5160522f61ee16f728c",
+        "size": 3336
+      },
+      {
+        "path": "ci/W1-request.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "cdc4ced401587b0d301880ea2de81d39cbf69d77",
+        "size": 448
+      },
+      {
+        "path": "ci/W1-validation.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "83a87ce410a50d0364c363abea3051693cfdf763",
+        "size": 3509
+      },
+      {
+        "path": "ci/W2-request.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "214050d3dac34ba59b98dbf734b087674105c9cf",
+        "size": 533
+      },
+      {
+        "path": "ci/W2-validation.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "597c060ba5c43615938dccfdfdebcfeb1d4d87d9",
+        "size": 5177
+      },
+      {
+        "path": "ci/W3-request.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "214050d3dac34ba59b98dbf734b087674105c9cf",
+        "size": 533
+      },
+      {
+        "path": "ci/W3-validation.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "43666a8fa6345efcd6c925931c5bcbfd1e1cfe01",
+        "size": 10453
+      },
+      {
+        "path": "ci/W4-request.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "0597d4a7ce40b3f607a3fc2faf250fb667ed860a",
+        "size": 212
+      },
+      {
+        "path": "ci/W4-scope.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "29509f5eab518096380fd97a7963075ae9d14e52",
+        "size": 2830
+      },
+      {
+        "path": "ci/W4-validation.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "552854e316fbfb56430bb2c6a7b8a34a02e4778e",
+        "size": 4856
+      },
+      {
+        "path": "ci/typecheck-delta-final.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "5e232db48a3c373c8817f0b9721c2d56ed9ebef7",
+        "size": 44687
+      },
+      {
+        "path": "criteria.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "1aef092ccd979fa1fc2af8d890869187c52298d6",
+        "size": 224039
+      },
+      {
+        "path": "implementation-46-W1.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "8a9b64e73815510700ce6a3d560a6af0d407af1f",
+        "size": 4491
+      },
+      {
+        "path": "independent-review-46.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "b8c32edcaa8fa048cf88ce0775b458db99f68ade",
+        "size": 5695
+      },
+      {
+        "path": "integration-pins-final.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "10b3cde037c57f6d9f773e87da1b925a9c8747b7",
+        "size": 15023
+      },
+      {
+        "path": "integration/owned-cohort.patch",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "9c11c83f1fa3d62b26a16f2fbd8e8e5a46c538a7",
+        "size": 141130
+      },
+      {
+        "path": "integration/owned-manifest.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "944ea724903f7568c53e0018400e3ec27b5324fc",
+        "size": 3282
+      },
+      {
+        "path": "shared-for-42/INTEGRATION-v2.md",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "3a5ae89f3abf275bfdfd10c8e722b3bb83181c2a",
+        "size": 6688
+      },
+      {
+        "path": "shared-for-42/INTEGRATION-v3.md",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "2c62d61f61ba74349df54553465fd8c14049b1dc",
+        "size": 8603
+      },
+      {
+        "path": "shared-for-42/INTEGRATION.md",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "267454f0ef2ef711e5f0f467377ef6e2ead46cdc",
+        "size": 4738
+      },
+      {
+        "path": "shared-for-42/manifest-v2.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "4f863fdc61cd5f58550010c954031bca66b20476",
+        "size": 2191
+      },
+      {
+        "path": "shared-for-42/manifest-v3.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "fd37172e5d05754459159e5ad1ec84a7a2a99ebe",
+        "size": 8176
+      },
+      {
+        "path": "shared-for-42/manifest.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "ac73e14d488297cb5138d3c5e5c85399739d207e",
+        "size": 1796
+      },
+      {
+        "path": "shared-for-42/mission46-current-choice-composition-v2.patch",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "6a94d1a5416a898f5fbffb9705b11931cf425fd9",
+        "size": 59182
+      },
+      {
+        "path": "shared-for-42/mission46-current-choice-composition-v3.patch",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+        "size": 59360
+      },
+      {
+        "path": "shared-for-42/mission46-current-choice-composition.patch",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "f794d245401551692ae4774283c91f8f3ae2e2d2",
+        "size": 57298
+      },
+      {
+        "path": "source-release.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "daa9cdb116461c812a0725cbc6358e61e97ed194",
+        "size": 8564
+      },
+      {
+        "path": "terminal-handoff.json",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "5bf71c59d9abf2cdd96f062865c67d1a5bc19df1",
+        "size": 6223
+      },
+      {
+        "path": "terminal-handoff.md",
+        "type": "blob",
+        "mode": "100644",
+        "sha": "11e5c31a6217b9e3f8959c424375fec564c3c519",
+        "size": 15326
+      }
+    ],
+    "original_bytes_preserved": true
+  },
+  "patches": {
+    "owned": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration/owned-cohort.patch",
+      "blob": "9c11c83f1fa3d62b26a16f2fbd8e8e5a46c538a7",
+      "sha256": "e4c649eae4fdffac0b5fe72dfbb106b12d75df6a0bc04ebdd865977ae14a9ad8",
+      "files": 9,
+      "hunks": 26
+    },
+    "shared": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+      "blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+      "sha256": "d036ee32780f10c6e217a1608701e3de3aa520143b2b2fe03f91d87ca5a03d9f",
+      "files": 6,
+      "hunks": 14,
+      "supersedes": "v1/v2 complete replacement, not cumulative"
+    }
+  },
+  "consumer_ack": {
+    "id": "ACK47-08",
+    "source_release": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+    "original_source_consumer": 42,
+    "current_consumer": 47,
+    "original_source_receipts_unchanged": true,
+    "status": "CONSUMED_IN_CONTAINING_C20_COMPOSED_QUALIFICATION_PENDING",
+    "next_owner": "45 exact composed checks; current-choice/financial/installed consumer owners and S0 full qualification."
+  },
+  "checks": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "AM": "NOT_RUN",
+    "source_green_transferred": false
+  },
+  "final_acceptance": "S0",
+  "GLOBAL_RELEASE": false,
+  "patch_integrity": {
+    "patches": [
+      {
+        "kind": "owned",
+        "paths": 9,
+        "hunks": 26,
+        "blob": "9c11c83f1fa3d62b26a16f2fbd8e8e5a46c538a7",
+        "sha256": "e4c649eae4fdffac0b5fe72dfbb106b12d75df6a0bc04ebdd865977ae14a9ad8",
+        "bytes": 141130
+      },
+      {
+        "kind": "shared",
+        "paths": 6,
+        "hunks": 14,
+        "blob": "eedf931eacfd25762feaea1ae8e35062a7fce09b",
+        "sha256": "d036ee32780f10c6e217a1608701e3de3aa520143b2b2fe03f91d87ca5a03d9f",
+        "bytes": 59360
+      }
+    ],
+    "existing_preimages_exact": 9,
+    "new_paths_absent": 6,
+    "all_modes": "100644",
+    "full_owned_files_read": 9,
+    "full_shared_postimages_read": 6,
+    "complete_patches_reconstructed": true,
+    "relative_import_references": 293,
+    "distinct_relative_import_paths": 136,
+    "all_relative_imports_resolved": true,
+    "extra_metadata_file": "/workspace/scratch/8fd84ac583a8/current46-import-inventory-extra.json",
+    "inventory_note": "Initial root export omitted unchanged CLI paths; v2 corrected it. Direct immutable C19 CLI inventory independently confirms155files and both new CLI paths absent; Atlas boundary package6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7 supplies the only outside-subtree relative import."
+  },
+  "behavior": [
+    {
+      "boundary": "real persistence and final joint fence",
+      "finding": "createCurrentChoiceFence is branded by private WeakSet and uses its own AsyncLocalStorage. It retains the exact frozen context, Request, headers/method/URL digest, operation identity, binding and installed identity. transaction/transactionAll delegate to the actual driver; after every provider callback they capture all three locked snapshots, await actual host revalidation, recapture currentSnapshots and compare bytes plus synchronous per-observer cloned guards before the driver can commit. No-scope calls pass through; pending asynchronous calls close fail-closed. No copied snapshot is compared to itself and no positive authorization is cached."
+    },
+    {
+      "boundary": "lease expiration/replacement and ui.finish",
+      "finding": "Actual ui-authority502fb retains admissions in a WeakMap keyed by the exact context, rechecks current(context) after asynchronous authorization, and deletes on finish. A renewed independent Request/lease cannot authorize the old context. Host GET/HEAD commandIdentity returns an actual random UUID; POST identity binds the Idempotency-Key and action. HTTP options admit+validate sf_case_read before calling the fenced service; the response is constructed synchronously after the final joint fence and then the lease is finished."
+    },
+    {
+      "boundary": "prepare and explicit promotion",
+      "finding": "Preparation reads and pins the exact historical choice, real Planner source and Atlas continuity, canonical simulation/result-store, source coverage registry and private binding. It preserves the historical choice. The shared host requires planner.preview for prepare and a separate decisions.promote-alternative human admission for the exact reviewed payload. Final adoption changes only the current alternative/case revision and result, keeps historical choices/preparedChanges/receipts/ledger, and marks the case reconsidering. It never applies a financial/domain command."
+    },
+    {
+      "boundary": "canonical promotion atomicity and replay",
+      "finding": "The final C08 promotion transaction pins original and adopted result bytes, complete case, private preview/coverage records and exact transaction receipt. Late denial throws before SQLite commit. A retry with unchanged command/payload reauthorizes and rereads current case, provenance and exact adopted coverage; it only accepts case.version=request.version+1 and the exact adopted result. Later revisions remain stale. Earlier separately authorized producer/coverage/result writes may already be durable; no global multi-step rollback claim."
+    },
+    {
+      "boundary": "ready-option and private-classification egress",
+      "finding": "Every initially ready option retains cloned request, original/current source and coverage digest. Before publication the service reissues the exact source, proves Atlas continuity again, rereads baseline, pins all three physical source fences and private classification inventory, rereads the whole authorized case and pins private state through withCase/fence.run egress. Initially unavailable options remain disabled; a changed ready proof returns unavailable. Synchronous observers do not register further observers."
+    },
+    {
+      "boundary": "Procurement37 and BI38",
+      "finding": "The source issuer remains Planner-version only. Resimulation uses business.calculations.persist exposed by current Proc37, preserving its sf-procurement-prefix restriction and explicit promotion guard. No business-services/cost-coverage/planner-product/local-store reset. Shared controls add only proved historical Planner-to-current remapping plus digest deduplication; the Procurement evidence block and all prior HTTP route ordering survive. BI38 paired-source consumers and schema remain on C19 APIs."
+    },
+    {
+      "boundary": "Memory40",
+      "finding": "Memory40 business-context390bce2594e39a28defce1d47fafa0d7291e940e and atlas-memorya45ab53b1dab706eedb3b0d075bbfe36a00be40d are untouched. The new fence owns a distinct ALS scope and passes through outside CurrentChoice; it neither enters nor bypasses private original-capture admission. Historical continuity uses business.atlasRecall().proveContinuity and current canonical context. Independent original/replay observations and no-cache authority behavior remain intact."
+    },
+    {
+      "boundary": "Native41, Decisions44, Reports36, Portfolio43",
+      "finding": "Host delta adds CurrentChoice imports, service construction and a first HTTP prefix only; native admission/registry/watch wiring is unchanged. No fabricated Request/session/Task or new native capability. Decisions44 browser tests and C12 Apply remain intact; CurrentChoice is not financial approval. Reports36 remains held and unreleased48 was not consumed. Portfolio43 code and existing oracle files remain untouched."
+    }
+  ],
+  "test_preservation": {
+    "all_six_test_or_support_outputs_read": true,
+    "local_execution": false,
+    "skips_or_only_added": false,
+    "C12_four_cases": [
+      "membership",
+      "preferences read",
+      "finished lease",
+      "replacement lease"
+    ],
+    "old_assertions": "All four cases and outcome/state assertions preserved. The preferences-read denial assertion changes state.read to outside.read with the same canonical factory/authorize/real store, so post-scope observation remains possible without borrowing the operation fence. Existing lifecycle assertions and180000ms budget unchanged.",
+    "new_coverage": "Real authority fixture uses actual SQLite/source lifecycle/product UI/human/C08 adapters with explicitly seeded unknown financial results, and timing probes around existing callbacks. It covers exact-context/lease/request substitution, principal/auth/policy/install/project/host drift, source/case race, final promotion staged rollback, and exact currently authorized replay. Separate producer lifecycle uses canonical Planner simulation/persistence/coverage. These are surgical source tests, not installed native/browser proof.",
+    "prepared_action_difference": "The source real-producer fixture admits decisions.edit through its injected authorizePreview callback; the unexecuted shared host correctly uses the existing planner.preview action. Exact shared action/grant behavior requires composed proof."
+  },
+  "proof_limits": {
+    "source_qualification": {
+      "core": {
+        "W": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+        "S": "d586e4d3bf4a61fcd967a2de7e13c9390770ad71",
+        "run": 43653193008,
+        "job": 132625941654,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653193008",
+        "pass": 32,
+        "fail": 0,
+        "skip": 0,
+        "files": 5,
+        "expect_calls": 443,
+        "elapsed_seconds": 202.01,
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+            "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+            "Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+            "Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+            "Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "log_sha256": "787e5f461180ccce8d032b60f41cce558b5f2288de82b51c4f04689c90438dd7",
+        "actual_job_log_confirmed": true
+      },
+      "supplement": {
+        "W": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+        "S": "7720206fb5f755b48ec8959e08fab971a0374831",
+        "run": 43653791489,
+        "job": 132627774817,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653791489",
+        "pass": 4,
+        "fail": 0,
+        "skip": 0,
+        "files": 1,
+        "expect_calls": 45,
+        "elapsed_seconds": 0.506,
+        "request": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        },
+        "log_sha256": "edb3c1123d73c074b804ff28f79eef9e31aba97f034de0ac3dee4c9c0c709d03",
+        "actual_job_log_confirmed": true
+      },
+      "unique_names": 34,
+      "overlap_names": [
+        "current-choice read suppresses its binding when membership changes during the final case authorization",
+        "current-choice read suppresses its binding when preferences read changes during the final case authorization"
+      ],
+      "never_a_single_34_test_run": true,
+      "omni": "NOT_APPLICABLE; logs explicitly say no omni spawn/delegation and no omni proof",
+      "source_typecheck": {
+        "status": "FAIL",
+        "run": 43653793969,
+        "job": 132627781768,
+        "diagnostics": 131,
+        "current_choice_diagnostics": 0,
+        "prior_run": 43599389386,
+        "prior_job": 132460676353,
+        "independent_raw_log_path_line_column_code_multiset_exact": true,
+        "raw_logs_equal": false,
+        "declared_typecheck_delta_matches_raw_log": true,
+        "new": [],
+        "removed": []
+      },
+      "source_guards": {
+        "status": "PASS_SOURCE_ONLY",
+        "rules": 78,
+        "changed_paths": 1127,
+        "gates": 0,
+        "warnings": 14,
+        "errors": 0,
+        "actual_job_log_confirmed": true
+      },
+      "history": {
+        "W1": {
+          "W": "5de6b03d563dadcfb9a7a582bfb44c1d391c911d",
+          "S": "764e56ca09445157379f662668995d18169c096b",
+          "run": 43651826334,
+          "job": 132621774603,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43651826334",
+          "pass": 31,
+          "fail": 0,
+          "skip": 0,
+          "files": 4,
+          "expect_calls": 398,
+          "elapsed_seconds": 169.84,
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+              "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+              "Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+              "Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {}
+          },
+          "log_sha256": "01ca4c6bc1659acb7e4346a40d076a61e68b845a1ba7a5782047adf3bea85397",
+          "actual_job_log_confirmed": true
+        },
+        "W2": {
+          "W": "c67d62cf9a33faef900322e37f83cf2a567b8f38",
+          "S": "9e9dfdd2c64724bea56d759cdf4a42cfd561c65c",
+          "run": 43652473765,
+          "job": 132623764948,
+          "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43652473765",
+          "pass": 31,
+          "fail": 1,
+          "skip": 0,
+          "files": 5,
+          "expect_calls": 441,
+          "elapsed_seconds": 146.36,
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+              "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+              "Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+              "Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+              "Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+              "--timeout",
+              "120000"
+            ],
+            "env": {}
+          },
+          "log_sha256": "d9aa6cec35dad0f0388ef6e7dd438bba5948d8abadd4f8021e2ea61ed9338b5c",
+          "actual_job_log_confirmed": true
+        },
+        "W2_failure": "Repeat promote returned denied/choice-provenance-unavailable after the first canonical promotion. Actual raw log retains 31pass/1fail; not rewritten by W3.",
+        "W2_checks": {
+          "job": 132623772501,
+          "diagnostics": 132,
+          "delta_against_final": [
+            [
+              "test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+              "126",
+              "48",
+              "2769"
+            ]
+          ],
+          "guards_gates": 2,
+          "gates_reason": "Tracked raw agent-scratch logs; removed only in later source revision, historical receipts retained."
+        }
+      },
+      "comparisons": {
+        "compare-core-supplement": {
+          "base": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+          "head": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+          "ahead_by": 1,
+          "paths": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/W3-request.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/W3-validation.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/W4-scope.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/independent-review-46.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration/owned-cohort.patch",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration/owned-manifest.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/INTEGRATION-v3.md",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/manifest-v3.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+            "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts"
+          ]
+        },
+        "compare-terminal": {
+          "base": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+          "head": "fc6d96d49bdae2e22fef796cd9eebbb384381d4b",
+          "ahead_by": 1,
+          "paths": [
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/W4-request.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/W4-validation.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/typecheck-delta-final.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/criteria.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/independent-review-46.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration-pins-final.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration/owned-manifest.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/source-release.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/terminal-handoff.json",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/terminal-handoff.md"
+          ]
+        },
+        "core-envelope": {
+          "base": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+          "head": "d586e4d3bf4a61fcd967a2de7e13c9390770ad71",
+          "ahead_by": 1,
+          "paths": [
+            ".ci-run.json"
+          ]
+        },
+        "supplement-envelope": {
+          "base": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+          "head": "7720206fb5f755b48ec8959e08fab971a0374831",
+          "ahead_by": 1,
+          "paths": [
+            ".ci-run.json"
+          ]
+        }
+      },
+      "integrated_C20_status": "NOT_RUN",
+      "source_pass_transfer": false
+    },
+    "criteria": {
+      "pack_blob": "b593782368d19e557358d64dcecaefccd10ac991",
+      "criteria_blob": "1aef092ccd979fa1fc2af8d890869187c52298d6",
+      "literal_count": 83,
+      "literal_ids_and_texts_and_canonical_status_exact": true,
+      "canonical_pointers_resolved_to_exact_objects": true,
+      "cohort_counts": {
+        "PARTIAL": 38,
+        "OUTSIDE_MISSION": 28,
+        "VERIFIED_WITHIN_COHORT": 12,
+        "DEPENDENCY_EVIDENCE_ONLY": 5
+      },
+      "canonical_global_pass_count": 0,
+      "all_integrated_C_status": "NOT_RUN",
+      "all_canonical_status": "NOT_RUN",
+      "overrides": 0,
+      "preserved_predicate_note": "source-release.preserved.GLOBAL_RELEASE=true records predicate preservation; it does not grant GLOBAL_RELEASE.",
+      "scope_catalog_entries_read": 18,
+      "mandatory_numeric_ids": [
+        "WP11.T02.CHK.21",
+        "WP11.T03.CHK.20"
+      ]
+    },
+    "rule": "Source W3+W4, source guards and static review do not qualify this newly composed candidate. Shared six files previously NOT_APPLIED/NOT_TYPECHECKED/NOT_TESTED; all composed results NOT_RUN.",
+    "original_failures_retained": true,
+    "source_preserved_GLOBAL_RELEASE_field": "Source preserved.GLOBAL_RELEASE=true means predicate unchanged, not grant of source/candidate release. Consumer GLOBAL_RELEASE=false."
+  },
+  "findings": [
+    {
+      "id": "M46-COMPOSED-C",
+      "owner": "session45 checks; integration47 composition; S0 final acceptance",
+      "status": "PENDING",
+      "finding": "Qualify one exact composed candidate with current driver/provider/Memory40 and applicable source regressions. Source successes are not inherited."
+    },
+    {
+      "id": "M46-SHARED-UI",
+      "owner": "integration47/session45/S0",
+      "status": "NOT_RUN_ON_COMPOSED_C",
+      "finding": "Six shared files were delivered as unapplied artifacts. Discovery, actual planner.preview preparation, independent human review/promotion, revoked access and lost-response idempotent recovery need composed HTTP/UI evidence."
+    },
+    {
+      "id": "M46-NUMERIC-LITERAL",
+      "owner": "canonical financial owners/S0",
+      "status": "PARTIAL",
+      "finding": "Known subtotal250000 with totalnull/conditioned is not the full literal250000 total/difference-10000/threshold15000/min20000 proof. Keep omitted/zero/not-applicable requirements and engines/policy unchanged."
+    },
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "owner": "S0/WP00 and canonical financial/Procurement owners",
+      "status": "NOT_SATISFIED",
+      "finding": "CurrentChoice promotion is not financial approval or C12 Apply. Preserve financial-approval-command-unavailable."
+    },
+    {
+      "id": "M46-TYPECHECK-EXTERNAL",
+      "owner": "respective owners/session45",
+      "status": "SOURCE_FAILURE_NOT_CANDIDATE_GREEN",
+      "finding": "Source check records131external diagnostics and0CurrentChoice; source guards pass. Parent proof helper separately verifies logs. No integrated check result claimed."
+    },
+    {
+      "id": "M46-NATIVE-RESIDENT",
+      "owner": "native/resident owners/S0",
+      "status": "NOT_RUN_HOLD_RETAINED",
+      "finding": "Installed native admission/watch, AM05/native equivalence and resident acceptance remain open. Update held Native41 proposed-host preimage metadata from0705 to composedb19c if these15 paths publish; do not activate the held patch."
+    },
+    {
+      "id": "REPORTS36-SEMANTIC",
+      "owner": "Reports48/S0",
+      "status": "HOLD",
+      "finding": "No old Reports36 targets activated; Reports48 was PREPARED_NOT_RELEASED at bounded terminal census."
+    },
+    {
+      "id": "MI07",
+      "owner": "session51/S0",
+      "status": "PRESERVED_OPEN",
+      "finding": "This intake does not close the inherited long-history proof gap or alter accepted original oracles."
+    }
+  ],
+  "independent_static_review": {
+    "reviewer": "bi_decisions_intake",
+    "scope": "Independent text-only review of all six shared-v3 changes and three owned production contracts, with C19 dependency composition; owned test/proof audit belongs to sibling reviewers.",
+    "recommendation": "SELECTIVE_INTEGRATION_CANDIDATE_SUPPORTED_STATICALLY_WITH_QUALIFICATIONS_OPEN",
+    "new_blocking_findings": [],
+    "semantic_observations": [
+      {
+        "id": "CC46-HTTP-HUMAN-LEASE",
+        "result": "STATIC_COMPATIBLE",
+        "details": "GET/HEAD admits sf_case_read and validates its digest before options; host issues nonempty UUID for GET/HEAD. The consumed ui-authority WeakMap supplies the same Request and command identity. POST requires origin, JSON size/schema and real human admission, and separate prepare/promote actions. Both paths synchronously finish their lease in finally after service response; no asynchronous authorization callback follows the final service fence."
+      },
+      {
+        "id": "CC46-FENCE-INSTALLATION",
+        "result": "STATIC_COMPATIBLE",
+        "details": "local/entry installs CurrentChoiceFence over the real C13 SQLite driver before source-lifecycle and passes the same wrapped persistence to runtime/services/assets. Without an active cohort scope transaction and transactionAll delegate unchanged. currentSnapshots and blob capabilities remain driver capabilities; restoration keeps its existing raw-driver route. Deferred runtime identity/host lookup is evaluated only by the cohort scope after factory creation."
+      },
+      {
+        "id": "CC46-FINAL-FENCE-C19-PROVIDER",
+        "result": "STATIC_COMPATIBLE",
+        "details": "Fence pins frozen context/binding, exact Request, headers, method, URL, operation identity, installation/project and parent lifetime. Every wrapped transaction performs authorization after provider callback, recaptures all three detached currentSnapshots and requires equal digest plus synchronous true observers before driver commit. C19 product-authority resolve uses currentSnapshots for revalidation and avoids opening a nested writer. C13 local-store preserves nested-write prohibition and fresh clones. CurrentChoice does not introduce a global transaction or rollback already durable producer steps."
+      },
+      {
+        "id": "CC46-MEMORY40-ALS",
+        "result": "STATIC_COMPATIBLE",
+        "details": "C19 Memory40 business-context/atlas-memory bytes remain untouched. Its captureLookup ALS is a distinct private instance with exact call/digest/Request/lease/header stability and active lifetime, so the new cohort fence neither grants nor caches the private recursion bypass. Continuity still uses business.atlasRecall().proveContinuity and current Planner issuer, while Memory40 public original reads retain complete case/source reauthorization and final source/state fences. No native or Memory green transfers."
+      },
+      {
+        "id": "CC46-CANONICAL-PRODUCER-BI",
+        "result": "STATIC_COMPATIBLE",
+        "details": "Owned resimulation requires one recorded planner-version source in the same installation/project, issues its current source and proves continuity. Only baseRef is renewed; canonical planner.simulateScenario, exposed business.calculations.persist and canonical results are reread and digest checked. Existing Proc37 persist guard remains active for sf-procurement: and the new route does not select that prefix. Coverage uses canonical baseline classification and reassessScenarioCoverage. UI prints canonical historical/current knownSubtotal,total,currency,horizon and pending conditions; null remains unavailable. All five BI38 product blobs stay C19 bytes."
+      },
+      {
+        "id": "CC46-PROCUREMENT-CONTROLS",
+        "result": "STATIC_COMPATIBLE",
+        "details": "Shared controls may offer the current planner-version only after historical continuity and fresh exact source resolution; the original choice is not mutated. The complete incoming Procurement evidence block is byte-identical; prior host HTTP route chain is byte-identical after removing the added current-choice prefix. No standalone producer or approval policy is overwritten."
+      },
+      {
+        "id": "CC46-PROMOTION-APPLY-M31",
+        "result": "STATIC_COMPATIBLE",
+        "details": "Promotion changes only the exact selected alternative/version and coverage basis, reopens case state to reconsidering, and appends the adopted result inside the canonical provider transaction. Historical choices remain byte-identical. Receipt replay checks live provenance, original command digest and private coverage, with final provider observers. It never emits a financial approval or an Apply command. C12 Apply blob65d2 and M31 approval obligation remain."
+      },
+      {
+        "id": "CC46-DECISIONS44-FIVE-NOMINALS",
+        "result": "PRESERVED",
+        "details": "All five original Decisions44 nominal titles and exact spec blob2d9c remain; cookie parser, strict parser test and installation fixture are outside the 15 destination set. No title/action/timeout/expectation is dropped. Five nominal browser journeys still need qualification against the new integrated candidate by the authorized checker/owner."
+      },
+      {
+        "id": "CC46-NATIVE41-HOLD",
+        "result": "PRESERVED",
+        "details": "The host receives only two imports, current-choice service/HTTP construction and a route prefix. None of Native41 held admission patch is applied. After C20 the host blob would be b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b, so Native41 expected preimage2bf remains divergent; real admission/readiness/continuation and AM witness stay held."
+      }
+    ],
+    "exact_region_preservation": {
+      "procurement_controls_block_sha256": "e4a70e19a97556d2df730d196da5af61ef87b39f0182360129c9bdc0c22af389",
+      "procurement_controls_block_unchanged": true,
+      "previous_http_route_chain_retained_after_new_prefix": true
+    },
+    "proof_gate": "Not an independent campaign FINAL/E17 review."
+  },
+  "verification": {
+    "target": "C19 exact current source tree and all15preimages/6absences reconciled",
+    "preimages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "group": "owned",
+        "source_base": "c27e908140ba34ffea39078a78626f47943a8444",
+        "current_C19": "c27e908140ba34ffea39078a78626f47943a8444",
+        "expected_postimage": "db487cd1b6263835302e9bcf80499d18531aa592",
+        "exact_preimage": true,
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+        "group": "owned",
+        "source_base": "2441642f59179516da09c9f9780b1b4764f6fd83",
+        "current_C19": "2441642f59179516da09c9f9780b1b4764f6fd83",
+        "expected_postimage": "6333d208823355d26b2c02259859a13e0eae9b19",
+        "exact_preimage": true,
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+        "group": "owned",
+        "source_base": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+        "current_C19": "c9d83f1dcc7865e9c724f9246a65102efa7824ca",
+        "expected_postimage": "349d7bb7bde86d8e4fc8e605a9c981ff4b0ab6ae",
+        "exact_preimage": true,
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "group": "owned",
+        "source_base": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+        "current_C19": "d220c42a28e87b034ca3513aca088a0dd0db262b",
+        "expected_postimage": "b2f96bec220a6ec2f674057546541d5a700e969e",
+        "exact_preimage": true,
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "group": "owned",
+        "source_base": "87e24342ee27b98e26b29a69a2f8de6b7bf7206c",
+        "current_C19": "87e24342ee27b98e26b29a69a2f8de6b7bf7206c",
+        "expected_postimage": "e3b25caeece77ca1d755bc64e8253ca003179793",
+        "exact_preimage": true,
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts",
+        "group": "owned",
+        "source_base": null,
+        "current_C19": null,
+        "expected_postimage": "dd5c155115190cf4af4ab76ec37970e3df268253",
+        "exact_preimage": true,
+        "mode": "NEW100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+        "group": "owned",
+        "source_base": null,
+        "current_C19": null,
+        "expected_postimage": "1f7e6cb2716cb2b17084ab599219f7651961e485",
+        "exact_preimage": true,
+        "mode": "NEW100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+        "group": "owned",
+        "source_base": null,
+        "current_C19": null,
+        "expected_postimage": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3",
+        "exact_preimage": true,
+        "mode": "NEW100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+        "group": "owned",
+        "source_base": null,
+        "current_C19": null,
+        "expected_postimage": "084f7050ca7f45fe22962207f706a5e0d71e3a93",
+        "exact_preimage": true,
+        "mode": "NEW100644"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
+        "group": "shared",
+        "source_base": null,
+        "current_C19": null,
+        "expected_postimage": "369c71b4505360a9742b4b9a64585438f63cec47",
+        "exact_preimage": true,
+        "mode": "NEW100644"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/current-choice-services.ts",
+        "group": "shared",
+        "source_base": null,
+        "current_C19": null,
+        "expected_postimage": "c2ef2828e824a46d67d7c6e79012656a092a3c82",
+        "exact_preimage": true,
+        "mode": "NEW100644"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+        "group": "shared",
+        "source_base": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+        "current_C19": "cbfec35a29a6d67d04ec06db0329ff6ed6688041",
+        "expected_postimage": "e9d3a80f3a592c224f9e3e5d936f72fdf3e81ec7",
+        "exact_preimage": true,
+        "mode": "100644"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "group": "shared",
+        "source_base": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+        "current_C19": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c",
+        "expected_postimage": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+        "exact_preimage": true,
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "group": "shared",
+        "source_base": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "current_C19": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "expected_postimage": "cfbf61fec81e273133c7a2675f1028fa147adad7",
+        "exact_preimage": true,
+        "mode": "100644"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "group": "shared",
+        "source_base": "920fda293db553096f4d8ab7004fcd9652a69291",
+        "current_C19": "920fda293db553096f4d8ab7004fcd9652a69291",
+        "expected_postimage": "bd7df025e12aa457898f48fcf9634273ec5be381",
+        "exact_preimage": true,
+        "mode": "100644"
+      }
+    ],
+    "source_release_docs_only": {
+      "parent": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/W4-request.json",
+          "blob": "0597d4a7ce40b3f607a3fc2faf250fb667ed860a",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/W4-validation.json",
+          "blob": "552854e316fbfb56430bb2c6a7b8a34a02e4778e",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/ci/typecheck-delta-final.json",
+          "blob": "5e232db48a3c373c8817f0b9721c2d56ed9ebef7",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/criteria.json",
+          "blob": "1aef092ccd979fa1fc2af8d890869187c52298d6",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/independent-review-46.json",
+          "blob": "b8c32edcaa8fa048cf88ce0775b458db99f68ade",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration-pins-final.json",
+          "blob": "10b3cde037c57f6d9f773e87da1b925a9c8747b7",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration/owned-manifest.json",
+          "blob": "944ea724903f7568c53e0018400e3ec27b5324fc",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/source-release.json",
+          "blob": "daa9cdb116461c812a0725cbc6358e61e97ed194",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/terminal-handoff.json",
+          "blob": "5bf71c59d9abf2cdd96f062865c67d1a5bc19df1",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/terminal-handoff.md",
+          "blob": "11e5c31a6217b9e3f8959c424375fec564c3c519",
+          "status": "added"
+        }
+      ]
+    },
+    "mode": "All100644; complete40hunks reconstruction, no runtime/product execution",
+    "inventory_correction": "Initial local export omitted unchanged CLI; corrected v2 plus immutable C19 direct CLI listing155files resolved all293relative references/136paths before publication."
+  },
+  "keep_current": {
+    "Apply": "65d2a0518427b1454aa665ef744bce7564ed8049",
+    "C12_fixture": "33650407123163ea881eca9d4940fde364b27c54",
+    "runtime": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+    "runtime_contract": "9e9bac976b503409de65868a366f352ca1e65071",
+    "Memory40": {
+      "business_context": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "atlas_memory": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d"
+    },
+    "original35": "a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9 and65c5fd04f6af34a241e6cc0bd40cd968cdc6e353",
+    "Portfolio43": "All28 protected paths plus ten C18 destinations untouched",
+    "Decisions44": "All4 C16 paths including five unchanged nominal cases",
+    "Native41": "Eight private paths retained; current host becomes b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b by CurrentChoice only, real admission/watch HOLD",
+    "Reports36": "Old14-target payload not activated;48 unreleased"
+  }
+}

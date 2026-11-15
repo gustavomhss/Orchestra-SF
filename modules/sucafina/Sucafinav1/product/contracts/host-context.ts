@@ -4,6 +4,7 @@ import type { ModelV2 } from "@orchestra/core/model"
 import type { SessionMessage } from "@orchestra/core/session/message"
 import type { Application } from "../../runtime/application.ts"
 import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
+import type { CurrentChoiceFence } from "../decisions/current-choice-preview.ts"
 import type { createSfProductAuthority, SfProductGrant } from "../integration/product-authority.ts"
 import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
 import type { BusinessPorts, PortResult } from "./ports.ts"
@@ -94,6 +95,8 @@ export type CreateSfHostRuntime = (input: {
   origin: string
   mount: string
   persistence: Application["persistence"] & SfScopedSourcePort
+  /** Installed below source lifecycle; shared by the real C08 and Planner producers. */
+  currentChoiceFence?: CurrentChoiceFence
   authenticate: Application["authenticate"]
   environment: Application["environment"]
   /** Explicit installation policy, distinct from financial roles and inaccessible to model input. */

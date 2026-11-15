@@ -63,8 +63,20 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
       if (resolved.length !== refs.length) return { status: "unavailable", reason: "decision-controls-evidence-unavailable" }
       const evidence: Evidence[] = []
       const forecasts: { source: RecordEvidence; label: string }[] = []
-      for (const [index, ref] of refs.entries()) {
-        const found = resolved[index]
+      for (const [index, original] of refs.entries()) {
+        let ref = original
+        let found = resolved[index]
+        // Coverage for a renewed choice is classified against the current
+        // projection. Historical bytes remain attached to the recorded choice.
+        if (found?.state === "historical" && found.currentRef?.kind === "record" &&
+          found.currentRef.target.surface === "planner" && found.currentRef.target.recordType === "planner-version" &&
+          await runtime.business.atlasRecall()?.proveContinuity(original, found.currentRef, call)) {
+          const currentRef = found.currentRef
+          const current = await runtime.business.context.resolve(currentRef, call)
+          if (current.state !== "fresh" || !current.currentRef || !same(current.currentRef, currentRef)) continue
+          ref = currentRef
+          found = current
+        }
         if (!found || found.state !== "fresh" || !found.currentRef || !same(found.currentRef, ref) || !found.authorizedProjection || !("context" in found.authorizedProjection) || !("components" in found.authorizedProjection)) continue
         const projection = found.authorizedProjection
         const sources = projection.context.sourceRefs.filter((source) => source.surface === ref.target.surface && source.type === ref.target.recordType && source.id === ref.target.recordId && source.incarnation === ref.target.incarnation && source.version === ref.target.version)
@@ -72,8 +84,8 @@ export async function readSfDecisionControls(runtime: SfDecisionHttpRuntime, req
         const source = sources[0]!
         const fields = source.fields.filter((field) => ref.target.fields.includes(field))
         const label = `${ref.target.recordType === "planner-version" ? "Forecast" : "Registro Planner"} ${source.id} · ${source.period.start} a ${source.period.end} · ${projection.context.currency} · revisão ${source.version}`
-        if (fields.length && source.period.start <= decision.horizon.start && source.period.end >= decision.horizon.end && ref.target.period && ref.target.period.start <= decision.horizon.start && ref.target.period.end >= decision.horizon.end) evidence.push({ evidence: ref, source, fields, label })
-        if (ref.target.recordType === "planner-version") forecasts.push({ source: ref, label })
+        if (fields.length && source.period.start <= decision.horizon.start && source.period.end >= decision.horizon.end && ref.target.period && ref.target.period.start <= decision.horizon.start && ref.target.period.end >= decision.horizon.end) if (!evidence.some((item) => item.evidence.refDigest === ref.refDigest)) evidence.push({ evidence: ref, source, fields, label })
+        if (ref.target.recordType === "planner-version" && !forecasts.some((item) => item.source.refDigest === ref.refDigest)) forecasts.push({ source: ref, label })
       }
       // Numeric comparison rules may cite only the attached, still-current
       // Procurement records behind the saved alternatives. These readers cannot issue scopes.

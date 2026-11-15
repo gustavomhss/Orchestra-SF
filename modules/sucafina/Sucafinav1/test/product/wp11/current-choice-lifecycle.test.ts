@@ -5,7 +5,7 @@ import type { ChoiceRecord, CostCoverageAssessment, DecisionCase, ScenarioResult
 import type { SfProductStatePort } from "../../../product/contracts/state.ts"
 import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
 import { reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
-import { createCurrentChoicePreview } from "../../../product/decisions/current-choice-preview.ts"
+import { createCurrentChoiceFence, createCurrentChoicePreview } from "../../../product/decisions/current-choice-preview.ts"
 import { createCurrentChoicePromotion } from "../../../product/decisions/current-choice-promotion.ts"
 import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
 import { createProposalCoverageRegistry } from "../../../product/decisions/proposal-coverage.ts"
@@ -91,15 +91,25 @@ test("a current quote replays the same historical choice, requires a separate hu
     expect(digestSfValue({ assessment: coverage.assessment, entries: coverage.entries })).toBe(coverageBeforeObservation)
     const plannerAfterQuote = await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: digestSfValue(snapshot) }))
     const writes = new WeakSet<object>()
-    const makeState = (store: typeof fixture.store) => createSfProductState({
+    let activeStore = fixture.store
+    const persistence: typeof fixture.store = { ...fixture.store,
+      transaction: (surface, work, options) => activeStore.transaction(surface, work, options),
+      transactionAll: (work, options) => activeStore.transactionAll!(work, options),
+      currentSnapshots: () => activeStore.currentSnapshots?.(),
+    }
+    const operationIdentity = () => `wp11-lifecycle-command-${human.round}`
+    const fence = createCurrentChoiceFence({ persistence, host: () => fixture.host, operationIdentity,
+      identity: () => ({ installationId: fixture.context.binding.installationId, projectId: fixture.context.binding.projectId }) })
+    const makeState = (store: Parameters<typeof createSfProductState>[0]["persistence"]) => createSfProductState({
       persistence: store, proposalCoverageWrites: writes, createId: () => "unused-lifecycle-incarnation",
       resolveTarget: async () => ({ incarnation: fixture.caseRef.incarnation }),
       authorize: async (request) => request === fixture.request && await fixture.host.revalidate(fixture.context) ? { principalRef: "finance", policyVersion: "policy", accessRevision: "access" } : undefined,
     })
-    const state = makeState(fixture.store)
+    const state = makeState(fence.persistence)
+    const outside = makeState(persistence)
     const authorizeCase = async (decision: DecisionCase, context: TrustedDomainContext) => decision.id === fixture.caseRef.id && decision.incarnation === fixture.caseRef.incarnation && decision.participants.includes(context.binding.principalRef) && await fixture.host.revalidate(context)
     const sourceFence = (snapshot: Snapshot) => human.sourceAllowed && digestSfValue({ versionId: currentSource.target.recordId, projection: projectPlannerSource(snapshot, actor, currentSource.target.recordId) }) === currentSource.target.projectionDigest
-    const sourceCurrent = async () => human.sourceAllowed && await fixture.store.transaction("planner", async (snapshot) => ({ commit: false, value: sourceFence(snapshot) }))
+    const sourceCurrent = async () => human.sourceAllowed && await activeStore.transaction("planner", async (snapshot) => ({ commit: false, value: sourceFence(snapshot) }))
     const resolveEvidence = async (refs: readonly BusinessEvidenceRef[], context: TrustedDomainContext): Promise<readonly BusinessEvidenceResolution[]> => {
       const current = await sourceCurrent() && await fixture.host.revalidate(context)
       return Promise.all(refs.map(async (ref) => {
@@ -125,7 +135,7 @@ test("a current quote replays the same historical choice, requires a separate hu
       },
     })
     const resimulate = createCurrentPlannerChoice({
-      planner: fixture.planner, persist, store: results, authorizeChoice,
+      fence, host: fixture.host, planner: fixture.planner, persist, store: results, authorizeChoice,
       issueSource: (versionId, context) => fixture.sources.resolveForecastSource(versionId, context),
       verifyContinuity: async (original, current, context) => digestSfValue(original) === digestSfValue(originalSource) && digestSfValue(current) === digestSfValue(currentSource) && await fixture.host.revalidate(context) && await sourceCurrent()
         ? { status: "ok", value: { fence: sourceCurrent, fenceSnapshot: sourceFence, revalidate: sourceCurrent } }
@@ -177,7 +187,7 @@ test("a current quote replays the same historical choice, requires a separate hu
       console.debug("WP11_CURRENT_CHOICE_DIAGNOSTIC", JSON.stringify(failure))
     }
     const preview = createCurrentChoicePreview({
-      state, host: fixture.host, sources, results, authorizeCase, resimulate: (request, context) => tracePreview("resimulate", () => resimulate(request, context)), writes,
+      fence, state, host: fixture.host, sources, results, authorizeCase, resimulate: (request, context) => tracePreview("resimulate", () => resimulate(request, context)), writes,
       authorizePreview: async () => human.preview,
       registerCoverage: registry.registerProposalCoverage,
       coverageEvidence: {
@@ -223,9 +233,9 @@ test("a current quote replays the same historical choice, requires a separate hu
         const valid = digestSfValue(binding.originalSource) === digestSfValue(originalSource) && digestSfValue(binding.source) === digestSfValue(currentSource) && await fixture.host.revalidate(context) && await sourceCurrent()
         if (valid && human.raceCase) {
           human.raceCase = false
-          const latest = await state.read(fixture.request, "cases", (value) => value.cases[fixture.caseRef.id])
+          const latest = await outside.read(fixture.request, "cases", (value) => value.cases[fixture.caseRef.id])
           if (latest.status !== "ok" || !latest.value) throw new Error("Concurrent case unavailable")
-          const changed = await state.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: "wp11-lifecycle-case-race", commandDigest: digestSfValue({ objective: "Review the training quote with updated context" }) }, async (value) => {
+          const changed = await outside.transaction(fixture.request, { namespace: "cases", expectedStorageVersion: latest.storageVersion, targetRef: fixture.caseRef.id, targetIncarnation: fixture.caseRef.incarnation, idempotencyKey: "wp11-lifecycle-case-race", commandDigest: digestSfValue({ objective: "Review the training quote with updated context" }) }, async (value) => {
             const current = value.cases[fixture.caseRef.id]!
             value.cases[fixture.caseRef.id] = { ...current, version: current.version + 1, objective: "Review the training quote with updated context" }
             return { commit: true, value: true }
@@ -234,17 +244,17 @@ test("a current quote replays the same historical choice, requires a separate hu
         }
         return valid
       },
-      operationIdentity: () => `wp11-lifecycle-preview-${human.round}`,
+      operationIdentity,
     })
     const makePromotion = (currentState: SfProductStatePort) => createCurrentChoicePromotion({
-      state: currentState, host: fixture.host, sources, authorizeCase,
+      fence, state: currentState, host: fixture.host, sources, authorizeCase,
       authorizePromotion: async () => human.promote,
-      verifyProvenance: async (request, candidate, result, context) => {
-        const binding = await preview.read(request, context)
+      verifyProvenance: async (request, candidate, result, context, receipt) => {
+        const binding = await preview.read(request, context, receipt)
         return binding.status === "ok" && digestSfValue(candidate) === originalDigest && result.resultDigest === request.resultDigest && await sourceCurrent()
       },
       verifySnapshot: (snapshot, _request, candidate) => sourceFence(snapshot) && digestSfValue(candidate) === originalDigest,
-      operationIdentity: () => "wp11-lifecycle-human-promotion", now: () => "2026-11-14T00:00:00Z",
+      operationIdentity, now: () => "2026-11-14T00:00:00Z",
     })
     const promotion = makePromotion(state)
     const previewRequest = { caseRef: recorded.value.caseRef, choiceId: choice.id, alternativeRef: { id: "selected", version: 1 }, coverageRef: "current-training-inventory" }
@@ -297,8 +307,9 @@ test("a current quote replays the same historical choice, requires a separate hu
     // dispose() is idempotent; fixture.cleanup() can safely repeat it after this real restart.
     await fixture.store.dispose()
     const reopened = await openLocalStore(fixture.directory)
+    activeStore = reopened
     try {
-      const restoredState = makeState(reopened)
+      const restoredState = makeState(fence.persistence)
       const restored = await restoredState.read(fixture.request, "cases", (value) => ({ decision: value.cases[fixture.caseRef.id], result: value.decisionResults?.[promoted.value.resultRef] }))
       if (restored.status !== "ok" || !restored.value.decision) throw new Error("Current choice after reopen unavailable")
       expect(restored.value.decision.version).toBe(4)
@@ -318,3 +329,4 @@ test("a current quote replays the same historical choice, requires a separate hu
     } finally { await reopened.dispose() }
   } finally { await fixture.cleanup() }
 }, 180000)
+

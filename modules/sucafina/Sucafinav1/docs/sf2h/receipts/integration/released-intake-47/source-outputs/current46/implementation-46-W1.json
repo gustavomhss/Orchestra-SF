@@ -1,0 +1,89 @@
+{
+  "schema": "sf2h-current-choice-cohort-implementation-v1",
+  "mission": 46,
+  "cohort": "CURRENT-CHOICE-COHORT",
+  "status": "IMPLEMENTED_PENDING_ACTIONS",
+  "branch": "astra-finance",
+  "pr": 35,
+  "base_product_sha": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "ack_sha": "90920c34546517baad267b3ee93705f7fc1016a3",
+  "packet_sha": "18f8d33a0a288155e605fa4246ad8f5f6b4039fc",
+  "composed_C12": "6470bebdc9bb5044df7959e697cb7d8629157e23",
+  "observed_stack": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "writer": {
+    "remote": "/root",
+    "lease": "current-choice-browser46",
+    "local_assistants": [
+      {
+        "id": "/root/cohort_real_adapter_tests",
+        "scope": "owned test drafts only"
+      },
+      {
+        "id": "/root/cohort_provider_review",
+        "scope": "scratch fence/shared patch proposal only"
+      },
+      {
+        "id": "/root/cohort_contract_ci",
+        "scope": "read-only contract and source review"
+      }
+    ]
+  },
+  "implementation": [
+    "Invocation-scoped real persistence decorator; exact original Request, descriptor, UI context, command, runtime identity and snapshot are fenced after the provider's final awaits.",
+    "Canonical Planner resimulation with source continuity; reviewed result and canonical coverage proof plus full registry-record digest persist in the private binding.",
+    "Explicit human promotion atomically adopts alternative/result plus transaction receipt and preserves every historical choice byte.",
+    "Authorized replay revalidates historical result provenance, live sources, exact adopted coverage and original receipt; old receipts never revive a finished lease.",
+    "Missing real composed fence fails closed; historical v1 bindings without coverage pins require a fresh authorized prepare before promotion."
+  ],
+  "review": [
+    {
+      "reviewer": "/root/cohort_contract_ci",
+      "finding": "Real currentSnapshots returns detached copies; recapture after final host revalidate required.",
+      "resolution": "Fixed: fresh currentSnapshots capture is compared after await and observers run synchronously in the real callback."
+    },
+    {
+      "reviewer": "/root/cohort_provider_review",
+      "finding": "Namespace authorize is not UI lease authority; resolveTarget includes later awaits.",
+      "resolution": "Actual host revalidation follows the completed provider callback, with all snapshot bytes pinned across that await."
+    }
+  ],
+  "ci": {
+    "status": "NOT_RUN",
+    "supported_workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "planned_cases": 31,
+    "local_product_execution": "NONE",
+    "deduplication": {
+      "checked_at": "2026-11-14T23:07:32Z",
+      "source_head": "90920c34546517baad267b3ee93705f7fc1016a3",
+      "current_choice_or_wp11_inflight": 0,
+      "unrelated_inflight": [
+        43650471583
+      ],
+      "check_branch_head": "87e5164a1c87ac9f013d381d5e601ca5b4b6c677",
+      "check_branch_latest_completed": 43599389386
+    }
+  },
+  "limits": [
+    "Numeric lifecycle uses real Planner and C08 with synthetic host grant/evidence boundaries; new real-adapter tests seed unknown financial results and prove authority/atomicity, not monetary correctness.",
+    "250000 knownSubtotal and complete financial coverage do not close the canonical total/difference/threshold or every downstream consumer criterion while comparisonStatus remains conditioned.",
+    "Shared host/HTTP/UI wiring is excluded; complete proposed patch for integrator42 remains pending review and is not applied to excluded paths.",
+    "This source qualification does not approve the final composed C, native/browser resident gates, all83 WP11 criteria or AM01-AM06.",
+    "Pre-existing source-wide typecheck findings remain to be measured; no inherited run is reused as this source's result."
+  ]
+}

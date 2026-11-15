@@ -39,6 +39,8 @@ import { readSfImportAnalysisChoices } from "../../../../modules/sucafina/Sucafi
 import { createSfBusinessServices } from "./business-services.ts"
 import { createSfExtendedBusinessServices } from "./extended-business-services.ts"
 import { createSfDecisionDomainServices } from "./decision-domain-services.ts"
+import { createSfCurrentChoiceServices } from "./current-choice-services.ts"
+import { createSfCurrentChoiceHttp } from "./current-choice-http.ts"
 import { createSfDecisionDomainHttp } from "./decision-domain-http.ts"
 import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
 import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
@@ -268,6 +270,10 @@ export const createSfHostRuntimeWithRoutineNative = async (
     hasAdmittedInputContext: nativeInputs.hasAdmittedInputContext, readAlternativeCapture: nativeInputs.readAlternativeCapture })
   business.bindDecisionDomain(decisionDomain)
   const decisionDomainHttp = createSfDecisionDomainHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, business, domain: decisionDomain } : undefined })
+  const currentChoice = input.currentChoiceFence ? createSfCurrentChoiceServices({ authority, business,
+    fence: input.currentChoiceFence, proposalCoverageWrites }) : undefined
+  const currentChoiceHttp = createSfCurrentChoiceHttp({ origin: input.origin, mount: input.mount,
+    runtime: () => identity() && currentChoice ? { authority, currentChoice } : undefined })
   const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
   residentReviewReaders.bindOutcome(memory.reviewOutcome)
@@ -830,7 +836,7 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
-    productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }

@@ -1,0 +1,647 @@
+diff --git a/apps/cli/src/sucafina-product/current-choice-http.ts b/apps/cli/src/sucafina-product/current-choice-http.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..369c71b4505360a9742b4b9a64585438f63cec47
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/current-choice-http.ts
+@@ -0,0 +1,154 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
++import { decodeSfOperationInput } from "../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
++import { htmlPolicy } from "../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
++import { documentHtml, esc, pageMain } from "../../../../modules/sucafina/Sucafinav1/src/screen-shell.ts"
++import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import type { createSfCurrentChoiceServices, SfCurrentChoiceOptions } from "./current-choice-services.ts"
++
++type Runtime = { authority: ReturnType<typeof createSfProductAuthority>; currentChoice: ReturnType<typeof createSfCurrentChoiceServices> }
++const modes = ["current-choice", "current-choice-prepare", "current-choice-promote"] as const
++
++/** Separate POSTs admit preparation and the exact human-reviewed promotion. */
++export function createSfCurrentChoiceHttp(input: { origin: string; mount: string; runtime: () => Runtime | undefined }) {
++  return async (request: Request, surface: string): Promise<Response | undefined> => {
++    const url = new URL(request.url)
++    const mode = url.searchParams.get("sf")
++    if (!modes.some((value) => value === mode)) return undefined
++    const reply = (value: unknown, status: number) => Response.json(value, { status,
++      headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
++    if (!["dashboard", "planner", "procurement"].includes(surface) || url.origin !== input.origin ||
++      url.pathname !== `${input.mount}/${surface}` || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
++    const runtime = input.runtime()
++    if (!runtime) return reply({ status: "unavailable", reason: "current-choice-host-unavailable" }, 503)
++    if (mode === "current-choice") {
++      if (!["GET", "HEAD"].includes(request.method)) return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
++      if ([...url.searchParams.keys()].some((key) => !["sf", "case", "format"].includes(key) || url.searchParams.getAll(key).length !== 1) ||
++        url.searchParams.has("format") && url.searchParams.get("format") !== "json") return reply({ status: "needs-input", reason: "invalid-current-choice-request" }, 400)
++      const wanted = url.searchParams.get("case") || undefined
++      if (wanted && wanted.length > 16384) return reply({ status: "needs-input" }, 400)
++      const digest = digestSfValue({ purpose: "current-choice", caseRef: wanted ?? "" })
++      const access = await runtime.authority.ui.admit(request, "sf_case_read", digest)
++      if (access.status !== "ok") return reply({ status: "denied" }, 403)
++      try {
++        if (!await runtime.authority.ui.validate(access.value, "sf_case_read", digest)) return reply({ status: "denied" }, 403)
++        const result = await runtime.currentChoice.options(wanted, access.value)
++        if (result.status !== "ok" || url.searchParams.get("format") === "json") return reply(result, status(result.status))
++        const html = page(result.value, surface)
++        return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store",
++          "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff" } })
++      } catch { return reply({ status: "unavailable", reason: "current-choice-options-unavailable" }, 503) }
++      finally { runtime.authority.ui.finish(access.value) }
++    }
++    if (request.method !== "POST") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
++    if (request.headers.get("origin") !== input.origin) return reply({ status: "denied" }, 403)
++    if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1 ||
++      !request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) return reply({ status: "needs-input", reason: "invalid-current-choice-request" }, 400)
++    const payload = await boundedJson(request)
++    if (!valid(payload, mode === "current-choice-promote")) return reply({ status: "needs-input", reason: "invalid-current-choice-input" }, 400)
++    const action = mode === "current-choice-prepare" ? "planner.preview" : "decisions.promote-alternative"
++    const admitted = await runtime.authority.human.admit(request, action, payload)
++    if (admitted.status !== "ok") return reply({ status: "denied" }, 403)
++    try {
++      const result = mode === "current-choice-prepare"
++        ? await runtime.currentChoice.prepare(payload as Parameters<typeof runtime.currentChoice.prepare>[0], admitted.value)
++        : await runtime.currentChoice.promote(payload as Parameters<typeof runtime.currentChoice.promote>[0], admitted.value)
++      // The service performs its final joint authorization/snapshot fence before
++      // returning. No asynchronous authority callback follows that publication.
++      return reply(result, status(result.status))
++    } catch { return reply({ status: "unavailable", reason: "current-choice-unavailable" }, 503) }
++    finally { runtime.authority.human.finish(admitted.value) }
++  }
++}
++function page(value: SfCurrentChoiceOptions, surface: string) {
++  const data = JSON.stringify(value).replace(/</g, "\\u003c")
++  const cases = value.cases.map((item) => `<option value="${esc(item.ref)}"${value.selected && item.ref === encodeCaseRef(value.selected.caseRef) ? " selected" : ""}>${esc(item.title)} · revisão ${item.version}</option>`).join("")
++  const choices = value.selected?.choices.map((choice, index) => `<article class="panel"><h3>${esc(choice.title)}</h3><p>${esc(choice.reason)}</p><button type="button" data-prepare="${index}"${choice.request ? "" : " disabled"}>Preparar escolha vigente</button></article>`).join("") ?? ""
++  const body = `<section class="sf-current-choice"><h1>Escolha vigente</h1><p>Recalcule uma escolha registrada com as fontes vigentes, revise o resultado e promova a alternativa mediante confirmação.</p>
++    <form method="get"><input type="hidden" name="sf" value="current-choice"><label>Caso <select name="case" required><option value="">Selecione</option>${cases}</select></label><button>Abrir caso</button></form>
++    ${value.selected ? `<h2>${esc(value.selected.title)}</h2>${choices || "<p>Este caso ainda não tem escolhas registradas.</p>"}` : ""}
++    <p id="current-choice-status" role="status" aria-live="polite"></p><section id="current-choice-review" hidden></section>
++    <p><a href="?sf=decision-controls">Controles de decisão e cobertura</a></p></section>
++    <script type="application/json" id="current-choice-data">${data}</script>${script()}`
++  return documentHtml("Escolha vigente", surface as "dashboard" | "planner" | "procurement", "", pageMain({ drawn: true, key: "Escolha vigente", index: 0 }, body), "", "", "")
++}
++function script() {
++  return `<script>(() => {
++    let data = JSON.parse(document.getElementById('current-choice-data').textContent);
++    const status = document.getElementById('current-choice-status');
++    const review = document.getElementById('current-choice-review');
++    const commands = new Map(); let prepared; let busy = false;
++    const reset = () => { prepared = undefined; review.replaceChildren(); review.hidden = true; };
++    const close = () => { reset(); data = undefined; for (const button of document.querySelectorAll('[data-prepare]')) button.disabled = true; status.textContent = 'Acesso ou contexto alterado. Reabra o caso.'; };
++    const send = async (mode, payload) => {
++      const body = JSON.stringify(payload); const index = mode+body;
++      let key = commands.get(index); if (!key) { key = crypto.randomUUID(); commands.set(index,key); }
++      const target = new URL(location.href); target.search = new URLSearchParams({sf:mode}).toString();
++      const response = await fetch(target, {method:'POST',credentials:'same-origin',cache:'no-store',headers:{'Content-Type':'application/json','Idempotency-Key':key},body});
++      if (response.status === 401 || response.status === 403) { close(); return undefined; }
++      const result = await response.json();
++      if (!response.ok || result.status !== 'ok') {
++        if (mode === 'current-choice-promote' && response.status >= 500) { status.textContent = 'Não foi possível confirmar a promoção. Tente novamente para consultar a mesma operação.'; return undefined; }
++        reset(); status.textContent = response.status === 409 ? 'O caso ou a fonte mudou. Reabra o caso e prepare novamente.' : 'A escolha vigente está indisponível. Revise a fonte e a cobertura de custos.'; return undefined;
++      }
++      return result.value;
++    };
++    const paragraph = text => { const node = document.createElement('p'); node.textContent = text; review.append(node); };
++    const amount = (value,currency) => value === null ? 'Indisponível' : new Intl.NumberFormat('pt-BR',{maximumFractionDigits:2}).format(value)+' '+currency;
++    const render = value => {
++      reset(); prepared = value; review.hidden = false;
++      const title = document.createElement('h2'); title.textContent = 'Revisar resultado vigente'; review.append(title);
++      const table = document.createElement('table'); const head = document.createElement('thead'); const row = document.createElement('tr');
++      for (const text of ['Medida','Escolha registrada','Resultado vigente']) { const cell = document.createElement('th'); cell.textContent = text; row.append(cell); } head.append(row); table.append(head);
++      const tbody = document.createElement('tbody');
++      for (const [label,field] of [['Subtotal conhecido','knownSubtotal'],['Total qualificado','total']]) { const tr = document.createElement('tr'); for (const text of [label,amount(value.historical[field],value.historical.currency),amount(value.current[field],value.current.currency)]) { const cell = document.createElement('td'); cell.textContent = text; tr.append(cell); } tbody.append(tr); } table.append(tbody); review.append(table);
++      const states = {complete:'Completa',conditioned:'Condicionada',incompatible:'Incompatível',unavailable:'Indisponível',pending:'Pendente'};
++      paragraph('Comparação: '+(states[value.current.comparisonStatus] ?? value.current.comparisonStatus)+'. Cobertura: '+(states[value.current.costCoverage.coverageState] ?? value.current.costCoverage.coverageState)+'.');
++      paragraph('Período: '+value.current.horizon.start+' a '+value.current.horizon.end+'.');
++      for (const entry of value.current.costCoverage.entries) paragraph(entry.categoryId+': '+({included:'incluída','not-applicable':'não aplicável',pending:'pendente'}[entry.status])+(entry.reason ? ' — '+entry.reason : ''));
++      for (const note of [...value.current.unresolvedConditions,...value.current.restrictions]) paragraph(note);
++      paragraph('A promoção atualiza a alternativa vigente e reabre a consideração do caso. A escolha registrada permanece preservada.');
++      const label = document.createElement('label'); const confirmation = document.createElement('input'); confirmation.type = 'checkbox'; label.append(confirmation,document.createTextNode(' Revisei o resultado, a cobertura e as pendências.')); review.append(label);
++      const button = document.createElement('button'); button.type = 'button'; button.textContent = 'Promover resultado vigente'; button.disabled = true; review.append(button);
++      confirmation.addEventListener('change',()=>button.disabled = !confirmation.checked || busy);
++      button.addEventListener('click',async()=> {
++        if (!prepared || prepared !== value || !confirmation.checked || busy) return;
++        busy = true; button.disabled = true; status.textContent = 'Verificando a autorização e promovendo…';
++        try { const result = await send('current-choice-promote',value.promotion); if (result && data) { reset(); for (const other of document.querySelectorAll('[data-prepare]')) other.disabled = true; status.textContent = 'Resultado promovido. A escolha histórica está preservada. Reabra o caso para continuar.'; } }
++        catch { status.textContent = 'Não foi possível confirmar a promoção. Tente novamente para consultar a mesma operação.'; }
++        finally { busy = false; if (prepared === value) button.disabled = !confirmation.checked; }
++      });
++    };
++    for (const button of document.querySelectorAll('[data-prepare]')) button.addEventListener('click',async()=> {
++      const option = data?.selected?.choices[Number(button.dataset.prepare)]; if (!option?.request || busy) return;
++      reset(); busy = true; button.disabled = true; status.textContent = 'Ressimulando e verificando cobertura…';
++      try { const value = await send('current-choice-prepare',option.request); if (value && data) { render(value); status.textContent = 'Resultado preparado. Revise antes de promover.'; } }
++      catch { status.textContent = 'Não foi possível preparar a escolha. Tente novamente.'; }
++      finally { busy = false; if (data) button.disabled = false; }
++    });
++  })();</script>`
++}
++function status(value: string) { return value === "ok" ? 200 : value === "denied" ? 403 : value === "conflict" || value === "stale" ? 409 : value === "needs-input" ? 400 : 503 }
++function record(value: unknown): value is Record<string, unknown> { return !!value && typeof value === "object" && !Array.isArray(value) }
++function text(value: unknown): value is string { return typeof value === "string" && !!value.trim() && value.length <= 16384 }
++function integer(value: unknown) { return typeof value === "number" && Number.isSafeInteger(value) && value >= 1 }
++function keys(value: Record<string, unknown>, names: readonly string[]) { return names.every((name) => Object.hasOwn(value, name)) && Object.keys(value).every((name) => names.includes(name)) }
++function valid(value: unknown, promotion: boolean): value is Record<string, unknown> {
++  if (!record(value) || !record(value.caseRef) || !keys(value.caseRef, ["id", "incarnation", "version"]) || !text(value.caseRef.id) || !text(value.caseRef.incarnation) || !integer(value.caseRef.version) ||
++    !text(value.choiceId) || !record(value.alternativeRef) || !keys(value.alternativeRef, ["id", "version"]) || !text(value.alternativeRef.id) || !integer(value.alternativeRef.version) || !text(value.coverageRef)) return false
++  return promotion ? keys(value, ["caseRef", "choiceId", "choiceDigest", "alternativeRef", "resultRef", "resultDigest", "scenario", "coverageRef"]) &&
++    text(value.resultRef) && typeof value.choiceDigest === "string" && /^[a-f0-9]{64}$/.test(value.choiceDigest) && typeof value.resultDigest === "string" && /^[a-f0-9]{64}$/.test(value.resultDigest) && decodeSfOperationInput("sf_scenario_simulate", value.scenario).ok
++    : keys(value, ["caseRef", "choiceId", "alternativeRef", "coverageRef"])
++}
++async function boundedJson(request: Request): Promise<unknown> {
++  const reader = request.body?.getReader()
++  if (!reader) return undefined
++  const chunks: Uint8Array[] = []; let length = 0
++  try {
++    while (true) { const result = await reader.read(); if (result.done) break; length += result.value.byteLength;
++      if (length > 262144) { await reader.cancel(); return undefined }; chunks.push(result.value) }
++    const bytes = new Uint8Array(length); let offset = 0
++    for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length }
++    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))
++  } catch { return undefined } finally { reader.releaseLock() }
++}
+diff --git a/apps/cli/src/sucafina-product/current-choice-services.ts b/apps/cli/src/sucafina-product/current-choice-services.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..c2ef2828e824a46d67d7c6e79012656a092a3c82
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/current-choice-services.ts
+@@ -0,0 +1,329 @@
++import { AsyncLocalStorage } from "node:async_hooks"
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
++import type { CostCoverageEntry, ScenarioResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
++import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { SfProductState, SfStateAuthority } from "../../../../modules/sucafina/Sucafinav1/product/contracts/state.ts"
++import { object, type Snapshot } from "../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
++import { sfRunSourceFence } from "../../../../modules/sucafina/Sucafinav1/product/ai/run-store.ts"
++import { encodeCaseRef, parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
++import { createCurrentPlannerChoice } from "../../../../modules/sucafina/Sucafinav1/product/planner/current-choice.ts"
++import { createCurrentChoicePreview, isCurrentChoiceFence, readCurrentChoiceBinding } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
++import type { CurrentChoiceBinding, CurrentChoiceFence, CurrentChoicePreviewRequest } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts"
++import { createCurrentChoicePromotion } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts"
++import type { CurrentChoicePromotion } from "../../../../modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts"
++import { createProposalCoverageRegistry } from "../../../../modules/sucafina/Sucafinav1/product/decisions/proposal-coverage.ts"
++import { supportsCoverageClassification } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts"
++import type { CoverageClassification } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts"
++import { verifyDecisionPlannerSources } from "../../../../modules/sucafina/Sucafinav1/product/decisions/baseline-fence.ts"
++import { reassessScenarioCoverage } from "../../../../modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
++import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import { createSfDecisionPlannerActors } from "./decision-baseline-services.ts"
++import type { createSfBusinessServices } from "./business-services.ts"
++
++type CaseRef = { id: string; incarnation: string; version: number }
++type RecordEvidence = Extract<BusinessEvidenceRef, { kind: "record" }>
++type SourceFences = Record<"dashboard" | "planner" | "procurement", string>
++type Scope = { context: TrustedDomainContext; preparation?: CurrentChoicePreviewRequest; binding?: CurrentChoiceBinding; currentSource?: RecordEvidence; sources?: SourceFences; classificationDigest?: string }
++export type SfCurrentChoiceOptions = { cases: readonly { ref: string; title: string; version: number }[]; selected?: {
++  caseRef: CaseRef; title: string; choices: readonly { id: string; title: string; reason: string; request?: CurrentChoicePreviewRequest }[]
++} }
++export type SfCurrentChoiceReview = { promotion: CurrentChoicePromotion; bindingDigest: string; historical: ScenarioResult; current: ScenarioResult }
++
++/** Host composition for human prepare/review/promote; no native capability or policy is added. */
++export function createSfCurrentChoiceServices(input: {
++  authority: ReturnType<typeof createSfProductAuthority>
++  business: ReturnType<typeof createSfBusinessServices>
++  fence: CurrentChoiceFence
++  proposalCoverageWrites: WeakSet<object>
++}) {
++  if (!isCurrentChoiceFence(input.fence)) throw new Error("SF_CURRENT_CHOICE_REAL_FENCE_REQUIRED")
++  const { authority, business, fence } = input
++  const host = authority.host
++  const scopes = new AsyncLocalStorage<Scope>()
++  const actors = createSfDecisionPlannerActors(authority)
++  const classifications = new WeakMap<object, CoverageClassification>()
++  const scope = (call: TrustedDomainContext) => {
++    const value = scopes.getStore()
++    return value?.context === call && fence.current(call) ? value : undefined
++  }
++  const unavailable = (reason = "current-choice-unavailable") => ({ status: "unavailable" as const, reason })
++  const sourceFences = (snapshots: Parameters<Parameters<CurrentChoiceFence["observe"]>[1]>[0]): SourceFences => ({
++    dashboard: sfRunSourceFence(snapshots.dashboard), planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement),
++  })
++  // Cohort writes append their own records, but never change the human's
++  // baseline classification. Fence this private dependency as well as sources.
++  const classificationInventory = (preferences: Readonly<SfProductState["preferences"]>) => Object.fromEntries(Object.entries(preferences).filter(([key]) =>
++    key.startsWith("sf:proposal-coverage:baseline:") || key.startsWith("sf:proposal-coverage:classification:")))
++  const readClassificationInventory = async (call: TrustedDomainContext) => {
++    const request = host.requestFor(call)
++    if (!request) return undefined
++    const found = await authority.state.read(request, "preferences", (state, actor) => sameActor(actor, call) ? classificationInventory(state.preferences) : undefined)
++    return found.status === "ok" ? found.value : undefined
++  }
++  const captureSources = async (call: TrustedDomainContext, work: () => Promise<boolean>) => {
++    const active = scope(call)
++    const inventory = await readClassificationInventory(call)
++    const before = await business.readSourceFences(call)
++    if (!active || !inventory || !before || !await work()) return false
++    const afterInventory = await readClassificationInventory(call)
++    const after = await business.readSourceFences(call)
++    if (!after || !afterInventory || !same(before, after) || !same(inventory, afterInventory) || scope(call) !== active) return false
++    const captured = structuredClone(after)
++    const privateDigest = digestSfValue(inventory)
++    active.sources = captured
++    active.classificationDigest = privateDigest
++    fence.observe(call, (snapshots) => same(sourceFences(snapshots), captured) &&
++      digestSfValue(classificationInventory(object(object(snapshots.dashboard.data.__sfProductV1).preferences))) === privateDigest)
++    return true
++  }
++  const publicationFence = (snapshot: Snapshot, call: TrustedDomainContext) => {
++    const expected = scope(call)?.sources
++    // This callback also runs from final observers: it must remain synchronous
++    // and side-effect-free, including no registration of another observer.
++    return !!expected && sfRunSourceFence(snapshot) === expected.planner && same(business.lockedSourceFences(), expected) && fence.current(call)
++  }
++  const freshRefs = async (refs: readonly BusinessEvidenceRef[], call: TrustedDomainContext) => {
++    const values = await business.context.context({ refs }, call)
++    return values.length === refs.length && values.every((value, index) => value.state === "fresh" &&
++      value.accessRevision === call.binding.accessRevision && !!value.authorizedProjection && !!value.currentRef &&
++      same(value.ref, refs[index]) && same(value.currentRef, value.ref)) && fence.current(call)
++  }
++  const currentPlanner = (snapshot: Snapshot, source: RecordEvidence, call: TrustedDomainContext) => {
++    const actor = actors.locked(snapshot, call)
++    return !!actor && verifyDecisionPlannerSources(snapshot, [source], actor, call)
++  }
++  const lineage = (snapshot: Snapshot, original: RecordEvidence) => {
++    const physical = snapshot.sfSources?.records[JSON.stringify([original.target.recordType, original.target.recordId])]
++    const old = Object.values(snapshot.sfSources?.scopes ?? {}).filter((entry) => entry.incarnation === original.target.incarnation &&
++      entry.scope.recordType === original.target.recordType && entry.scope.recordId === original.target.recordId)
++    return !!physical?.alive && old.length === 1 && old[0]!.sourceIncarnation === physical.incarnation && old[0]!.version >= original.target.version
++  }
++  const continuity: Parameters<typeof createCurrentPlannerChoice>[0]["verifyContinuity"] = async (original, current, call) => {
++    if (!scope(call) || original.target.recordId !== current.target.recordId || original.target.recordType !== "planner-version" ||
++      current.target.recordType !== "planner-version" || !await business.atlasRecall()?.proveContinuity(original, current, call) || !await actors.capture(call))
++      return unavailable("current-choice-continuity-unavailable")
++    const active = scope(call)
++    if (!active) return unavailable()
++    active.currentSource = structuredClone(current)
++    const revalidate = async () => {
++      const again = await business.plannerProduct.issueSource(current.target.recordId, call)
++      return again.status === "ok" && same(again.value.evidence, current) &&
++        !!await business.atlasRecall()?.proveContinuity(original, current, call) && fence.current(call)
++    }
++    return { status: "ok", value: { fence: revalidate, revalidate,
++      fenceSnapshot: (snapshot) => fence.current(call) && lineage(snapshot, original) && currentPlanner(snapshot, current, call) } }
++  }
++  const resimulate = createCurrentPlannerChoice({ host, fence, planner: business.planner, issueSource: business.plannerProduct.issueSource,
++    persist: business.calculations.persist, store: business.results, operationIdentity: business.operationIdentity,
++    authorizeChoice: async (caseRef, choice, call) => {
++      const active = scope(call)
++      if (!active?.preparation || !same(active.preparation.caseRef, caseRef) || active.preparation.choiceId !== choice.id ||
++        !await authority.human.authorize(call, "planner.preview", active.preparation)) return false
++      const current = await business.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
++      return current.status === "ok" && current.value.case.version === caseRef.version &&
++        current.value.case.choices.filter((item) => same(item, choice)).length === 1 && fence.current(call)
++    }, verifyContinuity: continuity })
++  const coverageEvidence: Parameters<typeof createCurrentChoicePreview>[0]["coverageEvidence"] = {
++    entries: async (scenario, baseline, call) => {
++      const active = scope(call)
++      const source = active?.currentSource
++      if (!source || !scenario.sourceRefs.some((ref) => same(ref, source))) return unavailable("current-choice-coverage-source-unavailable")
++      const classification = await business.baselineCoverage.readClassification(source.refId, call)
++      if (classification.status !== "ok") return classification
++      if (classification.value.basis.id !== baseline.basisId || classification.value.basis.version !== baseline.basisVersion) return { status: "needs-input", reason: "current-choice-coverage-classification-required" }
++      const entries: readonly CostCoverageEntry[] = structuredClone(baseline.entries)
++      for (const entry of entries) if (entry.status !== "pending") classifications.set(entry, classification.value)
++      const refs = [classification.value.source, ...classification.value.basis.sourceRefs, ...scenario.sourceRefs,
++        ...baseline.evaluatedSourceRefs, ...entries.flatMap((entry) => entry.status === "pending" ? [] : entry.evidenceRefs)]
++        .filter((ref, index, all) => all.findIndex((other) => same(other, ref)) === index)
++      // Resolve once to establish any real source scopes, then bracket the
++      // canonical re-read. Owned preview observes this fence before registry
++      // registration begins, so the publication basis must already exist here.
++      if (!await freshRefs(refs, call) || !await captureSources(call, () => freshRefs(refs, call))) return unavailable("current-choice-coverage-evidence-unavailable")
++      return { status: "ok", value: entries }
++    },
++    resolve: (refs, call) => business.context.context({ refs }, call),
++    supports: (entry, evidence) => {
++      const classification = classifications.get(entry)
++      return !!classification && supportsCoverageClassification(classification, entry, evidence)
++    },
++    verifySnapshot: (snapshot, _result, _basis, call) => publicationFence(snapshot, call),
++  }
++  const coverage = createProposalCoverageRegistry({ state: authority.state, host, authorizeCase: business.authorizeCase,
++    operationIdentity: business.operationIdentity, proposalCoverageWrites: input.proposalCoverageWrites, now: () => new Date().toISOString(),
++    verifyEvidence: (record, call) => captureSources(call, async () => {
++      const original = await business.baselineCoverage.resolveForecastCoverage(record.scenario.baseRef, call)
++      const computed = await business.planner.simulateScenario(record.scenario, call)
++      if (original.status !== "ok" || computed.status !== "ok" || !same(original.value.basis, record.basis)) return false
++      const entries = await coverageEvidence.entries(computed.value, original.value.assessment, call)
++      if (entries.status !== "ok") return false
++      const attributed = { ...computed.value, costCoverage: { ...computed.value.costCoverage,
++        alternativeId: record.assessment.alternativeId, alternativeVersion: record.assessment.alternativeVersion } } as ScenarioResult
++      const evaluated = await reassessScenarioCoverage({ scenario: attributed, basis: original.value.basis, baseline: original.value.assessment,
++        entries: entries.value, resolveEvidence: (refs) => coverageEvidence.resolve(refs, call), supports: coverageEvidence.supports })
++      return !!evaluated && same(evaluated, record.result) && record.sourceRefs.length > 0 && await freshRefs(record.sourceRefs, call)
++    }),
++    verifySnapshot: (snapshot, _record, call) => publicationFence(snapshot, call),
++  })
++  const preview = createCurrentChoicePreview({ state: authority.state, host, fence, sources: {
++    resolveForecastCoverage: (ref, call) => ref.startsWith("proposal-coverage:") ? coverage.resolveForecastCoverage(ref, call) : business.plannerSources.resolveForecastCoverage(ref, call),
++  }, results: business.results,
++    coverageEvidence, authorizeCase: business.authorizeCase,
++    authorizePreview: (request, call) => authority.human.authorize(call, "planner.preview", request),
++    resimulate, registerCoverage: coverage.registerProposalCoverage,
++    verifySnapshot: (snapshot, _request, binding, call) => currentPlanner(snapshot, binding.source, call) && publicationFence(snapshot, call),
++    verifySources: (binding, call) => captureSources(call, async () => {
++      const active = scope(call)
++      if (!active) return false
++      const current = await business.plannerProduct.issueSource(binding.source.target.recordId, call)
++      if (current.status !== "ok" || !same(current.value.evidence, binding.source)) return false
++      const proof = await continuity(binding.originalSource, binding.source, call)
++      if (proof.status !== "ok" || !await proof.value.revalidate()) return false
++      const producer = await business.results.readHistoricalScenario({ resultRef: binding.producerResultRef }, call)
++      const replay = await business.planner.simulateScenario(binding.promotion.scenario, call)
++      if (producer.status !== "ok" || producer.value.kind !== "scenario" || replay.status !== "ok" ||
++        producer.value.resultDigest !== binding.producerResultDigest || !same(producer.value.result, replay.value) || !await freshRefs(replay.value.sourceRefs, call)) return false
++      active.binding = structuredClone(binding)
++      return true
++    }), operationIdentity: business.operationIdentity, writes: input.proposalCoverageWrites })
++  const promote = createCurrentChoicePromotion({ state: authority.state, host, fence, sources: coverage,
++    authorizeCase: business.authorizeCase, authorizePromotion: (request, call) => authority.human.authorize(call, "decisions.promote-alternative", request),
++    verifyProvenance: async (request, _choice, _result, call, receipt) => (await preview.read(request, call, receipt)).status === "ok",
++    verifySnapshot: (snapshot, _request, _choice, _result, call) => {
++      const binding = scope(call)?.binding
++      return !!binding && currentPlanner(snapshot, binding.source, call) && publicationFence(snapshot, call)
++    }, operationIdentity: business.operationIdentity, now: () => new Date().toISOString() })
++  const pinPrivateRead = async (call: TrustedDomainContext, caseId?: string, matches: (state: Readonly<SfProductState>) => boolean = () => true) => {
++    const request = host.requestFor(call)
++    if (!request || !fence.current(call)) return false
++    const admitted = await authority.state.read(request, "preferences", (_state, actor) => sameActor(actor, call))
++    if (admitted.status !== "ok" || !admitted.value) return false
++    const found = await authority.state.read(request, "cases", (state, actor) => {
++      if (!sameActor(actor, call) || !matches(state)) return false
++      const active = scope(call)
++      if (!active || active.classificationDigest && digestSfValue(classificationInventory(state.preferences)) !== active.classificationDigest) return false
++      const expectedSources = active.sources && structuredClone(active.sources)
++      if (expectedSources) fence.observe(call, (snapshots) => same(sourceFences(snapshots), expectedSources))
++      const select = (value: Readonly<SfProductState>) => ({ cases: caseId ? value.cases[caseId] : value.cases,
++        results: value.decisionResults, preferences: value.preferences })
++      const expected = digestSfValue(select(state))
++      fence.observe(call, (snapshots) => digestSfValue(select(object(snapshots.dashboard.data.__sfProductV1) as unknown as SfProductState)) === expected)
++      return true
++    })
++    return found.status === "ok" && found.value && fence.current(call)
++  }
++  const run = async <T>(call: TrustedDomainContext, work: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
++    if (call.kind !== "ui") return { status: "denied", reason: "current-choice-human-action-required" }
++    try { return await scopes.run({ context: call }, () => fence.run(call, work)) }
++    catch { return unavailable() }
++    finally { actors.release(call) }
++  }
++  return {
++    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run(call, async () => {
++      const request = host.requestFor(call)
++      if (!request) return unavailable()
++      const candidates = await authority.state.read(request, "cases", (state, actor) => sameActor(actor, call)
++        ? Object.values(state.cases).filter((value) => value.participants.includes(actor.principalRef)).map((value) => encodeCaseRef(value)) : undefined)
++      if (candidates.status !== "ok" || !candidates.value || candidates.value.length > 100) return unavailable()
++      const cases: { ref: string; title: string; version: number }[] = []
++      for (const ref of candidates.value) {
++        const found = await business.cases.read({ caseRef: ref }, call)
++        if (found.status === "ok") cases.push({ ref, title: found.value.case.objective, version: found.value.case.version })
++      }
++      const matchesCases = (state: Readonly<SfProductState>) => cases.every((item) => Object.values(state.cases).some((current) =>
++        encodeCaseRef(current) === item.ref && current.version === item.version && current.objective === item.title && current.participants.includes(call.binding.principalRef)))
++      if (!wanted) return await pinPrivateRead(call, undefined, matchesCases) ? { status: "ok", value: { cases } } : unavailable()
++      if (!parseCaseRef(wanted) || !cases.some((value) => value.ref === wanted)) return { status: "denied", reason: "current-choice-case-unavailable" }
++      const current = await business.cases.read({ caseRef: wanted }, call)
++      if (current.status !== "ok") return current
++      const decision = current.value.case
++      const caseRef = { id: decision.id, incarnation: decision.incarnation, version: decision.version }
++      return business.withCase(call, caseRef, {}, async () => {
++        const choices: NonNullable<SfCurrentChoiceOptions["selected"]>["choices"][number][] = []
++        const ready: { request: CurrentChoicePreviewRequest; original: RecordEvidence; source: RecordEvidence; coverageDigest: string }[] = []
++        for (const choice of decision.choices) {
++          const alternative = decision.alternatives.filter((value) => value.id === choice.alternativeId)
++          const original = choice.result.sourceRefs.filter((ref): ref is RecordEvidence => ref.kind === "record" && ref.refId === choice.scenario.baseRef && ref.target.surface === "planner" && ref.target.recordType === "planner-version")
++          const option = { id: choice.id, title: alternative[0]?.title ?? choice.alternativeId, reason: "A fonte ou a cobertura vigente requer revisão." }
++          if (original.length !== 1 || alternative.length !== 1) { choices.push(option); continue }
++          const source = await business.plannerProduct.issueSource(original[0]!.target.recordId, call)
++          if (source.status !== "ok" || !await business.atlasRecall()?.proveContinuity(original[0]!, source.value.evidence, call)) { choices.push(option); continue }
++          const baseline = await business.baselineCoverage.resolveForecastCoverage(source.value.evidence.refId, call)
++          if (baseline.status !== "ok") { choices.push(option); continue }
++          const selectedRequest: CurrentChoicePreviewRequest = { caseRef, choiceId: choice.id,
++            alternativeRef: { id: alternative[0]!.id, version: alternative[0]!.version }, coverageRef: baseline.value.coverageRef }
++          ready.push({ request: structuredClone(selectedRequest), original: structuredClone(original[0]!),
++            source: structuredClone(source.value.evidence), coverageDigest: digestSfValue(baseline.value) })
++          choices.push({ ...option, reason: "Recalcular com a fonte vigente e revisar antes de promover.", request: selectedRequest })
++        }
++        // Discovery is also a publication: a ready action must refer to the
++        // exact sources and coverage observed above, including the final reads.
++        // Initially unavailable choices remain disabled; changed ready proofs
++        // invalidate this response instead of silently upgrading or replacing it.
++        if (ready.length && !await captureSources(call, async () => {
++          for (const expected of ready) {
++            const emitted = choices.filter((choice) => choice.id === expected.request.choiceId && !!choice.request && same(choice.request, expected.request))
++            if (emitted.length !== 1) return false
++            const source = await business.plannerProduct.issueSource(expected.original.target.recordId, call)
++            if (source.status !== "ok" || !same(source.value.evidence, expected.source) ||
++              !await business.atlasRecall()?.proveContinuity(expected.original, source.value.evidence, call)) return false
++            const baseline = await business.baselineCoverage.resolveForecastCoverage(source.value.evidence.refId, call)
++            if (baseline.status !== "ok" || baseline.value.coverageRef !== expected.request.coverageRef ||
++              digestSfValue(baseline.value) !== expected.coverageDigest || !same(emitted[0]!.request, expected.request)) return false
++          }
++          return true
++        })) return unavailable("current-choice-options-changed")
++        const after = await business.cases.read({ caseRef: wanted }, call)
++        if (after.status !== "ok" || !same(after.value.case, decision) || !await pinPrivateRead(call, decision.id, (state) => matchesCases(state) && sameCaseProjection(state.cases[decision.id], decision))) return unavailable()
++        return { status: "ok", value: { cases, selected: { caseRef, title: decision.objective, choices } } }
++      })
++    }),
++    prepare: (request: CurrentChoicePreviewRequest, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceReview>> => run(call, async () => {
++      const active = scope(call)
++      if (!active) return unavailable()
++      active.preparation = structuredClone(request)
++      return business.withCase(call, request.caseRef, {}, async () => {
++        const prepared = await preview.prepare(request, call)
++        if (prepared.status !== "ok") return prepared
++        const verified = await preview.read(prepared.value.promotion, call)
++        const result = await business.results.read({ resultRef: prepared.value.promotion.resultRef, kind: "scenario" }, call)
++        const current = await business.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, call)
++        if (verified.status !== "ok" || result.status !== "ok" || result.value.kind !== "scenario" || current.status !== "ok") return unavailable()
++        const history = current.value.case.choices.filter((choice) => choice.id === request.choiceId && digestSfValue(choice) === prepared.value.promotion.choiceDigest)
++        if (history.length !== 1 || !await pinPrivateRead(call, request.caseRef.id, (state) => sameCaseProjection(state.cases[request.caseRef.id], current.value.case) &&
++          same(state.decisionResults?.[result.value.resultRef], result.value) && same(readCurrentChoiceBinding(state, prepared.value.promotion), verified.value))) return unavailable()
++        return { status: "ok", value: { ...prepared.value, historical: history[0]!.result, current: result.value.result } }
++      })
++    }),
++    promote: (request: CurrentChoicePromotion, call: TrustedDomainContext) => run(call, async () => {
++      // A retried operation keeps its original receipt selector while canonical
++      // readers receive the current authorized case version for source checks.
++      const current = await business.cases.read({ caseRef: encodeCaseRef(request.caseRef) }, call)
++      if (current.status !== "ok") return current
++      const selected = { id: current.value.case.id, incarnation: current.value.case.incarnation, version: current.value.case.version }
++      return business.withCase(call, selected, {}, async () => {
++        const result = await promote(request, call)
++        if (result.status !== "ok") return result
++        return await pinPrivateRead(call, request.caseRef.id, (state) => {
++          const decision = state.cases[request.caseRef.id]
++          const adopted = state.decisionResults?.[result.value.resultRef]
++          return !!decision && decision.incarnation === result.value.caseRef.incarnation && decision.version === result.value.caseRef.version &&
++            same(decision.choices, current.value.case.choices) && !!adopted && adopted.resultRef === result.value.resultRef &&
++            same(adopted.caseRef, result.value.caseRef) && adopted.resultDigest === request.resultDigest && digestSfValue(adopted.result) === request.resultDigest
++        }) ? result : unavailable()
++      })
++    }),
++  }
++}
++function same(left: unknown, right: unknown) { return digestSfValue(left) === digestSfValue(right) }
++function sameActor(actor: SfStateAuthority, call: TrustedDomainContext) {
++  return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
++}
++
++/** The authorized port hides commands and receipt internals; this UI emits neither. */
++function sameCaseProjection(raw: unknown, projected: unknown) {
++  const shared = (value: unknown) => Object.fromEntries(Object.entries(object(value)).filter(([key]) => key !== "preparedChanges" && key !== "receipts"))
++  return same(shared(raw), shared(projected))
++}
+diff --git a/apps/cli/src/sucafina-product/decision-controls.ts b/apps/cli/src/sucafina-product/decision-controls.ts
+index cbfec35a29a6d67d04ec06db0329ff6ed6688041..e9d3a80f3a592c224f9e3e5d936f72fdf3e81ec7 100644
+--- a/apps/cli/src/sucafina-product/decision-controls.ts
++++ b/apps/cli/src/sucafina-product/decision-controls.ts
+@@ -63,8 +63,20 @@
+       if (resolved.length !== refs.length) return { status: "unavailable", reason: "decision-controls-evidence-unavailable" }
+       const evidence: Evidence[] = []
+       const forecasts: { source: RecordEvidence; label: string }[] = []
+-      for (const [index, ref] of refs.entries()) {
+-        const found = resolved[index]
++      for (const [index, original] of refs.entries()) {
++        let ref = original
++        let found = resolved[index]
++        // Coverage for a renewed choice is classified against the current
++        // projection. Historical bytes remain attached to the recorded choice.
++        if (found?.state === "historical" && found.currentRef?.kind === "record" &&
++          found.currentRef.target.surface === "planner" && found.currentRef.target.recordType === "planner-version" &&
++          await runtime.business.atlasRecall()?.proveContinuity(original, found.currentRef, call)) {
++          const currentRef = found.currentRef
++          const current = await runtime.business.context.resolve(currentRef, call)
++          if (current.state !== "fresh" || !current.currentRef || !same(current.currentRef, currentRef)) continue
++          ref = currentRef
++          found = current
++        }
+         if (!found || found.state !== "fresh" || !found.currentRef || !same(found.currentRef, ref) || !found.authorizedProjection || !("context" in found.authorizedProjection) || !("components" in found.authorizedProjection)) continue
+         const projection = found.authorizedProjection
+         const sources = projection.context.sourceRefs.filter((source) => source.surface === ref.target.surface && source.type === ref.target.recordType && source.id === ref.target.recordId && source.incarnation === ref.target.incarnation && source.version === ref.target.version)
+@@ -72,8 +84,8 @@
+         const source = sources[0]!
+         const fields = source.fields.filter((field) => ref.target.fields.includes(field))
+         const label = `${ref.target.recordType === "planner-version" ? "Forecast" : "Registro Planner"} ${source.id} · ${source.period.start} a ${source.period.end} · ${projection.context.currency} · revisão ${source.version}`
+-        if (fields.length && source.period.start <= decision.horizon.start && source.period.end >= decision.horizon.end && ref.target.period && ref.target.period.start <= decision.horizon.start && ref.target.period.end >= decision.horizon.end) evidence.push({ evidence: ref, source, fields, label })
+-        if (ref.target.recordType === "planner-version") forecasts.push({ source: ref, label })
++        if (fields.length && source.period.start <= decision.horizon.start && source.period.end >= decision.horizon.end && ref.target.period && ref.target.period.start <= decision.horizon.start && ref.target.period.end >= decision.horizon.end) if (!evidence.some((item) => item.evidence.refDigest === ref.refDigest)) evidence.push({ evidence: ref, source, fields, label })
++        if (ref.target.recordType === "planner-version" && !forecasts.some((item) => item.source.refDigest === ref.refDigest)) forecasts.push({ source: ref, label })
+       }
+       // Numeric comparison rules may cite only the attached, still-current
+       // Procurement records behind the saved alternatives. These readers cannot issue scopes.
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+index 0705fe61bb1d8daa7341d3c9b312780424ad3c7c..b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b 100644
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -39,6 +39,8 @@
+ import { createSfBusinessServices } from "./business-services.ts"
+ import { createSfExtendedBusinessServices } from "./extended-business-services.ts"
+ import { createSfDecisionDomainServices } from "./decision-domain-services.ts"
++import { createSfCurrentChoiceServices } from "./current-choice-services.ts"
++import { createSfCurrentChoiceHttp } from "./current-choice-http.ts"
+ import { createSfDecisionDomainHttp } from "./decision-domain-http.ts"
+ import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
+ import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
+@@ -268,6 +270,10 @@
+     hasAdmittedInputContext: nativeInputs.hasAdmittedInputContext, readAlternativeCapture: nativeInputs.readAlternativeCapture })
+   business.bindDecisionDomain(decisionDomain)
+   const decisionDomainHttp = createSfDecisionDomainHttp({ origin: input.origin, mount: input.mount, runtime: () => identity() ? { authority, business, domain: decisionDomain } : undefined })
++  const currentChoice = input.currentChoiceFence ? createSfCurrentChoiceServices({ authority, business,
++    fence: input.currentChoiceFence, proposalCoverageWrites }) : undefined
++  const currentChoiceHttp = createSfCurrentChoiceHttp({ origin: input.origin, mount: input.mount,
++    runtime: () => identity() && currentChoice ? { authority, currentChoice } : undefined })
+   const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
+   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
+   residentReviewReaders.bindOutcome(memory.reviewOutcome)
+@@ -830,7 +836,7 @@
+   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
+     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
+     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
+-    productHttp: async (request, surface) => await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
++    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+     prepare: async (request) => {
+       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
+diff --git a/modules/sucafina/Sucafinav1/local/entry.ts b/modules/sucafina/Sucafinav1/local/entry.ts
+index 26a330c62a0e5e9f3e2ea79be0b6854e7dca7363..cfbf61fec81e273133c7a2675f1028fa147adad7 100644
+--- a/modules/sucafina/Sucafinav1/local/entry.ts
++++ b/modules/sucafina/Sucafinav1/local/entry.ts
+@@ -19,6 +19,7 @@
+ import { bootstrapLocalSurface } from "../runtime/local-bootstrap.ts"
+ import { loadLocalConfiguration, requireLocalIsolation } from "../runtime/local-configuration.ts"
+ import { scanLocalFile } from "../runtime/local-scanner.ts"
++import { createCurrentChoiceFence } from "../product/decisions/current-choice-preview.ts"
+ import { createSfSourcePersistence } from "../product/integration/source-lifecycle.ts"
+ import { enumerateSfSources } from "../product/integration/source-inventory.ts"
+ import { createSfSourceScopeProjector } from "../product/integration/source-projections.ts"
+@@ -32,7 +33,7 @@
+ import { digestSfValue } from "../product/contracts/canonical.ts"
+ import freeze from "../product/contracts/freeze-v1.json"
+ import biBrowser from "../product/integration/generated/bi-entry.txt" with { type: "text" }
+-import type { CreateSfHostRuntime } from "../product/contracts/host-context.ts"
++import type { CreateSfHostRuntime, SfHostRuntime } from "../product/contracts/host-context.ts"
+ 
+ /** Explicit factory loaded by Orchestra serve --installation. No listener, global config or host credentials. */
+ export default async function installation(context: { origin: string; createHostRuntime?: CreateSfHostRuntime }) {
+@@ -50,7 +51,17 @@
+   const now = () => new Date().toISOString()
+   const projectScope = createSfSourceScopeProjector(now)
+   const driver = await openLocalStore(path.join(loaded.directory, operator ? "business-local" : "business"))
+-  const store = { ...driver, ...createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
++  let runtime: SfHostRuntime | undefined
++  const currentChoiceFence = createCurrentChoiceFence({ persistence: driver,
++    host: () => {
++      const host = runtime?.services?.()?.host
++      if (!host) throw new Error("SF_CURRENT_CHOICE_HOST_UNAVAILABLE")
++      return host
++    },
++    identity: () => runtime?.identity(),
++    operationIdentity: (call) => call.kind === "ui" ? runtime?.services?.()?.ui.operationIdentity(call) : undefined,
++  })
++  const store = { ...currentChoiceFence.persistence, ...createSfSourcePersistence({ persistence: currentChoiceFence.persistence, enumerate: enumerateSfSources, projectScope, createId: randomUUID }) }
+   const restoration = createSfSourcePersistence({ persistence: driver, enumerate: enumerateSfSources, projectScope, createId: randomUUID, purpose: "business-restore" })
+   const services = { jobs: undefined as Awaited<ReturnType<typeof createLocalJobs>> | undefined }
+   const status = (request: Request) => {
+@@ -91,8 +102,8 @@
+   const requestEnvironment = async (request: Request) => ({ at: now(), id: randomUUID, directory: await identity.directory(request), bankKey: loaded.keys.bank })
+   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
+   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
+-  const runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
+-    mount: config.mount, persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, assets,
++  runtime = await context.createHostRuntime?.({ installationId, directory: loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
++    mount: config.mount, persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+     grants: operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
+       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
+       operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : [] })
+@@ -117,7 +128,7 @@
+       const productHtml = getSfProductHtml(runtime?.services?.())
+       const document = productHtml?.(decorateSfProductHtml(html, surface, page), surface, page, presentationRequest.getStore()) ?? decorateSfProductHtml(html, surface, page)
+       // Keep WP06 document/import navigation while composing WP04's fenced page projection.
+-      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a>`), surface)
++      return decorateSfDecisionControlsHtml(document.replace('<div class="workspace-tools">', `<div class="workspace-tools">${surface === "dashboard" || surface === "planner" ? '<a href="?sf=imports">Imports</a>' : ""}<a href="?sf=documents">Documents</a><a href="?sf=current-choice">Escolha vigente</a>`), surface)
+     },
+     maxJsonBytes: 2 * 1024 * 1024,
+     assets,
+diff --git a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+index 920fda293db553096f4d8ab7004fcd9652a69291..bd7df025e12aa457898f48fcf9634273ec5be381 100644
+--- a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+@@ -4,6 +4,7 @@
+ import type { SessionMessage } from "@orchestra/core/session/message"
+ import type { Application } from "../../runtime/application.ts"
+ import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
++import type { CurrentChoiceFence } from "../decisions/current-choice-preview.ts"
+ import type { createSfProductAuthority, SfProductGrant } from "../integration/product-authority.ts"
+ import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
+ import type { BusinessPorts, PortResult } from "./ports.ts"
+@@ -94,6 +95,8 @@
+   origin: string
+   mount: string
+   persistence: Application["persistence"] & SfScopedSourcePort
++  /** Installed below source lifecycle; shared by the real C08 and Planner producers. */
++  currentChoiceFence?: CurrentChoiceFence
+   authenticate: Application["authenticate"]
+   environment: Application["environment"]
+   /** Explicit installation policy, distinct from financial roles and inaccessible to model input. */

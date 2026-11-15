@@ -1,0 +1,173 @@
+{
+  "schema": "sf2h-current-choice-source-release-v1",
+  "mission": 46,
+  "cohort": "CURRENT-CHOICE-COHORT",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "lease_epoch": "current-choice-browser46",
+  "status": "RELEASED_FOR_SELECTIVE_INTEGRATION_SOURCE_QUALIFIED",
+  "terminal": true,
+  "authority": {
+    "ack_commit": "90920c34546517baad267b3ee93705f7fc1016a3",
+    "ack_blob": "9522f6cf4fe493ea370af5160522f61ee16f728c",
+    "ack_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/35#issuecomment-6885491153",
+    "root_sole_remote_writer": true,
+    "helpers": "Three assistants authored exclusive local drafts or reviewed; none advanced refs or dispatched Actions. Root retained all remote mutation authority.",
+    "writer_state_after_terminal_commit": "RELEASED_NO_FURTHER_SOURCE_WRITES_WITHOUT_NEW_AUTHORITY",
+    "effective_model_receipt": null,
+    "browser_or_native_session_receipt": null,
+    "identity_limit": "No native Goal/session/provider/model attestation was generated. Git observations establish branch/receipt state, not live telemetry of every external writer."
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-finance",
+  "pr": 35,
+  "initial_head": "ec052c2c3bef96f492512f3d5f663919580f25c8",
+  "source_head": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+  "source_tree": "73beb3558437a2b8671f7d88aad4332304af2d75",
+  "production_change_commit": "5de6b03d563dadcfb9a7a582bfb44c1d391c911d",
+  "terminal_commit_rule": "This receipt is published in a later docs-only child of source_head; its exact commit is the PR35 terminal comment target. No self-referential fabricated SHA.",
+  "product_and_test_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "blob": "db487cd1b6263835302e9bcf80499d18531aa592"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+      "blob": "6333d208823355d26b2c02259859a13e0eae9b19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "blob": "349d7bb7bde86d8e4fc8e605a9c981ff4b0ab6ae"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "blob": "b2f96bec220a6ec2f674057546541d5a700e969e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "blob": "e3b25caeece77ca1d755bc64e8253ca003179793"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts",
+      "blob": "dd5c155115190cf4af4ab76ec37970e3df268253"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+      "blob": "1f7e6cb2716cb2b17084ab599219f7651961e485"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+      "blob": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+      "blob": "084f7050ca7f45fe22962207f706a5e0d71e3a93"
+    }
+  ],
+  "qualified_source": {
+    "core": {
+      "W": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+      "S": "d586e4d3bf4a61fcd967a2de7e13c9390770ad71",
+      "run": 43653193008,
+      "job": 132625941654,
+      "result": "PASS32/0",
+      "expect_calls": 443
+    },
+    "supplement": {
+      "W": "1330fdc580d675bba3202bdad5e26c16c54c4559",
+      "S": "7720206fb5f755b48ec8959e08fab971a0374831",
+      "run": 43653791489,
+      "job": 132627774817,
+      "result": "PASS4/0",
+      "expect_calls": 45
+    },
+    "unique_test_names": 34,
+    "qualification_rule": "The supplement changes only one test file. All production and remaining test/support blobs match the core. Never assert a single34-test run.",
+    "checks": {
+      "run": 43653793969,
+      "job": 132627781768,
+      "overall": "FAILURE",
+      "typecheck": "131pre-existing external diagnostics,0CurrentChoice; same exact path/location/code multiset",
+      "guards": "PASS;78rules,1127paths,0gate,14warn,0errors"
+    }
+  },
+  "integration": {
+    "recipient": "session42",
+    "final_acceptance_owner": "S0",
+    "strategy": "Selective exact owned outputs plus complete v3 shared patch after verifying preimages. Do not merge the historical Finance branch or control directory.",
+    "pins": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration-pins-final.json",
+    "owned_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/integration/owned-cohort.patch",
+    "owned_patch_sha256": "e4c649eae4fdffac0b5fe72dfbb106b12d75df6a0bc04ebdd865977ae14a9ad8",
+    "shared_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/shared-for-42/mission46-current-choice-composition-v3.patch",
+    "shared_patch_sha256": "d036ee32780f10c6e217a1608701e3de3aa520143b2b2fe03f91d87ca5a03d9f",
+    "shared_patch_base": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+    "shared_patch_status": "NOT_APPLIED_NOT_TYPECHECKED_NOT_RUNTIME_TESTED",
+    "superseded_versions": "v1 andv2 preserved as history; v3 is complete, not cumulative."
+  },
+  "criteria": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/current-choice-cohort/criteria.json",
+    "literal_ids": 83,
+    "literal_text_preserved": true,
+    "canonical_status_override": false,
+    "scoped_counts": {
+      "VERIFIED_WITHIN_COHORT": 12,
+      "PARTIAL": 38,
+      "DEPENDENCY_EVIDENCE_ONLY": 5,
+      "OUTSIDE_MISSION": 28
+    },
+    "canonical_global_pass_count": 0
+  },
+  "mandatory_gaps": [
+    {
+      "id": "M46-COMPOSED-C",
+      "owner": "session42/S0",
+      "state": "PENDING",
+      "requirement": "Compose the fence immediately above the current actual driver, preserve producer/authority identity, and execute source regressions plus actual HTTP/UI journey on one exact C. Observed candidate driver/provider/Planner/business/cost-coverage differ from source qualification."
+    },
+    {
+      "id": "M46-SHARED-UI",
+      "owner": "session42",
+      "state": "NOT_APPLIED_NOT_RUN",
+      "requirement": "Apply/reconcile the complete shared v3 patch; qualify discovery, current coverage, explicit prepare/review/promotion, revoked access and idempotent lost-response UI recovery. Historical Atlas protected capture is required; missing ancestry remains unavailable."
+    },
+    {
+      "id": "M46-TYPECHECK-EXTERNAL",
+      "owner": "respective path owners/integrator",
+      "state": "BLOCKED_OUTSIDE_WRITE_PATHS",
+      "requirement": "Resolve the131unchanged external package diagnostics; source package check is not green."
+    },
+    {
+      "id": "M46-NUMERIC-LITERAL",
+      "owner": "canonical financial owners/S0",
+      "state": "PARTIAL",
+      "requirement": "WP11.T02.CHK.21 andWP11.T03.CHK.20 remain partial: lifecycle observes knownSubtotal250000 but totalnull/conditioned; complete total250000, difference-10000, threshold15000/min20000 and omitted/zero/not-applicable branches require their canonical full proof. Do not upgrade hypotheses or change engines/policy in this mission."
+    },
+    {
+      "id": "M46-NATIVE-RESIDENT",
+      "owner": "native/consumer owners/S0",
+      "state": "NOT_RUN",
+      "requirement": "Installed browser, native/MCP equivalence, resident model and all consumer edges are not certified by this source test selection."
+    }
+  ],
+  "semantics": {
+    "historical_choice_unchanged": true,
+    "explicit_human_promotion": true,
+    "safe_current_receipt_replay": true,
+    "atomicity": "One final canonical C08 promotion transaction: late denial rolls back all staged promotion changes. Earlier independently authorized canonical result/coverage writes may remain; no global multi-step transaction is promised.",
+    "replay_limit": "Requires current authorization and the exact promoted case revision; later case revisions are stale."
+  },
+  "preserved": {
+    "predecessor_handoff": true,
+    "contracts_and_plan": true,
+    "all15WP74tasks1610criteria": true,
+    "GLOBAL_RELEASE": true,
+    "raw_W2_failure_history": true,
+    "no_engines_or_policies_changed": true,
+    "no_dev_merge": true,
+    "no_deploy": true,
+    "no_local_product_tests": true,
+    "remote_operations": "GitHub MCP only; ref advances used expected-head CAS"
+  }
+}

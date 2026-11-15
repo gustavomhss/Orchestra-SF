@@ -1,0 +1,48 @@
+{
+  "base_commit": "36521bb47f1d10de8d8bb5d376fdb5d5fa7bc8e1",
+  "requires": "mission46 owned changes in current-choice-preview.ts, current-choice-promotion.ts, planner/current-choice.ts",
+  "status": "NOT_APPLIED_NOT_TYPECHECKED_NOT_TESTED",
+  "revision": 2,
+  "supersedes_patch_sha256": "8d7b661b23891ea74814099f84073a5c20623705c7470362479c3889223e659c",
+  "supersedes_reason": "Ready current-choice discovery now revalidates exact emitted source, Atlas continuity, baseline and request under final source/classification snapshot fence before publication.",
+  "review": "Independent final static review by cohort_contract_ci completed; exact request/source/baseline revalidation and observer lifetime inspected; no additional blocker found; no UI or integration PASS claim",
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
+      "base_blob": null,
+      "proposed_blob": "369c71b4505360a9742b4b9a64585438f63cec47",
+      "lines": 154
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/current-choice-services.ts",
+      "base_blob": null,
+      "proposed_blob": "c2ef2828e824a46d67d7c6e79012656a092a3c82",
+      "lines": 329
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+      "base_blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515",
+      "proposed_blob": "1821436f040cb592910e08478d6044ac99dff9ba",
+      "lines": 408
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "base_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+      "proposed_blob": "b4c8b89273d370aef6ec0bbae16b57fad0badd05",
+      "lines": 859
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "base_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+      "proposed_blob": "cfbf61fec81e273133c7a2675f1028fa147adad7",
+      "lines": 283
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "base_blob": "920fda293db553096f4d8ab7004fcd9652a69291",
+      "proposed_blob": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "lines": 105
+    }
+  ],
+  "patch_sha256": "bff0986db06d756d2bd8a466752ad2f8d179504c3c9359a209f7fb41b3a8211a"
+}

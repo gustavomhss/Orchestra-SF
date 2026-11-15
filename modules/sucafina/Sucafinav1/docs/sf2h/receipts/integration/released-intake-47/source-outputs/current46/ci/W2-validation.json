@@ -1,0 +1,120 @@
+{
+  "schema": "sf2h-current-choice-validation-v1",
+  "mission": 46,
+  "source": {
+    "W": "c67d62cf9a33faef900322e37f83cf2a567b8f38",
+    "tree": "d0be59cbf16535bbc104f1a2b8f539996bf36b98",
+    "S": "9e9dfdd2c64724bea56d759cdf4a42cfd561c65c",
+    "S_tree": "3f9597bb517069a4dbd282982dc095e4420bb190",
+    "snapshot_delta": [
+      ".ci-run.json"
+    ]
+  },
+  "test": {
+    "run": 43652473765,
+    "job": 132623764948,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43652473765",
+    "conclusion": "failure",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+        "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "pass": 31,
+    "fail": 1,
+    "skip": 0,
+    "files": 5,
+    "expect_calls": 441,
+    "elapsed_seconds": 146.36,
+    "bun": "1.3.14 (0d9b296a)",
+    "omni": "not applicable (focused: no declaring test ran)",
+    "failure": {
+      "file": "test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+      "line": 164,
+      "test": "real product authority prepares the canonical current Planner result, binds real coverage, and promotes only a separate exact human command",
+      "expected": "Repeated authorized promotion equals its persisted receipt; no extra write.",
+      "actual": {
+        "status": "denied",
+        "reason": "choice-provenance-unavailable"
+      },
+      "completed_before_failure": [
+        "Denied read-only preparation",
+        "Computed and replayed actual canonical Planner result",
+        "Bound actual canonical coverage and private proof",
+        "Required a separate exact human promotion command",
+        "Persisted new alternative and result; retained historical choice and unchanged Planner/procurement"
+      ],
+      "diagnosis": "The added test composed source-continuity observation with case-version-bound coverage. After promotion increments the case version, the old coverage resolver correctly denies; continuity must use the canonical source observer independently of case cost classification. Product factories and canonical registry must retain fail-closed behavior."
+    }
+  },
+  "checks": {
+    "run": 43652476377,
+    "job": 132623772501,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43652476377",
+    "conclusion": "failure",
+    "typecheck": {
+      "command": "bun typecheck",
+      "cwd": "modules/sucafina",
+      "conclusion": "failure",
+      "diagnostics": 132,
+      "current_choice_diagnostics": 1,
+      "prior_run": 43599389386,
+      "prior_diagnostics": 131,
+      "difference": {
+        "prior": 131,
+        "current": 132,
+        "added": [
+          "test/product/current-choice-cohort/real-producer-lifecycle.test.ts(126,48)|TS2769"
+        ],
+        "removed": []
+      },
+      "owned_fix_required": "Explicitly narrow optional coverageDigest before passing to typed expect matcher; preserve equality assertion."
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "conclusion": "failure",
+      "rules": 78,
+      "changed_paths": 1116,
+      "gates": 2,
+      "warnings": 14,
+      "errors": 0,
+      "gate_rule": "agent-scratch",
+      "rule_blob": "71ce321c30465faaf957a08256bd6b7d007d4173",
+      "findings": [
+        "docs/sf2h/receipts/current-choice-cohort/ci/W1-test-output.log",
+        "docs/sf2h/receipts/current-choice-cohort/ci/W1-typecheck-diagnostics.log"
+      ],
+      "remediation": "Remove raw tool-output files from the final tree. Preserve original immutable CI run/job links, structured validation receipts and the historical commit. Do not disable or change the rule."
+    },
+    "artifact": {
+      "id": 14136945671,
+      "name": "astra-finance-checks-c67d62cf9a33faef900322e37f83cf2a567b8f38-1",
+      "size_in_bytes": 8326,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14136945671",
+      "archive_download_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14136945671/zip",
+      "expired": false,
+      "created_at": "2026-11-14T23:18:49Z",
+      "expires_at": "2026-11-28T23:18:48Z",
+      "updated_at": "2026-11-14T23:18:49Z",
+      "digest": "sha256:a81de6e7aadd5be972f6dc6c3ceb5b4271e7d9b1304721cb61884467779e18cd",
+      "workflow_run": {
+        "id": 43652476377,
+        "repository_id": 1455724710,
+        "head_repository_id": 1455724710,
+        "head_branch": "astra-check-finance",
+        "head_sha": "c67d62cf9a33faef900322e37f83cf2a567b8f38"
+      }
+    }
+  },
+  "claim": "FAILED qualification snapshot, retained for traceability. W1's 31 tests pass again; the new 32nd lifecycle fails on replay. This snapshot must not be represented as a passing source gate."
+}

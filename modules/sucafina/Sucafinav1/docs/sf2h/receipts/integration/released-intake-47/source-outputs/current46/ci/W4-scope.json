@@ -1,0 +1,75 @@
+{
+  "schema": "sf2h-current-choice-validation-scope-v1",
+  "mission": 46,
+  "prior_candidate": {
+    "W": "61a7a7eab8dd12e1767e9343398acea7becbff42",
+    "tree": "aa997dd3ade458eab7a1f2d2d1fe35bda33256d2",
+    "S": "d586e4d3bf4a61fcd967a2de7e13c9390770ad71",
+    "S_tree": "2cd294a17a27d91113c909b88bb56412fa2e5454",
+    "snapshot_delta": [
+      ".ci-run.json"
+    ]
+  },
+  "prior_run": 43653193008,
+  "prior_result": "32pass0fail443expect",
+  "selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp11/current-choice-read-fence.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "reason": "Only product/test delta from W3 is the legacy read-fence test retaining all four C12 cases instead of the two predecessor cases. Execute that complete file; do not repeat unchanged canonical lifecycle and actual-adapter suites.",
+  "production_blobs_unchanged_since_W1": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "blob": "db487cd1b6263835302e9bcf80499d18531aa592"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-promotion.ts",
+      "blob": "6333d208823355d26b2c02259859a13e0eae9b19"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/current-choice.ts",
+      "blob": "349d7bb7bde86d8e4fc8e605a9c981ff4b0ab6ae"
+    }
+  ],
+  "unaffected_test_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-fixture.ts",
+      "blob": "dd5c155115190cf4af4ab76ec37970e3df268253"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+      "blob": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+      "blob": "1f7e6cb2716cb2b17084ab599219f7651961e485"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/current-choice-lifecycle.test.ts",
+      "blob": "b2f96bec220a6ec2f674057546541d5a700e969e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+      "blob": "084f7050ca7f45fe22962207f706a5e0d71e3a93"
+    }
+  ],
+  "deduplication": {
+    "matched_running_current_choice": [],
+    "unrelated_running": [
+      {
+        "id": 43653550785,
+        "branch": "ci-run-linux-portfolio50-a68ac1b3-r1",
+        "sha": "c2bb42ba3f1be357b51045f4d827911b86596847"
+      }
+    ],
+    "queued": []
+  },
+  "limits": "If the supplemental four cases pass, unique covered test names are34 across W3 and W4; never describe this as one34-test run. Final same-C qualification belongs to S0."
+}
