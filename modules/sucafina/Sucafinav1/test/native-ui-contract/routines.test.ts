@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { Option, Schema } from "effect"
 import {
-  SfRoutines, SfRoutinesPrepareAdmission, SfRoutinesRun,
-  SfSchedulesRead, SfSchedulesUpdate,
+  SfRoutineCaseRef, SfRoutineResult, SfRoutines, SfRoutinesPrepareAdmission, SfRoutinesRun,
+  SfSchedulesPause, SfSchedulesRead, SfSchedulesUpdate,
 } from "@orchestra/schema/sucafina/routines"
 import { createSfRoutinesHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
 import type { SfNativeHostDependencies } from "../../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
@@ -69,6 +69,32 @@ describe("A09 schema equivalence and authority boundary", () => {
       "schedules.create", "schedules.list", "schedules.pause",
       "schedules.read", "schedules.read-run", "schedules.update",
     ].sort())
+  })
+
+  test("loads canonical public numeric/optional helpers without losing wire semantics", () => {
+    const result = {
+      documentId: "recipe-1", publishedVersion: "publication-1",
+      principalRef: "principal-1", projectId: "project-1",
+      correlationId: "correlation-1", sourceRefs: [], pending: [],
+      admission: "preparing",
+    }
+    const decode = Schema.decodeUnknownOption(SfRoutineResult, {
+      onExcessProperty: "error",
+    })
+    const withoutOptionals = decode(result)
+    expect(Option.isSome(withoutOptionals)).toBe(true)
+    if (Option.isSome(withoutOptionals)) expect(withoutOptionals.value).toEqual(result)
+    expect(Option.isSome(decode({ ...result, admissionVersion: 0 }))).toBe(true)
+    expect(Option.isNone(decode({ ...result, admissionVersion: -1 }))).toBe(true)
+    expect(Option.isNone(Schema.decodeUnknownOption(SfRoutineCaseRef)(
+      { ...caseRef, version: -1 },
+    ))).toBe(true)
+    expect(Option.isSome(Schema.decodeUnknownOption(SfSchedulesPause.input)(
+      { scheduleRef: "schedule-1", expectedVersion: 0 },
+    ))).toBe(true)
+    expect(Option.isNone(Schema.decodeUnknownOption(SfSchedulesPause.input)(
+      { scheduleRef: "schedule-1", expectedVersion: -1 },
+    ))).toBe(true)
   })
 
   test("retains zero, null and absent independently without allowing private fields", () => {
