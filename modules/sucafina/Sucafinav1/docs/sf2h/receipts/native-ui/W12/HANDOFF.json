@@ -1,0 +1,195 @@
+{
+  "schema": "sf2h.native-ui.ux20.w12.handoff.v1",
+  "mission_id": "UX20-W12",
+  "seat": "W12",
+  "order": "U10",
+  "output": "U10.queue",
+  "status": "BLOCKED_CONTRACT_INDEPENDENT_PRESENTATION_COMMITTED",
+  "status_explanation": "UI model/panel, responsive copy and fixture tests are authored; required installed SfProcurementQueueView(props:SfSurfaceProps) is NOT authored because A03 CAP24 lacks the frozen source-backed queue DTO. This output is NOT ARTIFACT_READY/INTEGRATED/QUALIFIED/CLOSED.",
+  "branch": "sf-ux-w12",
+  "pr": {
+    "number": 127,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/127",
+    "base": "sf2-stack",
+    "draft": true,
+    "merge": false,
+    "warning": "PR compares cohort history and may contain unrelated planning files; 114 must consume ONLY W12 file blobs with CAS, never merge whole branch."
+  },
+  "author": {
+    "github_actor": "gustavomhss",
+    "model": "GPT-6",
+    "requested_model": "Astra",
+    "runtime_session_id": null,
+    "lease": "ux-native-w12-e1",
+    "lease_state": "AUTHORING_END_BLOCKED_CONTRACT_HANDOFF_TO_114",
+    "integrator": "S0-C-e17-browser114"
+  },
+  "scope": {
+    "allowlist": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/**",
+      "packages/app-shell/test-browser/sucafina-native/w12-queue.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W12/**"
+    ],
+    "excluded": [
+      "U10.overview",
+      "U21 BI",
+      "U11.title-save",
+      "U13.pr-approval",
+      "A03 schemas/projection",
+      "F01 navigation core",
+      "shared registries",
+      "generated SDK",
+      "engines",
+      "policy"
+    ]
+  },
+  "base": {
+    "cohort_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "cohort_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+    "material_commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "material_tree": "647b024075265fc76d6253c99bec00a82618f816"
+  },
+  "submission_commit_before_receipt": "b2fca35953f0186c7ba3cfc3a4d321a10cbfc0a4",
+  "submission_tree_before_receipt": "f2a45946136a607d9c1648089055843f6a67ba88",
+  "files": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/model.ts",
+      "preimage": null,
+      "postimage": "f535b02c0ab84eda56b056ac8b985c47958dec48",
+      "exports_or_content": "SfProcurementQueueRow;SfProcurementQueueGroup;sfQueueVisible;sfQueueFilterRows;sfQueueFilterOptions;sfQueueMeasuredWait;sfQueueFindRow"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/copy.ts",
+      "preimage": null,
+      "postimage": "7cbdffda8adc49fe086e2fdf8bdf9e2ec381d07a",
+      "exports_or_content": "SF_U10_QUEUE_COPY;SF_U10_QUEUE_COPY_BR"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/panel.tsx",
+      "preimage": null,
+      "postimage": "2cca1a18191515ecc9876adbf2aff52d41a916a3",
+      "exports_or_content": "SfProcurementQueuePanel"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/queue.css",
+      "preimage": null,
+      "postimage": "6af1c83f71cddae5aa267902ff25aea62e706a01",
+      "exports_or_content": "responsive filter layout"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/w12-queue.test.ts",
+      "preimage": null,
+      "postimage": "c2ca5296d77bf9ee8f9e6bb834522375b7351028",
+      "exports_or_content": "four component-fixture test cases"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W12/ACK.json",
+      "preimage": null,
+      "postimage": "b22c5ac5911dfc826f0037760a1e96516bb23979",
+      "exports_or_content": "ACK and source/contract pins"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W12/SHARED-FRAGMENTS.md",
+      "preimage": null,
+      "postimage": "01b5fadaa9201401cb45c9c3d3eee3984cc7f570",
+      "exports_or_content": "inert copy and integration fragments"
+    }
+  ],
+  "frozen_contracts": {
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+  },
+  "source_reconciliation": [
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+      "delta": "SAME_BLOB"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "old_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "current_blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "delta": "visibility before request existence and CAS; presentation toPrecision; no backward replacement"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+      "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+      "delta": "SAME_BLOB"
+    }
+  ],
+  "protocol": {
+    "frozen_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "actual_cohort_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "delta": "Documentary older coordinator references; overlay COMMON + user W12 assigns 114,120,119"
+  },
+  "causal_blockers": [
+    {
+      "id": "W12-A03-CAP24",
+      "kind": "BLOCKED_CONTRACT",
+      "observed": "W11 branch 426fbad29edacd1323a81902feaf27a0885a3a1d, packages/schema/src/sucafina/procurement.ts, blob d1deeec7319428f3c9eb6e45dd025d85c3d07363: DashboardData has requests,formSettings,metrics only; apps/cli projection CAP24 publishes requestsSummary/metrics, not C02 queue rows",
+      "needed": "114+A03 owner agree pinned typed CAP24 queue subprojection preserving original evidence ref/digest, row.version, canonical holder/approvalStage/stageEnteredAt/ageDays and group produced by procurementApprovalGroups, current owner stamp + visibility, no client inference; update schema/client/handler and contract lock/admission"
+    },
+    {
+      "id": "W12-F01-NAV",
+      "kind": "BLOCKED_INTEGRATION",
+      "observed": "F01 SfSurfaceProps only surfaceId/route; W12 leaf has no own route/owner-state authority. No W12-authorized named navigation builder and selection restoration binding was published to this leaf.",
+      "needed": "114 consume F01 public builder + owner-scoped selection/revalidation; inject navigation callbacks into panel, never synthesize href from ids or principal"
+    },
+    {
+      "id": "W12-COMPONENTS",
+      "kind": "BLOCKED_INTEGRATION",
+      "observed": "F03/S01 shared component implementations are parallel-owner work, not integrated into W12 C58",
+      "needed": "114 integrate real shared frame/states/table/detail before 119 compiler or 120 integrated Actions"
+    },
+    {
+      "id": "W12-114-ADMISSION",
+      "kind": "PENDING_CONSUMER_ACK",
+      "observed": "114 historic ACK and lease active but no W12 per-output integration admission/consumer receipt observed",
+      "needed": "114 verify exact blobs/preimages, lease, contracts and candidate before consuming"
+    }
+  ],
+  "component_invariants": [
+    "No row is manufactured from IDs, principal or another owner's state",
+    "No approval/currency/amount computation, no Age=Date.now-stage",
+    "Null vs zero preserved, no unavailable->empty",
+    "Filter group comes from the server's canonical approval groups",
+    "Selected row is exact SfRef; source callback is fenced by F01, no hand-assembled URL",
+    "No source data rendered during denied/session-expired/unavailable",
+    "Draft or approval mutations do not exist in W12 queue"
+  ],
+  "missing_entrypoint": {
+    "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/queues/index.tsx",
+    "symbol": "SfProcurementQueueView(props:SfSurfaceProps): JSX.Element",
+    "reason": "Do not implement faux A03 read, unknown DTO decoders, or inert success placeholder; requires admitted A03 queue schema and real F01 navigation."
+  },
+  "requested_by_114": {
+    "shared_fragment": "SHARED-FRAGMENTS.md",
+    "registration": "Register W12 copy and queue entry only after A03 typed DTO and F01 owner route admitted",
+    "integration": "Only owned files with per-blob postimage/expected current context; not PR whole-branch merge",
+    "admission": "issue per-output decision/consumer ACK"
+  },
+  "validation": {
+    "local_tests": "NOT_RUN_BY_DESIGN",
+    "component_test_written": "packages/app-shell/test-browser/sucafina-native/w12-queue.test.ts",
+    "component_test_evidence": "NOT_RUN",
+    "product_ci_owner": 120,
+    "compiler_owner": 119,
+    "merged": false,
+    "deployed": false,
+    "azure": false,
+    "global_release": false,
+    "hosted_C58_qualification": false
+  },
+  "acceptance": {
+    "AC01": "PARTIAL_PRESENTATION_ONLY; missing producer queue field DTO",
+    "AC02": "MODEL_STATE_MAPPING_DESIGNED_NOT_INTEGRATED",
+    "AC03": "RESPONSIVE_CSS_AUTHORED_VISUAL_NOT_RUN"
+  },
+  "handoff": "Authoring partial artifacts committed to dedicated branch and draft PR; transferred to 114 for contract decision and future W12 continuation under new lease; no false ARTIFACT_READY."
+}
