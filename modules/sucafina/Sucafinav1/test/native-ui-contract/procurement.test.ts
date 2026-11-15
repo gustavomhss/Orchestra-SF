@@ -163,6 +163,8 @@ describe("W11 Procurement A03 public contract", () => {
     let reads = 0
     let finishes = 0
     const commits: boolean[] = []
+    const producer = { pages: ["Settings"], domain, render: () => undefined }
+    const contributions = [producer]
     const deps: Parameters<typeof createSfProcurementProjectionHandlers>[0] = {
       origin: "https://sf.example",
       mount: "/sucafina",
@@ -183,7 +185,7 @@ describe("W11 Procurement A03 public contract", () => {
         environment: async () => environment,
         domains: {
           dashboard: [], planner: [],
-          procurement: [{ pages: ["Settings"], domain, render: () => undefined }],
+          procurement: contributions,
         },
         maxJsonBytes: 1024,
         productView: async () => ({
@@ -254,6 +256,16 @@ describe("W11 Procurement A03 public contract", () => {
 
     reads = 0
     sourceCurrent = true
+    contributions.pop()
+    const unavailable = await read()
+    expect(unavailable.status).toBe(503)
+    expect(await unavailable.json()).toEqual({
+      status: "unavailable", reason: "procurement-domain-unavailable",
+    })
+    expect(reads).toBe(1)
+    contributions.push(producer)
+
+    reads = 0
     afterRead = "denied"
     const revoked = await read()
     expect(revoked.status).toBe(403)
@@ -270,8 +282,8 @@ describe("W11 Procurement A03 public contract", () => {
       status: "stale", reason: "procurement-context-changed",
     })
     expect(reads).toBe(2)
-    expect(finishes).toBe(6)
-    expect(commits).toEqual([false, false, false, false, false, false])
+    expect(finishes).toBe(7)
+    expect(commits).toEqual([false, false, false, false, false, false, false])
   })
 
 })
