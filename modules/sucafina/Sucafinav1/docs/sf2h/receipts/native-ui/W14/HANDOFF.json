@@ -19,7 +19,18 @@
   "authoring": {
     "commit": "94b0bedcb174a98cad84d30c828b0d45b70f1001",
     "tree": "0f15be761e7966d1751f7a2715b62081e29e83ef",
-    "numberOfChangedFiles": 9
+    "numberOfChangedFiles": 9,
+    "reviewFixes": [
+      {
+        "commit": "9a9c01fef7f3ceb2d3eb9f4d4a3255aa695b6131",
+        "purpose": "reject malformed source collections and preserve valid null budget fields"
+      },
+      {
+        "commit": "b6ac7ae2db5d5b0e33273c0493497ed83c2d05c8",
+        "purpose": "enforce strict handling of project, contract and performance nested collections"
+      }
+    ],
+    "currentHead": "b6ac7ae2db5d5b0e33273c0493497ed83c2d05c8"
   },
   "contractCatalog": {
     "sha": "31dbec1726fd8147156b01dc545726650ffd49e1",
@@ -453,7 +464,7 @@
     "packages/client/src/sucafina/domain.ts": "57 methods delegating to canonical F02 execute",
     "apps/cli/src/sucafina-product/native-ui/domain/projection.ts": "server-only source-bound whitelisting and canonical financial computation",
     "apps/cli/src/sucafina-product/native-ui/domain.ts": "11 projection handlers; 10 authorized views, one blocked local-admin reader",
-    "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts": "seven source/field/permission-boundary component tests; no installed-flow proof"
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts": "eight independent source/field/permission-boundary component tests; no installed-flow proof"
   },
   "invariants": [
     "producer retains Domain.view and exact current actor roles inside transaction",
@@ -512,11 +523,13 @@
       "nested IDs",
       "server-derived budget totals",
       "OPEX/CAPEX boundaries",
-      "numeric CAS filtered by source"
+      "numeric CAS filtered by source",
+      "malformed source collection fail-closed; never substitute empty lists"
     ],
     "installedFlowCoverage": "NOT_RUN_BLOCKED_COMPOSITION",
     "requestedAction": "120 must dedupe by tree/selection/runtime/config and dispatch surgical Actions only when composed candidate exists",
-    "requestedCompiler": "119 must check I00 export/registry, Effect Schema compilation and guards only via delegated interface"
+    "requestedCompiler": "119 must check I00 export/registry, Effect Schema compilation and guards only via delegated interface",
+    "testCount": 8
   },
   "release": {
     "integrated": false,
@@ -530,5 +543,19 @@
     "value": "ux-native-w14-e1",
     "authoring": "HANDOFF_READY",
     "integration": "114_ONLY"
+  },
+  "pr": {
+    "number": 133,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/133",
+    "draft": true,
+    "sourceHead": "b6ac7ae2db5d5b0e33273c0493497ed83c2d05c8",
+    "baseHead": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+    "comparison": {
+      "state": "diverged",
+      "totalFiles": 170,
+      "ownedFiles": 14,
+      "inheritedCampaignFiles": 156
+    },
+    "safeToMergeDirectly": false
   }
 }
