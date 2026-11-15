@@ -17,12 +17,17 @@ const runtimeVersions = () => ({ boundaryVersion: "1", schemaVersion: "1", manif
 
 function requirePublishedRecords(records: readonly { envelope: BusinessMemoryEnvelope; entry: SfAtlasProjection["entry"]; recordDigest: string }[], receipts: readonly MemoryWriteReceipt[]) {
   expect(records).toHaveLength(receipts.length)
-  expect(new Set(records.map((record) => record.envelope.eventId))).toEqual(new Set(receipts.map((receipt) => receipt.eventId)))
+  const publishedEventIds = receipts.map((receipt) => {
+    if (typeof receipt.eventId !== "string") throw new Error("Published Atlas receipt omitted its event identity")
+    return receipt.eventId
+  })
+  expect(new Set(records.map((record) => record.envelope.eventId))).toEqual(new Set(publishedEventIds))
   for (const receipt of receipts) {
     const matches = records.filter((record) => record.envelope.eventId === receipt.eventId)
     expect(matches).toHaveLength(1)
     const record = matches[0]
     if (!record) throw new Error("Rank omitted an actual published record")
+    if (typeof receipt.recordDigest !== "string" || receipt.scanner.status !== "clean") throw new Error("Published Atlas receipt lacks a clean scan or record digest")
     expect(record.envelope.sourceEventId).toBe(receipt.sourceEventId)
     expect(record.recordDigest).toBe(receipt.recordDigest)
     expect(digestSfValue({ owner: record.envelope.owner, kind: record.envelope.kind, entry: record.entry })).toBe(receipt.recordDigest)
