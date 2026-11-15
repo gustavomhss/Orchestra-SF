@@ -114,6 +114,7 @@ export async function registerInstalledProofFromHost(input: Readonly<{
     throw new Error("F04_AUTHORIZED_ACTIONS_CANDIDATE_REQUIRED")
   const browser = await attachHostedNativeBrowser(input.scratchRoot)
   let createdManifestPath: string | undefined
+  let createdSelectedPath: string | undefined
   try {
     const pages = await input.host.liveMicrosoftActorPages(browser)
     // The real writer independently verifies distinct authenticated Microsoft
@@ -155,6 +156,7 @@ export async function registerInstalledProofFromHost(input: Readonly<{
       manifest, browser, suite: input.suite,
       selections: definitions, ...(staleEditor ? { staleEditor } : {}),
     })
+    createdSelectedPath = selected.file
     const consumed = await readNativeSelectedInstallation(manifest, input.suite)
     return {
       manifestPath: registration.path,
@@ -168,6 +170,7 @@ export async function registerInstalledProofFromHost(input: Readonly<{
   } catch (error) {
     // We exclusively created the v1 file during this call; do not leave an
     // orphaned 'installed' manifest after a failed selection registration.
+    if (createdSelectedPath) await rm(createdSelectedPath, { force: true })
     if (createdManifestPath) await rm(createdManifestPath, { force: true })
     throw error
   } finally {

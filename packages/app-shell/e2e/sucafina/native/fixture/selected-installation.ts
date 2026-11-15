@@ -372,7 +372,7 @@ export async function readNativeSelectedInstallation(
         throw new Error("F04_PRIVATE_SOURCE_VERSION_RECORD_INVALID")
     }
   }
-  return bundle as NativeSelectedInstallation
+  return bundle as unknown as NativeSelectedInstallation
 }
 
 /** Every consumer must re-check actor, source readiness, record and current CAS
