@@ -35,6 +35,9 @@ type AnalysisState = {
 }
 
 const caseKey = (item: Case["caseRef"]) => JSON.stringify([item.id, item.incarnation, item.version])
+// The original decision-case reference is source-locked in case-port.ts.
+// F01 already decoded its URL routeRefCodec; compare only authorized choices.
+const sourceCaseRef = (item: Case["caseRef"]) => `case:${encodeURIComponent(item.id)}:${encodeURIComponent(item.incarnation)}`
 const analysisKey = (item: Analysis) => JSON.stringify([item.profileId, item.profileVersion, item.skillId, item.skillVersion, item.manifestDigest])
 const modelKey = (item: Model) => JSON.stringify([item.providerID, item.id, item.variant ?? ""])
 const keyState = (status: string): SfUiState => {
@@ -121,7 +124,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     // An opaque deep-link is only admitted after matching an entry in the
     // current authorized choices. No cross-case implicit lookup is performed.
     const route = props.route
-    const linked = value.cases.find((item) => item.caseRef.id === route.params.caseRef)
+    const linked = value.cases.find((item) => sourceCaseRef(item.caseRef) === route.params.caseRef)
     if (!linked) {
       setView("notice", "sf.u37.notFound")
       return
@@ -137,7 +140,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     !!selectedModel() && selectedAnalysis()?.skillId === "sf-enquadrar-decisao" &&
     !!view.objective.trim() && !isBusy() && view.phase !== "outcome-unknown"
 
-  const loadHistory = async (target: Case, ticket = epoch, generation = owner.generation()) => {
+  const loadHistory = async (target: Case, ticket = epoch, generation = owner.generation(), preferredRunRef?: string) => {
     const ready = owner.ready()
     if (!ready || privacy() !== "ready") return
     historyAbort?.abort()
@@ -159,8 +162,10 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     }
     setView("runs", result.body.value)
     setView("historyState", result.body.value.length ? "ready" : "empty")
-    if (props.route.kind === "entry") {
-      const requested = result.body.value.find((run) => run.runRef === props.route.params.analysisRef)
+    const desired = preferredRunRef ?? (props.route.kind === "entry" && sourceCaseRef(target.caseRef) === props.route.params.caseRef
+      ? props.route.params.analysisRef : undefined)
+    if (desired) {
+      const requested = result.body.value.find((run) => run.runRef === desired)
       if (requested) await readRun(requested.runRef, ticket, generation)
       else setView("notice", "sf.u37.notFound")
     }
@@ -291,8 +296,10 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
     }
     // No synthetic run state/receipt and no background replay. Human explicitly
     // reconciles the original case history after the producer acknowledges.
-    setView({ phase: "idle", prepared: null, preparedRequest: null, runRef: result.body.value.runRef })
-    await loadHistory(selectedCase()!, ticket, generation)
+    commandSent = false
+    setView({ phase: "idle", prepared: null, preparedRequest: null })
+    const selected = selectedCase()
+    if (selected) await loadHistory(selected, ticket, generation, result.body.value.runRef)
   }
 
   const cancel = async () => {
@@ -315,6 +322,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       setView({ phase: "outcome-unknown", notice: "sf.u37.unknownOutcome" })
       return
     }
+    commandSent = false
     setView({
       phase: "idle", notice: result.body.status === "ok" && result.body.value.cancelled
         ? "sf.u37.cancelled" : result.body.status === "stale" ? "sf.u37.stale" :
@@ -431,6 +439,7 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
               // Reconcile with an authorized read; do not replay a mutation.
               const selected = selectedCase()
               if (!selected) return
+              commandSent = false
               setView({ phase: "idle", prepared: null, preparedRequest: null })
               void loadHistory(selected)
             }}>{t("sf.u37.reconcile")}</button>
