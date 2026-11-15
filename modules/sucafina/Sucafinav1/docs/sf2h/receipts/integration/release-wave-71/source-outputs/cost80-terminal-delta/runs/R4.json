@@ -1,0 +1,95 @@
+{
+  "schema": "sf2h.cost-coverage-closure.actions-result.v1",
+  "mission": 80,
+  "attempt": "R4",
+  "state": "EXPECTED_COUNTERFACTUAL_FAILURE_CAUSAL_NULL_PROOF",
+  "not_a_release_candidate": true,
+  "do_not_integrate": true,
+  "source_branch_unchanged": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+  "corrected_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+  "counterfactual_W": "a67dbbb5f310f8f3388967230f0fbc8932116891",
+  "counterfactual_tree": "706d05b48e97b53f066936fb350cf8220fd0c1ed",
+  "S": "1b0359f078951b819622d0438394ac63ef43e010",
+  "S_tree": "c3c156261f8a2bde64742701beb1cda3858e9918",
+  "only_product_intervention": {
+    "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+    "from": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+    "to": "e913189a675bbcfa81a657f58d2255eac3b6dce2"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+      "--test-name-pattern",
+      "included null|persisted null",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "a14c5072f4d3a9f0df16f1f461b45d0dfe9bd3b762416d58f462cab550f6ec44",
+  "ref": "ci-run-linux-astra-wp80-a67dbbb5-a14c5072-r4",
+  "run_id": 43676126745,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43676126745",
+  "job_id": 132696560814,
+  "conclusion": "failure",
+  "tests": {
+    "pass": 0,
+    "fail": 2,
+    "filtered_out": 7,
+    "total_executed": 2,
+    "files": 2,
+    "expect_calls": 13,
+    "duration_seconds": 11.02
+  },
+  "omni_positive_control": {
+    "nonce": "45aded1ac51f084ddf98201f9ac50bfa",
+    "verdict": "not applicable",
+    "reason": "focused: no declaring test ran"
+  },
+  "envelope": {
+    "ahead_by": 1,
+    "changed_files": [
+      ".ci-run.json"
+    ],
+    "product_identical_to_counterfactual_W": true
+  },
+  "tests_and_fixtures_identical_to_R3": true,
+  "matching_R3_test_blobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+      "blob": "efeb097ae13519db036d8adf08548a34959e3fe2"
+    }
+  ],
+  "observed_cause": {
+    "unit": "Normalized pending input adds uncategorized-component while the original included-null input does not; exact reassessment equality fails.",
+    "persisted": "Real C08 registration/read and Planner no-op scenario retain issues[]; preimage reassessment adds uncategorized-component and breaks full scenario equality.",
+    "both_failed_by_expected_extra_issue": true,
+    "DataCloneError_observed": false,
+    "undefined_reassessment_observed": false,
+    "matcher_probe": {
+      "assertionEntriesArray": false,
+      "borrowedEntriesArray": true
+    }
+  },
+  "positive_pair": {
+    "run": 43675129605,
+    "job": 132693485486,
+    "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+    "S": "da3097fc435b232ab3dcf77c036f3d3dfb5e0142",
+    "same_two_tests": "PASS within the9-test R3 selection"
+  },
+  "raw_test_log": {
+    "path": "runs/R4-tests.log",
+    "sha256": "704404d718f49b60d8a9567fb8fb99f340bb212d927b88437e91a061abd8e531"
+  },
+  "rule": "This diagnostic product commit is used only by the temporary existing Actions request ref. It never moved cost-coverage-fix or sf2-stack. It adds causal evidence, not another acceptance PASS.",
+  "GLOBAL_RELEASE": false
+}

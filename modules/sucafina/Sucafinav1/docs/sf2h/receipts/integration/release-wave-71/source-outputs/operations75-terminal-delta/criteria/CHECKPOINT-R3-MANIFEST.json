@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.operations75.criteria-checkpoint-manifest.v1",
+  "checkpoint": "R3-documentary-revision",
+  "state": "SOURCE_CONTROLS_PASS_BROWSER_AND_COMPOSITION_PENDING",
+  "files": [
+    {
+      "path": "criterion-matrix75.checkpoint-R3.json",
+      "sha256": "51731a60e4288370ab1ea7e85f13641d7c6055c837a5c7f56f825fea6017b0fd",
+      "bytes": 321682
+    },
+    {
+      "path": "CHECKPOINT-R3.md",
+      "sha256": "9c3a9d65a80f6740fb70e78ac102edbca285a1bdd71fc8890e145148c16237d3",
+      "bytes": 7644
+    },
+    {
+      "path": "checkpoint-R3-source-observations.json",
+      "sha256": "d0675335286a214f5bf707acd9d94e150b5e6825a20e60e9b1753c94f3c4ba63",
+      "bytes": 21024
+    },
+    {
+      "path": "host63-pre-intake-reconciliation.json",
+      "sha256": "c6c5020cd323e1323ad2906b00b214a8993224eb88abdada8f9760a4ae7dcf42",
+      "bytes": 3364
+    }
+  ],
+  "source_pending_model": {
+    "path": "criterion-matrix75.pending.json",
+    "sha256": "271ac02939d8f92f7e60abfccf935bd951bcab16f38197338b86d1d460efdecd",
+    "unchanged": true
+  },
+  "documentary_integrity": {
+    "criteria_objects_unchanged": true,
+    "original_browser_objects_unchanged": true,
+    "all251_ids_preserved": true,
+    "ten_historical_gaps_preserved": true,
+    "seven_scoped_live_PASS": true,
+    "no_full_criteria_closed": true,
+    "no_direct_new_WP_PASS": true,
+    "five_browser_NOT_RUN75": true,
+    "acceptance_reflects_real_execution": true,
+    "no_generic74_79_dependency": true
+  },
+  "execution": {
+    "product_tests_local": false,
+    "actions_dispatched": false,
+    "remote_writes": false,
+    "activity": "Read existing evidence and immutable GitHub receipts; reconcile text/JSON/hash only."
+  }
+}

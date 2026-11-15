@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.integration71.readback.v1",
+  "candidate": "C45",
+  "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+  "parent": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "status": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+  "material": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "sha": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "exact": true,
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+      "sha": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+      "exact": true,
+      "changed": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/egress-boundary.test.ts",
+      "sha": "382a03b707dce748c6251f120ce0d7299de62c82",
+      "exact": true,
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/evidence.ts",
+      "sha": "f4cedb5da62893dad1b6f8e498d9a1b6be9545f3",
+      "exact": true,
+      "changed": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-egress-privacy/legacy-egress.test.ts",
+      "sha": "4b350694202e438c04aa72b7b52a62411178fb1c",
+      "exact": true,
+      "changed": true
+    }
+  ],
+  "compare": {
+    "files": 21,
+    "unexpected": [],
+    "missing": [],
+    "complete": true
+  },
+  "validation": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}
+

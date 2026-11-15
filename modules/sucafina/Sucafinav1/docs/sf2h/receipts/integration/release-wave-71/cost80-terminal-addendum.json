@@ -1,0 +1,288 @@
+{
+  "schema": "sf2h.integration71.source80.documentary-addendum-review.v1",
+  "status": "DOCUMENTARY_CAUSALITY_ADDENDUM_VERIFIED_NO_NEW_MATERIAL",
+  "created_utc": "2026-11-15T04:42:32.748523+00:00",
+  "previous_terminal": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+  "documentary_terminal": "2fbf3a9b715bc76793cdff092d6b91b1f0de3190",
+  "documentary_tree": "3c22fddb007096415feeab75788912bdab473d44",
+  "material_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+  "material_W_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+  "authority_blob": "6fae8f83726f368d172ef467a09d51a2bfd049b9",
+  "authority_state": "ENDED_SOURCE_RELEASED",
+  "delta": {
+    "repository_full_name": "gustavomhss/Orchestra-SF",
+    "base": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+    "head": "2fbf3a9b715bc76793cdff092d6b91b1f0de3190",
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "total_commits": 1,
+    "too_large": null,
+    "base_commit": {
+      "sha": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ce9ef9a9835e56488584e2db97b4f3060d251361",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ce9ef9a9835e56488584e2db97b4f3060d251361"
+    },
+    "merge_base_commit": {
+      "sha": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/commits/ce9ef9a9835e56488584e2db97b4f3060d251361",
+      "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/ce9ef9a9835e56488584e2db97b4f3060d251361"
+    },
+    "files": [
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/CAUSALITY-ADDENDUM.json",
+        "status": "added",
+        "additions": 43,
+        "deletions": 0,
+        "changes": 43,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/CRITERIA.json",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 1,
+        "changes": 7,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/IMPLEMENTATION.md",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 2,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/PATCH-MANIFEST.json",
+        "status": "modified",
+        "additions": 7,
+        "deletions": 1,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/QUALIFICATION.json",
+        "status": "modified",
+        "additions": 18,
+        "deletions": 2,
+        "changes": 20,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/REVIEW80.json",
+        "status": "modified",
+        "additions": 7,
+        "deletions": 1,
+        "changes": 8,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/TERMINAL80.json",
+        "status": "modified",
+        "additions": 14,
+        "deletions": 4,
+        "changes": 18,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/requests/R4.ci-run.json",
+        "status": "added",
+        "additions": 1,
+        "deletions": 0,
+        "changes": 1,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/runs/R4-tests.log",
+        "status": "added",
+        "additions": 74,
+        "deletions": 0,
+        "changes": 74,
+        "previous_filename": null
+      },
+      {
+        "filename": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/runs/R4.json",
+        "status": "added",
+        "additions": 95,
+        "deletions": 0,
+        "changes": 95,
+        "previous_filename": null
+      }
+    ]
+  },
+  "changed_material_paths": [],
+  "causality_addendum": {
+    "blob": "6e685575fdf27747eecbb4cdfb6feca5fa16b677",
+    "payload": {
+      "schema": "sf2h.cost-coverage-closure.causality-addendum.v1",
+      "mission": 80,
+      "state": "CAUSAL_NULL_ATTRIBUTION_CORRECTED_AND_VERIFIED",
+      "supersedes_only": "R1's first included-null failure must not be presented as a clean orphan-issue witness.",
+      "material_release_unchanged": {
+        "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+        "tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+        "product_blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+        "unique_qualified_tests": 23,
+        "patch_sha256": "2610414176ea887c8a765109a05baf409506f4cda8783dc445c384ecc30736ce"
+      },
+      "R1": {
+        "run": 43673699755,
+        "pass": 2,
+        "fail": 6,
+        "classification": "Exploratory baseline: five product-attributable failures and one matcher-confounded null failure.",
+        "valid_product_failures": [
+          "assessment horizon is caller's original object; test stops at that identity assertion",
+          "reassessment horizon is caller's original object; test stops at that identity assertion",
+          "getter changes scenario/currency/version across awaited resolver",
+          "resolver can rewrite expected references via its input",
+          "classifier can mutate an entry after checking it and still produce complete"
+        ],
+        "confounded_failure": "included-null normalized assessment is undefined after Bun replaced input.entries with its asymmetric matcher; do not infer uncategorized-component from this failure"
+      },
+      "R4_and_R3": {
+        "R4": 43676126745,
+        "R4_outcome": "0pass/2fail;bothfailbyadditionaluncategorized-component",
+        "R3": 43675129605,
+        "R3_outcome": "bothsamefinaltestspasswithin9/0",
+        "counterfactual_W": "a67dbbb5f310f8f3388967230f0fbc8932116891",
+        "corrected_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+        "only_tree_difference": "product/decisions/cost-coverage.ts restored to exact original preimage",
+        "same_test_blobs": true,
+        "same_fixture_and_config_blobs": true,
+        "source_or_target_branch_reverted": false,
+        "causal_scope": "Null assessment/reassessment consistency and real C08 persisted no-op equality"
+      },
+      "remaining_checks45_and_integrated_gates_unchanged": true,
+      "authority": "80 product/test material remains frozen and released. This addendum changes only attribution/evidence receipts, not the material unit or the45 request.",
+      "GLOBAL_RELEASE": false
+    }
+  },
+  "R4": {
+    "schema": "sf2h.cost-coverage-closure.actions-result.v1",
+    "mission": 80,
+    "attempt": "R4",
+    "state": "EXPECTED_COUNTERFACTUAL_FAILURE_CAUSAL_NULL_PROOF",
+    "not_a_release_candidate": true,
+    "do_not_integrate": true,
+    "source_branch_unchanged": "ce9ef9a9835e56488584e2db97b4f3060d251361",
+    "corrected_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+    "counterfactual_W": "a67dbbb5f310f8f3388967230f0fbc8932116891",
+    "counterfactual_tree": "706d05b48e97b53f066936fb350cf8220fd0c1ed",
+    "S": "1b0359f078951b819622d0438394ac63ef43e010",
+    "S_tree": "c3c156261f8a2bde64742701beb1cda3858e9918",
+    "only_product_intervention": {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "from": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+      "to": "e913189a675bbcfa81a657f58d2255eac3b6dce2"
+    },
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+        "Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+        "--test-name-pattern",
+        "included null|persisted null",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "request_sha256": "a14c5072f4d3a9f0df16f1f461b45d0dfe9bd3b762416d58f462cab550f6ec44",
+    "ref": "ci-run-linux-astra-wp80-a67dbbb5-a14c5072-r4",
+    "run_id": 43676126745,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43676126745",
+    "job_id": 132696560814,
+    "conclusion": "failure",
+    "tests": {
+      "pass": 0,
+      "fail": 2,
+      "filtered_out": 7,
+      "total_executed": 2,
+      "files": 2,
+      "expect_calls": 13,
+      "duration_seconds": 11.02
+    },
+    "omni_positive_control": {
+      "nonce": "45aded1ac51f084ddf98201f9ac50bfa",
+      "verdict": "not applicable",
+      "reason": "focused: no declaring test ran"
+    },
+    "envelope": {
+      "ahead_by": 1,
+      "changed_files": [
+        ".ci-run.json"
+      ],
+      "product_identical_to_counterfactual_W": true
+    },
+    "tests_and_fixtures_identical_to_R3": true,
+    "matching_R3_test_blobs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+        "blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+        "blob": "efeb097ae13519db036d8adf08548a34959e3fe2"
+      }
+    ],
+    "observed_cause": {
+      "unit": "Normalized pending input adds uncategorized-component while the original included-null input does not; exact reassessment equality fails.",
+      "persisted": "Real C08 registration/read and Planner no-op scenario retain issues[]; preimage reassessment adds uncategorized-component and breaks full scenario equality.",
+      "both_failed_by_expected_extra_issue": true,
+      "DataCloneError_observed": false,
+      "undefined_reassessment_observed": false,
+      "matcher_probe": {
+        "assertionEntriesArray": false,
+        "borrowedEntriesArray": true
+      }
+    },
+    "positive_pair": {
+      "run": 43675129605,
+      "job": 132693485486,
+      "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+      "S": "da3097fc435b232ab3dcf77c036f3d3dfb5e0142",
+      "same_two_tests": "PASS within the9-test R3 selection"
+    },
+    "raw_test_log": {
+      "path": "runs/R4-tests.log",
+      "sha256": "704404d718f49b60d8a9567fb8fb99f340bb212d927b88437e91a061abd8e531"
+    },
+    "rule": "This diagnostic product commit is used only by the temporary existing Actions request ref. It never moved cost-coverage-fix or sf2-stack. It adds causal evidence, not another acceptance PASS.",
+    "GLOBAL_RELEASE": false
+  },
+  "independent_verification": {
+    "request_blob": "a95f1a054d24a8ca3c84be991fe94cc1ab107ce2",
+    "actual_payload_and_request_sha256_match": true,
+    "actual_S_sole_parent_counterfactual_W": true,
+    "counterfactual_only_restores_exact_original_product_preimage": true,
+    "counterfactual_tests_fixtures_config_equal_R3_W": true,
+    "S_adds_only_ci_request": true,
+    "actual_run_head_conclusion_attempt_match": true,
+    "actual_job_log_bytes": 73370,
+    "actual_job_log_sha256": "b9524e3c07a8aa9a892eeec556f2e90e89869ab1d90b32f0b71b21172063fabb",
+    "archived_excerpt_is_exact_actual_log_substring": true,
+    "archived_excerpt_sha256": "704404d718f49b60d8a9567fb8fb99f340bb212d927b88437e91a061abd8e531",
+    "observed_failing_test_lines": [
+      "2026-11-15T04:19:13.5244111Z (fail) C10 stability: included null and its normalized pending row reassess identically without zero filling [24.59ms]",
+      "2026-11-15T04:19:24.3582066Z (fail) C10 persisted null registration survives canonical no-op reassessment without changing its case or classification [10806.36ms]"
+    ],
+    "observed_extra_issue_diffs": 2,
+    "DataCloneError_or_undefined_reassessment_in_excerpt": false
+  },
+  "checks45": "This documentary delta changes no REQUEST-45 or hosted check receipt. Source terminal still says REQUESTED_NO_RESULT_OBSERVED; no global owner45 absence assertion is made.",
+  "intake": "Archive the evidence-only addendum. Keep all7alreadyreleased80 material paths and all23bounded candidate tests unchanged. Never integrate counterfactual_W/product preimage.",
+  "interpretation": "R1 remains2PASS/6FAIL; only five failures are clean product-attributable, while its null failure is matcher-confounded. R4 final test bytes fail by the predicted extra uncategorized-component and the same two tests pass inside R3. R4 is not acceptance PASS, new material, P03 or installed BI proof.",
+  "execution": {
+    "remote_writes": 0,
+    "product_tests": 0,
+    "builds": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false
+}
+

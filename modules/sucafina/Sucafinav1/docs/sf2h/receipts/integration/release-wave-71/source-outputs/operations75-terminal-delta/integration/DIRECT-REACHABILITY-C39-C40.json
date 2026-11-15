@@ -1,0 +1,104 @@
+{
+  "schema": "mission75-bi62-direct-reachability-note-v1",
+  "mission": 75,
+  "created_at_utc": "2026-11-15T04:11:58Z",
+  "status": "STATIC_DIRECT_REACHABILITY_ONLY",
+  "delta": {
+    "C38": {
+      "commit": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+      "tree": "9ad861864150f4690ad1ed3faa1f8c7164130212"
+    },
+    "C39": {
+      "commit": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+      "tree": "6975ec3f93801e081f14091343f6c2f2d1b57252"
+    },
+    "C40": {
+      "commit": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+      "tree": "b325894e636ae31db80886bb9ca2add1ce4ec126"
+    },
+    "direct_parent_links_verified": true,
+    "candidate_receipt": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C39-bi62.json",
+      "blob": "5a663d9b6cca7ee9f2f68374ce53ba659c374173",
+      "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN"
+    },
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/bi-services.ts",
+        "pre": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+        "post": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575",
+        "post_read_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+        "pre": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+        "post": "4d165428dc731e59c2faf01a4e47b352e691dfbc",
+        "post_read_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "pre": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+        "post": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+        "post_read_verified": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "pre": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+        "post": "95cfac2aa0f2709fad3547dead073cded9f80977",
+        "post_read_verified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+        "pre": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "post": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+        "post_read_verified": true
+      }
+    ]
+  },
+  "direct_inspection": {
+    "roots_at_C40": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+        "blob": "8230eb28f322dde255382b74280192f39844724d",
+        "finding": "Bun Operations host imports createOperationsInstallation and the existing runtime/store/operator modules. It has no direct import of the five BI62 sources or invocation of createSfBiServices."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "blob": "5cac657f5f9de9b6de9a9c63dc45c67886724b84",
+        "finding": "The composed mission 75 installation constructs business/import/document services, routes documentHttp then importHttp at line 181, and uses business.procurementQueueView at line 182. Its new admission diagnostics do not add a BI factory or browser bundle."
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "finding": "No direct import or invocation of bi-services, extended-bi-browser, analytics/scenario, analytics/view or analytics/milestones is present."
+      }
+    ],
+    "dependency_direction": [
+      "bi-services.ts imports createSfBusinessServices only as a type at line 22; this does not cause createSfBusinessServices to initialize BI. createSfBiServices is a separately invoked exported factory at line 27.",
+      "bi-services.ts imports createScenarioCostBiHost from analytics/scenario.ts at line 13 and uses it within the BI factory/projection code.",
+      "extended-bi-browser.ts imports analytics/view.ts at line 2 and runs its UI setup only under the document [data-sf-bi] root at lines 10-11.",
+      "analytics/view.ts imports renderTimeline from analytics/milestones.ts at line 11 and invokes it within renderBiView at line 230."
+    ],
+    "delta_effect": "The inspected BI unit extends projected scenario/portfolio support to BI10 and adjusts timeline/source selection, focus and visual-period state in its own BI presentation paths.",
+    "boundary": "This is the requested direct-import/call inspection. It does not claim a complete transitive-module audit or execute BI, compiler, browser or Microsoft qualification."
+  },
+  "conclusion": {
+    "concrete_new_operations_blocker_identified": false,
+    "action": "Preserve BI62 C39 unchanged and continue the authorized exact-five Operations qualification on the actual frozen candidate.",
+    "original_selection": "OP-PROC-01, OP-PROC-02, OP-PROC-03, OP-IMPORT-01, OP-DOC-01 remain the only original-five selection; no BI test or oracle is added.",
+    "evidence_status": "C39 is MATERIAL_COMPOSED_VALIDATION_NOT_RUN. No source62 PASS or held BI result is transferred to C40 or Operations.",
+    "remaining_validation": "The actual candidate run establishes startup and the original Operations behavior. This note creates no general BI review prerequisite.",
+    "held_preserved": [
+      "M62-HTTP-POST",
+      "M62-CANONICAL-COST",
+      "M62-C10-COVERAGE",
+      "M62-EXTERNAL-COMPOSITION",
+      "M62-NUMERICAL-HISTORY",
+      "M62-INSTALLED-NATIVE",
+      "M62-COMPILER-GENERATION"
+    ],
+    "product_or_test_execution_performed": false,
+    "source_or_remote_mutation_performed": false,
+    "matrix_changed": false
+  }
+}

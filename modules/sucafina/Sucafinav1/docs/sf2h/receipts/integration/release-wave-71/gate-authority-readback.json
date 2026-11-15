@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h.mission71.gate-authority-readback.v1",
+  "method": "Previously fetched read-only GitHub MCP immutable/read-only ref evidence in this session; no ref mutation.",
+  "producer45": {
+    "ref": "refs/heads/astra-compose",
+    "node_id": "REF_kwDOVsSYprhyZWZzL2hlYWRzL2FzdHJhLWNvbXBvc2U",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/astra-compose",
+    "object": {
+      "sha": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/d317873c18bf224c4c1f4d3425179d12ad53e81b"
+    }
+  },
+  "checking45": {
+    "ref": "refs/heads/astra-check-compose",
+    "node_id": "REF_kwDOVsSYpr5yZWZzL2hlYWRzL2FzdHJhLWNoZWNrLWNvbXBvc2U",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/astra-check-compose",
+    "object": {
+      "sha": "771cf5896aa504620ab35a2e44cca2606b7e18c3",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/771cf5896aa504620ab35a2e44cca2606b7e18c3"
+    }
+  },
+  "checking45_commit": {
+    "sha": "771cf5896aa504620ab35a2e44cca2606b7e18c3",
+    "node_id": "C_kwDOVsSYptoAKDc3MWNmNTg5NmFhNTA0NjIwYWIzNWEyZTQ0Y2NhMjYwNmI3ZTE4YzM",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/771cf5896aa504620ab35a2e44cca2606b7e18c3",
+    "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/771cf5896aa504620ab35a2e44cca2606b7e18c3",
+    "author": {
+      "name": "gustavomhss",
+      "email": "gmhelmold@gmail.com",
+      "date": "2026-11-14T14:20:19Z"
+    },
+    "committer": {
+      "name": "gustavomhss",
+      "email": "gmhelmold@gmail.com",
+      "date": "2026-11-14T14:20:19Z"
+    },
+    "tree": {
+      "sha": "12707f474e546fe850ab798de957d2fc535007ff",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/trees/12707f474e546fe850ab798de957d2fc535007ff"
+    },
+    "message": "Check15: typecheck W17 BI driver consumption and guards",
+    "parents": [
+      {
+        "sha": "9048e0e65351a5bd80768458a79fed94a4993db7",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/9048e0e65351a5bd80768458a79fed94a4993db7",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/9048e0e65351a5bd80768458a79fed94a4993db7"
+      },
+      {
+        "sha": "8005cdc71222a6656c38e0ab90a434bb66d20949",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/8005cdc71222a6656c38e0ab90a434bb66d20949",
+        "html_url": "https://github.com/gustavomhss/Orchestra-SF/commit/8005cdc71222a6656c38e0ab90a434bb66d20949"
+      }
+    ],
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  },
+  "dev": {
+    "ref": "refs/heads/dev",
+    "node_id": "REF_kwDOVsSYpq5yZWZzL2hlYWRzL2Rldg",
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/refs/heads/dev",
+    "object": {
+      "sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "type": "commit",
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/commits/a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    }
+  },
+  "distinction": "astra-compose is producer45; astra-check-compose is a separate historical Check15 W17 ref, not a new producer release.",
+  "guard_base_in_runner": null,
+  "merge_base_in_runner": null,
+  "execution": "NONE_BY71"
+}

@@ -1,0 +1,230 @@
+{
+  "schema": "sf2h.m79.node-abort-signal-proposal.v1",
+  "state": "SCOPED_PASS_FOR_OWNER74_INTAKE",
+  "producer": "79 diagnostic artifact only",
+  "production_writer": "74",
+  "integrator": "71",
+  "source_commit": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "source_installation_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+  "target_C34": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+  "defect_evidence": {
+    "source": "Hosted Actions job132692476767, fetched and verified by root; initial patch author used root's run report.",
+    "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43674790650",
+    "job_id": "132692476767",
+    "reported_result": "4 pass / 1 fail,3.22s",
+    "positive_controls": [
+      "Exact74 POST28 returned200 in3ms",
+      "Versions77 returned200 in7ms,1version and2audit entries",
+      "30025-byte slow consumer with chunked and declared body passed",
+      "413 arrived before senderEOF"
+    ],
+    "remaining_failure": "Partial10/4096 disconnect produced Node aborted/error/close and reader rejection/release with postRead=0, but final Request.signal.aborted remainedfalse."
+  },
+  "delta": {
+    "path": "apps/cli/src/sucafina-product/installation.ts",
+    "preimage": {
+      "file": "installation.ts.preimage.txt",
+      "blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+      "sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
+      "bytes": 9786
+    },
+    "postimage": {
+      "file": "installation.ts.postimage.txt",
+      "blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+      "sha256": "f38d0b8a880dd540052f10639d8a41640480e2dbaa65327135cc8d4dbcd13a3f",
+      "bytes": 11483
+    },
+    "patch": {
+      "file": "abort-signal-delta.patch.txt",
+      "blob": "e1175fbc90f11429e97bf9d1efec536b8aefd83b",
+      "sha256": "4b798921a947513bcc7a8b31197de9d21231eb307d5c70197cb07b4f5e4f9a80",
+      "bytes": 7186
+    },
+    "behavior": [
+      "Attach a per-request Node aborted listener and compose its AbortController signal with the existing Effect signal before constructing the final Request.",
+      "The Web Request source path continues to compose its existing native signal.",
+      "Never turn Node end or close into cancellation; only aborted or an already aborted source forwards abort.",
+      "Attach a passive error guard before the aborted listener so reader cancellation cannot expose a queued Node error.",
+      "Actual close removes all own aborted/error/close listeners. Cleanup is idempotent and clears an outstanding Immediate.",
+      "If Node closed is alreadytrue, schedule one unref Immediate for cleanup; closed is set before queued error/close, so synchronous cleanup is unsafe.",
+      "A finally enclosing declared-length validation, stream construction and handling detaches the aborted listener on every return/throw, while the passive error/close guard survives only until actual close or the already-closed fallback."
+    ]
+  },
+  "preserved": [
+    "Exact74 NodeStream.fromReadable, closeOnDone:false, context-empty Web conversion and HWM0",
+    "Exact74 request-body helper bytes and all declared/incremental limits",
+    "Final Request identity after authentication binding; no extra Request construction",
+    "Binary upload routing, MaxBodySize, workbench65536, host/origin/forwarded fences, Microsoft bridge",
+    "No request/socket destroy calls and no synthetic EOF"
+  ],
+  "map": {
+    "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+    "source_artifact_preimage": {
+      "file": "microsoft49-composition-74.preimage.json.txt",
+      "blob": "cd6a91c9f6fb11972220a11728300b6d7cdded6b",
+      "sha256": "c149a655d62ea1346dd3a74b7a9f0279f782503701a8b08cdbb9df98e22620f0",
+      "bytes": 2411
+    },
+    "destination_preimage_at_source74": null,
+    "postimage": {
+      "file": "microsoft49-composition-74.postimage.json.txt",
+      "blob": "6586b2f2ec475e6fe0e39648e5ac84ee60e83aaf",
+      "sha256": "88da8b2a1824ebd794b178b23ac7114b9a4444d61a691cb1ec24f3c7b69691bc",
+      "bytes": 2412
+    },
+    "delta": {
+      "file": "microsoft-map-delta.patch.txt",
+      "blob": "60c5dc1330fe267a5770a2be52cf565a445edb01",
+      "sha256": "3bbeba325714bf9c7b50e3f61cb6e8704b3068089f351c197cf224db2aa605f8",
+      "bytes": 1041
+    },
+    "changed_fields": [
+      "installation.ts postimage_blob",
+      "installation.ts postimage_sha256",
+      "installation.ts bytes"
+    ],
+    "precondition": "The delta applies only if the exact74 map has been materialized. complete-C34.patch.txt instead adds the new map because its canonical destination is absent on C34/source74. Historical map55 and source49 provenance remain unchanged."
+  },
+  "complete_unit": {
+    "patch": {
+      "file": "complete-C34.patch.txt",
+      "blob": "de0cb0cfeecf6e55efb6a902b241cb1318732976",
+      "sha256": "3e193bee830e87937c9b3dee7e8d2f3362a4ef304f54e2acc71e5c4c73eeb81d",
+      "bytes": 22339
+    },
+    "entries": [
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "preimage": {
+          "file": "installation.ts.C34.preimage.txt",
+          "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+          "bytes": 5315
+        },
+        "postimage": {
+          "file": "installation.ts.postimage.txt",
+          "blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+          "sha256": "f38d0b8a880dd540052f10639d8a41640480e2dbaa65327135cc8d4dbcd13a3f",
+          "bytes": 11483
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+        "preimage": null,
+        "postimage": {
+          "file": "request-body.ts.unchanged.txt",
+          "blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+          "sha256": "ca824aaed4746dcfab581e14d67aacc3e3e513ba18fa1e8f35c3e835d367019c",
+          "bytes": 5077
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "preimage": {
+          "file": "http.ts.preimage.txt",
+          "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "sha256": "43148e811b8e23cd2cb2a2e6fcee5027362b893c4ecac68467e73960bb22bd82",
+          "bytes": 25541
+        },
+        "postimage": {
+          "file": "http.ts.postimage.txt",
+          "blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+          "sha256": "948b190b53a725c673ac9a57cdf587d20a3f0c2ec351db4af1fc46fd7dd6fab1",
+          "bytes": 25782
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+        "preimage": null,
+        "postimage": {
+          "file": "microsoft49-composition-74.postimage.json.txt",
+          "blob": "6586b2f2ec475e6fe0e39648e5ac84ee60e83aaf",
+          "sha256": "88da8b2a1824ebd794b178b23ac7114b9a4444d61a691cb1ec24f3c7b69691bc",
+          "bytes": 2412
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "preimage": {
+          "file": "integration-fixture.ts.preimage.txt",
+          "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+          "sha256": "020a65af381b94ded41ad516d08c8337a4a5d62ed9676a353136172e31907c1e",
+          "bytes": 3543
+        },
+        "postimage": {
+          "file": "integration-fixture.ts.postimage.txt",
+          "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+          "sha256": "6d8ba7820763c2461dccb118020352e11b05389a27fe8f322fcc6519b9e3594c",
+          "bytes": 3615
+        }
+      }
+    ],
+    "closure": "No additional production module imports or dependencies. Transport-only control needs installation+request-body. Full74 unit also requires http.ts; Microsoft composition needs map+fixture lookup. Separate owner-25mib proposal excluded."
+  },
+  "runtime_source_evidence": {
+    "Bun_commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+    "incoming": {
+      "path": "src/js/node/_http_incoming.ts",
+      "blob": "83de7a47c71e9bdfdc7cb2cdd3af7f947e88db22",
+      "lines": "297-343",
+      "fact": "IncomingMessage._destroy emits aborted before completing destruction."
+    },
+    "destroy": {
+      "path": "src/js/internal/streams/destroy.ts",
+      "blob": "b11e41161be313851aceb485178c191db040f8d1",
+      "lines": "78-139",
+      "fact": "onDestroy sets kClosed before scheduling emitErrorCloseNT; emitErrorCloseNT emits error before close."
+    },
+    "Effect_node": {
+      "path": "packages/platform-node-shared/src/NodeStream.ts",
+      "blob": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+      "lines": "379-389",
+      "fact": "Scope finalization removes the adapter readable/error/end listeners."
+    }
+  },
+  "required_qualification": [
+    "Repeat the same S1 partial10/4096 disconnect oracle without the diagnostic error observer. Require finalRequest.signal.aborted=true, reader rejection/release and no postRead.",
+    "After actual close and two event-loop turns, require no own aborted/error/close guard listener and no pending cleanup Immediate.",
+    "Normal realEOF and successful responses must retain signal.aborted=false. Do not use close/end as cancellation.",
+    "Preserve POST28, real Versions77 persistence, slow/chunked EOF and413-before-EOF controls.",
+    "Exercise already closed/aborted sources or equivalent lifecycle control to show fallback cleanup is bounded and does not remove the error guard before queued error."
+  ],
+  "verification": {
+    "source_access": "GitHub MCP",
+    "artifact_operations": "Exact preimages, text patches, JSON metadata and hashes; product and compiler execution only through hosted Actions.",
+    "own_branch_scope": "Only79 fixture/receipt namespaces; production paths materialized exclusively in isolated validation overlays.",
+    "local_tests_or_compiler": "NOT_RUN",
+    "hosted_functional_result": "SCOPED_PASS; see functional_qualification",
+    "production_adoption": "NOT_APPLIED_BY79; owner74 retains sole authority",
+    "compiler_guards": "REQUESTED_NOT_RUN /45",
+    "release_claim": false
+  },
+  "source_delivery": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+  "source_blob_rechecked": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+  "functional_qualification": {
+    "W": {
+      "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+      "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+    },
+    "V": {
+      "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+      "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+    },
+    "S": {
+      "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+      "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+    },
+    "run": 43675862594,
+    "job": 132695751973,
+    "cleanup_job": 132696240217,
+    "pass": 11,
+    "fail": 0,
+    "assertions": 333,
+    "duration_seconds": 2.97,
+    "scope": "instrumented isolated validation overlay; proposed production bytes reduce exactly after removing only passive marks",
+    "compiler_guards": "REQUESTED_NOT_RUN / owner45",
+    "integration": "NOT_APPLIED / owner74 and71"
+  },
+  "GLOBAL_RELEASE": false,
+  "qualification_scope_note": "Disconnect regression observes actual aborted/error/close ordering, signal propagation and zero guard listeners without diagnostic error observation. The already-closed construction fallback was reviewed statically; no separate forced already-closed construction test is claimed."
+}

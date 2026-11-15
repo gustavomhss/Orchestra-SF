@@ -1,0 +1,112 @@
+{
+  "schema": "sf2h.m79.delivery-envelope.v1",
+  "state": "TERMINAL_DELIVERED_SCOPED_PASS",
+  "recorded_at": "2026-11-15 04:34:51 UTC",
+  "branch": "http-post-diagnosis",
+  "pr": 89,
+  "target_branch": "sf2-stack",
+  "source_W": {
+    "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+    "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+  },
+  "qualified_V": {
+    "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+    "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+  },
+  "executed_S": {
+    "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+    "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+  },
+  "documentary_delivery_D1": {
+    "sha": "3c16967289520c36f3343b0159cedf47d850ce1b",
+    "tree": "96be2fd542449744c24cf36b0190e80cb9aedaa6"
+  },
+  "current_envelope": "D2: the commit containing this file. Its exact SHA/tree are supplied in PR89 and the final PR32 guard request after CAS; a file cannot embed its own commit hash.",
+  "parent": "3c16967289520c36f3343b0159cedf47d850ce1b",
+  "document_paths_changed": [
+    "CAUSE.json",
+    "HANDOFF-74-71.json",
+    "TERMINAL79.json",
+    "REVIEWS.json",
+    "checks/REQUEST-45.json",
+    "INDEX.md",
+    "DELIVERY-ENVELOPE.json"
+  ],
+  "code_and_tests": "Identical to W2; no source/test/config/proposal postimage change in D1 or D2.",
+  "qualified_product_installation": "34d74d6651031c5194db1d22c823baae60e9a260",
+  "executed_instrumented_installation": "40edd1ece604ef2b7c4120b9b93455c1b34223b2",
+  "verification": {
+    "D1_compare": "GitHub MCP compare W2...D1:15 receipts only; independent reviewer confirmed.",
+    "immutable_fixture": "request-reconstruction.test.ts remains6ae1250910a61c2d0b89e394ed3457630eeb2709",
+    "immutable_proposal": "installation.ts.postimage.txt remains34d74d6651031c5194db1d22c823baae60e9a260",
+    "D2_scope": "Only the seven declared own documentation files; code and qualified bytes are unchanged.",
+    "correction": "Source-description precision: URL/init path calls checkBodyStreamRef; one-argument Request returns through cloneInto earlier.",
+    "additional_product_tests": "NOT_RUN; no material code/test change and no repeated journey."
+  },
+  "functional": {
+    "run": 43675862594,
+    "job": 132695751973,
+    "cleanup_job": 132696240217,
+    "pass": 11,
+    "fail": 0,
+    "assertions": 333,
+    "duration_seconds": 2.97
+  },
+  "handoffs": {
+    "to74": {
+      "pr": 85,
+      "comment_id": 6889216421,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/85#issuecomment-6889216421",
+      "status": "POSTED_ACK_PENDING"
+    },
+    "to71": {
+      "pr": 65,
+      "comment_id": 6889219555,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889219555",
+      "status": "POSTED_ACK_PENDING"
+    }
+  },
+  "checks": {
+    "owner": 45,
+    "state": "REQUESTED_NOT_RUN",
+    "existing_request_comments": [
+      6888879352,
+      6889033103
+    ],
+    "delivery_guard": "Exact D2 commit to be pinned in the existing request conversation immediately after CAS; no execution receipt claimed."
+  },
+  "ownership": {
+    "transport": 74,
+    "integration": 71,
+    "compiler_guards": 45,
+    "diagnostics79": "TERMINAL_RELEASED"
+  },
+  "outstanding": [
+    {
+      "owner": 45,
+      "status": "REQUESTED_NOT_RUN",
+      "requirement": "modules/sucafina and apps/cli bun typecheck; root bun run check:guards --base origin/dev, exact source/config/dev/mergebase."
+    },
+    {
+      "owner": 74,
+      "status": "ACK_REQUESTED",
+      "requirement": "Adopt/reconcile the complete proposed unit in sole production writer branch."
+    },
+    {
+      "owner": 71,
+      "status": "ACK_REQUESTED",
+      "requirement": "Integrate exact candidate and issue composedC; source proof is not integrated acceptance."
+    },
+    {
+      "owner": "52/67/BI continuation",
+      "status": "NOT_RUN_BY79",
+      "requirement": "Resume actual user journeys after74adoption; this11testcomponentselection is not journey proof."
+    },
+    {
+      "owner": "S0",
+      "status": "REMAINING",
+      "requirement": "Final eightselections, AM evidence, reviews, C/G7 andD/G8 unchanged."
+    }
+  ],
+  "GLOBAL_RELEASE": false
+}

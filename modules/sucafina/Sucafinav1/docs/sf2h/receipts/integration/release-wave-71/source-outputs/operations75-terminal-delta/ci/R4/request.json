@@ -1,0 +1,83 @@
+{
+  "envelope": {
+    "campaign": "sf2h-integral-20261112",
+    "mission": 75,
+    "sourceBranch": "sf2-stack",
+    "productSha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "requestSha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+    "selection": "journeys"
+  },
+  "request": {
+    "package": "app",
+    "directory": "packages/app-shell",
+    "packageSelector": "packages/app",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/operations.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "snapshotSha": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+  "run": "43675784039",
+  "attempt": "1",
+  "integrity": [
+    {
+      "path": ".ci-run.json",
+      "sha256": "1e0ff71361aaba45007a4ffff1377763bf51703928ee9045d8c0273dee2443a5"
+    },
+    {
+      "path": ".github/workflows/sf-operations-scanner.yml",
+      "sha256": "91adf931b72c3a88a0252b9010c835fceeec1abcb609cfce26c9a414da9c1189"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "sha256": "2a441c5a25e569ba78797493b410cefd19fa5484f1dfca666a4809d2b4381512"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/request.mjs",
+      "sha256": "d6cea591f1045391d9b15bc514d6c3b60e69294f9a8d8bc8ea2a4d94f5ed870e"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "sha256": "43f675022aa15555bbf234417b0a25431a925825197fb19354211f52006c8231"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "sha256": "3f907fd08f4afdb059b125a451f6b6ca473a326bb41cbbbbba53a7de1c855eaa"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/cleanup.sh",
+      "sha256": "089bf65246458a859eedecb4a57aaf4ef902ba7bbbf5cf86dd37a927d8854d12"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/tools.lock.json",
+      "sha256": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "sha256": "492f3145a61e5469f43618270701d2ba1972bb82e271633dc5f952557de3dc66"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "sha256": "29c9dcd28d0de5726770feac79be3f11652c349de2cbac09e8517307663f76fb"
+    }
+  ],
+  "playwrightArgs": [
+    "--config",
+    "e2e/playwright.production.config.ts",
+    "--workers",
+    "1",
+    "--retries",
+    "0",
+    "--repeat-each",
+    "1",
+    "(^|[\\\\/])e2e[\\\\/]sucafina[\\\\/]operations\\.spec\\.ts$"
+  ]
+}

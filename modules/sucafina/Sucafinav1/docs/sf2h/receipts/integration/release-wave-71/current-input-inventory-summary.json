@@ -1,0 +1,81 @@
+{
+  "schema": "sf2h.mission71.current-input-inventory-summary.v1",
+  "candidate": {
+    "symbol": "C45",
+    "W": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+    "parent": "eecbdacb21734695094332deb6142aa35d5c9c3c"
+  },
+  "status": "STATIC_INPUT_IDENTITIES_RECONCILED_NOT_QUALIFIED",
+  "paths_planned": 1095,
+  "present": 1093,
+  "required_present": 1088,
+  "material_count": 168,
+  "material_exact": 168,
+  "required_missing": 0,
+  "protected_expected_absences": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "exists": false,
+      "parentTree": "73085a5fae8baadbbf2192ff15bf38699a8c6087",
+      "missingAt": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "bases": [
+        "review67_protected_input"
+      ],
+      "required_present": false,
+      "disposition": "Protected owner52 unreleased exclusion, not an imported or required live dependency. Source67 closure marks HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE/candidateConsumed=false; C40 Git trees show absent. Preserve absence until independently released and reviewed."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+      "exists": false,
+      "parentTree": "2e26443e88892eefbed988d447af7599cd362bf5",
+      "missingAt": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+      "bases": [
+        "review67_protected_input"
+      ],
+      "required_present": false,
+      "disposition": "Protected owner52 unreleased exclusion, not an imported or required live dependency. Source67 closure marks HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE/candidateConsumed=false; C40 Git trees show absent. Preserve absence until independently released and reviewed."
+    }
+  ],
+  "inherited60_retained_exact": 336,
+  "inherited60_changed_explained": 9,
+  "unexplained_observed_pins": 0,
+  "mode_counts": {
+    "100644": 1090,
+    "100755": 3
+  },
+  "guard_workflow_package_lock_count": 193,
+  "resident_profiles": 5,
+  "resident_skills": 18,
+  "Microsoft_atomic": "ATOMIC_STATIC_BINDING_MATCH",
+  "request_declarations": 68,
+  "catalog_totals": {
+    "source_missions": 17,
+    "executed_exact_envelopes": 60,
+    "eligible_bounded": 22,
+    "blocked_executed": 13,
+    "archived": 25,
+    "blocked_proposed": 5,
+    "eligible_proposed": 1,
+    "archived_proposed": 2,
+    "complete_checks45_documents": 17,
+    "mission71_dispatches": 0
+  },
+  "inventory": {
+    "path": "current-input-inventory.json",
+    "local_review_path": "review71/current-input-inventory.json",
+    "bytes": 665145,
+    "sha256": "134ef237e24632cf54fd0b4e390b1a2ae849c074170eeab566636127af632b20",
+    "git_blob": "3faeca6593952cbddf29bda367bfb40ce8f66db1"
+  },
+  "catalog": {
+    "path": "source-request-catalog-final.json",
+    "local_review_path": "review71/validation-source-requests.json",
+    "bytes": 997757,
+    "sha256": "ec4276b24352fe16a95d6bcdd684d148f4e52419e1622957f7c360e3446abc1f",
+    "git_blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+  },
+  "execution": "STATIC_TEXT_AND_GIT_IDENTITY_ONLY; NO_PRODUCT_COMPILER_TEST_BUILD_GUARD_CI",
+  "GLOBAL_RELEASE": false
+}

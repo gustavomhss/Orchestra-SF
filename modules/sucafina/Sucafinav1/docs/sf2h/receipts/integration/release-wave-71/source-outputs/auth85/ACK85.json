@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h.m85.ack.v1",
+  "mission": 85,
+  "state": "ACKNOWLEDGED_COMPOSED_QUALIFICATION_STARTED",
+  "campaign": "sf2h-integral-20261112",
+  "source": {
+    "branch": "auth-retention-fix",
+    "observed_head": "2690de74b0581130ae92e1129d986d31d1663fe8",
+    "tree": "a4ad8a365b3e9e9b3eb3041eccd5c97b7b067156",
+    "source72_W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "PR": 84
+  },
+  "target": {
+    "branch": "sf2-stack",
+    "observed_head": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+    "tree": "78d7c23395d92a4a0193fdd545f8aa023af0c55d",
+    "authority": "71 only"
+  },
+  "invariants": {
+    "readonly59_local_store_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+    "target_auth72_merged": false,
+    "cilane": "existing test-ci.yml only",
+    "compiler_guards_owner": 45,
+    "review_owner": 84,
+    "acceptance_owner": "71/S0",
+    "global_release": false
+  },
+  "lease": {
+    "epoch": "auth-compose-browser85",
+    "branch_writer": "mission85",
+    "auth_paths_only": true,
+    "source72_terminal": true,
+    "readonly59_terminal": true
+  },
+  "identity": {
+    "model": "GPT-6",
+    "backend_session_id": null,
+    "identity_limit": "No independently verifiable backend session ID provided; none inferred."
+  },
+  "read": {
+    "mission_pin": "606c253d4108b75da431a70bd4aba9088d0fcb72",
+    "planning_pin": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "common_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "actor_S0B_blob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+    "WP10_blob": "a8e15e10c2353ad4f21ef266f84b72c46cbda755"
+  },
+  "proof": {
+    "source_R1": {
+      "run": 43671466268,
+      "job": 132682240447,
+      "status": "pass-with-2-inherited-skips",
+      "not_composed": true
+    },
+    "two_readonly_cases": "INERT_NOT_RUN",
+    "next": "Inspect exact pre/post + verify no in-flight duplicate; create isolated C36+72+59+Microsoft map snapshot W and surgical Actions S; do not mutate target71"
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts (auth maintenance only)",
+    "modules/sucafina/Sucafinav1/runtime/local-contract.ts (auth only)",
+    "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+    "modules/sucafina/Sucafinav1/local/entry.ts (auth only)",
+    "modules/sucafina/Sucafinav1/test/product/auth-readonly-composition/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-readonly-composition/"
+  ],
+  "criteria": [
+    "M70-AUTH-01",
+    "WP10.T03.QLT.01",
+    "WP10.T03.QLT.40",
+    "WP10.T04.CHK.01",
+    "WP10.T04.CHK.02",
+    "WP10.T04.CHK.03",
+    "WP10.T04.CHK.40",
+    "CAMP.CMP.02"
+  ],
+  "result_not_claimed": "Not an implementation, integration, or test PASS"
+}

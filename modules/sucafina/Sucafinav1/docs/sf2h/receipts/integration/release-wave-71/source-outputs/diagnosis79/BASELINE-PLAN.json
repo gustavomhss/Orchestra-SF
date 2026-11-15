@@ -1,0 +1,186 @@
+{
+  "schema": "sf2h.installed-post-cause.baseline-plan.v1",
+  "mission": 79,
+  "state": "PREPARED_NOT_RUN",
+  "base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+  "branch": "http-post-diagnosis",
+  "authority": {
+    "production_writer": 74,
+    "stack_integrator": 71,
+    "checks": 45,
+    "own_branch": "fixtures and inert receipts only",
+    "overlay": "V0 adds passive marks only; S0 adds .ci-run.json only; no production branch update"
+  },
+  "reading": {
+    "assigned_pack": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "complete": true,
+    "method": "Root and three delegated readers read all38keys plus required annexes; source/evidence reviewed before fixtures",
+    "annexes": [
+      "product-acceptance",
+      "execution-reconciliation",
+      "resident-runtime",
+      "atlas-packaging"
+    ]
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/installed-post-cause/probe.test.ts",
+      "--timeout",
+      "18000"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "expected_tests": 2,
+  "request_bound_ms": 1800,
+  "tests_bound_ms": [
+    12000,
+    18000
+  ],
+  "new_discriminant": "Same configured Node/Effect listener with paused read versus raw data/end control, pre-abort EOF states, then one actual Versions/save with real local operator and read-only reconciliation",
+  "hypothesis": "Bun1.3.14 emitServerSocketEOFNT omits req in its nextTick call. Paused NodeStream gets data without request EOF. Static hypothesis only until Actions evidence.",
+  "counterclaims": [
+    "Content-Length explicitly28 and77",
+    "No fake identity, no body reconsume, no second mutation",
+    "No business SQL/authwrite is inferred from ERR_ABORTED",
+    "No browser journey or native host acceptance is claimed"
+  ],
+  "runtime_scope": "Actual composeSfInstallation + NodeHttpServer + createLocalInstallation + canonical local identity + SQLite. Host runtime/native CLI boot not part of this component probe.",
+  "sources": {
+    "bun": {
+      "version": "1.3.14",
+      "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "http_server_blob": "462b6019f341827b0a05dd5b24062152e79982ea",
+      "incoming_blob": "83de7a47c71e9bdfdc7cb2cdd3af7f947e88db22"
+    },
+    "effect": {
+      "commit": "cd7ab658994104bd6fe8f841f1440bea32c387f5",
+      "HttpServerRequest": "83e6c3e6f9d0f12ce2eb4ccec969459f9f99c7a4",
+      "NodeHttpIncomingMessage": "2461e86c785d6f7435c8e4cc533f450329d9cc44",
+      "NodeStream": "342eeabadb49aeb5a9025911ba67b43fa641b590"
+    }
+  },
+  "files": [
+    {
+      "name": "probe.test.ts",
+      "bytes": 9511,
+      "blob": "b8b778500446c210af7cb823045cae1ef2c24414",
+      "sha256": "2d320a990ad376ce3a8a9903e442cb6a1b62fd5b9b2b53f8bb33ece0237cbe35",
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-post-cause/probe.test.ts"
+    },
+    {
+      "name": "listener79.ts",
+      "bytes": 15034,
+      "blob": "b1194c05bc1407632b52fd22c9013f22aff4748d",
+      "sha256": "53f791a31a63e0239e26ed20d409d5829c1223951ea123eefa9a3a4916b89ef1",
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-post-cause/listener79.ts"
+    },
+    {
+      "name": "instrumentation/application.postimage.txt",
+      "bytes": 39613,
+      "blob": "69bf5b0e64c2d7fca27c9192c035467169ebcd5a",
+      "sha256": "d536169cf6127eac6b7527653a6df003aa9736d7af447f8ee0d4b2c6bafab5bc",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-post-cause/instrumentation/application.postimage.txt"
+    },
+    {
+      "name": "instrumentation/application.preimage.txt",
+      "bytes": 39080,
+      "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "sha256": "c1ac0f971c3296af6e672a3190c75f631d77b289216eff794f987cf244416bef",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-post-cause/instrumentation/application.preimage.txt"
+    },
+    {
+      "name": "instrumentation/entry.postimage.txt",
+      "bytes": 25451,
+      "blob": "ccdd1e2833a8f2c6a3dc605f43c550bdb3671ac6",
+      "sha256": "54eb1ab8d9e302c95351b4b132ec32e98004db2b00b575844daf59e46dbbae82",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-post-cause/instrumentation/entry.postimage.txt"
+    },
+    {
+      "name": "instrumentation/entry.preimage.txt",
+      "bytes": 25080,
+      "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-post-cause/instrumentation/entry.preimage.txt"
+    },
+    {
+      "name": "instrumentation/installation.postimage.txt",
+      "bytes": 5557,
+      "blob": "02ca3801a3497b62383b3107ad89b5d5223336ff",
+      "sha256": "2b0d56887f54a7908559b4873c5e00be1652502ddb1796da8be9edf6f30a093e",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-post-cause/instrumentation/installation.postimage.txt"
+    },
+    {
+      "name": "instrumentation/installation.preimage.txt",
+      "bytes": 5315,
+      "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-post-cause/instrumentation/installation.preimage.txt"
+    },
+    {
+      "name": "instrumentation/passive-instrumentation.patch.txt",
+      "bytes": 6702,
+      "blob": "e4ba854b026d0f76a20f444a26fec1f8c423f8d5",
+      "sha256": "e7ce2dfeeecb803196b1c0bb8f8db2d3a4c156844d835f56bb4262288f9b6418",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-post-cause/instrumentation/passive-instrumentation.patch.txt"
+    }
+  ],
+  "overlay": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "mode": "100644",
+      "preimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "postimage_blob": "02ca3801a3497b62383b3107ad89b5d5223336ff",
+      "preimage_artifact": "instrumentation/installation.preimage.txt",
+      "postimage_artifact": "instrumentation/installation.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "preimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "postimage_blob": "ccdd1e2833a8f2c6a3dc605f43c550bdb3671ac6",
+      "preimage_artifact": "instrumentation/entry.preimage.txt",
+      "postimage_artifact": "instrumentation/entry.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "mode": "100644",
+      "preimage_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "postimage_blob": "69bf5b0e64c2d7fca27c9192c035467169ebcd5a",
+      "preimage_artifact": "instrumentation/application.preimage.txt",
+      "postimage_artifact": "instrumentation/application.postimage.txt"
+    }
+  ],
+  "observations": "No bodies, cookies, enrollment tokens or protected HTML in logs; capped event metadata only; passive readers return original values/promises.",
+  "cleanup": "Per-call timeout cleared; abort after pre-abort snapshot; only owned sockets closed; observer methods/listeners restored; store disposed; temp root removed in finally. M79_CLEANUP emits actual listener/socket/observer result.",
+  "prior_evidence": {
+    "R4": {
+      "W": "2b18f271a95d37716ed1a1a9f7bd0a15056c643c",
+      "S": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+      "run": 43669699195,
+      "job": 132676784075,
+      "artifact": 14142789407,
+      "zip_sha256": "20992ebe6f7df91c5426c08f010f48525ce192548ccabe9fad140b0c9d5a66da",
+      "observed": "GET200, explicit Content-Length28 timeout, one save77 unknown and never replayed"
+    },
+    "R6": {
+      "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+      "S": "d87d0883bcc087b13cffc6a45649745616b46f34",
+      "run": 43670652989,
+      "job": 132679720158,
+      "artifact": 14144003095,
+      "zip_sha256": "29beb21989ae918e05c543dc33a76184f12962558097902404eb945f70b8fdb0"
+    },
+    "A52": {
+      "commit": "56239d138ed4ae7cac9ac6b01e68a3ee78d1bf4f",
+      "patch": "41749cabf80392bdfcb1a7db97c1cb0e2bb04a77",
+      "postimage": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+      "qualification": "Prior working bulk-reader workaround; not a qualified causal fix"
+    }
+  },
+  "GLOBAL_RELEASE": false
+}

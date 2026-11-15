@@ -1,0 +1,103 @@
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -1,3 +1,4 @@
++import { markIncoming79 } from "../../../../modules/sucafina/Sucafinav1/test/product/installed-post-cause/listener79.ts"
+ import path from "node:path"
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
+@@ -40,7 +41,9 @@
+     if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+     // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
+     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
++    markIncoming79(sanitized.source, "effect.toWeb.start")
+     const web = yield* HttpServerRequest.toWeb(sanitized)
++    markIncoming79(sanitized.source, "effect.toWeb.complete")
+     if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
+     const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+     if (!request) return HttpServerResponse.empty({ status: 403 })
+--- a/modules/sucafina/Sucafinav1/local/entry.ts
++++ b/modules/sucafina/Sucafinav1/local/entry.ts
+@@ -1,3 +1,4 @@
++import { mark79 } from "../test/product/installed-post-cause/listener79.ts"
+ import path from "node:path"
+ import { userInfo } from "node:os"
+ import { randomUUID } from "node:crypto"
+@@ -165,12 +166,16 @@
+       if ((operator && request.method === "POST" || microsoft && !["GET", "HEAD", "OPTIONS"].includes(request.method)) && (request.headers.get("origin") !== config.origin || request.headers.get("sec-fetch-site") === "cross-site")) return new Response("Access denied", { status: 403 })
+       const readiness = status(request)
+       if (readiness) return readiness
++      mark79(request, "identity.handle.start")
+       const auth = await identity.handle(request)
++      mark79(request, "identity.handle.complete")
+       if (auth) {
+         if (operator && url.pathname === `${config.mount}/auth/login` && auth.status === 200) return utilityHtml("Signed out", '<p class="utility-empty">Your local session has ended. To sign in again, open the Abrir Sucafina shortcut on this Mac.</p>', true)
+         return auth
+       }
++      mark79(request, "identity.prepare.start")
+       await identity.prepare(request)
++      mark79(request, "identity.prepare.complete")
+       if (operator && (url.pathname === `${config.mount}/notifications` || url.pathname === `${config.mount}/backups`)) {
+         if (!["GET", "HEAD", "POST"].includes(request.method)) return new Response(null, { status: 405, headers: { Allow: "GET, HEAD, POST" } })
+         const person = await identity.person(request)
+@@ -236,7 +241,9 @@
+         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
+         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
+       }
++      mark79(request, "business.handler.start")
+       const response = await presentationRequest.run(request, () => business(request))
++      mark79(request, "business.handler.complete")
+       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
+       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
+       return localChrome(response)
+--- a/modules/sucafina/Sucafinav1/runtime/application.ts
++++ b/modules/sucafina/Sucafinav1/runtime/application.ts
+@@ -1,3 +1,4 @@
++import { mark79 } from "../test/product/installed-post-cause/listener79.ts"
+ import { configure, controls, roleMap } from "./admin.ts"
+ import { createHash } from "node:crypto"
+ import type { ResolvedActor, RoleRow, Surface } from "../src/identity.ts"
+@@ -67,8 +68,10 @@
+     // Product operations own fresh authentication and transactions; never nest them in the page lock.
+     const product = await application.product?.(request, surface)
+     if (product) return product
++    mark79(request, "command.body.start")
+     const parsed =
+       request.method === "POST" && !uploading ? await readCommand(request, application.maxJsonBytes) : undefined
++    mark79(request, "command.body.complete")
+     if (parsed instanceof Response) return parsed
+     const environment = await application.environment(request)
+     const transaction: TransactionRunner = (work) =>
+@@ -81,9 +84,13 @@
+     if (preparedUpload instanceof Response) return preparedUpload
+     const productView = request.method === "POST" ? undefined : await application.productView?.(request, surface, url.searchParams.get("page") ?? undefined)
+     if (productView instanceof Response) return productView
++    mark79(request, "persistence.transaction.start")
+     const response = await transaction(async (snapshot, blobs) => {
++      mark79(request, "persistence.transaction.enter")
+       // Resolve current roles INSIDE the same transaction that rereads records and locks.
++      mark79(request, "domain.authenticate.start")
+       const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
++      mark79(request, "domain.authenticate.complete")
+       if (!principal || !principal.id || principal.id.startsWith("local:"))
+         return { commit: false, value: reply("Authentication required", 401) }
+       const access = object(object(snapshot.data.access)[principal.id])
+@@ -301,9 +308,11 @@
+         const auditStart = snapshot.audit.length
+         // Authorize and validate deletion in a staged draft before examining private metadata.
+         const target = deletionKind ? structuredClone(snapshot) : snapshot
++        mark79(request, "domain.dispatch.start")
+         const result = parsed.action.startsWith("configure-")
+           ? configure(target, surface, actor, parsed, environment)
+           : contribution.domain.execute(target, actor, parsed, environment)
++        mark79(request, "domain.dispatch.complete")
+         if (result.ok && deletionKind) {
+           const id = parsed.id ?? ""
+           const parent =
+@@ -444,6 +453,7 @@
+         }),
+       }
+     }).finally(() => productView?.finish())
++    mark79(request, "persistence.transaction.complete")
+     return request.method === "HEAD"
+       ? new Response(null, {
+           status: response.status,

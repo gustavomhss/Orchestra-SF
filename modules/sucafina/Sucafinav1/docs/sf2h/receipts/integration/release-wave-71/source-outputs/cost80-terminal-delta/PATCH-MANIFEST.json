@@ -1,0 +1,184 @@
+{
+  "schema": "sf2h.cost-coverage-closure.patch-manifest.v1",
+  "mission": 80,
+  "scope": "Complete product and test payload; evidence receipts are separately versioned and deliberately not recursively embedded in the patch.",
+  "source_base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+  "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+  "W_tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "bytes": 16753,
+      "sha256": "3f2438bace3bd7839a4f663be4f3a06277b6795ba0384df2766360100154bf9a",
+      "blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+      "preimage": {
+        "blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+        "sha256": "404383fd380ff5daaaac58c4ef110b989c6c6f2aad8862638be4dbfe2e7b4d5b",
+        "bytes": 14443
+      },
+      "postimage": {
+        "blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+        "sha256": "3f2438bace3bd7839a4f663be4f3a06277b6795ba0384df2766360100154bf9a",
+        "bytes": 16753
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-coverage.test.ts",
+      "bytes": 14131,
+      "sha256": "dfb422098445f09b629e537ca67a2a34e5c85ee02db90f5ddff375cb3b2a72a8",
+      "blob": "bf06e061b29ae22674e9dadb2a410d4ca74c8469",
+      "preimage": {
+        "state": "ABSENT_IN_SOURCE_BASE"
+      },
+      "postimage": {
+        "blob": "bf06e061b29ae22674e9dadb2a410d4ca74c8469",
+        "sha256": "dfb422098445f09b629e537ca67a2a34e5c85ee02db90f5ddff375cb3b2a72a8",
+        "bytes": 14131
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-fixture.ts",
+      "bytes": 3954,
+      "sha256": "b80de42e3f57aa091d7cb866347d1e4078271ed13fec1c84fa8348726421f7de",
+      "blob": "394bd5434dfc1286b3b0b4312ed8499f79961124",
+      "preimage": {
+        "state": "ABSENT_IN_SOURCE_BASE"
+      },
+      "postimage": {
+        "blob": "394bd5434dfc1286b3b0b4312ed8499f79961124",
+        "sha256": "b80de42e3f57aa091d7cb866347d1e4078271ed13fec1c84fa8348726421f7de",
+        "bytes": 3954
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+      "bytes": 8233,
+      "sha256": "9faeb96e437af3bd3d8eae7577ecce46943c7eb106814eb1d9c19234c1fea1df",
+      "blob": "efeb097ae13519db036d8adf08548a34959e3fe2",
+      "preimage": {
+        "state": "ABSENT_IN_SOURCE_BASE"
+      },
+      "postimage": {
+        "blob": "efeb097ae13519db036d8adf08548a34959e3fe2",
+        "sha256": "9faeb96e437af3bd3d8eae7577ecce46943c7eb106814eb1d9c19234c1fea1df",
+        "bytes": 8233
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts",
+      "bytes": 1507,
+      "sha256": "cd87f824e37095df14a4453e3c0ba76a5f29ef264e6685b5a5f8d13ec5f72745",
+      "blob": "d60df8ce4762745b0b171420811eec860282a0f1",
+      "preimage": {
+        "state": "ABSENT_IN_SOURCE_BASE"
+      },
+      "postimage": {
+        "blob": "d60df8ce4762745b0b171420811eec860282a0f1",
+        "sha256": "cd87f824e37095df14a4453e3c0ba76a5f29ef264e6685b5a5f8d13ec5f72745",
+        "bytes": 1507
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability-fixture.ts",
+      "bytes": 5439,
+      "sha256": "b1f4ef952b0ef41bcd72e95ef270e2b82971fae037bd7f9dd03150f8b7fef737",
+      "blob": "1d01850bf64ded7804e6ce9f3eccf11ce612ff27",
+      "preimage": {
+        "state": "ABSENT_IN_SOURCE_BASE"
+      },
+      "postimage": {
+        "blob": "1d01850bf64ded7804e6ce9f3eccf11ce612ff27",
+        "sha256": "b1f4ef952b0ef41bcd72e95ef270e2b82971fae037bd7f9dd03150f8b7fef737",
+        "bytes": 5439
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+      "bytes": 10295,
+      "sha256": "5be43374dde51576022a800d5edce4ff57239e8e3b07ef07a7d4db6ec59b98a7",
+      "blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737",
+      "preimage": {
+        "state": "ABSENT_IN_SOURCE_BASE"
+      },
+      "postimage": {
+        "blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737",
+        "sha256": "5be43374dde51576022a800d5edce4ff57239e8e3b07ef07a7d4db6ec59b98a7",
+        "bytes": 10295
+      }
+    }
+  ],
+  "patch": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/patch/CODE-AND-TESTS.patch",
+      "bytes": 56229,
+      "sha256": "2610414176ea887c8a765109a05baf409506f4cda8783dc445c384ecc30736ce",
+      "blob": "ca7f4ae8b27b9e568bf482069225f881a1b6fec4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/patch/cost-coverage.postimage.ts.txt",
+      "bytes": 16753,
+      "sha256": "3f2438bace3bd7839a4f663be4f3a06277b6795ba0384df2766360100154bf9a",
+      "blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/patch/cost-coverage.preimage.ts.txt",
+      "bytes": 14443,
+      "sha256": "404383fd380ff5daaaac58c4ef110b989c6c6f2aad8862638be4dbfe2e7b4d5b",
+      "blob": "e913189a675bbcfa81a657f58d2255eac3b6dce2"
+    }
+  ],
+  "application": "Apply CODE-AND-TESTS.patch only when the declared preimages match. All six added test files must be absent or byte-identical. If target has changed,71 reconciles;80 never overwrites another owner's change.",
+  "contracts_changed": false,
+  "formulas_changed": false,
+  "legacy_expectations_changed": false,
+  "source_code_stats": {
+    "product_files": 1,
+    "added_lines": 45,
+    "removed_lines": 6
+  },
+  "causal_test_lineage": {
+    "R1_and_R2_blob": "32dd80e500aabb7d7bc746925a7591acad5a1508",
+    "R3_blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737",
+    "change": "Three actual subjects isolated from Bun asymmetric matcher mutation across two files; expected values unchanged and original-input equality added.",
+    "product_blob_same_R2_R3": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+    "clean_null_counterfactual": {
+      "W": "a67dbbb5f310f8f3388967230f0fbc8932116891",
+      "run": 43676126745,
+      "only_product_preimage_restored": true,
+      "final_test_blobs_unchanged": true
+    }
+  },
+  "packaging_verification": {
+    "operation": "Apply review patch to isolated preimage and compare output bytes only; no product code executed",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "sha256": "3f2438bace3bd7839a4f663be4f3a06277b6795ba0384df2766360100154bf9a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-coverage.test.ts",
+        "sha256": "dfb422098445f09b629e537ca67a2a34e5c85ee02db90f5ddff375cb3b2a72a8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/numeric-fixture.ts",
+        "sha256": "b80de42e3f57aa091d7cb866347d1e4078271ed13fec1c84fa8348726421f7de"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts",
+        "sha256": "9faeb96e437af3bd3d8eae7577ecce46943c7eb106814eb1d9c19234c1fea1df"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/resolution-stability.test.ts",
+        "sha256": "cd87f824e37095df14a4453e3c0ba76a5f29ef264e6685b5a5f8d13ec5f72745"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability-fixture.ts",
+        "sha256": "b1f4ef952b0ef41bcd72e95ef270e2b82971fae037bd7f9dd03150f8b7fef737"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts",
+        "sha256": "5be43374dde51576022a800d5edce4ff57239e8e3b07ef07a7d4db6ec59b98a7"
+      }
+    ]
+  }
+}

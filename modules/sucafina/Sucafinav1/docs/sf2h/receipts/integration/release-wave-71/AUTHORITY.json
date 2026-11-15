@@ -1,0 +1,100 @@
+{
+  "schema": "sf2h.integration71.terminal-authority.v1",
+  "mission": 71,
+  "state": "ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS",
+  "lease_epoch": "S0-C-e13-browser71",
+  "branch": "sf2-stack",
+  "PR": 65,
+  "authority_source": {
+    "control": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7",
+    "current_control_observed": "093c54b69a37861626c1f64e3439759a7896ecb2",
+    "same_mission_blob": true
+  },
+  "predecessor": {
+    "mission": 60,
+    "terminal": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "state": "EXPLICITLY_ENDED"
+  },
+  "ACK71": {
+    "sha": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+    "comment_id": 6888325805
+  },
+  "material_candidate": {
+    "symbol": "C45",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "terminal_publication": {
+    "parent": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "scope": "Only new documentary receipts below the mission71 receipt prefix; no material/tooling/config/test/workflow/ref-lane change",
+    "identity": "The immutable commit containing this authority and HANDOFF is the terminal71 publication. Its exact SHA/tree and readback are published externally in PR65 and the final45 queue comment; no impossible self-embedded commit hash.",
+    "formal_S0_D_envelope": false
+  },
+  "writer": {
+    "role": "Only /root moved sf2-stack; three delegated readers had no remote writes",
+    "model_declared": "GPT-6 Astra Pro (developer session instruction)",
+    "model_effective": null,
+    "session_id": null,
+    "identity_limit": "No provider/session attestation was exposed; none invented",
+    "transport": "GitHub MCP GitData create_tree/create_commit and expected_sha update_ref force:false"
+  },
+  "outcome": {
+    "increments": 17,
+    "range": "C29-C45",
+    "material_unique_paths": 168,
+    "modified": 48,
+    "added": 120,
+    "serial_applications": 174,
+    "serial_overlap_paths": 6,
+    "source86_legacy_oracle_already_present": 1,
+    "material_validation": "NOT_RUN_ON_C45",
+    "functional_or_acceptance_findings_closed_by71": 0
+  },
+  "authority_after_terminal": {
+    "stack_writer": "71 lease ended; next stack writer requires S0 assignment and fresh current-HEAD/control/source authority reconciliation plus ACK",
+    "checks_and_dispatch": 45,
+    "epic_final_campaign_AM_acceptance": "S0",
+    "source_leases": "Independently recorded in source-census-final;71 does not cancel or seize other source leases",
+    "remaining71_actions": "Readback of this terminal and publication of final PR metadata/ACK/queue comments only; no further stack commits"
+  },
+  "preserved": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "T0": "2026-11-13T04:01:10Z",
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39,
+    "final_selections": 8,
+    "AM": "AM01-AM06",
+    "FINAL_reviews": 3,
+    "gates": [
+      "C/G7",
+      "D/G8"
+    ],
+    "pending_ids_and_digests": 56,
+    "historical_findings60": 38,
+    "mandatory_auth70_findings": 3,
+    "new71_owner_addenda": "H79ABORT andH85-ROUTE-MISMATCH separate; no historical reset"
+  },
+  "execution": {
+    "product_tests": 0,
+    "typechecks": 0,
+    "builds": 0,
+    "guards": 0,
+    "preflights": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "workflow_ref_moves": 0,
+    "dev_merges": 0,
+    "deploys": 0,
+    "engine_or_policy_changes": 0
+  },
+  "GLOBAL_RELEASE": false
+}
+

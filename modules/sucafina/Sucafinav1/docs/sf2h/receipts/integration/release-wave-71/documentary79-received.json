@@ -1,0 +1,571 @@
+{
+  "schema": "sf2h.integration71.documentary79.v1",
+  "state": "RECEIVED_TERMINAL_DIAGNOSTIC_PROPOSAL_NOT_APPLIED",
+  "source": {
+    "branch": "http-post-diagnosis",
+    "pr": 89,
+    "terminal": "545201aa12e330360530727a96d7cb9cc678e2b9",
+    "tree": "0d844d58b5ec1931b40a5304b47ebf367c1a7066",
+    "authority_blob": "74cf55da724ffe89ea8926b2c8db8f52cbe6ebce",
+    "handoff_blob": "ab9f0e622610286e9a502a22b97d5052d20a9d13",
+    "lease": "http-post-cause-browser79",
+    "lease_state": "ENDED",
+    "archive_tree": "0ec5ae6be9a8ae2fff262f639c2298c18913b1b7",
+    "archive_blobs": 69
+  },
+  "candidate": {
+    "symbol": "C45",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+    "material_delta": 0
+  },
+  "sourceClaim": {
+    "schema": "sf2h.m79.cause.v1",
+    "state": "DEMONSTRATED_ON_PINNED_RUNTIME",
+    "runtime": {
+      "bun": "1.3.14",
+      "commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "effect": "4.0.0-beta.83",
+      "commit_effect": "cd7ab658994104bd6fe8f841f1440bea32c387f5"
+    },
+    "first_uncompleted_boundary": "Delivery of streamed body to reader of new Request(existingRequest, initObject). Node and Effect consume all bytes and reach real EOF; the reconstructed request reader remains pending.",
+    "production_site": {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "C34_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "expression": "installation.handler(new Request(request, { signal }))"
+    },
+    "causal_control": {
+      "run": 43675862594,
+      "job": 132695751973,
+      "payload_bytes": 28,
+      "content_length": 28,
+      "same_factors": [
+        "actualNode/Effectlistener",
+        "freshbodypercase",
+        "HttpServerRequest.toWeb",
+        "capturedEffectcontext",
+        "defaultHWM",
+        "NodeStreamcloseOnDone",
+        "initialAbortSignal",
+        "consumergetReader/read"
+      ],
+      "results": [
+        {
+          "variant": "direct",
+          "outcome": "eof",
+          "bytes": 28,
+          "eof": 1,
+          "elapsed_ms": 1,
+          "node_bytes": 28,
+          "node_eof": true,
+          "signal_before_cancel": false
+        },
+        {
+          "variant": "one-argument",
+          "outcome": "eof",
+          "bytes": 28,
+          "eof": 1,
+          "elapsed_ms": 1,
+          "node_bytes": 28,
+          "node_eof": true,
+          "signal_before_cancel": false
+        },
+        {
+          "variant": "signal-init",
+          "outcome": "deadline",
+          "bytes": 0,
+          "eof": 0,
+          "elapsed_ms": 801,
+          "node_bytes": 28,
+          "node_eof": true,
+          "signal_before_cancel": false
+        },
+        {
+          "variant": "empty-init",
+          "outcome": "deadline",
+          "bytes": 0,
+          "eof": 0,
+          "elapsed_ms": 801,
+          "node_bytes": 28,
+          "node_eof": true,
+          "signal_before_cancel": false
+        },
+        {
+          "variant": "explicit-body",
+          "outcome": "eof",
+          "bytes": 28,
+          "eof": 1,
+          "elapsed_ms": 1,
+          "node_bytes": 28,
+          "node_eof": true,
+          "signal_before_cancel": false
+        }
+      ]
+    },
+    "source_mechanism": {
+      "qualification": "Static path inspection plus matching controlled runtime behavior; not a garbage-collection race and not evidence that GC collected a live Request.",
+      "request_blob": "4f5cfd4317f39aa85eca511913364a4282d3bb75",
+      "body_blob": "3b759f0981c34f88c6527ff16e3841e4e0248a9d",
+      "steps": [
+        "Request.checkBodyStreamRef stores the readable stream in js.gc.stream and clears native Locked.readable(581-591); the URL/init construction path calls it(873).",
+        "Request(existing, initObject) copies native #body.value using clone(691-696) without forwarding the relocated stream; Request(existing) uses cloneInto(640-660), which reads js.gc.stream and calls cloneWithReadableStream(1039-1049).",
+        "Body.Value.clone delegates to cloneWithReadableStream with no supplied stream(1082-1090). A Locked body enters tee; absent the original readable/onStartStreaming producer, its fallback creates a ByteStream(998-1077), matching the observed pending zero-byte reader."
+      ],
+      "sources": [
+        "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/runtime/webcore/Request.zig",
+        "https://github.com/oven-sh/bun/blob/0d9b296af33f2b851fcbf4df3e9ec89751734ba4/src/runtime/webcore/Body.zig"
+      ]
+    },
+    "excluded": {
+      "missing_Content_Length": "False:28and77 explicitly declared, same header in paired controls.",
+      "Node_EOF_loss": "Contradicted:push(null),end,close and readableEnded were observed before cancellation in baseline and negative controls.",
+      "Effect_channel_drop": "collect and rawWeb completed28bytes; caller classification identifies Effect adapter for the source read.",
+      "signal_alone": "False:empty init{} also stalls while all initial signals are identical and un-aborted.",
+      "HWM_alone": "HWM0 reconstruction still stalled in V1.",
+      "body_reconsume": "One consumer per fresh request; repeated use of one stream was not the discriminator.",
+      "SQL_lock_or_domain_dispatch": "Baseline Versions stops at command.body before persistence.transaction; state remains0versions/0audit.",
+      "identity_provider_latency": "Strict minimal control has no provider; real local identity.prepare completed before the stalled body read."
+    },
+    "fix": {
+      "hang": "Retain74's single finalRequest created from URL/body/signal; avoid the Bun Request(existing,init) reconstruction. Keep incremental bounds and backpressure rather than buffering the whole body.",
+      "abort_gap": "Add Node.aborted to finalboundSignal and queued-error/close cleanup, as qualified by strict partialdisconnect with diagnostic error observer disabled.",
+      "minimal_delta_over74": "fix-proposal/abort-signal-delta.patch.txt",
+      "full_dependency_bundle": "fix-proposal/complete-C34.patch.txt",
+      "postimage": "34d74d6651031c5194db1d22c823baae60e9a260",
+      "producer": 74
+    },
+    "no_release_claim": [
+      "No upstream issue/patch was published.",
+      "No production branch was written by79.",
+      "Not a claim about every Bun version or every production journey."
+    ],
+    "GLOBAL_RELEASE": false
+  },
+  "sourceEnvelope": {
+    "schema": "sf2h.m79.delivery-envelope.v1",
+    "state": "TERMINAL_DELIVERED_SCOPED_PASS",
+    "recorded_at": "2026-11-15 04:34:51 UTC",
+    "branch": "http-post-diagnosis",
+    "pr": 89,
+    "target_branch": "sf2-stack",
+    "source_W": {
+      "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+      "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+    },
+    "qualified_V": {
+      "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+      "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+    },
+    "executed_S": {
+      "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+      "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+    },
+    "documentary_delivery_D1": {
+      "sha": "3c16967289520c36f3343b0159cedf47d850ce1b",
+      "tree": "96be2fd542449744c24cf36b0190e80cb9aedaa6"
+    },
+    "current_envelope": "D2: the commit containing this file. Its exact SHA/tree are supplied in PR89 and the final PR32 guard request after CAS; a file cannot embed its own commit hash.",
+    "parent": "3c16967289520c36f3343b0159cedf47d850ce1b",
+    "document_paths_changed": [
+      "CAUSE.json",
+      "HANDOFF-74-71.json",
+      "TERMINAL79.json",
+      "REVIEWS.json",
+      "checks/REQUEST-45.json",
+      "INDEX.md",
+      "DELIVERY-ENVELOPE.json"
+    ],
+    "code_and_tests": "Identical to W2; no source/test/config/proposal postimage change in D1 or D2.",
+    "qualified_product_installation": "34d74d6651031c5194db1d22c823baae60e9a260",
+    "executed_instrumented_installation": "40edd1ece604ef2b7c4120b9b93455c1b34223b2",
+    "verification": {
+      "D1_compare": "GitHub MCP compare W2...D1:15 receipts only; independent reviewer confirmed.",
+      "immutable_fixture": "request-reconstruction.test.ts remains6ae1250910a61c2d0b89e394ed3457630eeb2709",
+      "immutable_proposal": "installation.ts.postimage.txt remains34d74d6651031c5194db1d22c823baae60e9a260",
+      "D2_scope": "Only the seven declared own documentation files; code and qualified bytes are unchanged.",
+      "correction": "Source-description precision: URL/init path calls checkBodyStreamRef; one-argument Request returns through cloneInto earlier.",
+      "additional_product_tests": "NOT_RUN; no material code/test change and no repeated journey."
+    },
+    "functional": {
+      "run": 43675862594,
+      "job": 132695751973,
+      "cleanup_job": 132696240217,
+      "pass": 11,
+      "fail": 0,
+      "assertions": 333,
+      "duration_seconds": 2.97
+    },
+    "handoffs": {
+      "to74": {
+        "pr": 85,
+        "comment_id": 6889216421,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/85#issuecomment-6889216421",
+        "status": "POSTED_ACK_PENDING"
+      },
+      "to71": {
+        "pr": 65,
+        "comment_id": 6889219555,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889219555",
+        "status": "POSTED_ACK_PENDING"
+      }
+    },
+    "checks": {
+      "owner": 45,
+      "state": "REQUESTED_NOT_RUN",
+      "existing_request_comments": [
+        6888879352,
+        6889033103
+      ],
+      "delivery_guard": "Exact D2 commit to be pinned in the existing request conversation immediately after CAS; no execution receipt claimed."
+    },
+    "ownership": {
+      "transport": 74,
+      "integration": 71,
+      "compiler_guards": 45,
+      "diagnostics79": "TERMINAL_RELEASED"
+    },
+    "outstanding": [
+      {
+        "owner": 45,
+        "status": "REQUESTED_NOT_RUN",
+        "requirement": "modules/sucafina and apps/cli bun typecheck; root bun run check:guards --base origin/dev, exact source/config/dev/mergebase."
+      },
+      {
+        "owner": 74,
+        "status": "ACK_REQUESTED",
+        "requirement": "Adopt/reconcile the complete proposed unit in sole production writer branch."
+      },
+      {
+        "owner": 71,
+        "status": "ACK_REQUESTED",
+        "requirement": "Integrate exact candidate and issue composedC; source proof is not integrated acceptance."
+      },
+      {
+        "owner": "52/67/BI continuation",
+        "status": "NOT_RUN_BY79",
+        "requirement": "Resume actual user journeys after74adoption; this11testcomponentselection is not journey proof."
+      },
+      {
+        "owner": "S0",
+        "status": "REMAINING",
+        "requirement": "Final eightselections, AM evidence, reviews, C/G7 andD/G8 unchanged."
+      }
+    ],
+    "GLOBAL_RELEASE": false
+  },
+  "verifiedProof": {
+    "W": {
+      "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+      "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+    },
+    "V": {
+      "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+      "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+    },
+    "S": {
+      "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+      "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+    },
+    "run": {
+      "id": 43675862594,
+      "attempt": 1,
+      "head_sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "job": 132695751973,
+    "request": {
+      "blob": "79037f11e72df7573efd855a4c8b5f89517b884a",
+      "payload": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/installed-post-cause/probe.test.ts",
+          "./Sucafinav1/test/product/installed-post-cause/bridge-regression.test.ts",
+          "./Sucafinav1/test/product/installed-post-cause/request-reconstruction.test.ts",
+          "./Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+          "./Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+          "--timeout",
+          "18000"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        }
+      }
+    },
+    "unique_parent_and_only_request_delta": true,
+    "actual_full_job_log_read": true,
+    "result": {
+      "pass": 11,
+      "fail": 0,
+      "expects": 333,
+      "files": 5,
+      "seconds": 2.97
+    },
+    "qualification_scope": "Isolated instrumented overlay V2 only; source W/terminal without overlay is not passing material C. Actual source evidence, not C44 installed journey."
+  },
+  "proposal": {
+    "schema": "sf2h.m79.node-abort-signal-proposal.v1",
+    "state": "SCOPED_PASS_FOR_OWNER74_INTAKE",
+    "producer": "79 diagnostic artifact only",
+    "production_writer": "74",
+    "integrator": "71",
+    "source_commit": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+    "source_installation_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+    "target_C34": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "defect_evidence": {
+      "source": "Hosted Actions job132692476767, fetched and verified by root; initial patch author used root's run report.",
+      "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43674790650",
+      "job_id": "132692476767",
+      "reported_result": "4 pass / 1 fail,3.22s",
+      "positive_controls": [
+        "Exact74 POST28 returned200 in3ms",
+        "Versions77 returned200 in7ms,1version and2audit entries",
+        "30025-byte slow consumer with chunked and declared body passed",
+        "413 arrived before senderEOF"
+      ],
+      "remaining_failure": "Partial10/4096 disconnect produced Node aborted/error/close and reader rejection/release with postRead=0, but final Request.signal.aborted remainedfalse."
+    },
+    "delta": {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "preimage": {
+        "file": "installation.ts.preimage.txt",
+        "blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+        "sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
+        "bytes": 9786
+      },
+      "postimage": {
+        "file": "installation.ts.postimage.txt",
+        "blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+        "sha256": "f38d0b8a880dd540052f10639d8a41640480e2dbaa65327135cc8d4dbcd13a3f",
+        "bytes": 11483
+      },
+      "patch": {
+        "file": "abort-signal-delta.patch.txt",
+        "blob": "e1175fbc90f11429e97bf9d1efec536b8aefd83b",
+        "sha256": "4b798921a947513bcc7a8b31197de9d21231eb307d5c70197cb07b4f5e4f9a80",
+        "bytes": 7186
+      },
+      "behavior": [
+        "Attach a per-request Node aborted listener and compose its AbortController signal with the existing Effect signal before constructing the final Request.",
+        "The Web Request source path continues to compose its existing native signal.",
+        "Never turn Node end or close into cancellation; only aborted or an already aborted source forwards abort.",
+        "Attach a passive error guard before the aborted listener so reader cancellation cannot expose a queued Node error.",
+        "Actual close removes all own aborted/error/close listeners. Cleanup is idempotent and clears an outstanding Immediate.",
+        "If Node closed is alreadytrue, schedule one unref Immediate for cleanup; closed is set before queued error/close, so synchronous cleanup is unsafe.",
+        "A finally enclosing declared-length validation, stream construction and handling detaches the aborted listener on every return/throw, while the passive error/close guard survives only until actual close or the already-closed fallback."
+      ]
+    },
+    "preserved": [
+      "Exact74 NodeStream.fromReadable, closeOnDone:false, context-empty Web conversion and HWM0",
+      "Exact74 request-body helper bytes and all declared/incremental limits",
+      "Final Request identity after authentication binding; no extra Request construction",
+      "Binary upload routing, MaxBodySize, workbench65536, host/origin/forwarded fences, Microsoft bridge",
+      "No request/socket destroy calls and no synthetic EOF"
+    ],
+    "map": {
+      "destination": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+      "source_artifact_preimage": {
+        "file": "microsoft49-composition-74.preimage.json.txt",
+        "blob": "cd6a91c9f6fb11972220a11728300b6d7cdded6b",
+        "sha256": "c149a655d62ea1346dd3a74b7a9f0279f782503701a8b08cdbb9df98e22620f0",
+        "bytes": 2411
+      },
+      "destination_preimage_at_source74": null,
+      "postimage": {
+        "file": "microsoft49-composition-74.postimage.json.txt",
+        "blob": "6586b2f2ec475e6fe0e39648e5ac84ee60e83aaf",
+        "sha256": "88da8b2a1824ebd794b178b23ac7114b9a4444d61a691cb1ec24f3c7b69691bc",
+        "bytes": 2412
+      },
+      "delta": {
+        "file": "microsoft-map-delta.patch.txt",
+        "blob": "60c5dc1330fe267a5770a2be52cf565a445edb01",
+        "sha256": "3bbeba325714bf9c7b50e3f61cb6e8704b3068089f351c197cf224db2aa605f8",
+        "bytes": 1041
+      },
+      "changed_fields": [
+        "installation.ts postimage_blob",
+        "installation.ts postimage_sha256",
+        "installation.ts bytes"
+      ],
+      "precondition": "The delta applies only if the exact74 map has been materialized. complete-C34.patch.txt instead adds the new map because its canonical destination is absent on C34/source74. Historical map55 and source49 provenance remain unchanged."
+    },
+    "complete_unit": {
+      "patch": {
+        "file": "complete-C34.patch.txt",
+        "blob": "de0cb0cfeecf6e55efb6a902b241cb1318732976",
+        "sha256": "3e193bee830e87937c9b3dee7e8d2f3362a4ef304f54e2acc71e5c4c73eeb81d",
+        "bytes": 22339
+      },
+      "entries": [
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "preimage": {
+            "file": "installation.ts.C34.preimage.txt",
+            "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+            "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+            "bytes": 5315
+          },
+          "postimage": {
+            "file": "installation.ts.postimage.txt",
+            "blob": "34d74d6651031c5194db1d22c823baae60e9a260",
+            "sha256": "f38d0b8a880dd540052f10639d8a41640480e2dbaa65327135cc8d4dbcd13a3f",
+            "bytes": 11483
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+          "preimage": null,
+          "postimage": {
+            "file": "request-body.ts.unchanged.txt",
+            "blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+            "sha256": "ca824aaed4746dcfab581e14d67aacc3e3e513ba18fa1e8f35c3e835d367019c",
+            "bytes": 5077
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "preimage": {
+            "file": "http.ts.preimage.txt",
+            "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+            "sha256": "43148e811b8e23cd2cb2a2e6fcee5027362b893c4ecac68467e73960bb22bd82",
+            "bytes": 25541
+          },
+          "postimage": {
+            "file": "http.ts.postimage.txt",
+            "blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+            "sha256": "948b190b53a725c673ac9a57cdf587d20a3f0c2ec351db4af1fc46fd7dd6fab1",
+            "bytes": 25782
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+          "preimage": null,
+          "postimage": {
+            "file": "microsoft49-composition-74.postimage.json.txt",
+            "blob": "6586b2f2ec475e6fe0e39648e5ac84ee60e83aaf",
+            "sha256": "88da8b2a1824ebd794b178b23ac7114b9a4444d61a691cb1ec24f3c7b69691bc",
+            "bytes": 2412
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+          "preimage": {
+            "file": "integration-fixture.ts.preimage.txt",
+            "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+            "sha256": "020a65af381b94ded41ad516d08c8337a4a5d62ed9676a353136172e31907c1e",
+            "bytes": 3543
+          },
+          "postimage": {
+            "file": "integration-fixture.ts.postimage.txt",
+            "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+            "sha256": "6d8ba7820763c2461dccb118020352e11b05389a27fe8f322fcc6519b9e3594c",
+            "bytes": 3615
+          }
+        }
+      ],
+      "closure": "No additional production module imports or dependencies. Transport-only control needs installation+request-body. Full74 unit also requires http.ts; Microsoft composition needs map+fixture lookup. Separate owner-25mib proposal excluded."
+    },
+    "runtime_source_evidence": {
+      "Bun_commit": "0d9b296af33f2b851fcbf4df3e9ec89751734ba4",
+      "incoming": {
+        "path": "src/js/node/_http_incoming.ts",
+        "blob": "83de7a47c71e9bdfdc7cb2cdd3af7f947e88db22",
+        "lines": "297-343",
+        "fact": "IncomingMessage._destroy emits aborted before completing destruction."
+      },
+      "destroy": {
+        "path": "src/js/internal/streams/destroy.ts",
+        "blob": "b11e41161be313851aceb485178c191db040f8d1",
+        "lines": "78-139",
+        "fact": "onDestroy sets kClosed before scheduling emitErrorCloseNT; emitErrorCloseNT emits error before close."
+      },
+      "Effect_node": {
+        "path": "packages/platform-node-shared/src/NodeStream.ts",
+        "blob": "342eeabadb49aeb5a9025911ba67b43fa641b590",
+        "lines": "379-389",
+        "fact": "Scope finalization removes the adapter readable/error/end listeners."
+      }
+    },
+    "required_qualification": [
+      "Repeat the same S1 partial10/4096 disconnect oracle without the diagnostic error observer. Require finalRequest.signal.aborted=true, reader rejection/release and no postRead.",
+      "After actual close and two event-loop turns, require no own aborted/error/close guard listener and no pending cleanup Immediate.",
+      "Normal realEOF and successful responses must retain signal.aborted=false. Do not use close/end as cancellation.",
+      "Preserve POST28, real Versions77 persistence, slow/chunked EOF and413-before-EOF controls.",
+      "Exercise already closed/aborted sources or equivalent lifecycle control to show fallback cleanup is bounded and does not remove the error guard before queued error."
+    ],
+    "verification": {
+      "source_access": "GitHub MCP",
+      "artifact_operations": "Exact preimages, text patches, JSON metadata and hashes; product and compiler execution only through hosted Actions.",
+      "own_branch_scope": "Only79 fixture/receipt namespaces; production paths materialized exclusively in isolated validation overlays.",
+      "local_tests_or_compiler": "NOT_RUN",
+      "hosted_functional_result": "SCOPED_PASS; see functional_qualification",
+      "production_adoption": "NOT_APPLIED_BY79; owner74 retains sole authority",
+      "compiler_guards": "REQUESTED_NOT_RUN /45",
+      "release_claim": false
+    },
+    "source_delivery": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+    "source_blob_rechecked": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+    "functional_qualification": {
+      "W": {
+        "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+        "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+      },
+      "V": {
+        "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+        "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+      },
+      "S": {
+        "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+        "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+      },
+      "run": 43675862594,
+      "job": 132695751973,
+      "cleanup_job": 132696240217,
+      "pass": 11,
+      "fail": 0,
+      "assertions": 333,
+      "duration_seconds": 2.97,
+      "scope": "instrumented isolated validation overlay; proposed production bytes reduce exactly after removing only passive marks",
+      "compiler_guards": "REQUESTED_NOT_RUN / owner45",
+      "integration": "NOT_APPLIED / owner74 and71"
+    },
+    "GLOBAL_RELEASE": false,
+    "qualification_scope_note": "Disconnect regression observes actual aborted/error/close ordering, signal propagation and zero guard listeners without diagnostic error observation. The already-closed construction fallback was reviewed statically; no separate forced already-closed construction test is claimed."
+  },
+  "decision": {
+    "code": "HOLD_OWNER74_ADOPTION_REQUIRED",
+    "production_paths_applied": [],
+    "diagnostic_tests_copied": [],
+    "reason": "The explicit terminal handoff to71 requires74 adoption before product intake.74 ended at8fac547; no subsequent authorized release was present at the finite census. Own79 tests require instrumented entry/application/installation overlays and cannot become an unqualified stack snapshot.",
+    "next": "S0 reconcile and reopen74 or assign a production successor; adopt exact abort delta after code/negative-control review, derive a fresh current72/74 Microsoft map, release complete bounded unit to next authorized stack integrator."
+  },
+  "targetReconciliation": {
+    "installation_current": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+    "installation_proposed": "34d74d6651031c5194db1d22c823baae60e9a260",
+    "abort_delta_blob": "e1175fbc90f11429e97bf9d1efec536b8aefd83b",
+    "complete_C34_patch_blob": "de0cb0cfeecf6e55efb6a902b241cb1318732976",
+    "current_map": "764b7223c3842855764c6832826708ba9eccc2b0",
+    "source_map_old": "cd6a91c9f6fb11972220a11728300b6d7cdded6b",
+    "source_map_proposed": "6586b2f2ec475e6fe0e39648e5ac84ee60e83aaf",
+    "map_action": "Do not replace current map with stale source map or historical entry0591. Re-derive from current auth72+installation adoption; current fixture lookup6517 already names successor map."
+  },
+  "validation": "No request bound or dispatched on C44. Source request retained documentary-only, blocked until owner adoption/overlay reconciliation.",
+  "execution": {
+    "product_tests": 0,
+    "compiler": 0,
+    "guards": 0,
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false,
+  "previous_candidate_observation": {
+    "symbol": "C44",
+    "sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+    "material_delta": 0
+  },
+  "current_delta_reconciliation": "C45 changes only86application/newtests; installation8a62, map764b andfixture6517 remain exact. No source79proof is transferred to this changed application closure."
+}
+

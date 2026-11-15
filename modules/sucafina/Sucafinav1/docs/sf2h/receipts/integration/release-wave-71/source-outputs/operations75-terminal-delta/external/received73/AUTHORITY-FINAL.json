@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.procurement73.authority-final.v1",
+  "mission": 73,
+  "campaign": "sf2h-integral-20261112",
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "at": "2026-11-15T03:29:01.558Z",
+  "branch": "procurement-privacy-fix",
+  "lease_epoch": "procurement-privacy-browser73",
+  "lease_state": "ENDED",
+  "writer": "/root",
+  "source_model": {
+    "configured": "GPT-6 Astra Pro",
+    "provider_receipt": null,
+    "effective_model_verified": false
+  },
+  "session_id": null,
+  "base_sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "ack_sha": "6db479f1f72e6ed0419a65e55cc9fd8f7f8078a5",
+  "work_sha": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+  "work_tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+  "terminal_commit": "Containing commit, to be bound by verified branch readback and handoff comments",
+  "paths": [
+    "modules/sucafina/Sucafinav1/runtime/procurement.ts (visibility-before-public-response and numeric presentation only; nofinancialpolicy/stage changes)",
+    "modules/sucafina/Sucafinav1/runtime/application.ts (public visibility/error boundary only)",
+    "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/"
+  ],
+  "material_source_frozen": true,
+  "further_source_writes": "Require explicit new authority/lease; none planned.",
+  "successor": {
+    "target_writer": 71,
+    "ACK71": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "target_last_observed": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "source75_authority": "operations-finish-browser75; no write grant to runtime/procurement.ts"
+  },
+  "results": {
+    "source_selected_tests": "PASS",
+    "independent_source_review": "See reviews/INDEPENDENT-RECHECK.json",
+    "compiler_guards": "REQUESTED_NOT_RUN",
+    "integration": "NOT_DONE_BY_73"
+  },
+  "publication": {
+    "transport": "GitHub MCP Git data with exact expected_sha and force=false",
+    "product_tests": "Hosted Actions only",
+    "docs_commit": "Only new73 receipt files; no source/test material changes from W",
+    "readback": "Root must verify before terminal announcements"
+  },
+  "consumer_release": "CONSUMER-RELEASE.json",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,111 @@
+{
+  "schema": "mission75.final-R4-criteria-manifest.v1",
+  "status": "FINAL_DOCUMENTARY_CHECKPOINT_READY_FOR_ROOT75_PUBLICATION",
+  "publication": "Root75 only; this agent performs no remote writes or product execution.",
+  "candidate": {
+    "name": "C40",
+    "commit": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "tree": "b325894e636ae31db80886bb9ca2add1ce4ec126",
+    "qualification": "FIVE_ORIGINAL_OPERATIONS_CASES_ONLY"
+  },
+  "source_control_selection": {
+    "W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "S": "209c613895a2555ba7de8befc33f1bd41b263f62",
+    "run": 43672349552,
+    "pass": 7,
+    "expect_calls": 150
+  },
+  "browser_selection": {
+    "W": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "S": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+    "run": 43675784039,
+    "job": 132695512980,
+    "pass": 5,
+    "fail": 0,
+    "skip": 0,
+    "flaky": 0
+  },
+  "files": [
+    {
+      "path": "criteria/criterion-matrix75.final-R4.json",
+      "local_path": "/workspace/scratch/68b6bb3034b2/agent-operations/criteria75/criterion-matrix75.final-R4.json",
+      "bytes": 437488,
+      "sha256": "cf11770a4e39d73a6777300c636e60d39599bbdc1acf27a22b08bf785afe5807"
+    },
+    {
+      "path": "criteria/final-R4-source-observations.json",
+      "local_path": "/workspace/scratch/68b6bb3034b2/agent-operations/criteria75/final-R4-source-observations.json",
+      "bytes": 14557,
+      "sha256": "105cecf3dd8a347ca5982ba03ec6c4aca4f4098892b7fce2d3eeefbaf4ba3db4"
+    },
+    {
+      "path": "criteria/FINAL-R4-DOCUMENTARY-VALIDATION.json",
+      "local_path": "/workspace/scratch/68b6bb3034b2/agent-operations/criteria75/FINAL-R4-DOCUMENTARY-VALIDATION.json",
+      "bytes": 1293,
+      "sha256": "e28ed9a4d810c145b119cad52507ef2befe5749038e6f9d7420ae8c25325a98e"
+    },
+    {
+      "path": "criteria/CHECKPOINT-FINAL-R4.md",
+      "local_path": "/workspace/scratch/68b6bb3034b2/agent-operations/criteria75/CHECKPOINT-FINAL-R4.md",
+      "bytes": 6799,
+      "sha256": "9c59a1519903d01bcc61df23bf0ce5d46ec2ff3840f4e61d64a72f6fd836c62c"
+    }
+  ],
+  "input_checkpoint": {
+    "file": "criterion-matrix75.checkpoint-R3.json",
+    "sha256": "51731a60e4288370ab1ea7e85f13641d7c6055c837a5c7f56f825fea6017b0fd"
+  },
+  "R4_original_archive": {
+    "archive_target": "ci/R4/artifact.zip",
+    "artifact_id": 14146162056,
+    "bytes": 319886,
+    "sha256": "11fd4542d0a29a1841a0a640b7100cf04a340b0948db60a13139c262898a8d21",
+    "original_attachments_preserved_in_archive": true
+  },
+  "preservation": {
+    "criteria": 251,
+    "WP04": 111,
+    "WP06": 140,
+    "historical_failed_or_blocked_criteria_retained": 25,
+    "current_partial_witness_criteria": 28,
+    "current_not_run_criteria": 223,
+    "full_criteria_closed": 0,
+    "original_nominals": 5,
+    "baseline_gap_rows": 10,
+    "source_R3_controls_relabelled": false
+  },
+  "historical_gap_disposition": {
+    "resolved_only_in_recorded_scopes": 6,
+    "still_open": 4,
+    "all_ten_historical_records_retained": true
+  },
+  "additional_open_obligations": [
+    "UPLOAD_POST_SCAN_RACE",
+    "CHECKS45",
+    "terminal75 CI handoff at checkpoint cutoff",
+    "laterC41 qualification by71/S0",
+    "broad formats/C06/AM/native/human/eight+three/global acceptance"
+  ],
+  "later_HEAD": {
+    "name": "C41",
+    "sha": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
+    "parents": [
+      "eb58cd9e9f8125d879bff260d6d794264b9dc53a"
+    ],
+    "reported_unit": "Dashboard67",
+    "reported_changed_reachable_source": {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "post": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d"
+    },
+    "source_of_delta_description": "Root75 observed reconciliation; only commit/tree/parent independently read here.",
+    "qualification": "NOT_QUALIFIED_BY_R4",
+    "authority": "71/S0",
+    "rerun_performed": false,
+    "R4_pass_transferred": false
+  },
+  "narrow_claim": "Five unchanged original Operations journeys PASS on C40 with real ephemeral ClamD. Seven live/private controls PASS separately on W4/R3.28 partial witnesses;0 full WP criterion closures; no PASS transfer to C41.",
+  "GLOBAL_RELEASE": false,
+  "local_product_execution": false,
+  "remote_writes": false
+}

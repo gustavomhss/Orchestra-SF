@@ -1,0 +1,74 @@
+{
+  "schema": "sf2h.integration71.late-request-catalog-verification.v1",
+  "status": "PASS_DATA_ONLY",
+  "path": "review71/validation-source-requests.json",
+  "bytes": 997757,
+  "sha256": "ec4276b24352fe16a95d6bcdd684d148f4e52419e1622957f7c360e3446abc1f",
+  "git_blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a",
+  "totals": {
+    "source_missions": 17,
+    "executed_exact_envelopes": 60,
+    "eligible_bounded": 22,
+    "blocked_executed": 13,
+    "archived": 25,
+    "blocked_proposed": 5,
+    "eligible_proposed": 1,
+    "archived_proposed": 2,
+    "complete_checks45_documents": 17,
+    "mission71_dispatches": 0
+  },
+  "added_request_ids": [
+    "m75-R4",
+    "m80-R4",
+    "m86-R1"
+  ],
+  "added_material_mission": 86,
+  "historical57_exact_payloads_selections_source_results_unchanged": true,
+  "historical8_proposal_payloads_unchanged": true,
+  "historical16_checks_documents_unchanged": true,
+  "eligibility_changes": {
+    "m66-R1": "BLOCKED_PREREQUISITE to ELIGIBLE_BOUNDED_REBIND after86composedC45",
+    "m75-journeys-proposal": "BLOCKED_PREREQUISITE to ARCHIVE_EXECUTED_LATER at75R4C40"
+  },
+  "selection_relationships": [
+    {
+      "group": "export66-final-bounded-regressions",
+      "preferred_existing_request_id": "m66-R1",
+      "narrower_existing_request_id": "m66-R2",
+      "full_request_files": 8,
+      "narrower_request_files": 1,
+      "no_automatic_duplicate_dispatch": true,
+      "rule": "R2 is a strict file subset with the same runner/env/config. R3 preserved-source-drift is a separate file and must not be deduplicated against R1."
+    },
+    {
+      "group": "procurement73-egress86-final-regressions",
+      "preferred_existing_request_id": "m86-R1",
+      "narrower_existing_request_id": "m73-R1",
+      "full_request_files": 6,
+      "narrower_request_files": 4,
+      "no_automatic_duplicate_dispatch": true,
+      "rule": "86 publishes an unfiltered six-file envelope including all four73 files;73 historical -t selector and15filtered remain exact. Use86 complete recipe for complete legacy evidence."
+    },
+    {
+      "independent_of": "m66-R1",
+      "reason": "preserved-source-drift.test.ts is absent from R1; retain own exact request."
+    }
+  ],
+  "candidate_binding": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "sha": null,
+    "tree": null,
+    "owner": 71,
+    "status": "NOT_BOUND_NOT_RUN",
+    "source_proof_transferred": false,
+    "dispatch_authorized": false
+  },
+  "sourcePASS_transferred": false,
+  "product_execution": 0,
+  "builds": 0,
+  "typechecks": 0,
+  "guards": 0,
+  "CI_dispatches": 0,
+  "remote_writes": 0
+}

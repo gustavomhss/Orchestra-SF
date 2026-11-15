@@ -1,0 +1,781 @@
+{
+  "schema": "sf2h.integration71.documentary-archive-map.v1",
+  "material_candidate": {
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "sources": [
+    {
+      "mission": 75,
+      "base_archive": "source-outputs/operations75-W4",
+      "base_archive_tree": "7880b9a38084ed4ff61e3fd349719f80600e3675",
+      "base_files": 89,
+      "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a",
+      "terminal_receipt_tree": "1ba6acbcb1508909ff6a77d9b0a4280955c53653",
+      "terminal_files": 170,
+      "delta_archive": "source-outputs/operations75-terminal-delta",
+      "delta_files": 81,
+      "delta": [
+        {
+          "path": "AUTHORITY-FINAL.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "fceac026c3d0792f038703a5f73acd68bc2e6a09",
+          "size": 5331,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/fceac026c3d0792f038703a5f73acd68bc2e6a09"
+        },
+        {
+          "path": "AUTHORITY-MATERIAL-W4.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c97939487b2dc2b8da75496a0deff6aa7f5be8a6",
+          "size": 5642,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c97939487b2dc2b8da75496a0deff6aa7f5be8a6"
+        },
+        {
+          "path": "DELIVERY-MANIFEST.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b1cc8f3c5d61419ccc7c9d68ce83e1313040d261",
+          "size": 26652,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b1cc8f3c5d61419ccc7c9d68ce83e1313040d261"
+        },
+        {
+          "path": "HANDOFF-FINAL.md",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ed18325ae0ff64a71c3879739ad0e819ecac30b3",
+          "size": 10732,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ed18325ae0ff64a71c3879739ad0e819ecac30b3"
+        },
+        {
+          "path": "checks/REQUEST-45-C40.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "a5a59c7a4e2a6894108e59bf1e26c9bdfe251ff7",
+          "size": 1974,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a5a59c7a4e2a6894108e59bf1e26c9bdfe251ff7"
+        },
+        {
+          "path": "ci/EXECUTION-LEDGER.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "d3ffa536a808c64ca04bad591af05941a8b7acd7",
+          "size": 15555,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/d3ffa536a808c64ca04bad591af05941a8b7acd7"
+        },
+        {
+          "path": "ci/FINAL-QUEUE.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c7fd56e193c6045121b6368eeffa37a2fc069893",
+          "size": 437,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c7fd56e193c6045121b6368eeffa37a2fc069893"
+        },
+        {
+          "path": "ci/R4-result.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "7d7054e43ee731a68d04f596ac7f3cefdc785830",
+          "size": 19205,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7d7054e43ee731a68d04f596ac7f3cefdc785830"
+        },
+        {
+          "path": "ci/R4/actions-artifacts.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ed4afbbdf8e14d402b30ab7050ca8538fa20088c",
+          "size": 877,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ed4afbbdf8e14d402b30ab7050ca8538fa20088c"
+        },
+        {
+          "path": "ci/R4/actions-jobs.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "263d17372490c80e25743f8dfd35c947744386ed",
+          "size": 3274,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/263d17372490c80e25743f8dfd35c947744386ed"
+        },
+        {
+          "path": "ci/R4/actions-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "fd4244f5823d3590e0b7580b7f252ea37e4a2af7",
+          "size": 14179,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/fd4244f5823d3590e0b7580b7f252ea37e4a2af7"
+        },
+        {
+          "path": "ci/R4/artifact-index.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "6baf824654bfe7876e65d3cc028a6092b4cf0748",
+          "size": 17201,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6baf824654bfe7876e65d3cc028a6092b4cf0748"
+        },
+        {
+          "path": "ci/R4/artifact.zip",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "569d25b96becba442c8ae185a1d04c7d315ffd7b",
+          "size": 319886,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/569d25b96becba442c8ae185a1d04c7d315ffd7b"
+        },
+        {
+          "path": "ci/R4/document-read.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "efab34e1a10b9eedd682cf8feedb222c163beea7",
+          "size": 74609,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/efab34e1a10b9eedd682cf8feedb222c163beea7"
+        },
+        {
+          "path": "ci/R4/document-reader/CHECKLIST.md",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "3449faf79647b07e7feea7caee7c2bcc9dc6bebc",
+          "size": 9416,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3449faf79647b07e7feea7caee7c2bcc9dc6bebc"
+        },
+        {
+          "path": "ci/R4/document-reader/LOCK-PROVENANCE.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "a69c821a0cdc55a62e3d86e73f1a4592eea7074d",
+          "size": 1112,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a69c821a0cdc55a62e3d86e73f1a4592eea7074d"
+        },
+        {
+          "path": "ci/R4/document-reader/POLICY.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "0d9bda8f5c20bd5e46ec11c05c3bab94e9c0688b",
+          "size": 7044,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/0d9bda8f5c20bd5e46ec11c05c3bab94e9c0688b"
+        },
+        {
+          "path": "ci/R4/document-reader/read_journeys_artifact.py",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "55c7509d0dc02208c723f037a01a23f10e11dedb",
+          "size": 27329,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/55c7509d0dc02208c723f037a01a23f10e11dedb"
+        },
+        {
+          "path": "ci/R4/observed-summary.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4e22f69ddd94ec29d325be8c89aa1b7d6f503112",
+          "size": 12477,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4e22f69ddd94ec29d325be8c89aa1b7d6f503112"
+        },
+        {
+          "path": "ci/R4/playwright-selection.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "6b64fdd2a1a5f36bff2d489b401b26a73af15d42",
+          "size": 5549,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6b64fdd2a1a5f36bff2d489b401b26a73af15d42"
+        },
+        {
+          "path": "ci/R4/request.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "3657e3ff06cb32a0b3d0cb37d1bd321b6cf345ee",
+          "size": 2644,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3657e3ff06cb32a0b3d0cb37d1bd321b6cf345ee"
+        },
+        {
+          "path": "ci/R4/scanner/clamd-error-output.log",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ac7855f087b4566bbd73665cbda703000e48137f",
+          "size": 2506,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ac7855f087b4566bbd73665cbda703000e48137f"
+        },
+        {
+          "path": "ci/R4/scanner/clamd-error.conf.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "fafeb69c447b77e50b53ef9d213e1aaef05f33df",
+          "size": 775,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/fafeb69c447b77e50b53ef9d213e1aaef05f33df"
+        },
+        {
+          "path": "ci/R4/scanner/clamd-error.log",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "a0966c9b3b811b955238cca1fe92414ee1914ae6",
+          "size": 3299,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a0966c9b3b811b955238cca1fe92414ee1914ae6"
+        },
+        {
+          "path": "ci/R4/scanner/clamd-ldd.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "a06c801372f39b590a6526f3659f538ad527e7e5",
+          "size": 725,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a06c801372f39b590a6526f3659f538ad527e7e5"
+        },
+        {
+          "path": "ci/R4/scanner/clamd-main-output.log",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "562a28955b912b1fa99103821cbed77d479dbbb4",
+          "size": 2526,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/562a28955b912b1fa99103821cbed77d479dbbb4"
+        },
+        {
+          "path": "ci/R4/scanner/clamd-main.conf.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b91037a36b74c5228dc53bef3f8f32556076d029",
+          "size": 777,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b91037a36b74c5228dc53bef3f8f32556076d029"
+        },
+        {
+          "path": "ci/R4/scanner/clamd-main.log",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "60bb1a41a8c0c26b01a61afeba47c248f72ef837",
+          "size": 3319,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/60bb1a41a8c0c26b01a61afeba47c248f72ef837"
+        },
+        {
+          "path": "ci/R4/scanner/clamd-version.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ca90b0b7b01338b52b4483793d34e1431ed91ee2",
+          "size": 13,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ca90b0b7b01338b52b4483793d34e1431ed91ee2"
+        },
+        {
+          "path": "ci/R4/scanner/cleanup.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "8ec8589fc5a960bf3bc5d8ae5aa08966b8ff12de",
+          "size": 326,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8ec8589fc5a960bf3bc5d8ae5aa08966b8ff12de"
+        },
+        {
+          "path": "ci/R4/scanner/configuration.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4252a4fb83904c4d6b0fbbf1094e4e4ce8343cb8",
+          "size": 781,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4252a4fb83904c4d6b0fbbf1094e4e4ce8343cb8"
+        },
+        {
+          "path": "ci/R4/scanner/daemon-controls.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "854ae664967119c095b02c6c7c8190f1633b818f",
+          "size": 472,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/854ae664967119c095b02c6c7c8190f1633b818f"
+        },
+        {
+          "path": "ci/R4/scanner/databases.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4b2c984884125b2f74d2dc6f56d5c58d182059b7",
+          "size": 623,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4b2c984884125b2f74d2dc6f56d5c58d182059b7"
+        },
+        {
+          "path": "ci/R4/scanner/freshclam-ldd.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "a7ffa8a97649f780da51252ea27e219af60cc6b4",
+          "size": 943,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a7ffa8a97649f780da51252ea27e219af60cc6b4"
+        },
+        {
+          "path": "ci/R4/scanner/freshclam-output.log",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "e5c048686e3107e2d311f782bd05ad985bdb7eb2",
+          "size": 1279,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e5c048686e3107e2d311f782bd05ad985bdb7eb2"
+        },
+        {
+          "path": "ci/R4/scanner/freshclam-version.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ca90b0b7b01338b52b4483793d34e1431ed91ee2",
+          "size": 13,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ca90b0b7b01338b52b4483793d34e1431ed91ee2"
+        },
+        {
+          "path": "ci/R4/scanner/freshclam.conf.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ba1c9e919ec0a7cf18f4e79b934f1eb3d07eebcd",
+          "size": 480,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ba1c9e919ec0a7cf18f4e79b934f1eb3d07eebcd"
+        },
+        {
+          "path": "ci/R4/scanner/freshclam.log",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "68fa31ea1e9313549d13aaf2cad49292b00c9f91",
+          "size": 1346,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/68fa31ea1e9313549d13aaf2cad49292b00c9f91"
+        },
+        {
+          "path": "ci/R4/scanner/package-info.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "87a81602d8d5383baa2c9f13938ae85441e5c549",
+          "size": 399,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/87a81602d8d5383baa2c9f13938ae85441e5c549"
+        },
+        {
+          "path": "ci/R4/scanner/package-sha256.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "7f5887d75a1f526e4109c372d3e2b3bfb993daf9",
+          "size": 76,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/7f5887d75a1f526e4109c372d3e2b3bfb993daf9"
+        },
+        {
+          "path": "ci/R4/scanner/package.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "dfd019b5d8f062b112a4308d5b07ee4f73f38595",
+          "size": 776,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/dfd019b5d8f062b112a4308d5b07ee4f73f38595"
+        },
+        {
+          "path": "ci/R4/scanner/process-error.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "e57da07337621fdc979d90b158a9dde3b1812776",
+          "size": 382,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e57da07337621fdc979d90b158a9dde3b1812776"
+        },
+        {
+          "path": "ci/R4/scanner/process-main.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ee5deb35b6ec088a6f497726b2fbffd8c07482df",
+          "size": 381,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ee5deb35b6ec088a6f497726b2fbffd8c07482df"
+        },
+        {
+          "path": "ci/R4/scanner/service.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b159e1a2b921bb921b89e6dd7fb85e7c3e022c96",
+          "size": 866,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b159e1a2b921bb921b89e6dd7fb85e7c3e022c96"
+        },
+        {
+          "path": "ci/R4/scanner/setup.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "1d483a73b5b055f59d8b5415b1a6dc6bec9746fc",
+          "size": 835,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1d483a73b5b055f59d8b5415b1a6dc6bec9746fc"
+        },
+        {
+          "path": "ci/R4/scanner/tools.lock.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "8691f0161dab9bb9c976fbca66e87dfde701c778",
+          "size": 2276,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8691f0161dab9bb9c976fbca66e87dfde701c778"
+        },
+        {
+          "path": "ci/R4/scanner/version.conf",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "114c222cf399327e1a8b423057372899ad9ee8e8",
+          "size": 192,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/114c222cf399327e1a8b423057372899ad9ee8e8"
+        },
+        {
+          "path": "ci/R4/selection.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "e6ff3c86ff437cd1bc1cfe8cc348e712009f4876",
+          "size": 170,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e6ff3c86ff437cd1bc1cfe8cc348e712009f4876"
+        },
+        {
+          "path": "ci/R4/snapshot-request.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "6b6293029dbeb40406b192565fb344830ed6df5f",
+          "size": 580,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6b6293029dbeb40406b192565fb344830ed6df5f"
+        },
+        {
+          "path": "criteria/CHECKPOINT-FINAL-R4.md",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "335d05f4e158e09f7376fc3d6acf421a99bbd6c0",
+          "size": 6799,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/335d05f4e158e09f7376fc3d6acf421a99bbd6c0"
+        },
+        {
+          "path": "criteria/CHECKPOINT-R3-MANIFEST.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "3f0518375bfec504f89460c15f67a7a3e2ceeb7b",
+          "size": 1700,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3f0518375bfec504f89460c15f67a7a3e2ceeb7b"
+        },
+        {
+          "path": "criteria/CHECKPOINT-R3.md",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "04a0d3c6890608061e8cbf4b3faee1a9e86c529d",
+          "size": 7644,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/04a0d3c6890608061e8cbf4b3faee1a9e86c529d"
+        },
+        {
+          "path": "criteria/FINAL-R4-DOCUMENTARY-VALIDATION.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "969c5c3dac375b500c5b32cc5ca91b8520955c15",
+          "size": 1293,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/969c5c3dac375b500c5b32cc5ca91b8520955c15"
+        },
+        {
+          "path": "criteria/FINAL-R4-MANIFEST.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "8627f0f57637fe3e7671a26893405d383e95e6d7",
+          "size": 4249,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8627f0f57637fe3e7671a26893405d383e95e6d7"
+        },
+        {
+          "path": "criteria/TERMINAL-HANDOFF-SUPPLEMENT.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "a97692f8b5a8997c5aaf7f13c09b2fdace410f69",
+          "size": 925,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a97692f8b5a8997c5aaf7f13c09b2fdace410f69"
+        },
+        {
+          "path": "criteria/checkpoint-R3-source-observations.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "9e49d263214adb3fb6c4663bffbd4e87bad3c638",
+          "size": 21024,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/9e49d263214adb3fb6c4663bffbd4e87bad3c638"
+        },
+        {
+          "path": "criteria/criterion-matrix75.checkpoint-R3.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ae930b6eafe124c2fc5adf05a5b86f2bd0117ce6",
+          "size": 321682,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ae930b6eafe124c2fc5adf05a5b86f2bd0117ce6"
+        },
+        {
+          "path": "criteria/criterion-matrix75.final-R4.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "14141f3452ff2524a460fd34163e912c4f2e5a15",
+          "size": 437488,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/14141f3452ff2524a460fd34163e912c4f2e5a15"
+        },
+        {
+          "path": "criteria/final-R4-source-observations.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "8e14ad3e530814db17b27c1049b15692697b6c6b",
+          "size": 14557,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8e14ad3e530814db17b27c1049b15692697b6c6b"
+        },
+        {
+          "path": "criteria/host63-pre-intake-reconciliation.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ca827ea5a773792df1f786848ca49aa504fe2733",
+          "size": 3364,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ca827ea5a773792df1f786848ca49aa504fe2733"
+        },
+        {
+          "path": "external/received73/AUTHORITY-FINAL.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "12122c0a74191f0766ad464d7b11b4679922b63d",
+          "size": 2214,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/12122c0a74191f0766ad464d7b11b4679922b63d"
+        },
+        {
+          "path": "external/received73/CONSUMER-RELEASE.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "cf6df28afb9d22340e525c906342faea12d407dc",
+          "size": 5813,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/cf6df28afb9d22340e525c906342faea12d407dc"
+        },
+        {
+          "path": "external/received73/PRESENTATION-RELEASE.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "3d4f9c0a682ea181fdd7173379e2b19129a267d5",
+          "size": 2235,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3d4f9c0a682ea181fdd7173379e2b19129a267d5"
+        },
+        {
+          "path": "external/received73/SOURCE-MANIFEST.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b3bbc1823b915de6f5683ea93cb6f2ad2acb120e",
+          "size": 5032,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b3bbc1823b915de6f5683ea93cb6f2ad2acb120e"
+        },
+        {
+          "path": "external/received73/checks/R1.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c782e55a9d10c074ec8653d424509f4f9ce0e598",
+          "size": 6615,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c782e55a9d10c074ec8653d424509f4f9ce0e598"
+        },
+        {
+          "path": "integration/C40-readback39.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b3832bd17c5c0967dcf699d860237ea81b12bd4a",
+          "size": 12004,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b3832bd17c5c0967dcf699d860237ea81b12bd4a"
+        },
+        {
+          "path": "integration/DIRECT-REACHABILITY-C39-C40.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "899f319bda4539c41a72d6cca21c8d345b11c345",
+          "size": 5432,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/899f319bda4539c41a72d6cca21c8d345b11c345"
+        },
+        {
+          "path": "integration/EXPECTED-JOURNEYS-INPUTS.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "a60aeaa883575b392edfbdc0137465f7d6efd3f3",
+          "size": 6317,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a60aeaa883575b392edfbdc0137465f7d6efd3f3"
+        },
+        {
+          "path": "integration/POST-C40-HEAD.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "c30f7cfe0bf615eed8e4b113e35a7455fbd6c7fe",
+          "size": 58716,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/c30f7cfe0bf615eed8e4b113e35a7455fbd6c7fe"
+        },
+        {
+          "path": "integration/R4-QUEUE-DEDUP.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "51b180958fcdc331e218ccd968d13bc59b618c84",
+          "size": 471,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/51b180958fcdc331e218ccd968d13bc59b618c84"
+        },
+        {
+          "path": "integration/R4-S-READBACK.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "ee086395f41371f8b2350061ee8b8f2b0abbeb35",
+          "size": 16605,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/ee086395f41371f8b2350061ee8b8f2b0abbeb35"
+        },
+        {
+          "path": "integration/REACHABILITY-C35-C36.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "80f3ac53b60729f459f426d92d23892183ef5b90",
+          "size": 7622,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/80f3ac53b60729f459f426d92d23892183ef5b90"
+        },
+        {
+          "path": "integration/REACHABILITY-C37-C38.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "4482a79f3711bd84a8f5e5ce8c70ec816c7437e3",
+          "size": 8982,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/4482a79f3711bd84a8f5e5ce8c70ec816c7437e3"
+        },
+        {
+          "path": "integration/READY-JOURNEYS-D2.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "98ee5daa65faaf498a2e1b12ce21a8459810bb1f",
+          "size": 3748,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/98ee5daa65faaf498a2e1b12ce21a8459810bb1f"
+        },
+        {
+          "path": "integration/received71/C40-operations75.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "50ac7c434ac30595bb3a20068721f6cf72563c73",
+          "size": 9932,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/50ac7c434ac30595bb3a20068721f6cf72563c73"
+        },
+        {
+          "path": "integration/received71/review-operations75.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "1cbbfb939918629ac3a62e549c8cda0b2b2ace59",
+          "size": 15251,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/1cbbfb939918629ac3a62e549c8cda0b2b2ace59"
+        },
+        {
+          "path": "logs/R4.log.txt",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "e8bad7ee7ab3e514ad56de6139313f03bef7b76b",
+          "size": 95152,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e8bad7ee7ab3e514ad56de6139313f03bef7b76b"
+        },
+        {
+          "path": "reviews/R4-ARTIFACT-INDEX.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "68f3c25dc45a8c3891b6a179f260a4b4eca2e736",
+          "size": 9505,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/68f3c25dc45a8c3891b6a179f260a4b4eca2e736"
+        },
+        {
+          "path": "reviews/R4-SCANNER-REVIEW.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "b2397d48672c1253d44dcf8ab4bb9317fb018b19",
+          "size": 13055,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/b2397d48672c1253d44dcf8ab4bb9317fb018b19"
+        },
+        {
+          "path": "reviews/R4-journeys-C40-independent.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "867b641369e11fa8d81d9bd7f82fe3f665258dd5",
+          "size": 37124,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/867b641369e11fa8d81d9bd7f82fe3f665258dd5"
+        },
+        {
+          "path": "reviews/pre-journeys-D1.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "3d9593b77f0c86c5fbcf180dceb59ca5fd6f779d",
+          "size": 17321,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3d9593b77f0c86c5fbcf180dceb59ca5fd6f779d"
+        }
+      ],
+      "removed": [],
+      "explanation": "Delta is computed against the exact already archived89-file source subtree, including earlier release documents betweenW4 andc1 as well as the67terminal additions. Historical three c1 authority files remain separately archived unchanged."
+    },
+    {
+      "mission": 80,
+      "base_archive": "source-outputs/cost80",
+      "base_archive_tree": "0e7ae1eb3aea4275f1619f7f7fc874006d0e7729",
+      "terminal": "2fbf3a9b715bc76793cdff092d6b91b1f0de3190",
+      "terminal_receipt_tree": "b2d9824d6b46b7b7d395be57c025b9f29e7c5246",
+      "delta_archive": "source-outputs/cost80-terminal-delta",
+      "delta_files": 10,
+      "delta": [
+        {
+          "path": "CAUSALITY-ADDENDUM.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "6e685575fdf27747eecbb4cdfb6feca5fa16b677",
+          "size": 2338,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6e685575fdf27747eecbb4cdfb6feca5fa16b677"
+        },
+        {
+          "path": "CRITERIA.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "8b514503b2fc37e9dca29a689b07b88ed154039e",
+          "size": 14519,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/8b514503b2fc37e9dca29a689b07b88ed154039e"
+        },
+        {
+          "path": "IMPLEMENTATION.md",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "43ba0282c3ebca0aa2dd966dbc0018b25a6766d1",
+          "size": 7947,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/43ba0282c3ebca0aa2dd966dbc0018b25a6766d1"
+        },
+        {
+          "path": "PATCH-MANIFEST.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "13990dbd98075168ecc919b6ca6f003111244024",
+          "size": 7880,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/13990dbd98075168ecc919b6ca6f003111244024"
+        },
+        {
+          "path": "QUALIFICATION.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "74ced8ae2760831d18c47592cb2ff185bc1be08f",
+          "size": 7163,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/74ced8ae2760831d18c47592cb2ff185bc1be08f"
+        },
+        {
+          "path": "REVIEW80.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "f6082841552aeabf348b4e8fe10a48564be3230a",
+          "size": 2734,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f6082841552aeabf348b4e8fe10a48564be3230a"
+        },
+        {
+          "path": "TERMINAL80.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "6fae8f83726f368d172ef467a09d51a2bfd049b9",
+          "size": 5317,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/6fae8f83726f368d172ef467a09d51a2bfd049b9"
+        },
+        {
+          "path": "requests/R4.ci-run.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "a95f1a054d24a8ca3c84be991fe94cc1ab107ce2",
+          "size": 303,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/a95f1a054d24a8ca3c84be991fe94cc1ab107ce2"
+        },
+        {
+          "path": "runs/R4-tests.log",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "985de4515a1b091f71c4fecc2741c3b49a73e565",
+          "size": 5061,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/985de4515a1b091f71c4fecc2741c3b49a73e565"
+        },
+        {
+          "path": "runs/R4.json",
+          "mode": "100644",
+          "type": "blob",
+          "sha": "f16fb2f184db003f62ebc25ca1e534c0998db2d3",
+          "size": 3631,
+          "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/f16fb2f184db003f62ebc25ca1e534c0998db2d3"
+        }
+      ]
+    },
+    {
+      "mission": 79,
+      "terminal": "545201aa12e330360530727a96d7cb9cc678e2b9",
+      "archive": "source-outputs/diagnosis79",
+      "tree": "0ec5ae6be9a8ae2fff262f639c2298c18913b1b7",
+      "files": 69,
+      "material_changes": 0
+    },
+    {
+      "mission": 85,
+      "terminal": "307c074630105091b39c96d4b9a713cdf76364b0",
+      "archive": "source-outputs/auth85",
+      "tree": "f1466c7b2e85ac4e851cc5f2e11a6bef653cb611",
+      "files": 10,
+      "material_changes": 0
+    }
+  ],
+  "GLOBAL_RELEASE": false
+}
+

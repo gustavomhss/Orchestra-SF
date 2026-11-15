@@ -1,0 +1,407 @@
+{
+  "schema": "sf2h.integration71.final-documentary-review.v1",
+  "status": "READY_FOR_TERMINAL_DOCUMENTARY_CAS_NO_OPEN_DOCUMENTARY_BLOCKERS",
+  "reviewed_utc": "2026-11-15T05:02:25.310370+00:00",
+  "reviewer": "/root/review_operations_auth",
+  "review_independence_scope": "Delegated documentary consistency review; reviewer contributed source reviews/templates. Not an independent S0 FINAL campaign session.",
+  "candidate": {
+    "symbol": "C45",
+    "W": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+    "parent": "eecbdacb21734695094332deb6142aa35d5c9c3c"
+  },
+  "method": "Read finaldocuments/currenttemplates and immutableMCPGit trees; JSONdeep equality and filehashes only. No product/repo scripts or test/compiler/build/guard/preflight/CI execution.",
+  "checklist_items": [
+    {
+      "id": "authority",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "Predecessor60 explicitly ended;ACK71 beforeC29;onlyroot writer;45 checks/S0 acceptance. Terminal scope is documentary CAS and no subsequent stack writes."
+    },
+    {
+      "id": "candidate",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "All17serial candidates match rootpublication state; C45 W/tree exact; terminal commit intentionally externally bound afterCAS, not impossible selfhash."
+    },
+    {
+      "id": "releases",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "17complete material units explicitly released;75frozenmaterial historical followedby actualENDED;documentary79/84/85 andactive87/88/89/90 distinguished."
+    },
+    {
+      "id": "complete_material",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "Aggregate168paths48modified120new174serialapplications302hunks; patch1454681bytes and allpre/post/modes reflected in exact reconstruction receipt.75archive89+81=170;80archive21base+10delta (6 modified,4added) reconstructs25blobs."
+    },
+    {
+      "id": "closure",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "Current1095path inventory1093present,0requiredmissing;345inherited inputs reconciled;5profiles18skills retained. ActiveMicrosoft74map/fixture matches3currentpostimages and49lineage."
+    },
+    {
+      "id": "proof_scope",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "75fiveoriginalsPASS_LIMITED_C40,85focused120PASS_LIMITED_C38,86source50PASS; no finalC45 credit. R4of80 is counterfactual0PASS2FAIL, corrected in templates. All sourcefails/scopes retained."
+    },
+    {
+      "id": "checks45",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "15IDs/cwd/commands exactly equal60 and checklist; effectiveprogram remains45runtime gate;actualdev/mergebase must be freshly resolved. Static gatequeue only."
+    },
+    {
+      "id": "final_gates",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "Eightrecipes equal60;AM01-06,3fresh independentFINAL,C/G7,D/G8 open. Source70/84reviews never FINALapproval."
+    },
+    {
+      "id": "history",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "All26pending and16finding historicaltop-level values deeply equal60;56IDs/digests and38+3findings;0closure. H79/H85separate."
+    },
+    {
+      "id": "holds",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "C28Reports/P03/M31/MI07/financial/capture/native/map/policy preserved;EA66explicit86fix stillC45recheckpending;H85mismatchunchanged andH79adoptionrequired."
+    },
+    {
+      "id": "routing",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "70routes72/73/74 andconsumptionACKs present;later75/80/85ACKs and84C45request explicit.90active nativeonly;52/87/88/89no complete release;79produceradoptionHOLD."
+    },
+    {
+      "id": "terminal",
+      "status": "PASS_DOCUMENTARY_PREPUBLICATION",
+      "finding": "AUTHORITY ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS, parentC45; future writerneedsS0+freshACK. Onlyterminalreadback andfinalmetadata/commentsremain afterCAS. GLOBAL_RELEASEfalse."
+    }
+  ],
+  "documentary_checks": [
+    {
+      "check": "authorityC45",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "terminal lease explicitly ends by documentary CAS",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "exact candidate chain and ACK first",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "all17sourceunits acknowledged",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "late documentary ACKs and routed source70 present",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "late active owners not consumed",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "75 complete archive exact overlay",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "80 complete archive exact overlay",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "75 terminal lastcommit67 remains separate from archive81",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "75 final addendum equal reviewed complete source",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "79 no adopted material and currentC45 addition",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "85 currentC45 and scopedC38",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "80 R4 counterfactual no material",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "all56pending historical fields preserved",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "38historical plus3Auth70 preserved with no closures",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "3Auth70 fixes recheckpending andH79/H85 separate",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "corrected80 wording absent",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "queue fullhistorical60 equality",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "15A45commands exact",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "eight final recipes exact",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "all23request projections pins and no execution",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "gateG7G8AMFINALopen",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "inventory168exact1095planned0missing",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "Microsoft74active fixture and3postimages match",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "queue exact recorded bytes/blob/digest",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "inventory exact recorded bytes/blob/digest",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "catalog exact recorded bytes/blob/digest",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "documentary85 exact recorded bytes/blob/digest",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "completeaggregate hashes counts C45",
+      "pass": true,
+      "detail": null
+    },
+    {
+      "check": "17increments174applications168unique",
+      "pass": true,
+      "detail": null
+    }
+  ],
+  "open_blockers": [],
+  "resolved_corrections": [
+    {
+      "id": "D71-80-R4-SCOPE",
+      "source": "Own templates current next/required wording",
+      "old": "lateR4installed0PASS2FAIL",
+      "new": "lateR4contrafactual0PASS2FAIL; não candidato nem rollback aplicado",
+      "replacements": 4,
+      "historical60_changed": false,
+      "root_action": "Use corrected templatebytes/digests in terminalreceipts; final cost80 addendum andHANDOFF alreadyaccurate."
+    }
+  ],
+  "archive_recomposition": [
+    {
+      "mission": 75,
+      "base_blobs": 89,
+      "delta_blobs": 81,
+      "terminal_blobs": 170,
+      "exact_path_mode_blob_overlay": true,
+      "removed": []
+    },
+    {
+      "mission": 80,
+      "base_blobs": 21,
+      "delta_blobs": 10,
+      "terminal_blobs": 25,
+      "exact_path_mode_blob_overlay": true,
+      "removed": []
+    }
+  ],
+  "inputs": [
+    {
+      "path": "a71/final/AUTHORITY.json",
+      "bytes": 3602,
+      "sha256": "84a712761d825cde77a5e8d580de513d11aa6547eef481e35695fa46c7eed805",
+      "git_blob": "8578861cbb3c7a028802e90770a89578e2d2391d"
+    },
+    {
+      "path": "a71/final/HANDOFF.md",
+      "bytes": 8676,
+      "sha256": "ffd9fd5752fb9209e5e409a4d17a2a6e1c68482a6c644ba7112ad8c9100c6564",
+      "git_blob": "9d1f4b7169fe32f4fcb35429125fe644e080d54e"
+    },
+    {
+      "path": "a71/final/source-census-final.json",
+      "bytes": 16586,
+      "sha256": "450cd79a38c0af5b5d77b05803b0e54ce55c426356d0f6e8e8f3b8a1559b024b",
+      "git_blob": "ca5890ed5addf5924a572dd089fedb001729743b"
+    },
+    {
+      "path": "a71/final/consumer-acks-final.json",
+      "bytes": 3562,
+      "sha256": "162cbc21d43c45a65d0ef6ba6a8eccf2292a6dfbfeec9de9f1fe41499e8a0a71",
+      "git_blob": "875119e34afac6e3851d90cf65d7363b75ad7547"
+    },
+    {
+      "path": "a71/final/candidates-final.json",
+      "bytes": 7372,
+      "sha256": "c6597d3e2d02f0c906143c8d3e1c27af3f4c8792ca6459e3026e2182a082c8b0",
+      "git_blob": "5e5e2a4ee977d87f72cbd99a3744623b552947bc"
+    },
+    {
+      "path": "a71/final/documentary79-received.json",
+      "bytes": 26620,
+      "sha256": "2e8a42c1d1ae1fdc92298bebf78d44c73e859b5eef030396c964506970f3934a",
+      "git_blob": "c7e2f2690d1322e91b66d4f647373800dccfc3d6"
+    },
+    {
+      "path": "a71/final/documentary85-received.json",
+      "bytes": 20193,
+      "sha256": "2f6126bceba2d3a4d1df07b30dc966b45ca61ff8e2bac319e730dc348ad4d40d",
+      "git_blob": "79c7d1fffb2b70272f38767376cbd723854107af"
+    },
+    {
+      "path": "a71/final/operations75-terminal-addendum.json",
+      "bytes": 41109,
+      "sha256": "193934c30c80defbadc9b82166146e7e90cecb49888924b975b241a3be943294",
+      "git_blob": "8ebc7c2a6f52d3954a18cdd493ff68a0ab087356"
+    },
+    {
+      "path": "a71/final/cost80-terminal-addendum.json",
+      "bytes": 12738,
+      "sha256": "274d4318212eb2ce337957be9c94ff921a5fabfe9de7e311ca3c70e646e32c42",
+      "git_blob": "cd50c101aaf6c19ae3a38cd1353352e3e819473b"
+    },
+    {
+      "path": "a71/final/documentary-archive-map.json",
+      "bytes": 32466,
+      "sha256": "a8ff125ed2d05e71e688ba9a750346ff85d9c0230217770f0be753da228c929d",
+      "git_blob": "0c466a7f81fb83fe6ee9e6b1bef6ae4a7825e6bd"
+    },
+    {
+      "path": "review71/pending-owners-template.json",
+      "bytes": 803247,
+      "sha256": "1a949ecbd17c16539f1f167eba2354382258089045f9908761d72b977ef8a4db",
+      "git_blob": "c9f4ae6ca7a3c8b1934420a2449ed39e7eec5430"
+    },
+    {
+      "path": "review71/finding-routing-template.json",
+      "bytes": 665011,
+      "sha256": "1bc3d500e6eb92c4a61833afdd6529b2722c67a23dffa73a74c869a3ef45e07e",
+      "git_blob": "33a15aaf96fd5dc4f8cb31ffc17ee6a14ce8e275"
+    },
+    {
+      "path": "review71/historical-equality-verification.json",
+      "bytes": 21183,
+      "sha256": "25c103b4701d2b991b7abd640fc7840fb1eb6f420c152813a349a69d768e4789",
+      "git_blob": "be3f429fe679946e0f75b7bdbf0ef8d10a6473e2"
+    },
+    {
+      "path": "review71/gate-queue-final.json",
+      "bytes": 403005,
+      "sha256": "9abed1d866b01a97d17f373dcc4ff8cb8a566dc96cb5abae410904d992147e28",
+      "git_blob": "c43900843aa415d731a4597fb12ab12afbd64cad"
+    },
+    {
+      "path": "review71/current-input-inventory.json",
+      "bytes": 665145,
+      "sha256": "134ef237e24632cf54fd0b4e390b1a2ae849c074170eeab566636127af632b20",
+      "git_blob": "3faeca6593952cbddf29bda367bfb40ce8f66db1"
+    },
+    {
+      "path": "review71/current-input-inventory-summary.json",
+      "bytes": 3245,
+      "sha256": "53e905b7c9eaa1f6f1fdb62401dcbbec912fd766cddf20d2bedb541ff7b6ddf9",
+      "git_blob": "afc6852c9e55ccad6d6628f586bcde3551573ffd"
+    },
+    {
+      "path": "review71/gate-queue-integrity.json",
+      "bytes": 1962,
+      "sha256": "6d870cd77f54b6aaa200fa0cf3a52e325aef7d1e3970461ef7aae9e0abfcf714",
+      "git_blob": "24fc69b146091c8d9578041b1624f1b4e9ac0ca7"
+    },
+    {
+      "path": "review71/gate-authority-readback.json",
+      "bytes": 3485,
+      "sha256": "97674bd91222b8654056d7835a2cd90997180a8db1492d8a7621ad3e9613115c",
+      "git_blob": "687f9cc3710f0a4ffec31c8f8fd002de6fb0e374"
+    },
+    {
+      "path": "a71/aggregate-C45-manifest.json",
+      "bytes": 285926,
+      "sha256": "5f3cc66329d5aa8dee652d57b21a035813ddc824711eb30114e7916142fd318d",
+      "git_blob": "68abe1b3d5133888b91dcb0640ffcba382b5eaa6"
+    },
+    {
+      "path": "a71/aggregate-C45-verification.json",
+      "bytes": 97770,
+      "sha256": "d01cd41b4562c187f2728e5377485179eedd48158e37789eeab8bf8e56f20ee6",
+      "git_blob": "565979a1afe1dedf961cd583b5c013631d105e03"
+    },
+    {
+      "path": "a71/complete-material-C45.patch",
+      "bytes": 1454681,
+      "sha256": "a98ee4bc1d3e510bfb9b1c1190019ed76a46f3c5efa6ad8601d6b02fbfe28fe7",
+      "git_blob": "88d5bc3b0e0f1ec5e75c67c9990ebcda4fc128ac"
+    },
+    {
+      "path": "review71/final-documentary-archive-readbacks.json",
+      "bytes": 117771,
+      "sha256": "230fbf8ae2a5ee1d91bb11fe7644312dda795921ff36b803118857e706bcd985",
+      "git_blob": "6d9baf7a6a43f47ff5154d060f5b7aaa4975a9cc"
+    }
+  ],
+  "publication_steps_remaining": [
+    "Publish corrected templates under finalpending/findings paths and all linked gate/inventory/catalog/aggregate files. current-input-inventory.json alias must retain exact inventory bytes, as rootalreadyplanned.",
+    "Perform documentary-only expected-headCAS parentC45, then readback exactterminal SHA/tree and publish externally inPR65/45queue. No further materialcommit orCI."
+  ],
+  "functional_hold_policy": "Allfinalproductgates remainOPEN; no productPASS required to deliver integrationhandoff. Thisreview never grantsGLOBAL_RELEASE orchanges owners.",
+  "execution": {
+    "product_tests": 0,
+    "typechecks": 0,
+    "builds": 0,
+    "guards": 0,
+    "preflights": 0,
+    "CI_dispatches": 0,
+    "remote_writes": 0
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,904 @@
+{
+  "schema": "sf2h.integration71.dependency-closure-final.v1",
+  "mission": 71,
+  "status": "CURRENT_C45_INPUTS_RECONCILED_STATIC_ONLY_NOT_QUALIFIED",
+  "candidate": {
+    "symbol": "C45",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "complete_current_graph": {
+    "path": "validation-inputs-final.json",
+    "bytes": 665145,
+    "git_blob": "3faeca6593952cbddf29bda367bfb40ce8f66db1",
+    "sha256": "134ef237e24632cf54fd0b4e390b1a2ae849c074170eeab566636127af632b20"
+  },
+  "inventory_alias": "current-input-inventory.json",
+  "summary": {
+    "schema": "sf2h.mission71.current-input-inventory-summary.v1",
+    "candidate": {
+      "symbol": "C45",
+      "W": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+      "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+      "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+      "parent": "eecbdacb21734695094332deb6142aa35d5c9c3c"
+    },
+    "status": "STATIC_INPUT_IDENTITIES_RECONCILED_NOT_QUALIFIED",
+    "paths_planned": 1095,
+    "present": 1093,
+    "required_present": 1088,
+    "material_count": 168,
+    "material_exact": 168,
+    "required_missing": 0,
+    "protected_expected_absences": [
+      {
+        "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+        "exists": false,
+        "parentTree": "73085a5fae8baadbbf2192ff15bf38699a8c6087",
+        "missingAt": "apps/cli/src/sucafina-product/decision-case-http.ts",
+        "bases": [
+          "review67_protected_input"
+        ],
+        "required_present": false,
+        "disposition": "Protected owner52 unreleased exclusion, not an imported or required live dependency. Source67 closure marks HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE/candidateConsumed=false; C40 Git trees show absent. Preserve absence until independently released and reviewed."
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+        "exists": false,
+        "parentTree": "2e26443e88892eefbed988d447af7599cd362bf5",
+        "missingAt": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+        "bases": [
+          "review67_protected_input"
+        ],
+        "required_present": false,
+        "disposition": "Protected owner52 unreleased exclusion, not an imported or required live dependency. Source67 closure marks HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE/candidateConsumed=false; C40 Git trees show absent. Preserve absence until independently released and reviewed."
+      }
+    ],
+    "inherited60_retained_exact": 336,
+    "inherited60_changed_explained": 9,
+    "unexplained_observed_pins": 0,
+    "mode_counts": {
+      "100644": 1090,
+      "100755": 3
+    },
+    "guard_workflow_package_lock_count": 193,
+    "resident_profiles": 5,
+    "resident_skills": 18,
+    "Microsoft_atomic": "ATOMIC_STATIC_BINDING_MATCH",
+    "request_declarations": 68,
+    "catalog_totals": {
+      "source_missions": 17,
+      "executed_exact_envelopes": 60,
+      "eligible_bounded": 22,
+      "blocked_executed": 13,
+      "archived": 25,
+      "blocked_proposed": 5,
+      "eligible_proposed": 1,
+      "archived_proposed": 2,
+      "complete_checks45_documents": 17,
+      "mission71_dispatches": 0
+    },
+    "inventory": {
+      "path": "current-input-inventory.json",
+      "local_review_path": "review71/current-input-inventory.json",
+      "bytes": 665145,
+      "sha256": "134ef237e24632cf54fd0b4e390b1a2ae849c074170eeab566636127af632b20",
+      "git_blob": "3faeca6593952cbddf29bda367bfb40ce8f66db1"
+    },
+    "catalog": {
+      "path": "source-request-catalog-final.json",
+      "local_review_path": "review71/validation-source-requests.json",
+      "bytes": 997757,
+      "sha256": "ec4276b24352fe16a95d6bcdd684d148f4e52419e1622957f7c360e3446abc1f",
+      "git_blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a"
+    },
+    "execution": "STATIC_TEXT_AND_GIT_IDENTITY_ONLY; NO_PRODUCT_COMPILER_TEST_BUILD_GUARD_CI",
+    "GLOBAL_RELEASE": false
+  },
+  "predecessor60": {
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "source_blob": "4b0456690ed32e15eea476b3d2885687ec4afa5b",
+    "closure_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/dependency-closure-final.json",
+    "historical_snapshot_preserved_in": "historical-dependency-closure60.json"
+  },
+  "current_material": {
+    "manifest": {
+      "path": "material-manifest-final.json",
+      "bytes": 285926,
+      "git_blob": "68abe1b3d5133888b91dcb0640ffcba382b5eaa6",
+      "sha256": "5f3cc66329d5aa8dee652d57b21a035813ddc824711eb30114e7916142fd318d"
+    },
+    "verification": {
+      "path": "material-verification-final.json",
+      "bytes": 97770,
+      "git_blob": "565979a1afe1dedf961cd583b5c013631d105e03",
+      "sha256": "d01cd41b4562c187f2728e5377485179eedd48158e37789eeab8bf8e56f20ee6"
+    },
+    "patch": {
+      "path": "complete-material-C45.patch",
+      "bytes": 1454681,
+      "git_blob": "88d5bc3b0e0f1ec5e75c67c9990ebcda4fc128ac",
+      "sha256": "a98ee4bc1d3e510bfb9b1c1190019ed76a46f3c5efa6ad8601d6b02fbfe28fe7"
+    },
+    "counts": {
+      "unique_material_paths": 168,
+      "modified": 48,
+      "added": 120,
+      "deleted": 0,
+      "mode_changes": 0,
+      "source_missions": 17,
+      "serial_applications": 174,
+      "serial_overlap_paths": 6,
+      "hunks": 302,
+      "added_lines": 17954,
+      "deleted_lines": 323
+    },
+    "material_reconciliation": {
+      "expected_count": 168,
+      "exact_count": 168,
+      "mismatches": [],
+      "overlapping_units": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "source_missions": [
+            59,
+            72
+          ],
+          "series": [
+            {
+              "mission": 59,
+              "pre": "666259511ad459629ef52f48aca20b231b0dff4b",
+              "post": "a36440a750d5671a34c3ab41b2af48093af9f7ee"
+            },
+            {
+              "mission": 72,
+              "pre": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+              "post": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6"
+            }
+          ],
+          "actual_blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+          "actual_mode": "100644"
+        },
+        {
+          "path": "script/sf2h/operations-scanner/README.md",
+          "source_missions": [
+            63,
+            75
+          ],
+          "series": [
+            {
+              "mission": 63,
+              "pre": null,
+              "post": "1cca813f15c94cd397825a42c28ac9b9020212df"
+            },
+            {
+              "mission": 75,
+              "pre": "1cca813f15c94cd397825a42c28ac9b9020212df",
+              "post": "83f0cb7243387ca045e5a7db6367f5a579f01d2f"
+            }
+          ],
+          "actual_blob": "83f0cb7243387ca045e5a7db6367f5a579f01d2f",
+          "actual_mode": "100644"
+        },
+        {
+          "path": "script/sf2h/operations-scanner/service.mjs",
+          "source_missions": [
+            63,
+            75
+          ],
+          "series": [
+            {
+              "mission": 63,
+              "pre": null,
+              "post": "c6d3edbe33e014efae925aaa36ab36701bb7147d"
+            },
+            {
+              "mission": 75,
+              "pre": "c6d3edbe33e014efae925aaa36ab36701bb7147d",
+              "post": "f7618e0097b78679f8c34749e93474c8dc93641b"
+            }
+          ],
+          "actual_blob": "f7618e0097b78679f8c34749e93474c8dc93641b",
+          "actual_mode": "100644"
+        },
+        {
+          "path": "script/sf2h/operations-scanner/setup.sh",
+          "source_missions": [
+            63,
+            75
+          ],
+          "series": [
+            {
+              "mission": 63,
+              "pre": null,
+              "post": "66bd6df24499027328f22b598e50268023287071"
+            },
+            {
+              "mission": 75,
+              "pre": "66bd6df24499027328f22b598e50268023287071",
+              "post": "ab355db12fb384949f433f6d2d15445f3dcd2dfa"
+            }
+          ],
+          "actual_blob": "ab355db12fb384949f433f6d2d15445f3dcd2dfa",
+          "actual_mode": "100644"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "source_missions": [
+            73,
+            86
+          ],
+          "series": [
+            {
+              "mission": 73,
+              "pre": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+              "post": "81f469822a2756b3e1ca87effbf5fd865a56010d"
+            },
+            {
+              "mission": 86,
+              "pre": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+              "post": "a0deff8a3b272019f472aa2f93499d1940a78370"
+            }
+          ],
+          "actual_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+          "actual_mode": "100644"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+          "source_missions": [
+            72,
+            74
+          ],
+          "series": [
+            {
+              "mission": 72,
+              "pre": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+              "post": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb"
+            },
+            {
+              "mission": 74,
+              "pre": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb",
+              "post": "6517ff7b77fcb48bd0c471352d3906ddd43157f0"
+            }
+          ],
+          "actual_blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+          "actual_mode": "100644"
+        }
+      ]
+    }
+  },
+  "inherited60_reconciliation": {
+    "source": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "inventory_blob": "e3a4bdf1b55fbbd2d14d447117e2a5d05b6ef12c",
+    "count": 345,
+    "retained_exact": 336,
+    "changed": 9,
+    "all_changes_explained_by_material71": true,
+    "deltas": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "before": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "after": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          67
+        ],
+        "explained_by_material71": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+        "before": "8570e0cab2686986ad81b304e8e3aeaf154cb20a",
+        "after": "c6bdeb197675406c933046fb5ede19e92cc047e7",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          61
+        ],
+        "explained_by_material71": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+        "before": "d2158a10de3473edc5f5d509f3215e84140a8382",
+        "after": "910701c103aba2866258adf2f3c99fc0bca28b11",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          61
+        ],
+        "explained_by_material71": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "before": "5a0592e200e14fa801b1ed24150384070ea5298b",
+        "after": "a59f695365a71614f6189eb6f2c2737c83ba233d",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          61
+        ],
+        "explained_by_material71": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "before": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "after": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          59,
+          72
+        ],
+        "explained_by_material71": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+        "before": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+        "after": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          63
+        ],
+        "explained_by_material71": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+        "before": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+        "after": "c229bc6e85d2474d057a21859d0d88055100a078",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          63
+        ],
+        "explained_by_material71": true
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "before": "d60be2f87aa210c9700fba276932a6f443264e4f",
+        "after": "5cac657f5f9de9b6de9a9c63dc45c67886724b84",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          75
+        ],
+        "explained_by_material71": true
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "before": "2bb15622053039562aab716f9afce410071afaf3",
+        "after": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "mode_before": "100644",
+        "mode_after": "100644",
+        "source_missions": [
+          67
+        ],
+        "explained_by_material71": true
+      }
+    ],
+    "unexpected": []
+  },
+  "observational_pins": {
+    "nonmaterial_with_no_matching_observed_blob": [],
+    "source_qualification_transferred": false,
+    "interpretation": "Old source pins remain evidence of their exact source; target material changes are explicit above. A matching Git blob only establishes byte identity, not execution or installed product acceptance."
+  },
+  "Microsoft49_material_fixture_inputs": {
+    "status": "ATOMIC_STATIC_BINDING_MATCH",
+    "fixture": {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+      "mode": "100644"
+    },
+    "active_map": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+      "blob": "764b7223c3842855764c6832826708ba9eccc2b0",
+      "mode": "100644",
+      "target_base": "c3e9bd367fe04cab3f9e19e8bcb77fe951632839",
+      "composition_mission": 71
+    },
+    "mapped_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "map_postimage": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+        "actual_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+        "map_mode": "100644",
+        "actual_mode": "100644",
+        "target_match": true,
+        "source_postimage": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "source_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde",
+        "original49_lineage_match": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "map_postimage": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+        "actual_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+        "map_mode": "100644",
+        "actual_mode": "100644",
+        "target_match": true,
+        "source_postimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "source_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "original49_lineage_match": true
+      },
+      {
+        "path": "apps/cli/src/commands/handlers/serve.ts",
+        "map_postimage": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "actual_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "map_mode": "100644",
+        "actual_mode": "100644",
+        "target_match": true,
+        "source_postimage": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "source_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+        "original49_lineage_match": true
+      }
+    ],
+    "historical55_map_and49_manifest": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+        "expected": "302334c0e5a50c681005d6c6463132abce84d8b1",
+        "actual": "302334c0e5a50c681005d6c6463132abce84d8b1",
+        "same": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/mission49-installation-manifest.json",
+        "expected": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+        "actual": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+        "same": true
+      }
+    ],
+    "source_archive_inputs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-installation.postimage.txt",
+        "mode": "100644",
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "type": "blob",
+        "parent_tree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "bases": [
+          "review72_C37_tree_binding",
+          "review74_historical49_archive_files_verified"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-installation.preimage.txt",
+        "mode": "100644",
+        "blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "type": "blob",
+        "parent_tree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "bases": [
+          "review72_C37_tree_binding",
+          "review74_historical49_archive_files_verified"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-serve.postimage.txt",
+        "mode": "100644",
+        "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "type": "blob",
+        "parent_tree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "bases": [
+          "review72_C37_tree_binding",
+          "review74_historical49_archive_files_verified"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-serve.preimage.txt",
+        "mode": "100644",
+        "blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "type": "blob",
+        "parent_tree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "bases": [
+          "review72_C37_tree_binding",
+          "review74_historical49_archive_files_verified"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/local-entry.postimage.txt",
+        "mode": "100644",
+        "blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "type": "blob",
+        "parent_tree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "bases": [
+          "review72_C37_tree_binding",
+          "review74_historical49_archive_files_verified"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/local-entry.preimage.txt",
+        "mode": "100644",
+        "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "type": "blob",
+        "parent_tree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "bases": [
+          "review72_C37_tree_binding",
+          "review74_historical49_archive_files_verified"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/mission49-installation-manifest.json",
+        "mode": "100644",
+        "blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+        "type": "blob",
+        "parent_tree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "bases": [
+          "Microsoft49/55_functional_input",
+          "review72_C37_tree_binding",
+          "review74_dependency_inventory",
+          "review74_consumer"
+        ]
+      }
+    ],
+    "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+    "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+    "limitation": "Static map-to-target and preserved-source pins; the Microsoft functional fixture has not run on this candidate.",
+    "preserved_prior_mission71_maps": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json",
+        "mode": "100644",
+        "blob": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24"
+      }
+    ]
+  },
+  "guard_workflow_package_lock_inputs": {
+    "count": 193,
+    "entry_pointer": "validation-inputs-final.json#/guard_workflow_package_lock_inputs/entries",
+    "qualification": "Presence and exact bytes only; A45 retains check authority."
+  },
+  "resident_runtime_data": {
+    "count": 23,
+    "profiles": 5,
+    "skills": 18,
+    "entry_pointer": "validation-inputs-final.json#/resident_runtime_data/entries",
+    "qualification": "Static current pins. Declared content digests and original source loading receipts remain separate. This is not proof of39 route handlers, native integration or installed/live AM."
+  },
+  "protected_exclusions": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "exists": false,
+      "parentTree": "73085a5fae8baadbbf2192ff15bf38699a8c6087",
+      "missingAt": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "bases": [
+        "review67_protected_input"
+      ],
+      "required_present": false,
+      "disposition": "Protected owner52 unreleased exclusion, not an imported or required live dependency. Source67 closure marks HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE/candidateConsumed=false; C40 Git trees show absent. Preserve absence until independently released and reviewed."
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+      "exists": false,
+      "parentTree": "2e26443e88892eefbed988d447af7599cd362bf5",
+      "missingAt": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+      "bases": [
+        "review67_protected_input"
+      ],
+      "required_present": false,
+      "disposition": "Protected owner52 unreleased exclusion, not an imported or required live dependency. Source67 closure marks HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE/candidateConsumed=false; C40 Git trees show absent. Preserve absence until independently released and reviewed."
+    }
+  ],
+  "required_missing": [],
+  "unexpected_protected_paths_present": [],
+  "source_request_inputs": {
+    "catalog": {
+      "path": "source-request-catalog-final.json",
+      "bytes": 997757,
+      "git_blob": "ac6f53b9c7f34930fc1da584452ae86ec7ee4e9a",
+      "sha256": "ec4276b24352fe16a95d6bcdd684d148f4e52419e1622957f7c360e3446abc1f"
+    },
+    "entry_pointer": "validation-inputs-final.json#/source_request_inputs",
+    "gate_queue": {
+      "path": "gate-queue-final.json",
+      "bytes": 403005,
+      "git_blob": "c43900843aa415d731a4597fb12ab12afbd64cad",
+      "sha256": "9abed1d866b01a97d17f373dcc4ff8cb8a566dc96cb5abae410904d992147e28"
+    }
+  },
+  "complete_unit_review_index": {
+    "reviews": [
+      {
+        "path": "reviews/atlas69-dependency-readback.json",
+        "git_blob": "46580bc98482381029cc65da27e1ee98421aef9b"
+      },
+      {
+        "path": "reviews/atlas69.json",
+        "git_blob": "0bd4b14118996affb1fecdeaec57eae5253c618b"
+      },
+      {
+        "path": "reviews/auth72.json",
+        "git_blob": "1cccb4f6558cd395f80e8bc895c7f484b70225ec"
+      },
+      {
+        "path": "reviews/auth84-received.json",
+        "git_blob": "1d80ad71944bc6f14ad4ed46df5c796e49e3fd9b"
+      },
+      {
+        "path": "reviews/bi62.json",
+        "git_blob": "6886605fba4a67f2c986eac1476c8cdea5f9fcb5"
+      },
+      {
+        "path": "reviews/c12-65.json",
+        "git_blob": "f7058b53a6f89b0d6b0fa5036ddc61cd197a0b5c"
+      },
+      {
+        "path": "reviews/canonical-read76-C42-addendum.json",
+        "git_blob": "289de17014126fcfd6711c3004900e6833e6a2e4"
+      },
+      {
+        "path": "reviews/canonical-read76-C42-preimages.json",
+        "git_blob": "936a977402c106708ed597941041f3ed809d83b0"
+      },
+      {
+        "path": "reviews/canonical-read76-text-verification.json",
+        "git_blob": "a875b45e3992eaafe14f3d6a8f5236bd7d746644"
+      },
+      {
+        "path": "reviews/canonical-read76.json",
+        "git_blob": "c5d38ff61fd57f187c029fc13cf9067196a2b259"
+      },
+      {
+        "path": "reviews/cost80.json",
+        "git_blob": "c0fa45465414d7b76fbcc41fe94ee11778abcf3e"
+      },
+      {
+        "path": "reviews/dashboard67-tests-proof.json",
+        "git_blob": "2590bc04b761453d15043bdc5545fd22367f35ce"
+      },
+      {
+        "path": "reviews/dashboard67.json",
+        "git_blob": "e029ce0ccb9cca77eca56edeeccea1c549a2cb42"
+      },
+      {
+        "path": "reviews/export-egress86-text-verification.json",
+        "git_blob": "1a9c502642aa12d4a86289db2c822f4a6281e396"
+      },
+      {
+        "path": "reviews/export-egress86.json",
+        "git_blob": "3a4db3d52dbefa9746698c665d98c70c6952a2bd"
+      },
+      {
+        "path": "reviews/exports66.json",
+        "git_blob": "20213801e5424d956e1ec6a4ed11b1c34c21ea47"
+      },
+      {
+        "path": "reviews/http74-composition.json",
+        "git_blob": "f973a887eed57ca162d21a3e62ebd8bb45d9e079"
+      },
+      {
+        "path": "reviews/http74-text-verification.json",
+        "git_blob": "62bf7af63be4b171a84842d5e54733d30da484fd"
+      },
+      {
+        "path": "reviews/http74.json",
+        "git_blob": "85b9fad1bce1acc589d975fc35118f72aeffa951"
+      },
+      {
+        "path": "reviews/mixed61.json",
+        "git_blob": "71da1b6be04175dda11c1b197c65cc33736aaccd"
+      },
+      {
+        "path": "reviews/native64.json",
+        "git_blob": "8b10deec5afbb94a100b48b2299beae4b4c0c223"
+      },
+      {
+        "path": "reviews/operations63.json",
+        "git_blob": "ae1429069defbd4cb485d54d8c9163751f4b0014"
+      },
+      {
+        "path": "reviews/operations75.json",
+        "git_blob": "1cbbfb939918629ac3a62e549c8cda0b2b2ace59"
+      },
+      {
+        "path": "reviews/privacy73-static-verification.json",
+        "git_blob": "c248ab78f6fd14ef1bdce4a2c112800defe4b0f9"
+      },
+      {
+        "path": "reviews/privacy73.json",
+        "git_blob": "dac920c407a59f4b05c4bea86df22c21dcad1b67"
+      },
+      {
+        "path": "reviews/runtime59.json",
+        "git_blob": "b0fa5e3e0ef1e850a927b31b7fff634d55c6d3ae"
+      },
+      {
+        "path": "reviews/workbench68.json",
+        "git_blob": "47f9da772e40f2c710003479a641af4a2dda7794"
+      }
+    ],
+    "dependencies": [
+      {
+        "path": "dependencies/dashboard67-current.json",
+        "git_blob": "c0a54d1dc061f0132952c808af90c880ee1c33d8"
+      },
+      {
+        "path": "dependencies/export-egress86-current.json",
+        "git_blob": "dfe30d2875f3a5ef8cb32aa6de471d624a05cac3"
+      },
+      {
+        "path": "dependencies/export-egress86-imports.json",
+        "git_blob": "03d4a60483ff8797fda568531b9b2b0773e00f74"
+      }
+    ],
+    "readbacks": [
+      {
+        "path": "readbacks/C29.json",
+        "git_blob": "0aed602a1cf871dbb9f8469f1aad25999873014d"
+      },
+      {
+        "path": "readbacks/C30.json",
+        "git_blob": "2f060fd45a70dca16fdc672d09afe74b70708ecf"
+      },
+      {
+        "path": "readbacks/C31.json",
+        "git_blob": "f70482c9d980c99159709dc65c26155cd5626a73"
+      },
+      {
+        "path": "readbacks/C32.json",
+        "git_blob": "5acff3c819de9905e0a5f446701814284f860ff9"
+      },
+      {
+        "path": "readbacks/C33.json",
+        "git_blob": "8374891dda486fc16b13e36fc6aee54292f063c1"
+      },
+      {
+        "path": "readbacks/C34.json",
+        "git_blob": "5d3ed778861c63751dc2371d46d5edf6d8708803"
+      },
+      {
+        "path": "readbacks/C35.json",
+        "git_blob": "4cdd348fa37215add64b4bf4ef3fb1ba8940f42f"
+      },
+      {
+        "path": "readbacks/C36.json",
+        "git_blob": "a8bdaf0dcf9c291e1627541c624895591e54f6b0"
+      },
+      {
+        "path": "readbacks/C42-cost80.json",
+        "git_blob": "47f6bf68fef1c41ffbb9209628bb5112fca093c0"
+      },
+      {
+        "path": "readbacks/C43-canonical-read76.json",
+        "git_blob": "ec5db0a6c94e223043ac7a5638cb7f7cae47982a"
+      },
+      {
+        "path": "readbacks/C44-http74.json",
+        "git_blob": "746f8f516ea7a38a343834fa5c9e926a3f6001d7"
+      }
+    ],
+    "verification": [
+      {
+        "path": "verification/C37-readback.json",
+        "git_blob": "f06812f07cc0069768ed6ac078659db00625dd32"
+      },
+      {
+        "path": "verification/C38-auth72-hashes.json",
+        "git_blob": "1e9e6924288f9dc5e09d78a3843be78c8f21a24a"
+      },
+      {
+        "path": "verification/C38-readback.json",
+        "git_blob": "b0e99e2a53d0fc997613745a0ec08ef21b825f4e"
+      },
+      {
+        "path": "verification/C39-readback.json",
+        "git_blob": "73b2b4daf3c5369af6170bc89011384dd0d229ab"
+      },
+      {
+        "path": "verification/C40-readback.json",
+        "git_blob": "817707c276e8ce6b22d8c4f2ee82d41279615cda"
+      },
+      {
+        "path": "verification/C41-dashboard67-hashes.json",
+        "git_blob": "a88e687e142e87febb98c0a6646ec687171226f9"
+      },
+      {
+        "path": "verification/C41-dashboard67-modes.json",
+        "git_blob": "21494b41f4f07914d9aa48ecdc84ecc2ae70c099"
+      },
+      {
+        "path": "verification/C41-readback.json",
+        "git_blob": "788572177e01555956bc9da5e31445ae5bfc5a27"
+      },
+      {
+        "path": "verification/C42-cost80-hashes.json",
+        "git_blob": "ad3f67fba8fa6824cdb7154919f27f5c37e3ed73"
+      },
+      {
+        "path": "verification/C42-cost80-preimage-mode.json",
+        "git_blob": "de5db4338dab03ce8ecb6f97cd9097693a792db3"
+      }
+    ]
+  },
+  "latest_readback": "readbacks/C45-export-egress86.json",
+  "shared_seams": [
+    {
+      "unit": "59 to72",
+      "disposition": "LocalStore serial preimage reconciliation preserves readonly reads and stronger auth/maintenance boundaries. Source85 readonly proof is limited toC38; finalC45 remains unexecuted.",
+      "evidence": [
+        "reviews/runtime59.json",
+        "reviews/auth72.json",
+        "documentary85-received.json"
+      ]
+    },
+    {
+      "unit": "64",
+      "disposition": "Complete six-file native unit including inert minimum host-context; no live Permission/Task/Schedule/origin/policy claim.",
+      "evidence": [
+        "reviews/native64.json"
+      ]
+    },
+    {
+      "unit": "62 and80",
+      "disposition": "Seventeen own62 paths plus three explicitly accepted complete consumers; later cost80 seven-file unit composed with preserved financial HOLD and original failure history. No permissive test fixture or counterfactual rollback imported.",
+      "evidence": [
+        "reviews/bi62.json",
+        "reviews/cost80.json",
+        "cost80-terminal-addendum.json"
+      ]
+    },
+    {
+      "unit": "67",
+      "disposition": "Corrected full preimages applied, current dependencies checked; unqualified52/first-save proposals remain excluded.",
+      "evidence": [
+        "reviews/dashboard67.json",
+        "dependencies/dashboard67-current.json"
+      ]
+    },
+    {
+      "unit": "75",
+      "disposition": "Frozen W4 nine-file material explicitly released and composed C40. Later terminal documentary intake does not reapply material; five original Operations proof belongs toC40.",
+      "evidence": [
+        "reviews/operations75.json",
+        "operations75-terminal-addendum.json"
+      ]
+    },
+    {
+      "unit": "76",
+      "disposition": "Canonical read seven-file unit reconciled overC42 including actual result-store preimage; originalP03 failure and72assertions/180000ms unchanged.",
+      "evidence": [
+        "reviews/canonical-read76.json",
+        "reviews/canonical-read76-C42-addendum.json"
+      ]
+    },
+    {
+      "unit": "74",
+      "disposition": "Ten released paths plus current Microsoft map/fixture atomic composition on entry72. Original49 archives/maps55/72 preserved. Proposed25MiB policy and source79 abort patch not adopted.",
+      "evidence": [
+        "reviews/http74.json",
+        "reviews/http74-composition.json",
+        "documentary79-received.json"
+      ]
+    },
+    {
+      "unit": "86",
+      "disposition": "Five-path released unit verified completely: four deltas plus already-present legacy oracle. Application and new egress tests preserve current59/72/75/66 dependency drifts. Source50PASS is not C45 evidence.",
+      "evidence": [
+        "reviews/export-egress86.json",
+        "dependencies/export-egress86-current.json",
+        "dependencies/export-egress86-imports.json"
+      ]
+    }
+  ],
+  "consumer_disposition": {
+    "A45": "Owns generation/compiler/effectiveE2Eprogram/bundle/admission/spawn/guards and eventual execution; exact15commands and required receipts in gate-queue-final.json. Resolve actualdev and merge-base in runner.",
+    "S0": "Owns eight final selections, AM01-AM06, three independent FINAL reviews,C/G7,D/G8 and acceptance. GLOBAL_RELEASE remainsfalse.",
+    "Auth70": "Corrections72/73/74 composed; all FIX_COMPOSED_RECHECK_PENDING.84 asked to reviewC45.",
+    "H85_ROUTE_MISMATCH": "403expected/404observed in microsoft-routes remainsopen; authorized continuation73/86 to reconcile contract and unexecuted409controls before oracle changes.",
+    "H79_ABORT": "Diagnostic proposal received only. S0 must reactivate74 or assignsuccessor; owner adoption and fresh Microsoftmap derivation required.",
+    "Active_sources": "52/81/87/88/89/90 are excluded unless a future authorized writer obtains complete explicit release and reconciles current inputs. No authority seized by silence."
+  },
+  "limits": [
+    "No --showConfig, --listFiles, compiler, typecheck, test, guard, build or workflow was executed by mission71.",
+    "Historical source W/S/run results remain bounded to their exact original inputs. Source PASS is not composed or installed PASS.",
+    "C28 HOLDs, P03 FAIL/HELD, native/live AM, eight installed journeys, three FINAL sessions and S0 acceptance remain under their existing authorities.",
+    "Later material or configuration changes require another candidate/tree binding and current input inventory. A later docs-only terminal commit may use this exact material candidate only with an explicit complete-docs-only comparison."
+  ],
+  "execution": {
+    "method": "Text/JSON/Git object identity only",
+    "product_tests": 0,
+    "typechecks": 0,
+    "builds": 0,
+    "guards": 0,
+    "preflights": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "workflow_ref_moves": 0
+  },
+  "GLOBAL_RELEASE": false
+}

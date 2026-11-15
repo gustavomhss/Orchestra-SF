@@ -1,0 +1,102 @@
+{
+  "schema": "sf2h.m79.handoff.v1",
+  "mission": 79,
+  "state": "TERMINAL_HANDOFF_DELIVERED_SCOPED_PASS",
+  "recorded_at": "2026-11-15 04:34:51 UTC",
+  "branch": "http-post-diagnosis",
+  "pr": 89,
+  "base_C34": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+  "lease_epoch": "http-post-cause-browser79",
+  "source_W": {
+    "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+    "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+  },
+  "qualified_V": {
+    "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+    "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+  },
+  "executed_S": {
+    "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+    "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+  },
+  "run": 43675862594,
+  "job": 132695751973,
+  "cleanup_job": 132696240217,
+  "authority": {
+    "producer_transport": 74,
+    "stack_integrator": 71,
+    "checks": 45,
+    "source79": "fixtures and receipts only",
+    "own_writer_terminal": "Implementation authority79 ended; complete diagnostic and proposal unit released to74/71. No further implementation writes or runs planned; ACK and adoption remain pending."
+  },
+  "delivery": {
+    "cause": "CAUSE.json",
+    "results": "evidence/V2-RESULTS.json",
+    "source_proposal": "fix-proposal/MANIFEST.json",
+    "complete_patch": "fix-proposal/complete-C34.patch.txt",
+    "delta_against_74": "fix-proposal/abort-signal-delta.patch.txt",
+    "map_delta": "fix-proposal/microsoft-map-delta.patch.txt",
+    "overlay": "VALIDATION-V2.json",
+    "checks": "checks/REQUEST-45.json"
+  },
+  "intake": {
+    "to74": "CAS against installation blob8a62 after rechecking current head; adopt qualified abort delta in your own branch and preserve the existing single final Request. Materialize/update active Microsoft map with proposed34d74d hashes, not debug40edd bytes. Do not adopt speculative data/end adapter.",
+    "to71": "Consume only74-owned adopted production change and complete dependency closure;79PR contains diagnostic fixtures/receipts only. Observed target e87e22d163924635bf0b41785c9bc80bf780ac0a still has C34 installation21236af8. Recheck exact preimages before integration. Own diagnostic fixtures require the declared instrumentation overlay; no claim that uninstrumented W alone is the passing V.",
+    "after_adoption": "45 runs compiler/guards on exact composed candidate;52/67/BI consumer owners resume interrupted journals. No unchanged180s retry was run by79."
+  },
+  "remaining": [
+    {
+      "owner": 45,
+      "status": "REQUESTED_NOT_RUN",
+      "requirement": "modules/sucafina and apps/cli bun typecheck; root bun run check:guards --base origin/dev, exact source/config/dev/mergebase."
+    },
+    {
+      "owner": 74,
+      "status": "ACK_REQUESTED",
+      "requirement": "Adopt/reconcile the complete proposed unit in sole production writer branch."
+    },
+    {
+      "owner": 71,
+      "status": "ACK_REQUESTED",
+      "requirement": "Integrate exact candidate and issue composedC; source proof is not integrated acceptance."
+    },
+    {
+      "owner": "52/67/BI continuation",
+      "status": "NOT_RUN_BY79",
+      "requirement": "Resume actual user journeys after74adoption; this11testcomponentselection is not journey proof."
+    },
+    {
+      "owner": "S0",
+      "status": "REMAINING",
+      "requirement": "Final eightselections, AM evidence, reviews, C/G7 andD/G8 unchanged."
+    }
+  ],
+  "preserved_campaign": {
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "work_packages": 15,
+    "tasks": 74,
+    "criteria": 1610
+  },
+  "GLOBAL_RELEASE": false,
+  "target_observed": {
+    "sha": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "installation_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "observation": "Immutable head from PR89 metadata; installation fetched at that exact SHA. The shared target may advance."
+  },
+  "repo_handoffs": {
+    "to74": {
+      "pr": 85,
+      "comment_id": 6889216421,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/85#issuecomment-6889216421",
+      "status": "POSTED_ACK_PENDING"
+    },
+    "to71": {
+      "pr": 65,
+      "comment_id": 6889219555,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889219555",
+      "status": "POSTED_ACK_PENDING"
+    }
+  },
+  "delivery_envelope": "DELIVERY-ENVELOPE.json"
+}

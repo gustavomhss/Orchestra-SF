@@ -1,0 +1,343 @@
+{
+  "schema": "operations75.R4-scanner-evidence-review.v1",
+  "status": "PASS_DOCUMENTARY_SCANNER_REVIEW",
+  "scope": "Independent reading/hashing of actual R4 documents; no product, browser, daemon or CI execution and no remote writes",
+  "binding": {
+    "work": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "snapshot": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+    "run": "43675784039",
+    "job": "132695512980",
+    "attempt": "1"
+  },
+  "source_freeze": {
+    "name": "D3",
+    "modified_by_this_review": false
+  },
+  "setup": {
+    "root": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr",
+    "started_at": "2026-11-15T04:14:54.509Z",
+    "ready_at": "2026-11-15T04:15:15.515Z",
+    "elapsed_seconds": 21.006,
+    "status": "READY",
+    "synthetic_database": false,
+    "global_installation": false,
+    "credentials_used": false,
+    "clamd_version": "ClamAV 1.5.4",
+    "freshclam_version": "ClamAV 1.5.4",
+    "scope_note": "setup.productQualification=NOT_RUN describes provisioning before product execution; runtime JSON separately records five successful journeys."
+  },
+  "package": {
+    "source": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+    "expected": {
+      "name": "clamav-1.5.4.linux.x86_64.deb",
+      "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+      "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+      "size": 105819396,
+      "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+      "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
+    },
+    "actual": {
+      "bytes": 105819396,
+      "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886"
+    }
+  },
+  "signatures": {
+    "origin": "database.clamav.net",
+    "freshclam_database_tests_passed": 3,
+    "TestDatabases": true,
+    "OfficialDatabaseOnly": true,
+    "files": [
+      {
+        "name": "bytecode.cvd",
+        "bytes": 281702,
+        "sha256": "6d4aa01f219e988060fc419f495d07f27e0cdf1a2cccc065971da922c76f7ffb",
+        "version": 339,
+        "signature_count_from_CVD_metadata": 80,
+        "functionality_level": 90,
+        "builder": "nrandolp",
+        "database_test": "PASS"
+      },
+      {
+        "name": "daily.cvd",
+        "bytes": 23450445,
+        "sha256": "a99edfb87ac6246137214caa2b3f238297e02f376954f64096392d4b1e773731",
+        "version": 28183,
+        "signature_count_from_CVD_metadata": 355871,
+        "functionality_level": 90,
+        "builder": "svc.clamav-publisher",
+        "database_test": "PASS"
+      },
+      {
+        "name": "main.cvd",
+        "bytes": 89072577,
+        "sha256": "0b2182d229f46981ec8f535382222f7c9dfdd656b250ad47988b910a8d302365",
+        "version": 63,
+        "signature_count_from_CVD_metadata": 3287027,
+        "functionality_level": 90,
+        "builder": "tomjudge",
+        "database_test": "PASS"
+      }
+    ],
+    "count_note": "CVD metadata counts and loaded engine signature count are separate observations; no arithmetic equality is asserted.",
+    "raw_database_bytes_in_artifact": false
+  },
+  "processes": [
+    {
+      "kind": "main",
+      "host": "127.0.0.1",
+      "port": 3310,
+      "pid": 5148,
+      "start_time": "13712",
+      "listen_inode": "25612",
+      "wire_version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+      "ping": "PONG",
+      "loaded_signature_count": 3628275,
+      "official_signatures_only_log": true,
+      "bytecode_security_mode": "TrustSigned",
+      "clean_INSTREAM_responses_in_log": 4,
+      "EICAR_detections_in_log": 1,
+      "size_limit_warnings_in_log": 0,
+      "cleanup": {
+        "kind": "main",
+        "pid": 5148,
+        "startTime": "13712",
+        "status": "STOPPED"
+      },
+      "normal_stop_in_log": true
+    },
+    {
+      "kind": "error",
+      "host": "127.0.0.1",
+      "port": 3311,
+      "pid": 5156,
+      "start_time": "13725",
+      "listen_inode": "23949",
+      "wire_version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+      "ping": "PONG",
+      "loaded_signature_count": 3628275,
+      "official_signatures_only_log": true,
+      "bytecode_security_mode": "TrustSigned",
+      "clean_INSTREAM_responses_in_log": 2,
+      "EICAR_detections_in_log": 1,
+      "size_limit_warnings_in_log": 1,
+      "cleanup": {
+        "kind": "error",
+        "pid": 5156,
+        "startTime": "13725",
+        "status": "STOPPED"
+      },
+      "normal_stop_in_log": true
+    }
+  ],
+  "daemon_controls": {
+    "scope": "Direct ClamD provisioning controls, not the product adapter or browser journeys",
+    "controls": [
+      {
+        "kind": "main",
+        "clean": "stream: OK",
+        "eicar": "stream: Eicar-Test-Signature FOUND",
+        "cleanAfter": "stream: OK"
+      },
+      {
+        "kind": "error",
+        "clean": "stream: OK",
+        "eicar": "stream: Eicar-Test-Signature FOUND",
+        "cleanAfter": "stream: OK"
+      }
+    ],
+    "sizeError": "INSTREAM size limit exceeded. ERROR"
+  },
+  "cleanup": {
+    "at": "2026-11-15T04:16:56.841Z",
+    "results": [
+      {
+        "kind": "main",
+        "pid": 5148,
+        "startTime": "13712",
+        "status": "STOPPED"
+      },
+      {
+        "kind": "error",
+        "pid": 5156,
+        "startTime": "13725",
+        "status": "STOPPED"
+      }
+    ],
+    "state": "STOPPED",
+    "evidencePreserved": true
+  },
+  "config_hashes": [
+    {
+      "path": "freshclam.conf",
+      "sha256": "94f30a856b938d9c66a480ccbb5af9bd70a495b3e67fc637f01543bed34e386d",
+      "bytes_match_receipt": true
+    },
+    {
+      "path": "clamd-main.conf",
+      "sha256": "3094d0905c8ebc9c61f37030e81bbd02b170731a66c939afc079448c4e372bc8",
+      "bytes_match_receipt": true
+    },
+    {
+      "path": "clamd-error.conf",
+      "sha256": "aaa9fd1e7f76d5d094dfcdc9a634785a90c69c8fdec0a95ba4b969659210f96f",
+      "bytes_match_receipt": true
+    }
+  ],
+  "lock_provenance": {
+    "source": {
+      "git_blob": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+      "bytes": 2172,
+      "sha256": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6",
+      "matches_request_integrity": true
+    },
+    "artifact": {
+      "bytes": 2276,
+      "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929",
+      "serialization": "JSON.stringify(JSON.parse(source), null, 2) plus newline"
+    },
+    "semantic_identity": true,
+    "source_hash_is_not_artifact_hash": true
+  },
+  "journeys_summary": {
+    "runtime_stats": {
+      "startTime": "2026-11-15T04:15:18.016Z",
+      "duration": 97656.48999999999,
+      "expected": 5,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "parser_status": "ARTIFACT_DOCUMENTS_PASS",
+    "parser_failure_count": 0,
+    "full_runtime_file": {
+      "path": "root75/evidence/R4/artifact/Orchestra-SF/Orchestra-SF/test-ci-evidence/playwright-runtime.json",
+      "bytes": 1386690,
+      "sha256": "307d48659438705323442d721affbe58587228653964277f7d6d9d463db39fb2"
+    },
+    "product_proof_source": "Actual R4 runtime JSON and job log, not local reexecution"
+  },
+  "archive_assessment": {
+    "status": "SUITABLE_FOR_EXACT_ZIP_ARCHIVE",
+    "archive": {
+      "path": "root75/evidence/R4/artifact.zip",
+      "bytes": 319886,
+      "sha256": "11fd4542d0a29a1841a0a640b7100cf04a340b0948db60a13139c262898a8d21"
+    },
+    "artifact_id": 14146162056,
+    "uploaded_zip_digest_confirmed_in_job_log": true,
+    "member_count": 31,
+    "uncompressed_bytes": 2050999,
+    "scanner_files": 26,
+    "scanner_and_small_test_documents_bytes": 34749,
+    "zip_CRC_and_extracted_byte_comparison": "PASS_ALL_31",
+    "index_file": "R4-ARTIFACT-INDEX.json",
+    "planned_reference": "ci/R4/artifact.zip",
+    "root_archive_plan": "Preserve original ZIP via GitHub create_blob base64/CAS; archive complete member index, full job log, parser output, request/selection JSON and all small scanner receipts/logs/configs. Full runtime and every inline attachment remain byte-exact inside ZIP.",
+    "html": {
+      "path": "root75/evidence/R4/artifact/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright-report/index.html",
+      "bytes": 629560,
+      "sha256": "82084370d4a33c0a84c231f3ab6524cb639c4cc6771dc8d146ab79825c81eb42",
+      "below_1_MiB": true,
+      "embedded_report_zip_bytes": 80061,
+      "embedded_report_zip_sha256": "d3fd9b09f9f109ed87d1c72b0d4bf6ca1006de4ff766d4277b40201c82bb7adb",
+      "embedded_members": [
+        {
+          "path": "b944adae46abeb4efa4f.json",
+          "bytes": 2173905
+        },
+        {
+          "path": "report.json",
+          "bytes": 4360
+        }
+      ],
+      "external_script_src": [],
+      "browser_rendering_performed": false
+    },
+    "runtime_over_1_MiB": true,
+    "trace_files": [],
+    "trace_note": "All five passed; retain-on-failure produced no trace and no file-backed attachment. JSON includes five inline application/json attachments."
+  },
+  "evidence_files": [
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/setup.json",
+      "bytes": 835,
+      "sha256": "e098392e5f3c312c7419d5819daa185964a503b3dcc6563a4b7d9ba9b7ba16d0"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/package.json",
+      "bytes": 776,
+      "sha256": "6987fa754a95ac93200c05552f39910b4318973bfc91ce96f13f9c9c99190ba8"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/databases.json",
+      "bytes": 623,
+      "sha256": "4a8420ed9fcac659be8794ccc14219078a63222ce8986a918317c4207b9158d6"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/freshclam-output.log",
+      "bytes": 1279,
+      "sha256": "d2b6e4af0befece306aaa9e545a2430465dc1ce9b03801526dc39d7bad70680b"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/service.json",
+      "bytes": 866,
+      "sha256": "d0caf0e442f143d62ddbb63b0935323d2becfbf9703bf02dd0534e3bf17c994e"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/process-main.json",
+      "bytes": 381,
+      "sha256": "e80f62db78e562e0f0a91714f3180cdd33d3ecd001d23c6c6af97a6c5e8176bf"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/process-error.json",
+      "bytes": 382,
+      "sha256": "364c67c1b5ae49b0f8a2da84cd0d67cf57a107987d70512ffa73798350aa7661"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/daemon-controls.json",
+      "bytes": 472,
+      "sha256": "6ead66ba9f7bb6a9fee31fcbbac90fc604c7abe5c2fd79e2a373e0a6cfdf0f00"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/cleanup.json",
+      "bytes": 326,
+      "sha256": "bb48ab900f3393fec895044375e90cda3b01192c55f819c04b92b11be8557f29"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/configuration.json",
+      "bytes": 781,
+      "sha256": "cf20c954d80bee55a7b1c22e4ac84e4fa52efae559eb87592da95d960c55c23c"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/clamd-main.log",
+      "bytes": 3319,
+      "sha256": "9317083df42f4ec22685b8633f14a12074fb9aebea1e86e354373763d0277c16"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/clamd-error.log",
+      "bytes": 3299,
+      "sha256": "80e2b27f1d95c400e990aa8ade320e66566b30f509eaa322985b6ba8dab7a97a"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/clamd-version.txt",
+      "bytes": 13,
+      "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/freshclam-version.txt",
+      "bytes": 13,
+      "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+    },
+    {
+      "path": "root75/evidence/R4/artifact/_temp/sf-operations75-43675784039-1.jmqZdr/evidence/tools.lock.json",
+      "bytes": 2276,
+      "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929"
+    }
+  ],
+  "limits": [
+    "R4 provisioning includes direct clean/EICAR/clean-after and size-error controls; real malformed/outage and private malicious/unavailable controls are separate R3 evidence.",
+    "No database or package binaries are archived in this artifact; exact hashes, versions, signed-load logs and receipts are preserved after cleanup.",
+    "Checks45, native/provider parity, C06 and global release remain separate authority gates."
+  ],
+  "GLOBAL_RELEASE": false
+}

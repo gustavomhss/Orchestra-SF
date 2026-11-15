@@ -1,0 +1,2600 @@
+{
+  "schema": "operations75.journeys-artifact-read.v1",
+  "scope": "Documentary extraction; no product code or tests executed by this tool",
+  "status": "ARTIFACT_DOCUMENTS_PASS",
+  "binding": {
+    "work": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "snapshot": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+    "run": "43675784039",
+    "attempt": "1",
+    "request_sha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717"
+  },
+  "checks": [
+    {
+      "check": "request.body",
+      "passed": true,
+      "actual": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "packageSelector": "packages/app",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      },
+      "expected": {
+        "package": "app",
+        "packageSelector": "packages/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      }
+    },
+    {
+      "check": "request.canonical_sha256",
+      "passed": true,
+      "actual": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+      "expected": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717"
+    },
+    {
+      "check": "request.envelope",
+      "passed": true,
+      "actual": {
+        "campaign": "sf2h-integral-20261112",
+        "mission": 75,
+        "sourceBranch": "sf2-stack",
+        "productSha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+        "requestSha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+        "selection": "journeys"
+      },
+      "expected": {
+        "campaign": "sf2h-integral-20261112",
+        "mission": 75,
+        "sourceBranch": "sf2-stack",
+        "productSha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+        "requestSha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+        "selection": "journeys"
+      }
+    },
+    {
+      "check": "request.snapshot",
+      "passed": true,
+      "actual": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "expected": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e"
+    },
+    {
+      "check": "request.run",
+      "passed": true,
+      "actual": "43675784039",
+      "expected": "43675784039"
+    },
+    {
+      "check": "request.attempt",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "check": "request.exact_playwright_args",
+      "passed": true,
+      "actual": [
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--workers",
+        "1",
+        "--retries",
+        "0",
+        "--repeat-each",
+        "1",
+        "(^|[\\\\/])e2e[\\\\/]sucafina[\\\\/]operations\\.spec\\.ts$"
+      ],
+      "expected": [
+        "--config",
+        "e2e/playwright.production.config.ts",
+        "--workers",
+        "1",
+        "--retries",
+        "0",
+        "--repeat-each",
+        "1",
+        "(^|[\\\\/])e2e[\\\\/]sucafina[\\\\/]operations\\.spec\\.ts$"
+      ]
+    },
+    {
+      "check": "request.integrity_path_order",
+      "passed": true,
+      "actual": [
+        ".ci-run.json",
+        ".github/workflows/sf-operations-scanner.yml",
+        "script/test-ci-request.ts",
+        "script/test-ci-location.ts",
+        "script/sf2h/operations-scanner/request.mjs",
+        "script/sf2h/operations-scanner/setup.sh",
+        "script/sf2h/operations-scanner/service.mjs",
+        "script/sf2h/operations-scanner/cleanup.sh",
+        "script/sf2h/operations-scanner/tools.lock.json",
+        "packages/app-shell/e2e/playwright.production.config.ts",
+        "packages/app-shell/e2e/sucafina/operations.spec.ts"
+      ],
+      "expected": [
+        ".ci-run.json",
+        ".github/workflows/sf-operations-scanner.yml",
+        "script/test-ci-request.ts",
+        "script/test-ci-location.ts",
+        "script/sf2h/operations-scanner/request.mjs",
+        "script/sf2h/operations-scanner/setup.sh",
+        "script/sf2h/operations-scanner/service.mjs",
+        "script/sf2h/operations-scanner/cleanup.sh",
+        "script/sf2h/operations-scanner/tools.lock.json",
+        "packages/app-shell/e2e/playwright.production.config.ts",
+        "packages/app-shell/e2e/sucafina/operations.spec.ts"
+      ]
+    },
+    {
+      "check": "integrity.sha_shape:.ci-run.json",
+      "passed": true,
+      "actual": "1e0ff71361aaba45007a4ffff1377763bf51703928ee9045d8c0273dee2443a5",
+      "expected": null
+    },
+    {
+      "check": "integrity.sha_shape:.github/workflows/sf-operations-scanner.yml",
+      "passed": true,
+      "actual": "91adf931b72c3a88a0252b9010c835fceeec1abcb609cfce26c9a414da9c1189",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:.github/workflows/sf-operations-scanner.yml",
+      "passed": true,
+      "actual": "91adf931b72c3a88a0252b9010c835fceeec1abcb609cfce26c9a414da9c1189",
+      "expected": "91adf931b72c3a88a0252b9010c835fceeec1abcb609cfce26c9a414da9c1189"
+    },
+    {
+      "check": "integrity.sha_shape:script/test-ci-request.ts",
+      "passed": true,
+      "actual": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:script/test-ci-request.ts",
+      "passed": true,
+      "actual": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc",
+      "expected": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+    },
+    {
+      "check": "integrity.sha_shape:script/test-ci-location.ts",
+      "passed": true,
+      "actual": "2a441c5a25e569ba78797493b410cefd19fa5484f1dfca666a4809d2b4381512",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:script/test-ci-location.ts",
+      "passed": true,
+      "actual": "2a441c5a25e569ba78797493b410cefd19fa5484f1dfca666a4809d2b4381512",
+      "expected": "2a441c5a25e569ba78797493b410cefd19fa5484f1dfca666a4809d2b4381512"
+    },
+    {
+      "check": "integrity.sha_shape:script/sf2h/operations-scanner/request.mjs",
+      "passed": true,
+      "actual": "d6cea591f1045391d9b15bc514d6c3b60e69294f9a8d8bc8ea2a4d94f5ed870e",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:script/sf2h/operations-scanner/request.mjs",
+      "passed": true,
+      "actual": "d6cea591f1045391d9b15bc514d6c3b60e69294f9a8d8bc8ea2a4d94f5ed870e",
+      "expected": "d6cea591f1045391d9b15bc514d6c3b60e69294f9a8d8bc8ea2a4d94f5ed870e"
+    },
+    {
+      "check": "integrity.sha_shape:script/sf2h/operations-scanner/setup.sh",
+      "passed": true,
+      "actual": "43f675022aa15555bbf234417b0a25431a925825197fb19354211f52006c8231",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:script/sf2h/operations-scanner/setup.sh",
+      "passed": true,
+      "actual": "43f675022aa15555bbf234417b0a25431a925825197fb19354211f52006c8231",
+      "expected": "43f675022aa15555bbf234417b0a25431a925825197fb19354211f52006c8231"
+    },
+    {
+      "check": "integrity.sha_shape:script/sf2h/operations-scanner/service.mjs",
+      "passed": true,
+      "actual": "3f907fd08f4afdb059b125a451f6b6ca473a326bb41cbbbbba53a7de1c855eaa",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:script/sf2h/operations-scanner/service.mjs",
+      "passed": true,
+      "actual": "3f907fd08f4afdb059b125a451f6b6ca473a326bb41cbbbbba53a7de1c855eaa",
+      "expected": "3f907fd08f4afdb059b125a451f6b6ca473a326bb41cbbbbba53a7de1c855eaa"
+    },
+    {
+      "check": "integrity.sha_shape:script/sf2h/operations-scanner/cleanup.sh",
+      "passed": true,
+      "actual": "089bf65246458a859eedecb4a57aaf4ef902ba7bbbf5cf86dd37a927d8854d12",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:script/sf2h/operations-scanner/cleanup.sh",
+      "passed": true,
+      "actual": "089bf65246458a859eedecb4a57aaf4ef902ba7bbbf5cf86dd37a927d8854d12",
+      "expected": "089bf65246458a859eedecb4a57aaf4ef902ba7bbbf5cf86dd37a927d8854d12"
+    },
+    {
+      "check": "integrity.sha_shape:script/sf2h/operations-scanner/tools.lock.json",
+      "passed": true,
+      "actual": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:script/sf2h/operations-scanner/tools.lock.json",
+      "passed": true,
+      "actual": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6",
+      "expected": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6"
+    },
+    {
+      "check": "integrity.sha_shape:packages/app-shell/e2e/playwright.production.config.ts",
+      "passed": true,
+      "actual": "492f3145a61e5469f43618270701d2ba1972bb82e271633dc5f952557de3dc66",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:packages/app-shell/e2e/playwright.production.config.ts",
+      "passed": true,
+      "actual": "492f3145a61e5469f43618270701d2ba1972bb82e271633dc5f952557de3dc66",
+      "expected": "492f3145a61e5469f43618270701d2ba1972bb82e271633dc5f952557de3dc66"
+    },
+    {
+      "check": "integrity.sha_shape:packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "passed": true,
+      "actual": "29c9dcd28d0de5726770feac79be3f11652c349de2cbac09e8517307663f76fb",
+      "expected": null
+    },
+    {
+      "check": "integrity.source_hash:packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "passed": true,
+      "actual": "29c9dcd28d0de5726770feac79be3f11652c349de2cbac09e8517307663f76fb",
+      "expected": "29c9dcd28d0de5726770feac79be3f11652c349de2cbac09e8517307663f76fb"
+    },
+    {
+      "check": "request.snapshot_file",
+      "passed": true,
+      "actual": {
+        "package": "app",
+        "packageSelector": "packages/app",
+        "directory": "packages/app-shell",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts",
+        "operationsScanner": {
+          "campaign": "sf2h-integral-20261112",
+          "mission": 75,
+          "sourceBranch": "sf2-stack",
+          "productSha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+          "requestSha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+          "selection": "journeys"
+        }
+      },
+      "expected": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "packageSelector": "packages/app",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/operations.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts",
+        "operationsScanner": {
+          "campaign": "sf2h-integral-20261112",
+          "mission": 75,
+          "sourceBranch": "sf2-stack",
+          "productSha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+          "requestSha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+          "selection": "journeys"
+        }
+      }
+    },
+    {
+      "check": "request.snapshot_file_sha256",
+      "passed": true,
+      "actual": "1e0ff71361aaba45007a4ffff1377763bf51703928ee9045d8c0273dee2443a5",
+      "expected": "1e0ff71361aaba45007a4ffff1377763bf51703928ee9045d8c0273dee2443a5"
+    },
+    {
+      "check": "selection.receipt",
+      "passed": true,
+      "actual": {
+        "ids": [
+          "OP-PROC-01",
+          "OP-PROC-02",
+          "OP-PROC-03",
+          "OP-IMPORT-01",
+          "OP-DOC-01"
+        ],
+        "tests": 5,
+        "workers": 1,
+        "retries": 0,
+        "repeat": 1
+      },
+      "expected": {
+        "ids": [
+          "OP-PROC-01",
+          "OP-PROC-02",
+          "OP-PROC-03",
+          "OP-IMPORT-01",
+          "OP-DOC-01"
+        ],
+        "tests": 5,
+        "workers": 1,
+        "retries": 0,
+        "repeat": 1
+      }
+    },
+    {
+      "check": "list.config_file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+      "expected": null
+    },
+    {
+      "check": "list.root_dir",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+      "expected": null
+    },
+    {
+      "check": "list.config.workers",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "list.config.fullyParallel",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "check": "list.config.forbidOnly",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "list.config.maxFailures",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "list.config.globalTimeout",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "list.config.shard",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "check": "list.version",
+      "passed": true,
+      "actual": "1.59.1",
+      "expected": "1.59.1"
+    },
+    {
+      "check": "list.bundle",
+      "passed": true,
+      "actual": "production",
+      "expected": "production"
+    },
+    {
+      "check": "list.project_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "list.project.name",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.project.id",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.project.retries",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "list.project.repeatEach",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "list.project.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "list.project.output",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+      "expected": null
+    },
+    {
+      "check": "list.project.test_dir",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e"
+    },
+    {
+      "check": "list.reporters",
+      "passed": true,
+      "actual": [
+        "json"
+      ],
+      "expected": [
+        "json"
+      ]
+    },
+    {
+      "check": "list.global_errors",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.spec_count",
+      "passed": true,
+      "actual": 5,
+      "expected": 5
+    },
+    {
+      "check": "list.ordered_ids",
+      "passed": true,
+      "actual": [
+        "OP-PROC-01",
+        "OP-PROC-02",
+        "OP-PROC-03",
+        "OP-IMPORT-01",
+        "OP-DOC-01"
+      ],
+      "expected": [
+        "OP-PROC-01",
+        "OP-PROC-02",
+        "OP-PROC-03",
+        "OP-IMPORT-01",
+        "OP-DOC-01"
+      ]
+    },
+    {
+      "check": "list.OP-PROC-01.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "list.OP-PROC-01.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "list.OP-PROC-01.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-PROC-01.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-PROC-01.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "list.OP-PROC-01.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "list.OP-PROC-01.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-PROC-01.not_executed_by_list",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-PROC-02.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "list.OP-PROC-02.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "list.OP-PROC-02.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-PROC-02.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-PROC-02.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "list.OP-PROC-02.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "list.OP-PROC-02.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-PROC-02.not_executed_by_list",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-PROC-03.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "list.OP-PROC-03.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "list.OP-PROC-03.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-PROC-03.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-PROC-03.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "list.OP-PROC-03.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "list.OP-PROC-03.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-PROC-03.not_executed_by_list",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-IMPORT-01.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "list.OP-IMPORT-01.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "list.OP-IMPORT-01.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-IMPORT-01.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-IMPORT-01.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "list.OP-IMPORT-01.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "list.OP-IMPORT-01.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-IMPORT-01.not_executed_by_list",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-DOC-01.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "list.OP-DOC-01.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "list.OP-DOC-01.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-DOC-01.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "list.OP-DOC-01.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "list.OP-DOC-01.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "list.OP-DOC-01.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "list.OP-DOC-01.not_executed_by_list",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.config_file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+      "expected": null
+    },
+    {
+      "check": "runtime.root_dir",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+      "expected": null
+    },
+    {
+      "check": "runtime.config.workers",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.config.fullyParallel",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "check": "runtime.config.forbidOnly",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "runtime.config.maxFailures",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.config.globalTimeout",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.config.shard",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "check": "runtime.version",
+      "passed": true,
+      "actual": "1.59.1",
+      "expected": "1.59.1"
+    },
+    {
+      "check": "runtime.bundle",
+      "passed": true,
+      "actual": "production",
+      "expected": "production"
+    },
+    {
+      "check": "runtime.project_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.project.name",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.project.id",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.project.retries",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.project.repeatEach",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.project.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "runtime.project.output",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+      "expected": null
+    },
+    {
+      "check": "runtime.project.test_dir",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e"
+    },
+    {
+      "check": "runtime.reporters",
+      "passed": true,
+      "actual": [
+        "html",
+        "line",
+        "json",
+        "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts"
+      ],
+      "expected": null
+    },
+    {
+      "check": "runtime.global_errors",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.spec_count",
+      "passed": true,
+      "actual": 5,
+      "expected": 5
+    },
+    {
+      "check": "runtime.ordered_ids",
+      "passed": true,
+      "actual": [
+        "OP-PROC-01",
+        "OP-PROC-02",
+        "OP-PROC-03",
+        "OP-IMPORT-01",
+        "OP-DOC-01"
+      ],
+      "expected": [
+        "OP-PROC-01",
+        "OP-PROC-02",
+        "OP-PROC-03",
+        "OP-IMPORT-01",
+        "OP-DOC-01"
+      ]
+    },
+    {
+      "check": "runtime.OP-PROC-01.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "runtime.OP-PROC-01.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-PROC-01.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-PROC-01.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-PROC-01.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "runtime.OP-PROC-01.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-PROC-01.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-PROC-01.ok",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "runtime.OP-PROC-01.outcome",
+      "passed": true,
+      "actual": "expected",
+      "expected": "expected"
+    },
+    {
+      "check": "runtime.OP-PROC-01.attempt_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-PROC-01.result_status",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-PROC-01.retry",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-PROC-01.errors",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-PROC-01.error",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "check": "runtime.OP-PROC-01.parallel_index",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-PROC-02.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "runtime.OP-PROC-02.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-PROC-02.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-PROC-02.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-PROC-02.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "runtime.OP-PROC-02.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-PROC-02.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-PROC-02.ok",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "runtime.OP-PROC-02.outcome",
+      "passed": true,
+      "actual": "expected",
+      "expected": "expected"
+    },
+    {
+      "check": "runtime.OP-PROC-02.attempt_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-PROC-02.result_status",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-PROC-02.retry",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-PROC-02.errors",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-PROC-02.error",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "check": "runtime.OP-PROC-02.parallel_index",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-PROC-03.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "runtime.OP-PROC-03.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-PROC-03.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-PROC-03.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-PROC-03.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "runtime.OP-PROC-03.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-PROC-03.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-PROC-03.ok",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "runtime.OP-PROC-03.outcome",
+      "passed": true,
+      "actual": "expected",
+      "expected": "expected"
+    },
+    {
+      "check": "runtime.OP-PROC-03.attempt_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-PROC-03.result_status",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-PROC-03.retry",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-PROC-03.errors",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-PROC-03.error",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "check": "runtime.OP-PROC-03.parallel_index",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.ok",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.outcome",
+      "passed": true,
+      "actual": "expected",
+      "expected": "expected"
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.attempt_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.result_status",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.retry",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.errors",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.error",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "check": "runtime.OP-IMPORT-01.parallel_index",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-DOC-01.file",
+      "passed": true,
+      "actual": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "expected": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/operations.spec.ts"
+    },
+    {
+      "check": "runtime.OP-DOC-01.test_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-DOC-01.projectName",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-DOC-01.projectId",
+      "passed": true,
+      "actual": "chromium",
+      "expected": "chromium"
+    },
+    {
+      "check": "runtime.OP-DOC-01.timeout",
+      "passed": true,
+      "actual": 60000,
+      "expected": 60000
+    },
+    {
+      "check": "runtime.OP-DOC-01.expectedStatus",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-DOC-01.non_skipping_annotations",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-DOC-01.ok",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "runtime.OP-DOC-01.outcome",
+      "passed": true,
+      "actual": "expected",
+      "expected": "expected"
+    },
+    {
+      "check": "runtime.OP-DOC-01.attempt_count",
+      "passed": true,
+      "actual": 1,
+      "expected": 1
+    },
+    {
+      "check": "runtime.OP-DOC-01.result_status",
+      "passed": true,
+      "actual": "passed",
+      "expected": "passed"
+    },
+    {
+      "check": "runtime.OP-DOC-01.retry",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.OP-DOC-01.errors",
+      "passed": true,
+      "actual": [],
+      "expected": []
+    },
+    {
+      "check": "runtime.OP-DOC-01.error",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "check": "runtime.OP-DOC-01.parallel_index",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.same_tests_as_list",
+      "passed": true,
+      "actual": [
+        [
+          "b944adae46abeb4efa4f-22afb77d3ca0df7121ad",
+          "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+          "sucafina/operations.spec.ts",
+          13,
+          3
+        ],
+        [
+          "b944adae46abeb4efa4f-05bfd53af44c9645acd5",
+          "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+          "sucafina/operations.spec.ts",
+          18,
+          3
+        ],
+        [
+          "b944adae46abeb4efa4f-014331764edf948dc865",
+          "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+          "sucafina/operations.spec.ts",
+          23,
+          3
+        ],
+        [
+          "b944adae46abeb4efa4f-e9566aebd8e9d1d91482",
+          "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+          "sucafina/operations.spec.ts",
+          28,
+          3
+        ],
+        [
+          "b944adae46abeb4efa4f-6f9d621cf244a785ed31",
+          "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+          "sucafina/operations.spec.ts",
+          33,
+          3
+        ]
+      ],
+      "expected": [
+        [
+          "b944adae46abeb4efa4f-22afb77d3ca0df7121ad",
+          "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+          "sucafina/operations.spec.ts",
+          13,
+          3
+        ],
+        [
+          "b944adae46abeb4efa4f-05bfd53af44c9645acd5",
+          "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+          "sucafina/operations.spec.ts",
+          18,
+          3
+        ],
+        [
+          "b944adae46abeb4efa4f-014331764edf948dc865",
+          "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+          "sucafina/operations.spec.ts",
+          23,
+          3
+        ],
+        [
+          "b944adae46abeb4efa4f-e9566aebd8e9d1d91482",
+          "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+          "sucafina/operations.spec.ts",
+          28,
+          3
+        ],
+        [
+          "b944adae46abeb4efa4f-6f9d621cf244a785ed31",
+          "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+          "sucafina/operations.spec.ts",
+          33,
+          3
+        ]
+      ]
+    },
+    {
+      "check": "runtime.stats.expected",
+      "passed": true,
+      "actual": 5,
+      "expected": 5
+    },
+    {
+      "check": "runtime.stats.skipped",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.stats.unexpected",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "runtime.stats.flaky",
+      "passed": true,
+      "actual": 0,
+      "expected": 0
+    },
+    {
+      "check": "html.nonempty",
+      "passed": true,
+      "actual": 629560,
+      "expected": null
+    },
+    {
+      "check": "scanner.lock",
+      "passed": true,
+      "actual": {
+        "schema": "sf2h.operations63.scanner-tools.v1",
+        "version": "1.5.4",
+        "platform": "linux-x86_64",
+        "asset": {
+          "name": "clamav-1.5.4.linux.x86_64.deb",
+          "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+          "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+          "size": 105819396,
+          "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+          "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
+        },
+        "source_commit": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+        "source_tag_object": "2cbd122d3a401b9bded52ef6bf201bff605af474",
+        "source_files": {
+          "CMakeLists.txt": "7ebb1c3834057707042ab5564689f3807a47f0e6",
+          "INSTALL.md": "5fc4bf7116c7a4183714a05eb88a57d8c37c20b8",
+          "clamd/CMakeLists.txt": "0ad10506520625052b6f219daad5064145c6de8c",
+          "freshclam/CMakeLists.txt": "1aad53091e712a24052e937945bc8e5306b4b3ac",
+          "etc/clamd.conf.sample": "73be60eae8a266743e75b668dd606eb20436f067",
+          "etc/freshclam.conf.sample": "cc437ebf4a97884cfb7d3395ec213181a14e0de3"
+        },
+        "relocation": {
+          "prefix": "usr/local",
+          "clamd": "sbin/clamd",
+          "freshclam": "bin/freshclam",
+          "certificates": "etc/certs",
+          "library_paths": [
+            "lib",
+            "lib64"
+          ],
+          "note": "Upstream defaults to /usr/local and build-time RPATH. Setup uses process-scoped LD_LIBRARY_PATH, explicit database/certificate/config paths, and rejects missing dynamic dependencies or relocated tools that cannot report the pinned version. No claim that the unexecuted package has already relocated successfully."
+        },
+        "database": {
+          "mirror": "database.clamav.net",
+          "required": [
+            "main",
+            "daily",
+            "bytecode"
+          ],
+          "official_only": true,
+          "synthetic_database_allowed": false
+        },
+        "services": {
+          "main": {
+            "host": "127.0.0.1",
+            "port": 3310,
+            "stream_max_length": 16777216
+          },
+          "error": {
+            "host": "127.0.0.1",
+            "port": 3311,
+            "stream_max_length": 1024
+          }
+        },
+        "bounds_seconds": {
+          "download": 180,
+          "freshclam": 300,
+          "readiness": 180,
+          "cleanup": 10
+        }
+      },
+      "expected": {
+        "schema": "sf2h.operations63.scanner-tools.v1",
+        "version": "1.5.4",
+        "platform": "linux-x86_64",
+        "asset": {
+          "name": "clamav-1.5.4.linux.x86_64.deb",
+          "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+          "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+          "size": 105819396,
+          "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+          "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
+        },
+        "source_commit": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+        "source_tag_object": "2cbd122d3a401b9bded52ef6bf201bff605af474",
+        "source_files": {
+          "CMakeLists.txt": "7ebb1c3834057707042ab5564689f3807a47f0e6",
+          "INSTALL.md": "5fc4bf7116c7a4183714a05eb88a57d8c37c20b8",
+          "clamd/CMakeLists.txt": "0ad10506520625052b6f219daad5064145c6de8c",
+          "freshclam/CMakeLists.txt": "1aad53091e712a24052e937945bc8e5306b4b3ac",
+          "etc/clamd.conf.sample": "73be60eae8a266743e75b668dd606eb20436f067",
+          "etc/freshclam.conf.sample": "cc437ebf4a97884cfb7d3395ec213181a14e0de3"
+        },
+        "relocation": {
+          "prefix": "usr/local",
+          "clamd": "sbin/clamd",
+          "freshclam": "bin/freshclam",
+          "certificates": "etc/certs",
+          "library_paths": [
+            "lib",
+            "lib64"
+          ],
+          "note": "Upstream defaults to /usr/local and build-time RPATH. Setup uses process-scoped LD_LIBRARY_PATH, explicit database/certificate/config paths, and rejects missing dynamic dependencies or relocated tools that cannot report the pinned version. No claim that the unexecuted package has already relocated successfully."
+        },
+        "database": {
+          "mirror": "database.clamav.net",
+          "required": [
+            "main",
+            "daily",
+            "bytecode"
+          ],
+          "official_only": true,
+          "synthetic_database_allowed": false
+        },
+        "services": {
+          "main": {
+            "host": "127.0.0.1",
+            "port": 3310,
+            "stream_max_length": 16777216
+          },
+          "error": {
+            "host": "127.0.0.1",
+            "port": 3311,
+            "stream_max_length": 1024
+          }
+        },
+        "bounds_seconds": {
+          "download": 180,
+          "freshclam": 300,
+          "readiness": 180,
+          "cleanup": 10
+        }
+      }
+    },
+    {
+      "check": "scanner.ephemeral_path",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr",
+      "expected": null
+    },
+    {
+      "check": "scanner.setup.status",
+      "passed": true,
+      "actual": "READY",
+      "expected": "READY"
+    },
+    {
+      "check": "scanner.setup.productSnapshot",
+      "passed": true,
+      "actual": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "expected": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e"
+    },
+    {
+      "check": "scanner.setup.runId",
+      "passed": true,
+      "actual": "43675784039",
+      "expected": "43675784039"
+    },
+    {
+      "check": "scanner.setup.runAttempt",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "check": "scanner.setup.syntheticDatabase",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "check": "scanner.setup.controls",
+      "passed": true,
+      "actual": "PASS_DAEMON_ONLY",
+      "expected": "PASS_DAEMON_ONLY"
+    },
+    {
+      "check": "scanner.setup.productQualification",
+      "passed": true,
+      "actual": "NOT_RUN",
+      "expected": "NOT_RUN"
+    },
+    {
+      "check": "scanner.branch",
+      "passed": true,
+      "actual": "sf-ops75-eb58cd9e9f81je4201f174def1",
+      "expected": null
+    },
+    {
+      "check": "scanner.package.expected",
+      "passed": true,
+      "actual": {
+        "name": "clamav-1.5.4.linux.x86_64.deb",
+        "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+        "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+        "size": 105819396,
+        "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+        "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
+      },
+      "expected": {
+        "name": "clamav-1.5.4.linux.x86_64.deb",
+        "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+        "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+        "size": 105819396,
+        "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+        "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
+      }
+    },
+    {
+      "check": "scanner.package.actual",
+      "passed": true,
+      "actual": {
+        "bytes": 105819396,
+        "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886"
+      },
+      "expected": {
+        "bytes": 105819396,
+        "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886"
+      }
+    },
+    {
+      "check": "scanner.package.source",
+      "passed": true,
+      "actual": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+      "expected": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb"
+    },
+    {
+      "check": "scanner.databases.origin",
+      "passed": true,
+      "actual": "database.clamav.net",
+      "expected": "database.clamav.net"
+    },
+    {
+      "check": "scanner.databases.freshclamCompleted",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "scanner.databases.testDatabasesEnabled",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "scanner.databases.officialDatabaseOnly",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "scanner.databases.syntheticDatabase",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "check": "scanner.database_names",
+      "passed": true,
+      "actual": [
+        "bytecode",
+        "daily",
+        "main"
+      ],
+      "expected": [
+        "bytecode",
+        "daily",
+        "main"
+      ]
+    },
+    {
+      "check": "scanner.database_entry:bytecode.cvd",
+      "passed": true,
+      "actual": {
+        "name": "bytecode.cvd",
+        "bytes": 281702,
+        "sha256": "6d4aa01f219e988060fc419f495d07f27e0cdf1a2cccc065971da922c76f7ffb"
+      },
+      "expected": null
+    },
+    {
+      "check": "scanner.database_entry:daily.cvd",
+      "passed": true,
+      "actual": {
+        "name": "daily.cvd",
+        "bytes": 23450445,
+        "sha256": "a99edfb87ac6246137214caa2b3f238297e02f376954f64096392d4b1e773731"
+      },
+      "expected": null
+    },
+    {
+      "check": "scanner.database_entry:main.cvd",
+      "passed": true,
+      "actual": {
+        "name": "main.cvd",
+        "bytes": 89072577,
+        "sha256": "0b2182d229f46981ec8f535382222f7c9dfdd656b250ad47988b910a8d302365"
+      },
+      "expected": null
+    },
+    {
+      "check": "scanner.freshclam.database_tests_passed",
+      "passed": true,
+      "actual": 3,
+      "expected": 3
+    },
+    {
+      "check": "scanner.freshclam.no_failed_database_test",
+      "passed": true,
+      "actual": null,
+      "expected": null
+    },
+    {
+      "check": "scanner.freshclam.tested_names",
+      "passed": true,
+      "actual": [
+        "bytecode",
+        "daily",
+        "main"
+      ],
+      "expected": [
+        "bytecode",
+        "daily",
+        "main"
+      ]
+    },
+    {
+      "check": "scanner.freshclam.private_database_paths",
+      "passed": true,
+      "actual": [
+        "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database/tmp.348721fdef/daily.cvd",
+        "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database/tmp.348721fdef/main.cvd",
+        "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database/tmp.348721fdef/bytecode.cvd"
+      ],
+      "expected": null
+    },
+    {
+      "check": "scanner.service.run_id",
+      "passed": true,
+      "actual": "43675784039",
+      "expected": "43675784039"
+    },
+    {
+      "check": "scanner.service.run_attempt",
+      "passed": true,
+      "actual": "1",
+      "expected": "1"
+    },
+    {
+      "check": "scanner.service.github_sha",
+      "passed": true,
+      "actual": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "expected": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e"
+    },
+    {
+      "check": "scanner.service.work_directory",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr"
+    },
+    {
+      "check": "scanner.configuration.services",
+      "passed": true,
+      "actual": {
+        "main": {
+          "host": "127.0.0.1",
+          "port": 3310,
+          "stream_max_length": 16777216
+        },
+        "error": {
+          "host": "127.0.0.1",
+          "port": 3311,
+          "stream_max_length": 1024
+        }
+      },
+      "expected": {
+        "main": {
+          "host": "127.0.0.1",
+          "port": 3310,
+          "stream_max_length": 16777216
+        },
+        "error": {
+          "host": "127.0.0.1",
+          "port": 3311,
+          "stream_max_length": 1024
+        }
+      }
+    },
+    {
+      "check": "scanner.configuration.credentials",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "check": "scanner.configuration.global_install",
+      "passed": true,
+      "actual": false,
+      "expected": false
+    },
+    {
+      "check": "scanner.configuration.library_path",
+      "passed": true,
+      "actual": [
+        "root/usr/local/lib",
+        "root/usr/local/lib64"
+      ],
+      "expected": [
+        "root/usr/local/lib",
+        "root/usr/local/lib64"
+      ]
+    },
+    {
+      "check": "scanner.configuration.files",
+      "passed": true,
+      "actual": [
+        "clamd-error.conf",
+        "clamd-main.conf",
+        "freshclam.conf"
+      ],
+      "expected": [
+        "clamd-error.conf",
+        "clamd-main.conf",
+        "freshclam.conf"
+      ]
+    },
+    {
+      "check": "scanner.configuration.hash:freshclam.conf",
+      "passed": true,
+      "actual": "94f30a856b938d9c66a480ccbb5af9bd70a495b3e67fc637f01543bed34e386d",
+      "expected": "94f30a856b938d9c66a480ccbb5af9bd70a495b3e67fc637f01543bed34e386d"
+    },
+    {
+      "check": "scanner.config.database:freshclam.conf",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database"
+    },
+    {
+      "check": "scanner.config.certs:freshclam.conf",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/etc/certs",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/etc/certs"
+    },
+    {
+      "check": "scanner.config.foreground:freshclam.conf",
+      "passed": true,
+      "actual": "yes",
+      "expected": "yes"
+    },
+    {
+      "check": "scanner.config.signature_test",
+      "passed": true,
+      "actual": "yes",
+      "expected": "yes"
+    },
+    {
+      "check": "scanner.config.mirror",
+      "passed": true,
+      "actual": "database.clamav.net",
+      "expected": "database.clamav.net"
+    },
+    {
+      "check": "scanner.configuration.hash:clamd-main.conf",
+      "passed": true,
+      "actual": "3094d0905c8ebc9c61f37030e81bbd02b170731a66c939afc079448c4e372bc8",
+      "expected": "3094d0905c8ebc9c61f37030e81bbd02b170731a66c939afc079448c4e372bc8"
+    },
+    {
+      "check": "scanner.config.database:clamd-main.conf",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database"
+    },
+    {
+      "check": "scanner.config.certs:clamd-main.conf",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/etc/certs",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/etc/certs"
+    },
+    {
+      "check": "scanner.config.foreground:clamd-main.conf",
+      "passed": true,
+      "actual": "yes",
+      "expected": "yes"
+    },
+    {
+      "check": "scanner.config.main.OfficialDatabaseOnly",
+      "passed": true,
+      "actual": "yes",
+      "expected": "yes"
+    },
+    {
+      "check": "scanner.config.main.TCPAddr",
+      "passed": true,
+      "actual": "127.0.0.1",
+      "expected": "127.0.0.1"
+    },
+    {
+      "check": "scanner.config.main.TCPSocket",
+      "passed": true,
+      "actual": "3310",
+      "expected": "3310"
+    },
+    {
+      "check": "scanner.config.main.StreamMaxLength",
+      "passed": true,
+      "actual": "16777216",
+      "expected": "16777216"
+    },
+    {
+      "check": "scanner.config.main.SelfCheck",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "check": "scanner.configuration.hash:clamd-error.conf",
+      "passed": true,
+      "actual": "aaa9fd1e7f76d5d094dfcdc9a634785a90c69c8fdec0a95ba4b969659210f96f",
+      "expected": "aaa9fd1e7f76d5d094dfcdc9a634785a90c69c8fdec0a95ba4b969659210f96f"
+    },
+    {
+      "check": "scanner.config.database:clamd-error.conf",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/database"
+    },
+    {
+      "check": "scanner.config.certs:clamd-error.conf",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/etc/certs",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/etc/certs"
+    },
+    {
+      "check": "scanner.config.foreground:clamd-error.conf",
+      "passed": true,
+      "actual": "yes",
+      "expected": "yes"
+    },
+    {
+      "check": "scanner.config.error.OfficialDatabaseOnly",
+      "passed": true,
+      "actual": "yes",
+      "expected": "yes"
+    },
+    {
+      "check": "scanner.config.error.TCPAddr",
+      "passed": true,
+      "actual": "127.0.0.1",
+      "expected": "127.0.0.1"
+    },
+    {
+      "check": "scanner.config.error.TCPSocket",
+      "passed": true,
+      "actual": "3311",
+      "expected": "3311"
+    },
+    {
+      "check": "scanner.config.error.StreamMaxLength",
+      "passed": true,
+      "actual": "1024",
+      "expected": "1024"
+    },
+    {
+      "check": "scanner.config.error.SelfCheck",
+      "passed": true,
+      "actual": "0",
+      "expected": "0"
+    },
+    {
+      "check": "scanner.version:clamd",
+      "passed": true,
+      "actual": "ClamAV 1.5.4",
+      "expected": null
+    },
+    {
+      "check": "scanner.version:freshclam",
+      "passed": true,
+      "actual": "ClamAV 1.5.4",
+      "expected": null
+    },
+    {
+      "check": "scanner.ready.ping:main",
+      "passed": true,
+      "actual": "PONG",
+      "expected": "PONG"
+    },
+    {
+      "check": "scanner.ready.port:main",
+      "passed": true,
+      "actual": 3310,
+      "expected": 3310
+    },
+    {
+      "check": "scanner.ready.version:main",
+      "passed": true,
+      "actual": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+      "expected": null
+    },
+    {
+      "check": "scanner.owned.host:main",
+      "passed": true,
+      "actual": "127.0.0.1",
+      "expected": "127.0.0.1"
+    },
+    {
+      "check": "scanner.owned.port:main",
+      "passed": true,
+      "actual": 3310,
+      "expected": 3310
+    },
+    {
+      "check": "scanner.owned.inode:main",
+      "passed": true,
+      "actual": "25612",
+      "expected": "25612"
+    },
+    {
+      "check": "scanner.owned.executable:main",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd"
+    },
+    {
+      "check": "scanner.owned.config:main",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-main.conf",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-main.conf"
+    },
+    {
+      "check": "scanner.process.pid:main",
+      "passed": true,
+      "actual": 5148,
+      "expected": 5148
+    },
+    {
+      "check": "scanner.process.start_time:main",
+      "passed": true,
+      "actual": "13712",
+      "expected": "13712"
+    },
+    {
+      "check": "scanner.process.executable:main",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd"
+    },
+    {
+      "check": "scanner.process.config_arg:main",
+      "passed": true,
+      "actual": [
+        "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+        "--foreground",
+        "--config-file=/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-main.conf"
+      ],
+      "expected": null
+    },
+    {
+      "check": "scanner.ready.ping:error",
+      "passed": true,
+      "actual": "PONG",
+      "expected": "PONG"
+    },
+    {
+      "check": "scanner.ready.port:error",
+      "passed": true,
+      "actual": 3311,
+      "expected": 3311
+    },
+    {
+      "check": "scanner.ready.version:error",
+      "passed": true,
+      "actual": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+      "expected": null
+    },
+    {
+      "check": "scanner.owned.host:error",
+      "passed": true,
+      "actual": "127.0.0.1",
+      "expected": "127.0.0.1"
+    },
+    {
+      "check": "scanner.owned.port:error",
+      "passed": true,
+      "actual": 3311,
+      "expected": 3311
+    },
+    {
+      "check": "scanner.owned.inode:error",
+      "passed": true,
+      "actual": "23949",
+      "expected": "23949"
+    },
+    {
+      "check": "scanner.owned.executable:error",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd"
+    },
+    {
+      "check": "scanner.owned.config:error",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-error.conf",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-error.conf"
+    },
+    {
+      "check": "scanner.process.pid:error",
+      "passed": true,
+      "actual": 5156,
+      "expected": 5156
+    },
+    {
+      "check": "scanner.process.start_time:error",
+      "passed": true,
+      "actual": "13725",
+      "expected": "13725"
+    },
+    {
+      "check": "scanner.process.executable:error",
+      "passed": true,
+      "actual": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+      "expected": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd"
+    },
+    {
+      "check": "scanner.process.config_arg:error",
+      "passed": true,
+      "actual": [
+        "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+        "--foreground",
+        "--config-file=/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-error.conf"
+      ],
+      "expected": null
+    },
+    {
+      "check": "scanner.control_kinds",
+      "passed": true,
+      "actual": [
+        "main",
+        "error"
+      ],
+      "expected": [
+        "main",
+        "error"
+      ]
+    },
+    {
+      "check": "scanner.control.clean:main",
+      "passed": true,
+      "actual": "stream: OK",
+      "expected": "stream: OK"
+    },
+    {
+      "check": "scanner.control.clean_after:main",
+      "passed": true,
+      "actual": "stream: OK",
+      "expected": "stream: OK"
+    },
+    {
+      "check": "scanner.control.eicar:main",
+      "passed": true,
+      "actual": "stream: Eicar-Test-Signature FOUND",
+      "expected": null
+    },
+    {
+      "check": "scanner.control.clean:error",
+      "passed": true,
+      "actual": "stream: OK",
+      "expected": "stream: OK"
+    },
+    {
+      "check": "scanner.control.clean_after:error",
+      "passed": true,
+      "actual": "stream: OK",
+      "expected": "stream: OK"
+    },
+    {
+      "check": "scanner.control.eicar:error",
+      "passed": true,
+      "actual": "stream: Eicar-Test-Signature FOUND",
+      "expected": null
+    },
+    {
+      "check": "scanner.control.size_error",
+      "passed": true,
+      "actual": "INSTREAM size limit exceeded. ERROR",
+      "expected": null
+    },
+    {
+      "check": "scanner.cleanup.state",
+      "passed": true,
+      "actual": "STOPPED",
+      "expected": "STOPPED"
+    },
+    {
+      "check": "scanner.cleanup.evidence",
+      "passed": true,
+      "actual": true,
+      "expected": true
+    },
+    {
+      "check": "scanner.cleanup.kinds",
+      "passed": true,
+      "actual": [
+        "main",
+        "error"
+      ],
+      "expected": [
+        "main",
+        "error"
+      ]
+    },
+    {
+      "check": "scanner.cleanup.status:main",
+      "passed": true,
+      "actual": "STOPPED",
+      "expected": "STOPPED"
+    },
+    {
+      "check": "scanner.cleanup.pid:main",
+      "passed": true,
+      "actual": 5148,
+      "expected": 5148
+    },
+    {
+      "check": "scanner.cleanup.start_time:main",
+      "passed": true,
+      "actual": "13712",
+      "expected": "13712"
+    },
+    {
+      "check": "scanner.cleanup.status:error",
+      "passed": true,
+      "actual": "STOPPED",
+      "expected": "STOPPED"
+    },
+    {
+      "check": "scanner.cleanup.pid:error",
+      "passed": true,
+      "actual": 5156,
+      "expected": 5156
+    },
+    {
+      "check": "scanner.cleanup.start_time:error",
+      "passed": true,
+      "actual": "13725",
+      "expected": "13725"
+    }
+  ],
+  "failure_count": 0,
+  "failures": [],
+  "journeys": [
+    {
+      "id": "OP-PROC-01",
+      "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "file": "sucafina/operations.spec.ts",
+      "line": 13,
+      "project": "chromium",
+      "expected_status": "passed",
+      "outcome": "expected",
+      "attempts": 1,
+      "statuses": [
+        "passed"
+      ],
+      "retries": [
+        0
+      ],
+      "duration_ms": 1990,
+      "attachments": [
+        {
+          "name": "operations-j04-comparison.json",
+          "content_type": "application/json",
+          "inline_bytes": 571,
+          "inline_sha256": "6f809138e48fdd168d9a19b34e2096d044ca461215a1e44d2004b0ef1bec27bb"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "OP-PROC-02",
+      "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "file": "sucafina/operations.spec.ts",
+      "line": 18,
+      "project": "chromium",
+      "expected_status": "passed",
+      "outcome": "expected",
+      "attempts": 1,
+      "statuses": [
+        "passed"
+      ],
+      "retries": [
+        0
+      ],
+      "duration_ms": 10968,
+      "attachments": [
+        {
+          "name": "operations-sourcing-frozen-fx.json",
+          "content_type": "application/json",
+          "inline_bytes": 1002,
+          "inline_sha256": "59f51e475f3783e1b4224236719c1a4431c84696d64d4b97dd9cf4140420ace0"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "OP-PROC-03",
+      "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "file": "sucafina/operations.spec.ts",
+      "line": 23,
+      "project": "chromium",
+      "expected_status": "passed",
+      "outcome": "expected",
+      "attempts": 1,
+      "statuses": [
+        "passed"
+      ],
+      "retries": [
+        0
+      ],
+      "duration_ms": 10367,
+      "attachments": [
+        {
+          "name": "operations-missing-fx-refusal.json",
+          "content_type": "application/json",
+          "inline_bytes": 1393,
+          "inline_sha256": "2f54c1ebdd8037c8e491615218f2415bc23c6a9baa674fef3c69df8cd583dab9"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "OP-IMPORT-01",
+      "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "file": "sucafina/operations.spec.ts",
+      "line": 28,
+      "project": "chromium",
+      "expected_status": "passed",
+      "outcome": "expected",
+      "attempts": 1,
+      "statuses": [
+        "passed"
+      ],
+      "retries": [
+        0
+      ],
+      "duration_ms": 7751,
+      "attachments": [
+        {
+          "name": "operations-import-real-receipt.json",
+          "content_type": "application/json",
+          "inline_bytes": 1023320,
+          "inline_sha256": "fc77d1f173064d4364d95fe87fd12f654d5683f485591575a58741b50b0104cc"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "id": "OP-DOC-01",
+      "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "file": "sucafina/operations.spec.ts",
+      "line": 33,
+      "project": "chromium",
+      "expected_status": "passed",
+      "outcome": "expected",
+      "attempts": 1,
+      "statuses": [
+        "passed"
+      ],
+      "retries": [
+        0
+      ],
+      "duration_ms": 23384,
+      "attachments": [
+        {
+          "name": "operations-document-real-reference.json",
+          "content_type": "application/json",
+          "inline_bytes": 3194,
+          "inline_sha256": "e1ba4fb8dea0844a2bf3333024dd6fad7919d27bbea9ab7b72b211a1afd35191"
+        }
+      ],
+      "errors": []
+    }
+  ],
+  "inventory": {
+    "html": "Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright-report/index.html",
+    "test_results": [],
+    "traces": [],
+    "trace_policy": "retain-on-failure: no trace is required for a passing attempt",
+    "scanner": {
+      "evidence_prefix": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/",
+      "work_directory": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr",
+      "services": {
+        "main": {
+          "port": 3310,
+          "ping": "PONG",
+          "version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+          "listen_inode": "25612"
+        },
+        "error": {
+          "port": 3311,
+          "ping": "PONG",
+          "version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+          "listen_inode": "23949"
+        }
+      },
+      "databases": [
+        {
+          "name": "bytecode.cvd",
+          "bytes": 281702,
+          "sha256": "6d4aa01f219e988060fc419f495d07f27e0cdf1a2cccc065971da922c76f7ffb"
+        },
+        {
+          "name": "daily.cvd",
+          "bytes": 23450445,
+          "sha256": "a99edfb87ac6246137214caa2b3f238297e02f376954f64096392d4b1e773731"
+        },
+        {
+          "name": "main.cvd",
+          "bytes": 89072577,
+          "sha256": "0b2182d229f46981ec8f535382222f7c9dfdd656b250ad47988b910a8d302365"
+        }
+      ],
+      "cleanup": {
+        "at": "2026-11-15T04:16:56.841Z",
+        "results": [
+          {
+            "kind": "main",
+            "pid": 5148,
+            "startTime": "13712",
+            "status": "STOPPED"
+          },
+          {
+            "kind": "error",
+            "pid": 5156,
+            "startTime": "13725",
+            "status": "STOPPED"
+          }
+        ],
+        "state": "STOPPED",
+        "evidencePreserved": true
+      }
+    }
+  },
+  "document_hashes": [
+    {
+      "path": "Orchestra-SF/Orchestra-SF/test-ci-evidence/request.json",
+      "bytes": 2644,
+      "sha256": "0fefca1fe25e5852202edd7e848853a1d486e0c78450e78435740cf834511d3a"
+    },
+    {
+      "path": "/workspace/scratch/68b6bb3034b2/root75/evidence/R4/snapshot-request.json",
+      "bytes": 580,
+      "sha256": "1e0ff71361aaba45007a4ffff1377763bf51703928ee9045d8c0273dee2443a5"
+    },
+    {
+      "path": "Orchestra-SF/Orchestra-SF/test-ci-evidence/selection.json",
+      "bytes": 170,
+      "sha256": "eb4aee40b4a4826764c4de07d51ad35387abd55f5071f783a11a2420c951935d"
+    },
+    {
+      "path": "Orchestra-SF/Orchestra-SF/test-ci-evidence/playwright-selection.json",
+      "bytes": 5549,
+      "sha256": "d2b2d98c156be35618f3c3d0f5a93f0bbb69ed53d38a6241c1a4d928a0946932"
+    },
+    {
+      "path": "Orchestra-SF/Orchestra-SF/test-ci-evidence/playwright-runtime.json",
+      "bytes": 1386690,
+      "sha256": "307d48659438705323442d721affbe58587228653964277f7d6d9d463db39fb2"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/setup.json",
+      "bytes": 835,
+      "sha256": "e098392e5f3c312c7419d5819daa185964a503b3dcc6563a4b7d9ba9b7ba16d0"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/tools.lock.json",
+      "bytes": 2276,
+      "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/package.json",
+      "bytes": 776,
+      "sha256": "6987fa754a95ac93200c05552f39910b4318973bfc91ce96f13f9c9c99190ba8"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/databases.json",
+      "bytes": 623,
+      "sha256": "4a8420ed9fcac659be8794ccc14219078a63222ce8986a918317c4207b9158d6"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/freshclam-output.log",
+      "bytes": 1279,
+      "sha256": "d2b6e4af0befece306aaa9e545a2430465dc1ce9b03801526dc39d7bad70680b"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/service.json",
+      "bytes": 866,
+      "sha256": "d0caf0e442f143d62ddbb63b0935323d2becfbf9703bf02dd0534e3bf17c994e"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/configuration.json",
+      "bytes": 781,
+      "sha256": "cf20c954d80bee55a7b1c22e4ac84e4fa52efae559eb87592da95d960c55c23c"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/freshclam.conf.txt",
+      "bytes": 480,
+      "sha256": "94f30a856b938d9c66a480ccbb5af9bd70a495b3e67fc637f01543bed34e386d"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/clamd-main.conf.txt",
+      "bytes": 777,
+      "sha256": "3094d0905c8ebc9c61f37030e81bbd02b170731a66c939afc079448c4e372bc8"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/clamd-error.conf.txt",
+      "bytes": 775,
+      "sha256": "aaa9fd1e7f76d5d094dfcdc9a634785a90c69c8fdec0a95ba4b969659210f96f"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/clamd-version.txt",
+      "bytes": 13,
+      "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/freshclam-version.txt",
+      "bytes": 13,
+      "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/process-main.json",
+      "bytes": 381,
+      "sha256": "e80f62db78e562e0f0a91714f3180cdd33d3ecd001d23c6c6af97a6c5e8176bf"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/process-error.json",
+      "bytes": 382,
+      "sha256": "364c67c1b5ae49b0f8a2da84cd0d67cf57a107987d70512ffa73798350aa7661"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/daemon-controls.json",
+      "bytes": 472,
+      "sha256": "6ead66ba9f7bb6a9fee31fcbbac90fc604c7abe5c2fd79e2a373e0a6cfdf0f00"
+    },
+    {
+      "path": "_temp/sf-operations75-43675784039-1.jmqZdr/evidence/cleanup.json",
+      "bytes": 326,
+      "sha256": "bb48ab900f3393fec895044375e90cda3b01192c55f819c04b92b11be8557f29"
+    }
+  ],
+  "requires_external_intake": [
+    "GitHub MCP: final released73+75 candidate W and its tree; snapshot S has single parent W and only .ci-run.json delta.",
+    "GitHub MCP: Actions run/job terminal success bound to S, correct repository/push/branch, setup/run/cleanup/upload steps successful.",
+    "GitHub MCP: base Playwright config, package scripts, flaky reporter and lockfile hashes at W match the reviewed source policy; JSON omits expect/use.",
+    "Review uploaded HTML and failure traces if present; raw pass counts alone do not close all campaign criteria.",
+    "Checks45, native/provider parity, C06 and global release are separate gates."
+  ],
+  "GLOBAL_RELEASE": false,
+  "checks45": "NOT_ESTABLISHED_BY_THIS_PARSER",
+  "native_parity": "NOT_ESTABLISHED_BY_THIS_PARSER"
+}

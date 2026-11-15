@@ -1,0 +1,213 @@
+{
+  "schema": "sf2h.integration71.candidates.v1",
+  "base60": {
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d"
+  },
+  "ACK71": {
+    "commit": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "tree": "8962e2dce1cad73b93dcd75a4a5bce5807eb3de4",
+    "blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+    "pr": 65,
+    "comment_id": 6888325805
+  },
+  "current_material_candidate": {
+    "symbol": "C45",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "candidates": [
+    {
+      "symbol": "C29",
+      "source": 59,
+      "sha": "342f04688aa173914f36a81e80e6781242616e82",
+      "tree": "ac40db3e52bc58b171bc1bb4f311ed0d1d13bbab",
+      "parent": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "paths": 9,
+      "manifest": "candidates/C29-runtime59.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C30",
+      "source": 63,
+      "sha": "947a4add941893c8247b95a5ce6386468313838b",
+      "tree": "280cbcaa7a73a88f7c9d4c13ae8efd796aa63caf",
+      "parent": "342f04688aa173914f36a81e80e6781242616e82",
+      "paths": 11,
+      "manifest": "candidates/C30-operations63.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C31",
+      "source": 64,
+      "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+      "parent": "947a4add941893c8247b95a5ce6386468313838b",
+      "paths": 6,
+      "manifest": "candidates/C31-native64.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C32",
+      "source": 61,
+      "sha": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+      "tree": "87c3d65399a71f4bbf72c8714f7ee02e662b24e7",
+      "parent": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "paths": 9,
+      "manifest": "candidates/C32-mixed61.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C33",
+      "source": 65,
+      "sha": "f8c316a3e96447fb2b33555396060e7977d51cfa",
+      "tree": "4c9cc42ad6cd557febf721db14c802d1f2fb9ced",
+      "parent": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+      "paths": 9,
+      "manifest": "candidates/C33-c12-65.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C34",
+      "source": 66,
+      "sha": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+      "tree": "a4881429b5d4e835b81c5619264cb8b0238d19f8",
+      "parent": "f8c316a3e96447fb2b33555396060e7977d51cfa",
+      "paths": 10,
+      "manifest": "candidates/C34-exports66.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C35",
+      "source": 68,
+      "sha": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+      "parent": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+      "paths": 11,
+      "manifest": "candidates/C35-workbench68.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C36",
+      "source": 69,
+      "sha": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+      "tree": "78d7c23395d92a4a0193fdd545f8aa023af0c55d",
+      "parent": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "paths": 12,
+      "manifest": "candidates/C36-atlas69.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C37",
+      "source": 73,
+      "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+      "tree": "94be5190a25b973af4ca647db5149e2ecec6df37",
+      "parent": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+      "paths": 7,
+      "manifest": "candidates/C37-privacy73.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C38",
+      "source": 72,
+      "sha": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+      "tree": "9ad861864150f4690ad1ed3faa1f8c7164130212",
+      "parent": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+      "paths": 14,
+      "manifest": "candidates/C38-auth72.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C39",
+      "source": 62,
+      "sha": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+      "tree": "6975ec3f93801e081f14091343f6c2f2d1b57252",
+      "parent": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+      "paths": 20,
+      "manifest": "candidates/C39-bi62.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C40",
+      "source": 75,
+      "sha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+      "tree": "b325894e636ae31db80886bb9ca2add1ce4ec126",
+      "parent": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
+      "paths": 9,
+      "manifest": "candidates/C40-operations75.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C41",
+      "source": 67,
+      "sha": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+      "tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
+      "parent": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+      "paths": 17,
+      "manifest": "candidates/C41-dashboard67.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C42",
+      "source": 80,
+      "sha": "9084b3ee2f7ae70e9ac9da428ed5490322540eef",
+      "tree": "69a6e2c8bc498548d5e2ab49e50ee6aa61c42cf6",
+      "parent": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+      "paths": 7,
+      "manifest": "candidates/C42-cost80.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C43",
+      "source": 76,
+      "sha": "c3e9bd367fe04cab3f9e19e8bcb77fe951632839",
+      "tree": "fbe7567127db5ecee19afd1440ea78eefdb01d10",
+      "parent": "9084b3ee2f7ae70e9ac9da428ed5490322540eef",
+      "paths": 7,
+      "manifest": "candidates/C43-canonical-read76.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C44",
+      "source": 74,
+      "sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+      "tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+      "parent": "c3e9bd367fe04cab3f9e19e8bcb77fe951632839",
+      "paths": 12,
+      "manifest": "candidates/C44-http74.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    },
+    {
+      "symbol": "C45",
+      "source": 86,
+      "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+      "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+      "parent": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+      "paths": 4,
+      "source_unit_paths": 5,
+      "already_satisfied": 1,
+      "manifest": "candidates/C45-export-egress86.json",
+      "readback": "VERIFIED_EXACT_TEXT_BLOBS_AND_ANCESTRY",
+      "validation": "NOT_RUN"
+    }
+  ],
+  "final_epic_candidate_accepted": false,
+  "GLOBAL_RELEASE": false
+}
+

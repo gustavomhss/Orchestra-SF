@@ -1,0 +1,420 @@
+{
+  "schema": "sf2h.operations75.execution-ledger.v1",
+  "scope": "Actual hosted Actions runs; source controls and composed browser qualification remain separate.",
+  "runs": [
+    {
+      "id": "R1",
+      "selection": "controls",
+      "work": "7be41d01c1d64fc3a067ba9a465a3522d9d040a8",
+      "work_tree": "467e99cd61489102607f200ce3b48b9d670808d6",
+      "snapshot": "51bf918908992b71b59f98489edb571da6026584",
+      "snapshot_tree": "87a1decaa06a00d8fa6a3dba29fde06e51cdacdb",
+      "run": 43671662128,
+      "job": 132682829681,
+      "attempt": 1,
+      "outcome": "FAIL_SETUP",
+      "tests": {
+        "executed": 0,
+        "expected": 7,
+        "status": "NOT_RUN_BLOCKED_SETUP"
+      },
+      "artifact": {
+        "id": 14144666197,
+        "sha256": "3aa8a0128e35dc1cdebbb0ec729d3a0a413bfc4c668c5fbec358fb711896a544",
+        "bytes": 5746,
+        "downloaded_and_hash_verified": true,
+        "files": [
+          {
+            "path": "request.json",
+            "sha256": "20290068ead764306c2a649aa345e7b6be0ee6dde9f75d273fa6e1e6583d2c9a",
+            "bytes": 3084
+          },
+          {
+            "path": "scanner/clamd-ldd.txt",
+            "sha256": "26f62e7515ce2ac69244a17daca6861c947b0fc8eaa9c13a9dfd18889ce987e4",
+            "bytes": 725
+          },
+          {
+            "path": "scanner/clamd-version.txt",
+            "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "bytes": 0
+          },
+          {
+            "path": "scanner/cleanup.json",
+            "sha256": "e024893322c3813efedda76306d43535681eaaaf9c1fce56395c02909cf9a447",
+            "bytes": 230
+          },
+          {
+            "path": "scanner/package-info.txt",
+            "sha256": "2a491cadb125eb384cfec5c47e830192e0dbbdcb6aceb1c2069e488f4aebb498",
+            "bytes": 399
+          },
+          {
+            "path": "scanner/package-sha256.txt",
+            "sha256": "d78ba8e65371dbf678e8c472acc1fcf7b4612728daa9acee562175b1ff7d7e76",
+            "bytes": 76
+          },
+          {
+            "path": "scanner/package.json",
+            "sha256": "6987fa754a95ac93200c05552f39910b4318973bfc91ce96f13f9c9c99190ba8",
+            "bytes": 776
+          },
+          {
+            "path": "scanner/setup.json",
+            "sha256": "7a37f506579ba4a8dd9ab53bc5644109eca1748b9b714519f184a75915212166",
+            "bytes": 487
+          },
+          {
+            "path": "scanner/tools.lock.json",
+            "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929",
+            "bytes": 2276
+          }
+        ]
+      },
+      "receipt": "ci/R1-result.json",
+      "corrective_action": "Explicit job-local version configuration for both clamd and freshclam; no global configuration or service"
+    },
+    {
+      "id": "R2",
+      "selection": "controls",
+      "work": "3e3a23ad86e7895a4f5405ade0ce084a813b9f24",
+      "work_tree": "e4d79d4231a7626ab30e3e95a5e465d4f4e13f26",
+      "snapshot": "1f06698c42a932a612b90fd9c93301214b0ddf11",
+      "snapshot_tree": "7a720ae40c9d9590e72a84c145a6578e05be0acb",
+      "run": 43672005574,
+      "job": 132683887580,
+      "attempt": 1,
+      "outcome": "FAIL_SETUP",
+      "tests": {
+        "executed": 0,
+        "expected": 7,
+        "status": "NOT_RUN_BLOCKED_SETUP"
+      },
+      "artifact": {
+        "id": 14145310023,
+        "sha256": "1f03c8046ae1b90cc2547b2506c091e9b327b5917c96db328b0354b121138848",
+        "bytes": 10485,
+        "downloaded_and_hash_verified": true,
+        "files": [
+          {
+            "path": "request.json",
+            "bytes": 3084,
+            "sha256": "0b9e450c1c8c326f62f4a133191bd0dd4aeeff44f87f0110aadb4ddfa2b31b3a"
+          },
+          {
+            "path": "scanner/clamd-error.conf.txt",
+            "bytes": 775,
+            "sha256": "4be648f00d2f8726608db93823f5ecc93e550a598e76ba0b3fac6dbd8e4d4407"
+          },
+          {
+            "path": "scanner/clamd-ldd.txt",
+            "bytes": 725,
+            "sha256": "c49d683627f0840e3ce82e5525c10193eaac1bade675739d9ea9dfb4df862a91"
+          },
+          {
+            "path": "scanner/clamd-main.conf.txt",
+            "bytes": 777,
+            "sha256": "8d36decbbc29561d37512422502f6c0319f71c2df837ab715e109a575dc50737"
+          },
+          {
+            "path": "scanner/clamd-version.txt",
+            "bytes": 13,
+            "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+          },
+          {
+            "path": "scanner/cleanup.json",
+            "bytes": 230,
+            "sha256": "05ab15c31a2dddee143608b9c6bdcbe801af233be5743cea7d05ed5735f1cedf"
+          },
+          {
+            "path": "scanner/configuration.json",
+            "bytes": 781,
+            "sha256": "b2c959aada45df0ca60ee42f6a80a32ae5b6f169280a135a5498d370f0d746a5"
+          },
+          {
+            "path": "scanner/freshclam-ldd.txt",
+            "bytes": 943,
+            "sha256": "28ea3f5216cc138e2f57924a3ad5fdf9e9da2d67cf85f7103a563ccbb4d16119"
+          },
+          {
+            "path": "scanner/freshclam-output.log",
+            "bytes": 970,
+            "sha256": "c167ac86513d0e0e87176eddf76112dc888d7b363c4c6673e2c42e755c5bd614"
+          },
+          {
+            "path": "scanner/freshclam-version.txt",
+            "bytes": 13,
+            "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+          },
+          {
+            "path": "scanner/freshclam.conf.txt",
+            "bytes": 480,
+            "sha256": "824a547a21602a03dcf3a2e8c22ea9d180143c2067198dd1f5f40900c24aa9ba"
+          },
+          {
+            "path": "scanner/freshclam.log",
+            "bytes": 1037,
+            "sha256": "f3e5ab1a1edb292d753cd3a33515b768794b01f4fd7f7c96a760b16a8d8fe225"
+          },
+          {
+            "path": "scanner/package-info.txt",
+            "bytes": 399,
+            "sha256": "2a491cadb125eb384cfec5c47e830192e0dbbdcb6aceb1c2069e488f4aebb498"
+          },
+          {
+            "path": "scanner/package-sha256.txt",
+            "bytes": 76,
+            "sha256": "0b38c495452c7b5de12301e6d2d7e6d322a88778438629442fdb82884431b289"
+          },
+          {
+            "path": "scanner/package.json",
+            "bytes": 776,
+            "sha256": "6987fa754a95ac93200c05552f39910b4318973bfc91ce96f13f9c9c99190ba8"
+          },
+          {
+            "path": "scanner/setup.json",
+            "bytes": 487,
+            "sha256": "9d06ba0b2873aa42b2f01c03f84dc577fbabeb35e27de3492e953c4682327b40"
+          },
+          {
+            "path": "scanner/tools.lock.json",
+            "bytes": 2276,
+            "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929"
+          },
+          {
+            "path": "scanner/version.conf",
+            "bytes": 192,
+            "sha256": "854e10b003abf1e20521180fd1aabd54e377f75aaf608331df828ab3f48d8a60"
+          }
+        ]
+      },
+      "receipt": "ci/R2-result.json",
+      "corrective_action": "Use official CVD_CERTS_DIR process environment for the FreshClam child/test-engine only; preserve TestDatabases yes and all verification"
+    },
+    {
+      "id": "R3",
+      "selection": "controls",
+      "work": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "work_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+      "snapshot": "209c613895a2555ba7de8befc33f1bd41b263f62",
+      "snapshot_tree": "659cae7dbdc9cbe9cad4387e1498a39a1c3ae90a",
+      "run": 43672349552,
+      "job": 132684956460,
+      "attempt": 1,
+      "outcome": "PASS_COMPONENT_CONTROLS",
+      "tests": {
+        "executed": 7,
+        "pass": 7,
+        "fail": 0,
+        "skipped": 0,
+        "expect_calls": 150,
+        "files": 3,
+        "duration_ms": 1500,
+        "cases": [
+          "(pass) real ClamD INSTREAM accepts clean, rejects EICAR and accepts clean again [61.58ms]",
+          "(pass) real ClamD size-limit error is rejected while both real daemons remain responsive [11.11ms]",
+          "(pass) real ClamD outage fails closed after the owned error daemon is stopped [334.26ms]",
+          "(pass) real ClamD rejects unknown and malformed INSTREAM commands and remains healthy [12.08ms]",
+          "(pass) real private import admission persists clean bytes and rejects EICAR without durable effects [352.09ms]",
+          "(pass) real private supplier upload commits clean bytes and rejects EICAR before mutation [72.78ms]",
+          "(pass) private import and supplier upload fail closed against the stopped owned real daemon [80.78ms]"
+        ]
+      },
+      "artifact": {
+        "id": 14145385503,
+        "sha256": "3c850b7e0a7ce11cdfae73be98e2d1c4ca2c0378549cd7fa991f76dfb45d7edd",
+        "bytes": 18829,
+        "downloaded_and_hash_verified": true,
+        "files": [
+          {
+            "path": "bun.log",
+            "bytes": 3744,
+            "sha256": "2d5aba96e166b952861c510143dc2dff4e2bf90b21b6fd88ee3d29340f6be576"
+          },
+          {
+            "path": "omni-nonce.txt",
+            "bytes": 33,
+            "sha256": "740896b0808ef10c7be2c83e6408481eead12a0b134d9a8693db32589ac1429c"
+          },
+          {
+            "path": "omni.json",
+            "bytes": 237,
+            "sha256": "c4cdbd28eccee5b5a42b91e0dd60b9a6b04a20ab2c4f13e40c4324caf2a3657d"
+          },
+          {
+            "path": "request.json",
+            "bytes": 3084,
+            "sha256": "aee47b10d1f4d46fbf733371e137d6cd2e8dae643cce2ae8e0a39e5181cd3e1d"
+          },
+          {
+            "path": "scanner/clamd-error-output.log",
+            "bytes": 2698,
+            "sha256": "c9cfbe9e11cd771e8811628604a91a365346641e504f2d670f6e9311fc99f3e6"
+          },
+          {
+            "path": "scanner/clamd-error.conf.txt",
+            "bytes": 775,
+            "sha256": "85d6095c631a514e33b4ae202b456d8640afa5485603b8e3329423643ae43dde"
+          },
+          {
+            "path": "scanner/clamd-error.log",
+            "bytes": 3491,
+            "sha256": "fb6e17c5ca1aa363b0a7ed6135880d7844198dc3c8e810d6afcf2defec87a6fa"
+          },
+          {
+            "path": "scanner/clamd-ldd.txt",
+            "bytes": 725,
+            "sha256": "62f5a7836d998ae4a6c8363e5311986aea3e0f5570ccd75efb2206c6b1938927"
+          },
+          {
+            "path": "scanner/clamd-main-output.log",
+            "bytes": 3294,
+            "sha256": "59c9daa82e1e7c4de5ab14a22f7867076e35f34d4fddb2afc7aec674e2aeb216"
+          },
+          {
+            "path": "scanner/clamd-main.conf.txt",
+            "bytes": 777,
+            "sha256": "4cebd61f2ca6e02de3d55b5560169a56a48831f25987e86451ea24ec4864fe80"
+          },
+          {
+            "path": "scanner/clamd-main.log",
+            "bytes": 4087,
+            "sha256": "9eb89d0ebd6c4440127b87133a5b32be8aa53b2ae1715ce539d37adf8f8cc08a"
+          },
+          {
+            "path": "scanner/clamd-version.txt",
+            "bytes": 13,
+            "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+          },
+          {
+            "path": "scanner/cleanup.json",
+            "bytes": 278,
+            "sha256": "f5375715f8e330c4adf401ec50290810bc9c575eab3a66fc5bc662996410e19c"
+          },
+          {
+            "path": "scanner/configuration.json",
+            "bytes": 781,
+            "sha256": "dce2b85c66fb8a150d5ee286d8413de9d56944f06fbab238bbc47e2bff386c41"
+          },
+          {
+            "path": "scanner/daemon-controls.json",
+            "bytes": 472,
+            "sha256": "6ead66ba9f7bb6a9fee31fcbbac90fc604c7abe5c2fd79e2a373e0a6cfdf0f00"
+          },
+          {
+            "path": "scanner/databases.json",
+            "bytes": 623,
+            "sha256": "4a8420ed9fcac659be8794ccc14219078a63222ce8986a918317c4207b9158d6"
+          },
+          {
+            "path": "scanner/freshclam-ldd.txt",
+            "bytes": 943,
+            "sha256": "71066c715c66d6f328f8d8b96d95b82faba6e581b9e4934b4c82fcb59b95e022"
+          },
+          {
+            "path": "scanner/freshclam-output.log",
+            "bytes": 1279,
+            "sha256": "d76530b880fe36beea2eab67a16bdc2b166a31ea05b25241cfc079ddcb0b36e1"
+          },
+          {
+            "path": "scanner/freshclam-version.txt",
+            "bytes": 13,
+            "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+          },
+          {
+            "path": "scanner/freshclam.conf.txt",
+            "bytes": 480,
+            "sha256": "78ff1bc61bfd52eb38d7c9397888ea285ac33a9889545e3eea1dd4eadd367cda"
+          },
+          {
+            "path": "scanner/freshclam.log",
+            "bytes": 1346,
+            "sha256": "14f5af26857ad349d7a3fafcbd2492b51004afe8a6a0a24299ce61749c3e4001"
+          },
+          {
+            "path": "scanner/package-info.txt",
+            "bytes": 399,
+            "sha256": "2a491cadb125eb384cfec5c47e830192e0dbbdcb6aceb1c2069e488f4aebb498"
+          },
+          {
+            "path": "scanner/package-sha256.txt",
+            "bytes": 76,
+            "sha256": "193571005c024b5ab90d90d4406a4cd9f3d0a50b572e71c140ce2aa7525f47c8"
+          },
+          {
+            "path": "scanner/package.json",
+            "bytes": 776,
+            "sha256": "6987fa754a95ac93200c05552f39910b4318973bfc91ce96f13f9c9c99190ba8"
+          },
+          {
+            "path": "scanner/process-error.json",
+            "bytes": 382,
+            "sha256": "6744aa29d2f65d46541f5645db3f1667a32de8217395feac6d519d14e7d51395"
+          },
+          {
+            "path": "scanner/process-main.json",
+            "bytes": 381,
+            "sha256": "0f6afdf3ad3c273b50524330b99febfe6d9a6d144539a8391024bb071fa13148"
+          },
+          {
+            "path": "scanner/service.json",
+            "bytes": 866,
+            "sha256": "b54afe58abba748061b4be5dc26297738a134197d8b5799596d7f89d5021e5ac"
+          },
+          {
+            "path": "scanner/setup.json",
+            "bytes": 835,
+            "sha256": "665017cb565e2b26e390737de5dd3aae87d6aa293b0a6ea7dcd86fd94df106a6"
+          },
+          {
+            "path": "scanner/tools.lock.json",
+            "bytes": 2276,
+            "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929"
+          },
+          {
+            "path": "scanner/version.conf",
+            "bytes": 192,
+            "sha256": "87d87802ce135ffea911a25a8a019b1f9fc9f46abbdce3eb8556a22db56f6ee8"
+          }
+        ]
+      },
+      "receipt": "ci/R3-result.json",
+      "corrective_action": null
+    },
+    {
+      "id": "R4",
+      "selection": "five original journeys",
+      "work": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+      "work_tree": "b325894e636ae31db80886bb9ca2add1ce4ec126",
+      "snapshot": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "snapshot_tree": "97cfe87165038481ffb1d5b3ad98fa673a2fafcc",
+      "run": 43675784039,
+      "job": 132695512980,
+      "attempt": 1,
+      "outcome": "SUCCESS_5_PASS_0_FAIL_0_SKIP_0_FLAKY",
+      "tests": {
+        "pass": 5,
+        "fail": 0,
+        "skip": 0,
+        "flaky": 0,
+        "retries": 0
+      },
+      "artifact": {
+        "id": 14146162056,
+        "bytes": 319886,
+        "sha256": "11fd4542d0a29a1841a0a640b7100cf04a340b0948db60a13139c262898a8d21",
+        "git_blob": "569d25b96becba442c8ae185a1d04c7d315ffd7b"
+      },
+      "receipt": "ci/R4-result.json",
+      "corrective_action": null
+    }
+  ],
+  "preserved_history63": {
+    "run": 43668156670,
+    "job": 132672057817,
+    "outcome": "1PASS_4FAIL",
+    "replaced_or_rewritten": false
+  },
+  "local_product_test_executions": 0,
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,143 @@
+{
+  "schema": "sf2h.integration71.consumer-acks.v1",
+  "candidate": {
+    "symbol": "C45",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "ACK71": {
+    "commit": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "tree": "8962e2dce1cad73b93dcd75a4a5bce5807eb3de4",
+    "blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+    "pr": 65,
+    "comment_id": 6888325805
+  },
+  "source_ACKs": {
+    "59": {
+      "pr": 72,
+      "id": 6888395414
+    },
+    "61": {
+      "pr": 73,
+      "id": 6888525408
+    },
+    "62": {
+      "pr": 75,
+      "id": 6888962035,
+      "candidate": "C39",
+      "sha": "a9eb6d3e70714e712c48f7286c53a27b45236d95"
+    },
+    "63": {
+      "pr": 78,
+      "id": 6888416764
+    },
+    "64": {
+      "pr": 80,
+      "id": 6888436534
+    },
+    "65": {
+      "pr": 74,
+      "id": 6888525535
+    },
+    "66": {
+      "pr": 77,
+      "id": 6888525679
+    },
+    "67": {
+      "pr": 82,
+      "id": 6889050768,
+      "candidate": "C41",
+      "sha": "1074cf338619a70ddef1ad1f62e32618fc355fed"
+    },
+    "68": {
+      "pr": 81,
+      "id": 6888559082
+    },
+    "69": {
+      "pr": 79,
+      "id": 6888778908
+    },
+    "70": {
+      "pr": 83,
+      "id": 6888436676
+    },
+    "72": {
+      "pr": 84,
+      "id": 6888525821,
+      "consumption_id": 6888943690,
+      "candidate": "C38",
+      "sha": "943b3fc6919eecb55556b05c48f07c9dbba1c530"
+    },
+    "73": {
+      "pr": 86,
+      "id": 6888525976,
+      "routing_id": 6888525976,
+      "consumption_id": 6888857686,
+      "candidate": "C37"
+    },
+    "74": {
+      "pr": 85,
+      "id": 6888526165,
+      "consumption_id": 6889237978,
+      "candidate": "C44",
+      "sha": "eecbdacb21734695094332deb6142aa35d5c9c3c"
+    },
+    "75": {
+      "pr": 78,
+      "id": 6888979964,
+      "candidate": "C40",
+      "sha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+      "terminal_ack_id": 6889396935,
+      "terminal": "4789c5c004e1a99c3def8e9d900979cbd94af77a"
+    },
+    "76": {
+      "pr": 87,
+      "id": 6889215153,
+      "candidate": "C43",
+      "sha": "c3e9bd367fe04cab3f9e19e8bcb77fe951632839"
+    },
+    "79": {
+      "pr": 89,
+      "id": 6889281863,
+      "source": "545201aa12e330360530727a96d7cb9cc678e2b9",
+      "disposition": "DOCUMENTARY_RECEIVED_PRODUCTION_NOT_ADOPTED",
+      "route_pr": 85,
+      "route_id": 6889307115
+    },
+    "80": {
+      "pr": 90,
+      "id": 6889139797,
+      "candidate": "C42",
+      "sha": "9084b3ee2f7ae70e9ac9da428ed5490322540eef",
+      "terminal_ack_id": 6889397051,
+      "documentary_terminal": "2fbf3a9b715bc76793cdff092d6b91b1f0de3190"
+    },
+    "84": {
+      "pr": 94,
+      "id": 6889114172,
+      "source": "ad158d6a068811b88c5765e938d44007264e9320",
+      "scope": "Independent source-scoped auth recheck with append-only C38/C39 static delta; not FINAL",
+      "current_candidate_request_id": 6889418088,
+      "requested_candidate": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d"
+    },
+    "85": {
+      "pr": 84,
+      "id": 6889417981,
+      "source": "307c074630105091b39c96d4b9a713cdf76364b0",
+      "tested_candidate": "C38",
+      "scope": "DOCUMENTARY_QUALIFICATION_ONLY"
+    },
+    "86": {
+      "pr": 86,
+      "id": 6889378679,
+      "candidate": "C45",
+      "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d"
+    }
+  },
+  "interpretation": "Consumption ACK records composition or documentary receipt exactly as labeled; none grants current candidate PASS or global acceptance.",
+  "execution": {
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false
+}
+

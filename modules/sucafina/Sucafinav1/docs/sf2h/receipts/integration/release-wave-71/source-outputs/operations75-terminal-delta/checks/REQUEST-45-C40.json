@@ -1,0 +1,69 @@
+{
+  "schema": "sf2h.operations75.compiler-request-update.v1",
+  "state": "REQUESTED_NOT_RUN",
+  "owner": 45,
+  "requester": 75,
+  "consumer": 71,
+  "work": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+  "tree": "b325894e636ae31db80886bb9ca2add1ce4ec126",
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "packages/app-shell",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:spawn-imports"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "hosted_only": true,
+  "no_owner_takeover": true,
+  "dev_observation": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "dev_requirement": "Reconcile actual origin/dev and record inspected base; old observation is not a lease",
+  "dedup": {
+    "pr": 32,
+    "prior_comments": [
+      6888457115,
+      6888494345,
+      6888678813
+    ],
+    "instruction": "Update the existing45 request, not a second lane.45 chooses the reconciled current composed candidate and real dev/merge-base. C40 browser PASS does not qualify a later C for compiler checks."
+  },
+  "source_scope": {
+    "material75": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "material73": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "composition71": "C40"
+  },
+  "scanner75": {
+    "workflow": ".github/workflows/sf-operations-scanner.yml",
+    "run": 43671662128,
+    "state": "IN_PROGRESS",
+    "selection": "controls",
+    "owner": 75
+  },
+  "originals": {
+    "status": "5PASS_AT_C40",
+    "run": 43675784039,
+    "job": 132695512980,
+    "snapshot": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+    "compiler_equivalence": false
+  },
+  "GLOBAL_RELEASE": false,
+  "newest_observed_stack": {
+    "sha": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "label": "C41",
+    "browser_pass_transfer": false
+  }
+}

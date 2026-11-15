@@ -1,0 +1,537 @@
+{
+  "schema": "sf2h.integration71.documentary85.v1",
+  "status": "RECEIVED_TERMINAL_QUALIFICATION_LIMITED_C38_NO_NEW_PRODUCT",
+  "source": {
+    "branch": "auth-retention-fix",
+    "pr": 84,
+    "terminal": "307c074630105091b39c96d4b9a713cdf76364b0",
+    "authority_blob": "144f64d93a33abb0802dd10bbc81537c34e2aeb2",
+    "authority_state": "TERMINAL_HANDOFF_READY_NO_PRODUCT_WRITES",
+    "material_changes": 0,
+    "archiveTree": "f1466c7b2e85ac4e851cc5f2e11a6bef653cb611",
+    "archiveBlobs": 10
+  },
+  "tested_candidate": {
+    "symbol": "C38",
+    "sha": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+    "tree": "9ad861864150f4690ad1ed3faa1f8c7164130212"
+  },
+  "current_candidate": {
+    "symbol": "C45",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+    "validation": "NOT_RUN"
+  },
+  "source_ci": {
+    "schema": "sf2h.auth85.hosted-ci.v1",
+    "mission": 85,
+    "execution_only": "GitHub Actions existing test-ci.yml with .ci-run.json; no local product tests; no workflow edits",
+    "runner": "ubuntu-24.04 bun 1.3.14",
+    "reference_source72": {
+      "W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "run": 43671466268,
+      "job": 132682240447,
+      "pass": 138,
+      "skip": 2,
+      "fail": 0,
+      "scope": "SOURCE_ONLY; NOT_CANDIDATE"
+    },
+    "observations": [
+      {
+        "kind": "R1_BROAD_OVERLAY",
+        "candidate": "5db743c86984c9c5772920eeaf8c52b1c42880b5",
+        "S": "910abc98e40313b342bf90a7ea7f245de4663e22",
+        "S_tree": "293330d3e39cbe52721f6e33bfeb5834af238609",
+        "request_blob": "9cdeefb592720250e537ed804a65ff5cb03d30a8",
+        "run": 43674892252,
+        "job": 132692758554,
+        "cleanup_job": 132693217815,
+        "cleanup": "success",
+        "status": "FAIL",
+        "files": 14,
+        "tests": 125,
+        "passed": 124,
+        "failed": 1,
+        "skipped": 0,
+        "assertions": 1173,
+        "omni": "NOT_APPLICABLE",
+        "both_inert_readonly_cases": "PASS",
+        "failure": {
+          "file": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+          "line": 162,
+          "test": "actual Procurement HTTP ownership uses resource-tenant oid despite matching names and email claims",
+          "expected_http": 403,
+          "observed_http": 404,
+          "classification": "FOREIGN_PROCUREMENT_EXISTING_C37_CONTRACT_DRIFT; NOT_AUTH72_NEW"
+        }
+      },
+      {
+        "kind": "B0_C37_FOREIGN_CONTROL",
+        "candidate": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+        "S": "a99041eeb498c585862439b59362dd7f9e48a428",
+        "request_blob": "7d89b46e0f9bdb5335d863eb6433f6cf5567279d",
+        "run": 43675205091,
+        "job": 132693712493,
+        "cleanup_job": 132694077588,
+        "cleanup": "success",
+        "status": "EXPECTED_FAIL_REPRODUCED_C37",
+        "files": 1,
+        "tests": 5,
+        "passed": 4,
+        "failed": 1,
+        "skipped": 0,
+        "failure": "Same file:162 and same expected403/observed404 with no auth72 overlay"
+      },
+      {
+        "kind": "R2_OWN_AUTH_OVERLAY",
+        "candidate": "5db743c86984c9c5772920eeaf8c52b1c42880b5",
+        "S": "cf434debc03c34d1c801797fa70e14548011512e",
+        "request_blob": "21fb7b9c122832c6f2c9f0fc5e96e044547e6d8d",
+        "run": 43675212157,
+        "job": 132693732478,
+        "cleanup_job": 132694102006,
+        "cleanup": "success",
+        "status": "PASS",
+        "files": 13,
+        "tests": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "assertions": 1075,
+        "exclusion": "microsoft-routes.test.ts excluded from focused auth selection only; its separate failing R1 and C37 B0 controls remain binding"
+      },
+      {
+        "kind": "R3_REAL_INTEGRATED_C38",
+        "candidate": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+        "S": "54281c363ea6c0ba4a15a7b3335a08a52f77d79e",
+        "S_tree": "50d64a9138d781373b583dc8e9e352b35f2ea09c",
+        "request_blob": "21fb7b9c122832c6f2c9f0fc5e96e044547e6d8d",
+        "run": 43675427012,
+        "job": 132694393020,
+        "cleanup_job": 132694889976,
+        "cleanup": "success",
+        "status": "PASS",
+        "files": 13,
+        "tests": 120,
+        "passed": 120,
+        "failed": 0,
+        "skipped": 0,
+        "assertions": 1075,
+        "readOnlyGraph": "PASS",
+        "nestedMaintenancePoison": "PASS"
+      }
+    ],
+    "source72_R1_not_transferred": true,
+    "full_14_suite_not_green": true,
+    "global_checks_not_claimed": [
+      "45 typecheck/guards",
+      "8 final selections on same C",
+      "AM01-AM06",
+      "three final independent reviews",
+      "G7/G8"
+    ],
+    "all_cleanup_jobs_success": true
+  },
+  "material_manifest": {
+    "schema": "sf2h.auth85.integrated-manifest.v1",
+    "mission": 85,
+    "recorded_date": "2026-11-15",
+    "campaign": "sf2h-integral-20261112",
+    "owner": "mission85, auth-retention-fix, PR84",
+    "read_only_source_reconciled": true,
+    "base": {
+      "candidate": "C37",
+      "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+      "tree": "94be5190a25b973af4ca647db5149e2ecec6df37",
+      "all_source72_preimages_verified": true
+    },
+    "overlay": {
+      "W": "5db743c86984c9c5772920eeaf8c52b1c42880b5",
+      "tree": "383103fb0cfff0f6ecdf67f339099e2514397215",
+      "parent": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+      "files": 14,
+      "origin": "Source72 composed proposal; readonly59 preserved"
+    },
+    "integrated": {
+      "candidate": "C38",
+      "sha": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+      "tree": "9ad861864150f4690ad1ed3faa1f8c7164130212",
+      "parent": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+      "writer": "71",
+      "files_verified": 14,
+      "code_test_fixture_equal_to_W": 13,
+      "map_metadata_only_rebind": true
+    },
+    "complete_patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-readonly-composition/COMPOSED-C38.patch",
+      "blob": "575744ad21f4981a9d44150bd9dc4a67a07489ee",
+      "sha256": "6c9e5840d82a755e33193fd9812c7295392b6d50a7aefe74c9336577944aa94e",
+      "bytes": 79443,
+      "files": 14,
+      "hunks": 26,
+      "reused_exact_71_published_patch": true
+    },
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "mode": "100644",
+        "kind": "modified",
+        "preimage": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "postimage": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "mode": "100644",
+        "kind": "modified",
+        "preimage": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "postimage": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "mode": "100644",
+        "kind": "modified",
+        "preimage": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "postimage": "d82b40928a235f2d249e45e59732f281dfded97f",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "mode": "100644",
+        "kind": "modified",
+        "preimage": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "postimage": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "a26bfa284dd7713d2204ff48628181a95743cbd1",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/fixture.ts",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "f0b23f1dcbc3529cd215ac6d58b9caf351be5e77",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "5cef79fa21cf23094ce554360f48a67f699295ba",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "531a79bcc0ad1398ea04dd150f26bf0eb421cbf6",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "7b443c1ab5ac4177c49c4f922a823df10a160d38",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "mode": "100644",
+        "kind": "modified",
+        "preimage": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+        "postimage": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb",
+        "overlayW_same_postimage": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json",
+        "mode": "100644",
+        "kind": "added",
+        "preimage": null,
+        "postimage": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24",
+        "overlayW_same_postimage": false
+      }
+    ],
+    "no_own_product_changes": true,
+    "source_R1_not_candidate_proof": true,
+    "global_release": false,
+    "remaining": [
+      "Independent mission84 review",
+      "Mission45 compiler/typecheck/guards",
+      "Procurement route-status test conflict inherited from C37",
+      "71/S0 final selectors, AM01-AM06 and three final independent reviews, C/G7 and D/G8"
+    ]
+  },
+  "material_reapplied": false,
+  "verified_source_envelopes": [
+    {
+      "kind": "R1_BROAD_OVERLAY",
+      "W": "5db743c86984c9c5772920eeaf8c52b1c42880b5",
+      "S": "910abc98e40313b342bf90a7ea7f245de4663e22",
+      "S_tree": "293330d3e39cbe52721f6e33bfeb5834af238609",
+      "request": {
+        "blob": "9cdeefb592720250e537ed804a65ff5cb03d30a8",
+        "payload": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+            "./Sucafinav1/test/microsoft-session.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+            "./Sucafinav1/test/microsoft-composition.test.ts",
+            "./Sucafinav1/test/microsoft-node.test.ts",
+            "./Sucafinav1/test/microsoft-routes.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43674892252,
+        "attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "910abc98e40313b342bf90a7ea7f245de4663e22"
+      },
+      "jobs": [
+        {
+          "id": 132692758554,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132693217815,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "sole_parent_W_and_request_only": true,
+      "actual_full_job_log_read": true
+    },
+    {
+      "kind": "B0_C37_FOREIGN_CONTROL",
+      "W": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+      "S": "a99041eeb498c585862439b59362dd7f9e48a428",
+      "S_tree": "f65261308a7931bb6dceeafca3284bb08ef3261f",
+      "request": {
+        "blob": "7d89b46e0f9bdb5335d863eb6433f6cf5567279d",
+        "payload": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/microsoft-routes.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43675205091,
+        "attempt": 1,
+        "conclusion": "failure",
+        "head_sha": "a99041eeb498c585862439b59362dd7f9e48a428"
+      },
+      "jobs": [
+        {
+          "id": 132693712493,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 132694077588,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "sole_parent_W_and_request_only": true,
+      "actual_full_job_log_read": true
+    },
+    {
+      "kind": "R2_OWN_AUTH_OVERLAY",
+      "W": "5db743c86984c9c5772920eeaf8c52b1c42880b5",
+      "S": "cf434debc03c34d1c801797fa70e14548011512e",
+      "S_tree": "870161fcb19570b6a56561b6a2f7798b6c90530d",
+      "request": {
+        "blob": "21fb7b9c122832c6f2c9f0fc5e96e044547e6d8d",
+        "payload": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+            "./Sucafinav1/test/microsoft-session.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+            "./Sucafinav1/test/microsoft-composition.test.ts",
+            "./Sucafinav1/test/microsoft-node.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43675212157,
+        "attempt": 1,
+        "conclusion": "success",
+        "head_sha": "cf434debc03c34d1c801797fa70e14548011512e"
+      },
+      "jobs": [
+        {
+          "id": 132693732478,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "success"
+        },
+        {
+          "id": 132694102006,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "sole_parent_W_and_request_only": true,
+      "actual_full_job_log_read": true
+    },
+    {
+      "kind": "R3_REAL_INTEGRATED_C38",
+      "W": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+      "S": "54281c363ea6c0ba4a15a7b3335a08a52f77d79e",
+      "S_tree": "50d64a9138d781373b583dc8e9e352b35f2ea09c",
+      "request": {
+        "blob": "21fb7b9c122832c6f2c9f0fc5e96e044547e6d8d",
+        "payload": {
+          "package": "sucafina",
+          "packageSelector": "packages/sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "./Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+            "./Sucafinav1/test/microsoft-session.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+            "./Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+            "./Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+            "./Sucafinav1/test/microsoft-composition.test.ts",
+            "./Sucafinav1/test/microsoft-node.test.ts",
+            "--timeout",
+            "120000"
+          ],
+          "env": {}
+        }
+      },
+      "run": {
+        "id": 43675427012,
+        "attempt": 1,
+        "conclusion": "success",
+        "head_sha": "54281c363ea6c0ba4a15a7b3335a08a52f77d79e"
+      },
+      "jobs": [
+        {
+          "id": 132694393020,
+          "name": "test (ubuntu-24.04)",
+          "conclusion": "success"
+        },
+        {
+          "id": 132694889976,
+          "name": "cleanup",
+          "conclusion": "success"
+        }
+      ],
+      "sole_parent_W_and_request_only": true,
+      "actual_full_job_log_read": true
+    }
+  ],
+  "current_disposition": [
+    "Two original readonly-composed cases are PASS on actual C38 via R3; former NOT_RUN is historical, not current absence of all proof.",
+    "Full14suite R1 remains124PASS/1FAIL; C37 B0 reproduces4PASS/1FAIL same403/404 conflict. Focused R2/R3 exclude that foreign suite explicitly; no broad PASS.",
+    "C45 uses current74 Microsoft map764b, fixture6517 and86applicationa0deff. C38 results do not qualify these newer inputs.",
+    "Shared readonly59, auth72 and historical map49/55/72 preserved; full14-file patch already consumed atC38, not applied twice."
+  ],
+  "remaining": [
+    {
+      "id": "H85-ROUTE-MISMATCH",
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+      "line": 162,
+      "status": "OPEN",
+      "owner": "S0 assigns explicit Procurement73/86 continuation",
+      "requirement": "Reconcile hidden/missing404 and visible CAS/version policy; investigate unreached409/control assertions; no blind oracle edit."
+    },
+    {
+      "id": "M70-AUTH-01",
+      "status": "FIX_COMPOSED_RECHECK_PENDING",
+      "owner": "Independent84 and S0;45checks",
+      "requirement": "CurrentC45 code/mapping and exact-stage proofs; bounded local logout fence is not durable cross-process revocation."
+    }
+  ],
+  "scope_limits": [
+    "Local pending logout fence does not survive crash before durable write; SQL-blocked logout is not committed revocation.",
+    "Trusted generic put not globally capped; bounded garbage deletion is not secure erase/WAL compaction; rolling mixed writers not qualified.",
+    "No compiler/guards/AM/final8/threeFINAL/G7G8 qualification credited."
+  ],
+  "execution": {
+    "product_tests": 0,
+    "CI_dispatches": 0,
+    "typechecks": 0,
+    "guards": 0
+  },
+  "GLOBAL_RELEASE": false
+}
+

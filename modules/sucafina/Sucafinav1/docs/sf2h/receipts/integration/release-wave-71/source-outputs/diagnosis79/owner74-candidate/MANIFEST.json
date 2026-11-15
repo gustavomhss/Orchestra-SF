@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.m79.owner74-candidate.v1",
+  "state": "QUALIFICATION_PENDING",
+  "producer": 74,
+  "integrator": 71,
+  "source_commit": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "base": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+  "new_production_code_by79": false,
+  "entries": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "preimage": {
+        "file": "01-installation.ts.preimage.txt",
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "bytes": 5315
+      },
+      "postimage": {
+        "file": "01-installation.ts.postimage.txt",
+        "blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+        "sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
+        "bytes": 9786
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "preimage": null,
+      "postimage": {
+        "file": "02-request-body.ts.postimage.txt",
+        "blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+        "sha256": "ca824aaed4746dcfab581e14d67aacc3e3e513ba18fa1e8f35c3e835d367019c",
+        "bytes": 5077
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": {
+        "file": "03-http.ts.preimage.txt",
+        "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+        "sha256": "43148e811b8e23cd2cb2a2e6fcee5027362b893c4ecac68467e73960bb22bd82",
+        "bytes": 25541
+      },
+      "postimage": {
+        "file": "03-http.ts.postimage.txt",
+        "blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+        "sha256": "948b190b53a725c673ac9a57cdf587d20a3f0c2ec351db4af1fc46fd7dd6fab1",
+        "bytes": 25782
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+      "preimage": null,
+      "postimage": {
+        "file": "04-microsoft49-composition-74.json.postimage.txt",
+        "blob": "cd6a91c9f6fb11972220a11728300b6d7cdded6b",
+        "sha256": "c149a655d62ea1346dd3a74b7a9f0279f782503701a8b08cdbb9df98e22620f0",
+        "bytes": 2411
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "preimage": {
+        "file": "05-integration-fixture.ts.preimage.txt",
+        "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+        "sha256": "020a65af381b94ded41ad516d08c8337a4a5d62ed9676a353136172e31907c1e",
+        "bytes": 3543
+      },
+      "postimage": {
+        "file": "05-integration-fixture.ts.postimage.txt",
+        "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+        "sha256": "6d8ba7820763c2461dccb118020352e11b05389a27fe8f322fcc6519b9e3594c",
+        "bytes": 3615
+      }
+    }
+  ],
+  "complete_patch": "complete.patch.txt",
+  "dependency_closure": "Exact existing74 unit: installation, request-body and product/interface/http. Two additional files materialize current Microsoft composition map/lookup. Historical map55 unchanged. Separate owner-25mib proposal excluded. Existing C34 lockfile/dependencies remain.",
+  "superseded_proposal": "No additional data/end adapter is selected. Qualify existing74 before proposing new code.",
+  "source74_prior_run": {
+    "run": 43672712025,
+    "job": 132686076424,
+    "pass": 14,
+    "fail": 1,
+    "failure": "Bun complete flag after local discard; not an ingress hang"
+  },
+  "qualification": "V1 adds explicit passive diagnostic marks over these postimages; its Microsoft map identifies instrumented bytes. No overall journey/integrated release is implied."
+}

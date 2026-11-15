@@ -1,0 +1,25 @@
+{
+  "cause": "POLICY initially used the reserialized evidence lock as source bytes; corrected source pin only. service.mjs saves JSON.parse(source) with JSON.stringify(value,null,2)+newline.",
+  "source": {
+    "path": "script/sf2h/operations-scanner/tools.lock.json",
+    "refs": [
+      "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "e87e22d163924635bf0b41785c9bc80bf780ac0a"
+    ],
+    "git_blob": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+    "sha256": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6",
+    "bytes": 2172,
+    "provenance": "GitHub MCP fetch_file at both refs; content persisted exactly as tools.lock.source.json"
+  },
+  "artifact": {
+    "run": 43672349552,
+    "path": "evidence/tools.lock.json",
+    "computed_blob_identity": "8691f0161dab9bb9c976fbca66e87dfde701c778",
+    "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929",
+    "bytes": 2276,
+    "provenance": "Downloaded R3 artifact14145385503; this is not a repository blob pin"
+  },
+  "semantic_identity": true,
+  "exact_json_serialization_match": true,
+  "product_changes": false
+}

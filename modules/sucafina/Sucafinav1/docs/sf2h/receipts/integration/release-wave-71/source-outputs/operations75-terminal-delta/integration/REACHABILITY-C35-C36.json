@@ -1,0 +1,114 @@
+{
+  "schema": "mission75-atlas69-delta-reachability-v1",
+  "mission": 75,
+  "created_at_utc": "2026-11-15T03:57:01Z",
+  "status": "STATIC_INTERPRETATION_ONLY",
+  "scope": "Read-only interpretation of the two production-source changes in C35→C36 and their direct reachability from the installed Operations host. No general Atlas review, test review, CI review or execution.",
+  "provenance": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "reader": "operations_diagnosis",
+    "remote_access": "GitHub MCP read-only",
+    "local_work": "Inert text snapshots, diff inspection and hashing only"
+  },
+  "candidate_delta": {
+    "before": {
+      "name": "C35",
+      "commit": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c"
+    },
+    "after": {
+      "name": "C36",
+      "commit": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+      "tree": "78d7c23395d92a4a0193fdd545f8aa023af0c55d"
+    },
+    "direct_parent_verified": true,
+    "source_changes": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+        "before_blob": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+        "after_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+        "effect": "Adds canonical publication/outbox/scanner-receipt matching and one-use, reader-bound recall observations. Pins request/lease/binding, state/source fences and canonical projections through final recall/ranking revalidation.",
+        "after_lines": [
+          "20-52: observation and publication helpers",
+          "54-460: canonical memory read and recall",
+          "490-578: final ranking scope"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "before_blob": "390bce2594e39a28defce1d47fafa0d7291e940e",
+        "after_blob": "2e7b312561f3f027ab070c61e15ecb6886fa169c",
+        "effect": "Pins context/recall requests and scope across awaits; checks context stability after authority revalidation; integrates final recall completion and canonical publication checks into Atlas-backed context/capture; returns the canonical memory writer receipt directly.",
+        "after_lines": [
+          "72-183: business context assembly",
+          "241-709: Atlas-backed business context and protected capture"
+        ]
+      }
+    ],
+    "broader_delta_reported_by_root": {
+      "total_paths": 55,
+      "production_sources": 2,
+      "new_tests": 10,
+      "receipts": 43,
+      "overlap_with_expected_75_73_config_original_paths": 0,
+      "independently_reaudited_here": false
+    }
+  },
+  "reachability": {
+    "host": {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "blob": "8230eb28f322dde255382b74280192f39844724d",
+      "lines": "15;35-43;48-72",
+      "observation": "Bun.serve on loopback port4174 constructs createOperationsInstallation with real operator identity, persistence and runner-supplied ClamD endpoint."
+    },
+    "installation": {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "lines": "16-18;89-125",
+      "observation": "Constructs import, document and business services. Routes documentHttp then importHttp, supplies business.procurementQueueView to the application, and invokes business.dispose during cleanup. It neither invokes nor exposes business.initializeAtlas."
+    },
+    "business_factory": {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "lines": "43-45;134-161;472-579;597-604;709-723",
+      "observation": "Both changed modules are eager runtime imports. evidence.current, recall.current and atlasState.current begin unset. createSfAtlasBusiness, rankSfAtlasRecall binding, evidence activation and Atlas descriptor registration occur inside initializeAtlas, which is returned to callers and is not called by the inspected Operations installation."
+    },
+    "queue": {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+      "blob": "91784d3ea3358565e19b62922c8867f134af9ac4",
+      "lines": "1-24;25-70",
+      "observation": "The installed queue view uses the Procurement port, collection, UI authority and queue renderer; this inspected module has no import from either changed Atlas module."
+    },
+    "import_service": {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "blob": "53a1f34779598545cde83295c8ff98b861fabb72",
+      "observation": "Constructed independently by the installation and supplied directly to importHttp; its imports do not reference either changed Atlas module."
+    },
+    "document_service": {
+      "path": "apps/cli/src/sucafina-product/document-services.ts",
+      "blob": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+      "observation": "Constructed independently by the installation and supplied directly to documentHttp; its imports do not reference either changed Atlas module."
+    },
+    "distinction": "The changed modules belong to the load/import dependency closure. The Atlas initialization and changed Atlas execution paths are not activated by the inspected Operations composition. This is a bounded static interpretation, not a proof of startup or dynamic behavior.",
+    "top_level_delta": "The new recall WeakMap is module-local. The inspected delta introduces no new external module dependency, process, listener or service installation; the authority and publication checks execute within function bodies."
+  },
+  "effect_on_original_five": {
+    "OP-PROC-01": "No concrete new blocker identified in the inspected direct Procurement domain/queue path.",
+    "OP-PROC-02": "Numeric presentation still requires writer73's combined procurement postimage on the qualifying candidate and the unchanged original browser assertion.",
+    "OP-PROC-03": "Screen-shell cleanup remains source75 work awaiting the actual composed candidate's original browser assertion.",
+    "OP-IMPORT-01": "Original installed import admission/recovery still requires the original browser run with the real ClamD setup; this Atlas delta does not replace that evidence.",
+    "OP-DOC-01": "Original installed document upload/extraction/confirmation/revocation still requires the original browser run with the real ClamD setup; this Atlas delta does not replace that evidence."
+  },
+  "conclusion": {
+    "concrete_new_blocker_identified": false,
+    "action": "Preserve Atlas69 C36 unchanged while composing the released73+75 unit.",
+    "qualification": "Do not transfer Atlas69 source PASS, source73 PASS or source75 R3 controls PASS to a candidate or to the five originals.",
+    "original_browser_status_75": "NOT_RUN as of this receipt",
+    "remaining_execution_requirement": "Obtain the actual71 candidate commit/tree and ACK authorizing the frozen73+75 composition, then execute all five unchanged originals on that exact candidate using the existing Actions workflow and real ClamD setup. The load dependency means only that run can establish startup and original-journey behavior.",
+    "node_74_79": "The inspected installed Operations host is Bun.serve4174 and does not traverse the CLI Node/ServerHttpApi host. No dependency on releases74/79 is identified for these five.",
+    "scanner_scope": "Atlas historical publication/scanner provenance and the mission75 file-admission ClamD evidence are separate controls.",
+    "acceptance_changes": false,
+    "product_or_test_execution_performed": false,
+    "source_or_remote_mutation_performed": false
+  }
+}
