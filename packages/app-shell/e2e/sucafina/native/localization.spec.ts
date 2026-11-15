@@ -96,30 +96,31 @@ for (const locale of locales) {
   }
 }
 
-test("Q02-COPY-01 legacy source label remains English, new P0 review action is translated", async ({ page, nativeHarness }) => {
-  const origin = await requireInstalled(page, nativeHarness)
-  // W19/U11.title-save source field label is frozen English \"Title\" in both
-  // locales; new review-action label is frozen as a proper en/pt-BR pair.
-  for (const locale of locales) {
+for (const locale of locales) {
+  test("Q02-COPY-01 source-English Title + translated review action · " + locale.id, async ({ page, nativeHarness }) => {
+    const origin = await requireInstalled(page, nativeHarness)
+    // W19/U11.title-save source field label is frozen English 'Title' in
+    // BOTH locales (legacy-source-copy-preserved), while the new review label
+    // is the frozen translated copy. One isolated test/context per locale
+    // prevents unsaved-draft navigation from silently discarding a local edit.
     await changeLocale(page, origin, locale)
     await page.goto(new URL("/orchestra/sf-procurement/requests", origin).href)
     const item = page.getByRole("link", { name: "F04 real domain P0 draft title", exact: true })
     await expect(item, "F04 real seeded draft must be authorized for requester").toBeVisible()
     await item.click()
     const editor = page.locator('[data-component="sf-request-title-save"]')
-    await expect(editor.getByRole("textbox", { name: "Title", exact: true })).toBeVisible()
+    const field = editor.getByRole("textbox", { name: "Title", exact: true })
+    await expect(field).toBeEditable()
     const change = editor.getByRole("button", {
       name: locale.id === "en" ? "Review title change" : "Revisar alteração do título",
       exact: true,
     })
-    // Edit only an in-memory field. This test must never submit a domain POST.
-    const field = editor.getByRole("textbox", { name: "Title", exact: true })
-    await expect(field).toBeEditable()
     await field.fill("Q02 locale-only unsaved draft")
     await expect(change).toBeEnabled()
     await expect(page.locator("html")).toHaveAttribute("lang", locale.documentLang)
-  }
-})
+    // Deliberately no Save/submit/approve: this is copy, not mutation proof.
+  })
+}
 
 test("Q02-COPY-01 no raw CAP/UI requirement ids in visible navigation copy", async ({ page, nativeHarness }) => {
   const origin = await requireInstalled(page, nativeHarness)
@@ -130,7 +131,7 @@ test("Q02-COPY-01 no raw CAP/UI requirement ids in visible navigation copy", asy
   const headingsAndLinks = await frame.locator("h1,h2,h3,nav a,nav button").allTextContents()
   expect(headingsAndLinks.length).toBeGreaterThan(0)
   for (const label of headingsAndLinks) {
-    expect(label.trim(), "Product labels must not use CAP/UI/WP IDs as names").not.toMatch(/^(?:CAP\\d+|UI\\d+|WP\\d+(?:\\.T\\d+)?)$/)
+    expect(label.trim(), "Product labels must not use CAP/UI/WP IDs as names").not.toMatch(/^(?:CAP\d+|UI\d+|WP\d+(?:\.T\d+)?)$/)
   }
 })
 
