@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h-mission115-terminal-source-handoff-v1",
+  "mission": 115,
+  "epoch": "native-history-browser115",
+  "lease_status": "ENDED_AFTER_RECEIPT_COMMIT",
+  "actor": "S0-B new browser Astra label GPT-6",
+  "github_login": "gustavomhss",
+  "session_runtime_id": null,
+  "source_branch": "native-runtime-finish",
+  "source_PR": 96,
+  "ack_sha": "345b0d0169f704273c721187dc7c8098137b0c3d",
+  "source_W": "2eab3b6df7cbeb1be791a8e451e507b67f8b2f37",
+  "source_tree": "a80f87cb7b964d1b8f1b5b385bd65e86e7b989d4",
+  "receipt_head_before_terminal": "d17d0b9a20f6d32a4865bb66a0a6fe3f3c3d8bec",
+  "receipt_tree_before_terminal": "32f56899fa1ab087e17597fd8ad1ce5a46f30642",
+  "delivered": [
+    "deadline test 3 TS error source fix, no oracle/deadline change",
+    "4 native-history component tests with no Task grant and evidence of alias mismatch, egress/revocation/dispose",
+    "complete patch and pre/post blob manifest",
+    "read-only adapter alias authorization/canonical reservation proposal with pre/post exact hashes",
+    "requests to CI120 and compiler119 and integrator114"
+  ],
+  "patch_dependency": {
+    "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+    "preimage": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3",
+    "proposed_postimage": "d70e2e66488d5f4e40d963d664d05a254034e32b",
+    "status": "NOT_APPLIED; OWNER114_REQUIRED",
+    "scope": "trusted native readAdmission canonical reference + authenticated original authorization ID only; preserve checkPlan"
+  },
+  "external_requests": [
+    {
+      "owner": 120,
+      "pr": 106,
+      "comment": 6896141683,
+      "status": "REQUESTED_NOT_RUN_FOR_115"
+    },
+    {
+      "owner": 119,
+      "pr": 107,
+      "comment": 6896142079,
+      "status": "REQUESTED_NOT_RUN_FOR_115"
+    },
+    {
+      "owner": 114,
+      "pr": 65,
+      "comment": 6896142496,
+      "status": "HANDOFF_POSTED_ACK_PENDING"
+    }
+  ],
+  "source_status": "PARTIAL_DELIVERED_SHARED_ADAPTER_CAUSE_PENDING",
+  "C53_proof": {
+    "run": 43707901079,
+    "job": 132792877003,
+    "pass": 178,
+    "fail": 1,
+    "total": 179,
+    "expect": 954
+  },
+  "W115_test_status": "NOT_RUN",
+  "W115_typecheck_status": "NOT_RUN",
+  "materialC_with_patch": "NOT_COMPOSED_BY_THIS_ACTOR",
+  "installed_C15": "NOT_PROVEN",
+  "AM06": "NOT_PROVEN",
+  "global_release": false,
+  "next_actions": [
+    "114 validate actual candidate current adapter preimage; apply one-line shared patch by legitimate owner and compose W115 code only",
+    "120 dedup original7+new1 in newly composed C",
+    "119 hosted Bun package typecheck on new C",
+    "114 record intake and pursue remaining predicates"
+  ],
+  "no_more_authored_writes_under_epoch": true
+}
