@@ -8,7 +8,7 @@ import { useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
-import { SfDataTable, type SfColumn, type SfSort, type SfUiState } from "../../shared/table"
+import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
 import type { SfDraftState } from "../../shared/draft"
 import { SfRequestTitleEdit } from "./title" // W19 protected: never duplicated/modified here
@@ -37,6 +37,7 @@ type Review = Readonly<{
   idempotencyKey: string
 }>
 const copyKey = (key: Key) => key as Parameters<typeof SfStatePanel>[0]["messageKey"]
+const tableKey = (value: Key) => value as unknown as SfTableCopyKey
 const message = (key: Key) => ({ key: copyKey(key) })
 const dataText = (text: string) => ({ kind: "data", text } as const)
 const prScope = "pr.details" as SfEditScopeKey
@@ -473,16 +474,16 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     return records
   })
   const columns: readonly SfColumn<SfRequest>[] = [
-    { id: "number", labelKey: copyKey("sf.u11.remaining.identity"), sortKey: "number",
+    { id: "number", labelKey: tableKey("sf.u11.remaining.identity"), sortKey: "number",
       align: "start", widthPolicy: { kind: "content", minPx: 130, maxPx: 200 },
       render: (row) => <span>{row.number ?? "—"}</span> },
-    { id: "title", labelKey: copyKey("sf.u11.remaining.field.title"), sortKey: "title",
+    { id: "title", labelKey: tableKey("sf.u11.remaining.field.title"), sortKey: "title",
       align: "start", widthPolicy: { kind: "flex", minPx: 150, weight: 3 },
       render: (row) => <span>{row.pr?.title ?? "—"}</span> },
-    { id: "status", labelKey: copyKey("sf.u11.remaining.status"), sortKey: "status",
+    { id: "status", labelKey: tableKey("sf.u11.remaining.status"), sortKey: "status",
       align: "start", widthPolicy: { kind: "content", minPx: 110, maxPx: 180 },
       render: (row) => <span>{row.status}</span> },
-    { id: "requester", labelKey: copyKey("sf.u11.remaining.requester"), sortKey: "requester",
+    { id: "requester", labelKey: tableKey("sf.u11.remaining.requester"), sortKey: "requester",
       align: "start", widthPolicy: { kind: "content", minPx: 110, maxPx: 170 },
       render: (row) => <span>{row.requesterName ?? row.createdBy}</span> },
   ]
@@ -519,7 +520,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
       coverage={{ state: "complete", summary: message("sf.u11.remaining.reviewSummary"),
         reasons: [], knownCount: fields.length, expectedCount: fields.length }}
       blockingReasons={[]}
-      confirmation={{ kind: "admitted", labelKey: copyKey("sf.u11.remaining.confirm"),
+      confirmation={{ kind: "admitted", labelKey: tableKey("sf.u11.remaining.confirm"),
         purpose, binding: { kind: "catalog-command", operationId,
           version: { kind: "record", expectedVersion: intent.version },
           confirmation: "presentation-only" } }}
@@ -687,7 +688,7 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
               page={{ kind: "none", total: rows().length }} onSort={(sort) => setView("sort", sort)}
               onPage={() => undefined} onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined })}
               rowActions={() => []} onRowAction={() => undefined}
-              captionKey={copyKey("sf.u11.remaining.list")} density="comfortable"
+              captionKey={tableKey("sf.u11.remaining.list")} density="comfortable"
               state={rows().length ? "ready" : view.read?.records.length ? "filtered-empty" : "empty"}
             />
           </div>
