@@ -52,5 +52,29 @@
   "ci": 164,
   "goal": "paused",
   "global_release": false,
-  "authoring_slot": "TERMINAL_HANDOFF_NO_FUTURE_WRITES_UNDER_THIS_EPOCH_WITHOUT_NEW_AUTHORITY"
+  "authoring_slot": "TERMINAL_HANDOFF_NO_FUTURE_WRITES_UNDER_THIS_EPOCH_WITHOUT_NEW_AUTHORITY",
+  "successor_reconciliation": {
+    "epoch": "S0-C-e21-browser189",
+    "fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+    "fence_blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+    "current": {
+      "integrator": 189,
+      "compiler": 190,
+      "product_ci": 191
+    },
+    "revoked_for_future": {
+      "integrator": 162,
+      "compiler": 163,
+      "product_ci": 164
+    },
+    "consumer_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "consumer_tree": "5cee64807f55d0ec169801795712844051c47e16",
+    "proposed_tree": "ee81256d7fa479cd5f24f317f319f01b788f03a5",
+    "F03_blobs_unchanged": true,
+    "progress": "HANDOFF_ONLY_NOT_APPLIED"
+  },
+  "current_handoff_target": 189,
+  "current_compiler_target": 190,
+  "current_product_ci_target": 191,
+  "previous_targets_162_163_164": "FENCED_FOR_FUTURE_WRITES_DISPATCH"
 }

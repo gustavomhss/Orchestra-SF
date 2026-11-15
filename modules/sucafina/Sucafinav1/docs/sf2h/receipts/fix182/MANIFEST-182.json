@@ -195,5 +195,25 @@
     "global_release": false,
     "native_goal": "paused"
   },
-  "next": "162 reconcile exact patch by CAS on same coherent W; 163 compile SDK/guards only according to affected scope; 164 hosted F03 selector after 162; no inherited pass"
+  "next": "Current sole integrator 189 must CAS consume original inert patch; subsequent compiler 190 and product CI 191 only, not 162/163/164",
+  "successor_reconciliation": {
+    "epoch": "S0-C-e21-browser189",
+    "fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json",
+    "fence_blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+    "current": {
+      "integrator": 189,
+      "compiler": 190,
+      "product_ci": 191
+    },
+    "revoked_for_future": {
+      "integrator": 162,
+      "compiler": 163,
+      "product_ci": 164
+    },
+    "consumer_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "consumer_tree": "5cee64807f55d0ec169801795712844051c47e16",
+    "proposed_tree": "ee81256d7fa479cd5f24f317f319f01b788f03a5",
+    "F03_blobs_unchanged": true,
+    "progress": "HANDOFF_ONLY_NOT_APPLIED"
+  }
 }

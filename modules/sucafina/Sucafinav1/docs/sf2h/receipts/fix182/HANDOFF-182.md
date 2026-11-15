@@ -38,3 +38,11 @@ Patch íntegro: [`SOURCE-FIX182.patch`](./SOURCE-FIX182.patch), blob `9ed61920fe
 **Validação após este patch: NOT_RUN.** Nenhum teste, typecheck, parser, build ou validador local executado. Falhas de Schema/Client/CLI/guards anteriores não viram PASS; full EPIC, oito finais, AM01–06 e revisões independentes mantidos. Terminar esta autoria não libera a goal nem `GLOBAL_RELEASE`.
 
 Dados auditáveis: [`MANIFEST-182.json`](./MANIFEST-182.json), [`REQUESTS-182.json`](./REQUESTS-182.json), [`TERMINAL-182.json`](./TERMINAL-182.json).
+
+## Adendo — autoridade atual do consumidor após fence 189
+
+O avanço de `sf2-stack` `913b6b8f` para `8a81e11df2bf78a55de3166e07a53ee366aad2ab` foi reconciliado com o GitHub MCP: apenas `docs/sf2h/receipts/integration/after162-189/S0-FENCE.json` (blob `2fcf0d3931adecc9d520a64c8c4385bd910acb6e`) foi acrescentado. Os **três preblobs F03 continuam idênticos**, portanto não houve descarte ou sobreposição da fonte.
+
+O novo fence `S0-C-e21-browser189` **revoga futuras escritas/dispatch de 162/163/164** e transfere a única autoridade de integração ao **189**, compilação ao **190**, CI ao **191**. As requisições anteriores são históricas e NÃO devem ser executadas pelos responsáveis revogados. A 189/PR65 deve comparar CAS os preblobs e consumir `CONSUMER-162-INERT.patch` inerte preservando `SfSource`, e então publicar W/tree. No W novo, 190 reutiliza app-shell typecheck/guards e 191 o selector exato `--timeout 120000 ./test-browser/sucafina-native/page-frame.test.ts` no workflow já existente.
+
+Árvore atual do consumidor: `5cee64807f55d0ec169801795712844051c47e16`; árvore pós-aplicação **somente proposta**: `ee81256d7fa479cd5f24f317f319f01b788f03a5`. Nenhuma escrita na `sf2-stack`, nenhum novo dispatch. [`CONTINUATION-189.json`](./CONTINUATION-189.json) guarda a reconciliação completa. Estado permanece `ARTIFACT_READY`, `NOT_RUN`, `GLOBAL_RELEASE=false`.
