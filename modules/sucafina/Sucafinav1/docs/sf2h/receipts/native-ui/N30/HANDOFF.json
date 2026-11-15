@@ -1,0 +1,204 @@
+{
+  "schema": "sf2h.native-ui.n30.handoff.v1",
+  "slot": "N30",
+  "lease_epoch": "ux-native-n30-e1",
+  "branch": "sf-ux-n30",
+  "target": "sf2-stack",
+  "state": "CODE_AUTHORED_REMOTE__INTEGRATION_AND_QUALIFICATION_PENDING",
+  "launch": {
+    "packet": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/launch30/N30.json",
+    "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+    "original_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+    "S0": "exclusive paths authorized after real ACK",
+    "ack": "ACK.json"
+  },
+  "preimages": {
+    "apps/cli/src/sucafina-product/memory-http.ts": "f727d5250024df7338491321c36e7055d7c18f74",
+    "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+    "apps/cli/src/sucafina-product/analysis-http.ts": "06522fa4a2eaa0841af8aabead799d9d56a8ada7"
+  },
+  "new_files": {
+    "packages/app-shell/src/orchestra/chapters/sucafina/memory/index.tsx": {
+      "preimage": null,
+      "postimage": "4b00165001c548b1f3e23b3b6814a1bc2fd66aa8",
+      "export": "SfMemoryView",
+      "unit": "U26"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/memory/memory.css": {
+      "preimage": null,
+      "postimage": "514c7ef4563138991bb83ff717e776000bb077bf",
+      "unit": "U26"
+    },
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u26.ts": {
+      "preimage": null,
+      "postimage": "0ec7c532253ff0574fbad1c1728af089377063eb",
+      "exports": [
+        "SF_U26_COPY",
+        "SF_U26_COPY_BR"
+      ],
+      "unit": "U26"
+    },
+    "packages/app-shell/e2e/sucafina/native/journeys/u26.spec.ts": {
+      "preimage": null,
+      "postimage": "1bb0d8c9447426f63bc0ee7264aaf4a8284b7876",
+      "unit": "U26",
+      "executed": false
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/index.tsx": {
+      "preimage": null,
+      "postimage": "0db0364435c2ad59cc9cd54b1bdc6e733d55ccaa",
+      "export": "SfAnalysesView",
+      "unit": "U37"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/decisions/analyses/analyses.css": {
+      "preimage": null,
+      "postimage": "edacb14def0629858b23d56dbf1a98afe8ce9703",
+      "unit": "U37"
+    },
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u37.ts": {
+      "preimage": null,
+      "postimage": "2687f6d826f919e1b4067fa7cf897073e1fa67ae",
+      "exports": [
+        "SF_U37_COPY",
+        "SF_U37_COPY_BR"
+      ],
+      "unit": "U37"
+    },
+    "packages/app-shell/e2e/sucafina/native/journeys/u37.spec.ts": {
+      "preimage": null,
+      "postimage": "bd1133ca2cc7162be98400f59cca935012b1a3ec",
+      "unit": "U37",
+      "executed": false
+    }
+  },
+  "shared_targets_for_125": {
+    "packages/app-shell/src/i18n/orchestra.ts": {
+      "preimage": "91e526cd53e2c020f36efacb60ecad250a4da11b",
+      "postimage": null,
+      "reason": "125-owned and not changed"
+    },
+    "packages/app-shell/src/orchestra/chapter-route.tsx": {
+      "preimage": "f22a07f31ed99055d30cd360fcdc6a1d1f365d99",
+      "postimage": null,
+      "reason": "125-owned and not changed"
+    },
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx": {
+      "preimage": "8b949f966725f8a7d22a486e3391f79deecce258",
+      "postimage": null,
+      "reason": "F01 provider, no changes"
+    }
+  },
+  "shared_patch": "INTEGRATION-PATCH.md",
+  "authored_scope": [
+    "UI41",
+    "UI61",
+    "UI62",
+    "UI63"
+  ],
+  "criteria": [
+    {
+      "id": "U26-AC01",
+      "state": "AUTHORED_NOT_RUN",
+      "evidence": "UI61 source-locked catalog/conditions/signals; e2e source authored",
+      "remaining": "120 installed tests with real F01 owner"
+    },
+    {
+      "id": "U26-AC02",
+      "state": "PARTIAL_BLOCKED_CONTRACT",
+      "evidence": "UI61 materiality detail, original source identity, no inferred mutation; UI62 explicit missing producer",
+      "remaining": "A14 similar-case operation + Planner evidence selector and 120 proof"
+    },
+    {
+      "id": "U26-AC03",
+      "state": "AUTHORED_NOT_RUN",
+      "evidence": "UI63 comparison expected/observed/cutoff/coverage/limitations, no causal attribution",
+      "remaining": "selectionRef resolver absent; 120 real comparable case proof"
+    },
+    {
+      "id": "U37-AC01",
+      "state": "AUTHORED_NOT_RUN",
+      "evidence": "UI41 typed choices, current case history/read, admission model selection",
+      "remaining": "125 integrate A15, 119 compiler, 120 installed proof"
+    },
+    {
+      "id": "U37-AC02",
+      "state": "PARTIAL_BLOCKED_CONTRACT",
+      "evidence": "prepare/start/cancel explicit, lost-response outcome quarantine, no mutation auto replay",
+      "remaining": "producer continue operation absent; 120 needs disposable running run"
+    },
+    {
+      "id": "U37-AC03",
+      "state": "AUTHORED_NOT_RUN",
+      "evidence": "read authorized output as escaped HTML text and no invented review session",
+      "remaining": "120 real native output/source proof"
+    }
+  ],
+  "acceptance_refs": [
+    "NUI01",
+    "NUI03",
+    "NUI04",
+    "NUI13",
+    "NUI14",
+    "NUI15"
+  ],
+  "verification": {
+    "local_tests": "NOT_RUN_BY_ORDER",
+    "local_typecheck": "NOT_RUN_BY_ORDER",
+    "local_build": "NOT_RUN_BY_ORDER",
+    "compiler_119": "NOT_RUN",
+    "ci_120": "NOT_RUN",
+    "installed_harness": "NOT_RUN",
+    "visual_screenshots": "NOT_CAPTURED",
+    "passed_assertions": 0,
+    "claimed_qualified": false
+  },
+  "dependencies": [
+    {
+      "owner": "A14",
+      "state": "UNMERGED_AT_AUTHORING",
+      "gate": "Public schema/client memory and binding"
+    },
+    {
+      "owner": "A15",
+      "state": "UNMERGED_AT_AUTHORING",
+      "gate": "Public schema/client analysis and binding"
+    },
+    {
+      "owner": "125",
+      "state": "PENDING",
+      "gate": "Shared i18n, route composition and source-authority integration"
+    },
+    {
+      "owner": "119",
+      "state": "PENDING",
+      "gate": "Cross-source compiler"
+    },
+    {
+      "owner": "120",
+      "state": "PENDING",
+      "gate": "Surgical installed journeys and visual/accessibility proofs"
+    }
+  ],
+  "blocked_contracts": [
+    "UI62 missing authorized similar-case producer in C60 A14 catalog",
+    "U26 signal/condition and outcome-selection mutations require original trusted PlannerEvidence selector",
+    "UI63 entry selectionRef has no admitted selector to authoritative case/choice",
+    "U37 additional skill input and continue require published producer input contract",
+    "U37 original HTML output is not a structured result renderer; intentionally escaped text"
+  ],
+  "safety_assertions": [
+    "No protected/shared producer/registry/router/package edits",
+    "No parallel backend/storage/dispatcher or private source import",
+    "No raw HTML execution; no guessed model or trusted evidence",
+    "Unknown mutations are not automatically repeated",
+    "Owner state generation and AbortSignal fence client reads",
+    "No local tests, merge, deploy or Goal activation"
+  ],
+  "handoff_to": [
+    "125",
+    "119",
+    "120"
+  ],
+  "merge": "NO_MERGE",
+  "deploy": "NO_DEPLOY"
+}
