@@ -78,6 +78,8 @@ export function decodeSfRequestTitlePage(
 // mutable fields supplied by U11 P0. Never forward a full PR or a prior form.
 export function sfRequestTitleSaveInput(record: SfRequestTitleRecord, title: string) {
   return {
+    page: "Requests",
+    action: "save",
     id: record.ref,
     version: record.version,
     values: { pr: { title } },
@@ -85,11 +87,7 @@ export function sfRequestTitleSaveInput(record: SfRequestTitleRecord, title: str
 }
 
 export function sfRequestTitleSaveCanonicalBody(record: SfRequestTitleRecord, title: string) {
-  return {
-    page: "Requests",
-    action: "save",
-    ...sfRequestTitleSaveInput(record, title),
-  } as const
+  return sfRequestTitleSaveInput(record, title)
 }
 
 export function isSfRequestTitleSaveAccepted(value: unknown): boolean {

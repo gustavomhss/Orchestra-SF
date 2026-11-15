@@ -48,7 +48,7 @@ async function authorizedTitleRead(
   try {
     // No new endpoint, client-side HTML parsing or producer field recalculation.
     // A03 owns this closed CAP25 GET input codec; default selection is no filters.
-    const input = {} as Parameters<ProcurementClient["domain.page.CAP25"]>[0]
+    const input = {} // A03 PageSelection: all selection keys are optional
     const result = await client["domain.page.CAP25"](input, { signal })
     if (result.kind !== "response") return { kind: "unavailable" }
     if (result.status === 401) return { kind: "unauthenticated" }
@@ -296,7 +296,14 @@ export function SfRequestTitleEdit(props: SfSurfaceProps) {
         sf.invalidate("revoked")
         return
       }
-      if (result.status < 200 || result.status >= 300 || !isSfRequestTitleSaveAccepted(result.body)) {
+      if (result.status >= 200 && result.status < 300 && !isSfRequestTitleSaveAccepted(result.body)) {
+        // A 2xx body that failed its canonical success decoder may follow a
+        // committed mutation; it is not evidence that a retry is safe.
+        currentDraft.setPhase("outcome-unknown")
+        setView({ sending: false, reviewing: false })
+        return
+      }
+      if (result.status < 200 || result.status >= 300) {
         currentDraft.setPhase(result.status === 422 ? "validation-error" : "failed")
         // A 409 is not by itself proof of an editable CAS conflict: the native
         // fence may reject an owner/host mismatch with the same HTTP code.
