@@ -1,0 +1,274 @@
+{
+  "schema": "sf2h.advance145.terminal-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 145,
+  "scope": "N23 / U12 CAP25 / U13.complete CAP26 / U14 CAP27",
+  "epoch": "ux-native-n23-e2",
+  "state": "ARTIFACT_READY_NOT_RELEASE",
+  "branch": "sf-ux-n23",
+  "expected_head": "3c92bcdd3e223d9e28f87000a6fd3539ac9a8c18",
+  "pre_handoff_head": "6be340e3dbd56738cfad02a37360747ffec8c647",
+  "pr": {
+    "number": 173,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/173",
+    "base": "sf2-stack",
+    "base_sha_observed": "8094e599e3d18609e269548d24619a3246fbc735",
+    "mergeable_observed": "clean_at_pre_handoff",
+    "changed_files_observed": 210,
+    "note": "PR aggregates prepared branch history, not just mission145 commits; 132 reconciles authored paths and foreign historical delta"
+  },
+  "auth": {
+    "actor": "gustavomhss",
+    "actual_model": null,
+    "session_id": null,
+    "model_disclosure": "Not exposed; no unsupported Astra claim",
+    "ack_commit": "ccbb404d7a01429cb3b2c6296350762c025c4e03",
+    "ack_blob": "3b7dfcf67827abe011fc35050398b5387eba3ac5"
+  },
+  "source_fence": {
+    "sha": "3c92bcdd3e223d9e28f87000a6fd3539ac9a8c18",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance145/S0-FENCE.json",
+    "pins": {
+      "runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "runtime/procurement.ts": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "product/procurement/sourcing-input-http.ts": "de85660b664826163c2e157ec382b97a425bb10d",
+      "apps/cli/src/sucafina-product/procurement-scenario-services.ts": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2"
+    }
+  },
+  "commits": [
+    {
+      "sha": "ccbb404d7a01429cb3b2c6296350762c025c4e03",
+      "purpose": "ACK"
+    },
+    {
+      "sha": "0812b71237e60d810e3a7ae704cb5c17cad0d6cf",
+      "purpose": "unknown-state visibility"
+    },
+    {
+      "sha": "ccdf0325d6f23cf532646b9c367d0cc2de139c22",
+      "purpose": "producer-confirmed pending fences"
+    },
+    {
+      "sha": "ce97a196d6fc7c930faa47570f2ef362e7e59a42",
+      "purpose": "15 installed E2E scenarios authored"
+    },
+    {
+      "sha": "96b0bc6abe00b97365d8e5baebc330e30ad8a9fc",
+      "purpose": "lost-response and bank-state E2E additions"
+    },
+    {
+      "sha": "6be340e3dbd56738cfad02a37360747ffec8c647",
+      "purpose": "failed-but-pending admission safety"
+    }
+  ],
+  "blobs": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/sourcing/index.tsx",
+      "before": "1367a576503ef86cf71958eac1ed9b0461f006ae",
+      "after": "e39b347632827cee26f6081c6669b7926ad3cb5d",
+      "description": "CAP25 read/quote state, unknown/review and authoritative draft confirmation"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx",
+      "before": "5b9cd2d3e14882dbef3079afbe0d7e8e1e16a53c",
+      "after": "d5d4f80e07cf054d2b21874bf08302de7f360ce3",
+      "description": "CAP27 lifecycle, source masks/command fence, non-replay and draft accounting"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/index.tsx",
+      "before": "87d0586669383d861714fb22fbefee97661f4cd4",
+      "after": "733c3cafa057116f3cf7bf9af5fd5a893564331f",
+      "description": "CAP26 sourcing/PO approval, holder/stage/CAS review and unknown outcomes"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/remaining/model.ts",
+      "before": "1c176c20c415083284d0713992ed39046a778f6f",
+      "after": "23e6c95a806f97612b3fcdfa2790e86dbacad68c",
+      "description": "source-only submitted currency and approval gating"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u12.spec.ts",
+      "before": null,
+      "after": "835b893ddb486792ac312a97743c52555f86abe2",
+      "description": "5 real installed CAP25 journeys (not executed)"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts",
+      "before": null,
+      "after": "688f5d1e680318406743460afa3910bca1c7a275",
+      "description": "5 real installed CAP26 remaining journeys (not executed)"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u14.spec.ts",
+      "before": null,
+      "after": "3c77809d69825e193b985a1d3c0c192c0ba12815",
+      "description": "5 real installed CAP27 journeys (not executed)"
+    }
+  ],
+  "preserved": {
+    "paths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/index.tsx",
+      "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/**"
+    ],
+    "w13_pr": {
+      "number": 115,
+      "branch": "sf-ux-w13",
+      "head_observed": "a92f50cf6df2c3a5d367e26f86b272eec34d380b",
+      "pr_view_blob": "847521e06a2cef99daae72bac5dbe42aaab02801",
+      "source_status": "not on sf-ux-n23 nor current sf2-stack; integrator132 must compose from W13 PR"
+    },
+    "outside_write_scope": [
+      "common router",
+      "native controller",
+      "generated SDK",
+      "product engines",
+      "native Goal",
+      "Azure/deploy/devmerge"
+    ],
+    "owner_stated": "Only 132 may integrate sf2-stack"
+  },
+  "criteria": [
+    {
+      "id": "U12-AC01",
+      "authored": "sourcing source-backed review, save/select_quote command and producer versions",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "U12-AC02",
+      "authored": "persisted supplier/quote/FX evidence, unknown-result non-replay and source-only ranking",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "U12-AC03",
+      "authored": "responsive 320/768/1024/1280/1440 + 200% root text E2E",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "U13-AC01",
+      "authored": "sourcing/PO pending approval holders, submitted amounts, source CAS/decision",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "U13-AC02",
+      "authored": "rejection reason, non-automatic reconciling, M31/MI07 separate and blocked missing currency",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "U13-AC03",
+      "authored": "responsive/keyboard native proof scenario",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "U14-AC01",
+      "authored": "source supplier lifecycle, independent bank edit, linked request guard, audit",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "U14-AC02",
+      "authored": "CAS save and status actions, unknown-result safe handling, CSV producer adapter deliberately disabled",
+      "proof": "NOT_RUN"
+    },
+    {
+      "id": "U14-AC03",
+      "authored": "responsive/keyboard native proof scenario",
+      "proof": "NOT_RUN"
+    }
+  ],
+  "proof": {
+    "source_file_reads": "GITHUB_MCP_READ",
+    "ack": "GITHUB_MCP_CAS_CONFIRMED",
+    "authoring": "GITHUB_MCP_COMMITS_CONFIRMED",
+    "pr": "OPEN_173",
+    "compilation": "NOT_RUN",
+    "sdk_generation": "NOT_RUN",
+    "local_tests": "NOT_RUN_PROHIBITED",
+    "installed_e2e": "NOT_RUN",
+    "unit_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "visual_screenshots": "NOT_RUN",
+    "desktop": "NOT_RUN",
+    "qualification": "NOT_RUN",
+    "release": "NOT_APPROVED"
+  },
+  "findings": [
+    {
+      "id": "145-F1",
+      "state": "RESOLVED_AUTHORED_UNVERIFIED",
+      "issue": "outcome-unknown hidden by outer state gate on all three pages; read-only reconcile UI unreachable",
+      "paths": [
+        "sourcing/index.tsx",
+        "suppliers/index.tsx",
+        "approvals/remaining/index.tsx"
+      ],
+      "fix": "show unknown without editable source and do not replay the command"
+    },
+    {
+      "id": "145-F2",
+      "state": "RESOLVED_AUTHORED_UNVERIFIED",
+      "issue": "draft discard after original producer POST 200 could not clear pendingOperation; next producer action remained blocked",
+      "paths": [
+        "sourcing/index.tsx",
+        "suppliers/index.tsx",
+        "approvals/remaining/index.tsx"
+      ],
+      "fix": "match operationRef with real producer ack and authorized source read; new/bank/decision may retire exact scope"
+    },
+    {
+      "id": "145-F3",
+      "state": "BLOCKED_CONTRACT",
+      "issue": "CAP27 has no producer-authorized CSV export-byte operation; UI remains disabled rather than inventing a download",
+      "owner": "132 to identify producer contract owner; no engine writes authorized for N23",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/procurement/suppliers/index.tsx"
+    },
+    {
+      "id": "145-F4",
+      "state": "INTEGRATION_PENDING",
+      "issue": "CAP26 protected W13 PR leaf available on PR115 but absent from sf2-stack and N23 branch; approvals/index.tsx absent in all read branches",
+      "owner": "132",
+      "action": "integrate W13 without overwriting PR leaf and implement guarded CAP26 PR vs remaining composer"
+    },
+    {
+      "id": "145-F5",
+      "state": "CONTRACT_BOUND",
+      "issue": "Sourcing case comparison requires a genuine upstream decision-case ref from A03, never inferred from quotation URL",
+      "owner": "132",
+      "action": "compose only with verified caseRef; block otherwise"
+    },
+    {
+      "id": "145-F6",
+      "state": "REQUIRES_HOSTED_PROOF",
+      "issue": "S03's submitted pending fence cannot be cleared after definitive producer rejection without matching authoritative confirmation/owner revocation; failed state intentionally blocks re-edit rather than suggesting fake recovery",
+      "owner": "132/149",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/index.tsx",
+      "action": "verify negative-status policy in integrated consumer; do not modify S03 from N23"
+    },
+    {
+      "id": "145-F7",
+      "state": "REQUIRES_RECONCILIATION",
+      "issue": "prepared branch was 14 ahead/21 behind sf2-stack at compare; PR aggregates 210 files and historical artifacts; GitHub later reports clean mergeability, which is not ownership/integrated validation",
+      "owner": "132",
+      "action": "review exact PR diff by provenance and integrate only rightful author units without reset/force"
+    }
+  ],
+  "next": [
+    {
+      "owner": 132,
+      "task": "Reconcile PR173 vs sf2-stack at observed base SHA, preserve authors, compose U12/U14 routes and U13 PR115+remaining route in protected index, wire i18n/shared owner, source-only A03 caseRef; do not release"
+    },
+    {
+      "owner": 149,
+      "pr": 107,
+      "task": "After composed candidate, compile, generate SDK and run guards/typing; capture actual failure evidence"
+    },
+    {
+      "owner": 150,
+      "pr": 106,
+      "task": "Run F04-installed surgical u12/u13/u14 Playwright journeys using real authorized seed data, read-after-write, lost response and five-width screens; no fake PASS"
+    }
+  ],
+  "goal": "PAUSED",
+  "integrator": 132,
+  "compiler": 149,
+  "ci": 150,
+  "release_gate": "NOT_APPROVED"
+}
