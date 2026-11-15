@@ -64,7 +64,7 @@ function fields(settings: Readonly<Settings>, names: readonly (keyof Settings)[]
 export function settingsReview(
   current: SettingsProjection, proposed: Readonly<Settings>, operationRef: SfOperationRef,
   intent: "save" | "reset",
-): SfChangeReviewProps {
+): Omit<SfChangeReviewProps, "onConfirm" | "onRevise" | "onCancel"> {
   const sourceVersion = current.value.versions.settings?.version
   const names = changedSettings(current.value.data.settings, proposed)
   const base: SfReviewSnapshot = sourceVersion === undefined
@@ -108,7 +108,5 @@ export function settingsReview(
           },
         },
     state: sourceVersion === undefined ? "unavailable" : "ready",
-    // Event handlers belong to the owner leaf; data model never dispatches.
-    onConfirm: () => undefined, onRevise: () => undefined, onCancel: () => undefined,
   }
 }
