@@ -1,0 +1,250 @@
+{
+  "schema": "sf2h.pre-r02.findings.v1",
+  "mission": 147,
+  "epoch": "pre-r02-e1-browser147",
+  "state": "PRELIMINARY_FIX_FIRST",
+  "material_cut": "d8f14f81855858120f914af4f3934406bfdb74f1",
+  "integrated_recheck_head": "8094e599e3d18609e269548d24619a3246fbc735",
+  "final_review": false,
+  "waiver": false,
+  "model": "GPT-6",
+  "session_id": null,
+  "source_based_only": true,
+  "tests": "NOT_RUN",
+  "number_of_findings": 4,
+  "findings": [
+    {
+      "id": "PRE147-R02-01",
+      "severity": "HIGH",
+      "status": "OPEN_STATIC_RECHECK",
+      "category": "tenant-installation/project identity; financial comparability",
+      "owner": {
+        "mission": 152,
+        "pr": 152,
+        "work_order": "U32",
+        "integrator": 132,
+        "integrator_pr": 65
+      },
+      "root_cause": "comparableReviewSections checks section IDs/period and projection context currency, surface, engineVersion, period but omits installationId and projectId, although the public SfReviewDomainProjection context carries both.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "24-35",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts#L24-L35"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "49-54",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/schema/src/sucafina/reviews.ts#L49-L54"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "143-160",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L143-L160"
+        }
+      ],
+      "causal_reproduction_static": "Give UI49 two independently authorized preserved review values with the same section id/period, projection surface, currency, engineVersion and context period but different projection.context.installationId or projectId. comparableReviewSections returns true; UI49 labels them compatible and enables scalar diff. This does NOT prove the producer permits cross-tenant read; that requires a negative hosted recheck.",
+      "expected": "Fail closed on distinct installation/project or require explicit authorized, prominently scoped cross-project semantics approved by contract; never silently treat unrelated tenant/project amounts as one comparable cut.",
+      "impact": "False financial comparison across installation/project boundaries; risk of misleading decision even where each record is separately readable, with potential authority confusion.",
+      "recheck": "After owner152 patch and 132 composition, have 150 execute U32/UI49 host-backed scenario with two source scopes, including same period/currency and denied second read. Assert incompatible and no joined diff, while same-scope reviews compare; obtain actual run, SHA, fixture identity and output.",
+      "dedup": "NEW_DELTA_NOT_IN_PR97_100_98",
+      "material_recheck": {
+        "head": "8094e599e3d18609e269548d24619a3246fbc735",
+        "blob_unchanged": true,
+        "tests": "NOT_RUN"
+      },
+      "criteria": [
+        "U32-AC01",
+        "U32-AC02",
+        "R02-AC01"
+      ]
+    },
+    {
+      "id": "PRE147-R02-02",
+      "severity": "MEDIUM",
+      "status": "OPEN_STATIC_RECHECK",
+      "category": "financial value, currency, unit and evidence-state preservation",
+      "owner": {
+        "mission": 152,
+        "pr": 152,
+        "work_order": "U32",
+        "integrator": 132,
+        "integrator_pr": 65
+      },
+      "root_cause": "preservedValueRows includes differences in unit/currency/evidenceState, but the compare table renders only String(value), without those changed dimensions.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "39-50",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts#L39-L50"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "168-185",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L168-L185"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "55-61",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/schema/src/sucafina/reviews.ts#L55-L61"
+        }
+      ],
+      "causal_reproduction_static": "Same review context/scope/period with one value id and number 100 in both cuts, but value.currency changes USD to EUR (or unit or evidenceState confirmed to estimated). Detection includes the row; UI49 displays '100' -> '100' without the cause, making a material financial/provenance change look like no numerical change.",
+      "expected": "Show before/after currency, unit, evidenceState, and source completeness beside amounts, and preserve zero distinct from null; never infer FX.",
+      "impact": "Finance reviewers cannot tell that identical numbers have incompatible units/currencies or differing confidence.",
+      "recheck": "Hosted table/a11y oracle in 150: 100 USD→100 EUR, confirmed→estimated, 0→null and null→0; ensure labels and evidence state are visible in source-authorized table and comparison; inspect 132 integrated blob before closing.",
+      "dedup": "NEW_DELTA_NOT_IN_PR97_100_98",
+      "material_recheck": {
+        "head": "8094e599e3d18609e269548d24619a3246fbc735",
+        "blob_unchanged": true,
+        "tests": "NOT_RUN"
+      },
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC01"
+      ]
+    },
+    {
+      "id": "PRE147-R02-03",
+      "severity": "HIGH",
+      "status": "OPEN_STATIC_RECHECK",
+      "category": "provenance, source versions and authenticity of 'unchanged'",
+      "owner": {
+        "mission": 152,
+        "pr": 152,
+        "work_order": "U32",
+        "integrator": 132,
+        "integrator_pr": 65
+      },
+      "root_cause": "preservedValueRows compares value/evidenceState/unit/currency only, not per-value sourceRefs and source version; changed() looks only at value rows, count and title, then displays 'unchanged', ignoring section and projection sourceRefs and their incarnation/version/observedAt.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "39-50",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts#L39-L50"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "110-116",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L110-L116"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "158-165",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L158-L165"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "25-29",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/schema/src/sucafina/reviews.ts#L25-L29"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "83-92",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/schema/src/sucafina/reviews.ts#L83-L92"
+        }
+      ],
+      "causal_reproduction_static": "Two preserved snapshots with same section id/title/count, same scalar value/evidenceState/unit/currency and period, but sourceRefs.version v7→v8 (or incarnation/observedAt changed) have zero preservedValueRows; changed() is false; UI49 shows 'unchanged' despite changed source ancestry.",
+      "expected": "Independently classify source/provenance revision versus numerical change; expose before/after source version/incarnation and actual cut without inventing value changes. Keep unchanged scalar label only when scoped explicitly to scalar equality.",
+      "impact": "Masks source freshness/revocation dependencies and misleads financial evidence review; historical confirmation must not be implied current.",
+      "recheck": "Owner152 updates comparator and 150 validates same numbers+different sourceRefs/version/incarnation, identical sources, and denied/revoked historical case; 132 rechecks integrated exact blob, no final acceptance inferred.",
+      "dedup": "NEW_DELTA_NOT_IN_PR97_100_98",
+      "material_recheck": {
+        "head": "8094e599e3d18609e269548d24619a3246fbc735",
+        "blob_unchanged": true,
+        "tests": "NOT_RUN"
+      },
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC02"
+      ]
+    },
+    {
+      "id": "PRE147-R02-04",
+      "severity": "MEDIUM",
+      "status": "OPEN_STATIC_RECHECK",
+      "category": "import target authorization freshness and period selection",
+      "owner": {
+        "mission": 157,
+        "pr": 157,
+        "work_order": "U23",
+        "integrator": 132,
+        "integrator_pr": 65
+      },
+      "root_cause": "files.import-targets is called with start/end, but changing either date invokes change() which fences preview only and leaves the previous targets list and selectionRef intact. prepare() can send the old selectionRef from a different period without rediscovering.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b",
+          "lines": "135-165",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx#L135-L165"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b",
+          "lines": "201-224",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx#L201-L224"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+          "blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b",
+          "lines": "401-416",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx#L401-L416"
+        }
+      ],
+      "causal_reproduction_static": "Discover planner targets for January, select one, change date range to February without Discover; change() preserves state.targets/selectionRef; selectedTarget() still matches the January selection and prepare() calls files.import-admit using that stale target. Backend reauthorization could reject, but this UI does not enforce fresh period-scoped target selection.",
+      "expected": "On changes to start/end clear selected target and period-bound target list, require fresh authorized import-targets discovery; producer must additionally deny stale/foreign selections.",
+      "impact": "Wrong-period destination intent and misleading authority in import review; no unauthorized commit has been proven.",
+      "recheck": "Owner157 clears period-scoped selection; 150 verifies January→February forces rediscovery, stale/revoked target denied, no admit/preview/apply with old selectionRef; 132 verifies postimage.",
+      "dedup": "NEW_DELTA_NOT_IN_PR97_100_98",
+      "material_recheck": {
+        "head": "8094e599e3d18609e269548d24619a3246fbc735",
+        "blob_unchanged": true,
+        "tests": "NOT_RUN"
+      },
+      "criteria": [
+        "U23-AC01",
+        "U23-AC02",
+        "R02-AC02"
+      ]
+    }
+  ],
+  "dedupe": {
+    "review_pr100": [
+      "R1-91-001 first-save lost ACK",
+      "R1-91-002 egress",
+      "R1-91-003 final-C proof"
+    ],
+    "review_pr97": [
+      "F92-EGRESS-01",
+      "F92-PURE-02",
+      "F92-FIRSTSAVE-03",
+      "F92-C10-04",
+      "F92-M31-05",
+      "F92-AUTH-06",
+      "F92-ATLAS-07",
+      "F92-HTTP-08",
+      "F92-COMPOSE-09"
+    ],
+    "review_pr98": [
+      "original gallery",
+      "native runtime",
+      "ClamD other SHA",
+      "final gates"
+    ],
+    "decision": "Referenced as inherited OPEN/MISSING_PROOF only; none duplicated as new finding; real recheck required after composition."
+  }
+}
