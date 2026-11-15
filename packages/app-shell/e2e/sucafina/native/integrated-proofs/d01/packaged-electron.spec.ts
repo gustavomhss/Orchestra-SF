@@ -208,7 +208,7 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
         contentType: "application/json",
         body: JSON.stringify({
           candidateSha: host.candidateSha, binarySha256: host.executableSha256,
-          actionsRunId: host.actionsRunId, packaged: main.isPackaged,
+          actionsRunId: host.actionsRunId, sourceBuildRunId: host.sourceBuildRunId, packaged: main.isPackaged,
           brokerRegister: "approved", bound: true,
           originalContextViaElectronNet: true, privateHttpOnlyObserved: after.isolatedHttpOnly > 0,
           defaultSessionCookies: after.default, wrongServerAndProjectDenied: true,

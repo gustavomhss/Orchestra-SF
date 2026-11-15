@@ -24,7 +24,7 @@ export async function registerD01PackagedArtifact(input: Readonly<{
 }>> {
   const root = await requirePrivateNativeRoot(input.scratchRoot)
   if (process.env.GITHUB_ACTIONS !== "true" ||
-      !process.env.GITHUB_RUN_ID || input.buildActionsRunId !== process.env.GITHUB_RUN_ID ||
+      !process.env.GITHUB_RUN_ID || !/^\d+$/.test(input.buildActionsRunId) ||
       !/^[0-9a-f]{40}$/.test(input.buildCandidateSha) ||
       input.buildCandidateSha !== process.env.SF_NATIVE_CANDIDATE_SHA)
     throw new Error("D01_APPROVED_HOSTED_BUILD_PROVENANCE_REQUIRED")
@@ -47,7 +47,8 @@ export async function registerD01PackagedArtifact(input: Readonly<{
     executablePath: executable,
     candidateSha: input.buildCandidateSha,
     executableSha256: binarySha256,
-    actionsRunId: input.buildActionsRunId,
+    actionsRunId: process.env.GITHUB_RUN_ID,
+    sourceBuildRunId: input.buildActionsRunId,
     packaged: true,
   }
   const handle = await open(target, "wx", 0o600)

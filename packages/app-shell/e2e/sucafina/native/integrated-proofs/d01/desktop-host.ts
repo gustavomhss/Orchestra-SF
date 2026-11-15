@@ -30,6 +30,7 @@ export type D01PackagedHost = Readonly<{
   candidateSha: string
   executableSha256: string
   actionsRunId: string
+  sourceBuildRunId: string
   executableFromPackagedArtifact: true
   /** Connection request is non-secret. Actual approval is main-owned IPC. */
   publicConnection: Readonly<{
@@ -48,12 +49,14 @@ export async function requireD01PackagedHost(manifest: NativeManifest): Promise<
   if (!file) throw new Error("D01_HOSTED_PACKAGED_ELECTRON_ATTESTATION_FILE_REQUIRED")
   await privateFile(file, root, 8192)
   const raw: unknown = JSON.parse(await readFile(file, "utf8"))
-  if (!record(raw) || Object.keys(raw).length !== 6 ||
+  if (!record(raw) || Object.keys(raw).length !== 7 ||
       raw.schema !== "sf2h.d01.packaged-electron.v1" ||
       typeof raw.executablePath !== "string" ||
       typeof raw.candidateSha !== "string" ||
       typeof raw.executableSha256 !== "string" ||
       typeof raw.actionsRunId !== "string" ||
+      typeof raw.sourceBuildRunId !== "string" ||
+      !/^\d+$/.test(raw.sourceBuildRunId) ||
       raw.packaged !== true)
     throw new Error("D01_ORIGINAL_PACKAGED_ARTIFACT_ATTESTATION_INVALID")
   if (!process.env.GITHUB_RUN_ID || raw.actionsRunId !== process.env.GITHUB_RUN_ID ||
@@ -83,6 +86,7 @@ export async function requireD01PackagedHost(manifest: NativeManifest): Promise<
     executablePath, candidateSha: manifest.candidateSha,
     executableSha256: raw.executableSha256.toLowerCase(),
     actionsRunId: raw.actionsRunId,
+    sourceBuildRunId: raw.sourceBuildRunId,
     executableFromPackagedArtifact: true,
     publicConnection: {
       serverKey, baseUrl: discoveryOrigin, projectId, credentials: { kind: "none" },
