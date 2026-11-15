@@ -1,0 +1,185 @@
+{
+  "schema": "sf2h.native-q02.delivery.v1",
+  "mission": 127,
+  "order": "Q02",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-qual-presentation",
+  "target": "sf2-stack",
+  "leaseEpoch": "native-q02-e1",
+  "githubActor": "gustavomhss",
+  "model": "GPT-6",
+  "fence": {
+    "head": "ef88762b673b6875d1012fd55f74681688b05853",
+    "codeHead": "39b1e9f8c3ef4e3cc33d6f190946d7826061f442",
+    "ackCommit": "b46d98dbd18a8429b8985e300e0b1e120ae7a7b6",
+    "allFourPreimages": "ABSENT",
+    "reason": "The original fence had no packages/app-shell/e2e/sucafina/native tree."
+  },
+  "sourcePins": {
+    "missionPacket": {
+      "commit": "a0e8ad664294a7a702c994d1cb90800d37e8d4d9",
+      "blob": "61c8ef601b5520a7320f07d286926d5cf37afff9"
+    },
+    "workOrder": "2f7838b11f2d93ca9dff9240a9eb86a840e0b836",
+    "surfaceManifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "surfaceSpecs": "d62847af81dffdc129312e71e69692081fd74b75",
+    "contractCatalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "f04PublicFixture": {
+      "head": "d2ea82b411c1f56a7acab854c4224da0acbbe685",
+      "blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "branch": "sf-ux-w05",
+      "installedOnQ02Head": false
+    },
+    "f03PublicFrame": {
+      "branch": "sf-ux-w04",
+      "head": "4b1de4f6108a02cdef8e633309b4b2f0378e76ae",
+      "installedOnQ02Head": false
+    },
+    "u11TitleEditor": {
+      "branch": "sf-ux-w19",
+      "head": "9b466e82afc2d05cde0dad3478e21d7b3803797c",
+      "installedOnQ02Head": false
+    }
+  },
+  "incrementalOutputs": [
+    {
+      "name": "Q02.pilot",
+      "file": "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts",
+      "produced": true,
+      "qualified": false
+    },
+    {
+      "name": "Q02.complete",
+      "files": [
+        "packages/app-shell/e2e/sucafina/native/visual.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/accessibility.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/localization.spec.ts"
+      ],
+      "produced": true,
+      "qualified": false
+    }
+  ],
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/pilot-presentation.spec.ts",
+      "preimage": null,
+      "postimage": "186deb142e53694161cfab2679098c04b872dbf3",
+      "plannedCases": 7,
+      "trace": [
+        "Q02.pilot",
+        "Q02-P0P1",
+        "WP10.T02",
+        "WP10.T04"
+      ],
+      "status": "AUTHORED_NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/visual.spec.ts",
+      "preimage": null,
+      "postimage": "707f51bdd3e85a67b4ec5a207f063411fea6aeae",
+      "plannedCases": 35,
+      "trace": [
+        "Q02.complete",
+        "Q02-AC01",
+        "Q02-AC03",
+        "LAYOUT-01"
+      ],
+      "status": "AUTHORED_NOT_RUN_BASELINES_UNSIGNED"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/accessibility.spec.ts",
+      "preimage": null,
+      "postimage": "d46a8ea74f73d2fd4d2a75f44f0c7c7ebb4f54ed",
+      "plannedCases": 10,
+      "trace": [
+        "Q02.complete",
+        "Q02-AC02",
+        "A11Y-01",
+        "LAYOUT-01"
+      ],
+      "status": "AUTHORED_NOT_RUN"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/localization.spec.ts",
+      "preimage": null,
+      "postimage": "958f16a4fe7ff9269864a5567b4e10f7f491b2f8",
+      "plannedCases": 34,
+      "trace": [
+        "Q02.complete",
+        "Q02-AC01",
+        "Q02-AC03",
+        "COPY-01",
+        "COPY-02"
+      ],
+      "status": "AUTHORED_NOT_RUN"
+    }
+  ],
+  "plannedCaseDefinitions": 86,
+  "collected": 0,
+  "run": 0,
+  "persistentSnapshotBaselinesApproved": 0,
+  "matrix": {
+    "chapters": 15,
+    "lightDarkCaptures": 30,
+    "otherPaletteSamples": [
+      "graphite",
+      "gruvbox",
+      "github",
+      "nord",
+      "amoled"
+    ],
+    "viewportsCssPx": [
+      320,
+      768,
+      1024,
+      1280,
+      1440
+    ],
+    "textProbe": "CSS-font-size-200-percent_PROXY_NOT_BROWSER_TEXT_ZOOM",
+    "reflowProbe": "1280-to-320-CSS-equivalent_PROXY_NOT_BROWSER_ZOOM",
+    "locales": [
+      "en",
+      "pt-BR"
+    ],
+    "actorCases": [
+      "requester",
+      "holder",
+      "denied"
+    ]
+  },
+  "proofClasses": {
+    "DOMAIN_FIXTURE_NOT_INSTALLED": "F04 corpus only, not an accepted browser/desktop result",
+    "WEB_INSTALLED_CONTEXT_OBSERVED": "F04 authenticated discovery/context plus chapter locator, not proof of transactions or all pages",
+    "INSTALLED_VISUAL_CAPTURE_NOT_DOMAIN_ACCEPTANCE": "Screenshot must bind installed candidate and source-backed chapter; independent reviewer must sign baseline",
+    "DESKTOP": "NOT_PROVEN_REQUIRES_D01",
+    "Q02_AC01_AC02_AC03_P0P1": "NOT_RUN_NOT_QUALIFIED"
+  },
+  "blockers": [
+    "125 must install F01/F02/F03/F04/I00 and real native chapter source contracts on same candidate SHA",
+    "F04 public fixture is on a separate branch; Q02 imports it intentionally, no local shim or stub",
+    "F04 multi-principal real authenticated requester/holder/denied in one isolated store is not yet established",
+    "125/129 must isolate producer seed per mutating test to avoid P0/P1 cross-test pollution",
+    "Review and independently sign all screenshot baselines; missing references are failures, not auto-updates",
+    "200%-text CSS probe and 1280-to-320 proxy are not proof of browser-native zoom",
+    "D01 packaged Electron main/preload/session consent and P0/P1 desktop proof API unavailable; desktop gates intentionally fail closed",
+    "Actual theme error/empty/draft state fixture selection and full a11y oracle must be corroborated by installed consumer",
+    "129 must record hosted run identity, actual collected tests, screenshots and negative proof; 128 must compile/guards",
+    "No original integrated candidate, typecheck result, CI result, reviewer approval, or global release is asserted"
+  ],
+  "authority": {
+    "integrator": 125,
+    "ci": 129,
+    "compiler": 128,
+    "qualifier": "independent review",
+    "session127": {
+      "localTests": 0,
+      "actionsDispatched": 0,
+      "typechecks": 0,
+      "merges": 0,
+      "deploys": 0,
+      "goalResumes": 0
+    }
+  },
+  "status": "ARTIFACT_READY_AUTHORING_ONLY__BLOCKED_INTEGRATION_AND_QUALIFICATION",
+  "globalRelease": false
+}
