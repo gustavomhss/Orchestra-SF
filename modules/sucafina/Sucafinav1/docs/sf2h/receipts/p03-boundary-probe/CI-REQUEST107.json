@@ -9,9 +9,8 @@
   "status": "REQUEST_NOT_DISPATCHED",
   "reason": "Short discriminant first; do not rerun unchanged original P03 until causal product fix",
   "source_branch": "p03-boundary-probe",
-  "source_head_pending_this_commit": true,
   "source_test_path": "modules/sucafina/Sucafinav1/test/product/p03-boundary-probe/selection-boundary.test.ts",
-  "expected_test_blob": "d47ee75ecaa1d43549d697cd7f64079abb3d9aee",
+  "expected_test_blob": "f3a00c24d867748d0ab69a03acf1ef4c7ab3dc76",
   "workflow": ".github/workflows/test-ci.yml",
   "runner": "bun",
   "package": "sucafina",
@@ -37,5 +36,6 @@
     "assertions": 72,
     "timeout_ms": 180000
   },
-  "global_release": false
+  "global_release": false,
+  "source_reference": "Resolve the current p03-boundary-probe commit at admission time; validate exact test blob f3a00c24d867748d0ab69a03acf1ef4c7ab3dc76"
 }

@@ -51,7 +51,24 @@ async function boundaryWorld(label: string) {
       expectedVersion: 0,
     }, context)
     if (selected.status !== "ok") throw new Error("real selection refused: " + JSON.stringify(selected))
-    return { world, ui, context, cleanup: async () => { ui.finish(context); await world.cleanup() } }
+    // The shared fixture convenience reviseRule() captures its bootstrap
+    // context. Use the CONSUMED UI context for an actual authorized rule CAS.
+    const reviseRule = async () => {
+      world.ruleOperation.id = "p03-boundary109-rule-" + label
+      return world.rules.register({
+        caseRef: world.caseRef,
+        criterionId: "renewal-difference",
+        metricRef: "planner:known-subtotal-difference",
+        operator: world.criterion.operator,
+        value: world.criterion.value + 1,
+        unit: "USD",
+        period: world.analysisRequest.portfolio.scope.horizon,
+        evidenceRefs: [world.evidence],
+        expectedRuleVersion: 1,
+        sensitivity: world.issuedUnits,
+      }, context)
+    }
+    return { world, ui, context, reviseRule, cleanup: async () => { ui.finish(context); await world.cleanup() } }
   } catch (error) {
     await world.cleanup()
     throw error
@@ -59,7 +76,7 @@ async function boundaryWorld(label: string) {
 }
 
 test("P03/109 observes amplification before any real selection drift; C08/Planner getters and revocation remain live", async () => {
-  const { world, ui, context, cleanup } = await boundaryWorld("selection")
+  const { world, ui, context, reviseRule, cleanup } = await boundaryWorld("selection")
   const observations = { plannerCompares: 0, historicalReads: 0, callbacks: [] as string[] }
   const originalCompare = world.plannerWithCriteria.compareScenarios
   const originalHistorical = world.results.readHistoricalScenario
@@ -118,7 +135,7 @@ test("P03/109 observes amplification before any real selection drift; C08/Planne
 
     // Real canonical rule CAS changes replay without changing the human
     // selection's C08 bytes. A stale read here is NOT evidence of a new choice.
-    const revised = await world.reviseRule()
+    const revised = await reviseRule()
     expect(revised.status).toBe("ok")
     const replayDrift = await world.selectPortfolio(world.analysisRequest, context)
     expect(replayDrift.status).not.toBe("ok")
@@ -153,7 +170,7 @@ test("P03/109 observes amplification before any real selection drift; C08/Planne
 }, 60000)
 
 test("P03/109 exposes the exact analysis boundary where a changed rule is mislabeled as selection drift", async () => {
-  const { world, context, cleanup } = await boundaryWorld("rule-cas")
+  const { world, context, reviseRule, cleanup } = await boundaryWorld("rule-cas")
   try {
     const readSelection = () => world.state.read(world.request, "preferences", (state) => state.preferences[selectionKey(world.caseRef)])
     const initial = await readSelection()
@@ -169,7 +186,7 @@ test("P03/109 exposes the exact analysis boundary where a changed rule is mislab
         if (selected.status === "ok") {
           // A real authorized CAS occurs after the first fully verified select,
           // before the later independent compare/binding/select observations.
-          const revision = await world.reviseRule()
+          const revision = await reviseRule()
           ruleRevision = revision.status
           phases.push("rule-cas:" + revision.status)
         }
