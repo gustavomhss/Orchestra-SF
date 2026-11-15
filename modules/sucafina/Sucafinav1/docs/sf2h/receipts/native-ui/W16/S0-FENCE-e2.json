@@ -1,0 +1,24 @@
+{
+  "schema": "sf2h.native-ui.writer-fence.v1",
+  "campaign": "sf2h-integral-20261112",
+  "seat": "W16",
+  "branch": "sf-ux-w16",
+  "authority": "S0, explicit user instruction to deploy new successor sessions for stopped chats",
+  "old_epoch": "ux-native-w16-e1",
+  "old_epoch_state": "REVOKED_FOR_FUTURE_ACCEPTANCE",
+  "new_epoch": "ux-native-w16-e2",
+  "previous_head": "74838faff3b672b1a2702934877bac333baa7817",
+  "handoff_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/HANDOFF-BLOCKED-OWNER.md",
+      "ref": "74838faff3b672b1a2702934877bac333baa7817"
+    }
+  ],
+  "native_goal": "paused; native writers remain revoked",
+  "runtime_termination_claimed": false,
+  "runtime_limitation": "Browser chat session IDs/lifecycle not exposed. User reports these chats stopped; scope transfer relies on recorded handoff + epoch acceptance fence + branch CAS, not silence or process kill.",
+  "integrator_rule": "114/S0 accept new outputs only from e2 bound to real successor ACK; reject late e1 outputs for integration. Reconcile any later commits, never discard them.",
+  "writer_rule": "New session must verify this fence and current head then publish ACK binding new actual actor/model/session. One commit writer per branch, CAS expected-head force=false. Unexpected e1 activity -> pause overlapping writes and reconcile, no reset/force.",
+  "scope": "Same original allowlists; no shared paths or new privileges",
+  "global_release": false
+}
