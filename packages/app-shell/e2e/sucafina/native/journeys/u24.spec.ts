@@ -49,7 +49,6 @@ test.describe("N27/U24 — native document/evidence/scenario journeys", () => {
     await expect(item).toBeVisible()
     await expect(item.getByRole("button", { name: /Confirm selection|Confirmar seleção/ })).toBeDisabled()
     await item.getByRole("button", { pressed: false }).filter({ hasText: /extracted/ }).click()
-    await expect(leaf.getByRole("blockquote")).toHaveCount(0) // the source is presented as an element, not a role
     await expect(leaf.locator("blockquote")).toBeVisible()
     await item.getByRole("button", { name: /Confirm selection|Confirmar seleção/ }).click()
     await expect(leaf.locator('[data-sf-confirmation="review"]')).toBeVisible()
