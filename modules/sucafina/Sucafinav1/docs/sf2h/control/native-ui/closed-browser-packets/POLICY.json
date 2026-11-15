@@ -1,0 +1,20 @@
+{
+  "schema": "sf2h.browser-closed-packets.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "basis": "Explicit user correction: sending new work/context to browser sessions already started does not work.",
+  "rules": [
+    "Every fresh browser session starts with one complete immutable input packet: exact source SHAs, full assigned criteria and contracts, exclusive write paths, lease, complete output, validation responsibility and consumer.",
+    "Do not count a GitHub comment, edited instruction file or review request as context delivered to an already-started browser session. No wake, runtime ACK or receipt is implied.",
+    "Do not enlarge an in-flight session's mission by sending later source outputs. Its original packet remains the work boundary. Previously authorized autonomous work within that packet continues.",
+    "S0 verifies new terminal outputs and appends them to a frozen next-batch manifest. A fresh integration or validation session receives the complete batch only at startup, after sole-writer/dispatcher transfer is verified. Do not wait for all campaign work if a complete independent batch is ready.",
+    "Findings and source deliveries are durable outputs for the next relevant fresh session, not messages presumed received by current authors. A correction needs a fresh mission with exact failing input when its original session has already started or ended.",
+    "Active sessions may independently finish their originally assigned work and publish complete PR/handoff. No recycled chats, no duplicate supervisor, no concurrent product writer or CI dispatcher.",
+    "State transitions are SOURCE_READY -> BATCH_PREPARED -> FRESH_CONSUMER_ACK -> CONSUMED -> VALIDATED. GitHub notices remain NOTICE_ONLY and never satisfy any transition.",
+    "Prior comments remain historical notices; do not delete or misrepresent them. Prior pinned packets/plans remain immutable; this operational delta changes dispatch/delivery semantics, not product scope or release criteria."
+  ],
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

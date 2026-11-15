@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h.closed-intake-batch.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "state": "BATCH_PREPARED_NOT_DELIVERED_TO_ACTIVE_SESSION",
+  "source_units": 6,
+  "reported_code_paths": 13,
+  "entries": [
+    {
+      "mission": 193,
+      "sha": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063",
+      "branch": "sf-ux-w16",
+      "handoff": "receipts/closure193/ARTIFACT-193.json",
+      "files": 1,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4dd1cb90d9aef580a84d7ec6a25c0fd10d721063/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure193/ARTIFACT-193.json",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 194,
+      "sha": "72c5d2afcbdc202605614a18c5ba472aafc34574",
+      "branch": "sf-ux-n22",
+      "handoff": "receipts/closure194/ARTIFACT.json",
+      "files": 1,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/72c5d2afcbdc202605614a18c5ba472aafc34574/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure194/ARTIFACT.json",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 195,
+      "sha": "679e17ecdfec23ab53ce4b23206594874617528d",
+      "branch": "sf-ux-n13",
+      "handoff": "receipts/closure195/ARTIFACT.json",
+      "files": 2,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/679e17ecdfec23ab53ce4b23206594874617528d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/ARTIFACT.json",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 197,
+      "sha": "3ec7a4ca7db735c08f1f63e164734a0bda245ac7",
+      "branch": "sf-proof-authority",
+      "handoff": "receipts/closure197/HANDOFF.md",
+      "files": 3,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/3ec7a4ca7db735c08f1f63e164734a0bda245ac7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure197/HANDOFF.md",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 198,
+      "sha": "34a00f196de20de359b53f51fbe9007442f8cea4",
+      "branch": "sf-proof-persistence",
+      "handoff": "receipts/closure198/HANDOFF.md",
+      "files": 4,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/34a00f196de20de359b53f51fbe9007442f8cea4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure198/HANDOFF.md",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 201,
+      "sha": "cb7a19356da4e9ba33c902264a1b4aa25639d976",
+      "branch": "sf-work-types",
+      "handoff": "receipts/repair201/HANDOFF.json",
+      "files": 2,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/cb7a19356da4e9ba33c902264a1b4aa25639d976/modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair201/HANDOFF.json",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    }
+  ],
+  "product_last_observed": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "consumer": "NEXT_FRESH_INTEGRATION_SESSION_AFTER_EXCLUSIVE_AUTHORITY_HANDOFF",
+  "authority_granted": false,
+  "notes": [
+    "This is an intake snapshot, not another launched session, product commit or CI proof.",
+    "Reconcile live product/consumer receipts before preparing the fresh consumer; omit already-consumed exact postblobs, preserve all late outputs, never reset or double-apply.",
+    "193/194/195 four preimages were read by S0 at6130; others require consumer preimage check. Unit tests/proof drivers do not establish AM positive.",
+    "Prior notices to189/190/200 are not treated as delivery of this batch to those chats. Work already present in their original frozen packet remains valid."
+  ],
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
