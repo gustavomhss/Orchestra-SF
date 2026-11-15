@@ -1,0 +1,42 @@
+{
+  "schema": "sf-native-admission-source-release-v1",
+  "mission": 64,
+  "state": "SOURCE_DELTA_RELEASED_FOR_SELECTIVE_HELD_COMPOSITION",
+  "branch": "native-admission-proof",
+  "PR": 80,
+  "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0",
+  "source_tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a",
+  "terminal_receipt_identity": "The Git commit containing this receipt is the evidence-only delivery envelope. Its immutable SHA/tree are recorded in the PR80 and PR65 handoff comments after MCP/CAS readback.",
+  "consumer": 60,
+  "consumer_epoch": "S0-C-e12-browser60",
+  "consumer_ack": "REQUESTED_NOT_OBSERVED",
+  "selective_intake": {
+    "owned_delta": "SOURCE-MANIFEST.json and owned-overlay/complete.patch",
+    "shared_patch": "assembly/host-context.patch",
+    "shared_preimage_blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+    "shared_postimage_blob": "297a4050323d80648684725f9c7e9a8680aa318f",
+    "instruction": "Consume exact three source and two test blobs; reconcile current target, then review/compose the inert host patch. Do not copy the source tree or overwrite other owners. Host patch alone installs no authentic origin or native readiness."
+  },
+  "observed_test_result": "PASS_COMPONENT_ONLY:158 pass,0 fail,829 expects,3files,14.32s,run43667749802",
+  "compiler_guards": "REQUEST45_NOT_RUN",
+  "installed_native_acceptance": "HELD_EXTERNAL_CAPABILITY",
+  "mandatory_external": "contracts/capability-contract.json;CAP64-ORIGIN/POLICY-C15/HUMAN/TASK-RELAY/RELOAD/LIFECYCLE/READINESS;CAP64-SCHEDULE if enabling watch",
+  "ack_requested_fields": [
+    "Exact source W and evidence envelope SHA/tree",
+    "Exact accepted/rejected owned blobs and shared patch pre/post",
+    "Target candidate SHA and disposition of every external capability",
+    "Checks45 request state and any real run identities",
+    "AM01–06/final eight selections/three campaign reviews/C-G7/D-G8 remain explicit"
+  ],
+  "authority": {
+    "source_epoch": "native-admission-browser64",
+    "after_delivery": "TERMINATED; no continuing source writer or monitoring ownership claimed",
+    "stack_writer": "NONE_ACTIVE_INFERRED; designated route60 requires new authority",
+    "compiler_owner": 45,
+    "final_acceptance": "S0",
+    "global_release": false
+  },
+  "target_authority_reconciliation": "TARGET-AUTHORITY.json",
+  "consumer_epoch_state": "ENDED_AT_faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "activation": "Source delta is released; stack intake requires explicit renewed/successor authority because60 terminated. Delivery to PR65 does not reactivate60."
+}

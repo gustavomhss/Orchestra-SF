@@ -1,0 +1,98 @@
+{
+  "candidate": {
+    "symbol": "C30",
+    "sha": "947a4add941893c8247b95a5ce6386468313838b",
+    "tree": "280cbcaa7a73a88f7c9d4c13ae8efd796aa63caf",
+    "parent": "342f04688aa173914f36a81e80e6781242616e82",
+    "source": 63,
+    "paths": 11,
+    "manifest": "candidates/C30-operations63.json",
+    "readback": "PASS_TEXT_IDENTITIES_ONLY",
+    "validation": "NOT_RUN"
+  },
+  "checks": [
+    {
+      "kind": "post63",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+      "sha": "d4847ae8096764205e00ccfaedf36a9f84f66a83",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+      "sha": "458c33783954d9b8465f289690718a4fe8c34ec6",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+      "sha": "6b2e5ae65131e4d050fe07b9185d2ec7c1156d4c",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "script/sf2h/operations-scanner/README.md",
+      "sha": "1cca813f15c94cd397825a42c28ac9b9020212df",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "script/sf2h/operations-scanner/cleanup.sh",
+      "sha": "034be3399187c8b8683c166987795f210a7421c2",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "script/sf2h/operations-scanner/select.mjs",
+      "sha": "4b4dabacea4c2b47daec81a9de95c61b5ca78fc4",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "sha": "c6d3edbe33e014efae925aaa36ab36701bb7147d",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "sha": "66bd6df24499027328f22b598e50268023287071",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "script/sf2h/operations-scanner/tools.lock.json",
+      "sha": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+      "sha": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+      "match": true
+    },
+    {
+      "kind": "post63",
+      "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+      "sha": "c229bc6e85d2474d057a21859d0d88055100a078",
+      "match": true
+    },
+    {
+      "kind": "commit",
+      "sha": "947a4add941893c8247b95a5ce6386468313838b",
+      "tree": "280cbcaa7a73a88f7c9d4c13ae8efd796aa63caf",
+      "parents": [
+        "342f04688aa173914f36a81e80e6781242616e82"
+      ]
+    },
+    {
+      "kind": "diff",
+      "files": 76,
+      "unexpected": []
+    }
+  ],
+  "source_ACK": {
+    "id": 6888416764
+  },
+  "proof": "Text/blob/ancestry only; no executable qualification"
+}

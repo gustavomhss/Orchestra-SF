@@ -1,0 +1,353 @@
+{
+  "schema": "sf2h.integration71.auth70-routing.v1",
+  "mission": 71,
+  "recorded_at": "2026-11-15 03:15:11 UTC",
+  "authority": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+  "source_terminal": "9c6946c31887ca1899a99ce120921c8bf937e721",
+  "findings_blob": "deee804ca0933adcf313d91f6db2810f1eda512c",
+  "handoff_blob": "4f16c3ae792da1c63272b4aeade52c1f4ca5bee2",
+  "reviewed_source": {
+    "sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "tree": "12594fd5a48f934847db717dd872d51776484296",
+    "opinion": "FIX-FIRST",
+    "confirmed_source_findings": [
+      "M70-AUTH-01",
+      "M70-ISO-01",
+      "M70-HTTP-01"
+    ],
+    "severity": "All P2 / MEDIUM; mandatory",
+    "reproductions_executed": false,
+    "open_gates": [
+      "M70-G01",
+      "M70-G02",
+      "M70-G03"
+    ],
+    "opinion_for_C28": "NOT_REVIEWED_BY70"
+  },
+  "consumer_ACK": "ACCEPTED_DOCUMENTARY_RELEASE_FIX_FIRST",
+  "routes": [
+    {
+      "id": "M70-AUTH-01",
+      "severity": "P2",
+      "owner": 72,
+      "branch": "auth-retention-fix",
+      "criteria": [
+        "mission70.acceptance[0] (session/storage)",
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40"
+      ],
+      "state": "OPEN_MANDATORY_OWNER_ACK_OBSERVED_NO_TERMINAL_RELEASE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts (auth secrets maintenance contract only)",
+        "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts (auth lifecycle maintenance only)",
+        "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/"
+      ],
+      "observed_owner_head": "4fe627efa6b5b727087da9f8c33a564bd4b9acb4",
+      "intake": "Await explicit terminal source; review full delta/preimages/dependencies; no in-flight snapshot intake",
+      "validation": "45 checks / authorized source lane;71 no dispatch; independent re-review required"
+    },
+    {
+      "id": "M70-ISO-01",
+      "severity": "P2",
+      "owner": 73,
+      "branch": "procurement-privacy-fix",
+      "criteria": [
+        "CAMP.INV.04",
+        "CAMP.CMP.02",
+        "CAMP.CMP.03",
+        "C03",
+        "C08",
+        "WP10.T03.QLT.40"
+      ],
+      "state": "OPEN_MANDATORY_OWNER_ACK_OBSERVED_NO_TERMINAL_RELEASE",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/procurement.ts (visibility-before-public-response and numeric presentation only; nofinancialpolicy/stage changes)",
+        "modules/sucafina/Sucafinav1/runtime/application.ts (public visibility/error boundary only)",
+        "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/"
+      ],
+      "observed_owner_head": "6db479f1f72e6ed0419a65e55cc9fd8f7f8078a5",
+      "intake": "Await explicit terminal source; review full delta/preimages/dependencies; no in-flight snapshot intake",
+      "validation": "45 checks / authorized source lane;71 no dispatch; independent re-review required"
+    },
+    {
+      "id": "M70-HTTP-01",
+      "severity": "P2",
+      "owner": 74,
+      "branch": "http-body-limit-fix",
+      "criteria": [
+        "mission70.acceptance[1] (Node/Effect body seam)",
+        "C08",
+        "WP10.T03.QLT.01",
+        "WP10.T03.QLT.40"
+      ],
+      "state": "OPEN_MANDATORY_OWNER_ACK_OBSERVED_NO_TERMINAL_RELEASE",
+      "paths": [
+        "apps/cli/src/sucafina-product/installation.ts",
+        "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "modules/sucafina/Sucafinav1/runtime/request-body.ts (newboundedexistingtransporthelper)",
+        "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/"
+      ],
+      "observed_owner_head": "1308e9c8ce72efe1605f80cb2a51b969cf519ec7",
+      "intake": "Await explicit terminal source; review full delta/preimages/dependencies; no in-flight snapshot intake",
+      "validation": "45 checks / authorized source lane;71 no dispatch; independent re-review required"
+    }
+  ],
+  "gates": [
+    {
+      "id": "M70-G01",
+      "title": "Microsoft/B2B e ingresso HTTPS reais sem prova admitida",
+      "status": "NOT_PROVEN",
+      "mandatory": true,
+      "defect_claim": false,
+      "criteria": [
+        "mission70.acceptance[1]",
+        "CAMP.CMP.03"
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+          "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+          "lines": {
+            "start": 19,
+            "end": 27
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts#L19-L27",
+          "why": "fixture não usa rede; gera par RSA local."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+          "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+          "lines": {
+            "start": 55,
+            "end": 67
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts#L55-L67",
+          "why": "tokens/claims sintéticos."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+          "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+          "lines": {
+            "start": 94,
+            "end": 108
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts#L94-L108",
+          "why": "Graph sintético."
+        }
+      ],
+      "required": "Owner autorizado deve fornecer recibo expurgado com candidato exato, tenant/app configurados, membro/convidado B2B, consentimento, papéis e remoção real de acesso, refresh/logout/restart, HTTPS/origem/proxy privado e redaction dos logs externos. Esta missão não inicia login/Azure/credenciais.",
+      "owner": "60/S0 coordenam owner Microsoft e frente de implantação já existente",
+      "does_not_close": [
+        "falha/sucesso real de Entra",
+        "tenant B2B",
+        "privacidade do proxy",
+        "aceite final"
+      ],
+      "authority_note": "Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60."
+    },
+    {
+      "id": "M70-G02",
+      "title": "Source CI49 não qualifica C27 nem POST Node com corpo",
+      "status": "NOT_PROVEN",
+      "mandatory": true,
+      "defect_claim": false,
+      "criteria": [
+        "C08",
+        "WP10.QLT.40",
+        "WP10.T03.CHK.03",
+        "mission70.acceptance[1]"
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+          "blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+          "lines": {
+            "start": 53,
+            "end": 105
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-node.test.ts#L53-L105",
+          "why": "listener Node real; helper sem method/body efetua GET."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+          "blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+          "lines": {
+            "start": 39,
+            "end": 43
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts#L39-L43",
+          "why": "composição usa toWebHandler."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+          "blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+          "lines": {
+            "start": 91,
+            "end": 104
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts#L91-L104",
+          "why": "POST Web Request não exercita IncomingMessage."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+          "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+          "lines": {
+            "start": 12,
+            "end": 29
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts#L12-L29",
+          "why": "fixture exige mapa canônico mas leitura de código não equivale a execução."
+        }
+      ],
+      "required": "Após correções e integração autorizada, W/S/run/job/logs no candidato composto com POST válido/negativo, chunked, limite, binário e aborto. Reexecutar apenas discriminantes afetados no lane existente; missão70 despacha zero testes.",
+      "owner": "60 coordena qualificador;45 conserva compiler/check workflow",
+      "authority_note": "Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60."
+    },
+    {
+      "id": "M70-G03",
+      "title": "Admission53 não está ligada à transação HTTP canônica",
+      "status": "HOLD_INERT_NOT_INSTALLED",
+      "mandatory": true,
+      "defect_claim": false,
+      "criteria": [
+        "C01",
+        "C03",
+        "C08",
+        "C12",
+        "CAMP.INV.02"
+      ],
+      "evidence": [
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+          "blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+          "lines": {
+            "start": 67,
+            "end": 70
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts#L67-L70",
+          "why": "contrato current síncrono depois de fresh auth e antes de um execute."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 28,
+            "end": 43
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L28-L43",
+          "why": "API instalada não expõe hook de admission53."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+          "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+          "lines": {
+            "start": 304,
+            "end": 306
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/runtime/application.ts#L304-L306",
+          "why": "Application chama execute canônico diretamente."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/index.ts",
+          "blob": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+          "lines": {
+            "start": 12,
+            "end": 32
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/index.ts#L12-L32",
+          "why": "registro liga ProcurementModule canônico."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+          "lines": {
+            "start": 651,
+            "end": 660
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/business-services.ts#L651-L660",
+          "why": "composição usa preparação, não lifecycle/admission53."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts",
+          "blob": "7239db74d724e95f007f9815f5e88b5199dd62df",
+          "lines": {
+            "start": 126,
+            "end": 144
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/admission.test.ts#L126-L144",
+          "why": "harness de teste envolve execute e chama current; não é instalação."
+        },
+        {
+          "repository": "gustavomhss/Orchestra-SF",
+          "commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+          "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+          "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+          "lines": {
+            "start": 19,
+            "end": 33
+          },
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/procurement-scenario-services.ts#L19-L33",
+          "why": "substituição financeira permanece explicitamente blocked."
+        }
+      ],
+      "required": "60/owner autorizado devem instalar hook de admissão vinculado ao Request/contexto/command exatos, dentro da transação após fresh auth, imediatamente antes de um único execute. Qualificar no produto composto. Preservar edição direta autorizada, CAS, holders e alçadas. M31/MI07 original permanece aberto; draft-save→submit→approve de valor congelado não fecha substituição ainda não gravada seguida de Apply.",
+      "owner": "60 + owner Procurement53/Decisions designado; S0 decide aceite",
+      "does_not_claim": "Ausência de ligação não demonstra bypass financeiro; o cenário está bloqueado.",
+      "authority_note": "Na publicação,60 encerrou a lease em faa30fddb7e7b61696b66fd069f51cf18c51125f.60/S0 recebem este handoff; correção/integração requer retomada ou sucessor explicitamente autorizado, sem retomada automática de60."
+    }
+  ],
+  "history": {
+    "inherited_findings": 38,
+    "additional70": 3,
+    "total": 41,
+    "none_dropped": true,
+    "inherited_path": "../after-c27-60/finding-routing-final.json",
+    "inherited_blob": "663b1c8c3e5e6bb79a79b1ccd1a78f1e6894213c"
+  },
+  "coordination": {
+    "72": {
+      "authority_sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+      "authority_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/auth-retention-fix.json",
+      "shared_path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "composition_base_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "rule": "Apply complete auth72 delta against its pinned preimage and reconcile hunks over post59. Never replace local-store with entire C28+72 file. Preserve readSnapshotRoot, readOnly/dispose poison, queue/write admissions, and secrets.get readonly inside business transactions.",
+      "checks": "Existing runtime59/56/Finance34 suite plus auth72 own regression/capacity tests must be requested on composed candidate;71 does not execute or dispatch.",
+      "no_auth72_source_consumed_in_this_review": true
+    },
+    "73": "Unique runtime/procurement correction owner; reconcile privacy before CAS and Operations63/75 precision presentation, preserve financial transitions, holders, approvals and M31.",
+    "74": "Reconcile full source52 release if available. Preserve immutable Microsoft49/55 map; changed entry/installation requires new current composition map + fixture lookup atomically; no engine/proxy/Azure changes."
+  },
+  "GLOBAL_RELEASE": false
+}

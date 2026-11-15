@@ -48,6 +48,8 @@ const CurrentRequest = Context.Reference<RequestScope | undefined>("sucafina/rou
 export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistryInput) {
   const identity = Object.freeze({})
   const scopes = new Set<RequestScope>()
+  // These are cancellable acquisitions in this same registry, never issued ownership capabilities.
+  const acquiring = new Set<{ request: Request; close: () => void }>()
   const entries = new Map<string, Entry>()
   const issued = new Set<string>()
   const invalidGenerations = new Set<number>()
@@ -59,63 +61,73 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
   ): Effect.Effect<A, E | ToolSafety.Denied, R> => Effect.gen(function* () {
     if (disposed || (yield* CurrentRequest) || !context || !request || input.requestFor(context) !== request ||
       request.signal.aborted) return yield* denied()
-    const resources = input.resources()
-    const generation = yield* Effect.tryPromise({ try: input.generation, catch: () => denied() })
     const expires = Date.parse(context.binding.expiresAt)
     const acquiredAt = now()
-    if (!resources?.current() || generation === undefined || !Number.isSafeInteger(generation) || generation < 0 ||
-      invalidGenerations.has(generation) || !Number.isFinite(expires) || expires <= acquiredAt) return yield* denied()
+    if (!Number.isFinite(expires) || expires <= acquiredAt) return yield* denied()
     const binding = context.binding
     const lease = context.lease
     const kind = context.kind
     const bindingDigest = digestSfValue(binding)
-    const resourcesDigest = digestSfValue(resources.identity)
     const headersDigest = digestSfValue([...request.headers])
     const lifetime = Math.min(expires - acquiredAt, 300_000)
     const deadline = acquiredAt + lifetime
     const monotonicDeadline = performance.now() + lifetime
     const cancellation = new AbortController()
     let expiryTimer: ReturnType<typeof setTimeout> | undefined
+    let releaseScope: (() => void) | undefined
     let active = true
-    const sync = () => active && !disposed && scopes.has(scope) && input.resources() === resources &&
-      resources.current() && input.requestFor(context) === request && !request.signal.aborted &&
-      !invalidGenerations.has(generation) && now() < deadline && performance.now() < monotonicDeadline &&
-      context.kind === kind && context.binding === binding && context.lease === lease &&
-      digestSfValue(context.binding) === bindingDigest && digestSfValue(resources.identity) === resourcesDigest &&
-      digestSfValue([...request.headers]) === headersDigest &&
-      binding.installationId === resources.identity.installationId && binding.projectId === resources.identity.projectId &&
-      (context.kind !== "native" || (context.binding.hostId === resources.identity.hostId &&
-        context.binding.locationId === digestSfValue(resources.identity.location) &&
-        context.binding.providerGeneration === generation))
-    const current = async () => {
-      const authorized = sync() && await input.authorize(context).catch(() => false)
-      const actualGeneration = authorized && sync() ? await input.generation().catch(() => undefined) : undefined
-      if (authorized && actualGeneration === generation && sync()) return true
-      close()
-      return false
-    }
     const close = () => {
       if (!active) return
       active = false
-      scopes.delete(scope)
+      acquiring.delete(acquisition)
       if (expiryTimer !== undefined) clearTimeout(expiryTimer)
       request.signal.removeEventListener("abort", close)
-      for (const entry of [...entries.values()]) if (entry.scope === scope) entry.close()
+      releaseScope?.()
       // Interrupt only this privately scoped operation, never another session owner selected by ID.
       cancellation.abort()
     }
-    const scope: RequestScope = { registry: identity, request, context, resources, generation, sync, current, close }
+    const acquisition = { request, close }
     return yield* Effect.acquireUseRelease(Effect.sync(() => {
-      scopes.add(scope)
+      // revoke/dispose/expiry must reach generation/authority awaits before a full scope can exist.
+      acquiring.add(acquisition)
       expiryTimer = setTimeout(close, lifetime)
       request.signal.addEventListener("abort", close, { once: true })
-      if (request.signal.aborted) close()
-    }), () => Effect.gen(function* () {
+      if (request.signal.aborted || disposed) close()
+    }), () => withSfRoutineNativeAbort(Effect.gen(function* () {
+      const resources = input.resources()
+      const generation = yield* Effect.tryPromise({ try: input.generation, catch: () => denied() })
+      if (!active || disposed || !resources?.current() || generation === undefined ||
+        !Number.isSafeInteger(generation) || generation < 0 || invalidGenerations.has(generation)) return yield* denied()
+      const resourcesDigest = digestSfValue(resources.identity)
+      const sync = () => active && !disposed && scopes.has(scope) && input.resources() === resources &&
+        resources.current() && input.requestFor(context) === request && !request.signal.aborted &&
+        !invalidGenerations.has(generation) && now() < deadline && performance.now() < monotonicDeadline &&
+        context.kind === kind && context.binding === binding && context.lease === lease &&
+        digestSfValue(context.binding) === bindingDigest && digestSfValue(resources.identity) === resourcesDigest &&
+        digestSfValue([...request.headers]) === headersDigest &&
+        binding.installationId === resources.identity.installationId && binding.projectId === resources.identity.projectId &&
+        (context.kind !== "native" || (context.binding.hostId === resources.identity.hostId &&
+          context.binding.locationId === digestSfValue(resources.identity.location) &&
+          context.binding.providerGeneration === generation))
+      const current = async () => {
+        const authorized = sync() && await input.authorize(context).catch(() => false)
+        const actualGeneration = authorized && sync() ? await input.generation().catch(() => undefined) : undefined
+        if (authorized && actualGeneration === generation && sync()) return true
+        close()
+        return false
+      }
+      const scope: RequestScope = { registry: identity, request, context, resources, generation, sync, current, close }
+      releaseScope = () => {
+        scopes.delete(scope)
+        for (const entry of [...entries.values()]) if (entry.scope === scope) entry.close()
+      }
+      scopes.add(scope)
+      acquiring.delete(acquisition)
       if (!(yield* checked(current))) return yield* denied()
-      const result = yield* withSfRoutineNativeAbort(Effect.provideService(effect, CurrentRequest, scope), cancellation.signal)
+      const result = yield* Effect.provideService(effect, CurrentRequest, scope)
       if (!(yield* checked(current))) return yield* denied()
       return result
-    }), () => Effect.sync(close))
+    }), cancellation.signal), () => Effect.sync(close))
   })
 
   const run: SfRoutineNativeOwnerHook["run"] = (invocation, effect) => Effect.gen(function* () {
@@ -195,14 +207,20 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
 
   return {
     owners, withRequest, run,
-    revoke: (request: Request) => { for (const scope of [...scopes]) if (scope.request === request) scope.close() },
+    revoke: (request: Request) => {
+      for (const acquisition of [...acquiring]) if (acquisition.request === request) acquisition.close()
+      for (const scope of [...scopes]) if (scope.request === request) scope.close()
+    },
     invalidateGeneration: (generation: number) => {
       invalidGenerations.add(generation)
+      // An acquisition has not established its generation yet; none may span a rotation.
+      for (const acquisition of [...acquiring]) acquisition.close()
       for (const scope of [...scopes]) if (scope.generation === generation) scope.close()
     },
     dispose: () => {
       if (disposed) return
       disposed = true
+      for (const acquisition of [...acquiring]) acquisition.close()
       for (const scope of [...scopes]) scope.close()
       for (const entry of [...entries.values()]) entry.close()
     },

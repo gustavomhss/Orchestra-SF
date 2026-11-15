@@ -1,0 +1,192 @@
+{
+  "schema": "sf-native-admission-assembly-v1",
+  "mission": 64,
+  "status": "INERT_COMPLETE_PATCH; NOT_APPLIED_OR_EXECUTED",
+  "owner": "Mission60 assigned shared composition lane; its epoch has explicitly ended. Further intake requires renewed/successor authority; no active writer inferred.",
+  "source_repository": "gustavomhss/Orchestra-SF",
+  "target": "apps/cli/src/sucafina-product/host-context.ts",
+  "preimage_commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "preimage_blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+  "artifacts": {
+    "host-context.preimage.txt": {
+      "git_blob_sha1": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "sha256": "09017349a0e60c625ab92f68bb209ea0d369aaa9ab7570d1e585fbae5e3689ea",
+      "bytes": 77300
+    },
+    "host-context.postimage.txt": {
+      "git_blob_sha1": "297a4050323d80648684725f9c7e9a8680aa318f",
+      "sha256": "b89aed44d0e22ddd59b550a13d750501113d3a18852264ca66468b484e0244a5",
+      "bytes": 78701
+    },
+    "host-context.patch": {
+      "git_blob_sha1": "30c639d37afc202f8f1bf7d15bd427e3bfca79ad",
+      "sha256": "6d26703fb0e38cd55e2bc8a5c7b8d65c0d4b91dee3a863f614ea74d1d9b8399b",
+      "bytes": 7941
+    }
+  },
+  "source_untouched": true,
+  "replacement_anchors": 7,
+  "patch_hunks": 5,
+  "module_dependencies": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "role": "mission64 new bounded admission hook; origin/case/source/publication/current authority verification",
+      "git_blob_sha1": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+      "sha256": "6244fcaf30ec2accd63d8614c266de2368978060729167d7c0813f122dc7b7a6",
+      "bytes": 12025,
+      "revision": "0846710321afab84e0c0a3a79653f41df8a284a0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "role": "mission64 non-replacing tryBind plus existing native guard wrapper",
+      "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+      "sha256": "0e1f2093f3b31eead495b70dbedb8a66344fb08142e4ba31587422431c05e3aa",
+      "bytes": 15351,
+      "revision": "0846710321afab84e0c0a3a79653f41df8a284a0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "role": "mission41 real native Task witness",
+      "git_blob_sha1": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+      "sha256": "9a04db76741494bf6e710a50e17a1df05e27e8c3e4ed2db248c4aaa673477e1f",
+      "bytes": 11691,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "role": "mission41 exact Request/lease/replay registry",
+      "git_blob_sha1": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+      "sha256": "989d57a0283948420ed5040b05b0b16b940fd3c707d2cb41416445eaf11534fa",
+      "bytes": 12601,
+      "revision": "0846710321afab84e0c0a3a79653f41df8a284a0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "role": "mission41 native scoped service capture and product mount order",
+      "git_blob_sha1": "5383051da7cda4523d81f34d93430871e564bb06",
+      "sha256": "1455a3cc71648018364cc0c9a429e7b98cd2eadd963ff0bf00ad88d5c43cb328",
+      "bytes": 10807,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "role": "existing C07 projection/dispatch adapter; reused without bypass",
+      "git_blob_sha1": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3",
+      "sha256": "e130b2122c90fb8be0e21129e50f3749830a24bcf21b37f1de2da5d03998115f",
+      "bytes": 29251,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "role": "existing exact-scope cancellation helper, no reentrant dispatch added",
+      "git_blob_sha1": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+      "sha256": "166d15578beca43de868af4bd78c752acd821cca7a99e2492732b78c92b83673",
+      "bytes": 12229,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "role": "canonical SF_ROUTINE_INPUT reader",
+      "git_blob_sha1": "f0a3a1f9b743161a98b5545fce1ca71c8d9c0abe",
+      "sha256": "d90866bef08d30bac3312724e583a2c7534b0ef991d8362b0a004f3c44242a92",
+      "bytes": 4631,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-records.ts",
+      "role": "canonical native admission/Task/Relay readers",
+      "git_blob_sha1": "d918fa52cdf301ed90ed243329caa799dcfc8ebd",
+      "sha256": "f9333b0fee6d2c73b6d6056fe5f9351186cf7d67167086bcb0f25f17dfb360de",
+      "bytes": 26950,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "role": "existing descriptor readiness and result consumers",
+      "git_blob_sha1": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "sha256": "ae09e051924b204f80de30e50964cd22410f8c7d45432ae3aeb00501d101ebb4",
+      "bytes": 22976,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-inputs.ts",
+      "role": "current case/source readers",
+      "git_blob_sha1": "a7c3cfa6723bf68770f58fca6ebb78cea6eefb4e",
+      "sha256": "723b9d9d241d05fb694a32094b7f55f50040cb128cf401cbe3ef46b12a7c69eb",
+      "bytes": 5507,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "role": "existing real publication capability",
+      "git_blob_sha1": "21e22bb8bb4813711e8b1f7851c0d10369200426",
+      "sha256": "d6a6036c0da025a22f5ccf84f0b55e6328cac8e15aa57750d79ea3de7a02ee1c",
+      "bytes": 4361,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "role": "installed publication contributor",
+      "git_blob_sha1": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+      "sha256": "b63a0e28e855f9ec387d246a46e24e32e9b3e4734963829d3227b6f3e3dee49a",
+      "bytes": 10689,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "role": "static scoped Tool.dynamic registration boundary; unchanged",
+      "git_blob_sha1": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "sha256": "ba0a78312a3a9682a470f2cdc2bf8292a56e15c9102b52651e99d10c5c58a903",
+      "bytes": 4185,
+      "revision": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    }
+  ],
+  "private_factory_signature": "createSfHostRuntimeWithRoutineNative(input, nativeRoutineOrigin?: () => SfRoutineNativeAdmissionOrigin | undefined)",
+  "installed_calls": [
+    "createSfHostRuntime -> createSfHostRuntimeWithRoutineNative(input) with no default origin",
+    "createSfRoutineNativeOwnerRegistry with canonical resources/requestFor/revalidate/generation",
+    "createSfRoutineNativeGovernance.ownerHook -> routineAdmission.run",
+    "createSfRoutineNativeAdmission -> real origin getter, routines.run human exact intent, registry41 and source/case/publication gates",
+    "createSfRoutineNativeAdapter.owners -> routineOwners.owners",
+    "unconditional native governance/runtime contributions and runtime.mount(product) using existing dependency order",
+    "host finalizer -> admission.dispose and registry.dispose before async native execution shutdown"
+  ],
+  "default_behavior": {
+    "authenticated_origin": "not installed",
+    "native_admission": "unavailable/fail-closed",
+    "routine_descriptors_at_boot": 0,
+    "watch_descriptor": "unadvertised",
+    "provider_or_task_created_by_patch": false
+  },
+  "readiness": {
+    "onReady_guard": "routineAdmission.readiness() === ready plus existing native adapter owners.available()",
+    "dynamic_tool_registration": "NOT_IMPLEMENTED",
+    "contribution_patch": "NONE: actual origin/readiness subscription and provider lifecycle capability is not exposed by the installed host",
+    "future_origin_limit": "An origin getter alone does not dynamically install descriptors or create persistent read authority. The integrator must not claim installed operations from this patch.",
+    "required_lifecycle": "Actual ready binding before provider materialization, supported scoped Tools.register lifetime, stale-capture denial, explicit removal of own registrations; no fake available:true."
+  },
+  "external_prerequisites": [
+    "Genuine authenticated Request-to-native-Maestro origin and live immutable binding for the actual invocation",
+    "C15 native Maestro/child token admission, budgets, current policy and receipts without relabelling resident profiles",
+    "Native independent review/direct human reply/authorization/Permission and canonical Task/Relay execution",
+    "Fresh authenticated read/continuation ownership after reload, with factual immutable artifact/digest consumer",
+    "Real Schedule admission before sf_watch_prepare"
+  ],
+  "verification": {
+    "kind": "static text/patch/hash verification only",
+    "patch_reconstruction": "exact postimage",
+    "local_product_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "hosted_assembly_tests": "NOT_RUN",
+    "AM02": "NOT_PROVEN",
+    "AM06": "NOT_PROVEN",
+    "installed_native_proof": false
+  },
+  "intake": "Reconcile current target preimage. Integrate selective module64 release and this complete patch; never copy producer tree. Recompute shared-host postimage if target drifted, preserve later edits, and run only authorized surgical hosted composition gates.",
+  "target_reconciliation": {
+    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "host_preimage_blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+    "observation": "MCP fetch_file exact same preimage; shared patch remains inert."
+  },
+  "target_authority_reconciliation": "../TARGET-AUTHORITY.json"
+}

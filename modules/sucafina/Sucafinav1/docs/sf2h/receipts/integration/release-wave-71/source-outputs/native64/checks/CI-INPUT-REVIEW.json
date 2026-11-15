@@ -1,0 +1,625 @@
+{
+  "schema": "sf-m64-ci-input-review-v1",
+  "mission": 64,
+  "reviewer": "ci_authority",
+  "observed_at_utc": "2026-11-15T02:24:54Z",
+  "status": "STATIC_INPUT_REVIEW_CONSISTENT; NO_TEST_OR_DISPATCH_EXECUTED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source_commit": "0846710321afab84e0c0a3a79653f41df8a284a0",
+  "source_tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a",
+  "source_parent": "ca9a04ca451e4457b2afcfc3def171baf23de9ae",
+  "request_file": ".ci-run.json",
+  "normalized_request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "./Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "./Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "selection": {
+    "kind": "three explicit named files, preserved in order",
+    "files": [
+      {
+        "arg": "./Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "exists_at_W": true,
+        "git_blob_sha1": "e6d0f3c7f8f2e6cfa19da57de109984bf3c7ada9",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts"
+      },
+      {
+        "arg": "./Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "exists_at_W": true,
+        "git_blob_sha1": "dfc38db2ef2552aa729bb73cbccdf1c991cfffbd",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts"
+      },
+      {
+        "arg": "./Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+        "exists_at_W": true,
+        "git_blob_sha1": "4abe43ac65b1006d154ee4b686a995c028079b18",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts"
+      }
+    ],
+    "filter_or_directory_selection": false,
+    "test_name_pattern": null,
+    "timeout_ms": 120000,
+    "expected_file_count": 3,
+    "validation_method": "Read source validation and normalization rules, inspect fetched files at exact W; did not import/execute validator or product/test code.",
+    "package_resolution": {
+      "selector": "packages/sucafina",
+      "alias": "sucafina",
+      "canonical_name": "@orchestra/sucafina",
+      "directory": "modules/sucafina",
+      "registry_entry_matches_manifest": true
+    },
+    "config": "none; config is restricted to Playwright and omitted for Bun"
+  },
+  "execution_contract": {
+    "branch_prefix": "ci-run-linux-",
+    "runner_host": "ubuntu-24.04",
+    "trigger": "push of unique ci-run-* branch at immutable S",
+    "expected_test_job": "test (ubuntu-24.04)",
+    "test_step": "Run tests",
+    "effective_command": {
+      "cwd": "modules/sucafina",
+      "program": "bun",
+      "argv": [
+        "test",
+        "./Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "./Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "./Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "workflow_environment": {
+        "GITHUB_ACTIONS": "false",
+        "ORCHESTRA_OMNI_CONTROL": "declared",
+        "CI": "true from GitHub hosted runner"
+      }
+    },
+    "requested_env": {},
+    "bun_version": "1.3.14",
+    "validator_node": "24.15",
+    "bunfig_preloads": [
+      "../../script/test-guard.ts",
+      "../../script/test-omni-control.ts"
+    ],
+    "control_rule": "Exactly one verdict carrying the job's nonce, pass or not applicable. A focused not applicable verdict gives no omni/native provider credit.",
+    "snapshot_delta_required": [
+      ".ci-run.json"
+    ],
+    "compiler_lane": "Unchanged; typecheck/guards remain mission45 lane, not this test snapshot.",
+    "test_scope": "Component qualification of consumer64 and regression41 only; no installed native/AM credit."
+  },
+  "source_and_config_pins": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "git_blob_sha1": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/.github/workflows/test-ci.yml"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "git_blob_sha1": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci.ts"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "git_blob_sha1": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci-request.ts"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "git_blob_sha1": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci-location.ts"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "git_blob_sha1": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci-package.ts"
+    },
+    {
+      "path": "script/test-ci-paths.ts",
+      "git_blob_sha1": "b6977405d4dd8b2db95f3926f2a0322fd511357e",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci-paths.ts"
+    },
+    {
+      "path": "script/module-registry.json",
+      "git_blob_sha1": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/module-registry.json"
+    },
+    {
+      "path": "packages/script/src/module-catalog.ts",
+      "git_blob_sha1": "c0439d3e356a42db80a2f1397837c33b1514a170",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/packages/script/src/module-catalog.ts"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "git_blob_sha1": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/modules/sucafina/package.json"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "git_blob_sha1": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/modules/sucafina/bunfig.toml"
+    },
+    {
+      "path": "script/test-guard.ts",
+      "git_blob_sha1": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-guard.ts"
+    },
+    {
+      "path": "script/test-omni-control.ts",
+      "git_blob_sha1": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-omni-control.ts"
+    },
+    {
+      "path": ".github/actions/setup-bun/action.yml",
+      "git_blob_sha1": "e2cda5b54676d4d1c35785aaef7aa69d66944597",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/.github/actions/setup-bun/action.yml"
+    },
+    {
+      "path": "package.json",
+      "git_blob_sha1": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/package.json"
+    },
+    {
+      "path": "bunfig.toml",
+      "git_blob_sha1": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/bunfig.toml"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "git_blob_sha1": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-admission.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "git_blob_sha1": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-registry.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-governance.ts"
+    }
+  ],
+  "lockfile_pin": {
+    "path": "bun.lock",
+    "mode": "100644",
+    "type": "blob",
+    "sha": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+    "size": 504498,
+    "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/e3f0c6443c12dd16cb66030f75e2f71f16508098"
+  },
+  "source_request_absent": true,
+  "dedup": {
+    "method": "GitHub MCP GET latest 30 repository Actions runs, all queued and all in_progress runs.",
+    "recent_count": 30,
+    "recent_boundary": {
+      "newest": {
+        "id": 43667468344,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-m69-b0-9a62c4fe-1",
+        "head_sha": "fcd6b6bb4a03b1569b51626663e2b96f13df100f",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-11-15T02:22:21Z",
+        "run_attempt": 1
+      },
+      "oldest": {
+        "id": 43658425036,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-mwh3knh6-817550e",
+        "head_sha": "817550e69ab5b9a9989332fb06c45c7cc396f340",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-15T00:29:34Z",
+        "run_attempt": 1
+      }
+    },
+    "matching_mission64_or_source": [],
+    "queued_count": 0,
+    "queued": [],
+    "in_progress_count": 5,
+    "in_progress": [
+      {
+        "id": 43667468344,
+        "workflow": "test-ci",
+        "branch": "ci-run-linux-astra-m69-b0-9a62c4fe-1",
+        "sha": "fcd6b6bb4a03b1569b51626663e2b96f13df100f",
+        "status": "in_progress",
+        "created_at": "2026-11-15T02:22:21Z",
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667468344"
+      },
+      {
+        "id": 43667462702,
+        "workflow": "test-ci",
+        "branch": "ci-run-linux-astra-wp11-0917b486-3619f1fd-m52-09",
+        "sha": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1",
+        "status": "in_progress",
+        "created_at": "2026-11-15T02:22:16Z",
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667462702"
+      },
+      {
+        "id": 43667290771,
+        "workflow": "test-ci",
+        "branch": "ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1",
+        "sha": "92ac331081a61b4724193488777599d4d8eec257",
+        "status": "in_progress",
+        "created_at": "2026-11-15T02:20:08Z",
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667290771"
+      },
+      {
+        "id": 43667093423,
+        "workflow": "test-ci",
+        "branch": "ci-run-linux-m62-contracts-r1",
+        "sha": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+        "status": "in_progress",
+        "created_at": "2026-11-15T02:17:41Z",
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667093423"
+      },
+      {
+        "id": 43665180272,
+        "workflow": "test-ci",
+        "branch": "ci-run-linux-m59r1",
+        "sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+        "status": "in_progress",
+        "created_at": "2026-11-15T01:53:26Z",
+        "attempt": 1,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43665180272"
+      }
+    ],
+    "conclusion": "No mission64/source-W matching run in the observed latest30 or live sets; queued=0, in_progress=5, all live runs belong to other named branches.",
+    "limits": "Bounded current observation, not an all-history dedup guarantee. Rebind eventual run to both new snapshot branch and S SHA.",
+    "sources": [
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs?per_page=30",
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs?status=queued&per_page=100",
+      "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/runs?status=in_progress&per_page=100"
+    ],
+    "latest30": [
+      {
+        "id": 43667468344,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-m69-b0-9a62c4fe-1",
+        "head_sha": "fcd6b6bb4a03b1569b51626663e2b96f13df100f",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-11-15T02:22:21Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43667462702,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp11-0917b486-3619f1fd-m52-09",
+        "head_sha": "c59b482c4d1d5baefb2cdd819b62e3796ffdeae1",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-11-15T02:22:16Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43667294352,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-export66-r1-75e46959",
+        "head_sha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T02:20:11Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43667290771,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1",
+        "head_sha": "92ac331081a61b4724193488777599d4d8eec257",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-11-15T02:20:08Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43667093423,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-m62-contracts-r1",
+        "head_sha": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-11-15T02:17:41Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43666919712,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-operations63-4a8906bd-nominal-r2",
+        "head_sha": "98522c038cba67a2552890e9daf8898caf146c41",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T02:15:31Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43666746009,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-m59p03",
+        "head_sha": "27a8cf1e9478f7647e884caf6d9315332b6bbc24",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T02:13:24Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43666600846,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-operations63-4a8906bd-aux-r1",
+        "head_sha": "f23937f385ceab4fb0d82d786e5243f5e81f875a",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-15T02:11:37Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43665988509,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-m59r2",
+        "head_sha": "8ac14c407824626adbe53f8eeec82d6572ee1630",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-15T02:03:58Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43665193618,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp11-a6e4102a-3619f1fd-m52-08",
+        "head_sha": "8392e09ae87a6df68790a69d223585e830ec82ca",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:53:38Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43665180272,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-m59r1",
+        "head_sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+        "status": "in_progress",
+        "conclusion": null,
+        "created_at": "2026-11-15T01:53:26Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43664202278,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp11-2a330245-3619f1fd-m52-07",
+        "head_sha": "e43c6ef8265abad48eaff7c36782d65efd7c7281",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:40:37Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43663977131,
+        "name": "astra-wp07-check",
+        "head_branch": "astra-check-wp07",
+        "head_sha": "9235894b095a2cf4a90184b4606949f75a70279d",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:37:43Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43663795167,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp07-910a0a2d-cd3364e7-m48-09",
+        "head_sha": "c5f14d262afda882f0fd6a0878ee04a974919864",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-15T01:35:21Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43663347199,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp11-78f2362b-3619f1fd-m52-06",
+        "head_sha": "6dea9a6f9a96b0e5c9051472d1bd6513189376fc",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:29:50Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43663209925,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp07-910a0a2d-1e6da53d-m48-08",
+        "head_sha": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:27:57Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43662417996,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp07-7621664e-1e6da53d-m48-07",
+        "head_sha": "1a3c35839d8d5f84155f10fd4148779a0ccb6c1a",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:17:53Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43662317407,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp11-19a48b5f-3619f1fd-m52-05",
+        "head_sha": "0bb51dc6f12a92f4ee590482faf70e7d842e4415",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:16:36Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43661892542,
+        "name": "Astra WP11 scoped checks",
+        "head_branch": "astra-check-wp11",
+        "head_sha": "14360372153592d944aa10e42bcac1b6d86680f5",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:11:28Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43661532296,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-m58p03r1",
+        "head_sha": "1574ee70c81518c80c92935a048b2bb075996d01",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T01:07:07Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43660186245,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp07-25b00c94-37251a43-m48-06",
+        "head_sha": "2b4dab4bb1689bbfb8bf307f0ae8397a7bee208a",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T00:50:38Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43660121173,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp11-68c3d091-3619f1fd-m52-04",
+        "head_sha": "5c09907f25e92eb1a16c7be4f4e932b066cea23a",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T00:49:51Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43660001174,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-runtime56-r1-b6b8f664-b2ed56cf-1",
+        "head_sha": "f74ed163aa647ba0f4c85fa5968f161bc3a0e4fb",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-15T00:48:24Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43659849107,
+        "name": "astra-wp07-check",
+        "head_branch": "astra-check-wp07",
+        "head_sha": "4e9997f7e9a285975c4c7735dcf9b2c18cc2185d",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T00:46:32Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43659828632,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-sfvisual-62a7a193",
+        "head_sha": "62a7a1938849cf5f5a0d8c0e5a421b8f3b96cddc",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T00:46:15Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43659727318,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-runtime56-b0-94b27683-543a78f5-1",
+        "head_sha": "ba2375dcf1ca273ea26e884e60bb8f70014ecfd7",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T00:45:07Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43659599684,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-astra-wp07-25b00c94-cd3364e7-m48-05",
+        "head_sha": "820a93a5d75bec7923d743574aa12946249a1bc1",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-15T00:43:34Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43659144888,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-sfvisual-f276916b",
+        "head_sha": "f276916bd16c6d526011e39ae68989b41f6229ab",
+        "status": "completed",
+        "conclusion": "failure",
+        "created_at": "2026-11-15T00:38:02Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43658555108,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-mwh3mhx0-12dfa25",
+        "head_sha": "12dfa2596691342b0019748db6a8deafc65dcb09",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-15T00:31:00Z",
+        "run_attempt": 1
+      },
+      {
+        "id": 43658425036,
+        "name": "test-ci",
+        "head_branch": "ci-run-linux-mwh3knh6-817550e",
+        "head_sha": "817550e69ab5b9a9989332fb06c45c7cc396f340",
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-11-15T00:29:34Z",
+        "run_attempt": 1
+      }
+    ]
+  },
+  "tool_limit": {
+    "attempted": "GET actions/workflows/test-ci.yml/runs?per_page=30",
+    "result": "Connector rejects this endpoint form; replaced by approved repository actions/runs GET. No mutation attempted."
+  },
+  "actions": {
+    "local_test_execution": "NONE",
+    "local_compiler_execution": "NONE",
+    "workflow_dispatch_or_branch_creation": "NONE",
+    "repository_mutation": "NONE",
+    "written_artifacts": [
+      "agent-ci/CI-INPUT-REVIEW.json"
+    ]
+  }
+}

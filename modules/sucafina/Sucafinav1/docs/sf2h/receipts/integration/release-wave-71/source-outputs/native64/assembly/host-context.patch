@@ -1,0 +1,99 @@
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -65,11 +65,12 @@
+ import { createSfRoutinePublicationContribution } from "./routine-publication.ts"
+ import { createSfInstalledRoutinePublication } from "./routine-installed-publication.ts"
+ import { createSfRoutineInputReaders } from "./routine-inputs.ts"
+ import { createSfRoutineServices } from "./routine-services.ts"
+ import { createSfRoutineNativeAdapter } from "./routine-native-adapter.ts"
+-import type { SfRoutineNativeOwnerPort } from "./routine-native-adapter.ts"
++import { createSfRoutineNativeAdmission, type SfRoutineNativeAdmissionOrigin } from "./routine-native-admission.ts"
++import { createSfRoutineNativeOwnerRegistry } from "./routine-native-registry.ts"
+ import { createSfRoutineNativeGovernance } from "./routine-native-governance.ts"
+ import { createSfRoutineNativeRuntime } from "./routine-native-runtime.ts"
+ import { createSfDashboardHttp } from "./dashboard-http.ts"
+ import { createSfSourcingInputs } from "./sourcing-inputs.ts"
+ import { createProcurementDecisionHttp } from "../../../../modules/sucafina/Sucafinav1/product/procurement/decision-http.ts"
+@@ -100,14 +101,14 @@
+ import type { SfNativeAdmission, SfSelectedRuntime } from "../../../../modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+ 
+ /** Resolves placement in the application's existing graph before it accepts HTTP. No second Session coordinator. */
+ export const createSfHostRuntime: CreateSfHostRuntime = (input) => createSfHostRuntimeWithRoutineNative(input)
+ 
+-/** Private composition seam. Owners must be an installed Request-to-native-Maestro capability, not caller IDs. */
++/** Private composition seam. The origin is an installed authenticated capability, never HTTP/model IDs. */
+ export const createSfHostRuntimeWithRoutineNative = async (
+   input: Parameters<CreateSfHostRuntime>[0],
+-  nativeRoutineOwners?: SfRoutineNativeOwnerPort,
++  nativeRoutineOrigin?: () => SfRoutineNativeAdmissionOrigin | undefined,
+ ): Promise<SfHostRuntime> => {
+   if (!input.installationId.trim() || !path.isAbsolute(input.directory) || path.resolve(input.directory) !== input.directory) throw new Error("SF_HOST_PLACEMENT_INVALID")
+   const directory = AbsolutePath.make(input.directory)
+   const bundle = await createResidentAiBundle({ root: input.sourceRoot, manifestPath: path.join(input.sourceRoot, "manifests/resident.json") })
+   const selected = bundle.profiles.map((profile) => {
+@@ -295,23 +296,36 @@
+   }
+   const installedRoutinePublication = createSfInstalledRoutinePublication({ identity, host: authority.host })
+   const routinePublication = createSfRoutinePublicationContribution({ identity, authorize: authority.authority.revalidateDomainContext,
+     installed: installedRoutinePublication.publication })
+   const routineInputs = createSfRoutineInputReaders({ cases: business.cases, context: business.context, resolveCase: business.resolveCase, revalidate: authority.host.revalidate })
+-  const routineGovernance = createSfRoutineNativeGovernance({ records: () => routineRuntime.resources()?.records })
++  const routineGovernance = createSfRoutineNativeGovernance({ records: () => routineRuntime.resources()?.records,
++    ownerHook: () => routineAdmission })
+   const routineRuntime = createSfRoutineNativeRuntime({ installationId: input.installationId, identity, governance: routineGovernance,
+     onReady: () => {
++      // No origin is installed by default. A future origin still needs a real live registry binding
++      // before this registration boundary; this callback does not implement dynamic tool registration.
++      if (routineAdmission.readiness() !== "ready") return
+       const installed = routineServices.descriptors
+       if (installed.some((descriptor) => business.descriptors.some((current) => current.id === descriptor.id)))
+         throw new Error("SF_ROUTINE_OPERATION_REGISTRY_CONFLICT")
+       business.descriptors.push(...installed)
+       return () => {
+         for (let index = business.descriptors.length - 1; index >= 0; index--)
+           if (installed.includes(business.descriptors[index]!)) business.descriptors.splice(index, 1)
+       }
+     } })
+-  const routineNative = createSfRoutineNativeAdapter({ resources: routineRuntime.resources, owners: () => nativeRoutineOwners,
++  const routineOwners = createSfRoutineNativeOwnerRegistry({ resources: routineRuntime.resources,
++    requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
++    generation: async () => await state.models?.() ? state.generation : undefined })
++  const routineAdmission = createSfRoutineNativeAdmission({ resources: routineRuntime.resources, registry: routineOwners,
++    governance: routineGovernance, origin: () => nativeRoutineOrigin?.(),
++    requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
++    authorizeIntent: (context, intent) => authority.human.authorize(context, "routines.run", intent),
++    generation: async () => await state.models?.() ? state.generation : undefined,
++    publication: routinePublication.publication, resolveCase: business.resolveCase, ...routineInputs })
++  const routineNative = createSfRoutineNativeAdapter({ resources: routineRuntime.resources, owners: () => routineOwners.owners,
+     requestFor: authority.host.requestFor, authorize: authority.authority.revalidateDomainContext,
+     generation: async () => await state.models?.() ? state.generation : undefined,
+     publication: routinePublication.publication, governance: routineGovernance, resolveCase: business.resolveCase, ...routineInputs })
+   const routineServices = createSfRoutineServices({ authority: authority.authority, publication: routinePublication.publication,
+     native: routineNative.native, resolveCase: business.resolveCase, prepareWatch: memory.prepareWatch, ...routineInputs })
+@@ -817,10 +831,12 @@
+         if (state.configuration !== digest) { state.configuration = digest; state.generation += 1 }
+         return data.models.map((model) => ({ providerID: model.providerID, id: model.id }))
+       }
+       yield* Effect.addFinalizer(() => Effect.gen(function* () {
+         if (state.identity !== identity) return
++        // Revoke Request/native capabilities synchronously before any asynchronous shutdown can yield.
++        routineAdmission.dispose(); routineOwners.dispose()
+         yield* Effect.promise(() => Promise.allSettled([...executions.values()].map((execution) => execution.shutdown())))
+         executions.clear()
+         routineRuntime.dispose(); routineGovernance.dispose()
+         stopped.forEach((entry) => clearTimeout(entry.timer)); stopped.clear()
+         state.identity = undefined; state.store = undefined; state.models = undefined; requests.clear(); admittedInputs.clear(); observed.clear(); alternativeCaptures.clear(); alternativeBindings.clear(); liveNativeBindings.clear(); invalidNativeGenerations.clear(); decisionDomain.dispose(); business.dispose(); extended.dispose(); documents?.dispose()
+@@ -850,12 +866,11 @@
+     interrupt: (binding) => state.api ? Effect.runPromise(state.api.interrupt(binding)) : Promise.resolve({ status: "unavailable", reason: "native-host-unavailable" }),
+   } }
+   return { identity, services: () => identity() ? services : undefined,
+     contributions: [{ id: "sucafina-host-context", nodes: [node] }, gate.contribution, native.contribution,
+       installedRoutinePublication.contribution, routinePublication.contribution,
+-      ...(nativeRoutineOwners ? [routineGovernance.contribution, routineRuntime.contribution] : []),
+-      nativeRoutineOwners ? routineRuntime.mount(product) : product] }
++      routineGovernance.contribution, routineRuntime.contribution, routineRuntime.mount(product)] }
+ }
+ 
+ function admissionDigest(admission: SfNativeAdmission) {
+   return digestSfValue({ ...admission, request: undefined })
+ }
