@@ -18,7 +18,15 @@ const { composeSfInstallation } = await import(new URL("../../../../../../apps/c
 async function listener(run, maximum = 16 * 1024 * 1024, signal) {
   const server = createServer()
   const received = []
-  server.on("request", (incoming) => received.push(incoming))
+  const resources = new Map()
+  server.on("request", (incoming) => {
+    received.push(incoming)
+    const socket = incoming.socket
+    const events = { socketClosed: false, requestClosed: false }
+    const closed = new Promise((resolve) => socket.once("close", () => { events.socketClosed = true; resolve() }))
+    incoming.once("close", () => { events.requestClosed = true })
+    resources.set(incoming, { socket, closed, events })
+  })
   const observed = { requests: [], completed: [], aborted: Promise.withResolvers(), reading: Promise.withResolvers() }
   try {
     await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
@@ -55,7 +63,7 @@ async function listener(run, maximum = 16 * 1024 * 1024, signal) {
         Layer.provide(installation.privacy),
       ))
       yield* Effect.addFinalizer(() => Effect.sync(() => server.closeAllConnections()))
-      yield* Effect.promise(() => run({ origin, observed, received }))
+      yield* Effect.promise(() => run({ origin, observed, received, resources }))
     })).pipe(Effect.provide(NodeHttpServer.layer(() => server, { host: "127.0.0.1", port: 0 }))), { signal })
   } finally { server.closeAllConnections() }
 }
@@ -82,12 +90,25 @@ function send(f, body, { path = "/sucafina/dashboard?sf=workbench-command", head
   })
 }
 
-async function released(incoming) {
-  if (!incoming.destroyed) await new Promise((resolve) => incoming.once("close", resolve))
-  await new Promise(setImmediate)
-  assert.equal(incoming.destroyed, true)
-  assert.equal(incoming.listenerCount("data"), 0)
-  assert.equal(incoming.listenerCount("readable"), 0)
+async function released(f, incoming) {
+  const resource = f.resources.get(incoming)
+  let timer
+  try {
+    // Node removes an answered request from its incoming queue before closing the socket.
+    // An incomplete request need not emit close itself; the real socket and reader must be released.
+    await Promise.race([resource.closed, new Promise((_, reject) => {
+      timer = setTimeout(() => reject(new Error(`Node resources still active: ${JSON.stringify({
+        request: f.received.indexOf(incoming), complete: incoming.complete, destroyed: incoming.destroyed,
+        readableEnded: incoming.readableEnded, socketDestroyed: resource.socket.destroyed,
+        dataListeners: incoming.listenerCount("data"), readableListeners: incoming.listenerCount("readable"),
+      })}`)), 3000)
+    })])
+    await new Promise(setImmediate)
+    assert.equal(resource.events.socketClosed, true)
+    assert.equal(resource.socket.destroyed, true)
+    assert.equal(incoming.listenerCount("data"), 0)
+    assert.equal(incoming.listenerCount("readable"), 0)
+  } finally { clearTimeout(timer) }
 }
 
 test("Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency and private error responses", { timeout: 20000 }, async (t) => {
@@ -123,7 +144,7 @@ test("Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency 
     assert.equal(f.observed.requests.length, calls)
     assert.equal(f.received.at(-1).headers["content-length"], "65537")
     assert.equal(f.received.at(-1).complete, false)
-    await released(f.received.at(-1))
+    await released(f, f.received.at(-1))
     const tooShortJson = await send(f, Buffer.from('{"ok":true}'), { headers: { "content-length": "2" } })
     assert.equal(tooShortJson.status, 400)
     assert.equal(f.observed.completed.length, 1)
@@ -143,7 +164,7 @@ test("Node runtime: bounded streaming keeps 413, UTF-8 bytes, no EOF dependency 
     assert.equal(denied.status, 403)
     const forged = await send(f, null, { headers: { "x-forwarded-proto": "https" } })
     assert.equal(forged.status, 403)
-    for (const incoming of f.received) await released(incoming)
+    for (const incoming of f.received) await released(f, incoming)
   }, undefined, t.signal)
 })
 
@@ -159,7 +180,7 @@ test("Node runtime: global stream budget cuts off chunked data and preserves bin
     const contract = await send(f, Buffer.alloc(4097), { path: "/sucafina/dashboard?upload=contract", end: false })
     assert.equal(contract.status, 413)
     assert.equal(f.observed.completed.length, 1)
-    for (const incoming of f.received) await released(incoming)
+    for (const incoming of f.received) await released(f, incoming)
   }, 4096, t.signal)
 })
 
@@ -178,6 +199,9 @@ test("Node runtime: disconnected/truncated input aborts the original Request and
     assert.equal(f.observed.completed.length, 0)
     assert.equal(f.received[0].complete, false)
     assert.equal(f.received[0].listenerCount("readable"), 0)
-    await released(f.received[0])
+    await released(f, f.received[0])
+    assert.equal(f.received[0].destroyed, true)
+    assert.equal(f.received[0].aborted, true)
+    assert.equal(f.resources.get(f.received[0]).events.requestClosed, true)
   }, undefined, t.signal)
 })
