@@ -8,13 +8,14 @@ import { useSfContext } from "../../context"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
-import { SfDataTable, type SfColumn } from "../../shared/table"
+import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey } from "../../shared/table"
 import { sfReadProjects, sfAdmitted, sfOwnerMatches } from "../projects/producer"
 import { sfProjectHref } from "../projects/paths"
 import { sfSourceDate, type SfProjectRecord, type SfProjectPage } from "../projects/model"
 import "./overview.css"
 
 const k = (value: keyof typeof SF_U05_COPY) => value as SfCopyKey
+const kt = (value: keyof typeof SF_U05_COPY) => value as unknown as SfTableCopyKey
 
 /** CAP09: read-only review of live source, never a stored historical snapshot. */
 export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Element {
@@ -95,18 +96,18 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
     a.project.id.localeCompare(b.project.id)))
   const milestoneCoverage = createMemo(() => projects().every((project) => project.milestones !== null))
   const columns: readonly SfColumn<SfProjectRecord>[] = [
-    { id: "name", labelKey: k("sf.u05.projects.project"), align: "start", widthPolicy: { kind: "flex", weight: 2, minPx: 170 },
+    { id: "name", labelKey: kt("sf.u05.projects.project"), align: "start", widthPolicy: { kind: "flex", weight: 2, minPx: 170 },
       render: (row) => <bdi>{row.name}</bdi> },
-    { id: "status", labelKey: k("sf.u05.projects.status"), align: "start", widthPolicy: { kind: "content", minPx: 100, maxPx: 180 },
+    { id: "status", labelKey: kt("sf.u05.projects.status"), align: "start", widthPolicy: { kind: "content", minPx: 100, maxPx: 180 },
       render: (row) => <span>{row.status ?? t("sf.u05.projects.notRecorded")}</span> },
-    { id: "risk", labelKey: k("sf.u05.projects.risk"), align: "start", widthPolicy: { kind: "content", minPx: 90, maxPx: 140 },
+    { id: "risk", labelKey: kt("sf.u05.projects.risk"), align: "start", widthPolicy: { kind: "content", minPx: 90, maxPx: 140 },
       render: (row) => <span>{row.risk ?? t("sf.u05.projects.notRecorded")}</span> },
-    { id: "end", labelKey: k("sf.u05.projects.target"), align: "start", widthPolicy: { kind: "content", minPx: 130, maxPx: 180 },
+    { id: "end", labelKey: kt("sf.u05.projects.target"), align: "start", widthPolicy: { kind: "content", minPx: 130, maxPx: 180 },
       render: (row) => <span>{sfSourceDate(row.end) ?? t("sf.u05.projects.notRecorded")}</span> },
-    { id: "watchList", labelKey: k("sf.u05.projects.watch"), align: "center", widthPolicy: { kind: "content", minPx: 90, maxPx: 150 },
+    { id: "watchList", labelKey: kt("sf.u05.projects.watch"), align: "center", widthPolicy: { kind: "content", minPx: 90, maxPx: 150 },
       render: (row) => <span>{row.watchList === null || row.watchList === undefined ?
         t("sf.u05.projects.notRecorded") : row.watchList ? "✓" : "—"}</span> },
-    { id: "pm", labelKey: k("sf.u05.projects.owner"), align: "start", widthPolicy: { kind: "flex", weight: 1, minPx: 140 },
+    { id: "pm", labelKey: kt("sf.u05.projects.owner"), align: "start", widthPolicy: { kind: "flex", weight: 1, minPx: 140 },
       render: (row) => <bdi>{row.pm ?? t("sf.u05.projects.notRecorded")}</bdi> },
   ]
   return (
@@ -159,7 +160,7 @@ export function SfPortfolioOverviewView(props: SfSurfaceProps<"CAP09">): JSX.Ele
                 }}
                 rowActions={() => []}
                 onRowAction={() => undefined}
-                captionKey={k("sf.u05.overview.projects")}
+                captionKey={kt("sf.u05.overview.projects")}
                 density="comfortable"
                 state={projects().length === 0 ? "filtered-empty" : "ready"}
               />
