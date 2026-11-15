@@ -1,0 +1,41 @@
+{
+  "id": "E-M48-CAUSAL-02",
+  "run": 43655757364,
+  "job": 132633777954,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655757364",
+  "W": "1b404dc1fda7eff08334124552c6570755fba161",
+  "W_tree": "f7f3bd0c05b4fca235e7a4fdf49be136e510b06d",
+  "S": "591ad815219f9204bea65186482f312b4965059b",
+  "S_tree": "d228492c692da35f91fa4e9ca873ed188dfd1217",
+  "source": "07ac4e6f6d6d88e0c30050a0e54af24da39060b1",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp08/thread-actors.test.ts",
+      "Sucafinav1/test/product/wp08/thread-history-continuity.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "4168f3bcb815f34c2191c0f861205a62b2f3d9e3117345a59efd4c9ca88b29d4",
+  "conclusion": "success",
+  "pass": 2,
+  "fail": 0,
+  "total": 2,
+  "selected_files": [
+    "Sucafinav1/test/product/wp08/thread-actors.test.ts",
+    "Sucafinav1/test/product/wp08/thread-history-continuity.test.ts"
+  ],
+  "omni": {
+    "nonce": "71dd4aefbe77628019a57775e89316ca",
+    "verdict": "2026-11-14T23:59:01.0649256Z omni positive control [71dd4aefbe77628019a57775e89316ca]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  },
+  "duration_seconds": 29.2,
+  "expect_calls": 74,
+  "log": "evidence/causal-02.log",
+  "scope": "Causal verification only of two repaired real fixtures on C19/W2. Test consumer blobs unchanged. This does not change the W1 78-case FAIL or qualify blocked closure admission."
+}

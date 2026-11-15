@@ -2417,6 +2417,82 @@
    })
  
    reportsTest("RPT-03 removes one authorized record without editing its source and creates only an explicit new revision", async ({ page, reports }, info) => {
+--- a/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
++++ b/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
+@@ -15,18 +15,26 @@
+   await page.getByText("Reports and backup", { exact: true }).click()
+   const form = page.locator("form.report-form")
+   await expect(form).toHaveCount(1)
+-  await form.getByLabel("Format", { exact: true }).selectOption("docx")
+-  await form.getByLabel("Year", { exact: true }).selectOption(String(corpus.year))
++  // These labels wrap their selects and option text. Use the exact accessible
++  // combobox names exposed by the installed Reports form.
++  const format = form.getByRole("combobox", { name: "Format", exact: true })
++  const year = form.getByRole("combobox", { name: "Year", exact: true })
++  await expect(format).toBeEnabled()
++  await format.selectOption("docx")
++  await expect(format).toHaveValue("docx")
++  await expect(year).toBeEnabled()
++  await year.selectOption(String(corpus.year))
++  await expect(year).toHaveValue(String(corpus.year))
+   await form.getByLabel("Title", { exact: true }).fill("Isolated Reports preserved dossier")
+   for (const checkbox of await form.getByRole("checkbox").all()) await checkbox.uncheck()
+   for (const title of ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"])
+     await form.getByRole("checkbox", { name: title, exact: true }).check()
+   await form.getByRole("button", { name: "Generate Report", exact: true }).click()
+ 
+-  // WP07 already exports this exact view. WP10 must mount it from the existing entry;
+-  // a legacy live-data download is not accepted as a preserved-review journey.
++  // C6 mounts the delivered preparation view from the existing Reports entry.
++  // This journey uses that installed composition and its preserved selection.
+   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
+-  await expect(preparation, "BLOCKED_COMPOSITION: Generate Report must mount the real ReviewPreparationView").toBeVisible()
++  await expect(preparation, "Generate Report opens the installed ReviewPreparationView").toBeVisible()
+   const load = preparation.getByRole("button", { name: "Load selection", exact: true })
+   await expect(load).toBeEnabled()
+   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
+@@ -224,6 +232,11 @@
+   expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
+   const link = preparation.getByRole("link", { name: "Download generated report", exact: true })
+   await expect(link).toHaveCount(1)
++  const expectedDownload = new URL(app.dashboardURL)
++  expectedDownload.search = new URLSearchParams({ sf: "review-download", artifactRef: artifact }).toString()
++  // A previous format remains visible while this response is processed. Wait
++  // for this artifact, not merely the already existing download link.
++  await expect(link).toHaveAttribute("href", expectedDownload.toString())
+   const href = new URL(text(await link.getAttribute("href")), page.url())
+   expect(href.origin).toBe(app.origin)
+   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
+@@ -283,8 +296,29 @@
+   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
+   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
+   const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
++  const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
+   await link.click()
+   expect(object(await (await read).json()).value).toEqual(saved)
++  const resolved = await resolution
++  expect(resolved.status()).toBe(200)
++  expect(resolved.headers()["cache-control"]).toBe("no-store")
++  const links = object(await resolved.json()).links
++  expect(Array.isArray(links)).toBe(true)
++  expect(links).toHaveLength(1)
++  const authorized = object((links as unknown[])[0])
++  const destination = new URL(text(authorized.url), app.dashboardURL)
++  expect(destination.origin).toBe(app.origin)
++  expect(destination.pathname).toBe(new URL(app.dashboardURL).pathname)
++  expect(destination.searchParams.get("page")).toBe("Budget Overview")
++  expect(destination.searchParams.get("year")).toBe(String(corpus.year))
++  // The host offers the producer-authorized destination for an explicit choice.
++  // Opening the evidence button alone does not navigate away from the review.
++  const sources = page.getByRole("navigation", { name: "Origens autorizadas da revisão", exact: true })
++  const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
++  await expect(open).toHaveCount(1)
++  await expect(open).toHaveAttribute("href", destination.toString())
++  await open.click()
++  await expect(page).toHaveURL(destination.toString())
+   await expect(page.locator("#content").getByRole("heading", { name: "Budget Overview", exact: true })).toBeVisible()
+   const target = new URL(page.url())
+   expect(target.origin).toBe(app.origin)
 --- a/packages/app-shell/e2e/sucafina/reports-support/revocation.ts
 +++ b/packages/app-shell/e2e/sucafina/reports-support/revocation.ts
 @@ -1,12 +1,12 @@
@@ -2885,61 +2961,3 @@
 +    body: JSON.stringify(receipt, null, 2), contentType: "application/json",
 +  })
 +}
---- a/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
-+++ b/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
-@@ -23,10 +23,10 @@
-     await form.getByRole("checkbox", { name: title, exact: true }).check()
-   await form.getByRole("button", { name: "Generate Report", exact: true }).click()
- 
--  // WP07 already exports this exact view. WP10 must mount it from the existing entry;
--  // a legacy live-data download is not accepted as a preserved-review journey.
-+  // C6 mounts the delivered preparation view from the existing Reports entry.
-+  // This journey uses that installed composition and its preserved selection.
-   const preparation = page.getByRole("region", { name: "Prepare review", exact: true })
--  await expect(preparation, "BLOCKED_COMPOSITION: Generate Report must mount the real ReviewPreparationView").toBeVisible()
-+  await expect(preparation, "Generate Report opens the installed ReviewPreparationView").toBeVisible()
-   const load = preparation.getByRole("button", { name: "Load selection", exact: true })
-   await expect(load).toBeEnabled()
-   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, "review-agenda", "POST"))
-@@ -224,6 +224,11 @@
-   expect(artifact).toMatch(/^report:[a-f0-9]{64}$/)
-   const link = preparation.getByRole("link", { name: "Download generated report", exact: true })
-   await expect(link).toHaveCount(1)
-+  const expectedDownload = new URL(app.dashboardURL)
-+  expectedDownload.search = new URLSearchParams({ sf: "review-download", artifactRef: artifact }).toString()
-+  // A previous format remains visible while this response is processed. Wait
-+  // for this artifact, not merely the already existing download link.
-+  await expect(link).toHaveAttribute("href", expectedDownload.toString())
-   const href = new URL(text(await link.getAttribute("href")), page.url())
-   expect(href.origin).toBe(app.origin)
-   expect(href.pathname).toBe(new URL(app.dashboardURL).pathname)
-@@ -283,8 +288,29 @@
-   const link = navigation.getByRole("button", { name: `Open source ${reference.refId}`, exact: true })
-   await expect(link, "The installed meeting must use the existing authorized source resolver").toBeEnabled()
-   const read = page.waitForResponse(responseFor(app.dashboardURL, "review-read", "GET"))
-+  const resolution = page.waitForResponse(responseFor(app.dashboardURL, "review-source", "GET"))
-   await link.click()
-   expect(object(await (await read).json()).value).toEqual(saved)
-+  const resolved = await resolution
-+  expect(resolved.status()).toBe(200)
-+  expect(resolved.headers()["cache-control"]).toBe("no-store")
-+  const links = object(await resolved.json()).links
-+  expect(Array.isArray(links)).toBe(true)
-+  expect(links).toHaveLength(1)
-+  const authorized = object((links as unknown[])[0])
-+  const destination = new URL(text(authorized.url), app.dashboardURL)
-+  expect(destination.origin).toBe(app.origin)
-+  expect(destination.pathname).toBe(new URL(app.dashboardURL).pathname)
-+  expect(destination.searchParams.get("page")).toBe("Budget Overview")
-+  expect(destination.searchParams.get("year")).toBe(String(corpus.year))
-+  // The host offers the producer-authorized destination for an explicit choice.
-+  // Opening the evidence button alone does not navigate away from the review.
-+  const sources = page.getByRole("navigation", { name: "Origens autorizadas da revisão", exact: true })
-+  const open = sources.getByRole("link", { name: text(authorized.label), exact: true })
-+  await expect(open).toHaveCount(1)
-+  await expect(open).toHaveAttribute("href", destination.toString())
-+  await open.click()
-+  await expect(page).toHaveURL(destination.toString())
-   await expect(page.locator("#content").getByRole("heading", { name: "Budget Overview", exact: true })).toBeVisible()
-   const target = new URL(page.url())
-   expect(target.origin).toBe(app.origin)

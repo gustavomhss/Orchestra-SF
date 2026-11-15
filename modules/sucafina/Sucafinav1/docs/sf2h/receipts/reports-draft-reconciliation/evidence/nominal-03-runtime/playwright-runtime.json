@@ -1,0 +1,398 @@
+{
+  "config": {
+    "configFile": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+    "rootDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": {},
+    "maxFailures": 0,
+    "metadata": {
+      "bundle": "production",
+      "ci": {
+        "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/046e805f2d9635a4527c58b4d4874749b6010304",
+        "commitHash": "046e805f2d9635a4527c58b4d4874749b6010304",
+        "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655931507"
+      },
+      "gitCommit": {
+        "shortHash": "046e805f",
+        "hash": "046e805f2d9635a4527c58b4d4874749b6010304",
+        "subject": "test(ci): four nominal Reports48 journeys on explicit C19 overlay",
+        "body": "test(ci): four nominal Reports48 journeys on explicit C19 overlay",
+        "author": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794700631000
+        },
+        "committer": {
+          "name": "gustavomhss",
+          "email": "gmhelmold@gmail.com",
+          "time": 1794700631000
+        },
+        "branch": "ci-run-linux-astra-wp07-1b404dc1-37251a43-m48-03"
+      },
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "bundle": "production",
+          "ci": {
+            "commitHref": "https://github.com/gustavomhss/Orchestra-SF/commit/046e805f2d9635a4527c58b4d4874749b6010304",
+            "commitHash": "046e805f2d9635a4527c58b4d4874749b6010304",
+            "buildHref": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655931507"
+          },
+          "gitCommit": {
+            "shortHash": "046e805f",
+            "hash": "046e805f2d9635a4527c58b4d4874749b6010304",
+            "subject": "test(ci): four nominal Reports48 journeys on explicit C19 overlay",
+            "body": "test(ci): four nominal Reports48 journeys on explicit C19 overlay",
+            "author": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794700631000
+            },
+            "committer": {
+              "name": "gustavomhss",
+              "email": "gmhelmold@gmail.com",
+              "time": 1794700631000
+            },
+            "branch": "ci-run-linux-astra-wp07-1b404dc1-37251a43-m48-03"
+          },
+          "actualWorkers": 1
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+        "testIgnore": [
+          "performance/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "html"
+      ],
+      [
+        "line"
+      ],
+      [
+        "json"
+      ],
+      [
+        "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/utils/flaky-reporter.ts"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "sucafina/reports.spec.ts",
+      "file": "sucafina/reports.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CI-UI-REPORTS · real preserved dossier",
+          "file": "sucafina/reports.spec.ts",
+          "line": 19,
+          "column": 13,
+          "specs": [
+            {
+              "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 180041,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 52,
+                            "line": 18
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 180000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form.report-form').getByLabel('Format', { exact: true })\u001b[22m\n\n\n   at sucafina/reports-support/review-flow.ts:18\n\n  16 |   const form = page.locator(\"form.report-form\")\n  17 |   await expect(form).toHaveCount(1)\n> 18 |   await form.getByLabel(\"Format\", { exact: true }).selectOption(\"docx\")\n     |                                                    ^\n  19 |   await form.getByLabel(\"Year\", { exact: true }).selectOption(String(corpus.year))\n  20 |   await form.getByLabel(\"Title\", { exact: true }).fill(\"Isolated Reports preserved dossier\")\n  21 |   for (const checkbox of await form.getByRole(\"checkbox\").all()) await checkbox.uncheck()\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:18:52)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:24:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "steps": [
+                        {
+                          "title": "Prepare and explicitly preserve the authorized dossier",
+                          "duration": 180079,
+                          "error": {
+                            "message": "Error: locator.selectOption: Test timeout of 180000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form.report-form').getByLabel('Format', { exact: true })\u001b[22m\n",
+                            "stack": "Error: locator.selectOption: Test timeout of 180000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form.report-form').getByLabel('Format', { exact: true })\u001b[22m\n\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:18:52)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:24:23",
+                            "location": {
+                              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                              "column": 52,
+                              "line": 18
+                            },
+                            "snippet": "   at sucafina/reports-support/review-flow.ts:18\n\n\u001b[0m \u001b[90m 16 |\u001b[39m   \u001b[36mconst\u001b[39m form \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m\"form.report-form\"\u001b[39m)\n \u001b[90m 17 |\u001b[39m   \u001b[36mawait\u001b[39m expect(form)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 18 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Format\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(\u001b[32m\"docx\"\u001b[39m)\n \u001b[90m    |\u001b[39m                                                    \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 19 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Year\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(\u001b[33mString\u001b[39m(corpus\u001b[33m.\u001b[39myear))\n \u001b[90m 20 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Title\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mfill(\u001b[32m\"Isolated Reports preserved dossier\"\u001b[39m)\n \u001b[90m 21 |\u001b[39m   \u001b[36mfor\u001b[39m (\u001b[36mconst\u001b[39m checkbox \u001b[36mof\u001b[39m \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"checkbox\"\u001b[39m)\u001b[33m.\u001b[39mall()) \u001b[36mawait\u001b[39m checkbox\u001b[33m.\u001b[39muncheck()\u001b[0m"
+                          }
+                        }
+                      ],
+                      "startTime": "2026-11-15T00:01:50.743Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6NmI1OWI3ZDMtYTQ3ZC00MWI0LTgyZWYtM2FjNWRhODhiMjRmOjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiMDQ2ZTgwNWYyZDk2MzVhNDUyN2M1OGI0ZDQ4NzQ3NDliNjAxMDMwNCIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6056592b37faa030393e-fd019dc4c55e77b430c2",
+              "file": "sucafina/reports.spec.ts",
+              "line": 22,
+              "column": 3
+            },
+            {
+              "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 180041,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 52,
+                            "line": 18
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 180000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form.report-form').getByLabel('Format', { exact: true })\u001b[22m\n\n\n   at sucafina/reports-support/review-flow.ts:18\n\n  16 |   const form = page.locator(\"form.report-form\")\n  17 |   await expect(form).toHaveCount(1)\n> 18 |   await form.getByLabel(\"Format\", { exact: true }).selectOption(\"docx\")\n     |                                                    ^\n  19 |   await form.getByLabel(\"Year\", { exact: true }).selectOption(String(corpus.year))\n  20 |   await form.getByLabel(\"Title\", { exact: true }).fill(\"Isolated Reports preserved dossier\")\n  21 |   for (const checkbox of await form.getByRole(\"checkbox\").all()) await checkbox.uncheck()\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:18:52)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:38:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T00:04:56.112Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6YmI2YmNlYTItMTIyOC00ZWE5LWEzMmEtYjk0YzU1MzY4NTNhOjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiMDQ2ZTgwNWYyZDk2MzVhNDUyN2M1OGI0ZDQ4NzQ3NDliNjAxMDMwNCIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6056592b37faa030393e-ee07c0ba4c7252737c4b",
+              "file": "sucafina/reports.spec.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 180040,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 52,
+                            "line": 18
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 180000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form.report-form').getByLabel('Format', { exact: true })\u001b[22m\n\n\n   at sucafina/reports-support/review-flow.ts:18\n\n  16 |   const form = page.locator(\"form.report-form\")\n  17 |   await expect(form).toHaveCount(1)\n> 18 |   await form.getByLabel(\"Format\", { exact: true }).selectOption(\"docx\")\n     |                                                    ^\n  19 |   await form.getByLabel(\"Year\", { exact: true }).selectOption(String(corpus.year))\n  20 |   await form.getByLabel(\"Title\", { exact: true }).fill(\"Isolated Reports preserved dossier\")\n  21 |   for (const checkbox of await form.getByRole(\"checkbox\").all()) await checkbox.uncheck()\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:18:52)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:104:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T00:08:00.596Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6MzU4ZDU1NmQtOTVlZC00YjAxLWFiNTktYTgxOTc2ZTM5NGQ3OjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiMDQ2ZTgwNWYyZDk2MzVhNDUyN2M1OGI0ZDQ4NzQ3NDliNjAxMDMwNCIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6056592b37faa030393e-effa19c87d0feea601e1",
+              "file": "sucafina/reports.spec.ts",
+              "line": 101,
+              "column": 3
+            },
+            {
+              "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 3,
+                      "parallelIndex": 0,
+                      "status": "timedOut",
+                      "duration": 180040,
+                      "error": {
+                        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+                        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                      },
+                      "errors": [
+                        {
+                          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+                        },
+                        {
+                          "location": {
+                            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+                            "column": 52,
+                            "line": 18
+                          },
+                          "message": "Error: locator.selectOption: Test timeout of 180000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('form.report-form').getByLabel('Format', { exact: true })\u001b[22m\n\n\n   at sucafina/reports-support/review-flow.ts:18\n\n  16 |   const form = page.locator(\"form.report-form\")\n  17 |   await expect(form).toHaveCount(1)\n> 18 |   await form.getByLabel(\"Format\", { exact: true }).selectOption(\"docx\")\n     |                                                    ^\n  19 |   await form.getByLabel(\"Year\", { exact: true }).selectOption(String(corpus.year))\n  20 |   await form.getByLabel(\"Title\", { exact: true }).fill(\"Isolated Reports preserved dossier\")\n  21 |   for (const checkbox of await form.getByRole(\"checkbox\").all()) await checkbox.uncheck()\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:18:52)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:118:23"
+                        }
+                      ],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-15T00:11:06.300Z",
+                      "annotations": [],
+                      "attachments": [
+                        {
+                          "name": "reports-installation",
+                          "contentType": "application/json",
+                          "body": "ewogICJlbnRyeSI6ICJhcHBzL2NsaS9zcmMvaW5kZXgudHMgc2VydmUgLS1pbnN0YWxsYXRpb24gbW9kdWxlcy9zdWNhZmluYS9TdWNhZmluYXYxL2xvY2FsL2VudHJ5LnRzIiwKICAibW91bnQiOiAiaHR0cDovL2xvY2FsaG9zdDo0MTEwL3N1Y2FmaW5hL2Rhc2hib2FyZD9zZj13b3JrYmVuY2giLAogICJwcmluY2lwYWxSZWYiOiAibWFjb3M6NjRmMGFkMDItOTcxZS00ZGUxLWI5ZmUtMmZiMDNhYjBiNWY0OjEwMDEiLAogICJhdXRoZW50aWNhdGlvbiI6ICJyZWFsLWxvY2FsLW9wZXJhdG9yIiwKICAiaXNvbGF0ZWQiOiB0cnVlLAogICJwcm9qZWN0cyI6IDI1LAogICJ5ZWFyIjogMjAyNiwKICAiY2FuZGlkYXRlU25hcHNob3QiOiAiMDQ2ZTgwNWYyZDk2MzVhNDUyN2M1OGI0ZDQ4NzQ3NDliNjAxMDMwNCIsCiAgImNvbmZpZyI6ICJlMmUvcGxheXdyaWdodC5wcm9kdWN0aW9uLmNvbmZpZy50cyIsCiAgInNlbGVjdGlvbiI6ICJDSS1VSS1SRVBPUlRTIgp9"
+                        },
+                        {
+                          "name": "error-context",
+                          "contentType": "text/markdown",
+                          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium/error-context.md"
+                        }
+                      ]
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "6056592b37faa030393e-bf67b9f1725920a5f8ec",
+              "file": "sucafina/reports.spec.ts",
+              "line": 116,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T00:01:16.303Z",
+    "duration": 774288.497,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

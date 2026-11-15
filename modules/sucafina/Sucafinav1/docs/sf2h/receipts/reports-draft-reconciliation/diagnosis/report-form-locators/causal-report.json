@@ -1,0 +1,188 @@
+{
+  "schema": "orchestra-sf.mission48.report-form-locator-causal-fix.v1",
+  "state": "PROPOSAL_ONLY_NOT_EXECUTED",
+  "finding": "M48-NOMINAL03-REPORT-FORM-LABEL",
+  "prepared_at": "2026-11-15T00:17:49.873786Z",
+  "actual_failure": {
+    "run": 43655931507,
+    "job": 132634322740,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655931507",
+    "W": "1b404dc1fda7eff08334124552c6570755fba161",
+    "S": "046e805f2d9635a4527c58b4d4874749b6010304",
+    "result": "0 pass /4 fail",
+    "stage": "After actual Workbench and dashboard navigation plus visible Reports form, before selection/preservation. All four await getByLabel(Format, exact:true).selectOption(docx) until unchanged180000ms budget expires.",
+    "log": {
+      "path": "mission48/evidence/nominal-03.log",
+      "bytes": 110287,
+      "git_blob": "97113843f8c332ca7bf2e8d02d1736f3de5b4a13",
+      "sha256": "3eda052c4534e371ccee225406ac662a67c38080069a5560143407c32008a2c3"
+    },
+    "log_lines": [
+      1093,
+      1097,
+      1100,
+      1104,
+      1118,
+      1122,
+      1143,
+      1147,
+      1168,
+      1172
+    ]
+  },
+  "artifact": {
+    "id": 14138841613,
+    "name": "playwright-ubuntu-24.04-1",
+    "archive": {
+      "path": "mission48/evidence/nominal-03.zip",
+      "bytes": 267388,
+      "git_blob": "5560a39293f0ed0af6ab7c2673f35a6f8c2903ce",
+      "sha256": "ab89c9a0bdcb6829c39e73a53041916976af512873ed862a2111c081754378b2"
+    },
+    "contexts": [
+      {
+        "path": "mission48/evidence/nominal-03-context/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium.md",
+        "bytes": 27263,
+        "git_blob": "11c18524c17a6f6fc0e1defa5bc4a5ff8c95fa39",
+        "sha256": "837161c369760f7ac573723ba411adf22e1b3d17b5529772f7f128c2c763d746",
+        "observable_lines": {
+          "Format_combobox": 320,
+          "Year_combobox": 325
+        }
+      },
+      {
+        "path": "mission48/evidence/nominal-03-context/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium.md",
+        "bytes": 27260,
+        "git_blob": "efdc2be74747a094bd04ecaad430b91e5540d3fa",
+        "sha256": "2af0688e6974aca04580f8244c28e78f81dea4893c56ae14ef558c72564261bd",
+        "observable_lines": {
+          "Format_combobox": 320,
+          "Year_combobox": 325
+        }
+      },
+      {
+        "path": "mission48/evidence/nominal-03-context/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium.md",
+        "bytes": 27246,
+        "git_blob": "3b2ec8457e5a31ecdfed4e8f3447a4666a3dac70",
+        "sha256": "c2ff01bd2eae12e9665ed27a397909874b6a207c9ab52b68723a1de47784fb5c",
+        "observable_lines": {
+          "Format_combobox": 320,
+          "Year_combobox": 325
+        }
+      },
+      {
+        "path": "mission48/evidence/nominal-03-context/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium.md",
+        "bytes": 27243,
+        "git_blob": "41207e54a37a87a0d78c87d7d1f8864887980b47",
+        "sha256": "be5bd6da767768036af3566986ee62a4f57712e8d0dee4494f630ee99f22a495",
+        "observable_lines": {
+          "Format_combobox": 320,
+          "Year_combobox": 325
+        }
+      }
+    ],
+    "provenance": "Read GitHub MCP artifacts endpoint and download metadata; root materialized the same ZIP and extracted actual error contexts."
+  },
+  "markup": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "ref": "1b404dc1fda7eff08334124552c6570755fba161",
+    "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+    "git_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+    "function": "footer",
+    "line": 571,
+    "local_complete_read": {
+      "path": "mission48/diagnosis/report-form-locators/runtime-application-W2.ts.txt",
+      "bytes": 39080,
+      "git_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "sha256": "c1ac0f971c3296af6e672a3190c75f631d77b289216eff794f987cf244416bef"
+    },
+    "excerpt": "<label>Format<select name=\"download\"><option value=\"pptx\">PowerPoint</option><option value=\"docx\">Word</option></select></label><label>Year<select name=\"year\">...2024,2025,2026,2027...</select></label>",
+    "mutation": "NONE"
+  },
+  "playwright": {
+    "installed_version": "1.59.1",
+    "catalog_source": {
+      "path": "package.json",
+      "ref": "1b404dc1fda7eff08334124552c6570755fba161",
+      "blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2"
+    },
+    "package_source": {
+      "path": "packages/app-shell/package.json",
+      "blob": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+      "declaration": "@playwright/test catalog:"
+    },
+    "official_engine_sources": [
+      {
+        "repository": "microsoft/playwright",
+        "ref": "v1.59.1",
+        "path": "packages/injected/src/selectorUtils.ts",
+        "blob": "6466e1b7b02a3cf2be2973e9a96013d9a571c77b",
+        "lines": [
+          65,
+          115
+        ],
+        "local": {
+          "path": "mission48/diagnosis/report-form-locators/playwright-selectorUtils-v1.59.1.ts.txt",
+          "bytes": 5491,
+          "git_blob": "6466e1b7b02a3cf2be2973e9a96013d9a571c77b",
+          "sha256": "db529f898a721d8e4e112df4efc70b633c4c36f6de78effe308708a67a579f15"
+        }
+      },
+      {
+        "repository": "microsoft/playwright",
+        "ref": "v1.59.1",
+        "path": "packages/injected/src/injectedScript.ts",
+        "blob": "a0882d2b0561016936d4f837896b0ed7563b6588",
+        "lines": [
+          474,
+          1712,
+          1733,
+          1736
+        ],
+        "local": {
+          "path": "mission48/diagnosis/report-form-locators/playwright-injectedScript-v1.59.1.ts.txt",
+          "bytes": 79954,
+          "git_blob": "a0882d2b0561016936d4f837896b0ed7563b6588",
+          "sha256": "124b08a098e16ac1d92cc789231bc47f0cf733423a0dacbff8f97ea0f63675ac"
+        }
+      }
+    ],
+    "cause": "The internal label engine matches getElementLabels via elementText. That includes descendant option text in the normalized label: FormatPowerPointWord and Year2024202520262027. Exact Format/Year therefore do not match, while the actual accessibility snapshots expose exact combobox names Format and Year."
+  },
+  "fix": {
+    "target": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+    "preimage_W2": {
+      "path": "mission48/proposal-e2e/preimages/review-flow.ts",
+      "bytes": 22930,
+      "git_blob": "4af1d169e39f945de01314fef73e3689ff297545",
+      "sha256": "e58f71fbd485a01c84e3698b7d502a92b6ff1e649f1fe0a386d2ba20d500a7a7"
+    },
+    "preimage_C19": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+    "postimage": {
+      "path": "mission48/proposal-e2e/postimages/review-flow.ts",
+      "bytes": 23315,
+      "git_blob": "6f77c86427ec23b3cd2b3675a0294a736495dac4",
+      "sha256": "22beac90a611a76d97c4b198e353734477c7fb3ca32ee55353c4d818e75e1963"
+    },
+    "patch": {
+      "path": "mission48/diagnosis/report-form-locators/review-flow.patch",
+      "bytes": 1438,
+      "git_blob": "c0ca09e28da766e181255276780ad4e513eeaffd",
+      "sha256": "f8d4fc2f7a29587ce0412666228a2f4af23b77778bc8fe879e4d5731c87c77bc"
+    },
+    "changes": [
+      "Use form-scoped getByRole(combobox,{name:Format,exact:true}) and analogous Year.",
+      "Assert enabled and selected values for both controls.",
+      "Keep real selectOption actions, Title filling, topic checkboxes, Generate Report click and every downstream oracle."
+    ],
+    "product_changes": 0,
+    "shared_changes": 0,
+    "other_files_changed": 0
+  },
+  "verification": {
+    "local_tests": "NOT_RUN",
+    "hosted_rerun": "PENDING_ROOT_W3",
+    "static_scope": "Original assertion lines retained; exact observed controls used; no request bypass, direct API mutation, retries, timeout increase, skip or test-count change."
+  },
+  "next": "Root publishes only the own helper delta plus receipts by CAS, composes W3 on same C19 with all producer/shared blobs unchanged, and qualifies the four original Reports journeys. Preserve nominal03 0/4 as historical evidence; causal02 remains bound to its own W2."
+}

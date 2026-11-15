@@ -1,13 +1,15 @@
 {
   "schema": "orchestra-sf.mission48.e2e-qualification-proposal.v1",
-  "status": "LOCAL_PROPOSAL_NOT_EXECUTED_NOT_PUBLISHED",
+  "status": "LOCAL_PROPOSAL_FOR_W3_NOT_EXECUTED_NOT_PUBLISHED",
   "prepared_at": "2026-11-14T23:17:27Z",
   "scope": "Reports-owned E2E changes only. Root is sole remote writer/CI dispatcher.",
   "source": {
     "branch": "astra-wp07",
     "pr": 27,
     "terminal36": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
-    "ack48": "20aa42350d674fb2850dc6926d5fcaa8aeb3e567"
+    "ack48": "20aa42350d674fb2850dc6926d5fcaa8aeb3e567",
+    "product_commit": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+    "receipt_commit": "07ac4e6f6d6d88e0c30050a0e54af24da39060b1"
   },
   "target": {
     "symbol": "C19",
@@ -28,57 +30,73 @@
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
       "preimage_source36": "c2553d992f3b5ca9d222509c8ae2d635013f4d6a",
-      "preimage_C12": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
+      "preimage_C19": "02b0f6f6957bdc537c75c527aea1fc6cb95ff7a4",
       "postimage": "9db3ae6a537a45d86089f5637d150a5ea1a713fc",
       "postimage_sha256": "a353eee46422f639bebf5f0e864ae70c25737ebab40e2e6e0c791ab426d3681e",
+      "source_mutation": true,
       "local_path": "postimages/human-answer-flow.ts"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts",
       "preimage_source36": null,
-      "preimage_C12": null,
+      "preimage_C19": null,
       "postimage": "dc1d4849a24a0b42756978daaa76930ab99d52e6",
       "postimage_sha256": "0228472125c2931fb6f674a76f02488699d9decfa41d9a58ce6e27569fc3ebf2",
+      "source_mutation": true,
       "local_path": "postimages/lost-created-thread-read.ts"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts",
       "preimage_source36": null,
-      "preimage_C12": null,
+      "preimage_C19": null,
       "postimage": "ebbf5b9365e6f5268f00004c1bdf766ecfca4dad",
       "postimage_sha256": "7977a11cccd2fa9968fba86a7284144d54ab5ab7d22cdf54efe432eec74193e3",
+      "source_mutation": true,
       "local_path": "postimages/lost-edit-response.ts"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
       "preimage_source36": "1465b8a2f2c512705f965ec493cd4c08a80d23f0",
-      "preimage_C12": "40591b3e4e2f672a80a898ac6d6238fa08f4d565",
+      "preimage_C19": "40591b3e4e2f672a80a898ac6d6238fa08f4d565",
       "postimage": "977dc142768d8e7d79d6862a3b2353934dfb833a",
       "postimage_sha256": "bcaa39d986cae374ebd59957a35f7814db5fd3ac2ddc6104ec6b464acdc18934",
+      "source_mutation": true,
       "local_path": "postimages/production-installation.ts"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
       "preimage_source36": null,
-      "preimage_C12": null,
+      "preimage_C19": null,
       "postimage": "b145caac8a47e029aded4418253488d250d680e1",
       "postimage_sha256": "9165d013e59f25e4ee287b96d8eb35d6f8c2c02dc3151fd4800f29e022cafb1e",
+      "source_mutation": true,
       "local_path": "postimages/read-reconciliation.ts"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
       "preimage_source36": "c332c865c9241df073553b1ddc8dfcb6af65399a",
-      "preimage_C12": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
+      "preimage_C19": "afc8b97cdc7425fedf1368275a1436f0227f89e8",
       "postimage": "857f339fe477839986e6e70cf4781c9f4f16e009",
       "postimage_sha256": "b60d5ce4a20040296920538f45c7582b45bcc650335d4858b666b990654bf794",
+      "source_mutation": true,
       "local_path": "postimages/reports.spec.ts"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "preimage_source36": "4af1d169e39f945de01314fef73e3689ff297545",
+      "preimage_C19": "98abf576128aa1c9ea7ae0c99230cc1dd16d4a0d",
+      "postimage": "6f77c86427ec23b3cd2b3675a0294a736495dac4",
+      "postimage_sha256": "22beac90a611a76d97c4b198e353734477c7fb3ca32ee55353c4d818e75e1963",
+      "source_mutation": true,
+      "local_path": "postimages/review-flow.ts"
     },
     {
       "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
       "preimage_source36": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
-      "preimage_C12": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
+      "preimage_C19": "21d21cac3b28211e3360ccbc8a3a4abe58653232",
       "postimage": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4",
       "postimage_sha256": "77d26874147b92102195906a8a478a2af1c86e1ab1618aa518493cf28c8111ac",
+      "source_mutation": true,
       "local_path": "postimages/revocation.ts"
     }
   ],
@@ -179,7 +197,9 @@
     "source_sha256": "c544459449f16159041d8f20964978e0e943a9fd4283c830bc9747dffb3fbeb2",
     "policy": "Reuse immutable helper released44. Exact one cookie, exact name/token/policy attrs, duplicate/extra attrs rejected; only attribute order is normalized.",
     "shared_wp03_patch_not_needed_by_Reports": true,
-    "source_WRITE_by48": false
+    "source_WRITE_by48": false,
+    "preimage_C19": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+    "target_status": "ALREADY_IN_C19_UNCHANGED"
   },
   "protocol_inputs": [
     {
@@ -343,14 +363,14 @@
       }
     ]
   },
-  "remaining": "Root must publish coherent changes, finalize exact W/S manifests and obtain actual hosted results. This proposal makes no PASS or criterion-completion claim.",
+  "remaining": "Root must publish this own helper delta and exact W3/S identities, obtain actual four-journey hosted results and finish source checks. This proposal grants no criterion approval; preserve W2 nominal03 zero pass/four fail and W1 boundary failure.",
   "complete_owned_patch": {
     "path": "reports-e2e48.patch",
-    "sha256": "f73b2094abf493463a5c03820525df0cfe88b8fe689f3846e93b875d7f44229b",
-    "targets": 7,
+    "sha256": "3e130fe58c6bce84cfc1f435b83ff33394253bfc895217273a4633882cab5ffc",
+    "targets": 8,
     "preimage_authority": "source36 terminal; no shared live-source writes"
   },
-  "updated_at": "2026-11-14T23:32:31.668696Z",
+  "updated_at": "2026-11-15T00:17:49.873786Z",
   "new_RPT04_oracles": [
     "Fill private question/reply/edit drafts in both logout and retained-session pages, then abort one real reply attempt in each page before any producer submission.",
     "Validate original payload/key/CAS, read-only drafts, recovery controls, one captured request per page, unchanged storage and unchanged thread before logout.",
@@ -359,16 +379,22 @@
   ],
   "revocation_trigger_change": "The former retained-page Next topic trigger is replaced by Reconcile action to directly exercise the genuine POST403 client/view purge. All existing visibility/content/access assertions are retained.",
   "preimage_materialization_note": "Removed one extra trailing LF from locally supplied revocation.ts preimage to recover exact previously fetched source/C12 blob21d21cac3b28211e3360ccbc8a3a4abe58653232. No code was changed in that preimage.",
+  "nominal03_causal_fix": {
+    "finding": "M48-NOMINAL03-REPORT-FORM-LABEL",
+    "W": "1b404dc1fda7eff08334124552c6570755fba161",
+    "run": 43655931507,
+    "job": 132634322740,
+    "actual_result": "0 pass /4 fail before review preservation, all at exact Format label locator",
+    "target": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+    "new_postimage": "6f77c86427ec23b3cd2b3675a0294a736495dac4",
+    "runtime_validation": "NOT_RUN_FOR_PROPOSAL",
+    "no_weakening": "Only Format/Year locators use their exact observed combobox roles; added readiness/value assertions; original assertions, UI submit and all downstream flows unchanged."
+  },
   "proposal_target_history": {
-    "symbol": "C13",
-    "commit": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
-    "tree": "26830e38d957219cb4af04050d7bdb0f9b79b4f6",
-    "evidence": "Root reports integrator47 released Finance34 runtime/local-store.ts plus 5 tests only. Root performs final all-path preimage verification before W assembly.",
-    "preimage_baseline": {
-      "symbol": "C12",
-      "commit": "6470bebdc9bb5044df7959e697cb7d8629157e23",
-      "verification": "Child fetched all listed preimages through GitHub MCP. C13 equivalence must be confirmed by root."
-    }
+    "symbol": "C19",
+    "commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
+    "evidence": "Root GitHub MCP verified every target preimage in prepared/own-overlay/manifest.json; this proposal only changes Reports-owned review-flow.ts after the actual W2 nominal03 failure."
   },
   "root_qualification_limit": "W1 boundary selection produced 75 PASS / 3 FAIL. Two fixture defects receive causal patches; the unchanged real closure creator remains blocked before the HTTP oracle. Do not rerun unchanged failing fixture or use filtering/skips to call the 78-case gate green. Four nominal Reports remain required on this explicit composition."
 }

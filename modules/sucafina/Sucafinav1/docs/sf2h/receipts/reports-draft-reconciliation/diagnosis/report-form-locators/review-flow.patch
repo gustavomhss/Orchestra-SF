@@ -1,0 +1,22 @@
+diff --git a/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts b/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
+--- a/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
++++ b/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts
+@@ -15,8 +15,16 @@
+   await page.getByText("Reports and backup", { exact: true }).click()
+   const form = page.locator("form.report-form")
+   await expect(form).toHaveCount(1)
+-  await form.getByLabel("Format", { exact: true }).selectOption("docx")
+-  await form.getByLabel("Year", { exact: true }).selectOption(String(corpus.year))
++  // These labels wrap their selects and option text. Use the exact accessible
++  // combobox names exposed by the installed Reports form.
++  const format = form.getByRole("combobox", { name: "Format", exact: true })
++  const year = form.getByRole("combobox", { name: "Year", exact: true })
++  await expect(format).toBeEnabled()
++  await format.selectOption("docx")
++  await expect(format).toHaveValue("docx")
++  await expect(year).toBeEnabled()
++  await year.selectOption(String(corpus.year))
++  await expect(year).toHaveValue(String(corpus.year))
+   await form.getByLabel("Title", { exact: true }).fill("Isolated Reports preserved dossier")
+   for (const checkbox of await form.getByRole("checkbox").all()) await checkbox.uncheck()
+   for (const title of ["Budget Overview", "Portfolio Dashboard", "Hot Topics & Actions"])
