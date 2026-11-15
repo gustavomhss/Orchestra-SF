@@ -1,0 +1,233 @@
+{
+  "schema": "sf2h.installed-bi.consumer-release.v1",
+  "mission": 62,
+  "state": "SOURCE_DELTA_RELEASED_FOR_SELECTIVE_HELD_COMPOSITION",
+  "source_consumption_release": true,
+  "qualification": "HOLD_NOT_ACCEPTED",
+  "terminal_identity": {
+    "commit": "CONTAINING_COMMIT",
+    "tree": "CONTAINING_TREE",
+    "parent": "a8b267ab600bfda7a8a747f34a80e2d65566565b",
+    "resolution": "Resolve through the actual containing Git commit. Exact terminal SHA/tree and CAS readback are published in PR75 and the PR65 terminal handoff; no self-referential Git hash is fabricated."
+  },
+  "source": {
+    "branch": "installed-bi-proof",
+    "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "tree": "811cab16598c23333f4276d115fd61940eb3d486",
+    "baseline": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "evidence_archive": "a8b267ab600bfda7a8a747f34a80e2d65566565b",
+    "evidence_archive_tree": "bb6fb137453d26865539e1cea77b75e7a763555e",
+    "manifest": "SOURCE-MANIFEST.json",
+    "material_paths": 17,
+    "product_paths": 3,
+    "test_and_helper_paths": 14,
+    "complete_patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/owned-overlay/complete.patch.txt",
+      "git_blob": "3a9d838d8e34d778e1a4c3e91fe35f195c20867e",
+      "sha256": "0fa7024cf9fcd69717f0e25bcdf70f165c04b7ab83612e3fef9e0547b435f391",
+      "bytes": 186971
+    },
+    "dependency_closure": "DEPENDENCY-CLOSURE.json",
+    "static_overlay_check": "owned-overlay/VERIFICATION.json"
+  },
+  "consumer": {
+    "requested": "60 via PR65",
+    "current": 71,
+    "ack": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "role": "sole sf2-stack writer",
+    "target_at_observation": {
+      "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+      "name": "C31",
+      "authority": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "authority_blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2"
+    },
+    "update": "CONTROL-RECONCILIATION-03.json",
+    "final_target_observation": {
+      "sha": "f8c316a3e96447fb2b33555396060e7977d51cfa",
+      "tree": "4c9cc42ad6cd557febf721db14c802d1f2fb9ced",
+      "message": "fix(sucafina): compose released C12 recovery65 as C33 [skip ci]",
+      "parent": [
+        "3e26a3c2b18b54d891f44adaac76b228a0daf4c0"
+      ],
+      "name": "C33",
+      "authority": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "tested_by62": false,
+      "source62_consumed": false
+    },
+    "final_target_observed_at": "2026-11-15T03:23:31Z"
+  },
+  "release_semantics": "Release exact source and evidence for reviewed selective composition. This does not grant acceptance, authorize whole-branch merge/reset, activate native UI, or transfer any source PASS to the target.",
+  "composition_rules": [
+    "Consume all17 material source/test paths as one declared unit. Verify exact preimages and absence of conflicting new test paths on actual target HEAD.",
+    "Review all four external proposals; integrate only with explicit owner disposition and complete pre/post/dependency records. Preserve private persistence, current grants, origin and decision context.",
+    "C31 and later C33 have changed runtime/shared/mixed-source/decision dependencies and were not tested by62. Source-only observations retain their W/S/run/job identities.",
+    "Use GitHub MCP/CAS with exact expected HEAD and force=false. Do not write another owner branch or merge the entire source branch.",
+    "Resolve external runtime prerequisites before unchanged test replay; keep all original assertions and budgets. Compiler/checks remain45 and final acceptance remains S0."
+  ],
+  "external_units": [
+    {
+      "id": "browser-selection",
+      "manifest": "external/browser-selection/MANIFEST.json",
+      "target": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "preimage": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "postimage": "95cfac2aa0f2709fad3547dead073cded9f80977",
+      "patch_sha256": "81a5f02640211ed62e4947ba5637090777b3b966ef5aad355cc0897fc411eaa4",
+      "state": "INERT_NOT_APPLIED",
+      "decision_owner": "71 as sole sf2-stack integrator, with relevant boundary owner"
+    },
+    {
+      "id": "legacy-bi10-test",
+      "manifest": "external/legacy-bi10-test/MANIFEST.json",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+      "preimage": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "postimage": "4f9e4323f0684fc2cb95eb0f25046194062467f2",
+      "patch_sha256": "198ccfed4b7276048a60742cd03d73012d3f2a8bd230fcb2100a4b29f65648df",
+      "state": "INERT_NOT_APPLIED",
+      "decision_owner": "71 as sole sf2-stack integrator, with relevant boundary owner"
+    },
+    {
+      "id": "missing-coverage-fixture",
+      "manifest": "external/missing-coverage-fixture/MANIFEST.json",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "preimage": "807a51590a516d62e9586ce7475ecf4599cd2642",
+      "postimage": "4499037e904567643fad0cb92fbccf223e2e81bd",
+      "patch_sha256": "264d2e383a8382e77c9822073cadd89f912d53769617627d78c65ec7daa78125",
+      "state": "INERT_NOT_APPLIED",
+      "decision_owner": "71 as sole sf2-stack integrator, with relevant boundary owner"
+    },
+    {
+      "id": "multi-source-timeline",
+      "manifest": "external/multi-source-timeline/MANIFEST.json",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "preimage": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "postimage": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+      "patch_sha256": "fb9b3640aefa6ff166d5dded3c3ecf4f4659d8262557adfa57600f5c89411902",
+      "state": "INERT_NOT_APPLIED",
+      "decision_owner": "71 as sole sf2-stack integrator, with relevant boundary owner"
+    }
+  ],
+  "validation_summary": [
+    {
+      "id": "R1",
+      "run": 43667093423,
+      "pass": 41,
+      "fail": 10,
+      "state": "FAIL",
+      "scope": "51 tests/6 files; eight deadlines and two promotion503 failures. Original cross-view/Portfolio/rendering claims remain unproved."
+    },
+    {
+      "id": "R2",
+      "run": 43668401496,
+      "pass": 0,
+      "fail": 1,
+      "state": "FAIL",
+      "scope": "Real installed CLI/browser nominal journey times out at180000ms during first save, before BI."
+    },
+    {
+      "id": "R3",
+      "run": 43668513417,
+      "pass": 2,
+      "fail": 7,
+      "state": "FAIL",
+      "scope": "Canonical FX/currency and forecast/waterfall pass; training missing/40000/zero/null, sensitivity and history remain blocked in upstream operations."
+    },
+    {
+      "id": "R4",
+      "run": 43669699195,
+      "pass": 0,
+      "fail": 1,
+      "state": "FAIL",
+      "scope": "Actual installed HTTP probe: GET200, tiny POSTs without headers until client abort, explicit Content-Length control also times out."
+    },
+    {
+      "id": "R5",
+      "run": 43669861192,
+      "pass": 4,
+      "fail": 0,
+      "state": "PASS_LIMITED_SCOPE",
+      "scope": "One authenticated BI10 canonical same-pair projection and three real Chromium renderer tests with explicitly synthetic unpersisted C02 payload. Not full installed proof."
+    },
+    {
+      "id": "R6",
+      "run": 43670652989,
+      "pass": 0,
+      "fail": 1,
+      "state": "FAIL",
+      "scope": "FinalW7 helper recognizes actual Versions/save net::ERR_ABORTED in16434ms; version0, retried=false, no BI reached."
+    }
+  ],
+  "run_identities": "evidence/CI-REQUESTS-02.json",
+  "running_ci": 0,
+  "criteria": {
+    "snapshot": "CRITERIA-01.json",
+    "append_only_delta": "CRITERIA-DELTA-R6.json",
+    "total": 108,
+    "BLOCKED": 59,
+    "NOT_RUN": 49,
+    "PASS": 0,
+    "literal_numeric_oracles": 7,
+    "meaning": "No whole criterion is declared accepted; narrow observations are separately attached to exact proof bindings."
+  },
+  "mandatory_gaps": [
+    {
+      "id": "HTTP_POST",
+      "owner": "74 through71",
+      "evidence": "evidence/HTTP-INGRESS-CONTRACT.json",
+      "state": "BLOCKED",
+      "required": "Localize and correct actual installed POST listener/body/admission/persistence boundary; preserve security/body/authority rules. No speculative root cause or patch supplied."
+    },
+    {
+      "id": "CANONICAL_COST",
+      "owner": "76 through71;59 lineage",
+      "evidence": "evidence/PERFORMANCE-BOUNDARY.json",
+      "state": "BLOCKED",
+      "required": "Material safe improvement before repeating original failed tests. Keep independent source/authority observations and original budgets. Phase timings are inclusive, not isolated method benchmarks."
+    },
+    {
+      "id": "C10_COVERAGE",
+      "owner": "52/59 lineage through71",
+      "evidence": "external/missing-coverage-fixture/C10-DIAGNOSTIC.json",
+      "state": "BLOCKED",
+      "required": "Review fixture proposal and separately resolve reassessment stability. Fixture declaration correction does not prove canonical stability or repair deadline failures."
+    },
+    {
+      "id": "EXTERNAL_COMPOSITION",
+      "owner": "71 and exact boundary owners",
+      "state": "NOT_RUN",
+      "required": "Review and explicitly accept/hold each of four complete inert proposals; compose with complete17-path source unit and validate current preimages. No other-owner file was directly edited."
+    },
+    {
+      "id": "NUMERICAL_AND_HISTORY",
+      "owner": "authorized validation owner after producer fixes",
+      "state": "BLOCKED",
+      "required": "Complete literal40000/omitted/null/zero, thresholds55000/15000, same-case ChoiceRecord history, positive N/A producer, annual margin and fullFX02 offer/scoring history requirements. No simplified oracle substitute."
+    },
+    {
+      "id": "INSTALLED_AND_NATIVE_PROOF",
+      "owner": "authorized installed validation owner; native boundary owner",
+      "state": "BLOCKED",
+      "required": "Reach installed BI09/10 and Portfolio, refresh/reload, exact-source/keyboard/authority-revocation paths. Native200%zoom, viewport/accessibility, p95, C17 and all8+3BI coverage remain unaccepted. Separate synthetic renderer tests do not fill these gaps."
+    },
+    {
+      "id": "COMPILER_GENERATION",
+      "owner": "45",
+      "state": "NOT_RUN",
+      "evidence": "COMPILER45-REQUEST-02.json",
+      "required": "Canonical package/e2e typechecks, spawn-imports, guards and legacy generated BI entry regeneration plus --check on actual composed candidate."
+    },
+    {
+      "id": "FINAL_ACCEPTANCE",
+      "owner": "S0 with required contributors",
+      "state": "NOT_RUN",
+      "required": "Final eight CI selections, AM01–AM06, three final independent reviews, C-G7/D-G8 and full epic acceptance are mandatory and not waived."
+    }
+  ],
+  "ack_requested": [
+    "Accepted/held material paths and each external proposal disposition.",
+    "Actual composed candidate SHA/tree and dependency reconciliation.",
+    "Explicit ownership of HTTP74, canonical-cost76, C10 lineage and compiler45 follow-up.",
+    "Preservation of source failures, qualification HOLD and remaining final gates."
+  ],
+  "GLOBAL_RELEASE": false
+}

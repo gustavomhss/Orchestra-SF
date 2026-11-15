@@ -1,0 +1,328 @@
+{
+  "schema": "sf2h.installed-bi.terminal-publication.v1",
+  "mission": 62,
+  "terminal_identity": {
+    "commit": "CONTAINING_COMMIT",
+    "tree": "CONTAINING_TREE",
+    "parent": "a8b267ab600bfda7a8a747f34a80e2d65566565b",
+    "resolution": "Resolve through the actual containing Git commit. Exact terminal SHA/tree and CAS readback are published in PR75 and the PR65 terminal handoff; no self-referential Git hash is fabricated."
+  },
+  "change_class": "FIVE_NEW_DOCUMENTS_ONLY",
+  "expected_parent": {
+    "sha": "a8b267ab600bfda7a8a747f34a80e2d65566565b",
+    "tree": "bb6fb137453d26865539e1cea77b75e7a763555e"
+  },
+  "material_source_unchanged": {
+    "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "tree": "811cab16598c23333f4276d115fd61940eb3d486",
+    "paths": 17
+  },
+  "new_documents_except_this_manifest": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONTROL-RECONCILIATION-03.json",
+      "mode": "100644",
+      "bytes": 11077,
+      "git_blob": "e4fedeb8f8a7adbb0d2261752a0ea2efa09fa695",
+      "sha256": "af71ca4293cf84f3875684bd9020d4e28b128b58b690dfcf3f4150fc39f9ab1f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONSUMER-RELEASE.json",
+      "mode": "100644",
+      "bytes": 11075,
+      "git_blob": "dcb0f9f5f28858bf74ea95b38303ae70a1d5bb90",
+      "sha256": "4577db9e98854efd675be1e5b4ed09c70b92725791490d74a05b5799a5e8447e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/AUTHORITY-FINAL.json",
+      "mode": "100644",
+      "bytes": 5071,
+      "git_blob": "8fbd11fbebef2d6a607ed358b12b5c2f8e302602",
+      "sha256": "3a3e364e73d9a7772bdc5f637cd8bfb198f0047964894f29021e2a80dac93a4b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/HANDOFF-FINAL.md",
+      "mode": "100644",
+      "bytes": 8813,
+      "git_blob": "951c2aeb8800c91d3a28e03847618a1b475e6170",
+      "sha256": "61060ded35a1aac06d1dc1155ee76f543349691c9a073307d58f34a35c3d75f6"
+    }
+  ],
+  "this_manifest": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/PUBLICATION-MANIFEST-TERMINAL.json",
+    "identity": "Exact containing Git tree blob; deliberately excluded from its own byte hash."
+  },
+  "prior_receipt_namespace": {
+    "sha": "edc04dca949df9a601f2a1f7e4f67eb4530d16cb",
+    "files": [
+      {
+        "path": "ACK62.json",
+        "mode": "100644",
+        "sha": "6defd02afc0cee6021d239bd2869ba13406741f9",
+        "size": 6599
+      },
+      {
+        "path": "COMPILER45-REQUEST-01.json",
+        "mode": "100644",
+        "sha": "a2187d48f0d49c82e485d53f6910a4576a46727d",
+        "size": 2457
+      },
+      {
+        "path": "COMPILER45-REQUEST-02.json",
+        "mode": "100644",
+        "sha": "1ee4e97247a62c2b3ce7ec3df790acefe00b4ae6",
+        "size": 2832
+      },
+      {
+        "path": "CONTROL-RECONCILIATION-02.json",
+        "mode": "100644",
+        "sha": "3f3723bd5842f26822e52eeddb0d084eeabafc35",
+        "size": 3536
+      },
+      {
+        "path": "CRITERIA-01.json",
+        "mode": "100644",
+        "sha": "3c7aaffd922a26d2a559c7e7d2ee2bd2f069d188",
+        "size": 197084
+      },
+      {
+        "path": "CRITERIA-DELTA-R6.json",
+        "mode": "100644",
+        "sha": "6184487c32cb868ec714095fde0d0b0f7db9662e",
+        "size": 7699
+      },
+      {
+        "path": "DEPENDENCY-BOUNDARIES-01.json",
+        "mode": "100644",
+        "sha": "b9c0ead58990842e3bc24c4b7ebcd536f46264c5",
+        "size": 4705
+      },
+      {
+        "path": "DEPENDENCY-CLOSURE.json",
+        "mode": "100644",
+        "sha": "c6c6004b00262c5737ea5b0eca1c3b029f31b0e3",
+        "size": 57029
+      },
+      {
+        "path": "INTEGRATION-BOUNDARIES.json",
+        "mode": "100644",
+        "sha": "e381064bbab69c137cde1bf4aead60a2102db237",
+        "size": 7145
+      },
+      {
+        "path": "NEXT-VALIDATION-REQUESTS.json",
+        "mode": "100644",
+        "sha": "1a6814a73a4388cb76b2afcc959fd026a9eb0308",
+        "size": 2566
+      },
+      {
+        "path": "SOURCE-MANIFEST.json",
+        "mode": "100644",
+        "sha": "b0b081f3dc4d4fffe9f1d965037777b8d749f73a",
+        "size": 7640
+      },
+      {
+        "path": "evidence/CI-REQUESTS-01.json",
+        "mode": "100644",
+        "sha": "7cc580ec183e87dbcbadd2f837cd0991efc11edd",
+        "size": 5283
+      },
+      {
+        "path": "evidence/CI-REQUESTS-02.json",
+        "mode": "100644",
+        "sha": "e4965ed5bdf9e53c7a8ff82a3ae9a354fe834a81",
+        "size": 7299
+      },
+      {
+        "path": "evidence/HTTP-INGRESS-CONTRACT.json",
+        "mode": "100644",
+        "sha": "212ff7e783a1cf20a7dcecb365d5c263d41ca5cd",
+        "size": 9665
+      },
+      {
+        "path": "evidence/PERFORMANCE-BOUNDARY.json",
+        "mode": "100644",
+        "sha": "e22ccb5621a749180d15065e02b36a0c02241284",
+        "size": 3137
+      },
+      {
+        "path": "evidence/R1-RESULT.json",
+        "mode": "100644",
+        "sha": "4b13c7bc222d41ba2e4837e047c2b30eb2a603bd",
+        "size": 60887
+      },
+      {
+        "path": "evidence/R2-RESULT.json",
+        "mode": "100644",
+        "sha": "2dd0a64d82aa361c6370aa5c04fbf8c978bbc072",
+        "size": 3169
+      },
+      {
+        "path": "evidence/R3-RESULT.json",
+        "mode": "100644",
+        "sha": "97534871f9246ed07ebb4ad082c79239e3f3f707",
+        "size": 42509
+      },
+      {
+        "path": "evidence/R4-RESULT.json",
+        "mode": "100644",
+        "sha": "168bab4fccfa859c9433f7b63c904d31e7591726",
+        "size": 8414
+      },
+      {
+        "path": "evidence/R5-RESULT.json",
+        "mode": "100644",
+        "sha": "ad9a024cbd10cf7a50d1faa1c01f2252cd4b4f37",
+        "size": 9605
+      },
+      {
+        "path": "evidence/R6-RESULT.json",
+        "mode": "100644",
+        "sha": "eb1c43d3947bb94be65d53bc1a35c876c0620e80",
+        "size": 3809
+      },
+      {
+        "path": "external/browser-selection/MANIFEST.json",
+        "mode": "100644",
+        "sha": "5f0759df982b80d04b0998aa539750baf0805349",
+        "size": 1399
+      },
+      {
+        "path": "external/browser-selection/extended-bi-browser.postimage.txt",
+        "mode": "100644",
+        "sha": "95cfac2aa0f2709fad3547dead073cded9f80977",
+        "size": 28989
+      },
+      {
+        "path": "external/browser-selection/extended-bi-browser.preimage.txt",
+        "mode": "100644",
+        "sha": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+        "size": 27170
+      },
+      {
+        "path": "external/browser-selection/proposal.patch.txt",
+        "mode": "100644",
+        "sha": "2bbc94d44229faacee1262a123480e770bbe81e8",
+        "size": 15557
+      },
+      {
+        "path": "external/legacy-bi10-test/MANIFEST.json",
+        "mode": "100644",
+        "sha": "3241357652b56f947ac1d3139df32233d343e5d3",
+        "size": 1295
+      },
+      {
+        "path": "external/legacy-bi10-test/README.md",
+        "mode": "100644",
+        "sha": "595b2edfccda32ba047dd9649b18b342ede48a43",
+        "size": 1223
+      },
+      {
+        "path": "external/legacy-bi10-test/presentation.postimage.txt",
+        "mode": "100644",
+        "sha": "4f9e4323f0684fc2cb95eb0f25046194062467f2",
+        "size": 20277
+      },
+      {
+        "path": "external/legacy-bi10-test/presentation.preimage.txt",
+        "mode": "100644",
+        "sha": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "size": 20141
+      },
+      {
+        "path": "external/legacy-bi10-test/proposal.patch.txt",
+        "mode": "100644",
+        "sha": "f0ca8e37299847dc7490382471559ee8b8681dc3",
+        "size": 2216
+      },
+      {
+        "path": "external/missing-coverage-fixture/C10-DIAGNOSTIC.json",
+        "mode": "100644",
+        "sha": "229f40271d350b8329a3e3184d955861acb1e0aa",
+        "size": 5183
+      },
+      {
+        "path": "external/missing-coverage-fixture/MANIFEST.json",
+        "mode": "100644",
+        "sha": "6ec5d7e983ea52b2957c6bc95ee6d5cabd41570f",
+        "size": 4265
+      },
+      {
+        "path": "external/missing-coverage-fixture/change.patch.txt",
+        "mode": "100644",
+        "sha": "04407104a25549a55990a491f6cd7ff91c0365ee",
+        "size": 1620
+      },
+      {
+        "path": "external/missing-coverage-fixture/postimage.txt",
+        "mode": "100644",
+        "sha": "4499037e904567643fad0cb92fbccf223e2e81bd",
+        "size": 13109
+      },
+      {
+        "path": "external/missing-coverage-fixture/preimage.txt",
+        "mode": "100644",
+        "sha": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "size": 12854
+      },
+      {
+        "path": "external/multi-source-timeline/MANIFEST.json",
+        "mode": "100644",
+        "sha": "6b24f65d4d12b6ba89f576313e679af1b455bb64",
+        "size": 1119
+      },
+      {
+        "path": "external/multi-source-timeline/milestones.postimage.txt",
+        "mode": "100644",
+        "sha": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+        "size": 5640
+      },
+      {
+        "path": "external/multi-source-timeline/milestones.preimage.txt",
+        "mode": "100644",
+        "sha": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "size": 5612
+      },
+      {
+        "path": "external/multi-source-timeline/proposal.patch.txt",
+        "mode": "100644",
+        "sha": "c29435c02727f518a2b7564b03856befbbdf21e5",
+        "size": 3755
+      },
+      {
+        "path": "owned-overlay/VERIFICATION.json",
+        "mode": "100644",
+        "sha": "666f8c91dc9487d7538e559f0664f2125787376a",
+        "size": 674
+      },
+      {
+        "path": "owned-overlay/complete.patch.txt",
+        "mode": "100644",
+        "sha": "3a9d838d8e34d778e1a4c3e91fe35f195c20867e",
+        "size": 186971
+      },
+      {
+        "path": "reviews/EVIDENCE-REVIEW-02.json",
+        "mode": "100644",
+        "sha": "a43502998ecabd66b7dd95b285388c2c76914d01",
+        "size": 30311
+      },
+      {
+        "path": "reviews/STATIC-REVIEW-01.json",
+        "mode": "100644",
+        "sha": "0bfd0d2e68904ba2412db6dc83484b76302b3b5d",
+        "size": 29051
+      }
+    ]
+  },
+  "preservation": "All43 preexisting receipt files, including ACK62 and historical observation snapshots, remain byte-identical. No material/source/test/external-target file changes afterW7.",
+  "publication_protocol": [
+    "Create tree on exactD1 base and commit with D1 parent using GitHub MCP.",
+    "CAS installed-bi-proof from exactD1 with force=false; no other branch mutation.",
+    "Read back branch head, commit parent/tree and exact five added paths.",
+    "Verify non-truncated receipt subtree blob/mode/size and preservation of all43 existing files.",
+    "Verify W7→terminal changes only receipt additions and publish exact SHA/tree in PR75/PR65."
+  ],
+  "verification_state_at_authoring": "D1_ARCHIVE_VERIFIED; TERMINAL_READBACK_REQUIRED_AFTER_PUBLICATION",
+  "qualification": "HOLD_NOT_ACCEPTED",
+  "GLOBAL_RELEASE": false
+}

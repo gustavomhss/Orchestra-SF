@@ -1,0 +1,267 @@
+{
+  "schema": "sf2h.installed-bi.control-reconciliation.v1",
+  "mission": 62,
+  "observed_at": "2026-11-15T03:19:28Z",
+  "append_only_update_to": "CONTROL-RECONCILIATION-02.json",
+  "requested_control": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "current_control": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+  "mission62_package_blob": "62a3c54a06d45371019f19d7cf8894d75b804ce7",
+  "mission62_grant_unchanged": true,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "predecessor60": {
+    "terminal": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "state": "LEASE_ENDED",
+    "material_candidate": "C28",
+    "automatic_reactivation": false
+  },
+  "successors": [
+    {
+      "mission": 71,
+      "state": "ACK_OBSERVED_ACTIVE_INTEGRATION",
+      "branch": "sf2-stack",
+      "lease_epoch": "S0-C-e13-browser71",
+      "ack": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "ack_blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+      "evidence": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6888325805",
+      "limits": "Sole target writer; source intake only after complete terminal release. Checks remain45 and epic/AM/final acceptance remain S0."
+    },
+    {
+      "mission": 74,
+      "state": "ACK_OBSERVED_ACTIVE_SOURCE_NOT_RELEASED_AT_OBSERVATION",
+      "branch": "http-body-limit-fix",
+      "lease_epoch": "http-limit-browser74",
+      "ack": "1308e9c8ce72efe1605f80cb2a51b969cf519ec7",
+      "evidence": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6888334912",
+      "limits": "Receives actual tiny-POST hang diagnosis through71. M70 body-size finding is related by boundary, not established as the cause of R4/R6."
+    },
+    {
+      "mission": 76,
+      "state": "ACK_OBSERVED_ACTIVE_SOURCE_NOT_RELEASED_AT_OBSERVATION",
+      "branch": "canonical-read-cost",
+      "lease_epoch": "canonical-read-browser76",
+      "ack": "08a22a26ecf16ae605dcbee7fc757093f749aa5b",
+      "evidence": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6888353314",
+      "limits": "Receives inclusive canonical phase and BI observation costs through71; no claim that a proposed optimization is already released or qualified."
+    }
+  ],
+  "target_at_observation": {
+    "branch": "sf2-stack",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "name": "C31",
+    "authority": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "authority_blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+    "state": "C31_MATERIAL_COMPOSED_NATIVE_ACTIVATION_HELD",
+    "sequence_after_terminal60": [
+      "ACK71",
+      "C29-runtime59",
+      "C30-operations63",
+      "C31-native64"
+    ],
+    "C31_manifest_blob": "74fea0e133ca45f43337a6301107690ed16355a0",
+    "source62_consumed": false,
+    "tested_by62": false,
+    "dependency_delta": "Runtime59, Operations63 and Native64 were composed after terminal60. Shared runtime/source lifecycle/read snapshot/host-context dependencies changed. Exact unchanged target preimages establish static applicability only."
+  },
+  "target_preimages": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "expected": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+      "observed": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "expected": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+      "observed": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "expected": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+      "observed": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "expected": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "proposal": "external/multi-source-timeline",
+      "observed": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "expected": "807a51590a516d62e9586ce7475ecf4599cd2642",
+      "proposal": "external/missing-coverage-fixture",
+      "observed": "807a51590a516d62e9586ce7475ecf4599cd2642",
+      "matches": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "expected": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "proposal": "external/browser-selection",
+      "observed": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "matches": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+      "expected": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "proposal": "external/legacy-bi10-test",
+      "observed": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "matches": true
+    }
+  ],
+  "route": "Requested handoff to60 is delivered in PR65;60 remains ended. ACK71 now provides the actual authorized successor. Historical documents that say prepared/after ACK retain their original observation time; this delta records actual activation.",
+  "source": {
+    "branch": "installed-bi-proof",
+    "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "tree": "811cab16598c23333f4276d115fd61940eb3d486",
+    "evidence_archive": "a8b267ab600bfda7a8a747f34a80e2d65566565b"
+  },
+  "restrictions": [
+    "No writes to sf2-stack or other source branches by62.",
+    "No source PASS or old target qualification transfers to C31 or any later candidate.",
+    "71 must recheck actual HEAD/preimages and changed dependencies at intake.",
+    "74 and76 ACKs are not source releases and do not prove their future fixes."
+  ],
+  "GLOBAL_RELEASE": false,
+  "final_prepublication_recheck": {
+    "observed_at": "2026-11-15T03:23:31Z",
+    "target": {
+      "sha": "f8c316a3e96447fb2b33555396060e7977d51cfa",
+      "tree": "4c9cc42ad6cd557febf721db14c802d1f2fb9ced",
+      "message": "fix(sucafina): compose released C12 recovery65 as C33 [skip ci]",
+      "parent": [
+        "3e26a3c2b18b54d891f44adaac76b228a0daf4c0"
+      ],
+      "name": "C33",
+      "authority": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "tested_by62": false,
+      "source62_consumed": false
+    },
+    "sequence_since_C31": [
+      "C32-mixed61",
+      "C33-c12-65"
+    ],
+    "preimages": [
+      {
+        "path": "apps/cli/src/sucafina-product/bi-services.ts",
+        "expected": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+        "observed": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+        "expected": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+        "observed": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+        "expected": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+        "observed": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+        "expected": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "observed": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+        "expected": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "observed": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "matches": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "expected": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+        "observed": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+        "matches": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+        "expected": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "observed": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "matches": true
+      }
+    ],
+    "material_changed_paths": [
+      {
+        "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+        "status": "modified"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+        "status": "modified"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-fixture.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/original-intent.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/planner-fixture.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/producer-fence.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/reopen-recovery.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+        "status": "added"
+      }
+    ],
+    "interpretation": "Seven target preimages remain exact. Additional mixed-source access and C12 decision dependencies changed; source62 results do not qualify C33. This is the final pinned observation, not a lock on another writer's future HEAD."
+  }
+}
