@@ -5,8 +5,8 @@ describe("F04 exact native Playwright selection (pure recognizer)", () => {
   it("recognizes the assigned pilot and nested journey specs", () => {
     expect(nativeSpecSelected(["e2e/sucafina/native/pilot-isolation.spec.ts"])).toBe(true)
     expect(nativeSpecSelected(["packages/app-shell/e2e/sucafina/native/journeys/u13.spec.ts:19:3"])).toBe(true)
-    expect(nativeSpecSelected([String.raw`e2e\\sucafina\\native\\pilot-presentation.spec.ts`])).toBe(true)
-    expect(nativeSpecSelected([String.raw`e2e/sucafina/native/pilot-isolation\\.spec\\.ts$`])).toBe(true)
+    expect(nativeSpecSelected([String.raw`e2e\sucafina\native\pilot-presentation.spec.ts`])).toBe(true)
+    expect(nativeSpecSelected([String.raw`e2e/sucafina/native/pilot-isolation\.spec\.ts$`])).toBe(true)
   })
   it("never treats discovery or non-native paths as installed-run selection", () => {
     expect(nativeSpecSelected(["--list", "e2e/sucafina/native/pilot-isolation.spec.ts"])).toBe(false)

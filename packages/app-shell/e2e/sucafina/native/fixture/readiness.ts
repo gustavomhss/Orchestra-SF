@@ -8,6 +8,9 @@ type RecordValue = Record<string, unknown>
 function record(value: unknown): value is RecordValue {
   return value !== null && typeof value === "object" && !Array.isArray(value)
 }
+function exactKeys(value: RecordValue, keys: readonly string[]): boolean {
+  return Object.keys(value).length === keys.length && keys.every((key) => Object.hasOwn(value, key))
+}
 function requiredText(value: unknown): string {
   if (typeof value !== "string" || !value.trim()) throw new Error("F04_INVALID_PRIVATE_MANIFEST")
   return value
@@ -35,7 +38,10 @@ export type NativeManifest = Readonly<{
   scratchRoot: string
 }>
 function target(value: unknown): NativeTarget {
-  if (!record(value)) throw new Error("F04_MISSING_REAL_TARGET")
+  if (!record(value) || !exactKeys(value, [
+    "serverKey", "discoveryOrigin", "shellOrigin", "publicOrigin", "installationId",
+    "projectId", "hostId", "mount", "chapterHref",
+  ])) throw new Error("F04_MISSING_OR_EXTRA_REAL_TARGET_FIELD")
   const result: NativeTarget = {
     serverKey: requiredText(value.serverKey),
     discoveryOrigin: requiredText(value.discoveryOrigin),
@@ -73,7 +79,11 @@ export async function readNativeManifest(): Promise<NativeManifest> {
       (typeof process.getuid === "function" && metadata.uid !== process.getuid()))
     throw new Error("F04_PRIVATE_MANIFEST_ISOLATION_REQUIRED")
   const raw: unknown = JSON.parse(await readFile(file, "utf8"))
-  if (!record(raw) || raw.schema !== "sf2h.native-installed-manifest.v1" || !record(raw.actors))
+  if (!record(raw) || !exactKeys(raw, [
+    "schema", "candidateSha", "target", "wrongServer", "wrongProject",
+    "wrongInstallation", "actors", "scratchRoot",
+  ]) || raw.schema !== "sf2h.native-installed-manifest.v1" ||
+      !record(raw.actors) || !exactKeys(raw.actors, ["requester", "holder", "denied"]))
     throw new Error("F04_REAL_INSTALLED_MANIFEST_INVALID")
   const manifest: NativeManifest = {
     schema: "sf2h.native-installed-manifest.v1",
@@ -101,6 +111,7 @@ export async function readNativeManifest(): Promise<NativeManifest> {
       manifest.target.publicOrigin !== manifest.wrongProject.publicOrigin ||
       manifest.target.publicOrigin !== manifest.wrongInstallation.publicOrigin)
     throw new Error("F04_REAL_HOST_BOUNDARIES_NOT_DISTINCT")
+  if (!path.isAbsolute(manifest.scratchRoot)) throw new Error("F04_SCRATCH_ABSOLUTE_PATH_REQUIRED")
   const scratch = await lstat(manifest.scratchRoot)
   if (!scratch.isDirectory() || scratch.isSymbolicLink() ||
       await realpath(manifest.scratchRoot) !== path.resolve(manifest.scratchRoot) ||
@@ -117,7 +128,8 @@ export type NativeWebObservation = Readonly<{
   projectId: string
   hostId: string
   principalRef: string
-  nativeChapterRendered: true
+  nativeChapterLocatorVisible: true
+  nativeChapterRendered: "NOT_PROVEN_BY_LOCATOR_ALONE"
   transactionP0P1: "NOT_PROVEN_BY_READINESS"
   desktop: "NOT_PROVEN_REQUIRES_D01"
 }>
@@ -186,7 +198,8 @@ export async function proveNativeWebReadiness(
     projectId: selected.projectId,
     hostId: selected.hostId,
     principalRef,
-    nativeChapterRendered: true,
+    nativeChapterLocatorVisible: true,
+    nativeChapterRendered: "NOT_PROVEN_BY_LOCATOR_ALONE",
     transactionP0P1: "NOT_PROVEN_BY_READINESS",
     desktop: "NOT_PROVEN_REQUIRES_D01",
   }
