@@ -1,0 +1,97 @@
+{
+  "schema": "sf2h.integration125.queue.v2",
+  "actor": "S0-C/C00/I00",
+  "lease": "S0-C-e18-browser125",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "material": {
+    "candidate": "C64",
+    "sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+    "status": "COMPOSED_UNQUALIFIED",
+    "unique_paths_since_C58": 98,
+    "path_updates_since_C58": 101,
+    "commits": [
+      {
+        "candidate": "C59",
+        "sha": "a0d7296dbaebfe14126cb174133dff2bf04fc71a",
+        "tree": "5739761dca6948484851820ccb23d4f7230f8165",
+        "parent": "22a9d20dddbdbc2f8d9dbd426bd3720a4b6e0a85",
+        "count": 3
+      },
+      {
+        "candidate": "C60",
+        "sha": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+        "tree": "667e4245b01875e6c3df83afae7630303ed146af",
+        "parent": "a0d7296dbaebfe14126cb174133dff2bf04fc71a",
+        "count": 6
+      },
+      {
+        "candidate": "C61",
+        "sha": "8a73afab60036c11fed15f6365a2b2930ee289d9",
+        "tree": "60bc1f0d8a795f8f83a86636e9a30c9021b97ab7",
+        "parent": "45edb28515f5a337e37c550b376941c6f9e4f1ce",
+        "count": 42
+      },
+      {
+        "candidate": "C62",
+        "sha": "ea8eae1d371a20032b29807a41bca0528ea9c13e",
+        "tree": "5f405450ffc16a2bcd99c01e85a81fb7b2f7b3e5",
+        "parent": "8a73afab60036c11fed15f6365a2b2930ee289d9",
+        "count": 30
+      },
+      {
+        "candidate": "C64",
+        "sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+        "tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+        "parent": "1f00d6704e9cd11b6392e775d7a594f41f8f66a4",
+        "count": 20
+      }
+    ],
+    "all_postimages_checked_remotely": true
+  },
+  "proof": "REMOTELY_COMPOSED_NOT_QUALIFIED",
+  "completed": [
+    {
+      "id": "C59",
+      "source": "121",
+      "path_updates": 3
+    },
+    {
+      "id": "C60",
+      "source": "122",
+      "path_updates": 6
+    },
+    {
+      "id": "C61",
+      "source": "F01/F02/F03/S02/S03/I00",
+      "path_updates": 42
+    },
+    {
+      "id": "C62",
+      "source": "S01/S04/S05/F04/I00",
+      "path_updates": 30
+    },
+    {
+      "id": "C64",
+      "source": "W11/W15/W16/W17/I00",
+      "path_updates": 20
+    }
+  ],
+  "pending": [
+    "119 PR107 hosted typecheck/guard exact C64 SHA/tree",
+    "120 PR106 dedup hosted surgical Actions C64 SHA/tree",
+    "I00 canonical admitted codecs+real host/desktop, owner fence, return intents (not created)",
+    "W18 binary F02 seam, W14 partial, W12 index, W13 U13, W19 U11, 123 nine regression oracles",
+    "A07..A15+other successor outputs only terminal exact source; no duplicated actors",
+    "Legacy P03/WP, M31/MI07, FINAL and release gates"
+  ],
+  "global_release": false,
+  "tests_local": false,
+  "merge_dev": false,
+  "force": false,
+  "deploy": false,
+  "goal_paused": true,
+  "notes": "Current session does not promise background continuation; predecessor 114 process termination unverified and local canonical plan inaccessible"
+}

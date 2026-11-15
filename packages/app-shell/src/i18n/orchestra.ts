@@ -1,5 +1,12 @@
 import { HOME_COPY, HOME_COPY_BR } from "./orchestra-chapters/home"
 import { SHELL_COPY, SHELL_COPY_BR } from "./orchestra-chapters/shell"
+import { SF_CONTEXT_COPY, SF_CONTEXT_COPY_BR } from "./orchestra-chapters/sf-context"
+import { SF_COMMON_COPY, SF_COMMON_COPY_BR } from "./orchestra-chapters/sf-common"
+import { SF_S02_COPY, SF_S02_COPY_BR } from "./orchestra-chapters/sf-s02"
+import { SF_S03_COPY, SF_S03_COPY_BR } from "./orchestra-chapters/sf-s03"
+import { SF_S01_COPY, SF_S01_COPY_BR } from "./orchestra-chapters/sf-s01"
+import { SF_S04_COPY, SF_S04_COPY_BR } from "./orchestra-chapters/sf-s04"
+import { SF_S05_COPY, SF_S05_COPY_BR } from "./orchestra-chapters/sf-s05"
 import { MCP_COPY, MCP_COPY_BR } from "./orchestra-chapters/mcp"
 import { SKILLS_COPY, SKILLS_COPY_BR } from "./orchestra-chapters/skills"
 import { PLUGINS_COPY, PLUGINS_COPY_BR } from "./orchestra-chapters/plugins"
@@ -363,6 +370,13 @@ export const ORCHESTRA_COPY = {
   "orchestra.governance.reason.unknown": "No reason was reported.",
   ...HOME_COPY,
   ...SHELL_COPY,
+  ...SF_CONTEXT_COPY,
+  ...SF_COMMON_COPY,
+  ...SF_S02_COPY,
+  ...SF_S03_COPY,
+  ...SF_S01_COPY,
+  ...SF_S04_COPY,
+  ...SF_S05_COPY,
   ...MCP_COPY,
   ...SKILLS_COPY,
   ...PLUGINS_COPY,
@@ -712,6 +726,13 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...ORCHESTRA_BASE_COPY_BR,
   ...HOME_COPY_BR,
   ...SHELL_COPY_BR,
+  ...SF_CONTEXT_COPY_BR,
+  ...SF_COMMON_COPY_BR,
+  ...SF_S02_COPY_BR,
+  ...SF_S03_COPY_BR,
+  ...SF_S01_COPY_BR,
+  ...SF_S04_COPY_BR,
+  ...SF_S05_COPY_BR,
   ...MCP_COPY_BR,
   ...SKILLS_COPY_BR,
   ...PLUGINS_COPY_BR,

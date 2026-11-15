@@ -7,7 +7,13 @@
   "exports": {
     ".": "./src/index.ts",
     "./effect": "./src/effect.ts",
-    "./contract": "./src/contract.ts"
+    "./contract": "./src/contract.ts",
+    "./sucafina/context": "./src/sucafina/context.ts",
+    "./sucafina/transport": "./src/sucafina/transport.ts",
+    "./sucafina/procurement": "./src/sucafina/procurement.ts",
+    "./sucafina/planner": "./src/sucafina/planner.ts",
+    "./sucafina/decisions": "./src/sucafina/decisions.ts",
+    "./sucafina/portfolio": "./src/sucafina/portfolio.ts"
   },
   "scripts": {
     "generate": "bun run script/build.ts",
