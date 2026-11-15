@@ -335,7 +335,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
       }
     }).catch((error: unknown) => {
       if (!live || controller.signal.aborted) return
-      console.error("N16 CAP16 read failed", error)
+      console.error("N16 CAP16 read failed")
       setStore({ state: "unavailable", data: undefined, ownerId: "", cas: undefined, actions: [] })
     })
     onCleanup(() => { live = false; controller.abort() })
@@ -476,7 +476,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
         setStore({ error: t("sf.common.unavailable"), mode: isDelete ? "overview" : "edit" })
       }
     } catch (error: unknown) {
-      console.error("N16 CAP16 mutation result unknown", error)
+      console.error("N16 CAP16 mutation result unknown")
       editing?.controller.setPhase("outcome-unknown")
       setStore({ uncertain: true, error: t("sf.common.operationUnknown") })
     } finally {
