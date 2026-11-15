@@ -1,0 +1,31 @@
+# W09 e2 ARTIFACT_READY — proposed shared wiring exclusively for integrator114; do not apply blindly
+# Target shared path: packages/app-shell/src/i18n/orchestra.ts
+# Expected preimage blob: 2eeaa42e02a45b3301fc765c6c92635af5101079
+# Owner: sole integrator114 / same C00. Preimage rechecked on sf2-stack. No shared path was edited by W09.
+diff --git a/packages/app-shell/src/i18n/orchestra.ts b/packages/app-shell/src/i18n/orchestra.ts
+--- a/packages/app-shell/src/i18n/orchestra.ts
++++ b/packages/app-shell/src/i18n/orchestra.ts
+@@ -20,6 +20,7 @@
+ import { ATLAS_COPY, ATLAS_COPY_BR } from "./orchestra-chapters/atlas"
+ import { RAG_STUDIO_COPY, RAG_STUDIO_COPY_BR } from "./orchestra-chapters/rag-studio"
+ import { BOARD_COPY, BOARD_COPY_BR } from "./orchestra-chapters/board"
++import { SF_S04_COPY, SF_S04_COPY_BR } from "./orchestra-chapters/sf-s04"
+ import { BOARD_MONEY_COPY, BOARD_MONEY_COPY_BR } from "./orchestra-chapters/board-money"
+ import { BOARD_VIEWS_COPY, BOARD_VIEWS_COPY_BR } from "./orchestra-chapters/board-views"
+ import { FLIGHT_ENGINEER_COPY, FLIGHT_ENGINEER_COPY_BR } from "./orchestra-chapters/flight-engineer"
+@@ -388,6 +389,7 @@
+   ...FLIGHT_ENGINEER_COPY,
+   ...INBOX_COPY,
+   ...BOARD_COPY,
++  ...SF_S04_COPY,
+   ...BOARD_VIEWS_COPY,
+   ...BOARD_MONEY_COPY,
+   // English base for every locale; Portuguese is layered on top through ORCHESTRA_COPY_BR (Actions: ActionsCopy.dictBr).
+@@ -737,6 +739,7 @@
+   ...FLIGHT_ENGINEER_COPY_BR,
+   ...INBOX_COPY_BR,
+   ...BOARD_COPY_BR,
++  ...SF_S04_COPY_BR,
+   ...BOARD_VIEWS_COPY_BR,
+   ...BOARD_MONEY_COPY_BR,
+   ...ActionsCopy.dictBr,

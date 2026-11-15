@@ -1,0 +1,168 @@
+{
+  "schema": "sf2h.native-ui.W09.artifact.v2",
+  "mission": "UX20-W09-R2",
+  "seat": "W09",
+  "output": "S04",
+  "epoch": "ux-native-w09-e2",
+  "state": "ARTIFACT_READY",
+  "global_release": false,
+  "branch": "sf-ux-w09",
+  "pr": 118,
+  "authority": {
+    "ack_e2": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/ACK-e2.json",
+    "fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/S0-FENCE-e2.json",
+    "input_head": "296a851f4fbe54660cad5d0c24a0bda8cba5a02c",
+    "ack_commit": "b3857e3be552938ad3924b5773ec4ef5712ef3b6",
+    "product_commit": "28bb783ae0568148217286be6130d9ff49b6cf0b",
+    "product_tree": "d06fa3e0ab8a3bbdfdd4b4d9c542c6dcddc36b35",
+    "old_epoch": "ux-native-w09-e1",
+    "old_epoch_acceptance": "REVOKED"
+  },
+  "product_files": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/types.ts",
+      "preimage_blob": null,
+      "postimage_blob": "e9b8bdb24a002a28cf7a9d9abd4824d81ec034e1",
+      "origin_stage_blob": "0237c53d96a0b8a6d82557304ba6094c164cbd3c",
+      "owner": "W09",
+      "status": "SOURCE_PUBLISHED_UNQUALIFIED"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/guards.ts",
+      "preimage_blob": null,
+      "postimage_blob": "31981656aaa3d1593fa17ca7382c605f6407ca9c",
+      "origin_stage_blob": null,
+      "owner": "W09",
+      "status": "SOURCE_PUBLISHED_UNQUALIFIED"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx",
+      "preimage_blob": null,
+      "postimage_blob": "1a50288033aea376e557f0f12ad3e2529e8b7667",
+      "origin_stage_blob": "1c9d714c522e2c26aaac06a15e58955be68f8b00",
+      "owner": "W09",
+      "status": "SOURCE_PUBLISHED_UNQUALIFIED"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/s04.css",
+      "preimage_blob": null,
+      "postimage_blob": "e0edcd2415e3ce4812586bb9b999ae6c4b444ff1",
+      "origin_stage_blob": "b9dcb93aa80ec6502ebce1ea3e1459ba08bfd662",
+      "owner": "W09",
+      "status": "SOURCE_PUBLISHED_UNQUALIFIED"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/guards.ts",
+      "preimage_blob": null,
+      "postimage_blob": "457510b12ec9adadbc6bf52de6a5bed1569b8d5b",
+      "origin_stage_blob": "3bcbf0a53a3eb5039344b58237080e985fea5005",
+      "owner": "W09",
+      "status": "SOURCE_PUBLISHED_UNQUALIFIED"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx",
+      "preimage_blob": null,
+      "postimage_blob": "f5c96fdf8afb023db967e63ad4cbf48f50f33466",
+      "origin_stage_blob": "427be1f62c293006a3e5819ca120ce0f261cce8e",
+      "owner": "W09",
+      "status": "SOURCE_PUBLISHED_UNQUALIFIED"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts",
+      "preimage_blob": null,
+      "postimage_blob": "9d3a0fd17c12714d1413da9e0c51041659c31263",
+      "origin_stage_blob": "2a60de5b033cf5a20b9459c9c2903c4fa203a2a6",
+      "owner": "W09",
+      "status": "SOURCE_PUBLISHED_UNQUALIFIED"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s04.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "f62bf03c887b83cd1b10573d65589f01c023c2e7",
+      "origin_stage_blob": "c9126dfee872522dc3f63c7d914729b916da64f8",
+      "owner": "W09",
+      "status": "SOURCE_PUBLISHED_UNQUALIFIED"
+    }
+  ],
+  "exact_product_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/PRODUCT-e2.patch",
+  "product_diff_base": "b3857e3be552938ad3924b5773ec4ef5712ef3b6",
+  "product_diff_head": "28bb783ae0568148217286be6130d9ff49b6cf0b",
+  "shared": {
+    "path": "packages/app-shell/src/i18n/orchestra.ts",
+    "writer": "114",
+    "preimage_blob": "2eeaa42e02a45b3301fc765c6c92635af5101079",
+    "preimage_at_sf2_stack_verified": true,
+    "postimage_blob": null,
+    "status": "PROPOSAL_ONLY_NOT_APPLIED",
+    "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/SHARED-I18N-114-e2.patch.txt",
+    "exports": [
+      "SF_S04_COPY",
+      "SF_S04_COPY_BR"
+    ]
+  },
+  "contract_blobs": {
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "producer_blobs": {
+    "modules/sucafina/Sucafinav1/runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "modules/sucafina/Sucafinav1/runtime/assets.ts": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+    "modules/sucafina/Sucafinav1/product/interface/document-http.ts": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+    "apps/desktop/src/main/response-download.ts": "cd869d37c96453d7692c83be51386bd559314449"
+  },
+  "source_delta": "All four observed original producer blobs match sf2-stack at inspection time",
+  "public_type_dependency": "packages/schema/src/sucafina/context.ts (F01, W02 author branch; not yet present in W09 cohort branch)",
+  "integration_dependencies": [
+    "F01",
+    "F03",
+    "A06",
+    "114 i18n and entrypoint composition"
+  ],
+  "qualification_dependencies": [
+    "F03",
+    "A06",
+    "installed authorized host",
+    "114 composed coherent candidate",
+    "120 hosted Actions",
+    "119 compiler and guards"
+  ],
+  "test_request": {
+    "owner": 120,
+    "path": "packages/app-shell/test-browser/sucafina-native/s04.test.ts",
+    "scope": "5 pure component guard tests; not installed ACL/scanner/download proof",
+    "status": "NOT_RUN"
+  },
+  "compiler_request": {
+    "owner": 119,
+    "package": "packages/app-shell",
+    "status": "NOT_RUN"
+  },
+  "s04_acceptance": {
+    "S04-AC01": "IMPLEMENTED_AT_COMPONENT_BOUNDARY_NOT_QUALIFIED",
+    "S04-AC02": "IMPLEMENTED_WITH_TYPED_EXPORTS_NOT_INTEGRATED"
+  },
+  "real_proofs": {
+    "scanner": "NOT_PROVEN",
+    "admission": "NOT_PROVEN",
+    "authorized_open": "NOT_PROVEN",
+    "download": "NOT_PROVEN",
+    "ACL": "NOT_PROVEN",
+    "desktop": "NOT_PROVEN",
+    "installed_e2e": "NOT_PROVEN"
+  },
+  "restrictions": {
+    "local_tests": "NOT_RUN_PROHIBITED",
+    "parser": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "hosted_actions": "NOT_RUN",
+    "merge": false,
+    "deploy": false,
+    "Azure": false,
+    "native_goal": "PAUSED"
+  }
+}

@@ -1,0 +1,810 @@
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/types.ts b/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/types.ts
+new file mode 100644
+index 0000000..e9b8bdb
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/types.ts
+@@ -0,0 +1,96 @@
++// S04 presentation carriers mirror the frozen component-signatures contract.
++// Public opaque identity comes from F01 Schema/context; no local brand or producer schema.
++import type { SfOpaque, SfRef, SfVersion, SfFileSelectionRef } from "@orchestra/schema/sucafina/context"
++
++export type SfCopyKey = SfOpaque<"key-from-frozen-typed-dictionaries">
++export type SfMessage = Readonly<{
++  key: SfCopyKey
++  params?: Readonly<Record<string, string | number>>
++}>
++export type SfText =
++  | Readonly<{ kind: "message"; message: SfMessage }>
++  | Readonly<{ kind: "data"; text: string }>
++export type SfUiState =
++  | "loading" | "ready" | "empty" | "filtered-empty" | "partial"
++  | "invalid" | "not-found" | "stale" | "conflict" | "unavailable"
++  | "denied" | "session-expired" | "outcome-unknown"
++export type SfCoverage = Readonly<{
++  state: "complete" | "partial" | "unavailable"
++  summary: SfMessage
++  reasons: readonly SfMessage[]
++  knownCount: number | null
++  expectedCount: number | null
++}>
++export type SfSource = Readonly<{
++  ref: SfRef
++  version: SfVersion
++  label: SfText
++  scope: SfText
++  coverage: SfCoverage
++}>
++export type SfUnit =
++  | Readonly<{ kind: "currency"; code: string }>
++  | Readonly<{ kind: "percent" }>
++  | Readonly<{ kind: "quantity"; label: SfMessage }>
++  | Readonly<{ kind: "unspecified"; label: SfMessage }>
++export type SfDisplayValue =
++  | Readonly<{ kind: "text"; text: SfText }>
++  | Readonly<{ kind: "number"; value: number; unit: SfUnit; fractionDigits: number }>
++  | Readonly<{ kind: "boolean"; value: boolean; trueLabel: SfMessage; falseLabel: SfMessage }>
++  | Readonly<{ kind: "date"; isoDate: string }>
++  | Readonly<{ kind: "timestamp"; isoTimestamp: string; timezone: string }>
++  | Readonly<{ kind: "missing"; reason: SfMessage }>
++  | Readonly<{ kind: "unavailable"; reason: SfMessage }>
++  | Readonly<{ kind: "list"; items: readonly SfDisplayValue[] }>
++export type SfReviewField = Readonly<{
++  path: string
++  label: SfMessage
++  value: SfDisplayValue
++  source?: SfSource
++}>
++export type SfEvidence = Readonly<{
++  ref: SfRef
++  source: SfSource
++  state: "candidate" | "confirmed" | "stale" | "unavailable" | "revoked"
++  title: SfText
++  excerpt: string | null
++  fields: readonly SfReviewField[]
++  reason?: SfMessage
++}>
++export type SfEvidencePanelProps = Readonly<{
++  items: readonly SfEvidence[]
++  selectedRef?: SfRef
++  state: SfUiState
++  onSelect: (evidenceRef: SfRef) => void
++  onOpenAuthorizedSource: (sourceRef: SfRef) => void
++  onClose: () => void
++}>
++export type SfAttachment = Readonly<{
++  ref: SfRef
++  version: SfVersion
++  fileName: string
++  mediaType: string
++  bytes: number
++  status: "admitted" | "blocked" | "scanner-unavailable" | "replaced" | "revoked"
++  reason?: SfMessage
++  canDownload: boolean
++  canRemoveReference: boolean
++}>
++export type SfFileAdmission =
++  | Readonly<{ kind: "idle" }>
++  | Readonly<{ kind: "selected"; selectionRef: SfFileSelectionRef; fileName: string; bytes: number; mediaType: string }>
++  | Readonly<{ kind: "admitting"; selectionRef: SfFileSelectionRef }>
++  | Readonly<{ kind: "admitted"; attachmentRef: SfRef }>
++  | Readonly<{ kind: "blocked" | "scanner-unavailable" | "failed"; reason: SfMessage }>
++export type SfAttachmentFieldProps = Readonly<{
++  attachments: readonly SfAttachment[]
++  acceptedFormats: readonly Readonly<{ mediaType: string; extensions: readonly string[]; label: SfMessage }>[]
++  limit: Readonly<{ maxBytes: number; maxFiles: number }>
++  admissionState: SfFileAdmission
++  recordRef: SfRef
++  recordVersion: SfVersion
++  onSelectFile: () => void
++  onAdmit: (request: Readonly<{ selectionRef: SfFileSelectionRef; recordRef: SfRef; recordVersion: SfVersion }>) => void
++  onRemoveReference: (request: Readonly<{ attachmentRef: SfRef; recordRef: SfRef; recordVersion: SfVersion }>) => void
++  onDownload: (request: Readonly<{ attachmentRef: SfRef; recordRef: SfRef; recordVersion: SfVersion }>) => void
++}>
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/guards.ts b/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/guards.ts
+new file mode 100644
+index 0000000..3198165
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/guards.ts
+@@ -0,0 +1,13 @@
++// S04 fail-closed presentation guards; they do not grant ACL or source access.
++import type { SfEvidence, SfUiState } from "./types"
++
++export function canPresentEvidence(state: SfUiState): boolean {
++  return state === "ready" || state === "partial"
++}
++
++// Revoked/unavailable items may remain in an owner's redacted result for status
++// continuity, but neither title nor private fields/excerpts may be displayed.
++export function canInspectEvidence(state: SfUiState, item: SfEvidence): boolean {
++  return canPresentEvidence(state) &&
++    (item.state === "candidate" || item.state === "confirmed" || item.state === "stale")
++}
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx
+new file mode 100644
+index 0000000..1a50288
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx
+@@ -0,0 +1,200 @@
++// S04 evidence presentation only: producer owns authorization and source reopening.
++import { createMemo, createUniqueId, For, Match, Show, Switch, type JSX } from "solid-js"
++import { useLanguage } from "@/context/language"
++import type {
++  SfDisplayValue, SfEvidence, SfEvidencePanelProps, SfMessage, SfText,
++} from "./types"
++import { canInspectEvidence, canPresentEvidence } from "./guards"
++import "./s04.css"
++
++export type { SfEvidence, SfEvidencePanelProps } from "./types"
++
++const labels = {
++  candidate: "orchestra.sf.s04.evidence.candidate",
++  confirmed: "orchestra.sf.s04.evidence.confirmed",
++  stale: "orchestra.sf.s04.evidence.stale",
++  unavailable: "orchestra.sf.s04.evidence.unavailable",
++  revoked: "orchestra.sf.s04.evidence.revoked",
++} as const
++
++// Source-provided SfMessage keys remain data from the frozen typed dictionary.
++// Register the S04 leaf centrally through the integrator; never display a raw key.
++export function SfEvidencePanel(props: SfEvidencePanelProps): JSX.Element {
++  const language = useLanguage()
++  const id = createUniqueId()
++  const selected = createMemo(() =>
++    props.selectedRef === undefined
++      ? undefined
++      : props.items.find((item) => item.ref === props.selectedRef),
++  )
++  const canInspect = (item: SfEvidence) => canInspectEvidence(props.state, item)
++  const msg = (value: SfMessage) =>
++    language.t(value.key as Parameters<typeof language.t>[0], value.params)
++  const txt = (value: SfText): string =>
++    value.kind === "data" ? value.text : msg(value.message)
++  const displayNumber = (current: Extract<SfDisplayValue, { kind: "number" }>) => {
++    const digits = Number.isInteger(current.fractionDigits)
++      ? Math.max(0, Math.min(20, current.fractionDigits))
++      : 0
++    return new Intl.NumberFormat(language.intl(), {
++      minimumFractionDigits: digits,
++      maximumFractionDigits: digits,
++    }).format(current.value)
++  }
++  const value = (current: SfDisplayValue): JSX.Element => {
++    switch (current.kind) {
++      case "text": return txt(current.text)
++      case "number":
++        return <span>{displayNumber(current)}
++          <Show when={current.unit.kind === "currency"}> <bdi>{current.unit.kind === "currency" ? current.unit.code : ""}</bdi></Show>
++          <Show when={current.unit.kind === "percent"}> %</Show>
++          <Show when={current.unit.kind === "quantity" || current.unit.kind === "unspecified"}>
++            {" "}{current.unit.kind === "quantity" || current.unit.kind === "unspecified" ? msg(current.unit.label) : ""}
++          </Show>
++        </span>
++      case "boolean": return msg(current.value ? current.trueLabel : current.falseLabel)
++      case "date": return <time dateTime={current.isoDate}>{current.isoDate}</time>
++      case "timestamp": return <time dateTime={current.isoTimestamp}>{current.isoTimestamp}</time>
++      case "missing": return msg(current.reason)
++      case "unavailable": return msg(current.reason)
++      case "list":
++        return <ul>{current.items.map((entry, index) =>
++          <li data-index={index}>{value(entry)}</li>,
++        )}</ul>
++    }
++  }
++  const canOpen = canInspect
++
++  return (
++    <section class="sf-s04 mx-card" aria-labelledby={id + "-title"} aria-busy={props.state === "loading"}>
++      <header class="sf-s04-head">
++        <h2 id={id + "-title"}>{language.t("orchestra.sf.s04.evidence.title")}</h2>
++        <button type="button" class="mx-btn" onClick={props.onClose}>
++          {language.t("orchestra.sf.s04.evidence.close")}
++        </button>
++      </header>
++
++      <Show when={!canPresentEvidence(props.state)}>
++        <p role={props.state === "denied" || props.state === "session-expired" ? "alert" : "status"} class="mx-note">
++          <Switch fallback={language.t("orchestra.sf.s04.evidence.hidden")}>
++            <Match when={props.state === "loading"}>{language.t("sf.common.loading")}</Match>
++            <Match when={props.state === "empty"}>{language.t("orchestra.sf.s04.evidence.empty")}</Match>
++            <Match when={props.state === "filtered-empty"}>{language.t("sf.common.filterEmpty")}</Match>
++            <Match when={props.state === "denied"}>{language.t("sf.common.noAccess")}</Match>
++            <Match when={props.state === "session-expired"}>{language.t("sf.common.loginAgain")}</Match>
++            <Match when={props.state === "unavailable"}>{language.t("sf.common.unavailable")}</Match>
++            <Match when={props.state === "outcome-unknown"}>{language.t("sf.common.operationUnknown")}</Match>
++            <Match when={props.state === "invalid"}>{language.t("sf.common.invalidLink")}</Match>
++            <Match when={props.state === "not-found"}>{language.t("sf.common.removed")}</Match>
++            <Match when={props.state === "stale" || props.state === "conflict"}>{language.t("sf.common.stale")}</Match>
++          </Switch>
++        </p>
++      </Show>
++
++      <Show when={canPresentEvidence(props.state)}>
++        <Show when={props.state === "partial"}>
++          <p role="status">{language.t("sf.common.partial")}</p>
++        </Show>
++
++        <Show when={props.items.length === 0}>
++          <p class="mx-note" role="status">
++            {props.state === "filtered-empty"
++              ? language.t("sf.common.filterEmpty")
++              : language.t("orchestra.sf.s04.evidence.empty")}
++          </p>
++        </Show>
++
++        <Show when={props.items.length > 0}>
++          <div class="sf-s04-layout">
++            <ul class="sf-s04-list" aria-label={language.t("orchestra.sf.s04.evidence.title")}>
++              <For each={props.items}>{(item) => (
++                <li class="sf-s04-row">
++                  <button type="button" class="mx-btn"
++                    aria-pressed={props.selectedRef === item.ref}
++                    disabled={!canInspect(item)}
++                    onClick={() => { if (canInspect(item)) props.onSelect(item.ref) }}>
++                    <span class="sf-s04-file-name">
++                      {canInspect(item) ? txt(item.title) : language.t(labels[item.state])}
++                    </span>
++                    <span class="sf-s04-muted sf-s04-status">
++                      {" — "}{language.t(labels[item.state])}
++                    </span>
++                  </button>
++                </li>
++              )}</For>
++            </ul>
++
++            <div class="sf-s04-detail">
++              <Show when={selected()} fallback={
++                <p role="status" class="mx-note">{language.t("orchestra.sf.s04.evidence.noSelection")}</p>
++              }>
++                {(entry) => (
++                  <Show when={canInspect(entry())} fallback={
++                    <p role="status" class="mx-note">
++                      {language.t(labels[entry().state])}
++                    </p>
++                  }>
++                    <article aria-label={txt(entry().title)} class="sf-s04-row">
++                      <h3>{txt(entry().title)}</h3>
++                      <p class="sf-s04-muted" role="status">
++                        {language.t(labels[entry().state])}
++                      </p>
++                      <p>{txt(entry().source.label)}</p>
++                      <p>
++                        <strong>{language.t("orchestra.sf.s04.evidence.scope")}: </strong>
++                        {txt(entry().source.scope)}
++                      </p>
++                      <p>
++                        <strong>{language.t("orchestra.sf.s04.evidence.version")}: </strong>
++                        <bdi>{String(entry().source.version)}</bdi>
++                      </p>
++                      <p role="status">
++                        {msg(entry().source.coverage.summary)}
++                      </p>
++                      <Show when={entry().source.coverage.reasons.length > 0}>
++                        <ul>
++                          <For each={entry().source.coverage.reasons}>
++                            {(reason) => <li>{msg(reason)}</li>}
++                          </For>
++                        </ul>
++                      </Show>
++
++                      <Show when={entry().excerpt !== null} fallback={
++                        <p class="mx-note">{language.t("orchestra.sf.s04.evidence.noExcerpt")}</p>
++                      }>
++                        <blockquote class="sf-s04-excerpt">{entry().excerpt}</blockquote>
++                      </Show>
++
++                      <h3>{language.t("orchestra.sf.s04.evidence.fields")}</h3>
++                      <Show when={entry().fields.length === 0}>
++                        <p class="mx-note">{language.t("orchestra.sf.s04.evidence.noFields")}</p>
++                      </Show>
++                      <dl>
++                        <For each={entry().fields}>{(field) => (
++                          <>
++                            <dt>{msg(field.label)}</dt>
++                            <dd>{value(field.value)}</dd>
++                          </>
++                        )}</For>
++                      </dl>
++                      <Show when={entry().reason}>
++                        {(reason) => <p role="status" class="mx-note">{msg(reason())}</p>}
++                      </Show>
++                      <button type="button" class="mx-btn"
++                        disabled={!canOpen(entry())}
++                        onClick={() => {
++                          if (canOpen(entry())) props.onOpenAuthorizedSource(entry().source.ref)
++                        }}>
++                        {language.t("orchestra.sf.s04.evidence.source")}
++                      </button>
++                    </article>
++                  </Show>
++                )}
++              </Show>
++            </div>
++          </div>
++        </Show>
++      </Show>
++    </section>
++  )
++}
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/s04.css b/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/s04.css
+new file mode 100644
+index 0000000..e0edcd2
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/s04.css
+@@ -0,0 +1,23 @@
++/* Orchestra Mx design tokens, responsive without a separate surface identity. */
++.sf-s04 { min-inline-size: 0; display: grid; gap: 16px; }
++.sf-s04-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
++.sf-s04-head h2, .sf-s04 h3 { margin: 0; color: var(--mx-strong); }
++.sf-s04-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,2fr); gap: 16px; min-inline-size: 0; }
++.sf-s04-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
++.sf-s04-row { border: 1px solid var(--mx-line); background: var(--mx-raised); padding: 12px; border-radius: 10px; min-inline-size: 0; }
++.sf-s04-row button { inline-size: 100%; min-inline-size: 0; text-align: start; white-space: normal; overflow-wrap: anywhere; }
++.sf-s04-row [aria-pressed="true"] { outline: 2px solid var(--mx-blue); outline-offset: 2px; }
++.sf-s04-detail { min-inline-size: 0; }
++.sf-s04-detail dl { display: grid; grid-template-columns: minmax(8rem,1fr) minmax(0,2fr); column-gap: 16px; row-gap: 8px; }
++.sf-s04-detail dt, .sf-s04-muted { color: var(--mx-dim); }
++.sf-s04-detail dd { min-inline-size: 0; margin: 0; overflow-wrap: anywhere; }
++.sf-s04-excerpt { white-space: pre-wrap; overflow-wrap: anywhere; border-inline-start: 2px solid var(--mx-line); padding-inline-start: 12px; }
++.sf-s04-actions { display: flex; flex-wrap: wrap; gap: 8px; }
++.sf-s04-file { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; min-inline-size: 0; }
++.sf-s04-file-name { min-inline-size: 0; overflow-wrap: anywhere; unicode-bidi: isolate; }
++.sf-s04-status { overflow-wrap: anywhere; }
++@media (max-width: 768px) {
++  .sf-s04-layout { grid-template-columns: minmax(0,1fr); }
++  .sf-s04-detail dl { grid-template-columns: minmax(0,1fr); }
++}
++@media (prefers-reduced-motion: reduce) { .sf-s04 * { scroll-behavior: auto; } }
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/guards.ts b/packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/guards.ts
+new file mode 100644
+index 0000000..457510b
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/guards.ts
+@@ -0,0 +1,30 @@
++// Local UI affordances only; server admission, ACL and scanner remain authoritative.
++import type { SfAttachment, SfAttachmentFieldProps, SfFileAdmission } from "../evidence/types"
++
++export function canAdmitSelected(
++  state: SfFileAdmission,
++  formats: SfAttachmentFieldProps["acceptedFormats"],
++  limit: SfAttachmentFieldProps["limit"],
++  attachments: readonly SfAttachment[],
++): boolean {
++  if (state.kind !== "selected") return false
++  if (!Number.isSafeInteger(limit.maxBytes) || limit.maxBytes <= 0) return false
++  if (!Number.isSafeInteger(limit.maxFiles) || limit.maxFiles <= 0) return false
++  if (!Number.isSafeInteger(state.bytes) || state.bytes <= 0 || state.bytes > limit.maxBytes) return false
++  if (attachments.filter((item) => item.status === "admitted").length >= limit.maxFiles) return false
++  const ext = state.fileName.match(/\.([A-Za-z0-9]+)$/)?.[1]?.toLowerCase()
++  if (!ext) return false
++  return formats.some((format) =>
++    format.mediaType.toLowerCase() === state.mediaType.toLowerCase() &&
++    format.extensions.some((suffix) => suffix.replace(/^\*?\./, "").toLowerCase() === ext),
++  )
++}
++
++// Even a true UI capability is only an affordance; the parent/producer reauthorizes
++// on every download with the original record/version and never trusts this result.
++export function canRequestDownload(item: SfAttachment): boolean {
++  return item.status === "admitted" && item.canDownload === true
++}
++export function canRequestReferenceRemoval(item: SfAttachment): boolean {
++  return item.status === "admitted" && item.canRemoveReference === true
++}
+
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx
+new file mode 100644
+index 0000000..f5c96fd
+--- /dev/null
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx
+@@ -0,0 +1,223 @@
++// S04 attachment presentation. Host owns selection, admission, ACL and download bytes.
++import { createUniqueId, For, Match, Show, Switch, type JSX } from "solid-js"
++import { createStore } from "solid-js/store"
++import { useLanguage } from "@/context/language"
++import type { SfAttachment, SfAttachmentFieldProps, SfMessage } from "../evidence/types"
++import type { SfFileSelectionRef, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
++import {
++  canAdmitSelected,
++  canRequestDownload,
++  canRequestReferenceRemoval,
++} from "./guards"
++import "../evidence/s04.css"
++
++export type { SfAttachment, SfFileAdmission, SfAttachmentFieldProps } from "../evidence/types"
++
++const statusKeys = {
++  admitted: "orchestra.sf.s04.attachments.admitted",
++  blocked: "orchestra.sf.s04.attachments.blocked",
++  "scanner-unavailable": "orchestra.sf.s04.attachments.scanner-unavailable",
++  replaced: "orchestra.sf.s04.attachments.replaced",
++  revoked: "orchestra.sf.s04.attachments.revoked",
++} as const
++
++type RemovalAttempt = Readonly<{
++  attachmentRef: SfRef
++  attachmentVersion: SfVersion
++  recordRef: SfRef
++  recordVersion: SfVersion
++}>
++
++export function SfAttachmentField(props: SfAttachmentFieldProps): JSX.Element {
++  const language = useLanguage()
++  const id = createUniqueId()
++  const [requests, setRequests] = createStore<{
++    admissionSelectionRef: SfFileSelectionRef | null
++    removals: readonly RemovalAttempt[]
++  }>({ admissionSelectionRef: null, removals: [] })
++  const msg = (value: SfMessage) =>
++    language.t(value.key as Parameters<typeof language.t>[0], value.params)
++  const admittedCount = () => props.attachments.filter((item) => item.status === "admitted").length
++  const canSelect = () =>
++    props.admissionState.kind !== "admitting" &&
++    Number.isSafeInteger(props.limit.maxFiles) &&
++    props.limit.maxFiles > admittedCount() &&
++    Number.isSafeInteger(props.limit.maxBytes) &&
++    props.limit.maxBytes > 0 &&
++    props.acceptedFormats.length > 0
++  const admissionRequested = () => {
++    const state = props.admissionState
++    return state.kind === "selected" && requests.admissionSelectionRef === state.selectionRef
++  }
++  const canAdmit = () =>
++    !admissionRequested() &&
++    canAdmitSelected(props.admissionState, props.acceptedFormats, props.limit, props.attachments)
++  const removalRequested = (item: SfAttachment) =>
++    requests.removals.some((attempt) =>
++      attempt.attachmentRef === item.ref &&
++      attempt.attachmentVersion === item.version &&
++      attempt.recordRef === props.recordRef &&
++      attempt.recordVersion === props.recordVersion,
++    )
++
++  // A dispatched opaque selection stays locked through response loss or phase changes.
++  // Only the producer can provide a new selection handle or a confirmed outcome.
++  const admit = () => {
++    if (!canAdmit()) return
++    const current = props.admissionState
++    if (current.kind !== "selected") return
++    setRequests("admissionSelectionRef", current.selectionRef)
++    props.onAdmit({
++      selectionRef: current.selectionRef,
++      recordRef: props.recordRef,
++      recordVersion: props.recordVersion,
++    })
++  }
++  const admittedStatus = (item: SfAttachmentFieldProps["attachments"][number]) =>
++    language.t(statusKeys[item.status])
++
++  return (
++    <section class="sf-s04 mx-card" aria-labelledby={id + "-title"}
++      aria-busy={props.admissionState.kind === "admitting"}>
++      <header class="sf-s04-head">
++        <h2 id={id + "-title"}>{language.t("orchestra.sf.s04.attachments.title")}</h2>
++        <button type="button" class="mx-btn" disabled={!canSelect()}
++          onClick={() => { if (canSelect()) props.onSelectFile() }}>
++          {language.t("orchestra.sf.s04.attachments.select")}
++        </button>
++      </header>
++
++      <p class="sf-s04-muted">
++        {language.t("orchestra.sf.s04.attachments.maxBytes")}: {props.limit.maxBytes}
++        {" · "}
++        {language.t("orchestra.sf.s04.attachments.maxFiles")}: {props.limit.maxFiles}
++      </p>
++
++      <section aria-label={language.t("orchestra.sf.s04.attachments.formats")}>
++        <h3>{language.t("orchestra.sf.s04.attachments.formats")}</h3>
++        <ul>
++          <For each={props.acceptedFormats}>{(format) => (
++            <li>
++              {msg(format.label)} — <bdi>{format.mediaType}</bdi>
++              {" ("}<bdi>{format.extensions.join(", ")}</bdi>{")"}
++            </li>
++          )}</For>
++        </ul>
++      </section>
++
++      <Switch>
++        <Match when={props.admissionState.kind === "selected"}>
++          <Show when={props.admissionState.kind === "selected" ? props.admissionState : undefined}>
++            {(phase) => (
++              <div class="sf-s04-row" role="group" aria-label={language.t("orchestra.sf.s04.attachments.selected")}>
++                <p role="status">{language.t("orchestra.sf.s04.attachments.selected")}</p>
++                <p class="sf-s04-file-name">
++                  <bdi>{phase().fileName}</bdi>
++                </p>
++                <p class="sf-s04-muted">
++                  {language.t("orchestra.sf.s04.attachments.fileCount")}: {phase().bytes}
++                  {" · "}
++                  {language.t("orchestra.sf.s04.attachments.mediaType")}: <bdi>{phase().mediaType}</bdi>
++                </p>
++                <Show when={!canAdmit() && !admissionRequested()}>
++                  <p class="mx-note" role="status">{language.t("orchestra.sf.s04.attachments.notEligible")}</p>
++                </Show>
++                <Show when={admissionRequested()}>
++                  <p role="status">{language.t("orchestra.sf.s04.attachments.admissionPending")}</p>
++                </Show>
++                <button type="button" class="mx-btn primary" disabled={!canAdmit()} onClick={admit}>
++                  {language.t("orchestra.sf.s04.attachments.admit")}
++                </button>
++              </div>
++            )}
++          </Show>
++        </Match>
++        <Match when={props.admissionState.kind === "admitting"}>
++          <p role="status" aria-live="polite">{language.t("orchestra.sf.s04.attachments.admitting")}</p>
++        </Match>
++        <Match when={props.admissionState.kind === "admitted"}>
++          <p role="status" aria-live="polite">{language.t("orchestra.sf.s04.attachments.admitted")}</p>
++        </Match>
++        <Match when={props.admissionState.kind === "blocked" || props.admissionState.kind === "scanner-unavailable" || props.admissionState.kind === "failed"}>
++          <Show when={props.admissionState.kind === "blocked" || props.admissionState.kind === "scanner-unavailable" || props.admissionState.kind === "failed" ? props.admissionState : undefined}>
++            {(phase) => (
++              <div role="alert">
++                <p>{phase().kind === "scanner-unavailable"
++                  ? language.t("orchestra.sf.s04.attachments.scanner-unavailable")
++                  : phase().kind === "blocked"
++                    ? language.t("orchestra.sf.s04.attachments.blocked")
++                    : language.t("orchestra.sf.s04.attachments.failed")}</p>
++                <p>{msg(phase().reason)}</p>
++              </div>
++            )}
++          </Show>
++        </Match>
++      </Switch>
++
++      <Show when={props.attachments.length === 0}>
++        <p class="mx-note" role="status">{language.t("orchestra.sf.s04.attachments.empty")}</p>
++      </Show>
++      <ul class="sf-s04-list" aria-label={language.t("orchestra.sf.s04.attachments.title")}>
++        <For each={props.attachments}>{(item) => (
++          <li class="sf-s04-row sf-s04-file">
++            <div class="sf-s04-file-name">
++              <strong>
++                <Show when={item.status !== "revoked"} fallback={language.t("orchestra.sf.s04.attachments.revoked")}>
++                  <bdi>{item.fileName}</bdi>
++                </Show>
++              </strong>
++              <p class="sf-s04-muted sf-s04-status" role="status">{admittedStatus(item)}</p>
++              <Show when={item.status === "admitted"}>
++                <p class="sf-s04-muted">
++                  {language.t("orchestra.sf.s04.attachments.fileCount")}: {item.bytes}
++                  {" · "}<bdi>{item.mediaType}</bdi>
++                  {" · "}<bdi>{String(item.version)}</bdi>
++                </p>
++              </Show>
++              <Show when={item.status === "revoked" ? undefined : item.reason}>
++                {(reason) => <p class="mx-note" role="status">{msg(reason())}</p>}
++              </Show>
++            </div>
++            <div class="sf-s04-actions">
++              <Show when={canRequestDownload(item)}>
++                <button type="button" class="mx-btn" onClick={() => {
++                  if (!canRequestDownload(item)) return
++                  props.onDownload({
++                    attachmentRef: item.ref,
++                    recordRef: props.recordRef,
++                    recordVersion: props.recordVersion,
++                  })
++                }}>
++                  {language.t("orchestra.sf.s04.attachments.download")}
++                </button>
++              </Show>
++              <Show when={canRequestReferenceRemoval(item)}>
++                <button type="button" class="mx-btn" disabled={removalRequested(item)} onClick={() => {
++                  if (!canRequestReferenceRemoval(item) || removalRequested(item)) return
++                  setRequests("removals", (current) => [...current, {
++                    attachmentRef: item.ref,
++                    attachmentVersion: item.version,
++                    recordRef: props.recordRef,
++                    recordVersion: props.recordVersion,
++                  }])
++                  props.onRemoveReference({
++                    attachmentRef: item.ref,
++                    recordRef: props.recordRef,
++                    recordVersion: props.recordVersion,
++                  })
++                }}>
++                  {language.t("orchestra.sf.s04.attachments.remove")}
++                </button>
++              </Show>
++              <Show when={removalRequested(item)}>
++                <p role="status" class="sf-s04-muted">
++                  {language.t("orchestra.sf.s04.attachments.referenceRemovalPending")}
++                </p>
++              </Show>
++            </div>
++          </li>
++        )}</For>
++      </ul>
++    </section>
++  )
++}
+
+diff --git a/packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts b/packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts
+new file mode 100644
+index 0000000..9d3a0fd
+--- /dev/null
++++ b/packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts
+@@ -0,0 +1,82 @@
++// S04 leaf copy. Shared dictionary composition belongs exclusively to integrator114.
++export const SF_S04_COPY = {
++  "orchestra.sf.s04.evidence.title": "Evidence",
++  "orchestra.sf.s04.evidence.candidate": "Candidate — not yet confirmed",
++  "orchestra.sf.s04.evidence.confirmed": "Confirmed",
++  "orchestra.sf.s04.evidence.stale": "Stale source — revalidate",
++  "orchestra.sf.s04.evidence.unavailable": "Source unavailable",
++  "orchestra.sf.s04.evidence.revoked": "Access revoked",
++  "orchestra.sf.s04.evidence.noSelection": "Select an authorized evidence reference to inspect it.",
++  "orchestra.sf.s04.evidence.noExcerpt": "No authorized excerpt was provided.",
++  "orchestra.sf.s04.evidence.fields": "Fields",
++  "orchestra.sf.s04.evidence.noFields": "No fields were provided.",
++  "orchestra.sf.s04.evidence.scope": "Scope",
++  "orchestra.sf.s04.evidence.version": "Source version",
++  "orchestra.sf.s04.evidence.source": "Open authorized source",
++  "orchestra.sf.s04.evidence.close": "Close evidence",
++  "orchestra.sf.s04.evidence.empty": "No evidence is available in the current authorized scope.",
++  "orchestra.sf.s04.evidence.hidden": "Evidence is not available in the current context.",
++  "orchestra.sf.s04.attachments.title": "Attachments",
++  "orchestra.sf.s04.attachments.empty": "No admitted attachments.",
++  "orchestra.sf.s04.attachments.select": "Choose file",
++  "orchestra.sf.s04.attachments.admit": "Upload for admission",
++  "orchestra.sf.s04.attachments.selected": "Selected — not uploaded",
++  "orchestra.sf.s04.attachments.admitting": "Checking file and scanner…",
++  "orchestra.sf.s04.attachments.admitted": "Admission confirmed by the source",
++  "orchestra.sf.s04.attachments.blocked": "Blocked",
++  "orchestra.sf.s04.attachments.scanner-unavailable": "Scanner unavailable — file not admitted",
++  "orchestra.sf.s04.attachments.failed": "Admission failed",
++  "orchestra.sf.s04.attachments.replaced": "Replaced",
++  "orchestra.sf.s04.attachments.revoked": "Access revoked",
++  "orchestra.sf.s04.attachments.download": "Download with authorization check",
++  "orchestra.sf.s04.attachments.remove": "Remove reference",
++  "orchestra.sf.s04.attachments.formats": "Supported formats",
++  "orchestra.sf.s04.attachments.maxBytes": "Maximum file size (bytes)",
++  "orchestra.sf.s04.attachments.maxFiles": "Maximum admitted files",
++  "orchestra.sf.s04.attachments.notEligible": "This selection does not meet the current format or size limits.",
++  "orchestra.sf.s04.attachments.fileCount": "File size (bytes)",
++  "orchestra.sf.s04.attachments.mediaType": "Media type",
++  "orchestra.sf.s04.attachments.admissionPending": "Upload requested. Check the result before trying again.",
++  "orchestra.sf.s04.attachments.referenceRemovalPending": "Removal requested. Check the result before trying again.",
++} as const
++
++export const SF_S04_COPY_BR = {
++  "orchestra.sf.s04.evidence.title": "Evidências",
++  "orchestra.sf.s04.evidence.candidate": "Candidata — ainda não confirmada",
++  "orchestra.sf.s04.evidence.confirmed": "Confirmada",
++  "orchestra.sf.s04.evidence.stale": "Fonte desatualizada — revalidar",
++  "orchestra.sf.s04.evidence.unavailable": "Fonte indisponível",
++  "orchestra.sf.s04.evidence.revoked": "Acesso revogado",
++  "orchestra.sf.s04.evidence.noSelection": "Selecione uma referência de evidência autorizada para inspecioná-la.",
++  "orchestra.sf.s04.evidence.noExcerpt": "Nenhum trecho autorizado foi fornecido.",
++  "orchestra.sf.s04.evidence.fields": "Campos",
++  "orchestra.sf.s04.evidence.noFields": "Nenhum campo foi fornecido.",
++  "orchestra.sf.s04.evidence.scope": "Escopo",
++  "orchestra.sf.s04.evidence.version": "Versão da fonte",
++  "orchestra.sf.s04.evidence.source": "Abrir fonte autorizada",
++  "orchestra.sf.s04.evidence.close": "Fechar evidência",
++  "orchestra.sf.s04.evidence.empty": "Nenhuma evidência disponível no escopo autorizado atual.",
++  "orchestra.sf.s04.evidence.hidden": "A evidência não está disponível no contexto atual.",
++  "orchestra.sf.s04.attachments.title": "Anexos",
++  "orchestra.sf.s04.attachments.empty": "Nenhum anexo admitido.",
++  "orchestra.sf.s04.attachments.select": "Selecionar arquivo",
++  "orchestra.sf.s04.attachments.admit": "Enviar para admissão",
++  "orchestra.sf.s04.attachments.selected": "Selecionado — ainda não enviado",
++  "orchestra.sf.s04.attachments.admitting": "Verificando arquivo e scanner…",
++  "orchestra.sf.s04.attachments.admitted": "Admissão confirmada pela fonte",
++  "orchestra.sf.s04.attachments.blocked": "Bloqueado",
++  "orchestra.sf.s04.attachments.scanner-unavailable": "Scanner indisponível — arquivo não admitido",
++  "orchestra.sf.s04.attachments.failed": "Falha na admissão",
++  "orchestra.sf.s04.attachments.replaced": "Substituído",
++  "orchestra.sf.s04.attachments.revoked": "Acesso revogado",
++  "orchestra.sf.s04.attachments.download": "Baixar com verificação de acesso",
++  "orchestra.sf.s04.attachments.remove": "Remover referência",
++  "orchestra.sf.s04.attachments.formats": "Formatos aceitos",
++  "orchestra.sf.s04.attachments.maxBytes": "Tamanho máximo do arquivo (bytes)",
++  "orchestra.sf.s04.attachments.maxFiles": "Máximo de arquivos admitidos",
++  "orchestra.sf.s04.attachments.notEligible": "Esta seleção não atende aos limites atuais de formato ou tamanho.",
++  "orchestra.sf.s04.attachments.fileCount": "Tamanho do arquivo (bytes)",
++  "orchestra.sf.s04.attachments.mediaType": "Tipo de mídia",
++  "orchestra.sf.s04.attachments.admissionPending": "Envio solicitado. Consulte o resultado antes de tentar novamente.",
++  "orchestra.sf.s04.attachments.referenceRemovalPending": "Remoção solicitada. Consulte o resultado antes de tentar novamente.",
++} as const
+
+diff --git a/packages/app-shell/test-browser/sucafina-native/s04.test.ts b/packages/app-shell/test-browser/sucafina-native/s04.test.ts
+new file mode 100644
+index 0000000..f62bf03
+--- /dev/null
++++ b/packages/app-shell/test-browser/sucafina-native/s04.test.ts
+@@ -0,0 +1,88 @@
++// S04 pure presentation-boundary checks; not an installed ACL or scanner E2E proof.
++import { expect, test } from "bun:test"
++import type { SfAttachment, SfAttachmentFieldProps, SfCopyKey, SfEvidence, SfFileAdmission, SfUiState } from "@/orchestra/chapters/sucafina/shared/evidence/types"
++import type { SfRef, SfFileSelectionRef } from "@orchestra/schema/sucafina/context"
++import { canInspectEvidence, canPresentEvidence } from "@/orchestra/chapters/sucafina/shared/evidence/guards"
++import {
++  canAdmitSelected,
++  canRequestDownload,
++  canRequestReferenceRemoval,
++} from "@/orchestra/chapters/sucafina/shared/attachments/guards"
++
++const acceptedFormats: SfAttachmentFieldProps["acceptedFormats"] = [
++  { mediaType: "application/pdf", extensions: [".pdf"], label: { key: "sf.common.source" as SfCopyKey } },
++]
++const limit = { maxBytes: 2048, maxFiles: 2 }
++const selected: SfFileAdmission = {
++  kind: "selected", selectionRef: "selection-opaque" as SfFileSelectionRef,
++  fileName: "source.pdf", bytes: 256, mediaType: "application/pdf",
++}
++const file = (status: SfAttachment["status"], canDownload = true, canRemoveReference = true): SfAttachment => ({
++  ref: "asset-opaque" as SfRef, version: 3, fileName: "source.pdf",
++  mediaType: "application/pdf", bytes: 256, status, canDownload, canRemoveReference,
++})
++
++test("S04: selected is not admitted; only explicit accepted selection can request admission", () => {
++  expect(canAdmitSelected({ kind: "idle" }, acceptedFormats, limit, [])).toBe(false)
++  expect(canAdmitSelected(selected, acceptedFormats, limit, [])).toBe(true)
++  expect(canAdmitSelected({ kind: "admitting", selectionRef: "selection-opaque" as SfFileSelectionRef }, acceptedFormats, limit, [])).toBe(false)
++  expect(canAdmitSelected({ kind: "admitted", attachmentRef: "asset-opaque" as SfRef }, acceptedFormats, limit, [])).toBe(false)
++})
++
++test("S04: blocked, scanner-unavailable and failed never become admission successes", () => {
++  for (const kind of ["blocked", "scanner-unavailable", "failed"] as const) {
++    expect(canAdmitSelected({ kind, reason: { key: "sf.common.unavailable" as SfCopyKey } }, acceptedFormats, limit, [])).toBe(false)
++  }
++})
++
++test("S04: every configured limit and every format predicate is fail-closed", () => {
++  expect(canAdmitSelected(selected, [], limit, [])).toBe(false)
++  expect(canAdmitSelected({ ...selected, fileName: "fake.exe" }, acceptedFormats, limit, [])).toBe(false)
++  expect(canAdmitSelected({ ...selected, mediaType: "text/plain" }, acceptedFormats, limit, [])).toBe(false)
++  expect(canAdmitSelected({ ...selected, bytes: 2049 }, acceptedFormats, limit, [])).toBe(false)
++  expect(canAdmitSelected({ ...selected, bytes: -1 }, acceptedFormats, limit, [])).toBe(false)
++  expect(canAdmitSelected({ ...selected, bytes: 0 }, acceptedFormats, limit, [])).toBe(false)
++  expect(canAdmitSelected(selected, acceptedFormats, { ...limit, maxBytes: 0 }, [])).toBe(false)
++  expect(canAdmitSelected(selected, acceptedFormats, { ...limit, maxFiles: 0 }, [])).toBe(false)
++  expect(canAdmitSelected(selected, acceptedFormats, limit, [file("admitted"), file("admitted")])).toBe(false)
++})
++
++test("S04: download and reference removal never trust a non-admitted status or stale flag", () => {
++  expect(canRequestDownload(file("admitted", true))).toBe(true)
++  expect(canRequestDownload(file("admitted", false))).toBe(false)
++  expect(canRequestReferenceRemoval(file("admitted", true, false))).toBe(false)
++  for (const status of ["blocked", "scanner-unavailable", "replaced", "revoked"] as const) {
++    expect(canRequestDownload(file(status, true))).toBe(false)
++    expect(canRequestReferenceRemoval(file(status, true, true))).toBe(false)
++  }
++})
++
++test("S04: private evidence content is not exposed for revoked, unavailable or non-authorized UI states", () => {
++  const message = { key: "sf.common.source" as SfCopyKey }
++  const evidence: SfEvidence = {
++    ref: "evidence-ref" as SfRef,
++    source: {
++      ref: "source-ref" as SfRef,
++      version: "source-v1",
++      label: { kind: "data", text: "Authorized source" },
++      scope: { kind: "data", text: "Current owner" },
++      coverage: { state: "complete", summary: message, reasons: [], knownCount: 1, expectedCount: 1 },
++    },
++    state: "confirmed",
++    title: { kind: "data", text: "Private title" },
++    excerpt: "Private excerpt",
++    fields: [],
++  }
++  for (const state of ["denied", "session-expired", "unavailable", "outcome-unknown", "invalid", "not-found", "loading", "empty", "filtered-empty", "stale", "conflict"] as const satisfies readonly SfUiState[]) {
++    expect(canPresentEvidence(state)).toBe(false)
++    expect(canInspectEvidence(state, evidence)).toBe(false)
++  }
++  for (const state of ["ready", "partial"] as const satisfies readonly SfUiState[]) {
++    expect(canPresentEvidence(state)).toBe(true)
++    expect(canInspectEvidence(state, evidence)).toBe(true)
++    expect(canInspectEvidence(state, { ...evidence, state: "candidate" })).toBe(true)
++    expect(canInspectEvidence(state, { ...evidence, state: "stale" })).toBe(true)
++    expect(canInspectEvidence(state, { ...evidence, state: "unavailable" })).toBe(false)
++    expect(canInspectEvidence(state, { ...evidence, state: "revoked" })).toBe(false)
++  }
++})
