@@ -262,6 +262,20 @@ function pageData(
     versions: versionsFor(view, ["settings"]),
   }
 }
+type ProcurementPageOutcome<Stamp> =
+  | { status: "unauthenticated" | "denied" }
+  | { status: "unavailable"; reason: "procurement-domain-unavailable" | "procurement-projection-unavailable" }
+  | { status: "stale"; reason: "procurement-source-changed" }
+  | {
+      status: "ok"
+      context: Stamp
+      value: NonNullable<ReturnType<typeof pageData>> & Readonly<{
+        capabilityId: Capability; selection: Selection; allowedActionIds: readonly string[]
+      }>
+    }
+
+// Transaction's generic T must cover every authority outcome; inferring it from
+// the first callback return would narrow all subsequent results to unauthenticated.
 function parseSelection(query: URLSearchParams, capability: Capability): Selection | undefined {
   const allowed = selectors[capability]
   if ([...query.keys()].some((key) => !allowed.includes(key) || query.getAll(key).length !== 1)) return undefined
@@ -330,7 +344,7 @@ function makePageHandler(deps: SfNativeHostDependencies, capability: Capability)
       if (productView instanceof Response)
         return refusal("unavailable", "procurement-producer-unavailable")
       prepared = productView
-      const result = await deps.application.persistence.transaction("procurement", async (snapshot: Snapshot) => {
+      const result = await deps.application.persistence.transaction<ProcurementPageOutcome<typeof bound.value.stamp>>("procurement", async (snapshot: Snapshot) => {
         const principal = await deps.application.authenticate(request, {
           surface: "procurement", roleMap: roleMap(snapshot, "procurement"),
         })
