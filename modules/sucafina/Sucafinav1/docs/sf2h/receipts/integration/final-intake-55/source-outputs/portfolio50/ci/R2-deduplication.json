@@ -1,0 +1,89 @@
+{
+  "schema": "sf2h.portfolio-final-history.dedup.v1",
+  "mission": 50,
+  "attempt": "R2",
+  "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+  "tree": "0d655fcddbbc708ba7aa01fcdee1c2699f5e9e08",
+  "S": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+  "request_blob": "f368e4c41c5d05311001960c0af04d282e4fa552",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "queued": 0,
+  "active": [
+    {
+      "run": 43654219902,
+      "sha": "fbc76905438455be37aeda813b380924d594de8f",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "packageSelector": "packages/app",
+        "runner": "playwright",
+        "args": [
+          "e2e/sucafina/decisions.spec.ts"
+        ],
+        "env": {
+          "ORCHESTRA_CHANNEL": "prod"
+        },
+        "config": "e2e/playwright.production.config.ts"
+      }
+    }
+  ],
+  "overlap": false,
+  "prior_R1": {
+    "status": "FAIL",
+    "tests": 23,
+    "files": 2,
+    "pass": 22,
+    "fail": 1,
+    "errors": 1,
+    "expect_calls": 103,
+    "duration_seconds": 182.49,
+    "by_file": {
+      "history_provenance": {
+        "status": "PASS",
+        "pass": 22,
+        "fail": 0,
+        "final_CAS_ms": 319.28,
+        "reopen_ms": 402.17
+      },
+      "semantic_union": {
+        "status": "FAIL",
+        "duration_ms": 180013.86,
+        "budget_ms": 180000,
+        "phase": "before.persistent.evaluateAndStore omitted result before line50",
+        "guard_ms": 180003,
+        "late_status": "stale",
+        "late_reason": "comparison-rule-or-source-changed"
+      }
+    },
+    "run": 43653550785,
+    "job": 132627055702,
+    "cleanup_job": 132628306934,
+    "cleanup": "PASS",
+    "control": {
+      "nonce": "a0fdd0d90f104afcc799143ae0f577da",
+      "nonce_count": 1,
+      "verdict_count": 1,
+      "verdict": "2026-11-14T23:35:00.5407491Z omni positive control [a0fdd0d90f104afcc799143ae0f577da]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+      "valid": true
+    }
+  },
+  "diagnosed_before_repeat": "ae62d8ca164f2cfb4d0c9b53932b596b293337b3",
+  "material_fix_source": "7b37732555b3378f238eee56e0f713e8ae92cae3",
+  "only_delta_from_W1": "P03 fixture readonly rule scope + cheap diagnostics; unchanged72expect/180000",
+  "dispatch_branch": "ci-run-linux-portfolio50-9d857d51-r2",
+  "history_not_repeated": "P02 code/tests/dependencies identical; onlyP03 fixture changed, not imported byhistory",
+  "maximum_correction_qualifications": 1,
+  "run": 43654501551,
+  "job": 132629953065
+}

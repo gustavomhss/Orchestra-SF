@@ -1,0 +1,257 @@
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/proof.ts b/modules/sucafina/Sucafinav1/product/portfolio/proof.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/proof.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/proof.ts
+@@ -9,6 +9,7 @@
+ import { parseCaseRef } from "../decisions/case-port.ts"
+ import { portfolioCandidateRef } from "./candidates.ts"
+ import type { PortfolioCandidate } from "./port.ts"
++import { readPortfolioSnapshot } from "./read-snapshot.ts"
+ 
+ type CaseRef = { id: string; incarnation: string; version: number }
+ type HistoricalCandidate = { candidate: PortfolioCandidate; originalCaseRef: CaseRef; currentCaseRef: CaseRef; scenarioResultRef: string; provenanceDigest: string }
+@@ -19,9 +20,9 @@
+   cases: Pick<DecisionCasePort, "read">
+   results: Pick<ReturnType<typeof createSfDecisionResultStore>, "readHistoricalScenario">
+   evidence: BusinessContextService
+-  host: Pick<DomainPortHost, "requestFor" | "revalidate">
++  host: Pick<DomainPortHost, "requestFor" | "revalidate"> & Partial<Pick<DomainPortHost, "persistence">>
+ }) {
+-  return async (incoming: { ref: string; candidateDigest: string }, context: TrustedDomainContext): Promise<PortResult<HistoricalCandidate>> => {
++  const read = async (incoming: { ref: string; candidateDigest: string }, context: TrustedDomainContext): Promise<PortResult<HistoricalCandidate>> => {
+     try {
+       const request = structuredClone(incoming)
+       const selected = selector(request.ref)
+@@ -89,6 +90,12 @@
+       return { status: "ok", value: structuredClone(second.value) }
+     } catch { return { status: "unavailable", reason: "portfolio-history-candidate-unavailable" } }
+   }
++  // A real host must keep both observations and the final authority callback in
++  // one admitted read. LocalStore rejects the entire root after a swallowed write.
++  // Hosts without persistence retain the independent-observation port contract.
++  return (incoming: { ref: string; candidateDigest: string }, context: TrustedDomainContext) =>
++    readPortfolioSnapshot<PortResult<HistoricalCandidate>>(input.host, context, incoming,
++      () => read(incoming, context), { status: "unavailable", reason: "portfolio-history-candidate-unavailable" })
+ }
+ 
+ function selector(ref: string) {
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts
+@@ -1,3 +1,6 @@
++import { createSfDecisionResultStore } from "../../../product/decisions/result-store.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
+ import { decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
+ import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
+ import type { PortfolioBinding } from "../../../product/decisions/portfolio-bindings.ts"
+@@ -10,7 +13,7 @@
+ import type { DecisionCasePort, PortResult } from "../../../product/contracts/ports.ts"
+ import type { SfStoredDecisionResult } from "../../../product/contracts/state.ts"
+ import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+-import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
+ import { createPortfolioHistoricalProvenance } from "../../../product/portfolio/history-provenance.ts"
+ 
+ const context = { binding: { accessRevision: "access-7" } } as TrustedDomainContext
+@@ -429,3 +432,85 @@
+     await fixture.world.cleanup()
+   }
+ }, 120000)
++
++test("historical candidate reloads original C08 provenance after LocalStore reopen and rechecks current access", async () => {
++  const fixture = await revisedCandidate()
++  try {
++    const world = fixture.world
++    const before = await createPortfolioCandidateHistoryReader({ state: world.state, cases: world.cases, results: world.results, evidence: world.evidenceService, host: world.host })(fixture.expected, world.context)
++    expect(before.status).toBe("ok")
++    if (before.status !== "ok") throw new Error(`Historical candidate unavailable before reopen: ${before.reason}`)
++    const durable = await world.state.read(world.request, "cases", (state) => ({ decision: state.cases[world.caseRef.id], result: state.decisionResults?.[fixture.scenarioResultRef] }))
++    if (durable.status !== "ok" || !durable.value.decision || durable.value.result?.kind !== "scenario") throw new Error("Reopen requires the actual persisted case and original C08 scenario")
++    expect(before.value.scenarioResultRef).toBe(fixture.scenarioResultRef)
++    expect(durable.value.result.requestDigest).toBe(digestSfValue(fixture.candidate.scenario))
++    expect(durable.value.result.resultDigest).toBe(digestSfValue(fixture.candidate.result))
++
++    await world.store.dispose()
++    const reopened = await openLocalStore(world.directory)
++    try {
++      // Only admission/evidence controls are reused. Every store-bound reader below
++      // is rebuilt over the reopened SQLite store; no saved state is seeded into it.
++      const request = new Request(world.request.url)
++      const trusted = { ...world.context, binding: { ...world.context.binding, requestId: "history-reopened-request" }, lease: {} } as typeof world.context
++      const access = { allowed: true, evidence: true }
++      const current = (context: TrustedDomainContext) => access.allowed && context === trusted && !request.signal.aborted
++      const host = { persistence: reopened, requestFor: (context: TrustedDomainContext) => context === trusted ? request : undefined, revalidate: async (context: TrustedDomainContext) => current(context) }
++      const unused = (): never => { throw new Error("Historical reopen must not create or mutate product state") }
++      const state = createSfProductState({
++        persistence: reopened, createId: unused, resolveTarget: async () => undefined,
++        authorize: async (incoming, _snapshot, namespace, mode) => current(trusted) && incoming === request && namespace === "cases" && mode === "read"
++          ? { principalRef: trusted.binding.principalRef, policyVersion: trusted.binding.policyVersion, accessRevision: trusted.binding.accessRevision } : undefined,
++      })
++      const evidence: BusinessContextService = { ...world.evidenceService, context: async (query, context) => {
++        const observed = await world.evidenceService.context(query, context)
++        return access.evidence ? observed : observed.map((item) => ({ ...item, state: "revoked" as const }))
++      } }
++      const authorizeCase: Parameters<typeof createDecisionCasePort>[0]["authorizeCase"] = async (value, context) => current(context) && value.id === world.caseRef.id && value.incarnation === world.caseRef.incarnation && value.participants.includes(context.binding.principalRef)
++      const cases = createDecisionCasePort({
++        state, host, creationTarget: { ref: world.caseRef.id, incarnation: world.caseRef.incarnation },
++        operationIdentity: () => undefined, authorizeCase, verifyScenarioOperations: async (_value, context) => current(context),
++        evidence, createId: unused, now: () => "2026-11-13T00:00:00Z",
++      })
++      const results = createSfDecisionResultStore({
++        state, host, authorizeCase, verifySources: async (_value, refs, context) => current(context) && refs.length > 0 &&
++          refs.every((ref) => digestSfValue(ref) === digestSfValue(world.evidence)) &&
++          (await evidence.context({ refs }, context)).every((item) => item.state === "fresh" || item.state === "historical"),
++        createId: unused, now: () => "2026-11-13T00:00:00Z",
++      })
++      const restored = await state.read(request, "cases", (value) => ({ decision: value.cases[world.caseRef.id], result: value.decisionResults?.[fixture.scenarioResultRef] }))
++      expect(restored).toEqual(durable)
++      const scenario = await results.readHistoricalScenario({ resultRef: fixture.scenarioResultRef }, trusted)
++      expect(scenario).toEqual({ status: "ok", value: durable.value.result })
++      const read = createPortfolioCandidateHistoryReader({ state, cases, results, evidence, host })
++      const recovered = await read(fixture.expected, trusted)
++      expect(recovered).toEqual(before)
++      if (recovered.status !== "ok") throw new Error(`Historical candidate unavailable after reopen: ${recovered.reason}`)
++      expect(recovered.value.originalCaseRef).toEqual(fixture.originalCaseRef)
++      expect(recovered.value.currentCaseRef).toEqual(fixture.currentCaseRef)
++      expect(recovered.value.scenarioResultRef).toBe(fixture.scenarioResultRef)
++      expect(digestSfValue(recovered.value.candidate)).toBe(fixture.expected.candidateDigest)
++      expect(recovered.value.provenanceDigest).toBe(before.value.provenanceDigest)
++
++      access.evidence = false
++      expect(await host.revalidate(trusted)).toBe(true)
++      const revokedEvidence = await read(fixture.expected, trusted)
++      expect(revokedEvidence).toEqual({ status: "unavailable", reason: "case-evidence-unavailable" })
++      expect(Object.hasOwn(revokedEvidence, "value")).toBe(false)
++      access.evidence = true
++      expect(await read(fixture.expected, trusted)).toEqual(before)
++      access.allowed = false
++      const revokedAuthority = await read(fixture.expected, trusted)
++      expect(revokedAuthority).toEqual({ status: "denied", reason: "portfolio-history-candidate-access-unavailable" })
++      expect(Object.hasOwn(revokedAuthority, "value")).toBe(false)
++      access.allowed = true
++      const after = await state.read(request, "cases", (value) => ({ decision: value.cases[world.caseRef.id], result: value.decisionResults?.[fixture.scenarioResultRef] }))
++      expect(after).toEqual(durable)
++    } finally {
++      await reopened.dispose()
++    }
++  } finally {
++    await fixture.world.cleanup()
++  }
++}, 120000)
++
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts
+@@ -30,23 +30,34 @@
+ 
+ const policyCriteria = ["renewal-difference", "renewal-ceiling-240000"] as const
+ 
++type CriterionEvaluationTiming = { calls: number; completed: number; totalElapsedMs: number; maximumElapsedMs: number }
++
+ test("semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed", async () => {
++  const startedAt = Date.now()
++  const criterionTiming: CriterionEvaluationTiming = { calls: 0, completed: 0, totalElapsedMs: 0, maximumElapsedMs: 0 }
++  const logPhase = (phase: string, status?: string) => console.info("[wp13-semantic-phase]", JSON.stringify({ phase, status, elapsedMs: Date.now() - startedAt, criterionEvaluations: { ...criterionTiming } }))
+   const history = await createRenewalChoiceHistory()
+   try {
+-    const before = await composePortfolio(history, history.before)
++    logPhase("compose-before:start")
++    const before = await composePortfolio(history, history.before, criterionTiming)
++    logPhase("compose-before:complete")
+     expect(history.before.baselineScenario.operations).toEqual([])
+     expect(history.before.baselineResult.id.startsWith("source-scenario:")).toBe(true)
+     expect(history.before.baselineResult).toMatchObject({ total: 240000, comparisonStatus: "complete" })
+     expect(before.ceilingRule).toMatchObject({ metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0, unit: "USD", sensitivity: { baselineRef: history.before.baselineRef } })
+     expect(history.before.rule).toMatchObject({ metricRef: "planner:known-subtotal-difference", operator: "lte", value: -20000, unit: "USD", sensitivity: { baselineRef: history.before.baselineRef } })
++    logPhase("baseline:start")
+     const baseline = await before.product.port.evaluate({ ...before.request, candidateRefs: [before.baselineCandidateRef], constraints: [] }, history.fixture.context)
++    logPhase("baseline:complete", baseline.status)
+     if (baseline.status !== "ok") throw new Error(`Source-only baseline portfolio: ${JSON.stringify(baseline)}`)
+     expect(baseline.value.combinations).toHaveLength(1)
+     expect(baseline.value.combinations[0]!.components).toEqual(history.before.baselineResult.components)
+     expect(baseline.value.combinations[0]!.restrictions).toContain("analysis-unavailable")
+     expect(baseline.value.combinations[0]!.eligibility).toBe("conditioned")
+ 
++    logPhase("omitted:start")
+     const omitted = await before.persistent.evaluateAndStore(before.request, history.before.caseRef, history.fixture.context)
++    logPhase("omitted:complete", omitted.status)
+     if (omitted.status !== "ok") throw new Error(`Omitted-training portfolio: ${JSON.stringify(omitted)}`)
+     const original = omitted.value.portfolio.combinations[0]!
+     expect(omitted.value.portfolio.combinations).toHaveLength(1)
+@@ -65,7 +76,9 @@
+     if (originalStored.status !== "ok" || !originalStored.value) throw new Error("Original portfolio C08 unavailable")
+     const originalDigest = digestSfValue(originalStored.value)
+ 
++    logPhase("choose:start")
+     const chosen = await before.choose()
++    logPhase("choose:complete")
+     const choiceDigest = digestSfValue(chosen.choice)
+     expect(chosen.choice.result).toMatchObject({ knownSubtotal: 210000, total: null, comparisonStatus: "conditioned" })
+     expect(chosen.choice.criteria).toEqual(policyCriteria)
+@@ -74,14 +87,20 @@
+     expect((await history.readCase()).preparedChanges).toEqual([])
+     expect((await history.readCase()).receipts).toEqual([])
+ 
++    logPhase("resolve-training:start")
+     const phase = await history.resolveTraining()
++    logPhase("resolve-training:complete")
+     expect(phase.caseRef.id).toBe(history.before.caseRef.id)
+     expect(phase.caseRef.incarnation).toBe(history.before.caseRef.incarnation)
+     expect(phase.caseRef.version).toBeGreaterThan(chosen.caseRef.version)
+     expect(phase.scenario).toMatchObject({ operations: [], assumptions: [] })
+     expect(phase.selectedResult.id.startsWith("source-scenario:")).toBe(true)
+-    const after = await composePortfolio(history, phase, before.ceilingRule.version)
++    logPhase("compose-after:start")
++    const after = await composePortfolio(history, phase, criterionTiming, before.ceilingRule.version)
++    logPhase("compose-after:complete")
++    logPhase("confirmed:start")
+     const confirmed = await after.persistent.evaluateAndStore(after.request, phase.caseRef, history.fixture.context)
++    logPhase("confirmed:complete", confirmed.status)
+     if (confirmed.status !== "ok") throw new Error(`Confirmed-training source portfolio: ${JSON.stringify(confirmed)}`)
+     const current = confirmed.value.portfolio.combinations[0]!
+     expect(current).toMatchObject({ eligibility: "ineligible", comparisonStatus: "complete", analysis: { scenario: { knownSubtotal: 250000, total: 250000, comparisonStatus: "complete", costCoverage: { coverageState: "complete", derivedMissingCategoryIds: [] } }, comparison: { knownDifference: 10000, completeDifference: 10000, comparisonStatus: "complete" } } })
+@@ -144,10 +163,13 @@
+     expect((await after.persistent.read(confirmed.value.portfolioResultRef, history.fixture.context)).status).not.toBe("ok")
+     expect(revokedBaselineReads).toBeGreaterThan(readsAfterRule)
+     expect((await after.coverageFor(phase.baselineScenario.baseRef, history.fixture.context)).status).not.toBe("ok")
+-  } finally { await history.cleanup() }
++  } finally {
++    logPhase("finally")
++    await history.cleanup()
++  }
+ }, 180000)
+ 
+-async function composePortfolio(history: Awaited<ReturnType<typeof createRenewalChoiceHistory>>, phase: Awaited<ReturnType<typeof createRenewalChoiceHistory>>["before"], expectedCeilingRuleVersion = 0) {
++async function composePortfolio(history: Awaited<ReturnType<typeof createRenewalChoiceHistory>>, phase: Awaited<ReturnType<typeof createRenewalChoiceHistory>>["before"], criterionTiming: CriterionEvaluationTiming, expectedCeilingRuleVersion = 0) {
+   const host = history.fixture.host
+   const context = history.fixture.context
+   const writes = new WeakSet<object>()
+@@ -239,7 +261,25 @@
+   // Grants are synthetic fixture authority. Both explicit human rules use the canonical Planner
+   // difference metric; <= 0 is equivalent to the ceiling only for the pinned complete 240000 baseline.
+   const metrics: { read?: ReturnType<typeof createPlannerCriterionMetric> } = {}
+-  const rules = createCriterionRuleRegistry({ state, host, authorizeCase, authorizeRule: async (request, trusted) => trusted.kind === "ui" && request.criterionId === criterion.id && request.metricRef === "planner:known-subtotal-difference" && request.operator === "lte" && request.value === 0 && request.unit === "USD" && request.sensitivity?.baselineRef === phase.baselineRef && await host.revalidate(trusted), verifyEvidence: (rule, trusted) => evidenceCurrent(rule.evidenceRefs, trusted), verifySnapshot, readMetric: (request, trusted) => { if (!metrics.read) throw new Error("Canonical criterion metric not composed"); return metrics.read(request, trusted) }, verifyMetric: (metric, trusted) => evidenceCurrent(metric.evidenceRefs, trusted), operationIdentity: () => `source-ceiling-rule-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
++  const canonicalRules = createCriterionRuleRegistry({ state, host, authorizeCase, authorizeRule: async (request, trusted) => trusted.kind === "ui" && request.criterionId === criterion.id && request.metricRef === "planner:known-subtotal-difference" && request.operator === "lte" && request.value === 0 && request.unit === "USD" && request.sensitivity?.baselineRef === phase.baselineRef && await host.revalidate(trusted), verifyEvidence: (rule, trusted) => evidenceCurrent(rule.evidenceRefs, trusted), verifySnapshot, readMetric: (request, trusted) => { if (!metrics.read) throw new Error("Canonical criterion metric not composed"); return metrics.read(request, trusted) }, verifyMetric: (metric, trusted) => evidenceCurrent(metric.evidenceRefs, trusted), operationIdentity: () => `source-ceiling-rule-${phase.caseRef.version}`, proposalCoverageWrites: writes, now })
++  // Binding validation also evaluates rules outside the Planner comparison's read scope.
++  // Keep each complete canonical readonly evaluation in one fresh root, joining an
++  // existing root only through the same authority-preserving snapshot helper.
++  const rules: typeof canonicalRules = {
++    ...canonicalRules,
++    evaluate: async (request, trusted) => {
++      const startedAt = Date.now()
++      criterionTiming.calls += 1
++      try {
++        return await readPortfolioSnapshot(host, trusted, request, () => canonicalRules.evaluate(request, trusted), { status: "unavailable", reason: "source-criterion-snapshot-unavailable" })
++      } finally {
++        const elapsedMs = Date.now() - startedAt
++        criterionTiming.completed += 1
++        criterionTiming.totalElapsedMs += elapsedMs
++        criterionTiming.maximumElapsedMs = Math.max(criterionTiming.maximumElapsedMs, elapsedMs)
++      }
++    },
++  }
+   metrics.read = createPlannerCriterionMetric({ host, rules, units: phase.issuer, preview: (request, trusted) => comparePlannerPreview({ host, sources, scenarios, planner: previewPlanner }, request, trusted) })
+   if (!phase.rule.sensitivity) throw new Error("Canonical rule units unavailable")
+   const registered = await rules.register({ caseRef: phase.caseRef, criterionId: criterion.id, metricRef: "planner:known-subtotal-difference", operator: "lte", value: 0, unit: "USD", period: phase.selectedResult.horizon, evidenceRefs: phase.rule.sensitivity.sourceRefs, sensitivity: phase.rule.sensitivity, expectedRuleVersion: expectedCeilingRuleVersion }, context)

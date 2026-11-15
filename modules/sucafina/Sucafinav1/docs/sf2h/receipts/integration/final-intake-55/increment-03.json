@@ -1,0 +1,636 @@
+{
+  "schema": "sf2h.final-intake-55.increment.v1",
+  "mission": 55,
+  "increment": 3,
+  "candidate_symbol": "C23",
+  "source": {
+    "mission": 50,
+    "branch": "astra-wp13",
+    "pr": 37,
+    "release": "c01520cb6a09e580897ebdb46e75e40a536b80be",
+    "release_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-final-history/CONSUMER-RELEASE.json",
+    "release_blob": "ed1172d317190a16fb0c10a3fd8ec506a602088a",
+    "state": "TERMINAL_PARTIAL_RELEASE_WITH_HELD_FINDING",
+    "source_authority_ended": true
+  },
+  "decision": "CONSUME_ONLY_RELEASED_P02_HISTORY_CORRECTION",
+  "material": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+      "mode": "100644",
+      "preimage_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+      "preimage_sha256": "cc8dabe132377e30ca307dff6b043aeb61a8b5aba1e8caf30ae97446efbe20ae",
+      "postimage_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+      "postimage_sha256": "30d8a709cdd2e923e143fbb05e8b7522a760b2a4a5c406abbfcfce957845c5d1",
+      "postimage_bytes": 14352,
+      "decision": "EXACT_RELEASED_P02_POSTIMAGE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+      "mode": "100644",
+      "preimage_blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+      "preimage_sha256": "be8ae1e2a86bf99e4641fdd973be7b0f9b921a191d08f19c938efa427b3d09a4",
+      "postimage_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+      "postimage_sha256": "2bd197a13b68b0c374dfaa95c6e36245bb8281633763d35d3e28de882c6fdc49",
+      "postimage_bytes": 39136,
+      "decision": "EXACT_RELEASED_P02_POSTIMAGE"
+    }
+  ],
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-final-history/integration/R1-complete.patch",
+    "blob": "48ca355bca3e67a1a22208436910f41c243678e3",
+    "sha256": "f4f646fd0df5340808944215a446ecf2f4d5e480bb607138994fd4d38205ae79"
+  },
+  "archive": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/portfolio50",
+    "tree": "28ffa511c50a1e4d369a5e4b496af2289687c5da",
+    "files": [
+      {
+        "path": "ACK-50.json",
+        "mode": "100644",
+        "sha": "44b2be89ee8b509e8c2e168e5cae4fa78dd84991",
+        "bytes": 4653
+      },
+      {
+        "path": "AUTHORITY-FINAL.json",
+        "mode": "100644",
+        "sha": "3d81323e2b091beac6247696a798a0b7799fe541",
+        "bytes": 2222
+      },
+      {
+        "path": "CONSUMER-RELEASE.json",
+        "mode": "100644",
+        "sha": "ed1172d317190a16fb0c10a3fd8ec506a602088a",
+        "bytes": 3160
+      },
+      {
+        "path": "HANDOFF-FINAL.md",
+        "mode": "100644",
+        "sha": "dcb77573d73a9b47e5a3e408f035aa2a19d0ff89",
+        "bytes": 12772
+      },
+      {
+        "path": "artifact-index.json",
+        "mode": "100644",
+        "sha": "4a8374eeaad658ef03fdc277283f6e1143e25985",
+        "bytes": 2813
+      },
+      {
+        "path": "checks/REQUEST-45.json",
+        "mode": "100644",
+        "sha": "192fd5971528cfb8b63176e08122588679816b02",
+        "bytes": 10586
+      },
+      {
+        "path": "ci/LEDGER.json",
+        "mode": "100644",
+        "sha": "6c1eb7353a4b8a33549d89f93148dbab52f779bf",
+        "bytes": 9196
+      },
+      {
+        "path": "ci/R1-request.json",
+        "mode": "100644",
+        "sha": "7abd4938446bf3d555440a26924629602fd903d0",
+        "bytes": 322
+      },
+      {
+        "path": "ci/R2-deduplication.json",
+        "mode": "100644",
+        "sha": "82f5fd204c208509bfea9d9eea19908ad1e28748",
+        "bytes": 2811
+      },
+      {
+        "path": "ci/R2-request.json",
+        "mode": "100644",
+        "sha": "f368e4c41c5d05311001960c0af04d282e4fa552",
+        "bytes": 259
+      },
+      {
+        "path": "ci/dispatch-deduplication.json",
+        "mode": "100644",
+        "sha": "05b1d2562feb2af912a6c0f995523f3b4009b1a0",
+        "bytes": 1984
+      },
+      {
+        "path": "criteria68.json",
+        "mode": "100644",
+        "sha": "6af741c2487b1e2da28164c5644bbd6e07c8af00",
+        "bytes": 662198
+      },
+      {
+        "path": "external/analysis-owner/analysis-read-before-bind.patch",
+        "mode": "100644",
+        "sha": "df650cd177349bc44c3aa933d8e907098a5b0384",
+        "bytes": 2093
+      },
+      {
+        "path": "external/analysis-owner/analysis.pre.ts.txt",
+        "mode": "100644",
+        "sha": "347d1c97952167523f9b2b04f1ab4fac7178cc9a",
+        "bytes": 9225
+      },
+      {
+        "path": "external/analysis-owner/analysis.proposed.ts.txt",
+        "mode": "100644",
+        "sha": "9478bca5458f4c796d31f8ec09045b5733125ae7",
+        "bytes": 9201
+      },
+      {
+        "path": "external/analysis-owner/manifest-review.json",
+        "mode": "100644",
+        "sha": "e1af9ba88a9f2616d3872289c17e31d22b57d5db",
+        "bytes": 12597
+      },
+      {
+        "path": "findings/P03-FINAL-DIAGNOSIS.json",
+        "mode": "100644",
+        "sha": "e532a2611f2597e627ab5838adf37aa610f74ed8",
+        "bytes": 8981
+      },
+      {
+        "path": "findings/P03-R1-DIAGNOSIS.json",
+        "mode": "100644",
+        "sha": "db71fb8457f0f6b447c97c06c9a2205bc3e374e1",
+        "bytes": 4015
+      },
+      {
+        "path": "implementation-01.json",
+        "mode": "100644",
+        "sha": "298d1d9b15dec6dc1ca1793eff6ff7d80825bc4c",
+        "bytes": 3550
+      },
+      {
+        "path": "implementation-02.json",
+        "mode": "100644",
+        "sha": "c0874108bdd46a2a4659121a16e86a51785e879e",
+        "bytes": 2038
+      },
+      {
+        "path": "implementation-03.json",
+        "mode": "100644",
+        "sha": "f72b88bc7fdd6491cf8a16101946bc5221344abc",
+        "bytes": 3757
+      },
+      {
+        "path": "integration/P03-fixture.patch",
+        "mode": "100644",
+        "sha": "eaba24021f8f16b5cc186723bd67f1a29a4e0720",
+        "bytes": 9912
+      },
+      {
+        "path": "integration/R1-complete.patch",
+        "mode": "100644",
+        "sha": "48ca355bca3e67a1a22208436910f41c243678e3",
+        "bytes": 10170
+      },
+      {
+        "path": "integration/R1-manifest.json",
+        "mode": "100644",
+        "sha": "99686e5281ebab2afc1a8f171d880ee8e6a9473f",
+        "bytes": 13142
+      },
+      {
+        "path": "integration/complete.patch",
+        "mode": "100644",
+        "sha": "871b32ea6db03d4d3118c675ce52836b813801e6",
+        "bytes": 20268
+      },
+      {
+        "path": "integration/manifest.json",
+        "mode": "100644",
+        "sha": "3ed67fa77e72110b3950613a9dfd2c9811612e33",
+        "bytes": 21811
+      },
+      {
+        "path": "integration/postimages/history-provenance.test.ts.txt",
+        "mode": "100644",
+        "sha": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "bytes": 39136
+      },
+      {
+        "path": "integration/postimages/proof.ts.txt",
+        "mode": "100644",
+        "sha": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "bytes": 14352
+      },
+      {
+        "path": "integration/postimages/semantic-union-source-scenario.test.ts.txt",
+        "mode": "100644",
+        "sha": "82adc95c5eeb8573e1e96cef255b4d26fbff9be7",
+        "bytes": 45377
+      },
+      {
+        "path": "integration/preimages/history-provenance.test.ts.txt",
+        "mode": "100644",
+        "sha": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+        "bytes": 32610
+      },
+      {
+        "path": "integration/preimages/proof.ts.txt",
+        "mode": "100644",
+        "sha": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+        "bytes": 13693
+      },
+      {
+        "path": "integration/preimages/semantic-union-source-scenario.test.ts.txt",
+        "mode": "100644",
+        "sha": "47b5358c8dda3179045499388ce98871576a2aa9",
+        "bytes": 43332
+      },
+      {
+        "path": "logs/R1.log.txt",
+        "mode": "100644",
+        "sha": "3585b6d38a0adb65bc766476e9c08cfacf21c29e",
+        "bytes": 78215
+      },
+      {
+        "path": "logs/R2.log.txt",
+        "mode": "100644",
+        "sha": "2af0e21bff7b7c50f59957279ab50d5adea83a4c",
+        "bytes": 73993
+      },
+      {
+        "path": "receipts/P02.json",
+        "mode": "100644",
+        "sha": "e0bd0b9a98471db633363568093ed6ba52fd00cb",
+        "bytes": 8114
+      },
+      {
+        "path": "receipts/P03.json",
+        "mode": "100644",
+        "sha": "2bb698d6975fba3826cca7afd0e66db234a2fc5c",
+        "bytes": 19342
+      },
+      {
+        "path": "reviews/P03-cold-review.json",
+        "mode": "100644",
+        "sha": "fddcb6f625f535151eee9bc40c082cb870cbda77",
+        "bytes": 562
+      },
+      {
+        "path": "reviews/cold-review-01.json",
+        "mode": "100644",
+        "sha": "0019797679d8de3619c1bb203d671b59d591821d",
+        "bytes": 742
+      }
+    ],
+    "policy": "All38 blobs from pinned terminal50 retained byte-exact, including source failures,68criteria,P03 and external proposals as inert evidence. No54 bytes copied."
+  },
+  "consumer_ACK": {
+    "by": "S0-C / mission55",
+    "state": "ACCEPTED_FOR_MATERIAL_COMPOSITION_PENDING_TARGET_GATES",
+    "candidate_resolution": "C23 is the material commit containing this manifest; subsequent candidates-final.json records exact SHA/tree.",
+    "meaning": "P02 release consumed; source history22PASS remains component-only, no composed approval.",
+    "mechanism": {
+      "proof_complete": true,
+      "complete_patch": true,
+      "history_complete": true,
+      "read_snapshot_complete": true,
+      "production_consumer_complete": true,
+      "original_read_body_preserved": true,
+      "original_twenty_one_tests_preserved_except_import_extensions": true,
+      "new_test_count": 1,
+      "mechanism": "Both provenance observations and all four original authority callbacks remain inside canonical readPortfolioSnapshot. Real LocalStore poisons the entire root on an attempted swallowed write. No awaited callback follows root acceptance.",
+      "tests_meaning": "Existing fourth/final callback attempts a real versioned cases write while authority remains live; regression demands non-ok, attempted write, rejected commit and unchanged durable state; new test disposes/reopens real store, rebuilds readers, verifies original C08 and revocations without reseeding.",
+      "consumer": "createSfPortfolioReconciliationServices uses authority.host directly (full persistence/requestFor/revalidate), invokes historicalCandidate for historical provenance and candidate resolution; keep current consumer39dc82d... unchanged.",
+      "limitations": "Ports lacking persistence keep independent-observation behavior. Component tests do not prove installed host restart/UI/native/MCP. No compiler or product execution by this reviewer."
+    }
+  },
+  "preserve": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "reason": "KEEP_CURRENT",
+      "observed": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "current_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "reason": "KEEP_CURRENT",
+      "observed": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "current_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "reason": "KEEP_CURRENT",
+      "observed": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "current_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "reason": "KEEP_CURRENT",
+      "observed": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "current_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+      "blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "reason": "KEEP_CURRENT",
+      "observed": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "current_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "reason": "KEEP_CURRENT",
+      "observed": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "current_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "reason": "KEEP_CURRENT",
+      "observed": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "current_blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "reason": "KEEP_CURRENT",
+      "observed": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "current_blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "reason": "KEEP_CURRENT",
+      "observed": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "current_blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "reason": "KEEP_CURRENT",
+      "observed": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "current_blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "reason": "KEEP_CURRENT",
+      "observed": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "current_blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "reason": "KEEP_CURRENT",
+      "observed": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "current_blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "reason": "KEEP_CURRENT",
+      "observed": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "current_blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "reason": "KEEP_CURRENT",
+      "observed": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "current_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "reason": "KEEP_CURRENT",
+      "observed": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "current_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "reason": "KEEP_CURRENT",
+      "observed": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "current_blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "reason": "KEEP_CURRENT",
+      "observed": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "current_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "reason": "KEEP_CURRENT",
+      "observed": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "current_blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "reason": "KEEP_CURRENT",
+      "observed": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "current_blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "current_blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "current_blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+      "blob": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "current_blob": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "blob": "0444570a0a961c979f75388fb0708812f98497e5",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "0444570a0a961c979f75388fb0708812f98497e5",
+      "current_blob": "0444570a0a961c979f75388fb0708812f98497e5",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "blob": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "current_blob": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "blob": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "current_blob": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "reason": "PRESERVE_ORIGINAL_POST_DISPATCH_ORACLE; released pre-dispatch variant added under a distinct filename",
+      "observed": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "current_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+      "blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "reason": "PRESERVE_ORIGINAL_POST_DISPATCH_ORACLE; released pre-dispatch variant added under a distinct filename",
+      "observed": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "current_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "reason": "Legacy durable-reservation redispatch conflict remains unchanged and HELD",
+      "observed": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "current_blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "exact": true
+    }
+  ],
+  "dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "disposition": "KEEP_CURRENT canonical helper; copied exactly into historical source because absent there; no target patch",
+      "current_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "introduced_C13": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "disposition": "KEEP_CURRENT Finance34",
+      "current_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "disposition": "KEEP_CURRENT",
+      "current_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+      "assertions": 72,
+      "budget_ms": 180000,
+      "disposition": "KEEP_CURRENT_P03_HELD",
+      "current_blob": "47b5358c8dda3179045499388ce98871576a2aa9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "budget_ms": 180000,
+      "disposition": "KEEP_CURRENT original phase guard",
+      "blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "current_blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "blob": "39dc82d505931daf927b35230341ac99fdc7e09d",
+      "disposition": "KEEP_CURRENT production raw reader caller",
+      "current_blob": "39dc82d505931daf927b35230341ac99fdc7e09d"
+    }
+  ],
+  "source_evidence": {
+    "W1": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+    "treeW1": "47e2d418566704e49c70286bf32e05e01feb9218",
+    "S1": "c2bb42ba3f1be357b51045f4d827911b86596847",
+    "run1": 43653550785,
+    "job1": 132627055702,
+    "history": "22 PASS",
+    "combined": "22 PASS 1 FAIL 1 ERROR; P03 failed180013.86ms",
+    "W2": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+    "run2": 43654501551,
+    "job2": 132629953065,
+    "P03": "0 PASS 1 FAIL 1 ERROR180020.75ms; no P03 closure",
+    "run_metadata": [
+      {
+        "run": 43653550785,
+        "head_sha": "c2bb42ba3f1be357b51045f4d827911b86596847",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1
+      },
+      {
+        "run": 43654501551,
+        "head_sha": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1
+      }
+    ],
+    "source_green_transfers": false
+  },
+  "held": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "proposed_blob": "82adc95c5eeb8573e1e96cef255b4d26fbff9be7",
+      "decision": "HOLD_P03_FIXTURE",
+      "reason": "Explicit50 release holds P03;54 is active owner."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "proposed_blob": "9478bca5458f4c796d31f8ec09045b5733125ae7",
+      "decision": "INERT_PROPOSAL_NOT_APPLIED",
+      "reason": "50 never proved performance;54 active06df1210... is not released."
+    }
+  ],
+  "qualification": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "CI": "NOT_DISPATCHED",
+    "AM": "NOT_RUN",
+    "checks_owner": 45,
+    "epic_acceptance_owner": "S0",
+    "GLOBAL_RELEASE": false
+  },
+  "preservation": {
+    "C20_and_eight_prior_intakes": true,
+    "C21_Agenda39": true,
+    "C22_Microsoft49": true,
+    "P01_28_KEEP": true,
+    "original_final_CAS_oracle": true,
+    "original_P03_72_assertions": true,
+    "original_P03_budget_ms": 180000,
+    "original_post_dispatch_oracles": true,
+    "Memory40": true
+  },
+  "publication": "GitHub MCP tree+commit+CAS expected_sha force:false; selective2-file released P02 only, no source ref mutation or execution.",
+  "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+  "parent_tree": "3f065ae6a43af17680ce18ee79aa067986cf8920",
+  "preimage_continuity": "Both exact source preimages verified at terminal47 and C21. C22 complete51-file diff changes neither P02 target nor its20 unique direct import targets; original28KEEP and dependent Finance34/local-store remain unchanged."
+}

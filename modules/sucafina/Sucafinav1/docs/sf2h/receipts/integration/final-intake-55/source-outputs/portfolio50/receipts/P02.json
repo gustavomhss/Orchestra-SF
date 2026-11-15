@@ -1,0 +1,145 @@
+{
+  "criterion_id": [
+    "WP13.INV.10",
+    "WP13.QLT.10",
+    "WP13.T01.DOD.01",
+    "WP13.T02.QLT.18",
+    "WP13.T04.CHK.03",
+    "WP13.T04.CMP.01"
+  ],
+  "entity_id": "M50-P02-HISTORY",
+  "scope": "Controlled component/canonical C08 + real SQLite reopen; not installed/native",
+  "status": "PASS",
+  "candidate_sha": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+  "actor_or_role": "S4-C Portfolio continuation50",
+  "fixture_id": "history-provenance.test.ts@09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+  "entrypoint_or_action": "createPortfolioCandidateHistoryReader/createPortfolioHistoricalProvenance; real authorized C08 CAS on fourth callback; close/reopenLocalStore",
+  "expected": "Histórico conserva binding original, C08 request/result ancestry, ledger da escolha e fonte autorizada; recusa substituições, revogação, versão futura, ambiguidade e CAS ocorrido no último callback. A missão50 também exige caminho positivo de reabertura com persistência/consumidor reconstruídos, sem equiparar isso a processo/host reiniciado.",
+  "observed": {
+    "status": "PASS",
+    "pass": 22,
+    "fail": 0,
+    "final_CAS_ms": 319.28,
+    "reopen_ms": 402.17
+  },
+  "evidence_uri": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653550785/job/132627055702",
+  "reviewer": "root50 actual Actions log review; review_p02 independent static source/patch/authority review",
+  "verified_at": "2026-11-14T23:35:08Z",
+  "product_candidate_sha": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+  "ci_snapshot_sha": "c2bb42ba3f1be357b51045f4d827911b86596847",
+  "ci_request_hash": "7abd4938446bf3d555440a26924629602fd903d0",
+  "contract_version": {
+    "decision_result": "sf-decision-result-v1",
+    "portfolio_binding": "sf-portfolio-binding-v1",
+    "comparison_binding": "sf-criterion-comparison-v1"
+  },
+  "producer_refs": [
+    "createDecisionMutations.addAlternative",
+    "createSfDecisionResultStore.readHistoricalScenario",
+    "createDecisionCasePort.read",
+    "createSfProductState.read/transaction",
+    "openLocalStore",
+    "readPortfolioSnapshot"
+  ],
+  "consumer_entrypoint": "createPortfolioCandidateHistoryReader; canonical CLI caller portfolio-reconciliation-services.ts preserved at39dc82d5",
+  "execution_actor": "GitHub Actions test-ci / test (ubuntu-24.04)",
+  "logical_owner": "Mission50 with47 sole target integrator",
+  "writer_lease": "portfolio-history-browser50",
+  "contract_versions": {
+    "decision_result": "sf-decision-result-v1",
+    "portfolio_binding": "sf-portfolio-binding-v1",
+    "comparison_binding": "sf-criterion-comparison-v1"
+  },
+  "profile_id": "N/A: controlled component fixture, no installed profile",
+  "profile_version": "N/A: no installed profile",
+  "skill_ids": "N/A: direct TypeScript entrypoints, no native skill dispatch",
+  "skill_versions": "N/A: no native skill dispatch",
+  "skill_digests": "N/A: no native skill dispatch",
+  "source_paths": [
+    "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts"
+  ],
+  "bundle_digest": "f4f646fd0df5340808944215a446ecf2f4d5e480bb607138994fd4d38205ae79",
+  "effective_model": "GPT-6 Astra Pro (authoring/review; not product runtime)",
+  "native_session_id": "N/A: no native session involved",
+  "case_id": "case (canonical-store tests); synthetic historical-port cases additionally documented in fixture",
+  "case_version": "Multiple test-specific original/current revisions, explicitly compared by assertions; no single resident case cohort",
+  "case_incarnation": "case-incarnation (canonical-store fixture)",
+  "mcp_server_generation": "N/A: no installed MCP server invoked",
+  "mcp_operation": "N/A: TypeScript component entrypoints",
+  "domain_port": "Canonical DecisionCasePort/result store + controlled evidence grants",
+  "domain_call_id": "N/A: multiple fixture-local calls; per-test titles retained",
+  "runtime_build_sha": "N/A: Bun directly executes checkout S; no installed build produced",
+  "atlas_engine_baseline": "N/A: no Atlas engine execution",
+  "atlas_boundary_version": "N/A: no Atlas boundary invocation",
+  "business_schema_version": {
+    "decision_result": "sf-decision-result-v1",
+    "portfolio_binding": "sf-portfolio-binding-v1",
+    "comparison_binding": "sf-criterion-comparison-v1"
+  },
+  "scanner_binary_version": "N/A: no scanner invoked",
+  "access_revision": "access (canonical-store fixture), access-7 (synthetic provenance ports), denied/revoked variants",
+  "expected_selection": [
+    "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+    "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+  ],
+  "selected_files": [
+    "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "Sucafinav1/test/product/wp13/history-provenance.test.ts"
+  ],
+  "measured_duration_seconds": {
+    "selected_run": 182.49,
+    "history_individual_ms": {
+      "status": "PASS",
+      "pass": 22,
+      "fail": 0,
+      "final_CAS_ms": 319.28,
+      "reopen_ms": 402.17
+    },
+    "history_file_duration_not_reported": true
+  },
+  "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+  "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
+  "run_id": 43653550785,
+  "job_id": 132627055702,
+  "run_attempt": 1,
+  "selected_test_titles": [
+    "accepts an original binding and selection when current case and evidence remain authorized",
+    "allows preserved evidence after a source change while the case remains at the original version",
+    "rejects a preserved result from a future case version",
+    "rejects a candidate whose case incarnation was replaced",
+    "rejects revoked historical sources",
+    "rejects a historical candidate missing from the authorized case",
+    "rejects a same-version alternative whose original payload changed",
+    "rejects ambiguous duplicate alternatives and a case older than the candidate",
+    "rejects a binding supplied for a different current owner case",
+    "keeps the first candidate observation when the provider reuses mutable objects",
+    "keeps the case snapshot before awaiting a historical candidate provider that reuses the same object",
+    "rejects caller mutation during historical provenance verification",
+    "rejects an owner observation changed during the first binding read",
+    "rejects a binding whose digest does not cover its contents",
+    "rejects a selection that differs from the binding proof",
+    "rejects a binding that changes between provenance passes",
+    "historical portfolio reads the original C08 candidate after WP11 replaces alternative v1 with v2",
+    "historical candidate rejects a naked digest when the original C08 case snapshot and choice are absent",
+    "historical candidate rejects changed C08 request ancestry and revoked evidence",
+    "historical chosen candidate requires the exact WP11 choice ledger and its original C08 scenario",
+    "historical candidate refuses a real case CAS in its last callback while the authority remains live",
+    "historical candidate reloads original C08 provenance after LocalStore reopen and rechecks current access"
+  ],
+  "assertion_count_observed": {
+    "entire_R1": 103,
+    "per_history_file": "Not separately reported; no inferred assertion count"
+  },
+  "source_tree_sha": "f936282abb7cdd1fd96170e550e8ce59a03096f0",
+  "candidate_tree_sha": "47e2d418566704e49c70286bf32e05e01feb9218",
+  "request_manifest_blob": "7abd4938446bf3d555440a26924629602fd903d0",
+  "result_artifact_sha256": "8c41459fdc43db360863ad3a72477abcb7a3ef91818ecb2d15d0352a0215411e",
+  "applicability_by_field": {
+    "native_profile_skill_MCP_Atlas_scanner_build": "N/A for this controlled component scope; therefore no corresponding integrated criterion is closed",
+    "case_cohort": "Fixture-local multiple revisions; exact provenance and current/original tuples asserted in test, not a resident campaign tuple",
+    "assertion_count": "103 belongs to combined R1. History22PASS verified from individual test lines; P03FAIL retained."
+  },
+  "full_criterion_closed": false
+}

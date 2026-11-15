@@ -1,0 +1,43 @@
+{
+  "schema": "sf2h.portfolio-final-history.implementation.v1",
+  "mission": 50,
+  "epoch": "portfolio-history-browser50",
+  "parent": "a97b78dc42424aa66385732416aa02518ecdb9b8",
+  "change": "Add real LocalStore reopen to original history regression suite",
+  "original_history_blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+  "preservation": {
+    "original_full_test_body": true,
+    "only_imports_extended": true,
+    "original_final_CAS_test_unchanged": true,
+    "original_budget_120000_unchanged": true,
+    "existing_tests": 21,
+    "added_tests": 1
+  },
+  "added_proof": [
+    "Real dispose/openLocalStore; recreate state/cases/results/history reader against reopened store; no seed",
+    "Read the original persisted C08 and preserve full state, original/current case refs, request/result/candidate/provenance digests",
+    "Evidence revocation with authority live refuses value; restoring evidence recovers; authority revocation refuses value; durable state unchanged"
+  ],
+  "static_review": {
+    "root": "Reviewed complete proposed addition, mechanical byte-prefix preservation of prior suite",
+    "independent": "review_p02 verified types and idempotent disposal, no local execution"
+  },
+  "target_reconciliation": {
+    "C18": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "tree": "8563e04f8751ed786ccdbc086ed6566c410af3fe",
+    "authority47_blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "increment06_blob": "a724e806a64ed070404e827cbf694da8ea53cbc4",
+    "decision": "Use exact C18+two owned paths for hosted candidate; preserve47's original post-reservation tests and separate renamed43 variants",
+    "history_and_P03_equal43": true,
+    "proof_preimage_unchanged": true,
+    "Finance34_in_ancestry": true
+  },
+  "scope": "Controlled grants and evidence fixture; canonical persisted state/result/case producers, not installed/native/whole-WP acceptance",
+  "execution": {
+    "local_tests": 0,
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}

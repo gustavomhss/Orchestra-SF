@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h.portfolio-final-history.p03-diagnosis.v1",
+  "mission": 50,
+  "state": "ROOT_CAUSE_BOUNDARY_IDENTIFIED_OWNED_FIX_UNDER_REVIEW",
+  "candidate": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+  "tree": "47e2d418566704e49c70286bf32e05e01feb9218",
+  "C18": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+  "Finance34_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+  "run": 43653550785,
+  "job": 132627055702,
+  "outcome": {
+    "status": "FAIL",
+    "duration_ms": 180013.86,
+    "budget_ms": 180000,
+    "phase": "before.persistent.evaluateAndStore omitted result before line50",
+    "guard_ms": 180003,
+    "late_status": "stale",
+    "late_reason": "comparison-rule-or-source-changed"
+  },
+  "observed": {
+    "bootstrap_ms": 51,
+    "prepare_omitted_complete_ms": 5545,
+    "deadline_ms": 180003,
+    "c08_read_cases": {
+      "calls": 9866,
+      "elapsed_ms": 59558,
+      "maximum_ms": 21
+    },
+    "host_revalidate": {
+      "calls": 119888,
+      "elapsed_ms": 6834
+    },
+    "verify_operation": {
+      "calls": 3828,
+      "elapsed_ms": 48272
+    },
+    "verify_source_only": {
+      "calls": 3828,
+      "elapsed_ms": 7123
+    },
+    "source_projection": {
+      "calls": 7656,
+      "elapsed_ms": 5173
+    },
+    "cases_transactions_before": 5,
+    "cases_transactions_deadline": 6
+  },
+  "demonstrated": [
+    "Original P03 unchanged with72expect lines and180000 budgets failed on actualFinance34 C18",
+    "First omitted portfolio result did not return before deadline; later250000 semantic assertions not reached",
+    "Original history fixture prepared omitted input in5545ms; remaining work amplifies canonical reads/revalidations",
+    "A new C08 comparison write occurred; late stale reason is not independent proof of binding corruption",
+    "Planner persistence masks an unsuccessful bind as comparison-persisted-but-binding-unavailable. R1 instead reports a direct read-binding stale reason; post-bind reread is supported, exact ordinal is not yet instrumented."
+  ],
+  "telemetry_limits": [
+    "Counters wrap history.state; composePortfolio uses another state. preferences transaction count3 cannot prove no binding commit.",
+    "Counts/elapsed of overlapping operations are cumulative and not disjoint wall-time attribution.",
+    "No exact microprofile of currentSnapshots/clone costs yet; these are static mechanism hypotheses.",
+    "R1 late comparison-rule-or-source-changed is a read-binding rejection after the guard; read-policy checks still execute. It is not a demonstrated semantic corruption or proof that the binding was never committed."
+  ],
+  "causal_boundary": {
+    "file": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+    "blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+    "mechanism": "validate invokes fixture verifyBinding under planner.compareScenarios snapshot, then invokes each rules.evaluate after that root ends. Direct rule evaluation expands metric/issuer/preview C08 reads without a shared readonly root; every binding read repeats validation twice. Producer persist and analysis add further actual replays.",
+    "disposition": "Do not edit shared producer; scoped fixture rules.evaluate wrapper can reuse existing readPortfolioSnapshot while preserving raw register/resolve, every evaluation and source check."
+  },
+  "before_any_repeat": [
+    "Independent cold review of readonly scope and all72literalassertions/budgets",
+    "Material owned fixture change + cheap phase/counter diagnostics, no unchanged retry",
+    "NewW/S/request and freshactive-run dedup; onlyP03 selection becauseP02 paths and base remain identical"
+  ],
+  "stop_rule": "At most one correction qualification after R1 under this diagnosis; if stillfails, preserveFAIL and hand exact shared producer patch to47/owner rather than another unchangedlongrun",
+  "possible_external_owner_work": [
+    "read-only comparison/analysis validation amplification",
+    "LocalStore/currentSnapshots clone costs"
+  ],
+  "GLOBAL_RELEASE": false
+}

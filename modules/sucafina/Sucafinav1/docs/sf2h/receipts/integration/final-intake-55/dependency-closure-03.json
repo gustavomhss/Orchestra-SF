@@ -1,0 +1,1029 @@
+{
+  "schema": "sf2h.final-intake-55.dependency-closure.v1",
+  "increment": 3,
+  "candidate_symbol": "C23",
+  "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+  "source_release": "c01520cb6a09e580897ebdb46e75e40a536b80be",
+  "direct_imports": {
+    "schema": "mission55-portfolio50-P02-direct-import-closure/v1",
+    "repository": "gustavomhss/Orchestra-SF",
+    "scope": "Direct literal relative imports in exactly two P02 postimages. No transitive traversal.",
+    "base": {
+      "symbol": "C21",
+      "commit": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e"
+    },
+    "planned_C22": {
+      "scope_provided_by_root": [
+        "runtime/entra-client",
+        "runtime/local-contract",
+        "runtime/local-identity",
+        "runtime/microsoft-*",
+        "local/entry",
+        "CLI installation/serve",
+        "Microsoft and entra tests",
+        "Microsoft guide"
+      ],
+      "provided_local_contract_postblob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "local_contract_direct_edge_count": 0,
+      "direct_targets_in_declared_C22_change_scope": [],
+      "caveat": "C22 has not been fetched or claimed verified by this helper. Root supplied future edit scope. No direct dependency in that declared scope; local-store.ts is unchanged by the supplied scope."
+    },
+    "source_inputs": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base_preimage_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+        "postimage_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "source_postimage_bytes": 14352
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "mode": "100644",
+        "type": "blob",
+        "base_preimage_blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+        "postimage_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "source_postimage_bytes": 39136
+      }
+    ],
+    "counts": {
+      "total_import_edges": 29,
+      "relative_import_edges": 28,
+      "unique_relative_targets": 20,
+      "C21_targets": 19,
+      "overlay_targets": 1,
+      "missing": 0,
+      "unexpected_modes": 0
+    },
+    "result": "COMPLETE_STATIC_DIRECT_RELATIVE_IMPORT_CLOSURE",
+    "edges": [
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 1,
+        "specifier": "../contracts/canonical.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 2,
+        "specifier": "../contracts/schema-admission.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 3,
+        "specifier": "../contracts/business-context.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "blob": "102c849084980ae52223809d33bdeea36a58536b",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 4,
+        "specifier": "../contracts/decisions.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 5,
+        "specifier": "../contracts/ports.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 6,
+        "specifier": "../contracts/sf-execution.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 7,
+        "specifier": "../contracts/state.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 8,
+        "specifier": "../decisions/result-store.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 9,
+        "specifier": "../decisions/case-port.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 10,
+        "specifier": "./candidates.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+        "blob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 11,
+        "specifier": "./port.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "source_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "line": 12,
+        "specifier": "./read-snapshot.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 1,
+        "specifier": "../../../product/decisions/result-store.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 2,
+        "specifier": "../../../product/host-binding/state-provider.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "e523b3ba2e93fad185c015b4458bee2ba669d0a0",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 3,
+        "specifier": "../../../runtime/local-store.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "c719172c21c1497d5ab8c7455aad1bc0095251e6",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 4,
+        "specifier": "../../../product/decisions/coverage-access.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+        "blob": "25e6056021a20cbdd1a3608fda515d77e052327f",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 5,
+        "specifier": "../../../product/decisions/mutations.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "blob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 6,
+        "specifier": "../../../product/decisions/portfolio-bindings.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+        "blob": "8815cc1fc27b570d241e2dd464d925eff05e5455",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 7,
+        "specifier": "../../../product/portfolio/candidates.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+        "blob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 8,
+        "specifier": "../../../product/portfolio/proof.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "P02_POSTIMAGE_OVERLAY",
+        "preimage_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 9,
+        "specifier": "./sensitivity-fixture.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+        "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "6832ff5943c964592feccbb6f4ce9bb13855698b",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 10,
+        "specifier": "bun:test",
+        "relative": false,
+        "resolved_path": null,
+        "resolution": "BUILTIN_EXTERNAL_NOT_RELATIVE",
+        "blob": null,
+        "mode": null,
+        "type": null
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 11,
+        "specifier": "../../../product/contracts/canonical.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 12,
+        "specifier": "../../../product/contracts/business-context.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "blob": "102c849084980ae52223809d33bdeea36a58536b",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 13,
+        "specifier": "../../../product/contracts/ports.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 14,
+        "specifier": "../../../product/contracts/state.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 15,
+        "specifier": "../../../product/contracts/sf-execution.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 16,
+        "specifier": "../../../product/decisions/case-port.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "from": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "source_blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+        "line": 17,
+        "specifier": "../../../product/portfolio/history-provenance.ts",
+        "relative": true,
+        "resolved_path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      }
+    ],
+    "targets": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "blob": "102c849084980ae52223809d33bdeea36a58536b",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+        "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/candidates.ts",
+        "blob": "5a56fb5305e64922af8b6b3246b8807256e79138",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+        "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "e523b3ba2e93fad185c015b4458bee2ba669d0a0",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "c719172c21c1497d5ab8c7455aad1bc0095251e6",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts",
+        "blob": "25e6056021a20cbdd1a3608fda515d77e052327f",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+        "blob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/portfolio-bindings.ts",
+        "blob": "8815cc1fc27b570d241e2dd464d925eff05e5455",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "P02_POSTIMAGE_OVERLAY",
+        "preimage_blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+        "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "6832ff5943c964592feccbb6f4ce9bb13855698b",
+        "origin": "C21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/history-provenance.ts",
+        "blob": "caa3b783b41f95287bba8a4bab3c652c8375c320",
+        "mode": "100644",
+        "type": "blob",
+        "parent_tree": "32e742fb06d27bae032555549e35266ff285f591",
+        "origin": "C21"
+      }
+    ],
+    "directory_pins": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts",
+        "sha": "61bd54abd18a5c127eb96477cee4f27d4c10e183",
+        "truncated": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions",
+        "sha": "25dff3d3099c388acd39574efc1db3c727bb51c3",
+        "truncated": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio",
+        "sha": "32e742fb06d27bae032555549e35266ff285f591",
+        "truncated": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding",
+        "sha": "e523b3ba2e93fad185c015b4458bee2ba669d0a0",
+        "truncated": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime",
+        "sha": "c719172c21c1497d5ab8c7455aad1bc0095251e6",
+        "truncated": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13",
+        "sha": "6832ff5943c964592feccbb6f4ce9bb13855698b",
+        "truncated": false
+      }
+    ],
+    "execution_qualification": "NOT_RUN; static identity closure only, not typechecking or functional approval",
+    "operations": {
+      "remote_reads": "GitHub MCP GET only",
+      "remote_writes": 0,
+      "tests": 0,
+      "typechecks": 0,
+      "guards": 0,
+      "CI": 0,
+      "AM": 0,
+      "product_execution": 0,
+      "census": false,
+      "polling": false,
+      "transitive_reads": false
+    }
+  },
+  "continuity": "Import resolution pinned to C21+P02 overlay. C22 exact51-file diff contains no P02 direct importer target; all resolved target blobs remain valid in C23. No runtime claim is inferred.",
+  "real_consumer": "createSfPortfolioReconciliationServices uses authority.host directly (full persistence/requestFor/revalidate), invokes historicalCandidate for historical provenance and candidate resolution; keep current consumer39dc82d... unchanged.",
+  "mechanism": "Both provenance observations and all four original authority callbacks remain inside canonical readPortfolioSnapshot. Real LocalStore poisons the entire root on an attempted swallowed write. No awaited callback follows root acceptance.",
+  "preserved_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+      "disposition": "KEEP_CURRENT canonical helper; copied exactly into historical source because absent there; no target patch",
+      "current_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "introduced_C13": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "disposition": "KEEP_CURRENT Finance34",
+      "current_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "disposition": "KEEP_CURRENT",
+      "current_blob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+      "assertions": 72,
+      "budget_ms": 180000,
+      "disposition": "KEEP_CURRENT_P03_HELD",
+      "current_blob": "47b5358c8dda3179045499388ce98871576a2aa9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "budget_ms": 180000,
+      "disposition": "KEEP_CURRENT original phase guard",
+      "blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "current_blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-reconciliation-services.ts",
+      "blob": "39dc82d505931daf927b35230341ac99fdc7e09d",
+      "disposition": "KEEP_CURRENT production raw reader caller",
+      "current_blob": "39dc82d505931daf927b35230341ac99fdc7e09d"
+    }
+  ],
+  "preserved_28": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "reason": "KEEP_CURRENT",
+      "observed": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "current_blob": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "reason": "KEEP_CURRENT",
+      "observed": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "current_blob": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "reason": "KEEP_CURRENT",
+      "observed": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "current_blob": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "reason": "KEEP_CURRENT",
+      "observed": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "current_blob": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+      "blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "reason": "KEEP_CURRENT",
+      "observed": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "current_blob": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "reason": "KEEP_CURRENT",
+      "observed": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "current_blob": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "reason": "KEEP_CURRENT",
+      "observed": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "current_blob": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "reason": "KEEP_CURRENT",
+      "observed": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "current_blob": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "reason": "KEEP_CURRENT",
+      "observed": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "current_blob": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "reason": "KEEP_CURRENT",
+      "observed": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "current_blob": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "reason": "KEEP_CURRENT",
+      "observed": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "current_blob": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "reason": "KEEP_CURRENT",
+      "observed": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "current_blob": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "reason": "KEEP_CURRENT",
+      "observed": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "current_blob": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "reason": "KEEP_CURRENT",
+      "observed": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "current_blob": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "reason": "KEEP_CURRENT",
+      "observed": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "current_blob": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "reason": "KEEP_CURRENT",
+      "observed": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "current_blob": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "reason": "KEEP_CURRENT",
+      "observed": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "current_blob": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "reason": "KEEP_CURRENT",
+      "observed": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "current_blob": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "reason": "KEEP_CURRENT",
+      "observed": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "current_blob": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "current_blob": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "current_blob": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+      "blob": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "current_blob": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "blob": "0444570a0a961c979f75388fb0708812f98497e5",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "0444570a0a961c979f75388fb0708812f98497e5",
+      "current_blob": "0444570a0a961c979f75388fb0708812f98497e5",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "blob": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "current_blob": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "blob": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "reason": "P01_ALREADY_INTEGRATED",
+      "observed": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "current_blob": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "reason": "PRESERVE_ORIGINAL_POST_DISPATCH_ORACLE; released pre-dispatch variant added under a distinct filename",
+      "observed": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "current_blob": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+      "blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "reason": "PRESERVE_ORIGINAL_POST_DISPATCH_ORACLE; released pre-dispatch variant added under a distinct filename",
+      "observed": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "current_blob": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "reason": "Legacy durable-reservation redispatch conflict remains unchanged and HELD",
+      "observed": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "current_blob": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "exact": true
+    }
+  ],
+  "source_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-final-history/integration/R1-complete.patch",
+    "blob": "48ca355bca3e67a1a22208436910f41c243678e3",
+    "sha256": "f4f646fd0df5340808944215a446ecf2f4d5e480bb607138994fd4d38205ae79"
+  },
+  "held": {
+    "P03": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "proposed_blob": "82adc95c5eeb8573e1e96cef255b4d26fbff9be7",
+        "decision": "HOLD_P03_FIXTURE",
+        "reason": "Explicit50 release holds P03;54 is active owner."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "proposed_blob": "9478bca5458f4c796d31f8ec09045b5733125ae7",
+        "decision": "INERT_PROPOSAL_NOT_APPLIED",
+        "reason": "50 never proved performance;54 active06df1210... is not released."
+      }
+    ],
+    "original_budget_ms": 180000,
+    "original_assertions": 72,
+    "owner": 54,
+    "analysis_state": "No ongoing54 or inert50 proposal applied.",
+    "legacy_post_dispatch": "Original two post-reservation handoff tests and domain request-stability hold remain unchanged."
+  },
+  "checks45": {
+    "owner": 45,
+    "target": "Exact C23 W/tree or later explicitly reconciled material candidate",
+    "commands": [
+      {
+        "cwd": "modules/sucafina",
+        "command": "bun typecheck"
+      },
+      {
+        "cwd": ".",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "whole_mission45_scope_preserved": true,
+    "execution": "NOT_RUN"
+  },
+  "functional_qualifier_inputs": {
+    "owner": "S0 / separately authorized qualifier, not mission55 and not compiler-only45",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "original_source_request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "limit": "The source combined run failedP03;22historyPASS does not relabel aggregate failure, qualify C23, or close installed restart/UI/native proof."
+  },
+  "no_pass_transfer": true,
+  "execution": {
+    "product": false,
+    "tests": false,
+    "typechecks": false,
+    "build": false,
+    "guards": false,
+    "preflight": false,
+    "CI": false,
+    "AM": false
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,288 @@
+{
+  "schema": "sf2h.portfolio-final-history.ci-ledger.v1",
+  "mission": 50,
+  "runs": [
+    {
+      "id": "R1",
+      "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+      "tree": "47e2d418566704e49c70286bf32e05e01feb9218",
+      "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
+      "S_tree": "275841f22701b3c464e869b2e353f07873aa2c5e",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_blob": "7abd4938446bf3d555440a26924629602fd903d0",
+      "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653550785",
+      "actual_file_order": [
+        "semantic-union-source-scenario.test.ts",
+        "history-provenance.test.ts"
+      ],
+      "outcome": {
+        "status": "FAIL",
+        "tests": 23,
+        "files": 2,
+        "pass": 22,
+        "fail": 1,
+        "errors": 1,
+        "expect_calls": 103,
+        "duration_seconds": 182.49,
+        "by_file": {
+          "history_provenance": {
+            "status": "PASS",
+            "pass": 22,
+            "fail": 0,
+            "final_CAS_ms": 319.28,
+            "reopen_ms": 402.17
+          },
+          "semantic_union": {
+            "status": "FAIL",
+            "duration_ms": 180013.86,
+            "budget_ms": 180000,
+            "phase": "before.persistent.evaluateAndStore omitted result before line50",
+            "guard_ms": 180003,
+            "late_status": "stale",
+            "late_reason": "comparison-rule-or-source-changed"
+          }
+        },
+        "run": 43653550785,
+        "job": 132627055702,
+        "cleanup_job": 132628306934,
+        "cleanup": "PASS",
+        "control": {
+          "nonce": "a0fdd0d90f104afcc799143ae0f577da",
+          "nonce_count": 1,
+          "verdict_count": 1,
+          "verdict": "2026-11-14T23:35:00.5407491Z omni positive control [a0fdd0d90f104afcc799143ae0f577da]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "valid": true
+        }
+      },
+      "log": {
+        "path": "logs/R1.log.txt",
+        "sha256": "8c41459fdc43db360863ad3a72477abcb7a3ef91818ecb2d15d0352a0215411e",
+        "bytes": 78215,
+        "git_blob": "3585b6d38a0adb65bc766476e9c08cfacf21c29e"
+      }
+    },
+    {
+      "id": "R2",
+      "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+      "tree": "0d655fcddbbc708ba7aa01fcdee1c2699f5e9e08",
+      "S": "25b84a8703bc3d8062b922ca79ad8efb9dbf5b45",
+      "S_tree": "865addc63c07e2a04c039baf1aea35046f7cffc1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "packageSelector": "packages/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "request_blob": "f368e4c41c5d05311001960c0af04d282e4fa552",
+      "run": 43654501551,
+      "job": 132629953065,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654501551",
+      "outcome": {
+        "status": "FAIL",
+        "tests": 1,
+        "files": 1,
+        "pass": 0,
+        "fail": 1,
+        "errors": 1,
+        "expect_calls": 24,
+        "duration_seconds": 180.19,
+        "test_duration_ms": 180020.75,
+        "budget_ms": 180000,
+        "guard_ms": 180001,
+        "late_status": "stale",
+        "late_reason": "comparison-rule-or-source-changed",
+        "phase": "First omitted evaluateAndStore; full omitted result not admitted",
+        "phases": [
+          {
+            "phase": "compose-before:start",
+            "elapsedMs": 5507,
+            "criterionEvaluations": {
+              "calls": 0,
+              "completed": 0,
+              "totalElapsedMs": 0,
+              "maximumElapsedMs": 0
+            }
+          },
+          {
+            "phase": "compose-before:complete",
+            "elapsedMs": 28187,
+            "criterionEvaluations": {
+              "calls": 12,
+              "completed": 12,
+              "totalElapsedMs": 18242,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "baseline:start",
+            "elapsedMs": 28187,
+            "criterionEvaluations": {
+              "calls": 12,
+              "completed": 12,
+              "totalElapsedMs": 18242,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "baseline:complete",
+            "status": "ok",
+            "elapsedMs": 43213,
+            "criterionEvaluations": {
+              "calls": 20,
+              "completed": 20,
+              "totalElapsedMs": 30266,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "omitted:start",
+            "elapsedMs": 43213,
+            "criterionEvaluations": {
+              "calls": 20,
+              "completed": 20,
+              "totalElapsedMs": 30266,
+              "maximumElapsedMs": 1544
+            }
+          },
+          {
+            "phase": "omitted:complete",
+            "status": "stale",
+            "elapsedMs": 180015,
+            "criterionEvaluations": {
+              "calls": 104,
+              "completed": 104,
+              "totalElapsedMs": 164328,
+              "maximumElapsedMs": 3065
+            }
+          },
+          {
+            "phase": "finally",
+            "elapsedMs": 180015,
+            "criterionEvaluations": {
+              "calls": 104,
+              "completed": 104,
+              "totalElapsedMs": 164328,
+              "maximumElapsedMs": 3065
+            }
+          }
+        ],
+        "trace": {
+          "label": "renewal-choice-history",
+          "phase": "prepare:transition-omitted:complete",
+          "elapsedMs": 180001,
+          "budgetMs": 180000,
+          "status": "deadline-exceeded",
+          "counts": {
+            "c08.read.cases": {
+              "calls": 9721,
+              "elapsedMs": 54946,
+              "maximumMs": 20
+            },
+            "host.revalidate": {
+              "calls": 118210,
+              "elapsedMs": 897,
+              "maximumMs": 3
+            },
+            "operation-source": {
+              "calls": 31888,
+              "elapsedMs": 1155,
+              "maximumMs": 3
+            },
+            "operation-coverage": {
+              "calls": 16809,
+              "elapsedMs": 141,
+              "maximumMs": 4
+            },
+            "c08.read.preferences": {
+              "calls": 96,
+              "elapsedMs": 441,
+              "maximumMs": 8
+            },
+            "c08.transaction.preferences": {
+              "calls": 3,
+              "elapsedMs": 56,
+              "maximumMs": 27
+            },
+            "classified-source": {
+              "calls": 39,
+              "elapsedMs": 1,
+              "maximumMs": 1
+            },
+            "classified-coverage": {
+              "calls": 41,
+              "elapsedMs": 818,
+              "maximumMs": 32
+            },
+            "c08.transaction.cases": {
+              "calls": 6,
+              "elapsedMs": 182,
+              "maximumMs": 35
+            },
+            "planner.verifySourceOnly": {
+              "calls": 3770,
+              "elapsedMs": 6369,
+              "maximumMs": 7
+            },
+            "planner.verifyOperation": {
+              "calls": 3770,
+              "elapsedMs": 47663,
+              "maximumMs": 20
+            },
+            "planner.verifySourceProjection": {
+              "calls": 7540,
+              "elapsedMs": 4978,
+              "maximumMs": 5
+            }
+          }
+        },
+        "control": {
+          "nonce": "4ab232635d8483ea310eea89eee3004e",
+          "nonce_count": 1,
+          "verdict_count": 1,
+          "verdict": "2026-11-14T23:46:27.3064145Z omni positive control [4ab232635d8483ea310eea89eee3004e]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+          "valid": true
+        },
+        "run": 43654501551,
+        "job": 132629953065,
+        "cleanup_job": 132631165881,
+        "cleanup": "PASS",
+        "post_deadline_status_not_independent_corruption": true
+      },
+      "reason": "AfterR1diagnosis and ownedreadscopefix; no unchangedretry",
+      "log": {
+        "path": "logs/R2.log.txt",
+        "sha256": "4762e4466be6d8775b91bb5518226703d89e085581ab0f30f447a9efd2d0a29a",
+        "bytes": 73993,
+        "git_blob": "2af0e21bff7b7c50f59957279ab50d5adea83a4c"
+      }
+    }
+  ],
+  "local_tests": 0,
+  "epic": 0,
+  "typecheck": "NOT_RUN",
+  "guards": "NOT_RUN",
+  "compiler_owner": 45,
+  "source_pass_is_integrated_acceptance": false,
+  "GLOBAL_RELEASE": false,
+  "all_mission50_runs_terminal": true,
+  "unchanged_retries": 0
+}

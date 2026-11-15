@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.portfolio-final-history.implementation.v1",
+  "mission": 50,
+  "epoch": "portfolio-history-browser50",
+  "increment": 3,
+  "parent": "ae62d8ca164f2cfb4d0c9b53932b596b293337b3",
+  "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+  "preblob": "47b5358c8dda3179045499388ce98871576a2aa9",
+  "postblob": "82adc95c5eeb8573e1e96cef255b4d26fbff9be7",
+  "post_sha256": "9994b16549bea7a3b7c4db8ab8d9adc9192214b0dbc2ca1b0005f596fcfbd0a0",
+  "reason": "R1 demonstrated repeated rule/metric/C08 validation beyond the180000ms budget despiteFinance34. Direct bindings.validate rule evaluations occur after the comparison read scope closes.",
+  "change": "Fixture facade delegates each complete canonicalRules.evaluate exactly once through existing readPortfolioSnapshot. register/resolve remain original; no producer checks removed and no proof cached.",
+  "diagnostics": "Cheap phase logs and inclusive aggregate timing of rule evaluations; no additional state read/digest/snapshot or guard modification",
+  "diagnostic_limit": "Parallel evaluations can overlap; totalElapsedMs is not exclusive CPU or additive wall time",
+  "original_assertions": {
+    "expect_lines": 72,
+    "literal_lines_identical": true,
+    "ordering_unchanged": true
+  },
+  "budgets": {
+    "test_ms": 180000,
+    "fixture_guard_ms": 180000,
+    "unchanged": true
+  },
+  "preservation": [
+    "All real producers and original source/C08 selection",
+    "Source revocation, baseline substitution, idempotency and no automatic effect assertions",
+    "All original writes/selection/bind/evaluateAndStore remain outside readonly wrapper",
+    "Proof/history/P01/28KEEP/CurrentChoice unchanged"
+  ],
+  "review": {
+    "root": "Reviewed complete diff and byte-identical72 assertion lines",
+    "independent": "review_p02 approved exact82adc95; no code correction requested",
+    "local_tests": 0
+  },
+  "prior_result": {
+    "W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+    "S": "c2bb42ba3f1be357b51045f4d827911b86596847",
+    "run": 43653550785,
+    "job": 132627055702,
+    "outcome": {
+      "status": "FAIL",
+      "tests": 23,
+      "files": 2,
+      "pass": 22,
+      "fail": 1,
+      "errors": 1,
+      "expect_calls": 103,
+      "duration_seconds": 182.49,
+      "by_file": {
+        "history_provenance": {
+          "status": "PASS",
+          "pass": 22,
+          "fail": 0,
+          "final_CAS_ms": 319.28,
+          "reopen_ms": 402.17
+        },
+        "semantic_union": {
+          "status": "FAIL",
+          "duration_ms": 180013.86,
+          "budget_ms": 180000,
+          "phase": "before.persistent.evaluateAndStore omitted result before line50",
+          "guard_ms": 180003,
+          "late_status": "stale",
+          "late_reason": "comparison-rule-or-source-changed"
+        }
+      },
+      "run": 43653550785,
+      "job": 132627055702,
+      "cleanup_job": 132628306934,
+      "cleanup": "PASS",
+      "control": {
+        "nonce": "a0fdd0d90f104afcc799143ae0f577da",
+        "nonce_count": 1,
+        "verdict_count": 1,
+        "verdict": "2026-11-14T23:35:00.5407491Z omni positive control [a0fdd0d90f104afcc799143ae0f577da]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+        "valid": true
+      }
+    }
+  },
+  "qualification": {
+    "status": "NOT_RUN",
+    "planned": "One P03-only hosted correction qualification on newW/S after freshdedup; no unchanged retry",
+    "finite_stop_rule": "At most one correction qualification after R1 under this diagnosis; if stillfails, preserveFAIL and hand exact shared producer patch to47/owner rather than another unchangedlongrun"
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,19 @@
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+index 347d1c97952167523f9b2b04f1ab4fac7178cc9a..9478bca5458f4c796d31f8ec09045b5733125ae7 100644
+--- a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+@@ -62,13 +62,13 @@
+       const resultRef = existing.value.state === "found" ? existing.value.result.resultRef : undefined
+       const saved = resultRef ? { status: "ok" as const, value: { resultRef } } : await input.persist({ kind: "comparison", request: compare, result: comparison.value }, idempotencyKey, context)
+       if (saved.status !== "ok") return saved
+       const stored = structuredClone(await input.results.read({ kind: "comparison", resultRef: saved.value.resultRef }, context))
+       if (stored.status !== "ok") return stored
+       if (stored.value.kind !== "comparison" || stored.value.resultRef !== saved.value.resultRef || stored.value.requestDigest !== requestDigest || digestSfValue(stored.value.caseRef) !== digestSfValue(selected.caseRef) || stored.value.resultDigest !== digestSfValue(stored.value.result) || digestSfValue(stored.value.result) !== digestSfValue(comparison.value)) return { status: "stale", reason: "portfolio-comparison-changed" }
+-      const previousBinding = resultRef ? await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context) : undefined
++      const previousBinding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
+       if (!previousBinding || previousBinding.status !== "ok") {
+         const binding = await input.bindings.bind({ caseRef: selected.caseRef, resultRef: saved.value.resultRef, request: compare, expectedRules: proofs.value }, context)
+         if (binding.status !== "ok") return binding
+       }
+       const binding = await input.bindings.read({ caseRef: selected.caseRef, resultRef: saved.value.resultRef }, context)
+       if (binding.status !== "ok") return binding

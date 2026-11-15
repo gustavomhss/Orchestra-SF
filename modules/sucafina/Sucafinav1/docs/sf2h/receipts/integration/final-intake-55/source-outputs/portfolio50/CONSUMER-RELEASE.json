@@ -1,0 +1,85 @@
+{
+  "schema": "sf2h.portfolio-final-history.consumer-release.v1",
+  "mission": 50,
+  "consumer": 47,
+  "source_pr": 37,
+  "state": "TERMINAL_PARTIAL_RELEASE_WITH_HELD_FINDING",
+  "P02": {
+    "state": "READY_FOR_SELECTIVE_REVIEW_AND_REQUIRED_GATES",
+    "patch": "integration/R1-complete.patch",
+    "qualified_W": "a68ac1b35a023b6769519fed64daadfdda50ea5a",
+    "tests": "history22PASS",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+        "mode": "100644",
+        "precondition": "EXACT_BLOB",
+        "pre": {
+          "blob": "e07714d6c390a655b6eac7f5c2d56193b7bbfc7b",
+          "sha256": "cc8dabe132377e30ca307dff6b043aeb61a8b5aba1e8caf30ae97446efbe20ae",
+          "bytes": 13693,
+          "artifact": "preimages/proof.ts.txt"
+        },
+        "post": {
+          "blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+          "sha256": "30d8a709cdd2e923e143fbb05e8b7522a760b2a4a5c406abbfcfce957845c5d1",
+          "bytes": 14352,
+          "artifact": "postimages/proof.ts.txt"
+        },
+        "change": "Exact reviewed43 canonical read boundary; all prior reader checks retained"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+        "mode": "100644",
+        "precondition": "EXACT_BLOB",
+        "pre": {
+          "blob": "8ae8e056f426e128ecec38a26d646896b7c28d81",
+          "sha256": "be8ae1e2a86bf99e4641fdd973be7b0f9b921a191d08f19c938efa427b3d09a4",
+          "bytes": 32610,
+          "artifact": "preimages/history-provenance.test.ts.txt"
+        },
+        "post": {
+          "blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+          "sha256": "2bd197a13b68b0c374dfaa95c6e36245bb8281633763d35d3e28de882c6fdc49",
+          "bytes": 39136,
+          "artifact": "postimages/history-provenance.test.ts.txt"
+        },
+        "change": "Preserve21 existing tests and fourth/final real-CAS oracle, append real reopen/authority proof"
+      }
+    ]
+  },
+  "P03": {
+    "state": "HELD_FAIL",
+    "patch": "integration/P03-fixture.patch",
+    "W": "9d857d51f18e0dc81f19892b7b0b85482f21c875",
+    "run": 43654501551,
+    "closed": false,
+    "reason": "Original180000 budget exceeded before firstomittedresult"
+  },
+  "external": {
+    "state": "INERT_OWNER_PROPOSAL",
+    "path": "external/analysis-owner/analysis-read-before-bind.patch",
+    "applied": false,
+    "tested": false,
+    "timeout_fix_demonstrated": false
+  },
+  "latest_target": {
+    "commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
+    "symbol": "C19 Memory40",
+    "authority47_blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "all_three_patch_preimages_match": true,
+    "all28_kept_blobs_match": true,
+    "Finance34_unchanged_from_C18": true,
+    "proof_limit": "Preimage compatibility only; W1/W2 based onC18, no PASS transferred toC19.47 alone forms nextintegratedcandidate."
+  },
+  "gates": {
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "owner": 45
+  },
+  "ACK_requested": true,
+  "ACK_received": false,
+  "source_authority_ended": true,
+  "GLOBAL_RELEASE": false
+}
