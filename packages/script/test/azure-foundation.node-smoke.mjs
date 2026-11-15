@@ -176,7 +176,9 @@ function assertBackup(template) {
     assert.equal(version.toLowerCase().includes("preview"), false)
   }
   assert.equal(vaults[0].sku.name, "Standard")
+  assert.equal(vaults[0].properties.publicNetworkAccess, "Enabled")
   assert.equal(vaults[0].properties.redundancySettings.standardTierStorageRedundancy, "LocallyRedundant")
+  assert.equal(vaults[0].properties.redundancySettings.crossRegionRestore, "Disabled")
   assert.equal(JSON.stringify(vaults[0].location), JSON.stringify(typed(template, "Microsoft.Compute/virtualMachines")[0].location))
   const policy = policies[0].properties
   assert.equal(policy.backupManagementType, "AzureIaasVM")
