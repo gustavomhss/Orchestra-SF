@@ -1,0 +1,127 @@
+{
+  "schema": "sf2h.canonical-read-cost.material-gate.v1",
+  "mission": 76,
+  "state": "MATERIAL_WORK_AND_REGRESSIONS_PASS",
+  "source": {
+    "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "tree": "fd815bff71b812debd0a7773e33060fe21427e55"
+  },
+  "composition": {
+    "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "tree": "51fedc4707ccb553e95658720678562390e16edc",
+    "dependency59": "26f7af7efcc143d558df51eeb35e4a7011f456fe"
+  },
+  "baseline": {
+    "W": "c9285ddf74eb4260162f6040226e4745dab184ff",
+    "V": "a5ab06e87c7280d28264dbaaf9fcf035824bdf12",
+    "S": "8bfce3242f1d7c8d6a224ba1418d6486d52444a8",
+    "run": 43672619431,
+    "job": 132685806297,
+    "tests": {
+      "pass": 58,
+      "fail": 0,
+      "expects": 580,
+      "files": 11
+    }
+  },
+  "candidate": {
+    "S": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+    "run": 43673023213,
+    "job": 132687025106,
+    "tests": {
+      "pass": 58,
+      "fail": 0,
+      "expects": 580,
+      "files": 11
+    }
+  },
+  "sameWork": {
+    "requestSha256": "9c46187ef0ce77dcd3175394d1f04c4c164e76c989d2bef2a76cd976eaee650c",
+    "fiveFixedTestHelperBlobsEqual": true,
+    "onlySourceAndHashMarkerChanged": true,
+    "producerOutputDigestsEqual": true,
+    "publicBoundaryCountsCompletionsErrorsEqual": true,
+    "callbackEvents": [
+      87440,
+      87440
+    ],
+    "callbackOrderSha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+    "workload": {
+      "prepare": 1,
+      "comparisonReads": 2,
+      "ruleResolves": 1,
+      "ruleEvaluations": 1,
+      "proofReads": 1,
+      "bindingWrites": 1,
+      "bindingReads": 1
+    },
+    "observer": {
+      "pending": 0,
+      "residualCalls": 0,
+      "residualResults": 0,
+      "maxRecordedCalls": 1,
+      "maxRecordedResults": 1
+    }
+  },
+  "measured": {
+    "storedHashesScalar": [
+      4,
+      3
+    ],
+    "storedHashesDuplicateBatch": [
+      8,
+      6
+    ],
+    "allCaseHashesDuplicateBatch": [
+      12,
+      10
+    ],
+    "calculationSourceHashes": [
+      64,
+      24
+    ],
+    "calculationReplayCallbacks": [
+      2,
+      2
+    ],
+    "totalDiagnosticDigests": [
+      133103,
+      131972
+    ],
+    "totalDiagnosticClones": [
+      72415,
+      72404
+    ],
+    "C08OpaqueFullStateClones": [
+      2216,
+      2216
+    ]
+  },
+  "negativeProofs": [
+    "Same-version full case objective drift introduced by real CAS after fourth source callback denies both duplicate results after three C08 observations.",
+    "Result changed after final source callback is denied by the independent third observation.",
+    "Retained callback arguments and caller output mutation cannot mutate other observations/outputs.",
+    "Duplicate batch outputs retain independent graphs.",
+    "Unselected final-envelope getters execute; uncloneable values still throw.",
+    "Complete evidence-reference identity, source freshness and real Planner replay remain required.",
+    "Existing historical final source/case/header/lease/facade failures and C08/criterion/read-before-bind regressions pass."
+  ],
+  "causalDecision": "This removes measured redundant traversals in producer paths exercised by the bounded canonical workflow. It authorizes one original P03 attempt under the mission. It does not prove the dominant P03 bottleneck fixed or any speed ratio.",
+  "timingLimit": "One instrumented hosted sample per variant; durations are descriptive. B0 unbounded-spy timing/memory excluded from paired comparison.",
+  "separateCalculationLimit": "calculationSources has no observed invocation in diagnostic phases; its measured Set improvement is separate and is not used alone to authorize P03.",
+  "remaining": {
+    "compiler45": "REQUESTED_NOT_RUN; request at checks/REQUEST-45.json and PR32 comment6888586763",
+    "P03": "PREPARED_NOT_RUN_AT_GATE_PUBLICATION",
+    "integration71": "NOT_ACCEPTED_AS_INTEGRATED_CANDIDATE",
+    "globalRelease": false
+  },
+  "originalP03": {
+    "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "expectLines": 72,
+    "expectOrderSha256": "f78152ede2f26602dadf8eaf461e8b2072b1e4edd360ba93811475c290993ba4",
+    "timeoutMs": 180000,
+    "preparedS": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+    "singleAttemptOnly": true
+  },
+  "GLOBAL_RELEASE": false
+}

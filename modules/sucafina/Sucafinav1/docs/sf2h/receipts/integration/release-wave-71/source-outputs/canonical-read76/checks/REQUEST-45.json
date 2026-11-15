@@ -1,0 +1,104 @@
+{
+  "schema": "sf2h.canonical-read-cost.check-request.v1",
+  "mission": 76,
+  "owner": 45,
+  "state": "REQUESTED_NOT_RUN_BY76",
+  "PR": 87,
+  "candidate": {
+    "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+    "branch": "canonical-read-cost",
+    "source_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+  },
+  "validationComposition": {
+    "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "tree": "51fedc4707ccb553e95658720678562390e16edc",
+    "required_release59": {
+      "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+      "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "manifest": "validation/readonly59-overlay.json"
+    },
+    "rule": "Check V with exact released59 dependency. W excludes59 by ownership; diagnostic readSnapshotRoot typing requires V. Do not copy59 LocalStore over a later72 integration;71 reconciles any composition change."
+  },
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "argv": [
+        "bun",
+        "typecheck"
+      ],
+      "purpose": "Private scalar/batch result digests, calculation source union and exact real diagnostic/regression tests."
+    },
+    {
+      "cwd": ".",
+      "argv": [
+        "bun",
+        "run",
+        "check:guards",
+        "--base",
+        "origin/dev"
+      ],
+      "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+      "base_requirement": "Record real available origin/dev SHA used; do not substitute approval."
+    }
+  ],
+  "interface": "Owner45 existing hosted compiler/guards lane. Deduplicate by V/tree/commands/base/config. Mission76 does not seize45 refs or change workflows.",
+  "ownedFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+      "bytes": 5542,
+      "sha256": "bc6dcec62f41d61d2d5174fa8a3ce55ed7f7bdaa7ffcdc89043335e0aa9af777",
+      "blob": "f3f5cad776aa603610c99dec829c10d565e1d60f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "bytes": 12165,
+      "sha256": "9c693c846ea02db4476d6582e13495a3eb45291cfa44257cc521aa64793ac8ac",
+      "blob": "7013df4178b57b6ea55c55e223749904008095a0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "bytes": 5828,
+      "sha256": "c5fdcdaf84e986fb00d2148f9ccd878cb27d14bff22d284e08a6590b10a82eb6",
+      "blob": "8f0051c478d0ade11b044d95e2928206a008308a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+      "bytes": 6644,
+      "sha256": "0853f2a63ea2d0f11ff2630107cb98884ea8f47755b7e811aa5ee46852ce1939",
+      "blob": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+      "bytes": 10695,
+      "sha256": "17b51edde620637193b92c581e38d67d81aea0cfd29bf1c4a0a02accca058860",
+      "blob": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "bytes": 30383,
+      "sha256": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de",
+      "blob": "c76d9bc385a4b5102b756812b778c844f20ab733"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts",
+      "bytes": 521,
+      "sha256": "58c88ca60fbc80ca294cbf8878ee481848644edd6717da33eb56e3ab0c3283a6",
+      "blob": "05621cc0d50782d19afb7fb7fd1358cfc734eb63"
+    }
+  ],
+  "generated_protocol_change": false,
+  "atlas_change": false,
+  "runtime72_change": false,
+  "executor65_change": false,
+  "surgical_tests": {
+    "baselineB0": 43671421907,
+    "correctedB1": 43671961465,
+    "controlledB2": 43672619431,
+    "R1": "PREPARED_NOT_DISPATCHED_AT_REQUEST",
+    "R1S": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+    "rule": "Actual test results remain separate from compiler/guards."
+  },
+  "limits": "No product tests, compiler or guards run locally. No compiler or guard PASS claimed until45 exact input evidence.",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.canonical-read-cost.terminal-authority.v1",
+  "mission": 76,
+  "state": "TERMINAL_SOURCE76_RELEASED_FOR_71_RECONCILIATION",
+  "epoch": "canonical-read-browser76",
+  "source_branch": "canonical-read-cost",
+  "source_PR": 87,
+  "source_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "material_W": "6854c0f966e4fd78322932181359c3742c53c16d",
+  "material_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+  "terminal_publication": "The commit containing this receipt is the terminal documentary source head; exact commit/tree are repeated in PR87 and the terminal71 handoff comment after CAS/readback.",
+  "previous_documentary_head": "2d01f58ff651ab52a32b73a6f399b0fcd183ee71",
+  "source_write_lease": "ENDED_AFTER_THIS_DOCUMENTARY_CAS; no further product/test/branch writes without a new explicit reconciled increment",
+  "remote_writer": "/root only; GitHub MCP GitData expected_sha CAS forcefalse",
+  "session_id": null,
+  "model_effective": null,
+  "model_declared": "GPT-6 Astra Pro (session instruction, not provider attestation)",
+  "consumer": {
+    "mission": 71,
+    "role": "exclusive sf2-stack integration",
+    "ACK": "REQUESTED_NOT_OBSERVED"
+  },
+  "checks": {
+    "owner": 45,
+    "status": "REQUESTED_NO_RESULT_OBSERVED"
+  },
+  "source_qualification": "MATERIAL_AND_SELECTED_REGRESSIONS_PASS",
+  "P03": "FAIL_HELD; one original attempt; no retry by76",
+  "open_gates": [
+    {
+      "owner": 45,
+      "item": "Compiler and guards on exact V/C; pending, not waived."
+    },
+    {
+      "owner": 71,
+      "item": "Selective intake, dependency reconciliation and exact composed proof/ACK."
+    },
+    {
+      "owner": "71/S0 with assigned producer owners",
+      "item": "OriginalP03 remains failed. Residual C08 fullclone and independent Planner verification costs remain; no unchanged retry by76."
+    },
+    {
+      "owner": "S0 and existing gate owners",
+      "item": "Final eight selections, AM/reviews/C-G7D-G8 and native/human/global acceptance remain open."
+    }
+  ],
+  "publication_prepared_at": "2026-11-15 03:49:02 UTC",
+  "GLOBAL_RELEASE": false
+}

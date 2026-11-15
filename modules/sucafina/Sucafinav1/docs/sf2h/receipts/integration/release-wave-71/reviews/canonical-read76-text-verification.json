@@ -1,0 +1,535 @@
+{
+  "method": "Pure text/JSON/hashing only; no product code, imports, tests, compiler, guards or builds executed. Exact hunk offsets/context; no fuzz.",
+  "material": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "preimage": {
+        "bytes": 29250,
+        "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "sha256": "576dc47430a6072d094c98d4c319d6659f8b58d07a201dc1a50d47bc34679a59"
+      },
+      "postimage": {
+        "bytes": 30383,
+        "blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+        "sha256": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de"
+      },
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 5542,
+        "blob": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+        "sha256": "bc6dcec62f41d61d2d5174fa8a3ce55ed7f7bdaa7ffcdc89043335e0aa9af777"
+      },
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 12165,
+        "blob": "7013df4178b57b6ea55c55e223749904008095a0",
+        "sha256": "9c693c846ea02db4476d6582e13495a3eb45291cfa44257cc521aa64793ac8ac"
+      },
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 5828,
+        "blob": "8f0051c478d0ade11b044d95e2928206a008308a",
+        "sha256": "c5fdcdaf84e986fb00d2148f9ccd878cb27d14bff22d284e08a6590b10a82eb6"
+      },
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 521,
+        "blob": "05621cc0d50782d19afb7fb7fd1358cfc734eb63",
+        "sha256": "58c88ca60fbc80ca294cbf8878ee481848644edd6717da33eb56e3ab0c3283a6"
+      },
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 6644,
+        "blob": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+        "sha256": "0853f2a63ea2d0f11ff2630107cb98884ea8f47755b7e811aa5ee46852ce1939"
+      },
+      "exact": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+      "preimage": null,
+      "postimage": {
+        "bytes": 10695,
+        "blob": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+        "sha256": "17b51edde620637193b92c581e38d67d81aea0cfd29bf1c4a0a02accca058860"
+      },
+      "exact": true
+    }
+  ],
+  "patches": [
+    {
+      "name": "product.patch",
+      "digest": {
+        "bytes": 8670,
+        "blob": "f0f8c578812a420dd64094374e313c53c7636809",
+        "sha256": "5f1f042e02226c49b6d8141270ec8f38a946650f8f3ea53d8a947ed610c85bd9"
+      },
+      "files": 1,
+      "hunks": 5,
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "hunks": 5,
+          "postimage": {
+            "bytes": 30383,
+            "blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+            "sha256": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de"
+          }
+        }
+      ],
+      "all_context_preimage_and_postimage_exact": true
+    },
+    {
+      "name": "source-and-tests.patch",
+      "digest": {
+        "bytes": 53211,
+        "blob": "726a58ed597bde2228325ad65577ac196979d5ca",
+        "sha256": "b4e1799e96620af805f43614c0bca99f2afa29acebfcaa6dc6c9861e2d2ad2f4"
+      },
+      "files": 7,
+      "hunks": 11,
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+          "hunks": 5,
+          "postimage": {
+            "bytes": 30383,
+            "blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+            "sha256": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+          "hunks": 1,
+          "postimage": {
+            "bytes": 5542,
+            "blob": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+            "sha256": "bc6dcec62f41d61d2d5174fa8a3ce55ed7f7bdaa7ffcdc89043335e0aa9af777"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+          "hunks": 1,
+          "postimage": {
+            "bytes": 12165,
+            "blob": "7013df4178b57b6ea55c55e223749904008095a0",
+            "sha256": "9c693c846ea02db4476d6582e13495a3eb45291cfa44257cc521aa64793ac8ac"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+          "hunks": 1,
+          "postimage": {
+            "bytes": 5828,
+            "blob": "8f0051c478d0ade11b044d95e2928206a008308a",
+            "sha256": "c5fdcdaf84e986fb00d2148f9ccd878cb27d14bff22d284e08a6590b10a82eb6"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts",
+          "hunks": 1,
+          "postimage": {
+            "bytes": 521,
+            "blob": "05621cc0d50782d19afb7fb7fd1358cfc734eb63",
+            "sha256": "58c88ca60fbc80ca294cbf8878ee481848644edd6717da33eb56e3ab0c3283a6"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+          "hunks": 1,
+          "postimage": {
+            "bytes": 6644,
+            "blob": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+            "sha256": "0853f2a63ea2d0f11ff2630107cb98884ea8f47755b7e811aa5ee46852ce1939"
+          }
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+          "hunks": 1,
+          "postimage": {
+            "bytes": 10695,
+            "blob": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+            "sha256": "17b51edde620637193b92c581e38d67d81aea0cfd29bf1c4a0a02accca058860"
+          }
+        }
+      ],
+      "all_context_preimage_and_postimage_exact": true
+    }
+  ],
+  "external": {
+    "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+    "hunks": 1,
+    "postimage": {
+      "bytes": 8230,
+      "blob": "c1634b7388216af2da62f1af0d229e2dc78affad",
+      "sha256": "53e435b01e6b673f8965f63d45f984003617cefd1820c06e447f6d17e295138a"
+    },
+    "disposition": "INERT_NOT_IN_RELEASE_ROUTE_TO_PREPARED_OWNER89"
+  },
+  "remote_blob_text_verified": [
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ACK76.json",
+      "blob": "ed9ed5842ed8070f533b910a6011f61495e66ac3",
+      "bytes": 3857
+    },
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/HANDOFF-71.md",
+      "blob": "4ea4bef2508fc6204c60e4cb320748bf8cb0a73c",
+      "bytes": 8687
+    },
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/delivery/MANIFEST.json",
+      "blob": "7bdc4b78ffa44f662566456d6c269d190ea65d29",
+      "bytes": 3961
+    },
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/delivery/DEPENDENCY-CLOSURE.json",
+      "blob": "94c7d9530adf5aaf27a0b6c19c5377bccb942e62",
+      "bytes": 44889
+    },
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/delivery/EVIDENCE-INDEX.json",
+      "blob": "43becb1771eb4445f4c6d620a4b49d9b4a2c29a6",
+      "bytes": 15311
+    },
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/delivery/product.patch",
+      "blob": "f0f8c578812a420dd64094374e313c53c7636809",
+      "bytes": 8670
+    },
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/reviews/RUNTIME-REVIEW.json",
+      "blob": "6e3a70c03ad56e094ffe932c6026f8d32a34af27",
+      "bytes": 12198
+    },
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/reviews/SOURCE-REVIEW.json",
+      "blob": "040d4762837d40a13453bc7d7d7c8c262a4d60a5",
+      "bytes": 6220
+    },
+    {
+      "file": "source-docs.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/reviews/P03-REVIEW.json",
+      "blob": "422b639e25b39a8d1c68ec32cc85958d06c8dac9",
+      "bytes": 20853
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/delivery/source-and-tests.patch",
+      "blob": "726a58ed597bde2228325ad65577ac196979d5ca",
+      "bytes": 53211
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/delivery/patch-check.json",
+      "blob": "dcb43fd5ebb1cf1c7068ddaa013f3ef4ec9eacfa",
+      "bytes": 2076
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/validation/readonly59-overlay.json",
+      "blob": "54e36aaceb02fa89ef1fb7d0628af95fff59e4db",
+      "bytes": 6473
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ci/LEDGER-FINAL.json",
+      "blob": "82192f38ad459943ffaec5e02f8440ef4724f1da",
+      "bytes": 7240
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ci/P03.json",
+      "blob": "65e3fb701e931171145650353dd0ebee7bddbe69",
+      "bytes": 14968
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/findings/B2-R1-CAUSAL76.json",
+      "blob": "3af5e56b718553f366db109082cb2055180cf517",
+      "bytes": 72792
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/findings/MATERIAL-GATE.json",
+      "blob": "59b9c2524ffc474d3742071305c07e164c214862",
+      "bytes": 4254
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/findings/FINDINGS76.md",
+      "blob": "6531e148730faa224db41fc1f3bb31aaa72ad353",
+      "bytes": 7326
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/external/EXTERNAL-CANDIDATE76.json",
+      "blob": "f0bd1c43dca777c7808d71b311a54ea3fe160fe3",
+      "bytes": 12132
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/external/EXTERNAL-CANDIDATE76.patch",
+      "blob": "9c09f86531b93d414bfd514a09e079042849b073",
+      "bytes": 787
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/checks/REQUEST-45.json",
+      "blob": "3db24316312fb5147cabd481c7a69ffd38d5487c",
+      "bytes": 4175
+    },
+    {
+      "file": "evidence-cache.json",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/CRITERIA76.json",
+      "blob": "314e72e5fb4ff692e2ed04c9b8f455c248f53e31",
+      "bytes": 81830
+    },
+    {
+      "file": "material-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "bytes": 30383
+    },
+    {
+      "file": "material-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+      "blob": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+      "bytes": 5542
+    },
+    {
+      "file": "material-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "blob": "7013df4178b57b6ea55c55e223749904008095a0",
+      "bytes": 12165
+    },
+    {
+      "file": "material-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "blob": "8f0051c478d0ade11b044d95e2928206a008308a",
+      "bytes": 5828
+    },
+    {
+      "file": "material-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts",
+      "blob": "05621cc0d50782d19afb7fb7fd1358cfc734eb63",
+      "bytes": 521
+    },
+    {
+      "file": "material-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+      "blob": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+      "bytes": 6644
+    },
+    {
+      "file": "material-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+      "blob": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+      "bytes": 10695
+    },
+    {
+      "file": "material-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "bytes": 29250
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/ai/run-store.ts",
+      "blob": "978e4d54d2d54d1308152b7a4e9625f5c54b36ae",
+      "bytes": 27602
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+      "blob": "102c849084980ae52223809d33bdeea36a58536b",
+      "bytes": 5643
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "bytes": 3612
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+      "blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+      "bytes": 7262
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/outputs.ts",
+      "blob": "4db2e631bd83ccda67442824557881c2ed990c92",
+      "bytes": 12947
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "bytes": 9660
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "bytes": 6143
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "bytes": 3022
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "blob": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "bytes": 9143
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/calculation-history.ts",
+      "blob": "4e92219aae9046891f167502139412bf9c509529",
+      "bytes": 3795
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts",
+      "blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+      "bytes": 12723
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "bytes": 31605
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+      "bytes": 22226
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/planner/criterion-metric.ts",
+      "blob": "2340a9566e1471f47d9c5c7f884bfc31be13cef3",
+      "bytes": 6260
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+      "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+      "bytes": 14876
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "bytes": 5363
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-choice-fixture.ts",
+      "blob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "bytes": 25756
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11/renewal-source-fixture.ts",
+      "blob": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d",
+      "bytes": 16513
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+      "bytes": 35140
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "0e812842ad0d534998c182100a8466548d70e915",
+      "bytes": 15748
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+      "bytes": 4757
+    },
+    {
+      "file": "target-cache.json",
+      "path": "modules/sucafina/package.json",
+      "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "bytes": 868
+    },
+    {
+      "file": "consumer-cache.json",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "bytes": 71752
+    },
+    {
+      "file": "consumer-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "bytes": 8247
+    },
+    {
+      "file": "consumer-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "bytes": 16784
+    },
+    {
+      "file": "consumer-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+      "blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+      "bytes": 8829
+    },
+    {
+      "file": "consumer-cache.json",
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "blob": "4d165428dc731e59c2faf01a4e47b352e691dfbc",
+      "bytes": 11675
+    },
+    {
+      "file": "consumer-cache.json",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+      "bytes": 43332
+    }
+  ],
+  "total_remote_blob_texts": 57,
+  "target_test_prefix_absent": true
+}

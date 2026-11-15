@@ -1,0 +1,2100 @@
+{
+  "schema": "sf2h.canonical-read-cost.b2-r1-causal.v1",
+  "status": "component-material-qualified-R1-P03-not-qualified-here",
+  "scope": "Comparação aritmética de B2/R1 hospedados, com source identities e observer idênticos. Evidência de trabalho redundante removido e regressões selecionadas PASS; sem alegação de speedup ou qualificação do P03. Nenhum produto/teste foi executado por esta análise.",
+  "B0Disposition": "B0 é histórico, pois spy mantinha histórico de argumentos/resultados. Não usar seus tempos ou memória como baseline pareado de R1.",
+  "B2": {
+    "run": 43672619431,
+    "job": 132685806297,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672619431/job/132685806297",
+    "snapshotIdentity": {
+      "W": "c9285ddf74eb4260162f6040226e4745dab184ff",
+      "V": "a5ab06e87c7280d28264dbaaf9fcf035824bdf12",
+      "S": "8bfce3242f1d7c8d6a224ba1418d6486d52444a8",
+      "provenance": "Identidades fornecidas pela receipt de dispatch do root; blobs dos cinco testes/helpers conferidos por este analista via GitHub MCP nos W exatos."
+    },
+    "artifacts": {
+      "evidence/B2/diagnostic.json": {
+        "bytes": 543484,
+        "sha256": "0b32ddf35f626037e02eac11aa2bdb2cf8e819771ec02f088886d12d8dd3e636"
+      },
+      "evidence/B2/primitive-aggregate.json": {
+        "bytes": 73428,
+        "sha256": "b54ccb99a1511b20db15b38947a2b4d22a7fcfc25d9dd8d31f96bee460f81038"
+      },
+      "evidence/B2/summary.json": {
+        "bytes": 2758,
+        "sha256": "f600ff6c4b6d15f6a937aeeede21af48ad926ba4342504fc7fdbc2671cd48990"
+      },
+      "evidence/B2/test-output.log": {
+        "bytes": 7914,
+        "sha256": "f9dba347ac6f8eafdbe6b53c190103894c9eea4da2adfa82026d05cecf8b2d6b"
+      }
+    },
+    "producerSha256": {
+      "product/host-binding/state-provider.ts": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+      "product/decisions/result-store.ts": "576dc47430a6072d094c98d4c319d6659f8b58d07a201dc1a50d47bc34679a59",
+      "product/decisions/criterion-comparison.ts": "0faeabe7da29ded1a5f1297fa4ad9d86190f63042a10622900c9b40cd035b4ef"
+    },
+    "selectedSuite": {
+      "passed": 58,
+      "failed": 0,
+      "expectCalls": 580,
+      "files": 11,
+      "seconds": 121.77,
+      "selectedFiles": [
+        "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+        "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+        "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts"
+      ]
+    },
+    "workload": {
+      "prepare": 1,
+      "comparisonReads": 2,
+      "ruleResolves": 1,
+      "ruleEvaluations": 1,
+      "proofReads": 1,
+      "bindingWrites": 1,
+      "bindingReads": 1
+    },
+    "syntheticBoundary": "Existing renewal fixture uses synthetic source declarations and human grants; SQLite/C08/Planner/rules/metric/comparison replay/binding persistence are real. This does not execute P03, select a choice, confirm training or qualify final history/revocation.",
+    "primitiveByKind": {
+      "digestSfValue": {
+        "calls": 133103,
+        "errors": 0,
+        "exclusiveMeasuredMs": 12882.994054
+      },
+      "structuredClone": {
+        "calls": 72415,
+        "errors": 0,
+        "exclusiveMeasuredMs": 11901.951569
+      }
+    },
+    "rootPhaseWallMs": 36252.72139,
+    "phaseWallMs": {
+      "prepare-once": 6090.120637,
+      "comparison-read": 22.241517,
+      "rule-resolve": 24.758063,
+      "rule-evaluate": 1668.630355,
+      "binding-proofs": 22.986724,
+      "binding-create": 16998.685573,
+      "binding-read": 11403.704411,
+      "comparison-read-again": 21.59411
+    },
+    "stackCaptureMs": 1550.831476,
+    "bindingReadBoundary": {
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 11403.59283,
+      "maximumMs": 11403.59283
+    },
+    "selectedCallsites": {
+      "structuredClone|product/host-binding/state-provider.ts:65:24": {
+        "calls": 2216,
+        "inclusiveMs": 6891.717802,
+        "exclusiveMeasuredMs": 6891.717802,
+        "errors": 0
+      },
+      "digestSfValue|product/decisions/result-store.ts:118:223": {
+        "calls": 11,
+        "inclusiveMs": 0.641303,
+        "exclusiveMeasuredMs": 0.641303,
+        "errors": 0
+      },
+      "structuredClone|product/decisions/result-store.ts:119:35": {
+        "calls": 11,
+        "inclusiveMs": 0.933388,
+        "exclusiveMeasuredMs": 0.933388,
+        "errors": 0
+      },
+      "structuredClone|product/decisions/result-store.ts:194:22": {
+        "calls": 334,
+        "inclusiveMs": 226.671905,
+        "exclusiveMeasuredMs": 226.671905,
+        "errors": 0
+      },
+      "digestSfValue|product/decisions/result-store.ts:202:116": {
+        "calls": 596,
+        "inclusiveMs": 295.763132,
+        "exclusiveMeasuredMs": 295.763132,
+        "errors": 0
+      },
+      "digestSfValue|product/decisions/result-store.ts:202:151": {
+        "calls": 596,
+        "inclusiveMs": 275.552321,
+        "exclusiveMeasuredMs": 275.552321,
+        "errors": 0
+      },
+      "digestSfValue|product/decisions/result-store.ts:202:186": {
+        "calls": 596,
+        "inclusiveMs": 133.568558,
+        "exclusiveMeasuredMs": 133.568558,
+        "errors": 0
+      },
+      "digestSfValue|product/decisions/result-store.ts:202:220": {
+        "calls": 596,
+        "inclusiveMs": 140.151266,
+        "exclusiveMeasuredMs": 140.151266,
+        "errors": 0
+      },
+      "digestSfValue|product/planner/operation-verifier.ts:94:37": {
+        "calls": 668,
+        "inclusiveMs": 2999.874794,
+        "exclusiveMeasuredMs": 2999.874794,
+        "errors": 0
+      },
+      "digestSfValue|product/planner/operation-verifier.ts:94:80": {
+        "calls": 668,
+        "inclusiveMs": 3042.891553,
+        "exclusiveMeasuredMs": 3042.891553,
+        "errors": 0
+      }
+    },
+    "callbackOrder": {
+      "events": 87440,
+      "sha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4"
+    },
+    "publicBoundaryCounts": {
+      "prepare-once|root>phase.prepare-once": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "comparison-read|root>phase.comparison-read": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "comparison-read|phase.comparison-read>results.read": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "comparison-read|results.read>host.requestFor": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "comparison-read|results.read>host.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "comparison-read|results.read>fixture.c08.read.cases": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "comparison-read|fixture.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "comparison-read|persistence.transaction.dashboard>persistence.callback.dashboard": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "rule-resolve|root>phase.rule-resolve": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "rule-resolve|phase.rule-resolve>rules.resolve": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "rule-resolve|rules.resolve>host.requestFor": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "rule-resolve|rules.resolve>host.revalidate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-resolve|rules.resolve>diagnostic.c08.read.cases": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-resolve|diagnostic.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-resolve|persistence.transaction.dashboard>persistence.callback.dashboard": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-resolve|persistence.callback.dashboard>c08.authorize.read.cases": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-resolve|c08.authorize.read.cases>host.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-resolve|rules.resolve>callback.authorizeCase": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-resolve|callback.authorizeCase>host.revalidate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-resolve|rules.resolve>diagnostic.c08.read.preferences": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-resolve|diagnostic.c08.read.preferences>persistence.transaction.dashboard": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-resolve|persistence.callback.dashboard>c08.authorize.read.preferences": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-resolve|c08.authorize.read.preferences>host.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-resolve|rules.resolve>callback.evidence": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-evaluate|root>phase.rule-evaluate": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "rule-evaluate|phase.rule-evaluate>rules.evaluate": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "rule-evaluate|rules.evaluate>host.requestFor": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-evaluate|rules.evaluate>host.revalidate": {
+        "calls": 5,
+        "completed": 5,
+        "errors": 0
+      },
+      "rule-evaluate|rules.evaluate>diagnostic.c08.read.cases": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|diagnostic.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "rule-evaluate|persistence.transaction.dashboard>persistence.callback.dashboard": {
+        "calls": 130,
+        "completed": 130,
+        "errors": 0
+      },
+      "rule-evaluate|persistence.callback.dashboard>c08.authorize.read.cases": {
+        "calls": 16,
+        "completed": 16,
+        "errors": 0
+      },
+      "rule-evaluate|c08.authorize.read.cases>host.revalidate": {
+        "calls": 16,
+        "completed": 16,
+        "errors": 0
+      },
+      "rule-evaluate|rules.evaluate>callback.authorizeCase": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|callback.authorizeCase>host.revalidate": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "rule-evaluate|rules.evaluate>diagnostic.c08.read.preferences": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|diagnostic.c08.read.preferences>persistence.transaction.dashboard": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "rule-evaluate|persistence.callback.dashboard>c08.authorize.read.preferences": {
+        "calls": 16,
+        "completed": 16,
+        "errors": 0
+      },
+      "rule-evaluate|c08.authorize.read.preferences>host.revalidate": {
+        "calls": 16,
+        "completed": 16,
+        "errors": 0
+      },
+      "rule-evaluate|rules.evaluate>callback.evidence": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|rules.evaluate>callback.criterionMetric": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "rule-evaluate|callback.criterionMetric>host.revalidate": {
+        "calls": 396,
+        "completed": 396,
+        "errors": 0
+      },
+      "rule-evaluate|callback.criterionMetric>rules.resolve": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-evaluate|rules.resolve>host.requestFor": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "rule-evaluate|rules.resolve>host.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|rules.resolve>diagnostic.c08.read.cases": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|rules.resolve>callback.authorizeCase": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|rules.resolve>diagnostic.c08.read.preferences": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|rules.resolve>callback.evidence": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "rule-evaluate|callback.criterionMetric>host.requestFor": {
+        "calls": 158,
+        "completed": 158,
+        "errors": 0
+      },
+      "rule-evaluate|callback.criterionMetric>fixture.c08.read.cases": {
+        "calls": 102,
+        "completed": 102,
+        "errors": 0
+      },
+      "rule-evaluate|fixture.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 102,
+        "completed": 102,
+        "errors": 0
+      },
+      "rule-evaluate|callback.criterionMetric>persistence.transaction.planner": {
+        "calls": 57,
+        "completed": 57,
+        "errors": 0
+      },
+      "rule-evaluate|persistence.transaction.planner>persistence.callback.planner": {
+        "calls": 313,
+        "completed": 313,
+        "errors": 0
+      },
+      "rule-evaluate|persistence.callback.planner>host.requestFor": {
+        "calls": 288,
+        "completed": 288,
+        "errors": 0
+      },
+      "rule-evaluate|persistence.callback.planner>host.revalidate": {
+        "calls": 512,
+        "completed": 512,
+        "errors": 0
+      },
+      "rule-evaluate|persistence.callback.planner>persistence.transaction.planner": {
+        "calls": 256,
+        "completed": 256,
+        "errors": 0
+      },
+      "rule-evaluate|callback.criterionMetric>fixture.c08.read.preferences": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "rule-evaluate|fixture.c08.read.preferences>persistence.transaction.dashboard": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-proofs|root>phase.binding-proofs": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-proofs|phase.binding-proofs>bindings.proofs": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-proofs|bindings.proofs>rules.resolve": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-proofs|rules.resolve>host.requestFor": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-proofs|rules.resolve>host.revalidate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-proofs|rules.resolve>diagnostic.c08.read.cases": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-proofs|diagnostic.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-proofs|persistence.transaction.dashboard>persistence.callback.dashboard": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-proofs|persistence.callback.dashboard>c08.authorize.read.cases": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-proofs|c08.authorize.read.cases>host.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-proofs|rules.resolve>callback.authorizeCase": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-proofs|callback.authorizeCase>host.revalidate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-proofs|rules.resolve>diagnostic.c08.read.preferences": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-proofs|diagnostic.c08.read.preferences>persistence.transaction.dashboard": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-proofs|persistence.callback.dashboard>c08.authorize.read.preferences": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-proofs|c08.authorize.read.preferences>host.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-proofs|rules.resolve>callback.evidence": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-create|root>phase.binding-create": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-create|phase.binding-create>bindings.bind": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>host.requestFor": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>host.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>rules.resolve": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-create|rules.resolve>host.requestFor": {
+        "calls": 10,
+        "completed": 10,
+        "errors": 0
+      },
+      "binding-create|rules.resolve>host.revalidate": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0
+      },
+      "binding-create|rules.resolve>diagnostic.c08.read.cases": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0
+      },
+      "binding-create|diagnostic.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 33,
+        "completed": 33,
+        "errors": 0
+      },
+      "binding-create|persistence.transaction.dashboard>persistence.callback.dashboard": {
+        "calls": 1334,
+        "completed": 1334,
+        "errors": 0
+      },
+      "binding-create|persistence.callback.dashboard>c08.authorize.read.cases": {
+        "calls": 66,
+        "completed": 66,
+        "errors": 0
+      },
+      "binding-create|c08.authorize.read.cases>host.revalidate": {
+        "calls": 66,
+        "completed": 66,
+        "errors": 0
+      },
+      "binding-create|rules.resolve>callback.authorizeCase": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0
+      },
+      "binding-create|callback.authorizeCase>host.revalidate": {
+        "calls": 33,
+        "completed": 33,
+        "errors": 0
+      },
+      "binding-create|rules.resolve>diagnostic.c08.read.preferences": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0
+      },
+      "binding-create|diagnostic.c08.read.preferences>persistence.transaction.dashboard": {
+        "calls": 35,
+        "completed": 35,
+        "errors": 0
+      },
+      "binding-create|persistence.callback.dashboard>c08.authorize.read.preferences": {
+        "calls": 70,
+        "completed": 70,
+        "errors": 0
+      },
+      "binding-create|c08.authorize.read.preferences>host.revalidate": {
+        "calls": 70,
+        "completed": 70,
+        "errors": 0
+      },
+      "binding-create|rules.resolve>callback.evidence": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>results.read": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-create|results.read>host.requestFor": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "binding-create|results.read>host.revalidate": {
+        "calls": 16,
+        "completed": 16,
+        "errors": 0
+      },
+      "binding-create|results.read>fixture.c08.read.cases": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-create|fixture.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 1110,
+        "completed": 1110,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>diagnostic.c08.read.cases": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>diagnostic.c08.read.preferences": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>callback.authorizeCase": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>callback.verifyBinding.replay": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "binding-create|callback.verifyBinding.replay>planner.compareScenarios": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "binding-create|planner.compareScenarios>host.revalidate": {
+        "calls": 2949,
+        "completed": 2949,
+        "errors": 0
+      },
+      "binding-create|planner.compareScenarios>host.requestFor": {
+        "calls": 1152,
+        "completed": 1152,
+        "errors": 0
+      },
+      "binding-create|planner.compareScenarios>fixture.c08.read.cases": {
+        "calls": 792,
+        "completed": 792,
+        "errors": 0
+      },
+      "binding-create|planner.compareScenarios>persistence.transaction.planner": {
+        "calls": 414,
+        "completed": 414,
+        "errors": 0
+      },
+      "binding-create|persistence.transaction.planner>persistence.callback.planner": {
+        "calls": 3177,
+        "completed": 3177,
+        "errors": 0
+      },
+      "binding-create|persistence.callback.planner>host.requestFor": {
+        "calls": 2916,
+        "completed": 2916,
+        "errors": 0
+      },
+      "binding-create|persistence.callback.planner>host.revalidate": {
+        "calls": 5184,
+        "completed": 5184,
+        "errors": 0
+      },
+      "binding-create|persistence.callback.planner>persistence.transaction.planner": {
+        "calls": 2592,
+        "completed": 2592,
+        "errors": 0
+      },
+      "binding-create|planner.compareScenarios>fixture.c08.read.preferences": {
+        "calls": 120,
+        "completed": 120,
+        "errors": 0
+      },
+      "binding-create|fixture.c08.read.preferences>persistence.transaction.dashboard": {
+        "calls": 156,
+        "completed": 156,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>rules.evaluate": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "binding-create|rules.evaluate>host.requestFor": {
+        "calls": 6,
+        "completed": 6,
+        "errors": 0
+      },
+      "binding-create|rules.evaluate>host.revalidate": {
+        "calls": 15,
+        "completed": 15,
+        "errors": 0
+      },
+      "binding-create|rules.evaluate>diagnostic.c08.read.cases": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-create|rules.evaluate>callback.authorizeCase": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-create|rules.evaluate>diagnostic.c08.read.preferences": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-create|rules.evaluate>callback.evidence": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-create|rules.evaluate>callback.criterionMetric": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "binding-create|callback.criterionMetric>host.revalidate": {
+        "calls": 1188,
+        "completed": 1188,
+        "errors": 0
+      },
+      "binding-create|callback.criterionMetric>rules.resolve": {
+        "calls": 6,
+        "completed": 6,
+        "errors": 0
+      },
+      "binding-create|callback.criterionMetric>host.requestFor": {
+        "calls": 474,
+        "completed": 474,
+        "errors": 0
+      },
+      "binding-create|callback.criterionMetric>fixture.c08.read.cases": {
+        "calls": 306,
+        "completed": 306,
+        "errors": 0
+      },
+      "binding-create|callback.criterionMetric>persistence.transaction.planner": {
+        "calls": 171,
+        "completed": 171,
+        "errors": 0
+      },
+      "binding-create|callback.criterionMetric>fixture.c08.read.preferences": {
+        "calls": 36,
+        "completed": 36,
+        "errors": 0
+      },
+      "binding-create|bindings.bind>diagnostic.c08.transaction.preferences": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-create|diagnostic.c08.transaction.preferences>c08.authorize.write.preferences": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-create|c08.authorize.write.preferences>host.revalidate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-create|diagnostic.c08.transaction.preferences>c08.authorize.write.cases": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-create|c08.authorize.write.cases>host.revalidate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|root>phase.binding-read": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-read|phase.binding-read>bindings.read": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-read|bindings.read>host.requestFor": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "binding-read|bindings.read>host.revalidate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|bindings.read>diagnostic.c08.read.preferences": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|diagnostic.c08.read.preferences>persistence.transaction.dashboard": {
+        "calls": 22,
+        "completed": 22,
+        "errors": 0
+      },
+      "binding-read|persistence.transaction.dashboard>persistence.callback.dashboard": {
+        "calls": 884,
+        "completed": 884,
+        "errors": 0
+      },
+      "binding-read|persistence.callback.dashboard>c08.authorize.read.preferences": {
+        "calls": 44,
+        "completed": 44,
+        "errors": 0
+      },
+      "binding-read|c08.authorize.read.preferences>host.revalidate": {
+        "calls": 44,
+        "completed": 44,
+        "errors": 0
+      },
+      "binding-read|bindings.read>results.read": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|results.read>host.requestFor": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-read|results.read>host.revalidate": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "binding-read|results.read>fixture.c08.read.cases": {
+        "calls": 6,
+        "completed": 6,
+        "errors": 0
+      },
+      "binding-read|fixture.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 738,
+        "completed": 738,
+        "errors": 0
+      },
+      "binding-read|bindings.read>rules.resolve": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|rules.resolve>host.requestFor": {
+        "calls": 6,
+        "completed": 6,
+        "errors": 0
+      },
+      "binding-read|rules.resolve>host.revalidate": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-read|rules.resolve>diagnostic.c08.read.cases": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-read|diagnostic.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0
+      },
+      "binding-read|persistence.callback.dashboard>c08.authorize.read.cases": {
+        "calls": 40,
+        "completed": 40,
+        "errors": 0
+      },
+      "binding-read|c08.authorize.read.cases>host.revalidate": {
+        "calls": 40,
+        "completed": 40,
+        "errors": 0
+      },
+      "binding-read|rules.resolve>callback.authorizeCase": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-read|callback.authorizeCase>host.revalidate": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0
+      },
+      "binding-read|rules.resolve>diagnostic.c08.read.preferences": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-read|rules.resolve>callback.evidence": {
+        "calls": 12,
+        "completed": 12,
+        "errors": 0
+      },
+      "binding-read|bindings.read>callback.verifyBinding.replay": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|callback.verifyBinding.replay>planner.compareScenarios": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|planner.compareScenarios>host.revalidate": {
+        "calls": 1966,
+        "completed": 1966,
+        "errors": 0
+      },
+      "binding-read|planner.compareScenarios>host.requestFor": {
+        "calls": 768,
+        "completed": 768,
+        "errors": 0
+      },
+      "binding-read|planner.compareScenarios>fixture.c08.read.cases": {
+        "calls": 528,
+        "completed": 528,
+        "errors": 0
+      },
+      "binding-read|planner.compareScenarios>persistence.transaction.planner": {
+        "calls": 276,
+        "completed": 276,
+        "errors": 0
+      },
+      "binding-read|persistence.transaction.planner>persistence.callback.planner": {
+        "calls": 2118,
+        "completed": 2118,
+        "errors": 0
+      },
+      "binding-read|persistence.callback.planner>host.requestFor": {
+        "calls": 1944,
+        "completed": 1944,
+        "errors": 0
+      },
+      "binding-read|persistence.callback.planner>host.revalidate": {
+        "calls": 3456,
+        "completed": 3456,
+        "errors": 0
+      },
+      "binding-read|persistence.callback.planner>persistence.transaction.planner": {
+        "calls": 1728,
+        "completed": 1728,
+        "errors": 0
+      },
+      "binding-read|planner.compareScenarios>fixture.c08.read.preferences": {
+        "calls": 80,
+        "completed": 80,
+        "errors": 0
+      },
+      "binding-read|fixture.c08.read.preferences>persistence.transaction.dashboard": {
+        "calls": 104,
+        "completed": 104,
+        "errors": 0
+      },
+      "binding-read|bindings.read>rules.evaluate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|rules.evaluate>host.requestFor": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-read|rules.evaluate>host.revalidate": {
+        "calls": 10,
+        "completed": 10,
+        "errors": 0
+      },
+      "binding-read|rules.evaluate>diagnostic.c08.read.cases": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "binding-read|rules.evaluate>callback.authorizeCase": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "binding-read|rules.evaluate>diagnostic.c08.read.preferences": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "binding-read|rules.evaluate>callback.evidence": {
+        "calls": 8,
+        "completed": 8,
+        "errors": 0
+      },
+      "binding-read|rules.evaluate>callback.criterionMetric": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "binding-read|callback.criterionMetric>host.revalidate": {
+        "calls": 792,
+        "completed": 792,
+        "errors": 0
+      },
+      "binding-read|callback.criterionMetric>rules.resolve": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "binding-read|callback.criterionMetric>host.requestFor": {
+        "calls": 316,
+        "completed": 316,
+        "errors": 0
+      },
+      "binding-read|callback.criterionMetric>fixture.c08.read.cases": {
+        "calls": 204,
+        "completed": 204,
+        "errors": 0
+      },
+      "binding-read|callback.criterionMetric>persistence.transaction.planner": {
+        "calls": 114,
+        "completed": 114,
+        "errors": 0
+      },
+      "binding-read|callback.criterionMetric>fixture.c08.read.preferences": {
+        "calls": 24,
+        "completed": 24,
+        "errors": 0
+      },
+      "comparison-read-again|root>phase.comparison-read-again": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "comparison-read-again|phase.comparison-read-again>results.read": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0
+      },
+      "comparison-read-again|results.read>host.requestFor": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0
+      },
+      "comparison-read-again|results.read>host.revalidate": {
+        "calls": 4,
+        "completed": 4,
+        "errors": 0
+      },
+      "comparison-read-again|results.read>fixture.c08.read.cases": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "comparison-read-again|fixture.c08.read.cases>persistence.transaction.dashboard": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      },
+      "comparison-read-again|persistence.transaction.dashboard>persistence.callback.dashboard": {
+        "calls": 3,
+        "completed": 3,
+        "errors": 0
+      }
+    },
+    "outputs": {
+      "comparison": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73",
+      "rule": "297d2038040a7ab226fe6b625464c19c10eb79f1201a082997f2d0338b493987",
+      "evaluation": "57db0af20092a4f30afc0ea4ff4cef0a4ef8ae4e7b1c7ef4ce82e1db1399e002",
+      "binding": "a9bb95f4b7004d7af4cc3c5dea1b451b7b9cd6e3d8ed3e24a98bf196226acfae",
+      "comparisonAgain": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73"
+    },
+    "spyHistory": {
+      "entryInvocations": 133111,
+      "entryCallsHighWater": 1,
+      "entryResultsHighWater": 1,
+      "phaseClears": 8,
+      "reportClears": 1,
+      "checkpointCallsHighWater": 0,
+      "checkpointResultsHighWater": 0,
+      "residualCallsHighWater": 0,
+      "residualResultsHighWater": 0,
+      "residualCalls": 0,
+      "residualResults": 0,
+      "pendingAtClearHighWater": 0
+    },
+    "pendingObserverPromisesAtReport": 0,
+    "processMemory": {
+      "beforeFirstPhase": {
+        "rss": 307716096,
+        "heapTotal": 97881088,
+        "heapUsed": 23052062,
+        "external": 10179669,
+        "arrayBuffers": 64771
+      },
+      "afterLastPhase": {
+        "rss": 315981824,
+        "heapTotal": 98469888,
+        "heapUsed": 29547029,
+        "external": 15024135,
+        "arrayBuffers": 123315
+      },
+      "limit": "Snapshots do processo inteiro, sem forced GC, peak, heap vivo pós-coleta ou limite de retenção do produto. Máximos de arrays do spy iguais a1 e resíduos0 documentam apenas o histórico observado."
+    },
+    "focusedControls": {
+      "result-digests": {
+        "scalar": 4,
+        "duplicateBatch": 8,
+        "duplicateBatchCaseHashes": 12,
+        "scalarCallbacks": 11,
+        "duplicateBatchCallbacks": 19
+      },
+      "calculation-sources": {
+        "inputReferencesPerDerivation": 6,
+        "distinctSourceReferences": 2,
+        "digests": 64,
+        "replayCallbacks": 2,
+        "producerLines": {
+          "first": 271,
+          "last": 274
+        },
+        "callsites": [
+          "product/decisions/result-store.ts:272:275",
+          "product/decisions/result-store.ts:272:299"
+        ],
+        "firstStack": "Error\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts:114:25)\n    at digestSfValue (unknown)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:272:275)\n    at findIndex (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:272:255)\n    at filter (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:103:236)\n    at processTicksAndRejections (native:7:39)"
+      }
+    }
+  },
+  "R1ExpectedBeforeOutcome": {
+    "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "Wtree": "fd815bff71b812debd0a7773e33060fe21427e55",
+    "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "Vtree": "51fedc4707ccb553e95658720678562390e16edc",
+    "S": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+    "branch": "ci-run-linux-m76-6854c0f9-9c46187e-r1",
+    "productPath": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+    "productPostimage": {
+      "bytes": 30383,
+      "blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "sha256": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de"
+    },
+    "testHelperIdentities": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+        "mode": "100644",
+        "status": "added",
+        "preimage": null,
+        "postimage": {
+          "bytes": 5542,
+          "blob": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+          "sha256": "bc6dcec62f41d61d2d5174fa8a3ce55ed7f7bdaa7ffcdc89043335e0aa9af777"
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+        "mode": "100644",
+        "status": "added",
+        "preimage": null,
+        "postimage": {
+          "bytes": 12165,
+          "blob": "7013df4178b57b6ea55c55e223749904008095a0",
+          "sha256": "9c693c846ea02db4476d6582e13495a3eb45291cfa44257cc521aa64793ac8ac"
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+        "mode": "100644",
+        "status": "added",
+        "preimage": null,
+        "postimage": {
+          "bytes": 5828,
+          "blob": "8f0051c478d0ade11b044d95e2928206a008308a",
+          "sha256": "c5fdcdaf84e986fb00d2148f9ccd878cb27d14bff22d284e08a6590b10a82eb6"
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+        "mode": "100644",
+        "status": "added",
+        "preimage": null,
+        "postimage": {
+          "bytes": 6644,
+          "blob": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+          "sha256": "0853f2a63ea2d0f11ff2630107cb98884ea8f47755b7e811aa5ee46852ce1939"
+        }
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+        "mode": "100644",
+        "status": "added",
+        "preimage": null,
+        "postimage": {
+          "bytes": 10695,
+          "blob": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+          "sha256": "17b51edde620637193b92c581e38d67d81aea0cfd29bf1c4a0a02accca058860"
+        }
+      }
+    ],
+    "identityGate": "Confirmar byte-identidade dos testes/probe/fixture entre B2 e R1 na receipt do root. Somente marker diagnostic-expected muda label/hashes; result-store é a única mudança de produto.",
+    "focusedControls": {
+      "scalarStoredDigests": {
+        "baseline": 4,
+        "expected": 3,
+        "removed": 1
+      },
+      "duplicateBatchStoredDigests": {
+        "baseline": 8,
+        "expected": 6,
+        "removed": 2
+      },
+      "duplicateBatchCaseHashes": {
+        "baseline": 12,
+        "expected": 10,
+        "removed": 2,
+        "derivation": "Oito digests dos quatro callbacks authorizeCase permanecem; os quatro digests finais de dois aliases tornam-se dois, um por objeto em cada uma das duas observações privadas."
+      },
+      "calculationSourcesDigests": {
+        "baseline": 64,
+        "expected": 24,
+        "removed": 40,
+        "derivation": "Quatro derivações visitam seis referências completas uma vez cada; Set retém a primeira ocorrência pelo digest integral, inclusive versão e demais campos."
+      },
+      "scalarCallbackEvents": 11,
+      "duplicateBatchCallbackEvents": 19,
+      "calculationReplayCallbacks": 2,
+      "caveat": "As contagens exatas não são assertions de velocidade. As regressões qualificam outputs, ordem, aliases, recusas, clone/getters, fonte/autoridade e replay."
+    },
+    "boundedWorkflow": {
+      "scalarStoredFinalDigest": {
+        "baseline": 11,
+        "expected": 0,
+        "removed": 11,
+        "sourceBaseline": "result-store.ts:118:223",
+        "mechanism": "Reutilizar digest de latest.stored privado sem remover a observação final."
+      },
+      "batchStoredFinalDigest": {
+        "baseline": 596,
+        "expected": 0,
+        "removed": 596,
+        "sourceBaseline": "result-store.ts:202:220",
+        "mechanism": "Reutilizar digest por ocorrência de latest.stored privado, conservando comparação final de observed.stored."
+      },
+      "scalarFinalReturnClone": {
+        "baseline": 11,
+        "expected": 0,
+        "removed": 11,
+        "sourceBaseline": "result-store.ts:119:35",
+        "mechanism": "Publicar stored do envelope final integralmente clonado; não retirar clone de final.value nem clones independentes do retorno batch."
+      },
+      "batchFinalCaseDigests": {
+        "baseline": 1192,
+        "conditionalExpected": 668,
+        "conditionalRemoved": 524,
+        "basis": "B2 observa334 batches finais e596 elementos sobreviventes. Se cada batch possui um único objeto de caso por observação privada, o helper WeakMap fará334×2 digests, em vez de596×2. Os aliases não foram inspecionados pelo observer, portanto conferir essa previsão no R1 em vez de pressupô-la demonstrada pelo B2.",
+        "sourceBaseline": [
+          "result-store.ts:202:116",
+          "result-store.ts:202:151"
+        ],
+        "sourceCandidate": "result-store.ts:211-218 caseDigest, ou caller225 caso o helper apareça inlined."
+      },
+      "totalDigestCalls": {
+        "baseline": 133103,
+        "conditionalExpected": 131972,
+        "conditionalRemoved": 1131,
+        "equation": "133103 - 11 - 596 - 524 = 131972; exige confirmar hipótese de668 case digests no R1."
+      },
+      "totalCloneCalls": {
+        "baseline": 72415,
+        "expected": 72404,
+        "removed": 11
+      },
+      "C08OpaqueStateClone": {
+        "baseline": 2216,
+        "expected": 2216,
+        "source": "state-provider.ts:65:24",
+        "unchangedSource": true
+      },
+      "calculationSourcesObserved": {
+        "baseline": 0,
+        "expected": 0,
+        "limit": "Set é qualificado pelo controle focado, não por ganho neste workflow que não usa readForCalculation."
+      },
+      "callbackOrderEvents": 87440,
+      "callbackOrderSha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+      "allOutputDigestsExpected": {
+        "comparison": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73",
+        "rule": "297d2038040a7ab226fe6b625464c19c10eb79f1201a082997f2d0338b493987",
+        "evaluation": "57db0af20092a4f30afc0ea4ff4cef0a4ef8ae4e7b1c7ef4ce82e1db1399e002",
+        "binding": "a9bb95f4b7004d7af4cc3c5dea1b451b7b9cd6e3d8ed3e24a98bf196226acfae",
+        "comparisonAgain": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73"
+      },
+      "publicBoundaryCountsExpected": "Igualdade de calls/completed/errors para todas as chaves B2. Tempos não entram nessa igualdade."
+    },
+    "observerExpected": {
+      "entryCallsHighWaterAtMost": 1,
+      "entryResultsHighWaterAtMost": 1,
+      "phaseClears": 8,
+      "reportClears": 1,
+      "residualCalls": 0,
+      "residualResults": 0,
+      "pendingAtClearHighWater": 0,
+      "pendingAtReport": 0,
+      "limit": "Zero residual não afirma zero retenção de invocação ativa/última; entryInvocations inclui digests de assertions fora das fases, devendo variar com o trabalho removido."
+    },
+    "status": "Previsões registradas antes do recebimento dos artifacts; todas as contagens aqui previstas foram observadas em R1, inclusive668 case digests antes condicional."
+  },
+  "R1Observed": {
+    "run": 43673023213,
+    "job": 132687025106,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673023213/job/132687025106",
+    "snapshotIdentity": {
+      "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+      "Wtree": "fd815bff71b812debd0a7773e33060fe21427e55",
+      "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "Vtree": "51fedc4707ccb553e95658720678562390e16edc",
+      "S": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+      "branch": "ci-run-linux-m76-6854c0f9-9c46187e-r1"
+    },
+    "artifacts": {
+      "evidence/R1/diagnostic.json": {
+        "bytes": 536920,
+        "sha256": "795d3691a6866cf48153c0ce62c41a286d97ded9e4a38587d7919cc6454c1f7a"
+      },
+      "evidence/R1/primitive-aggregate.json": {
+        "bytes": 72688,
+        "sha256": "be7f41c052a09dbdccfa763f5c8457df37132e49c6f3c655ac8e8f185322e0a1"
+      },
+      "evidence/R1/summary.json": {
+        "bytes": 3542,
+        "sha256": "08ec45737d3b028783d341833f53010c663347094e168dccc14f1c441e167a99"
+      },
+      "evidence/R1/test-output.log": {
+        "bytes": 7700,
+        "sha256": "83c5e86c9fdd29eb0861b096dccf26609d69366c6e681a258f6211bc8169b0ac"
+      }
+    },
+    "producerSha256": {
+      "product/host-binding/state-provider.ts": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+      "product/decisions/result-store.ts": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de",
+      "product/decisions/criterion-comparison.ts": "0faeabe7da29ded1a5f1297fa4ad9d86190f63042a10622900c9b40cd035b4ef"
+    },
+    "selectedSuite": {
+      "passed": 58,
+      "failed": 0,
+      "expectCalls": 580,
+      "files": 11,
+      "seconds": 119.16,
+      "selectedFiles": [
+        "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+        "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+        "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts"
+      ]
+    },
+    "workload": {
+      "prepare": 1,
+      "comparisonReads": 2,
+      "ruleResolves": 1,
+      "ruleEvaluations": 1,
+      "proofReads": 1,
+      "bindingWrites": 1,
+      "bindingReads": 1
+    },
+    "primitiveByKind": {
+      "digestSfValue": {
+        "calls": 131972,
+        "errors": 0,
+        "exclusiveMeasuredMs": 12480.236193
+      },
+      "structuredClone": {
+        "calls": 72404,
+        "errors": 0,
+        "exclusiveMeasuredMs": 11735.555421
+      }
+    },
+    "rootPhaseWallMs": 35358.113073,
+    "phaseWallMs": {
+      "prepare-once": 5964.172351,
+      "comparison-read": 23.282231,
+      "rule-resolve": 22.706457,
+      "rule-evaluate": 1631.981347,
+      "binding-proofs": 22.0653,
+      "binding-create": 16652.865525,
+      "binding-read": 11017.639097,
+      "comparison-read-again": 23.400765
+    },
+    "stackCaptureMs": 1489.66641,
+    "bindingReadBoundary": {
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 11017.523719,
+      "maximumMs": 11017.523719
+    },
+    "callbackOrder": {
+      "events": 87440,
+      "sha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4"
+    },
+    "outputs": {
+      "comparison": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73",
+      "rule": "297d2038040a7ab226fe6b625464c19c10eb79f1201a082997f2d0338b493987",
+      "evaluation": "57db0af20092a4f30afc0ea4ff4cef0a4ef8ae4e7b1c7ef4ce82e1db1399e002",
+      "binding": "a9bb95f4b7004d7af4cc3c5dea1b451b7b9cd6e3d8ed3e24a98bf196226acfae",
+      "comparisonAgain": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73"
+    },
+    "spyHistory": {
+      "entryInvocations": 131980,
+      "entryCallsHighWater": 1,
+      "entryResultsHighWater": 1,
+      "phaseClears": 8,
+      "reportClears": 1,
+      "checkpointCallsHighWater": 0,
+      "checkpointResultsHighWater": 0,
+      "residualCallsHighWater": 0,
+      "residualResultsHighWater": 0,
+      "residualCalls": 0,
+      "residualResults": 0,
+      "pendingAtClearHighWater": 0
+    },
+    "pendingObserverPromisesAtReport": 0,
+    "processMemory": {
+      "beforeFirstPhase": {
+        "rss": 304025600,
+        "heapTotal": 96447488,
+        "heapUsed": 23916390,
+        "external": 10645994,
+        "arrayBuffers": 65904
+      },
+      "afterLastPhase": {
+        "rss": 308146176,
+        "heapTotal": 97068032,
+        "heapUsed": 25910911,
+        "external": 11703967,
+        "arrayBuffers": 144550
+      },
+      "limit": "Uso do processo observado, incluindo instrumentação e GC; sem interpretação de heap do produto, peak ou limite de retenção."
+    },
+    "focusedControls": {
+      "result-digests": {
+        "scalar": 3,
+        "duplicateBatch": 6,
+        "duplicateBatchCaseHashes": 10,
+        "scalarCallbacks": 11,
+        "duplicateBatchCallbacks": 19
+      },
+      "calculation-sources": {
+        "inputReferencesPerDerivation": 6,
+        "distinctSourceReferences": 2,
+        "digests": 24,
+        "replayCallbacks": 2,
+        "producerLines": {
+          "first": 294,
+          "last": 303
+        },
+        "callsites": [
+          "product/decisions/result-store.ts:297:20"
+        ],
+        "firstStack": "Error\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts:114:25)\n    at digestSfValue (unknown)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:297:20)\n    at filter (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:103:236)\n    at processTicksAndRejections (native:7:39)"
+      }
+    }
+  },
+  "interpretationRules": [
+    "Conferir contagens globais e semântica dos callsites contra os blobs exatos; linhas mudaram no result-store e helpers podem aparecer inlined no stack.",
+    "operation-verifier.ts:94 continua sendo caller de projectionDigest, não expressão direta digestSfValue.",
+    "Não somar tempos inclusivos de boundaries aninhadas. Somente fases de topo sem sobreposição e primitive exclusiveMeasuredMs são agregados próprios.",
+    "Não alegar speedup, regressão temporal ou previsão do P03 a partir de uma amostra instrumentada por variante. Tempos são descritivos e o observer também custa trabalho.",
+    "Clones C08 integrais, fonte/autoridade e replay preservados integram o custo residual medido; não autorizar projeções rejeitadas pela58.",
+    "Somente uma mudança material qualificada por regressões permite repetir o P03 original, mantendo72 assertions e180000ms. Este relatório não qualifica o P03."
+  ],
+  "sourceIdentityVerification": {
+    "method": "GitHub MCP fetch_file com refs W imutáveis; comparação do SHA Git blob retornado pelo provedor, não do trecho de uma linha retornado para evitar baixar arquivos novamente.",
+    "verifiedSharedTestHelpers": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+        "B2blob": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+        "R1blob": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+        "equal": true,
+        "B2url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9285ddf74eb4260162f6040226e4745dab184ff/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+        "R1url": "https://github.com/gustavomhss/Orchestra-SF/blob/6854c0f966e4fd78322932181359c3742c53c16d/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+        "B2blob": "8f0051c478d0ade11b044d95e2928206a008308a",
+        "R1blob": "8f0051c478d0ade11b044d95e2928206a008308a",
+        "equal": true,
+        "B2url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9285ddf74eb4260162f6040226e4745dab184ff/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+        "R1url": "https://github.com/gustavomhss/Orchestra-SF/blob/6854c0f966e4fd78322932181359c3742c53c16d/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+        "B2blob": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+        "R1blob": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+        "equal": true,
+        "B2url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9285ddf74eb4260162f6040226e4745dab184ff/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+        "R1url": "https://github.com/gustavomhss/Orchestra-SF/blob/6854c0f966e4fd78322932181359c3742c53c16d/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+        "B2blob": "7013df4178b57b6ea55c55e223749904008095a0",
+        "R1blob": "7013df4178b57b6ea55c55e223749904008095a0",
+        "equal": true,
+        "B2url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9285ddf74eb4260162f6040226e4745dab184ff/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+        "R1url": "https://github.com/gustavomhss/Orchestra-SF/blob/6854c0f966e4fd78322932181359c3742c53c16d/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+        "B2blob": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+        "R1blob": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+        "equal": true,
+        "B2url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9285ddf74eb4260162f6040226e4745dab184ff/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+        "R1url": "https://github.com/gustavomhss/Orchestra-SF/blob/6854c0f966e4fd78322932181359c3742c53c16d/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts"
+      }
+    ],
+    "productBefore": {
+      "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "sha256": "576dc47430a6072d094c98d4c319d6659f8b58d07a201dc1a50d47bc34679a59"
+    },
+    "productAfter": {
+      "blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "sha256": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de"
+    },
+    "stateProviderUnchanged": true,
+    "criterionComparisonUnchanged": true,
+    "validationDependency": "Os dois V incluem o mesmo bundle readonly59 exato. A integração desse bundle é pré-requisito de validação; não pertence ao patch de produto76."
+  },
+  "comparison": {
+    "sameObserverAndTestBytes": true,
+    "sameObserverAndTestBytesEvidence": "sourceIdentityVerification.verifiedSharedTestHelpers",
+    "sameSelectedFiles": true,
+    "sameWorkload": true,
+    "sameOutputs": true,
+    "sameCallbackOrder": true,
+    "publicBoundaryCounts": {
+      "baselineRows": 192,
+      "candidateRows": 192,
+      "equal": true,
+      "differences": []
+    },
+    "controlDigestCountChanges": {
+      "scalarStored": {
+        "B2": 4,
+        "R1": 3
+      },
+      "duplicateBatchStored": {
+        "B2": 8,
+        "R1": 6
+      },
+      "duplicateBatchCases": {
+        "B2": 12,
+        "R1": 10
+      },
+      "calculationSources": {
+        "B2": 64,
+        "R1": 24
+      },
+      "scalarCallbackEvents": {
+        "B2": 11,
+        "R1": 11
+      },
+      "duplicateBatchCallbackEvents": {
+        "B2": 19,
+        "R1": 19
+      },
+      "calculationReplayCallbacks": {
+        "B2": 2,
+        "R1": 2
+      }
+    },
+    "exactPrimitiveCountDelta": {
+      "digestSfValue": {
+        "B2": 133103,
+        "R1": 131972,
+        "removed": 1131,
+        "accounting": "11 scalar stored +596 batch stored +524 duplicate private case digests =1131"
+      },
+      "structuredClone": {
+        "B2": 72415,
+        "R1": 72404,
+        "removed": 11,
+        "accounting": "11 scalar return clones; all other module clone counts stable."
+      }
+    },
+    "changedModuleCountsOnly": [
+      {
+        "module": "digestSfValue|product/decisions/result-store.ts",
+        "baselineCalls": 10471,
+        "candidateCalls": 9340,
+        "deltaCalls": -1131
+      },
+      {
+        "module": "structuredClone|product/decisions/result-store.ts",
+        "baselineCalls": 5313,
+        "candidateCalls": 5302,
+        "deltaCalls": -11
+      }
+    ],
+    "unchangedModuleCounts": "Todos os demais módulos/primitivas agregados, inclusive unattributed, preservam contagens; só result-store explica a diferença global.",
+    "callsiteMapping": [
+      {
+        "mechanism": "Último digest escalar de latest.stored",
+        "B2": [
+          {
+            "site": "digestSfValue|product/decisions/result-store.ts:118:223",
+            "calls": 11,
+            "inclusiveMs": 0.641303,
+            "exclusiveMeasuredMs": 0.641303,
+            "errors": 0
+          }
+        ],
+        "R1": [],
+        "baselineCalls": 11,
+        "candidateCalls": 0,
+        "removedCalls": 11,
+        "interpretation": "11 chamadas removidas: a comparação final usa latestDigest já computado em112:26; permanece digest do stored da nova observação em122:188."
+      },
+      {
+        "mechanism": "Último digest batch de previous.stored",
+        "B2": [
+          {
+            "site": "digestSfValue|product/decisions/result-store.ts:202:220",
+            "calls": 596,
+            "inclusiveMs": 140.151266,
+            "exclusiveMeasuredMs": 140.151266,
+            "errors": 0
+          }
+        ],
+        "R1": [],
+        "baselineCalls": 596,
+        "candidateCalls": 0,
+        "removedCalls": 596,
+        "interpretation": "596 chamadas removidas: a comparação final usa latestDigests[index] da segunda observação privada, sem trocar a fonte da observação final."
+      },
+      {
+        "mechanism": "Digests finais de casos compartilhados dentro do batch",
+        "B2": [
+          {
+            "site": "digestSfValue|product/decisions/result-store.ts:202:116",
+            "calls": 596,
+            "inclusiveMs": 295.763132,
+            "exclusiveMeasuredMs": 295.763132,
+            "errors": 0
+          },
+          {
+            "site": "digestSfValue|product/decisions/result-store.ts:202:151",
+            "calls": 596,
+            "inclusiveMs": 275.552321,
+            "exclusiveMeasuredMs": 275.552321,
+            "errors": 0
+          }
+        ],
+        "R1": [
+          {
+            "site": "digestSfValue|product/decisions/result-store.ts:215:22",
+            "calls": 668,
+            "inclusiveMs": 322.037642,
+            "exclusiveMeasuredMs": 322.037642,
+            "errors": 0
+          }
+        ],
+        "baselineCalls": 1192,
+        "candidateCalls": 668,
+        "removedCalls": 524,
+        "interpretation": "1192→668: WeakMap local reutiliza apenas digest do mesmo objeto privado; current e previous continuam objetos de observações independentes. A contagem antes condicional foi confirmada em R1."
+      },
+      {
+        "mechanism": "Clone adicional do retorno escalar",
+        "B2": [
+          {
+            "site": "structuredClone|product/decisions/result-store.ts:119:35",
+            "calls": 11,
+            "inclusiveMs": 0.933388,
+            "exclusiveMeasuredMs": 0.933388,
+            "errors": 0
+          }
+        ],
+        "R1": [],
+        "baselineCalls": 11,
+        "candidateCalls": 0,
+        "removedCalls": 11,
+        "interpretation": "11 clones adicionais removidos. O stored retornado já pertence ao envelope final inteiro clonado, que continua sendo observado e clonado antes de sua seleção/publicação."
+      },
+      {
+        "mechanism": "Clone integral do envelope final escalar preservado",
+        "B2": [
+          {
+            "site": "structuredClone|product/decisions/result-store.ts:116:22",
+            "calls": 11,
+            "inclusiveMs": 4.838489,
+            "exclusiveMeasuredMs": 4.838489,
+            "errors": 0
+          }
+        ],
+        "R1": [
+          {
+            "site": "structuredClone|product/decisions/result-store.ts:120:22",
+            "calls": 11,
+            "inclusiveMs": 4.666016,
+            "exclusiveMeasuredMs": 4.666016,
+            "errors": 0
+          }
+        ],
+        "baselineCalls": 11,
+        "candidateCalls": 11,
+        "removedCalls": 0,
+        "interpretation": "11→11; getter e erro em campos não selecionados continuam anteriores à publicação."
+      },
+      {
+        "mechanism": "Clone integral do envelope final batch preservado",
+        "B2": [
+          {
+            "site": "structuredClone|product/decisions/result-store.ts:194:22",
+            "calls": 334,
+            "inclusiveMs": 226.671905,
+            "exclusiveMeasuredMs": 226.671905,
+            "errors": 0
+          }
+        ],
+        "R1": [
+          {
+            "site": "structuredClone|product/decisions/result-store.ts:206:22",
+            "calls": 334,
+            "inclusiveMs": 224.529473,
+            "exclusiveMeasuredMs": 224.529473,
+            "errors": 0
+          }
+        ],
+        "baselineCalls": 334,
+        "candidateCalls": 334,
+        "removedCalls": 0,
+        "interpretation": "334→334; não juntar observações independentes."
+      },
+      {
+        "mechanism": "Clone de cada retorno batch preservado",
+        "B2": [
+          {
+            "site": "structuredClone|product/decisions/result-store.ts:203:37",
+            "calls": 596,
+            "inclusiveMs": 128.650225,
+            "exclusiveMeasuredMs": 128.650225,
+            "errors": 0
+          }
+        ],
+        "R1": [
+          {
+            "site": "structuredClone|product/decisions/result-store.ts:226:37",
+            "calls": 596,
+            "inclusiveMs": 124.139922,
+            "exclusiveMeasuredMs": 124.139922,
+            "errors": 0
+          }
+        ],
+        "baselineCalls": 596,
+        "candidateCalls": 596,
+        "removedCalls": 0,
+        "interpretation": "596→596; duplicatas não passam a compartilhar retorno mutável."
+      },
+      {
+        "mechanism": "Digest do stored final batch preservado",
+        "B2": [
+          {
+            "site": "digestSfValue|product/decisions/result-store.ts:202:186",
+            "calls": 596,
+            "inclusiveMs": 133.568558,
+            "exclusiveMeasuredMs": 133.568558,
+            "errors": 0
+          }
+        ],
+        "R1": [
+          {
+            "site": "digestSfValue|product/decisions/result-store.ts:225:180",
+            "calls": 596,
+            "inclusiveMs": 133.633245,
+            "exclusiveMeasuredMs": 133.633245,
+            "errors": 0
+          }
+        ],
+        "baselineCalls": 596,
+        "candidateCalls": 596,
+        "removedCalls": 0,
+        "interpretation": "596→596; a nova observação final continua comparada integralmente."
+      },
+      {
+        "mechanism": "Clone opaco C08 preservado",
+        "B2": [
+          {
+            "site": "structuredClone|product/host-binding/state-provider.ts:65:24",
+            "calls": 2216,
+            "inclusiveMs": 6891.717802,
+            "exclusiveMeasuredMs": 6891.717802,
+            "errors": 0
+          }
+        ],
+        "R1": [
+          {
+            "site": "structuredClone|product/host-binding/state-provider.ts:65:24",
+            "calls": 2216,
+            "inclusiveMs": 6836.526653,
+            "exclusiveMeasuredMs": 6836.526653,
+            "errors": 0
+          }
+        ],
+        "baselineCalls": 2216,
+        "candidateCalls": 2216,
+        "removedCalls": 0,
+        "interpretation": "2216→2216; fonte state-provider idêntica, sem nova projeção."
+      }
+    ],
+    "phaseTimesDescriptiveOnly": [
+      {
+        "phase": "prepare-once",
+        "B2ms": 6090.120637,
+        "R1ms": 5964.172351
+      },
+      {
+        "phase": "comparison-read",
+        "B2ms": 22.241517,
+        "R1ms": 23.282231
+      },
+      {
+        "phase": "rule-resolve",
+        "B2ms": 24.758063,
+        "R1ms": 22.706457
+      },
+      {
+        "phase": "rule-evaluate",
+        "B2ms": 1668.630355,
+        "R1ms": 1631.981347
+      },
+      {
+        "phase": "binding-proofs",
+        "B2ms": 22.986724,
+        "R1ms": 22.0653
+      },
+      {
+        "phase": "binding-create",
+        "B2ms": 16998.685573,
+        "R1ms": 16652.865525
+      },
+      {
+        "phase": "binding-read",
+        "B2ms": 11403.704411,
+        "R1ms": 11017.639097
+      },
+      {
+        "phase": "comparison-read-again",
+        "B2ms": 21.59411,
+        "R1ms": 23.400765
+      }
+    ],
+    "observerHistoryBoundsObserved": {
+      "B2": {
+        "entryInvocations": 133111,
+        "entryCallsHighWater": 1,
+        "entryResultsHighWater": 1,
+        "phaseClears": 8,
+        "reportClears": 1,
+        "checkpointCallsHighWater": 0,
+        "checkpointResultsHighWater": 0,
+        "residualCallsHighWater": 0,
+        "residualResultsHighWater": 0,
+        "residualCalls": 0,
+        "residualResults": 0,
+        "pendingAtClearHighWater": 0
+      },
+      "R1": {
+        "entryInvocations": 131980,
+        "entryCallsHighWater": 1,
+        "entryResultsHighWater": 1,
+        "phaseClears": 8,
+        "reportClears": 1,
+        "checkpointCallsHighWater": 0,
+        "checkpointResultsHighWater": 0,
+        "residualCallsHighWater": 0,
+        "residualResultsHighWater": 0,
+        "residualCalls": 0,
+        "residualResults": 0,
+        "pendingAtClearHighWater": 0
+      },
+      "pendingB2": 0,
+      "pendingR1": 0,
+      "limit": "Amostras dos comprimentos dos arrays internos: máximo1 em entry e0 após clear. Não demonstram zero retenção da invocação ativa/última nem limite de heap."
+    },
+    "arithmeticVerification": {
+      "B2": {
+        "rawPrimitiveRows": 1633,
+        "aggregatedSites": 386,
+        "allowedRoundingDeltaMs": 1e-06,
+        "discrepancies": []
+      },
+      "R1": {
+        "rawPrimitiveRows": 1611,
+        "aggregatedSites": 382,
+        "allowedRoundingDeltaMs": 1e-06,
+        "discrepancies": []
+      }
+    }
+  },
+  "bindingReadCausalBoundary": {
+    "B2": {
+      "boundary": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0,
+        "inclusiveMs": 11403.59283,
+        "maximumMs": 11403.59283
+      },
+      "directChildren": {
+        "host.requestFor": {
+          "calls": 1,
+          "completed": 1,
+          "errors": 0,
+          "inclusiveMs": 0.001652,
+          "maximumMs": 0.001652
+        },
+        "host.revalidate": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 0.013897,
+          "maximumMs": 0.008267
+        },
+        "diagnostic.c08.read.preferences": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 11.012352,
+          "maximumMs": 5.899204
+        },
+        "results.read": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 42.999961,
+          "maximumMs": 22.463865
+        },
+        "rules.resolve": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 48.211949,
+          "maximumMs": 24.486082
+        },
+        "callback.verifyBinding.replay": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 7941.613217,
+          "maximumMs": 4047.876095
+        },
+        "rules.evaluate": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 3358.398879,
+          "maximumMs": 1714.598734
+        }
+      }
+    },
+    "R1": {
+      "boundary": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0,
+        "inclusiveMs": 11017.523719,
+        "maximumMs": 11017.523719
+      },
+      "directChildren": {
+        "host.requestFor": {
+          "calls": 1,
+          "completed": 1,
+          "errors": 0,
+          "inclusiveMs": 0.000854,
+          "maximumMs": 0.000854
+        },
+        "host.revalidate": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 0.007598,
+          "maximumMs": 0.005619
+        },
+        "diagnostic.c08.read.preferences": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 10.40328,
+          "maximumMs": 5.391612
+        },
+        "results.read": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 44.508411,
+          "maximumMs": 23.797451
+        },
+        "rules.resolve": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 46.361507,
+          "maximumMs": 23.892215
+        },
+        "callback.verifyBinding.replay": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 7685.547029,
+          "maximumMs": 3862.014606
+        },
+        "rules.evaluate": {
+          "calls": 2,
+          "completed": 2,
+          "errors": 0,
+          "inclusiveMs": 3229.558833,
+          "maximumMs": 1621.951992
+        }
+      }
+    },
+    "limit": "Tempos inclusivos. Dois replays canônicos e duas avaliações por leitura são filhos diretos preservados, não trabalho removido. Não somar suas métricas, compares ou transações descendentes de novo."
+  },
+  "finalFindings": [
+    "R1 confirma remoção causal de 1131 digests e 11 clones no workflow, todos atribuídos a result-store; nenhum outro módulo alterou sua contagem. Não se usa somente diferença de duração para inferir essa causa.",
+    "O controle focado demonstra calculationSources 64→24 com replay 2→2, fontes completas e primeira ocorrência preservadas. O workflow não usa esse ramo; nenhum ganho de P03 é atribuído a ele.",
+    "192 contadores públicos, 87440 eventos/ordem e cinco digests de saída coincidem. Regressões selecionadas 58/0/580 em ambos os lados dão suporte específico a clones/getters, aliases, callbacks, autoridade, fonte, fences e replay; não garantem equivalência universal.",
+    "state-provider e criterion-comparison continuam byte-idênticos. O clone opaco C08 permanece 2216 chamadas; não se aplica nenhuma projeção rejeitada pela58. O custo inclusivo do binding conserva replay e avaliações descendentes.",
+    "Fases instrumentadas 36,252721390s e 35,358113073s são descritivas de uma execução por variante; não há afirmação de speedup, throughput, distribuição, causalidade temporal exclusiva ou previsão de P03.",
+    "B0 não integra comparação temporal por retenção antiga do spy. B2/R1 compartilham o probe corrigido; memória continua descritiva do processo inteiro.",
+    "Qualificação material de componentes permite ao root prosseguir ao P03 original separado, sem mudar 72 assertions ou 180000ms. Nenhum resultado desse P03 consta aqui."
+  ]
+}

@@ -1,0 +1,221 @@
+{
+  "schema": "sf2h.mission76.external-candidate.v1",
+  "status": "INERT_UNQUALIFIED_NOT_APPLIED_NOT_TESTED",
+  "candidate": "stored-scenarios-final-private-clone",
+  "owner_required": "Planner stored-scenarios owner assigned by 71/S0; outside mission76 product paths",
+  "source_repository": "gustavomhss/Orchestra-SF",
+  "source_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "source_path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+  "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+  "source_line": 91,
+  "preimage": {
+    "git_blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+    "sha256": "aac8f77c5b7e78ffdec2ecdcfabf8ebd38e6847a96a931800d924e9462aa458a",
+    "bytes": 8247
+  },
+  "postimage": {
+    "git_blob": "c1634b7388216af2da62f1af0d229e2dc78affad",
+    "sha256": "53e435b01e6b673f8965f63d45f984003617cefd1820c06e447f6d17e295138a",
+    "bytes": 8230
+  },
+  "patch": {
+    "file": "EXTERNAL-CANDIDATE76.patch",
+    "sha256": "9d3c0652fb5a5ff60a6dd1e6cbe082ac4c654680217a2f7d7b92885d2f854af3",
+    "bytes": 787,
+    "changes": "Exactly one success-publication clone removed; no other source change."
+  },
+  "private_boundary": [
+    "Each successful PreparedScenario.value is produced by its own complete structuredClone at source line64 (external producer) or line71 (Planner projection).",
+    "Subsequent result rereads and final case observations receive reference IDs, encoded case references and context; no callback receives the private PreparedScenario.value graph.",
+    "Duplicate input references each execute the prepare loop and construct their own independent value clone. Removing the final clone therefore retains independence between returned duplicate outputs.",
+    "No earlier input/opaque response/case/projection clone is removed. Unselected clone failures and getter effects at those existing boundaries remain.",
+    "The final complete-case comparison, independent result reread, canonical projection/replay, authority checks and failure-publication cloning remain byte-identical."
+  ],
+  "limitations": [
+    "Private-boundary ownership argument remains static; the external candidate has not been applied, typechecked or behaviorally tested.",
+    "Exact preimage clone site is observed in both B2 and R1 at224calls; this justifies retaining a concrete small candidate, not claiming it addresses the dominant cost or closes P03.",
+    "No speedup, P03 closure, source76 qualification or release is claimed for this external patch.",
+    "71 must assign the actual Planner owner, reconcile the live target/preimage and require the listed negative tests plus applicable hosted gates before any application/release."
+  ],
+  "required_negative_tests": [
+    "Resolve duplicate references in one call; mutate one returned result, basis, projection and source graph; other occurrence and subsequent calls remain unchanged.",
+    "External supports/resolve and coverageRefFor callbacks retain/mutate their provided arguments; returned successful prepared values remain detached with existing refusal behavior.",
+    "Accessor side effects and uncloneable functions in opaque external/Planner/case responses still execute or fail at the original complete-response cloning boundaries.",
+    "Change stored result after initial projection but before reread: preserve scenario-changed refusal.",
+    "Change full case after result reread but before final case observation: preserve case-changed refusal.",
+    "Preserve exact per-occurrence callback order, errors, source replays and authorization/revocation observations, including mixed successful and failed batches."
+  ],
+  "measurement_required": "The original callsite is measured above. The assigned owner must still compare candidate work/output identities and unchanged callback/fence behavior under hosted qualification; no flaky speed assertion.",
+  "tests_executed": [],
+  "applied": false,
+  "measured_callsite_evidence": {
+    "status": "EXACT_EXISTING_SITE_OBSERVED_PATCH_REMAINS_UNQUALIFIED",
+    "site": "structuredClone|product/planner/stored-scenarios.ts:91:105",
+    "B2": {
+      "W": "c9285ddf74eb4260162f6040226e4745dab184ff",
+      "W_tree": "2d60474a9782481e88d5d1a5e574fe8d9787f371",
+      "V": "a5ab06e87c7280d28264dbaaf9fcf035824bdf12",
+      "V_tree": "88e78f1578e1e5393d34c372f2cfb8852ea052cf",
+      "S": "8bfce3242f1d7c8d6a224ba1418d6486d52444a8",
+      "run": 43672619431,
+      "job": 132685806297,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672619431/job/132685806297",
+      "exact_site": "structuredClone|product/planner/stored-scenarios.ts:91:105",
+      "aggregate": {
+        "calls": 224,
+        "inclusiveMs": 141.31626999995206,
+        "exclusiveMeasuredMs": 141.31626999995206,
+        "errors": 0
+      },
+      "raw_rows": {
+        "prepare-once|phase.prepare-once|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 34,
+          "completed": 34,
+          "errors": 0,
+          "inclusiveMs": 20.97862099998747,
+          "maximumMs": 0.9728389999945648,
+          "exclusiveMeasuredMs": 20.97862099998747
+        },
+        "rule-evaluate|callback.criterionMetric|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 10,
+          "completed": 10,
+          "errors": 0,
+          "inclusiveMs": 5.884095999994315,
+          "maximumMs": 0.8833980000053998,
+          "exclusiveMeasuredMs": 5.884095999994315
+        },
+        "binding-create|planner.compareScenarios|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 78,
+          "completed": 78,
+          "errors": 0,
+          "inclusiveMs": 49.236799000020255,
+          "maximumMs": 1.751868999999715,
+          "exclusiveMeasuredMs": 49.236799000020255
+        },
+        "binding-create|callback.criterionMetric|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 30,
+          "completed": 30,
+          "errors": 0,
+          "inclusiveMs": 19.20473799998581,
+          "maximumMs": 1.9283530000102473,
+          "exclusiveMeasuredMs": 19.20473799998581
+        },
+        "binding-read|planner.compareScenarios|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 52,
+          "completed": 52,
+          "errors": 0,
+          "inclusiveMs": 32.99877400000696,
+          "maximumMs": 0.9903469999990193,
+          "exclusiveMeasuredMs": 32.99877400000696
+        },
+        "binding-read|callback.criterionMetric|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 20,
+          "completed": 20,
+          "errors": 0,
+          "inclusiveMs": 13.013241999957245,
+          "maximumMs": 1.3073829999921145,
+          "exclusiveMeasuredMs": 13.013241999957245
+        }
+      },
+      "raw_report": {
+        "path": "evidence/B2/diagnostic.json",
+        "sha256": "0b32ddf35f626037e02eac11aa2bdb2cf8e819771ec02f088886d12d8dd3e636"
+      },
+      "aggregate_report": {
+        "path": "evidence/B2/primitive-aggregate.json",
+        "sha256": "b54ccb99a1511b20db15b38947a2b4d22a7fcfc25d9dd8d31f96bee460f81038"
+      },
+      "diagnostic_boundary": "Existing renewal fixture uses synthetic source declarations and human grants; SQLite/C08/Planner/rules/metric/comparison replay/binding persistence are real. This does not execute P03, select a choice, confirm training or qualify final history/revocation.",
+      "dominant_observed_primitive_for_context": {
+        "site": "structuredClone|product/host-binding/state-provider.ts:65:24",
+        "calls": 2216,
+        "exclusiveMeasuredMs": 6891.717802000232
+      },
+      "patch_present_in_workload": false
+    },
+    "R1": {
+      "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+      "W_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+      "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "V_tree": "51fedc4707ccb553e95658720678562390e16edc",
+      "S": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+      "run": 43673023213,
+      "job": 132687025106,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673023213/job/132687025106",
+      "exact_site": "structuredClone|product/planner/stored-scenarios.ts:91:105",
+      "aggregate": {
+        "calls": 224,
+        "inclusiveMs": 135.13451800006442,
+        "exclusiveMeasuredMs": 135.13451800006442,
+        "errors": 0
+      },
+      "raw_rows": {
+        "prepare-once|phase.prepare-once|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 34,
+          "completed": 34,
+          "errors": 0,
+          "inclusiveMs": 21.391630000027362,
+          "maximumMs": 1.4096199999912642,
+          "exclusiveMeasuredMs": 21.391630000027362
+        },
+        "rule-evaluate|callback.criterionMetric|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 10,
+          "completed": 10,
+          "errors": 0,
+          "inclusiveMs": 5.720255000007455,
+          "maximumMs": 0.8612790000042878,
+          "exclusiveMeasuredMs": 5.720255000007455
+        },
+        "binding-create|planner.compareScenarios|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 78,
+          "completed": 78,
+          "errors": 0,
+          "inclusiveMs": 46.25987299992994,
+          "maximumMs": 0.8978409999981523,
+          "exclusiveMeasuredMs": 46.25987299992994
+        },
+        "binding-create|callback.criterionMetric|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 30,
+          "completed": 30,
+          "errors": 0,
+          "inclusiveMs": 17.459085000053165,
+          "maximumMs": 0.8932080000085989,
+          "exclusiveMeasuredMs": 17.459085000053165
+        },
+        "binding-read|planner.compareScenarios|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 52,
+          "completed": 52,
+          "errors": 0,
+          "inclusiveMs": 31.153701000017463,
+          "maximumMs": 0.9816249999857973,
+          "exclusiveMeasuredMs": 31.153701000017463
+        },
+        "binding-read|callback.criterionMetric|structuredClone|product/planner/stored-scenarios.ts:91:105": {
+          "calls": 20,
+          "completed": 20,
+          "errors": 0,
+          "inclusiveMs": 13.149974000029033,
+          "maximumMs": 1.9664349999948172,
+          "exclusiveMeasuredMs": 13.149974000029033
+        }
+      },
+      "raw_report": {
+        "path": "evidence/R1/diagnostic.json",
+        "sha256": "795d3691a6866cf48153c0ce62c41a286d97ded9e4a38587d7919cc6454c1f7a"
+      },
+      "aggregate_report": {
+        "path": "evidence/R1/primitive-aggregate.json",
+        "sha256": "be7f41c052a09dbdccfa763f5c8457df37132e49c6f3c655ac8e8f185322e0a1"
+      },
+      "diagnostic_boundary": "Existing renewal fixture uses synthetic source declarations and human grants; SQLite/C08/Planner/rules/metric/comparison replay/binding persistence are real. This does not execute P03, select a choice, confirm training or qualify final history/revocation.",
+      "dominant_observed_primitive_for_context": {
+        "site": "structuredClone|product/host-binding/state-provider.ts:65:24",
+        "calls": 2216,
+        "exclusiveMeasuredMs": 6836.526652999979
+      },
+      "patch_present_in_workload": false
+    },
+    "interpretation": "This is a small external candidate, not the dominant measured cost. Both workloads retain the original clone and execute it224times. B2 observes141.31626999995206ms and R1 observes135.13451800006442ms at this exact primitive. These are descriptive observed costs, not measured removable wall time, a candidate speedup or a P03 result.",
+    "method_limits": "Synchronous native primitive timing under instrumentation; stack capture lies outside the measured native call. Aggregate reconstructed from the listed raw phase/path rows. Different hosted invocations are not a randomized timing comparison. No candidate version of this external file was executed."
+  }
+}

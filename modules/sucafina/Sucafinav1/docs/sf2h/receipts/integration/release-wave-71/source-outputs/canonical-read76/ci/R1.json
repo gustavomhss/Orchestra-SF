@@ -1,0 +1,344 @@
+{
+  "schema": "sf2h.canonical-read-cost.ci-receipt.v1",
+  "mission": 76,
+  "selection": "R1",
+  "source": {
+    "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+  },
+  "composition": {
+    "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "tree": "51fedc4707ccb553e95658720678562390e16edc",
+    "dependency59Material": "26f7af7efcc143d558df51eeb35e4a7011f456fe"
+  },
+  "envelope": {
+    "S": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+    "tree": "c2734bc867038f87c41010ebfb95fc1c162880bb",
+    "onlyDifferenceFromV": ".ci-run.json",
+    "branch": "ci-run-linux-m76-6854c0f9-9c46187e-r1"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "9c46187ef0ce77dcd3175394d1f04c4c164e76c989d2bef2a76cd976eaee650c",
+  "run": {
+    "id": 43673023213,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673023213",
+    "headSha": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+    "status": "completed",
+    "conclusion": "success",
+    "startedAt": "2026-11-15T03:35:06Z"
+  },
+  "jobs": [
+    {
+      "id": 132687025106,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132687910448,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "observed": {
+    "run": 43673023213,
+    "job": 132687025106,
+    "selected": [
+      "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts"
+    ],
+    "nonce": [
+      "4a832f1785d714aded705ad2d0a6347b"
+    ],
+    "verdict": [
+      "omni positive control [4a832f1785d714aded705ad2d0a6347b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "bun": [
+      "bun test v1.3.14 (0d9b296a)"
+    ],
+    "statistics": [
+      " 58 pass",
+      " 0 fail",
+      " 580 expect() calls",
+      "Ran 58 tests across 11 files. [119.16s]"
+    ]
+  },
+  "metrics": {
+    "result-digests": {
+      "scalar": 3,
+      "duplicateBatch": 6,
+      "duplicateBatchCaseHashes": 10,
+      "scalarCallbacks": 11,
+      "duplicateBatchCallbacks": 19
+    },
+    "calculation-sources": {
+      "inputReferencesPerDerivation": 6,
+      "distinctSourceReferences": 2,
+      "digests": 24,
+      "replayCallbacks": 2,
+      "producerLines": {
+        "first": 294,
+        "last": 303
+      },
+      "callsites": [
+        "product/decisions/result-store.ts:297:20"
+      ],
+      "firstStack": "Error\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts:114:25)\n    at digestSfValue (unknown)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:297:20)\n    at filter (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:103:236)\n    at processTicksAndRejections (native:7:39)"
+    }
+  },
+  "comparison": {
+    "baselineTotals": {
+      "digestSfValue": 133103,
+      "structuredClone": 72415
+    },
+    "candidateTotals": {
+      "digestSfValue": 131972,
+      "structuredClone": 72404
+    },
+    "outputsEqual": true,
+    "callCountsEqual": true,
+    "callbackEvents": [
+      87440,
+      87440
+    ],
+    "callbackHashes": [
+      "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+      "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4"
+    ],
+    "phaseWallMs": [
+      36252.72138999999,
+      35358.113072999986
+    ],
+    "spyHistory": {
+      "entryInvocations": 131980,
+      "entryCallsHighWater": 1,
+      "entryResultsHighWater": 1,
+      "phaseClears": 8,
+      "reportClears": 1,
+      "checkpointCallsHighWater": 0,
+      "checkpointResultsHighWater": 0,
+      "residualCallsHighWater": 0,
+      "residualResultsHighWater": 0,
+      "residualCalls": 0,
+      "residualResults": 0,
+      "pendingAtClearHighWater": 0
+    },
+    "pending": 0
+  },
+  "limits": [
+    "Component work/regression qualification only; no global, compiler or native Omni proof.",
+    "Instrumented durations and process memory are descriptive, not an allocation bound or guaranteed speed ratio.",
+    "P03 is separate and not selected in R1."
+  ],
+  "GLOBAL_RELEASE": false
+}

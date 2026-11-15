@@ -1,0 +1,616 @@
+{
+  "schema": "sf2h.mission76.independent-p03-review.v1",
+  "mission": 76,
+  "reviewer": "ci_contract",
+  "scope": "Independent read-only review of the single observed original P03 run after material producer work and discriminating regressions. This is not an A45 compiler verdict, global campaign review, or integration authority.",
+  "state": "P03_FAIL_TIMEOUT_REPORTED_STALE",
+  "method": {
+    "remote": "GitHub MCP exact-S source/request/commit/compare reads, run API, jobs API, test-job and cleanup-job logs, snapshot-ref readback",
+    "local": "Static source/assertion counting, UTF-8 SHA256 hashing and log parsing only",
+    "authoredProductOrTests": false,
+    "executedProductOrTestsLocally": false,
+    "dispatchedRuns": false,
+    "remoteMutations": false
+  },
+  "pins": {
+    "base": {
+      "commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d"
+    },
+    "W1": {
+      "commit": "6854c0f966e4fd78322932181359c3742c53c16d",
+      "tree": "fd815bff71b812debd0a7773e33060fe21427e55"
+    },
+    "V1": {
+      "commit": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "tree": "51fedc4707ccb553e95658720678562390e16edc",
+      "composition": "W1 plus complete pinned readonly59 overlay"
+    },
+    "S": {
+      "commit": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+      "tree": "cf47f376fddce6b9633765ec2620544d6cf1198c",
+      "parent": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "onlyDeltaFromV1": ".ci-run.json"
+    },
+    "durableMaterialGate": {
+      "commit": "2d01f58ff651ab52a32b73a6f399b0fcd183ee71",
+      "tree": "453df0e2d1ff486c9a8e29f1bd8db3bc01078c71",
+      "committerDate": "2026-11-15T03:41:28Z",
+      "runCreatedAfterGateSeconds": 20
+    },
+    "independentRuntimeReview": {
+      "file": "ci_contract/RUNTIME-REVIEW76.json",
+      "sha256": "e5ebcb721df848500b29c8d015b5a046ef1654eed4c615ad5042d835ac17181c",
+      "state": "MATERIAL_WORK_AND_REGRESSIONS_PASS"
+    }
+  },
+  "originalSelection": {
+    "requestBlob": "f368e4c41c5d05311001960c0af04d282e4fa552",
+    "requestSha256": "b419f1644413b9714ff2ffac74b6c368938197bc12981458c90dccd3b22cec62",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "soleTestFile": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "testBlob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "testSha256": "bf37a61e3e919f54b06edfc1d8808c13e5206f983f34b06661466f05770ce0b9",
+    "matchesOriginalBaseBlob": true,
+    "assertions": {
+      "sourceExpectOccurrences": 72,
+      "sourceLines": 72,
+      "orderedRawExpectLinesSha256": "f78152ede2f26602dadf8eaf461e8b2072b1e4edd360ba93811475c290993ba4",
+      "orderUnchanged": true,
+      "runtimeExpectCalls": 24,
+      "all72Executed": false
+    },
+    "budgets": {
+      "individualTestTimeoutMs": 180000,
+      "fixtureGuardDefaultMs": 180000,
+      "originalCliTimeoutMs": 120000,
+      "unchanged": true,
+      "interpretation": "The original individual test override and fixture guard remain 180000 ms. The request's original --timeout 120000 is also preserved; the observed test explicitly timed out at 180000 ms."
+    },
+    "fixtureTraceBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+    "renewalChoiceFixtureBlob": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+    "testFileOrRuntimeInstrumentationAddedForP03": false,
+    "note": "The new bounded diagnostic test and its spy were not selected or imported by the original P03 request."
+  },
+  "run": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "id": 43673511994,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673511994",
+    "event": "push",
+    "attempt": 1,
+    "status": "completed",
+    "conclusion": "failure",
+    "headSha": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+    "branch": "ci-run-linux-m76-6854c0f9-b419f164-p03",
+    "createdAt": "2026-11-15T03:41:48Z",
+    "startedAt": "2026-11-15T03:41:48Z",
+    "updatedAt": "2026-11-15T03:46:47Z",
+    "testJob": {
+      "id": 132688523969,
+      "name": "test (ubuntu-24.04)",
+      "conclusion": "failure",
+      "runTestsStep": "failure"
+    },
+    "cleanup": {
+      "jobId": 132689601722,
+      "conclusion": "success",
+      "deleteSnapshotBranchStep": "success",
+      "loggedTarget": "ci-run-linux-m76-6854c0f9-b419f164-p03",
+      "refReadback": {
+        "method": "GitHub MCP GET git/ref/heads/ci-run-linux-m76-6854c0f9-b419f164-p03",
+        "status": 404,
+        "errorCode": "NOT_FOUND"
+      },
+      "qualification": "Cleanup command contains || true, so job success alone is not treated as deletion proof; independent ref readback returned NOT_FOUND."
+    },
+    "jobs": [
+      {
+        "id": 132688523969,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Assert Linux ARM64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 3
+          },
+          {
+            "name": "Assert macOS arm64",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 4
+          },
+          {
+            "name": "Setup request validator Node",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 5
+          },
+          {
+            "name": "Read request",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 6
+          },
+          {
+            "name": "Fetch source history for Script fixtures",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 7
+          },
+          {
+            "name": "Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 8
+          },
+          {
+            "name": "ripgrep",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 9
+          },
+          {
+            "name": "Setup Playwright Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 10
+          },
+          {
+            "name": "Install Chromium",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 11
+          },
+          {
+            "name": "Linux sandbox dependencies",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 12
+          },
+          {
+            "name": "Setup Python",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 13
+          },
+          {
+            "name": "Install Python test dependencies",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 14
+          },
+          {
+            "name": "Configure git identity",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 15
+          },
+          {
+            "name": "Export requested environment",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 16
+          },
+          {
+            "name": "omni binaries",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 17
+          },
+          {
+            "name": "Rust toolchain (rust-toolchain.toml)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 18
+          },
+          {
+            "name": "Omni control nonce",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 19
+          },
+          {
+            "name": "Run tests",
+            "status": "completed",
+            "conclusion": "failure",
+            "number": 20
+          },
+          {
+            "name": "Upload Lean dashboard previews (extension)",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 21
+          },
+          {
+            "name": "Upload Playwright evidence",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 22
+          },
+          {
+            "name": "Post Setup Bun",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 42
+          },
+          {
+            "name": "Post Setup request validator Node",
+            "status": "completed",
+            "conclusion": "skipped",
+            "number": 43
+          },
+          {
+            "name": "Post Checkout repository",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 44
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 45
+          }
+        ]
+      },
+      {
+        "id": 132689601722,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "steps": [
+          {
+            "name": "Set up job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 1
+          },
+          {
+            "name": "Delete the snapshot branch",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 2
+          },
+          {
+            "name": "Complete job",
+            "status": "completed",
+            "conclusion": "success",
+            "number": 3
+          }
+        ]
+      }
+    ],
+    "originalRunAttemptsObserved": 1,
+    "rerunRequestedByReviewer": false
+  },
+  "observed": {
+    "bun": "1.3.14 (0d9b296a)",
+    "tests": 1,
+    "files": 1,
+    "pass": 0,
+    "fail": 1,
+    "errors": 1,
+    "expectCalls": 24,
+    "testElapsedMs": 180011.68,
+    "bunElapsedSeconds": 180.18,
+    "explicitTestTimeoutMs": 180000,
+    "fixtureDeadlineElapsedMs": 180001,
+    "processExitCode": 1,
+    "testName": "semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed",
+    "error": {
+      "report": "Unhandled error between tests",
+      "message": "Omitted-training portfolio: {\"status\":\"stale\",\"reason\":\"portfolio-analysis-changed\"}",
+      "reportedOutcome": {
+        "status": "stale",
+        "reason": "portfolio-analysis-changed"
+      },
+      "stackLocation": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts:50:44",
+      "precedingAwaitAtLine49": "before.persistent.evaluateAndStore(before.request, history.before.caseRef, history.fixture.context)",
+      "timeoutLine": "this test timed out after 180000ms.",
+      "rawWp11DeadlineExceptionInLog": false
+    },
+    "control": {
+      "nonce": "91dfd739e6c3dac80393b942d279fc53",
+      "envNonceMatchesLog": true,
+      "omniPositiveControl": "not applicable (focused: no declaring test ran)",
+      "reportedOmniSpawn": false,
+      "reportedOmniDelegation": false,
+      "omniQualification": false
+    }
+  },
+  "checkpoints": [
+    {
+      "job_log_line": 811,
+      "timestamp": "2026-11-15T03:43:36.2601973Z",
+      "label": "renewal-choice-history",
+      "phase": "bootstrap-start",
+      "elapsedMs": 1,
+      "budgetMs": 180000,
+      "counts": {}
+    },
+    {
+      "job_log_line": 812,
+      "timestamp": "2026-11-15T03:43:36.3065061Z",
+      "label": "renewal-choice-history",
+      "phase": "bootstrap-complete",
+      "elapsedMs": 47,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 1,
+          "elapsedMs": 3,
+          "maximumMs": 3
+        }
+      },
+      "stateBytes": 38346,
+      "transactionsBytes": 415,
+      "casesBytes": 37395,
+      "resultBytes": 2,
+      "transactions": 1,
+      "cases": 1,
+      "results": 0
+    },
+    {
+      "job_log_line": 813,
+      "timestamp": "2026-11-15T03:43:36.3084531Z",
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-omitted:start",
+      "elapsedMs": 49,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 2,
+          "elapsedMs": 4,
+          "maximumMs": 3
+        }
+      },
+      "stateBytes": 38346,
+      "transactionsBytes": 415,
+      "casesBytes": 37395,
+      "resultBytes": 2,
+      "transactions": 1,
+      "cases": 1,
+      "results": 0
+    },
+    {
+      "job_log_line": 814,
+      "timestamp": "2026-11-15T03:43:41.4198379Z",
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-omitted:complete",
+      "elapsedMs": 5160,
+      "budgetMs": 180000,
+      "counts": {
+        "c08.read.cases": {
+          "calls": 426,
+          "elapsedMs": 1742,
+          "maximumMs": 15
+        },
+        "host.revalidate": {
+          "calls": 2962,
+          "elapsedMs": 34,
+          "maximumMs": 1
+        },
+        "operation-source": {
+          "calls": 846,
+          "elapsedMs": 35,
+          "maximumMs": 1
+        },
+        "operation-coverage": {
+          "calls": 462,
+          "elapsedMs": 0,
+          "maximumMs": 0
+        },
+        "c08.read.preferences": {
+          "calls": 96,
+          "elapsedMs": 414,
+          "maximumMs": 7
+        },
+        "c08.transaction.preferences": {
+          "calls": 3,
+          "elapsedMs": 49,
+          "maximumMs": 25
+        },
+        "classified-source": {
+          "calls": 39,
+          "elapsedMs": 0,
+          "maximumMs": 0
+        },
+        "classified-coverage": {
+          "calls": 41,
+          "elapsedMs": 790,
+          "maximumMs": 29
+        },
+        "c08.transaction.cases": {
+          "calls": 5,
+          "elapsedMs": 137,
+          "maximumMs": 32
+        },
+        "planner.verifySourceOnly": {
+          "calls": 96,
+          "elapsedMs": 179,
+          "maximumMs": 4
+        },
+        "planner.verifyOperation": {
+          "calls": 96,
+          "elapsedMs": 1217,
+          "maximumMs": 17
+        },
+        "planner.verifySourceProjection": {
+          "calls": 192,
+          "elapsedMs": 132,
+          "maximumMs": 2
+        }
+      },
+      "stateBytes": 484469,
+      "transactionsBytes": 104018,
+      "casesBytes": 53809,
+      "resultBytes": 111960,
+      "transactions": 9,
+      "cases": 1,
+      "results": 5
+    },
+    {
+      "job_log_line": 815,
+      "timestamp": "2026-11-15T03:46:36.2615090Z",
+      "label": "renewal-choice-history",
+      "phase": "prepare:transition-omitted:complete",
+      "elapsedMs": 180001,
+      "budgetMs": 180000,
+      "status": "deadline-exceeded",
+      "counts": {
+        "c08.read.cases": {
+          "calls": 12026,
+          "elapsedMs": 48596,
+          "maximumMs": 21
+        },
+        "host.revalidate": {
+          "calls": 146500,
+          "elapsedMs": 7269,
+          "maximumMs": 19
+        },
+        "operation-source": {
+          "calls": 39566,
+          "elapsedMs": 1397,
+          "maximumMs": 3
+        },
+        "operation-coverage": {
+          "calls": 20854,
+          "elapsedMs": 115,
+          "maximumMs": 2
+        },
+        "c08.read.preferences": {
+          "calls": 96,
+          "elapsedMs": 414,
+          "maximumMs": 7
+        },
+        "c08.transaction.preferences": {
+          "calls": 3,
+          "elapsedMs": 49,
+          "maximumMs": 25
+        },
+        "classified-source": {
+          "calls": 39,
+          "elapsedMs": 0,
+          "maximumMs": 0
+        },
+        "classified-coverage": {
+          "calls": 41,
+          "elapsedMs": 790,
+          "maximumMs": 29
+        },
+        "c08.transaction.cases": {
+          "calls": 6,
+          "elapsedMs": 170,
+          "maximumMs": 33
+        },
+        "planner.verifySourceOnly": {
+          "calls": 4678,
+          "elapsedMs": 7995,
+          "maximumMs": 11
+        },
+        "planner.verifyOperation": {
+          "calls": 4678,
+          "elapsedMs": 56642,
+          "maximumMs": 20
+        },
+        "planner.verifySourceProjection": {
+          "calls": 9356,
+          "elapsedMs": 5786,
+          "maximumMs": 6
+        }
+      }
+    }
+  ],
+  "telemetryInterpretation": {
+    "lastCompletedCheckpoint": {
+      "phase": "prepare:transition-omitted:complete",
+      "elapsedMs": 5160
+    },
+    "deadlineRecordRepeatsLastPhase": true,
+    "exactActiveProducerAtDeadline": "NOT_ESTABLISHED",
+    "sampledCounters": "The final counts are the guard-time snapshot. measure() increments calls before work and adds elapsed in finally; an in-flight interval can be absent from elapsed at the report.",
+    "counterTiming": "Cumulative inclusive asynchronous observation durations, potentially nested/overlapping; do not add them or treat them as exclusive CPU time.",
+    "largestNamedInclusiveCounters": [
+      {
+        "operation": "planner.verifyOperation",
+        "calls": 4678,
+        "elapsedMs": 56642,
+        "maximumMs": 20
+      },
+      {
+        "operation": "c08.read.cases",
+        "calls": 12026,
+        "elapsedMs": 48596,
+        "maximumMs": 21
+      }
+    ],
+    "cloneSpecificAttribution": "The original P03 log has no primitive clone/hash instrumentation. These inclusive C08/Planner counters do not establish which clone or digest call caused the terminal timeout."
+  },
+  "causalConclusion": {
+    "boundedProducerReduction": "The separately qualified identical-harness B2/R1 comparison established 1131 fewer canonical digest traversals and 11 fewer clones, preserved public observations/callback order/output digests, and passed 58 tests / 580 expects on both sides.",
+    "p03Result": "The original P03 still fails at its preserved 180000 ms limit. The bounded producer optimization is insufficient to close P03.",
+    "reportedStaleLimit": "portfolio-analysis-changed is the surfaced refusal. This record does not establish an actual source/data mutation, a new semantic regression caused by the patch, or the exact internal responsible call.",
+    "phaseLimit": "The repeated prepare:transition-omitted:complete label is the last completed checkpoint, not a stack trace for the operation executing at timeout.",
+    "noCrossRunCostTransfer": "The bounded diagnostic's primitive attribution is not assigned to this original P03 run, and older mission58/59 attribution is not inherited as this run's stack.",
+    "noSpeedClaim": true,
+    "p03PassClaim": false,
+    "a45Verdict": "NOT_ASSESSED_HERE",
+    "globalClosureClaim": false,
+    "requiredDisposition": "Preserve this terminal failure and material-work evidence in the draft PR and handoff71. No unchanged P03 rerun; any further causal investigation needs its own authorized material/discriminating gate."
+  },
+  "evidence": {
+    "testJobLog": {
+      "jobId": 132688523969,
+      "utf8Bytes": 72721,
+      "sha256": "613409fdae480041a72a05d41cf3beb5fdecf1b4ebce4bcdd181ada514a0ff98",
+      "hashIncludesBom": true
+    },
+    "selectedTestOutput": {
+      "file": "evidence/P03/test-output.log",
+      "utf8Bytes": 5291,
+      "sha256": "745a2102c4d80d70c44923df4ba8102c3ddcd34376ea4a1dd96e3f209a0ccb0f",
+      "independentMcpExcerptExactlyMatchesLocal": true,
+      "range": "From bun test version line through process exit-code line, inclusive"
+    },
+    "cleanupJobLog": {
+      "jobId": 132689601722,
+      "sha256": "7e952f2e5ec45e84fef4ecb4c72e450375b8857da4c5e6121169d776c877b486"
+    },
+    "sources": [
+      "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673511994",
+      "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673511994/job/132688523969",
+      "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673511994/job/132689601722",
+      "https://github.com/gustavomhss/Orchestra-SF/blob/e827b3d6d8de3832ea903d5cb914c59eaf12ba26/.ci-run.json",
+      "https://github.com/gustavomhss/Orchestra-SF/blob/e827b3d6d8de3832ea903d5cb914c59eaf12ba26/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "https://github.com/gustavomhss/Orchestra-SF/blob/e827b3d6d8de3832ea903d5cb914c59eaf12ba26/modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+      "https://github.com/gustavomhss/Orchestra-SF/compare/ccd7384a75efd69da203c7c42f04f3083ceb4974...e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+      "https://github.com/gustavomhss/Orchestra-SF/commit/2d01f58ff651ab52a32b73a6f399b0fcd183ee71"
+    ]
+  }
+}

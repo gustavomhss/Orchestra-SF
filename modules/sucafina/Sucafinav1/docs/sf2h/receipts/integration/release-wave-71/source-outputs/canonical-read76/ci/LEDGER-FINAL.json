@@ -1,0 +1,176 @@
+{
+  "schema": "sf2h.canonical-read-cost.final-ci-ledger.v1",
+  "mission": 76,
+  "workflow": {
+    "path": ".github/workflows/test-ci.yml",
+    "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "changed": false
+  },
+  "policy": {
+    "hostedOnly": true,
+    "oneMission76RunInFlight": true,
+    "originalP03Attempts": 1,
+    "noRerunAfterP03Failure": true,
+    "localProductTestsOrHeavyChecks": 0,
+    "newWorkflows": 0,
+    "compilerOwner": 45
+  },
+  "runs": [
+    {
+      "stage": "B0",
+      "W": "8b538ad58a1156b2ffdecafce407e72c8532a97d",
+      "Wtree": "ecf142e3f34321492be6cc019430f3b6d278fd04",
+      "V": "34bcd158f09ce181570c99564dc47ad771ac8210",
+      "Vtree": "7e162829e2a9561cc390ada18b99e34242331bfa",
+      "S": "f2bc6a042c6eff9797bd1f34ee2c6ac4dfc8ffc6",
+      "Stree": "b0a15bda9ade745f10ddee27bdc2f3173c0b2165",
+      "branch": "ci-run-linux-m76-8b538ad5-9c46187e-b0",
+      "run": {
+        "id": 43671421907,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671421907",
+        "headSha": "f2bc6a042c6eff9797bd1f34ee2c6ac4dfc8ffc6",
+        "status": "completed",
+        "conclusion": "failure",
+        "startedAt": "2026-11-15T03:14:05Z"
+      },
+      "requestSha256": "9c46187ef0ce77dcd3175394d1f04c4c164e76c989d2bef2a76cd976eaee650c",
+      "receipt": "ci/B0.json",
+      "observed": [
+        " 56 pass",
+        " 2 fail",
+        " 559 expect() calls",
+        "Ran 58 tests across 11 files. [118.26s]"
+      ],
+      "omni": [
+        "omni positive control [503dfa38ec21b6539a0a6f22198b26c5]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      ],
+      "role": "Historical exploratory baseline; two new harness failures; old spy history invalidates paired timing"
+    },
+    {
+      "stage": "B1",
+      "W": "01bc5935280d512d25e096cf0fd5834f76489a7b",
+      "Wtree": "0a9a5bfed9feef4642496a7ccfd8bcbb697fe130",
+      "V": "7bcbf91c8c04b99eed1024ca8bbfb56dd3aa575b",
+      "Vtree": "f289f67a875d8e5078fbb4586fbe129a21c80a1e",
+      "S": "842b77450aa299a421d179ead9ff9abf734419cd",
+      "Stree": "691cfde235e1e2e437c74e3bd55e1307a8c802b4",
+      "branch": "ci-run-linux-m76-01bc5935-2e16e768-b1",
+      "run": {
+        "id": 43671961465,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671961465",
+        "headSha": "842b77450aa299a421d179ead9ff9abf734419cd",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-15T03:21:02Z"
+      },
+      "requestSha256": "2e16e768094e6627c1e72f812c0c4f2a6b4cf4f49ef3b44053ee5d674cc46212",
+      "receipt": "ci/B1.json",
+      "observed": [
+        " 3 pass",
+        " 0 fail",
+        " 42 expect() calls",
+        "Ran 3 tests across 1 file. [700.00ms]"
+      ],
+      "omni": [
+        "omni positive control [c7268b1130bd0a4b83573216cf43add0]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      ],
+      "role": "Changed harness file only"
+    },
+    {
+      "stage": "B2",
+      "W": "c9285ddf74eb4260162f6040226e4745dab184ff",
+      "Wtree": "2d60474a9782481e88d5d1a5e574fe8d9787f371",
+      "V": "a5ab06e87c7280d28264dbaaf9fcf035824bdf12",
+      "Vtree": "88e78f1578e1e5393d34c372f2cfb8852ea052cf",
+      "S": "8bfce3242f1d7c8d6a224ba1418d6486d52444a8",
+      "Stree": "76f9ba99d56edaebdbaf2e42ad2bfa9d301e57b1",
+      "branch": "ci-run-linux-m76-c9285ddf-9c46187e-b2",
+      "run": {
+        "id": 43672619431,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672619431",
+        "headSha": "8bfce3242f1d7c8d6a224ba1418d6486d52444a8",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-15T03:29:55Z"
+      },
+      "requestSha256": "9c46187ef0ce77dcd3175394d1f04c4c164e76c989d2bef2a76cd976eaee650c",
+      "receipt": "ci/B2.json",
+      "observed": [
+        " 58 pass",
+        " 0 fail",
+        " 580 expect() calls",
+        "Ran 58 tests across 11 files. [121.77s]"
+      ],
+      "omni": [
+        "omni positive control [e5bdb67b0250a4bcabb34c2e293468b0]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      ],
+      "role": "Final controlled baseline"
+    },
+    {
+      "stage": "R1",
+      "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+      "Wtree": "fd815bff71b812debd0a7773e33060fe21427e55",
+      "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "Vtree": "51fedc4707ccb553e95658720678562390e16edc",
+      "S": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+      "Stree": "c2734bc867038f87c41010ebfb95fc1c162880bb",
+      "branch": "ci-run-linux-m76-6854c0f9-9c46187e-r1",
+      "run": {
+        "id": 43673023213,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673023213",
+        "headSha": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+        "status": "completed",
+        "conclusion": "success",
+        "startedAt": "2026-11-15T03:35:06Z"
+      },
+      "requestSha256": "9c46187ef0ce77dcd3175394d1f04c4c164e76c989d2bef2a76cd976eaee650c",
+      "receipt": "ci/R1.json",
+      "observed": [
+        " 58 pass",
+        " 0 fail",
+        " 580 expect() calls",
+        "Ran 58 tests across 11 files. [119.16s]"
+      ],
+      "omni": [
+        "omni positive control [4a832f1785d714aded705ad2d0a6347b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      ],
+      "role": "Material producer work and regressions qualified"
+    },
+    {
+      "stage": "P03",
+      "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+      "Wtree": "fd815bff71b812debd0a7773e33060fe21427e55",
+      "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "Vtree": "51fedc4707ccb553e95658720678562390e16edc",
+      "S": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+      "Stree": "cf47f376fddce6b9633765ec2620544d6cf1198c",
+      "branch": "ci-run-linux-m76-6854c0f9-b419f164-p03",
+      "run": {
+        "id": 43673511994,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673511994",
+        "headSha": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "startedAt": "2026-11-15T03:41:48Z",
+        "updatedAt": "2026-11-15T03:46:47Z"
+      },
+      "requestSha256": "b419f1644413b9714ff2ffac74b6c368938197bc12981458c90dccd3b22cec62",
+      "receipt": "ci/P03.json",
+      "observed": [
+        " 0 pass",
+        " 1 fail",
+        " 1 error",
+        " 24 expect() calls",
+        "Ran 1 test across 1 file. [180.18s]"
+      ],
+      "omni": [
+        "omni positive control [91dfd739e6c3dac80393b942d279fc53]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+      ],
+      "role": "Original P03 once after durable gate;FAIL preserved"
+    }
+  ],
+  "compiler45": "REQUESTED_NO_RESULT_OBSERVED; checks/REQUEST-45.json",
+  "state": "ALL_FIVE_REQUESTS_TERMINAL; MATERIAL_PASS; ORIGINAL_P03_FAIL",
+  "GLOBAL_RELEASE": false
+}

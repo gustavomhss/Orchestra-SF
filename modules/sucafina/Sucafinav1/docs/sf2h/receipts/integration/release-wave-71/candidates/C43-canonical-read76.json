@@ -1,0 +1,163 @@
+{
+  "schema": "sf2h.integration71.candidate.v1",
+  "candidate": "C43",
+  "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+  "parent": "9084b3ee2f7ae70e9ac9da428ed5490322540eef",
+  "parentTree": "69a6e2c8bc498548d5e2ab49e50ee6aa61c42cf6",
+  "writer": "S0-C-e13-browser71",
+  "source": {
+    "branch": "canonical-read-cost",
+    "pr": 87,
+    "terminal": "9a7fb8c3c83df886781024d6f548d6523209523f",
+    "terminal_tree": "60286b38818d75ee036dcd9f3801fd2dd9e02be1",
+    "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "W_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+    "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "V_tree": "51fedc4707ccb553e95658720678562390e16edc",
+    "authority_blob": "f40f7f12ae39a5f1db4de770151be892da5f607d",
+    "release_blob": "1b17a6702410db23a4a4955b5b8686b81acca23e",
+    "lease": "canonical-read-browser76",
+    "lease_status": "ENDED_SOURCE_RELEASED",
+    "archiveTree": "07a77fe1f40a1070428495e5d0d38876c53b2663",
+    "archiveBlobs": 42
+  },
+  "files": [
+    {
+      "mission": 76,
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "mode": "100644",
+      "pre": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "post": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "kind": "modified",
+      "review_unit": "source76-explicit-seven-path-terminal-unit"
+    },
+    {
+      "mission": 76,
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-fixture.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "f3f5cad776aa603610c99dec829c10d565e1d60f",
+      "kind": "added",
+      "review_unit": "source76-explicit-seven-path-terminal-unit"
+    },
+    {
+      "mission": 76,
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "7013df4178b57b6ea55c55e223749904008095a0",
+      "kind": "added",
+      "review_unit": "source76-explicit-seven-path-terminal-unit"
+    },
+    {
+      "mission": 76,
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "8f0051c478d0ade11b044d95e2928206a008308a",
+      "kind": "added",
+      "review_unit": "source76-explicit-seven-path-terminal-unit"
+    },
+    {
+      "mission": 76,
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "05621cc0d50782d19afb7fb7fd1358cfc734eb63",
+      "kind": "added",
+      "review_unit": "source76-explicit-seven-path-terminal-unit"
+    },
+    {
+      "mission": 76,
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-fixture.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "55f12d0958487f7b8cd1ae263cb0487ecb2c9cc0",
+      "kind": "added",
+      "review_unit": "source76-explicit-seven-path-terminal-unit"
+    },
+    {
+      "mission": 76,
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-probe.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "c3576cac82d2edb793fe7ef9bc5fb8d2b8c2a38f",
+      "kind": "added",
+      "review_unit": "source76-explicit-seven-path-terminal-unit"
+    }
+  ],
+  "review": "reviews/canonical-read76.json",
+  "currentTargetAddendum": "reviews/canonical-read76-C42-addendum.json",
+  "sourceArchive": "source-outputs/canonical-read76",
+  "completeUnit": "1canonical producer+6newtests/helpers including diagnostic-expected.ts;7paths/11hunks exact",
+  "proof": {
+    "baseline": {
+      "run": 43672619431,
+      "pass": 58,
+      "fail": 0,
+      "expect_calls": 580,
+      "files": 11
+    },
+    "candidate": {
+      "run": 43673023213,
+      "pass": 58,
+      "fail": 0,
+      "expect_calls": 580,
+      "files": 11
+    },
+    "material": {
+      "removed_digests": 1131,
+      "removed_clones": 11,
+      "unchanged_public_boundary_records": 192,
+      "unchanged_callback_events": 87440,
+      "identical_output_digests": 5,
+      "proof": "findings/B2-R1-CAUSAL76.json",
+      "scope": "Bounded real canonical producer workflow; no claimed speedup or originalP03 prediction."
+    },
+    "originalP03": {
+      "run": 43673511994,
+      "job": 132688523969,
+      "S": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+      "state": "FAIL_NOT_CLOSED",
+      "pass": 0,
+      "fail": 1,
+      "error": 1,
+      "expect_calls": 24,
+      "assertion_lines_preserved": 72,
+      "timeout_ms": 180000,
+      "case_elapsed_ms": 180011.68,
+      "attempts76": 1,
+      "error_reason": "portfolio-analysis-changed",
+      "receipt": "ci/P03.json"
+    },
+    "historicalFailures": {
+      "B0": "56PASS/2FAIL/559expects;two new instrument faults corrected;historical old-spy timing excluded",
+      "B1": "3PASS/0FAIL/42expects focused harness correction"
+    },
+    "compiler45": {
+      "state": "REQUESTED_NO_RESULT_OBSERVED",
+      "request": "checks/REQUEST-45.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888586763"
+    }
+  },
+  "semantic": "Three independent C08 observations remain. Intermediate stored digest detaches only the observed stored projection. Final digest and fresh scalar or per-occurrence batch clones remain; no authorization cache. Canonical calculation-source deduplication preserves order, full semantic digest and two replay callbacks.",
+  "targetReconciliation": "C42 cost80 transitive changes retained; source diagnostics do not measure C42 or transfer source PASS. Current72 LocalStore retained. Existing consumers and nine selected oracles reconciled at immutable C41 and C42 delta.",
+  "excluded": "EXTERNAL-CANDIDATE76.patch remains inert; successor89 owns originalP03 causal correction and original rerun qualification.",
+  "held": [
+    "C28 Reports and EA66 legacy egress remain as recorded; no Reports application/reader fix here.",
+    "M31/MI07/C12 financial prerequisites remain; result-store optimization grants no financial approval or archive.",
+    "P03 original58/59/76 failures and causal uncertainty remain; route89.",
+    "C10 numerical coverage producer remains80; neither this7path release nor tiny external clone corrects C10.",
+    "Current72 authentication/retention and59 read-only composition preserved;85 owns later qualification/corrections.",
+    "Compiler/guards45, composed functional qualification, original installed journeys, final8selections, AM01–06 and required independent/global reviews remain open."
+  ],
+  "validation": "NOT_RUN_BY_71; exact final candidate queued to45",
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "builds": 0,
+    "guards": 0,
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,510 @@
+{
+  "schema": "sf2h.canonical-read-cost.original-p03-receipt.v1",
+  "mission": 76,
+  "status": "FAIL_NOT_CLOSED",
+  "source": {
+    "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+  },
+  "composition": {
+    "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "tree": "51fedc4707ccb553e95658720678562390e16edc",
+    "dependency59Material": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "dependencyManifest": "../validation/readonly59-overlay.json"
+  },
+  "envelope": {
+    "S": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+    "tree": "cf47f376fddce6b9633765ec2620544d6cf1198c",
+    "branch": "ci-run-linux-m76-6854c0f9-b419f164-p03",
+    "onlyDifferenceFromV": ".ci-run.json"
+  },
+  "prerequisite": {
+    "gateCommit": "2d01f58ff651ab52a32b73a6f399b0fcd183ee71",
+    "gateBlob": "59b9c2524ffc474d3742071305c07e164c214862",
+    "gate": "../findings/MATERIAL-GATE.json",
+    "R1": 43673023213,
+    "gateReadBackBeforeDispatch": true,
+    "dispatchedAt": {
+      "current_time": "2026-11-15 03:41:46 UTC"
+    },
+    "originalAttempts": 1
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "b419f1644413b9714ff2ffac74b6c368938197bc12981458c90dccd3b22cec62",
+  "requestBlob": "f368e4c41c5d05311001960c0af04d282e4fa552",
+  "originalTest": {
+    "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+    "blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "bytes": 43332,
+    "sha256": "bf37a61e3e919f54b06edfc1d8808c13e5206f983f34b06661466f05770ce0b9",
+    "expectLines": 72,
+    "expectLinesOrderedSha256": "f78152ede2f26602dadf8eaf461e8b2072b1e4edd360ba93811475c290993ba4",
+    "timeoutMs": 180000,
+    "fixtureTraceBlob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+    "changed": false,
+    "diagnosticProbeLoaded": false,
+    "fixtureBlobs": {
+      "test/product/wp11/fixture-trace.ts": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+      "test/product/wp11/renewal-choice-fixture.ts": "0dc89d86866620a8109051c68bc2d2b4d92c508f",
+      "test/product/wp11/renewal-source-fixture.ts": "3c1caeff08728b3e0c2aed8ae916c0754ad6318d"
+    }
+  },
+  "run": {
+    "id": 43673511994,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673511994",
+    "headSha": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+    "status": "completed",
+    "conclusion": "failure",
+    "attempt": 1,
+    "startedAt": "2026-11-15T03:41:48Z",
+    "updatedAt": "2026-11-15T03:46:47Z"
+  },
+  "jobs": [
+    {
+      "id": 132688523969,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_id": 43673511994,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132689601722,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 43673511994,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "observed": {
+    "run": 43673511994,
+    "job": 132688523969,
+    "selected": [
+      "Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts"
+    ],
+    "nonce": [
+      "91dfd739e6c3dac80393b942d279fc53"
+    ],
+    "verdict": [
+      "omni positive control [91dfd739e6c3dac80393b942d279fc53]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "bun": [
+      "bun test v1.3.14 (0d9b296a)"
+    ],
+    "statistics": [
+      " 0 pass",
+      " 1 fail",
+      " 1 error",
+      " 24 expect() calls",
+      "Ran 1 test across 1 file. [180.18s]"
+    ],
+    "failure": [
+      "error: Omitted-training portfolio: {\"status\":\"stale\",\"reason\":\"portfolio-analysis-changed\"}",
+      "      at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts:50:44)",
+      "(fail) semantic union: portfolio replays the USD 240000 ceiling and USD 20000 advantage in the same chosen case when training is confirmed [180011.68ms]",
+      "  ^ this test timed out after 180000ms."
+    ],
+    "traces": [
+      {
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-start",
+        "elapsedMs": 1,
+        "budgetMs": 180000,
+        "counts": {}
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "bootstrap-complete",
+        "elapsedMs": 47,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 1,
+            "elapsedMs": 3,
+            "maximumMs": 3
+          }
+        },
+        "stateBytes": 38346,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:start",
+        "elapsedMs": 49,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 2,
+            "elapsedMs": 4,
+            "maximumMs": 3
+          }
+        },
+        "stateBytes": 38346,
+        "transactionsBytes": 415,
+        "casesBytes": 37395,
+        "resultBytes": 2,
+        "transactions": 1,
+        "cases": 1,
+        "results": 0
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:complete",
+        "elapsedMs": 5160,
+        "budgetMs": 180000,
+        "counts": {
+          "c08.read.cases": {
+            "calls": 426,
+            "elapsedMs": 1742,
+            "maximumMs": 15
+          },
+          "host.revalidate": {
+            "calls": 2962,
+            "elapsedMs": 34,
+            "maximumMs": 1
+          },
+          "operation-source": {
+            "calls": 846,
+            "elapsedMs": 35,
+            "maximumMs": 1
+          },
+          "operation-coverage": {
+            "calls": 462,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          },
+          "c08.read.preferences": {
+            "calls": 96,
+            "elapsedMs": 414,
+            "maximumMs": 7
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 49,
+            "maximumMs": 25
+          },
+          "classified-source": {
+            "calls": 39,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          },
+          "classified-coverage": {
+            "calls": 41,
+            "elapsedMs": 790,
+            "maximumMs": 29
+          },
+          "c08.transaction.cases": {
+            "calls": 5,
+            "elapsedMs": 137,
+            "maximumMs": 32
+          },
+          "planner.verifySourceOnly": {
+            "calls": 96,
+            "elapsedMs": 179,
+            "maximumMs": 4
+          },
+          "planner.verifyOperation": {
+            "calls": 96,
+            "elapsedMs": 1217,
+            "maximumMs": 17
+          },
+          "planner.verifySourceProjection": {
+            "calls": 192,
+            "elapsedMs": 132,
+            "maximumMs": 2
+          }
+        },
+        "stateBytes": 484469,
+        "transactionsBytes": 104018,
+        "casesBytes": 53809,
+        "resultBytes": 111960,
+        "transactions": 9,
+        "cases": 1,
+        "results": 5
+      },
+      {
+        "label": "renewal-choice-history",
+        "phase": "prepare:transition-omitted:complete",
+        "elapsedMs": 180001,
+        "budgetMs": 180000,
+        "status": "deadline-exceeded",
+        "counts": {
+          "c08.read.cases": {
+            "calls": 12026,
+            "elapsedMs": 48596,
+            "maximumMs": 21
+          },
+          "host.revalidate": {
+            "calls": 146500,
+            "elapsedMs": 7269,
+            "maximumMs": 19
+          },
+          "operation-source": {
+            "calls": 39566,
+            "elapsedMs": 1397,
+            "maximumMs": 3
+          },
+          "operation-coverage": {
+            "calls": 20854,
+            "elapsedMs": 115,
+            "maximumMs": 2
+          },
+          "c08.read.preferences": {
+            "calls": 96,
+            "elapsedMs": 414,
+            "maximumMs": 7
+          },
+          "c08.transaction.preferences": {
+            "calls": 3,
+            "elapsedMs": 49,
+            "maximumMs": 25
+          },
+          "classified-source": {
+            "calls": 39,
+            "elapsedMs": 0,
+            "maximumMs": 0
+          },
+          "classified-coverage": {
+            "calls": 41,
+            "elapsedMs": 790,
+            "maximumMs": 29
+          },
+          "c08.transaction.cases": {
+            "calls": 6,
+            "elapsedMs": 170,
+            "maximumMs": 33
+          },
+          "planner.verifySourceOnly": {
+            "calls": 4678,
+            "elapsedMs": 7995,
+            "maximumMs": 11
+          },
+          "planner.verifyOperation": {
+            "calls": 4678,
+            "elapsedMs": 56642,
+            "maximumMs": 20
+          },
+          "planner.verifySourceProjection": {
+            "calls": 9356,
+            "elapsedMs": 5786,
+            "maximumMs": 6
+          }
+        }
+      }
+    ],
+    "exit": [
+      "##[error]Process completed with exit code 1."
+    ]
+  },
+  "result": {
+    "pass": 0,
+    "fail": 1,
+    "error": 1,
+    "executedExpectCalls": 24,
+    "preservedExpectLines": 72,
+    "elapsedMs": 180011.68,
+    "testTimeoutMs": 180000,
+    "bunElapsedSeconds": 180.18,
+    "processExit": 1
+  },
+  "causalLimit": "The last completed fixture checkpoint is prepare:transition-omitted:complete at5160ms. Deadline re-emits that last label at180001ms, not the active function. Counts are inclusive; neither higher deadline counts nor timeout establish an exclusive clone cost or comparative speed. The error identifies the failed portfolio evaluation boundary, not its exact internal dominant call. W1's bounded result-store work reduction is independently established by B2/R1; original P03 is still not closed.",
+  "next": "No second original run in mission76. Consumer71 must reconcile this partial source release and residual producer/replay cost with exact composition, compiler45 and later owners before any new qualification.",
+  "GLOBAL_RELEASE": false,
+  "artifacts": []
+}

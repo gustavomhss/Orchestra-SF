@@ -1,0 +1,4205 @@
+{
+  "schema": "sf2h.canonical-read-cost.b0-causal.v1",
+  "status": "historical-diagnostic-not-paired-timing-baseline",
+  "language": "pt-BR",
+  "scope": "Reagregação aritmética dos resultados hospedados B0. Nenhum código do produto ou teste foi executado nesta análise. O analista também é autor do probe; isto não substitui revisão independente da mudança.",
+  "criticalDisposition": [
+    "B0 conserva evidência histórica de multiplicidade e locais observados. O observer original acumulava referências nos arrays internos do spy Bun; B0 não é o baseline temporal pareado para a mudança seguinte.",
+    "B2 e R1 precisam compartilhar o probe corrigido que limpa o histórico e reporta seus comprimentos numéricos. Nenhum resultado futuro é afirmado neste arquivo.",
+    "O workload é limitado e não executa o P03 original. Não qualifica as 72 assertions, o prazo de 180000ms, composição71 ou aceite global."
+  ],
+  "execution": {
+    "W0": {
+      "commit": "8b538ad58a1156b2ffdecafce407e72c8532a97d",
+      "tree": "ecf142e3f34321492be6cc019430f3b6d278fd04"
+    },
+    "V0": {
+      "commit": "34bcd158f09ce181570c99564dc47ad771ac8210",
+      "tree": "7e162829e2a9561cc390ada18b99e34242331bfa",
+      "overlay": "Bundle readonly59 exato: quatro arquivos de produto e cinco testes, separado da autoria W0."
+    },
+    "S0": {
+      "commit": "f2bc6a042c6eff9797bd1f34ee2c6ac4dfc8ffc6",
+      "tree": "b0a15bda9ade745f10ddee27bdc2f3173c0b2165"
+    },
+    "parents": "W0 -> V0 -> S0, conferidos pelo parent via GitHub MCP.",
+    "run": 43671421907,
+    "job": 132682095454,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671421907/job/132682095454",
+    "branch": "ci-run-linux-m76-8b538ad5-9c46187e-b0",
+    "diagnostic": "PASS",
+    "selectedSuite": {
+      "passed": 56,
+      "failed": 2,
+      "tests": 58,
+      "files": 11,
+      "expectCalls": 559,
+      "seconds": 118.26,
+      "existingTestsPassed": 54
+    },
+    "suiteQualification": "B0 não foi green no conjunto: duas falhas de harness novo calculation-sources são preservadas, não convertidas em PASS pelo diagnóstico.",
+    "B1HarnessCorrection": {
+      "run": 43671961465,
+      "job": 132683752972,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671961465/job/132683752972",
+      "passed": 3,
+      "failed": 0,
+      "expectCalls": 42,
+      "file": "test/product/canonical-read-cost/calculation-sources.test.ts",
+      "scope": "Correção separada das duas falhas do harness; não reexecução do diagnóstico nem P03."
+    }
+  },
+  "inputs": {
+    "diagnostic": {
+      "path": "evidence/B0/diagnostic.json",
+      "bytes": 542745,
+      "sha256": "236fb02cdd123e7299149ccd1569504f99fff80c2ce720c9f032e361b6ce2e01"
+    },
+    "providedAggregate": {
+      "path": "evidence/B0/primitive-aggregate.json",
+      "bytes": 73430,
+      "sha256": "45bbb41474c73bb942b322289648df225c3af320725638f0ee72771cb9917427"
+    },
+    "arithmeticVerification": {
+      "aggregatedSites": 386,
+      "maximumAllowedRoundingDeltaMs": 1e-06,
+      "discrepancies": [],
+      "method": "Reagregar o JSON bruto por kind|site e comparar todos os campos presentes no agregado recebido."
+    },
+    "producerSha256": {
+      "product/host-binding/state-provider.ts": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+      "product/decisions/result-store.ts": "576dc47430a6072d094c98d4c319d6659f8b58d07a201dc1a50d47bc34679a59",
+      "product/decisions/criterion-comparison.ts": "0faeabe7da29ded1a5f1297fa4ad9d86190f63042a10622900c9b40cd035b4ef"
+    },
+    "sourceBlobs": {
+      "product/host-binding/state-provider.ts": {
+        "blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/34bcd158f09ce181570c99564dc47ad771ac8210/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+      },
+      "product/decisions/result-store.ts": {
+        "blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/34bcd158f09ce181570c99564dc47ad771ac8210/modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+      },
+      "product/decisions/criterion-comparison.ts": {
+        "blob": "dbd02e2d4d15ca2b866179759d38a0066e6550dc",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/34bcd158f09ce181570c99564dc47ad771ac8210/modules/sucafina/Sucafinav1/product/decisions/criterion-comparison.ts"
+      },
+      "product/planner/operation-verifier.ts": {
+        "blob": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/34bcd158f09ce181570c99564dc47ad771ac8210/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts"
+      },
+      "product/planner/scenario-comparison-port.ts": {
+        "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/34bcd158f09ce181570c99564dc47ad771ac8210/modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+      }
+    }
+  },
+  "workload": {
+    "prepare": 1,
+    "comparisonReads": 2,
+    "ruleResolves": 1,
+    "ruleEvaluations": 1,
+    "proofReads": 1,
+    "bindingWrites": 1,
+    "bindingReads": 1
+  },
+  "syntheticBoundary": "Existing renewal fixture uses synthetic source declarations and human grants; SQLite/C08/Planner/rules/metric/comparison replay/binding persistence are real. This does not execute P03, select a choice, confirm training or qualify final history/revocation.",
+  "measurementSemantics": {
+    "primitive": "Pass-through síncrono exato de structuredClone e digestSfValue; digest cobre canonicalização mais hash. Nenhuma serialização extra de argumentos para medição.",
+    "attribution": "Stack capturado antes do timer; o primeiro arquivo:linha:coluna do repositório fora do probe serve de chave. Inlining/JIT pode atribuir ao caller, e existem invocações unattributed.",
+    "exclusiveMeasuredMs": "Subtrai duração de primitivas medidas aninhadas, não todo o overhead do observador. Em B0 inclusiveMs e exclusiveMeasuredMs são iguais em todos os registros de primitivas.",
+    "publicCalls": "Durações públicas são inclusivas e se sobrepõem. Contadores de propriedades não veem chamadas lexicais internas, como evaluate -> resolve.",
+    "rootPhases": "As oito fases de topo são aguardadas e não se sobrepõem. Sua soma é tempo instrumentado dentro das fases, não duração integral do teste ou CPU.",
+    "callbackIdentity": "Readers e work de C08 preservam identidade; os callbacks de persistência conservam snapshot e BlobTransaction. Nenhum callback de sucesso é fabricado.",
+    "noStatisticalClaim": "Uma execução histórica, sem razão de velocidade, sem intervalos de confiança ou projeção de tempo do P03."
+  },
+  "totals": {
+    "nonOverlappingRootPhaseWallMs": 35340.885435,
+    "primitive": {
+      "calls": 205518,
+      "completed": 205518,
+      "errors": 0,
+      "inclusiveMs": 24660.928386,
+      "exclusiveMeasuredMs": 24660.928386
+    },
+    "primitiveByKind": {
+      "digestSfValue": {
+        "calls": 133103,
+        "completed": 133103,
+        "errors": 0,
+        "inclusiveMs": 13007.413147,
+        "exclusiveMeasuredMs": 13007.413147
+      },
+      "structuredClone": {
+        "calls": 72415,
+        "completed": 72415,
+        "errors": 0,
+        "inclusiveMs": 11653.515239,
+        "exclusiveMeasuredMs": 11653.515239
+      }
+    },
+    "stackCaptureMs": 1465.10154,
+    "rootWallMinusMeasuredPrimitiveAndStackMs": 9214.855509,
+    "remainderInterpretation": "Diferença descritiva: inclui outro trabalho do produto, persistência, await, JIT/GC e overhead não medido; não é CPU própria atribuível a uma função.",
+    "pendingObserverPromisesAtReport": 0,
+    "unattributed": {
+      "structuredClone": {
+        "calls": 3402,
+        "completed": 3402,
+        "errors": 0,
+        "inclusiveMs": 467.276317,
+        "exclusiveMeasuredMs": 467.276317
+      },
+      "digestSfValue": {
+        "calls": 261,
+        "completed": 261,
+        "errors": 0,
+        "inclusiveMs": 1.747607,
+        "exclusiveMeasuredMs": 1.747607
+      }
+    }
+  },
+  "phases": [
+    {
+      "phase": "prepare-once",
+      "wallMs": 5956.162291,
+      "primitive": {
+        "calls": 36731,
+        "completed": 36731,
+        "errors": 0,
+        "inclusiveMs": 3979.689546,
+        "exclusiveMeasuredMs": 3979.689546
+      }
+    },
+    {
+      "phase": "comparison-read",
+      "wallMs": 27.295762,
+      "primitive": {
+        "calls": 48,
+        "completed": 48,
+        "errors": 0,
+        "inclusiveMs": 16.371115,
+        "exclusiveMeasuredMs": 16.371115
+      }
+    },
+    {
+      "phase": "rule-resolve",
+      "wallMs": 24.416921,
+      "primitive": {
+        "calls": 38,
+        "completed": 38,
+        "errors": 0,
+        "inclusiveMs": 13.700623,
+        "exclusiveMeasuredMs": 13.700623
+      }
+    },
+    {
+      "phase": "rule-evaluate",
+      "wallMs": 1642.094224,
+      "primitive": {
+        "calls": 9478,
+        "completed": 9478,
+        "errors": 0,
+        "inclusiveMs": 1142.103246,
+        "exclusiveMeasuredMs": 1142.103246
+      }
+    },
+    {
+      "phase": "binding-proofs",
+      "wallMs": 23.274283,
+      "primitive": {
+        "calls": 39,
+        "completed": 39,
+        "errors": 0,
+        "inclusiveMs": 13.843383,
+        "exclusiveMeasuredMs": 13.843383
+      }
+    },
+    {
+      "phase": "binding-create",
+      "wallMs": 16631.422119,
+      "primitive": {
+        "calls": 95538,
+        "completed": 95538,
+        "errors": 0,
+        "inclusiveMs": 11673.809103,
+        "exclusiveMeasuredMs": 11673.809103
+      }
+    },
+    {
+      "phase": "binding-read",
+      "wallMs": 11015.46706,
+      "primitive": {
+        "calls": 63598,
+        "completed": 63598,
+        "errors": 0,
+        "inclusiveMs": 7807.380052,
+        "exclusiveMeasuredMs": 7807.380052
+      }
+    },
+    {
+      "phase": "comparison-read-again",
+      "wallMs": 20.752775,
+      "primitive": {
+        "calls": 48,
+        "completed": 48,
+        "errors": 0,
+        "inclusiveMs": 14.031318,
+        "exclusiveMeasuredMs": 14.031318
+      }
+    }
+  ],
+  "bindingRead": {
+    "boundaryKey": "binding-read|phase.binding-read>bindings.read",
+    "boundary": {
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 11015.337556,
+      "maximumMs": 11015.337556
+    },
+    "directChildren": {
+      "host.requestFor": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0,
+        "inclusiveMs": 0.001078,
+        "maximumMs": 0.001078
+      },
+      "host.revalidate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 0.00822,
+        "maximumMs": 0.005995
+      },
+      "diagnostic.c08.read.preferences": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 10.540815,
+        "maximumMs": 5.396881
+      },
+      "results.read": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 43.848933,
+        "maximumMs": 23.035545
+      },
+      "rules.resolve": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 44.836734,
+        "maximumMs": 22.988255
+      },
+      "callback.verifyBinding.replay": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 7723.245239,
+        "maximumMs": 3876.898474
+      },
+      "rules.evaluate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 3192.046455,
+        "maximumMs": 1608.898193
+      }
+    },
+    "directChildrenInclusiveSumMs": 11014.527474,
+    "boundaryMinusDirectChildrenMs": 0.810082,
+    "residualInterpretation": "Diferença de bookkeeping observada, não medição de CPU própria. Não adicionar transações, métricas ou compares descendentes aos pais inclusivos.",
+    "descendantBoundaryTotals": {
+      "bindings.read": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0,
+        "inclusiveMs": 11015.337556
+      },
+      "c08.authorize.read.cases": {
+        "calls": 40,
+        "completed": 40,
+        "errors": 0,
+        "inclusiveMs": 0.555367
+      },
+      "c08.authorize.read.preferences": {
+        "calls": 44,
+        "completed": 44,
+        "errors": 0,
+        "inclusiveMs": 0.567288
+      },
+      "callback.authorizeCase": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0,
+        "inclusiveMs": 0.271583
+      },
+      "callback.criterionMetric": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 3100.511912
+      },
+      "callback.evidence": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0,
+        "inclusiveMs": 5.129196
+      },
+      "callback.verifyBinding.replay": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 7723.245239
+      },
+      "diagnostic.c08.read.cases": {
+        "calls": 20,
+        "completed": 20,
+        "errors": 0,
+        "inclusiveMs": 105.108454
+      },
+      "diagnostic.c08.read.preferences": {
+        "calls": 22,
+        "completed": 22,
+        "errors": 0,
+        "inclusiveMs": 112.030679
+      },
+      "fixture.c08.read.cases": {
+        "calls": 738,
+        "completed": 738,
+        "errors": 0,
+        "inclusiveMs": 3327.541114
+      },
+      "fixture.c08.read.preferences": {
+        "calls": 104,
+        "completed": 104,
+        "errors": 0,
+        "inclusiveMs": 594.738495
+      },
+      "host.requestFor": {
+        "calls": 3043,
+        "completed": 3043,
+        "errors": 0,
+        "inclusiveMs": 3.160694
+      },
+      "host.revalidate": {
+        "calls": 6350,
+        "completed": 6350,
+        "errors": 0,
+        "inclusiveMs": 180.972633
+      },
+      "persistence.callback.dashboard": {
+        "calls": 884,
+        "completed": 884,
+        "errors": 0,
+        "inclusiveMs": 2269.295392
+      },
+      "persistence.callback.planner": {
+        "calls": 2118,
+        "completed": 2118,
+        "errors": 0,
+        "inclusiveMs": 7021.234206
+      },
+      "persistence.transaction.dashboard": {
+        "calls": 884,
+        "completed": 884,
+        "errors": 0,
+        "inclusiveMs": 4132.75215
+      },
+      "persistence.transaction.planner": {
+        "calls": 2118,
+        "completed": 2118,
+        "errors": 0,
+        "inclusiveMs": 7347.647022
+      },
+      "phase.binding-read": {
+        "calls": 1,
+        "completed": 1,
+        "errors": 0,
+        "inclusiveMs": 11015.46706
+      },
+      "planner.compareScenarios": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 7723.150127
+      },
+      "results.read": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 43.848933
+      },
+      "rules.evaluate": {
+        "calls": 2,
+        "completed": 2,
+        "errors": 0,
+        "inclusiveMs": 3192.046455
+      },
+      "rules.resolve": {
+        "calls": 6,
+        "completed": 6,
+        "errors": 0,
+        "inclusiveMs": 135.585653
+      }
+    },
+    "descendantCounterLimit": "Os dois rules.resolve diretamente sob bindings.read e os outros quatro observados dentro da métrica não enumeram os resolve lexicais internos. Os contadores diagnostic.c08.authorize não cobrem as autorizações do fixture original.",
+    "primitiveByKind": {
+      "structuredClone": {
+        "calls": 23124,
+        "completed": 23124,
+        "errors": 0,
+        "inclusiveMs": 3642.020176,
+        "exclusiveMeasuredMs": 3642.020176
+      },
+      "digestSfValue": {
+        "calls": 40474,
+        "completed": 40474,
+        "errors": 0,
+        "inclusiveMs": 4165.359876,
+        "exclusiveMeasuredMs": 4165.359876
+      }
+    },
+    "criterionComparisonOwnPrimitives": {
+      "calls": 21,
+      "completed": 21,
+      "errors": 0,
+      "inclusiveMs": 0.26345,
+      "exclusiveMeasuredMs": 0.26345
+    },
+    "interpretation": "Uma leitura pública dura cerca de 11,015s neste processo instrumentado. Seus dois replays canônicos e duas avaliações explicam os grandes filhos inclusivos; as primitivas diretamente atribuídas a criterion-comparison são pequenas. Isto não autoriza remover replay, observações ou callbacks e não estabelece dominância no P03."
+  },
+  "criticalAttribution": {
+    "stateProviderOpaqueClone": {
+      "site": "structuredClone|product/host-binding/state-provider.ts:65:24",
+      "measurement": {
+        "calls": 2216,
+        "completed": 2216,
+        "errors": 0,
+        "inclusiveMs": 6744.277473,
+        "exclusiveMeasuredMs": 6744.277473
+      },
+      "source": "await read(structuredClone(state), authority)",
+      "scope": "Full-state clone para reader opaco; o seletor fechado preexistente em linha64 é medido separadamente. Custo observado não prova equivalência de uma projeção nova."
+    },
+    "operationVerifierProjectionDigest": {
+      "callerSites": [
+        {
+          "site": "digestSfValue|product/planner/operation-verifier.ts:94:37",
+          "measurement": {
+            "calls": 668,
+            "completed": 668,
+            "errors": 0,
+            "inclusiveMs": 3090.88321,
+            "exclusiveMeasuredMs": 3090.88321
+          }
+        },
+        {
+          "site": "digestSfValue|product/planner/operation-verifier.ts:94:80",
+          "measurement": {
+            "calls": 668,
+            "completed": 668,
+            "errors": 0,
+            "inclusiveMs": 3021.256894,
+            "exclusiveMeasuredMs": 3021.256894
+          }
+        }
+      ],
+      "sourceExpression": "projectionDigest(again.value.baseline) === projectionDigest(values)",
+      "explanation": "Linha94 não contém expressão direta digestSfValue. O stack do spy atribui o digest ao caller de projectionDigest, compatível com helper inlined. O helper em scenario-comparison-port.ts:70-71 chama digestSfValue após normalizar observedAt e digerir componentes. Esta interpretação depende dos blobs exatos e do stack Bun/JIT.",
+      "helperAttributedSite": {
+        "site": "digestSfValue|product/planner/scenario-comparison-port.ts:71:175",
+        "measurement": {
+          "calls": 1572,
+          "completed": 1572,
+          "errors": 0,
+          "inclusiveMs": 337.387055,
+          "exclusiveMeasuredMs": 337.387055
+        }
+      },
+      "directDigestSeparateSite": {
+        "observedSites": [
+          {
+            "site": "digestSfValue|product/planner/operation-verifier.ts:82:23",
+            "measurement": {
+              "calls": 668,
+              "completed": 668,
+              "errors": 0,
+              "inclusiveMs": 32.569309,
+              "exclusiveMeasuredMs": 32.569309
+            }
+          }
+        ],
+        "interpretation": "Digest direto do payload da operação em linha82, distinto dos callers de projectionDigest na linha94."
+      },
+      "aggregationLimit": "Cada registro de invocação pertence a uma chave. Callers94 e helper71 podem ser agregados como registros disjuntos quando pertinente, mas não se infere identidade estável do helper para toda execução a partir do stack."
+    },
+    "criterionComparisonOwnPrimitivesAllPhases": {
+      "calls": 62,
+      "completed": 62,
+      "errors": 0,
+      "inclusiveMs": 0.837578,
+      "exclusiveMeasuredMs": 0.837578
+    }
+  },
+  "oldCandidateReach": {
+    "status": "Escopo medido de proposta anterior; não qualificação nem previsão de ganho.",
+    "targetSites": [
+      {
+        "site": "digestSfValue|product/decisions/result-store.ts:118:223",
+        "purpose": "Digest integral de latest.stored na comparação final escalar.",
+        "measurement": {
+          "calls": 11,
+          "completed": 11,
+          "errors": 0,
+          "inclusiveMs": 0.602542,
+          "exclusiveMeasuredMs": 0.602542
+        }
+      },
+      {
+        "site": "digestSfValue|product/decisions/result-store.ts:202:220",
+        "purpose": "Digest integral de previous.stored na comparação final por elemento do batch.",
+        "measurement": {
+          "calls": 596,
+          "completed": 596,
+          "errors": 0,
+          "inclusiveMs": 146.118444,
+          "exclusiveMeasuredMs": 146.118444
+        }
+      },
+      {
+        "site": "structuredClone|product/decisions/result-store.ts:119:35",
+        "purpose": "Clone final escalar de observed.stored, depois do clone de final.value.",
+        "measurement": {
+          "calls": 11,
+          "completed": 11,
+          "errors": 0,
+          "inclusiveMs": 0.876009,
+          "exclusiveMeasuredMs": 0.876009
+        }
+      }
+    ],
+    "targetedPrimitiveTotal": {
+      "calls": 618,
+      "completed": 618,
+      "errors": 0,
+      "inclusiveMs": 147.596995,
+      "exclusiveMeasuredMs": 147.596995
+    },
+    "targetedPrimitiveMsAsPercentOfInstrumentedRootWall": 0.417638,
+    "interpretation": "No máximo estes 618 spans medidos, somando147,596995ms, correspondem aos três callsites da proposta antiga neste workload. Esse número não é limite superior de ganho de wall time: remover invocações também muda captura de stack, spy, bookkeeping e GC. Tampouco limita todo ganho possível de outros candidatos.",
+    "calculationSources": {
+      "publicReadForCalculationCallsObserved": 0,
+      "primitiveCallsAttributedToCalculationSourcesLine272": 0,
+      "limit": "Nenhum caminho readForCalculation observado nem digest atribuído à linha272 neste workload. Uma otimização Set nessa função não recebe alegação de ganho deste B0. Ausência em stack isoladamente não prova ausência universal, e este resultado não se transfere ao P03."
+    }
+  },
+  "outputs": {
+    "comparison": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73",
+    "rule": "297d2038040a7ab226fe6b625464c19c10eb79f1201a082997f2d0338b493987",
+    "evaluation": "57db0af20092a4f30afc0ea4ff4cef0a4ef8ae4e7b1c7ef4ce82e1db1399e002",
+    "binding": "a9bb95f4b7004d7af4cc3c5dea1b451b7b9cd6e3d8ed3e24a98bf196226acfae",
+    "comparisonAgain": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73"
+  },
+  "callbackOrder": {
+    "events": 87440,
+    "sha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+    "limit": "Digest de eventos de fronteira medidos; não prova isoladamente equivalência de todos os callbacks do sistema."
+  },
+  "memory": {
+    "snapshots": {
+      "prepare-once": {
+        "before": {
+          "rss": 301641728,
+          "heapTotal": 93381632,
+          "heapUsed": 33195839,
+          "external": 16276742,
+          "arrayBuffers": 64771
+        },
+        "after": {
+          "rss": 452915200,
+          "heapTotal": 190770176,
+          "heapUsed": 131314439,
+          "external": 22582081,
+          "arrayBuffers": 502
+        }
+      },
+      "comparison-read": {
+        "before": {
+          "rss": 453046272,
+          "heapTotal": 190786560,
+          "heapUsed": 131314439,
+          "external": 22582081,
+          "arrayBuffers": 502
+        },
+        "after": {
+          "rss": 457097216,
+          "heapTotal": 193309696,
+          "heapUsed": 135646956,
+          "external": 24925885,
+          "arrayBuffers": 10269
+        }
+      },
+      "rule-resolve": {
+        "before": {
+          "rss": 457097216,
+          "heapTotal": 193309696,
+          "heapUsed": 135646956,
+          "external": 24925885,
+          "arrayBuffers": 10269
+        },
+        "after": {
+          "rss": 458932224,
+          "heapTotal": 193309696,
+          "heapUsed": 135646956,
+          "external": 24948542,
+          "arrayBuffers": 32926
+        }
+      },
+      "rule-evaluate": {
+        "before": {
+          "rss": 458932224,
+          "heapTotal": 193309696,
+          "heapUsed": 135646956,
+          "external": 24948542,
+          "arrayBuffers": 32926
+        },
+        "after": {
+          "rss": 512159744,
+          "heapTotal": 213293056,
+          "heapUsed": 141805185,
+          "external": 23070627,
+          "arrayBuffers": 1016252
+        }
+      },
+      "binding-proofs": {
+        "before": {
+          "rss": 512159744,
+          "heapTotal": 213309440,
+          "heapUsed": 141805185,
+          "external": 23070627,
+          "arrayBuffers": 1016252
+        },
+        "after": {
+          "rss": 505434112,
+          "heapTotal": 213309440,
+          "heapUsed": 141805185,
+          "external": 23094001,
+          "arrayBuffers": 1039626
+        }
+      },
+      "binding-create": {
+        "before": {
+          "rss": 505434112,
+          "heapTotal": 213309440,
+          "heapUsed": 141805185,
+          "external": 23094001,
+          "arrayBuffers": 1039626
+        },
+        "after": {
+          "rss": 1103724544,
+          "heapTotal": 567448576,
+          "heapUsed": 400853497,
+          "external": 53828697,
+          "arrayBuffers": 5440346
+        }
+      },
+      "binding-read": {
+        "before": {
+          "rss": 1103724544,
+          "heapTotal": 567448576,
+          "heapUsed": 400853497,
+          "external": 53828697,
+          "arrayBuffers": 5440346
+        },
+        "after": {
+          "rss": 1483325440,
+          "heapTotal": 815440896,
+          "heapUsed": 526438446,
+          "external": 61420016,
+          "arrayBuffers": 3392909
+        }
+      },
+      "comparison-read-again": {
+        "before": {
+          "rss": 1483325440,
+          "heapTotal": 815440896,
+          "heapUsed": 526438446,
+          "external": 61420016,
+          "arrayBuffers": 3392909
+        },
+        "after": {
+          "rss": 1483587584,
+          "heapTotal": 815442944,
+          "heapUsed": 526438446,
+          "external": 61430011,
+          "arrayBuffers": 3402904
+        }
+      }
+    },
+    "correctionOfRawLimit": "A frase do report B0 \"No values are inspected, serialized, retained or cloned by the primitive observer\" é ampla demais e incorreta quanto à retenção: spyOn do Bun mantém histórico de chamadas/resultados mesmo quando o código do probe não armazena payloads explicitamente.",
+    "interpretation": "RSS e heap incluem processo inteiro, fixtures anteriores da seleção, instrumentação que retinha argumentos/resultados, JIT e GC. Não há forced GC, peak, medição de objeto vivo pós-coleta ou atribuição de crescimento ao produto. B0 não demonstra vazamento ou heap do produto.",
+    "futureProbeDisposition": "Probe corrigido limpa histórico a cada entrada, após fase aguardada antes da memória e antes do report, guardando somente comprimentos/high-water numéricos. O framework pode manter bookkeeping da invocação ativa/última; zero residual não prova zero retenção em voo. Deve ser idêntico entre B2 e R1."
+  },
+  "safeScopeConclusions": [
+    "C08 tem clone opaco material medido. Preservá-lo é necessário enquanto getters, erros de clone, seleção após clone e mutations em authorize não têm prova equivalente; readonly59 não autoriza nova projeção.",
+    "criterion-comparison é fronteira de replay e observações independentes. Seu tempo inclusivo é dominado por trabalho descendente no workload, não por hash/clone próprio. Não há justificativa nesta medição para apagar validações ou memoizar através de callbacks.",
+    "O candidato antigo que só remove os três callsites listados alcança pouco trabalho primitivo medido. Qualificação material deve apontar o novo callsite efetivamente afetado e preservar toda a sequência semântica.",
+    "B0 é diagnóstico histórico; qualquer comparação temporal precisa do probe com retenção corrigida em ambos os lados. O P03 original permanece uma qualificação separada, com 72 assertions e180000ms intactos."
+  ],
+  "modulePrimitiveTotals": [
+    {
+      "key": "structuredClone|product/host-binding/state-provider.ts",
+      "calls": 2904,
+      "completed": 2904,
+      "errors": 0,
+      "inclusiveMs": 7041.608986,
+      "exclusiveMeasuredMs": 7041.608986
+    },
+    {
+      "key": "digestSfValue|product/planner/operation-verifier.ts",
+      "calls": 2004,
+      "completed": 2004,
+      "errors": 0,
+      "inclusiveMs": 6144.709413,
+      "exclusiveMeasuredMs": 6144.709413
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts",
+      "calls": 10471,
+      "completed": 10471,
+      "errors": 0,
+      "inclusiveMs": 3123.354915,
+      "exclusiveMeasuredMs": 3123.354915
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts",
+      "calls": 5313,
+      "completed": 5313,
+      "errors": 0,
+      "inclusiveMs": 1577.789143,
+      "exclusiveMeasuredMs": 1577.789143
+    },
+    {
+      "key": "structuredClone|product/planner/port.ts",
+      "calls": 19308,
+      "completed": 19308,
+      "errors": 0,
+      "inclusiveMs": 1180.174236,
+      "exclusiveMeasuredMs": 1180.174236
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts",
+      "calls": 1568,
+      "completed": 1568,
+      "errors": 0,
+      "inclusiveMs": 665.499356,
+      "exclusiveMeasuredMs": 665.499356
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts",
+      "calls": 1665,
+      "completed": 1665,
+      "errors": 0,
+      "inclusiveMs": 619.643401,
+      "exclusiveMeasuredMs": 619.643401
+    },
+    {
+      "key": "digestSfValue|product/decisions/case-port.ts",
+      "calls": 7014,
+      "completed": 7014,
+      "errors": 0,
+      "inclusiveMs": 537.586823,
+      "exclusiveMeasuredMs": 537.586823
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts",
+      "calls": 1848,
+      "completed": 1848,
+      "errors": 0,
+      "inclusiveMs": 524.794796,
+      "exclusiveMeasuredMs": 524.794796
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts",
+      "calls": 25541,
+      "completed": 25541,
+      "errors": 0,
+      "inclusiveMs": 510.426463,
+      "exclusiveMeasuredMs": 510.426463
+    },
+    {
+      "key": "structuredClone|unattributed",
+      "calls": 3402,
+      "completed": 3402,
+      "errors": 0,
+      "inclusiveMs": 467.276317,
+      "exclusiveMeasuredMs": 467.276317
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts",
+      "calls": 22614,
+      "completed": 22614,
+      "errors": 0,
+      "inclusiveMs": 393.498921,
+      "exclusiveMeasuredMs": 393.498921
+    },
+    {
+      "key": "digestSfValue|product/planner/stored-scenarios.ts",
+      "calls": 2016,
+      "completed": 2016,
+      "errors": 0,
+      "inclusiveMs": 374.797532,
+      "exclusiveMeasuredMs": 374.797532
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts",
+      "calls": 38877,
+      "completed": 38877,
+      "errors": 0,
+      "inclusiveMs": 288.538621,
+      "exclusiveMeasuredMs": 288.538621
+    },
+    {
+      "key": "structuredClone|runtime/planner.ts",
+      "calls": 26203,
+      "completed": 26203,
+      "errors": 0,
+      "inclusiveMs": 284.852218,
+      "exclusiveMeasuredMs": 284.852218
+    },
+    {
+      "key": "structuredClone|product/contracts/schema-admission.ts",
+      "calls": 4589,
+      "completed": 4589,
+      "errors": 0,
+      "inclusiveMs": 148.022195,
+      "exclusiveMeasuredMs": 148.022195
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-comparison-port.ts",
+      "calls": 186,
+      "completed": 186,
+      "errors": 0,
+      "inclusiveMs": 110.668594,
+      "exclusiveMeasuredMs": 110.668594
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts",
+      "calls": 10688,
+      "completed": 10688,
+      "errors": 0,
+      "inclusiveMs": 100.865178,
+      "exclusiveMeasuredMs": 100.865178
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts",
+      "calls": 691,
+      "completed": 691,
+      "errors": 0,
+      "inclusiveMs": 96.349495,
+      "exclusiveMeasuredMs": 96.349495
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts",
+      "calls": 216,
+      "completed": 216,
+      "errors": 0,
+      "inclusiveMs": 86.309111,
+      "exclusiveMeasuredMs": 86.309111
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-access.ts",
+      "calls": 152,
+      "completed": 152,
+      "errors": 0,
+      "inclusiveMs": 73.137978,
+      "exclusiveMeasuredMs": 73.137978
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts",
+      "calls": 414,
+      "completed": 414,
+      "errors": 0,
+      "inclusiveMs": 45.56529,
+      "exclusiveMeasuredMs": 45.56529
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts",
+      "calls": 6458,
+      "completed": 6458,
+      "errors": 0,
+      "inclusiveMs": 41.097707,
+      "exclusiveMeasuredMs": 41.097707
+    },
+    {
+      "key": "structuredClone|product/planner/sensitivity-units.ts",
+      "calls": 111,
+      "completed": 111,
+      "errors": 0,
+      "inclusiveMs": 33.309443,
+      "exclusiveMeasuredMs": 33.309443
+    },
+    {
+      "key": "structuredClone|test/product/wp11/renewal-operation-verifier.ts",
+      "calls": 2004,
+      "completed": 2004,
+      "errors": 0,
+      "inclusiveMs": 29.44263,
+      "exclusiveMeasuredMs": 29.44263
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts",
+      "calls": 1198,
+      "completed": 1198,
+      "errors": 0,
+      "inclusiveMs": 28.980192,
+      "exclusiveMeasuredMs": 28.980192
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-port.ts",
+      "calls": 112,
+      "completed": 112,
+      "errors": 0,
+      "inclusiveMs": 24.513891,
+      "exclusiveMeasuredMs": 24.513891
+    },
+    {
+      "key": "structuredClone|runtime/contract.ts",
+      "calls": 4130,
+      "completed": 4130,
+      "errors": 0,
+      "inclusiveMs": 23.689055,
+      "exclusiveMeasuredMs": 23.689055
+    },
+    {
+      "key": "structuredClone|product/planner/preview-comparison.ts",
+      "calls": 126,
+      "completed": 126,
+      "errors": 0,
+      "inclusiveMs": 19.07802,
+      "exclusiveMeasuredMs": 19.07802
+    },
+    {
+      "key": "structuredClone|product/planner/scenario.ts",
+      "calls": 690,
+      "completed": 690,
+      "errors": 0,
+      "inclusiveMs": 16.142195,
+      "exclusiveMeasuredMs": 16.142195
+    },
+    {
+      "key": "structuredClone|product/decisions/baseline-coverage.ts",
+      "calls": 267,
+      "completed": 267,
+      "errors": 0,
+      "inclusiveMs": 15.409346,
+      "exclusiveMeasuredMs": 15.409346
+    },
+    {
+      "key": "structuredClone|product/planner/operation-verifier.ts",
+      "calls": 1336,
+      "completed": 1336,
+      "errors": 0,
+      "inclusiveMs": 10.333351,
+      "exclusiveMeasuredMs": 10.333351
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts",
+      "calls": 214,
+      "completed": 214,
+      "errors": 0,
+      "inclusiveMs": 7.752887,
+      "exclusiveMeasuredMs": 7.752887
+    },
+    {
+      "key": "structuredClone|product/decisions/criterion-rules.ts",
+      "calls": 83,
+      "completed": 83,
+      "errors": 0,
+      "inclusiveMs": 4.839891,
+      "exclusiveMeasuredMs": 4.839891
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts",
+      "calls": 180,
+      "completed": 180,
+      "errors": 0,
+      "inclusiveMs": 3.15083,
+      "exclusiveMeasuredMs": 3.15083
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts",
+      "calls": 460,
+      "completed": 460,
+      "errors": 0,
+      "inclusiveMs": 3.037797,
+      "exclusiveMeasuredMs": 3.037797
+    },
+    {
+      "key": "digestSfValue|unattributed",
+      "calls": 261,
+      "completed": 261,
+      "errors": 0,
+      "inclusiveMs": 1.747607,
+      "exclusiveMeasuredMs": 1.747607
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts",
+      "calls": 60,
+      "completed": 60,
+      "errors": 0,
+      "inclusiveMs": 1.269252,
+      "exclusiveMeasuredMs": 1.269252
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts",
+      "calls": 59,
+      "completed": 59,
+      "errors": 0,
+      "inclusiveMs": 0.789395,
+      "exclusiveMeasuredMs": 0.789395
+    },
+    {
+      "key": "structuredClone|product/decisions/coverage-classification.ts",
+      "calls": 42,
+      "completed": 42,
+      "errors": 0,
+      "inclusiveMs": 0.612546,
+      "exclusiveMeasuredMs": 0.612546
+    },
+    {
+      "key": "structuredClone|product/planner/criterion-metric.ts",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.151477,
+      "exclusiveMeasuredMs": 0.151477
+    },
+    {
+      "key": "structuredClone|product/decisions/criterion-comparison.ts",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.048183,
+      "exclusiveMeasuredMs": 0.048183
+    },
+    {
+      "key": "structuredClone|product/decisions/mutations.ts",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.029874,
+      "exclusiveMeasuredMs": 0.029874
+    },
+    {
+      "key": "structuredClone|runtime/local-store.ts",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.024292,
+      "exclusiveMeasuredMs": 0.024292
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-coverage-fixture.ts",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.009543,
+      "exclusiveMeasuredMs": 0.009543
+    }
+  ],
+  "allPrimitiveCallsites": [
+    {
+      "key": "structuredClone|product/host-binding/state-provider.ts:65:24",
+      "calls": 2216,
+      "completed": 2216,
+      "errors": 0,
+      "inclusiveMs": 6744.277473,
+      "exclusiveMeasuredMs": 6744.277473
+    },
+    {
+      "key": "digestSfValue|product/planner/operation-verifier.ts:94:37",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 3090.88321,
+      "exclusiveMeasuredMs": 3090.88321
+    },
+    {
+      "key": "digestSfValue|product/planner/operation-verifier.ts:94:80",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 3021.256894,
+      "exclusiveMeasuredMs": 3021.256894
+    },
+    {
+      "key": "structuredClone|product/planner/port.ts:113:34",
+      "calls": 1609,
+      "completed": 1609,
+      "errors": 0,
+      "inclusiveMs": 925.615519,
+      "exclusiveMeasuredMs": 925.615519
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:68:24",
+      "calls": 1217,
+      "completed": 1217,
+      "errors": 0,
+      "inclusiveMs": 609.105211,
+      "exclusiveMeasuredMs": 609.105211
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:69:63",
+      "calls": 1217,
+      "completed": 1217,
+      "errors": 0,
+      "inclusiveMs": 571.314622,
+      "exclusiveMeasuredMs": 571.314622
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:67:25",
+      "calls": 1217,
+      "completed": 1217,
+      "errors": 0,
+      "inclusiveMs": 474.046321,
+      "exclusiveMeasuredMs": 474.046321
+    },
+    {
+      "key": "structuredClone|unattributed",
+      "calls": 3402,
+      "completed": 3402,
+      "errors": 0,
+      "inclusiveMs": 467.276317,
+      "exclusiveMeasuredMs": 467.276317
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:71:175",
+      "calls": 1572,
+      "completed": 1572,
+      "errors": 0,
+      "inclusiveMs": 337.387055,
+      "exclusiveMeasuredMs": 337.387055
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:77:72",
+      "calls": 1217,
+      "completed": 1217,
+      "errors": 0,
+      "inclusiveMs": 314.458278,
+      "exclusiveMeasuredMs": 314.458278
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:76:24",
+      "calls": 1217,
+      "completed": 1217,
+      "errors": 0,
+      "inclusiveMs": 298.24942,
+      "exclusiveMeasuredMs": 298.24942
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:202:116",
+      "calls": 596,
+      "completed": 596,
+      "errors": 0,
+      "inclusiveMs": 297.584386,
+      "exclusiveMeasuredMs": 297.584386
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:202:151",
+      "calls": 596,
+      "completed": 596,
+      "errors": 0,
+      "inclusiveMs": 281.854784,
+      "exclusiveMeasuredMs": 281.854784
+    },
+    {
+      "key": "structuredClone|product/host-binding/state-provider.ts:64:55",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 276.656355,
+      "exclusiveMeasuredMs": 276.656355
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:74:25",
+      "calls": 1217,
+      "completed": 1217,
+      "errors": 0,
+      "inclusiveMs": 252.952077,
+      "exclusiveMeasuredMs": 252.952077
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:194:22",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 227.507257,
+      "exclusiveMeasuredMs": 227.507257
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:162:20",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 226.185987,
+      "exclusiveMeasuredMs": 226.185987
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:176:20",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 224.892022,
+      "exclusiveMeasuredMs": 224.892022
+    },
+    {
+      "key": "structuredClone|runtime/planner.ts:341:36",
+      "calls": 8046,
+      "completed": 8046,
+      "errors": 0,
+      "inclusiveMs": 199.617687,
+      "exclusiveMeasuredMs": 199.617687
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:43:162",
+      "calls": 518,
+      "completed": 518,
+      "errors": 0,
+      "inclusiveMs": 190.324192,
+      "exclusiveMeasuredMs": 190.324192
+    },
+    {
+      "key": "digestSfValue|product/decisions/case-port.ts:82:28",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 174.283902,
+      "exclusiveMeasuredMs": 174.283902
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:580",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 172.877506,
+      "exclusiveMeasuredMs": 172.877506
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts:69:26",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 170.916137,
+      "exclusiveMeasuredMs": 170.916137
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:128:111",
+      "calls": 3218,
+      "completed": 3218,
+      "errors": 0,
+      "inclusiveMs": 166.880458,
+      "exclusiveMeasuredMs": 166.880458
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:633",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 165.991879,
+      "exclusiveMeasuredMs": 165.991879
+    },
+    {
+      "key": "digestSfValue|product/decisions/case-port.ts:96:29",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 158.061019,
+      "exclusiveMeasuredMs": 158.061019
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:181:158",
+      "calls": 596,
+      "completed": 596,
+      "errors": 0,
+      "inclusiveMs": 157.63384,
+      "exclusiveMeasuredMs": 157.63384
+    },
+    {
+      "key": "digestSfValue|product/decisions/case-port.ts:96:74",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 157.35364,
+      "exclusiveMeasuredMs": 157.35364
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:110:172",
+      "calls": 3218,
+      "completed": 3218,
+      "errors": 0,
+      "inclusiveMs": 153.248753,
+      "exclusiveMeasuredMs": 153.248753
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:202:220",
+      "calls": 596,
+      "completed": 596,
+      "errors": 0,
+      "inclusiveMs": 146.118444,
+      "exclusiveMeasuredMs": 146.118444
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:166:157",
+      "calls": 596,
+      "completed": 596,
+      "errors": 0,
+      "inclusiveMs": 143.939446,
+      "exclusiveMeasuredMs": 143.939446
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:181:192",
+      "calls": 596,
+      "completed": 596,
+      "errors": 0,
+      "inclusiveMs": 142.659763,
+      "exclusiveMeasuredMs": 142.659763
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts:91:105",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 136.490541,
+      "exclusiveMeasuredMs": 136.490541
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:202:186",
+      "calls": 596,
+      "completed": 596,
+      "errors": 0,
+      "inclusiveMs": 134.688166,
+      "exclusiveMeasuredMs": 134.688166
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts:71:117",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 131.122431,
+      "exclusiveMeasuredMs": 131.122431
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:203:37",
+      "calls": 596,
+      "completed": 596,
+      "errors": 0,
+      "inclusiveMs": 126.667677,
+      "exclusiveMeasuredMs": 126.667677
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts:60:144",
+      "calls": 15339,
+      "completed": 15339,
+      "errors": 0,
+      "inclusiveMs": 123.876468,
+      "exclusiveMeasuredMs": 123.876468
+    },
+    {
+      "key": "structuredClone|product/contracts/schema-admission.ts:60:29",
+      "calls": 610,
+      "completed": 610,
+      "errors": 0,
+      "inclusiveMs": 117.918353,
+      "exclusiveMeasuredMs": 117.918353
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts:36:55",
+      "calls": 260,
+      "completed": 260,
+      "errors": 0,
+      "inclusiveMs": 110.579406,
+      "exclusiveMeasuredMs": 110.579406
+    },
+    {
+      "key": "digestSfValue|product/planner/stored-scenarios.ts:52:26",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 109.607803,
+      "exclusiveMeasuredMs": 109.607803
+    },
+    {
+      "key": "digestSfValue|product/planner/stored-scenarios.ts:91:19",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 106.782597,
+      "exclusiveMeasuredMs": 106.782597
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-comparison-port.ts:78:22",
+      "calls": 94,
+      "completed": 94,
+      "errors": 0,
+      "inclusiveMs": 105.824712,
+      "exclusiveMeasuredMs": 105.824712
+    },
+    {
+      "key": "structuredClone|product/planner/port.ts:105:149",
+      "calls": 3218,
+      "completed": 3218,
+      "errors": 0,
+      "inclusiveMs": 105.488851,
+      "exclusiveMeasuredMs": 105.488851
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts:60:170",
+      "calls": 15339,
+      "completed": 15339,
+      "errors": 0,
+      "inclusiveMs": 104.382621,
+      "exclusiveMeasuredMs": 104.382621
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:994",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 72.204153,
+      "exclusiveMeasuredMs": 72.204153
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:941",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 69.253485,
+      "exclusiveMeasuredMs": 69.253485
+    },
+    {
+      "key": "structuredClone|runtime/planner.ts:327:19",
+      "calls": 2065,
+      "completed": 2065,
+      "errors": 0,
+      "inclusiveMs": 67.96311,
+      "exclusiveMeasuredMs": 67.96311
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:53:83",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 65.30836,
+      "exclusiveMeasuredMs": 65.30836
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:139:257",
+      "calls": 10374,
+      "completed": 10374,
+      "errors": 0,
+      "inclusiveMs": 63.796381,
+      "exclusiveMeasuredMs": 63.796381
+    },
+    {
+      "key": "structuredClone|product/planner/port.ts:86:37",
+      "calls": 6436,
+      "completed": 6436,
+      "errors": 0,
+      "inclusiveMs": 63.259899,
+      "exclusiveMeasuredMs": 63.259899
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:53:114",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 62.359606,
+      "exclusiveMeasuredMs": 62.359606
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts:149:19",
+      "calls": 8192,
+      "completed": 8192,
+      "errors": 0,
+      "inclusiveMs": 59.779703,
+      "exclusiveMeasuredMs": 59.779703
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:139:281",
+      "calls": 10374,
+      "completed": 10374,
+      "errors": 0,
+      "inclusiveMs": 58.884447,
+      "exclusiveMeasuredMs": 58.884447
+    },
+    {
+      "key": "structuredClone|product/planner/port.ts:86:98",
+      "calls": 6436,
+      "completed": 6436,
+      "errors": 0,
+      "inclusiveMs": 55.149651,
+      "exclusiveMeasuredMs": 55.149651
+    },
+    {
+      "key": "digestSfValue|product/planner/stored-scenarios.ts:83:20",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 55.112502,
+      "exclusiveMeasuredMs": 55.112502
+    },
+    {
+      "key": "digestSfValue|product/planner/stored-scenarios.ts:83:51",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 53.469439,
+      "exclusiveMeasuredMs": 53.469439
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:49:245",
+      "calls": 14,
+      "completed": 14,
+      "errors": 0,
+      "inclusiveMs": 48.959318,
+      "exclusiveMeasuredMs": 48.959318
+    },
+    {
+      "key": "digestSfValue|product/planner/stored-scenarios.ts:53:153",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 45.293967,
+      "exclusiveMeasuredMs": 45.293967
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:49:290",
+      "calls": 14,
+      "completed": 14,
+      "errors": 0,
+      "inclusiveMs": 44.798744,
+      "exclusiveMeasuredMs": 44.798744
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:67:11",
+      "calls": 1336,
+      "completed": 1336,
+      "errors": 0,
+      "inclusiveMs": 43.737876,
+      "exclusiveMeasuredMs": 43.737876
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts:58:113",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 42.648811,
+      "exclusiveMeasuredMs": 42.648811
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:52:87",
+      "calls": 82,
+      "completed": 82,
+      "errors": 0,
+      "inclusiveMs": 41.825359,
+      "exclusiveMeasuredMs": 41.825359
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:52:118",
+      "calls": 82,
+      "completed": 82,
+      "errors": 0,
+      "inclusiveMs": 38.661908,
+      "exclusiveMeasuredMs": 38.661908
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-access.ts:39:139",
+      "calls": 76,
+      "completed": 76,
+      "errors": 0,
+      "inclusiveMs": 37.731728,
+      "exclusiveMeasuredMs": 37.731728
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts:49:29",
+      "calls": 94,
+      "completed": 94,
+      "errors": 0,
+      "inclusiveMs": 37.162076,
+      "exclusiveMeasuredMs": 37.162076
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts:36:281",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 36.984038,
+      "exclusiveMeasuredMs": 36.984038
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:65:301",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 36.781151,
+      "exclusiveMeasuredMs": 36.781151
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts:89:29",
+      "calls": 94,
+      "completed": 94,
+      "errors": 0,
+      "inclusiveMs": 36.072543,
+      "exclusiveMeasuredMs": 36.072543
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:65:346",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 35.991889,
+      "exclusiveMeasuredMs": 35.991889
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-access.ts:39:170",
+      "calls": 76,
+      "completed": 76,
+      "errors": 0,
+      "inclusiveMs": 35.40625,
+      "exclusiveMeasuredMs": 35.40625
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts:36:326",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 35.056836,
+      "exclusiveMeasuredMs": 35.056836
+    },
+    {
+      "key": "digestSfValue|product/planner/operation-verifier.ts:82:23",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 32.569309,
+      "exclusiveMeasuredMs": 32.569309
+    },
+    {
+      "key": "structuredClone|product/planner/port.ts:94:20",
+      "calls": 1609,
+      "completed": 1609,
+      "errors": 0,
+      "inclusiveMs": 30.660316,
+      "exclusiveMeasuredMs": 30.660316
+    },
+    {
+      "key": "structuredClone|product/contracts/schema-admission.ts:46:29",
+      "calls": 3979,
+      "completed": 3979,
+      "errors": 0,
+      "inclusiveMs": 30.103842,
+      "exclusiveMeasuredMs": 30.103842
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:75:23",
+      "calls": 1217,
+      "completed": 1217,
+      "errors": 0,
+      "inclusiveMs": 29.281033,
+      "exclusiveMeasuredMs": 29.281033
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:96:55",
+      "calls": 3218,
+      "completed": 3218,
+      "errors": 0,
+      "inclusiveMs": 23.404869,
+      "exclusiveMeasuredMs": 23.404869
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-port.ts:66:19",
+      "calls": 22,
+      "completed": 22,
+      "errors": 0,
+      "inclusiveMs": 22.058591,
+      "exclusiveMeasuredMs": 22.058591
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:55:29",
+      "calls": 3100,
+      "completed": 3100,
+      "errors": 0,
+      "inclusiveMs": 20.829677,
+      "exclusiveMeasuredMs": 20.829677
+    },
+    {
+      "key": "structuredClone|product/host-binding/state-provider.ts:119:24",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 19.908494,
+      "exclusiveMeasuredMs": 19.908494
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:292",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 19.510278,
+      "exclusiveMeasuredMs": 19.510278
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:256",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 18.097439,
+      "exclusiveMeasuredMs": 18.097439
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:55:64",
+      "calls": 3100,
+      "completed": 3100,
+      "errors": 0,
+      "inclusiveMs": 17.879703,
+      "exclusiveMeasuredMs": 17.879703
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:32:47",
+      "calls": 41,
+      "completed": 41,
+      "errors": 0,
+      "inclusiveMs": 17.817363,
+      "exclusiveMeasuredMs": 17.817363
+    },
+    {
+      "key": "structuredClone|product/planner/sensitivity-units.ts:92:19",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 17.398686,
+      "exclusiveMeasuredMs": 17.398686
+    },
+    {
+      "key": "digestSfValue|product/decisions/case-port.ts:153:157",
+      "calls": 2672,
+      "completed": 2672,
+      "errors": 0,
+      "inclusiveMs": 16.633451,
+      "exclusiveMeasuredMs": 16.633451
+    },
+    {
+      "key": "structuredClone|product/planner/scenario.ts:8:19",
+      "calls": 690,
+      "completed": 690,
+      "errors": 0,
+      "inclusiveMs": 16.142195,
+      "exclusiveMeasuredMs": 16.142195
+    },
+    {
+      "key": "digestSfValue|product/decisions/case-port.ts:153:232",
+      "calls": 2672,
+      "completed": 2672,
+      "errors": 0,
+      "inclusiveMs": 16.092144,
+      "exclusiveMeasuredMs": 16.092144
+    },
+    {
+      "key": "structuredClone|product/planner/sensitivity-units.ts:68:49",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 15.737686,
+      "exclusiveMeasuredMs": 15.737686
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:53:303",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 15.361441,
+      "exclusiveMeasuredMs": 15.361441
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:50:35",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 15.225156,
+      "exclusiveMeasuredMs": 15.225156
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:53:328",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 15.174002,
+      "exclusiveMeasuredMs": 15.174002
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:132:88",
+      "calls": 3218,
+      "completed": 3218,
+      "errors": 0,
+      "inclusiveMs": 14.931928,
+      "exclusiveMeasuredMs": 14.931928
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:132:113",
+      "calls": 3218,
+      "completed": 3218,
+      "errors": 0,
+      "inclusiveMs": 14.187166,
+      "exclusiveMeasuredMs": 14.187166
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:161:163",
+      "calls": 106,
+      "completed": 106,
+      "errors": 0,
+      "inclusiveMs": 13.105224,
+      "exclusiveMeasuredMs": 13.105224
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:161:194",
+      "calls": 106,
+      "completed": 106,
+      "errors": 0,
+      "inclusiveMs": 12.883551,
+      "exclusiveMeasuredMs": 12.883551
+    },
+    {
+      "key": "structuredClone|runtime/contract.ts:121:13",
+      "calls": 2065,
+      "completed": 2065,
+      "errors": 0,
+      "inclusiveMs": 12.498627,
+      "exclusiveMeasuredMs": 12.498627
+    },
+    {
+      "key": "structuredClone|test/product/wp11/renewal-operation-verifier.ts:40:22",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 11.584825,
+      "exclusiveMeasuredMs": 11.584825
+    },
+    {
+      "key": "structuredClone|runtime/contract.ts:120:10",
+      "calls": 2065,
+      "completed": 2065,
+      "errors": 0,
+      "inclusiveMs": 11.190428,
+      "exclusiveMeasuredMs": 11.190428
+    },
+    {
+      "key": "structuredClone|runtime/planner.ts:360:17",
+      "calls": 8046,
+      "completed": 8046,
+      "errors": 0,
+      "inclusiveMs": 11.071103,
+      "exclusiveMeasuredMs": 11.071103
+    },
+    {
+      "key": "structuredClone|product/decisions/baseline-coverage.ts:54:122",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 11.013282,
+      "exclusiveMeasuredMs": 11.013282
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:79",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 10.979009,
+      "exclusiveMeasuredMs": 10.979009
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:116",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 10.956577,
+      "exclusiveMeasuredMs": 10.956577
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:110:62",
+      "calls": 3218,
+      "completed": 3218,
+      "errors": 0,
+      "inclusiveMs": 10.897286,
+      "exclusiveMeasuredMs": 10.897286
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:81:85",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 10.579159,
+      "exclusiveMeasuredMs": 10.579159
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:134:113",
+      "calls": 6,
+      "completed": 6,
+      "errors": 0,
+      "inclusiveMs": 10.341256,
+      "exclusiveMeasuredMs": 10.341256
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:398",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 10.148642,
+      "exclusiveMeasuredMs": 10.148642
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:72:142",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 10.085373,
+      "exclusiveMeasuredMs": 10.085373
+    },
+    {
+      "key": "structuredClone|product/planner/operation-verifier.ts:43:20",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 9.806181,
+      "exclusiveMeasuredMs": 9.806181
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:141:172",
+      "calls": 1572,
+      "completed": 1572,
+      "errors": 0,
+      "inclusiveMs": 9.687504,
+      "exclusiveMeasuredMs": 9.687504
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:352",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 9.522899,
+      "exclusiveMeasuredMs": 9.522899
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:141:201",
+      "calls": 1572,
+      "completed": 1572,
+      "errors": 0,
+      "inclusiveMs": 9.239208,
+      "exclusiveMeasuredMs": 9.239208
+    },
+    {
+      "key": "structuredClone|test/product/wp11/renewal-operation-verifier.ts:92:23",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 9.06402,
+      "exclusiveMeasuredMs": 9.06402
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:134:57",
+      "calls": 6,
+      "completed": 6,
+      "errors": 0,
+      "inclusiveMs": 8.828155,
+      "exclusiveMeasuredMs": 8.828155
+    },
+    {
+      "key": "structuredClone|test/product/wp11/renewal-operation-verifier.ts:70:21",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 8.793785,
+      "exclusiveMeasuredMs": 8.793785
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:110:112",
+      "calls": 3218,
+      "completed": 3218,
+      "errors": 0,
+      "inclusiveMs": 7.943048,
+      "exclusiveMeasuredMs": 7.943048
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:39:29",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 7.916778,
+      "exclusiveMeasuredMs": 7.916778
+    },
+    {
+      "key": "digestSfValue|product/decisions/case-port.ts:85:28",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 7.812912,
+      "exclusiveMeasuredMs": 7.812912
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:147",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 7.409121,
+      "exclusiveMeasuredMs": 7.409121
+    },
+    {
+      "key": "digestSfValue|product/decisions/case-port.ts:96:113",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 7.349755,
+      "exclusiveMeasuredMs": 7.349755
+    },
+    {
+      "key": "structuredClone|product/planner/preview-comparison.ts:16:20",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 7.31054,
+      "exclusiveMeasuredMs": 7.31054
+    },
+    {
+      "key": "structuredClone|product/planner/preview-comparison.ts:34:17",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 7.188525,
+      "exclusiveMeasuredMs": 7.188525
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:192",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 6.869672,
+      "exclusiveMeasuredMs": 6.869672
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:76:91",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 6.59707,
+      "exclusiveMeasuredMs": 6.59707
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:713",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 6.493363,
+      "exclusiveMeasuredMs": 6.493363
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:759",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 6.397749,
+      "exclusiveMeasuredMs": 6.397749
+    },
+    {
+      "key": "structuredClone|runtime/planner.ts:356:18",
+      "calls": 8046,
+      "completed": 8046,
+      "errors": 0,
+      "inclusiveMs": 6.200318,
+      "exclusiveMeasuredMs": 6.200318
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:81:155",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 6.073436,
+      "exclusiveMeasuredMs": 6.073436
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:100:49",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 6.058773,
+      "exclusiveMeasuredMs": 6.058773
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:118:99",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 5.372166,
+      "exclusiveMeasuredMs": 5.372166
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:49:33",
+      "calls": 82,
+      "completed": 82,
+      "errors": 0,
+      "inclusiveMs": 5.257951,
+      "exclusiveMeasuredMs": 5.257951
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:71:36",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 5.152422,
+      "exclusiveMeasuredMs": 5.152422
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:99:19",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 5.055573,
+      "exclusiveMeasuredMs": 5.055573
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:118:135",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 5.013861,
+      "exclusiveMeasuredMs": 5.013861
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:44:27",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 4.904252,
+      "exclusiveMeasuredMs": 4.904252
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:71:67",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 4.828505,
+      "exclusiveMeasuredMs": 4.828505
+    },
+    {
+      "key": "structuredClone|product/decisions/criterion-rules.ts:53:37",
+      "calls": 82,
+      "completed": 82,
+      "errors": 0,
+      "inclusiveMs": 4.78083,
+      "exclusiveMeasuredMs": 4.78083
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:107:20",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 4.749417,
+      "exclusiveMeasuredMs": 4.749417
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:142:263",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 4.69246,
+      "exclusiveMeasuredMs": 4.69246
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:116:22",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 4.677587,
+      "exclusiveMeasuredMs": 4.677587
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:66:11",
+      "calls": 1336,
+      "completed": 1336,
+      "errors": 0,
+      "inclusiveMs": 4.1718,
+      "exclusiveMeasuredMs": 4.1718
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:72:75",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 4.120716,
+      "exclusiveMeasuredMs": 4.120716
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:102:91",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 3.949738,
+      "exclusiveMeasuredMs": 3.949738
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:39:154",
+      "calls": 520,
+      "completed": 520,
+      "errors": 0,
+      "inclusiveMs": 3.877281,
+      "exclusiveMeasuredMs": 3.877281
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:52:202",
+      "calls": 82,
+      "completed": 82,
+      "errors": 0,
+      "inclusiveMs": 3.862769,
+      "exclusiveMeasuredMs": 3.862769
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-comparison-port.ts:41:24",
+      "calls": 40,
+      "completed": 40,
+      "errors": 0,
+      "inclusiveMs": 3.802147,
+      "exclusiveMeasuredMs": 3.802147
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:52:237",
+      "calls": 82,
+      "completed": 82,
+      "errors": 0,
+      "inclusiveMs": 3.693322,
+      "exclusiveMeasuredMs": 3.693322
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:49:122",
+      "calls": 14,
+      "completed": 14,
+      "errors": 0,
+      "inclusiveMs": 3.590376,
+      "exclusiveMeasuredMs": 3.590376
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts:36:218",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 3.484327,
+      "exclusiveMeasuredMs": 3.484327
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:42:302",
+      "calls": 40,
+      "completed": 40,
+      "errors": 0,
+      "inclusiveMs": 3.456698,
+      "exclusiveMeasuredMs": 3.456698
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:63:11",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 3.419643,
+      "exclusiveMeasuredMs": 3.419643
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:49:183",
+      "calls": 14,
+      "completed": 14,
+      "errors": 0,
+      "inclusiveMs": 3.380918,
+      "exclusiveMeasuredMs": 3.380918
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:42:257",
+      "calls": 40,
+      "completed": 40,
+      "errors": 0,
+      "inclusiveMs": 3.354493,
+      "exclusiveMeasuredMs": 3.354493
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:66:61",
+      "calls": 1336,
+      "completed": 1336,
+      "errors": 0,
+      "inclusiveMs": 3.335859,
+      "exclusiveMeasuredMs": 3.335859
+    },
+    {
+      "key": "structuredClone|product/planner/preview-comparison.ts:28:18",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 3.33132,
+      "exclusiveMeasuredMs": 3.33132
+    },
+    {
+      "key": "structuredClone|product/decisions/baseline-coverage.ts:54:79",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 3.299422,
+      "exclusiveMeasuredMs": 3.299422
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts:36:157",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 3.271002,
+      "exclusiveMeasuredMs": 3.271002
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:98:131",
+      "calls": 22,
+      "completed": 22,
+      "errors": 0,
+      "inclusiveMs": 3.261557,
+      "exclusiveMeasuredMs": 3.261557
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts:25:322",
+      "calls": 36,
+      "completed": 36,
+      "errors": 0,
+      "inclusiveMs": 3.229959,
+      "exclusiveMeasuredMs": 3.229959
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts:25:277",
+      "calls": 36,
+      "completed": 36,
+      "errors": 0,
+      "inclusiveMs": 3.10881,
+      "exclusiveMeasuredMs": 3.10881
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:65:178",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 2.882449,
+      "exclusiveMeasuredMs": 2.882449
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:135:29",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 2.746413,
+      "exclusiveMeasuredMs": 2.746413
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:65:239",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 2.740524,
+      "exclusiveMeasuredMs": 2.740524
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-operation-verifier.ts:91:27",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 2.671746,
+      "exclusiveMeasuredMs": 2.671746
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:98:164",
+      "calls": 22,
+      "completed": 22,
+      "errors": 0,
+      "inclusiveMs": 2.335132,
+      "exclusiveMeasuredMs": 2.335132
+    },
+    {
+      "key": "digestSfValue|product/planner/stored-scenarios.ts:53:84",
+      "calls": 448,
+      "completed": 448,
+      "errors": 0,
+      "inclusiveMs": 2.297595,
+      "exclusiveMeasuredMs": 2.297595
+    },
+    {
+      "key": "digestSfValue|product/planner/stored-scenarios.ts:35:17",
+      "calls": 448,
+      "completed": 448,
+      "errors": 0,
+      "inclusiveMs": 2.233629,
+      "exclusiveMeasuredMs": 2.233629
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-port.ts:61:20",
+      "calls": 22,
+      "completed": 22,
+      "errors": 0,
+      "inclusiveMs": 1.939634,
+      "exclusiveMeasuredMs": 1.939634
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:28:44",
+      "calls": 5,
+      "completed": 5,
+      "errors": 0,
+      "inclusiveMs": 1.854974,
+      "exclusiveMeasuredMs": 1.854974
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:100:483",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 1.835798,
+      "exclusiveMeasuredMs": 1.835798
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:40:178",
+      "calls": 135,
+      "completed": 135,
+      "errors": 0,
+      "inclusiveMs": 1.782757,
+      "exclusiveMeasuredMs": 1.782757
+    },
+    {
+      "key": "digestSfValue|unattributed",
+      "calls": 261,
+      "completed": 261,
+      "errors": 0,
+      "inclusiveMs": 1.747607,
+      "exclusiveMeasuredMs": 1.747607
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:79:24",
+      "calls": 22,
+      "completed": 22,
+      "errors": 0,
+      "inclusiveMs": 1.455404,
+      "exclusiveMeasuredMs": 1.455404
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:142:350",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 1.354802,
+      "exclusiveMeasuredMs": 1.354802
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:122:5",
+      "calls": 44,
+      "completed": 44,
+      "errors": 0,
+      "inclusiveMs": 1.256285,
+      "exclusiveMeasuredMs": 1.256285
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:141:27",
+      "calls": 334,
+      "completed": 334,
+      "errors": 0,
+      "inclusiveMs": 1.219875,
+      "exclusiveMeasuredMs": 1.219875
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:124:794",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 1.202767,
+      "exclusiveMeasuredMs": 1.202767
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:96:1175",
+      "calls": 148,
+      "completed": 148,
+      "errors": 0,
+      "inclusiveMs": 1.184843,
+      "exclusiveMeasuredMs": 1.184843
+    },
+    {
+      "key": "structuredClone|product/decisions/baseline-coverage.ts:128:35",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.998269,
+      "exclusiveMeasuredMs": 0.998269
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:43:34",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.99652,
+      "exclusiveMeasuredMs": 0.99652
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:141:99",
+      "calls": 86,
+      "completed": 86,
+      "errors": 0,
+      "inclusiveMs": 0.941938,
+      "exclusiveMeasuredMs": 0.941938
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:91:141",
+      "calls": 148,
+      "completed": 148,
+      "errors": 0,
+      "inclusiveMs": 0.934694,
+      "exclusiveMeasuredMs": 0.934694
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:40:150",
+      "calls": 135,
+      "completed": 135,
+      "errors": 0,
+      "inclusiveMs": 0.92109,
+      "exclusiveMeasuredMs": 0.92109
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:50:307",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 0.911888,
+      "exclusiveMeasuredMs": 0.911888
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:119:35",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 0.876009,
+      "exclusiveMeasuredMs": 0.876009
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:65:30",
+      "calls": 23,
+      "completed": 23,
+      "errors": 0,
+      "inclusiveMs": 0.850267,
+      "exclusiveMeasuredMs": 0.850267
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:50:244",
+      "calls": 131,
+      "completed": 131,
+      "errors": 0,
+      "inclusiveMs": 0.823081,
+      "exclusiveMeasuredMs": 0.823081
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:43:65",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.815469,
+      "exclusiveMeasuredMs": 0.815469
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:124:69",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.812353,
+      "exclusiveMeasuredMs": 0.812353
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:34:96",
+      "calls": 93,
+      "completed": 93,
+      "errors": 0,
+      "inclusiveMs": 0.793004,
+      "exclusiveMeasuredMs": 0.793004
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:109:167",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 0.7884,
+      "exclusiveMeasuredMs": 0.7884
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:34:63",
+      "calls": 93,
+      "completed": 93,
+      "errors": 0,
+      "inclusiveMs": 0.77744,
+      "exclusiveMeasuredMs": 0.77744
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:124:38",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.771838,
+      "exclusiveMeasuredMs": 0.771838
+    },
+    {
+      "key": "structuredClone|product/host-binding/state-provider.ts:170:361",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.766664,
+      "exclusiveMeasuredMs": 0.766664
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-comparison-port.ts:40:22",
+      "calls": 40,
+      "completed": 40,
+      "errors": 0,
+      "inclusiveMs": 0.752361,
+      "exclusiveMeasuredMs": 0.752361
+    },
+    {
+      "key": "digestSfValue|product/planner/port.ts:122:48",
+      "calls": 44,
+      "completed": 44,
+      "errors": 0,
+      "inclusiveMs": 0.749128,
+      "exclusiveMeasuredMs": 0.749128
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:109:200",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 0.689075,
+      "exclusiveMeasuredMs": 0.689075
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:118:188",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 0.66416,
+      "exclusiveMeasuredMs": 0.66416
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:100:165",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 0.629696,
+      "exclusiveMeasuredMs": 0.629696
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:28:83",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.62919,
+      "exclusiveMeasuredMs": 0.62919
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:42:227",
+      "calls": 40,
+      "completed": 40,
+      "errors": 0,
+      "inclusiveMs": 0.621374,
+      "exclusiveMeasuredMs": 0.621374
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:118:223",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 0.602542,
+      "exclusiveMeasuredMs": 0.602542
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:32:146",
+      "calls": 90,
+      "completed": 90,
+      "errors": 0,
+      "inclusiveMs": 0.598921,
+      "exclusiveMeasuredMs": 0.598921
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:42:187",
+      "calls": 40,
+      "completed": 40,
+      "errors": 0,
+      "inclusiveMs": 0.595099,
+      "exclusiveMeasuredMs": 0.595099
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts:25:238",
+      "calls": 36,
+      "completed": 36,
+      "errors": 0,
+      "inclusiveMs": 0.59196,
+      "exclusiveMeasuredMs": 0.59196
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:33:140",
+      "calls": 88,
+      "completed": 88,
+      "errors": 0,
+      "inclusiveMs": 0.582309,
+      "exclusiveMeasuredMs": 0.582309
+    },
+    {
+      "key": "digestSfValue|product/planner/preview-comparison.ts:25:198",
+      "calls": 36,
+      "completed": 36,
+      "errors": 0,
+      "inclusiveMs": 0.582179,
+      "exclusiveMeasuredMs": 0.582179
+    },
+    {
+      "key": "digestSfValue|product/decisions/coverage-classification.ts:33:169",
+      "calls": 88,
+      "completed": 88,
+      "errors": 0,
+      "inclusiveMs": 0.573974,
+      "exclusiveMeasuredMs": 0.573974
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:245:228",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.539396,
+      "exclusiveMeasuredMs": 0.539396
+    },
+    {
+      "key": "structuredClone|product/planner/operation-verifier.ts:51:22",
+      "calls": 668,
+      "completed": 668,
+      "errors": 0,
+      "inclusiveMs": 0.52717,
+      "exclusiveMeasuredMs": 0.52717
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:273:283",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.524162,
+      "exclusiveMeasuredMs": 0.524162
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:32:174",
+      "calls": 90,
+      "completed": 90,
+      "errors": 0,
+      "inclusiveMs": 0.516703,
+      "exclusiveMeasuredMs": 0.516703
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:28:121",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.508296,
+      "exclusiveMeasuredMs": 0.508296
+    },
+    {
+      "key": "structuredClone|product/planner/stored-scenarios.ts:69:141",
+      "calls": 224,
+      "completed": 224,
+      "errors": 0,
+      "inclusiveMs": 0.507411,
+      "exclusiveMeasuredMs": 0.507411
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:255:12",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.493553,
+      "exclusiveMeasuredMs": 0.493553
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:237:282",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.488398,
+      "exclusiveMeasuredMs": 0.488398
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:72:72",
+      "calls": 74,
+      "completed": 74,
+      "errors": 0,
+      "inclusiveMs": 0.463798,
+      "exclusiveMeasuredMs": 0.463798
+    },
+    {
+      "key": "structuredClone|product/planner/preview-comparison.ts:14:19",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.450277,
+      "exclusiveMeasuredMs": 0.450277
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:84:220",
+      "calls": 80,
+      "completed": 80,
+      "errors": 0,
+      "inclusiveMs": 0.442176,
+      "exclusiveMeasuredMs": 0.442176
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:83:237",
+      "calls": 78,
+      "completed": 78,
+      "errors": 0,
+      "inclusiveMs": 0.440777,
+      "exclusiveMeasuredMs": 0.440777
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:83:212",
+      "calls": 78,
+      "completed": 78,
+      "errors": 0,
+      "inclusiveMs": 0.435821,
+      "exclusiveMeasuredMs": 0.435821
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:84:245",
+      "calls": 80,
+      "completed": 80,
+      "errors": 0,
+      "inclusiveMs": 0.431744,
+      "exclusiveMeasuredMs": 0.431744
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:84:169",
+      "calls": 59,
+      "completed": 59,
+      "errors": 0,
+      "inclusiveMs": 0.430921,
+      "exclusiveMeasuredMs": 0.430921
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:242:51",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.422703,
+      "exclusiveMeasuredMs": 0.422703
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:227:21",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.420453,
+      "exclusiveMeasuredMs": 0.420453
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:53:250",
+      "calls": 74,
+      "completed": 74,
+      "errors": 0,
+      "inclusiveMs": 0.406482,
+      "exclusiveMeasuredMs": 0.406482
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:236:336",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.398716,
+      "exclusiveMeasuredMs": 0.398716
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:84:198",
+      "calls": 59,
+      "completed": 59,
+      "errors": 0,
+      "inclusiveMs": 0.380466,
+      "exclusiveMeasuredMs": 0.380466
+    },
+    {
+      "key": "structuredClone|product/decisions/coverage-classification.ts:24:22",
+      "calls": 19,
+      "completed": 19,
+      "errors": 0,
+      "inclusiveMs": 0.37432,
+      "exclusiveMeasuredMs": 0.37432
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts:86:154",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.368471,
+      "exclusiveMeasuredMs": 0.368471
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-port.ts:59:18",
+      "calls": 22,
+      "completed": 22,
+      "errors": 0,
+      "inclusiveMs": 0.367737,
+      "exclusiveMeasuredMs": 0.367737
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:33:198",
+      "calls": 7,
+      "completed": 7,
+      "errors": 0,
+      "inclusiveMs": 0.325169,
+      "exclusiveMeasuredMs": 0.325169
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:127:34",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.299328,
+      "exclusiveMeasuredMs": 0.299328
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-comparison-port.ts:56:62",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 0.289374,
+      "exclusiveMeasuredMs": 0.289374
+    },
+    {
+      "key": "structuredClone|product/planner/preview-comparison.ts:20:24",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.284926,
+      "exclusiveMeasuredMs": 0.284926
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:127:65",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.282854,
+      "exclusiveMeasuredMs": 0.282854
+    },
+    {
+      "key": "structuredClone|product/planner/preview-comparison.ts:35:29",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.2619,
+      "exclusiveMeasuredMs": 0.2619
+    },
+    {
+      "key": "structuredClone|product/planner/preview-comparison.ts:28:71",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.250532,
+      "exclusiveMeasuredMs": 0.250532
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:45:29",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.242395,
+      "exclusiveMeasuredMs": 0.242395
+    },
+    {
+      "key": "structuredClone|product/decisions/coverage-classification.ts:26:168",
+      "calls": 23,
+      "completed": 23,
+      "errors": 0,
+      "inclusiveMs": 0.238226,
+      "exclusiveMeasuredMs": 0.238226
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:49:380",
+      "calls": 82,
+      "completed": 82,
+      "errors": 0,
+      "inclusiveMs": 0.230049,
+      "exclusiveMeasuredMs": 0.230049
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:129:50",
+      "calls": 21,
+      "completed": 21,
+      "errors": 0,
+      "inclusiveMs": 0.229325,
+      "exclusiveMeasuredMs": 0.229325
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:53:337",
+      "calls": 74,
+      "completed": 74,
+      "errors": 0,
+      "inclusiveMs": 0.221606,
+      "exclusiveMeasuredMs": 0.221606
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:93:66",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.22115,
+      "exclusiveMeasuredMs": 0.22115
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:111:73",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.185183,
+      "exclusiveMeasuredMs": 0.185183
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:52:7",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.180354,
+      "exclusiveMeasuredMs": 0.180354
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:84:310",
+      "calls": 30,
+      "completed": 30,
+      "errors": 0,
+      "inclusiveMs": 0.180126,
+      "exclusiveMeasuredMs": 0.180126
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:53:383",
+      "calls": 74,
+      "completed": 74,
+      "errors": 0,
+      "inclusiveMs": 0.177945,
+      "exclusiveMeasuredMs": 0.177945
+    },
+    {
+      "key": "structuredClone|product/planner/sensitivity-units.ts:57:21",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.173071,
+      "exclusiveMeasuredMs": 0.173071
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:111:26",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.168766,
+      "exclusiveMeasuredMs": 0.168766
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:54:900",
+      "calls": 25,
+      "completed": 25,
+      "errors": 0,
+      "inclusiveMs": 0.166446,
+      "exclusiveMeasuredMs": 0.166446
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:84:339",
+      "calls": 30,
+      "completed": 30,
+      "errors": 0,
+      "inclusiveMs": 0.162315,
+      "exclusiveMeasuredMs": 0.162315
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:52:48",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.157361,
+      "exclusiveMeasuredMs": 0.157361
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:272:183",
+      "calls": 21,
+      "completed": 21,
+      "errors": 0,
+      "inclusiveMs": 0.156302,
+      "exclusiveMeasuredMs": 0.156302
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:110:405",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.15485,
+      "exclusiveMeasuredMs": 0.15485
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:65:37",
+      "calls": 6,
+      "completed": 6,
+      "errors": 0,
+      "inclusiveMs": 0.151974,
+      "exclusiveMeasuredMs": 0.151974
+    },
+    {
+      "key": "structuredClone|product/planner/criterion-metric.ts:21:21",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.151477,
+      "exclusiveMeasuredMs": 0.151477
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:54:877",
+      "calls": 25,
+      "completed": 25,
+      "errors": 0,
+      "inclusiveMs": 0.148478,
+      "exclusiveMeasuredMs": 0.148478
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:162:172",
+      "calls": 21,
+      "completed": 21,
+      "errors": 0,
+      "inclusiveMs": 0.146421,
+      "exclusiveMeasuredMs": 0.146421
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:52:26",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.135665,
+      "exclusiveMeasuredMs": 0.135665
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:112:100",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.131695,
+      "exclusiveMeasuredMs": 0.131695
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:162:197",
+      "calls": 21,
+      "completed": 21,
+      "errors": 0,
+      "inclusiveMs": 0.125727,
+      "exclusiveMeasuredMs": 0.125727
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:272:158",
+      "calls": 21,
+      "completed": 21,
+      "errors": 0,
+      "inclusiveMs": 0.123039,
+      "exclusiveMeasuredMs": 0.123039
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:112:66",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.113566,
+      "exclusiveMeasuredMs": 0.113566
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-comparison-port.ts:65:61",
+      "calls": 6,
+      "completed": 6,
+      "errors": 0,
+      "inclusiveMs": 0.102734,
+      "exclusiveMeasuredMs": 0.102734
+    },
+    {
+      "key": "structuredClone|product/decisions/baseline-coverage.ts:60:23",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.098373,
+      "exclusiveMeasuredMs": 0.098373
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:24:135",
+      "calls": 15,
+      "completed": 15,
+      "errors": 0,
+      "inclusiveMs": 0.097655,
+      "exclusiveMeasuredMs": 0.097655
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:116:50",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.090152,
+      "exclusiveMeasuredMs": 0.090152
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:154:273",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.088507,
+      "exclusiveMeasuredMs": 0.088507
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts:57:398",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.088246,
+      "exclusiveMeasuredMs": 0.088246
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:24:163",
+      "calls": 15,
+      "completed": 15,
+      "errors": 0,
+      "inclusiveMs": 0.087322,
+      "exclusiveMeasuredMs": 0.087322
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:46:28",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.086955,
+      "exclusiveMeasuredMs": 0.086955
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:86:61",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.086952,
+      "exclusiveMeasuredMs": 0.086952
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:94:29",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.085922,
+      "exclusiveMeasuredMs": 0.085922
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:81:410",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.081545,
+      "exclusiveMeasuredMs": 0.081545
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-port.ts:111:28",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.080845,
+      "exclusiveMeasuredMs": 0.080845
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:85:174",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 0.073277,
+      "exclusiveMeasuredMs": 0.073277
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:85:202",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 0.072894,
+      "exclusiveMeasuredMs": 0.072894
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:86:114",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 0.064355,
+      "exclusiveMeasuredMs": 0.064355
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:86:142",
+      "calls": 12,
+      "completed": 12,
+      "errors": 0,
+      "inclusiveMs": 0.062784,
+      "exclusiveMeasuredMs": 0.062784
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:103:48",
+      "calls": 61,
+      "completed": 61,
+      "errors": 0,
+      "inclusiveMs": 0.061849,
+      "exclusiveMeasuredMs": 0.061849
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:154:422",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.061164,
+      "exclusiveMeasuredMs": 0.061164
+    },
+    {
+      "key": "structuredClone|product/decisions/criterion-rules.ts:61:23",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.059061,
+      "exclusiveMeasuredMs": 0.059061
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:154:380",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.059051,
+      "exclusiveMeasuredMs": 0.059051
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:135:102",
+      "calls": 7,
+      "completed": 7,
+      "errors": 0,
+      "inclusiveMs": 0.058982,
+      "exclusiveMeasuredMs": 0.058982
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:161:13",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.056526,
+      "exclusiveMeasuredMs": 0.056526
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:81:507",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.056251,
+      "exclusiveMeasuredMs": 0.056251
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:122:11",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.055212,
+      "exclusiveMeasuredMs": 0.055212
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:154:306",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.05397,
+      "exclusiveMeasuredMs": 0.05397
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:81:459",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.053042,
+      "exclusiveMeasuredMs": 0.053042
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:28:49",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.052893,
+      "exclusiveMeasuredMs": 0.052893
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:103:77",
+      "calls": 61,
+      "completed": 61,
+      "errors": 0,
+      "inclusiveMs": 0.051564,
+      "exclusiveMeasuredMs": 0.051564
+    },
+    {
+      "key": "digestSfValue|product/planner/sensitivity-units.ts:81:556",
+      "calls": 37,
+      "completed": 37,
+      "errors": 0,
+      "inclusiveMs": 0.04995,
+      "exclusiveMeasuredMs": 0.04995
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:57:141",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.049455,
+      "exclusiveMeasuredMs": 0.049455
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:57:167",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.049009,
+      "exclusiveMeasuredMs": 0.049009
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:252:105",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.048521,
+      "exclusiveMeasuredMs": 0.048521
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:89:21",
+      "calls": 11,
+      "completed": 11,
+      "errors": 0,
+      "inclusiveMs": 0.045943,
+      "exclusiveMeasuredMs": 0.045943
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:94:87",
+      "calls": 5,
+      "completed": 5,
+      "errors": 0,
+      "inclusiveMs": 0.045868,
+      "exclusiveMeasuredMs": 0.045868
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:141:123",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.044975,
+      "exclusiveMeasuredMs": 0.044975
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:78:446",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.044429,
+      "exclusiveMeasuredMs": 0.044429
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:62:51",
+      "calls": 5,
+      "completed": 5,
+      "errors": 0,
+      "inclusiveMs": 0.043146,
+      "exclusiveMeasuredMs": 0.043146
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:40:114",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.042284,
+      "exclusiveMeasuredMs": 0.042284
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:122:44",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.039547,
+      "exclusiveMeasuredMs": 0.039547
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:161:48",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.038408,
+      "exclusiveMeasuredMs": 0.038408
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:99:402",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.037525,
+      "exclusiveMeasuredMs": 0.037525
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:62:107",
+      "calls": 5,
+      "completed": 5,
+      "errors": 0,
+      "inclusiveMs": 0.034359,
+      "exclusiveMeasuredMs": 0.034359
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-port.ts:35:24",
+      "calls": 22,
+      "completed": 22,
+      "errors": 0,
+      "inclusiveMs": 0.032635,
+      "exclusiveMeasuredMs": 0.032635
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:28:9",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.03248,
+      "exclusiveMeasuredMs": 0.03248
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:63:229",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.031992,
+      "exclusiveMeasuredMs": 0.031992
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:122:468",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.031651,
+      "exclusiveMeasuredMs": 0.031651
+    },
+    {
+      "key": "structuredClone|product/decisions/criterion-comparison.ts:58:37",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.03094,
+      "exclusiveMeasuredMs": 0.03094
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:78:499",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.030747,
+      "exclusiveMeasuredMs": 0.030747
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:78:169",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.03041,
+      "exclusiveMeasuredMs": 0.03041
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:43:193",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.030129,
+      "exclusiveMeasuredMs": 0.030129
+    },
+    {
+      "key": "structuredClone|product/decisions/mutations.ts:91:23",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.029874,
+      "exclusiveMeasuredMs": 0.029874
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:122:28",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.029501,
+      "exclusiveMeasuredMs": 0.029501
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:122:500",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.029173,
+      "exclusiveMeasuredMs": 0.029173
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:40:161",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.028495,
+      "exclusiveMeasuredMs": 0.028495
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:137:55",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.027929,
+      "exclusiveMeasuredMs": 0.027929
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:57:73",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.026751,
+      "exclusiveMeasuredMs": 0.026751
+    },
+    {
+      "key": "structuredClone|runtime/local-store.ts:395:84",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.024292,
+      "exclusiveMeasuredMs": 0.024292
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:122:61",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.024071,
+      "exclusiveMeasuredMs": 0.024071
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:78:229",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.023902,
+      "exclusiveMeasuredMs": 0.023902
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:54:177",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.023693,
+      "exclusiveMeasuredMs": 0.023693
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:75:78",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.021834,
+      "exclusiveMeasuredMs": 0.021834
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:55:209",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.020803,
+      "exclusiveMeasuredMs": 0.020803
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:98:97",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.020637,
+      "exclusiveMeasuredMs": 0.020637
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts:39:58",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.020417,
+      "exclusiveMeasuredMs": 0.020417
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:52:149",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.020119,
+      "exclusiveMeasuredMs": 0.020119
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:55:181",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.019956,
+      "exclusiveMeasuredMs": 0.019956
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:57:104",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.019474,
+      "exclusiveMeasuredMs": 0.019474
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:263:422",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.019392,
+      "exclusiveMeasuredMs": 0.019392
+    },
+    {
+      "key": "digestSfValue|product/decisions/cost-coverage.ts:54:200",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.019046,
+      "exclusiveMeasuredMs": 0.019046
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:38:282",
+      "calls": 5,
+      "completed": 5,
+      "errors": 0,
+      "inclusiveMs": 0.018661,
+      "exclusiveMeasuredMs": 0.018661
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts:58:40",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.018417,
+      "exclusiveMeasuredMs": 0.018417
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-port.ts:110:26",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.017903,
+      "exclusiveMeasuredMs": 0.017903
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:131:55",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.017556,
+      "exclusiveMeasuredMs": 0.017556
+    },
+    {
+      "key": "structuredClone|product/decisions/criterion-comparison.ts:63:23",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.017243,
+      "exclusiveMeasuredMs": 0.017243
+    },
+    {
+      "key": "structuredClone|product/planner/scenario-port.ts:30:25",
+      "calls": 22,
+      "completed": 22,
+      "errors": 0,
+      "inclusiveMs": 0.016546,
+      "exclusiveMeasuredMs": 0.016546
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:162:75",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.016459,
+      "exclusiveMeasuredMs": 0.016459
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:38:313",
+      "calls": 5,
+      "completed": 5,
+      "errors": 0,
+      "inclusiveMs": 0.015111,
+      "exclusiveMeasuredMs": 0.015111
+    },
+    {
+      "key": "digestSfValue|product/planner/criterion-metric.ts:43:249",
+      "calls": 18,
+      "completed": 18,
+      "errors": 0,
+      "inclusiveMs": 0.015074,
+      "exclusiveMeasuredMs": 0.015074
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:257:67",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.014697,
+      "exclusiveMeasuredMs": 0.014697
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:85:406",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.0138,
+      "exclusiveMeasuredMs": 0.0138
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:300:29",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.013268,
+      "exclusiveMeasuredMs": 0.013268
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:52:54",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.012796,
+      "exclusiveMeasuredMs": 0.012796
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:149:446",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.012795,
+      "exclusiveMeasuredMs": 0.012795
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:163:74",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.012417,
+      "exclusiveMeasuredMs": 0.012417
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:112:9",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.011591,
+      "exclusiveMeasuredMs": 0.011591
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:38:183",
+      "calls": 5,
+      "completed": 5,
+      "errors": 0,
+      "inclusiveMs": 0.011284,
+      "exclusiveMeasuredMs": 0.011284
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:92:123",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.011233,
+      "exclusiveMeasuredMs": 0.011233
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:156:111",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.011203,
+      "exclusiveMeasuredMs": 0.011203
+    },
+    {
+      "key": "digestSfValue|product/planner/scenario-port.ts:112:41",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.011052,
+      "exclusiveMeasuredMs": 0.011052
+    },
+    {
+      "key": "digestSfValue|product/decisions/mutations.ts:273:236",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.010871,
+      "exclusiveMeasuredMs": 0.010871
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:141:58",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.010179,
+      "exclusiveMeasuredMs": 0.010179
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:131:109",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.010154,
+      "exclusiveMeasuredMs": 0.010154
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:163:115",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.010139,
+      "exclusiveMeasuredMs": 0.010139
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:143:54",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.010084,
+      "exclusiveMeasuredMs": 0.010084
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:89:96",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.009981,
+      "exclusiveMeasuredMs": 0.009981
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:137:109",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.009889,
+      "exclusiveMeasuredMs": 0.009889
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:159:60",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.00974,
+      "exclusiveMeasuredMs": 0.00974
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:156:54",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.009698,
+      "exclusiveMeasuredMs": 0.009698
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:159:119",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.009629,
+      "exclusiveMeasuredMs": 0.009629
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:143:115",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.009201,
+      "exclusiveMeasuredMs": 0.009201
+    },
+    {
+      "key": "structuredClone|product/decisions/result-store.ts:245:144",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.009084,
+      "exclusiveMeasuredMs": 0.009084
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:87:48",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.00904,
+      "exclusiveMeasuredMs": 0.00904
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:163:112",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.008683,
+      "exclusiveMeasuredMs": 0.008683
+    },
+    {
+      "key": "digestSfValue|product/host-binding/state-provider.ts:162:112",
+      "calls": 10,
+      "completed": 10,
+      "errors": 0,
+      "inclusiveMs": 0.008452,
+      "exclusiveMeasuredMs": 0.008452
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:38:223",
+      "calls": 5,
+      "completed": 5,
+      "errors": 0,
+      "inclusiveMs": 0.008377,
+      "exclusiveMeasuredMs": 0.008377
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:84:41",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.00741,
+      "exclusiveMeasuredMs": 0.00741
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-coverage-fixture.ts:24:47",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.00716,
+      "exclusiveMeasuredMs": 0.00716
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:150:51",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.006835,
+      "exclusiveMeasuredMs": 0.006835
+    },
+    {
+      "key": "digestSfValue|product/decisions/result-store.ts:252:140",
+      "calls": 3,
+      "completed": 3,
+      "errors": 0,
+      "inclusiveMs": 0.006521,
+      "exclusiveMeasuredMs": 0.006521
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:69:107",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.005125,
+      "exclusiveMeasuredMs": 0.005125
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-choice-fixture.ts:179:122",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.00481,
+      "exclusiveMeasuredMs": 0.00481
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-source-fixture.ts:42:49",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.004278,
+      "exclusiveMeasuredMs": 0.004278
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:52:89",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.004043,
+      "exclusiveMeasuredMs": 0.004043
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:52:211",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.003663,
+      "exclusiveMeasuredMs": 0.003663
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:69:216",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.003113,
+      "exclusiveMeasuredMs": 0.003113
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:82:500",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.002959,
+      "exclusiveMeasuredMs": 0.002959
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:69:145",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.002866,
+      "exclusiveMeasuredMs": 0.002866
+    },
+    {
+      "key": "digestSfValue|product/decisions/baseline-coverage.ts:82:551",
+      "calls": 2,
+      "completed": 2,
+      "errors": 0,
+      "inclusiveMs": 0.002655,
+      "exclusiveMeasuredMs": 0.002655
+    },
+    {
+      "key": "digestSfValue|test/product/wp11/renewal-coverage-fixture.ts:23:448",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.002383,
+      "exclusiveMeasuredMs": 0.002383
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:91:175",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.002342,
+      "exclusiveMeasuredMs": 0.002342
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-rules.ts:85:389",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.002196,
+      "exclusiveMeasuredMs": 0.002196
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:69:250",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.001795,
+      "exclusiveMeasuredMs": 0.001795
+    },
+    {
+      "key": "digestSfValue|product/decisions/criterion-comparison.ts:69:290",
+      "calls": 1,
+      "completed": 1,
+      "errors": 0,
+      "inclusiveMs": 0.001594,
+      "exclusiveMeasuredMs": 0.001594
+    }
+  ]
+}

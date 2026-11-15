@@ -1,0 +1,96 @@
+{
+  "summary": {
+    "run": 43673023213,
+    "job": 132687025106,
+    "selected": [
+      "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts"
+    ],
+    "nonce": [
+      "4a832f1785d714aded705ad2d0a6347b"
+    ],
+    "verdict": [
+      "omni positive control [4a832f1785d714aded705ad2d0a6347b]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "bun": [
+      "bun test v1.3.14 (0d9b296a)"
+    ],
+    "statistics": [
+      " 58 pass",
+      " 0 fail",
+      " 580 expect() calls",
+      "Ran 58 tests across 11 files. [119.16s]"
+    ]
+  },
+  "metrics": {
+    "result-digests": {
+      "scalar": 3,
+      "duplicateBatch": 6,
+      "duplicateBatchCaseHashes": 10,
+      "scalarCallbacks": 11,
+      "duplicateBatchCallbacks": 19
+    },
+    "calculation-sources": {
+      "inputReferencesPerDerivation": 6,
+      "distinctSourceReferences": 2,
+      "digests": 24,
+      "replayCallbacks": 2,
+      "producerLines": {
+        "first": 294,
+        "last": 303
+      },
+      "callsites": [
+        "product/decisions/result-store.ts:297:20"
+      ],
+      "firstStack": "Error\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts:114:25)\n    at digestSfValue (unknown)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:297:20)\n    at filter (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:103:236)\n    at processTicksAndRejections (native:7:39)"
+    }
+  },
+  "comparison": {
+    "baselineTotals": {
+      "digestSfValue": 133103,
+      "structuredClone": 72415
+    },
+    "candidateTotals": {
+      "digestSfValue": 131972,
+      "structuredClone": 72404
+    },
+    "outputsEqual": true,
+    "callCountsEqual": true,
+    "callbackEvents": [
+      87440,
+      87440
+    ],
+    "callbackHashes": [
+      "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+      "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4"
+    ],
+    "phaseWallMs": [
+      36252.72138999999,
+      35358.113072999986
+    ],
+    "spyHistory": {
+      "entryInvocations": 131980,
+      "entryCallsHighWater": 1,
+      "entryResultsHighWater": 1,
+      "phaseClears": 8,
+      "reportClears": 1,
+      "checkpointCallsHighWater": 0,
+      "checkpointResultsHighWater": 0,
+      "residualCallsHighWater": 0,
+      "residualResultsHighWater": 0,
+      "residualCalls": 0,
+      "residualResults": 0,
+      "pendingAtClearHighWater": 0
+    },
+    "pending": 0
+  }
+}
