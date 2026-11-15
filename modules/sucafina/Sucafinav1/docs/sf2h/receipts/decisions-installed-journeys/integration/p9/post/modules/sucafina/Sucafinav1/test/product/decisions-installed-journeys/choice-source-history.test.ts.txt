@@ -1,0 +1,607 @@
+import { expect, test } from "bun:test"
+import { mkdtemp, chmod, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { openLocalStore } from "../../../runtime/local-store.ts"
+import type { Snapshot } from "../../../runtime/contract.ts"
+import type { Surface } from "../../../src/identity.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { BusinessEvidenceRef, BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
+import type { DomainProjection, SourceRef } from "../../../product/contracts/context.ts"
+import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
+import type { CaseLedgerEvent, CostCoverageBasis, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { DomainPortHost, PortResult } from "../../../product/contracts/ports.ts"
+import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
+import type { SfLedgerRecordCapture, SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace } from "../../../product/contracts/state.ts"
+import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
+import { createSfRecordHistory } from "../../../product/host-binding/business-context.ts"
+import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
+import { enqueueSfLedgerEvent, sfChoiceSourceCaptureDigest } from "../../../product/integration/ledger-outbox.ts"
+import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
+import { createChoiceSnapshot } from "../../../product/decisions/choice.ts"
+import { createDecisionMutations } from "../../../product/decisions/mutations.ts"
+import { captureSfChoicePlannerSources, createSfChoiceSourceCaptureReader } from "../../../product/decisions/choice-source-history.ts"
+import { comparePlannerScenarios } from "../../../product/planner/comparison.ts"
+
+// Unit-only C08 fixtures. They are never imported by, or used to seed, the five
+// installed UI journeys. SQLite, source lifecycle, private leases, mutations,
+// capture digest, protected reader and recordHistory are the actual producers.
+// Authentication/projector doubles below are explicit adversarial boundaries.
+type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
+type CaptureSelection = Parameters<typeof captureSfChoicePlannerSources>[1]
+type CaptureDependencies = Parameters<typeof captureSfChoicePlannerSources>[0]
+type MutationInput = Parameters<typeof createDecisionMutations>[0]
+const at = "2026-11-15T05:00:00.000Z"
+const period = { start: "2027-01-01", end: "2027-12-31" }
+const originalCaseRef = { id: "choice-case", incarnation: "choice-case-inc", version: 4 }
+const operation = "sf-human:decisions.choose"
+
+async function fixture() {
+  const directory = await mkdtemp(join(tmpdir(), "sf-choice-capture-unit-"))
+  await chmod(directory, 0o700)
+  const driver = await openLocalStore(directory)
+  const identity = { installationId: "choice-install", projectId: "choice-project", principalRef: "choice-reader", accessRevision: "access-1", policyVersion: "policy-1" }
+  const abort = new AbortController()
+  const transport = new Request("https://example.test/sucafina/planner?sf=decision-choose", {
+    method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, signal: abort.signal,
+  })
+  const controls = { allowed: true, sourceAllowed: true, caseAllowed: true, identity: { ...identity }, now: Date.parse(at), serial: 0,
+    requestMissing: false, requestOverride: undefined as Request | undefined,
+    projectorDenied: false, captureCalls: 0, projectCalls: 0, caseCalls: 0, currentCalls: 0,
+    monitorReads: false, readNamespaces: [] as SfStateNamespace[], completedCaseAuthorizations: 0,
+    revalidateHook: undefined as ((call: TrustedDomainContext) => void | Promise<void>) | undefined,
+    captureHook: undefined as ((selection: CaptureSelection, result: PortResult<readonly SfLedgerRecordCapture[]>) => void | Promise<void>) | undefined,
+    projectHook: undefined as ((ref: RecordRef, result: PortResult<DomainProjection>) => void | Promise<void>) | undefined,
+    caseHook: undefined as ((value: DecisionCase) => void | Promise<void>) | undefined,
+    currentHook: undefined as ((value: BusinessEvidenceResolution) => void | Promise<void>) | undefined }
+  const nextId = () => `choice-fixture-${++controls.serial}`
+  const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
+  for (const surface of surfaces) await driver.transaction(surface, async (snapshot) => {
+    snapshot.data.choiceSources = surface === "planner" ? { baseline: { annual: 1200 }, candidate: { annual: 2400 } } : {}
+    return { commit: true, value: undefined }
+  })
+  const sourceRows = (snapshot: Snapshot) => snapshot.data.choiceSources as Record<string, { annual: number }>
+  const sources = createSfSourcePersistence({ persistence: driver, createId: nextId,
+    enumerate: (surface, snapshot) => surface === "planner" ? Object.entries(sourceRows(snapshot)).map(([recordId, value]) => ({ recordType: "planner-version", recordId, inputDigest: digestSfValue(value) })) : [],
+    projectScope: (surface, snapshot, scope) => surface === "planner" && scope.recordType === "planner-version"
+      ? structuredClone(sourceRows(snapshot)[scope.recordId]) : undefined })
+  for (const surface of surfaces) await sources.initializeSources(surface)
+  const scope = (id: string) => ({ principalRef: identity.principalRef, accessRevision: identity.accessRevision,
+    policyVersion: identity.policyVersion, recordType: "planner-version", recordId: id, selector: { fields: ["lines"], period } })
+  const currentSource = async (id: string): Promise<SfLedgerRecordCapture | undefined> => {
+    const read = await sources.readScopedSource("planner", scope(id), async () => controls.allowed && controls.sourceAllowed)
+    if (!read) return undefined
+    const ref: RecordRef = { schema: "sf-evidence-v1", kind: "record", refId: `planner-source:${id}:${read.incarnation}:${read.version}`,
+      installationId: identity.installationId, projectId: identity.projectId, refDigest: "", evidenceLevel: "observed",
+      target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: read.incarnation, version: read.version,
+        fields: ["lines"], period: { ...period }, projectionDigest: read.inputDigest } }
+    ref.refDigest = digestSfEvidenceRef(ref)
+    const physical: SourceRef = { surface: "planner", type: "planner-version", id, incarnation: ref.target.incarnation,
+      version: ref.target.version, fields: ["lines"], period: { ...period }, observedAt: at }
+    const annual = (read.projection as { annual: number }).annual
+    const projection: DomainProjection = { context: { ...identity, surface: "planner", currency: "USD", period: { ...period }, sourceRefs: [physical], capabilities: [] },
+      version: read.version, engineVersion: "choice-capture-unit-projection-v1", missing: [],
+      components: [{ id: "service", amount: annual, currency: "USD", period: { ...period }, sourceRefs: [physical], evidenceState: "confirmed" }],
+      values: [{ id: "annual", value: annual, unit: "USD", currency: "USD", period: { ...period }, granularity: "year", sourceRefs: [ref], drilldown: ref, evidenceState: "confirmed" }] }
+    return { ref, projection }
+  }
+  const captures: SfLedgerRecordCapture[] = []
+  for (const id of ["baseline", "candidate"]) {
+    const value = await currentSource(id)
+    if (!value) throw new Error("Canonical source fixture could not be observed")
+    captures.push(value)
+  }
+  const refs = captures.map((value) => value.ref)
+  const basis: CostCoverageBasis = { id: "choice-coverage", version: 1, decisionType: "renewal-transition-v1",
+    categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: structuredClone(refs) }
+  const alternatives: DecisionCase["alternatives"][number][] = captures.map(({ ref, projection }, index) => {
+    const id = index === 0 ? "baseline" : "candidate"
+    const costCoverage = assessCostCoverage({ basis, alternativeId: id, alternativeVersion: 1, currency: "USD", horizon: period,
+      entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => ({ categoryId, status: "pending" as const, reason: "Explicit unknown cost inventory in the unit fixture" })),
+      components: projection.components, evidence: refs.map((ref) => ({ ref, state: "fresh" as const, accessRevision: identity.accessRevision, checkedAt: at })), supports: () => false })
+    const result: ScenarioResult = { id: `scenario:${id}`, version: 1, comparisonStatus: "conditioned", knownSubtotal: index === 0 ? 1200 : 2400,
+      total: null, currency: "USD", horizon: { ...period }, components: structuredClone(projection.components), sourceRefs: [structuredClone(ref)],
+      restrictions: [], unresolvedConditions: costCoverage.derivedMissingCategoryIds.map((id) => `coverage:${id}`), costCoverage }
+    return { id, version: 1, title: id, scenario: { baseRef: ref.refId, operations: [], assumptions: [] }, result }
+  })
+  const decision: DecisionCase = { ...originalCaseRef, state: "comparing", objective: "Protected Planner choice history", currency: "USD", horizon: { ...period },
+    criteria: [{ id: "cost", description: "Known subtotal difference", required: true }], participants: [identity.principalRef], sourceRefs: structuredClone(refs),
+    alternatives, costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+  const comparison = comparePlannerScenarios({ baselineRef: alternatives[0]!.result.id, alternativeRef: alternatives[1]!.result.id,
+    baselineCoverageRef: "coverage:baseline", alternativeCoverageRef: "coverage:candidate", baseline: alternatives[0]!.result, alternative: alternatives[1]!.result })
+  const request = { caseRef: { ...originalCaseRef }, alternativeId: "candidate", alternativeVersion: 1,
+    comparison: { scenarioRefs: [alternatives[0]!.result.id, alternatives[1]!.result.id], criteria: ["cost"] }, criteria: ["cost"], reason: "Human choice with explicit unknown costs" }
+  const ui = createSfUiAuthority({ privateCommands: [operation], authorize: async (request) => request === transport && controls.allowed ? { ...controls.identity } : undefined,
+    commandIdentity: async () => "choice-contract-intention", createId: nextId, now: () => controls.now })
+  const admitted = await ui.admit(transport, operation, digestSfValue(request))
+  if (admitted.status !== "ok" || !await ui.validate(admitted.value, operation, digestSfValue(request))) throw new Error("Real private UI lease fixture failed")
+  const context = admitted.value
+  const host: DomainPortHost = { persistence: sources,
+    requestFor: (call) => controls.requestMissing ? undefined : controls.requestOverride ?? (call.kind === "ui" ? ui.requestFor(call) : undefined),
+    revalidate: async (call) => {
+      const admitted = call.kind === "ui" && await ui.revalidate(call)
+      await controls.revalidateHook?.(call)
+      return admitted
+    },
+    authenticate: async (request) => request === transport && controls.allowed && controls.sourceAllowed ? { id: controls.identity.principalRef, canWrite: true, roles: [{ surface: "planner", role: "admin" }] } : null,
+    environment: async () => ({ at, id: nextId, directory: [{ id: identity.principalRef, name: "Choice fixture reader" }] }) }
+  const canonicalState = createSfProductState({ persistence: sources, createId: nextId,
+    authorize: async (request) => request === transport && !request.signal.aborted && controls.allowed ? {
+      principalRef: controls.identity.principalRef, accessRevision: controls.identity.accessRevision, policyVersion: controls.identity.policyVersion } : undefined,
+    resolveTarget: async (request, snapshot, _namespace, targetRef) => {
+      if (request !== transport || !controls.allowed) return undefined
+      if (targetRef === "fixture-create") return { incarnation: "fixture-create-inc" }
+      const actual = (snapshot.data.__sfProductV1 as SfProductState | undefined)?.cases[targetRef]
+      return actual && actual.participants.includes(identity.principalRef) ? { incarnation: actual.incarnation } : undefined
+    } })
+  const state: SfProductStatePort = { transaction: canonicalState.transaction,
+    read: <T>(request: Request, namespace: SfStateNamespace, read: (stored: Readonly<SfProductState>, authority: SfStateAuthority) => T | Promise<T>) => {
+      if (controls.monitorReads) controls.readNamespaces.push(namespace)
+      return canonicalState.read(request, namespace, read)
+    } }
+  const initialized = await state.transaction(transport, { namespace: "cases", expectedStorageVersion: 0,
+    targetRef: "fixture-create", targetIncarnation: "fixture-create-inc", idempotencyKey: "fixture-create", commandDigest: digestSfValue(decision) }, async (stored) => {
+    stored.cases[decision.id] = structuredClone(decision)
+    return { commit: true, value: undefined }
+  })
+  if (initialized.status !== "ok") throw new Error("Canonical C08 fixture could not be initialized")
+  const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => {
+    controls.caseCalls++
+    await controls.caseHook?.(value)
+    const allowed = controls.caseAllowed && value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
+    controls.completedCaseAuthorizations++
+    return allowed
+  }
+  const project: CaptureDependencies["project"] = async (ref, call) => {
+    controls.projectCalls++
+    const actual = !controls.projectorDenied && call === context ? await currentSource(ref.target.recordId) : undefined
+    const result: PortResult<DomainProjection> = actual && digestSfValue(actual.ref) === digestSfValue(ref)
+      ? { status: "ok", value: structuredClone(actual.projection) } : { status: "denied", reason: "fixture-source-unavailable" }
+    await controls.projectHook?.(ref, result)
+    return result
+  }
+  const captureInput: CaptureDependencies = { host, project }
+  const unused = async (): Promise<never> => { throw new Error("Unexpected producer outside the selected choice path") }
+  const mutationInput: MutationInput = { state, host, sources: { resolveForecastSource: unused, resolveForecastCoverage: unused },
+    planner: { compareForecast: unused, simulateScenario: unused, evaluateSensitivity: unused, compareScenarios: async () => ({ status: "ok", value: structuredClone(comparison) }) },
+    authorizeCase, authorizeMutation: async (name, value, call) => name === "record-choice" && call.kind === "ui" && ui.matchesIntent(call, operation, digestSfValue(value)) && await ui.revalidate(call),
+    verifyMutation: (_snapshot, name, value, call) => name === "record-choice" && call.kind === "ui" && ui.matchesIntent(call, operation, digestSfValue(value)),
+    operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined,
+    confirmChoice: async (ref, alternativeId, call) => call === context && alternativeId === request.alternativeId &&
+      digestSfValue(ref) === digestSfValue(request.caseRef) && await host.revalidate(call),
+    resolveQuestion: unused, resolveAnswer: unused, confirmAnswer: async () => false,
+    resolveChoiceValues: async () => ({ status: "ok", value: [{ criterionRef: "cost", value: comparison.knownDifference, unit: "USD", currency: "USD", horizon: { ...period } }] }),
+    prepareDomainCommands: unused, createId: nextId, now: () => at,
+    captureChoiceSources: async (selection, call) => {
+      controls.captureCalls++
+      const result = await captureSfChoicePlannerSources(captureInput, selection, call)
+      await controls.captureHook?.(selection, result)
+      return result
+    } }
+  const mutations = createDecisionMutations(mutationInput)
+  const readStored = () => driver.transaction("dashboard", async (snapshot) => ({ commit: false, value: structuredClone(snapshot.data.__sfProductV1 as SfProductState) }))
+  // Negative fixtures deliberately corrupt protected bytes only through this
+  // test boundary, to prove production readers never treat storage as a grant.
+  const corrupt = (work: (stored: SfProductState) => void) => driver.transaction("dashboard", async (snapshot) => {
+    work(snapshot.data.__sfProductV1 as SfProductState)
+    return { commit: true, value: undefined }
+  })
+  const selection = async (): Promise<CaptureSelection> => {
+    const result = createChoiceSnapshot({ case: decision, alternativeId: "candidate", alternativeVersion: 1, comparison, criteria: ["cost"],
+      values: [{ criterionRef: "cost", value: comparison.knownDifference, unit: "USD", currency: "USD", horizon: { ...period } }], evidenceRefs: refs,
+      id: "isolated-choice", principalRef: identity.principalRef, reason: request.reason, at })
+    if (result.status !== "ok") throw new Error("Canonical choice fixture was refused")
+    const choice = result.choice
+    const event: CaseLedgerEvent = { id: "isolated-choice-event", caseRef: { ...originalCaseRef, version: 5 }, kind: "choice-recorded", principalRef: identity.principalRef,
+      at, consideredActions: alternatives.map((value) => value.id), factualGaps: choice.result.unresolvedConditions, lifecycleState: "chosen", rationale: choice.reason,
+      evidenceRefs: choice.evidenceRefs, outputDigest: digestSfValue(choice) }
+    const next: DecisionCase = { ...structuredClone(decision), version: 5, state: "chosen", choices: [choice], ledger: [event] }
+    const snapshot = await sources.transaction("planner", async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))
+    return { case: next, choice, event, snapshot }
+  }
+  const editSource = (id: string, annual: number) => sources.transaction("planner", async (snapshot) => {
+    sourceRows(snapshot)[id] = { annual }
+    return { commit: true, value: undefined }
+  })
+  const replaceSource = async (id: string, annual: number) => {
+    await sources.transaction("planner", async (snapshot) => { delete sourceRows(snapshot)[id]; return { commit: true, value: undefined } })
+    await editSource(id, annual)
+  }
+  const readerInput = { host, state, authorizeCase }
+  const readProtected = createSfChoiceSourceCaptureReader(readerInput)
+  const current = async (original: RecordRef, _page: string | undefined, call: TrustedDomainContext): Promise<BusinessEvidenceResolution> => {
+    controls.currentCalls++
+    const fresh = await currentSource(original.target.recordId)
+    const value: BusinessEvidenceResolution = fresh && await host.revalidate(call)
+      ? { state: "fresh", ref: fresh.ref, currentRef: fresh.ref, authorizedProjection: fresh.projection, accessRevision: call.binding.accessRevision, checkedAt: at }
+      : { state: "unavailable", ref: original, accessRevision: call.binding.accessRevision, checkedAt: at }
+    await controls.currentHook?.(value)
+    return value
+  }
+  const history = createSfRecordHistory({ host, readOriginalCapture: readProtected, current, now: () => at })
+  const capture = (incoming: CaptureSelection) => sources.transactionAll!(async (snapshots) => {
+    const selected = { ...incoming, snapshot: structuredClone(snapshots.planner) }
+    return { commit: false, value: await captureSfChoicePlannerSources(captureInput, selected, context) }
+  })
+  return { directory, driver, sources, host, state, identity, context, ui, transport, abort, controls, captures, refs, decision, comparison, request,
+    mutationInput, mutations, captureInput, project, authorizeCase, currentSource, selection, readStored, corrupt, editSource, replaceSource,
+    readerInput, readProtected, current, history, capture,
+    record: () => mutations.recordChoice(request, context),
+    close: async () => { ui.finish(context); await driver.dispose(); await rm(directory, { recursive: true, force: true }) } }
+}
+type Fixture = Awaited<ReturnType<typeof fixture>>
+
+function firstEntry(stored: SfProductState) {
+  const entries = Object.values(stored.outbox)
+  expect(entries).toHaveLength(1)
+  const entry = entries[0]!
+  expect(entry.choiceCapture).toBeDefined()
+  if (!entry.choiceCapture) throw new Error("Expected the actual protected choice capture")
+  return { entry, capture: entry.choiceCapture }
+}
+async function recorded(f: Fixture) {
+  expect((await f.record()).status).toBe("ok")
+  const stored = await f.readStored()
+  expect(stored.cases[originalCaseRef.id]!.choices).toHaveLength(1)
+  expect(stored.cases[originalCaseRef.id]!.version).toBe(5)
+  return { stored, ...firstEntry(stored) }
+}
+function rebindSelection(selection: CaptureSelection) {
+  selection.event.evidenceRefs = structuredClone(selection.choice.evidenceRefs)
+  selection.event.outputDigest = digestSfValue(selection.choice)
+  selection.case.choices = [structuredClone(selection.choice)]
+  selection.case.ledger = [structuredClone(selection.event)]
+}
+
+test("one canonical choice atomically captures original Planner evidence in the cases/outbox commit", async () => {
+  const f = await fixture()
+  try {
+    let returned: readonly SfLedgerRecordCapture[] | undefined
+    f.controls.captureHook = (_selection, result) => { if (result.status === "ok") returned = result.value }
+    const { stored, entry, capture } = await recorded(f)
+    const decision = stored.cases[originalCaseRef.id]!
+    const choice = decision.choices[0]!, event = decision.ledger[0]!
+    expect(f.controls.captureCalls).toBe(1)
+    expect(entry.state).toBe("pending")
+    expect(capture.records).toEqual(f.captures)
+    expect(capture.choiceId).toBe(choice.id)
+    expect(capture.outputDigest).toBe(digestSfValue(choice))
+    expect(capture.eventRefDigest).toBe(entry.eventRef.refDigest)
+    expect(capture.eventDigest).toBe(digestSfValue(event))
+    expect(event.outputDigest).toBe(capture.outputDigest)
+    expect(capture.captureDigest).toBe(sfChoiceSourceCaptureDigest(entry, capture))
+    expect(stored.versions.cases).toBe(2)
+    expect(stored.versions.outbox).toBe(1)
+    expect(decision.preparedChanges).toEqual([])
+    expect(decision.receipts).toEqual([])
+    expect(stored.atlas).toEqual({})
+    returned![0]!.projection.values[0]!.value = 999999
+    returned![0]!.ref.target.version += 50
+    expect((await f.readStored()).outbox).toEqual(stored.outbox)
+    const read = await f.readProtected(f.refs[1]!.refDigest, f.context)
+    expect(read).toEqual(f.captures[1])
+    read!.projection.values[0]!.value = -1
+    expect(await f.readProtected(f.refs[1]!.refDigest, f.context)).toEqual(f.captures[1])
+  } finally { await f.close() }
+})
+
+test("exact retry keeps the original choice and capture and never captures again", async () => {
+  const f = await fixture()
+  try {
+    const original = await recorded(f)
+    const calls = f.controls.captureCalls
+    f.mutationInput.captureChoiceSources = async () => { throw new Error("Replay must not enrich historical evidence") }
+    expect((await f.record()).status).toBe("ok")
+    expect(f.controls.captureCalls).toBe(calls)
+    expect(await f.readStored()).toEqual(original.stored)
+  } finally { await f.close() }
+})
+
+test("legacy choice entries remain uncaptured on retry and cannot synthesize an original projection", async () => {
+  const f = await fixture()
+  try {
+    const realCapture = f.mutationInput.captureChoiceSources
+    delete f.mutationInput.captureChoiceSources
+    expect((await f.record()).status).toBe("ok")
+    const before = await f.readStored()
+    expect(Object.values(before.outbox)).toHaveLength(1)
+    expect(Object.values(before.outbox)[0]!.choiceCapture).toBeUndefined()
+    f.mutationInput.captureChoiceSources = realCapture
+    expect((await f.record()).status).toBe("ok")
+    expect(await f.readStored()).toEqual(before)
+    expect(await f.readProtected(f.refs[1]!.refDigest, f.context)).toBeUndefined()
+    expect((await f.history.resolve(f.refs[1]!, f.context)).state).toBe("unavailable")
+  } finally { await f.close() }
+})
+
+test.each(["source-denied", "incomplete-records", "not-an-array", "selection-mutation", "headers-drift", "lease-ended", "capture-method-replaced"] as const)(
+  "capture failure %s commits neither a choice nor any outbox effect", async (failure) => {
+    const f = await fixture()
+    try {
+      const before = await f.readStored()
+      if (failure === "source-denied") f.controls.projectorDenied = true
+      f.controls.captureHook = (selection, result) => {
+        if (failure === "incomplete-records" && result.status === "ok") result.value = result.value.slice(0, 1)
+        if (failure === "not-an-array" && result.status === "ok") Object.assign(result, { value: undefined })
+        if (failure === "selection-mutation") selection.choice.reason = "Changed after proof"
+        if (failure === "headers-drift") f.transport.headers.set("x-unit-authority", "changed")
+        if (failure === "lease-ended") f.ui.finish(f.context)
+        if (failure === "capture-method-replaced") f.mutationInput.captureChoiceSources = async () => ({ status: "ok", value: [] })
+      }
+      expect((await f.record()).status).not.toBe("ok")
+      expect(await f.readStored()).toEqual(before)
+    } finally { await f.close() }
+  },
+)
+
+test.each(["operations", "assumptions", "non-planner"] as const)("unsupported %s remains an explicit empty capture without reading a source", async (kind) => {
+  const f = await fixture()
+  try {
+    const selection = await f.selection()
+    if (kind === "operations") selection.choice.scenario.operations = [{ kind: "exclude", targetRef: f.refs[1]!.refId }]
+    if (kind === "assumptions") selection.choice.scenario.assumptions = [{ id: "estimated-cost", value: 12, evidenceRefs: [], state: "estimated" }]
+    if (kind === "non-planner") {
+      const ref = structuredClone(f.refs[1]!)
+      ref.target.surface = "dashboard"
+      ref.target.recordType = "project"
+      ref.refDigest = digestSfEvidenceRef(ref)
+      selection.choice.evidenceRefs = [ref]
+    }
+    rebindSelection(selection)
+    const before = f.controls.projectCalls
+    expect(await f.capture(selection)).toEqual({ status: "ok", value: [] })
+    expect(f.controls.projectCalls).toBe(before)
+  } finally { await f.close() }
+})
+
+test.each(["request-missing", "request-replaced", "aborted", "lease-ended", "binding-revoked"] as const)("capture refuses %s under a real UI lease", async (failure) => {
+  const f = await fixture()
+  try {
+    const selection = await f.selection()
+    if (failure === "request-missing") f.controls.requestMissing = true
+    if (failure === "request-replaced") f.controls.projectHook = () => { f.controls.requestOverride = new Request(f.transport) }
+    if (failure === "aborted") f.abort.abort()
+    if (failure === "lease-ended") f.ui.finish(f.context)
+    if (failure === "binding-revoked") f.controls.identity.accessRevision = "access-2"
+    expect((await f.capture(selection)).status).not.toBe("ok")
+    expect((await f.readStored()).cases[originalCaseRef.id]!.choices).toEqual([])
+  } finally { await f.close() }
+})
+
+test.each(["source-argument", "projector-method", "headers"] as const)("capture refuses %s drift while awaiting the authorized projector", async (failure) => {
+  const f = await fixture()
+  try {
+    f.controls.projectHook = (ref) => {
+      if (failure === "source-argument") ref.target.version += 1
+      if (failure === "projector-method") f.captureInput.project = async () => ({ status: "denied", reason: "new-producer" })
+      if (failure === "headers") f.transport.headers.set("x-unit-authority", "changed")
+    }
+    expect((await f.capture(await f.selection())).status).not.toBe("ok")
+  } finally { await f.close() }
+})
+
+test.each(["missing-capture", "missing-case", "missing-choice", "missing-event", "choice-bytes", "event-rationale", "event-lifecycle", "event-actions", "event-ref", "capture-bytes", "capture-digest", "writer", "access-revision", "policy", "created-at"] as const)(
+  "protected capture reader refuses %s without historical substitution", async (failure) => {
+    const f = await fixture()
+    try {
+      await recorded(f)
+      await f.corrupt((stored) => {
+        const entry = Object.values(stored.outbox)[0]!, capture = entry.choiceCapture!, decision = stored.cases[originalCaseRef.id]!
+        if (failure === "missing-capture") delete entry.choiceCapture
+        if (failure === "missing-case") delete stored.cases[originalCaseRef.id]
+        if (failure === "missing-choice") decision.choices = []
+        if (failure === "missing-event") decision.ledger = []
+        if (failure === "choice-bytes") decision.choices[0]!.reason = "Tampered choice"
+        if (failure === "event-rationale") decision.ledger[0]!.rationale = "Tampered rationale outside the event reference"
+        if (failure === "event-lifecycle") decision.ledger[0]!.lifecycleState = "applied"
+        if (failure === "event-actions") decision.ledger[0]!.consideredActions = ["unconsidered-alternative"]
+        if (failure === "event-ref") entry.eventRef.target.outputDigest = digestSfValue("different-choice")
+        if (failure === "capture-bytes") capture.records[0]!.projection.values[0]!.value = 99999
+        if (failure === "capture-digest") capture.captureDigest = digestSfValue("unrelated-capture")
+        if (failure === "writer") entry.writerPrincipalRef = "other-reader"
+        if (failure === "access-revision") entry.accessRevision = "other-access"
+        if (failure === "policy") capture.policyVersion = "other-policy"
+        if (failure === "created-at") entry.createdAt = "2026-11-15T05:01:00.000Z"
+      })
+      const before = await f.readStored()
+      expect(await f.readProtected(f.refs[1]!.refDigest, f.context)).toBeUndefined()
+      expect(await f.readStored()).toEqual(before)
+    } finally { await f.close() }
+  },
+)
+
+test("outbox replay cannot add or change a protected capture on an existing event", async () => {
+  const f = await fixture()
+  try {
+    const { stored } = await recorded(f)
+    const event = stored.cases[originalCaseRef.id]!.ledger[0]!
+    const scope = { installationId: f.identity.installationId, projectId: f.identity.projectId, authority: {
+      principalRef: f.identity.principalRef, accessRevision: f.identity.accessRevision, policyVersion: f.identity.policyVersion } }
+    const altered = structuredClone(f.captures)
+    altered[0]!.projection.values[0]!.value = 9999
+    const staged = structuredClone(stored)
+    expect(enqueueSfLedgerEvent(staged, event, scope, altered).status).not.toBe("ok")
+    expect(staged).toEqual(stored)
+    delete Object.values(staged.outbox)[0]!.choiceCapture
+    const legacy = structuredClone(staged)
+    expect(enqueueSfLedgerEvent(staged, event, scope, f.captures).status).not.toBe("ok")
+    expect(staged).toEqual(legacy)
+  } finally { await f.close() }
+})
+
+test("protected original bytes remain historical after a real same-record Planner edit", async () => {
+  const f = await fixture()
+  try {
+    const { stored } = await recorded(f)
+    await f.editSource("candidate", 3600)
+    const before = await f.readStored()
+    const resolution = await f.history.resolve(f.refs[1]!, f.context)
+    expect(resolution.state).toBe("historical")
+    expect(resolution.ref).toEqual(f.refs[1])
+    expect(resolution.authorizedProjection).toEqual(f.captures[1]!.projection)
+    expect(resolution.currentRef?.kind).toBe("record")
+    if (resolution.currentRef?.kind !== "record") throw new Error("Expected currently authorized Planner lineage")
+    expect(resolution.currentRef.target.incarnation).toBe(f.refs[1]!.target.incarnation)
+    expect(resolution.currentRef.target.version).toBeGreaterThan(f.refs[1]!.target.version)
+    expect(resolution.differences).toContainEqual({ field: "annual", before: 2400, after: 3600 })
+    expect(await f.readStored()).toEqual(before)
+    expect(before.cases).toEqual(stored.cases)
+    expect(before.outbox).toEqual(stored.outbox)
+  } finally { await f.close() }
+})
+
+test("a delete and recreate with the same logical Planner id cannot inherit the old capture", async () => {
+  const f = await fixture()
+  try {
+    await recorded(f)
+    await f.replaceSource("candidate", 3600)
+    const current = await f.currentSource("candidate")
+    expect(current?.ref.target.incarnation).not.toBe(f.refs[1]!.target.incarnation)
+    expect(await f.readProtected(f.refs[1]!.refDigest, f.context)).toEqual(f.captures[1])
+    const before = await f.readStored()
+    expect((await f.history.resolve(f.refs[1]!, f.context)).state).toBe("unavailable")
+    expect(await f.readStored()).toEqual(before)
+  } finally { await f.close() }
+})
+
+test("stored capture is not a grant when current source ACL is revoked", async () => {
+  const f = await fixture()
+  try {
+    await recorded(f)
+    f.controls.sourceAllowed = false
+    expect(await f.readProtected(f.refs[1]!.refDigest, f.context)).toEqual(f.captures[1])
+    const before = await f.readStored()
+    expect((await f.history.resolve(f.refs[1]!, f.context)).state).toBe("unavailable")
+    expect(await f.readStored()).toEqual(before)
+  } finally { await f.close() }
+})
+
+test.each(["case-authorization", "case-argument", "headers", "lease"] as const)("protected reader rechecks %s after its asynchronous case authorization", async (failure) => {
+  const f = await fixture()
+  try {
+    await recorded(f)
+    let changed = false
+    f.controls.caseHook = (value) => {
+      if (changed) return
+      changed = true
+      if (failure === "case-authorization") f.controls.caseAllowed = false
+      if (failure === "case-argument") value.objective = "Mutated after the protected read"
+      if (failure === "headers") f.transport.headers.set("x-unit-authority", "changed")
+      if (failure === "lease") f.ui.finish(f.context)
+    }
+    const before = await f.readStored()
+    expect(await f.readProtected(f.refs[1]!.refDigest, f.context)).toBeUndefined()
+    expect(changed).toBe(true)
+    expect(await f.readStored()).toEqual(before)
+  } finally { await f.close() }
+})
+
+test("historical resolution refuses current-source drift between independent observations", async () => {
+  const f = await fixture()
+  try {
+    await recorded(f)
+    await f.editSource("candidate", 3600)
+    let changed = false
+    f.controls.currentHook = async () => {
+      if (!changed) { changed = true; await f.editSource("candidate", 4800) }
+    }
+    expect((await f.history.resolve(f.refs[1]!, f.context)).state).toBe("unavailable")
+    expect(changed).toBe(true)
+  } finally { await f.close() }
+})
+
+test("capture requires the real held C08 snapshot even with otherwise valid UI authority", async () => {
+  const f = await fixture()
+  try {
+    expect((await captureSfChoicePlannerSources(f.captureInput, await f.selection(), f.context)).status).not.toBe("ok")
+    expect((await f.readStored()).cases[originalCaseRef.id]!.choices).toEqual([])
+  } finally { await f.close() }
+})
+
+test("recordHistory rereads protected original bytes after observing the current source", async () => {
+  const f = await fixture()
+  try {
+    await recorded(f)
+    await f.editSource("candidate", 3600)
+    let changed = false
+    f.controls.currentHook = async () => {
+      if (changed) return
+      changed = true
+      await f.corrupt((stored) => { Object.values(stored.outbox)[0]!.choiceCapture!.records[1]!.projection.values[0]!.value = -9 })
+    }
+    expect((await f.history.resolve(f.refs[1]!, f.context)).state).toBe("unavailable")
+    expect(changed).toBe(true)
+  } finally { await f.close() }
+})
+
+function gate() {
+  let release!: () => void
+  const promise = new Promise<void>((resolve) => { release = resolve })
+  return { promise, release }
+}
+
+test.each(["choice", "outbox-entry", "captured-source"] as const)(
+  "final capture egress serializes a concurrent change to %s before exposing original bytes", async (target) => {
+    const f = await fixture()
+    const start = gate(), started = gate()
+    let triggered = false, held = false, writerEntered = false, writerCommitted = false
+    let writer: Promise<void> | undefined
+    try {
+      await recorded(f)
+      f.controls.readNamespaces = []
+      f.controls.completedCaseAuthorizations = 0
+      f.controls.monitorReads = true
+      // This promise and its first await are created OUTSIDE every C08 read.
+      // The competing writer therefore acquires its own canonical transaction;
+      // it is not a reentrant write hidden inside the reader's snapshot.
+      writer = (async () => {
+        await start.promise
+        started.release()
+        expect(f.sources.currentSnapshots?.()).toBeUndefined()
+        await f.corrupt((stored) => {
+          writerEntered = true
+          if (target === "choice") stored.cases[originalCaseRef.id]!.choices[0]!.reason = "Concurrent human choice revision"
+          if (target === "outbox-entry") delete stored.outbox[Object.keys(stored.outbox)[0]!]
+          if (target === "captured-source") Object.values(stored.outbox)[0]!.choiceCapture!.records[1]!.projection.values[0]!.value = -77
+        })
+        writerCommitted = true
+      })()
+      // Attach a rejection observer immediately; the original promise is still
+      // awaited below, so a failed writer assertion cannot disappear.
+      void writer.catch(() => undefined)
+      f.controls.revalidateHook = async () => {
+        if (triggered || f.controls.readNamespaces.filter((name) => name === "outbox").length < 2 ||
+          f.controls.completedCaseAuthorizations < 2) return
+        triggered = true
+        held = f.sources.currentSnapshots?.() !== undefined
+        start.release()
+        await started.promise
+        if (held) {
+          expect(writerEntered).toBe(false)
+          expect(writerCommitted).toBe(false)
+        } else {
+          // Reproduce the former post-read await: mutation is now observable
+          // before the revalidation returns. Such an egress must refuse.
+          await writer
+        }
+      }
+      const result = await f.readProtected(f.refs[1]!.refDigest, f.context)
+      expect(triggered).toBe(true)
+      expect(result === undefined || held).toBe(true)
+      if (result !== undefined) expect(result).toEqual(f.captures[1])
+      f.controls.revalidateHook = undefined
+      f.controls.monitorReads = false
+      start.release()
+      await writer
+      expect(writerEntered).toBe(true)
+      expect(writerCommitted).toBe(true)
+      expect(await f.readProtected(f.refs[1]!.refDigest, f.context)).toBeUndefined()
+    } finally {
+      f.controls.revalidateHook = undefined
+      start.release()
+      await writer?.catch(() => undefined)
+      await f.close()
+    }
+  },
+)

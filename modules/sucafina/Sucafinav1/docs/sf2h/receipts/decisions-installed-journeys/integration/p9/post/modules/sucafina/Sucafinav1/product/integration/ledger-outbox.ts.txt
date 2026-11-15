@@ -1,0 +1,78 @@
+import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import type { CaseLedgerEvent } from "../contracts/decisions.ts"
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { SfProductState, SfStateAuthority, SfAtlasOutboxEntry, SfLedgerRecordCapture, SfChoiceSourceCapture } from "../contracts/state.ts"
+
+/** Runs inside the same authorized cases+outbox transaction as the official ledger append. */
+export function enqueueSfLedgerEvent(state: SfProductState, event: CaseLedgerEvent, scope: {
+  installationId: string
+  projectId: string
+  authority: SfStateAuthority
+}, recordCaptures?: readonly SfLedgerRecordCapture[]) {
+  const current = state.cases[event.caseRef.id]
+  if (!current || current.incarnation !== event.caseRef.incarnation || current.version !== event.caseRef.version ||
+      event.principalRef !== scope.authority.principalRef || !current.ledger.some((entry) => entry.id === event.id && digestSfValue(entry) === digestSfValue(event)))
+    return { status: "conflict", reason: "ledger-event-not-committed-in-staging" } as const
+  const key = JSON.stringify([event.caseRef.id, event.caseRef.incarnation, event.id])
+  const value: Extract<BusinessEvidenceRef, { kind: "case-event" }> = {
+    schema: "sf-evidence-v1", kind: "case-event", refId: `case-event:${encodeURIComponent(event.caseRef.id)}:${encodeURIComponent(event.caseRef.incarnation)}:${encodeURIComponent(event.id)}`,
+    installationId: scope.installationId, projectId: scope.projectId, refDigest: "", evidenceLevel: "decision",
+    target: { caseId: event.caseRef.id, caseIncarnation: event.caseRef.incarnation, caseVersion: event.caseRef.version, eventId: event.id, outputDigest: event.outputDigest, evidenceRefs: structuredClone(event.evidenceRefs) },
+  }
+  const eventRef = { ...value, refDigest: digestSfEvidenceRef(value) }
+  let choiceCapture: SfChoiceSourceCapture | undefined
+  if (recordCaptures?.length) {
+    try {
+      const matches = current.choices.filter((choice) => digestSfValue(choice) === event.outputDigest)
+      const choice = matches[0]
+      if (event.kind !== "choice-recorded" || matches.length !== 1 || !choice ||
+        current.choices.filter((value) => value.id === choice.id).length !== 1 || choice.scenario.operations.length ||
+        choice.principalRef !== scope.authority.principalRef || choice.at !== event.at ||
+        digestSfValue(choice.evidenceRefs) !== digestSfValue(event.evidenceRefs) || !choice.evidenceRefs.length ||
+        choice.evidenceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version"))
+        return { status: "conflict", reason: "ledger-choice-capture-scope-mismatch" } as const
+      const expected = [...new Map(choice.evidenceRefs.map((ref) => [ref.refDigest, ref])).values()]
+      const records = structuredClone(recordCaptures)
+      if (records.length !== expected.length || new Set(records.map((item) => item.ref.refDigest)).size !== records.length ||
+        records.some(({ ref, projection }) => ref.kind !== "record" || ref.target.surface !== "planner" || ref.target.recordType !== "planner-version" ||
+          ref.refDigest !== digestSfEvidenceRef(ref) || ref.installationId !== scope.installationId || ref.projectId !== scope.projectId ||
+          !ref.target.period || !expected.some((value) => digestSfValue(value) === digestSfValue(ref)) ||
+          !projection || !projection.context || !Array.isArray(projection.values) || !Array.isArray(projection.components) || !Array.isArray(projection.missing) ||
+          projection.context.installationId !== scope.installationId || projection.context.projectId !== scope.projectId ||
+          projection.context.principalRef !== scope.authority.principalRef || projection.context.policyVersion !== scope.authority.policyVersion ||
+          projection.context.accessRevision !== scope.authority.accessRevision || projection.context.surface !== "planner" ||
+          projection.context.currency !== current.currency || digestSfValue(projection.context.period) !== digestSfValue(ref.target.period) ||
+          projection.values.some((value) => !value || !Array.isArray(value.sourceRefs) || value.sourceRefs.length !== 1 || digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref))))
+        return { status: "conflict", reason: "ledger-choice-capture-evidence-mismatch" } as const
+      const material: Omit<SfChoiceSourceCapture, "captureDigest"> = {
+        schema: "sf-choice-source-capture-v1", eventRefDigest: eventRef.refDigest, eventDigest: digestSfValue(event), choiceId: choice.id,
+        outputDigest: event.outputDigest, policyVersion: scope.authority.policyVersion, records,
+      }
+      choiceCapture = { ...material, captureDigest: sfChoiceSourceCaptureDigest({ eventRef, writerPrincipalRef: scope.authority.principalRef,
+        accessRevision: scope.authority.accessRevision, createdAt: event.at }, material) }
+    } catch { return { status: "conflict", reason: "ledger-choice-capture-invalid" } as const }
+  }
+  const prior = state.outbox[key]
+  if (prior && prior.accessRevision !== scope.authority.accessRevision)
+    return { status: "denied", reason: "ledger-outbox-authority-changed" } as const
+  if (prior && (digestSfValue(prior.eventRef) !== digestSfValue(eventRef) || prior.writerPrincipalRef !== scope.authority.principalRef))
+    return { status: "conflict", reason: "ledger-outbox-content-changed" } as const
+  if (prior && choiceCapture && digestSfValue(prior.choiceCapture) !== digestSfValue(choiceCapture))
+    return { status: "conflict", reason: "ledger-choice-capture-changed" } as const
+  if (!prior) state.outbox[key] = {
+    eventRef, writerPrincipalRef: scope.authority.principalRef, accessRevision: scope.authority.accessRevision,
+    createdAt: event.at, attempts: 0, state: "pending", ...(choiceCapture ? { choiceCapture } : {}),
+  }
+  return { status: "ok", value: { key, eventRef } } as const
+}
+
+/** Canonical integrity material; neither an authorization grant nor an Atlas receipt. */
+export function sfChoiceSourceCaptureDigest(
+  entry: Pick<SfAtlasOutboxEntry, "eventRef" | "writerPrincipalRef" | "accessRevision" | "createdAt">,
+  capture: Omit<SfChoiceSourceCapture, "captureDigest">,
+) {
+  return digestSfValue({ eventRef: entry.eventRef, writerPrincipalRef: entry.writerPrincipalRef,
+    accessRevision: entry.accessRevision, createdAt: entry.createdAt,
+    capture: { schema: capture.schema, eventRefDigest: capture.eventRefDigest, eventDigest: capture.eventDigest, choiceId: capture.choiceId,
+      outputDigest: capture.outputDigest, policyVersion: capture.policyVersion, records: capture.records } })
+}

@@ -1,0 +1,145 @@
+{
+  "schema": "mission52-p9-unit-matrix-v2",
+  "status": "STATIC_REVIEW_COMPLETE_NOT_RUN",
+  "target": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+  "scope": "Surgical unit proof for private choice source capture, atomic cases/outbox staging, and protected historical reads; no nominal UI, native, integration, financial approval or criterion acceptance is granted.",
+  "execution": {
+    "local": "NOT_AUTHORIZED_NOT_RUN",
+    "hosted": "PENDING_ROOT_ONLY_ONE_SELECTED_FILE_DEFAULT_BUDGET_NO_RUN_YET",
+    "original_five_ui_journeys": "UNCHANGED"
+  },
+  "fixture_rules": [
+    "Admit a real private UI lease through createSfUiAuthority; use its Request, binding and revalidation.",
+    "Use actual canonical product state/C08 persistence for transaction and no-effects assertions where the concrete factory permits; keep controlled boundary doubles explicit.",
+    "Construct an actual coherent DecisionCase, ChoiceRecord and choice-recorded ledger event through canonical helpers where available; bind source refs and protected projection bytes by canonical digests.",
+    "Use canonical source lifecycle records for physical continuity; distinguish a material edit from physical replacement.",
+    "Use actual capture/reader, enqueueSfLedgerEvent, sfChoiceSourceCaptureDigest and createSfRecordHistory implementations; do not recreate their validators in test helpers.",
+    "Assert public outcomes and persisted effects, not provisional reason strings or an exact incidental call count."
+  ],
+  "groups": [
+    {
+      "id": "eligible_capture",
+      "checks": [
+        "A valid UI zero-operation/assumption-free Planner choice captures every distinct referenced Planner version with the original authorized projection.",
+        "Returned capture and stored outbox are detached from input/projector aliases; mutating a returned object cannot rewrite committed history.",
+        "Unsupported structural shapes return ok[] without inventing a capture; an eligible denied/stale source does not downgrade to ok[]."
+      ]
+    },
+    {
+      "id": "atomic_outbox",
+      "checks": [
+        "One actual choice and matching ledger event stage a capture in the same cases+outbox C08 commit; the digest binds actual event, choice, writer, access revision, policy and creation time.",
+        "A capture denial, invalid capture, or post-await authority drift commits neither new choice nor outbox capture.",
+        "Exact replay preserves the original capture and performs no historical enrichment; legacy entries remain without capture.",
+        "Incomplete, duplicate, foreign or mismatched source records cannot be enqueued as a valid capture."
+      ]
+    },
+    {
+      "id": "protected_reader",
+      "checks": [
+        "The protected reader resolves the exact original ref/projection from a matching current case, actual choice and actual ledger/outbox event.",
+        "Missing capture or missing bound case/choice/event returns unavailable without synthesizing from today's source.",
+        "Tampered choice, event, eventRef, capture bytes or capture digest is refused.",
+        "Writer/access/policy/time metadata tampering is refused even if the visible source ref is unchanged.",
+        "Case or capture changed between initial and final reads is refused; authorization is reopened before egress."
+      ]
+    },
+    {
+      "id": "live_authority",
+      "checks": [
+        "Absent, replaced or aborted Request is refused.",
+        "Headers, binding, private UI lease or current case authorization changed during an await is refused.",
+        "Current ACL revocation prevents historical read even when protected original bytes and their digest remain intact."
+      ]
+    },
+    {
+      "id": "record_history_continuity",
+      "checks": [
+        "An actual material edit of the same physical Planner record returns historical original bytes plus the current ref and precise differences.",
+        "Physical replacement/delete-recreate of the same logical record id does not inherit the old source's protected capture.",
+        "Current projection or original capture drift between continuity observations is refused.",
+        "Reading historical bytes performs no source mutation, grant renewal, Atlas publication, approval or Apply."
+      ]
+    },
+    {
+      "id": "final_egress_serialization",
+      "checks": [
+        "A competing SQLite writer created outside the reader ALS context changes choice/outbox/captured-source during final revalidation.",
+        "Canonical held C08 prevents the writer from entering; a non-held egress must refuse if the change completes before revalidation returns.",
+        "After the competing commit, a new protected read cannot return the old capture.",
+        "The original 47 test bodies and assertions remain verbatim; no sleeps, timeouts or UI replacements."
+      ]
+    }
+  ],
+  "api_bindings": {
+    "capture": "captureSfChoicePlannerSources({host,project},selection,call)",
+    "reader": "createSfChoiceSourceCaptureReader({host,state,authorizeCase})",
+    "enqueue": "enqueueSfLedgerEvent(state,event,scope,recordCaptures?)",
+    "digest": "sfChoiceSourceCaptureDigest(entry,captureWithoutDigest)",
+    "mutation_hook": "captureChoiceSources({case,choice,event,snapshot},context)",
+    "history": "createSfRecordHistory({host,readOriginalCapture,current,now})",
+    "event_integrity": "SfChoiceSourceCapture.eventDigest = digestSfValue(actual full CaseLedgerEvent); included in captureDigest"
+  },
+  "limits": [
+    "This is a proposed matrix, not a report of tests executed or passed.",
+    "The final test file must be reconciled to the root's concrete capture/reader module before dispatch.",
+    "Tests may use controlled invalid boundary responses to exercise refusal; these fixtures are not replacements for the five nominal UI journeys.",
+    "No source policy, grants, roles, original assertions, scenario identities, timeout or workflow is changed."
+  ],
+  "planned_test_count": 50,
+  "planned_tests": [
+    "one canonical choice atomically captures original Planner evidence in the cases/outbox commit",
+    "exact retry keeps the original choice and capture and never captures again",
+    "legacy choice entries remain uncaptured on retry and cannot synthesize an original projection",
+    "capture failure source-denied commits neither a choice nor any outbox effect",
+    "capture failure incomplete-records commits neither a choice nor any outbox effect",
+    "capture failure not-an-array commits neither a choice nor any outbox effect",
+    "capture failure selection-mutation commits neither a choice nor any outbox effect",
+    "capture failure headers-drift commits neither a choice nor any outbox effect",
+    "capture failure lease-ended commits neither a choice nor any outbox effect",
+    "capture failure capture-method-replaced commits neither a choice nor any outbox effect",
+    "unsupported operations remains an explicit empty capture without reading a source",
+    "unsupported assumptions remains an explicit empty capture without reading a source",
+    "unsupported non-planner remains an explicit empty capture without reading a source",
+    "capture refuses request-missing under a real UI lease",
+    "capture refuses request-replaced under a real UI lease",
+    "capture refuses aborted under a real UI lease",
+    "capture refuses lease-ended under a real UI lease",
+    "capture refuses binding-revoked under a real UI lease",
+    "capture refuses source-argument drift while awaiting the authorized projector",
+    "capture refuses projector-method drift while awaiting the authorized projector",
+    "capture refuses headers drift while awaiting the authorized projector",
+    "protected capture reader refuses missing-capture without historical substitution",
+    "protected capture reader refuses missing-case without historical substitution",
+    "protected capture reader refuses missing-choice without historical substitution",
+    "protected capture reader refuses missing-event without historical substitution",
+    "protected capture reader refuses choice-bytes without historical substitution",
+    "protected capture reader refuses event-rationale without historical substitution",
+    "protected capture reader refuses event-lifecycle without historical substitution",
+    "protected capture reader refuses event-actions without historical substitution",
+    "protected capture reader refuses event-ref without historical substitution",
+    "protected capture reader refuses capture-bytes without historical substitution",
+    "protected capture reader refuses capture-digest without historical substitution",
+    "protected capture reader refuses writer without historical substitution",
+    "protected capture reader refuses access-revision without historical substitution",
+    "protected capture reader refuses policy without historical substitution",
+    "protected capture reader refuses created-at without historical substitution",
+    "outbox replay cannot add or change a protected capture on an existing event",
+    "protected original bytes remain historical after a real same-record Planner edit",
+    "a delete and recreate with the same logical Planner id cannot inherit the old capture",
+    "stored capture is not a grant when current source ACL is revoked",
+    "protected reader rechecks case-authorization after its asynchronous case authorization",
+    "protected reader rechecks case-argument after its asynchronous case authorization",
+    "protected reader rechecks headers after its asynchronous case authorization",
+    "protected reader rechecks lease after its asynchronous case authorization",
+    "historical resolution refuses current-source drift between independent observations",
+    "capture requires the real held C08 snapshot even with otherwise valid UI authority",
+    "recordHistory rereads protected original bytes after observing the current source",
+    "final capture egress serializes a concurrent change to choice before exposing original bytes",
+    "final capture egress serializes a concurrent change to outbox-entry before exposing original bytes",
+    "final capture egress serializes a concurrent change to captured-source before exposing original bytes"
+  ],
+  "test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+  "test_sha256": "fad6ccb9cab9b6399dd4a2ef3a4f9ee11da4c94be7065d4e76e0b72a416cec96",
+  "material": "/workspace/scratch/fec39c0682b3/m52-work/p9-choice-source-history-tests-material-v2.json"
+}

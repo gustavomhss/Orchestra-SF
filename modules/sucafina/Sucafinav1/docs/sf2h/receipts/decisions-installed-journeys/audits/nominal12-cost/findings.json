@@ -1,0 +1,713 @@
+{
+  "schema": "sf2h.m52.nominal12.compare-read-audit.v1",
+  "scope": "Read-only evidence parsing and pinned-source comparison; no execution, no tests, no product proposal",
+  "runs": [
+    {
+      "folder": "nominal11-43672508561",
+      "snapshot": "f0b9c4c92c74072b86484fcbdd0f8aff1d990f05",
+      "test_duration_ms": 81376,
+      "steps": [
+        {
+          "title": "create two actual Planner versions through human controls",
+          "duration_ms": 1324
+        },
+        {
+          "title": "discover and inspect authorized sources before attaching them to the saved case",
+          "duration_ms": 2507
+        },
+        {
+          "title": "save the first alternative with an explicit pending cost inventory",
+          "duration_ms": 6035
+        },
+        {
+          "title": "lose the second creation response and explicitly recover the identical request",
+          "duration_ms": 8037
+        },
+        {
+          "title": "reopen the exact alternatives and consume them in the current comparison",
+          "duration_ms": 10798
+        },
+        {
+          "title": "register the explicit limit for the known subtotal increase using current comparison evidence",
+          "duration_ms": 3075
+        },
+        {
+          "title": "record a human choice, lose its response, then explicitly retry the exact retained intent after reload",
+          "duration_ms": 11573
+        },
+        {
+          "title": "read the durable choice without treating it as financial approval",
+          "duration_ms": 135
+        },
+        {
+          "title": "reopen the same choice and retain its historical values after the real Planner source changes",
+          "duration_ms": 16665
+        }
+      ],
+      "semantic_shape": {
+        "annual_values": [
+          1200,
+          2400
+        ],
+        "currency": "USD",
+        "year": 2027,
+        "case_version_after_attach": 2,
+        "same_case_across_attach_coverage_recovery": true,
+        "source_count": 2,
+        "distinct_source_refs": 2,
+        "sources": [
+          {
+            "surface": "planner",
+            "recordType": "planner-version",
+            "version": 1,
+            "fields": [
+              "id",
+              "name",
+              "year",
+              "locked",
+              "closed",
+              "hc",
+              "lists",
+              "lines",
+              "projects",
+              "fx",
+              "summary",
+              "hr",
+              "restrictedHr",
+              "fteInputsKnown",
+              "hrMonthStates",
+              "sharedEntities",
+              "sharedAllocations"
+            ],
+            "period": {
+              "start": "2027-01-01",
+              "end": "2027-12-31"
+            }
+          },
+          {
+            "surface": "planner",
+            "recordType": "planner-version",
+            "version": 1,
+            "fields": [
+              "id",
+              "name",
+              "year",
+              "locked",
+              "closed",
+              "hc",
+              "lists",
+              "lines",
+              "projects",
+              "fx",
+              "summary",
+              "hr",
+              "restrictedHr",
+              "fteInputsKnown",
+              "hrMonthStates",
+              "sharedEntities",
+              "sharedAllocations"
+            ],
+            "period": {
+              "start": "2027-01-01",
+              "end": "2027-12-31"
+            }
+          }
+        ],
+        "coverages": [
+          {
+            "title": "Keep the baseline service",
+            "case_version": 2,
+            "coverage_version": 1,
+            "basis_version": 1,
+            "decisionType": "renewal-transition-v1",
+            "categoryIds": [
+              "service",
+              "service_overlap",
+              "implementation",
+              "contract_exit",
+              "migration",
+              "taxes",
+              "training",
+              "internal_costs",
+              "other_relevant_costs"
+            ],
+            "additionalCategoryIds": [],
+            "basis_refs": 2,
+            "entries": [
+              {
+                "categoryId": "service",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "service_overlap",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "implementation",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "contract_exit",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "migration",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "taxes",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "training",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "internal_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "other_relevant_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              }
+            ],
+            "expectedVersion": 0
+          },
+          {
+            "title": "Consider the candidate service",
+            "case_version": 3,
+            "coverage_version": 1,
+            "basis_version": 1,
+            "decisionType": "renewal-transition-v1",
+            "categoryIds": [
+              "service",
+              "service_overlap",
+              "implementation",
+              "contract_exit",
+              "migration",
+              "taxes",
+              "training",
+              "internal_costs",
+              "other_relevant_costs"
+            ],
+            "additionalCategoryIds": [],
+            "basis_refs": 2,
+            "entries": [
+              {
+                "categoryId": "service",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "service_overlap",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "implementation",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "contract_exit",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "migration",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "taxes",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "training",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "internal_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "other_relevant_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              }
+            ],
+            "expectedVersion": 0
+          }
+        ],
+        "same_basis_for_two_coverages": true,
+        "recovered_case_version": 4,
+        "promotion_mutations": 3,
+        "promotion_distinct_intentions": 2,
+        "financialApplication": false
+      },
+      "pre_compare_requests": {
+        "POST workbench-views": 13,
+        "GET workbench": 2,
+        "POST workbench-command": 1,
+        "GET workbench-case": 6,
+        "POST workbench-analysis": 6,
+        "POST decision-portfolio-results": 6,
+        "GET bi-options": 3,
+        "GET bi-data": 4,
+        "POST decision-edit": 1,
+        "GET decision-controls": 4,
+        "POST decision-coverage": 2,
+        "POST decision-promote": 3
+      },
+      "pre_compare_network": {
+        "GET None 200": 11,
+        "POST workbench-views 200": 12,
+        "POST None 200": 6,
+        "POST workbench-views net::ERR_ABORTED": 1,
+        "GET workbench 200": 2,
+        "POST workbench-command 200": 1,
+        "GET workbench-case 200": 6,
+        "POST workbench-analysis 200": 6,
+        "POST decision-portfolio-results 200": 6,
+        "GET bi-options 200": 3,
+        "GET bi-data 200": 4,
+        "POST decision-edit 200": 1,
+        "GET decision-controls 200": 4,
+        "POST decision-coverage 200": 2,
+        "POST decision-promote 200": 2,
+        "POST decision-promote net::ERR_CONNECTION_RESET": 1
+      },
+      "compare_requests": [
+        {
+          "method": "POST",
+          "mode": "decision-compare",
+          "idempotencyKey": "462b240a-e51d-4ee2-8781-7b167dca5610"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-compare",
+          "idempotencyKey": "3fdbd1c5-0c7d-41a9-badc-034583fd94d0"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-compare",
+          "idempotencyKey": "a032dba9-1bd2-49f1-b27d-be5f7ace4749"
+        }
+      ],
+      "compare_network": [
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "network_fields": [
+        "contentType",
+        "error",
+        "event",
+        "httpStatus",
+        "method",
+        "mode",
+        "path"
+      ],
+      "profile_count": 0,
+      "evidence": [
+        {
+          "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal11-43672508561/observations-line-12.json",
+          "bytes": 103464,
+          "sha256": "e2fa03651f351d4c96b90fd546245c33963a2d4dd1d26517941dfc09a540880c"
+        },
+        {
+          "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal11-43672508561/runtime-extracted.json",
+          "bytes": 162543,
+          "sha256": "290199b58cc30927326084d0aefec0b19cc7c90252ac1237790c24475ae659b4"
+        },
+        {
+          "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal11-43672508561/cli-line-12.log",
+          "bytes": 781,
+          "sha256": "26511db39aadcaaf85b634df627081fa066d18e50037cd80ed2868aaf5aa6d38"
+        },
+        {
+          "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal11-43672508561/profile-records.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ]
+    },
+    {
+      "folder": "nominal12-43676977918",
+      "snapshot": "de56ec928b22ffbaf3b4110262bce3dec0f1441c",
+      "test_duration_ms": 63624,
+      "steps": [
+        {
+          "title": "create two actual Planner versions through human controls",
+          "duration_ms": 1841
+        },
+        {
+          "title": "discover and inspect authorized sources before attaching them to the saved case",
+          "duration_ms": 4796
+        },
+        {
+          "title": "save the first alternative with an explicit pending cost inventory",
+          "duration_ms": 11624
+        },
+        {
+          "title": "lose the second creation response and explicitly recover the identical request",
+          "duration_ms": 16238
+        },
+        {
+          "title": "reopen the exact alternatives and consume them in the current comparison",
+          "duration_ms": 16729
+        }
+      ],
+      "semantic_shape": {
+        "annual_values": [
+          1200,
+          2400
+        ],
+        "currency": "USD",
+        "year": 2027,
+        "case_version_after_attach": 2,
+        "same_case_across_attach_coverage_recovery": true,
+        "source_count": 2,
+        "distinct_source_refs": 2,
+        "sources": [
+          {
+            "surface": "planner",
+            "recordType": "planner-version",
+            "version": 1,
+            "fields": [
+              "id",
+              "name",
+              "year",
+              "locked",
+              "closed",
+              "hc",
+              "lists",
+              "lines",
+              "projects",
+              "fx",
+              "summary",
+              "hr",
+              "restrictedHr",
+              "fteInputsKnown",
+              "hrMonthStates",
+              "sharedEntities",
+              "sharedAllocations"
+            ],
+            "period": {
+              "start": "2027-01-01",
+              "end": "2027-12-31"
+            }
+          },
+          {
+            "surface": "planner",
+            "recordType": "planner-version",
+            "version": 1,
+            "fields": [
+              "id",
+              "name",
+              "year",
+              "locked",
+              "closed",
+              "hc",
+              "lists",
+              "lines",
+              "projects",
+              "fx",
+              "summary",
+              "hr",
+              "restrictedHr",
+              "fteInputsKnown",
+              "hrMonthStates",
+              "sharedEntities",
+              "sharedAllocations"
+            ],
+            "period": {
+              "start": "2027-01-01",
+              "end": "2027-12-31"
+            }
+          }
+        ],
+        "coverages": [
+          {
+            "title": "Keep the baseline service",
+            "case_version": 2,
+            "coverage_version": 1,
+            "basis_version": 1,
+            "decisionType": "renewal-transition-v1",
+            "categoryIds": [
+              "service",
+              "service_overlap",
+              "implementation",
+              "contract_exit",
+              "migration",
+              "taxes",
+              "training",
+              "internal_costs",
+              "other_relevant_costs"
+            ],
+            "additionalCategoryIds": [],
+            "basis_refs": 2,
+            "entries": [
+              {
+                "categoryId": "service",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "service_overlap",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "implementation",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "contract_exit",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "migration",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "taxes",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "training",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "internal_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "other_relevant_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              }
+            ],
+            "expectedVersion": 0
+          },
+          {
+            "title": "Consider the candidate service",
+            "case_version": 3,
+            "coverage_version": 1,
+            "basis_version": 1,
+            "decisionType": "renewal-transition-v1",
+            "categoryIds": [
+              "service",
+              "service_overlap",
+              "implementation",
+              "contract_exit",
+              "migration",
+              "taxes",
+              "training",
+              "internal_costs",
+              "other_relevant_costs"
+            ],
+            "additionalCategoryIds": [],
+            "basis_refs": 2,
+            "entries": [
+              {
+                "categoryId": "service",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "service_overlap",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "implementation",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "contract_exit",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "migration",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "taxes",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "training",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "internal_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "other_relevant_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              }
+            ],
+            "expectedVersion": 0
+          }
+        ],
+        "same_basis_for_two_coverages": true,
+        "recovered_case_version": 4,
+        "promotion_mutations": 3,
+        "promotion_distinct_intentions": 2,
+        "financialApplication": false
+      },
+      "pre_compare_requests": {
+        "POST workbench-views": 13,
+        "GET workbench": 2,
+        "POST workbench-command": 1,
+        "GET workbench-case": 6,
+        "POST workbench-analysis": 6,
+        "POST decision-portfolio-results": 6,
+        "GET bi-options": 3,
+        "GET bi-data": 4,
+        "POST decision-edit": 1,
+        "GET decision-controls": 4,
+        "POST decision-coverage": 2,
+        "POST decision-promote": 3
+      },
+      "pre_compare_network": {
+        "GET None 200": 11,
+        "POST workbench-views 200": 12,
+        "POST None 200": 6,
+        "POST workbench-views net::ERR_ABORTED": 1,
+        "GET workbench 200": 2,
+        "POST workbench-command 200": 1,
+        "GET workbench-case 200": 6,
+        "POST workbench-analysis 200": 6,
+        "POST decision-portfolio-results 200": 6,
+        "GET bi-options 200": 3,
+        "GET bi-data 200": 4,
+        "POST decision-edit 200": 1,
+        "GET decision-controls 200": 4,
+        "POST decision-coverage 200": 2,
+        "POST decision-promote 200": 2,
+        "POST decision-promote net::ERR_CONNECTION_RESET": 1
+      },
+      "compare_requests": [
+        {
+          "method": "POST",
+          "mode": "decision-compare",
+          "idempotencyKey": "7f6c8ee5-ab15-47c2-b88e-119455f387c6"
+        }
+      ],
+      "compare_network": [
+        {
+          "event": "requestfailed",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "network_fields": [
+        "contentType",
+        "error",
+        "event",
+        "httpStatus",
+        "method",
+        "mode",
+        "path"
+      ],
+      "profile_count": 0,
+      "evidence": [
+        {
+          "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal12-43676977918/observations-line-12.json",
+          "bytes": 41494,
+          "sha256": "1b7d358bc3d0e99d506b50c90fe975f1282a13144db87e9bec9303fcc1634abb"
+        },
+        {
+          "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal12-43676977918/runtime-extracted.json",
+          "bytes": 87492,
+          "sha256": "7549c51ec55bafee717639942097754c69e11757ab9f7fe53cfcc4b31ab31aea"
+        },
+        {
+          "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal12-43676977918/cli-line-12.log",
+          "bytes": 782,
+          "sha256": "324cb8bdd6fc4a3a3f038d3a80ea3d0dee2aa7918395d95e4b2b2dd661357580"
+        },
+        {
+          "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal12-43676977918/profile-records.json",
+          "bytes": 3,
+          "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+        }
+      ]
+    }
+  ],
+  "equal_semantic_shape": true,
+  "equal_pre_compare_requests": true,
+  "equal_pre_compare_network": true,
+  "unchanged_source_blobs": {
+    "decisions/case-port.ts": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+    "decisions/result-store.ts": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+    "planner/scenario-comparison-port.ts": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+  },
+  "unchanged_stored_scenarios_blob": "1761a5d2558c9091d1c02730774751ace44e9131",
+  "limitations": [
+    "No request start/end timestamp or HTTP duration is present in network observations.",
+    "Composite Playwright steps are not producer or HTTP timing measurements.",
+    "CLI contains boot/watcher/shutdown only; no comparison profile, response body or SQL/CPU attribution.",
+    "The nominal12 artifact does not expose full StoredDecisionResult envelopes; historical caseRef groups cannot be counted as a runtime observation.",
+    "Broader composition changes and runner variability remain unseparated. No cause is attributed to P9, auth72, BI62, Dashboard67 or another owner."
+  ],
+  "findings": [
+    "The first comparison in nominal12 aborts before a response; exactly one compare request is observed.",
+    "The preceding semantic input shape and full pre-compare request/network inventories match nominal11.",
+    "The unchanged stored-scenario reader keys case observations by digest of the complete historical caseRef and starts new Maps per phase.",
+    "The P9 record-choice capture stage is not reached in nominal12; the artifact has no decision-choose request.",
+    "BCS changed from390bce to1400fa between W11 andW12. Its historical fallback is gated by stale/unavailable; no runtime trace proves whether it was invoked here."
+  ],
+  "product_changes_proposed": []
+}

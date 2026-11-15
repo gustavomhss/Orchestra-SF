@@ -1,0 +1,28 @@
+{
+  "schema": "sf-m52-p9-ui-preservation-v1",
+  "state": "STATIC_ONLY_NOT_RUNTIME",
+  "owned10_unchanged_from_P8": true,
+  "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+  "nominal_count": 5,
+  "timeout_ms_each": 180000,
+  "retries": 0,
+  "repeatEach": 1,
+  "workers": 1,
+  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "mutations": "UI-only for every nominal journey; separate unit fixtures are never imported by nominal UI",
+  "source": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
+  "prior_P8_identity_audit": {
+    "base_audit": "/workspace/scratch/fec39c0682b3/m52-audit/p8-current-base/audit.json",
+    "base_audit_sha256": "b984cec8c249879868d92f0eb7385a5ea14dc9ba8700337292c7598bd43c40ab",
+    "C35_W_S_evidence": "/workspace/scratch/fec39c0682b3/m52-audit/p8-current-base/C35-W11-S11-evidence.json",
+    "C35_W_S_evidence_sha256": "fecfe75a99afb8dc5ee53ee651cdfd0bc5c8d3944ccebc1fa1e3cdceae0aa937",
+    "C32_to_C34_changed_paths": 145,
+    "C34_to_C35_changed_paths": 77,
+    "intersection_with_35_audited_paths": [],
+    "W_delta_paths": 25,
+    "W_postimages_modes_exact": true,
+    "W_S_preserved_root_entries": 43,
+    "W_S_only_extra_path": ".ci-run.json"
+  },
+  "GLOBAL_RELEASE": false
+}

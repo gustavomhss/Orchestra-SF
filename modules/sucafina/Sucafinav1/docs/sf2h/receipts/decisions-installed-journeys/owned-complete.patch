@@ -1,6 +1,3 @@
-diff --git a/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
-new file mode 100644
-index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed840effd65
 --- /dev/null
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
 @@ -0,0 +1,84 @@
@@ -88,8 +85,6 @@ index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed8
 +    finally { session.off("Fetch.requestPaused", paused); await Promise.all(running); await session.detach() }
 +  }
 +}
-diff --git a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
-index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..e5a510068cc16a41b29446524b4c7870c98568c5 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
 @@ -1,5 +1,11 @@
@@ -185,8 +180,6 @@ index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..e5a510068cc16a41b29446524b4c7870
    const contentType = response.headers()["content-type"] ?? ""
    const record = { mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(), contentType }
    observations.push(record)
-diff --git a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
-index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
 @@ -1,5 +1,6 @@
@@ -249,8 +242,6 @@ index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..ef401f74f0af0b3c6f0dcf0f23e554c6
 +    return result
 +  })
  }
-diff --git a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
-index c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e..9fe64294027cf6805ff8e7ba4b7cfac83455de85 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
 @@ -1,4 +1,4 @@
@@ -283,8 +274,6 @@ index c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e..9fe64294027cf6805ff8e7ba4b7cfac8
 -  return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
 +  return { completed: completed.promise, close: async () => { page.off("requestfailed", failed); await session.send("Fetch.disable"); await session.detach() } }
  }
-diff --git a/packages/app-shell/e2e/sucafina/decisions.spec.ts b/packages/app-shell/e2e/sucafina/decisions.spec.ts
-index 2d9c867af87fa0a26b182365b1780232b49bcaf9..b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf 100644
 --- a/packages/app-shell/e2e/sucafina/decisions.spec.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions.spec.ts
 @@ -146,9 +146,8 @@
@@ -299,8 +288,6 @@ index 2d9c867af87fa0a26b182365b1780232b49bcaf9..b6f63bfa1b8eacb5bf37a5c5b0d508fd
        observations.push({ stage: "creation-response-dropped", httpStatus: lost.httpStatus, contentType: lost.contentType })
        expect(lost.httpStatus).toBe(200)
        expect(lost.contentType).toContain("application/json")
-diff --git a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
-index 979bfeeb460e85fe1911affe0ac9ad4d21a27e3a..903b48594ff95e0d1f78539982adcf75eb3b9272 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
 @@ -24,7 +24,7 @@
@@ -350,8 +337,6 @@ index 979bfeeb460e85fe1911affe0ac9ad4d21a27e3a..903b48594ff95e0d1f78539982adcf75
    const offered = inventory.getByRole("option", { name: /renewal|transition/i })
    await expect(offered).toHaveCount(1)
    await inventory.selectOption({ label: (await offered.textContent())!.trim() })
-diff --git a/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
-index c469187a2e04d49d157cf9d3830145ca845f4064..de8671b4482339791b8f03bd5616c13d50dc4a87 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
 @@ -23,8 +23,8 @@
@@ -365,8 +350,6 @@ index c469187a2e04d49d157cf9d3830145ca845f4064..de8671b4482339791b8f03bd5616c13d
    const initial = asRecord((await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
    expect(asRecord(initial.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
    await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
-diff --git a/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
-index 9e02b30fee0e1f37afeac28b0296bdfbbbab70aa..10b59adfce7d8fb5143f49c9df9a0d7321425018 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
 @@ -25,7 +25,7 @@
@@ -378,8 +361,6 @@ index 9e02b30fee0e1f37afeac28b0296bdfbbbab70aa..10b59adfce7d8fb5143f49c9df9a0d73
      const comparedAlternatives = (asRecord(selected.decision).alternatives as unknown[]).map(asRecord).filter((alternative) => selectedIds.includes(String(alternative.id)))
      expect(comparedAlternatives).toHaveLength(2)
      const comparedRefs = comparedAlternatives.flatMap((alternative) => asRecord(alternative.result).sourceRefs as unknown[]).map(asRecord)
-diff --git a/modules/sucafina/Sucafinav1/product/decisions/http.ts b/modules/sucafina/Sucafinav1/product/decisions/http.ts
-index 596512b4e12c094fd178ea845f4b560bbf23a348..a77da76589ece60a6925bdd20731efbc8f19b597 100644
 --- a/modules/sucafina/Sucafinav1/product/decisions/http.ts
 +++ b/modules/sucafina/Sucafinav1/product/decisions/http.ts
 @@ -169,6 +169,55 @@
@@ -438,8 +419,6 @@ index 596512b4e12c094fd178ea845f4b560bbf23a348..a77da76589ece60a6925bdd20731efbc
  function response(result: PortResult<unknown>, status?: number) {
    return Response.json(result, { status: status ?? (result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : 503), headers: { "cache-control": "no-store" } })
  }
-diff --git a/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
-index fa509e9d7a7da9d0024c9487975f7b26b3b29146..e1c78c9311d9af5df81191acc490b9574421ad3d 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
 @@ -1,4 +1,4 @@

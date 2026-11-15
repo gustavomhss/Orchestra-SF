@@ -1,0 +1,214 @@
+import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import type { BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+import type { DomainProjection } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import type { CostCoverageBasis, DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+import type { DecisionCasePort, DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+import { encodeCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+import { decisionCoverageRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/coverage-access.ts"
+import type { createCriterionRuleRegistry, CriterionMetric } from "../../../../modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts"
+import { readHistoricalScenarios } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+import type { createSfDecisionResultStore, StoredDecisionResult } from "../../../../modules/sucafina/Sucafinav1/product/decisions/result-store.ts"
+import { comparePlannerScenarios, plannerComponentDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/comparison.ts"
+import { projectionDigest } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+import type { ResolvedScenario } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts"
+import { readPortfolioSnapshot } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts"
+import { plannerKnownSubtotal } from "../../../../modules/sucafina/Sucafinav1/src/planner-accounts.ts"
+
+type ReadMetric = Parameters<typeof createCriterionRuleRegistry>[0]["readMetric"]
+export type KnownSubtotalMetricRequest = Parameters<ReadMetric>[0]
+export const knownSubtotalMetricNotApplicable = Symbol("sf-known-subtotal-metric-not-applicable")
+type StoredScenario = Extract<StoredDecisionResult, { kind: "scenario" }>
+type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
+type Alternative = DecisionCase["alternatives"][number]
+type Prepared = { reference: string; stored: StoredScenario; alternative: Alternative; basis: CostCoverageBasis; source: PlannerRecord; coverageRef: string }
+type Observation = [ResolvedScenario, ResolvedScenario]
+type InternalResult = PortResult<CriterionMetric> | { status: "not-applicable" }
+
+export type KnownSubtotalMetricDependencies = {
+  host: DomainPortHost
+  business: {
+    results: Pick<ReturnType<typeof createSfDecisionResultStore>, "read" | "readHistoricalScenario">
+    cases: Pick<DecisionCasePort, "read">
+    plannerSources: PlannerSourceHost
+    projectPlannerEvidence: (source: PlannerRecord, call: TrustedDomainContext,
+      selected: { period: DomainProjection["context"]["period"]; currency: "USD" }) => Promise<PortResult<DomainProjection>>
+  }
+}
+
+/** A private, independently reauthorized metric for unmodified Planner source alternatives.
+ * Every call observes both phases again. It neither consumes a previous comparison nor
+ * supplies cached scenario reads to another producer. Unsupported shapes retain the
+ * general metric path; a failed eligible proof can never select that fallback. */
+export function createSfKnownSubtotalMetric(input: KnownSubtotalMetricDependencies) {
+  return async (incoming: KnownSubtotalMetricRequest, call: TrustedDomainContext): Promise<PortResult<CriterionMetric> | typeof knownSubtotalMetricNotApplicable> => {
+    if (incoming.metricRef !== "planner:known-subtotal-difference" || !incoming.baselineRef) return knownSubtotalMetricNotApplicable
+    try {
+      const captured = structuredClone(incoming)
+      const host = input.host, business = input.business
+      const requestFor = host.requestFor, revalidate = host.revalidate
+      const persistence = host.persistence, authenticate = host.authenticate, environment = host.environment
+      const request = requestFor.call(host, call)
+      if (!request || request.signal.aborted) return { status: "denied", reason: "criterion-metric-access-unavailable" }
+      const binding = call.binding, lease = call.lease
+      const authority = digestSfValue([call.kind, call.binding]), payload = digestSfValue(captured)
+      const requestFingerprint = () => {
+        const headers: [string, string][] = []
+        request?.headers.forEach((value, name) => headers.push([name, value]))
+        return digestSfValue({ method: request?.method, url: request?.url, headers: headers.sort(([left], [right]) => left.localeCompare(right)) })
+      }
+      const requestDigest = requestFingerprint()
+      const store = business.results, cases = business.cases, sources = business.plannerSources
+      const historical = store.readHistoricalScenario, readResult = store.read, readCase = cases.read
+      const project = business.projectPlannerEvidence, resolveSource = sources.resolveForecastSource, resolveCoverage = sources.resolveForecastCoverage
+      const current = () => !!request && !request.signal.aborted && input.host === host && input.business === business &&
+        host.requestFor === requestFor && host.revalidate === revalidate && requestFor.call(host, call) === request &&
+        host.persistence === persistence && host.authenticate === authenticate && host.environment === environment && requestFingerprint() === requestDigest &&
+        call.binding === binding && call.lease === lease && digestSfValue([call.kind, call.binding]) === authority &&
+        digestSfValue(incoming) === payload && digestSfValue(captured) === payload &&
+        business.results === store && store.readHistoricalScenario === historical && store.read === readResult &&
+        business.cases === cases && cases.read === readCase && business.plannerSources === sources &&
+        sources.resolveForecastSource === resolveSource && sources.resolveForecastCoverage === resolveCoverage && business.projectPlannerEvidence === project
+      const changed = () => ({ status: "stale" as const, reason: "criterion-metric-changed" })
+      const unavailable = (reason: string) => ({ status: "unavailable" as const, reason })
+      const references = [captured.baselineRef!, captured.scenarioRef] as const
+      if (!references.every((reference) => reference.trim()) || references[0] === references[1])
+        return { status: "needs-input", reason: "two-distinct-scenarios-required" }
+
+      const work = async (): Promise<InternalResult> => {
+        if (!current() || !await revalidate.call(host, call) || !current()) return { status: "denied", reason: "criterion-metric-access-unavailable" }
+        const observeHistory = async (): Promise<PortResult<[StoredScenario, StoredScenario]>> => {
+          const selectors = [...references]
+          const selectorDigest = digestSfValue(selectors)
+          const values = structuredClone(await readHistoricalScenarios(store, selectors, call))
+          if (!current() || digestSfValue(selectors) !== selectorDigest) return changed()
+          if (values.length !== 2 || !(0 in values) || !(1 in values)) return unavailable("scenario-batch-invalid")
+          const result: StoredScenario[] = []
+          for (const [index, value] of values.entries()) {
+            if (value.status !== "ok") return value
+            const stored = value.value
+            if (stored.kind !== "scenario" || stored.resultRef !== references[index] || stored.caseRef.id !== captured.caseRef.id ||
+              stored.caseRef.incarnation !== captured.caseRef.incarnation || stored.caseRef.version > captured.caseRef.version)
+              return { status: "denied", reason: "criterion-scenario-scope-mismatch" }
+            if (digestSfValue(stored.result) !== stored.resultDigest) return unavailable("criterion-scenario-proof-unavailable")
+            result.push(stored)
+          }
+          return { status: "ok", value: [result[0]!, result[1]!] }
+        }
+        const observeCase = async () => {
+          const selector = { caseRef: encodeCaseRef(captured.caseRef) }
+          const selectorDigest = digestSfValue(selector)
+          const value = structuredClone(await readCase.call(cases, selector, call))
+          if (!current() || digestSfValue(selector) !== selectorDigest) return changed()
+          if (value.status !== "ok") return value
+          if (value.value.case.id !== captured.caseRef.id || value.value.case.incarnation !== captured.caseRef.incarnation ||
+            value.value.case.version !== captured.caseRef.version) return changed()
+          return value
+        }
+        const initialHistory = await observeHistory()
+        if (initialHistory.status !== "ok") return initialHistory
+        const initialCase = await observeCase()
+        if (initialCase.status !== "ok") return initialCase
+        const decision = initialCase.value.case
+        const caseDigest = digestSfValue(decision)
+        const matched: { stored: StoredScenario; alternative: Alternative; reference: string }[] = []
+        for (const [index, stored] of initialHistory.value.entries()) {
+          const alternatives = decision.alternatives.filter((alternative) => digestSfValue(alternative.scenario) === stored.requestDigest && digestSfValue(alternative.result) === stored.resultDigest)
+          if (alternatives.length !== 1) return unavailable("scenario-not-current-case-alternative")
+          matched.push({ stored, alternative: alternatives[0]!, reference: references[index]! })
+        }
+        // Classification precedes the narrow projection/coverage proof. Non-Planner
+        // evidence remains with its existing producer, including mixed operations.
+        if (matched.some(({ alternative }) => alternative.scenario.operations.length !== 0 || alternative.scenario.assumptions.length !== 0 ||
+          alternative.result.currency !== "USD" || alternative.result.knownSubtotal === null ||
+          alternative.result.sourceRefs.some((ref) => ref.kind !== "record" || ref.target.surface !== "planner"))) return { status: "not-applicable" }
+        const prepared: Prepared[] = []
+        for (const item of matched) {
+          const { alternative } = item, result = alternative.result
+          const refs = result.sourceRefs.filter((ref): ref is PlannerRecord => ref.kind === "record" && ref.refId === alternative.scenario.baseRef &&
+            ref.target.surface === "planner" && ref.target.recordType === "planner-version")
+          if (refs.length !== 1) return unavailable("scenario-proof-unavailable")
+          const source = refs[0]!
+          if (source.refDigest !== digestSfEvidenceRef(source) || source.installationId !== call.binding.installationId || source.projectId !== call.binding.projectId)
+            return { status: "denied", reason: "criterion-source-scope-mismatch" }
+          if (result.currency !== decision.currency || digestSfValue(result.horizon) !== digestSfValue(decision.horizon) ||
+            result.costCoverage.currency !== result.currency || digestSfValue(result.costCoverage.horizon) !== digestSfValue(result.horizon) ||
+            result.costCoverage.alternativeId !== alternative.id || result.costCoverage.alternativeVersion !== alternative.version ||
+            !result.costCoverage.evaluatedSourceRefs.some((ref) => ref.kind === "record" && digestSfValue(ref) === digestSfValue(source)))
+            return unavailable("criterion-scenario-proof-unavailable")
+          const bases = decision.costCoverageBases.filter((basis) => basis.id === result.costCoverage.basisId && basis.version === result.costCoverage.basisVersion)
+          if (bases.length !== 1) return unavailable("scenario-proof-unavailable")
+          prepared.push({ ...item, basis: bases[0]!, source, coverageRef: decisionCoverageRef(captured.caseRef, alternative.id, alternative.version) })
+        }
+        const observeProofs = async (): Promise<PortResult<Observation>> => {
+          const values: ResolvedScenario[] = []
+          for (const item of prepared) {
+            const sourceArgument = structuredClone(item.source)
+            const selection = { period: structuredClone(item.alternative.result.horizon), currency: "USD" as const }
+            const argumentsDigest = digestSfValue([sourceArgument, selection])
+            const projection = structuredClone(await project.call(business, sourceArgument, call, selection))
+            if (!current() || digestSfValue([sourceArgument, selection]) !== argumentsDigest) return changed()
+            if (projection.status !== "ok") return projection
+            const value = projection.value, result = item.alternative.result
+            if (value.context.installationId !== call.binding.installationId || value.context.projectId !== call.binding.projectId ||
+              value.context.principalRef !== call.binding.principalRef || value.context.accessRevision !== call.binding.accessRevision ||
+              value.context.policyVersion !== call.binding.policyVersion || value.context.surface !== "planner" || value.context.currency !== result.currency ||
+              digestSfValue(value.context.period) !== digestSfValue(result.horizon) || !value.engineVersion.trim() ||
+              new Set(value.components.map((component) => component.id)).size !== value.components.length ||
+              value.components.some((component) => component.amount !== null && !Number.isFinite(component.amount)) ||
+              plannerComponentDigest(result.components) !== plannerComponentDigest(value.components))
+              return unavailable("criterion-planner-projection-unproven")
+            // A null cell remains unknown. The ordered canonical sum preserves zero
+            // and IEEE-754 rounding; a wholly absent projection never becomes zero.
+            const subtotal = value.components.some((component) => component.amount !== null)
+              ? plannerKnownSubtotal(value.components.map((component) => component.amount)) : null
+            if (subtotal === null || !Number.isFinite(subtotal) || result.knownSubtotal !== subtotal)
+              return unavailable("criterion-planner-subtotal-unproven")
+            const source = structuredClone(await resolveSource.call(sources, item.source.refId, call))
+            if (!current()) return changed()
+            if (source.status !== "ok") return source
+            if (source.value.versionId !== item.source.target.recordId || digestSfValue(source.value.evidence) !== digestSfValue(item.source)) return changed()
+            const coverage = structuredClone(await resolveCoverage.call(sources, item.coverageRef, call))
+            if (!current()) return changed()
+            if (coverage.status !== "ok") return coverage
+            if (coverage.value.coverageRef !== item.coverageRef || digestSfValue(coverage.value.basis) !== digestSfValue(item.basis) ||
+              digestSfValue(coverage.value.assessment) !== digestSfValue(result.costCoverage)) return changed()
+            values.push(structuredClone({ result, coverageRef: item.coverageRef, basis: item.basis, source: item.source, projection: value }))
+          }
+          return { status: "ok", value: [values[0]!, values[1]!] }
+        }
+        const first = await observeProofs()
+        if (first.status !== "ok") return first
+        const compare = (values: Observation) => comparePlannerScenarios({ baselineRef: references[0], alternativeRef: references[1],
+          baselineCoverageRef: values[0].coverageRef, alternativeCoverageRef: values[1].coverageRef,
+          baseline: values[0].result, alternative: values[1].result, baselineProof: values[0], alternativeProof: values[1] })
+        const comparison = compare(first.value)
+        // The second phase invokes the same real producers again, before the final
+        // historical and whole-case fences. No projection or authorization is cached.
+        const second = await observeProofs()
+        if (second.status !== "ok") return second
+        if (second.value.some((value, index) => digestSfValue({ ...value, projection: undefined }) !== digestSfValue({ ...first.value[index]!, projection: undefined }) ||
+          projectionDigest(value.projection) !== projectionDigest(first.value[index]!.projection))) return changed()
+        const finalComparison = compare(second.value)
+        if (digestSfValue(finalComparison) !== digestSfValue(comparison)) return changed()
+        const finalHistory = await observeHistory()
+        if (finalHistory.status !== "ok") return finalHistory
+        if (digestSfValue(finalHistory.value) !== digestSfValue(initialHistory.value) || !current() || !await revalidate.call(host, call) || !current()) return changed()
+        const finalCase = await observeCase()
+        if (finalCase.status !== "ok") return finalCase
+        if (digestSfValue(finalCase.value.case) !== caseDigest || digestSfValue(decision) !== caseDigest || !current()) return changed()
+        const evidenceRefs = [...second.value[0].result.sourceRefs, ...second.value[1].result.sourceRefs]
+          .filter((ref, index, all) => all.findIndex((entry) => entry.refDigest === ref.refDigest) === index)
+        return { status: "ok", value: structuredClone({ ...captured, value: finalComparison.knownDifference, unit: second.value[1].result.currency,
+          period: second.value[1].result.horizon, evidenceRefs, state: finalComparison.comparisonStatus === "complete" ? "confirmed" : "conditioned",
+          engineVersion: second.value[1].projection.engineVersion }) }
+      }
+      const result = await readPortfolioSnapshot<InternalResult>(host, call, captured, work,
+        { status: "unavailable", reason: "criterion-metric-snapshot-unavailable" })
+      if (!current()) return changed()
+      return result.status === "not-applicable" ? knownSubtotalMetricNotApplicable : structuredClone(result)
+    } catch {
+      return { status: "unavailable", reason: "criterion-metric-unavailable" }
+    }
+  }
+}

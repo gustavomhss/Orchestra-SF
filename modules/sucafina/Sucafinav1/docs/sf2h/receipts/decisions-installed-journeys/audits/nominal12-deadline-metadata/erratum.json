@@ -1,0 +1,293 @@
+{
+  "schema": "sf-m52-nominal12-metadata-erratum-v1",
+  "id": "M52-NOMINAL12-UI-DEADLINE",
+  "state": "CORRECTED_EXACT_SOURCE_VERIFIED",
+  "classification": "METADATA_ONLY_NO_PRODUCT_OR_TEST_CHANGE",
+  "source52": "ACTIVE",
+  "owned_source": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
+  "run_id": 43676977918,
+  "W": "c4883ae51636a4ebbcf9274994e96e2725214e48",
+  "S": "de56ec928b22ffbaf3b4110262bce3dec0f1441c",
+  "incorrect_field": "ui_deadline_ms",
+  "incorrect_value": 15000,
+  "corrected_value": 10000,
+  "source_audit": {
+    "path": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/source-audit.json",
+    "bytes": 7313,
+    "sha256": "80c8637ea6a3e632e66d9425f76bf26cf83a8179b3b5ed6b34f2750bbe4feb17",
+    "git_blob": "d455bc70d3b4b766338aba5ab6512f542853ae2a"
+  },
+  "source_path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+  "source_blob": "0a330a1377326e3ea919b4714cada83a208efc39",
+  "source_sha256": "9c77905882d364bb44bcfeee017d6ea4856ffdcc0e13f9d39b591309e0b0f546",
+  "source_refs": [
+    {
+      "label": "W12",
+      "ref": "c4883ae51636a4ebbcf9274994e96e2725214e48",
+      "blob": "0a330a1377326e3ea919b4714cada83a208efc39",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4883ae51636a4ebbcf9274994e96e2725214e48/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts"
+    },
+    {
+      "label": "W11",
+      "ref": "fb9ed54674e7792008e8d1bd7425adc7effe8c09",
+      "blob": "0a330a1377326e3ea919b4714cada83a208efc39",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/fb9ed54674e7792008e8d1bd7425adc7effe8c09/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts"
+    }
+  ],
+  "mechanism": {
+    "send_definition_line": 138,
+    "timer_line": 140,
+    "fetch_signal_line": 142,
+    "clear_timeout_line": 149,
+    "compare_click_handler_line": 163,
+    "compare_send_line": 169
+  },
+  "changed_artifacts": [
+    {
+      "path": "m52-work/nominal12-envelope.json",
+      "before": {
+        "path": "m52-work/nominal12-envelope.json",
+        "bytes": 1533,
+        "sha256": "228fcb9d3b7eeea0fe266bed3ec30aaf68fc04b5a98706303368b36cd2f7fd1f",
+        "git_blob": "c90f3c3b624a8399c620f2363ba4bb04035b7520"
+      },
+      "after": {
+        "path": "m52-work/nominal12-envelope.json",
+        "bytes": 1533,
+        "sha256": "217d6c2e2bda9b1659ba1e9dc5c33504ba31dac1281719c65ccfd30fc1157604",
+        "git_blob": "633a4946cb689bb75e49e74e5a05d2b5531f0be7"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/nominal12-envelope.json"
+    },
+    {
+      "path": "m52-work/nominal12-dispatched-envelope.json",
+      "before": {
+        "path": "m52-work/nominal12-dispatched-envelope.json",
+        "bytes": 1533,
+        "sha256": "228fcb9d3b7eeea0fe266bed3ec30aaf68fc04b5a98706303368b36cd2f7fd1f",
+        "git_blob": "c90f3c3b624a8399c620f2363ba4bb04035b7520"
+      },
+      "after": {
+        "path": "m52-work/nominal12-dispatched-envelope.json",
+        "bytes": 1533,
+        "sha256": "217d6c2e2bda9b1659ba1e9dc5c33504ba31dac1281719c65ccfd30fc1157604",
+        "git_blob": "633a4946cb689bb75e49e74e5a05d2b5531f0be7"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/nominal12-dispatched-envelope.json"
+    },
+    {
+      "path": "m52-work/p9-publication/ci/nominal12-request.json",
+      "before": {
+        "path": "m52-work/p9-publication/ci/nominal12-request.json",
+        "bytes": 1533,
+        "sha256": "228fcb9d3b7eeea0fe266bed3ec30aaf68fc04b5a98706303368b36cd2f7fd1f",
+        "git_blob": "c90f3c3b624a8399c620f2363ba4bb04035b7520"
+      },
+      "after": {
+        "path": "m52-work/p9-publication/ci/nominal12-request.json",
+        "bytes": 1533,
+        "sha256": "217d6c2e2bda9b1659ba1e9dc5c33504ba31dac1281719c65ccfd30fc1157604",
+        "git_blob": "633a4946cb689bb75e49e74e5a05d2b5531f0be7"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/p9-publication/ci/nominal12-request.json"
+    },
+    {
+      "path": "m52-audit/nominal12-43676977918/nominal-12-receipt.json",
+      "before": {
+        "path": "m52-audit/nominal12-43676977918/nominal-12-receipt.json",
+        "bytes": 114591,
+        "sha256": "95b4e3b44066d6e84b09faef8a9490d870e7f48bcc494c3addd08ba8bf0a94e6",
+        "git_blob": "dddfb7532bc09d20b903f591f04fffd13ac0bad2"
+      },
+      "after": {
+        "path": "m52-audit/nominal12-43676977918/nominal-12-receipt.json",
+        "bytes": 115798,
+        "sha256": "bed4754e095a303c7d83df90b2524578981421da831dfa9d46a64352d4e6eeb7",
+        "git_blob": "64a440144d82b2b7489dd7ed54307f1920bad1a8"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-audit/nominal12-43676977918/nominal-12-receipt.json"
+    },
+    {
+      "path": "mission52-criteria-v12-pending.json",
+      "before": {
+        "path": "mission52-criteria-v12-pending.json",
+        "bytes": 952206,
+        "sha256": "8617a1c5f5b23c7f1211143f84df136c8f07a34c791b25c1a8ee0587360bdc03",
+        "git_blob": "eb86773a448d2705b910046dbf3f6aa8fc0ca082"
+      },
+      "after": {
+        "path": "mission52-criteria-v12-pending.json",
+        "bytes": 952986,
+        "sha256": "ac3729d144ba94924c68aa95d6889b58f5a7158c168ef0f67b056d8c0fba8a50",
+        "git_blob": "166168bb2807978228d415687528f7de98239377"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/mission52-criteria-v12-pending.json"
+    },
+    {
+      "path": "m52-work/criteria-v12-pending-integrity.json",
+      "before": {
+        "path": "m52-work/criteria-v12-pending-integrity.json",
+        "bytes": 2821,
+        "sha256": "53d5bd585b6b45c013e7a1eb026559dffb2af214625c01e351446f37fcfe4d3b",
+        "git_blob": "e7c20980094fcc30f2fb4ba4931db3d431678520"
+      },
+      "after": {
+        "path": "m52-work/criteria-v12-pending-integrity.json",
+        "bytes": 2821,
+        "sha256": "dc6d661736eaab4bbb39a848e741f74344ed590ac8c742319ea32b6cae8320ee",
+        "git_blob": "329da308f1285209fcc554c6b9eedd745fff251a"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/criteria-v12-pending-integrity.json"
+    },
+    {
+      "path": "mission52-criteria-v12-final.json",
+      "before": {
+        "path": "mission52-criteria-v12-final.json",
+        "bytes": 1036297,
+        "sha256": "d72e17bc07885cc5f1bb3c294eb7aa1e3ab8104b9be55310f918527d7df7a5f1",
+        "git_blob": "fff7713084523be6cc5f740acc584ecbc7e24d40"
+      },
+      "after": {
+        "path": "mission52-criteria-v12-final.json",
+        "bytes": 1038306,
+        "sha256": "43978b3bacf1fe99f927180f7b8c02eb55903652af3d894c3e19abae24d77343",
+        "git_blob": "c7a75b4786d0415ee695d4d9836e860662be3743"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/mission52-criteria-v12-final.json"
+    },
+    {
+      "path": "m52-work/criteria-v12-final-integrity.json",
+      "before": {
+        "path": "m52-work/criteria-v12-final-integrity.json",
+        "bytes": 3100,
+        "sha256": "1f39680f5c8b4426ca5475d1b3be3227eaa29b6d142b496e128bb9a883e9ad92",
+        "git_blob": "74c54fc9cfa1228eb65503487f07e03394d40d79"
+      },
+      "after": {
+        "path": "m52-work/criteria-v12-final-integrity.json",
+        "bytes": 3100,
+        "sha256": "1e4fd961b1196effa3b93c1b434f9ba892fc3d3275735bb00bc11ff85d483af4",
+        "git_blob": "a79716381067c515636def43ed9433eac44c8a16"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/criteria-v12-final-integrity.json"
+    },
+    {
+      "path": "m52-work/update-criteria-v12-pending.py",
+      "before": {
+        "path": "m52-work/update-criteria-v12-pending.py",
+        "bytes": 18238,
+        "sha256": "ed64d47483ad1c0b47e9aa06048807d473f5a904297505f2d809435d78ab6f11",
+        "git_blob": "b5b65496e1bba8ec4a4a3e4f260d5904baeedc66"
+      },
+      "after": {
+        "path": "m52-work/update-criteria-v12-pending.py",
+        "bytes": 18734,
+        "sha256": "6369f0e8b0edd6d0c300e06637bb9166fc01f5f8ef71a88145e83e45e53ffd93",
+        "git_blob": "eb638f70c0cd82966d5821db92b1ab2e90d79e10"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/update-criteria-v12-pending.py"
+    },
+    {
+      "path": "m52-work/normalize-nominal12.py",
+      "before": {
+        "path": "m52-work/normalize-nominal12.py",
+        "bytes": 10096,
+        "sha256": "d861c4cc7240304ba9c2216e1b4571373def4362f7e8999dd63b9316c05f44aa",
+        "git_blob": "8b08fc332c90f75e2197901c227eacde175d7364"
+      },
+      "after": {
+        "path": "m52-work/normalize-nominal12.py",
+        "bytes": 11263,
+        "sha256": "6b96e4979b58ecfa029af3d6c3897a8a9c9175ba48a51492b550490633a39397",
+        "git_blob": "ccb1776fe318e8091d3e8d3fc686e4bf1668e618"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/normalize-nominal12.py"
+    },
+    {
+      "path": "m52-work/update-criteria-nominal12-final.py",
+      "before": {
+        "path": "m52-work/update-criteria-nominal12-final.py",
+        "bytes": 23254,
+        "sha256": "435d6c48fd7e2f0c1882eedea39bf48d4f85c21ba41e658e8ee26405d6b14dc0",
+        "git_blob": "3a5ce6acbf1736a0ab55f8cef4b9e65ec8c72c57"
+      },
+      "after": {
+        "path": "m52-work/update-criteria-nominal12-final.py",
+        "bytes": 23408,
+        "sha256": "c89dc7830e1488bf28a8e4272897f60af5f4f38335f73c26f4adfd9e268f0571",
+        "git_blob": "2deb1074e90b1f6e4fd7dc8adf8850304ba41028"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/update-criteria-nominal12-final.py"
+    },
+    {
+      "path": "m52-work/p9-publication/delivery/p9-evidence-manifest.json",
+      "before": {
+        "path": "m52-work/p9-publication/delivery/p9-evidence-manifest.json",
+        "bytes": 22182,
+        "sha256": "608ca0a6e525f7af44c2a03d3aa92a73e93f4721b75f3db01bc690c3baa65f3d",
+        "git_blob": "b738acfec6295ad84b6bdcc6378c3c22d013f693"
+      },
+      "after": {
+        "path": "m52-work/p9-publication/delivery/p9-evidence-manifest.json",
+        "bytes": 22182,
+        "sha256": "de0384ebb56ac5bd155e870f03b37c2c8f05b4b0ed87a73a70cf9f156fa5e476",
+        "git_blob": "a113f378e42ccd2f0ed9e9ad3a141f8c0cc4019a"
+      },
+      "preimage_backup": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/pre/m52-work/p9-publication/delivery/p9-evidence-manifest.json"
+    }
+  ],
+  "raw_runtime_inputs_unchanged": [
+    {
+      "path": "m52-audit/nominal12-43676977918/artifact.zip",
+      "bytes": 3619081,
+      "sha256": "77e83d5cb24f6af50c8c158e393705d082d1147022a5013fc9f2cc9db7e4dfb0",
+      "git_blob": "a7eea61406050e26ace26ec9f8787248dea97989"
+    },
+    {
+      "path": "m52-audit/nominal12-43676977918/runtime-extracted.json",
+      "bytes": 87492,
+      "sha256": "7549c51ec55bafee717639942097754c69e11757ab9f7fe53cfcc4b31ab31aea",
+      "git_blob": "9c63e2f5909c3131670cce4aaa17e1b5f5182cc5"
+    },
+    {
+      "path": "m52-audit/nominal12-43676977918/extracted/test-ci-evidence/playwright-runtime.json",
+      "bytes": 122404,
+      "sha256": "79724265ee15198c17b2087c8f8d806971b73c8e3060f4c10caff1d9340067c5",
+      "git_blob": "98295001569996983910b73a55e83f8af955ee36"
+    },
+    {
+      "path": "m52-audit/nominal12-43676977918/extracted/test-ci-evidence/playwright-selection.json",
+      "bytes": 5018,
+      "sha256": "7d82310862746091d2e0247d2ffab54c1834ebd796bb8c9c89d45d0a99ce75a9",
+      "git_blob": "62ee8e1a6d8bbd0b19d096fe6a49b25880fb9703"
+    },
+    {
+      "path": "m52-audit/nominal12-43676977918/extracted/test-ci-evidence/request.json",
+      "bytes": 322,
+      "sha256": "dc660f621049d2e868ce1700a9366148e4ea49e8db74e42fdb66975fe77e3f1f",
+      "git_blob": "75295b9effd8d1511e1400f2e90ceadb4ce1cb44"
+    }
+  ],
+  "preserved": {
+    "runtime_cases_and_statuses": true,
+    "summary_3PASS_2FAIL": true,
+    "statistics": true,
+    "hosted_runtime_artifact": true,
+    "request_json": true,
+    "W_S_and_product_tree": true,
+    "original83_records": true,
+    "all146_observed_fragments": true,
+    "supplemental_unit03_PASS50": true,
+    "prior_run_histories": true,
+    "test_budget_all5_ms": 180000,
+    "retries": 0,
+    "source52_ACTIVE": true
+  },
+  "limits": [
+    "The actual browser send() timer schedules abort after10000ms in both immutable W11 and W12 sources. This does not measure when the request reached or completed on the server.",
+    "No code, workflow, test assertion, UI action, timeout budget, authorization policy or runtime result was changed.",
+    "The original16,729ms step includes reopening and is not HTTP latency; ERR_ABORTED root cause remains unproved by this metadata correction.",
+    "The prepared packet manifest was refreshed only for its existing nominal12-request entry. Root may include this erratum and source audit during its normal final manifest assembly.",
+    "No GitHub mutation, product execution or test dispatch was performed by this reviewer."
+  ]
+}

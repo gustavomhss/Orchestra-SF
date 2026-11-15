@@ -1,64 +1,67 @@
-# Mission52 — source hosted checks compared exactly with mission44
+# Missão52 — segundo check da source
 
-The authorized source check completed with **failure**, with the same 130 TypeScript diagnostics, 43 guard gates and 18 warnings as mission44. No diagnostic site, code, full message or continuation changed. No guard finding was added or removed. These are still failures; the comparison does not create a waiver or an acceptance result.
+O run **43676572309 terminou com FAIL**: `bun typecheck` saiu com código **2** e os guards com código **1**. Os resultados são exatamente herdados dos checks01 e44: **130 diagnósticos TypeScript em 44 arquivos, 43 GATE e 18 WARN**, sem achados novos, removidos ou com texto diferente. Essa comparação não concede waiver, PASS de critérios ou aceitação global.
 
-## Exact run and source
+## Identidade da execução
 
-| Field | Evidence |
+| Campo | Evidência |
 | --- | --- |
-| Workflow run | [43661892542](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43661892542) |
-| Job / attempt | [132652817225](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43661892542/job/132652817225) / 1 |
+| Run | [43676572309](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43676572309) |
+| Job | [132697917208](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43676572309/job/132697917208) |
 | Branch | `astra-check-wp11` |
-| Checked source | `14360372153592d944aa10e42bcac1b6d86680f5` |
-| Checked tree | `47341d2756b567632ef450555493cefbdd4bdb68` |
-| Workflow blob | `3b361b6b22c7c5628d6b149321f73934ea5f9a84` — unchanged from44 |
-| Guard base | `a1d37698a7bb097c1578f827eba6a19b9917ef07` — unchanged from44 |
-| Merge base | `9e4f3d35833f9b2cea6abdf58f42331f3973d9bf` — unchanged from44 |
-| Artifact | `14140103060` / `astra-wp11-checks-14360372153592d944aa10e42bcac1b6d86680f5-1` |
-| ZIP SHA256 | `aa9dd24c62ae44c770bb46dd061816bfaf811fa90abab61fba77e05583d35beb` — matches GitHub artifact digest |
-| Reference run44 | `43650398020` / job `132617339891` |
-| Reference source44 | `ff0bd96d1303ef55204d498f286ba0da8543419d` |
+| Source efetivamente verificada | `ea8003b703bae61f9a4452261a7780cc38f0c754` |
+| Árvore efetivamente verificada | `739adbafb5b5c95c878895ae1007e685a43fe197` |
+| Pai/source52 preservada | `554e4e692318c952fdd1b365eb233d7c1b6d8cf5` |
+| Único delta do commit de check | `docs/sf2h/receipts/decisions-installed-journeys/checks/source-02-request.json` |
+| Workflow | `.github/workflows/astra-wp11-check.yml`, blob `3b361b6b22c7c5628d6b149321f73934ea5f9a84` |
+| Guard base | `a1d37698a7bb097c1578f827eba6a19b9917ef07` |
+| Merge base | `9e4f3d35833f9b2cea6abdf58f42331f3973d9bf` |
+| Artefato | `14146885018`, 8.510 bytes, três membros |
+| ZIP SHA256 | `cc0c42cfb32cef274ad33e2a171fee7dfed7440060ca72741049c527bbfbf0ce` |
 
-Only run43661892542 was retrieved for check52. Root's earlier c106 source pointer push carried `[skip ci]`; no separate check run was created for it. This read-only review performed no dispatch or rerun. The evidence set contains three exact ZIP members: source.json, typecheck.log and guards.log. The decoded job log was also saved and correlated with artifact line numbers.
+O ZIP foi obtido pelo GitHub MCP e hidratado pela referência de arquivo emitida pelo conector. Tamanho e SHA256 coincidem com os metadados do GitHub. `source.json` coincide com o JSON emitido no job, linha359. O workflow, guard base e merge base são os mesmos dos dois baselines.
 
-## Exact differences
+## Comparação exata
 
-| Comparison | Before44 | Check52 | Added | Removed | Changed text |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| TypeScript diagnostic sites/codes | 130 | 130 | 0 | 0 | 0 |
-| Paths with TypeScript diagnostics | 44 | 44 | 0 | 0 | 0 |
-| Guard GATE findings | 43 | 43 | 0 | 0 | 0 |
-| Guard WARN findings | 18 | 18 | 0 | 0 | 0 |
+| Medida | Baseline44 | Checks01 | Checks02 | Novos/removidos no02 |
+| --- | ---: | ---: | ---: | ---: |
+| Diagnósticos TypeScript | 130 | 130 | 130 | 0 / 0 |
+| Arquivos com diagnósticos | 44 | 44 | 44 | 0 / 0 |
+| Guard GATE | 43 | 43 | 43 | 0 / 0 |
+| Guard WARN | 18 | 18 | 18 | 0 / 0 |
 
-TypeScript exit code: **2**. Guardrails exit code: **1**. All 130 diagnostic records match by repository-normalized path, line, column, TS code, first message and every continuation line. All61 guard records match by severity, path/line location, rule and message. There are no line-movement substitutions or text-only exceptions in this comparison.
+Referências: baseline44 run`43650398020`/job`132617339891`/source`ff0bd96d1303ef55204d498f286ba0da8543419d`; checks01 run`43661892542`/job`132652817225`/source`14360372153592d944aa10e42bcac1b6d86680f5`.
 
-The complete normalized file stores every current diagnostic/finding, exact reference job-log line, current artifact-log line and current job-log line, with explicit empty added/removed/text-variation arrays. The two text variations recorded by mission44 relative to its own older baseline are not reused: check52 matches mission44's actual messages exactly, including those two sites.
+O arquivo inteiro `typecheck.log` é **idêntico em bytes** aos dois baselines, SHA256 `5a7e2134901935a8a940e1d907c4d1e667c20379309769972657a72fbb799ef4`. Os130 registros também foram comparados por path normalizado, linha, coluna, código, mensagem e todas as continuações. Não houve substituição por “mesmo tipo de erro” nem tolerância de deslocamento de linha.
 
-## Ownership and inherited findings
+Os61 registros de guards coincidem por nível, localização, regra e mensagem. O único delta textual de `guards.log` em relação ao01 é o resumo de alcance: **1.173 → 1.364 paths alterados**. Permanecem78 regras,43 gates,18 warnings e0 erros do motor de guards. Isso explica o SHA diferente do log de guards e não representa novo finding.
 
-The literal write_paths in the pinned mission52 package were applied separately from the changed-path set. **All130 TypeScript diagnostics are outside mission52's owned paths and outside the nine material paths changed since the check44 source.** The source branch has not absorbed current stack shared/other-owner changes, so unchanged inherited diagnostics are evidence about this source commit, not a claim about all current integration candidates.
+## Ownership e limites dos achados
 
-All43 gates are the same `agent-scratch` findings under prior WP11 receipt paths outside mission52's write scope. The18 warnings consist of one inherited binary artifact warning, ten inherited dependency warnings and seven timeout warnings. Five timeout warnings lie in the owned Decisions spec, which has other mission52 edits, but the timeout statements themselves remain exactly `test.setTimeout(180_000)` at lines13,22,36,88,136. Their original blob is `2d9c867af87fa0a26b182365b1780232b49bcaf9`; current checked blob is `b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf`. Thus those warnings are inherited relative to origin/dev and are not evidence of a mission52 timeout increase.
+Todos os130 diagnósticos estão fora dos paths próprios literais da missão52 e fora dos paths de código alterados desde os checks01 e44. A comparação GitHub01→02 lista200 paths:198 de documentação e os dois helpers próprios P8, `closure-response.ts` e `journey.ts`. Os stats zerados do formato compacto do conector não foram interpretados como ausência de edição.
 
-The three distinct axes are preserved per record: whether the path is owned by52, whether the source path changed after check44, and whether the finding is identical to44. No inherited failure was silently reclassified as passed. No guard source, workflow, timeout or waiver was modified by this review.
+Os43 gates continuam sendo `agent-scratch` dos recibos históricos `WP11/final-20261114/evidence/`, fora do escopo de escrita52. Os18 warnings são1`binary-added`,10`dep-new-added` e7`test-timeout-raised`.
 
-## Scope limit
+Cinco warnings de timeout pertencem ao spec Decisões. O blob verificado continua `b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf`, igual ao checks01: as cinco linhas13,22,36,88,136 continuam exatamente `test.setTimeout(180_000)`. As advertências já existiam no baseline44 em relação a `origin/dev`; nenhuma duração foi aumentada pela missão52.
 
-The unchanged workflow runs `bun typecheck` in `modules/sucafina`, expanding to `bun --cwd Sucafinav1 typecheck` and `tsgo --noEmit`, followed by `bun run check:guards --base origin/dev`. Some CLI source diagnostics arise through the Sucafina import graph. This does not independently typecheck all CLI, app-shell or E2E packages.
+O índice normalizado conserva cada diagnóstico/finding e seus apontadores de linha no artefato, job atual e baselines. Arrays de novos, removidos e variações permanecem explicitamente vazios. Nenhum erro herdado foi reclassificado como corrigido.
 
-The run checks source14360372153592d944aa10e42bcac1b6d86680f5, including the owned narrow HTTP factory. It does not compile or validate the proposed shared case-route adapter, C23/C25 host binding or installation body patch as a complete isolated composition. It does not replace any of the five nominal UI journeys, their mandatory financial case, or later same-composition validation.
+## Alcance da prova
 
-## Files
+O workflow executou `bun typecheck` em `modules/sucafina`, expandido para `bun --cwd Sucafinav1 typecheck` e `tsgo --noEmit`, e depois `bun run check:guards --base origin/dev`. Os diagnósticos CLI transversais vêm do grafo de imports de Sucafina; esta execução não é um typecheck independente de todo CLI, app-shell ou E2E.
 
-- `checks/source-01.json`: complete diagnostic and guard index, zero-diff arrays, exact source/run/artifact metadata and scope limits.
-- `compare44-source.json`: read-only GitHub compare metadata and patches for the nine material changed paths; predecessor44 terminal documentation is also in this comparison and is not attributed to52.
-- `scope-inputs.json`: pinned mission52 write scope and exact before/after timeout evidence.
-- `extracted/`: exact three artifact members; retained locally for reproducibility, not proposed as repository raw-log additions.
+Este resultado pertence à source `ea8003…`, **não à composição isolada P9 sobreC41**. Os módulos compartilhados de métrica, captura histórica e seus testes inertes não foram promovidos a código ativo na source52 por este check. Logo este run não compila nem qualifica por transferência o W/S de P9, não substitui as cinco jornadas UI e não constitui prova de native, restart, AM ou aprovação financeira.
 
-Artifact member SHA256 values:
+**Disposição: FAIL herdado permanece aberto; acceptance NOT_GRANTED; GLOBAL_RELEASE false.** O revisor realizou apenas leituras MCP e processamento estático de bytes/ZIP/JSON. Nenhum produto, teste, compiler, guard, dispatch ou rerun foi executado localmente.
 
-- `guards.log`: `584c2006ea4f157522b75d1ccfea1d96d6537fc0553682e680bedf6ae569a95f`
-- `source.json`: `2cbe10a2006a8d93cb2487d63f3fd3f951a5319cda4fffbb49f78c0bb1638bd9`
-- `typecheck.log`: `5a7e2134901935a8a940e1d907c4d1e667c20379309769972657a72fbb799ef4`
+## Arquivos e integridade
 
-Normalized JSON SHA256: `2a3ec402ff61922153a9e3acf7b58d3365b3001c043de0ffeb4d2227a1f1cc8a`.
+- `checks02-normalized.json`:130 diagnósticos,61 findings, diferenças vazias, identidades e limitações completas.
+- `parsed-diagnostics.json` e `parsed-guards.json`: índices extraídos dos dois logs do artefato.
+- `compare01.json`, `jobs.json`, `artifacts.json`, `workflow.json`, `spec.json` e `head_commit.json`: respostas primárias de leitura do GitHub MCP.
+- `artifact.zip`, `extracted/` e `job-132697917208.log`: evidência bruta retida em scratch; não se propõe adicioná-la como logs brutos à source.
+- `normalize_checks02.py`: processamento de dados reproduzível, sem invocar produto ou testes.
+
+SHA256 dos membros: `source.json`=`4df5718c3848091cb12a78c3a6e15845c4d66e4127f6369d2d0248001aa97398`; `guards.log`=`ebecf5136bc61233e974964bf489e7a954a52bcdd86f1303adebfdbf232192f3`; `typecheck.log`=`5a7e2134901935a8a940e1d907c4d1e667c20379309769972657a72fbb799ef4`.
+
+SHA256 do job completo: `8097c5514a4fb4f8233f63151d53dce569427e8bbab28b82f326d244210abb72`. Typecheck exit2 na linha864; guard exit1 na linha997; resumo dos guards na linha934.

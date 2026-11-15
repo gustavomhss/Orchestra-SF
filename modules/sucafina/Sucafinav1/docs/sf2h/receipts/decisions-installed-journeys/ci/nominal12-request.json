@@ -1,0 +1,51 @@
+{
+  "schema": "sf-m52-nominal-envelope-v1",
+  "mission": 52,
+  "nominal": 12,
+  "state": "DISPATCHED_AWAITING_RESULT",
+  "base": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+  "base_tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
+  "base_symbol": "C41",
+  "owned_source": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
+  "owned_source_tree": "e66b3d1046e3843968ddb48ea478a57456758e99",
+  "W": "c4883ae51636a4ebbcf9274994e96e2725214e48",
+  "W_tree": "c96d49c3942283d9beb445d80ba08e3f1538b471",
+  "S": "de56ec928b22ffbaf3b4110262bce3dec0f1441c",
+  "S_tree": "7faa8bb486b78f1656d6b19db2b256d14bbabc23",
+  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "branch": "ci-run-linux-astra-wp11-c4883ae5-3619f1fd-m52-12",
+  "overlay_count": 31,
+  "count": 5,
+  "timeout_ms": 180000,
+  "retries": 0,
+  "repeatEach": 1,
+  "workers": 1,
+  "ui_deadline_ms": 10000,
+  "unit_gate": {
+    "run": 43676716309,
+    "job": 132698352149,
+    "cleanup_job": 132698758769,
+    "state": "PASS",
+    "pass": 50,
+    "fail": 0,
+    "expects": 306,
+    "duration_ms": 2700,
+    "scope": "one selected supplemental file; not UI replacement"
+  },
+  "authority": {
+    "source52": "ACTIVE",
+    "target": "71_ACK_OBSERVED_BOUNDED",
+    "requested_handoff": "47",
+    "target_writes52": 0
+  },
+  "GLOBAL_RELEASE": false,
+  "dispatched_at": "2026-11-15 04:29:17 UTC",
+  "dedup": {
+    "at": "2026-11-15 04:28:51 UTC",
+    "latest_runs": 100,
+    "active_wp11": 0,
+    "exact_S": 0
+  },
+  "run_id": 43676977918,
+  "created_at": "2026-11-15T04:29:19Z"
+}

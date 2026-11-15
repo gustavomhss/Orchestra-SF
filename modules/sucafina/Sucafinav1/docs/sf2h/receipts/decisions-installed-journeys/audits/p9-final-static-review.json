@@ -1,0 +1,623 @@
+{
+  "schema": "sf2h.mission52.p9-independent-static-review.v1",
+  "recorded_at": "2026-11-15T04:26:14.650468+00:00",
+  "reviewer": "/root/composition_audit",
+  "verdict": "PASS_STATIC_NO_RUNTIME_QUALIFICATION",
+  "GLOBAL_RELEASE": "HOLD",
+  "blocking_findings": [],
+  "scope": "Read-only GitHub MCP and textual scratch review/rebase. No product execution, tests, tsc/build, repository checkout, remote mutation or dispatch.",
+  "frozen_base": {
+    "label": "C41",
+    "sha": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
+    "parent": "eb58cd9e9f8125d879bff260d6d794264b9dc53a"
+  },
+  "reviewed_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "preimage": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "postimage": "2b8aa07e730bdc73891b14faced899e6f54ee487",
+      "bytes": 9847,
+      "sha256": "e0d89920ffb1c707ce6dc56cfa93d01fc4904d20a341fa824cabd0399666c870"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ledger-outbox.ts",
+      "preimage": "393aebdac3b6b5c80b41a1ca73227413563ad440",
+      "postimage": "8e097896028878d2072239858534ed99c2463207",
+      "bytes": 6698,
+      "sha256": "a18a32502d1f8d717402115a13bc73ac29546258ab768de14b3a12f2bf2d36bb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "preimage": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+      "postimage": "ca21c3690f71d28c04c4bbd5045aa8389c42d384",
+      "bytes": 42303,
+      "sha256": "220d8b0af77a33060b229604024663df1ed8ff33b34978727fbee3a19e134861"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/choice-source-history.ts",
+      "preimage": null,
+      "postimage": "791de0d1ea25c0488c9124157d21f18cd3faf315",
+      "bytes": 14576,
+      "sha256": "e1f2eaa24a86a10a5e687ec92a3a1067af0d9ebb3eeba400f88325c91bb8f7fb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "preimage": "2e7b312561f3f027ab070c61e15ecb6886fa169c",
+      "postimage": "1400fa4894c55e99ae7fa18c809be9c2298fc49d",
+      "bytes": 69514,
+      "sha256": "0b512210e303e3907d0033fd511fd5e400e219b28215fba4fde8b457bee04357"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "preimage": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+      "postimage": "c7f8b5e31b835632fdbe6b6c195ead5f304838f1",
+      "bytes": 72085,
+      "sha256": "67509203052558b2f73d4b782d8bf49aab90aa20e8a6bfbd4145dd57e0173a54"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "incremental_preimage": "9d17760c418ee9b48b97443d90a994c31cc415f5",
+      "postimage": "8c0548252444adf21acc7e6bdc206fca016ed5f6",
+      "bytes": 12673,
+      "sha256": "b794c497d177c1eb7a1fd43315072c133f680de02f2995125050f845372dcd4c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "preimage": null,
+      "postimage": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "bytes": 38618,
+      "sha256": "fad6ccb9cab9b6399dd4a2ef3a4f9ee11da4c94be7065d4e76e0b72a416cec96",
+      "test_cases": 50
+    }
+  ],
+  "resolved_findings": [
+    {
+      "id": "P9-SNAPSHOT-IDENTITY",
+      "severity": "blocking-before-qualification",
+      "former_helper": "133149a2076db8ce48a810178915fff42d168e63",
+      "finding": "LocalStore.currentSnapshots returns detached clones on every call; object-reference equality rejected the legitimate held C08 observation.",
+      "resolution": "Compare canonical digest of complete snapshots while retaining real producer, Request, private lease, binding and function identities.",
+      "closed_by": "791de0d1ea25c0488c9124157d21f18cd3faf315"
+    },
+    {
+      "id": "P9-FINAL-EGRESS-WINDOW",
+      "severity": "blocking-before-qualification",
+      "former_helper": "2ba11396ce2700fb270dbd269df218fa55e26c2d",
+      "former_bcs": "7a44dfcff93fef65c38c02344ac650b4e5598865",
+      "finding": "The final private reader and outer BCS wrapper had asynchronous revalidation after the last protected state read; a concurrent mutation could invalidate the case/outbox anchor before the stale capture returned.",
+      "resolution": "Final outbox state.read now holds nested independently admitted cases reads, case authorization and pinned host revalidation within the same canonical C08 scope; final cloned cases/outbox equality is checked there. After completion only synchronous transport pins and clone remain. BCS adds no further asynchronous revalidation.",
+      "closed_by": [
+        "791de0d1ea25c0488c9124157d21f18cd3faf315",
+        "1400fa4894c55e99ae7fa18c809be9c2298fc49d"
+      ]
+    }
+  ],
+  "domain_review": {
+    "atomicity": "Optional capture executes only in the existing new-choice transaction for cases plus outbox. It does not add a namespace grant, source fence, transactionAll entry point or separate commit.",
+    "replay": "Operation replay and prior C08 receipt return before callback/work. Existing choices/outbox entries are not backfilled or replaced by replay.",
+    "legacy": "Absent optional callback preserves legacy behavior; explicit unsupported shape returns an empty capture array. A supported callback failure is not converted to successful unsupported output.",
+    "authority": "Request/private lease/binding/command identity, function identities, selection digests, authorization and mutation verification remain checked after callback awaits. No approval or financial grant is added.",
+    "provenance": "Captured records are actual domain projector outputs for the exact unique Planner refs of the real choice. Choice/event/outputDigest, full eventDigest, writer, time, source refs, policy version and capture digest are bound to canonical ledger/outbox. Pending entries do not become Atlas publications.",
+    "supported_scope": "UI, USD, nonexecuting choice with only Planner-version evidence, no scenario operations or assumptions. Unsupported legacy shapes do not fabricate history.",
+    "event_digest_v3": "Full ledger event digest covers rationale, lifecycle, factual gaps and considered actions in addition to the event reference/output digest."
+  },
+  "host_review": {
+    "capture": "Requires actual current C08 snapshots and exact full canonical contents; pins projector and transport; revalidates around real producer calls. Copies refs/projections and rejects producer mutation or content drift.",
+    "reader": "Requires current outbox and cases namespace authority, current case participation and protected exact historical anchors. Current case may advance beyond the historic choice version, while original capture identity remains immutable. Final read is linearized under C08.",
+    "recursion": "Reader uses state.read plus plain case authorization, not cases.read or the BCS evidence resolver; it does not recursively call itself.",
+    "bcs": "Atlas original capture remains first. The new fallback is an independently protected choice capture, and neither publishes nor assumes an Atlas receipt. Existing Atlas69 admission and final egress checks are preserved.",
+    "record_history_byte_identical_to_C37": true,
+    "record_history_suffix_sha256": "006d7ea6c73a7ee9032dd5a4c4dc17110b13e13f1feab0623cba9f4a76faf740",
+    "current_proofs_retained": "The unchanged recordHistory still requires current source ACL, physical incarnation continuity, fresh projections, repeated protected original-capture observations and canonical differences.",
+    "portfolio_wiring": "Only the default preparation path receives the real business.projectPlannerEvidence capture callback. Explicit custom preparation remains without an implicit capture callback."
+  },
+  "unit_static_review": {
+    "cases": 50,
+    "prior_cases_preserved": 47,
+    "new_cases": [
+      "concurrent choice mutation at final egress",
+      "concurrent outbox entry removal at final egress",
+      "concurrent captured-source bytes mutation at final egress"
+    ],
+    "real_foundation": "Fixture uses canonical SQLite LocalStore, SourcePersistence, C08 state provider and private UI lease; boundary authorization/projector doubles do not replace production persistence.",
+    "concurrency": "Competing writer promise is created outside the reader C08 scope. Under the held lock the hook waits only for the writer-start gate, never for its transaction completion; after reader completion the writer is drained. Without the lock it commits before revalidation returns and the old stale-return behavior fails.",
+    "cleanup": "Rejected writer promise has an immediate rejection observer and is still awaited; finally clears the hook, releases gates, drains the writer and closes the fixture.",
+    "no_test_run_by_reviewer": true,
+    "not_a_substitute_for_five_ui_journeys": true
+  },
+  "composition": {
+    "C35": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "C37": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "C40": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "C41": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "C35_to_C37": "2 commits/88 paths; only relevant overlay collision BCS. Atlas69 producer/egress and privacy73 changes preserved.",
+    "C37_to_C40": "3 commits/248 paths: Auth72, BI62, frozen Operations75. Only overlay collision Microsoft fixture. Auth72 map and current LocalStore retained.",
+    "C40_to_C41": {
+      "commits": 1,
+      "changed_paths": 155,
+      "candidate_paths": 31,
+      "intersection": [
+        "apps/cli/src/sucafina-product/business-services.ts"
+      ],
+      "preservation": "Merged post equals former52 post plus the exact same single dashboard67 preparePrivateDraftRead binding by which C41 changed the old preimage. Other30 candidate paths have no delta in the complete155-file compare."
+    },
+    "Microsoft_map": "Current Auth72 source map preserved; isolated52 companion changes only installation postblob/SHA256/bytes. Historical55 map remains intact. Fixture redirects only the lookup to the isolated companion.",
+    "Runtime59": "Capability is now integrated dependency, not foreign overlay. At C40/C41 eight old59 blobs remain identical; LocalStore d9eaac043514141abb2f1f978a6fd2ceaf4040d6 additionally includes Auth72. currentSnapshots and transactionAll bodies remain unchanged.",
+    "stale_PR_base": "PR40.base.sha 6b8b4090cf3c3ec952986a7f4fc602f1266bf6e0 is an older commit, 68 commits behind C37, not a new target. The direct sf2-stack ref/immutable commit chain is used."
+  },
+  "authority": {
+    "mission52": {
+      "blob": "ee4f18cc45421f300b453b7c385d677b77001ea5",
+      "value": {
+        "schema": "sf2-mission52-authority-v1",
+        "mission": 52,
+        "actor": "S4-A",
+        "state": "ACK52_ACTIVE_BOUNDED_SUCCESSION",
+        "lease_epoch": "decisions-installed-browser52",
+        "recorded_at_utc": "2026-11-14 23:37:35 UTC",
+        "campaign": "sf2h-integral-20261112",
+        "T0": "2026-11-13T04:01:10Z",
+        "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "repository": "gustavomhss/Orchestra-SF",
+        "branch": "astra-wp11",
+        "pr": 40,
+        "authority_source": {
+          "commit": "f2383d1248a130e05a9e6667516023ecea70389e",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/decisions-installed-journeys.json",
+          "direct_user_instruction": "Execute mission52, same astra-wp11/PR40; qualify five original installed Decisions journeys on current corrected composition."
+        },
+        "predecessor": {
+          "mission": 44,
+          "head": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+          "tree": "c82b671766ba4bb8d0c3ef4ee8b2b695a88e1c7c",
+          "handoff_blob": "85ad6d7eef836b04424c6c94474977dff88a41ce",
+          "release_blob": "2b8bdfe3706e103fb81fc75dd5e991e92ffe2a7a",
+          "explicit_authority_ended": true,
+          "pending_work": false
+        },
+        "reconciliation": {
+          "source_head_unchanged": true,
+          "control_head": "f2383d1248a130e05a9e6667516023ecea70389e",
+          "source_comments_reviewed": true,
+          "source_receipts_reviewed": true,
+          "competing_WP11_claim_observed": false,
+          "limit": "Bounded repository evidence plus explicit predecessor terminal; no inference of external process liveness from stale status or silence."
+        },
+        "target": {
+          "branch": "sf2-stack",
+          "pr": 65,
+          "candidate": "C18",
+          "commit": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+          "tree": "8563e04f8751ed786ccdbc086ed6566c410af3fe",
+          "parent": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c",
+          "sole_writer": 47,
+          "authority_ack": "657ddd81e8f8cc6709ea82e7a8acb40c04851d7b",
+          "authority_blob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+          "epoch": "S0-C-e9-browser47"
+        },
+        "installed": {
+          "Procurement37": {
+            "release": "ab2a967125b3c767067797a27b919466020fbd82",
+            "C15": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364",
+            "manifest_blob": "15ad5a0640c312e03d32e7c1cb74187c9d3a3eba",
+            "all_24_postimages_verified": true
+          },
+          "Decisions44": {
+            "C16": "6cc6e94535e48d43f17794e6c6e4d171dfdab18c",
+            "manifest_blob": "3622b492cbeab93ef1c388222dd8558a0c8e7314",
+            "all_4_postimages_verified": true,
+            "spec": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+            "cookie_helper": "81a6863f68fc2b83c4b331c19920c59267b5d060",
+            "installation_fixture": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+            "cookie_contract": "a8865d50f22248d172f106030516e67ec8ee833e"
+          },
+          "C18_delta": "Portfolio43 README/tests and inert receipts only; no Decisions, Procurement, cookie, fixture, workflow or runtime change after C17."
+        },
+        "read_complete": {
+          "pinned_START_WORKFLOW_COMMON": true,
+          "actor_pack": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S4-A.json",
+          "full_pack_via_root_and_bounded_readers": true,
+          "criteria": 83,
+          "criteria_original_statuses_and_proof_bindings_preserved": true,
+          "appendices": [
+            "specs/product-acceptance.md",
+            "specs/resident-runtime.md"
+          ],
+          "AGENTS": [
+            "AGENTS.md",
+            "packages/app-shell/AGENTS.md",
+            "packages/app-shell/e2e/AGENTS.md"
+          ],
+          "Playwright_official": [
+            "best-practices",
+            "actionability",
+            "test-assertions",
+            "locators",
+            "network",
+            "browser-contexts"
+          ],
+          "predecessor_handoff_release_and_manifest": true,
+          "real_nominal_spec_and_helpers": true,
+          "actual_test_ci_workflow_and_request_location_uploader": true
+        },
+        "execution": {
+          "first_action": "Original exact five-case spec on C18, no product overlay; .ci-run.json envelope only.",
+          "request": {
+            "package": "app",
+            "directory": "packages/app-shell",
+            "packageSelector": "packages/app",
+            "runner": "playwright",
+            "args": [
+              "e2e/sucafina/decisions.spec.ts"
+            ],
+            "env": {
+              "ORCHESTRA_CHANNEL": "prod"
+            },
+            "config": "e2e/playwright.production.config.ts"
+          },
+          "one_run_per_WP": true,
+          "dedup": {
+            "latest_100_runs_reviewed": true,
+            "WP11_in_flight": 0,
+            "queue_count": 0,
+            "prior_nominal": 43649103661,
+            "prior_nominal_is_old_cookie_fixture": true
+          },
+          "tests": "NOT_RUN_AT_ACK",
+          "local_product_tests": 0,
+          "local_servers": 0,
+          "epic": 0,
+          "budget_changes": 0,
+          "skips": 0
+        },
+        "write_scope": [
+          "modules/sucafina/Sucafinav1/ui/decision-choice.ts",
+          "modules/sucafina/Sucafinav1/ui/decision-alternatives.ts",
+          "modules/sucafina/Sucafinav1/ui/decision-edit.ts",
+          "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+          "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+          "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+          "packages/app-shell/e2e/sucafina/decisions-support/",
+          "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/"
+        ],
+        "path_discrepancy": {
+          "listed_prefix": "modules/sucafina/Sucafinav1/ui/",
+          "installed_prefix": "modules/sucafina/Sucafinav1/product/ui/",
+          "files": [
+            "decision-choice.ts",
+            "decision-alternatives.ts",
+            "decision-edit.ts"
+          ],
+          "handling": "No parallel ui directory and no expanded live-write grant. If a defect requires these actual paths, supply complete minimal patch for47 unless current explicit authority resolves them. Exact authorized E2E/HTTP/coverage-read paths remain available."
+        },
+        "helpers": {
+          "composition_audit": "/root/composition_audit",
+          "financial_contract": "/root/financial_contract",
+          "pack_criteria": "/root/pack_criteria",
+          "scope": "Read-only supporting audits; no writer/dispatcher/controller authority, no campaign FINAL review."
+        },
+        "preserved_boundaries": [
+          "A47 sole integrator; no sf2-stack writes",
+          "Shared/Procurement/C12/CurrentChoice46 read only",
+          "Reports48 paths and45 workflows unchanged",
+          "Financial fifth remains mandatory; human choice is not approval",
+          "All five original identities, assertions, 180000ms budgets; production UI commands only",
+          "No native/provider/restart/AM or GLOBAL_RELEASE claim"
+        ],
+        "publication": {
+          "expected_parent": "b6d0ef56e69a3837c9df9dd69b61dbb8724e4b49",
+          "CAS": true,
+          "force": false
+        }
+      }
+    },
+    "integrator71": {
+      "blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+      "value": {
+        "schema": "sf2h.release-wave-71.ack.v1",
+        "mission": 71,
+        "state": "ACK71_ACCEPTED_BOUNDED_SUCCESSION",
+        "recorded_at": "2026-11-15 03:04:13 UTC",
+        "campaign": "sf2h-integral-20261112",
+        "T0": "2026-11-13T04:01:10Z",
+        "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+        "branch": "sf2-stack",
+        "PR": 65,
+        "lease_epoch": "S0-C-e13-browser71",
+        "writer": "Mission71 /root only",
+        "expected_head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "observed_head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "session_id": null,
+        "model_effective": null,
+        "identity_limits": "Developer-declared GPT-6 Astra Pro; runtime/provider model receipt and actual session ID not exposed. /root is observed collaboration role, not a fabricated backend session ID.",
+        "predecessor": {
+          "mission": 60,
+          "terminal": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+          "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+          "authority_blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+          "state": "HANDOFF_TERMINAL_LEASE_ENDED"
+        },
+        "control": {
+          "branch": "sf2-control",
+          "head": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+          "mission_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/integration-release-wave.json",
+          "mission_blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7",
+          "later_authority_observed": false
+        },
+        "write_paths": [
+          "sf2-stack target only",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/"
+        ],
+        "current_material_candidate": {
+          "name": "C28",
+          "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+          "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+          "qualification": "HOLD_NOT_RUN"
+        },
+        "authority_limits": {
+          "checks": 45,
+          "epic_AM_final_acceptance": "S0",
+          "source_branches": "read only; integrate released exact units only",
+          "readers": [
+            "/root/review_runtime59",
+            "/root/review_native64",
+            "/root/review_operations_auth"
+          ],
+          "reviews": "bounded read-only support, not three FINAL independent reviews",
+          "sidebar": "separate planning authority",
+          "Azure": "separate"
+        },
+        "reading": {
+          "completed": "Mission71, current HEAD/PR65/control, predecessor60 authority/handoff/census/errata/closure, root AGENTS, pinned START/WORKFLOW/COMMON and root-assigned fields of S0-C.",
+          "in_progress": "Distributed complete S0-C fields/annexes and predecessor pending/findings/gate details. Must close with coverage receipt before product intake; this ACK changes no product.",
+          "source_reviews": "59/63/64 read-only inspections in progress; preliminary preimages match."
+        },
+        "criterion_ids": [
+          "WP10.CMP.01",
+          "WP10.CMP.02",
+          "WP10.CMP.10",
+          "WP10.CMP.40",
+          "WP10.CMP.60",
+          "WP10.DOD.01",
+          "WP10.DOD.02",
+          "WP10.DOD.10",
+          "WP10.DOD.40",
+          "WP10.DOD.60",
+          "WP10.INV.01",
+          "WP10.INV.02",
+          "WP10.INV.10",
+          "WP10.INV.40",
+          "WP10.INV.60",
+          "WP10.QLT.01",
+          "WP10.QLT.02",
+          "WP10.QLT.10",
+          "WP10.QLT.40",
+          "WP10.QLT.60",
+          "WP10.SUC.01",
+          "WP10.SUC.02",
+          "WP10.SUC.10",
+          "WP10.SUC.40",
+          "WP10.SUC.60",
+          "WP10.T02.CHK.01",
+          "WP10.T02.CHK.02",
+          "WP10.T02.CHK.03",
+          "WP10.T02.CHK.04",
+          "WP10.T02.CHK.05",
+          "WP10.T02.CHK.10",
+          "WP10.T02.CHK.11",
+          "WP10.T02.CMP.01",
+          "WP10.T02.CMP.10",
+          "WP10.T02.DOD.01",
+          "WP10.T02.DOD.10",
+          "WP10.T02.INV.01",
+          "WP10.T02.INV.10",
+          "WP10.T02.QLT.01",
+          "WP10.T02.QLT.10",
+          "WP10.T02.SUC.01",
+          "WP10.T02.SUC.10",
+          "WP10.T04.CHK.01",
+          "WP10.T04.CHK.02",
+          "WP10.T04.CHK.03",
+          "WP10.T04.CHK.10",
+          "WP10.T04.CHK.11",
+          "WP10.T04.CHK.40",
+          "WP10.T04.CHK.41",
+          "WP10.T04.CMP.01",
+          "WP10.T04.CMP.10",
+          "WP10.T04.CMP.40",
+          "WP10.T04.DOD.01",
+          "WP10.T04.DOD.10",
+          "WP10.T04.DOD.40",
+          "WP10.T04.INV.01",
+          "WP10.T04.INV.10",
+          "WP10.T04.INV.40",
+          "WP10.T04.QLT.01",
+          "WP10.T04.QLT.10",
+          "WP10.T04.QLT.40",
+          "WP10.T04.SUC.01",
+          "WP10.T04.SUC.10",
+          "WP10.T04.SUC.40",
+          "WP14.CMP.01",
+          "WP14.CMP.10",
+          "WP14.CMP.20",
+          "WP14.CMP.40",
+          "WP14.DOD.01",
+          "WP14.DOD.02",
+          "WP14.DOD.10",
+          "WP14.DOD.20",
+          "WP14.DOD.40",
+          "WP14.INV.01",
+          "WP14.INV.02",
+          "WP14.INV.10",
+          "WP14.INV.20",
+          "WP14.INV.40",
+          "WP14.QLT.01",
+          "WP14.QLT.02",
+          "WP14.QLT.10",
+          "WP14.QLT.20",
+          "WP14.QLT.40",
+          "WP14.SUC.01",
+          "WP14.SUC.10",
+          "WP14.SUC.20",
+          "WP14.SUC.40",
+          "WP14.T01.CHK.01",
+          "WP14.T01.CHK.02",
+          "WP14.T01.CHK.03",
+          "WP14.T01.CHK.20",
+          "WP14.T01.CMP.01",
+          "WP14.T01.CMP.20",
+          "WP14.T01.DOD.01",
+          "WP14.T01.DOD.20",
+          "WP14.T01.INV.01",
+          "WP14.T01.INV.20",
+          "WP14.T01.QLT.01",
+          "WP14.T01.QLT.20",
+          "WP14.T01.SUC.01",
+          "WP14.T01.SUC.20",
+          "WP14.T02.CHK.01",
+          "WP14.T02.CHK.02",
+          "WP14.T02.CHK.03",
+          "WP14.T02.CHK.10",
+          "WP14.T02.CHK.11",
+          "WP14.T02.CMP.01",
+          "WP14.T02.CMP.10",
+          "WP14.T02.DOD.01",
+          "WP14.T02.DOD.10",
+          "WP14.T02.INV.01",
+          "WP14.T02.INV.10",
+          "WP14.T02.QLT.01",
+          "WP14.T02.QLT.10",
+          "WP14.T02.SUC.01",
+          "WP14.T02.SUC.10",
+          "WP14.T03.CHK.01",
+          "WP14.T03.CHK.02",
+          "WP14.T03.CHK.03",
+          "WP14.T03.CMP.01",
+          "WP14.T03.DOD.01",
+          "WP14.T03.INV.01",
+          "WP14.T03.QLT.01",
+          "WP14.T03.SUC.01",
+          "WP14.T04.CHK.01",
+          "WP14.T04.CHK.02",
+          "WP14.T04.CHK.03",
+          "WP14.T04.CHK.10",
+          "WP14.T04.CMP.01",
+          "WP14.T04.CMP.10",
+          "WP14.T04.DOD.01",
+          "WP14.T04.DOD.10",
+          "WP14.T04.INV.01",
+          "WP14.T04.INV.10",
+          "WP14.T04.QLT.01",
+          "WP14.T04.QLT.10",
+          "WP14.T04.SUC.01",
+          "WP14.T04.SUC.10",
+          "WP14.T05.CHK.01",
+          "WP14.T05.CHK.02",
+          "WP14.T05.CHK.03",
+          "WP14.T05.CHK.04",
+          "WP14.T05.CHK.05",
+          "WP14.T05.CHK.06",
+          "WP14.T05.CHK.40",
+          "WP14.T05.CMP.01",
+          "WP14.T05.CMP.40",
+          "WP14.T05.DOD.01",
+          "WP14.T05.DOD.40",
+          "WP14.T05.INV.01",
+          "WP14.T05.INV.40",
+          "WP14.T05.QLT.01",
+          "WP14.T05.QLT.40",
+          "WP14.T05.SUC.01",
+          "WP14.T05.SUC.40"
+        ],
+        "holds_preserved": [
+          "C28 Reports POST/HotTopic/Agenda/runtime/86criteria",
+          "P03 FAIL; no identical retry",
+          "M31/MI07 original financial capture contract",
+          "real ClamD and five Operations journeys",
+          "authenticated native origin/C15/Permission/Task/Relay/Schedule",
+          "M70-AUTH-01",
+          "M70-ISO-01",
+          "M70-HTTP-01",
+          "Microsoft live G01/Node G02/admission G03",
+          "all inherited56pending IDs/digests/28findings; final8recipes/AM01-06/threeFINAL/C-G7/D-G8"
+        ],
+        "publication_rule": "New candidate per coherent explicit release, exact preimage verification and dependency/consumer closure; no branch/snapshot wholesale copying or source PASS transfer. Parent-SHA CAS without force, skip CI.",
+        "execution": {
+          "tests": 0,
+          "typechecks": 0,
+          "guards": 0,
+          "builds": 0,
+          "preflights": 0,
+          "CI_dispatches": 0,
+          "AM": 0,
+          "workflow_ref_moves": 0,
+          "producer_branch_writes": 0,
+          "dev_merge": 0,
+          "deploy": 0,
+          "Azure": 0
+        },
+        "GLOBAL_RELEASE": false
+      }
+    },
+    "control_snapshot": "606c253d4108b75da431a70bd4aba9088d0fcb72",
+    "mission52_packet_blob": "2b70fb1706cec24aa1aa36e916cfc42a87305dd0",
+    "mission71_packet_blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7",
+    "C40_to_C41_ack_or_terminal_change": false,
+    "handoff": "Original47 handoff is retained with observed integration succession. This review does not assign52 target-write authority, release a source lease, integrate a shared patch or transfer any previous owner/test PASS."
+  },
+  "remaining_qualification": [
+    "Root must qualify the exact proposed candidate in surgical Actions unit runs and the original five installed UI journeys, without assertion/budget/identity changes.",
+    "The four independent UI journeys remain required; mandatory financial journey must be observed separately under the actual composed admission policy.",
+    "P9 adds real capture/proof work; static review cannot establish latency, backend liveness or end-to-end success.",
+    "Global release remains HOLD; unit or dependent-owner PASS must not be inherited as installed UI proof."
+  ],
+  "artifacts": {
+    "/workspace/scratch/fec39c0682b3/m52-work/p9-final-egress/material.json": {
+      "bytes": 244210,
+      "sha256": "ec82e34b7c2565974579b1649ef7b8952a4c320e8e316c507b4ac55d526c2351"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-work/p9-domain-source/p9-domain-material-v3.json": {
+      "bytes": 115614,
+      "sha256": "82bd2af9a6756f39c040acbef3a7529173f245ec74317a00557520f23d2c1a0c"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-work/p9-host-source/p9-host-material.json": {
+      "bytes": 171689,
+      "sha256": "329cfcf84b33206e4015e26358ac6e1d38a1973231182f2e836bb230f18976ed"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-work/p9-c41-business-services/material.json": {
+      "bytes": 148423,
+      "sha256": "edfa354fa3f4bbd95d930f03b1d9fd94aaeb030944b1939cd51c2c5400822dc7"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-work/p9-c41-business-services/complete.patch": {
+      "bytes": 2603,
+      "sha256": "e18240688479d936545687cfabedc405aeef512f36db1ed0fbee5bbfba4ab01a"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-work/p9-c40-microsoft-map/material.json": {
+      "bytes": 14028,
+      "sha256": "68b31e1c7cbf8bb3fd73e1877bb2d907a1679ff36680d0b04f8569f23f564af9"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-work/p9-tests/choice-source-history.test.v2.ts.txt": {
+      "bytes": 38618,
+      "sha256": "fad6ccb9cab9b6399dd4a2ef3a4f9ee11da4c94be7065d4e76e0b72a416cec96"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-audit/p9-review/current-C37-evidence.json": {
+      "bytes": 611760,
+      "sha256": "337977b4387f8b0649c23f38eb3a135528eedd77127b6166abe51d3faa159318"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-audit/p9-review/C40-target-evidence.json": {
+      "bytes": 898224,
+      "sha256": "cd6253d503f4a39082378005eebae42379d8d2e1690d2ba9d8ca8ea591ac6d18"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-audit/p9-review/C40-auth72-source.json": {
+      "bytes": 133908,
+      "sha256": "92bde3a6938c217e45be1b57a9c30e6a8684e91af8a2157027ac2284d6d2035b"
+    },
+    "/workspace/scratch/fec39c0682b3/m52-audit/p9-review/C41-target-evidence.json": {
+      "bytes": 2567193,
+      "sha256": "2526b2d11fce5762083e7f1b06abc0f8acc4cf3f7cd734861987e71652d3c776"
+    }
+  }
+}

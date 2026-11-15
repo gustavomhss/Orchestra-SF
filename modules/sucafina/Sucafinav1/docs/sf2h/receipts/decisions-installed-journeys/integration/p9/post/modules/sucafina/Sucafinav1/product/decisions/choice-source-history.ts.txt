@@ -1,0 +1,191 @@
+import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+import type { DomainProjection } from "../contracts/context.ts"
+import type { CaseLedgerEvent, ChoiceRecord, DecisionCase } from "../contracts/decisions.ts"
+import type { DomainPortHost, PortResult } from "../contracts/ports.ts"
+import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import type { SfAtlasOutboxEntry, SfLedgerRecordCapture, SfProductStatePort, SfStateAuthority } from "../contracts/state.ts"
+import type { Snapshot } from "../../runtime/contract.ts"
+import { selectSfCase } from "../host-binding/state-provider.ts"
+import { sfChoiceSourceCaptureDigest } from "../integration/ledger-outbox.ts"
+
+type RecordRef = Extract<BusinessEvidenceRef, { kind: "record" }>
+type ChoiceSelection = { case: DecisionCase; choice: ChoiceRecord; event: CaseLedgerEvent; snapshot: Readonly<Snapshot> }
+type SourceProjector = (ref: RecordRef, call: TrustedDomainContext) => Promise<PortResult<DomainProjection>>
+const same = (left: unknown, right: unknown) => digestSfValue(left) === digestSfValue(right)
+const plannerRecord = (ref: BusinessEvidenceRef): ref is RecordRef =>
+  ref.kind === "record" && ref.target.surface === "planner" && ref.target.recordType === "planner-version"
+
+function authorityMatches(authority: SfStateAuthority, call: TrustedDomainContext) {
+  return authority.principalRef === call.binding.principalRef && authority.policyVersion === call.binding.policyVersion &&
+    authority.accessRevision === call.binding.accessRevision
+}
+
+/** Pins a real transport and its private lease; it does not retain an authorization. */
+function pinCall(host: DomainPortHost, call: TrustedDomainContext) {
+  const requestFor = host.requestFor, revalidate = host.revalidate, persistence = host.persistence
+  const authenticate = host.authenticate, environment = host.environment
+  const request = requestFor.call(host, call), lease = call.lease, binding = call.binding
+  const authority = digestSfValue([call.kind, call.binding])
+  const fingerprint = () => request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+  const transport = fingerprint()
+  const stable = () => !!request && !request.signal.aborted && host.requestFor === requestFor && host.revalidate === revalidate &&
+    host.persistence === persistence && host.authenticate === authenticate && host.environment === environment &&
+    requestFor.call(host, call) === request && call.lease === lease && call.binding === binding &&
+    digestSfValue([call.kind, call.binding]) === authority && fingerprint() === transport
+  return { request, stable, revalidate: () => revalidate.call(host, call) }
+}
+
+function validProjection(capture: SfLedgerRecordCapture, identity: {
+  installationId: string; projectId: string; principalRef: string; policyVersion: string; accessRevision: string; currency: string
+}) {
+  const { ref, projection } = capture
+  return plannerRecord(ref) && ref.refDigest === digestSfEvidenceRef(ref) && !!ref.target.period &&
+    ref.installationId === identity.installationId && ref.projectId === identity.projectId &&
+    !!projection && !!projection.context && Array.isArray(projection.values) && Array.isArray(projection.components) && Array.isArray(projection.missing) &&
+    projection.context.installationId === identity.installationId && projection.context.projectId === identity.projectId &&
+    projection.context.principalRef === identity.principalRef && projection.context.policyVersion === identity.policyVersion &&
+    projection.context.accessRevision === identity.accessRevision && projection.context.surface === "planner" &&
+    projection.context.currency === identity.currency && same(projection.context.period, ref.target.period) &&
+    new Set(projection.values.map((value) => value.id)).size === projection.values.length &&
+    projection.values.every((value) => Array.isArray(value.sourceRefs) && value.sourceRefs.length === 1 && same(value.sourceRefs[0], ref))
+}
+
+/** Runs only inside the existing C08 choice transaction. Captures the actual domain
+ * producer, never a projection reconstructed from a subtotal or a later source. */
+export async function captureSfChoicePlannerSources(input: { host: DomainPortHost; project: SourceProjector },
+  selection: ChoiceSelection, call: TrustedDomainContext): Promise<PortResult<readonly SfLedgerRecordCapture[]>> {
+  const unavailable = (reason: string): PortResult<readonly SfLedgerRecordCapture[]> => ({ status: "unavailable", reason })
+  try {
+    const { case: value, choice, event } = selection
+    if (call.kind !== "ui" || value.currency !== "USD" || choice.scenario.operations.length || choice.scenario.assumptions.length ||
+      !choice.evidenceRefs.length || !choice.evidenceRefs.every(plannerRecord)) return { status: "ok", value: [] }
+    const host = input.host, project = input.project, persistence = host.persistence, currentSnapshots = persistence.currentSnapshots
+    const pin = pinCall(host, call), payload = digestSfValue(selection)
+    const snapshots = currentSnapshots?.call(persistence)
+    if (!snapshots || !same(snapshots.planner, selection.snapshot)) return unavailable("choice-capture-canonical-transaction-required")
+    const planner = snapshots.planner, snapshotsDigest = digestSfValue(snapshots)
+    const plannerDigest = digestSfValue(planner)
+    const stable = () => input.host === host && input.project === project && persistence.currentSnapshots === currentSnapshots && pin.stable() &&
+      digestSfValue(selection) === payload && (() => {
+        const latest = currentSnapshots?.call(persistence)
+        // LocalStore returns detached observations, even inside C08. Compare
+        // their full contents while retaining the actual producer identity.
+        return !!latest && digestSfValue(latest) === snapshotsDigest
+      })()
+    if (!stable() || !await pin.revalidate() || !stable()) return unavailable("choice-capture-authority-unavailable")
+    if (event.kind !== "choice-recorded" || event.caseRef.id !== value.id || event.caseRef.incarnation !== value.incarnation ||
+      event.caseRef.version !== value.version || !same(value.ledger.at(-1), event) ||
+      value.ledger.filter((item) => item.id === event.id).length !== 1 ||
+      value.choices.filter((item) => item.id === choice.id).length !== 1 || !value.choices.some((item) => same(item, choice)) ||
+      event.outputDigest !== digestSfValue(choice) || choice.principalRef !== call.binding.principalRef ||
+      event.principalRef !== choice.principalRef || event.at !== choice.at || !same(event.evidenceRefs, choice.evidenceRefs) ||
+      !value.participants.includes(call.binding.principalRef)) return unavailable("choice-capture-ledger-mismatch")
+    const refs = [...new Map(choice.evidenceRefs.map((ref) => [ref.refDigest, ref])).values()]
+    if (refs.length > 500) return unavailable("choice-capture-evidence-limit")
+    const records: SfLedgerRecordCapture[] = []
+    for (const ref of refs) {
+      const selected = structuredClone(ref)
+      const result = await project.call(input, selected, call)
+      if (!stable() || !same(selected, ref)) return unavailable("choice-capture-source-changed")
+      if (result.status !== "ok") return result
+      const capture = structuredClone({ ref, projection: result.value })
+      if (!validProjection(capture, { ...call.binding, currency: value.currency })) return unavailable("choice-capture-projection-mismatch")
+      records.push(capture)
+    }
+    if (!stable() || !await pin.revalidate() || !stable() || digestSfValue(planner) !== plannerDigest ||
+      !same(selection.snapshot, planner)) return unavailable("choice-capture-source-changed")
+    return { status: "ok", value: structuredClone(records) }
+  } catch { return unavailable("choice-capture-unavailable") }
+}
+
+function anchorCapture(key: string, entry: SfAtlasOutboxEntry, value: DecisionCase, call: TrustedDomainContext) {
+  const capture = entry.choiceCapture, ref = entry.eventRef
+  if (!capture || capture.schema !== "sf-choice-source-capture-v1" || !Array.isArray(capture.records) || !capture.records.length ||
+    capture.records.length > 500 || ref.kind !== "case-event" || ref.schema !== "sf-evidence-v1" || ref.evidenceLevel !== "decision" ||
+    ref.installationId !== call.binding.installationId || ref.projectId !== call.binding.projectId ||
+    ref.refDigest !== digestSfEvidenceRef(ref) || capture.eventRefDigest !== ref.refDigest ||
+    key !== JSON.stringify([ref.target.caseId, ref.target.caseIncarnation, ref.target.eventId]) ||
+    value.id !== ref.target.caseId || value.incarnation !== ref.target.caseIncarnation || value.version < ref.target.caseVersion ||
+    !value.participants.includes(call.binding.principalRef) || !["pending", "settled"].includes(entry.state) ||
+    capture.captureDigest !== sfChoiceSourceCaptureDigest(entry, capture)) return false
+  const events = value.ledger.filter((event) => event.id === ref.target.eventId)
+  const choices = value.choices.filter((choice) => choice.id === capture.choiceId)
+  const event = events[0], choice = choices[0]
+  if (events.length !== 1 || choices.length !== 1 || !event || !choice || event.kind !== "choice-recorded" ||
+    event.caseRef.id !== value.id || event.caseRef.incarnation !== value.incarnation || event.caseRef.version !== ref.target.caseVersion ||
+    digestSfValue(event) !== capture.eventDigest || event.outputDigest !== capture.outputDigest || event.outputDigest !== ref.target.outputDigest ||
+    event.outputDigest !== digestSfValue(choice) || choice.scenario.operations.length || choice.scenario.assumptions.length ||
+    value.currency !== "USD" || choice.principalRef !== entry.writerPrincipalRef || event.principalRef !== entry.writerPrincipalRef ||
+    event.at !== entry.createdAt || choice.at !== entry.createdAt || !same(event.evidenceRefs, ref.target.evidenceRefs) ||
+    !same(event.evidenceRefs, choice.evidenceRefs) || !choice.evidenceRefs.length || !choice.evidenceRefs.every(plannerRecord)) return false
+  const expected = [...new Map(choice.evidenceRefs.map((item) => [item.refDigest, item])).values()]
+  return expected.length === capture.records.length && new Set(capture.records.map((item) => item.ref.refDigest)).size === capture.records.length &&
+    capture.records.every((item) => expected.some((source) => same(source, item.ref)) && validProjection(item, {
+      installationId: ref.installationId, projectId: ref.projectId, principalRef: entry.writerPrincipalRef,
+      accessRevision: entry.accessRevision, policyVersion: capture.policyVersion, currency: value.currency,
+    }))
+}
+
+/** An independent protected producer for human choices. This proves the original
+ * capture only; recordHistory must still prove today's ACL and physical lineage.
+ * Pending outbox entries do not become Atlas publications or memory receipts. */
+export function createSfChoiceSourceCaptureReader(input: {
+  host: DomainPortHost
+  state: SfProductStatePort
+  authorizeCase: (value: DecisionCase, call: TrustedDomainContext) => Promise<boolean>
+}) {
+  return async (digest: string, call: TrustedDomainContext): Promise<SfLedgerRecordCapture | undefined> => {
+    try {
+      if (call.kind !== "ui" || !digest) return undefined
+      const host = input.host, state = input.state, read = state.read, authorizeCase = input.authorizeCase
+      const pin = pinCall(host, call), request = pin.request
+      const stable = () => input.host === host && input.state === state && state.read === read &&
+        input.authorizeCase === authorizeCase && pin.stable()
+      if (!request || !stable() || !await pin.revalidate() || !stable()) return undefined
+      const readEntries = () => state.read(request, "outbox", (snapshot, authority) => {
+        if (!authorityMatches(authority, call)) return undefined
+        const entries = Object.entries(snapshot.outbox).filter(([, entry]) =>
+          entry.choiceCapture?.records.some((item) => item.ref.refDigest === digest))
+        return entries.length > 0 && entries.length <= 500 ? structuredClone(entries) : undefined
+      })
+      const first = await readEntries()
+      if (first.status !== "ok" || !first.value || !stable()) return undefined
+      const originals: SfLedgerRecordCapture[] = []
+      const cases = new Map<string, DecisionCase>()
+      for (const [key, entry] of first.value) {
+        const id = entry.eventRef.target.caseId
+        const loaded = await state.read(request, "cases", selectSfCase(id, call))
+        if (loaded.status !== "ok" || !loaded.value || !stable()) return undefined
+        const value = structuredClone(loaded.value), before = digestSfValue(value)
+        if (!anchorCapture(key, entry, value, call) || !await input.authorizeCase(value, call) ||
+          !stable() || digestSfValue(value) !== before) return undefined
+        const existing = cases.get(id)
+        if (existing && !same(existing, value)) return undefined
+        cases.set(id, value)
+        const matches = entry.choiceCapture!.records.filter((item) => item.ref.refDigest === digest)
+        if (matches.length !== 1) return undefined
+        originals.push(structuredClone(matches[0]!))
+      }
+      if (!originals.length || !originals.every((capture) => same(capture, originals[0]))) return undefined
+      // Keep the final case/outbox admission and authority awaits inside one
+      // canonical C08 read. No asynchronous work follows its completed boundary.
+      const last = await state.read(request, "outbox", async (snapshot, authority) => {
+        if (!authorityMatches(authority, call) || !stable()) return false
+        for (const [id, before] of cases) {
+          const loaded = await state.read(request, "cases", selectSfCase(id, call))
+          if (loaded.status !== "ok" || !loaded.value || !same(loaded.value, before) ||
+            !await input.authorizeCase(loaded.value, call) || !stable() || !same(loaded.value, before)) return false
+        }
+        if (!await pin.revalidate() || !stable()) return false
+        const entries = Object.entries(snapshot.outbox).filter(([, entry]) =>
+          entry.choiceCapture?.records.some((item) => item.ref.refDigest === digest))
+        return same(entries, first.value) && [...cases].every(([id, before]) =>
+          !!snapshot.cases[id] && same(snapshot.cases[id], before))
+      })
+      if (last.status !== "ok" || last.value !== true || !stable()) return undefined
+      return structuredClone(originals[0])
+    } catch { return undefined }
+  }
+}
+

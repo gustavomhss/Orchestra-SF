@@ -1,0 +1,31 @@
+{
+  "schema": "sf2h.mission52.p9.unit-fixture-independent-static-review.v1",
+  "status": "NO_STATIC_BLOCKER_IDENTIFIED_NOT_EXECUTED",
+  "source": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p9-tests/choice-source-history.test.ts.txt",
+    "git_blob": "5644f3f8c3b9ffbdca0641491b48b983897b0e63",
+    "sha256": "c627e7cd862c923be812645641afed7b99fdb12b208839d3f8ee9080af5849c0",
+    "lines": 523,
+    "expanded_test_registrations": 47
+  },
+  "review": [
+    "Read all 521 draft lines and the final two-line confirmChoice constraint, total523 lines.",
+    "Compared actual operations contract88550f78693ba1a66b285f2f53abcd3f8c09afdc, MutationHost, domain v3 and helper.",
+    "SQLite/SourcePersistence scope initialization precedes capture; stable nested readScopedSource does not write, currentSnapshots comparisons now use detached-observation content.",
+    "Real state-provider C08 provides Planner transactionAll callback; next case version4→5, event/choice/outputDigest and outbox additional namespace match.",
+    "Real private UI authority and intent are used; final confirmChoice pins context/case/alternative and host revalidation.",
+    "Adversarial fixtures alter only declared unit boundaries and assert no persisted case/outbox effects.",
+    "Replay, original-byte historical resolution, physical delete/recreate, current ACL revocation and rechecks use canonical producers.",
+    "Multiple time-distinct captures remain conservatively refused; outside single-choice original journey, no normalization or suite expansion."
+  ],
+  "execution": {
+    "tests": 0,
+    "compile": 0,
+    "product": 0,
+    "remote_mutations": 0
+  },
+  "limits": [
+    "This is static review, not Actions or installed UI acceptance.",
+    "Authentication and DomainProjection projector are explicit unit boundary doubles; five installed UI journeys remain independent."
+  ]
+}

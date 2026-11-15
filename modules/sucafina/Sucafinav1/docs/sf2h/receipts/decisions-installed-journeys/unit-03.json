@@ -1,0 +1,360 @@
+{
+  "schema": "sf-m52-supplemental-unit-receipt-v3",
+  "state": "COMPLETED",
+  "base": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+  "base_tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
+  "base_label": "C41",
+  "owned_source": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
+  "W": "c4883ae51636a4ebbcf9274994e96e2725214e48",
+  "W_tree": "c96d49c3942283d9beb445d80ba08e3f1538b471",
+  "S": "61ef9950c8355db002d99c18d91e1265ccfe4d55",
+  "S_tree": "6b4261d5a5086bea22dd8575e6529cfb93f8278c",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts"
+    ],
+    "env": {}
+  },
+  "request_blob": "ac4ba49cede79091fe524a891119348be67e2e5f",
+  "overlay_count": 31,
+  "unit_cases": 50,
+  "timeout_unchanged": true,
+  "retries": 0,
+  "GLOBAL_RELEASE": false,
+  "branch": "ci-run-linux-astra-wp11-c4883ae5-ac4ba49c-m52-u3",
+  "dispatched_at": "2026-11-15 04:25:36 UTC",
+  "preflight": "p9-unit-preflight.json",
+  "run_id": 43676716309,
+  "created_at": "2026-11-15T04:25:37Z",
+  "unit": 3,
+  "job_id": 132698352149,
+  "cleanup_job_id": 132698758769,
+  "conclusion": "success",
+  "cleanup_conclusion": "success",
+  "passed": 50,
+  "failed": 0,
+  "expects": 306,
+  "files": 1,
+  "duration_ms": 2700,
+  "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+  "source_test_sha256": "fad6ccb9cab9b6399dd4a2ef3a4f9ee11da4c94be7065d4e76e0b72a416cec96",
+  "results": [
+    {
+      "name": "one canonical choice atomically captures original Planner evidence in the cases/outbox commit",
+      "status": "PASS",
+      "duration_ms": 109.63,
+      "log_line": "2026-11-15T04:27:17.8872047Z (pass) one canonical choice atomically captures original Planner evidence in the cases/outbox commit [109.63ms]"
+    },
+    {
+      "name": "exact retry keeps the original choice and capture and never captures again",
+      "status": "PASS",
+      "duration_ms": 49.23,
+      "log_line": "2026-11-15T04:27:17.9364339Z (pass) exact retry keeps the original choice and capture and never captures again [49.23ms]"
+    },
+    {
+      "name": "legacy choice entries remain uncaptured on retry and cannot synthesize an original projection",
+      "status": "PASS",
+      "duration_ms": 39.56,
+      "log_line": "2026-11-15T04:27:17.9760557Z (pass) legacy choice entries remain uncaptured on retry and cannot synthesize an original projection [39.56ms]"
+    },
+    {
+      "name": "capture failure source-denied commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 32.07,
+      "log_line": "2026-11-15T04:27:18.0081790Z (pass) capture failure source-denied commits neither a choice nor any outbox effect [32.07ms]"
+    },
+    {
+      "name": "capture failure incomplete-records commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 35.97,
+      "log_line": "2026-11-15T04:27:18.0441468Z (pass) capture failure incomplete-records commits neither a choice nor any outbox effect [35.97ms]"
+    },
+    {
+      "name": "capture failure not-an-array commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 33.6,
+      "log_line": "2026-11-15T04:27:18.0777722Z (pass) capture failure not-an-array commits neither a choice nor any outbox effect [33.60ms]"
+    },
+    {
+      "name": "capture failure selection-mutation commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 36.9,
+      "log_line": "2026-11-15T04:27:18.1146627Z (pass) capture failure selection-mutation commits neither a choice nor any outbox effect [36.90ms]"
+    },
+    {
+      "name": "capture failure headers-drift commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 34.25,
+      "log_line": "2026-11-15T04:27:18.1489343Z (pass) capture failure headers-drift commits neither a choice nor any outbox effect [34.25ms]"
+    },
+    {
+      "name": "capture failure lease-ended commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 33.67,
+      "log_line": "2026-11-15T04:27:18.1826248Z (pass) capture failure lease-ended commits neither a choice nor any outbox effect [33.67ms]"
+    },
+    {
+      "name": "capture failure capture-method-replaced commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 39.55,
+      "log_line": "2026-11-15T04:27:18.2221840Z (pass) capture failure capture-method-replaced commits neither a choice nor any outbox effect [39.55ms]"
+    },
+    {
+      "name": "unsupported operations remains an explicit empty capture without reading a source",
+      "status": "PASS",
+      "duration_ms": 25.83,
+      "log_line": "2026-11-15T04:27:18.2480109Z (pass) unsupported operations remains an explicit empty capture without reading a source [25.83ms]"
+    },
+    {
+      "name": "unsupported assumptions remains an explicit empty capture without reading a source",
+      "status": "PASS",
+      "duration_ms": 27.69,
+      "log_line": "2026-11-15T04:27:18.2757372Z (pass) unsupported assumptions remains an explicit empty capture without reading a source [27.69ms]"
+    },
+    {
+      "name": "unsupported non-planner remains an explicit empty capture without reading a source",
+      "status": "PASS",
+      "duration_ms": 24.7,
+      "log_line": "2026-11-15T04:27:18.3004235Z (pass) unsupported non-planner remains an explicit empty capture without reading a source [24.70ms]"
+    },
+    {
+      "name": "capture refuses request-missing under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 30.37,
+      "log_line": "2026-11-15T04:27:18.3308302Z (pass) capture refuses request-missing under a real UI lease [30.37ms]"
+    },
+    {
+      "name": "capture refuses request-replaced under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 26.06,
+      "log_line": "2026-11-15T04:27:18.3569078Z (pass) capture refuses request-replaced under a real UI lease [26.06ms]"
+    },
+    {
+      "name": "capture refuses aborted under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 24.89,
+      "log_line": "2026-11-15T04:27:18.3818006Z (pass) capture refuses aborted under a real UI lease [24.89ms]"
+    },
+    {
+      "name": "capture refuses lease-ended under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 24.1,
+      "log_line": "2026-11-15T04:27:18.4058980Z (pass) capture refuses lease-ended under a real UI lease [24.10ms]"
+    },
+    {
+      "name": "capture refuses binding-revoked under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 30.33,
+      "log_line": "2026-11-15T04:27:18.4361763Z (pass) capture refuses binding-revoked under a real UI lease [30.33ms]"
+    },
+    {
+      "name": "capture refuses source-argument drift while awaiting the authorized projector",
+      "status": "PASS",
+      "duration_ms": 28.94,
+      "log_line": "2026-11-15T04:27:18.4652294Z (pass) capture refuses source-argument drift while awaiting the authorized projector [28.94ms]"
+    },
+    {
+      "name": "capture refuses projector-method drift while awaiting the authorized projector",
+      "status": "PASS",
+      "duration_ms": 25.22,
+      "log_line": "2026-11-15T04:27:18.4904538Z (pass) capture refuses projector-method drift while awaiting the authorized projector [25.22ms]"
+    },
+    {
+      "name": "capture refuses headers drift while awaiting the authorized projector",
+      "status": "PASS",
+      "duration_ms": 32.68,
+      "log_line": "2026-11-15T04:27:18.5231505Z (pass) capture refuses headers drift while awaiting the authorized projector [32.68ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-capture without historical substitution",
+      "status": "PASS",
+      "duration_ms": 56.47,
+      "log_line": "2026-11-15T04:27:18.5796543Z (pass) protected capture reader refuses missing-capture without historical substitution [56.47ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-case without historical substitution",
+      "status": "PASS",
+      "duration_ms": 48.92,
+      "log_line": "2026-11-15T04:27:18.6286031Z (pass) protected capture reader refuses missing-case without historical substitution [48.92ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-choice without historical substitution",
+      "status": "PASS",
+      "duration_ms": 56.7,
+      "log_line": "2026-11-15T04:27:18.6852957Z (pass) protected capture reader refuses missing-choice without historical substitution [56.70ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-event without historical substitution",
+      "status": "PASS",
+      "duration_ms": 50.78,
+      "log_line": "2026-11-15T04:27:18.7360861Z (pass) protected capture reader refuses missing-event without historical substitution [50.78ms]"
+    },
+    {
+      "name": "protected capture reader refuses choice-bytes without historical substitution",
+      "status": "PASS",
+      "duration_ms": 49.79,
+      "log_line": "2026-11-15T04:27:18.7859012Z (pass) protected capture reader refuses choice-bytes without historical substitution [49.79ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-rationale without historical substitution",
+      "status": "PASS",
+      "duration_ms": 47.96,
+      "log_line": "2026-11-15T04:27:18.8338815Z (pass) protected capture reader refuses event-rationale without historical substitution [47.96ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-lifecycle without historical substitution",
+      "status": "PASS",
+      "duration_ms": 49.23,
+      "log_line": "2026-11-15T04:27:18.8831556Z (pass) protected capture reader refuses event-lifecycle without historical substitution [49.23ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-actions without historical substitution",
+      "status": "PASS",
+      "duration_ms": 50.05,
+      "log_line": "2026-11-15T04:27:18.9331973Z (pass) protected capture reader refuses event-actions without historical substitution [50.05ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-ref without historical substitution",
+      "status": "PASS",
+      "duration_ms": 55.88,
+      "log_line": "2026-11-15T04:27:18.9890998Z (pass) protected capture reader refuses event-ref without historical substitution [55.88ms]"
+    },
+    {
+      "name": "protected capture reader refuses capture-bytes without historical substitution",
+      "status": "PASS",
+      "duration_ms": 49.09,
+      "log_line": "2026-11-15T04:27:19.0381671Z (pass) protected capture reader refuses capture-bytes without historical substitution [49.09ms]"
+    },
+    {
+      "name": "protected capture reader refuses capture-digest without historical substitution",
+      "status": "PASS",
+      "duration_ms": 49.32,
+      "log_line": "2026-11-15T04:27:19.0875003Z (pass) protected capture reader refuses capture-digest without historical substitution [49.32ms]"
+    },
+    {
+      "name": "protected capture reader refuses writer without historical substitution",
+      "status": "PASS",
+      "duration_ms": 55.18,
+      "log_line": "2026-11-15T04:27:19.1429126Z (pass) protected capture reader refuses writer without historical substitution [55.18ms]"
+    },
+    {
+      "name": "protected capture reader refuses access-revision without historical substitution",
+      "status": "PASS",
+      "duration_ms": 63.26,
+      "log_line": "2026-11-15T04:27:19.2060094Z (pass) protected capture reader refuses access-revision without historical substitution [63.26ms]"
+    },
+    {
+      "name": "protected capture reader refuses policy without historical substitution",
+      "status": "PASS",
+      "duration_ms": 49.59,
+      "log_line": "2026-11-15T04:27:19.2556215Z (pass) protected capture reader refuses policy without historical substitution [49.59ms]"
+    },
+    {
+      "name": "protected capture reader refuses created-at without historical substitution",
+      "status": "PASS",
+      "duration_ms": 48.9,
+      "log_line": "2026-11-15T04:27:19.3045276Z (pass) protected capture reader refuses created-at without historical substitution [48.90ms]"
+    },
+    {
+      "name": "outbox replay cannot add or change a protected capture on an existing event",
+      "status": "PASS",
+      "duration_ms": 40.16,
+      "log_line": "2026-11-15T04:27:19.3447033Z (pass) outbox replay cannot add or change a protected capture on an existing event [40.16ms]"
+    },
+    {
+      "name": "protected original bytes remain historical after a real same-record Planner edit",
+      "status": "PASS",
+      "duration_ms": 68.88,
+      "log_line": "2026-11-15T04:27:19.4135974Z (pass) protected original bytes remain historical after a real same-record Planner edit [68.88ms]"
+    },
+    {
+      "name": "a delete and recreate with the same logical Planner id cannot inherit the old capture",
+      "status": "PASS",
+      "duration_ms": 61.9,
+      "log_line": "2026-11-15T04:27:19.4754474Z (pass) a delete and recreate with the same logical Planner id cannot inherit the old capture [61.90ms]"
+    },
+    {
+      "name": "stored capture is not a grant when current source ACL is revoked",
+      "status": "PASS",
+      "duration_ms": 53.63,
+      "log_line": "2026-11-15T04:27:19.5291248Z (pass) stored capture is not a grant when current source ACL is revoked [53.63ms]"
+    },
+    {
+      "name": "protected reader rechecks case-authorization after its asynchronous case authorization",
+      "status": "PASS",
+      "duration_ms": 44.61,
+      "log_line": "2026-11-15T04:27:19.5737908Z (pass) protected reader rechecks case-authorization after its asynchronous case authorization [44.61ms]"
+    },
+    {
+      "name": "protected reader rechecks case-argument after its asynchronous case authorization",
+      "status": "PASS",
+      "duration_ms": 42.47,
+      "log_line": "2026-11-15T04:27:19.6162300Z (pass) protected reader rechecks case-argument after its asynchronous case authorization [42.47ms]"
+    },
+    {
+      "name": "protected reader rechecks headers after its asynchronous case authorization",
+      "status": "PASS",
+      "duration_ms": 44.23,
+      "log_line": "2026-11-15T04:27:19.6605159Z (pass) protected reader rechecks headers after its asynchronous case authorization [44.23ms]"
+    },
+    {
+      "name": "protected reader rechecks lease after its asynchronous case authorization",
+      "status": "PASS",
+      "duration_ms": 42.5,
+      "log_line": "2026-11-15T04:27:19.7029695Z (pass) protected reader rechecks lease after its asynchronous case authorization [42.50ms]"
+    },
+    {
+      "name": "historical resolution refuses current-source drift between independent observations",
+      "status": "PASS",
+      "duration_ms": 51.91,
+      "log_line": "2026-11-15T04:27:19.7549709Z (pass) historical resolution refuses current-source drift between independent observations [51.91ms]"
+    },
+    {
+      "name": "capture requires the real held C08 snapshot even with otherwise valid UI authority",
+      "status": "PASS",
+      "duration_ms": 27.03,
+      "log_line": "2026-11-15T04:27:19.7819901Z (pass) capture requires the real held C08 snapshot even with otherwise valid UI authority [27.03ms]"
+    },
+    {
+      "name": "recordHistory rereads protected original bytes after observing the current source",
+      "status": "PASS",
+      "duration_ms": 57.07,
+      "log_line": "2026-11-15T04:27:19.8391183Z (pass) recordHistory rereads protected original bytes after observing the current source [57.07ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to choice before exposing original bytes",
+      "status": "PASS",
+      "duration_ms": 80.04,
+      "log_line": "2026-11-15T04:27:19.9191727Z (pass) final capture egress serializes a concurrent change to choice before exposing original bytes [80.04ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to outbox-entry before exposing original bytes",
+      "status": "PASS",
+      "duration_ms": 58.11,
+      "log_line": "2026-11-15T04:27:19.9773006Z (pass) final capture egress serializes a concurrent change to outbox-entry before exposing original bytes [58.11ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to captured-source before exposing original bytes",
+      "status": "PASS",
+      "duration_ms": 55.74,
+      "log_line": "2026-11-15T04:27:20.0330619Z (pass) final capture egress serializes a concurrent change to captured-source before exposing original bytes [55.74ms]"
+    }
+  ],
+  "raw_log": {
+    "job": 132698352149,
+    "path": "unit/p9-unit03/job-132698352149.log",
+    "sha256": "1599ce2b68ad9fed5b35be992a0846c9c61bc7c3453b26892dde0573c00aab52",
+    "bytes": 77496
+  },
+  "limits": [
+    "One selected Bun file on exact W/C41, not the five installed UI journeys.",
+    "Unit fixture uses real C08/SQLite/source lifecycle/private UI lease, with explicit authentication and projection doubles.",
+    "No case criterion is promoted; integrated_proofs remain untouched.",
+    "No approval or financial Apply was exercised.",
+    "No local product execution; all runtime results come from the hosted Actions job."
+  ]
+}

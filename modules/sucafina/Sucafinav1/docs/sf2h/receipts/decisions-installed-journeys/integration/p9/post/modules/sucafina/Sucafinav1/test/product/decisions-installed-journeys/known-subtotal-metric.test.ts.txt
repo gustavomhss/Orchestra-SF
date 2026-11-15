@@ -1,0 +1,448 @@
+import { expect, test } from "bun:test"
+import { createSfKnownSubtotalMetric, knownSubtotalMetricNotApplicable } from "../../../../../../apps/cli/src/sucafina-product/known-subtotal-metric.ts"
+import type { KnownSubtotalMetricDependencies, KnownSubtotalMetricRequest } from "../../../../../../apps/cli/src/sucafina-product/known-subtotal-metric.ts"
+import { createSfPortfolioAuthority } from "../../../../../../apps/cli/src/sucafina-product/portfolio-authority.ts"
+import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+import type { AuthorizedCaseProjection, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { DomainProjection, SourceRef } from "../../../product/contracts/context.ts"
+import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
+import type { CostCoverageBasis, CostCoverageEntry, DecisionCase, ScenarioResult } from "../../../product/contracts/decisions.ts"
+import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../product/contracts/ports.ts"
+import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
+import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
+import { decisionCoverageRef } from "../../../product/decisions/coverage-access.ts"
+import { assessCostCoverage } from "../../../product/decisions/cost-coverage.ts"
+import type { CriterionMetric } from "../../../product/decisions/criterion-rules.ts"
+import type { StoredDecisionResult } from "../../../product/decisions/result-store.ts"
+import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
+import { comparePlannerScenarios } from "../../../product/planner/comparison.ts"
+import { plannerCoverageComplete } from "../../../product/planner/coverage.ts"
+import type { PlannerScenarioHost, ResolvedScenario } from "../../../product/planner/scenario-comparison-port.ts"
+import { plannerKnownSubtotal } from "../../../src/planner-accounts.ts"
+
+// Surgical adapter contracts: real UI leases, canonical coverage and comparison math.
+// Data/read-port fixtures below are explicit unit observations, not an installed
+// journey, a C08 durability claim, seeds for E2E, or a substitute for the five UI cases.
+type StoredScenario = Extract<StoredDecisionResult, { kind: "scenario" }>
+type PlannerRecord = Extract<BusinessEvidenceRef, { kind: "record" }>
+type MetricResult = Awaited<ReturnType<ReturnType<typeof createSfKnownSubtotalMetric>>>
+type Stage = "history" | "case" | "projection" | "source" | "coverage"
+type Boundary = { stage: Stage; count: number; key: string; args: unknown[]; value: unknown }
+type Hook = (point: Boundary) => void | Promise<void>
+const at = "2026-11-15T03:00:00.000Z"
+const period = { start: "2027-01-01", end: "2027-12-31" }
+const caseRef = { id: "metric-case", incarnation: "metric-case-inc", version: 4 }
+const references = ["stored:baseline", "stored:candidate"] as const
+
+async function fixture(options: { complete?: boolean; amounts?: readonly [readonly (number | null)[], readonly (number | null)[]]; reuseReplies?: boolean } = {}) {
+  const identity = { installationId: "metric-install", projectId: "metric-project", principalRef: "metric-reader", accessRevision: "access-1", policyVersion: "policy-1" }
+  const abort = new AbortController()
+  const transport = new Request("https://example.test/sucafina/planner?sf=decision-compare", {
+    method: "POST", headers: { origin: "https://example.test", "content-type": "application/json" }, signal: abort.signal,
+  })
+  const state = { allowed: true, identity: { ...identity }, now: Date.parse(at), serial: 0, hook: undefined as Hook | undefined,
+    requestOverride: undefined as Request | undefined, counts: { history: 0, case: 0, projection: 0, source: 0, coverage: 0 },
+    events: [] as { stage: Stage; key: string }[], reuseReplies: options.reuseReplies === true, replies: new Map<Stage, object>(),
+    legacyBatches: [] as string[][], legacyScalar: [] as string[], writes: 0 }
+  const ui = createSfUiAuthority({ authorize: async (request) => request === transport && state.allowed ? { ...state.identity } : undefined,
+    commandIdentity: async () => "metric-contract", createId: () => `metric-admission-${++state.serial}`, now: () => state.now })
+  const request: KnownSubtotalMetricRequest = { caseRef: { ...caseRef }, criterionId: "cost", ruleRef: "rule:cost", ruleVersion: 1,
+    metricRef: "planner:known-subtotal-difference", baselineRef: references[0], scenarioRef: references[1] }
+  const digest = digestSfValue(request)
+  const admitted = await ui.admit(transport, "sf_scenario_compare", digest)
+  if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_scenario_compare", digest)) throw new Error("Real UI admission failed")
+  const context = admitted.value
+  // The canonical helper explicitly retains independent-port behavior when no
+  // persistence adapter is supplied. SQLite/root semantics have separate59 tests.
+  const host: DomainPortHost = { persistence: undefined as unknown as DomainPortHost["persistence"],
+    authenticate: async () => undefined,
+    environment: async () => { throw new Error("Environment is not consumed by this metric fixture") },
+    requestFor: (call) => state.requestOverride ?? (call.kind === "ui" ? ui.requestFor(call) : undefined),
+    revalidate: (call) => call.kind === "ui" ? ui.revalidate(call) : Promise.resolve(false) }
+  const records: PlannerRecord[] = ["v0", "v1"].map((id) => {
+    const value: PlannerRecord = { schema: "sf-evidence-v1", kind: "record", refId: `planner-source:${id}`,
+      installationId: identity.installationId, projectId: identity.projectId, refDigest: "", evidenceLevel: "observed",
+      target: { surface: "planner", recordType: "planner-version", recordId: id, incarnation: `${id}-inc`, version: 1,
+        fields: ["lines"], period, projectionDigest: digestSfValue({ versionId: id, fixture: "authorized projection" }) } }
+    return { ...value, refDigest: digestSfEvidenceRef(value) }
+  })
+  const basis: CostCoverageBasis = { id: "metric-coverage", version: 1, decisionType: "renewal-transition-v1",
+    categoryIds: [...RENEWAL_TRANSITION_CATEGORIES], additionalCategoryIds: [], sourceRefs: records }
+  const projections: Record<string, DomainProjection> = {}
+  const alternatives: DecisionCase["alternatives"][number][] = []
+  for (const [index, source] of records.entries()) {
+    const record: SourceRef = { surface: "planner", type: "planner-version", id: source.target.recordId,
+      incarnation: source.target.incarnation, version: source.target.version, fields: source.target.fields, period, observedAt: at }
+    const amounts = options.amounts?.[index] ?? [index === 0 ? 1200 : 2400]
+    const projection: DomainProjection = { context: { ...identity, surface: "planner", period, currency: "USD", sourceRefs: [record], capabilities: [] },
+      version: 1, engineVersion: "planner-contract-v1", values: [],
+      components: amounts.map((amount, component) => ({ id: `service-${component}`, amount, currency: "USD", period,
+        sourceRefs: [record], evidenceState: amount === null ? "absent" : "confirmed" })),
+      missing: amounts.some((amount) => amount === null) ? [{ field: "service", reason: "missing" }] : [] }
+    projections[source.target.recordId] = projection
+    const id = index === 0 ? "baseline" : "candidate"
+    const entries: CostCoverageEntry[] = RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => categoryId === "service"
+      ? { categoryId, status: "included", componentRefs: projection.components.map((component) => component.id), evidenceRefs: [source], scopeNote: "Authorized fixture service amounts" }
+      : categoryId === "training" && !options.complete
+        ? { categoryId, status: "pending", reason: "Authorized training source is still absent" }
+        : { categoryId, status: "not-applicable", justification: `Explicit unit fixture scope excludes ${categoryId}`, evidenceRefs: [source] })
+    // Coverage authorization is the explicit port fixture; the inventory,
+    // monetary separation, pending classification and completeness checks are real.
+    const assessment = assessCostCoverage({ basis, alternativeId: id, alternativeVersion: 1, currency: "USD", horizon: period,
+      entries, components: projection.components,
+      evidence: records.map((ref) => ({ ref, state: "fresh", accessRevision: identity.accessRevision, checkedAt: at })), supports: () => true })
+    const subtotal = projection.components.some((component) => component.amount !== null)
+      ? plannerKnownSubtotal(projection.components.map((component) => component.amount)) : null
+    const common = { id: `source-scenario:${id}`, version: 1, components: structuredClone(projection.components), currency: "USD", horizon: period,
+      sourceRefs: [source], restrictions: [] }
+    const complete = assessment.coverageState === "complete" && subtotal !== null && plannerCoverageComplete(basis, assessment, projection, source)
+    const result: ScenarioResult = complete && assessment.coverageState === "complete" && subtotal !== null
+      ? { ...common, comparisonStatus: "complete", knownSubtotal: subtotal, total: subtotal, costCoverage: assessment, unresolvedConditions: [] }
+      : { ...common, comparisonStatus: "conditioned", knownSubtotal: subtotal, total: null, costCoverage: assessment,
+        unresolvedConditions: assessment.entries.flatMap((entry) => entry.status === "pending" ? [`coverage:${entry.categoryId}:${entry.reason}`] : []) }
+    alternatives.push({ id, version: 1, title: id, scenario: { baseRef: source.refId, operations: [], assumptions: [] }, result })
+  }
+  const data = { decision: { ...caseRef, state: "comparing", objective: "Contract fixture for two current Planner alternatives", currency: "USD", horizon: period,
+    criteria: [{ id: "cost", description: "Known subtotal difference", required: true }], participants: [identity.principalRef], sourceRefs: records,
+    alternatives, costCoverageBases: [basis], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] } as DecisionCase,
+    stored: {} as Record<string, StoredScenario>, projections,
+    sources: Object.fromEntries(records.map((source) => [source.refId, { versionId: source.target.recordId, evidence: structuredClone(source) }])) as Record<string, { versionId: string; evidence: PlannerRecord }>,
+    coverage: {} as Record<string, Extract<Awaited<ReturnType<PlannerSourceHost["resolveForecastCoverage"]>>, { status: "ok" }>["value"]> }
+  for (const [index, alternative] of alternatives.entries()) {
+    data.stored[references[index]!] = { schema: "sf-decision-result-v1", kind: "scenario", resultRef: references[index]!,
+      caseRef: { ...caseRef, version: index === 0 ? 3 : 4 }, principalRef: identity.principalRef, accessRevision: identity.accessRevision,
+      policyVersion: identity.policyVersion, requestDigest: digestSfValue(alternative.scenario), resultDigest: digestSfValue(alternative.result),
+      sourceRefs: structuredClone(alternative.result.sourceRefs), result: structuredClone(alternative.result), createdAt: at }
+    const coverageRef = decisionCoverageRef(caseRef, alternative.id, alternative.version)
+    data.coverage[coverageRef] = { coverageRef, basis: structuredClone(basis), assessment: structuredClone(alternative.result.costCoverage) }
+  }
+  const emit = async <T extends object>(stage: Stage, key: string, args: unknown[], incoming: T): Promise<T> => {
+    let value = incoming
+    if (state.reuseReplies) {
+      const prior = state.replies.get(stage)
+      if (prior) { for (const name of Object.keys(prior)) delete (prior as Record<string, unknown>)[name]; Object.assign(prior, incoming); value = prior as T }
+      else state.replies.set(stage, value)
+    }
+    state.events.push({ stage, key })
+    const count = ++state.counts[stage]
+    await state.hook?.({ stage, count, key, args, value })
+    return value
+  }
+  const business: KnownSubtotalMetricDependencies["business"] = {
+    results: {
+      read: async () => { throw new Error("Historical scenario reads must retain their canonical reader") },
+      readHistoricalScenario: async (selector, call) => {
+        if (call !== context) return { status: "denied", reason: "fixture-context-mismatch" }
+        const value = data.stored[selector.resultRef]
+        return emit("history", selector.resultRef, [selector, call], value
+          ? { status: "ok" as const, value: structuredClone(value) }
+          : { status: "unavailable" as const, reason: "fixture-result-missing" })
+      },
+    },
+    cases: { read: async (selector, call) => {
+      if (call !== context || selector.caseRef !== encodeCaseRef(caseRef)) return { status: "denied", reason: "fixture-case-scope-mismatch" }
+      const value: AuthorizedCaseProjection = { context: { ...identity, kind: "ui" },
+        case: { ...structuredClone(data.decision), preparedChanges: [], receipts: [] }, events: [], evidenceRefs: records, checkedAt: at }
+      return emit("case", selector.caseRef, [selector, call], { status: "ok" as const, value })
+    } },
+    plannerSources: {
+      resolveForecastSource: async (reference, call) => {
+        if (call !== context) return { status: "denied", reason: "fixture-context-mismatch" }
+        const value = data.sources[reference]
+        return emit("source", reference, [reference, call], value
+          ? { status: "ok" as const, value: structuredClone(value) }
+          : { status: "unavailable" as const, reason: "fixture-source-missing" })
+      },
+      resolveForecastCoverage: async (reference, call) => {
+        if (call !== context) return { status: "denied", reason: "fixture-context-mismatch" }
+        const value = data.coverage[reference]
+        return emit("coverage", reference, [reference, call], value
+          ? { status: "ok" as const, value: structuredClone(value) }
+          : { status: "unavailable" as const, reason: "fixture-coverage-missing" })
+      },
+    },
+    projectPlannerEvidence: async (source, call, selected) => {
+      if (call !== context) return { status: "denied", reason: "fixture-context-mismatch" }
+      const value = data.projections[source.target.recordId]
+      return emit("projection", source.target.recordId, [source, call, selected], value
+        ? { status: "ok" as const, value: structuredClone(value) }
+        : { status: "unavailable" as const, reason: "fixture-projection-missing" })
+    },
+  }
+  const input: KnownSubtotalMetricDependencies = { host, business }
+  const changeAlternative = (index: number, change: (value: DecisionCase["alternatives"][number]) => DecisionCase["alternatives"][number]) => {
+    const alternative = change(structuredClone(data.decision.alternatives[index]!))
+    data.decision.alternatives = data.decision.alternatives.map((value, selected) => selected === index ? alternative : value)
+    const previous = data.stored[references[index]!]!
+    data.stored[references[index]!] = { ...previous, requestDigest: digestSfValue(alternative.scenario), resultDigest: digestSfValue(alternative.result),
+      result: structuredClone(alternative.result), sourceRefs: structuredClone(alternative.result.sourceRefs) }
+  }
+  const resolved = (reference: string): PortResult<ResolvedScenario> => {
+    const index = references.indexOf(reference as typeof references[number])
+    if (index < 0) return { status: "unavailable", reason: "fixture-result-missing" }
+    const alternative = data.decision.alternatives[index]!, source = records[index]!
+    return { status: "ok", value: structuredClone({ result: alternative.result, source, basis,
+      coverageRef: decisionCoverageRef(caseRef, alternative.id, alternative.version), projection: data.projections[source.target.recordId]! }) }
+  }
+  return { input, host, business, context, ui, request, transport, abort, state, data, records, basis, resolved, changeAlternative,
+    read: createSfKnownSubtotalMetric(input), close: () => ui.finish(context) }
+}
+type Fixture = Awaited<ReturnType<typeof fixture>>
+
+function metric(result: MetricResult): CriterionMetric {
+  expect(result).not.toBe(knownSubtotalMetricNotApplicable)
+  if (typeof result === "symbol" || result.status !== "ok") throw new Error("Expected a proved metric")
+  return result.value
+}
+function refused(result: MetricResult, status?: Exclude<PortResult<unknown>["status"], "ok">) {
+  expect(result).not.toBe(knownSubtotalMetricNotApplicable)
+  if (typeof result === "symbol") throw new Error("A failed eligible proof must not select legacy fallback")
+  expect(result.status).not.toBe("ok")
+  if (status) expect(result.status).toBe(status)
+}
+function afterFirstProjection(f: Fixture, mutate: (value: Fixture) => void) {
+  f.state.hook = ({ stage, count }) => { if (stage === "projection" && count === 1) mutate(f) }
+}
+
+function wired(f: Fixture) {
+  const scenarios: PlannerScenarioHost = {
+    resolve: async (reference, call) => { expect(call).toBe(f.context); f.state.legacyScalar.push(reference); return f.resolved(reference) },
+    resolveMany: async (incoming, call) => { expect(call).toBe(f.context); f.state.legacyBatches.push([...incoming]); return incoming.map(f.resolved) },
+  }
+  const unexpected = () => { f.state.writes++; throw new Error("Unrelated Portfolio operation entered by metric contract") }
+  // Only the readMetric dependency path is exercised. All unrelated services
+  // fail explicitly; this is not a fake complete installed Portfolio host.
+  const services = { ...f.business, plannerProduct: { scenarios }, planner: {}, operationIdentity: () => "metric-contract",
+    readSourceFences: unexpected, lockedSourceFences: unexpected, context: { context: unexpected }, selectedCase: unexpected, resolveCase: unexpected }
+  const authority = { host: f.host, ui: f.ui, human: { authorize: unexpected }, state: { read: unexpected, transaction: unexpected } }
+  return createSfPortfolioAuthority({ authority, business: services, proposalCoverageWrites: new WeakSet<object>(), proof: () => undefined } as unknown as Parameters<typeof createSfPortfolioAuthority>[0]).readMetric
+}
+
+test("known subtotal metric preserves USD 1200, pending coverage and null totals through two independent observations", async () => {
+  const f = await fixture()
+  try {
+    const before = structuredClone(f.data)
+    expect(metric(await f.read(f.request, f.context))).toEqual({ ...f.request, value: 1200, unit: "USD", period,
+      evidenceRefs: f.records, state: "conditioned", engineVersion: "planner-contract-v1" })
+    expect(f.data.decision.alternatives.map((value) => value.result.total)).toEqual([null, null])
+    expect(f.data.decision.alternatives.every((value) => value.result.costCoverage.coverageState === "pending")).toBe(true)
+    expect(f.state.events.filter((event) => event.stage === "history").map((event) => event.key)).toEqual([...references, ...references])
+    expect(f.state.events.filter((event) => event.stage === "projection").map((event) => event.key)).toEqual(["v0", "v1", "v0", "v1"])
+    expect(f.state.counts).toEqual({ history: 4, case: 2, projection: 4, source: 4, coverage: 4 })
+    expect(f.data).toEqual(before)
+  } finally { f.close() }
+})
+
+test("only actual canonical complete coverage yields a confirmed metric", async () => {
+  const f = await fixture({ complete: true })
+  try {
+    const baseline = f.resolved(references[0]), candidate = f.resolved(references[1])
+    if (baseline.status !== "ok" || candidate.status !== "ok") throw new Error("Fixture observations unavailable")
+    const oracle = comparePlannerScenarios({ baselineRef: references[0], alternativeRef: references[1],
+      baselineCoverageRef: baseline.value.coverageRef, alternativeCoverageRef: candidate.value.coverageRef,
+      baseline: baseline.value.result, alternative: candidate.value.result, baselineProof: baseline.value, alternativeProof: candidate.value })
+    expect(oracle.comparisonStatus).toBe("complete")
+    expect(oracle.completeDifference).toBe(1200)
+    expect(metric(await f.read(f.request, f.context))).toMatchObject({ value: 1200, state: "confirmed", unit: "USD" })
+  } finally { f.close() }
+})
+
+test("zero is a real amount while all absent components cannot manufacture zero", async () => {
+  const zero = await fixture({ amounts: [[0], [0]] })
+  try {
+    expect(metric(await zero.read(zero.request, zero.context))).toMatchObject({ value: 0, state: "conditioned" })
+    expect(zero.data.decision.alternatives.every((value) => value.result.total === null)).toBe(true)
+  } finally { zero.close() }
+  const absent = await fixture({ amounts: [[null], [null]] })
+  try {
+    expect(await absent.read(absent.request, absent.context)).toBe(knownSubtotalMetricNotApplicable)
+    expect(absent.state.counts.projection).toBe(0)
+    expect(metric(await wired(absent)(absent.request, absent.context))).toMatchObject({ value: null, state: "conditioned" })
+    expect(absent.state.legacyBatches).toEqual([[...references], [...references]])
+    for (const index of [0, 1]) absent.changeAlternative(index, (value) => ({ ...value, result: { ...value.result, knownSubtotal: 0 } as ScenarioResult }))
+    refused(await absent.read(absent.request, absent.context), "unavailable")
+  } finally { absent.close() }
+})
+
+test("canonical component order retains IEEE-754 known-subtotal rounding", async () => {
+  const f = await fixture({ amounts: [[1e16, 1, -1e16], [1e16, -1e16, 1]] })
+  try { expect(metric(await f.read(f.request, f.context))).toMatchObject({ value: 1, state: "conditioned" }) }
+  finally { f.close() }
+})
+
+test("reused port result objects retain baseline-candidate order and detached output", async () => {
+  const f = await fixture({ reuseReplies: true })
+  try {
+    const first = metric(await f.read(f.request, f.context))
+    expect(first.value).toBe(1200)
+    expect(first.evidenceRefs.map((ref) => ref.refId)).toEqual(f.records.map((ref) => ref.refId))
+    first.evidenceRefs[0]!.refDigest = "0".repeat(64)
+    first.period.start = "1900-01-01"
+    const second = metric(await f.read(f.request, f.context))
+    expect(second.value).toBe(1200)
+    expect(second.evidenceRefs).toEqual(f.records)
+    expect(second.period).toEqual(period)
+    expect(f.state.counts.history).toBe(8)
+  } finally { f.close() }
+})
+
+for (const [name, mutate] of [
+  ["source incarnation/version", (f: Fixture) => {
+    const source = f.data.sources[f.records[0]!.refId]!.evidence
+    source.target.version++; source.refDigest = digestSfEvidenceRef(source)
+  }],
+  ["coverage assessment", (f: Fixture) => {
+    const ref = decisionCoverageRef(caseRef, "baseline", 1), value = f.data.coverage[ref]!
+    value.assessment = { ...value.assessment, issues: ["source-proof-changed"] }
+  }],
+  ["current projection engine", (f: Fixture) => { f.data.projections.v0!.engineVersion = "changed-engine" }],
+] as const) test(`metric refuses ${name} drift between proof phases`, async () => {
+  const f = await fixture()
+  try {
+    f.state.hook = ({ stage, count }) => { if (stage === "coverage" && count === 2) mutate(f) }
+    refused(await f.read(f.request, f.context), "stale")
+  } finally { f.close() }
+})
+
+test("final historical metadata and whole-case content are independently fenced", async () => {
+  const history = await fixture()
+  try {
+    afterFirstProjection(history, (f) => { f.data.stored[references[0]]!.createdAt = "2026-11-15T03:00:01.000Z" })
+    refused(await history.read(history.request, history.context), "stale")
+  } finally { history.close() }
+  const wholeCase = await fixture()
+  try {
+    wholeCase.state.hook = ({ stage, count }) => { if (stage === "history" && count === 4) wholeCase.data.decision.objective = "Changed without advancing the declared version" }
+    refused(await wholeCase.read(wholeCase.request, wholeCase.context), "stale")
+  } finally { wholeCase.close() }
+})
+
+for (const [name, mutate] of [
+  ["historical reader", (f: Fixture) => { const old = f.business.results.readHistoricalScenario; f.business.results.readHistoricalScenario = (...args) => old(...args) }],
+  ["general result reader", (f: Fixture) => { const old = f.business.results.read; f.business.results.read = (...args) => old(...args) }],
+  ["whole-case reader", (f: Fixture) => { const old = f.business.cases.read; f.business.cases.read = (...args) => old(...args) }],
+  ["projection producer", (f: Fixture) => { const old = f.business.projectPlannerEvidence; f.business.projectPlannerEvidence = (...args) => old(...args) }],
+  ["source resolver", (f: Fixture) => { const old = f.business.plannerSources.resolveForecastSource; f.business.plannerSources.resolveForecastSource = (...args) => old(...args) }],
+  ["coverage resolver", (f: Fixture) => { const old = f.business.plannerSources.resolveForecastCoverage; f.business.plannerSources.resolveForecastCoverage = (...args) => old(...args) }],
+  ["requestFor", (f: Fixture) => { const old = f.host.requestFor; f.host.requestFor = (...args) => old(...args) }],
+  ["revalidation", (f: Fixture) => { const old = f.host.revalidate; f.host.revalidate = (...args) => old(...args) }],
+  ["authentication", (f: Fixture) => { const old = f.host.authenticate; f.host.authenticate = (...args) => old(...args) }],
+  ["environment", (f: Fixture) => { const old = f.host.environment; f.host.environment = (...args) => old(...args) }],
+] as const) test(`metric rejects ${name} replacement even when the new method delegates the same value`, async () => {
+  const f = await fixture()
+  try { afterFirstProjection(f, mutate); refused(await f.read(f.request, f.context), "stale") }
+  finally { f.close() }
+})
+
+for (const [name, mutate] of [
+  ["Request identity", (f: Fixture) => { f.state.requestOverride = new Request(f.transport.url, { method: "POST", headers: f.transport.headers }) }],
+  ["Request headers", (f: Fixture) => { f.transport.headers.set("x-metric-source", "changed") }],
+  ["authority revision", (f: Fixture) => { f.state.identity.accessRevision = "access-2" }],
+  ["aborted Request", (f: Fixture) => { f.abort.abort() }],
+  ["input payload", (f: Fixture) => { f.request.ruleVersion = 2 }],
+] as const) test(`metric cannot publish after ${name} changes`, async () => {
+  const f = await fixture()
+  try { afterFirstProjection(f, mutate); refused(await f.read(f.request, f.context)) }
+  finally { f.close() }
+})
+
+test("serialized UI binding cannot recover its private lease", async () => {
+  const f = await fixture()
+  try {
+    const forged = { ...f.context, binding: { ...f.context.binding }, lease: {} } as unknown as TrustedUiContext
+    refused(await f.read(f.request, forged), "denied")
+    expect(f.state.counts.history).toBe(0)
+  } finally { f.close() }
+})
+
+test("mutable callback arguments are isolated and rejected instead of changing the captured source", async () => {
+  const f = await fixture()
+  try {
+    const before = structuredClone(f.records)
+    f.state.hook = ({ stage, count, args }) => { if (stage === "projection" && count === 1) (args[0] as PlannerRecord).target.version++ }
+    refused(await f.read(f.request, f.context), "stale")
+    expect(f.records).toEqual(before)
+    expect(f.data.decision.alternatives[0]!.result.sourceRefs).toEqual([before[0]!])
+  } finally { f.close() }
+})
+
+test("historical batch order and result-to-case scope cannot be substituted", async () => {
+  const reversed = await fixture()
+  try {
+    const original = reversed.business.results.readHistoricalScenario
+    reversed.business.results.readHistoricalScenario = (selector, call) => original({ resultRef: selector.resultRef === references[0] ? references[1] : references[0] }, call)
+    refused(await reversed.read(reversed.request, reversed.context), "denied")
+  } finally { reversed.close() }
+  const replaced = await fixture()
+  try {
+    replaced.data.stored[references[1]]!.caseRef = { ...caseRef, incarnation: "other-case-inc" }
+    refused(await replaced.read(replaced.request, replaced.context), "denied")
+  } finally { replaced.close() }
+})
+
+for (const [name, mutate] of [
+  ["stored arithmetic", (f: Fixture) => f.changeAlternative(1, (value) => ({ ...value, result: { ...value.result, knownSubtotal: 999 } as ScenarioResult }))],
+  ["component amount", (f: Fixture) => { const p = f.data.projections.v1!; p.components = p.components.map((value) => ({ ...value, amount: 2500 })) }],
+  ["duplicate component identity", (f: Fixture) => {
+    const p = f.data.projections.v1!, component = { ...structuredClone(p.components[0]!), amount: 1200 }
+    p.components = [component, structuredClone(component)]
+    f.changeAlternative(1, (value) => ({ ...value, result: { ...value.result, components: structuredClone(p.components) } as ScenarioResult }))
+  }],
+] as const) test(`current projection must prove ${name}; valid hashes alone do not authenticate money`, async () => {
+  const f = await fixture()
+  try { mutate(f); refused(await f.read(f.request, f.context), "unavailable") }
+  finally { f.close() }
+})
+
+for (const [name, alter] of [
+  ["operation", (value: DecisionCase["alternatives"][number]) => ({ ...value, scenario: { ...value.scenario, operations: [{ kind: "exclude" as const, targetRef: "service:1" }] } })],
+  ["assumption", (value: DecisionCase["alternatives"][number]) => ({ ...value, scenario: { ...value.scenario, assumptions: [{ id: "assumption", value: 1, state: "hypothetical" as const, evidenceRefs: [] }] } })],
+] as const) test(`unsupported ${name} selects the real legacy wiring exactly through the sentinel`, async () => {
+  const f = await fixture()
+  try {
+    f.changeAlternative(1, alter)
+    expect(await f.read(f.request, f.context)).toBe(knownSubtotalMetricNotApplicable)
+    expect(f.state.counts.projection).toBe(0)
+    const readMetric = wired(f)
+    const result = await readMetric(f.request, f.context)
+    expect(result.status).toBe("ok")
+    expect(f.state.legacyBatches).toEqual([[...references], [...references]])
+    expect(f.state.legacyScalar).toEqual([])
+    expect(f.state.writes).toBe(0)
+  } finally { f.close() }
+})
+
+test("eligible proof failure never falls back to an otherwise successful legacy metric", async () => {
+  const f = await fixture()
+  try {
+    f.data.projections.v1!.engineVersion = ""
+    const readMetric = wired(f)
+    refused(await readMetric(f.request, f.context), "unavailable")
+    expect(f.state.legacyBatches).toEqual([])
+    expect(f.state.legacyScalar).toEqual([])
+    expect(f.state.writes).toBe(0)
+  } finally { f.close() }
+})
+
+test("a successful eligible metric uses its independent proof without entering legacy comparison", async () => {
+  const f = await fixture()
+  try {
+    const readMetric = wired(f)
+    expect(metric(await readMetric(f.request, f.context))).toMatchObject({ value: 1200, state: "conditioned", unit: "USD" })
+    expect(f.state.legacyBatches).toEqual([])
+    expect(f.state.counts.projection).toBe(4)
+    expect(f.state.writes).toBe(0)
+  } finally { f.close() }
+})
+
+test("an eligible coverage denial is propagated without retrying through legacy", async () => {
+  const f = await fixture()
+  try {
+    f.business.plannerSources.resolveForecastCoverage = async () => ({ status: "denied", reason: "fixture-coverage-access-revoked" })
+    const readMetric = wired(f)
+    expect(await readMetric(f.request, f.context)).toEqual({ status: "denied", reason: "fixture-coverage-access-revoked" })
+    expect(f.state.legacyBatches).toEqual([])
+    expect(f.state.legacyScalar).toEqual([])
+    expect(f.state.writes).toBe(0)
+  } finally { f.close() }
+})

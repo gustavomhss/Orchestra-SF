@@ -2021,5 +2021,29 @@
     "transport74": "PREPARED corrective owner M70-HTTP-01; installation proposal readonly for52",
     "canonical_cost76": "PREPARED own producer hotpaths; no52authority grant",
     "audit": "audits/control-delta-before-p7.json"
+  },
+  "latest_checkpoint52": {
+    "source_before_publication": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
+    "source_check_parent": "ea8003b703bae61f9a4452261a7780cc38f0c754",
+    "tested_composition": "C41",
+    "tested_base": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "unit03": {
+      "run": 43676716309,
+      "pass": 50,
+      "fail": 0,
+      "expects": 306
+    },
+    "nominal12": {
+      "run": 43676977918,
+      "pass": 3,
+      "fail": 2,
+      "receipt": "nominal-12.json"
+    },
+    "latest_observed_target": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "latest_observed_tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+    "next_nominal": 13,
+    "next_status": "DISPATCHED_NO_RESULT_YET",
+    "authority": "ACK71 observed; source52 ACTIVE; requested handoff47; no target writes52",
+    "GLOBAL_RELEASE": false
   }
 }

@@ -1,0 +1,82 @@
+{
+  "state": "METADATA_GRAPH_COHERENT_STATIC_ONLY",
+  "erratum": {
+    "path": "m52-audit/nominal12-43676977918/deadline-metadata-erratum/erratum.json",
+    "bytes": 13184,
+    "sha256": "4054383f9017fff5fb62f9f58bce64b474744b21bf99e11b9942f29a7e8b7b5f",
+    "git_blob": "e0d3f63faa524faf3c7e566225750f2decbd4d15"
+  },
+  "corrected_artifacts": [
+    {
+      "path": "m52-work/nominal12-envelope.json",
+      "bytes": 1533,
+      "sha256": "217d6c2e2bda9b1659ba1e9dc5c33504ba31dac1281719c65ccfd30fc1157604",
+      "git_blob": "633a4946cb689bb75e49e74e5a05d2b5531f0be7"
+    },
+    {
+      "path": "m52-work/nominal12-dispatched-envelope.json",
+      "bytes": 1533,
+      "sha256": "217d6c2e2bda9b1659ba1e9dc5c33504ba31dac1281719c65ccfd30fc1157604",
+      "git_blob": "633a4946cb689bb75e49e74e5a05d2b5531f0be7"
+    },
+    {
+      "path": "m52-work/p9-publication/ci/nominal12-request.json",
+      "bytes": 1533,
+      "sha256": "217d6c2e2bda9b1659ba1e9dc5c33504ba31dac1281719c65ccfd30fc1157604",
+      "git_blob": "633a4946cb689bb75e49e74e5a05d2b5531f0be7"
+    },
+    {
+      "path": "m52-audit/nominal12-43676977918/nominal-12-receipt.json",
+      "bytes": 115798,
+      "sha256": "bed4754e095a303c7d83df90b2524578981421da831dfa9d46a64352d4e6eeb7",
+      "git_blob": "64a440144d82b2b7489dd7ed54307f1920bad1a8"
+    },
+    {
+      "path": "mission52-criteria-v12-pending.json",
+      "bytes": 952986,
+      "sha256": "ac3729d144ba94924c68aa95d6889b58f5a7158c168ef0f67b056d8c0fba8a50",
+      "git_blob": "166168bb2807978228d415687528f7de98239377"
+    },
+    {
+      "path": "m52-work/criteria-v12-pending-integrity.json",
+      "bytes": 2821,
+      "sha256": "dc6d661736eaab4bbb39a848e741f74344ed590ac8c742319ea32b6cae8320ee",
+      "git_blob": "329da308f1285209fcc554c6b9eedd745fff251a"
+    },
+    {
+      "path": "mission52-criteria-v12-final.json",
+      "bytes": 1038306,
+      "sha256": "43978b3bacf1fe99f927180f7b8c02eb55903652af3d894c3e19abae24d77343",
+      "git_blob": "c7a75b4786d0415ee695d4d9836e860662be3743"
+    },
+    {
+      "path": "m52-work/criteria-v12-final-integrity.json",
+      "bytes": 3100,
+      "sha256": "1e4fd961b1196effa3b93c1b434f9ba892fc3d3275735bb00bc11ff85d483af4",
+      "git_blob": "a79716381067c515636def43ed9433eac44c8a16"
+    },
+    {
+      "path": "m52-work/p9-publication/delivery/p9-evidence-manifest.json",
+      "bytes": 22182,
+      "sha256": "de0384ebb56ac5bd155e870f03b37c2c8f05b4b0ed87a73a70cf9f156fa5e476",
+      "git_blob": "a113f378e42ccd2f0ed9e9ad3a141f8c0cc4019a"
+    }
+  ],
+  "source_blob": "0a330a1377326e3ea919b4714cada83a208efc39",
+  "deadline_ms": 10000,
+  "checks": {
+    "actual_W11_W12_blob_identical": true,
+    "source_git_blob_verified": true,
+    "envelope_three_copies_identical": true,
+    "receipt_reference_hashes_current": true,
+    "criteria_receipt_and_envelope_hashes_current": true,
+    "integrity_output_and_input_hashes_current": true,
+    "publication_existing_ci_manifest_entry_current": true,
+    "all83_originals_and146_fragments_preserved": true,
+    "raw_runtime_inputs_unchanged": true,
+    "runtime_statuses_unchanged": true,
+    "no_product_or_test_change": true
+  },
+  "ready_for_root_packet_review": true,
+  "publication_performed": false
+}

@@ -1,0 +1,178 @@
+{
+  "schema": "sf-m52-deadline-source-audit-v1",
+  "state": "EXACT_PINNED_SOURCE_READ_NO_RUNTIME_EXECUTION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+  "sources": [
+    {
+      "label": "W12",
+      "ref": "c4883ae51636a4ebbcf9274994e96e2725214e48",
+      "blob": "0a330a1377326e3ea919b4714cada83a208efc39",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c4883ae51636a4ebbcf9274994e96e2725214e48/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts"
+    },
+    {
+      "label": "W11",
+      "ref": "fb9ed54674e7792008e8d1bd7425adc7effe8c09",
+      "blob": "0a330a1377326e3ea919b4714cada83a208efc39",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/fb9ed54674e7792008e8d1bd7425adc7effe8c09/modules/sucafina/Sucafinav1/product/ui/decision-choice.ts"
+    }
+  ],
+  "contents_equal": true,
+  "configured_decision_compare_deadline_ms": 10000,
+  "request_lifecycle": {
+    "send_definition_line": 138,
+    "timer_line": 140,
+    "fetch_signal_line": 142,
+    "clear_timeout_line": 149,
+    "compare_click_handler_line": 163,
+    "compare_send_line": 169
+  },
+  "source_excerpt": [
+    {
+      "line": 138,
+      "text": "  const send = async (action, payload, id) => {"
+    },
+    {
+      "line": 139,
+      "text": "    const url = choiceEndpoint(action)"
+    },
+    {
+      "line": 140,
+      "text": "    const controller = new AbortController(); const deadline = setTimeout(() => controller.abort(), 10000)"
+    },
+    {
+      "line": 141,
+      "text": "    try {"
+    },
+    {
+      "line": 142,
+      "text": "      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: controller.signal, headers: { 'Content-Type': 'application/json', 'Idempotency-Key': id }, body: typeof payload === 'string' ? payload : JSON.stringify(payload) })"
+    },
+    {
+      "line": 143,
+      "text": "      if (accessRevoked || response.status === 401 || response.status === 403) { dispatchEvent(new Event('sf-access-revoked')); throw Object.assign(new Error('access-changed'), { accessDenied: true }) }"
+    },
+    {
+      "line": 144,
+      "text": "      const value = await response.json()"
+    },
+    {
+      "line": 145,
+      "text": "      if (accessRevoked) throw Object.assign(new Error('access-changed'), { accessDenied: true })"
+    },
+    {
+      "line": 146,
+      "text": "      if (!response.ok || value.status !== 'ok') throw Object.assign(new Error('unavailable'), { httpStatus: response.status, inputRejected: response.status === 400 && value.reason === 'invalid-decision-input', rejected: [400, 409, 422].includes(response.status) && ['invalid', 'needs-input', 'conflict'].includes(value.status) })"
+    },
+    {
+      "line": 147,
+      "text": "      if (!active()) throw new Error('closed')"
+    },
+    {
+      "line": 148,
+      "text": "      return value.value"
+    },
+    {
+      "line": 149,
+      "text": "    } finally { clearTimeout(deadline) }"
+    },
+    {
+      "line": 150,
+      "text": "  }"
+    },
+    {
+      "line": 151,
+      "text": "  const rejected = (error, wasUncertain, message, kind) => {"
+    },
+    {
+      "line": 152,
+      "text": "    if (error?.accessDenied) { revoke(); return true }"
+    },
+    {
+      "line": 153,
+      "text": "    if (!active()) return true"
+    },
+    {
+      "line": 154,
+      "text": "    // Sensitivity may persist its result before a binding conflict is returned."
+    },
+    {
+      "line": 155,
+      "text": "    // An initial 409 therefore cannot release that request's body or key."
+    },
+    {
+      "line": 156,
+      "text": "    if (error?.rejected && pending && !pending.resultRef && !(pending.kind === 'sensitivity' && error.httpStatus === 409 && !wasUncertain)) {"
+    },
+    {
+      "line": 157,
+      "text": "      if (wasUncertain || pending.intent && !error.inputRejected) { reconciliationRequired = true; message.textContent = 'The request was rejected but the earlier ' + kind + ' is still unconfirmed. Reopen the decision to reconcile its current state.' }"
+    },
+    {
+      "line": 158,
+      "text": "      else { if (pending.intent) { sessionStorage.removeItem(storageKey); releaseChoicePeers() }; pending = undefined; key = crypto.randomUUID(); portfolioKey = crypto.randomUUID(); sensitivityKey = crypto.randomUUID(); message.textContent = 'The ' + kind + ' was rejected. Your entries are preserved; review the current decision before retrying.' }"
+    },
+    {
+      "line": 159,
+      "text": "      return true"
+    },
+    {
+      "line": 160,
+      "text": "    }"
+    },
+    {
+      "line": 161,
+      "text": "    return false"
+    },
+    {
+      "line": 162,
+      "text": "  }"
+    },
+    {
+      "line": 163,
+      "text": "  compare.addEventListener('click', async () => {"
+    },
+    {
+      "line": 164,
+      "text": "    if (!active() || locked() || compare.disabled) return"
+    },
+    {
+      "line": 165,
+      "text": "    const fields = new FormData(form); const baseline = fields.get('baseline'); const alternative = fields.get('alternative'); const criteria = fields.getAll('criteria')"
+    },
+    {
+      "line": 166,
+      "text": "    if (baseline === alternative || context.criteria.some((criterion) => criterion.required && !criteria.includes(criterion.id))) { output.textContent = 'Select two different alternatives and all required criteria.'; return }"
+    },
+    {
+      "line": 167,
+      "text": "    begin(); rule = undefined; numericBasis = undefined; numeric.hidden = true; numericEvidence.replaceChildren(); numericDescription.textContent = ''; sensitivity.hidden = true; output.textContent = 'Comparing alternatives…'"
+    },
+    {
+      "line": 168,
+      "text": "    try {"
+    },
+    {
+      "line": 169,
+      "text": "      const compared = await send('decision-compare', { caseRef: context.caseRef, baselineAlternativeId: baseline, alternativeId: alternative, criteria }, crypto.randomUUID())"
+    },
+    {
+      "line": 170,
+      "text": "      result = { request: compared.request, baselineAlternativeId: baseline, alternativeId: alternative, criteria, rulesReady: !compared.comparison.criterionResults.some((criterion) => criterion.reason === 'criterion-rule-unavailable') }; key = crypto.randomUUID(); portfolioKey = crypto.randomUUID()"
+    },
+    {
+      "line": 171,
+      "text": "      const value = compared.comparison; output.replaceChildren()"
+    }
+  ],
+  "finding": "The same UI blob schedules controller.abort() after10000ms and passes its signal to the original decision-compare fetch in both W12 and W11. The former15000ms envelope field was a metadata error; no code, test budget or request timer is changed.",
+  "limits": [
+    "Static source verification only; no elapsed HTTP duration or causal root of runtime ERR_ABORTED is proved.",
+    "Original five per-case budgets180000ms/retries0 remain as recorded in the hosted runtime."
+  ],
+  "source_utf8_bytes": 50577,
+  "source_sha256": "9c77905882d364bb44bcfeee017d6ea4856ffdcc0e13f9d39b591309e0b0f546",
+  "source_git_blob_verified": "0a330a1377326e3ea919b4714cada83a208efc39",
+  "full_source_copy": "decision-choice.ts.txt",
+  "method": "GitHub MCP immutable ref fetch; UTF8 content Git-blob hash verified independently by deterministic byte processing."
+}
