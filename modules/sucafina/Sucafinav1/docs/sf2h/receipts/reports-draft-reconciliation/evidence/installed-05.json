@@ -1,0 +1,51 @@
+{
+  "id": "E-M48-INSTALLED-05",
+  "run": 43659599684,
+  "job": 132645714268,
+  "cleanup_job": 132646302579,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43659599684",
+  "source": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+  "source_tree": "0fc313477baa7e2602361e2fef6c8cc4a6ea766c",
+  "W": "25b00c94c25fc36363cfd8c0063c5ab85d6966c8",
+  "W_tree": "2a3442a86ab02a9739303575d31c5d9093fd8049",
+  "S": "820a93a5d75bec7923d743574aa12946249a1bc1",
+  "S_tree": "773b24514e785170470c28f81e364608a331f202",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "--timeout",
+      "60000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "cd3364e7e257575d574f06e62c7b865bae97aa053046934516492299c10e7c66",
+  "request_blob": "6d6515f2a5666c7fb5dd13aad55fde98484b344c",
+  "request_only_diff": [
+    ".ci-run.json"
+  ],
+  "conclusion": "success",
+  "pass": 4,
+  "fail": 0,
+  "total": 4,
+  "selected_files": [
+    "Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts"
+  ],
+  "expect_calls": 103,
+  "duration_seconds": 11.87,
+  "log": "evidence/installed-05.log",
+  "omni": {
+    "nonce": "3a42002bfebb4e9f4424c3071ce4cc1b",
+    "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  },
+  "scope": "Actual four installed-composition tests on W4/C19 with full21 shared patches. This PASS covers only the selected file; it is not the unchanged 78-case boundary gate, full four-browser qualification, source/composed compiler gate, or criterion acceptance.",
+  "limitations": [
+    "The installed sf-human alias case proves resolver uncertainty then real missing-grant denial; positive-authorized alias is not claimed by that fixture.",
+    "The preserved-review cycle uses actual agenda/preserve HTTP and C05/receipt; no C05/receipt or positive authorization was fabricated.",
+    "All four new cases retain 60000ms individual budgets; no existing assertion/budget changed."
+  ],
+  "shared_patch_sha256": "d4c4bc8930692289259359a1448fc6ea8dbe7d072ce929266f0210d5599dcbd1"
+}

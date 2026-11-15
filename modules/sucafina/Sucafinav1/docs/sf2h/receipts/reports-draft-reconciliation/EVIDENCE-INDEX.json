@@ -1,0 +1,67 @@
+{
+  "schema": "orchestra-sf.reports48.evidence-index.v1",
+  "purpose": "Durable result receipts and exact immutable historical log provenance; raw runner output is not carried as new agent scratch files in the current source tree.",
+  "guard_finding": {
+    "run": 43659849107,
+    "job": 132646486974,
+    "rule": "agent-scratch",
+    "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+    "own_paths": 4,
+    "historical36_paths_outside_mission48_write_scope": 3
+  },
+  "retired_from_current_tree": [
+    {
+      "name": "boundary-01.log",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/boundary-01.log",
+      "commit": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+      "blob": "0651be1c7acc96ea3fb1aa1bdf45fb7601d0e483",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d1ddde582bdd99db92f37b6d3abef70578e7a2d8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/boundary-01.log",
+      "bytes": 85621,
+      "sha256": "fece97d8911683776c8a37f74a00a011e9bc96c7218a3f79c95098238e6489a8",
+      "logical_receipt_reference": "evidence/boundary-01.log",
+      "content_preserved": "Exact bytes remain in immutable source5 commit and Git blob, independently verified by MCP and local byte hash. No history rewrite or renamed raw-output file."
+    },
+    {
+      "name": "causal-02.log",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/causal-02.log",
+      "commit": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+      "blob": "aa50805006425eeb9d2e47d17e26cf4d7254442b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d1ddde582bdd99db92f37b6d3abef70578e7a2d8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/causal-02.log",
+      "bytes": 69209,
+      "sha256": "ec7fd6217c9ed327d9bf9f521b851aabb0e841ef353feee2e71a0220e5c28198",
+      "logical_receipt_reference": "evidence/causal-02.log",
+      "content_preserved": "Exact bytes remain in immutable source5 commit and Git blob, independently verified by MCP and local byte hash. No history rewrite or renamed raw-output file."
+    },
+    {
+      "name": "nominal-03.log",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03.log",
+      "commit": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+      "blob": "97113843f8c332ca7bf2e8d02d1736f3de5b4a13",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d1ddde582bdd99db92f37b6d3abef70578e7a2d8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03.log",
+      "bytes": 110287,
+      "sha256": "3eda052c4534e371ccee225406ac662a67c38080069a5560143407c32008a2c3",
+      "logical_receipt_reference": "evidence/nominal-03.log",
+      "content_preserved": "Exact bytes remain in immutable source5 commit and Git blob, independently verified by MCP and local byte hash. No history rewrite or renamed raw-output file."
+    },
+    {
+      "name": "nominal-04.log",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04.log",
+      "commit": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+      "blob": "1a216c37ff6883e903165d94ce4f9fe2866d5aba",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d1ddde582bdd99db92f37b6d3abef70578e7a2d8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04.log",
+      "bytes": 112261,
+      "sha256": "8dbe7208f13684091d2159c267d5934ca1b73fbbf019aabf782c1d8cf0ac4ba1",
+      "logical_receipt_reference": "evidence/nominal-04.log",
+      "content_preserved": "Exact bytes remain in immutable source5 commit and Git blob, independently verified by MCP and local byte hash. No history rewrite or renamed raw-output file."
+    }
+  ],
+  "preserved_structured_results": [
+    "evidence/boundary-01.json",
+    "evidence/causal-02.json",
+    "evidence/nominal-03.json",
+    "evidence/nominal-04.json",
+    "evidence/installed-05.json"
+  ],
+  "remaining_scope": "Three Reports36 raw log paths are outside mission48 write paths and were not edited. MCP readback confirmed all three are absent from W4; this observation is not a composed guards PASS.",
+  "future_runs": "Persist structured per-case outcomes, exact identities, request hashes, artifact/job URLs and diagnostic findings. Raw downloaded job logs remain analysis material; do not rename them to bypass the guard."
+}

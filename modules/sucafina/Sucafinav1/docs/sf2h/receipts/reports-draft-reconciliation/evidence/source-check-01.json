@@ -1,0 +1,168 @@
+{
+  "schema": "orchestra-sf.reports48.source-check.v1",
+  "id": "E-M48-SOURCE-CHECK-01",
+  "run": 43659849107,
+  "job": 132646486974,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43659849107",
+  "conclusion": "failure",
+  "source": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+  "source_tree": "0fc313477baa7e2602361e2fef6c8cc4a6ea766c",
+  "executed_sha": "4e9997f7e9a285975c4c7735dcf9b2c18cc2185d",
+  "executed_tree": "0fc313477baa7e2602361e2fef6c8cc4a6ea766c",
+  "guard_base": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "ref": "astra-check-wp07",
+  "workflow": ".github/workflows/astra-wp07-check.yml",
+  "workflow_blob": "28c453f4b7735f944e1237715e399e955d86546c",
+  "source_equivalence": {
+    "method": "GitHub MCP compare source d1dd to validation child4e999; same tree; zero changed files",
+    "changed_files": 0
+  },
+  "typecheck": {
+    "command": "bun typecheck",
+    "directory": "modules/sucafina",
+    "exit_code": 2,
+    "diagnostics": 186,
+    "prior36_diagnostics": 137,
+    "identical_path_code_message": 136,
+    "new_test_diagnostics": 49,
+    "changed_text_on_unchanged_wp06_file": 1,
+    "diagnostic_receipt": "evidence/source-check-01-diagnostics.json",
+    "assessment": "The49 new own-test diagnostics refer to missing imported dependencies/APIs and derivative type loss on the uncomposed source lane. Static triage remains separate from a composed compiler run; no assertions or types are weakened."
+  },
+  "guards": {
+    "command": "bun run check:guards --base origin/dev",
+    "directory": ".",
+    "exit_code": 1,
+    "rules": 78,
+    "changed_paths": 910,
+    "gate": 7,
+    "warn": 12,
+    "errors": 0,
+    "findings": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/client-and-collection.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 883,
+        "mission48_owned": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/nominal-03.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 884,
+        "mission48_owned": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/source-guards.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 885,
+        "mission48_owned": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/boundary-01.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 886,
+        "mission48_owned": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/causal-02.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 887,
+        "mission48_owned": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-03.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 888,
+        "mission48_owned": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/evidence/nominal-04.log",
+        "rule": "agent-scratch",
+        "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+        "log_line": 889,
+        "mission48_owned": true
+      }
+    ]
+  },
+  "export_fixtures": {
+    "status": "generated",
+    "command": "bun run modules/sucafina/Sucafinav1/test/product/wp07/generate-export-fixtures.ts",
+    "exit_code": 0,
+    "visual_or_browser_credit": false,
+    "manifest": {
+      "schema": "wp07-export-inspection-v1",
+      "fixture": "explicit synthetic data; 25 projects, long notes, monthly financial trajectory, empty section and preserved human comment",
+      "productSha": "4e9997f7e9a285975c4c7735dcf9b2c18cc2185d",
+      "runId": "43659849107",
+      "runAttempt": "1",
+      "contentExtraction": "passed",
+      "visualInspection": "pending; render and inspect these exact files",
+      "files": [
+        {
+          "name": "preserved-long.pptx",
+          "sha256": "6c01b81755edf1835cce97659ee3ca0d43085efaa26dd816c7bce442badddd74",
+          "bytes": 1063233,
+          "format": "pptx",
+          "kind": "preserved",
+          "selectedRecords": 26,
+          "slides": 39,
+          "figures": 1,
+          "extractedTextSha256": "7de5d5ada23b1b52bc7868bd3e3e253da6c768f674b1827becdb91e132121d3a"
+        },
+        {
+          "name": "legacy-long.pptx",
+          "sha256": "1771ad60d9b9afc8eb2d98f77f2ee0413b2c08147aca0393b21be2bcfe3925c3",
+          "bytes": 399219,
+          "format": "pptx",
+          "kind": "legacy",
+          "selectedRecords": 25,
+          "slides": 26,
+          "figures": 0,
+          "extractedTextSha256": "916d6aa734ed022187d7f7381fc0a9e4361d01ee1d8c718bab3209636676dbe6"
+        },
+        {
+          "name": "preserved-long.docx",
+          "sha256": "bbd4812ce40b1a45c597855b9f6236a91f5b4262f4e533a9b57f91c1f8b3968c",
+          "bytes": 15275,
+          "format": "docx",
+          "kind": "preserved",
+          "selectedRecords": 26,
+          "slides": null,
+          "figures": 1,
+          "extractedTextSha256": "aaf3cb909d7c67042ffde410e7217433812c737775d29e44e56f359569f47f3c"
+        },
+        {
+          "name": "legacy-long.docx",
+          "sha256": "8a91c1eb126d80a3db7cb5d66f9563c9fcdb32de8ff5b2b4772bd230138fe227",
+          "bytes": 9415,
+          "format": "docx",
+          "kind": "legacy",
+          "selectedRecords": 25,
+          "slides": null,
+          "figures": 0,
+          "extractedTextSha256": "e74e9e767adeefc4b232c8aae273b6dd79de420de3daa959f44f15b6d0e5dad5"
+        }
+      ]
+    }
+  },
+  "artifact": {
+    "id": 14139676911,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43659849107/artifacts/14139676911",
+    "zip_sha256": "a2aae6f403661ce00099c0f4636cbbfc56592f604ace4790d484c6d66a4fa4d7",
+    "verified_from_mcp_download": true
+  },
+  "job_log": {
+    "job_id": 132646486974,
+    "canonical_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43659849107/job/132646486974",
+    "bytes": 148018,
+    "sha256": "e1b636ec3f169713407364fe445aaa561f159a70505c65d77878832da71c6f6f",
+    "retention": "Raw output retained as analysis material; structured findings and immutable artifact references are the repository deliverable."
+  },
+  "scope": "Exact source-tree check through the existing interface. It is not a typecheck/guards PASS for source or composed W4. Shared patches remain inert in source; no compiler45 workflow or other owner path was edited."
+}

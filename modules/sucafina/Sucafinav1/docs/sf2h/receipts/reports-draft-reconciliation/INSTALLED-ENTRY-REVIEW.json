@@ -1,0 +1,125 @@
+{
+  "schema": "sf-mission48-installed-entry-final-static-review-v1",
+  "reviewer": "/root/cold_review",
+  "reviewed_at_utc": "2026-11-15T00:42:27.393720+00:00",
+  "verdict": "STATIC_PASS_PENDING_HOSTED_QUALIFICATION",
+  "scope": "Final delta from the reviewed 18-path bundle to the frozen 21-path bundle: three added shared paths, the three pre-consumption catches in reviews/http.ts, and the new four-case own test. No unrelated owner paths reviewed or edited.",
+  "package": {
+    "path": "mission48/proposal-read-boundary21/manifest.json",
+    "manifest_sha256": "1a2fd2e3d833939aa6fd07c93aedb74c02a426a5eae5919d7e659dec06498920",
+    "patch_sha256": "d4c4bc8930692289259359a1448fc6ea8dbe7d072ce929266f0210d5599dcbd1",
+    "target_count": 21,
+    "state": "FROZEN_INERT_NOT_APPLIED",
+    "base_commit": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "prior_bundle_sha256": "78d3268abc6299345de33b9d657d07cd5304ceaea7d700a97ee2936e11f4a6e4",
+    "integrity": "Every local preimage/postimage blob, SHA-256 and byte count matches the frozen manifest; complete patch and own test hashes match. Seventeen previous postimages are byte-identical. The only changed previous postimage is reviews/http.ts.",
+    "remote_readback": "The reviewer independently read the three added preimages at C19 5b11f1460fa44426626ea7674ccb8baf0a083e0a via GitHub MCP and matched the declared Git blobs. No publication or remote mutation was performed by this reviewer."
+  },
+  "reviewed_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+      "preimage_blob": "ce0e5655f19d7d60246024af013c811bf921b042",
+      "postimage_blob": "000e1aaedcc929f94e0dcb45d1e63267f1401531",
+      "preimage_sha256": "1fc0be8b40f4ea036080987c67619d8f8480dc3dc74c399897534dae95abab0c",
+      "postimage_sha256": "c8b94cd54f3cb33a724edfab998f2a64a3bb16fa4dc09a780d46529abd4af400"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "preimage_blob": "d8e0d149e37c640db8957f3e917f867088923d93",
+      "postimage_blob": "acfd548c15231bdc92a588b48462d580d220cad3",
+      "preimage_sha256": "4f126782c18018ec6f17da90c19a19c237731064d3ee23fbfe4769e793224dcc",
+      "postimage_sha256": "8d6295d9309ec640c5fd065794b9d1f71bdefb642873fd0388c03c607706aa8a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "preimage_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "postimage_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+      "preimage_sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+      "postimage_sha256": "e2fbaccd8329d0971242cb135ab1ec5ce8a109bce12175141fe9353e001f6eac"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-review-cycle.ts",
+      "preimage_blob": "cdbcf2d09cd82e352c41e5eb0b38055956f101e2",
+      "postimage_blob": "6960533cbb8cb128ec4e6d90583903107b5eeb0c",
+      "preimage_sha256": "29bcd90df60407f3166e181d6a76911e77b80aaf4cd5cb00e72d09b888dac84d",
+      "postimage_sha256": "e155f83fd97a61fd616f94473266e5b32ca1836dda7333f99e7010bc0fd4bf44"
+    }
+  ],
+  "findings": [
+    {
+      "id": "IR48-01",
+      "status": "RESOLVED_STATIC",
+      "subject": "Reports entry emitted by the actual form",
+      "assessment": "The predicate accepts no-sf docx/pptx downloads with the originating page, and retains the old Generate Report sentinel. Existing origin, surface, method, query cardinality, topic, period, title, admission and source discovery checks remain. xlsx is still outside this entry. BI modes and write handlers are unchanged."
+    },
+    {
+      "id": "IR48-02",
+      "status": "RESOLVED_STATIC",
+      "subject": "Installed authority swallowed read I/O",
+      "assessment": "The producer preserves resolve rejection only for sf_review_prepare or sf-read/sf-human aliases whose suffix is an own key in collaborationReads. The installed host-context admitRead really uses sf-human. No new grant or permission is created; real undefined/invalid identity remains denial. Native and human write admission retain their legacy gates.",
+      "caller_evidence": {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "ref": "c44a3b80da2549c6a3bc4cbdb186a275d93370ab",
+        "blob": "0705fe61bb1d8daa7341d3c9b312780424ad3c7c"
+      }
+    },
+    {
+      "id": "IR48-03",
+      "status": "RESOLVED_STATIC",
+      "subject": "Validation throws before consuming a valid admission",
+      "assessment": "extended-http and the three scoped reviews/http catches set validated only after validate returns true. A thrown validation no longer turns the intentionally absent pre-consumption requestFor into 403. Explicit revalidation false, actual producer identity loss and post-validation request mismatch remain negative. The handlers retain finally.finish. No mutation retry was added."
+    },
+    {
+      "id": "IR48-04",
+      "status": "RESOLVED_STATIC",
+      "subject": "Second preserved-review read falsely became denial",
+      "assessment": "extended-review-cycle.update propagates an explicit second-read denial, preserves other non-ok results after session revalidation, reports authorized digest divergence as stale, and reports exceptions as unavailable unless revalidation proves false. All three cycle HTTP callsites now use readStatus, so unavailable is 503 and stale/conflict is 409. Source selection, notes, confirmation requirements and write behavior remain unchanged."
+    },
+    {
+      "id": "IR48-05",
+      "status": "PASS_STATIC",
+      "subject": "Real composition tests without fabricated authority",
+      "assessment": "The four new cases use the existing financialCompositionFixture, SQLite, createSfProductAuthority, installed extended services and real browser assets. The preserved-review setup calls actual agenda and human preserve HTTP routes; no C05 object, receipt, successful authorization, projection or response is substituted. Fault wrappers delegate to the real snapshots/reader and interrupt the specified read phase. Recovery and explicit actor denial retain concrete status assertions."
+    }
+  ],
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+    "sha256": "8d63e518d7a02ef11921acd27dd3f2073345b39fa682273f9a8db245ae73974a",
+    "blob": "59743deea7211c8cda0dc09c5feb9b160f7c0ca8",
+    "cases": 4,
+    "timeout_ms_per_case": 60000,
+    "static_coverage": [
+      "actual form query plus old sentinel; duplicate topic rejection; xlsx pass-through",
+      "real command-identity unavailable versus actor revocation",
+      "authority I/O at admission, validate before consumption and final page delivery",
+      "real preserved review: interrupted second read on update and previousReviewRef focus, recovery and actual revocation",
+      "registered sf-read positive/revalidation path; installed sf-human alias rejects I/O and then denies its actual missing grant"
+    ],
+    "new_grants": false,
+    "assertions_or_existing_budgets_weakened": false,
+    "execution": "NOT_RUN_BY_REVIEWER"
+  },
+  "type_semantic_review": {
+    "actual_new_type_or_semantic_blockers_identified": [],
+    "method": "Source reading, exact deltas, contracts and artifact hashes only; no compiler, build, test runner, product server or simulation executed.",
+    "authority_interpretation": "A false UI result denotes an invalid current lease/binding or denied identity; it is not a universal claim of ACL revocation. The concrete installed resolve exception collapse is removed only for the closed read set."
+  },
+  "limits": [
+    "This is static review, not a runtime PASS. Root owns hosted execution and the four complete Reports journeys on the explicit final composition.",
+    "The existing fixture does not grant the sf-human collaboration.storage.version action. Its unknown-then-real-denial behavior is exercised by the proposed test; authorized-positive alias behavior is established by code composition, not claimed as runtime evidence.",
+    "The tests instantiate real installed service factories over the existing authentication fixture. They do not replace full browser, enrollment/cookie, native-host or end-to-end authorization qualification.",
+    "Legacy unavailable-to-409 mappings in unrelated inner branches are not globally normalized by this delta; those results remain recoverable and this review makes no global all-503 claim.",
+    "No additional host-context cleanup patch is needed for the identified case: a rejected admitRead never exposes its local context, and the admission registry uses weak keys."
+  ],
+  "blockers": [],
+  "mutation_scope": {
+    "reviewer_written_paths": [
+      "mission48/final/INSTALLED-ENTRY-REVIEW.json"
+    ],
+    "product_edits": "NONE",
+    "remote_writes": "NONE",
+    "dispatches": "NONE",
+    "new_active_shared_edits_by_reviewer": "NONE; all proposed product changes reviewed as inert complete patch artifacts"
+  },
+  "release_gate": "Root must bind hosted results to this exact patch/test composition and complete the authorized Reports qualification before claiming release readiness."
+}
