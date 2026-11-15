@@ -1,0 +1,121 @@
+{
+  "schema": "sf88.export-reader.terminal-handoff.v1",
+  "mission": 88,
+  "to": "71/S0",
+  "from": "new Astra mission88 GPT-6 / authenticated GitHub user gustavomhss / no exposed session backend ID",
+  "branch": "export-visual-proof",
+  "prNumber": 93,
+  "prDraft": true,
+  "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "missionInputSha": "b9935108fccc20776c60e5536a9eeddcbbaa3c83",
+  "startingHead": "5f5a76b8369b4f375e5f8bf24deae1c1cbef5cd5",
+  "lease": "export-reader-browser88",
+  "leaseStatus": "TERMINAL_RELEASED_AFTER_EVIDENCE_COMMIT",
+  "finalIndependentReviewer": false,
+  "globalRelease": false,
+  "codeW": "a1be5ae4e7e934ca1c47674ee0b166cc560e2b31",
+  "latestSuccessfulSnapshot": "a952f1b3ce48b15473f4b07810e79efd05d759fd",
+  "latestSuccessfulRunId": 43678123870,
+  "latestArtifactId": 14146978247,
+  "evidence": [
+    "ACK-88.json",
+    "FINDINGS-R1.md",
+    "RESULTS-R2.json",
+    "RESULTS-R3.json",
+    "MATRIX-14.json",
+    "HANDOFF-88.json",
+    "INDEX-88.md"
+  ],
+  "verdicts": {
+    "reader": "PASS_FOR_13_UNIQUE_CASES_140_PAGES_9_SHEETS",
+    "originalIntegrity": "PASS",
+    "visual": "FINDINGS_OPEN_NOT_FINAL",
+    "functional": "FAIL_2_TESTS_OF_14",
+    "integratorApproval": "NOT_GIVEN",
+    "globalRelease": "NO"
+  },
+  "blockers": [
+    {
+      "owner": "86",
+      "issue": "EA66-LEGACY-EGRESS returned 200 with bytes after revocation instead of 403",
+      "proof": "run43678123870 job132702648942"
+    },
+    {
+      "owner": "71/source lifecycle",
+      "issue": "composed-storage.readonly denial added durable source metadata instead of preserving initial state",
+      "proof": "composed-storage.test.ts:157; runs43677064008/43677729466/43678123870"
+    },
+    {
+      "owner": "48/layout/report exporter",
+      "issue": "DOCX Review title overlays opaque identifier on page 1 of 15 in genuine PDF render",
+      "proof": "R3 _inspection/file-0003/page-01.png"
+    },
+    {
+      "owner": "XLSX owner/71",
+      "issue": "Planner 21 and members 6 sparse PDF pages; print layout readability not certified",
+      "proof": "R3 gallery"
+    },
+    {
+      "owner": "security reviewer/71",
+      "issue": "admin dashboard JSON backup legitimately contains synthetic salary field, member XLSX excludes; verify authorization contract",
+      "proof": "R3 manifest.json privacyReviewRequired"
+    },
+    {
+      "owner": "FINAL independent S3-R3",
+      "issue": "Review sample does not sign independent FINAL; 25 projects, full graph/chart, native parity remain non-green",
+      "proof": "source66 criteria and FINDINGS-R1.md"
+    }
+  ],
+  "criteria": [
+    {
+      "id": "WP07.T04.CHK.01",
+      "status": "PARTIAL_VISUAL_FINDING",
+      "reason": "actual DOCX title overlap; no new 25-project visual check"
+    },
+    {
+      "id": "WP07.T04.CHK.02",
+      "status": "PASS_SOURCE_CASE_UNCHANGED",
+      "reason": "source66 preserved-source drift case checked; not expanded to full integrated candidate"
+    },
+    {
+      "id": "WP07.T04.CHK.03",
+      "status": "PARTIAL_WITH_LEGACY_EGRESS_FAIL",
+      "reason": "Revocation at byte egress still fails; mission86"
+    },
+    {
+      "id": "WP07.T04.CHK.04",
+      "status": "PARTIAL_CHART_NOT_PROVEN",
+      "reason": "No chart captured in this Review sample"
+    },
+    {
+      "id": "WP07.T04.QLT.01",
+      "status": "VISUAL_INSPECTED_FINDINGS_OPEN",
+      "reason": "real DOCX pagination/title defect prevents visual qualification"
+    },
+    {
+      "id": "WP07.T04.CMP.02",
+      "status": "FAIL_EXTERNAL",
+      "reason": "read-only durable source side effect and revoked byte egress"
+    },
+    {
+      "id": "WP06.T01.CHK.05",
+      "status": "PASS_SOURCE_CASE_BUT_ADMIN_BACKUP_REVIEW",
+      "reason": "member roster excludes salary, admin JSON includes intended synthetic salary field; auth policy reviewer"
+    },
+    {
+      "id": "WP04.T05.CHK.04",
+      "status": "PARTIAL_EXPORT_ONLY",
+      "reason": "CSV/HTML output inspected; post-import identifier reuse not re-qualified"
+    }
+  ],
+  "nextActions": [
+    "71 reconcile PR93 patch with current sf2-stack workflow under own CAS; do not overwrite workflow scanner75 or dispatcher45",
+    "86 resolve EA66-LEGACY-EGRESS; source owner isolate readonly metadata writes",
+    "Layout owner address title overlap, spreadsheet print usability; rerun owned cases only after corresponding fixes",
+    "Independently review actual rendered gallery before S3-R3 signs FINAL",
+    "Retain/download Actions artifacts within configured 7-day retention"
+  ],
+  "prohibitedActionsTaken": [
+    "none: no force/merge/deploy/Azure or local product test"
+  ]
+}

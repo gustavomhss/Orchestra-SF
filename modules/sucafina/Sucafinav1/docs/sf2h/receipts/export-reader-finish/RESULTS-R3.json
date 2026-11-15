@@ -1,0 +1,203 @@
+{
+  "schema": "sf88.export-reader-run3.v1",
+  "mission": 88,
+  "sourceW": "a1be5ae4e7e934ca1c47674ee0b166cc560e2b31",
+  "snapshotS": "a952f1b3ce48b15473f4b07810e79efd05d759fd",
+  "requestBranch": "ci-run-linux-sf88-a1be5a-own5-r3",
+  "runId": 43678123870,
+  "jobId": 132702648942,
+  "artifactId": 14146978247,
+  "artifactName": "sf66-exports-a952f1b3ce48b15473f4b07810e79efd05d759fd-ubuntu-24.04-1",
+  "actionsUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43678123870",
+  "downloadedZipSha256": "685ff05f52be887127bdb7bbb2bf15b9f1b19eb4b0bf72894ca6e5b6a92523da",
+  "runner": "ubuntu-24.04",
+  "tools": {
+    "python": "3.12.3",
+    "libreoffice": "24.2.7.2",
+    "poppler": "24.02.0",
+    "fontconfig": "2.15.0",
+    "fonts": [
+      "DejaVu Sans",
+      "Liberation Sans",
+      "Carlito"
+    ]
+  },
+  "origin": {
+    "uniqueOriginals": 13,
+    "originalBytes": 3144513,
+    "integrity": "SHA256_EQUAL_BEFORE_AFTER_FOR_ALL_13",
+    "historicalRunArtifactsReused": false
+  },
+  "reader": {
+    "status": "COMPLETED",
+    "githubStep": "Render SF66 generated exports",
+    "githubStepConclusion": "success",
+    "originalFormatCoverage": [
+      "docx",
+      "pptx",
+      "xlsx",
+      "csv",
+      "html",
+      "json"
+    ],
+    "sheetSourceViews": 9,
+    "generatedPdfPngPages": 140,
+    "gallery": "_inspection/gallery/index.html",
+    "galleryResolvedLinks": 206,
+    "galleryBrokenLinks": 0,
+    "originalXlsxSheets": 9,
+    "csvMode": "per-record field-value, 31 and 25 columns preserved",
+    "csvPageCounts": {
+      "procurement-register": 2,
+      "suppliers-buyer": 10
+    },
+    "adminJsonSalaryReview": true
+  },
+  "functional": {
+    "status": "FAIL",
+    "githubStep": "Run tests",
+    "exitCode": 1,
+    "testsTotal": 14,
+    "testsPassed": 12,
+    "testsFailed": 2,
+    "assertions": 1723,
+    "failures": [
+      {
+        "id": "EA66-LEGACY-EGRESS",
+        "expectedHttp": 403,
+        "actualHttp": 200,
+        "observed": "Synthetic DOCX returned after session revocation; next request 401",
+        "owner": "mission86"
+      },
+      {
+        "id": "EA66-READONLY-SOURCE-SIDE-EFFECT",
+        "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+        "line": 157,
+        "observed": "Read-only denied transition changes durable source scope/version entries",
+        "owner": "71/source lifecycle owner"
+      }
+    ]
+  },
+  "visual": {
+    "status": "INSPECTED_WITH_FINDINGS_NOT_APPROVED",
+    "defects": [
+      "DOCX page1 overlapping Review title",
+      "Planner XLSX PDF prints 21 sparse pages",
+      "Members XLSX PDF prints 6 sparse pages",
+      "Aptos font fallback in hosted LibreOffice"
+    ],
+    "remaining": [
+      "independent FINAL full-resolution page-by-page review",
+      "25 identifiable projects with long note visual criteria",
+      "native MCP/UI parity",
+      "financial chart unavailable-series visual parity",
+      "HTML real-browser render parity"
+    ]
+  },
+  "files": [
+    {
+      "caseId": "after-drift-docx",
+      "format": "docx",
+      "sha256": "68a9ac07f9e0487d9d213d612e93e2519e7198733071140d4289129a49d4e2ed",
+      "bytes": 12741,
+      "pages": 15,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "after-drift-pptx",
+      "format": "pptx",
+      "sha256": "6584153401c524b76ad351935a604fe18b106386f438b3305ddc342cfd30fb51",
+      "bytes": 1533773,
+      "pages": 29,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "composed-docx",
+      "format": "docx",
+      "sha256": "2401d27726f143033d922a4057bf15ba82d142c81bc55f140e2b059fb4bfe987",
+      "bytes": 12742,
+      "pages": 15,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "composed-pptx",
+      "format": "pptx",
+      "sha256": "1df7a476756412cff96f33abfa7bfc71e93d921a3c49b81b10d7032bf17bc1be",
+      "bytes": 1533773,
+      "pages": 29,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "dashboard-backup",
+      "format": "json",
+      "sha256": "b28668a0a42fb47fc46a28152bf9711d7451cedf42a39a7b25971a6bdac3c1d7",
+      "bytes": 3116,
+      "pages": 7,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "legacy-egress-control",
+      "format": "docx",
+      "sha256": "54f0ba18d757b84af05dddf377327040441e880d2e3ec182142381acb227c9bc",
+      "bytes": 8884,
+      "pages": 1,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "legacy-egress-revoked",
+      "format": "docx",
+      "sha256": "930272f808eb58abe43c43ae55fc52222ba03204172e48eab28dfc86f52b219d",
+      "bytes": 8884,
+      "pages": 1,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "members-admin",
+      "format": "xlsx",
+      "sha256": "7b9f4aea4c3051e43b88cea7c87d6b8a9a4d5c5c2f469e80b73b8146671c1c59",
+      "bytes": 7713,
+      "pages": 6,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "opex-template",
+      "format": "xlsx",
+      "sha256": "fd001b494c27b4c2c2910e6b155c54179e0cc9098561f8c91a69e1dccff618a4",
+      "bytes": 6524,
+      "pages": 2,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "planner-viewer",
+      "format": "xlsx",
+      "sha256": "9c28316209eb996bc18af9e1ef11e93735bd6244c80779bf1dbbed2b5d7d408f",
+      "bytes": 12507,
+      "pages": 21,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "procurement-register",
+      "format": "csv",
+      "sha256": "5c6a777f2bf17cf1c2b7015304861d8bbae589a46ad1982237147b919389ef81",
+      "bytes": 758,
+      "pages": 2,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "purchase-order",
+      "format": "html",
+      "sha256": "a3db32b6f749e12dc7be488ae1e623ece1123f4a5a4629061065472d92f5d24c",
+      "bytes": 2105,
+      "pages": 2,
+      "shaBeforeEqualsAfter": true
+    },
+    {
+      "caseId": "suppliers-buyer",
+      "format": "csv",
+      "sha256": "c2be0f72d297a77d6fcb278fb48f9eadbfc13f52b52b621e1f8bc6eacc160b22",
+      "bytes": 993,
+      "pages": 10,
+      "shaBeforeEqualsAfter": true
+    }
+  ]
+}
