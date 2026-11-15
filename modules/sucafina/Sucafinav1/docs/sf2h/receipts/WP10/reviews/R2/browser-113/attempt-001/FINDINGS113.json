@@ -1,0 +1,498 @@
+{
+  "schema": "sf2h.review.integrity.delta113.v1",
+  "mission": 113,
+  "reviewer": "S2-R2",
+  "independent_product_authorship": false,
+  "phase": "PRELIMINARY_FIX_FIRST_C53",
+  "source": {
+    "base": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "base_label": "C44",
+    "material": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "material_status": "NOT_FROZEN_FINAL"
+  },
+  "planning": {
+    "15": 15,
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "pack_sha": "dfb48ef567034ebc235d47bb12be030083d3e065",
+    "common_sha": "d61f32af03fe10747a50274233f953af044decf6"
+  },
+  "proofs": {
+    "firstsave": {
+      "status": "SURGICAL_PASS",
+      "run": 43707908864,
+      "job": 132792901856,
+      "snapshot": "3735f357c91a6e8308647bcb17b716fdca00fa51",
+      "pass": 15,
+      "fail": 0
+    },
+    "native": {
+      "status": "FAIL",
+      "run": 43707901079,
+      "job": 132792877003,
+      "snapshot": "e826732db28589f117f5e3c7fb0cd8d18f16496c",
+      "pass": 178,
+      "fail": 1
+    },
+    "compiler": {
+      "status": "PARTIAL_FAILED_AT_FIRST_COMMAND",
+      "run": 43708133478,
+      "job": 132793604402,
+      "artifact": 14159716242
+    },
+    "denied_old": {
+      "status": "FOCUSED_C51_BASELINE_ONLY",
+      "run": 43682451927,
+      "pass": 5
+    },
+    "egress_c53": "MISSING_PROOF",
+    "finance_c53": "MISSING_PROOF",
+    "atlas_am05": "MISSING_PROOF"
+  },
+  "mandatory_gates": {
+    "WP14_pure_io": "OPEN",
+    "native_reauthorized_read": "FAIL",
+    "P03_original": "FAIL_ORIGINAL_NO_NEW_CAUSAL_PATCH",
+    "AM01_AM06": "OPEN",
+    "final_eight": "OPEN",
+    "G7C_G8D": "OPEN",
+    "independent_FINAL": "NOT_ELIGIBLE",
+    "GLOBAL_RELEASE": false
+  },
+  "criteria": {
+    "pack_own": [
+      "WP10.CMP.01",
+      "WP10.CMP.02",
+      "WP10.CMP.10",
+      "WP10.CMP.40",
+      "WP10.CMP.60",
+      "WP10.DOD.01",
+      "WP10.DOD.02",
+      "WP10.DOD.10",
+      "WP10.DOD.40",
+      "WP10.DOD.60",
+      "WP10.INV.01",
+      "WP10.INV.02",
+      "WP10.INV.10",
+      "WP10.INV.40",
+      "WP10.INV.60",
+      "WP10.QLT.01",
+      "WP10.QLT.02",
+      "WP10.QLT.10",
+      "WP10.QLT.40",
+      "WP10.QLT.60",
+      "WP10.SUC.01",
+      "WP10.SUC.02",
+      "WP10.SUC.10",
+      "WP10.SUC.40",
+      "WP10.SUC.60",
+      "WP10.T03.CHK.01",
+      "WP10.T03.CHK.02",
+      "WP10.T03.CHK.03",
+      "WP10.T03.CHK.40",
+      "WP10.T03.CMP.01",
+      "WP10.T03.CMP.02",
+      "WP10.T03.CMP.40",
+      "WP10.T03.DOD.01",
+      "WP10.T03.DOD.40",
+      "WP10.T03.INV.01",
+      "WP10.T03.INV.40",
+      "WP10.T03.QLT.01",
+      "WP10.T03.QLT.40",
+      "WP10.T03.SUC.01",
+      "WP10.T03.SUC.40"
+    ],
+    "observed_wp_sources": [
+      {
+        "wp": "WP00",
+        "criterion_count": 85,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP00.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP01",
+        "criterion_count": 75,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP01.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP02",
+        "criterion_count": 78,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP02.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP03",
+        "criterion_count": 112,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP03.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP04",
+        "criterion_count": 111,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP04.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP05",
+        "criterion_count": 108,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP05.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP06",
+        "criterion_count": 140,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP07",
+        "criterion_count": 86,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP07.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP08",
+        "criterion_count": 132,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP08.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP09",
+        "criterion_count": 112,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP09.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP10",
+        "criterion_count": 171,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP11",
+        "criterion_count": 83,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP11.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP12",
+        "criterion_count": 108,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP12.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP13",
+        "criterion_count": 68,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP13.json",
+        "state": "NOT_CERTIFIED"
+      },
+      {
+        "wp": "WP14",
+        "criterion_count": 91,
+        "planning_ref": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP14.json",
+        "state": "NOT_CERTIFIED"
+      }
+    ],
+    "observed_subset_sum": 1560,
+    "global_declared": 1610,
+    "unaccounted_in_this_pack": 50,
+    "rule": "Do not reduce global 1610 to 1560; preserve immutable planning and no criteria certified on partial C53."
+  },
+  "findings_count": 10,
+  "read_source_static": true,
+  "tests_dispatched_by_113": false,
+  "write_policy": "own receipt-only",
+  "created_at": "2026-11-15T11:25:32.939Z",
+  "findings": [
+    {
+      "id": "F113-NATIVE-01",
+      "severity": "BLOCKER",
+      "status": "OPEN_CONFIRMED_FAIL_C53",
+      "source_kind": "RUN_AND_SOURCE",
+      "owner": "native-consumer successor of 103, route via integrator106; dispatcher107 rechecks only a new material C",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02",
+        "WP10.INV.40"
+      ],
+      "contracts": [
+        "C15",
+        "historical-revocation",
+        "native-readonly"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts:49-54",
+        "apps/cli/src/sucafina-product/routine-native-registry.ts:230-323",
+        "apps/cli/src/sucafina-product/routine-native-adapter.ts:108-112,189-196"
+      ],
+      "evidence": {
+        "run": 43707901079,
+        "job": 132792877003,
+        "attempt": 1,
+        "workflow_sha": "e826732db28589f117f5e3c7fb0cd8d18f16496c",
+        "parent": "180212940105e7b9ad15171b067c1c1b7841df5f",
+        "pass": 178,
+        "fail": 1,
+        "files": 7,
+        "asserts": 954,
+        "actual": "Expected observed?.status ok; received undefined",
+        "test": "fresh reauthorized read projects native admission with no Task execution authority",
+        "test_line": 54
+      },
+      "impact": "Positive reauthorized historical admission cannot be claimed working; native lane FAIL. The consumer callback may hide internal exceptions through observe() returning undefined; actual inner failing boundary remains undetermined by log.",
+      "recheck": "Writer isolates first denied/unavailable/throw boundary without relaxing oracle or widening authority; minimal source-only fix, reconciled by106; 107 retests original seven specs in new C/tree/W/S with new job logs; real installed native provider/Task still separate."
+    },
+    {
+      "id": "F113-PURE-02",
+      "severity": "HIGH",
+      "status": "OPEN_STATIC_UNCHANGED_C44_TO_C53",
+      "source_kind": "DIRECT_CODE",
+      "owner": "WP14/81 + WP10 host boundary via integrator106",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.INV.40"
+      ],
+      "contracts": [
+        "WP14-pure",
+        "C03",
+        "C08"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/product/decision-memory/signal-registry.ts:58,89,169",
+        "modules/sucafina/Sucafinav1/product/decision-memory/outcome-selection.ts:50"
+      ],
+      "blobs": {
+        "registry": "b6edcf44f55923cbaa764ff9374ce127145b0f9e",
+        "selection": "790e7c98820df61306ad67bd5897b1301118d335"
+      },
+      "impact": "The ostensibly pure WP14 decision-memory layer directly calls state.transaction and mutates preferences; pure/IO ownership boundary not repaired, independent of tests green in other areas.",
+      "recheck": "Move persistent commands into WP10-owned adapter with pure WP14 derivations, preserve CAS/identity/revoke/reload, static dependency check and installed persistence-restart+revocation tests; do not close before source correction."
+    },
+    {
+      "id": "F113-COMPILER-03",
+      "severity": "BLOCKER",
+      "status": "FAIL_ON_FIRST_CHECK_OTHER_CHECKS_NOT_OBSERVED",
+      "source_kind": "HOSTED_RUN_AND_LOG",
+      "owner": "mission108 compiler/guards",
+      "criteria": [
+        "WP10.T03.CHK.02",
+        "WP10.QLT.40"
+      ],
+      "files": [
+        "script/sf2h/final-bundle/build-artifact.py",
+        "mission108 check envelope (sf-compiler-c53 workflow/runner)"
+      ],
+      "evidence": {
+        "run": 43708133478,
+        "job": 132793604402,
+        "attempt": 1,
+        "workflow_sha": "fe3fbb73019667cfb2bc95e78299064cf4b63549",
+        "source_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+        "source_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+        "artifact": 14159716242,
+        "first_check": "bundle-build python3 script/sf2h/final-bundle/build-artifact.py --repo-root . --check",
+        "observed": "After `>>> bundle-build` the hosted step exits 1; no later `<<<`, no per-command log/exit evidence for remaining 16 commands; bash runner has inherited -e (set -uo pipefail does not disable it)."
+      },
+      "impact": "It is false to report all 17 checks failed or passed: neither five bun typechecks nor Atlas/guards/spawn commands have observed results in this run.",
+      "recheck": "108 reads 14159716242 bundle-build.log to find exact first-command cause; repair owned wrapper to record all exits despite errexit, rerun exact C tree, publish full 17 exit codes, E2E inclusion, Atlas generation, spawn and guard output; no reviewer dispatch."
+    },
+    {
+      "id": "F113-EGRESS-04",
+      "severity": "HIGH",
+      "status": "SOURCE_PATCH_COMPOSED_C45_MISSING_EXACT_HOSTED_PROOF_C53",
+      "source_kind": "DIRECT_CODE_PLUS_PROOF_GAP",
+      "owner": "egress86/integrator106 and CI107 only on admitted test scope",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02"
+      ],
+      "contracts": [
+        "C03",
+        "C06",
+        "privacy-egress"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/runtime/application.ts:705-812"
+      ],
+      "blobs": {
+        "current": "a0deff8a3b272019f472aa2f93499d1940a78370"
+      },
+      "impact": "Post-download fresh authenticate, actor and digest comparison, abort fence now present; cannot certify late revocation, 409 changed source, HEAD nor actual byte egress on C53 from source alone.",
+      "recheck": "Hosted exact C53 delayed generation→revoke/access drift/source version/private-only drift, 403/409 controls, HEAD/abort and byte absence, compare W/S/test/fixture/OS."
+    },
+    {
+      "id": "F113-DENIED-05",
+      "severity": "HIGH",
+      "status": "C51_FOCAL_5PASS_C53_COMPOSED_PROOF_OPEN",
+      "source_kind": "REAL_OLD_RUN_PLUS_DIRECT_CODE",
+      "owner": "denied-read97 / integrator106 / CI107",
+      "criteria": [
+        "WP10.T03.CHK.02",
+        "WP10.INV.40"
+      ],
+      "contracts": [
+        "C03",
+        "C06",
+        "C12",
+        "read-only"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/product/host-binding/denied-read.ts:17-45",
+        "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts"
+      ],
+      "evidence": {
+        "run": 43682451927,
+        "passed": 5,
+        "source_material": "C51",
+        "current_denied_blob": "5314a3cea74752c194cd56a890ec0908d3b9272f"
+      },
+      "impact": "Denied preflight uses persistence.transaction(... commit:false) and C51 focused negative tests passed; no proof of every C53 composed forbidden read plus no durable source lifecycle changes when integrated.",
+      "recheck": "Adopt only identical dependency closure or run exact C final denied-to-reader→no-write snapshots and revoke/race; distinguish authorized read audits from denied writes."
+    },
+    {
+      "id": "F113-FIRSTSAVE-06",
+      "severity": "HIGH",
+      "status": "C53_SURGICAL_PASS_UI_AND_FINAL_GATE_OPEN",
+      "source_kind": "HOSTED_PASS_PLUS_SOURCE",
+      "owner": "UI52/creation-recovery96/111 plus integrator106; CI107 already completed 104 surgical check",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02"
+      ],
+      "contracts": [
+        "C08",
+        "C12",
+        "first-save-idempotency"
+      ],
+      "files": [
+        "apps/cli/src/sucafina-product/dashboard-http.ts:29-35",
+        "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts:185-230"
+      ],
+      "evidence": {
+        "C51_original_fail_run": 43682448571,
+        "C53_run": 43707908864,
+        "job": 132792901856,
+        "attempt": 1,
+        "workflow_sha": "3735f357c91a6e8308647bcb17b716fdca00fa51",
+        "parent": "180212940105e7b9ad15171b067c1c1b7841df5f",
+        "pass": 15,
+        "fail": 0,
+        "files": 4,
+        "asserts": 256
+      },
+      "impact": "HTTP missing/malformed keys now 403 before runtime, valid-key identity outage remains 503, revoked 403, SQLite first-save original-key recovery verified within four surgical specs. No proof of real browser reload via 96+111 or all product paths.",
+      "recheck": "Preserve surgical PASS evidence; obtain installed browser/host52/96/111 recovery after reply loss/reload, stable idempotency, no duplicate command, fresh user reauthorization, UI final egress, and C-matched frozen candidate."
+    },
+    {
+      "id": "F113-FINANCE-07",
+      "severity": "HIGH",
+      "status": "SOURCE_STABLE_FINAL_COMPOSED_PROOF_MISSING",
+      "source_kind": "DIRECT_CODE_AND_UNCOVERED_CONSUMER",
+      "owner": "WP04/financial owner and integrator106; CI107 for admitted suite only",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02"
+      ],
+      "contracts": [
+        "C03",
+        "C06",
+        "C12",
+        "M31"
+      ],
+      "files": [
+        "modules/sucafina/porta/act.ts:239-267",
+        "modules/sucafina/Sucafinav1/src/procurement.ts:32-67",
+        "modules/sucafina/Sucafinav1/runtime/procurement.ts:629-654",
+        "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+      ],
+      "impact": "Source freezes PR amount and step holder and records base currency; cost categorization validates missing categories, but real installed cross-actor approval, CAS/atomic restart, persistent chosen amount/grant, revocation and C12 idempotency are not established by current C53 surgical CI.",
+      "recheck": "Exact frozen-C actual PR draft→submit→persisted amount/base currency→correct/wrong frozen holder→sourcing; C03/C06 reauth mid-transaction, C12 crash/replay/restart; no weakening amount/role/fixture."
+    },
+    {
+      "id": "F113-COVERAGE-08",
+      "severity": "HIGH",
+      "status": "ORACLES_PRESERVED_NOT_FULLY_QUALIFIED_ON_C53",
+      "source_kind": "IMMUTABLE_PACK_PLUS_CODE",
+      "owner": "WP08/09/10 finance and integrator106",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02"
+      ],
+      "contracts": [
+        "C10",
+        "C03",
+        "C06"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts"
+      ],
+      "evidence": {
+        "code_blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+        "oracle": "AI-RENEWAL and AI-RENEWAL-OMITTED-CATEGORY",
+        "USD": {
+          "base_transition": 210000,
+          "renewal": 240000,
+          "advantage": 30000,
+          "implementation_ceiling": 55000,
+          "changed_transition": 235000,
+          "changed_advantage": 5000,
+          "training_omitted_subtotal": 210000,
+          "training_resolved_40000_total": 250000,
+          "training_resolved_advantage": -10000,
+          "training_resolved_ceiling": 15000,
+          "training_zero_total": 210000
+        }
+      },
+      "impact": "Missing training must remain pending (not zero); historic conditioned ChoiceRecord immutable; category overlay not duplicate charged. No exact integrated C53 oracle + BI/portfolio consumer proof from reviewed runs.",
+      "recheck": "Run/adopt invariant-matched C with coverage fixtures including omitted, null, zero, separate 40000, 70000 change, evidence version/revoke/FX and consumers, verify 55000/15000 and no stale PASS; final suite only by authorized dispatcher."
+    },
+    {
+      "id": "F113-ATLAS-09",
+      "severity": "HIGH",
+      "status": "MISSING_EXACT_C53_AM05_PROOF",
+      "source_kind": "DIRECT_CODE_PROOF_GAP",
+      "owner": "Atlas/WP10/integrator106 and 108 for compiler-generated checks",
+      "criteria": [
+        "WP10.T03.CHK.02",
+        "WP10.QLT.40"
+      ],
+      "contracts": [
+        "C17",
+        "AM05",
+        "Atlas",
+        "C12"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/product/host-binding/atlas-store.ts:1-52",
+        "modules/sucafina/Sucafinav1/product/decision-memory/atlas-projection.ts"
+      ],
+      "impact": "Snapshot adapter validates durable memory log but integrated real scanner, secret rejection, owner/ACL/restart, physical source incarnation and revocation/AM05 missing.",
+      "recheck": "Exact C scanner clean/secret/unavailable, durable append/restart/ACL/fence, generated diff and check:spawn-imports after 108 runner fixed."
+    },
+    {
+      "id": "F113-RELEASE-10",
+      "severity": "BLOCKER",
+      "status": "NO_FROZEN_FINAL_C",
+      "source_kind": "INTEGRATION_AND_PROOF_GATE",
+      "owner": "integrator106/S0 acceptance",
+      "criteria": [
+        "WP10.T03.CHK.01",
+        "WP10.T03.CHK.02",
+        "WP10.T03.CHK.03",
+        "WP10.T03.CHK.40"
+      ],
+      "contracts": [
+        "R41",
+        "G7C",
+        "G8D",
+        "AM01-AM06"
+      ],
+      "files": [
+        "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-R2.json"
+      ],
+      "impact": "C53 material not final; native FAIL; WP14 pure IO OPEN; compiler incomplete; P03 original FAIL; 95 provider, 96/111 and 102 visual not composed+qualified; eight selections/AM/epic and three independent FINALs absent.",
+      "recheck": "106 freezes candidate SHA/tree/manifest and provenance, 107 single dispatcher exact proof,108 full guards, owners close causal deltas, R1/R2/R3 independent FINAL after no mandatory OPEN, S0 gates G7C/G8D; no GLOBAL_RELEASE."
+    }
+  ]
+}
