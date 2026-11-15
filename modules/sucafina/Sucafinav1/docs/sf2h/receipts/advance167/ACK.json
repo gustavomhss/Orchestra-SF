@@ -1,0 +1,85 @@
+{
+  "schema": "sf2h-proof-am03-ack-v1",
+  "mission": 167,
+  "epoch": "proof-am03-e1-browser167",
+  "branch": "sf-am03-proof",
+  "expected_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "expected_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "actor": "ChatGPT/GPT-6 (remote GitHub MCP writer; not an Orchestra Astra runtime)",
+  "actual_assistant_model": "GPT-6",
+  "native_session_id": null,
+  "native_session_id_reason": "No native Astra/SessionV2 ID exposed to this tool session",
+  "native_provider_model": null,
+  "state": "ACK_READ_ONLY_PRECONDITIONS_CONFIRMED",
+  "native_goal": "PAUSED",
+  "global_release": false,
+  "acceptance": "QUALIFICATION_ONLY",
+  "proof": "AM03",
+  "proof_status": "NOT_RUN",
+  "authority": {
+    "integrator": "162/S0-C-e20/PR65",
+    "compiler": "163/PR107",
+    "product_ci": "164/PR106",
+    "write_paths": [
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/**",
+      "packages/app-shell/e2e/sucafina/native/integrated-proofs/am03/**",
+      "script/sf2h/proofs/am03/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/**"
+    ]
+  },
+  "inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/167.json",
+      "commit": "c5947d78329f4f0cf3666fa27d38364c67009688",
+      "blob": "cac62d5f1e7116a21cb90e0462754ce3403055ac"
+    },
+    {
+      "path": "AGENTS.md",
+      "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-A.json",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "6ff8de164c225698f97a1457817a4b31b1af5eec"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "0098a065c267101c92054194dd5f0a3548c001b7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+      "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "97dc67147f47049053fb5ccb4df376e2ebe8ec8d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "22e41fcd2066f409f3d4e212a17429e59bebe331"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "472b44cc594db8cafd7669e8424d0f494d38cc9a"
+    }
+  ],
+  "limits": [
+    "No local tests, typecheck, parsers, validators, or builds",
+    "No runtime or existing specification modifications",
+    "No fake authenticated grant, provider/model inference or PASS",
+    "No GitHub Actions dispatch except sole CI dispatcher 164",
+    "No deploy/restart/goal activation/branch replacement"
+  ],
+  "preimage": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/ACK.json",
+    "blob": null,
+    "tree": "07133fe09922121f3cca3bffd6b4463053b48ece"
+  },
+  "next": "Prove only uncovered AM03 boundary/correlation cases in exclusive proof modules; report hosted CI as NOT_RUN until artifact verified."
+}
