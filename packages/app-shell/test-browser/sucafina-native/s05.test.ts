@@ -198,6 +198,7 @@ test("S05 question uses authorized recipient ref and preserves source refs on dr
     expect(submitted).toEqual(["submit"]) // only a consumer callback, not an installed send
     const answer = view.host.querySelector<HTMLTextAreaElement>('textarea[id$="-answer"]')!
     answer.value = "Real author response"
+    answer.dispatchEvent(new Event("input", { bubbles: true }))
     view.button("Submit answer").click()
     expect(answered).toEqual([{ questionRef: ref("q1"), text: "Real author response" }])
     view.set("answer", { ref: ref("a1"), version: 8, text: "Recorded answer", author: data("Alex") })
