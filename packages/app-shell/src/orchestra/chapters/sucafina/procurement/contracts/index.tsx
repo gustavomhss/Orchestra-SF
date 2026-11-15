@@ -8,7 +8,7 @@ import { useSfContext } from "../../context"
 import { encodeSfRouteRef } from "../../navigation-state"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
-import { SfDataTable, type SfColumn, type SfSort, type SfUiState } from "../../shared/table"
+import { SfDataTable, type SfColumn, type SfCopyKey as SfTableCopyKey, type SfSort, type SfUiState } from "../../shared/table"
 import { SfChangeReview, type SfReviewField, type SfReviewSnapshot } from "../../shared/change-review"
 import type { SfDraftState } from "../../shared/draft"
 import { SF_U15_COPY } from "@/i18n/orchestra-chapters/sf-u15"
@@ -26,6 +26,7 @@ type Review = Readonly<{
   intentRef: SfIntentRef; operationRef: SfOperationRef; idempotencyKey: string
 }>
 const key = (value: Key) => value as Parameters<typeof SfStatePanel>[0]["messageKey"]
+const tableKey = (value: Key) => value as unknown as SfTableCopyKey
 const message = (value: Key) => ({ key: key(value) })
 const dataText = (text: string) => ({ kind: "data", text } as const)
 const editScope = "vendor-contract-fields" as SfEditScopeKey
@@ -217,13 +218,13 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     return records
   })
   const columns: readonly SfColumn<SfVendorContract>[] = [
-    { id: "vendor", labelKey: key("sf.u15.field.vendor"), align: "start", sortKey: "vendor",
+    { id: "vendor", labelKey: tableKey("sf.u15.field.vendor"), align: "start", sortKey: "vendor",
       widthPolicy: { kind: "flex", minPx: 130, weight: 3 }, render: (row) => <span>{safeField(row, "vendor")}</span> },
-    { id: "num", labelKey: key("sf.u15.field.num"), align: "start", sortKey: "num",
+    { id: "num", labelKey: tableKey("sf.u15.field.num"), align: "start", sortKey: "num",
       widthPolicy: { kind: "content", minPx: 90, maxPx: 190 }, render: (row) => <span>{safeField(row, "num")}</span> },
-    { id: "name", labelKey: key("sf.u15.field.name"), align: "start", sortKey: "name",
+    { id: "name", labelKey: tableKey("sf.u15.field.name"), align: "start", sortKey: "name",
       widthPolicy: { kind: "flex", minPx: 130, weight: 2 }, render: (row) => <span>{safeField(row, "name")}</span> },
-    { id: "end", labelKey: key("sf.u15.field.end"), align: "start", sortKey: "end",
+    { id: "end", labelKey: tableKey("sf.u15.field.end"), align: "start", sortKey: "end",
       widthPolicy: { kind: "content", minPx: 96, maxPx: 160 }, render: (row) => <span>{safeField(row, "end")}</span> },
   ]
 
@@ -471,7 +472,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
               onSort={(sort) => setView("sort", sort)} onPage={() => undefined}
               onSelect={(ref) => setView({ selected: ref, creating: false, reviewing: undefined })}
               rowActions={() => []} onRowAction={() => undefined}
-              captionKey={key("sf.u15.list")} density="comfortable"
+              captionKey={tableKey("sf.u15.list")} density="comfortable"
               state={filteredRows().length ? "ready" : view.read?.records.length ? "filtered-empty" : "empty"}
             />
           </div>
