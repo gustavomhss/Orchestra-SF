@@ -146,9 +146,8 @@ test("CI-UI-DECISIONS — recover a lost creation response by reading the same c
       // CDP pauses the original browser response, after the real handler committed.
       // It neither issues an APIRequest/route.fetch nor supplies a synthetic response.
       const failed = page.waitForEvent("requestfailed", { predicate: (request) => isCommand(request, "workbench-command") })
-      const observed = Promise.all([interruption.completed, failed])
-      await form.getByRole("button", { name: "Create decision", exact: true }).click()
-      const [lost] = await observed
+      const [lost] = await Promise.all([interruption.completed, failed,
+        form.getByRole("button", { name: "Create decision", exact: true }).click()])
       observations.push({ stage: "creation-response-dropped", httpStatus: lost.httpStatus, contentType: lost.contentType })
       expect(lost.httpStatus).toBe(200)
       expect(lost.contentType).toContain("application/json")

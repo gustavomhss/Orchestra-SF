@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page } from "@playwright/test"
 import { asRecord } from "./journey"
+import { clickForResponse } from "./command-response"
 
 export const sourceNames = { baseline: "Decisions baseline plan", candidate: "Decisions candidate plan", line: "Decision annual service" }
 
@@ -79,9 +80,7 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
 
 async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
   await expect(button).toBeEnabled()
-  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
-  await button.click()
-  const response = await pending
+  const response = await clickForResponse(page, button, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action)
   expect(response.status()).toBe(200)
   expect(response.headers()["content-type"]).toContain("application/json")
   const result = asRecord(await response.json())

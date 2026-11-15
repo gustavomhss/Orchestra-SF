@@ -1,5 +1,6 @@
 import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
+import { clickForResponse } from "./command-response"
 
 export const draft = {
   objective: "CI Decisions — annual service decision",
@@ -42,17 +43,38 @@ export async function withInstallation(page: Page, info: TestInfo,
       ...(body && typeof body === "object" && "operation" in body && typeof body.operation === "string" ? { operation: body.operation } : {}),
       ...(request.headers()["idempotency-key"] ? { idempotencyKey: request.headers()["idempotency-key"] } : {}) })
   }
+  const network: Record<string, unknown>[] = []
+  const selected = (request: Request) => {
+    const url = new URL(request.url())
+    return url.origin === installation.origin && ["/sucafina/dashboard", "/sucafina/planner", "/sucafina/procurement"].includes(url.pathname)
+  }
+  const responseListener = (response: Response) => {
+    if (!selected(response.request())) return
+    const url = new URL(response.url())
+    network.push({ event: "response", method: response.request().method(), path: url.pathname, mode: url.searchParams.get("sf"),
+      httpStatus: response.status(), contentType: response.headers()["content-type"] ?? "" })
+  }
+  const failureListener = (request: Request) => {
+    if (!selected(request)) return
+    const url = new URL(request.url())
+    network.push({ event: "requestfailed", method: request.method(), path: url.pathname, mode: url.searchParams.get("sf"),
+      error: request.failure()?.errorText ?? "requestfailed" })
+  }
   page.on("request", listener)
+  page.on("response", responseListener)
+  page.on("requestfailed", failureListener)
   try {
     await page.context().addCookies([installation.cookie])
     await action(installation, observations)
     body.completed = true
   } finally {
     page.off("request", listener)
+    page.off("response", responseListener)
+    page.off("requestfailed", failureListener)
     // Never retain cookies, authorization headers, enrollment URLs or arbitrary response bodies.
     try {
       await info.attach("decisions-observations.json", { contentType: "application/json", body: JSON.stringify({
-        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests,
+        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests, network,
         verdict: "The Playwright runtime report owns the terminal test result.",
         limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
       }, null, 2) })
@@ -86,9 +108,7 @@ export async function fillDecision(page: Page, objective: string) {
 
 export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
   await expect(button).toBeEnabled()
-  const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
-  await button.click()
-  const response = await pending
+  const response = await clickForResponse(page, button, (request) => isCommand(request, mode, method))
   return readReply(response, observations)
 }
 

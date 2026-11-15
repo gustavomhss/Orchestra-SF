@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test"
+import { expect, type Page, type Request } from "@playwright/test"
 
 type PausedResponse = {
   requestId: string
@@ -11,7 +11,13 @@ type PausedResponse = {
 export async function loseCreationResponse(page: Page, origin: string) {
   const session = await page.context().newCDPSession(page)
   const completed = Promise.withResolvers<{ httpStatus: number; contentType: string; body: unknown; payload: unknown }>()
+  const state = { responsePaused: false }
+  const failed = (request: Request) => {
+    if (request.url() === `${origin}/sucafina/dashboard?sf=workbench-command` && request.method() === "POST" && !state.responsePaused)
+      completed.reject(new Error(`Creation failed before the original response could be intercepted: ${request.failure()?.errorText ?? "requestfailed"}`))
+  }
   const listener = async (event: PausedResponse) => {
+    state.responsePaused = true
     try {
       const payload: unknown = event.request.postData ? JSON.parse(event.request.postData) : undefined
       expect(event.request.url).toBe(`${origin}/sucafina/dashboard?sf=workbench-command`)
@@ -27,7 +33,8 @@ export async function loseCreationResponse(page: Page, origin: string) {
       completed.reject(error)
     }
   }
+  page.on("requestfailed", failed)
   session.once("Fetch.requestPaused", listener)
   await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=workbench-command`, requestStage: "Response" }] })
-  return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
+  return { completed: completed.promise, close: async () => { page.off("requestfailed", failed); await session.send("Fetch.disable"); await session.detach() } }
 }
