@@ -5,6 +5,7 @@ import type { SessionMessage } from "@orchestra/core/session/message"
 import type { Application } from "../../runtime/application.ts"
 import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
 import type { CurrentChoiceFence } from "../decisions/current-choice-preview.ts"
+import type { CaseCreationRecovery } from "../decisions/case-port.ts"
 import type { createSfProductAuthority, SfProductGrant } from "../integration/product-authority.ts"
 import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
 import type { BusinessPorts, PortResult } from "./ports.ts"
@@ -46,6 +47,8 @@ export type SfHostSessionPort = {
 }
 export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   dispatch: BusinessPorts["dispatch"]
+  /** Private, human-admitted key-only C08 recovery; never model-visible. */
+  caseCreationRecovery?: (key: string, context: TrustedUiContext) => Promise<PortResult<CaseCreationRecovery>>
   /** Private HTTP adapters mounted in the existing local application. */
   productHttp?: NonNullable<Application["product"]>
   /** Private page projection prepared before the page lock and fenced inside it. */

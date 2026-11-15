@@ -41,6 +41,7 @@ import { createSfExtendedBusinessServices } from "./extended-business-services.t
 import { createSfDecisionDomainServices } from "./decision-domain-services.ts"
 import { createSfCurrentChoiceServices } from "./current-choice-services.ts"
 import { createSfCurrentChoiceHttp } from "./current-choice-http.ts"
+import { createSfCreationRecoveryHttp } from "./creation-recovery-http.ts"
 import { createSfDecisionDomainHttp } from "./decision-domain-http.ts"
 import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
 import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
@@ -880,14 +881,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
   const analysisHttp = createSfAnalysisHttp({ origin: input.origin, mount: input.mount,
     runtime: () => identity() ? { human: authority.human, selected, models: async () => state.models ? state.models() : [], inputs: analysisInputs, start: analyses.start,
       choices: (request) => readSfImportAnalysisChoices(request, services) } : undefined })
-  const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
+  const creationRecoveryHttp = createSfCreationRecoveryHttp({ origin: input.origin, mount: input.mount,
+    runtime: () => identity() ? { ui: authority.ui, recoverCreation: business.cases.recoverCreation } : undefined })
+  const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
     routineRuns: { discoverRuns: async (context) =>
       context.kind !== "ui" || !nativeRoutineProducer ? routineServices.routineRuns.discoverRuns(context)
         : (await reauthenticatedRoutineHistory(context, () => routineServices.routineRuns.discoverRuns(context))
           ?? { status: "denied" as const, reason: "native-routine-historical-origin-unavailable" }) },
-    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+    productHttp: async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
     prepare: async (request) => {
       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }

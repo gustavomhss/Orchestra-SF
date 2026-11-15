@@ -12,6 +12,17 @@ export function encodeCaseRef(value: Pick<DecisionCase, "id" | "incarnation">) {
   return `case:${encodeURIComponent(value.id)}:${encodeURIComponent(value.incarnation)}`
 }
 
+
+/**
+ * An authenticated view of the original C08 transaction, not a new create.
+ * 'missing' is deliberately inconclusive while an earlier POST may be in flight.
+ */
+export type CaseCreationRecovery =
+  | { state: "missing" }
+  | { state: "committed"; caseRef: string; receipt: {
+      commandDigest: string; storageVersion: number; aggregateRevision: number; incarnation: string
+    } }
+
 export function createDecisionCasePort(input: {
   state: SfProductStatePort
   host: Pick<DomainPortHost, "requestFor" | "revalidate">
@@ -125,7 +136,72 @@ export function createDecisionCasePort(input: {
     if (again.value.case.version !== ref.version || digestSfValue(again.value.case) !== caseDigest || digestSfValue(current.value.case) !== caseDigest || digestSfValue(parsed.value) !== intentDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
     return { status: "ok", value: { objective: parsed.value.objective, horizon: parsed.value.horizon, currency: parsed.value.currency, criteria: parsed.value.criteria.map((description, index) => again.value.case.criteria.find((criterion) => criterion.description === description) ?? { id: `intent:${digestSfValue({ caseRef, index, description })}`, description, required: true }), sourceRefs: parsed.value.sourceRefs, gaps: [], domainApplied: false, analysisBasis: "domain" } }
   }
-  return { ...port, prepareIntentForCase }
+
+  const recoverCreation = async (key: string, context: TrustedDomainContext): Promise<PortResult<CaseCreationRecovery>> => {
+    // The sole durable correlation is the host's original operation identity,
+    // derived from the same Idempotency-Key admitted by ui-authority/host-context.
+    if (context.kind !== "ui") return { status: "denied", reason: "human-case-recovery-required" }
+    if (typeof key !== "string" || !/^[A-Za-z0-9._:-]{8,128}$/.test(key)) return { status: "needs-input", reason: "invalid-creation-key" }
+    const source = input.host.requestFor(context)
+    if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
+    const operation = digestSfValue({ operation: "sf_case_draft", key })
+    const ledgerKey = JSON.stringify([context.binding.principalRef, "cases", input.creationTarget.ref, operation])
+    type Observed = { kind: "missing" } | { kind: "changed" } | { kind: "committed"; caseRef: string; caseDigest: string;
+      receipt: Extract<CaseCreationRecovery, { state: "committed" }>["receipt"] }
+    const observe = () => input.state.read<Observed>(source, "cases", (state, authority): Observed => {
+      if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion ||
+        authority.accessRevision !== context.binding.accessRevision) return { kind: "changed" }
+      const transaction = state.transactions[ledgerKey]
+      if (!transaction) return { kind: "missing" }
+      if (transaction.namespace !== "cases" || transaction.principalRef !== authority.principalRef ||
+        transaction.targetRef !== input.creationTarget.ref || transaction.targetIncarnation !== input.creationTarget.incarnation ||
+        !/^[a-f0-9]{64}$/.test(transaction.commandDigest) || transaction.incarnation !== state.incarnation ||
+        !Number.isSafeInteger(transaction.storageVersion) || !Number.isSafeInteger(transaction.aggregateRevision))
+        return { kind: "changed" }
+      const created = transaction.value
+      if (!created || typeof created !== "object" || Array.isArray(created)) return { kind: "changed" }
+      const original = created as Partial<DecisionCase>
+      if (typeof original.id !== "string" || !original.id || typeof original.incarnation !== "string" || !original.incarnation ||
+        !Array.isArray(original.participants) || !original.participants.includes(authority.principalRef)) return { kind: "changed" }
+      const current = state.cases[original.id]
+      if (!current || current.incarnation !== original.incarnation || !current.participants.includes(authority.principalRef))
+        return { kind: "changed" }
+      return {
+        kind: "committed", caseRef: encodeCaseRef(current), caseDigest: digestSfValue(current),
+        receipt: { commandDigest: transaction.commandDigest, storageVersion: transaction.storageVersion,
+          aggregateRevision: transaction.aggregateRevision, incarnation: transaction.incarnation },
+      }
+    })
+    try {
+      const initial = await observe()
+      if (initial.status === "unavailable" && initial.reason === "product-state-uninitialized")
+        return await input.host.revalidate(context) && !source.signal.aborted && input.host.requestFor(context) === source
+          ? { status: "ok", value: { state: "missing" } }
+          : { status: "denied", reason: "case-recovery-authority-changed" }
+      if (initial.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
+      if (initial.status !== "ok") return failure(initial)
+      if (initial.value.kind === "changed") return { status: "denied", reason: "creation-correlation-unavailable" }
+      if (initial.value.kind === "missing") {
+        return await input.host.revalidate(context) && !source.signal.aborted && input.host.requestFor(context) === source
+          ? { status: "ok", value: { state: "missing" } }
+          : { status: "denied", reason: "case-recovery-authority-changed" }
+      }
+      // Never return the serialized transaction without fully reopening the
+      // live case, all its evidence and scenario-operation fences.
+      const opened = await port.read({ caseRef: initial.value.caseRef }, context)
+      if (opened.status !== "ok") return { status: opened.status, reason: "case-recovery-unavailable" }
+      const final = await observe()
+      if (final.status !== "ok" || final.value.kind !== "committed" ||
+        final.value.caseRef !== initial.value.caseRef || final.value.caseDigest !== initial.value.caseDigest ||
+        digestSfValue(final.value.receipt) !== digestSfValue(initial.value.receipt) ||
+        source.signal.aborted || input.host.requestFor(context) !== source || !await input.host.revalidate(context))
+        return { status: "stale", reason: "case-recovery-changed" }
+      return { status: "ok", value: { state: "committed", caseRef: final.value.caseRef, receipt: final.value.receipt } }
+    } catch {
+      return { status: "unavailable", reason: "case-recovery-unavailable" }
+    }
+  }
+  return { ...port, prepareIntentForCase, recoverCreation }
 }
 
 export function parseCaseRef(ref: string): { id: string; incarnation: string } | undefined {
