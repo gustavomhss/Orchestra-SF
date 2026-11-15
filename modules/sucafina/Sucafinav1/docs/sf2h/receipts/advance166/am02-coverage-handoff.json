@@ -1,0 +1,2336 @@
+{
+  "schema": "sf2h.mission166.am02.advance.v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 166,
+  "proof": "AM02",
+  "epoch": "proof-am02-e1-browser166",
+  "branch": "sf-am02-proof",
+  "logical_owner": "S0-B/WP10.T06",
+  "executor": "ChatGPT GPT-6 via GitHub MCP; no Astra native session observed",
+  "reviewer": "S3-R3 (independent; NOT_RUN)",
+  "status": "NOT_RUN",
+  "outcome": "Two new, remote-only proof files written under exclusive allowlist; no CI or native runtime executed. Component-source implementation is unqualified until integrator and product CI select it.",
+  "counters": {
+    "expected_packs": 8,
+    "expected_operations": 39,
+    "listed_packs": 8,
+    "listed_operations": 39,
+    "positive_runtime_proofs_observed": 0,
+    "negative_hosted_proofs_observed": 0,
+    "final_acceptance": 0
+  },
+  "source": {
+    "prepared_head": "690a34cdd81c12d7311f3717c19679b950276161",
+    "prepared_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "ack_commit": "a8517bfd12b207713b9a64a91cd7498a358de17d",
+    "proof_test_commit": "ef70facf7121f2ca7336d42127fb1908d8fa06df",
+    "qualifier_commit": "3c3b138bffe32cf6aebbad69d6abee1b71a9eedd",
+    "post_source_tree": "f9d69bc306055919960adba47909f726acf47a4a",
+    "plan_ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "mission_packet_ref": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "mission_packet_blob": "afbc88914a1ffac362e2219b445cdf0d0b6a363e",
+    "inputs": {
+      "actorpack": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-B.json",
+        "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "blob": "7597a7e508228ac2878a9061887ac77fc70ad009"
+      },
+      "manifest": {
+        "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "453c6f3a5b48c081223909af8293f854ad31d7c8"
+      },
+      "freeze": {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "b20cf5cecf22885dd8858f3659056a50ab88f485"
+      },
+      "AGENTS": {
+        "path": "AGENTS.md",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4"
+      },
+      "bridge": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "472b44cc594db8cafd7669e8424d0f494d38cc9a"
+      },
+      "registry": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f"
+      },
+      "dispatch": {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "6ba1b02eee73d44133c78599284f9772b26007b1"
+      },
+      "oldpublic": {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "22e41fcd2066f409f3d4e212a17429e59bebe331"
+      },
+      "oldroute": {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "8edf5ecb086b8c8c7e07a1ca5375dc203d9e6d61"
+      },
+      "oldskill": {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "fd8830ff71d67b031b49ccf72dfc313e4693565d"
+      },
+      "oldbridge": {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "d51f56f2cd664c23e338bc271603178b069a1000"
+      },
+      "planner_fixture": {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+        "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+        "blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219"
+      },
+      "newtest": {
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "ref": "3c3b138bffe32cf6aebbad69d6abee1b71a9eedd",
+        "blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96"
+      },
+      "qualifier": {
+        "path": "script/sf2h/proofs/am02/qualify.ts",
+        "ref": "3c3b138bffe32cf6aebbad69d6abee1b71a9eedd",
+        "blob": "86870360f94d77e57b4a21dcff9455934b324804"
+      }
+    },
+    "absent_source_read": {
+      "requested": "apps/cli/src/sucafina-product/workbench-http.ts",
+      "status": "NOT_FOUND at prepared HEAD",
+      "nearest_existing": [
+        "apps/cli/src/sucafina-product/work-http.ts",
+        "apps/cli/src/sucafina-product/analysis-http.ts"
+      ]
+    }
+  },
+  "new_executable_artifacts": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+      "blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+      "scenario": "Real SQLite Planner, public ToolRegistry, private MCP SDK, loaded SessionV2.skill; correlate host command / bridge callID / native domainCallID / C16 receipt, forged actor-role-project and revocation negatives",
+      "qualification": "NOT_RUN",
+      "unqualified": [
+        "synthetic Request principal/run/case labels",
+        "no model provider inference",
+        "no full native Task admission",
+        "other seven packs"
+      ]
+    },
+    {
+      "path": "script/sf2h/proofs/am02/qualify.ts",
+      "blob": "86870360f94d77e57b4a21dcff9455934b324804",
+      "scenario": "Strict qualifier of actual captured 39-route witness tuples; no fabricated successes or generic simulator; never issues final PASS",
+      "qualification": "NOT_RUN",
+      "unqualified": [
+        "requires CI attested model/scanner/native admission/consumer run references"
+      ]
+    }
+  ],
+  "existing_tests_reused_not_duplicated": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "22e41fcd2066f409f3d4e212a17429e59bebe331"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "8edf5ecb086b8c8c7e07a1ca5375dc203d9e6d61"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "fd8830ff71d67b031b49ccf72dfc313e4693565d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "d51f56f2cd664c23e338bc271603178b069a1000"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "blob": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219"
+    }
+  ],
+  "criteria": [
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    },
+    {
+      "status": "NOT_RUN",
+      "observed": null,
+      "ci_snapshot_sha": null,
+      "evidence_uri": null,
+      "expected": "Only real per-operation UI/agent/MCP positive and denied witness bound to one C and current installation, profile/skill, call IDs and consumer can qualify."
+    }
+  ],
+  "matrix": [
+    {
+      "operation": "sf_dashboard_read",
+      "pack": "performance",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-produzir-bi-contextual",
+      "producer_task": "WP02.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+      "handler_export": "readDashboard",
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/extended-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_kpi_explain",
+      "pack": "performance",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-explicar-forecast",
+      "producer_task": "WP02.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/dashboard/capabilities.ts",
+      "handler_export": "explainKpi",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/extended-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_bi_view",
+      "pack": "performance",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-produzir-bi-contextual",
+      "producer_task": "WP05.T04",
+      "handler_path": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+      "handler_export": "readBiView",
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/extended-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_source_get",
+      "pack": "performance",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP10.T07",
+      "handler_path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handler_export": "resolveSfSource",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-sources.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/extended-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_forecast_compare",
+      "pack": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-explicar-forecast",
+      "producer_task": "WP03.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "handler_export": "compareForecast",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts"
+        ],
+        "new_scenario": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_scenario_simulate",
+      "pack": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-comparar-cenarios",
+      "producer_task": "WP03.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "handler_export": "simulateScenario",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_scenario_compare",
+      "pack": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-comparar-cenarios",
+      "producer_task": "WP03.T05",
+      "handler_path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "handler_export": "compareScenarios",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_sensitivity_evaluate",
+      "pack": "planning",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-avaliar-sensibilidade",
+      "producer_task": "WP13.T03",
+      "handler_path": "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+      "handler_export": "evaluateSensitivity",
+      "consumer_tasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_portfolio_evaluate",
+      "pack": "planning",
+      "profile_id": "sf_portfolio",
+      "skill_id": "sf-compor-portfolio",
+      "producer_task": "WP13.T02",
+      "handler_path": "modules/sucafina/Sucafinav1/product/portfolio/capabilities.ts",
+      "handler_export": "evaluatePortfolio",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_request_read",
+      "pack": "procurement",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "producer_task": "WP04.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "handler_export": "readRequest",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_supplier_read",
+      "pack": "procurement",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "producer_task": "WP04.T05",
+      "handler_path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "handler_export": "readSupplier",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_contract_read",
+      "pack": "procurement",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "producer_task": "WP04.T05",
+      "handler_path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "handler_export": "readContract",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_sourcing_compare",
+      "pack": "procurement",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "producer_task": "WP04.T03",
+      "handler_path": "modules/sucafina/Sucafinav1/product/procurement/capabilities.ts",
+      "handler_export": "compareSourcing",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/product-authority.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_case_read",
+      "pack": "decisions",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "producer_task": "WP11.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handler_export": "readCase",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/cross-surface.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/authority-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_case_draft",
+      "pack": "decisions",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "producer_task": "WP11.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handler_export": "draftCase",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/cross-surface.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/authority-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_alternative_draft",
+      "pack": "decisions",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-comparar-cenarios",
+      "producer_task": "WP11.T02",
+      "handler_path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handler_export": "draftAlternative",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/cross-surface.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/authority-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_change_prepare",
+      "pack": "decisions",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-preparar-compra",
+      "producer_task": "WP11.T03",
+      "handler_path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handler_export": "prepareChange",
+      "consumer_tasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/cross-surface.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/authority-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_receipt_get",
+      "pack": "decisions",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-preparar-compra",
+      "producer_task": "WP11.T04",
+      "handler_path": "modules/sucafina/Sucafinav1/product/decisions/capabilities.ts",
+      "handler_export": "readReceipt",
+      "consumer_tasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/cross-surface.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/authority-composition.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_work_list",
+      "pack": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP08.T04",
+      "handler_path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handler_export": "listWork",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_question_prepare",
+      "pack": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "producer_task": "WP08.T06",
+      "handler_path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handler_export": "prepareQuestion",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_answer_read",
+      "pack": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-coordenar-perguntas",
+      "producer_task": "WP08.T02",
+      "handler_path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handler_export": "readAnswer",
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_relation_read",
+      "pack": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-coordenar-perguntas",
+      "producer_task": "WP08.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handler_export": "readRelations",
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_handoff_prepare",
+      "pack": "collaboration",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-coordenar-perguntas",
+      "producer_task": "WP08.T05",
+      "handler_path": "modules/sucafina/Sucafinav1/product/collaboration/capabilities.ts",
+      "handler_export": "prepareHandoff",
+      "consumer_tasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/work-bridge.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_document_extract",
+      "pack": "documents_reports",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "producer_task": "WP06.T05",
+      "handler_path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "handler_export": "extractDocumentEvidence",
+      "consumer_tasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_import_preview",
+      "pack": "documents_reports",
+      "profile_id": "sf_finance",
+      "skill_id": "sf-explicar-forecast",
+      "producer_task": "WP06.T02",
+      "handler_path": "modules/sucafina/Sucafinav1/product/imports/capabilities.ts",
+      "handler_export": "previewImport",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_review_prepare",
+      "pack": "documents_reports",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP07.T02",
+      "handler_path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "handler_export": "prepareReview",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_report_prepare",
+      "pack": "documents_reports",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP07.T04",
+      "handler_path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "handler_export": "prepareReport",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_artifact_get",
+      "pack": "documents_reports",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP07.T04",
+      "handler_path": "modules/sucafina/Sucafinav1/product/reviews/capabilities.ts",
+      "handler_export": "readArtifact",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_context_get",
+      "pack": "knowledge",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "producer_task": "WP10.T07",
+      "handler_path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handler_export": "readSfBusinessContext",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_knowledge_search",
+      "pack": "knowledge",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-revisar-condicoes-contratuais",
+      "producer_task": "WP06.T05",
+      "handler_path": "modules/sucafina/Sucafinav1/product/documents/capabilities.ts",
+      "handler_export": "searchDocumentEvidence",
+      "consumer_tasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_evidence_get",
+      "pack": "knowledge",
+      "profile_id": "sf_procurement",
+      "skill_id": "sf-comparar-sourcing",
+      "producer_task": "WP10.T07",
+      "handler_path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handler_export": "resolveSfBusinessEvidence",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_decision_recall",
+      "pack": "knowledge",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-consultar-memoria-decisoria",
+      "producer_task": "WP10.T07",
+      "handler_path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handler_export": "recallSfDecisions",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_freshness_check",
+      "pack": "knowledge",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-enquadrar-decisao",
+      "producer_task": "WP10.T07",
+      "handler_path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+      "handler_export": "checkSfFreshness",
+      "consumer_tasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/wp10/integration/workspace-services.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_routine_catalog",
+      "pack": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP09.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handler_export": "readRoutineCatalog",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_routine_prepare",
+      "pack": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP09.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handler_export": "prepareRoutine",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_routine_run",
+      "pack": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP09.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handler_export": "runAdmittedRoutine",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_routine_status",
+      "pack": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP09.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handler_export": "readRoutineStatus",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_routine_result",
+      "pack": "routines",
+      "profile_id": "sf_maestro",
+      "skill_id": "sf-preparar-revisao-executiva",
+      "producer_task": "WP09.T01",
+      "handler_path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handler_export": "readRoutineResult",
+      "consumer_tasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    },
+    {
+      "operation": "sf_watch_prepare",
+      "pack": "routines",
+      "profile_id": "sf_portfolio",
+      "skill_id": "sf-reavaliar-compromissos",
+      "producer_task": "WP09.T06",
+      "handler_path": "modules/sucafina/Sucafinav1/product/routines/capabilities.ts",
+      "handler_export": "prepareWatch",
+      "consumer_tasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ],
+      "positive": {
+        "status": "NOT_RUN",
+        "source_test_candidates": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts"
+        ],
+        "new_scenario": null,
+        "live_native_model_or_scanner_receipt": null
+      },
+      "negative": {
+        "status": "NOT_RUN",
+        "new_scenario": null,
+        "required": [
+          "no grant / forged actor-role-project",
+          "revoked access or missing SkillLoadReceipt",
+          "no domain call or output"
+        ]
+      },
+      "correlation": {
+        "status": "NOT_RUN",
+        "required": "same real authority, business version and handler; public bridge callID -> domain operationIdentity -> C16 receipt -> consumer"
+      }
+    }
+  ],
+  "ci_request164": {
+    "owner": "164/product-ci-e4-browser164/PR106",
+    "dispatch": "REQUEST_ONLY_NOT_STARTED",
+    "after_integration": {
+      "owner": "162/S0-C-e20-browser162/PR65",
+      "required": true,
+      "same_coherent_tree": "W"
+    },
+    "exact_test_ci": {
+      "package": "sucafina",
+      "packageSelector": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "--timeout",
+        "30000"
+      ],
+      "os": "linux",
+      "env": {},
+      "config": null
+    },
+    "same_w_dedupe": "Before scheduling compare tree, ordered selector, runtime/config/fixtures/producers and existing successful run; only new test selected, add historic regressions only if input causally changed.",
+    "historical_regression_selectors": [
+      "Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+      "Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts"
+    ],
+    "hosted_run_id": null,
+    "ci_snapshot_sha": null,
+    "ci_request_hash": null,
+    "selected_files": null,
+    "measured_duration_seconds": null
+  },
+  "request163": {
+    "owner": "163/compiler-e4-browser163/PR107",
+    "status": "REQUEST_ONLY",
+    "after_integration": "Include new proof TypeScript files in existing compile/SDK guard selections only on changed coherent W; no new runner, infrastructure or SDK generation by 166."
+  },
+  "request162": {
+    "owner": "162/S0-C-e20-browser162/PR65",
+    "status": "REQUEST_ONLY",
+    "paths": [
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+      "script/sf2h/proofs/am02/qualify.ts"
+    ],
+    "source_sha": "3c3b138bffe32cf6aebbad69d6abee1b71a9eedd",
+    "keep_history": true,
+    "no_direct_integrator_write": true
+  },
+  "runtime_missing": {
+    "effective_model": null,
+    "native_session_id": null,
+    "case_id": null,
+    "case_version": null,
+    "case_incarnation": null,
+    "model_provider_receipt": null,
+    "scanner_binary_version": null,
+    "atlas_boundary_version": null,
+    "full_host_admission": null,
+    "consumers_verified_after_reload": 0
+  },
+  "next_action": "162 integrates only the two new code files into coherent sf2-stack W; 163 checks compilation; 164 schedules the exact new Bun selector through existing GitHub test:ci protocol after dedupe; evidence stays NOT_RUN until observed.",
+  "release_fence": "AM01–AM06, 8 same-C final CI, epic, 3 independent FINAL, D and guards remain required; goal paused."
+}
