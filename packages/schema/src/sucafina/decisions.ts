@@ -48,11 +48,6 @@ const coverageAssessment = Schema.Union(
  )),derivedMissingCategoryIds:Schema.Tuple()}),
  Schema.Struct({...coverageAssessmentBase,coverageState:Schema.Literal("pending","unavailable"),entries:Schema.Array(coverageEntry),derivedMissingCategoryIds:Schema.Array(text)})
 )
-const coverageValue = Schema.Struct({
- schema:Schema.Literal("sf-baseline-coverage-v1"),coverageRef:text,caseRef:SfDecisionCaseRef,caseScopeDigest:text,
- source:recordEvidence,basis:SfSourceCostCoverageBasis,assessment:coverageAssessment,version:version,
- principalRef:text,accessRevision:text,policyVersion:text,installationId:text,projectId:text,createdAt:text,classificationDigest:digest,recordDigest:digest,
-})
 const classification = Schema.Struct({
  schema:Schema.Literal("sf-coverage-classification-v1"),caseRef:SfDecisionCaseRef,basis:SfSourceCostCoverageBasis,source:recordEvidence,
  version:nonnegative,mappings:Schema.Array(Schema.Struct({
@@ -62,11 +57,6 @@ const classification = Schema.Struct({
 })
 const sensitivity = Schema.Struct({baselineRef:text,parameterRef:text,parameterUnit:text,resultUnit:text,engineVersion:text,sourceRefs:Schema.Array(SfSourceEvidenceInput)})
 const criterionRequest = Schema.Struct({caseRef:SfDecisionCaseRef,criterionId:text,metricRef:text,operator:Schema.Literal("lte","gte","eq"),value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(SfSourceEvidenceInput),expectedRuleVersion:nonnegative,sensitivity:Schema.optional(sensitivity)})
-const criterionValue = Schema.Struct({
- schema:Schema.Literal("sf-criterion-rule-v1"),caseRef:SfDecisionCaseRef,criterionId:text,metricRef:text,operator:Schema.Literal("lte","gte","eq"),
- value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(SfSourceEvidenceInput),sensitivity:Schema.optional(sensitivity),
- ruleRef:text,version,criterionDigest:digest,principalRef:text,accessRevision:text,policyVersion:text,installationId:text,projectId:text,createdAt:text,recordDigest:digest,
-})
 const selectionInput = Schema.Struct({caseRef:SfDecisionCaseRef,baselineAlternativeId:text,alternativeId:text,criteria:Schema.Array(text),expectedVersion:nonnegative})
 const selectionValue = Schema.Struct({
  schema:Schema.Literal("sf-portfolio-selection-v1"),selectionRef:text,caseRef:SfDecisionCaseRef,
@@ -162,10 +152,10 @@ export const SfDecisionsCurrentChoicePromote = {operationId:"decisions.current-c
 export const SfDecisionsControlsRead = {operationId:"decisions.controls.read",input:controlsQuery,output:portResult(controlsValue),method:"GET",pathTemplate:"{mount}/{surface}",effect:"read",responseMode:"json",fixedQuery:{"sf":"decision-controls","format":"json"}} as const
 
 /** valid(payload,mode=decision-coverage); catalog decision-controls */
-export const SfDecisionsDecisionCoverage = {operationId:"decisions.decision-coverage",input:decisionCoverage,output:portResult(coverageValue),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-coverage"}} as const
+export const SfDecisionsDecisionCoverage = {operationId:"decisions.decision-coverage",input:decisionCoverage,output:portResult(Schema.Struct({coverageRef:text,version})),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-coverage"}} as const
 
 /** valid(payload,mode=decision-criteria); catalog decision-controls */
-export const SfDecisionsDecisionCriteria = {operationId:"decisions.decision-criteria",input:criterionRequest,output:portResult(criterionValue),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-criteria"}} as const
+export const SfDecisionsDecisionCriteria = {operationId:"decisions.decision-criteria",input:criterionRequest,output:portResult(Schema.Struct({ruleRef:text,version})),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-criteria"}} as const
 
 /** valid(payload,mode=decision-select-portfolio); catalog decision-controls */
 export const SfDecisionsDecisionSelectPortfolio = {operationId:"decisions.decision-select-portfolio",input:selectionInput,output:portResult(selectionValue),method:"POST",pathTemplate:"{mount}/{surface}",effect:"mutation",responseMode:"json",fixedQuery:{"sf":"decision-select-portfolio"}} as const
