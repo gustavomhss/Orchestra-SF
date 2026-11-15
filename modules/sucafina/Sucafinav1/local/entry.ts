@@ -1,7 +1,16 @@
 import path from "node:path"
 import { userInfo } from "node:os"
 import { randomUUID } from "node:crypto"
-import { createModule } from "../index.ts"
+import { createModule, contributions, type ModuleServices } from "../index.ts"
+import { createSfContextHandler } from "../../../../apps/cli/src/sucafina-product/native-ui/context.ts"
+import { mountSfNativeProjections, type SfNativeHostDependencies } from "../../../../apps/cli/src/sucafina-product/native-ui/router.ts"
+import { createSfDomainProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/domain.ts"
+import { createSfPeopleProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/people.ts"
+import { createSfWorkProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/work.ts"
+import { createSfPlannerProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/planner.ts"
+import { createSfProcurementProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
+import { createSfDecisionsProjectionHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/decisions.ts"
+import { createSfRoutinesHandlers } from "../../../../apps/cli/src/sucafina-product/native-ui/routines.ts"
 import { openLocalStore } from "../runtime/local-store.ts"
 import { startAuthMaintenance } from "../runtime/auth-maintenance.ts"
 import { createEntraClient } from "../runtime/entra-client.ts"
@@ -138,7 +147,7 @@ export async function createConfiguredInstallation(
     persistence: store, authenticate: identity.authenticate, environment: requestEnvironment, browserScript: async () => biBrowser, ...(runtime ? { identity: runtime.identity } : {}) })
   const workbench = createSfWorkbenchHttp({ origin: config.origin, mount: config.mount, runtime: () => runtime?.services?.() })
   const presentationRequest = new AsyncLocalStorage<Request>()
-  const business = createModule(config.mount, {
+  const applicationServices: ModuleServices = {
     persistence: store,
     authenticate: identity.authenticate,
     environment: requestEnvironment,
@@ -159,6 +168,35 @@ export async function createConfiguredInstallation(
     },
     maxJsonBytes: 2 * 1024 * 1024,
     assets,
+  }
+  const business = createModule(config.mount, applicationServices)
+  // Original authorized application, original Request and same runtime/identity.
+  // This registers only the F02 closed native paths; legacy domain dispatch is
+  // untouched. A missing producer context reader remains 503, never a fake grant.
+  const nativeApplication = { ...applicationServices, domains: contributions }
+  const nativeDependenciesBase = {
+    origin: config.origin,
+    mount: config.mount,
+    application: nativeApplication,
+    runtime: () => runtime?.services?.(),
+  }
+  const nativeContext = createSfContextHandler(nativeDependenciesBase)
+  const nativeDependencies: SfNativeHostDependencies = {
+    ...nativeDependenciesBase,
+    readContext: nativeContext.readContext,
+  }
+  const nativeProjections = mountSfNativeProjections({
+    mount: config.mount,
+    context: nativeContext,
+    handlers: [
+      ...createSfDomainProjectionHandlers(nativeDependencies),
+      ...createSfPeopleProjectionHandlers(nativeDependencies),
+      ...createSfWorkProjectionHandlers(nativeDependencies),
+      ...createSfPlannerProjectionHandlers(nativeDependencies),
+      ...createSfProcurementProjectionHandlers(nativeDependencies),
+      ...createSfDecisionsProjectionHandlers(nativeDependencies),
+      ...createSfRoutinesHandlers(nativeDependencies),
+    ],
   })
   // Started only after composition succeeds, outside request/business scopes.
   // Auth retention runs for Microsoft too, independently of operator backup jobs.
@@ -243,6 +281,12 @@ export async function createConfiguredInstallation(
         if (!person && request.method === "GET") return new Response(null, { status: 303, headers: { location: `${config.mount}/auth/login?returnTo=${encodeURIComponent(url.pathname + url.search)}`, "Cache-Control": "no-store" } })
         if (person && !operator) await bootstrapLocalSurface({ request, surface, groups: config.groups[surface], identity, store })
       }
+      // The authorized native projection seam runs after the installation's
+      // origin, identity.handle/prepare and narrowly selected surface bootstrap.
+      // Every handler receives this identical Request; no URL rewrite, body
+      // clone or parallel backend. Absence of context authority fails closed.
+      const nativeResponse = await nativeProjections(request)
+      if (nativeResponse) return nativeResponse
       const response = await presentationRequest.run(request, () => business(request))
       if (request.method === "POST" && response?.ok) void jobs.runOnce().catch(() => undefined)
       if (!operator || !response || !response.headers.get("content-type")?.includes("text/html") || url.searchParams.has("download") || request.method === "HEAD") return response
