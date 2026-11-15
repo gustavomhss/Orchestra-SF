@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.runtime-regression-fix.ack.v1",
+  "mission": 123,
+  "campaign": "sf2h-integral-20261112",
+  "state": "STARTED_DIAGNOSING",
+  "actor": "runtime-regression-fix; current ChatGPT browser conversation",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "session_id_reason": "The host has not exposed an authoritative underlying conversation/session identifier; not fabricated.",
+  "branch": "runtime-regression-fix",
+  "observed_head_before_write": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "base_material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "base_tree": "647b024075265fc76d6253c99bec00a82618f816",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_blob_sha": "a2c93d0f057f805389c9a54f0b8fc20172680ff9",
+  "lease_epoch": "runtime-regression-fix-e1-browser123",
+  "authority": {
+    "direct_write": [
+      "modules/sucafina/Sucafinav1/test/product/runtime-regression-fix/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-regression-fix/**"
+    ],
+    "producer_patch_only": "See mission 123 producer_patch_paths; reserve patch receipts, do not edit upstream product code without explicit owner grant.",
+    "owner_reconciliation": "114 sole integrator PR65 open draft; 120 product CI PR106 open draft; 119 compiler PR107 open draft; 99/109 P03 and 52/81/other producers not presumed ended. Silence does not revoke lease."
+  },
+  "read_sources": [
+    "AGENTS.md @ C58",
+    "sf2h-plan/START.md @ dbf9547",
+    "sf2h-plan/WORKFLOW.md @ dbf9547",
+    "sf2h-plan/execution/COMMON.md @ dbf9547",
+    "sf2h-plan/execution/actors/S3.json @ dbf9547",
+    "mission 123 @ 2dc0f8f"
+  ],
+  "original_runs": [
+    {
+      "id": 43726458847,
+      "job": 132849340798,
+      "pass": 83,
+      "fail": 1,
+      "assertions": 1228
+    },
+    {
+      "id": 43726376680,
+      "job": 132849088063,
+      "pass": 42,
+      "fail": 8,
+      "assertions": 1061
+    }
+  ],
+  "observed": "Original 118B unnamed WP01 failure is missing browser-startup-before-lease at browser-fixture.ts:232; nine independent oracles still OPEN.",
+  "dispatch": "NONE: no local tests or new Actions dispatcher",
+  "global_release": false
+}
