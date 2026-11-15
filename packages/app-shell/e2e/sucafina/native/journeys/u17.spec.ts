@@ -56,4 +56,15 @@ test.describe("N24 U17 – alternatives, assumptions and question cycles", () =>
       expect(overflow).toBeLessThanOrEqual(1)
     })
   }
+  test("keeps question source fields available at 200% root text resize @sf-u17", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await openCase(page)
+    await page.getByRole("link", { name: /Questions|Perguntas/ }).click()
+    await page.evaluate(() => { document.documentElement.style.fontSize = "200%" })
+    await expect(page.getByRole("textbox", { name: /Question text|Texto da pergunta/ })).toBeVisible()
+    await expect(page.getByRole("combobox", { name: /Related criterion|Critério relacionado/ })).toBeVisible()
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+    expect(overflow).toBeLessThanOrEqual(1)
+  })
+
 })
