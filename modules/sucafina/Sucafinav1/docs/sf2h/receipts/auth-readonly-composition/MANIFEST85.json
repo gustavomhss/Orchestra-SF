@@ -1,0 +1,163 @@
+{
+  "schema": "sf2h.auth85.integrated-manifest.v1",
+  "mission": 85,
+  "recorded_date": "2026-11-15",
+  "campaign": "sf2h-integral-20261112",
+  "owner": "mission85, auth-retention-fix, PR84",
+  "read_only_source_reconciled": true,
+  "base": {
+    "candidate": "C37",
+    "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "tree": "94be5190a25b973af4ca647db5149e2ecec6df37",
+    "all_source72_preimages_verified": true
+  },
+  "overlay": {
+    "W": "5db743c86984c9c5772920eeaf8c52b1c42880b5",
+    "tree": "383103fb0cfff0f6ecdf67f339099e2514397215",
+    "parent": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "files": 14,
+    "origin": "Source72 composed proposal; readonly59 preserved"
+  },
+  "integrated": {
+    "candidate": "C38",
+    "sha": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+    "tree": "9ad861864150f4690ad1ed3faa1f8c7164130212",
+    "parent": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "writer": "71",
+    "files_verified": 14,
+    "code_test_fixture_equal_to_W": 13,
+    "map_metadata_only_rebind": true
+  },
+  "complete_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-readonly-composition/COMPOSED-C38.patch",
+    "blob": "575744ad21f4981a9d44150bd9dc4a67a07489ee",
+    "sha256": "6c9e5840d82a755e33193fd9812c7295392b6d50a7aefe74c9336577944aa94e",
+    "bytes": 79443,
+    "files": 14,
+    "hunks": 26,
+    "reused_exact_71_published_patch": true
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "mode": "100644",
+      "kind": "modified",
+      "preimage": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "postimage": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "kind": "modified",
+      "preimage": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "postimage": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "mode": "100644",
+      "kind": "modified",
+      "preimage": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+      "postimage": "d82b40928a235f2d249e45e59732f281dfded97f",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "kind": "modified",
+      "preimage": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "postimage": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "a26bfa284dd7713d2204ff48628181a95743cbd1",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/fixture.ts",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "f0b23f1dcbc3529cd215ac6d58b9caf351be5e77",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "5cef79fa21cf23094ce554360f48a67f699295ba",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "531a79bcc0ad1398ea04dd150f26bf0eb421cbf6",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "7b443c1ab5ac4177c49c4f922a823df10a160d38",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "mode": "100644",
+      "kind": "modified",
+      "preimage": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "postimage": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb",
+      "overlayW_same_postimage": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json",
+      "mode": "100644",
+      "kind": "added",
+      "preimage": null,
+      "postimage": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24",
+      "overlayW_same_postimage": false
+    }
+  ],
+  "no_own_product_changes": true,
+  "source_R1_not_candidate_proof": true,
+  "global_release": false,
+  "remaining": [
+    "Independent mission84 review",
+    "Mission45 compiler/typecheck/guards",
+    "Procurement route-status test conflict inherited from C37",
+    "71/S0 final selectors, AM01-AM06 and three final independent reviews, C/G7 and D/G8"
+  ]
+}

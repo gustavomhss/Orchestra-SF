@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.auth85.microsoft-map.v1",
+  "source49_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+  "tested_against_C38": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+  "installed": {
+    "entry": {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877"
+    },
+    "installation": {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "21236af83e4de879242fd298d9e15a9923f3bf41"
+    },
+    "serve": {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1"
+    },
+    "fixture": {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb"
+    },
+    "map": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json",
+      "blob": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24"
+    }
+  },
+  "old_72_map_blob": "d6de43f85ab5a252835a90451dad76356b811c34",
+  "rebind_only_fields": [
+    "target_base",
+    "composition_mission",
+    "validation"
+  ],
+  "lineage_files_array_unchanged": true,
+  "original49_archives_unchanged": true,
+  "old55_map_blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+  "node_orchestrated_tests": {
+    "R3": 43675427012,
+    "pass": true
+  },
+  "later74_transport_changes": "RECONCILE_NEW_BLOBS_AT_HEAD; do not carry forward map without validating entry/installation/serve and fixture"
+}

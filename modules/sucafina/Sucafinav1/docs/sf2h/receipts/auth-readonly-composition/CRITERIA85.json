@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.auth85.criterion-proof.v1",
+  "candidate": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+  "scope": "C38 auth72 + readonly59 + Microsoft49 installed map; not GLOBAL_RELEASE",
+  "proof": {
+    "run": 43675427012,
+    "job": 132694393020,
+    "passed": 120,
+    "failed": 0,
+    "skips": 0
+  },
+  "cases": [
+    [
+      "Graph logout during readonly root",
+      "test/product/auth-retention-fix/readonly-composed.test.ts",
+      "PASS",
+      "local cancellation fence blocks identity before queued durable logout; persistent revocation only after 204 and SQL commit"
+    ],
+    [
+      "Nested auth GC under readonly root",
+      "test/product/auth-retention-fix/readonly-composed.test.ts",
+      "PASS",
+      "caught refusal still poisons readonly root; zero state changes"
+    ],
+    [
+      "Callback in flight / consumed challenge / double redemption",
+      "test/product/auth-retention-fix/races.test.ts;test/microsoft-session.test.ts",
+      "PASS",
+      "durable parent correlation; one session admission"
+    ],
+    [
+      "Logout and refresh races",
+      "test/product/auth-retention-fix/races.test.ts;test/microsoft-session.test.ts",
+      "PASS",
+      "copied cookie invalidated after committed revoke, refresh cannot revive"
+    ],
+    [
+      "Two instances / Graph completion / restart",
+      "test/product/auth-retention-fix/races.test.ts",
+      "PASS",
+      "inflight result denied; restart/cross-instance controls"
+    ],
+    [
+      "Absolute TTL / expiry",
+      "test/product/auth-retention-fix/retention.test.ts;test/microsoft-session.test.ts",
+      "PASS",
+      "no expiry extension by refresh"
+    ],
+    [
+      "Unknown handle logout and idempotence",
+      "test/product/auth-retention-fix/unknown-handles.test.ts",
+      "PASS",
+      "no arbitrary persistent rows"
+    ],
+    [
+      "Capacity and no valid-issuance eviction",
+      "test/product/auth-retention-fix/capacity.test.ts",
+      "PASS",
+      "shared limits and no silent evictions"
+    ],
+    [
+      "GC bounded and idle maintenance",
+      "test/product/auth-retention-fix/maintenance.test.ts;test/product/auth-retention-fix/retention.test.ts",
+      "PASS",
+      "bounded batches; not secure erase or full backlog SLA"
+    ],
+    [
+      "Microsoft HTTPS/Node/installation auth",
+      "test/microsoft-composition.test.ts;test/microsoft-node.test.ts",
+      "PASS",
+      "actual installed origin/client/entry route"
+    ],
+    [
+      "Procurement HTTP route semantics",
+      "test/microsoft-routes.test.ts",
+      "OPEN_FOREIGN",
+      "R1 403 vs404; reproduced C37 B0, owner71+73; not silently rewritten"
+    ]
+  ],
+  "limits": [
+    "No claim of durable logout on SQL-locked pending writer",
+    "Failed durable logout local fence is not crash-safe cross-instance until successful retry",
+    "Previous/current mixed-version live deployments not qualified",
+    "Source-only run never transfers",
+    "Foreign suite failure and checks45/final gates remain open"
+  ]
+}
