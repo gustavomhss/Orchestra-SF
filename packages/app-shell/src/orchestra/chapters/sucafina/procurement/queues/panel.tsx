@@ -55,9 +55,9 @@ const GROUP_LABELS: Record<SfProcurementQueueGroup, SfU10QueueCopyKey> = {
   unassigned: "sf.u10.queue.group.unassigned",
 }
 
-const STATE_COPY: Record<SfProcurementQueueReadPhase | "empty" | "filtered-empty", SharedKey> = {
+const STATE_COPY: Record<SfProcurementQueueReadPhase | "empty" | "filtered-empty", SharedKey | SfU10QueueCopyKey> = {
   loading: "sf.common.loading",
-  ready: "sf.common.unknown",
+  ready: "sf.u10.queue.caption",
   partial: "sf.common.partial",
   empty: "sf.common.empty",
   "filtered-empty": "sf.common.filterEmpty",
