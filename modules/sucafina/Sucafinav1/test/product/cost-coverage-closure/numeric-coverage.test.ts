@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
-import { reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
+import { assessCostCoverage, reassessScenarioCoverage, validateScenarioCoverage } from "../../../product/decisions/cost-coverage.ts"
 import { domain } from "../../../runtime/planner.ts"
 import { createWp05ComparisonFixture, wp05Horizon } from "../wp05/engine-fixture.ts"
 import { numericCoverageFixture } from "./numeric-fixture.ts"
@@ -98,6 +98,14 @@ test("C10 refuses unsupported N/A and component currency, period or source chang
   const value = await numericCoverageFixture("confirmed")
   try {
     const { coverage, fixture, scenario } = value
+    const noInventory = assessCostCoverage({ basis: { ...fixture.basis, categoryIds: [] }, alternativeId: scenario.costCoverage.alternativeId,
+      alternativeVersion: scenario.costCoverage.alternativeVersion, currency: scenario.currency, horizon: scenario.horizon,
+      entries: coverage.entries, components: scenario.components, evidence: coverage.evidence, supports: coverage.supports })
+    expect(noInventory).toMatchObject({ coverageState: "pending", entries: [], issues: ["inventory-unavailable"] })
+    const noApplicabilityEvidence = coverage.assess(coverage.entries.map((entry) => entry.categoryId === "contract_exit" && entry.status === "not-applicable"
+      ? { ...entry, evidenceRefs: [] } : entry))
+    expect(noApplicabilityEvidence.coverageState).toBe("pending")
+    expect(noApplicabilityEvidence.entries).toContainEqual({ categoryId: "contract_exit", status: "pending", reason: "evidence-unavailable" })
     const alteredStatement = coverage.assess(coverage.entries.map((entry) => entry.categoryId === "contract_exit" && entry.status === "not-applicable"
       ? { ...entry, justification: "An unsupported replacement statement" } : entry))
     expect(alteredStatement.coverageState).toBe("pending")
