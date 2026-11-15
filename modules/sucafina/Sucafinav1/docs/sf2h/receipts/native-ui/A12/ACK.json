@@ -1,0 +1,39 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "mission": "UX-A12",
+  "order": "A12",
+  "actor": "ChatGPT",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed",
+  "lease_epoch": "ux-native-a12-e1",
+  "branch": "sf-ux-a12",
+  "head_preflight": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "base_material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "authority": "S0 wave2 A12 packet",
+  "allowlist": [
+    "packages/schema/src/sucafina/work.ts",
+    "packages/client/src/sucafina/work.ts",
+    "apps/cli/src/sucafina-product/native-ui/work.ts",
+    "packages/schema/src/sucafina/work/**",
+    "packages/client/src/sucafina/work/**",
+    "apps/cli/src/sucafina-product/native-ui/work/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts"
+  ],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A12/",
+  "contract_blobs": {
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "source_preflight": {
+    "views-http.ts": "4f246d4b1e6090d509d8bed554d3556b50e61386",
+    "work-http.ts": "b2dc424d96a67ddd581abbc460cfb938b35e0447",
+    "http.ts": "78574180369c9495cbe5e5d3e569bb500fbff277",
+    "personal-views.ts": "e424c7454a1aa4b7bd8290408001e65ae029d156"
+  },
+  "source_delta": "http.ts differs from historical blob 164c820... (body reader, decision creation-scope and related command semantics); keep current C58 producer; A12 work/search branches remain source-bound and will not revert producer",
+  "write_state": "ACKED_PRE_EDIT",
+  "v2": "BLOCKED_DEPENDENCY: personal-views.ts V2 producer not released",
+  "checks": "NOT_RUN per lane instruction"
+}
