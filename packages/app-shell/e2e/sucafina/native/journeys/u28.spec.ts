@@ -23,7 +23,7 @@ test.describe("N16 U28 local administration", () => {
       await expect(chapter.locator("#sf-u28-notifications")).toBeVisible()
       await expect(chapter.locator("#sf-u28-export")).toBeVisible()
       await expect(chapter.locator("#sf-u28-import")).toBeVisible()
-      await expect(chapter.getByText("Currently unavailable")).toBeVisible()
+      await expect(chapter.getByText(/Currently unavailable|Indisponível no momento/).first()).toBeVisible()
     } else {
       await expect(chapter).toHaveAttribute("data-sf-owner", "not-authorized")
       await expect(forbidden).toHaveCount(0)
