@@ -10,7 +10,7 @@ const NumericInput = Schema.Union([Schema.Finite, Schema.String, Schema.Null])
 const BooleanInput = Schema.Union([Schema.Boolean, Schema.Literals(["true", "false", "on"])])
 const Version = Schema.Struct({ version: NonNegativeInteger, by: Schema.String })
 const Period = Schema.Struct({ start: Schema.String, end: Schema.String })
-const CaseRef = Schema.Struct({ id: NonEmpty, incarnation: NonEmpty, version: PositiveInteger })
+const CaseRef = Schema.Struct({ id: NonEmpty, incarnation: NonEmpty, version: PositiveInteger }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const SourceRef = Schema.Struct({
   surface: Schema.Literals(["dashboard", "planner", "procurement"]),
   type: Schema.String, id: Schema.String, incarnation: Schema.String,
@@ -49,11 +49,11 @@ const Quote = Schema.Struct({
   description: Schema.optional(Schema.String),
   notes: Schema.optional(Schema.String),
   attachments: Schema.optional(Schema.Array(Schema.Struct({ id: Schema.optional(Schema.String), name: Schema.optional(Schema.String) }))),
-  scores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record(Schema.String, NumericInput)]),
-  cscores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record(Schema.String, NumericInput)]),
+  scores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record(Schema.String, NumericInput)])),
+  cscores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record(Schema.String, NumericInput)])),
   techPass: Schema.optional(BooleanInput),
   qty: Schema.optional(NumericInput), unitPrice: Schema.optional(NumericInput),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Requisition = Schema.Struct({
   title: Schema.optional(Schema.String),
   type: Schema.optional(Schema.String),
@@ -68,7 +68,7 @@ const Requisition = Schema.Struct({
   expenseType: Schema.optional(Schema.String),
   category: Schema.optional(Schema.String),
   requesterName: Schema.optional(Schema.String),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Sourcing = Schema.Struct({
   quotes: Schema.optional(Schema.Array(Quote)),
   evaluator: Schema.optional(Schema.String),
@@ -84,7 +84,7 @@ const Sourcing = Schema.Struct({
     criteria: Schema.optional(Schema.Array(Criterion)),
     commCriteria: Schema.optional(Schema.Array(Criterion)),
   })),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const PurchaseLine = Schema.Struct({
   id: Schema.optional(Schema.String),
   desc: Schema.optional(Schema.String), description: Schema.optional(Schema.String),
@@ -115,7 +115,7 @@ const PurchaseOrder = Schema.Struct({
   notes: Schema.optional(Schema.String),
   fxRate: Schema.optional(Amount), approvalBaseCurrency: Schema.optional(Schema.String),
   approval: Schema.optional(Schema.NullOr(Approval)),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const HistoryEntry = Schema.Struct({
   at: Schema.String, by: Schema.String, action: Schema.String, note: Schema.String,
 })
@@ -129,7 +129,7 @@ export const SfProcurementRequest = Schema.Struct({
   po: Schema.optional(Schema.NullOr(PurchaseOrder)),
   history: Schema.optional(Schema.Array(HistoryEntry)),
   value: Schema.optional(Amount),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const BankField = Schema.String
 const SupplierContact = Schema.Struct({
   name: Schema.optional(Schema.String), email: Schema.optional(Schema.String),
@@ -148,8 +148,8 @@ export const SfProcurementSupplier = Schema.Struct({
   currency: Schema.optional(Schema.String), incoterm: Schema.optional(Schema.String),
   riskRating: Schema.optional(Schema.String), dueDiligence: Schema.optional(BooleanInput),
   sanctionsDate: Schema.optional(Schema.String), nda: Schema.optional(BooleanInput),
-  dpa: Schema.optional(BooleanInput), certifications: Schema.optional(Schema.Array(Schema.String)),
-  categories: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)]),
+  dpa: Schema.optional(BooleanInput), certifications: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)])),
+  categories: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)])),
   contacts: Schema.optional(Schema.Array(SupplierContact)),
   commercial: Schema.optional(SupplierSection), compliance: Schema.optional(SupplierSection),
   notes: Schema.optional(Schema.String),
@@ -159,7 +159,7 @@ export const SfProcurementSupplier = Schema.Struct({
   validatedAt: Schema.optional(Schema.NullOr(Schema.String)),
   validatedBy: Schema.optional(Schema.NullOr(Schema.String)),
   history: Schema.optional(Schema.Array(Schema.Struct({ field: Schema.String }))),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Level = Schema.Struct({
   id: Schema.String, name: Schema.String, threshold: NumericInput,
   holderId: Schema.NullOr(Schema.String),
@@ -176,15 +176,15 @@ export const SfProcurementSettings = Schema.Struct({
   criteria: Schema.optional(Schema.Array(Criterion)),
   commCriteria: Schema.optional(Schema.Array(Criterion)),
   requireActiveSupplier: Schema.optional(BooleanInput),
-  paymentTerms: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)]),
-  categories: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)]),
-  incoterms: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)]),
+  paymentTerms: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)])),
+  categories: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)])),
+  incoterms: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)])),
   billingAddress: Schema.optional(Schema.String),
   defaultDeliveryAddress: Schema.optional(Schema.String),
   fxUpdated: Schema.optional(Schema.String),
   reminderDays: Schema.optional(NumericInput), escalationDays: Schema.optional(NumericInput),
   uploadCap: Schema.optional(NumericInput),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const Stamp = Schema.Struct({
   installationId: NonEmpty, projectId: NonEmpty, hostId: NonEmpty, principalRef: NonEmpty,
   policyVersion: Schema.String, accessRevision: Schema.String,
@@ -194,7 +194,7 @@ const PageSelection = Schema.Struct({
   filter: Schema.optional(Schema.String), q: Schema.optional(Schema.String),
   request: Schema.optional(Schema.String), supplier: Schema.optional(Schema.String),
   status: Schema.optional(Schema.String),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const RequestVersion = Schema.Record(Schema.String, Version)
 const DirectoryEntry = Schema.Struct({ id: Schema.String, name: Schema.String })
 const PublicSettings = SfProcurementSettings
@@ -259,27 +259,27 @@ const Failure = Schema.Struct({
   fieldErrors: Schema.optional(Schema.Array(Schema.Struct({ field: Schema.String, message: Schema.String }))),
   stored: Schema.optional(Schema.NullOr(Schema.Union([
     SfProcurementRequest, SfProcurementSupplier, SfProcurementSettings,
-  ])),
+  ]))),
   by: Schema.optional(Schema.String), currentVersionCAS: Schema.optional(NonNegativeInteger),
 })
 const CommandResult = Schema.Union([
   Schema.Struct({ ok: Schema.Literal(true), warnings: Schema.optional(Schema.Array(Schema.String)) }),
   Failure,
 ])
-const EmptyValues = Schema.Struct({})
-const PrValues = Schema.Struct({ pr: Requisition })
-const SourcingValues = Schema.Struct({ sourcing: Sourcing })
-const PoValues = Schema.Struct({ po: PurchaseOrder })
-const SupplierValues = Schema.Struct({ supplier: SfProcurementSupplier })
-const SettingsValues = Schema.Struct({ settings: SfProcurementSettings })
-const QuoteSelectionValues = Schema.Struct({ quoteId: NonEmpty })
-const ApprovalValues = Schema.Struct({ comment: Schema.optional(Schema.String) })
-const ReasonValues = Schema.Struct({ reason: Schema.String })
+const EmptyValues = Schema.Struct({}).annotate({ parseOptions: { onExcessProperty: "error" } })
+const PrValues = Schema.Struct({ pr: Requisition }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const SourcingValues = Schema.Struct({ sourcing: Sourcing }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const PoValues = Schema.Struct({ po: PurchaseOrder }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const SupplierValues = Schema.Struct({ supplier: SfProcurementSupplier }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const SettingsValues = Schema.Struct({ settings: SfProcurementSettings }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const QuoteSelectionValues = Schema.Struct({ quoteId: NonEmpty }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const ApprovalValues = Schema.Struct({ comment: Schema.optional(Schema.String) }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const ReasonValues = Schema.Struct({ reason: Schema.String }).annotate({ parseOptions: { onExcessProperty: "error" } })
 export const SfProcurementTitleSave = Schema.Struct({
   page: Schema.Literal("Requests"), action: Schema.Literal("save"),
   id: NonEmpty, version: NonNegativeInteger,
   values: Schema.Struct({ pr: Schema.Struct({ title: Schema.String }) }),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const CommandValues = {
   Requests: {
     create: PrValues, save: Schema.Union([PrValues, SourcingValues, PoValues]),
@@ -309,7 +309,7 @@ function domainCommand<Page extends string, Action extends string, Values>(
     page: Schema.Literal(page), action: Schema.Literal(action),
     id: Schema.optional(Schema.String), version: NonNegativeInteger,
     values, confirmed: Schema.optional(Schema.Boolean),
-  })
+  }).annotate({ parseOptions: { onExcessProperty: "error" } })
 }
 const PortFailure = Schema.Union([
   Schema.Struct({
@@ -350,7 +350,7 @@ const ScenarioSelection = Schema.Struct({
       period: Period,
     }),
   ]),
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const ScenarioAuthority = Schema.Struct({
   installationId: NonEmpty, projectId: NonEmpty, principalRef: NonEmpty,
   accessRevision: Schema.String, policyVersion: Schema.String,
@@ -363,7 +363,7 @@ const ScenarioControls = Schema.Struct({
     currency: Schema.String, period: Period,
   })),
   financialApproval: Schema.Literal("blocked"), financialApprovalReason: Schema.String,
-})
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const CostCoverageEntry = Schema.Union([
   Schema.Struct({
     status: Schema.Literal("included"), categoryId: Schema.String,
