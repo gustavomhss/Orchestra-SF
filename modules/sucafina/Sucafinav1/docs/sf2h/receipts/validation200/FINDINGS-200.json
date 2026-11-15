@@ -1,0 +1,140 @@
+{
+  "schema": "sf2h.product-ci200.findings.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 200,
+  "epoch": "product-ci-e6-browser200",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "model": "GPT-6",
+  "session_id": null,
+  "github_actor": "gustavomhss",
+  "product": {
+    "sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25"
+  },
+  "items": [
+    {
+      "id": "CI200-AM03-IMPORT",
+      "severity": "blocking",
+      "state": "REPRODUCED_HANDED_TO_OWNER_NOT_FIXED",
+      "W": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "run_id": 43775802204,
+      "job_id": 133001695266,
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+      "preblob": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+      "expected": "module imports resolve and real generation/lease test body runs",
+      "observed": "Cannot find module '../../../product/contracts/canonical.ts'; also product host-binding path uses same insufficient ../ depth",
+      "likely_fix": "Inspect import graph; relative imports from am03 to root Sucafinav1/product require ../../../../product/{contracts/canonical,host-binding/skill-loader}.ts; do not change oracle",
+      "owner": {
+        "mission": 197,
+        "pr": 184,
+        "branch": "sf-proof-authority"
+      },
+      "consumer": {
+        "mission": 189,
+        "pr": 65
+      },
+      "notice_comment_ids": [
+        6903351062,
+        6903352061
+      ],
+      "rerun_condition": "189 CAS consumes corrected code and confirms postblob on new W; identical W prohibited",
+      "validation": "NOT_RUN_AFTER_FIX",
+      "release": false
+    },
+    {
+      "id": "CI200-AM01-HYPOTHETICAL-TOTAL",
+      "severity": "blocking",
+      "state": "REPRODUCED_HANDED_TO_OWNER_NOT_FIXED",
+      "W": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "run_id": 43775802204,
+      "job_id": 133001695266,
+      "test_path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+      "test_blob": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+      "shared_path": "modules/sucafina/Sucafinav1/test/product/wp12/native-scenario-preparation.ts",
+      "shared_preblob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+      "line": 111,
+      "expected": "Hypothetical baseline/pending/complete have result.total null; conditioned + scenario-is-hypothetical + preview-not-applied, missing training != 0",
+      "observed": "Baseline result.total 240000 when expected null; failure preempts profile/skill/real inference verification",
+      "unknown": "Cannot classify producer vs oracle error without source/contract reconciliation; do not relax assertion or invent output",
+      "owner": {
+        "mission": 196,
+        "pr": 182,
+        "branch": "sf-proof-profiles"
+      },
+      "shared_fix_consumer": {
+        "mission": 189,
+        "pr": 65
+      },
+      "notice_comment_ids": [
+        6903351531,
+        6903352061
+      ],
+      "rerun_condition": "Owner supplies complete causal fix (shared if required as inert CAS patch) and 189 consumes, new W/input verified; same preblob no rerun",
+      "validation": "NOT_RUN_AFTER_FIX",
+      "release": false
+    }
+  ],
+  "pass_scopes": [
+    {
+      "run_id": 43775214053,
+      "scope": "C08 lifecycle 6/6 fault-injection component",
+      "positive_native": false
+    },
+    {
+      "run_id": 43775606150,
+      "scope": "F04 routes 3/3 pure metadata",
+      "installed_auth": false
+    },
+    {
+      "run_id": 43775802204,
+      "scope": "AM02 1/1 synthetic fixture bridge; AM05 1/1 actual scanner staged Atlas door",
+      "am02_integrated": false,
+      "am05_durable_reopen": false
+    }
+  ],
+  "prior_unresolved": [
+    {
+      "batch": "B1",
+      "W": "4de88999e329283540369bbbfc2180a99b9202e6",
+      "run_id": 43772149086,
+      "result": "3PASS_8FAIL_DECISIONS_EFFECT_DECODER"
+    },
+    {
+      "batch": "B2",
+      "W": "e344a6685e7244ea65b20031ae6f917bcec819be",
+      "run_id": 43772487366,
+      "result": "48PASS_2IMPORT_ERROR_A01_A11_MISSING_PROJECTIONS"
+    },
+    {
+      "batch": "B5",
+      "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "run_id": 43773852118,
+      "result": "7PASS_1FAIL_BROWSER_S05_NOT_LIFECYCLE"
+    }
+  ],
+  "compiler190": {
+    "owner": 190,
+    "W77e": {
+      "run_id": 43772959867,
+      "job_id": 132992733158,
+      "artifact_id": 14185067705,
+      "status": "FAIL_6_OF_9_CHECKS"
+    },
+    "later_run": {
+      "id": 43774116387,
+      "status": "FAIL",
+      "head": "b935f51ca9333c77d2b13ced8e7ad743df79468d"
+    },
+    "scope": "NOT_DISPATCHED_BY_200"
+  },
+  "unqualified": [
+    "GLOBAL_RELEASE",
+    "native positive AM01–06",
+    "installed F04 genuine identities",
+    "D01 desktop",
+    "8 final same-C selections",
+    "G7/G8"
+  ],
+  "GLOBAL_RELEASE": false
+}

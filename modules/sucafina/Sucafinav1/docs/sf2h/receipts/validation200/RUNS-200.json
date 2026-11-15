@@ -1,0 +1,285 @@
+{
+  "schema": "sf2h.product-ci200.runs.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 200,
+  "epoch": "product-ci-e6-browser200",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "model": "GPT-6",
+  "session_id": null,
+  "github_actor": "gustavomhss",
+  "product": {
+    "sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+    "accepted_final_C": false
+  },
+  "legacy_191": {
+    "fence": "38b88f976992da68085bdf2f0b9ed549ee49b517",
+    "terminal191": "39da658c14f172f8424f50ee49defb47ce605fe2",
+    "files_unmodified_verified_against_terminal191": {
+      "HANDOFF-191.md": "1ddde433b8152a28e1f8053e75937e85b4dbbb1f",
+      "QUEUE-191.json": "2f567c824d784502cba571ae6d62d61ec38f81bb",
+      "RUNS-191.json": "7b13186d3a32f4ec281697e6b9e2bd767ce54d57",
+      "FINDINGS-191.json": "29e303b7b11c0cb9b8344b701df9b8f478b2bf13",
+      "CHECKPOINT-191-03.json": "eea3d7f48fb2e90b7fdfae2a7d157b25e02f82bc"
+    },
+    "legacy_runs": [
+      {
+        "batch": "B1",
+        "W": "4de88999e329283540369bbbfc2180a99b9202e6",
+        "run_id": 43772149086,
+        "result": "3PASS_8FAIL_DECISIONS_EFFECT_DECODER"
+      },
+      {
+        "batch": "B2",
+        "W": "e344a6685e7244ea65b20031ae6f917bcec819be",
+        "run_id": 43772487366,
+        "result": "48PASS_2IMPORT_ERROR_A01_A11_MISSING_PROJECTIONS"
+      },
+      {
+        "batch": "B3",
+        "W": "77e58de895b5157b2a32e3427483bd12f40a7525",
+        "run_id": 43772869717,
+        "result": "31PASS_F01_A12_NEGATIVE_NOT_NATIVE_POSITIVE"
+      },
+      {
+        "batch": "B4",
+        "W": "25038d3d83a3ffc58b1011c54770c1a985ffff32",
+        "run_id": 43773234546,
+        "result": "20PASS_AM_NEGATIVE_ONLY"
+      },
+      {
+        "batch": "B5",
+        "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+        "run_id": 43773852118,
+        "result": "7PASS_1FAIL_BROWSER_S05_NOT_LIFECYCLE"
+      }
+    ],
+    "never_promote_to_final_C": true
+  },
+  "actual_product_runs": [
+    {
+      "workflow": "test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator": "script/test-ci-request.ts",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "runner": "ubuntu-24.04",
+      "bun": "1.3.14",
+      "os": "linux",
+      "product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "product_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+      "attempt": 1,
+      "artifacts": [],
+      "snapshot_diff": {
+        "added": [
+          ".ci-run.json"
+        ],
+        "modified": [],
+        "deleted": [],
+        "verified_by": "GitHub compare W..S exactly one .ci-run.json"
+      },
+      "batch": "B6-C08-LIFECYCLE",
+      "status": "COMPLETED",
+      "conclusion": "success",
+      "S": "12a1a84593c5b060a1168faf607e8b7abe2bfab8",
+      "Stree": "583778ee69e08fd6d1c2bf3717098a80750df5f4",
+      "request_blob": "836f52f2a43e092489ac4e0d69ca5e04a5f7e4c2",
+      "branch": "ci-run-linux-sf200-c08-lifecycle-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/native-host-provider/lifecycle.test.ts"
+        ],
+        "env": {}
+      },
+      "run_id": 43775214053,
+      "job_ids": [
+        132999863918,
+        133000309338
+      ],
+      "selected_files": 1,
+      "selected_tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "expect_calls": 20,
+      "omni_positive_control": "NOT_APPLICABLE_NO_SPAWN",
+      "evidence_class": "COMPONENT_LIFECYCLE_FAULT_INJECTION_ONLY_NOT_REAL_INSTALLED_NATIVE_RUNTIME",
+      "criteria": [
+        "C08 abandoned reserved Session removed via genuine Session API",
+        "persisted creation recovered by actual session identity",
+        "no-create does not delete unrelated session",
+        "foreign parent/model/location and mismatch denied",
+        "terminal cleanup error does not authorize retry"
+      ]
+    },
+    {
+      "workflow": "test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator": "script/test-ci-request.ts",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "runner": "ubuntu-24.04",
+      "bun": "1.3.14",
+      "os": "linux",
+      "product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "product_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+      "attempt": 1,
+      "artifacts": [],
+      "snapshot_diff": {
+        "added": [
+          ".ci-run.json"
+        ],
+        "modified": [],
+        "deleted": [],
+        "verified_by": "GitHub compare W..S exactly one .ci-run.json"
+      },
+      "batch": "B7-F04-ROUTES",
+      "status": "COMPLETED",
+      "conclusion": "success",
+      "S": "30fdda6d68a0f8d917ba75136b0124f8aac80966",
+      "Stree": "2efc490ac4719ec021baa72d36bbde59bf09096d",
+      "request_blob": "4b38fac0c3237c86f482cfa18c7bd129c622419c",
+      "branch": "ci-run-linux-sf200-f04-journeys-1",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "./test-browser/sucafina-native/fixture/journeys.test.ts"
+        ],
+        "env": {}
+      },
+      "run_id": 43775606150,
+      "job_ids": [
+        133001082279,
+        133001524074
+      ],
+      "selected_files": 1,
+      "selected_tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "expect_calls": 9,
+      "omni_positive_control": "NOT_APPLICABLE_NO_SPAWN",
+      "evidence_class": "PURE_FROZEN_ROUTE_METADATA_NO_INSTALLATION_Microsoft_PRINCIPAL_OR_UI",
+      "criteria": [
+        "CAP14 exact procurement route and Dashboard command source",
+        "CAP04 OPEX and CAP05 CAPEX exact year-bound routes",
+        "reject foreign shell/cross-chapter/unsafe URL"
+      ]
+    },
+    {
+      "workflow": "test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator": "script/test-ci-request.ts",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "runner": "ubuntu-24.04",
+      "bun": "1.3.14",
+      "os": "linux",
+      "product_sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "product_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+      "attempt": 1,
+      "artifacts": [],
+      "snapshot_diff": {
+        "added": [
+          ".ci-run.json"
+        ],
+        "modified": [],
+        "deleted": [],
+        "verified_by": "GitHub compare W..S exactly one .ci-run.json"
+      },
+      "batch": "B8-AM-NEW-PROOF-FILES",
+      "status": "COMPLETED",
+      "conclusion": "failure",
+      "S": "63dd323ae114238d817a915d3b97d6ae5f5f66e5",
+      "Stree": "3fcce4aed7922ee5411dc90ebcc575f560fd2169",
+      "request_blob": "c499275053d909cf33622f8245346c6622fa8027",
+      "branch": "ci-run-linux-sf200-am-unrun-165169-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "240000",
+          "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts"
+        ],
+        "env": {}
+      },
+      "run_id": 43775802204,
+      "job_ids": [
+        133001695266,
+        133002709022
+      ],
+      "selected_files": 4,
+      "reported_tests": 4,
+      "passed": 2,
+      "failed_or_import_error": 2,
+      "import_errors": 1,
+      "expect_calls": 100,
+      "omni_positive_control": "PASS_25_REAL_OMNI_SPAWNS_0_DELEGATED_AM05",
+      "per_file": [
+        {
+          "selection": "am01/portfolio-recall-proof.test.ts",
+          "result": "FAIL",
+          "elapsed_ms": 97512.84,
+          "actual": "Received 240000 at shared native-scenario-preparation.ts:111, expected null for hypothetical scenario",
+          "test_blob": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+          "shared_blob": "3f02a1ad9ee2985b4094690bd32c16e22a0dda75",
+          "owner": 196,
+          "consumer": 189,
+          "proof": "NOT_RUN_NATIVE_PROFILE_SKILL_MODEL"
+        },
+        {
+          "selection": "am02/forecast-domain-correlation.test.ts",
+          "result": "PASS_COMPONENT",
+          "elapsed_ms": 1590.92,
+          "test_blob": "c954bc428052a4d3a41ef5d7c3f242d594b4ae96",
+          "proof": "REAL_SQLite_PLANNER_TOOL_REGISTRY_PRIVATE_MCP_BUT_SYNTHETIC_PRINCIPAL_RUN_CASE_NOT_AM02_INTEGRATED"
+        },
+        {
+          "selection": "am03/provider-generation.test.ts",
+          "result": "FAIL_IMPORT",
+          "test_blob": "4081eaaed8cc3e3c8bdfcaf153cc015f9bb19ef4",
+          "actual": "Cannot find module ../../../product/contracts/canonical.ts",
+          "owner": 197,
+          "consumer": 189,
+          "proof": "TEST_BODY_NOT_EXECUTED"
+        },
+        {
+          "selection": "am05/scanner-write-gates.test.ts",
+          "result": "PASS_SCANNER",
+          "elapsed_ms": 1639.19,
+          "test_blob": "47aa1c78c8b6c55d293cf2ea48bdcb6c8c93e9b8",
+          "proof": "REAL_GITLEAKS_SCANNER_HIT_TIMEOUT_ABSENCE_REAL_ATLAS_WRITE_GATE_STAGED_ONLY_NOT_FULL_DURABLE_RESTART"
+        }
+      ],
+      "evidence_class": "TWO_POSITIVE_COMPONENT_CHECKS_AND_TWO_REAL_FAILURES_NO_AM01_06_NATIVE_PASS"
+    }
+  ],
+  "authoritative_ci_recipes": "modules/sucafina/Sucafinav1/docs/sf2h-plan/ci-recipes.json@dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "immutable_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "native_goal": "PAUSED",
+  "GLOBAL_RELEASE": false,
+  "reconciled_at_checkpoint": {
+    "in_progress": 0,
+    "queued": 0,
+    "waiting": 0,
+    "latest_finished": 43775802204
+  },
+  "special_notes": [
+    "Run43773852118 browser 7PASS1FAIL S05 not lifecycle",
+    "B3/B4 distinct SHAs and NOT final C",
+    "B8 two passes are component-only, AM03 import never executed its body, AM01 never reached skill inference",
+    "No required per-file unit test artifacts; positive installed proof artifacts absent",
+    "No unapproved workflow/validator modifications, retries, duplicate compiler190 or direct product changes"
+  ]
+}
