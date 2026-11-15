@@ -252,6 +252,17 @@ export function SfRelations(props: SfRelationsProps) {
 export function SfThread(props: SfThreadProps) {
   const copy = useCopy()
   const uid = createUniqueId()
+  let draftInput: HTMLTextAreaElement | undefined
+  // A controlled textarea can still hold native keystrokes when the owner has not
+  // accepted them. Reconcile the DOM on *state* changes as well as draft changes:
+  // outcome-unknown/unavailable retain the exact owner draft without replaying POST.
+  createEffect(() => {
+    const state = props.state
+    const draft = props.draft
+    if (!draftInput) return
+    const next = mayDisplay(state) ? draft : ""
+    if (draftInput.value !== next) draftInput.value = next
+  })
   const [postFence, setPostFence] = createSignal<{ threadRef: string; incarnation: string; version: number }>()
   const locked = () => {
     const fence = postFence()
@@ -318,7 +329,7 @@ export function SfThread(props: SfThreadProps) {
         <form class="sf-collab-form" onSubmit={(event) => { event.preventDefault(); post() }}>
           <label class="sf-collab-field" for={uid + "-draft"}>
             <span>{copy.key("sf.s05.thread.compose")}</span>
-            <textarea id={uid + "-draft"} rows={4} value={props.draft}
+            <textarea id={uid + "-draft"} rows={4} ref={draftInput} value={props.draft}
               disabled={!mayEdit(props.state)} onInput={(event) => props.onEditDraft(event.currentTarget.value)} />
           </label>
           <button class="mx-btn primary sf-collab-primary" type="submit" disabled={!canPost()}>
