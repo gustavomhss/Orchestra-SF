@@ -20,7 +20,7 @@ test("U33 shows the real preserved 25-record source and never fabricates an Offi
   expect(records, "The original producer, not a fixture summary, must cover at least 25 records").toBeGreaterThanOrEqual(25)
   await expect(report.locator("input[type=checkbox]").first()).toBeVisible()
   await expect(report.locator('a[download]')).toHaveCount(0)
-  const action = report.getByRole("button", { name: /Generate report|Gerar relatório/ })
+  const action = page.getByRole("button", { name: /Generate report|Gerar relatório/ })
   if (await action.isEnabled()) await action.click()
   await expect(report.locator("[data-sf-file-unavailable]")).toBeVisible()
   await expect(report.locator('a[download]')).toHaveCount(0)

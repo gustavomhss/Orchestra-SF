@@ -28,7 +28,7 @@ test("U32 reads the original preserved review and shows exact identity and secti
     await page.setViewportSize({ width, height: 900 })
     await expect(source).toBeVisible()
   }
-  await review.getByRole("button", { name: /Present review|Apresentar revisão/ }).click()
+  await page.getByRole("button", { name: /Present review|Apresentar revisão/ }).click()
   await expect(review).toHaveAttribute("data-sf-presentation", "true")
   await expect(source).toBeVisible()
 })

@@ -27,7 +27,7 @@ test("U25 keeps reviewed agenda separate from preserved result at 320 and 1280 C
     const fits = await agenda.evaluate((node) => node.scrollWidth <= node.clientWidth + 1)
     expect(fits, "U25 should reflow within its usable container").toBe(true)
   }
-  await agenda.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ }).click()
+  await page.getByRole("button", { name: /Review selected sections|Revisar seções selecionadas/ }).click()
   await expect(agenda.locator('[data-sf-agenda-preview]')).toBeVisible()
   await expect(agenda.locator('[data-sf-preserved-confirmed]')).toHaveCount(0)
   // Preserving mutates the actual product; only 120's isolated write campaign
