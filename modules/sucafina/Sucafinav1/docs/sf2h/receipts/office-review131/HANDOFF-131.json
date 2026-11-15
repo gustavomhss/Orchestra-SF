@@ -1,0 +1,113 @@
+{
+  "schema": "sf2h.office-independent-handoff.v1",
+  "mission": 131,
+  "campaign": "sf2h-integral-20261112",
+  "actor": "NOVA131",
+  "lease": "office-review-e1-browser131",
+  "branch": "office-visual-proof",
+  "head_at_admission": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+  "ack_commit": "c29013542b3ead59fdc00076a2b93dfc4c54df8e",
+  "evidence_commit": "1ae4885ec1fddad42c8c685da772da6ce9176da9",
+  "findings_commit": "fc812bff8b9863eee9e2806e5a7fd68c9a16ae05",
+  "review_commit": "de1be69e8395c7d8f31737de349fa1df8f1f0d45",
+  "write_scope": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/office-review131/**",
+  "outputs": [
+    "ACK.json",
+    "EVIDENCE-131.json",
+    "FINDINGS-131.json",
+    "REVIEW-131.md",
+    "HANDOFF-131.json"
+  ],
+  "source_input_refs": {
+    "W102": {
+      "branch": "xlsx-print-layout",
+      "source": "104bf61f67da9740024f38427c1580ba29f36e99",
+      "run": 43725105940,
+      "artifact": 14166480115
+    },
+    "C58": {
+      "source": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "run": 43726378502,
+      "artifact": 14166341968
+    },
+    "DOCX112": {
+      "branch": "export-visual-recheck",
+      "PR": 108,
+      "run": 43682455278,
+      "artifact": 14148499941
+    },
+    "DOCX130": {
+      "branch": "docx-continuation-fix",
+      "source_static": "e1ed069223ef76e853d690f1728033c3c7a0b947",
+      "render": "NOT_PROVEN"
+    },
+    "C125": {
+      "branch": "sf2-stack",
+      "observed_head": "a15434ab558a650137f2472c7d59e6ae1e98e72a",
+      "qualification": "NOT_PROVEN"
+    }
+  },
+  "verdict": {
+    "W102_original_integrity": "PASS_SCOPED",
+    "W102_vs_C58_nine_worksheet_cells_and_formulas": "0_DIFF_SCOPED",
+    "XLSX_visual": "FIX_FIRST",
+    "PPTX_presence_only": "SCOPED_PASS_NONFINAL",
+    "DOCX_title": "SCOPED_PASS_SOURCE_ONLY",
+    "DOCX_table_continuity": "FAIL_W102_SOURCE",
+    "DOCX130_fix": "NOT_PROVEN_POST_FIX_RENDER",
+    "four_scenarios": "NOT_PROVEN_IN_EXISTING_READER_ARTIFACT",
+    "charts": "NOT_PROVEN_NO_CHART_CASES",
+    "C125": "NOT_PROVEN",
+    "global_final": false
+  },
+  "findings": [
+    "VIS131-001 OPEX p3 missing repeated row identity/measure/currency, high",
+    "VIS131-002 Info p1 label/value overlap, medium",
+    "VIS131-003 OPEX p2 long literal clipping, medium",
+    "VIS112-001 both DOCX p3-p15 unlabeled continuation; new code130 has no genuine render recheck",
+    "VIS88-005 Aptos/native print parity unproven"
+  ],
+  "actions": {
+    "125_integrator": [
+      "Consume only independent receipts, keep source W102 status separate from integrated candidate C; never mark candidate PASS by cherry-picking source green.",
+      "Route VIS131-001/002/003 to XLSX source owner; request scoped patch, source pre/post blobs and expected per-sheet pagination, preserve all values/formulas/headers.",
+      "Do not mark VIS112-001 fixed by merely observing 130 render.ts code delta; wait for 129 genuine render and independent page-based recheck.",
+      "On a new composed candidate, supply exact C/head/tree and normalized producer and reviewer artifacts with source/snapshot/run/job/artifact IDs for a separate review."
+    ],
+    "129_dispatcher": [
+      "Reconcile existing requests/runs and dedupe before any dispatch, using the sole authorized GitHub Actions lane; no duplicate W102/C58 selection.",
+      "Provide unchanged originals + manifests + PDFs + PNGs for each of normal/empty/wide/long, per worksheet and scenario, with full source C/S/W/run/job/hash provenance.",
+      "For DOCX130 once genuine source code is integrated/selected, supply both composed and after-drift DOCX PDF and per-page PNG for page changes, plus source/literal checksums and title/note sentinels.",
+      "No request for new product CI is being issued by reviewer131."
+    ],
+    "130_docx_writer": [
+      "Return source commit/pre-post render.ts blob and regression artifacts; preserve original captured value, period/source association, table headers, metadata and all long note/title content.",
+      "Discriminate label derivation for arbitrary captured values, long rows >12 lines and lossless fragments; no unrestricted cantSplit on extremely tall rows."
+    ],
+    "128_compiler": [
+      "Use existing compilation lane and SDK/guard provenance; 131 does not compile or execute tests."
+    ],
+    "S0": [
+      "No whole-product FINAL or Goal resume authorized from these receipts; independent final reviewers and frozen candidate gate remain separate."
+    ]
+  },
+  "proof_to_continue": {
+    "XLSX": "Actual 4 scenario source originals+per-sheet render pages with SHA, including nonempty CAPEX/rate cards and multiple member/leader rows",
+    "DOCX130": "Genuine exact post-fix original DOCX/PDF/PNG and p2-p15 correlation, no test fixture substitution",
+    "C125": "Exact candidate C and source/S/run artifact provenance; re-review material deltas before approval"
+  },
+  "independence": {
+    "authored_office_product": false,
+    "modified_tests": false,
+    "modified_workflows": false,
+    "modified_office_originals": false,
+    "ran_product_tests": false,
+    "rerendered_office": false,
+    "dispatched_CI": false,
+    "merged": false,
+    "deployed": false,
+    "resumed_native_goal": false,
+    "approved_global_release": false
+  },
+  "status": "REVIEW_COMPLETED_SOURCE_FIX_FIRST_HANDOFF_DELIVERED_NO_FINAL"
+}
