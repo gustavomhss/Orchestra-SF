@@ -131,6 +131,9 @@ async function scheduleCall(
   if (operation === "schedules.update" && Schema.is(SfSchedulesUpdate.input)(payload)) {
     if (!products?.scheduleDetails) return unavailable("schedule-detail-port-unavailable")
     const detail = await products.scheduleDetails.read({ scheduleRef: payload.scheduleRef }, binding)
+    // The legacy update PortResult has no not-found arm; never fake an update
+    // outcome or convert a missing authorized detail into an editable record.
+    if (detail.status === "not-found") return unavailable("schedule-detail-not-found")
     if (detail.status !== "ok") return detail
     if (detail.value.scheduleRef !== payload.scheduleRef || detail.value.version !== payload.expectedVersion)
       return { status: "stale", reason: "schedule-detail-changed" }
@@ -243,6 +246,8 @@ async function projection(request: Request, deps: SfNativeHostDependencies): Pro
     const source = await runtime.dispatch("sf_routine_status", sourceInput.value, grant.value)
       .catch(() => unavailable("routine-status-producer-unavailable"))
     if (source.status !== "ok") {
+      if (deps.runtime() !== runtime || !await runtime.ui.revalidate(grant.value))
+        return reply(denied("routine-authority-changed"), 403)
       return wireResult("projection.routine", {
         status: source.status,
         reason: source.reason,
