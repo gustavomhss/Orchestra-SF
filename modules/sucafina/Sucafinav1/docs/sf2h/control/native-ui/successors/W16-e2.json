@@ -1,0 +1,223 @@
+{
+  "schema": "sf2h.native-ui.successor-packet.v1",
+  "mission_id": "UX20-W16-R2",
+  "seat": "W16",
+  "branch": "sf-ux-w16",
+  "pr": null,
+  "work_order": "A04",
+  "output": "A04",
+  "state": "PREPARED_NOT_STARTED",
+  "actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "lease_epoch": "ux-native-w16-e2",
+  "expected_head": "bad9cbccfb75fbd46b8826925c15781286c6fc6c",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/S0-FENCE-e2.json",
+    "sha": "bad9cbccfb75fbd46b8826925c15781286c6fc6c",
+    "previous_head": "74838faff3b672b1a2702934877bac333baa7817",
+    "previous_epoch": "ux-native-w16-e1",
+    "previous_epoch_revoked": true,
+    "runtime_termination_claimed": false
+  },
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "original_packet": {
+    "schema": "sf2h.native-ui.author-packet.v1",
+    "mission_id": "UX20-W16",
+    "seat": "W16",
+    "work_order_id": "A04",
+    "output_id": null,
+    "title": "Bindings finos: Casos, alternativas e efeitos",
+    "state": "PREPARED_USER_AUTHORIZED_OUTPUT_PREFLIGHT",
+    "requested_model": "Astra (user browser); record actual model when exposed",
+    "effective_model": null,
+    "actual_session_id": null,
+    "actual_actor": null,
+    "branch": "sf-ux-w16",
+    "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "cohort_base": "resolve branch initial head; same immutable shared cohort commit for all19",
+    "source": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+    },
+    "common_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/campaign-overlay/COMMON.md",
+    "work_order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A04.json",
+    "required_reads": {
+      "instructions": [
+        "AGENTS.md",
+        "packages/schema/AGENTS.md"
+      ],
+      "common": [
+        "EXECUTION-PROTOCOL.md",
+        "manifest.json",
+        "host-signatures.ts"
+      ],
+      "local": [
+        "work-orders/A04.json"
+      ],
+      "contracts": [
+        "ctx",
+        "decisions",
+        "transport"
+      ],
+      "surfaces": [],
+      "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+      "source_bindings": [
+        "contract-catalog.json#/sources/choice",
+        "contract-catalog.json#/sources/decision-apply",
+        "contract-catalog.json#/sources/decision-controls",
+        "contract-catalog.json#/sources/portfolio",
+        "contract-catalog.json#/sources/workbench"
+      ]
+    },
+    "write_paths": [
+      "packages/schema/src/sucafina/decisions.ts",
+      "packages/client/src/sucafina/decisions.ts",
+      "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+      "packages/schema/src/sucafina/decisions/**",
+      "packages/client/src/sucafina/decisions/**",
+      "apps/cli/src/sucafina-product/native-ui/decisions/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts"
+    ],
+    "test_write_grants": [],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/",
+    "lease": {
+      "reserved_epoch": "ux-native-w16-e1",
+      "state": "RESERVED_NOT_ACTIVE; publish real ACK and per-output admission",
+      "integrator": "same current114 C00, no second supervisor"
+    },
+    "frozen_contract_blobs": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    },
+    "authoring_locks": [
+      "ctx",
+      "decisions",
+      "transport"
+    ],
+    "contract_refs": [
+      "ctx",
+      "decisions",
+      "transport"
+    ],
+    "source_binding_pins": {
+      "choice": {
+        "path": "apps/cli/src/sucafina-product/current-choice-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "369c71b4505360a9742b4b9a64585438f63cec47",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "369c71b4505360a9742b4b9a64585438f63cec47",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "decision-apply": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "fa83ce380647f02d8942f01ffbc1981cf1b2494d",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "decision-controls": {
+        "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "portfolio": {
+        "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "workbench": {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+        "changed": true,
+        "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+      }
+    },
+    "entrypoints": [
+      {
+        "path": "packages/schema/src/sucafina/decisions.ts",
+        "symbol": "SfDecisions",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "packages/client/src/sucafina/decisions.ts",
+        "symbol": "createSfDecisionsClient",
+        "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/decisions.ts",
+        "symbol": "createSfDecisionsProjectionHandlers",
+        "signature": "CONTRACTS.md: exact new projection IDs only, preserving producer Request/auth and original typed shapes"
+      }
+    ],
+    "integration_dependencies": [
+      "F01",
+      "F02"
+    ],
+    "qualification_dependencies": [
+      "F01",
+      "F02"
+    ],
+    "affected_test_files": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts"
+    ],
+    "scope_clarifications": [],
+    "delivery": "Complete assigned output; one PR to sf2-stack, exactprepost/patch/tests/dependencies and ARTIFACT_READY handoff to114; do not edit sharedpaths or wait for unrelated services."
+  },
+  "handoffs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/HANDOFF-BLOCKED-OWNER.md",
+      "ref": "74838faff3b672b1a2702934877bac333baa7817"
+    }
+  ],
+  "preserved_proposal_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/ACK.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/HANDOFF-BLOCKED-OWNER.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W16/SOURCE-EQUIVALENCE.json"
+  ],
+  "authoring_authority": {
+    "s0_admission": "8852ed4a060f6eb3b49c142b894852d0af49740f",
+    "scope": "Only author identity/epoch changes. Same per-output S0 authoring grant now bound to e2; no need to wait114 before writing exclusive leaves after real successor ACK. Original same-actor qualifier superseded only for this explicit fenced succession."
+  },
+  "mission": "Continue from exact saved output, implement and finish assigned output in actual allowlisted product paths. Reuse staged/proposed code after reading contracts and correcting known gaps; do not redo the inventory or leave another preauth-only handoff. Complete PR in same branch.",
+  "routing": {
+    "integrator": "114 / S0-C-e17-browser114 / PR65",
+    "product_ci": "120 / PR106",
+    "compiler": "119 / PR107"
+  },
+  "acceptance": [
+    "Read applicable AGENTS, full original_packet, full assigned work order/required reads and the listed predecessor handoffs. Canonical/normative/source digests unchanged.",
+    "Verify current HEAD descends fence and no conflicting actor. Publish ACK real new model/session if exposed; unknown stays unknown. Bind e2 and actual input SHA, then implement autonomously within allowlist.",
+    "Preserve prior commits and original branch/PR. Never reset/rebase blindly, merge whole UX envelope, force push, gh or alternate remote channel. GitHub MCP/CAS only.",
+    "Materialize complete tested-by-contract implementation in real exclusive destinations; source/contract gaps need actual fixes, not placeholders, permissive Schema.Any/opaque schemas, silent API changes or producer clones.",
+    "Missing real producers blocks integration/proof, not independent authoring against frozen contracts. Shared exports/i18n/registries/SDK composition stay114; provide complete patches/preimages for shared consumer wiring.",
+    "At unit completion request surgical hosted validation via120 and compiler119, dedup. No local test/parser/typecheck/validator; no premature full epic.",
+    "Complete same PR with source blobs/prepost, coverage, pending dependency/proof status and handoff explicit e2 terminal. ARTIFACT_READY not INTEGRATED/QUALIFIED/DONE.",
+    "No native Goal resume, new supervisor, dev merge, deploy, Azure, engines, secrets, runtime restart or release claims. All original final gates mandatory."
+  ],
+  "global_release": false
+}
