@@ -1,0 +1,35 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "slot": "N30",
+  "actor": "ChatGPT GPT-6 (this conversation)",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_note": "No provider session identifier exposed to this GitHub connector; not invented.",
+  "branch": "sf-ux-n30",
+  "lease_epoch": "ux-native-n30-e1",
+  "ack_type": "REAL_REMOTE_ACK",
+  "ack_at": "2026-11-15",
+  "preflight_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "source_preimages": {
+    "apps/cli/src/sucafina-product/memory-http.ts": "f727d5250024df7338491321c36e7055d7c18f74",
+    "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+    "apps/cli/src/sucafina-product/analysis-http.ts": "06522fa4a2eaa0841af8aabead799d9d56a8ada7"
+  },
+  "owned_outputs": [
+    "U26",
+    "U37"
+  ],
+  "authorization": "S0-exclusive-leaf-authoring",
+  "integration_owner": "125",
+  "ci_owner": "120",
+  "compiler_owner": "119",
+  "ack_assertions": [
+    "Branch HEAD verified before any write",
+    "All three producer source blobs matched N30 launch pins",
+    "Will write only N30 effective allowlist plus receipt prefix",
+    "No local tests, generated/shared registries or producer edits"
+  ],
+  "state": "STARTED_AUTHORED",
+  "qualifications": "No tests or integration claimed by ACK"
+}
