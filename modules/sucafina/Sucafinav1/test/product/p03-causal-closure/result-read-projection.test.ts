@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test"
-import type { SfProductState } from "../../../product/contracts/state.ts"
+import type { SfProductState, SfStateAuthority } from "../../../product/contracts/state.ts"
 import { selectSfDecisionResult } from "../../../product/host-binding/state-provider.ts"
 import { createCalculationFixture } from "../planner-p03-finish/calculation-fixture.ts"
 
@@ -87,6 +87,34 @@ test("C08 selected result fallback preserves accessor effects, noncloneable fail
     expect(fresh.status).toBe("ok")
     if (fresh.status !== "ok" || !fresh.value?.stored) throw new Error("Detached restart read missing")
     expect(fresh.value.stored).toEqual(f.original)
+  } finally {
+    f.fixture.store.transaction = transaction
+    await f.cleanup()
+  }
+}, 60000)
+
+test("C08 projection keeps null-prototype inherited-key behavior for missing results and cases", async () => {
+  const f = await createCalculationFixture()
+  const transaction = f.fixture.store.transaction
+  try {
+    f.fixture.store.transaction = (surface, work, options) => transaction(surface, async (snapshot, blobs) => {
+      if (surface === "dashboard") {
+        const state = snapshot.data.__sfProductV1 as SfProductState
+        if (state.decisionResults) Object.setPrototypeOf(state.decisionResults, null)
+        Object.setPrototypeOf(state.cases, null)
+      }
+      return work(snapshot, blobs)
+    }, options)
+    const request = f.fixture.request
+    const context = f.fixture.context
+    const settle = async <T>(read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T) => {
+      try { return { outcome: "returned", result: await f.settings.state.read(request, "cases", read) } }
+      catch (cause) { return { outcome: "threw", name: cause instanceof Error ? cause.name : String(cause), message: cause instanceof Error ? cause.message : "" } }
+    }
+    const absent = selectSfDecisionResult("constructor", context)
+    expect(await settle(absent)).toEqual(await settle((state, authority) => absent(state, authority)))
+    const fixed = selectSfDecisionResult(f.original.resultRef, context, "constructor")
+    expect(await settle(fixed)).toEqual(await settle((state, authority) => fixed(state, authority)))
   } finally {
     f.fixture.store.transaction = transaction
     await f.cleanup()
