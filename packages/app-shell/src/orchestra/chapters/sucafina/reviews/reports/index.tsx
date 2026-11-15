@@ -160,7 +160,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
               <h2>{t("sf.u33.contents")}</h2>
               <p>{t("sf.u33.limit")}</p>
               <ul class="sf-n28-items">
-                <For each={review().sections}>{(section) => <li class="mx-card" data-section-id={section.id}>
+                <For each={review().sections}>{(section) => <li class="mx-card" data-section-id={section.id} data-source-record-count={section.count}>
                   <label>
                     <input type="checkbox" checked={store.selected.includes(section.title)}
                       disabled={store.operationState === "preparing" || store.operationState === "outcome-unknown" ||
