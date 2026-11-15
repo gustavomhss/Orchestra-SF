@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h.causal-fix175.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 175,
+  "order": "A05",
+  "epoch": "native-fix-e1-browser175",
+  "branch": "sf-ux-w17",
+  "pr": 134,
+  "actor": {
+    "model": "GPT-6",
+    "requested_model": "Astra",
+    "requested_model_available_in_this_session": false,
+    "session_id": null,
+    "session_id_reason": "Not exposed by runtime",
+    "github_login": "gustavomhss"
+  },
+  "authority": {
+    "packet_sha": "f9ffad06f0ec573e73402699f41def7a27074c23",
+    "immutable_packet_commit": "dd4e12b7b396307bb548bbd6e62a670281d342a7",
+    "predecessor_epoch": "ux-native-w17-e3",
+    "predecessor_future_write_authority": "REVOKED_FOR_CURRENT_PACKET_PATHS",
+    "runtime_termination_claimed": false,
+    "source_pre_head": "b1238d1d43308739f915111708d88bfb729d4799",
+    "source_pre_tree": "7c53b243e4a94c26115da86017f1c285cfd576b2",
+    "source_pre_portfolio_blob": "708731dbbaf1fe69664715a4f34007976a4b0476",
+    "active_write_paths": [
+      "packages/schema/src/sucafina/portfolio.ts",
+      "packages/schema/src/sucafina/portfolio/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/**"
+    ]
+  },
+  "source_proof": {
+    "installed_effect": "4.0.0-beta.83",
+    "effect_source": "Effect-TS/effect tag effect@4.0.0-beta.83",
+    "observed_schema_issues": [
+      "portfolio.ts:256 TS2345",
+      "portfolio.ts:260 TS2345"
+    ],
+    "consumer_head_seen": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "consumer_has_same_portfolio_blob": true,
+    "github_actions_compiler_run": 43766055614,
+    "github_actions_compiler_job": 132971280139,
+    "github_actions_product_run": 43765725305,
+    "portfolio_spec_historical": "9 PASS on W690a34; not transferable to new SHA"
+  },
+  "preflight": {
+    "root_agents": "READ",
+    "schema_agents": "READ",
+    "fence": "CONFIRMED",
+    "source_head": "CONFIRMED",
+    "workorder_and_contracts": "READ",
+    "runtime_checks": "NOT_RUN",
+    "goal": "paused",
+    "GLOBAL_RELEASE": false
+  },
+  "state": "ACK_CONFIRMED_BEFORE_PRODUCT_WRITE"
+}
