@@ -215,7 +215,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
     setState("review", review)
     if (kind === "position-save") positionDraft(pos()!)?.setPhase("reviewing")
   }
-  const fields = (values: Readonly<Record<string, string | boolean | number>>): SfReviewField[] =>
+  const fields = (values: object): SfReviewField[] =>
     Object.entries(values).map(([path, value]) => ({
       path, label: msg("sf.u08." + path),
       value: display(String(value)),
@@ -394,9 +394,9 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                     </For>
                   </select>
                 </label>
-                <a class="mx-btn" href="/orchestra/sf-imports/new" aria-disabled={!allowed("import-workbook")}>
-                  {t("sf.u08.import")}
-                </a>
+                <Show when={allowed("import-workbook")} fallback={<span aria-disabled="true">{t("sf.u08.import")}</span>}>
+                  <a class="mx-btn" href="/orchestra/sf-imports/new">{t("sf.u08.import")}</a>
+                </Show>
                 <button type="button" class="mx-btn" disabled={!allowed("sync")}
                   onClick={() => openReview("sync", "", cas(`${currentVersion()}:positions:sync`))}>
                   {t("sf.u08.sync")}
