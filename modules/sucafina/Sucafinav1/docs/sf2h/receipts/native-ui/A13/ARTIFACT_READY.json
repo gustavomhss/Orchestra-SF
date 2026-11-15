@@ -1,0 +1,171 @@
+{
+  "schema": "sf2h.native-ui.executor-receipt.v1",
+  "mission_id": "UX-A13",
+  "order": "A13",
+  "output_id": "UX-A13.29-operations",
+  "state": "ARTIFACT_READY",
+  "actor": "ChatGPT",
+  "model": "GPT-6",
+  "session_id": null,
+  "branch": "sf-ux-a13",
+  "lease_epoch": "ux-native-a13-e1",
+  "pr_number": 139,
+  "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/139",
+  "base_author_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "ack_commit": "fda223a74149c8dbc4c0b0400325d03071881c88",
+  "code_head": "77b720c59da8a5bd88a28e2c35022b0f1ab52c52",
+  "code_tree": "e5de02af4ea4b97fbcddccb7096c7396aa04b778",
+  "artifact_commits": [
+    "19e609d73419c4f73dfb34eb4565bded9fccc318",
+    "e71f7f69c020d5d4449fc9d36f939a475e459041",
+    "884b2e6de6ba19387080d266f4d5e5d946693064",
+    "77b720c59da8a5bd88a28e2c35022b0f1ab52c52"
+  ],
+  "files": [
+    {
+      "path": "packages/schema/src/sucafina/collaboration/fields.ts",
+      "preimage": null,
+      "postimage": "5c75027bb3fb7b7cfd34662f6ae55d87f6fd4019",
+      "change": "added",
+      "owner": "A13"
+    },
+    {
+      "path": "packages/schema/src/sucafina/collaboration/contracts.ts",
+      "preimage": null,
+      "postimage": "ffbfd2e1816125a3ae3b8a04a15e4c80f202da08",
+      "change": "added",
+      "owner": "A13"
+    },
+    {
+      "path": "packages/schema/src/sucafina/collaboration/operations.ts",
+      "preimage": null,
+      "postimage": "a37dc39b600740af0a78345dfa3d4565256c791a",
+      "change": "added",
+      "owner": "A13"
+    },
+    {
+      "path": "packages/schema/src/sucafina/collaboration.ts",
+      "preimage": null,
+      "postimage": "03bb179e7e6260aaded62fba075c4def3bdd7b46",
+      "change": "added",
+      "owner": "A13"
+    },
+    {
+      "path": "packages/client/src/sucafina/collaboration.ts",
+      "preimage": null,
+      "postimage": "79dc64adc03103300e48f0fae8a75e8d5f7ce64f",
+      "change": "added",
+      "owner": "A13"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+      "preimage": null,
+      "postimage": "1cf009887afbe56f8191dd32dd9da64e9a06682b",
+      "change": "added",
+      "owner": "A13"
+    }
+  ],
+  "exports": [
+    "SfCollaboration",
+    "createSfCollaborationClient"
+  ],
+  "number_of_operations": 29,
+  "operation_ids": [
+    "collaboration.answer-confirm",
+    "collaboration.answer-prepare",
+    "collaboration.answer-prepare-message",
+    "collaboration.answer-read",
+    "collaboration.confirmation-confirm",
+    "collaboration.confirmation-prepare",
+    "collaboration.confirmation-project",
+    "collaboration.cycle-read",
+    "collaboration.handoff-create",
+    "collaboration.handoff-link",
+    "collaboration.handoff-update",
+    "collaboration.question-consume",
+    "collaboration.question-output",
+    "collaboration.recipients",
+    "collaboration.relation-create",
+    "collaboration.relation-read",
+    "collaboration.relation-remove",
+    "collaboration.selection-create",
+    "collaboration.selection-list",
+    "collaboration.selection-version",
+    "collaboration.storage-version",
+    "collaboration.thread-create",
+    "collaboration.thread-edit",
+    "collaboration.thread-history",
+    "collaboration.thread-read",
+    "collaboration.thread-reply",
+    "collaboration.thread-resolve",
+    "collaboration.work-destination",
+    "collaboration.work-list"
+  ],
+  "required_contracts": {
+    "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "execution_protocol": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "contracts": "94553a3119826ef1c44271966233dd58042ddd70"
+  },
+  "source": {
+    "binding": "collaboration-routes",
+    "path": "modules/sucafina/Sucafinav1/product/collaboration/http-routes.ts",
+    "expected_blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+    "observed_blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+    "drift": "SAME_BLOB"
+  },
+  "coverage": {
+    "A13-AC01": {
+      "status": "AUTHORED_NOT_RUN",
+      "detail": "schemas source-bound: omitted/null/zero, evidence, incarnations, scope, recipient and read version variants"
+    },
+    "A13-AC02": {
+      "status": "AUTHORED_NOT_RUN",
+      "detail": "explicit closed 29 IDs; literals for operation and namespace; no arbitrary dispatcher"
+    },
+    "A13-AC03": {
+      "status": "AUTHORED_NOT_RUN",
+      "detail": "29 F02 client methods and negative specs: CAS, idempotency, source stale/denied, no retry"
+    }
+  },
+  "tests": {
+    "source_spec": "modules/sucafina/Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+    "blob": "1cf009887afbe56f8191dd32dd9da64e9a06682b",
+    "authored": true,
+    "executed": false,
+    "status": "NOT_RUN",
+    "local_validation": false,
+    "local_typecheck": false,
+    "actions_120": null,
+    "compiler_119": null,
+    "installed_identity_proof": false,
+    "desktop_proof": false
+  },
+  "blocked": [
+    {
+      "kind": "BLOCKED_INTEGRATION",
+      "owner": "114",
+      "dependency": "F01/F02 + operation registry/package exports/bindings in same integrated C"
+    },
+    {
+      "kind": "BLOCKED_QUALIFICATION",
+      "owner": "119/120",
+      "dependency": "hosted compiler and surgical Action spec only after integration"
+    },
+    {
+      "kind": "BLOCKED_MERGE",
+      "owner": "114",
+      "dependency": "sf2-stack diverged; PR currently mergeable=false, select A13 own blobs, not inherited cohort"
+    }
+  ],
+  "consumer_acks": [],
+  "qualification": "NOT_QUALIFIED",
+  "global_release": false,
+  "lease_terminal": "AUTHOR_HANDOFF_SUBMITTED_PENDING_114_CONSUMER_ACK",
+  "merge_to_dev": false,
+  "deploy": false,
+  "goal_reactivated": false
+}

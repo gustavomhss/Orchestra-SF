@@ -1,0 +1,967 @@
+{
+  "schema": "sf2h.native-ui.a13.registry-fragment.v1",
+  "order": "A13",
+  "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+  "source_commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "source_blob": "a266e12bd80a2ff95922c2492225ced86eda3ac3",
+  "code_commit": "77b720c59da8a5bd88a28e2c35022b0f1ab52c52",
+  "entries": [
+    {
+      "operationId": "collaboration.answer-confirm",
+      "schemaExport": "SfCollaborationAnswerConfirm",
+      "clientMethod": "collaboration.answer-confirm",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-answer-confirm"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"answer-confirm\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "questionId",
+        "answerRef",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.answer-prepare",
+      "schemaExport": "SfCollaborationAnswerPrepare",
+      "clientMethod": "collaboration.answer-prepare",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-answer-prepare"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"answer-prepare\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "questionId",
+        "answerRef"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.answer-prepare-message",
+      "schemaExport": "SfCollaborationAnswerPrepareMessage",
+      "clientMethod": "collaboration.answer-prepare-message",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-answer-prepare-message"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"answer-prepare-message\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "questionId",
+        "messageId",
+        "incarnation",
+        "version"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.answer-read",
+      "schemaExport": "SfCollaborationAnswerRead",
+      "clientMethod": "collaboration.answer-read",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-answer-read"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"answer-read\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "questionId"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.confirmation-confirm",
+      "schemaExport": "SfCollaborationConfirmationConfirm",
+      "clientMethod": "collaboration.confirmation-confirm",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-confirmation-confirm"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"confirmation-confirm\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "scope",
+        "observedSourceVersion",
+        "expectedScopeFingerprint",
+        "expectedStorageVersion",
+        "idempotencyKey"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.confirmation-prepare",
+      "schemaExport": "SfCollaborationConfirmationPrepare",
+      "clientMethod": "collaboration.confirmation-prepare",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-confirmation-prepare"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"confirmation-prepare\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "scope"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.confirmation-project",
+      "schemaExport": "SfCollaborationConfirmationProject",
+      "clientMethod": "collaboration.confirmation-project",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-confirmation-project"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"confirmation-project\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "id"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.cycle-read",
+      "schemaExport": "SfCollaborationCycleRead",
+      "clientMethod": "collaboration.cycle-read",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-cycle-read"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"cycle-read\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "caseRef",
+        "selection"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.handoff-create",
+      "schemaExport": "SfCollaborationHandoffCreate",
+      "clientMethod": "collaboration.handoff-create",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-handoff-create"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"handoff-create\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "intent",
+        "sourceRef",
+        "relationKey"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.handoff-link",
+      "schemaExport": "SfCollaborationHandoffLink",
+      "clientMethod": "collaboration.handoff-link",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-handoff-link"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"handoff-link\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "topicRef",
+        "sourceRefs",
+        "sourceRef",
+        "relationKey"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.handoff-update",
+      "schemaExport": "SfCollaborationHandoffUpdate",
+      "clientMethod": "collaboration.handoff-update",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-handoff-update"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"handoff-update\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "topicId",
+        "expectedVersion",
+        "idempotencyKey",
+        "values",
+        "sourceRefs",
+        "sourceRef",
+        "relationKey"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.question-consume",
+      "schemaExport": "SfCollaborationQuestionConsume",
+      "clientMethod": "collaboration.question-consume",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-question-consume"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"question-consume\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "proposal",
+        "sourceRef",
+        "period",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.question-output",
+      "schemaExport": "SfCollaborationQuestionOutput",
+      "clientMethod": "collaboration.question-output",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-question-output"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"question-output\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "outputRef",
+        "caseRef"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.recipients",
+      "schemaExport": "SfCollaborationRecipients",
+      "clientMethod": "collaboration.recipients",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-recipients"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"recipients\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.relation-create",
+      "schemaExport": "SfCollaborationRelationCreate",
+      "clientMethod": "collaboration.relation-create",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-relation-create"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"relation-create\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "operation",
+        "pair",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.relation-read",
+      "schemaExport": "SfCollaborationRelationRead",
+      "clientMethod": "collaboration.relation-read",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-relation-read"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"relation-read\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "recordRefs"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.relation-remove",
+      "schemaExport": "SfCollaborationRelationRemove",
+      "clientMethod": "collaboration.relation-remove",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-relation-remove"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"relation-remove\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "operation",
+        "id",
+        "pair",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.selection-create",
+      "schemaExport": "SfCollaborationSelectionCreate",
+      "clientMethod": "collaboration.selection-create",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-selection-create"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"selection-create\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "draft",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.selection-list",
+      "schemaExport": "SfCollaborationSelectionList",
+      "clientMethod": "collaboration.selection-list",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-selection-list"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"selection-list\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "caseRef"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.selection-version",
+      "schemaExport": "SfCollaborationSelectionVersion",
+      "clientMethod": "collaboration.selection-version",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-selection-version"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"selection-version\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.storage-version",
+      "schemaExport": "SfCollaborationStorageVersion",
+      "clientMethod": "collaboration.storage-version",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-storage-version"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"storage-version\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "namespace"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.thread-create",
+      "schemaExport": "SfCollaborationThreadCreate",
+      "clientMethod": "collaboration.thread-create",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-thread-create"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"thread-create\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "draft",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.thread-edit",
+      "schemaExport": "SfCollaborationThreadEdit",
+      "clientMethod": "collaboration.thread-edit",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-thread-edit"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"thread-edit\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "id",
+        "messageId",
+        "expectedVersion",
+        "body",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.thread-history",
+      "schemaExport": "SfCollaborationThreadHistory",
+      "clientMethod": "collaboration.thread-history",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-thread-history"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"thread-history\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "id",
+        "messageId",
+        "incarnation",
+        "version"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.thread-read",
+      "schemaExport": "SfCollaborationThreadRead",
+      "clientMethod": "collaboration.thread-read",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-thread-read"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"thread-read\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "id"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.thread-reply",
+      "schemaExport": "SfCollaborationThreadReply",
+      "clientMethod": "collaboration.thread-reply",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-thread-reply"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"thread-reply\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "id",
+        "body",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.thread-resolve",
+      "schemaExport": "SfCollaborationThreadResolve",
+      "clientMethod": "collaboration.thread-resolve",
+      "effect": "mutation",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-thread-resolve"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"thread-resolve\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "id",
+        "mutation"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.work-destination",
+      "schemaExport": "SfCollaborationWorkDestination",
+      "clientMethod": "collaboration.work-destination",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-work-destination"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"work-destination\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "selection",
+        "actionRef"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    },
+    {
+      "operationId": "collaboration.work-list",
+      "schemaExport": "SfCollaborationWorkList",
+      "clientMethod": "collaboration.work-list",
+      "effect": "read",
+      "kind": "existing-http",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "collaboration-work-list"
+      },
+      "sourceRef": "collaboration-routes",
+      "sourceSelector": "routes.get(\"work-list\"): keys/optional/validate/invoke; HTTP admission in source collaboration",
+      "inputRequiredKeys": [
+        "selectionRef",
+        "period"
+      ],
+      "requestHeaders": [
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID",
+        "Accept: application/json"
+      ],
+      "optionalRequestHeaders": [
+        "X-SF-Review-Binding: current review accessRevision only"
+      ],
+      "responseHeaders": [
+        "X-SF-Review-Binding"
+      ],
+      "responsePolicy": "source-envelope-preserved; decode by operation; no-store; no HTML parsing",
+      "automaticRetry": false
+    }
+  ],
+  "shared_patch": [
+    {
+      "owner": "114",
+      "path": "packages/schema/package.json",
+      "preimage_blob": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a",
+      "action": "add explicit exports[\"./sucafina/collaboration\"] = \"./src/sucafina/collaboration.ts\"; preserve existing entries; on current 114 head compare preimage before applying"
+    },
+    {
+      "owner": "114",
+      "path": "packages/client/package.json",
+      "preimage_blob": "4cd0244e98ff18b5e65d3c2808196705095b6691",
+      "action": "add explicit exports[\"./sucafina/collaboration\"] = \"./src/sucafina/collaboration.ts\"; preserve existing entries; on current 114 head compare preimage before applying"
+    },
+    {
+      "owner": "114",
+      "path": "packages/schema/src/sucafina/operation-registry.ts",
+      "preimage_blob": null,
+      "action": "materialize these 29 metadata entries in immutable SfOperationRegistry; NO import of family codecs here; literal method/path/fixedQuery and exact selector/response policy"
+    },
+    {
+      "owner": "114",
+      "path": "packages/schema/src/sucafina/index.ts",
+      "preimage_blob": null,
+      "action": "import SfCollaboration from ./collaboration and compose its 29 codeced operations into SfNativeOperationBindings ONLY when F02+family admitted; avoid metadata→leaf circular dependency"
+    },
+    {
+      "owner": "114",
+      "path": "packages/client/src/sucafina/transport.ts",
+      "preimage_blob": null,
+      "action": "use frozen F02 SfTransport; no family-specific protocol or retries; only admitted registry IDs"
+    },
+    {
+      "owner": "114",
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "preimage_blob": null,
+      "action": "no collaboration projection handler required: use existing product/collaboration/http-routes.ts JSON origin; preserve admission Request/header"
+    }
+  ],
+  "scope": {
+    "server_leaf": "NONE_REQUIRED_EXISTING_JSON",
+    "frontend": "closed 29 methods",
+    "backend_changes": "NONE",
+    "owner_path_only": true,
+    "shared_paths_mutated": false,
+    "producer_code_mutated": false
+  }
+}
