@@ -1,0 +1,253 @@
+{
+  "schema": "sf2h.office-independent-evidence.v1",
+  "mission": 131,
+  "actor": "NOVA131",
+  "methods": [
+    "Genuine GitHub Actions ZIP download; verify SHA256 vs GitHub artifact digest",
+    "Verify 25 original files vs manifests before and after read in each ZIP",
+    "Read existing PDF/PNG pages, PDF text/geometry/font inventory and OOXML originals without generating/running anything",
+    "Compare all 9 worksheet cells/formulas between W102 and C58 samples"
+  ],
+  "W102": {
+    "run": 43725105940,
+    "job": 132845224624,
+    "artifact": 14166480115,
+    "zip_sha256": "f7c4fc8503214e5ab046d71812f145adafdfc330ee42d1a6a50db40dd309b37f",
+    "snapshot": "079e57e84705105cefe03db9082e11a4c1973163",
+    "parent": "104bf61f67da9740024f38427c1580ba29f36e99",
+    "functional_step": "success",
+    "numeric_exit": "NOT_CAPTURED",
+    "reader": "COMPLETED",
+    "originals_verified": 25,
+    "originals_unchanged": 25,
+    "pdfs": 12,
+    "pngs": 121
+  },
+  "C58": {
+    "run": 43726378502,
+    "artifact": 14166341968,
+    "zip_sha256": "44bf585bbd508c21c2a8bbe962f72e03b4ff90b2d3b5f63ad478de3d04023a77",
+    "snapshot": "110a5aacb241326abc105534981169a331a3f161",
+    "parent": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "originals_verified": 25,
+    "originals_unchanged": 25,
+    "pdfs": 12,
+    "pngs": 139
+  },
+  "W102_xlsx": [
+    {
+      "case": "planner-viewer",
+      "original_sha256": "4748f32cd4281da39a91642e043b228af224a64e294b2ac26bed32bd786fa91a",
+      "pdf_sha256": "5fbc43f1010b46f6774b1ac23478f6b775f6b4995ebd839cffcfbff34bc17833",
+      "pdf_pages": 8,
+      "C58_pdf_pages": 21
+    },
+    {
+      "case": "members-admin",
+      "original_sha256": "3625bfc0dbede19ed69f6cfb63c32ae691fb9288e77cca5d324f3c722e752663",
+      "pdf_sha256": "aeb6a40ab483c1ec5f55ac1f3b0d80a70728d375a861e8e6c22b43ae871107f6",
+      "pdf_pages": 2,
+      "C58_pdf_pages": 6
+    },
+    {
+      "case": "opex-template",
+      "original_sha256": "209ad1f37f68b617432289188ad404d0a004718eb017db71624d29016b11bd1c",
+      "pdf_sha256": "3b259771aa5c3dbd14d8191c0b6000c102c52b412755dbed7b6b19864702beb7",
+      "pdf_pages": 1,
+      "C58_pdf_pages": 2
+    }
+  ],
+  "W102_sheet_page_map": [
+    {
+      "file": "planner-viewer",
+      "sheet": "Info",
+      "range": "A1:B28",
+      "populated_cells": 38,
+      "pages": [
+        1
+      ],
+      "median_pt": 11,
+      "verdict": "FAIL_VIS131-002"
+    },
+    {
+      "file": "planner-viewer",
+      "sheet": "OPEX",
+      "range": "A1:V7",
+      "populated_cells": 98,
+      "pages": [
+        2,
+        3
+      ],
+      "median_pt": 10.31,
+      "verdict": "FAIL_VIS131-001_AND_003"
+    },
+    {
+      "file": "planner-viewer",
+      "sheet": "CAPEX",
+      "range": "A1:X1",
+      "populated_cells": 24,
+      "pages": [
+        4,
+        5
+      ],
+      "median_pt": 9.51,
+      "verdict": "HEADER_ONLY_SAMPLE_PASS__POPULATED_NOT_PROVEN"
+    },
+    {
+      "file": "planner-viewer",
+      "sheet": "Headcount",
+      "range": "A1:M2",
+      "populated_cells": 23,
+      "pages": [
+        6
+      ],
+      "median_pt": 8.8,
+      "verdict": "ONE_POSITION_SAMPLE_PASS"
+    },
+    {
+      "file": "planner-viewer",
+      "sheet": "Rate cards",
+      "range": "A1:E1",
+      "populated_cells": 5,
+      "pages": [
+        7
+      ],
+      "median_pt": 11,
+      "verdict": "EMPTY_HEADER_SAMPLE_PASS__POPULATED_NOT_PROVEN"
+    },
+    {
+      "file": "planner-viewer",
+      "sheet": "FX rates",
+      "range": "A1:B3",
+      "populated_cells": 5,
+      "pages": [
+        8
+      ],
+      "median_pt": 11,
+      "verdict": "SAMPLE_PASS"
+    },
+    {
+      "file": "members-admin",
+      "sheet": "All Members",
+      "range": "A1:L2",
+      "populated_cells": 24,
+      "pages": [
+        1
+      ],
+      "median_pt": 8.6,
+      "verdict": "ONE_MEMBER_SAMPLE_PASS__FONT_SMALL"
+    },
+    {
+      "file": "members-admin",
+      "sheet": "Summary by Leader",
+      "range": "A1:K2",
+      "populated_cells": 22,
+      "pages": [
+        2
+      ],
+      "median_pt": 9.3,
+      "verdict": "ONE_LEADER_SAMPLE_PASS"
+    },
+    {
+      "file": "opex-template",
+      "sheet": "OPEX",
+      "range": "A1:N1",
+      "populated_cells": 14,
+      "pages": [
+        1
+      ],
+      "median_pt": 11,
+      "verdict": "HEADER_ONLY_14_CELLS_PASS"
+    }
+  ],
+  "W102_print": {
+    "planner_opex": "A3 landscape, 2 pages wide; repeat row 1",
+    "planner_capex": "A3 landscape, 2 pages wide; repeat row 1",
+    "planner_headcount": "A3 landscape, one page wide",
+    "planner_info": "A4 landscape",
+    "planner_rate_cards": "A4 landscape",
+    "planner_fx": "A4 portrait",
+    "members": "A3 landscape, one page wide",
+    "opex_template": "A4 landscape, one page wide"
+  },
+  "sample_numerics": [
+    {
+      "location": "Planner OPEX V2",
+      "formula": "SUM(J2:U2)",
+      "cached": 24,
+      "unit": "EUR",
+      "PDF_page": 3
+    },
+    {
+      "location": "Planner OPEX V5",
+      "formula": "SUM(J5:U5)",
+      "cached": 155555.58,
+      "unit": "USD",
+      "PDF_page": 3
+    },
+    {
+      "location": "Planner FX EUR",
+      "value": 1.2,
+      "unit": "USD per 1 unit",
+      "PDF_page": 8
+    },
+    {
+      "location": "Planner FX GBP",
+      "value": null,
+      "unit": "USD per 1 unit",
+      "PDF_page": 8
+    }
+  ],
+  "data_integrity": {
+    "W102_vs_C58": "0 decoded cell value/type/formula mismatches in 9 worksheets over 3 workbook pairs, synthetic corpus only",
+    "PDF_text_geometry": "No extracted PDF text spans outside physical page bounds in W102 Office PDFs; does not rule out truncation within cells or adjacent overlap",
+    "XLSX_fonts": "Embedded Carlito-Regular, not native Aptos",
+    "chart_objects": "No actual xl/charts/chart*.xml or ppt/charts/chart*.xml parts; empty ppt/charts folders are not charts"
+  },
+  "W102_office": {
+    "composed_DOCX": {
+      "pages": 15,
+      "sha256": "be48b6529c3b7eebbcae4ec918f27f8ed478e480b99b18d369a06fb5302b3922",
+      "OOXML_rows": 169,
+      "cantSplit": 0,
+      "continuation_ambiguous": "p3-p15"
+    },
+    "after_drift_DOCX": {
+      "pages": 15,
+      "sha256": "3849e4752c4a51bb32051fa281e3baa779f50446bd7945a2aeb84f6f04b05439",
+      "OOXML_rows": 169,
+      "cantSplit": 0,
+      "continuation_ambiguous": "p3-p15"
+    },
+    "composed_PPTX": {
+      "pages": 29,
+      "sha256": "bfb968e942b14de708d94d49b4c94c5e0fef199a0b6fc1e34718f90f9fa38ee3"
+    },
+    "after_drift_PPTX": {
+      "pages": 29,
+      "sha256": "03e238d63cb3d5381cf63e7420cfc6b2182cab5c6abf1fb5d6ebd2f06d4e8985"
+    },
+    "sentinels": "Long note sentinel END-EXPORT-66-NOTE and literal <scope> present in extracted PDFs"
+  },
+  "open_proof": {
+    "W102_scenarios": "No individual genuine normal/empty/wide/long PDF/PNG sets with separate source hashes available in the examined artifacts",
+    "W130": {
+      "source_head": "e1ed069223ef76e853d690f1728033c3c7a0b947",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+      "new_source_PDF_PNG": "NOT_OBSERVED",
+      "visual": "NOT_PROVEN"
+    },
+    "candidate_125": {
+      "branch": "sf2-stack",
+      "observed_head": "a15434ab558a650137f2472c7d59e6ae1e98e72a",
+      "visual": "NOT_PROVEN"
+    }
+  },
+  "constraints": {
+    "product_tests_executed": false,
+    "office_rerendered": false,
+    "product_changed": false,
+    "originals_mutated": false,
+    "global_release": false
+  }
+}

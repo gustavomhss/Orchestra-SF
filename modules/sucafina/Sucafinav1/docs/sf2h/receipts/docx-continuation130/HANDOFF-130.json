@@ -1,0 +1,102 @@
+{
+  "schema": "sf2h.docx-continuation-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 130,
+  "lease_epoch": "docx-e2-browser130",
+  "state": "IMPLEMENTED_NOT_QUALIFIED",
+  "origin": {
+    "branch": "docx-continuation-fix",
+    "expected_start": "a6153b63fd31ca20178db46ea72b0175ec589018",
+    "fence_commit": "a6153b63fd31ca20178db46ea72b0175ec589018",
+    "ack_commit": "45387380bffa942a2f58e0ec53586aa720ad1c57",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/docx-continuation130/S0-FENCE.json",
+    "ack_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/docx-continuation130/ACK-130.json",
+    "previous_mission_124": "REVOKED_BY_S0",
+    "previous_runtime_terminated": "UNKNOWN_NOT_ASSERTED"
+  },
+  "source": {
+    "W": "f47b278b9667dedb106e53a75b8ab9f3d5c475d7",
+    "tree": "22632ae2c3b000612b511ae7bc29623fa6859f1c",
+    "file": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+    "preimage_blob": "7010c9e5ec1f5300388408573b5ace1273662070",
+    "postimage_blob": "2a42b20133651bcff54f0a4f1ed2eb3590c06cc9",
+    "commits": [
+      "e1ed069223ef76e853d690f1728033c3c7a0b947",
+      "f47b278b9667dedb106e53a75b8ab9f3d5c475d7"
+    ],
+    "scope": "DOCX table flow only; no PPTX/PDF/XLSX, title style or sealing changes"
+  },
+  "regressions": {
+    "file": "modules/sucafina/Sucafinav1/test/product/docx-continuation130/table-flow.test.ts",
+    "blob": "9ef0efd8772bcf4546bf5ef340d041ff3252bd8f",
+    "commit": "95007382af5942da9951bf4fd170af9249f2bcb2",
+    "cases": 3,
+    "status": "NOT_RUN",
+    "coverage": [
+      "Real DOCX roundtrip XML: header and every physical table row has 3 non-empty cells, bounded body fragments and non-split row, all data and chart media, title and artifact seal/digest",
+      "Long captured text including Unicode/newlines/XML specials and extremely long sourceRef, ensure every continued physical row identifies record/period/sources; exact concatenated value/period/sources and sentinels",
+      "Extremely long opaque identifier: limited carry labels yet exact full original ID recovered without losing tail"
+    ]
+  },
+  "before": {
+    "role": "HISTORICAL_C51_NOT_A_VALIDATION_OF_W",
+    "run": 43682455278,
+    "artifact_id": 14148499941,
+    "zip_sha256": "ac15e48914aef2e5d496f48c6136901432cda499caa82f8954851d1c748461e1",
+    "manifest_sha256": "e562aeb561e48e5dd205227b44b29e3e35fbba52f8e14bdb001d9bc4cbf46fb6",
+    "composed_docx_sha256": "e76815d22f0ad16726fc3187c63df46bce87b17847cee66498389253160e1d2a",
+    "after_drift_docx_sha256": "1473f074ba6efdca1bef4d6352050a93d31b5841f29acaad93d86c23d2458c31",
+    "composed_pdf_sha256": "c3d3907dd9fb8971c23b1dcde86c20c6bd2a358411ac320c6451b1b4e718be7c",
+    "after_drift_pdf_sha256": "6c77c9633335a0c2dc2b8d95873fe1c12b9ace474374d9f7320e5d6a36fafbc9",
+    "composed_pages": 15,
+    "after_drift_pages": 15,
+    "specific_example": "Composed DOCX row license:1:currency-declared: USD p2→p3; first column is empty on p3 continuation; same pattern visible across pages3–15 in PR108/112.",
+    "examined_page_sha256": {
+      "composed_p02": "9d14c933b5ddb62fb59a048b7597be0eeb28d9614d2a3a156cb33a5054413f36",
+      "composed_p03": "75e2bbfb2f8f6785471dbe5f2908e27654c22f109cb20cfe6923e803721f383a",
+      "composed_p04": "4d65e6c6dad7a9a55d13d6039154e7af73658ab68a0386488923fd6564fe1214"
+    }
+  },
+  "after": {
+    "candidate": "PENDING_125_COMPOSITION",
+    "run": null,
+    "artifact": null,
+    "zip_sha256": null,
+    "manifest_sha256": null,
+    "PDF_PNG_perpage": null,
+    "visual_result": "NOT_RUN"
+  },
+  "findings": {
+    "VIS112_001": "OPEN_AWAITING_HOSTED_READER_AND_INDEPENDENT_131",
+    "VIS88_001": "HISTORICALLY_PASS_PAGE1_ONLY;RECHECK_REQUIRED_AFTER_CHANGE"
+  },
+  "criteria": {
+    "WP07_DOD_02": "SOURCE_DELTA_READY_PROOF_NOT_RUN",
+    "WP07_QLT_02": "SOURCE_DELTA_READY_PROOF_NOT_RUN",
+    "WP07_CMP_02": "REGRESSIONS_ADDED_NOT_RUN",
+    "VIS112_001": "RECHECK_REQUIRED",
+    "WP07_others": "UNMODIFIED_AND_NOT_ACCEPTED_BY_THIS_DELTA"
+  },
+  "dependencies": {
+    "integrator_125": "Adopt ONLY authorized source + regression test blobs after preimage/epoch verification; branch has divergent envelopes; preserve other authors and compose coherent C.",
+    "compiler_128": "Hosted typecheck/guards on accepted C; collect diagnostics no suppressions",
+    "ci_129": "Sole hosted surgical test and existing reader88 generation; duplicate check by W/S/tree/config",
+    "visual_131": "Independently compare after true rendered DOCX pages to before; do not infer pass from XML."
+  },
+  "forbidden_confirmed": [
+    "No product tests executed locally",
+    "No new workflow/reader/runner",
+    "No other-format exports changed",
+    "No native Goal restart",
+    "No dev merge/deploy",
+    "No GLOBAL_RELEASE"
+  ],
+  "state_details": {
+    "integration": "NOT_INTEGRATED_BY_THIS_SESSION",
+    "CI": "NOT_RUN",
+    "visual": "NOT_RUN",
+    "consumer_ACK": "PENDING",
+    "global_release": false
+  },
+  "next": "Publish PR, notify 125/129/131 with exact W/files and request; integrate selectively, obtain hosted test & reader artifacts, independent full-page review, record acceptance."
+}
