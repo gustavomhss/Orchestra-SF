@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h-product-type-repair-ack-v1",
+  "mission": {
+    "sha": "111c29106bf02ddf38cc425826b764f8c5452ae6",
+    "blob": "e6bbb6ab4f44797831e3386aae94773361c74cd3"
+  },
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S0-C/CLI product-source type correction",
+  "requested_preset": "Astra",
+  "effective_model": "GPT-6",
+  "session": "Independent ChatGPT conversation; opaque session ID not exposed",
+  "github_login": "gustavomhss",
+  "lease_epoch": "product-types-browser116",
+  "status": "ACKED_BEFORE_PRODUCT_EDIT",
+  "branch": "product-type-repair",
+  "expected_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "source_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "source_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "pack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+    "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "planning_ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "compiler108": {
+    "head": "59490441e732c025933484a0c4907c353c1e2874",
+    "results_blob": "01305338a422d551d22f54772c5626519b53e12b",
+    "findings_blob": "61cb828066932ffa8a726c09946d099e7f311115",
+    "proposal_blob": "6ccee0ea3bd6074b4a60381780b1c953a4ea47c5",
+    "proposal_status": "UNVERIFIED"
+  },
+  "files": {
+    "apps/cli/src/sucafina-product/bi-services.ts": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575",
+    "apps/cli/src/sucafina-product/current-choice-services.ts": "c2ef2828e824a46d67d7c6e79012656a092a3c82",
+    "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts": "0ff544b39f61a26cea6d15c238a88217ef7e6130",
+    "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts": "4d2e9087e4adfb57cdcfb6b0c686e1a6b9d7a516"
+  },
+  "reconciliation": {
+    "head_matches_expected": true,
+    "stack_head_observed": "806278627986f808afe71f53408fe31b77752894",
+    "stack_ahead_commits": 3,
+    "stack_product_paths_modified_since_c53": false,
+    "prior_pr_for_branch": false,
+    "other_writers": "no authority over granted source paths claimed; independent branch, no takeover"
+  },
+  "grants": [
+    "apps/cli/src/sucafina-product/bi-services.ts",
+    "apps/cli/src/sucafina-product/current-choice-services.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+    "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts",
+    "modules/sucafina/Sucafinav1/test/product/product-type-repair/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/product-type-repair/"
+  ],
+  "nonoverlap": [
+    "115",
+    "117",
+    "118",
+    "119",
+    "120"
+  ],
+  "restrictions": [
+    "GitHub MCP/CAS force:false only",
+    "No local tests, direct TS compiler, CI dispatch or epic",
+    "No any, casts-as-error-hiding, ts-ignore, exclusions or policy/oracle weakening",
+    "No merge, force, deploy, Azure, restart"
+  ],
+  "next": "Apply source-only corrections on the four granted paths; publish complete pre/post patch and handoff to sole integrator 114; 119 compiles, 120 owns product test runs"
+}
