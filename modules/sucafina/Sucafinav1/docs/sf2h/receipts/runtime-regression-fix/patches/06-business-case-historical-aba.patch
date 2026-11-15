@@ -1,0 +1,112 @@
+diff --git a/apps/cli/src/sucafina-product/business-services.ts b/apps/cli/src/sucafina-product/business-services.ts
+index 7f77d2443c220ba153cf38ee538a15a7f9a4b78d..0000000 100644
+--- a/apps/cli/src/sucafina-product/business-services.ts
++++ b/apps/cli/src/sucafina-product/business-services.ts
+@@ -228,53 +228,60 @@
+   const dashboardDecisions = createSfDashboardDecisions({ authority: input.authority, cases, records: dashboardRecords, issue: dashboardServices.issue,
+     preparePrivateDraftRead: dashboardServices.observer.preparePrivateDraftRead, proposalCoverageWrites: input.proposalCoverageWrites, dashboardHostWrites })
+   type CaseRef = { id: string; incarnation: string; version: number }
+-  type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number }
+-  const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
+-  const callBindingDigest = (call: TrustedDomainContext) => digestSfValue([call.kind, call.binding])
+-  const currentCaseAuthority = (call: TrustedDomainContext, request: Request, bindingDigest: string) =>
+-    host.requestFor(call) === request && !request.signal.aborted && callBindingDigest(call) === bindingDigest
+-  const releaseCaseScope = (call: TrustedDomainContext, scope: CaseScope) => {
+-    scope.retainers--
+-    if (scope.retainers === 0 && caseBindings.get(call) === scope) caseBindings.delete(call)
+-  }
+-  // Private selector for producers which must not recursively call cases.read.
+-  // It proves current C08 membership and identity; each producer still authorizes its sources.
+-  const selectedCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
+-    const scope = caseBindings.get(call)
+-    const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : scope?.selected
+-    const request = host.requestFor(call)
+-    const binding = callBindingDigest(call)
+-    if (!selected || !request || (call.kind === "ui" && (!scope || scope.request !== request || scope.bindingDigest !== binding)) ||
+-      !await host.revalidate(call) || !currentCaseAuthority(call, request, binding)) return { status: "unavailable", reason: "case-selection-unavailable" }
+-    const captured = structuredClone(selected)
+-    const current = await input.authority.state.read(request, "cases", (state, actor) => {
+-      const value = state.cases[captured.id]
+-      return value && value.incarnation === captured.incarnation && value.version === captured.version && value.participants.includes(actor.principalRef) &&
+-        actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
+-        ? { id: value.id, incarnation: value.incarnation, version: value.version } : undefined
+-    })
+-    const valid = await host.revalidate(call)
+-    const again = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
+-    return current.status === "ok" && current.value && digestSfValue(current.value) === digestSfValue(captured) && digestSfValue(again) === digestSfValue(captured) &&
+-      valid && currentCaseAuthority(call, request, binding) && (call.kind === "native" || caseBindings.get(call) === scope)
+-      ? { status: "ok", value: captured } : { status: "unavailable", reason: "case-selection-unavailable" }
+-  }
+-  const resolveCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
+-    const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
+-    if (!selected) return { status: "unavailable", reason: "case-selection-unavailable" }
+-    const current = await cases.read({ caseRef: encodeCaseRef(selected) }, call)
+-    return current.status === "ok" && current.value.case.version === selected.version && await host.revalidate(call)
+-      ? { status: "ok", value: structuredClone(selected) } : { status: "unavailable", reason: "case-selection-unavailable" }
+-  }
+-  const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+-    const request = host.requestFor(call)
+-    const binding = callBindingDigest(call)
+-    const captured = structuredClone(selected)
+-    if (call.kind !== "ui" || !request || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
+-    const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
+-    if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version) ||
+-      !await host.revalidate(call) || !currentCaseAuthority(call, request, binding) || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
+-    const scope: CaseScope = { selected: captured, request, bindingDigest: binding, retainers: 1 }
++  type CaseScope = { selected: CaseRef; request: Request; bindingDigest: string; retainers: number; initialVersion?: number }
++  const caseBindings = new WeakMap<TrustedDomainContext, CaseScope>()
++  const callBindingDigest = (call: TrustedDomainContext) => digestSfValue([call.kind, call.binding])
++  const currentCaseAuthority = (call: TrustedDomainContext, request: Request, bindingDigest: string) =>
++    host.requestFor(call) === request && !request.signal.aborted && callBindingDigest(call) === bindingDigest
++  const releaseCaseScope = (call: TrustedDomainContext, scope: CaseScope) => {
++    scope.retainers--
++    if (scope.retainers === 0 && caseBindings.get(call) === scope) caseBindings.delete(call)
++  }
++  // Private selector for producers which must not recursively call cases.read.
++  // It proves current C08 membership and identity; each producer still authorizes its sources.
++  const selectedCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
++    const scope = caseBindings.get(call)
++    const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : scope?.selected
++    const request = host.requestFor(call)
++    const binding = callBindingDigest(call)
++    if (!selected || !request || (call.kind === "ui" && (!scope || scope.request !== request || scope.bindingDigest !== binding)) ||
++      !await host.revalidate(call) || !currentCaseAuthority(call, request, binding)) return { status: "unavailable", reason: "case-selection-unavailable" }
++    const captured = structuredClone(selected)
++    const current = await input.authority.state.read(request, "cases", (state, actor) => {
++      const value = state.cases[captured.id]
++      return value && value.incarnation === captured.incarnation && value.version === captured.version &&
++        value.version >= (scope?.initialVersion ?? captured.version) && value.participants.includes(actor.principalRef) &&
++        actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision && actor.policyVersion === call.binding.policyVersion
++        ? { id: value.id, incarnation: value.incarnation, version: value.version } : undefined
++    })
++    const valid = await host.revalidate(call)
++    const again = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
++    return current.status === "ok" && current.value && digestSfValue(current.value) === digestSfValue(captured) && digestSfValue(again) === digestSfValue(captured) &&
++      valid && currentCaseAuthority(call, request, binding) && (call.kind === "native" || caseBindings.get(call) === scope)
++      ? { status: "ok", value: captured } : { status: "unavailable", reason: "case-selection-unavailable" }
++  }
++  const resolveCase = async (call: TrustedDomainContext): Promise<PortResult<CaseRef>> => {
++    const selected = call.kind === "native" ? { id: call.binding.caseId, incarnation: call.binding.caseIncarnation, version: call.binding.caseVersion } : caseBindings.get(call)?.selected
++    if (!selected) return { status: "unavailable", reason: "case-selection-unavailable" }
++    const current = await cases.read({ caseRef: encodeCaseRef(selected) }, call)
++    return current.status === "ok" && current.value.case.version === selected.version &&
++      current.value.case.version >= (call.kind === "ui" ? caseBindings.get(call)?.initialVersion ?? selected.version : selected.version) &&
++      await host.revalidate(call)
++      ? { status: "ok", value: structuredClone(selected) } : { status: "unavailable", reason: "case-selection-unavailable" }
++  }
++  const withCase = async <T>(call: TrustedDomainContext, selected: CaseRef, options: { allowHistoricalRetry?: boolean }, action: () => Promise<PortResult<T>>): Promise<PortResult<T>> => {
++    const request = host.requestFor(call)
++    const binding = callBindingDigest(call)
++    const captured = structuredClone(selected)
++    if (call.kind !== "ui" || !request || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
++    const current = await cases.read({ caseRef: encodeCaseRef(captured) }, call)
++    if (current.status !== "ok" || (options.allowHistoricalRetry ? current.value.case.version < captured.version : current.value.case.version !== captured.version) ||
++      !await host.revalidate(call) || !currentCaseAuthority(call, request, binding) || caseBindings.has(call)) return { status: "denied", reason: "case-selection-unavailable" }
++    // A replay can start with selected v1 while the C08 case is already v2.
++    // Never let an in-flight v2 -> v1 rollback revive fresh selectedCase,
++    // resolveCase, or nested calculation work under that historical scope.
++    const scope: CaseScope = { selected: captured, request, bindingDigest: binding,
++      retainers: 1, initialVersion: current.value.case.version }
+     caseBindings.set(call, scope)
+     try {
+       const result = await action()
