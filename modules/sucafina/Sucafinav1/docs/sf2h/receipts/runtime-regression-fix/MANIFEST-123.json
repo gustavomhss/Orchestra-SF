@@ -1,0 +1,225 @@
+{
+  "schema": "sf2h.123.patch-handoff.v1",
+  "mission": 123,
+  "branch": "runtime-regression-fix",
+  "campaign": "sf2h-integral-20261112",
+  "leaseEpoch": "runtime-regression-fix-e1-browser123",
+  "initialHead": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "initialTree": "647b024075265fc76d6253c99bec00a82618f816",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "missionBlobSha": "a2c93d0f057f805389c9a54f0b8fc20172680ff9",
+  "originalEvidence": [
+    {
+      "run": 43726458847,
+      "job": 132849340798,
+      "pass": 83,
+      "fail": 1,
+      "expects": 1228
+    },
+    {
+      "run": 43726376680,
+      "job": 132849088063,
+      "pass": 42,
+      "fail": 8,
+      "expects": 1061
+    }
+  ],
+  "patches": [
+    {
+      "id": "01-planner-revocation",
+      "path": "modules/sucafina/Sucafinav1/product/integration/planner-sources.ts",
+      "baseBlob": "02d75207b2978cc5c05368cc7e3517efeb3ce3ce",
+      "targetBlob": "cf940bb5adc76fa501b537c2e2eab9d326a37465",
+      "authority": "producer-reserved",
+      "patchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-regression-fix/patches/01-planner-revocation.patch",
+      "applied_to_source": false,
+      "validated_in_actions": false
+    },
+    {
+      "id": "02-wp00-journey-bindings",
+      "path": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+      "baseBlob": "d99589bb1819ac8f61f8c84d43b120415755a850",
+      "targetBlob": "8ebe7679a808cc27bd851345f4f1296664bfadd2",
+      "authority": "producer-reserved",
+      "patchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-regression-fix/patches/02-wp00-journey-bindings.patch",
+      "applied_to_source": false,
+      "validated_in_actions": false
+    },
+    {
+      "id": "03-wp08-private-writer-fixture",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+      "baseBlob": "ca0e83b316f368be5ede080f881db86743bd0435",
+      "targetBlob": "2fc7dcb003e6b72a2486828ed29a9985a83cfc49",
+      "authority": "test-writer-authorization-required",
+      "patchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-regression-fix/patches/03-wp08-private-writer-fixture.patch",
+      "applied_to_source": false,
+      "validated_in_actions": false
+    },
+    {
+      "id": "04-import-preview-contribution-links",
+      "path": "modules/sucafina/Sucafinav1/product/ui/contribution-body.ts",
+      "baseBlob": "42878a8eb5eb6e33c0140559e6390d537c3000f0",
+      "targetBlob": "a8b6aa9e3d8db574d9931953f9899330363d786e",
+      "authority": "ui-producer-authorization-required",
+      "patchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-regression-fix/patches/04-import-preview-contribution-links.patch",
+      "applied_to_source": false,
+      "validated_in_actions": false
+    },
+    {
+      "id": "05-analysis-run-admission-egress",
+      "path": "apps/cli/src/sucafina-product/analysis-run-context.ts",
+      "baseBlob": "1d9a8a9589f3884a083ac09cbc951d4cce0bbdca",
+      "targetBlob": "9eea7bb8d0230b2e67277b991df02600ada33833",
+      "authority": "producer-reserved",
+      "patchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-regression-fix/patches/05-analysis-run-admission-egress.patch",
+      "applied_to_source": false,
+      "validated_in_actions": false
+    },
+    {
+      "id": "06-business-case-historical-aba",
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "baseBlob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+      "targetBlob": "ec17b45ea75e5708225ac8c03199875759c3f2b6",
+      "authority": "composition-producer-authorization-required",
+      "patchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-regression-fix/patches/06-business-case-historical-aba.patch",
+      "applied_to_source": false,
+      "validated_in_actions": false
+    }
+  ],
+  "findings": [
+    {
+      "n": 1,
+      "run": 43726458847,
+      "job": 132849340798,
+      "test": "test/product/diagnostics/calculation/source-observation.test.ts",
+      "line": 86,
+      "cause": "requestFor already absent short-circuits host.revalidate; negative observation contract not satisfied",
+      "patches": [
+        "01-planner-revocation"
+      ],
+      "owner": "Planner source producer; 114 admission",
+      "state": "PATCH_READY_UNVERIFIED",
+      "required": "120 rerun diagnostic; expect revalidate=1, sourceTransaction/authenticate/preparedReads=0"
+    },
+    {
+      "n": 2,
+      "run": 43726376680,
+      "job": 132849088063,
+      "test": "test/product/wp00/baseline-corpus-coverage.test.ts",
+      "line": 60,
+      "cause": "Eight J01-J08 mutable corpus entries lacked fixtureBindings/executionStatus fields",
+      "patches": [
+        "02-wp00-journey-bindings"
+      ],
+      "owner": "WP00 corpus owner; 114 admission",
+      "state": "PATCH_READY_UNVERIFIED",
+      "required": "J01-J08 candidate bindings correspond to existing tests; executionStatus stays NOT_RUN"
+    },
+    {
+      "n": 3,
+      "run": 43726376680,
+      "job": 132849088063,
+      "test": "test/product/wp08/host-answer-reuse.test.ts",
+      "durationMs": 11767.14,
+      "cause": "Not established: complex real SQLite/Dashboard answer lifecycle exceeds 5000 ms; per-phase point of blockage absent from 118B log",
+      "patches": [],
+      "probe": "modules/sucafina/Sucafinav1/test/product/runtime-regression-fix/host-answer-stage-probe.test.ts",
+      "owner": "WP08/answer producer + 120",
+      "state": "OPEN_NEEDS_PHASE_EVIDENCE",
+      "required": "120 run only stage probe, inspect SF123_WP08_PHASE last marker, then causal optimization; no timeout raise"
+    },
+    {
+      "n": 4,
+      "run": 43726376680,
+      "job": 132849088063,
+      "test": "test/product/wp08/collaboration-journey.test.ts",
+      "line": 105,
+      "cause": "C08 preferences recognizes private selection writer only through injected caseSelectionWrites; fixture omitted same guard on createSfProductState",
+      "patches": [
+        "03-wp08-private-writer-fixture"
+      ],
+      "owner": "WP08 test fixture writer; 114 admission",
+      "state": "PATCH_READY_UNVERIFIED",
+      "required": "120 run actual full journey; any downstream failure remains distinct"
+    },
+    {
+      "n": 5,
+      "run": 43726376680,
+      "job": 132849088063,
+      "test": "test/product/wp01/decision-conflict-recovery.test.ts",
+      "line": 32,
+      "cause": "Browser lease requested without ordered startup; browser-fixture.ts:232; 118B selection lacked required pool owner",
+      "patches": [],
+      "owner": "120 CI selection; WP01 browser lifecycle owner",
+      "state": "RECHECK_SELECTION_READY_UNEXECUTED",
+      "required": "One ordered Actions selection: browser-startup.test.ts, decision-conflict-recovery.test.ts, browser-lifecycle.test.ts; no test/controller modification"
+    },
+    {
+      "n": 6,
+      "run": 43726376680,
+      "job": 132849088063,
+      "test": "test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "line": 67,
+      "cause": "Historical withCase scope kept only selected v1; when current C08 v2 rolled back to v1 during call, fresh selectedCase/resolveCase revived",
+      "patches": [
+        "06-business-case-historical-aba",
+        "05-analysis-run-admission-egress"
+      ],
+      "owner": "CLI business services owner; 114 admission",
+      "state": "PATCH_READY_UNVERIFIED",
+      "required": "Anchor initial actual case version in lexical scope; check current C08 projection independently at egress"
+    },
+    {
+      "n": 7,
+      "run": 43726376680,
+      "job": 132849088063,
+      "test": "test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "line": 122,
+      "cause": "Final human.authorize can revoke C08 membership after business.withCase returns; missing after-authorize C08 reobservation",
+      "patches": [
+        "05-analysis-run-admission-egress"
+      ],
+      "owner": "CLI analysis owner; 114 admission",
+      "state": "PATCH_READY_UNVERIFIED",
+      "required": "Reobserve exact current authorized case after human final check; no returning previously successful result"
+    },
+    {
+      "n": 8,
+      "run": 43726376680,
+      "job": 132849088063,
+      "test": "test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+      "line": 187,
+      "cause": "No explicit C08 projection read at run admission/egress under protected outer snapshot; fault injector never triggered",
+      "patches": [
+        "05-analysis-run-admission-egress"
+      ],
+      "owner": "CLI analysis owner; 114 admission",
+      "state": "PATCH_READY_UNVERIFIED",
+      "required": "Read C08 in read-only dashboard outer transaction, reject snapshot mutation and finished lease even after projection"
+    },
+    {
+      "n": 9,
+      "run": 43726376680,
+      "job": 132849088063,
+      "test": "test/product/wp06/native/import-analysis.test.ts",
+      "line": 156,
+      "cause": "Host authorized persisted contribution renderer lacked explicit importPreviewRef link and sf=imports route",
+      "patches": [
+        "04-import-preview-contribution-links"
+      ],
+      "owner": "UI contribution producer; 114/124 ownership review",
+      "state": "PATCH_READY_UNVERIFIED",
+      "required": "Preserve persisted selected C04 ref; read-only guarded navigation; rerun original full proof, no invented preview"
+    }
+  ],
+  "directSourceEdits": 0,
+  "producerPatches": 6,
+  "independentRegressionsAdded": [
+    "modules/sucafina/Sucafinav1/test/product/runtime-regression-fix/host-answer-stage-probe.test.ts"
+  ],
+  "ownerAdmission": "Required for ALL six source patches; three target paths require explicit extension outside mission producer_patch_paths; 114 must reconcile active leases and CAS on current SHAs.",
+  "ci": "No tests or compiler runs dispatched by123. 120 exclusive product CI selector, 119 compiler/guards; all statuses unverified.",
+  "wp00ExecutionStatus": "NOT_RUN",
+  "globalRelease": false,
+  "integrationState": "PATCH_HANDOFF_ONLY: neither producer source nor backend was modified; 9/9 findings NOT ACCEPTED."
+}
