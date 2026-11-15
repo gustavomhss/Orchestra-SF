@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h.mission52.c32-host-context-static-review.v1",
+  "status": "STATIC_PASS_NOT_RUN",
+  "base": "3e26a3c2b18b54d891f44adaac76b228a0daf4c0",
+  "base_tree": "87c3d65399a71f4bbf72c8714f7ee02e662b24e7",
+  "path": "apps/cli/src/sucafina-product/host-context.ts",
+  "preimage": "297a4050323d80648684725f9c7e9a8680aa318f",
+  "postimage": "46d3a77a819f4127b073cb8f5572838824019075",
+  "material": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p8-c32-host-context-material.json",
+    "sha256": "ea888329c2daaf72b703345b60917081b81322458bf0dfa26096c5e8b2d85709",
+    "bytes": 163836
+  },
+  "patch": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p8-c32-host-context-complete.patch",
+    "sha256": "a0b17f88f504da03a041b5fba8f89e6aecfe809608af7a9544057d96c8ef3bf5",
+    "bytes": 4627
+  },
+  "mission52_hunks": [
+    {
+      "ordinal": 1,
+      "purpose": "Import createSfDecisionCaseHttp.",
+      "new_bindings": [
+        "createSfDecisionCaseHttp"
+      ]
+    },
+    {
+      "ordinal": 2,
+      "purpose": "Compose the existing narrow case HTTP adapter with current authority/business/portfolio and exact locked aggregate revision callback.",
+      "preserved_fence": "currentSnapshots()->dashboard.__sfProductV1; schemaVersion1, nonempty incarnation, nonnegative safe-integer revision; undefined on absent/invalid snapshots."
+    },
+    {
+      "ordinal": 3,
+      "purpose": "Insert adapter after currentChoiceHttp and before analysisHttp; preserve every other handler and order."
+    }
+  ],
+  "native64_hunks_preserved": [
+    "Authenticated admission origin and owner registry imports replace the older owner-port import.",
+    "Composition seam accepts nativeRoutineOrigin capability, preserving its authenticated-origin comment.",
+    "Governance ownerHook uses routineAdmission and readiness guard remains before descriptor registration.",
+    "Owner registry/admission construction and their request/authority/generation/intent bindings remain byte exact.",
+    "Synchronous routineAdmission.dispose and routineOwners.dispose remain before asynchronous shutdown.",
+    "Native governance/runtime contributions and routineRuntime.mount(product) retain current C32 installation shape."
+  ],
+  "textual_reconstruction_checks": {
+    "original_blobs_verified": true,
+    "current_C32_blob_verified": true,
+    "original52_hunks_apply_once_exactly": true,
+    "reverse52_recovers_entire_C32_file": true,
+    "native_delta_on_original52_post_recovers_same_composed_file": true,
+    "reverse_native_delta_recovers_original52_post": true,
+    "all_six_native_after_hunks_present_once_unchanged": true,
+    "final_diff_exactly_three52_hunks": true
+  },
+  "source_paths_changed_in_proposal": [
+    "apps/cli/src/sucafina-product/host-context.ts"
+  ],
+  "native_activation_policy_or_grants_changed": false,
+  "CurrentChoice_Reports_C12_workflow_paths_changed": [],
+  "production_execution": 0,
+  "local_tests": 0,
+  "typechecks": 0,
+  "hosted_tests": 0,
+  "remote_mutations": 0,
+  "integration_acceptance": false,
+  "GLOBAL_RELEASE": false
+}

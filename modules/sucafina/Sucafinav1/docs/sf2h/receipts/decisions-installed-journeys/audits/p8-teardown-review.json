@@ -1,0 +1,164 @@
+{
+  "schema": "sf2h.mission52.nominal10-teardown.independent-static-review.v1",
+  "reviewer": "composition_audit",
+  "verdict": "PASS_STATIC_NO_BLOCKERS",
+  "runtime_qualification": false,
+  "base_W": "812d6bd9de70890775708533a7b05687c2d4d93d",
+  "source_run": 43670807969,
+  "scope": "Textual and static control-flow review only; no product execution, tests, compilation, dispatch or remote mutation",
+  "entries": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "preimage": "fa509e9d7a7da9d0024c9487975f7b26b3b29146",
+      "postimage": "e1c78c9311d9af5df81191acc490b9574421ad3d",
+      "preimage_sha256": "931b60f23ad9373b441be4c13d49b643f6b66abee767aa03befb816bcd71f235",
+      "postimage_sha256": "1627265da0aac3f849d24b72be81567f4282e0247b12efe1fea1399a173cb842",
+      "preimage_bytes": 1990,
+      "postimage_bytes": 2920,
+      "material": "/workspace/scratch/fec39c0682b3/m52-work/teardown10/closure-response-material.json",
+      "material_sha256": "30904f9cf80eaa8097bdb42db87c19193d336546567d36e6a60b31ab5d020305",
+      "patch": "/workspace/scratch/fec39c0682b3/m52-work/teardown10/closure-response-complete.patch",
+      "patch_sha256": "ebbb55358858669d787d25c1531e74722f21fdab70fc26dd91781b4c9d9486b7",
+      "patch_bytes": 2763,
+      "expect_lines": 2,
+      "checks": {
+        "preimage_matches_immutable_W": true,
+        "git_preimage": true,
+        "git_postimage": true,
+        "sha256_preimage": true,
+        "sha256_postimage": true,
+        "patch_sha256": true,
+        "complete_unified_patch_exact": true,
+        "expect_lines_exact": true
+      }
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "preimage": "3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2",
+      "postimage": "e5a510068cc16a41b29446524b4c7870c98568c5",
+      "preimage_sha256": "e285f499fc39211a2751c20c288cdb7eeb883a8d4749cceb8b55c579722ad46a",
+      "postimage_sha256": "253c95d9bae35827730331241c0f8accecfc990c9167cc2db8561eb4e7fa3e50",
+      "preimage_bytes": 9064,
+      "postimage_bytes": 9547,
+      "material": "/workspace/scratch/fec39c0682b3/m52-work/teardown10/journey-teardown-material.json",
+      "material_sha256": "2fda11837974fea357e14c79d4eeae8c0c370175d06c77b0d0df291875e59c09",
+      "patch": "/workspace/scratch/fec39c0682b3/m52-work/teardown10/journey-teardown-complete.patch",
+      "patch_sha256": "6dba4f9145fa01820da747c9a4daeddbed42fdee9b440626788bbafd222c76e7",
+      "patch_bytes": 1815,
+      "expect_lines": 27,
+      "checks": {
+        "preimage_matches_immutable_W": true,
+        "git_preimage": true,
+        "git_postimage": true,
+        "sha256_preimage": true,
+        "sha256_postimage": true,
+        "patch_sha256": true,
+        "complete_unified_patch_exact": true,
+        "expect_lines_exact": true
+      }
+    }
+  ],
+  "immutable_sources": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+      "sha256": "9924641f3fef04434be4987509ad865d03d9cf46a1f021d92acd89dc9504f81d",
+      "bytes": 12983
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+      "blob": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+      "sha256": "c29db28d516c62ace5ca599e41b6e97080fa5f15c37706485fa3422d2b8a03de",
+      "bytes": 7605
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "blob": "de8671b4482339791b8f03bd5616c13d50dc4a87",
+      "sha256": "0f2bd070ee2889719b6998d58e33f55b62f6c15b6040042f4dbd587424411563",
+      "bytes": 12222
+    }
+  ],
+  "preserved_selection": {
+    "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+    "identities": [
+      "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+    ],
+    "test_count": 5,
+    "timeout_statements": [
+      "test.setTimeout(180_000)",
+      "test.setTimeout(180_000)",
+      "test.setTimeout(180_000)",
+      "test.setTimeout(180_000)",
+      "test.setTimeout(180_000)"
+    ],
+    "retries": 0,
+    "choice_history_blob": "de8671b4482339791b8f03bd5616c13d50dc4a87",
+    "caller_unchanged": true,
+    "shared_fixture_blob": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+    "shared_fixture_unchanged": true
+  },
+  "findings": [
+    {
+      "id": "closure-before-response",
+      "verdict": "PASS",
+      "detail": "A matching original POST requestfailed before Fetch.requestPaused rejects completed. Promise.all in the unchanged choice caller now rejects instead of waiting indefinitely for a response event that cannot arrive. No successful response is invented."
+    },
+    {
+      "id": "closure-intentional-failure",
+      "verdict": "PASS",
+      "detail": "responsePaused is set synchronously before the response callback first awaits. The requestfailed caused by the existing Fetch.failRequest therefore does not reject completed. Original HTTP status, content type, body, payload and both helper assertions remain unchanged; caller success assertions still decide acceptance."
+    },
+    {
+      "id": "closure-page-and-cleanup",
+      "verdict": "PASS",
+      "detail": "Page close rejects the pending completion. close is memoized, removes only its own page/CDP listeners and attempts detach in a finally after Fetch.disable. Setup failure invokes that cleanup before propagating failure."
+    },
+    {
+      "id": "aftereach-ownership",
+      "verdict": "PASS",
+      "detail": "The five unchanged tests pass their actual TestInfo into withInstallation. A WeakMap uses that same per-test key and stores only the returned fixture-owned stop closure. The afterEach hook performs no port/process selection, creates no replacement service and never terminates an unrelated process."
+    },
+    {
+      "id": "aftereach-race",
+      "verdict": "PASS",
+      "detail": "The body finally and runner afterEach share one promise initialized by the first stop call. A second call awaits it. Deletion occurs when it settles; after successful normal cleanup the hook is a no-op. The shared async stop function and its existing exit/listener assertions remain intact."
+    },
+    {
+      "id": "authority-policy",
+      "verdict": "PASS",
+      "detail": "Only two owned E2E helpers change. No product source, grants, rules, financial approval, C12, CurrentChoice, shared WP03 fixture, workflows, request payloads, spec identity, assertion or timeout changes."
+    }
+  ],
+  "limits": [
+    "The nominal10 artifact has no decisions-observations or CLI attachment. It does not identify an HTTP status, request payload, requestfailed event, producer duration or persistence outcome for decision-choose.",
+    "The static unresolved-promise path is compatible with the observed timeout, missing attachments and subsequent EADDRINUSE, but does not prove it was the actual event sequence in nominal10.",
+    "If the page/session is already closed, Fetch.disable or detach may throw and replace the original error message. The result remains failure and detach is attempted; this is a diagnostic limitation, not a success bypass.",
+    "The hook does not synthesize missing body observations. If startup has not returned, cleanup remains the existing shared fixture responsibility.",
+    "A later run must establish the actual choice response and complete all independent UI journeys. This review is not a PASS for any nominal10 journey."
+  ],
+  "product_choice_static_analysis": {
+    "observed_route": "portfolio-http decision-choose invokes withCase with historical retry, then canonical mutations.recordChoice",
+    "pipeline": [
+      "authorizeMutation and replayMutation",
+      "UI confirmation and load current case",
+      "canonical compareScenarios",
+      "read candidate and baseline stored scenario history",
+      "resolveChoiceValues: current case, rule, P7 metric twice, rule again, final case and authorization",
+      "createChoiceSnapshot",
+      "saveCase canonical C08 transaction with locked authority and outbox fencing"
+    ],
+    "read_scopes": "Installed compareScenarios and resolveChoiceValues have separate finished readPortfolioSnapshot callbacks. withCase is a private selection binding, not a transaction around the entire mutation; saveCase runs after them.",
+    "conclusion": "No inevitable nominal refusal or write-within-read-snapshot defect identified statically. Structural work count does not establish latency or a producer cause.",
+    "source_pins": {
+      "portfolio-preparation.ts": "cd9b7e0ebd49db83ea8612d80fc636ed008b2c2c",
+      "decisions/mutations.ts": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+      "portfolio-http.ts": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+      "business-services.ts": "844edd2860e11d5de165c09c7863f4cc6ef5ad67",
+      "portfolio-services.ts": "9d17760c418ee9b48b97443d90a994c31cc415f5"
+    }
+  }
+}

@@ -89,17 +89,23 @@ index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed8
 +  }
 +}
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
-index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2 100644
+index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..e5a510068cc16a41b29446524b4c7870c98568c5 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
-@@ -1,5 +1,6 @@
- import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
+@@ -1,5 +1,11 @@
+-import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
++import { expect, test, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
  import { startPlannerInstallation } from "../wp03/installation-fixture"
 +import { clickForResponse, type CommandResponse } from "./command-response"
++
++// A timed-out test body can still await a userland promise. Teardown owns the
++// same fixture stop independently; it never borrows or kills another service.
++const installationStops = new WeakMap<TestInfo, () => Promise<void>>()
++test.afterEach(async ({}, info) => { await installationStops.get(info)?.() })
  
  export const draft = {
    objective: "CI Decisions — annual service decision",
-@@ -9,7 +10,7 @@
+@@ -9,7 +15,7 @@
    sourceRefs: [],
  }
  
@@ -108,7 +114,17 @@ index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..3f548f0afdbb2d0c17c3cf9f0c3d4dd6
    const url = new URL(request.url())
    return request.method() === method && url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
  }
-@@ -42,17 +43,38 @@
+@@ -32,6 +38,9 @@
+   const observations: Record<string, unknown>[] = []
+   const body = { completed: false }
+   const installation = await startPlannerInstallation(info)
++  let stopping: Promise<void> | undefined
++  const stop = () => stopping ??= installation.stop().finally(() => { installationStops.delete(info) })
++  installationStops.set(info, stop)
+   const requests: { method: string; mode: string; operation?: string; idempotencyKey?: string }[] = []
+   const listener = (request: Request) => {
+     const url = new URL(request.url())
+@@ -42,21 +51,42 @@
        ...(body && typeof body === "object" && "operation" in body && typeof body.operation === "string" ? { operation: body.operation } : {}),
        ...(request.headers()["idempotency-key"] ? { idempotencyKey: request.headers()["idempotency-key"] } : {}) })
    }
@@ -148,7 +164,12 @@ index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..3f548f0afdbb2d0c17c3cf9f0c3d4dd6
          verdict: "The Playwright runtime report owns the terminal test result.",
          limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
        }, null, 2) })
-@@ -86,13 +108,10 @@
+-    } finally { await installation.stop() }
++    } finally { await stop() }
+   }
+ }
+ 
+@@ -86,13 +116,10 @@
  
  export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
    await expect(button).toBeEnabled()
@@ -416,4 +437,56 @@ index 596512b4e12c094fd178ea845f4b560bbf23a348..a77da76589ece60a6925bdd20731efbc
 +
  function response(result: PortResult<unknown>, status?: number) {
    return Response.json(result, { status: status ?? (result.status === "ok" ? 200 : result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : 503), headers: { "cache-control": "no-store" } })
+ }
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
+index fa509e9d7a7da9d0024c9487975f7b26b3b29146..e1c78c9311d9af5df81191acc490b9574421ad3d 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
+@@ -1,4 +1,4 @@
+-import { expect, type Page } from "@playwright/test"
++import { expect, type Page, type Request } from "@playwright/test"
+ 
+ type PausedResponse = {
+   requestId: string
+@@ -11,7 +11,14 @@
+ export async function loseClosureResponse(page: Page, origin: string, surface: "dashboard" | "procurement", action: "decision-choose" | "decision-apply") {
+   const session = await page.context().newCDPSession(page)
+   const completed = Promise.withResolvers<{ httpStatus: number; contentType: string; body: unknown; payload: unknown }>()
+-  session.once("Fetch.requestPaused", async (event: PausedResponse) => {
++  const state = { responsePaused: false, closing: undefined as Promise<void> | undefined }
++  const failed = (request: Request) => {
++    if (request.url() === `${origin}/sucafina/${surface}?sf=${action}` && request.method() === "POST" && !state.responsePaused)
++      completed.reject(new Error(`Closure failed before the original response could be intercepted: ${request.failure()?.errorText ?? "requestfailed"}`))
++  }
++  const closed = () => completed.reject(new Error("The page closed before the original closure response was intercepted"))
++  const paused = async (event: PausedResponse) => {
++    state.responsePaused = true
+     try {
+       expect(event.request.url).toBe(`${origin}/sucafina/${surface}?sf=${action}`)
+       expect(event.request.method).toBe("POST")
+@@ -23,7 +30,22 @@
+       await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "ConnectionReset" })
+       completed.resolve({ httpStatus: event.responseStatusCode ?? 0, contentType, body, payload })
+     } catch (error) { completed.reject(error) }
+-  })
+-  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/${surface}\\?sf=${action}`, requestStage: "Response" }] })
+-  return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
++  }
++  const close = () => state.closing ??= (async () => {
++    page.off("requestfailed", failed)
++    page.off("close", closed)
++    session.off("Fetch.requestPaused", paused)
++    try { await session.send("Fetch.disable") }
++    finally { await session.detach() }
++  })()
++  session.once("Fetch.requestPaused", paused)
++  try {
++    await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/${surface}\\?sf=${action}`, requestStage: "Response" }] })
++  } catch (error) {
++    await close()
++    throw error
++  }
++  page.on("requestfailed", failed)
++  page.once("close", closed)
++  return { completed: completed.promise, close }
  }

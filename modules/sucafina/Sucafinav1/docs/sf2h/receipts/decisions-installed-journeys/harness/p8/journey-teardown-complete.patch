@@ -1,0 +1,34 @@
+--- a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
+@@ -1,6 +1,11 @@
+-import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
++import { expect, test, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
+ import { startPlannerInstallation } from "../wp03/installation-fixture"
+ import { clickForResponse, type CommandResponse } from "./command-response"
++
++// A timed-out test body can still await a userland promise. Teardown owns the
++// same fixture stop independently; it never borrows or kills another service.
++const installationStops = new WeakMap<TestInfo, () => Promise<void>>()
++test.afterEach(async ({}, info) => { await installationStops.get(info)?.() })
+ 
+ export const draft = {
+   objective: "CI Decisions — annual service decision",
+@@ -33,6 +38,9 @@
+   const observations: Record<string, unknown>[] = []
+   const body = { completed: false }
+   const installation = await startPlannerInstallation(info)
++  let stopping: Promise<void> | undefined
++  const stop = () => stopping ??= installation.stop().finally(() => { installationStops.delete(info) })
++  installationStops.set(info, stop)
+   const requests: { method: string; mode: string; operation?: string; idempotencyKey?: string }[] = []
+   const listener = (request: Request) => {
+     const url = new URL(request.url())
+@@ -78,7 +86,7 @@
+         verdict: "The Playwright runtime report owns the terminal test result.",
+         limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
+       }, null, 2) })
+-    } finally { await installation.stop() }
++    } finally { await stop() }
+   }
+ }
+ 

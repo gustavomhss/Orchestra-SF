@@ -134,7 +134,7 @@ index 0000000000000000000000000000000000000000..1c0fabda68c92b3d7a14b569c2c3e960
 +  }
 +}
 diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
-index b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b..36ad71ccbeacc42382dcc2d0f35ee7f707981790 100644
+index 297a4050323d80648684725f9c7e9a8680aa318f..46d3a77a819f4127b073cb8f5572838824019075 100644
 --- a/apps/cli/src/sucafina-product/host-context.ts
 +++ b/apps/cli/src/sucafina-product/host-context.ts
 @@ -42,6 +42,7 @@
@@ -145,7 +145,7 @@ index b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b..36ad71ccbeacc42382dcc2d0f35ee7f7
  import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
  import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
  import { createSfAlternativeCaptures } from "./alternative-captures.ts"
-@@ -276,6 +277,15 @@
+@@ -277,6 +278,15 @@
      runtime: () => identity() && currentChoice ? { authority, currentChoice } : undefined })
    const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
    const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
@@ -161,7 +161,7 @@ index b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b..36ad71ccbeacc42382dcc2d0f35ee7f7
    residentReviewReaders.bindOutcome(memory.reviewOutcome)
    const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
    for (const replacement of extended.replacements) {
-@@ -836,7 +846,7 @@
+@@ -852,7 +862,7 @@
    const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
      procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
      analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,

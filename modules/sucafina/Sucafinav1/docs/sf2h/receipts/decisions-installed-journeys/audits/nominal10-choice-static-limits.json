@@ -1,0 +1,103 @@
+{
+  "schema": "sf2h.mission52.nominal10.choice-cost-static-review.v1",
+  "status": "READ_ONLY_STRUCTURAL_AUDIT_NO_CAUSAL_RUNTIME_FINDING",
+  "W": "812d6bd9de70890775708533a7b05687c2d4d93d",
+  "nominal_run": 43670807969,
+  "inputs": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-preparation.ts",
+      "blob": "cd9b7e0ebd49db83ea8612d80fc636ed008b2c2c",
+      "read": "Exact W10 GitHub MCP; source copy Git blob verified."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "blob": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+      "read": "Exact W10 GitHub MCP; source copy Git blob verified."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "blob": "9d17760c418ee9b48b97443d90a994c31cc415f5",
+      "read": "Full P6 source postimage matched W10 manifest."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "blob": "632a47e792502d7476149d2b790ad447cbd96649",
+      "read": "Full P7 source postimage matched W10 manifest."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/known-subtotal-metric.ts",
+      "blob": "0fbe3adf8280621b93972385e3af36dfa833c831",
+      "read": "Full P7 source postimage matched W10 manifest."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/criterion-rules.ts",
+      "blob": "c357c6c66aac544394ab355306e1f6f7195395f7",
+      "read": "Previously pinned W6 primary source; no file change in candidate overlays."
+    }
+  ],
+  "new_choice_success_path": [
+    "human mutation authorization",
+    "idempotent replay lookup",
+    "explicit human confirmation",
+    "case load",
+    "canonical comparison",
+    "stored candidate/baseline proof reads when using stored-result references",
+    "independent resolveChoiceValues",
+    "snapshot construction",
+    "saveCase transaction and outbox ledger enqueue"
+  ],
+  "conditioned_one_criterion_structural_calls": {
+    "assumptions": [
+      "No earlier authorization/stale/proof failure or replay hit.",
+      "The one rule is the known-subtotal-difference rule and all P7 structural eligibility checks succeed.",
+      "Criterion state remains conditioned, so the confirmed-only verifyMetric branch does not execute."
+    ],
+    "metric_calls_inside_comparison": 2,
+    "independent_metric_calls_inside_resolveChoiceValues": 2,
+    "total_metric_calls": 4,
+    "each_P7_call": {
+      "fresh_historical_batch_observations": 2,
+      "full_case_reads": 2,
+      "real_projector_calls": 4,
+      "real_source_resolutions": 4,
+      "real_coverage_resolutions": 4
+    },
+    "resolveChoiceValues_additional_reads": {
+      "case_reads": 2,
+      "rule_resolutions": 2
+    },
+    "count_limit": "These are source-level successful-path call counts, not observed execution counts or latency measurements from nominal10."
+  },
+  "scope_findings": [
+    "P6 wraps default mutationPlanner.compareScenarios and resolveChoiceValues separately in readPortfolioSnapshot.",
+    "recordChoice and its saveCase transaction remain outside both read-only roots.",
+    "P7 independently reopens sources/coverage/history/case on every call; it does not reuse a previous comparison or metric proof.",
+    "Conditioned metrics remain numeric observations and do not constitute formal approval."
+  ],
+  "runtime_limit": {
+    "observed_source": "Root message and error-context description; normalized nominal10 receipt not supplied to this reviewer.",
+    "unavailable_evidence": [
+      "decisions-observations attachment",
+      "CLI log attachment",
+      "HTTP response/status/payload for choose",
+      "server choose-stage timings",
+      "persistence outcome"
+    ],
+    "cannot_conclude": [
+      "POSTchoose was sent or reached a particular server stage",
+      "The choice producer exceeded10s",
+      "The choice was or was not durably recorded",
+      "A read-root or persistence deadlock occurred",
+      "P7 needs further production optimization to fix this failure"
+    ]
+  },
+  "recommendation": "Do not change the production choice path or remove fresh phases on this evidence. First resolve the capture/response-loss helper interaction or collect a bounded original-request failure observation through the authorized original UI journey.",
+  "product_patch_proposed": false,
+  "product_execution": 0,
+  "local_product_tests": 0,
+  "remote_mutations": 0,
+  "workflow_dispatches": 0,
+  "criterion_promotions": 0,
+  "integration_acceptance": false,
+  "GLOBAL_RELEASE": false
+}

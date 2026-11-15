@@ -1,0 +1,50 @@
+--- a/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts
+@@ -1,4 +1,4 @@
+-import { expect, type Page } from "@playwright/test"
++import { expect, type Page, type Request } from "@playwright/test"
+ 
+ type PausedResponse = {
+   requestId: string
+@@ -11,7 +11,14 @@
+ export async function loseClosureResponse(page: Page, origin: string, surface: "dashboard" | "procurement", action: "decision-choose" | "decision-apply") {
+   const session = await page.context().newCDPSession(page)
+   const completed = Promise.withResolvers<{ httpStatus: number; contentType: string; body: unknown; payload: unknown }>()
+-  session.once("Fetch.requestPaused", async (event: PausedResponse) => {
++  const state = { responsePaused: false, closing: undefined as Promise<void> | undefined }
++  const failed = (request: Request) => {
++    if (request.url() === `${origin}/sucafina/${surface}?sf=${action}` && request.method() === "POST" && !state.responsePaused)
++      completed.reject(new Error(`Closure failed before the original response could be intercepted: ${request.failure()?.errorText ?? "requestfailed"}`))
++  }
++  const closed = () => completed.reject(new Error("The page closed before the original closure response was intercepted"))
++  const paused = async (event: PausedResponse) => {
++    state.responsePaused = true
+     try {
+       expect(event.request.url).toBe(`${origin}/sucafina/${surface}?sf=${action}`)
+       expect(event.request.method).toBe("POST")
+@@ -23,7 +30,22 @@
+       await session.send("Fetch.failRequest", { requestId: event.requestId, errorReason: "ConnectionReset" })
+       completed.resolve({ httpStatus: event.responseStatusCode ?? 0, contentType, body, payload })
+     } catch (error) { completed.reject(error) }
+-  })
+-  await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/${surface}\\?sf=${action}`, requestStage: "Response" }] })
+-  return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
++  }
++  const close = () => state.closing ??= (async () => {
++    page.off("requestfailed", failed)
++    page.off("close", closed)
++    session.off("Fetch.requestPaused", paused)
++    try { await session.send("Fetch.disable") }
++    finally { await session.detach() }
++  })()
++  session.once("Fetch.requestPaused", paused)
++  try {
++    await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/${surface}\\?sf=${action}`, requestStage: "Response" }] })
++  } catch (error) {
++    await close()
++    throw error
++  }
++  page.on("requestfailed", failed)
++  page.once("close", closed)
++  return { completed: completed.promise, close }
+ }
