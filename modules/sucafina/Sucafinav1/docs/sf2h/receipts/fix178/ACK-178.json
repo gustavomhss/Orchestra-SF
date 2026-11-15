@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.native-fix178.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 178,
+  "order": "A10",
+  "branch": "sf-ux-a10",
+  "pr": 138,
+  "epoch": "native-fix-e1-browser178",
+  "actor": "ChatGPT / GPT-6 (GitHub connector)",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "authority": "source allowlist only; predecessor ux-native-a10-e1 fenced for future writes on named files",
+  "state": "ACKNOWLEDGED_PRE_EDIT",
+  "source": {
+    "head": "e7a8296ee2afadd94c6b875fe5c263351ee60062",
+    "tree": "bf32e880aee994331d42b3b1e37780bfa75e4629",
+    "people_blob": "6b76597dadb57f5530348059ef79b04e324712dc",
+    "test_blob": "7df1e268540e6f3ab1c79b2961fcb7def12966a8",
+    "fence_blob": "da24e2b67a86106097dec95783c8edfd7fa4d1fc"
+  },
+  "consumer": {
+    "head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "people_blob": "6b76597dadb57f5530348059ef79b04e324712dc",
+    "failed_w": "690a34cdd81c12d7311f3717c19679b950276161",
+    "failed_w_tree": "07133fe09922121f3cca3bffd6b4463053b48ece"
+  },
+  "producer_pins": {
+    "domain": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+    "runtime_contract": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+    "schema_people": "6e462e00f39d7ca866ca76fd88582b98a2415f92",
+    "client_people": "57278f55bb2b36a69c93653c54bb7b8129b1e41f",
+    "router_consumer": "17db52d914ca49934953e1161461b03856eb29c5"
+  },
+  "evidence": {
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139,
+    "compiler_results_blob": "157ffdabe6002e7013782465868a1f0663090243",
+    "browser_run": 43766970018,
+    "browser_job": 132974180913,
+    "browser_findings_blob": "c185d38925d8bb013e05362d34bdc5a1c473ffd2"
+  },
+  "write_allowlist": [
+    "apps/cli/src/sucafina-product/native-ui/people.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/**"
+  ],
+  "restrictions": {
+    "no_local_checks": true,
+    "ci_only_164": true,
+    "compiler_only_163": true,
+    "sole_integrator": 162,
+    "goal_paused": true,
+    "global_release": false
+  }
+}
