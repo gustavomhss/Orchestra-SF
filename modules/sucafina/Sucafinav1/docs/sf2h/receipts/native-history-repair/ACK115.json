@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h-mission115-ack-v1",
+  "mission": 115,
+  "actor": "S0-B native historical read correction successor103",
+  "assistant": "ChatGPT GPT-6 (Astra session label)",
+  "runtime_session_id": "not exposed by host",
+  "github_authenticated_login": "gustavomhss",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "lease": {
+    "epoch": "native-history-browser115",
+    "status": "ACTIVE_FOR_EXACT_MISSION_PATHS",
+    "previous_actor": "103 terminal ENDED explicitly (PR96 issuecomment 6890165674)",
+    "branch": "native-runtime-finish",
+    "pr": 96,
+    "expected_head": "4159c2e02e8a56900331a8ec646253ce6a6e5ce9",
+    "tree": "44da3f1bfd15f591be7f6a1617d436b3a1c0df55"
+  },
+  "inputs": {
+    "mission_json_sha": "8966ffc2437ffd2a489fb74c351786803b7bfefb",
+    "mission_pinned": "111c29106bf02ddf38cc425826b764f8c5452ae6",
+    "pack_full_blob_sha": "7597a7e508228ac2878a9061887ac77fc70ad009",
+    "common_blob_sha": "d61f32af03fe10747a50274233f953af044decf6",
+    "source103_terminal": "4159c2e02e8a56900331a8ec646253ce6a6e5ce9",
+    "source103_material": "e957f66b00a3b05265e42d46e1d88201dea3e770",
+    "C53": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "ci107_run": 43707901079,
+    "ci107_job": 132792877003,
+    "ci107": {
+      "pass": 178,
+      "fail": 1,
+      "expect": 954,
+      "files": 7
+    },
+    "compiler108_run": 43708496555
+  },
+  "preimages": {
+    "apps/cli/src/sucafina-product/routine-native-origin.ts": "0d34ddeb14e9da525d6acc4960a54f35be18d577",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts": "b5a92ee1653873463e85e2445919c85828c7ef4d",
+    "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts": "12d73520e558ffec6b63dcc1c3f452f6add41ec6",
+    "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts": "79ada67b416fbe453fdf99da2e2582f76501338f",
+    "apps/cli/src/sucafina-product/routine-native-adapter.ts": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3"
+  },
+  "write_paths": [
+    "apps/cli/src/sucafina-product/routine-native-origin.ts",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-history-repair/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-history-repair/"
+  ],
+  "read_only_paths": [
+    "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+    "apps/cli/src/sucafina-product/routine-native-records.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+    "producer95",
+    "admission110",
+    "engines",
+    "shared host"
+  ],
+  "initial_analysis": "Canonical native readAdmission can return reservation.reference even when fetched by authorization ID; adapter currently requires record.reference === requested ID and may hold, while observeSfRoutineNative masks callback assertion exceptions as undefined. Verify first refusal before proposing a patch; adapter outside mission115 write lease.",
+  "ci_policy": "120 sole product dispatcher: original 7 specifications + targeted new negatives via existing hosted test:ci, not local. 119 sole compiler. 114 sole integrator.",
+  "validation": "NOT_RUN_FOR_115",
+  "readiness": "OFF",
+  "global_release": false
+}
