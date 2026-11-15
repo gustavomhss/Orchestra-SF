@@ -19,7 +19,7 @@ const Error = Schema.Struct({
   // Current C58 dashboard reads sometimes give status alone. Do not recast 503 into revocation.
   reason: Schema.optional(Schema.String),
 })
-const Result = <A, Encoded, Context>(value: Schema.Schema<A, Encoded, Context>) =>
+const Result = <S extends Schema.Top>(value: S) =>
   Schema.Union([Schema.Struct({ status: Schema.Literal("ok"), value }), Error])
 
 const SourceRef = Schema.Struct({
