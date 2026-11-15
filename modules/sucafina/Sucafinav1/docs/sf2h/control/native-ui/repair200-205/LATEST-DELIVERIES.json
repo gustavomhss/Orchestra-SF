@@ -1,0 +1,103 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "sha": "c83ec04bcba7a890a4f5c0a1fbb788e7c43683b1",
+  "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/native-ui/repair200-205/PROMPTS6.md",
+  "packets": "f552f02336a4de85e7c62ca1e19baed23d17ae8b",
+  "new_sessions": [
+    {
+      "mission": 200,
+      "branch": "sf-ci-validation",
+      "head": "38b88f976992da68085bdf2f0b9ed549ee49b517",
+      "message": "docs(sf): reserve causal closure 200 [skip ci]"
+    },
+    {
+      "mission": 201,
+      "branch": "sf-work-types",
+      "head": "835f751fa8d0e37ba2c4b009db0bf6a0aec5544a",
+      "message": "docs(sf): reserve causal closure 201 [skip ci]"
+    },
+    {
+      "mission": 202,
+      "branch": "sf-context-types",
+      "head": "9a2ca9055c8cf7f82deb5fa2d711383e5729b2da",
+      "message": "docs(sf): reserve causal closure 202 [skip ci]"
+    },
+    {
+      "mission": 203,
+      "branch": "sf-transport-types",
+      "head": "50acf465f573ff27255c97634d9b98f04985a281",
+      "message": "docs(sf): reserve causal closure 203 [skip ci]"
+    },
+    {
+      "mission": 204,
+      "branch": "sf-fixture-types",
+      "head": "2c086e65163feaa15b59f91e9daa8a9d45e1a691",
+      "message": "docs(sf): reserve causal closure 204 [skip ci]"
+    },
+    {
+      "mission": 205,
+      "branch": "sf-thread-newlines",
+      "head": "988d770ed29fa947ef20eb19ca94cd3379158c28",
+      "message": "docs(sf): reserve causal closure 205 [skip ci]"
+    }
+  ],
+  "existing": [
+    {
+      "mission": 193,
+      "branch": "sf-ux-w16",
+      "head": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063",
+      "message": "docs(sf): register closure193 notice receipts without ACK [skip ci]",
+      "state": "HANDOFF_AVAILABLE"
+    },
+    {
+      "mission": 194,
+      "branch": "sf-ux-n22",
+      "head": "72c5d2afcbdc202605614a18c5ba472aafc34574",
+      "message": "docs(sf): hand off closure194 CAP14 evidence and surgical CI request [skip ci]",
+      "state": "HANDOFF_AVAILABLE"
+    },
+    {
+      "mission": 195,
+      "branch": "sf-ux-n13",
+      "head": "5d8e2a00895abea3bbfb0ce97ea9c514f79bbd50",
+      "message": "test(sucafina): call F04 requireNativeJourney explicitly [skip ci]",
+      "state": "CODE_PROGRESS"
+    },
+    {
+      "mission": 196,
+      "branch": "sf-proof-profiles",
+      "head": "5a6f7f54d210e04e12e9077771452d9b216bd34a",
+      "message": "docs(sf): acknowledge closure 196 lease and fence",
+      "state": "ACK_OBSERVED"
+    },
+    {
+      "mission": 197,
+      "branch": "sf-proof-authority",
+      "head": "4e5c62b0cafe71fb76e1a41a163e4359a53b05e6",
+      "message": "docs(sf2h): acknowledge mission 197 fenced authority",
+      "state": "ACK_OBSERVED"
+    },
+    {
+      "mission": 198,
+      "branch": "sf-proof-persistence",
+      "head": "3d12706365880ee4e12d01db6c875029183a00b0",
+      "message": "docs(sf): reserve complete native closure 198 [skip ci]",
+      "state": "USER_LAUNCHED_NO_ACK_OBSERVED"
+    },
+    {
+      "mission": 199,
+      "branch": "sf-installed-host",
+      "head": "59642460dafca7ca5874f0fd03a567233b88c564",
+      "message": "docs(sf): ACK native closure 199 epoch and fence [skip ci]",
+      "state": "ACK_OBSERVED"
+    }
+  ],
+  "routing": {
+    "integration": 189,
+    "compiler": 190,
+    "product_ci": 200
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
