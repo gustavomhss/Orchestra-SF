@@ -98,14 +98,17 @@ describe("A08 — source-faithful BI schemas", () => {
   })
 
   test("closed view/digest inputs reject unknown decisions and source digests", () => {
-    expect(() => Schema.decodeUnknownSync(SfBi.operations["bi.bi-decision"].input)({
+    expect(() => Schema.decodeUnknownSync(SfBi.operations["bi.bi-decision"].input, { onExcessProperty: "error" })({
       viewId: "BI99", selectionRef: "ref", snapshot: "a".repeat(64), target: "b".repeat(64),
     })).toThrow()
-    expect(() => Schema.decodeUnknownSync(SfBi.operations["bi.bi-source"].input)({
+    expect(() => Schema.decodeUnknownSync(SfBi.operations["bi.bi-source"].input, { onExcessProperty: "error" })({
       selectionRef: "ref", valueId: "v", referenceDigest: "not-sha256",
     })).toThrow()
-    expect(() => Schema.decodeUnknownSync(SfBi.operations["bi.bi-data"].input)({
+    expect(() => Schema.decodeUnknownSync(SfBi.operations["bi.bi-data"].input, { onExcessProperty: "error" })({
       baseRef: "only-base", candidateRef: "candidate", currency: "USD", viewId: "BI11",
+    })).toThrow()
+    expect(() => Schema.decodeUnknownSync(SfBi.operations["bi.bi-options"].input, { onExcessProperty: "error" })({
+      viewId: "BI01", sf: "arbitrary-action",
     })).toThrow()
   })
 
