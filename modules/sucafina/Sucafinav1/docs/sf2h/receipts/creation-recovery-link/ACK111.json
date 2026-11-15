@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h.111.ack.v1",
+  "mission": 111,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "creation-recovery-link",
+  "observed_branch_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "observed_branch_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "model_effective": "GPT-6",
+  "claimed_astra_provider": false,
+  "session_id": "not-exposed-by-current-GitHub-connector",
+  "github_actor": "gustavomhss",
+  "role": "S4-A scoped HTTP consumer contribution, not owner52/96/106",
+  "lease_epoch": "creation-link-browser111",
+  "write_paths": [
+    "apps/cli/src/sucafina-product/creation-recovery-http.ts",
+    "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-recovery-link/"
+  ],
+  "read_only_owner_paths": [
+    "modules/sucafina/Sucafinav1/product/interface/http.ts",
+    "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+    "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
+  ],
+  "inputs": [
+    {
+      "ref": "mission111",
+      "sha": "cc4cc95d20b6385fb469fc01b68b0317f8545dd9"
+    },
+    {
+      "ref": "plan-S4-A",
+      "sha": "75ead4aae6187f440df6d9f9cdda6b10e444da13"
+    },
+    {
+      "ref": "OWNER-52-100-CURRENT.patch",
+      "sha": "64de6285477b5373eef9caa248f50b95d6e77b7d"
+    },
+    {
+      "ref": "branch96",
+      "sha": "3ef1bbf2188275f5bc6ebaeed162a069ad3ae351"
+    },
+    {
+      "ref": "branch52",
+      "sha": "3cce0806f4e958b2282afae5717e4948e270745a"
+    },
+    {
+      "ref": "sf2-stack",
+      "sha": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07"
+    },
+    {
+      "ref": "C53",
+      "sha": "180212940105e7b9ad15171b067c1c1b7841df5f"
+    }
+  ],
+  "authority_reconciliation": "52 has published terminal handoff in PR40, 96 owns case-port and UI, 106 is sole stack integrator. No shared-path writes or CI dispatch by 111.",
+  "validation": {
+    "source": "NOT_YET_IMPLEMENTED",
+    "actions": "NOT_DISPATCHED",
+    "review91": "PENDING"
+  },
+  "global_release": false
+}
