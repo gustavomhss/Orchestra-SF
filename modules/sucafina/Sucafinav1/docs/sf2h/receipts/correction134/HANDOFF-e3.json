@@ -1,0 +1,164 @@
+{
+  "schema": "sf2h.correction-author-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 134,
+  "order": "A04",
+  "output": "W16-source-contracts-parse-repair",
+  "lease_epoch": "ux-native-w16-e3",
+  "actual_actor": {
+    "model": "GPT-6",
+    "session_id": null,
+    "session_id_status": "not exposed"
+  },
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w16",
+  "pr": 135,
+  "state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+  "checkpoint": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/CHECKPOINT-e3.json",
+  "fence": {
+    "commit": "8cc74162fe739812ba564ef3c9ed13ad208f62fe",
+    "previous_epoch": "ux-native-w16-e2",
+    "current_epoch": "ux-native-w16-e3",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES",
+    "runtime_termination_claimed": false
+  },
+  "commits": {
+    "ACK": "f5ff0c675ea81bbaa572073db6270f2854ffc5c5",
+    "product_and_regression": "57afa211f1c08b2205239f166bfcd7a1eabd9731",
+    "source_tree": "30800c3681150bf4d13f4f2301c3258970e19c88",
+    "parent_of_product_commit": "f5ff0c675ea81bbaa572073db6270f2854ffc5c5",
+    "force": false,
+    "reset": false
+  },
+  "finding": {
+    "id": "C64-W16-TS1005",
+    "run": 43738115971,
+    "job": 132885115197,
+    "compiler_run": 43738074189,
+    "compiler_job": 132884987559,
+    "observed": "GitHub Actions native job log: Unexpected > at packages/schema/src/sucafina/decisions/source-contracts.ts:16:262",
+    "root_cause": "document.segment.textDigest Readonly<{algorithm:'sha256';value:string}> closure malformed; extra > before required }",
+    "repair": "unambiguous multiline nested Readonly block; no data/validation/discriminator change",
+    "unrelated_observation": "same historical job also reports planner.ts:15 Schema.isBetweenLength is not a function; belongs another author, not changed by mission134"
+  },
+  "source_pins": {
+    "material": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "producer_business_context": "102c849084980ae52223809d33bdeea36a58536b",
+    "producer_operations": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+    "producer_outputs": "0d9fc51d26a0ca726d32e74605b555f871d99af6"
+  },
+  "frozen_contracts": {
+    "AGENTS.md": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "packages/schema/AGENTS.md": "2dc577ff394a02b4c6812d78e23ef43da869f850",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "EXECUTION-PROTOCOL.md": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "families": [
+      "ctx",
+      "decisions",
+      "transport"
+    ]
+  },
+  "files": [
+    {
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "kind": "schema_source_type",
+      "preimage": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+      "postimage": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "consumer_preimage": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+      "semantics": "Document evidence segment.textDigest object and enclosing segment Readonly braces now closed; all original keys/types, recursion and 21 operations retained"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "kind": "native_contract_regression",
+      "preimage": "c530f05ffe4afa96e4b489eda62764dbdf37d572",
+      "postimage": "6183175ebce968280b61668085d27771697a4b64",
+      "consumer_preimage": "c530f05ffe4afa96e4b489eda62764dbdf37d572",
+      "semantics": "11th test: typed document and nested calculation evidence, draft command, SHA256 digest closure, bad algorithms, unknown authority and malformed recursive source rejection"
+    }
+  ],
+  "patch_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/PATCH-134.diff",
+  "invariants": {
+    "closed_operation_count": 21,
+    "operation_catalog_unchanged": true,
+    "schema_validation_unchanged": true,
+    "auth_owner_and_permissions_unchanged": true,
+    "recursive_evidence_preserved": true,
+    "readonly_fields_preserved": true,
+    "digests_and_source_identity_preserved": true,
+    "client_and_runtime_handlers_unchanged": true,
+    "foreign_author_commits_preserved": true
+  },
+  "regressions": {
+    "test_path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "prior_test_count": 10,
+    "after_test_count": 11,
+    "cases": [
+      "Valid document evidence with nonnegative zero revision/segment/confirmationVersion and SHA-256 text digest",
+      "Recursive calculation referencing document is accepted by source evidence and sf_case_draft command",
+      "Short document segment SHA-256 digest rejected",
+      "Blake3 algorithm substituted for SHA-256 segment digest rejected",
+      "Unknown target.authority rejected under strict excess-property parsing",
+      "Nested evidence with empty installationId rejected recursively"
+    ],
+    "actual_run": "NOT_RUN",
+    "reason": "Only mission129 CI after mission132 real integration, not standalone local suite"
+  },
+  "acceptance": [
+    {
+      "id": "A04-AC01",
+      "result": "CODE_SPEC_WRITTEN_NOT_RUN",
+      "proof": "document and calculation source-equivalent fields retain absent/zero/recursive sourceRefs; original 21 bindings untouched"
+    },
+    {
+      "id": "A04-AC02",
+      "result": "CODE_SPEC_WRITTEN_NOT_RUN",
+      "proof": "unknown authority and malformed nested evidence forbidden, onExcessProperty:error retained"
+    },
+    {
+      "id": "A04-AC03",
+      "result": "UNCHANGED_EXISTING_SPEC_NOT_RUN",
+      "proof": "existing caseRef/incarnation/version and transport one-shot tests intact; no route, operation or expectedVersion changed"
+    }
+  ],
+  "handoff_to_132": {
+    "pr": 65,
+    "consumer_head_observed": "fc8840207377a363d4e6844aab496b4f1521f83c",
+    "consumer_source_preimage": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+    "consumer_test_preimage": "c530f05ffe4afa96e4b489eda62764dbdf37d572",
+    "use": "Cherry-pick ONLY product/regression commit 57afa211f1c08b2205239f166bfcd7a1eabd9731 or apply exact PATCH-134.diff after re-checking current preimages and foreign ownership. Never wholesale merge 169-file historical PR diff.",
+    "expected_postblobs": {
+      "packages/schema/src/sucafina/decisions/source-contracts.ts": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts": "6183175ebce968280b61668085d27771697a4b64"
+    },
+    "consumer_ack": "PENDING_REAL_CONSUMER_ACK",
+    "integration_status": "PENDING"
+  },
+  "handoff_to_128": {
+    "pr": 107,
+    "after": "132 integrates one coherent C",
+    "request": "Hosted bun typecheck in packages/schema plus transitive client/CLI compiler guards as impacted; report actual C/tree/run/job/oracle, no reusing C64 green",
+    "status": "REQUEST_ONLY_NOT_RUN"
+  },
+  "handoff_to_129": {
+    "pr": 106,
+    "after": "132 integrates one coherent C",
+    "request": "Hosted surgical decisions.test.ts and transitive native-ui-contract consumers; deduplicate same C/tree/config/fixtures; preserve all historical failures, provide run/job",
+    "status": "REQUEST_ONLY_NOT_RUN"
+  },
+  "source_artifact_status": "ARTIFACT_READY",
+  "integrated": false,
+  "qualified": false,
+  "global_release": false,
+  "goal": "paused",
+  "legacy_branch_diff": "PR135 contains prior history; integrator must not merge entire branch",
+  "writer_status": "NO_SECOND_WRITER; no run delegated here; correction unit closed for source author pending real consumer ACK",
+  "unresolved": [
+    "Compiler128 and CI129 pending on newly integrated candidate",
+    "Consumer132 has not acknowledged exact postimages",
+    "C64 planner.ts Schema.isBetweenLength failure external to W16 remains separate"
+  ]
+}

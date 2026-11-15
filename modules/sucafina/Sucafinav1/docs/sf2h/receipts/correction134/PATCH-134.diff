@@ -1,0 +1,143 @@
+diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts
+index c530f05ffe4afa96e4b489eda62764dbdf37d572..6183175ebce968280b61668085d27771697a4b64 100644
+--- a/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts
++++ b/modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts
+@@ -1,6 +1,8 @@
+ import { describe, expect, test } from "bun:test"
+ import { Schema } from "effect"
+ import { SfDecisions } from "../../../../../packages/schema/src/sucafina/decisions.ts"
++import { SfSourceEvidenceInput } from "../../../../../packages/schema/src/sucafina/decisions/source-contracts.ts"
++import type { SfEvidenceRef } from "../../../../../packages/schema/src/sucafina/decisions/source-contracts.ts"
+ import { createSfDecisionsClient } from "../../../../../packages/client/src/sucafina/decisions.ts"
+ import type { SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
+ 
+@@ -52,6 +54,96 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
+     expect(op.maxRequestBytes).toBe(65536)
+   })
+ 
++  test("document digest nesting and recursive evidence retain exact source contracts", () => {
++    const document = {
++      schema: "sf-evidence-v1",
++      refId: "evidence:doc-1",
++      installationId: "installation-1",
++      projectId: "project-1",
++      refDigest: digest,
++      evidenceLevel: "observed",
++      kind: "document",
++      target: {
++        documentId: "document-1",
++        incarnation: "document-incarnation-1",
++        revision: 0,
++        blobDigest: { algorithm: "sha256", value: digest },
++        segment: {
++          start: 0,
++          end: 12,
++          unit: "utf16",
++          textDigest: { algorithm: "sha256", value: digest },
++        },
++        confirmationVersion: 0,
++      },
++    } satisfies SfEvidenceRef
++    const calculation = {
++      schema: "sf-evidence-v1",
++      refId: "evidence:calculation-1",
++      installationId: "installation-1",
++      projectId: "project-1",
++      refDigest: digest,
++      evidenceLevel: "observed",
++      kind: "calculation",
++      target: {
++        calculationId: "calculation-1",
++        runId: "run-1",
++        engineVersion: "v1",
++        inputDigest: digest,
++        resultDigest: digest,
++        sourceRefs: [document],
++        period: { start: "2026-01-01", end: "2026-12-31" },
++        currency: "BRL",
++      },
++    } satisfies SfEvidenceRef
++    const draft = SfDecisions.operations["decisions.command.sf_case_draft"].input
++    const input = {
++      operation: "sf_case_draft",
++      input: {
++        objective: "Compare documented alternatives",
++        horizon: { start: "2026-01-01", end: "2026-12-31" },
++        currency: "BRL",
++        criteria: [],
++        sourceRefs: [calculation],
++      },
++    }
++
++    expect(accepts(SfSourceEvidenceInput, document)).toBe(true)
++    expect(accepts(SfSourceEvidenceInput, calculation)).toBe(true)
++    expect(accepts(draft, input)).toBe(true)
++    expect(accepts(SfSourceEvidenceInput, {
++      ...document,
++      target: {
++        ...document.target,
++        segment: { ...document.target.segment, textDigest: { algorithm: "sha256", value: "short" } },
++      },
++    })).toBe(false)
++    expect(accepts(SfSourceEvidenceInput, {
++      ...document,
++      target: {
++        ...document.target,
++        segment: { ...document.target.segment, textDigest: { algorithm: "blake3", value: digest } },
++      },
++    })).toBe(false)
++    expect(accepts(SfSourceEvidenceInput, {
++      ...document,
++      target: { ...document.target, authority: "admin" },
++    })).toBe(false)
++    expect(accepts(draft, {
++      ...input,
++      input: {
++        ...input.input,
++        sourceRefs: [{
++          ...calculation,
++          target: {
++            ...calculation.target,
++            sourceRefs: [{ ...document, installationId: "" }],
++          },
++        }],
++      },
++    })).toBe(false)
++  })
++
+   test("choice mutation retains reviewed source digests and does not accept fake receipts", () => {
+     const op = SfDecisions.operations["decisions.current-choice-promote"]
+     expect(accepts(op.input, {caseRef,choiceId:"a",choiceDigest:digest,alternativeRef:{id:"x",version:1},resultRef:"r",resultDigest:digest,coverageRef:"c"})).toBe(false)
+
+diff --git a/packages/schema/src/sucafina/decisions/source-contracts.ts b/packages/schema/src/sucafina/decisions/source-contracts.ts
+index f18a08ce25194864dfa0a54f39d7c16c4472d699..17295d70e40abbf0b9f78b4009ca28ac3c171baf 100644
+--- a/packages/schema/src/sucafina/decisions/source-contracts.ts
++++ b/packages/schema/src/sucafina/decisions/source-contracts.ts
+@@ -13,7 +13,26 @@ export type SfEvidenceRef = Readonly<{
+   evidenceLevel:"observed"|"claim"|"assumption"|"proposal"|"decision";
+ }> & (
+  | Readonly<{kind:"record";target:Readonly<{surface:"dashboard"|"planner"|"procurement";recordType:string;recordId:string;incarnation:string;version:number;fields:readonly string[];period?:Readonly<{start:string;end:string}>;projectionDigest:string}>}>
+- | Readonly<{kind:"document";target:Readonly<{documentId:string;incarnation:string;revision:number;blobDigest:Readonly<{algorithm:"sha256";value:string}>;segment:Readonly<{start:number;end:number;unit:"utf16";textDigest:Readonly<{algorithm:"sha256";value:string>}>;ragSourceId?:string;ragRevisionId?:string;ragSourceHash?:Readonly<{algorithm:"blake3";value:string}>;fieldCandidateId?:string;confirmationVersion?:number}>}>
++ | Readonly<{
++     kind: "document"
++     target: Readonly<{
++       documentId: string
++       incarnation: string
++       revision: number
++       blobDigest: Readonly<{ algorithm: "sha256"; value: string }>
++       segment: Readonly<{
++         start: number
++         end: number
++         unit: "utf16"
++         textDigest: Readonly<{ algorithm: "sha256"; value: string }>
++       }>
++       ragSourceId?: string
++       ragRevisionId?: string
++       ragSourceHash?: Readonly<{ algorithm: "blake3"; value: string }>
++       fieldCandidateId?: string
++       confirmationVersion?: number
++     }>
++   }>
+  | Readonly<{kind:"calculation";target:Readonly<{calculationId:string;runId:string;engineVersion:string;inputDigest:string;resultDigest:string;sourceRefs:readonly SfEvidenceRef[];period:Readonly<{start:string;end:string}>;currency:string}>}>
+  | Readonly<{kind:"receipt";target:Readonly<{surface:"dashboard"|"planner"|"procurement";receiptId:string;idempotencyKey:string;targetIncarnation:string;commandDigest:string;version:number}>}>
+  | Readonly<{kind:"case-event";target:Readonly<{caseId:string;caseIncarnation:string;caseVersion:number;eventId:string;outputDigest:string;evidenceRefs:readonly SfEvidenceRef[]}>}>

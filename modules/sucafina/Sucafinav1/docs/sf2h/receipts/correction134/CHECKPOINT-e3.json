@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h.correction-author-checkpoint.v1",
+  "mission": 134,
+  "order": "A04",
+  "seat": "W16",
+  "campaign": "sf2h-integral-20261112",
+  "lease_epoch": "ux-native-w16-e3",
+  "state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+  "branch": "sf-ux-w16",
+  "pr": 135,
+  "fence_commit": "8cc74162fe739812ba564ef3c9ed13ad208f62fe",
+  "ack_commit": "f5ff0c675ea81bbaa572073db6270f2854ffc5c5",
+  "source_commit": "57afa211f1c08b2205239f166bfcd7a1eabd9731",
+  "source_tree": "30800c3681150bf4d13f4f2301c3258970e19c88",
+  "allowed_scope": [
+    "packages/schema/src/sucafina/decisions.ts",
+    "packages/schema/src/sucafina/decisions/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/**"
+  ],
+  "actual_writes": [
+    "packages/schema/src/sucafina/decisions/source-contracts.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/ACK-e3.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/PATCH-134.diff",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/CHECKPOINT-e3.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/HANDOFF-e3.json"
+  ],
+  "files": [
+    {
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "kind": "schema_source_type",
+      "preimage": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+      "postimage": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "consumer_preimage": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+      "semantics": "Document evidence segment.textDigest object and enclosing segment Readonly braces now closed; all original keys/types, recursion and 21 operations retained"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "kind": "native_contract_regression",
+      "preimage": "c530f05ffe4afa96e4b489eda62764dbdf37d572",
+      "postimage": "6183175ebce968280b61668085d27771697a4b64",
+      "consumer_preimage": "c530f05ffe4afa96e4b489eda62764dbdf37d572",
+      "semantics": "11th test: typed document and nested calculation evidence, draft command, SHA256 digest closure, bad algorithms, unknown authority and malformed recursive source rejection"
+    }
+  ],
+  "patch_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction134/PATCH-134.diff",
+  "integrator": {
+    "mission": 132,
+    "pr": 65,
+    "observed_head": "fc8840207377a363d4e6844aab496b4f1521f83c",
+    "consumer_ack": "PENDING_NOT_INVENTED"
+  },
+  "compiler": {
+    "mission": 128,
+    "pr": 107,
+    "run": "NOT_RUN_ON_CORRECTION_SHA"
+  },
+  "product_ci": {
+    "mission": 129,
+    "pr": 106,
+    "run": "NOT_RUN_ON_CORRECTION_SHA"
+  },
+  "goal": "paused",
+  "global_release": false,
+  "lease_terminal": "AUTHOR_SOURCE_DELIVERED; awaiting real consumer review/ACK, no writer transfer claimed"
+}
