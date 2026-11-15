@@ -11,7 +11,7 @@ import { SfPageFrame } from "../../shared/frame"
 import type { SfCoverage, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import {
-  SfChangeReview, type SfReviewField, type SfReviewSnapshot,
+  SfChangeReview, type SfReviewField,
   type SfEffect, type SfReviewConfirmation,
 } from "../../shared/change-review"
 import { SfReceiptView, type SfReceipt } from "../../shared/receipt"
@@ -20,7 +20,7 @@ import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/con
 import type { SF_U18_COPY } from "@/i18n/orchestra-chapters/sf-u18"
 import {
   u18Coverage, u18ErrorKey, u18Key, u18Message, u18PortState, u18Ref,
-  u18Text, u18TransportState, type SfCase, type SfCaseChange, type SfCaseReceipt, type SfDecisionReview,
+  u18Text, u18TransportState, type SfCase, type SfCaseChange, type SfDecisionReview,
 } from "../choice/model"
 import "../choice/u18.css"
 
@@ -156,7 +156,7 @@ export function SfPreparedChangesView(props: SfSurfaceProps<"UI39">): JSX.Elemen
       const result = await createSfDecisionsClient(ready.transport)["decisions.decision-review"](
         { caseRef: { id: data.id, incarnation: data.incarnation, version: data.version },
           choiceId: current.choiceId, changeId: current.id },
-        { signal: controller.signal, idempotencyKey: intent },
+        { signal: controller.signal },
       )
       if (controller.signal.aborted || fence !== mutationFence || generation !== owner.generation()) return
       if (result.kind === "response" && result.body.status === "ok") {

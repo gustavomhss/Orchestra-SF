@@ -59,8 +59,8 @@ export function u18Coverage(source: { coverageState: "complete" | "pending" | "u
     : source.coverageState === "pending" ? "partial" : "unavailable"
   return {
     state,
-    summary: u18Message(state === "complete" ? "sf.u22.chart.coverageComplete" : state === "partial" ? "sf.u22.chart.coveragePartial" : "sf.u22.chart.coverageUnknown"),
-    reasons: source.issues.map((issue) => ({ key: u18Key("sf.u18.choice.condition"), params: { note: issue } })),
+    summary: u18Message(state === "complete" ? "sf.u18.choice.coverageComplete" : state === "partial" ? "sf.u18.choice.coveragePartial" : "sf.u18.choice.coverageUnknown"),
+    reasons: source.issues.map((issue) => ({ key: u18Key("sf.u18.choice.conditionNamed"), params: { note: issue } })),
     knownCount: null,
     expectedCount: null,
   }

@@ -39,8 +39,7 @@ const display = (value: string | number | boolean | null): SfDisplayValue =>
   { kind: "text", text: data(String(value)) } // 0, signs, precision and booleans survive
 
 function valueUnit(unit: string, currency?: string): SfPlotSeries["unit"] {
-  return currency && /^[A-Z]{3}$/.test(currency) ? { kind: "currency", code: currency } :
-    /^[A-Z]{3}$/.test(unit) ? { kind: "currency", code: unit } :
+  return currency === unit && /^[A-Z]{3}$/.test(unit) ? { kind: "currency", code: unit } :
     { kind: "quantity", label: msg("sf.u22.chart.unitNamed", { name: unit }) }
 }
 
@@ -52,6 +51,8 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
   const projection = () => packet().projection
   const presentation = () => packet().presentation
   const decision = () => projection().decision
+  const portfolio = () => { const current = decision(); return current?.kind === "portfolio" ? current.portfolio : undefined }
+  const scenario = () => { const current = decision(); return current?.kind === "scenario" ? current : undefined }
   const isView = () => packet().request.viewId === props.viewId && presentation().viewId === props.viewId
   const exactValue = (valueId: string) => projection().values.find((value) => value.id === valueId)
   const navigation = () => packet().navigation
@@ -206,9 +207,9 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
                   </Show>
                 </>}
               </Show>
-              <Show when={decision()?.kind === "portfolio"}>
+              <Show when={portfolio()}>
                 <ul>
-                  <For each={decision()?.kind === "portfolio" ? decision()!.portfolio.combinations : []}>
+                  <For each={portfolio()?.combinations ?? []}>
                     {(combination) => <li>
                       {combination.id} — {combination.eligibility} / {combination.comparisonStatus}
                       <Show when={combination.conflicts.length}>
@@ -240,7 +241,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
           <Show when={props.viewId === "BI11"}>
             <section class="sf-u22-detail" aria-label={t("sf.u22.chart.sensitivity")}>
               <h3>{t("sf.u22.chart.sensitivity")}</h3>
-              <Show when={decision()?.kind === "scenario" && decision()!.sensitivity}>
+              <Show when={scenario()?.sensitivity}>
                 {() => {
                   const current = decision()
                   if (!current || current.kind !== "scenario" || !current.sensitivity) return null

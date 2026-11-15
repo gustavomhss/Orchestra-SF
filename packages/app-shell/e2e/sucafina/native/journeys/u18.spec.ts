@@ -3,13 +3,13 @@
  * integrated candidate with F04's real private manifest and original producer.
  * No mocked auth/choices/case/receipts and no local runner.
  */
-import { expect } from "@playwright/test"
+import { expect, type Page } from "@playwright/test"
 import { nativeInstalledFixture as test } from "../fixture"
 
 test.use({ trace: "off" })
 test.describe.configure({ retries: 0 })
 
-async function openInstalledChapter(page: Parameters<typeof test>[0] extends never ? never : import("@playwright/test").Page, manifest: {
+async function openInstalledChapter(page: Page, manifest: {
   target: { chapterHref: string; shellOrigin: string }
 }) {
   await page.goto(new URL(manifest.target.chapterHref, manifest.target.shellOrigin).toString())

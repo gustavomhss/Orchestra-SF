@@ -4,6 +4,7 @@
  */
 import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
+import type { SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { useLanguage } from "@/context/language"
 import type { SfSurfaceProps } from "../../context/contracts"
 import { useSfContext } from "../../context"
@@ -283,7 +284,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
               {(review) => <>
                 <SfChangeReview
                   operation={{
-                    ref: u18Ref(view.operationRef ?? review().bindingDigest),
+                    ref: (view.operationRef ?? review().bindingDigest) as SfOperationRef,
                     label: u18Message("sf.u18.choice.review"),
                     scope: { kind: "data", text: selected()?.title ?? "" },
                   }}
@@ -310,7 +311,7 @@ export function SfChoiceView(props: SfSurfaceProps<"UI38">): JSX.Element {
                   <ul>
                     <For each={review().current.costCoverage.entries}>
                       {(item) => <li>{item.categoryId} · {item.status}
-                        <Show when={item.status === "pending"}>{(pending) => " — " + (item.status === "pending" ? item.reason : "")}</Show>
+                        <Show when={item.status === "pending"}>{" — " + (item.status === "pending" ? item.reason : "")}</Show>
                       </li>}
                     </For>
                   </ul>
