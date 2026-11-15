@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.mission96.ack.v1",
+  "mission": 96,
+  "state": "ACKNOWLEDGED_IMPLEMENTATION_PENDING",
+  "actor": "new GPT-6 conversation acting on mission96; not claiming a separately observable Astra seat",
+  "model_effective": "GPT-6",
+  "session_id": "NOT_EXPOSED_BY_CONNECTED_RUNTIME",
+  "github_actor": "gustavomhss",
+  "lease_epoch": "creation-reload-browser96",
+  "lease_claim": "only exact mission96 paths, subject to live overlapping owner reconciliation",
+  "branch": "creation-reload-fix",
+  "branch_start_sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "branch_tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_pin": "f0d860691ea8d782a43905855d52699a39347dfe",
+  "mission_blob": "5879996067c27dc8ed5f298e371a77e2a96d8c3c",
+  "source": {
+    "review91_pr": 100,
+    "review91_head": "3f3198e7636242421ef71a788502b10179893e5c",
+    "finding": "R1-91-001",
+    "review91_findings_blob": "97396d595b3008ef5d1cb74d2580c2d756b69a4d",
+    "wp01_pr": 43,
+    "wp01_handoff": "2ee71fc90055814912654ae198f7a1dcf9583943",
+    "integrator_pr": 65,
+    "integrator": 71,
+    "dispatcher": 45,
+    "reviewer": 91
+  },
+  "preimages": {
+    "product/ui/decision-create.ts": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+    "product/decisions/case-port.ts": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+    "product/host-binding/state-provider.ts": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+    "product/integration/ui-authority.ts": "read-only",
+    "product/contracts/ports.ts": "88b6efb4840b8731f707862a8baf14683526c7a9"
+  },
+  "allowed_write_paths": [
+    "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+    "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+    "modules/sucafina/Sucafinav1/product/ui/creation-intent.ts",
+    "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-reload-fix/"
+  ],
+  "excluded": [
+    "UI/HTTP52",
+    "HotTopic87",
+    "runtime/application86",
+    "contracts without owner",
+    "dispatcher45",
+    "sf2-stack solely71"
+  ],
+  "observations": [
+    "Branch HEAD exact C45; no replacement of any existing writer by silence",
+    "Known client closure-only UUID is lost on reload; C08 SQLite transaction ledger persists original operation identity, keyed by principal/namespace/target/key",
+    "Need an authenticated recovery surface from HTTP52/71 to use the committed record; any external changes handed over as complete patch",
+    "No new model/session identity invented"
+  ],
+  "test_policy": "only existing Actions interface via dispatcher45, request/dedup by exact tree/selection; no local bun test, no heavy or epic run",
+  "release": "GLOBAL_RELEASE_FALSE",
+  "checks": "NOT_RUN"
+}
