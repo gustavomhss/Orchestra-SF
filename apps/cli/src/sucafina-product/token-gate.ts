@@ -231,7 +231,7 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
           if (route.kind === "other") return original.stream(request)
           if (route.kind === "denied") return Stream.fail(refusal("sf-model-unbound"))
           const record = route.record
-          const valid = () => route.kind === "maestro" ? readyMaestro(record) : ready(record)
+          const valid = () => route.kind === "maestro" ? readyMaestro(route.record) : ready(route.record)
           if (!(yield* valid()) || request.model.route.protocol !== "openai-responses" || request.model.route.transport.id !== "http-json")
             return Stream.fail(refusal("sf-route-unavailable"))
           const originalRoute = request.model.route
@@ -240,7 +240,7 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
             Stream.unwrap(Effect.gen(function* () {
               if (!(yield* valid())) return Stream.fail(refusal("sf-authority-unavailable"))
               const guarded = HttpClient.mapRequestEffect(base, (httpRequest) =>
-                enforceSfResponseTokenBudget(httpRequest, runtime.http, { model: request.model.id, contextBudgetTokens: route.kind === "maestro" ? record.contextBudgetTokens : record.budget,
+                enforceSfResponseTokenBudget(httpRequest, runtime.http, { model: request.model.id, contextBudgetTokens: route.kind === "maestro" ? route.record.contextBudgetTokens : route.record.budget,
                   revalidate: valid, persistReceipt: record.persistReceipt }).pipe(
                   Effect.mapError(() => new HttpClientError.HttpClientError({ reason: new HttpClientError.TransportError({
                     request: httpRequest, description: "SF budget gate denied request",
