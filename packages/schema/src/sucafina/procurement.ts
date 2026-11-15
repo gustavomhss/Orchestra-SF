@@ -266,11 +266,57 @@ const CommandResult = Schema.Union([
   Schema.Struct({ ok: Schema.Literal(true), warnings: Schema.optional(Schema.Array(Schema.String)) }),
   Failure,
 ])
+// Separate writable fieldsets from read projections: status/holder/snapshots,
+// PO FX and immutable identifiers cannot be set by a native command payload.
+const SourcingEdit = Schema.Struct({
+  quotes: Schema.optional(Schema.Array(Quote)), evaluator: Schema.optional(Schema.String),
+  selectedId: Schema.optional(Schema.NullOr(Schema.String)),
+  fewQuotesJustification: Schema.optional(Schema.String),
+  selectionJustification: Schema.optional(Schema.String),
+  contractStrategy: Schema.optional(Schema.String),
+  weights: Schema.optional(Schema.Struct({
+    tech: Schema.optional(NumericInput), comm: Schema.optional(NumericInput),
+    criteria: Schema.optional(Schema.Array(Criterion)),
+    commCriteria: Schema.optional(Schema.Array(Criterion)),
+  })),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
+const PurchaseOrderEdit = Schema.Struct({
+  currency: Schema.optional(Schema.String), expenseType: Schema.optional(Schema.String),
+  supplier: Schema.optional(Schema.String), supplierId: Schema.optional(Schema.NullOr(Schema.String)),
+  description: Schema.optional(Schema.String), lines: Schema.optional(Schema.Array(PurchaseLine)),
+  paymentTerms: Schema.optional(Schema.String), deliveryDate: Schema.optional(Schema.String),
+  deliveryConditions: Schema.optional(Schema.String),
+  contractRef: Schema.optional(Schema.String), incoterm: Schema.optional(Schema.String),
+  incoterms: Schema.optional(Schema.String), assetRef: Schema.optional(Schema.String),
+  supplierContact: Schema.optional(Schema.String), quoteRef: Schema.optional(Schema.String),
+  billingAddress: Schema.optional(Schema.String), deliveryAddress: Schema.optional(Schema.String),
+  acceptance: Schema.optional(Schema.String), warranty: Schema.optional(Schema.String),
+  notes: Schema.optional(Schema.String),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
+const SupplierEdit = Schema.Struct({
+  legalName: Schema.optional(Schema.String), tradingName: Schema.optional(Schema.String),
+  type: Schema.optional(Schema.String), country: Schema.optional(Schema.String),
+  address: Schema.optional(Schema.String), taxId: Schema.optional(Schema.String),
+  regNo: Schema.optional(Schema.String), contactName: Schema.optional(Schema.String),
+  contactEmail: Schema.optional(Schema.String), contactPhone: Schema.optional(Schema.String),
+  financeEmail: Schema.optional(Schema.String), paymentTerms: Schema.optional(Schema.String),
+  currency: Schema.optional(Schema.String), incoterm: Schema.optional(Schema.String),
+  riskRating: Schema.optional(Schema.String), dueDiligence: Schema.optional(BooleanInput),
+  sanctionsDate: Schema.optional(Schema.String), nda: Schema.optional(BooleanInput),
+  dpa: Schema.optional(BooleanInput), certifications: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)])),
+  categories: Schema.optional(Schema.Union([Schema.String, Schema.Array(Schema.String)])),
+  contacts: Schema.optional(Schema.Array(SupplierContact)),
+  commercial: Schema.optional(SupplierSection), compliance: Schema.optional(SupplierSection),
+  notes: Schema.optional(Schema.String),
+  iban: Schema.optional(BankField), account: Schema.optional(BankField),
+  bankName: Schema.optional(BankField), swift: Schema.optional(BankField),
+  accountHolder: Schema.optional(BankField), bankCountry: Schema.optional(BankField),
+}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const EmptyValues = Schema.Struct({}).annotate({ parseOptions: { onExcessProperty: "error" } })
 const PrValues = Schema.Struct({ pr: Requisition }).annotate({ parseOptions: { onExcessProperty: "error" } })
-const SourcingValues = Schema.Struct({ sourcing: Sourcing }).annotate({ parseOptions: { onExcessProperty: "error" } })
-const PoValues = Schema.Struct({ po: PurchaseOrder }).annotate({ parseOptions: { onExcessProperty: "error" } })
-const SupplierValues = Schema.Struct({ supplier: SfProcurementSupplier }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const SourcingValues = Schema.Struct({ sourcing: SourcingEdit }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const PoValues = Schema.Struct({ po: PurchaseOrderEdit }).annotate({ parseOptions: { onExcessProperty: "error" } })
+const SupplierValues = Schema.Struct({ supplier: SupplierEdit }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const SettingsValues = Schema.Struct({ settings: SfProcurementSettings }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const QuoteSelectionValues = Schema.Struct({ quoteId: NonEmpty }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const ApprovalValues = Schema.Struct({ comment: Schema.optional(Schema.String) }).annotate({ parseOptions: { onExcessProperty: "error" } })
@@ -278,7 +324,9 @@ const ReasonValues = Schema.Struct({ reason: Schema.String }).annotate({ parseOp
 export const SfProcurementTitleSave = Schema.Struct({
   page: Schema.Literal("Requests"), action: Schema.Literal("save"),
   id: NonEmpty, version: NonNegativeInteger,
-  values: Schema.Struct({ pr: Schema.Struct({ title: Schema.String }) }),
+  values: Schema.Struct({
+    pr: Schema.Struct({ title: Schema.String }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
 }).annotate({ parseOptions: { onExcessProperty: "error" } })
 const CommandValues = {
   Requests: {
