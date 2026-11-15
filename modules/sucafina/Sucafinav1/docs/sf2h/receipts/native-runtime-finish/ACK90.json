@@ -1,0 +1,63 @@
+{
+  "schema": "sf2h-native-runtime-ack90-v1",
+  "mission": 90,
+  "status": "IN_PROGRESS",
+  "branch": "native-runtime-finish",
+  "lease_epoch": "native-runtime-browser90",
+  "model_observed": "GPT-6 (ChatGPT system declaration)",
+  "model_effective_native": null,
+  "session_id_observed": null,
+  "session_note": "This ChatGPT connector session does not expose a native Orchestra Session ID; Astra label not independently observable.",
+  "github_connection_observed": "gustavomhss",
+  "github_transport": "GitHub MCP connector",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_source": "093c54b69a37861626c1f64e3439759a7896ecb2",
+  "mission_blob": "8a1e1e6a0bbd63bd9589ab134359fe8a8b71bbe3",
+  "base_sha": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+  "base_tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
+  "observed_preimages": {
+    "apps/cli/src/sucafina-product/host-context.ts": "297a4050323d80648684725f9c7e9a8680aa318f",
+    "apps/cli/src/sucafina-product/routine-native-owner.ts": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+    "apps/cli/src/sucafina-product/routine-native-runtime.ts": "5383051da7cda4523d81f34d93430871e564bb06",
+    "apps/cli/src/sucafina-product/routine-native-governance.ts": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+    "apps/cli/src/sucafina-product/routine-native-dispatch.ts": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+    "apps/cli/src/sucafina-product/routine-native-admission.ts": "68f9114d94eaee84f19a5f353d12967fe05fdf86"
+  },
+  "inputs": [
+    "90.json pinned",
+    "AGENTS.md",
+    "sf2h-plan/START.md",
+    "sf2h-plan/WORKFLOW.md",
+    "sf2h-plan/execution/COMMON.md",
+    "sf2h-plan/execution/actors/S0-B.json",
+    "PR80 64 HANDOFF-FINAL, SOURCE-MANIFEST, capability-contract, API-NOTES, source-pins, criteria, AM-COVERAGE"
+  ],
+  "task_criteria": [
+    "WP00.T04.*",
+    "WP10.T06.*",
+    "CAP64-*",
+    "AM01-AM06 retained"
+  ],
+  "own_write_paths": [
+    "apps/cli/src/sucafina-product/routine-native-owner.ts",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts",
+    "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+    "apps/cli/src/sucafina-product/routine-native-governance.ts",
+    "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+    "apps/cli/src/sucafina-product/routine-native-admission.ts",
+    "apps/cli/src/sucafina-product/routine-native-origin.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-runtime-finish/"
+  ],
+  "shared_paths_patch_only": [
+    "apps/cli/src/sucafina-product/host-context.ts",
+    "apps/cli/src/sucafina-product/contribution.ts",
+    "apps/cli/src/sucafina-product/native-host.ts",
+    "apps/cli/src/sucafina-product/token-gate.ts"
+  ],
+  "authority": "64 terminal; 71 sole integrator; 45 central CI dispatcher. Silence never authorizes takeover.",
+  "readiness": "HOLD",
+  "installed_acceptance": "NOT_PROVEN",
+  "GLOBAL_RELEASE": false
+}
