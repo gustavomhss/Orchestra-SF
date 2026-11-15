@@ -42,7 +42,8 @@ const key = (value: keyof typeof SF_U46_COPY | "sf.common.loading" | "sf.common.
   "sf.common.unavailable" | "sf.common.noAccess" | "sf.common.invalidLink" |
   "sf.common.stale" | "sf.common.loginAgain" | "sf.common.partial" |
   "sf.common.operationUnknown" | "sf.common.conflict" | "sf.common.saved" |
-  "sf.common.review" | "sf.common.currentSource" | "sf.common.returnToList"): SfCopyKey => value as SfCopyKey
+  "sf.common.review" | "sf.common.currentSource" | "sf.common.returnToList" |
+  "sf.common.pending" | "sf.common.failed" | "sf.common.filterEmpty"): SfCopyKey => value as SfCopyKey
 const msg = (value: keyof typeof SF_U46_COPY, params?: Record<string, string | number>): SfMessage =>
   ({ key: key(value), params })
 const data = (text: string) => ({ kind: "data" as const, text })
@@ -55,6 +56,7 @@ function stateCopy(value: SfUiState): SfCopyKey {
   switch (value) {
     case "loading": return key("sf.common.loading")
     case "empty": return key("sf.common.empty")
+    case "filtered-empty": return key("sf.common.filterEmpty")
     case "denied": return key("sf.common.noAccess")
     case "session-expired": return key("sf.common.loginAgain")
     case "invalid": return key("sf.common.invalidLink")
@@ -79,7 +81,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
     outcome: "idle" | "unknown" | "failed" | "conflict" | "succeeded"
     error: string | undefined
     verified: Readonly<{ ref: SfOperationRef; action: CommandAction; versionId: string;
-      expected: number; requestNumber: number; beforeCount: number }> | undefined
+      expected: number; requestNumber: number; beforeCount: number; createdRef: string | undefined }> | undefined
   }>({ layout: "single", draft: undefined, draftId: undefined, copyName: "",
     review: undefined, busy: false, outcome: "idle", error: undefined, verified: undefined })
   let commandAbort: AbortController | undefined
@@ -98,7 +100,8 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
   const routeRecordId = () => props.route.kind === "detail" ? props.route.params.versionRef : undefined
   const record = () => page()?.data.versions.find((version) => version.id === routeRecordId())
   const pageState = (): SfUiState => page() && props.route.kind === "detail" && !record()
-    ? "not-found" : model.view.state
+    ? "not-found" : model.view.state === "ready" && !records().length
+      ? "filtered-empty" : model.view.state
   const go = (destination: "overview" | "versions" | "new" | "compare" | "detail" | "import", options?: { year?: number; versionRef?: string }) =>
     navigate(plannerHref(props.route, destination, options))
 
@@ -177,7 +180,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
   }
 
   const submit = async (request: Review) => {
-    if (screen.busy || screen.outcome === "unknown" || screen.review?.ref !== request.ref) return
+    if (screen.busy || screen.outcome !== "idle" || screen.verified || screen.review?.ref !== request.ref) return
     const ready = model.owner.ready()
     const active = model.owner.state()
     if (!ready || active.status !== "ready" || !model.can(request.action)) return
@@ -201,6 +204,12 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
     }
     const generation = model.owner.generation()
     const beforeCount = page()?.data.versions.length ?? 0
+    // A locked or official version rejects a year field, even for name-only edits.
+    const saveValues = request.first ? {} : {
+      name: request.proposed.name,
+      ...(request.version && request.proposed.year !== request.version.year
+        ? { year: request.proposed.year } : {}),
+    }
     const abort = new AbortController()
     commandAbort = abort
     setScreen({ busy: true, outcome: "idle", error: undefined })
@@ -208,7 +217,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
       if (request.action === "save" && !request.first && screen.draft) {
         const reviewedPayload = JSON.stringify({
           operationId: op.save, versionId: request.versionId, expected: request.expected,
-          name: request.proposed.name, year: request.proposed.year,
+          values: saveValues,
         })
         const digestBytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(reviewedPayload))
         if (abort.signal.aborted || generation !== model.owner.generation()) return
@@ -232,7 +241,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
       // Each case is a source-locked catalog operation; never a generic action dispatcher.
       const result = request.action === "save"
         ? await client["domain.command.CAP23.save"]({
-          ...command, action: "save", values: request.first ? {} : { name: request.proposed.name, year: request.proposed.year },
+          ...command, action: "save", values: saveValues,
         }, options)
         : request.action === "copy"
           ? await client["domain.command.CAP23.copy"]({
@@ -259,11 +268,19 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
           screen.draft?.setPhase(result.body.status === 409 ? "conflict" : "failed")
         return
       }
-      // The write's success is not a projection and is not a fabricated receipt.
-      // Only the following authorized page read may mark the retained draft clean.
-      setScreen({ busy: false, outcome: "succeeded", error: undefined,
+      // Creation/copy must return an exact source-assigned identity. Another
+      // writer increasing the count is not proof of this command.
+      const createdRef = request.first || request.action === "copy"
+        ? typeof result.body.value === "string" && result.body.value ? result.body.value : undefined
+        : undefined
+      if ((request.first || request.action === "copy") && !createdRef) {
+        setScreen({ busy: false, outcome: "unknown", error: "missing-created-reference" })
+        return
+      }
+      // Do not allow a second command while the authorized readback is pending.
+      setScreen({ busy: true, outcome: "succeeded", error: undefined,
         verified: { ref: request.ref, action: request.action, versionId: request.versionId,
-          expected: request.expected, requestNumber: model.view.request + 1, beforeCount } })
+          expected: request.expected, requestNumber: model.view.request + 1, beforeCount, createdRef } })
       model.refresh()
     } catch (error) {
       if (abort.signal.aborted || model.owner.generation() !== generation) return
@@ -280,18 +297,22 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         (model.view.state !== "ready" && model.view.state !== "empty")) return
     const projected = current.data.versions.find((version) => version.id === verified.versionId)
     const revision = projected && current.versions["versions:" + projected.id]?.version
+    const created = current.data.versions.find((version) => version.id === verified.createdRef)
+    const createdRevision = created && current.versions["versions:" + created.id]?.version
     const reviewed = screen.review
     const proven = verified.action === "save" ? verified.versionId
       ? !!projected && revision !== undefined && revision !== verified.expected &&
         projected.name === reviewed?.proposed.name && projected.year === reviewed.proposed.year
-      : current.data.versions.length > verified.beforeCount
-      : verified.action === "copy" ? current.data.versions.length > verified.beforeCount
+      : !!created && createdRevision !== undefined && current.data.versions.length > verified.beforeCount
+      : verified.action === "copy" ? !!created && createdRevision !== undefined &&
+          created.id !== verified.versionId && created.year === reviewed?.version?.year &&
+          (!reviewed.copyNameProvided || created.name === reviewed.proposed.name)
       : verified.action === "official" ? !!projected?.official && projected.locked
       : verified.action === "lock" ? !!projected?.locked
       : verified.action === "unlock" ? !!projected && !projected.locked
       : verified.action === "delete" && !projected
     if (!proven) {
-      setScreen({ verified: undefined, outcome: "conflict", error: "stale" })
+      setScreen({ verified: undefined, outcome: "conflict", error: "stale", busy: false })
       return
     }
     if (verified.action === "save" && projected && revision !== undefined && screen.draft) {
@@ -300,7 +321,12 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
         value: { name: projected.name, year: projected.year },
       })
     }
-    setScreen({ verified: undefined, review: undefined, outcome: "idle", error: undefined, copyName: "" })
+    setScreen({ verified: undefined, review: undefined, outcome: "idle", error: undefined, copyName: "", busy: false })
+    if (created && (verified.action === "copy" || !verified.versionId)) {
+      go("detail", { year: created.year, versionRef: created.id })
+    } else if (verified.action === "delete" && props.route.kind === "detail") {
+      go("versions", { year: reviewed?.version?.year })
+    }
   })
 
   const fields = (item: EditableVersion): readonly SfReviewField[] => [
@@ -356,7 +382,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
       }}
       captionKey={key("sf.u46.versions")}
       density="comfortable"
-      state={model.view.state}
+      state={pageState()}
     />
   )
 
@@ -474,6 +500,12 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                   if (available) go("versions", { year: Number(optionId) })
                 }}
               />
+              <Show when={screen.verified}>
+                <p role="status" class="sf-u46-alert">{copy.t(key("sf.common.pending"))}</p>
+              </Show>
+              <Show when={screen.outcome === "failed" || screen.outcome === "conflict"}>
+                <p role="alert" class="sf-u46-alert">{copy.t(key(screen.outcome === "conflict" ? "sf.common.conflict" : "sf.common.failed"))}</p>
+              </Show>
               <Show when={screen.outcome === "unknown"}>
                 <div role="alert" class="sf-u46-alert">
                   <p>{copy.t(key("sf.u46.outcomeUnknown"))}</p>
@@ -499,7 +531,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                     coverage={{ state: "complete", summary: msg("sf.u46.reviewScope"), reasons: [],
                       knownCount: 1, expectedCount: 1 }}
                     blockingReasons={model.can(request().action) ? [] : [msg("sf.u46.reviewScope")]}
-                    confirmation={model.can(request().action) && screen.outcome !== "unknown"
+                    confirmation={model.can(request().action) && screen.outcome === "idle" && !screen.busy && !screen.verified
                       ? { kind: "admitted", labelKey: key("sf.u46.confirm"), purpose: reviewAction(request()),
                           binding: { kind: "catalog-command", operationId: op[request().action],
                             version: { kind: "record", expectedVersion: request().expected }, confirmation: "presentation-only" } }
@@ -536,7 +568,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
                           <input id="sf-u46-copy-name" class="mx-input" value={screen.copyName}
                             onInput={(event) => setScreen("copyName", event.currentTarget.value)} />
                           <ul class="sf-u46-source-choices">
-                            <For each={records()}>
+                            <For each={loaded().data.versions}>
                               {(version) => <li>
                                 <span>{version.name} · {version.year}</span>
                                 <button class="mx-btn" type="button" disabled={!allowed(version, "copy")}
