@@ -1,4 +1,4 @@
-import { Show, createMemo, createSignal } from "solid-js"
+import { Show, createEffect, createMemo, createSignal } from "solid-js"
 import type { JSX } from "solid-js"
 import type { SfEditScopeKey, SfIntentRef, SfOperationRef, SfRef } from "@orchestra/schema/sucafina/context"
 import { SfChangeReview } from "../../shared/change-review"
@@ -22,7 +22,7 @@ export type U02EditProps = Readonly<{
   labelKey: Key
   valueLabelKey: Key
   value: number | undefined
-  version: number
+  version: number | undefined
   recordId?: string
   scope: string
   year: number
@@ -61,7 +61,7 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     editScopeKey: editScope,
     identity: props.recordId ? { kind: "record", recordRef: props.recordId as SfRef } :
       { kind: "new", newIntentRef: intentRef },
-    baseVersion: props.version,
+    baseVersion: props.version ?? null,
     base: props.recordId ? { text: props.value === undefined ? "" : String(props.value) } : null,
     value: { text: props.value === undefined ? "" : String(props.value) },
     revalidation: {
@@ -73,6 +73,13 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
       actionIds: [props.actionId],
     },
   }))
+  createEffect(() => {
+    const version = props.version
+    const value = props.value
+    if (version !== undefined) {
+      draft().receiveRemote({ baseVersion: version, value: { text: value === undefined ? "" : String(value) } })
+    }
+  })
   const [review, setReview] = createSignal(false)
   const [busy, setBusy] = createSignal(false)
   const [feedback, setFeedback] = createSignal<"none" | "invalid" | "conflict" | "denied" | "failed" | "outcome-unknown" | "saved">("none")
@@ -81,7 +88,7 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
     return state.availability === "active" ? state : undefined
   }
   const parsed = () => active() ? validNumber(active()!.value.text, props) : null
-  const allowed = () => props.admitted && parsed() !== null && props.year >= 2024 &&
+  const allowed = () => props.admitted && props.version !== undefined && parsed() !== null && props.year >= 2024 &&
     props.year <= 2027 && !busy() && active()?.pendingOperation === null && active()?.conflict === null
   const reviewFields = () => [{
     path: props.actionId === "save-month" ? "month" : props.actionId === "save-revenue" ? "revenue" : "value",
@@ -101,23 +108,24 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
   async function confirm() {
     const value = parsed()
     const state = active()
-    if (!allowed() || value === null || !state || state.baseVersion !== props.version) {
+    const expectedVersion = props.version
+    if (!allowed() || value === null || expectedVersion === undefined || !state || state.baseVersion !== expectedVersion) {
       setReview(false); setFeedback("conflict"); return
     }
     setReview(false);setBusy(true)
     const operationRef = (props.operationId + ":" + crypto.randomUUID()) as SfOperationRef
     const idempotencyKey = crypto.randomUUID()
     try {
-      const digest = await sha256({ action: props.operationId, value, version: props.version,
+      const digest = await sha256({ action: props.operationId, value, version: expectedVersion,
         recordId: props.recordId, year: props.year, month: props.month })
-      if (!allowed() || active()?.baseVersion !== props.version) {
+      if (!allowed() || active()?.baseVersion !== expectedVersion) {
         setFeedback("conflict");return
       }
       draft().setPending({ operationRef, idempotencyKey, payloadDigest: digest,
-        expectedVersion: props.version })
+        expectedVersion })
       if (!active()?.pendingOperation) { setFeedback("conflict");return }
       draft().setPhase("submitting")
-      const response = await props.onWrite(value, props.version, idempotencyKey, new AbortController().signal)
+      const response = await props.onWrite(value, expectedVersion, idempotencyKey, new AbortController().signal)
       if (response.kind === "transport-error") {
         draft().setPhase("outcome-unknown");setFeedback("outcome-unknown")
       } else if (!response.body.ok) {
@@ -168,7 +176,7 @@ export function SfU02Edit(props: U02EditProps): JSX.Element {
           label: { key: key(props.labelKey) }, scope: { kind: "data", text: props.scope } }}
         base={base()} current={base()}
         proposed={{ kind: "draft", intentRef, sourceRef: props.recordId ? props.recordId as SfRef : null,
-          sourceVersion: props.version, fields: reviewFields() }}
+          sourceVersion: props.version ?? null, fields: reviewFields() }}
         effects={[]}
         coverage={{ state: "complete", summary: { key: key("sf.u02.currentData") },
           reasons: [], knownCount: 1, expectedCount: 1 }}
