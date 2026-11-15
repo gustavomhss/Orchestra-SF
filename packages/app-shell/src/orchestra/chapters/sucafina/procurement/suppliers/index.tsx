@@ -259,8 +259,8 @@ export function SfSuppliersView(props: SfSurfaceProps<"CAP27">): JSX.Element {
     if (ui.state !== "ready") return ui.state
     if (ui.phase === "outcome-unknown") return "outcome-unknown"
     if (ui.phase === "conflict") return "conflict"
-    if (ui.phase === "failed") return ui.error === "denied" || ui.error === "session-expired" || ui.error === "not-found"
-      ? ui.error : "ready"
+    if (ui.phase === "failed") return ui.error === "denied" || ui.error === "session-expired" || ui.error === "not-found" ||
+      !!editState()?.pendingOperation ? ui.error ?? "unavailable" : "ready"
     if (routeRef() && !supplier()) return "not-found"
     if (ui.mode !== "new" && !routeRef() && page()?.value.data.suppliers.length === 0) return "empty"
     if (ui.mode !== "new" && !routeRef() && rows().length === 0) return "filtered-empty"

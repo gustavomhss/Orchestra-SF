@@ -210,8 +210,8 @@ export function SfRemainingApprovalsView(props:SfSurfaceProps<"CAP26">):JSX.Elem
     if(ui.state!=="ready")return ui.state
     if(ui.phase==="outcome-unknown"||ui.phase==="source-changed")return "outcome-unknown"
     if(ui.phase==="conflict")return "conflict"
-    if(ui.phase==="failed")return ui.failure==="denied"||ui.failure==="session-expired"||ui.failure==="not-found"
-      ?ui.failure:"ready"
+    if(ui.phase==="failed")return ui.failure==="denied"||ui.failure==="session-expired"||ui.failure==="not-found"||
+      !!draftState()?.pendingOperation ?ui.failure??"unavailable":"ready"
     if(ref()&&selected()?.kind==="not-found")return "not-found"
     if(ref()&&selected()?.kind==="not-pending")return "invalid"
     if(ref()&&selected()?.kind==="source-unavailable")return "invalid"
