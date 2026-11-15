@@ -29,11 +29,11 @@ const Selection = Schema.Struct({
   filter: Optional(Schema.String),
 })
 const BasicQuery = { year: Optional(Year) }
-const VersionQuery = { ...BasicQuery, version: Optional(NonEmpty) }
+const VersionQuery = { ...BasicQuery, version: Optional(Schema.String) }
 const Queries = {
-  CAP17: Schema.Struct({ ...VersionQuery, filter: Optional(NonEmpty) }),
-  CAP18: Schema.Struct({ ...VersionQuery, mode: Optional(Schema.Literals(["budget", "actual", "forecast", "compare"])), owner: Optional(NonEmpty), class: Optional(Schema.Literals(["capex", "opex"])), q: Optional(Schema.String) }),
-  CAP19: Schema.Struct({ ...VersionQuery, mode: Optional(Schema.Literals(["budget", "actual", "forecast", "compare"])), owner: Optional(NonEmpty), class: Optional(Schema.Literals(["capex", "opex"])), q: Optional(Schema.String) }),
+  CAP17: Schema.Struct({ ...VersionQuery, filter: Optional(Schema.String) }),
+  CAP18: Schema.Struct({ ...VersionQuery, mode: Optional(Schema.Literals(["budget", "actual", "forecast", "compare", ""])), owner: Optional(Schema.String), class: Optional(Schema.Literals(["capex", "opex", ""])), q: Optional(Schema.String) }),
+  CAP19: Schema.Struct({ ...VersionQuery, mode: Optional(Schema.Literals(["budget", "actual", "forecast", "compare", ""])), owner: Optional(Schema.String), class: Optional(Schema.Literals(["capex", "opex", ""])), q: Optional(Schema.String) }),
   CAP20: Schema.Struct(VersionQuery),
   CAP21: Schema.Struct(BasicQuery),
   CAP22: Schema.Struct(VersionQuery),

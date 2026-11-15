@@ -45,17 +45,16 @@ function select(request: Request, spec: Page): Selection | undefined {
   const year = params.get("year"), version = params.get("version"), mode = params.get("mode")
   const owner = params.get("owner"), cls = params.get("class"), filter = params.get("filter")
   if (year !== null && !/^202[4-7]$/.test(year)) return undefined
-  if ([version, owner, filter].some((v) => v !== null && !v.trim())) return undefined
-  if (mode !== null && !["budget", "actual", "forecast", "compare"].includes(mode)) return undefined
-  if (cls !== null && !["capex", "opex"].includes(cls)) return undefined
+  if (mode !== null && mode !== "" && !["budget", "actual", "forecast", "compare"].includes(mode)) return undefined
+  if (cls !== null && cls !== "" && !["capex", "opex"].includes(cls)) return undefined
   return {
     year: year === null ? 2026 : Number(year),
-    ...(version !== null ? { versionId: version } : {}),
-    ...(mode !== null ? { mode } : {}),
-    ...(owner !== null ? { owner } : {}),
-    ...(cls !== null ? { class: cls } : {}),
+    ...(version !== null && version.trim() ? { versionId: version } : {}),
+    ...(mode !== null && mode.trim() ? { mode } : {}),
+    ...(owner !== null && owner.trim() ? { owner } : {}),
+    ...(cls !== null && cls.trim() ? { class: cls } : {}),
     ...(params.has("q") ? { q: params.get("q") ?? "" } : {}),
-    ...(filter !== null ? { filter } : {}),
+    ...(filter !== null && filter.trim() ? { filter } : {}),
   }
 }
 function planVersions(view: View) {
