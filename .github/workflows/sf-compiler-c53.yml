@@ -73,8 +73,8 @@ jobs:
             printf '>>> %s | cwd=%s | argv=' "$name" "$directory"
             printf '%q ' "$@"
             printf '\n'
-            (cd "$directory" && "$@") > "$EVIDENCE/$name.log" 2>&1
-            local code=$?
+            local code=0
+            (cd "$directory" && "$@") > "$EVIDENCE/$name.log" 2>&1 || code=$?
             printf '%s\t%s\t%s\n' "$name" "$code" "$directory" >> "$EVIDENCE/exit-codes.tsv"
             printf '<<< %s exit=%s\n' "$name" "$code"
             tail -n 60 "$EVIDENCE/$name.log" || true
