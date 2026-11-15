@@ -9,6 +9,12 @@ import {
   SfThreadEditResult, SfThreadHistory, SfThreadReadResult, SfWorkPresentation,
 } from "./contracts"
 
+/** Empty collaboration reads have NO admitted fields. Effect 4's empty Struct
+ * does not reject excess keys on its own; the record's Never value rejects
+ * any injected field during decodeUnknownSync / transport decodeUnknownOption.
+ */
+const SfClosedEmptyInput = Schema.Record(Schema.String, Schema.Never).check(Schema.isMaxProperties(0))
+
 /** A13 fixed allowlist of 29 existing admitted collaboration HTTP operations.
  *  No dynamic dispatch, permission inference, server proxy or browser-side state.
  *  Registry bindings/fixed query are composed only by integrator 114.
@@ -153,7 +159,7 @@ export const SfCollaborationSelectionList = {
 
 export const SfCollaborationSelectionVersion = {
   operationId: "collaboration.selection-version",
-  input: Schema.Struct({  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  input: SfClosedEmptyInput,
   output: sfPortResult(SfNonNegative),
 } as const
 
@@ -177,7 +183,7 @@ export const SfCollaborationWorkDestination = {
 
 export const SfCollaborationRecipients = {
   operationId: "collaboration.recipients",
-  input: Schema.Struct({  }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+  input: SfClosedEmptyInput,
   output: sfPortResult(SfRecipientList),
 } as const
 

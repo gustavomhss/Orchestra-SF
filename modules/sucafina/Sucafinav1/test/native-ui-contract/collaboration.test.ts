@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test"
-import { Schema } from "effect"
+import { Option, Schema } from "effect"
 import { SfCollaboration } from "../../../../../packages/schema/src/sucafina/collaboration.ts"
 import { createSfCollaborationClient } from "../../../../../packages/client/src/sucafina/collaboration.ts"
 import type { SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
@@ -240,10 +240,24 @@ describe("A13 fixed source collaboration contracts", () => {
 
   test("empty reads cannot smuggle a permission grant or generic dispatch name", () => {
     for (const id of ["collaboration.recipients", "collaboration.selection-version"] as const) {
-      expect(Schema.decodeUnknownSync(SfCollaboration.operations[id].input)({})).toEqual({})
-      expect(() => Schema.decodeUnknownSync(SfCollaboration.operations[id].input)({
+      const input = SfCollaboration.operations[id].input
+      expect(Schema.decodeUnknownSync(input)({})).toEqual({})
+      expect(Option.isSome(Schema.decodeUnknownOption(input)({}))).toBe(true)
+      // F02 calls decodeUnknownOption before choosing the route or sending IO.
+      // Both its decoder and direct consumers must reject extras rather than strip them.
+      expect(() => Schema.decodeUnknownSync(input)({
         operation: "grant", principalRef: "anyone",
       })).toThrow()
+      for (const extra of [
+        { operation: "grant" },
+        { principalRef: "anyone" },
+        { action: "dispatch" },
+        { permission: "admin" },
+        { operation: "grant", principalRef: "anyone", expectedStorageVersion: 0 },
+      ]) {
+        expect(() => Schema.decodeUnknownSync(input)(extra)).toThrow()
+        expect(Option.isNone(Schema.decodeUnknownOption(input)(extra))).toBe(true)
+      }
     }
     const names = Schema.decodeUnknownSync(SfCollaboration.operations["collaboration.recipients"].output)({
       status: "ok", value: [{ id: "recipient-1", name: "Permitted recipient" }],
