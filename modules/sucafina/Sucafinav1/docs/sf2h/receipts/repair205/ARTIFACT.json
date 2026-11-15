@@ -1,0 +1,159 @@
+{
+  "schema": "sf2h.causal-repair205.artifact.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 205,
+  "order": "S05",
+  "status": "ARTIFACT_READY_PENDING_INTEGRATION_AND_HOSTED_PROOF",
+  "actor": {
+    "requested_model": "Astra (requested label)",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_exposure": "not exposed",
+    "new_chat_session_requested": true
+  },
+  "authority": {
+    "epoch": "compiler-source-e1-browser205",
+    "branch": "sf-thread-newlines",
+    "prepared_head": "988d770ed29fa947ef20eb19ca94cd3379158c28",
+    "product_base": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "fence_blob": "298e9e894fda018c895ed4be0f968563355e03e3",
+    "fence_state": "PREPARED_NOT_STARTED",
+    "ack_commit": "ceb453a68920ca8ff82a8acb20ada34227c5fec9",
+    "ack_blob": "76318ce8ab47e7b4572200909f8b4b3ed0ef5608",
+    "code_commit": "dce549842bb75de8edb6d1a8c317fa01edc8a96c",
+    "code_tree": "d31f96591ec7cf964efe676e2f7687efd398c88c",
+    "byte_assert_commit": "26fca4e3a4f5fad0e83f853a0c0acb386b96bda3",
+    "byte_assert_tree": "2084b75e903cb3e6ee5dbc6392747a1956655c2a",
+    "previous_authority": "REVOKED_FOR_FUTURE_ASSIGNED_WRITES_OR_DISPATCH",
+    "runtime_termination_claimed": false,
+    "force": false
+  },
+  "files": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "pre_blob": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "post_blob": "619402f411f6592cc7bfdcd9d2d97a834d36c26c"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "pre_blob": "5d02157e04299a299cd3c4fada3dd19913a59598",
+      "intermediate_blob": "c7e357ba99460677f7cb9b5e80bf48f2f1c5d63f",
+      "post_blob": "313372865426a047cc500d1dba891a75cb8fa047"
+    }
+  ],
+  "consumer": {
+    "owner": 189,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "observed_tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+    "checked_preimages": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts": "5d02157e04299a299cd3c4fada3dd19913a59598"
+    },
+    "required_postimages": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx": "619402f411f6592cc7bfdcd9d2d97a834d36c26c",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts": "313372865426a047cc500d1dba891a75cb8fa047"
+    },
+    "ack": "PENDING_189",
+    "consumer_post_head": null,
+    "consumer_post_tree": null,
+    "operation": "apply only exact post blobs with expected-head and preimage CAS; do not merge author branch history; reconcile drift"
+  },
+  "causal_bytes": {
+    "fixture_raw_text_escaped": "\"  Next owner\\r\\nstill exact  \"",
+    "fixture_raw_hex": "20 20 4e 65 78 74 20 6f 77 6e 65 72 0d 0a 73 74 69 6c 6c 20 65 78 61 63 74 20 20",
+    "fixture_raw_length": 27,
+    "expected_dom_escaped": "\"  Next owner\\nstill exact  \"",
+    "expected_dom_hex": "20 20 4e 65 78 74 20 6f 77 6e 65 72 0a 73 74 69 6c 6c 20 65 78 61 63 74 20 20",
+    "expected_dom_length": 26,
+    "original_run_received_bytes": "NOT_RECORDED_BY_BUN_FORMATTER",
+    "observation": "Browser formatted Received and Expected visually equal with -0/+0; raw fixture has 0d0a and expected DOM has 0a. Previously value/effect received raw CRLF; presentation now normalizes only DOM and adds explicit UTF-8 byte assertions."
+  },
+  "invariants": [
+    "No trim/rewrite of outgoing props.draft; onPost.text raw",
+    "No automatic POST/replay on owner transition or outcome-unknown",
+    "Thread CAS post fence keeps threadRef,incarnation,version",
+    "No old-owner draft, message, pending state after denied/rebind",
+    "No fake-grants, auth, provider identities or receipts",
+    "unavailable preserves same-owner draft; denied/session-expired purges DOM",
+    "U44 owns ownerKey,accessRevision,generation,route reset and stale request aborts",
+    "onReconcileRead only re-reads original producer"
+  ],
+  "untouched": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/types.ts",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/collaboration-pages/threads/index.tsx",
+    "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts"
+  ],
+  "criteria": {
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "S05_workorder_blob": "4c0ac7f6ea42a16c137c1ea361ef0fd3b407b50c",
+    "component_signatures_blob": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "component_contracts_blob": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "host_signatures_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "tasks": [
+      "WP08.T01",
+      "WP08.T02",
+      "WP08.T03",
+      "WP08.T06"
+    ],
+    "surfaces": [
+      "UI51",
+      "UI52",
+      "UI53"
+    ],
+    "cases": [
+      {
+        "id": "S05-AC01",
+        "state": "SOURCE_PATCHED_HOSTED_PROOF_NOT_RUN"
+      },
+      {
+        "id": "S05-AC02",
+        "state": "PUBLIC_SIGNATURE_UNCHANGED_HOSTED_PROOF_NOT_RUN"
+      }
+    ]
+  },
+  "evidence": {
+    "previous_browser": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "result": "FAIL_BEFORE_184_FIX"
+    },
+    "browser": {
+      "run": 43773852118,
+      "job": 132995508966,
+      "attempt": 1,
+      "source_head": "8f131b06a94f1f2a265ba5e519e3166b114d1689",
+      "result": "7_PASS_1_FAIL_across_4_files; S05 4_PASS_1_FAIL_line170",
+      "native_positive_proof": false
+    },
+    "compiler": {
+      "run": 43772959867,
+      "job": 132992733158,
+      "artifact": 14185067705,
+      "findings": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation190/FINDINGS-190-W77e.md",
+      "status": "HISTORICAL_W77e_FAILURE_NOT_NEWEST_PRODUCT"
+    },
+    "after_patch": {
+      "local_test": "NOT_RUN",
+      "hosted_browser": "NOT_RUN",
+      "typecheck": "NOT_RUN",
+      "build": "NOT_RUN",
+      "guards": "NOT_RUN",
+      "SDK": "NOT_RUN",
+      "native_installed_proof": "NOT_RUN"
+    }
+  },
+  "routing": {
+    "integrator": 189,
+    "sole_product_CI": 200,
+    "compiler": 190,
+    "product_CI_pr": 106,
+    "compiler_pr": 107,
+    "source_missions_193_199": "UNTOUCHED"
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

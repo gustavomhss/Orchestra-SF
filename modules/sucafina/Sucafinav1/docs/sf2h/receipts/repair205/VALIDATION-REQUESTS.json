@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.causal-repair205.conditional-requests.v1",
+  "mission": 205,
+  "source_branch": "sf-thread-newlines",
+  "source_commit": "26fca4e3a4f5fad0e83f853a0c0acb386b96bda3",
+  "state": "PENDING_189_CONSUMER_ACK_NOT_DISPATCHED",
+  "consumer_pr": 65,
+  "prerequisite": {
+    "owner": 189,
+    "branch": "sf2-stack",
+    "publish_real_W_and_tree": true,
+    "required_postimages": {
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx": "619402f411f6592cc7bfdcd9d2d97a834d36c26c",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts": "313372865426a047cc500d1dba891a75cb8fa047"
+    },
+    "consumer_ack": "PENDING",
+    "dedup": "candidate/tree, request hash, workflow, validator, runtime/config, fixtures and selection"
+  },
+  "product_CI": {
+    "owner": 200,
+    "pr": 106,
+    "branch": "sf-ci-validation",
+    "workflow": "test-ci",
+    "package": "app",
+    "directory": "packages/app-shell",
+    "runner": "bun",
+    "selector": [
+      "./test-browser/sucafina-native/s05.test.ts"
+    ],
+    "expected": "five S05 tests; strict DOM LF bytes, raw command CRLF bytes, owner purge, no automatic edit/replay, incarnation/version/CAS",
+    "historical_failed_run": 43773852118,
+    "historical_failed_job": 132995508966,
+    "other_7_pass": "do not re-run unaffected checks",
+    "dispatch_after_189_ack_only": true,
+    "dispatched_by_205": false
+  },
+  "compiler": {
+    "owner": 190,
+    "pr": 107,
+    "branch": "sf-compiler-checks",
+    "package": "packages/app-shell",
+    "command": "bun typecheck through authorized existing compiler lane",
+    "guards": "canonical compiler guards if required by current W/matrix; no duplicate dispatcher",
+    "prior_W77e_run": 43772959867,
+    "dispatch_after_189_ack_only": true,
+    "dispatched_by_205": false
+  },
+  "no_local_test_or_build": true,
+  "no_CI_started": true,
+  "comments_are_not_wake_or_ACK": true,
+  "GLOBAL_RELEASE": false
+}
