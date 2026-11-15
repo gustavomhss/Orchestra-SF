@@ -824,8 +824,77 @@
     "historical_check01_gate_count": 7,
     "not_a_rerun": true,
     "remaining_legacy_paths_count": 3,
-    "remaining_legacy_paths_scope": "Outside mission48 source write paths; no removal by48. Count3 is an expected residual classification, not a hosted result.",
+    "remaining_legacy_paths_scope": "Historical expected3 residuals, now independently confirmed byCHECK02 actual. Outside mission48 writes; no deletion by48.",
     "later_same_product_source": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
-    "later_source_delta": "Only3 own E2E observability files plus receipts; pending sourceCHECK02."
+    "later_source_delta": "Historical source7 added3 own E2E observability files and receipts. Final source8 was checked by actualCHECK02; see root_terminal_observation."
+  },
+  "root_terminal_observation": {
+    "recorded_at": "2026-11-15T01:48:33.065199+00:00",
+    "receipt": {
+      "path": "evidence/source-check-02.json",
+      "sha256": "4c725eda2e7f206860593c41d0cc4273909c2fb9d3a0894915ef03ef500d07f0",
+      "bytes": 6688
+    },
+    "diagnostics": {
+      "path": "evidence/source-check-02-diagnostics.json",
+      "sha256": "466a2099fbc7123c73c649e73cdbed48008e8f4a458b19ff9fa2e3428c3a02da",
+      "bytes": 129003
+    },
+    "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "executed_sha": "9235894b095a2cf4a90184b4606949f75a70279d",
+    "source_and_executed_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+    "result": "FAIL",
+    "typecheck": {
+      "command": "bun typecheck",
+      "directory": "modules/sucafina",
+      "exit_code": 2,
+      "diagnostics": 186,
+      "prior36_diagnostics": 137,
+      "identical_path_code_message": 136,
+      "new_test_diagnostics": 49,
+      "changed_text_on_unchanged_wp06_file": 1,
+      "diagnostic_receipt": "evidence/source-check-02-diagnostics.json",
+      "assessment": "The186 diagnostic headlines are exactly equal in order to source-CHECK01. This remains a FAIL on the uncomposed source lane; earlier triage49 missing dependency/API or derivative own-test errors still does not prove a composed typecheck PASS.",
+      "prior_check01_diagnostics": 186,
+      "identical_ordered_diagnostic_headlines": true,
+      "typecheck_artifact_bytes_identical_to_check01": true
+    },
+    "guards": {
+      "command": "bun run check:guards --base origin/dev",
+      "directory": ".",
+      "exit_code": 1,
+      "rules": 78,
+      "changed_paths": 950,
+      "gate": 3,
+      "warn": 12,
+      "errors": 0,
+      "findings": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/client-and-collection.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+          "log_line": 884,
+          "mission48_owned": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/nominal-03.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+          "log_line": 885,
+          "mission48_owned": false
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/evidence/source-guards.log",
+          "rule": "agent-scratch",
+          "message": "Scratch or tool-output file added. Delete it; do not commit agent working files.",
+          "log_line": 886,
+          "mission48_owned": false
+        }
+      ],
+      "own_mission48_gates": 0,
+      "historical_out_of_scope_gates": 3,
+      "causal_remediation": "Four own raw logs were retired at source6 d9e2b517 with exact immutable history references. CHECK02 now confirms the reduction7→3; no suppression, renaming or legacy-path deletion."
+    },
+    "interpretation": "CHECK02 confirms4 own raw-log gates removed:7→3. All3 remaining paths are legacy36 outside48writes. Typecheck remains186 and byte-identical toCHECK01. Do not infer source PASS, composed compiler PASS, or nominal browser proof."
   }
 }

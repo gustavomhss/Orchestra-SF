@@ -62,6 +62,289 @@
     "evidence/nominal-04.json",
     "evidence/installed-05.json"
   ],
-  "remaining_scope": "Three Reports36 raw log paths are outside mission48 write paths and were not edited. MCP readback confirmed all three are absent from W4; this observation is not a composed guards PASS.",
-  "future_runs": "Persist structured per-case outcomes, exact identities, request hashes, artifact/job URLs and diagnostic findings. Raw downloaded job logs remain analysis material; do not rename them to bypass the guard."
+  "remaining_scope": "The3 remaining raw logs are legacy36 paths outside48write authority, confirmed byCHECK02. They remain with their owner. No guard suppression or raw-log renaming.",
+  "future_runs": "No further unchanged failing fixture rerun by48. Any successor must first establish a causal discriminator/correction and preserve exact prior identities and actuals.",
+  "terminal_at": "2026-11-15T01:50:58.858424+00:00",
+  "source_CHECK02": {
+    "run": 43663977131,
+    "job": 132659187470,
+    "outcome": "FAIL",
+    "own_gates": 0,
+    "legacy_out_of_scope_gates": 3,
+    "typecheck_diagnostics": 186,
+    "guard_warnings": 12,
+    "receipt": "evidence/source-check-02.json"
+  },
+  "hosted_actuals": [
+    {
+      "receipt": {
+        "path": "evidence/boundary-01.json",
+        "bytes": 4311,
+        "sha256": "9b3dd170a5504f73866be6b4ae2e5cb5ad17c21a9531e42e5b491e4cbdcc7cee",
+        "git_blob": "dab07a3de8edfb40f9708adda3c8200df019dde9"
+      },
+      "id": "E-M48-BOUNDARY-01",
+      "run": 43654508667,
+      "job": 132629975340,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654508667",
+      "conclusion": "failure",
+      "log_identity": {
+        "path": "evidence/boundary-01.log",
+        "bytes": 85621,
+        "sha256": "fece97d8911683776c8a37f74a00a011e9bc96c7218a3f79c95098238e6489a8",
+        "git_blob": "0651be1c7acc96ea3fb1aa1bdf45fb7601d0e483"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": null
+    },
+    {
+      "receipt": {
+        "path": "evidence/causal-02.json",
+        "bytes": 1660,
+        "sha256": "3c413de4a64ca64b605c16290130444fa2aa08be08ae1303a25bf24ea9be450b",
+        "git_blob": "0498ee7ed238fc6ad63ba6722114da7119c460c5"
+      },
+      "id": "E-M48-CAUSAL-02",
+      "run": 43655757364,
+      "job": 132633777954,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655757364",
+      "conclusion": "success",
+      "log_identity": {
+        "path": "evidence/causal-02.log",
+        "bytes": 69209,
+        "sha256": "ec7fd6217c9ed327d9bf9f521b851aabb0e841ef353feee2e71a0220e5c28198",
+        "git_blob": "aa50805006425eeb9d2e47d17e26cf4d7254442b"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": null
+    },
+    {
+      "receipt": {
+        "path": "evidence/nominal-03.json",
+        "bytes": 2766,
+        "sha256": "7f54b13980847f86b50a5d24b85e1164651d2f4ef4c1d877e083967f00b017d9",
+        "git_blob": "95fe59b5c42f2fd2c227357ee862c293a314261b"
+      },
+      "id": "E-M48-NOMINAL-03",
+      "run": 43655931507,
+      "job": 132634322740,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43655931507",
+      "conclusion": "failure",
+      "log_identity": {
+        "path": "evidence/nominal-03.log",
+        "bytes": 110287,
+        "sha256": "3eda052c4534e371ccee225406ac662a67c38080069a5560143407c32008a2c3",
+        "git_blob": "97113843f8c332ca7bf2e8d02d1736f3de5b4a13"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": null
+    },
+    {
+      "receipt": {
+        "path": "evidence/nominal-04.json",
+        "bytes": 3408,
+        "sha256": "da9223864a595e88984dac4547ca80d887bfbbdbd18f0e91b103d5d43312b749",
+        "git_blob": "5a17240a649526b6c4e826a8d3ff658ecb7a64aa"
+      },
+      "id": "E-M48-NOMINAL-04",
+      "run": 43657599973,
+      "job": 132639507850,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43657599973",
+      "conclusion": "failure",
+      "log_identity": {
+        "path": "evidence/nominal-04.log",
+        "bytes": 112261,
+        "sha256": "8dbe7208f13684091d2159c267d5934ca1b73fbbf019aabf782c1d8cf0ac4ba1",
+        "git_blob": "1a216c37ff6883e903165d94ce4f9fe2866d5aba"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": null
+    },
+    {
+      "receipt": {
+        "path": "evidence/installed-05.json",
+        "bytes": 2301,
+        "sha256": "0689583172e7dd3ddeb21010d3298bedff1e81d2f22fc64d550bfb5313a233bc",
+        "git_blob": "5d4a3dab535dc4a0f52e86c0f48ada643cc50367"
+      },
+      "id": "E-M48-INSTALLED-05",
+      "run": 43659599684,
+      "job": 132645714268,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43659599684",
+      "conclusion": "success",
+      "log_identity": {
+        "path": "evidence/installed-05.log",
+        "bytes": 69388,
+        "sha256": "7903465ac03afdce772c8e76b961176431d3f6d71a2b68f369ab8231a34aa11f",
+        "git_blob": "316aabbd62ce09f0f9b4496e84260a5de3ea5f61"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": null
+    },
+    {
+      "receipt": {
+        "path": "evidence/nominal-06.json",
+        "bytes": 19100,
+        "sha256": "4f7030f501edf344e1624575f33e92dc72b57dfe1a53788b0a328687c7b2c2b9",
+        "git_blob": "ff985c0c8bc9afdbfe8b1850cf538fab653d3a7a"
+      },
+      "id": "E-M48-NOMINAL-06",
+      "run": 43660186245,
+      "job": 132647536371,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43660186245",
+      "conclusion": "failure",
+      "log_identity": {
+        "path": "evidence/nominal-06.log",
+        "bytes": 109393,
+        "sha256": "05ebea03518e82e8daaa627bc03ab79c6a3eea0a08b1dfaa837f3f658b53a73b",
+        "git_blob": "abd0072b93bbc3c8fa18242a7f8944706fae6050"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": {
+        "id": 14140102297,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43660186245/artifacts/14140102297",
+        "archive": {
+          "local_path": "evidence/nominal-06.zip",
+          "bytes": 261191,
+          "sha256": "62405994e19f931862197e6e8219b072a54e3d417b330146912b13c0d063837a"
+        }
+      }
+    },
+    {
+      "receipt": {
+        "path": "evidence/diagnostic-07.json",
+        "bytes": 9314,
+        "sha256": "d52f35461c8a4ce0865c7f0f296253fd9a51a23833ebac793b894bcd3643bfdb",
+        "git_blob": "3b76ff9ce6e0bbfd264350dac388aa3a133f195e"
+      },
+      "id": "E-M48-DIAGNOSTIC-07",
+      "run": 43662417996,
+      "job": 132654419258,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43662417996",
+      "conclusion": "failure",
+      "log_identity": {
+        "path": "evidence/diagnostic-07.log",
+        "bytes": 101678,
+        "sha256": "19035e04cddfeff39ea173b9d8d68cc12901ccc660c81745e79e079e90e5ceb6",
+        "git_blob": "9ff51c746e2514ba47dc91fb7756edf09334f987"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": {
+        "id": 14140298535,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43662417996/artifacts/14140298535",
+        "archive": {
+          "local_path": "evidence/diagnostic-07.zip",
+          "bytes": 216604,
+          "sha256": "1e52190e8a67dadcb3019a60a1ed029bb70f903660b1a5d1df2c88ac3591e8e7"
+        }
+      }
+    },
+    {
+      "receipt": {
+        "path": "evidence/diagnostic-08.json",
+        "bytes": 9978,
+        "sha256": "8ca851eff1eff34fbaf1c224464bd7d3da5bdb7091c3d9dc60b974b6a6f223fc",
+        "git_blob": "9a333fed3648994a791566a0dcc8f5afbe0a8126"
+      },
+      "id": "E-M48-DIAGNOSTIC-08",
+      "run": 43663209925,
+      "job": 132656858318,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663209925",
+      "conclusion": "failure",
+      "log_identity": {
+        "path": "evidence/diagnostic-08.log",
+        "bytes": 101797,
+        "sha256": "d3ac304fe4a8a7327efc2f00aa8235113616ca724a812ddf96a25d1aa7e1dd70",
+        "git_blob": "64a0caf5101d82236154a8f46af2c28a0b942d7b"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": {
+        "id": 14140864138,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663209925/artifacts/14140864138",
+        "archive": {
+          "local_path": "evidence/diagnostic-08.zip",
+          "bytes": 217589,
+          "sha256": "c47cce6a43edf6de605727ef1bc9ecbb26b9a4ae493fa9e4c9c6633a492bc809"
+        }
+      }
+    },
+    {
+      "receipt": {
+        "path": "evidence/installed-09.json",
+        "bytes": 5304,
+        "sha256": "268754f1c939d3827e78774d413f340bcce65b85543ec827ab2b79dd9e0a7295",
+        "git_blob": "383641976a5fb16deb07d184fb2137455e0c91d5"
+      },
+      "id": "E-M48-INSTALLED-09",
+      "run": 43663795167,
+      "job": 132658631801,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663795167",
+      "conclusion": "success",
+      "log_identity": {
+        "path": "evidence/installed-09.log",
+        "bytes": 69388,
+        "sha256": "dd8a5954e8d964500219c3537b3e33b5edf5065cc88403e3031906122710e32a",
+        "git_blob": "1b5faf422e3a891a1d4858c38e266dbf9d32d8fd"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": null
+    },
+    {
+      "receipt": {
+        "path": "evidence/source-check-01.json",
+        "bytes": 7244,
+        "sha256": "16e99bc9e89d36b3a099bdfd92dca5d999139b235e6c4b82598318965103010e",
+        "git_blob": "7539605480fad1741763767620a23ea17b9258c1"
+      },
+      "id": "E-M48-SOURCE-CHECK-01",
+      "run": 43659849107,
+      "job": 132646486974,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43659849107",
+      "conclusion": "failure",
+      "log_identity": {
+        "path": "evidence/source-check-01.log",
+        "bytes": 148018,
+        "sha256": "e1b636ec3f169713407364fe445aaa561f159a70505c65d77878832da71c6f6f",
+        "git_blob": "0a56a7ec6952941b8dbd3306a42f71e74648124d"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": {
+        "id": 14139676911,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43659849107/artifacts/14139676911",
+        "zip_sha256": "a2aae6f403661ce00099c0f4636cbbfc56592f604ace4790d484c6d66a4fa4d7",
+        "verified_from_mcp_download": true
+      }
+    },
+    {
+      "receipt": {
+        "path": "evidence/source-check-02.json",
+        "bytes": 6688,
+        "sha256": "4c725eda2e7f206860593c41d0cc4273909c2fb9d3a0894915ef03ef500d07f0",
+        "git_blob": "001621c75454b3672465b3fc7529cd43caeda85b"
+      },
+      "id": "E-M48-SOURCE-CHECK-02",
+      "run": 43663977131,
+      "job": 132659187470,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663977131",
+      "conclusion": "failure",
+      "log_identity": {
+        "path": "evidence/source-check-02.log",
+        "bytes": 146646,
+        "sha256": "a11cd1241a8b12fd83ad051787847ab2b286362b19827c9ee0c33c4188bd35d8",
+        "git_blob": "e300a14eb5505a541a772e9d41e0bd91e2acee8f"
+      },
+      "raw_log_retention": "First4 logs retain their exact immutable Git blobs listed above. Later logs remain original job output/runner artifacts with hashes; no raw logs are newly committed.",
+      "artifact": {
+        "id": 14141083647,
+        "name": "wp07-check-9235894b095a2cf4a90184b4606949f75a70279d-1",
+        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/actions/artifacts/14141083647",
+        "zip_bytes": 88372,
+        "zip_sha256": "d2a3e938cdd14248f766f9fde51f7de67e2232ef85252ab4e2e0f56a59c5d833",
+        "download": "Returned GitHub MCP download URI only; ZIP digest verified before extraction",
+        "product_sha_verified": true,
+        "product_tree_verified": true,
+        "guard_base_verified": true
+      }
+    }
+  ]
 }

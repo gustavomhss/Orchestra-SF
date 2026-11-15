@@ -1,0 +1,200 @@
+{
+  "schema": "orchestra-sf.mission48.identity-bound-track-reconciliation.v2",
+  "operation": "DOCUMENTARY_METADATA_ONLY_NOT_PRODUCT_TEST",
+  "input_matrix_sha256": "5460c0c3060d0240c529f6d53e9886e3f6c2df81afcf707aedead61094fc01e4",
+  "output_matrix_sha256": "276154604d4a2a8e4b3a0a29ee3e9a6fce39a5456dfe1ec91be9e5eadf615727",
+  "output": "mission48/final/CRITERIA.json",
+  "canonical_criteria_unchanged": 86,
+  "canonical_acceptance": {
+    "NOT_ESTABLISHED": 86
+  },
+  "partial_ids_unchanged": [
+    "WP07.CMP.01",
+    "WP07.INV.01",
+    "WP07.QLT.10",
+    "WP07.SUC.10",
+    "WP07.T02.DOD.01",
+    "WP07.T02.INV.02",
+    "WP07.T02.INV.18",
+    "WP07.T02.QLT.18",
+    "WP07.T02.SUC.01"
+  ],
+  "historical_semantic_equality": true,
+  "historical_canonical_json_sha256": "309123d1d7f430238c7f5e0574f1c3dcc573d3b935ff822665fca07523ef1b70",
+  "execution_records_unchanged": true,
+  "external_review_only_receipts": [],
+  "candidate_projection": {
+    "requested_candidate": {
+      "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "source_product": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+      "source_e2e": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+      "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+      "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "W_tree": "9de02fcf17f0ada054dfab0ee43a554ee5d21650",
+      "composition_baseline": {
+        "symbol": "C27",
+        "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+      },
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/VALIDATION-W-06.json@910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "verified_blob_count": 46,
+      "material_changed_paths": 46,
+      "shared_patch_sha256": "27126424e90de7ec7b6e93154beb5d060932477596283409174b06bb8fc0641f",
+      "current_integrator": 57,
+      "requested_consumer": 47,
+      "previous_W": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "dependency_reconciliation": "C27-DEPENDENCY-RECONCILIATION.json",
+      "rebase_review": "C27-REBASE-REVIEW.json",
+      "source8_active_code_delta_from_source7": 0,
+      "shared_postimage_delta_from_C19_unit": 2
+    },
+    "same_as_registered_candidate": true,
+    "completed_execution_refs": [
+      "E-M48-DIAGNOSTIC-08",
+      "E-M48-INSTALLED-09"
+    ],
+    "nominal_execution_state": "NO_COMPLETED_NOMINAL_RECEIPT_FOR_CANDIDATE",
+    "completed_diagnostic_execution_refs": [
+      "E-M48-DIAGNOSTIC-08"
+    ],
+    "aggregate_gate_acceptance": "NOT_ADJUDICATED",
+    "automatic_criterion_approval": false
+  },
+  "tracks": [
+    {
+      "id": "M48-TRACK-BOUNDARY-01",
+      "status": "FAIL",
+      "execution_ref": "E-M48-BOUNDARY-01",
+      "source": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+      "run": 43654508667,
+      "job": 132629975340,
+      "W": "9647675e5a08f86393d478602897657a3b8d478a",
+      "S": "071aab991a79134f9aadbfe5e65c7e750d8e4e04",
+      "actual_counts": {
+        "pass": 75,
+        "fail": 3,
+        "total": 78
+      }
+    },
+    {
+      "id": "M48-TRACK-CAUSAL-02",
+      "status": "PASS",
+      "execution_ref": "E-M48-CAUSAL-02",
+      "source": "07ac4e6f6d6d88e0c30050a0e54af24da39060b1",
+      "run": 43655757364,
+      "job": 132633777954,
+      "W": "1b404dc1fda7eff08334124552c6570755fba161",
+      "S": "591ad815219f9204bea65186482f312b4965059b",
+      "actual_counts": {
+        "pass": 2,
+        "fail": 0,
+        "total": 2
+      }
+    },
+    {
+      "id": "M48-TRACK-NOMINAL-03",
+      "status": "FAIL",
+      "execution_ref": "E-M48-NOMINAL-03",
+      "source": "07ac4e6f6d6d88e0c30050a0e54af24da39060b1",
+      "run": 43655931507,
+      "job": 132634322740,
+      "W": "1b404dc1fda7eff08334124552c6570755fba161",
+      "S": "046e805f2d9635a4527c58b4d4874749b6010304",
+      "actual_counts": {
+        "pass": 0,
+        "fail": 4,
+        "total": 4
+      }
+    },
+    {
+      "id": "M48-TRACK-NOMINAL-04",
+      "status": "FAIL",
+      "execution_ref": "E-M48-NOMINAL-04",
+      "source": "2a5ced326a20bc67ac50b40cb756c8d6f4e5c6fa",
+      "run": 43657599973,
+      "job": 132639507850,
+      "W": "c44a3b80da2549c6a3bc4cbdb186a275d93370ab",
+      "S": "f6793f038eff88dba5b6329eebc8ea50cc5f3f82",
+      "actual_counts": {
+        "pass": 0,
+        "fail": 4,
+        "total": 4
+      }
+    },
+    {
+      "id": "M48-TRACK-INSTALLED-05",
+      "status": "PASS",
+      "execution_ref": "E-M48-INSTALLED-05",
+      "source": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+      "run": 43659599684,
+      "job": 132645714268,
+      "W": "25b00c94c25fc36363cfd8c0063c5ab85d6966c8",
+      "S": "820a93a5d75bec7923d743574aa12946249a1bc1",
+      "actual_counts": {
+        "pass": 4,
+        "fail": 0,
+        "total": 4
+      }
+    },
+    {
+      "id": "M48-TRACK-NOMINAL-06",
+      "status": "FAIL",
+      "execution_ref": "E-M48-NOMINAL-06",
+      "source": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+      "run": 43660186245,
+      "job": 132647536371,
+      "W": "25b00c94c25fc36363cfd8c0063c5ab85d6966c8",
+      "S": "2b4dab4bb1689bbfb8bf307f0ae8397a7bee208a",
+      "actual_counts": {
+        "pass": 0,
+        "fail": 4,
+        "total": 4
+      }
+    },
+    {
+      "id": "M48-TRACK-DIAGNOSTIC-07",
+      "status": "FAIL",
+      "execution_ref": "E-M48-DIAGNOSTIC-07",
+      "source": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+      "run": 43662417996,
+      "job": 132654419258,
+      "W": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "S": "1a3c35839d8d5f84155f10fd4148779a0ccb6c1a",
+      "actual_counts": {
+        "pass": 0,
+        "fail": 1,
+        "total": 1
+      }
+    },
+    {
+      "id": "M48-TRACK-DIAGNOSTIC-08",
+      "status": "FAIL",
+      "execution_ref": "E-M48-DIAGNOSTIC-08",
+      "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "run": 43663209925,
+      "job": 132656858318,
+      "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "S": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+      "actual_counts": {
+        "pass": 0,
+        "fail": 1,
+        "total": 1
+      }
+    },
+    {
+      "id": "M48-TRACK-INSTALLED-09",
+      "status": "PASS",
+      "execution_ref": "E-M48-INSTALLED-09",
+      "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "run": 43663795167,
+      "job": 132658631801,
+      "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "S": "c5f14d262afda882f0fd6a0878ee04a974919864",
+      "actual_counts": {
+        "pass": 4,
+        "fail": 0,
+        "total": 4
+      }
+    }
+  ]
+}

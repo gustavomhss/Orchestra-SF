@@ -1,0 +1,474 @@
+{
+  "schema": "sf2h.reports-draft-reconciliation.preparation-blocker.v1",
+  "id": "M48-REPORTS-PREPARATION-POST-NO-RESPONSE",
+  "state": "BLOCKED_REQUIRES_CAUSAL_SERVER_OBSERVATION",
+  "mission": 48,
+  "branch": "astra-wp07",
+  "PR": 27,
+  "handoff": {
+    "requested_consumer": 47,
+    "last_accepted_integrator": 57,
+    "last_integrator_lease": "ENDED",
+    "last_integrator_terminal": "d6d9816bb09f7595330862616305e0791e23e61e",
+    "current_active_integrator": null,
+    "designated_successor": 60,
+    "successor_state": "PREPARED_NOT_STARTED",
+    "successor_epoch": "S0-C-e12-browser60",
+    "successor_ACK_observed": false,
+    "control": "afa3079d74d819f1afb3add83cf50eba63069f16",
+    "successor_package_blob": "e819f3c3414d18f5895064903b5148d0495ca6ff",
+    "consumer_ACK": "REQUESTED_IN_TERMINAL_HANDOFF_NOT_RECEIVED",
+    "rule": "The requested47 handoff follows formal succession.57 ended;60 is prepared only. A successor must reconcile current HEAD/control/authority and publish its own ACK. No active writer or consumption is inferred from a prepared mission.",
+    "activation": "HOLD: a new integrator ACK alone does not qualify this source package. Complete qualifying evidence and integrator review remain required before material activation under the successor60 package."
+  },
+  "candidate": {
+    "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+    "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+    "source_product": "2fbb07c89581d1b30cbb23a1046805c3bcaea4a3",
+    "source_e2e": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+    "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+    "W_tree": "9de02fcf17f0ada054dfab0ee43a554ee5d21650",
+    "composition_baseline": {
+      "symbol": "C27",
+      "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+    },
+    "shared_patch_sha256": "27126424e90de7ec7b6e93154beb5d060932477596283409174b06bb8fc0641f",
+    "identity_receipt": {
+      "local_path": "final/FINAL-CANDIDATE-W6.json",
+      "bytes": 1149,
+      "sha256": "2c2888aff9499aea7e4f8a60e05b6edb365bb94ce4a488051b1c4720acbc88ff"
+    },
+    "validation_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-reconciliation/VALIDATION-W-06.json@910a0a2d2a5718838a3226ffe3043af9bf23c411"
+  },
+  "problem": {
+    "stage": "Installed Reports preparation, after Generate Report mounts Prepare review and the user clicks Load selection.",
+    "expected": "The actual same-origin same-path POST with sf=review-agenda returns a response, then the unchanged parser and selected-source assertions complete before explicit dossier preservation.",
+    "observed": "Nominal06 has four actual timeouts at the agenda response wait. Diagnostic07 and diagnostic08 each observe the correct POST immediately after click, no response event until the case deadline, and ERR_CONNECTION_REFUSED only near teardown.",
+    "root_cause": "NOT_ESTABLISHED",
+    "persisted_after_C27_rebase": true,
+    "causal_limit": "The C27 diagnostic did not clear the observed blocker. That observation does not assign the cause to Runtime56, performance, body adaptation, payload size, authorization or the listener."
+  },
+  "executions": [
+    {
+      "id": "E-M48-NOMINAL-06",
+      "run": 43660186245,
+      "job": 132647536371,
+      "cleanup_job": 132651296497,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43660186245",
+      "source": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+      "W": "25b00c94c25fc36363cfd8c0063c5ab85d6966c8",
+      "W_tree": "2a3442a86ab02a9739303575d31c5d9093fd8049",
+      "S": "2b4dab4bb1689bbfb8bf307f0ae8397a7bee208a",
+      "S_tree": "ba1638e4645db39192e24a2ba7daf2cb44d77307",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 4,
+      "total": 4,
+      "started": 4,
+      "skip": 0,
+      "request_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f",
+      "request_blob": "b216b474fff3eb0dbb720678080899908fab5a0c",
+      "execution_kind": "four_nominal_journeys",
+      "composition_baseline_symbol": "C19",
+      "controls": {
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "timeout_ms": 180000,
+        "expect_timeout_ms": 10000,
+        "trace": "off",
+        "video": "off",
+        "screenshot": "off"
+      },
+      "receipt": {
+        "local_path": "evidence/nominal-06.json",
+        "bytes": 19100,
+        "sha256": "4f7030f501edf344e1624575f33e92dc72b57dfe1a53788b0a328687c7b2c2b9"
+      },
+      "runtime": {
+        "local_path": "evidence/nominal-06-runtime/playwright-runtime.json",
+        "bytes": 23506,
+        "sha256": "74e471bd510fd15cb08df0ba22ea039c0eef50d40fe27d3d54dabdd2a3b0a0ba"
+      },
+      "log": {
+        "local_path": "evidence/nominal-06.log",
+        "bytes": 109393,
+        "sha256": "05ebea03518e82e8daaa627bc03ab79c6a3eea0a08b1dfaa837f3f658b53a73b"
+      },
+      "selection": {
+        "local_path": "evidence/nominal-06-runtime/playwright-selection.json",
+        "bytes": 4904,
+        "sha256": "79e31b46db0351ac8edb34d691b2a14f8286abd0aa68a931edf457b27ebe6d5d"
+      },
+      "business_journeys_completed": 0,
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false,
+      "cases": [
+        {
+          "case_id": "RPT-01",
+          "title_from_runtime": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+          "runtime_status": "TIMED_OUT",
+          "duration_ms": 180024,
+          "retry": 0,
+          "blocking_stage": "prepareReview waits for the review-agenda POST response at reports-support/review-flow.ts:40:30; the 180000 ms case timeout expires before agendaResult and the selected-section assertions complete.",
+          "assertions_reached": "The installed Prepare review region is present and Load selection is enabled before the pending response wait. No preserved-review, reconciliation, answer, export, revision or purge business result is established.",
+          "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+          "context": {
+            "local_path": "evidence/nominal-06-context/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium.md",
+            "bytes": 13641,
+            "sha256": "1c33aff8db8c92c0003e05023b93285672f013f1b75ae0fb779a135a5b283b24"
+          }
+        },
+        {
+          "case_id": "RPT-02",
+          "title_from_runtime": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+          "runtime_status": "TIMED_OUT",
+          "duration_ms": 180019,
+          "retry": 0,
+          "blocking_stage": "prepareReview waits for the review-agenda POST response at reports-support/review-flow.ts:40:30; the 180000 ms case timeout expires before agendaResult and the selected-section assertions complete.",
+          "assertions_reached": "The installed Prepare review region is present and Load selection is enabled before the pending response wait. No preserved-review, reconciliation, answer, export, revision or purge business result is established.",
+          "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+          "context": {
+            "local_path": "evidence/nominal-06-context/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium.md",
+            "bytes": 13624,
+            "sha256": "e551ac3d305844f874ee6efc52d6f3422b67089093a3bf0500d890f4b2e9d19f"
+          }
+        },
+        {
+          "case_id": "RPT-03",
+          "title_from_runtime": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+          "runtime_status": "TIMED_OUT",
+          "duration_ms": 180021,
+          "retry": 0,
+          "blocking_stage": "prepareReview waits for the review-agenda POST response at reports-support/review-flow.ts:40:30; the 180000 ms case timeout expires before agendaResult and the selected-section assertions complete.",
+          "assertions_reached": "The installed Prepare review region is present and Load selection is enabled before the pending response wait. No preserved-review, reconciliation, answer, export, revision or purge business result is established.",
+          "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+          "context": {
+            "local_path": "evidence/nominal-06-context/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium.md",
+            "bytes": 13638,
+            "sha256": "3ed00966662551babff8dca6077b2dcf24f54788cc62b7f9813b66b013d7cd54"
+          }
+        },
+        {
+          "case_id": "RPT-04",
+          "title_from_runtime": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+          "runtime_status": "TIMED_OUT",
+          "duration_ms": 180018,
+          "retry": 0,
+          "blocking_stage": "prepareReview waits for the review-agenda POST response at reports-support/review-flow.ts:40:30; the 180000 ms case timeout expires before agendaResult and the selected-section assertions complete.",
+          "assertions_reached": "The installed Prepare review region is present and Load selection is enabled before the pending response wait. No preserved-review, reconciliation, answer, export, revision or purge business result is established.",
+          "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+          "context": {
+            "local_path": "evidence/nominal-06-context/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium.md",
+            "bytes": 13621,
+            "sha256": "5e8e89fee6bb2b1c2a0b7c9bf79280da096ecc1e87d489790fba9a685056ce1f"
+          }
+        }
+      ],
+      "transport": {
+        "instrumented": false,
+        "observation": "All four cases timed out waiting for the matching review-agenda POST response; these earlier contexts alone do not prove request arrival, HTTP status or transport cause."
+      },
+      "selected_files": [
+        "e2e/sucafina/reports.spec.ts"
+      ]
+    },
+    {
+      "id": "E-M48-DIAGNOSTIC-07",
+      "run": 43662417996,
+      "job": 132654419258,
+      "cleanup_job": 132655766684,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43662417996",
+      "source": "3468e5136f185b6de3cfce00ca4eda9b8c01eecf",
+      "W": "7621664e70df4f98388b1280b72c99a4c1e874b7",
+      "W_tree": "bee9af4d7386920ef9356b0e874fee243feb1a38",
+      "S": "1a3c35839d8d5f84155f10fd4148779a0ccb6c1a",
+      "S_tree": "b26c220d3cf58549add36343d5627841d97f2b03",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "total": 1,
+      "started": 1,
+      "skip": 0,
+      "request_sha256": "1e6da53d110967854023b0d46a57864dc6ebcc6244e39db8fe95943da1d43df3",
+      "request_blob": "70b49a8117513630b084f07d3f16c63f06035dfb",
+      "source_tree": "4b275a76464168b2432cd66c512d65b5ecdcd65f",
+      "execution_kind": "single_transport_diagnostic",
+      "composition_baseline_symbol": "C19",
+      "controls": {
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "timeout_ms": 180000
+      },
+      "receipt": {
+        "local_path": "evidence/diagnostic-07.json",
+        "bytes": 9314,
+        "sha256": "d52f35461c8a4ce0865c7f0f296253fd9a51a23833ebac793b894bcd3643bfdb"
+      },
+      "runtime": {
+        "local_path": "evidence/diagnostic-07-runtime/playwright-runtime.json",
+        "bytes": 9840,
+        "sha256": "8a902af34b848a230bf1fcf323d9b005fe0c68bafc672def70187dc8b4df66d6"
+      },
+      "log": {
+        "local_path": "evidence/diagnostic-07.log",
+        "bytes": 101678,
+        "sha256": "19035e04cddfeff39ea173b9d8d68cc12901ccc660c81745e79e079e90e5ceb6"
+      },
+      "selection": {
+        "local_path": "evidence/diagnostic-07-runtime/playwright-selection.json",
+        "bytes": 2803,
+        "sha256": "5b6a6bc7ac55885d443cffdea37ed0d77c40bdc3e06f16204e6daa91f77177c2"
+      },
+      "business_journeys_completed": 0,
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false,
+      "cases": [
+        {
+          "case_id": "RPT-DIAG-AGENDA-01",
+          "title_from_runtime": "RPT-DIAG-AGENDA-01 observes actual agenda transport and preserves the authorized dossier",
+          "runtime_status": "TIMED_OUT",
+          "duration_ms": 180023,
+          "retry": 0,
+          "blocking_stage": "The single agenda-transport diagnostic timed out at its 180000 ms case budget. The late requestfailed handler produced the second error at review-flow.ts:391:40; no review-agenda response event is present in the captured observer.",
+          "assertions_reached": "The browser observed the correct same-origin, same-path review-agenda POST. Prepare review is present in the final context. Successful agenda response and authorized dossier preservation were not established.",
+          "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+          "context": {
+            "local_path": "evidence/diagnostic-07-context/sucafina-reports-support-a-3746f-rves-the-authorized-dossier-chromium.md",
+            "bytes": 10690,
+            "sha256": "119014c93e84a56b74707f58d902677ea4d9c3eb9dc20bf3391dfefe433b7b2b"
+          }
+        }
+      ],
+      "transport": {
+        "receipt": {
+          "local_path": "evidence/diagnostic-07-transport.json",
+          "bytes": 961,
+          "sha256": "3d17ee9d2c80cc6d050f00c0a063d71411bc269daac2c4800c901164d2feb389"
+        },
+        "request_observed_ms": 40,
+        "request_method": "POST",
+        "request_mode": "review-agenda",
+        "same_origin": true,
+        "same_path": true,
+        "response_events_observed": 0,
+        "requestfailed_observed_ms": 176249,
+        "requestfailed_codes": [
+          "net::ERR_CONNECTION_REFUSED"
+        ],
+        "observer_duration_ms": 176250,
+        "time_basis": "Elapsed from observer installation after page preparation, not from case start.",
+        "cli_observation": "No recognized transport error or repository stack location in the bounded CLI tail.",
+        "interpretation": "The only requestfailed event is one millisecond before observer completion, at test deadline/teardown. It does not establish initial connection refusal or the earlier pending stage."
+      },
+      "selected_files": [
+        "e2e/sucafina/reports-support/agenda-transport.spec.ts"
+      ]
+    },
+    {
+      "id": "E-M48-DIAGNOSTIC-08",
+      "run": 43663209925,
+      "job": 132656858318,
+      "cleanup_job": 132658274162,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663209925",
+      "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+      "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+      "W_tree": "9de02fcf17f0ada054dfab0ee43a554ee5d21650",
+      "S": "1c773176439c6761505e5b9063b0f5e84ef52e20",
+      "S_tree": "46cdfdf0eee4ea7ae2e3bc4396a0eabc9318d82d",
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 1,
+      "total": 1,
+      "started": 1,
+      "skip": 0,
+      "request_sha256": "1e6da53d110967854023b0d46a57864dc6ebcc6244e39db8fe95943da1d43df3",
+      "request_blob": "70b49a8117513630b084f07d3f16c63f06035dfb",
+      "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+      "execution_kind": "single_transport_diagnostic",
+      "composition_baseline_symbol": "C27",
+      "controls": {
+        "workers": 1,
+        "retries": 0,
+        "repeatEach": 1,
+        "timeout_ms": 180000
+      },
+      "receipt": {
+        "local_path": "evidence/diagnostic-08.json",
+        "bytes": 9978,
+        "sha256": "8ca851eff1eff34fbaf1c224464bd7d3da5bdb7091c3d9dc60b974b6a6f223fc"
+      },
+      "runtime": {
+        "local_path": "evidence/diagnostic-08-runtime/playwright-runtime.json",
+        "bytes": 9864,
+        "sha256": "ea7f9c55d70665209dabd5c90b1f8ac207c8378fe151cb674c178bb1231561ab"
+      },
+      "log": {
+        "local_path": "evidence/diagnostic-08.log",
+        "bytes": 101797,
+        "sha256": "d3ac304fe4a8a7327efc2f00aa8235113616ca724a812ddf96a25d1aa7e1dd70"
+      },
+      "selection": {
+        "local_path": "evidence/diagnostic-08-runtime/playwright-selection.json",
+        "bytes": 2803,
+        "sha256": "d5ad1fe0d5f85e89f7c57cd39c88a24459b301410627804176ddace2d06d07c4"
+      },
+      "business_journeys_completed": 0,
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false,
+      "cases": [
+        {
+          "case_id": "RPT-DIAG-AGENDA-01",
+          "title_from_runtime": "RPT-DIAG-AGENDA-01 observes actual agenda transport and preserves the authorized dossier",
+          "runtime_status": "TIMED_OUT",
+          "duration_ms": 180025,
+          "retry": 0,
+          "blocking_stage": "The single agenda-transport diagnostic timed out at its 180000 ms case budget. The late requestfailed handler produced the second error at review-flow.ts:391:40; no review-agenda response event is present in the captured observer.",
+          "assertions_reached": "The browser observed the correct same-origin, same-path review-agenda POST. Prepare review and Agenda topics are present in the final context. Successful agenda response and authorized dossier preservation were not established; visible retention text is not nominal or criterion proof.",
+          "observed_ui_status": "Selection unavailable: agenda-unavailable. Your topics, records and order are retained. Discover and refresh changed sources, then preview and confirm again.",
+          "context": {
+            "local_path": "evidence/diagnostic-08-context/sucafina-reports-support-a-3746f-rves-the-authorized-dossier-chromium.md",
+            "bytes": 12782,
+            "sha256": "ea9691d6bc0f0f9e1fedb08bd1a2df2b84ee3942ab47a509214fe58e66dd2099"
+          }
+        }
+      ],
+      "transport": {
+        "receipt": {
+          "local_path": "evidence/diagnostic-08-transport.json",
+          "bytes": 961,
+          "sha256": "8122b0a7eed0d318be74cb5d46713db3aded58eec18439520c5c9bbfac74aaa5"
+        },
+        "request_observed_ms": 43,
+        "request_method": "POST",
+        "request_mode": "review-agenda",
+        "same_origin": true,
+        "same_path": true,
+        "response_events_observed": 0,
+        "requestfailed_observed_ms": 175889,
+        "requestfailed_codes": [
+          "net::ERR_CONNECTION_REFUSED"
+        ],
+        "observer_duration_ms": 175890,
+        "time_basis": "Elapsed from observer installation after page preparation, not from case start.",
+        "cli_observation": "No recognized transport error or repository stack location in the bounded CLI tail.",
+        "interpretation": "The only requestfailed event is one millisecond before observer completion, at test deadline/teardown. It does not establish initial connection refusal or the earlier pending stage."
+      },
+      "selected_files": [
+        "e2e/sucafina/reports-support/agenda-transport.spec.ts"
+      ]
+    }
+  ],
+  "causality": {
+    "state": "NOT_ESTABLISHED",
+    "established": [
+      "The preparation view mounts and Load selection is reached.",
+      "The diagnostic observer records the intended same-origin same-path review-agenda POST at 40 ms on W5 and 43 ms on W6.",
+      "Neither diagnostic records a response event before its deadline.",
+      "ERR_CONNECTION_REFUSED appears only at 176249 ms / 175889 ms, one millisecond before each observer finishes during deadline/teardown.",
+      "All four nominal06 journeys remain incomplete; neither one-case diagnostic gives nominal or acceptance credit."
+    ],
+    "not_established": [
+      "Initial connection refusal",
+      "Server process death",
+      "Arrival of the request at the listener or product handler",
+      "Body EOF delivery",
+      "A particular HTTP response status",
+      "Authorization loss",
+      "A body consumption deadlock",
+      "Oversize body rejection or cancellation",
+      "Performance as the root cause"
+    ],
+    "cli_limit": "The bounded allowlisted CLI tail has no recognized transport error or repository stack location; this is not proof of a healthy process or completed request.",
+    "ui_limit": "agenda-unavailable and the C27 retention text are observed UI states, not proven backend causes or proof that discussion drafts/intents were exercised."
+  },
+  "read_only_analysis": {
+    "receipts": [
+      {
+        "local_path": "diagnosis/nominal07-post-body/READ-REVIEW.json",
+        "bytes": 14431,
+        "sha256": "e2e1febf8c98cbea06c4ce6913b5dc511f50d543525dfd4487c0c716ab811acb"
+      },
+      {
+        "local_path": "diagnosis/nominal07-post-body/LIMIT-REVIEW.json",
+        "bytes": 5555,
+        "sha256": "632f75b8475c7de22514f0fe1aa908463b8d096e1a742b0ffe0408155b99f225"
+      }
+    ],
+    "body_review": "No duplicate body consumer or unconditional circular await was demonstrated in the inspected CLI/Effect/installation/product path. reviews/http has an EOF wait, but the runtime does not show whether that stage was reached or stalled.",
+    "size_review": "The initial three-topic selector envelope contains no projections or Projects25 rows. Its verified constructor shape has a static upper bound of 626 bytes versus 262144 configured bytes; this is not a captured body. The oversize-cancel hypothesis is unsupported for this first load.",
+    "performance_review": "Runtime56 source receipts and the C27 rebase do not establish Reports latency or the cause of the missing response.",
+    "code_changed": false,
+    "product_executed": false
+  },
+  "acceptance_impact": {
+    "RPT_01": "BLOCKED_BEFORE_SUCCESSFUL_PREPARATION",
+    "RPT_02": "BLOCKED_BEFORE_SUCCESSFUL_PREPARATION",
+    "RPT_03": "BLOCKED_BEFORE_SUCCESSFUL_PREPARATION",
+    "RPT_04": "BLOCKED_BEFORE_SUCCESSFUL_PREPARATION",
+    "nominal_positive_credit": 0,
+    "browser_draft_reconciliation_credit": false,
+    "browser_true_revocation_purge_credit": false,
+    "four_journeys_required_on_coherent_candidate": true,
+    "independent_gates": {
+      "installed_four_on_W6": {
+        "state": "PASS_4_OF_4",
+        "receipt": "evidence/installed-09.json",
+        "run": 43663795167,
+        "job": 132658631801,
+        "scope": "Four installed entry/provider cases only;103expects,12.55s"
+      },
+      "final_CHECK": {
+        "state": "FAIL",
+        "receipt": "evidence/source-check-02.json",
+        "run": 43663977131,
+        "job": 132659187470,
+        "scope": "Uncomposed source8 exact tree;186TypeScript/3legacygates"
+      },
+      "limit": "Neither result establishes the browser POST response or nominal journey completion."
+    },
+    "GLOBAL_RELEASE": false
+  },
+  "next_authorized_work": {
+    "owner": "Requested integrator47 or formally acknowledged successor (60 prepared at closing) coordinates server/bridge and Reports owners.57 has ended.",
+    "before_any_repeat": "Establish a causal discriminant or correction. Do not repeat the unchanged failing fixture just to obtain another timeout.",
+    "observation": "Add approved, bounded server/bridge phase observations for the existing request without capturing body content, cookie/header values, private URLs, grants or command keys.",
+    "phase_boundaries": [
+      "Listener receives request",
+      "Effect incoming-to-Web adaptation completes",
+      "Local installation reaches product dispatcher",
+      "Reports body reader begins and reaches EOF, reporting byte count only",
+      "UI admission/validation begins and completes",
+      "Agenda producer begins and completes",
+      "Response is returned to the bridge and handed to the actual listener"
+    ],
+    "purpose": "Locate the first missing phase, including the possibility that the request never enters the server; distinguish transport/body/authorization/producer/response waits using evidence.",
+    "after_cause": "Apply the smallest authorized causal correction atomically with current dependencies. Preserve the complete earlier evidence.",
+    "qualification_order": [
+      "Obtain a positive installed preparation with the same three sections, 25 real projects and unchanged assertions/budget.",
+      "Then execute all four original Reports nominal journeys on the exact coherent candidate, without filters/skips, retries, fixture reduction or assertion/budget changes."
+    ],
+    "mutation_policy": "No automatic mutation replay; any continuation retains explicit user intent and the existing idempotency contract."
+  },
+  "preservation": {
+    "prior_receipts_overwritten": false,
+    "logs_runtime_context_transport_retained": true,
+    "prior_failures_reclassified_as_pass": false,
+    "nominal_and_diagnostics_kept_separate": true,
+    "Agenda39_paths_edited": false,
+    "new_code_or_tests": false,
+    "remote_operations": false
+  },
+  "provenance": "Local factual synthesis from the exact saved receipts, runtime reports and transport observations. Runtime/context/log/selection hashes were checked against their receipts; source/W/S/run/job identities remain those supplied and reconciled by root. No new remote verification or execution.",
+  "root_terminal_observation": {
+    "at": "2026-11-15T01:48:33.065199+00:00",
+    "source_check": "FAIL",
+    "installed09": "PASS4/0",
+    "diagnostic08": "FAIL0/1",
+    "root_cause": "NOT_ESTABLISHED",
+    "no_further_unchanged_fixture_rerun": true,
+    "authority_observation": "REMOTE-CLOSING-OBSERVATIONS.json"
+  }
+}

@@ -1,0 +1,115 @@
+{
+  "id": "E-M48-INSTALLED-09",
+  "run": 43663795167,
+  "job": 132658631801,
+  "cleanup_job": 132658973800,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43663795167",
+  "source": "ac72112c576edf20ef1bc3b53ee10dce26b00ac7",
+  "source_tree": "285539c31d390b517acf87f36e22adfa58fc095f",
+  "W": "910a0a2d2a5718838a3226ffe3043af9bf23c411",
+  "W_tree": "9de02fcf17f0ada054dfab0ee43a554ee5d21650",
+  "S": "c5f14d262afda882f0fd6a0878ee04a974919864",
+  "S_tree": "ec54d16eac86d56c2085a02b5f4ed97bdb332227",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "--timeout",
+      "60000"
+    ],
+    "env": {}
+  },
+  "request_sha256": "cd3364e7e257575d574f06e62c7b865bae97aa053046934516492299c10e7c66",
+  "request_blob": "6d6515f2a5666c7fb5dd13aad55fde98484b344c",
+  "request_only_diff": [
+    ".ci-run.json"
+  ],
+  "conclusion": "success",
+  "pass": 4,
+  "fail": 0,
+  "total": 4,
+  "selected_files": [
+    "Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts"
+  ],
+  "expect_calls": 103,
+  "duration_seconds": 12.55,
+  "log": "evidence/installed-09.log",
+  "omni": {
+    "nonce": "a2ed8666b33f324ccf85bbb8aed14958",
+    "verdict": "not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "log_line": 820
+  },
+  "scope": "Actual four installed-composition tests on exact W6/C27 with its coherent21 shared patches. PASS4/0 covers only installed-review-entry.test.ts; it does not qualify the unchanged78-case boundary gate, four nominal Reports journeys, diagnostics, source/composed compiler gate, any criterion or global acceptance.",
+  "limitations": [
+    "The installed sf-human alias case proves resolver uncertainty then real missing-grant denial; positive-authorized alias is not claimed by that fixture.",
+    "The preserved-review cycle uses actual agenda/preserve HTTP and C05/receipt; no C05/receipt or positive authorization was fabricated.",
+    "All four new cases retain 60000ms individual budgets; no existing assertion/budget changed."
+  ],
+  "shared_patch_sha256": "27126424e90de7ec7b6e93154beb5d060932477596283409174b06bb8fc0641f",
+  "kind": "boundary",
+  "composition_baseline": {
+    "symbol": "C27",
+    "commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262"
+  },
+  "case_results": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "title_from_log": "the installed Reports form route mounts its actual review bootstrap and keeps query validation",
+      "file_case_ordinal": 1,
+      "runtime_status": "PASS",
+      "duration_ms": 2209.3,
+      "log_line": 811,
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "title_from_log": "an actual preserved review keeps update and successor focus recoverable when its second read is interrupted",
+      "file_case_ordinal": 2,
+      "runtime_status": "PASS",
+      "duration_ms": 9279.05,
+      "log_line": 812,
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "title_from_log": "the Reports focus route preserves real command identity unavailability and still denies a revoked actor",
+      "file_case_ordinal": 3,
+      "runtime_status": "PASS",
+      "duration_ms": 234.67,
+      "log_line": 813,
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "title_from_log": "installed Reports authorization I/O remains recoverable before consumption and before page delivery",
+      "file_case_ordinal": 4,
+      "runtime_status": "PASS",
+      "duration_ms": 488.38,
+      "log_line": 814,
+      "criterion_acceptance_credit": false,
+      "nominal_journey_credit": false
+    }
+  ],
+  "log_receipt": {
+    "local_path": "evidence/installed-09.log",
+    "bytes": 69388,
+    "sha256": "dd8a5954e8d964500219c3537b3e33b5edf5065cc88403e3031906122710e32a"
+  },
+  "criterion_acceptance_credit": false,
+  "nominal_journey_credit": false,
+  "identity_provenance": {
+    "source_W_trees": "Copied from exact FINAL-CANDIDATE-W6.json supplied by root; no new remote verification by this receipt author.",
+    "S_trees_run_jobs": "Exact root-provided identities.",
+    "request_only_diff": "Root explicitly verified S differs from W only at .ci-run.json.",
+    "request_content": "Local compact request SHA256 and Git blob equal the root-provided values.",
+    "cleanup_job": "Root-provided cleanup identity; no cleanup outcome is inferred.",
+    "actual_counts_and_durations": "Parsed from the hosted installed09 log, including all four case result lines and aggregate summary."
+  }
+}

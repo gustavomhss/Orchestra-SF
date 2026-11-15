@@ -84,5 +84,32 @@
     "transport_evidence": "evidence/diagnostic-07-transport.json",
     "candidate_still_C19": true
   },
-  "requalification_rationale": "C27 contains released read/runtime dependencies and a different installed composition. A single real preparation diagnostic may test their effect before the four nominal journeys; no claim of transport cure is made from the dependency alone."
+  "requalification_rationale": "C27 contains released read/runtime dependencies and a different installed composition. A single real preparation diagnostic may test their effect before the four nominal journeys; no claim of transport cure is made from the dependency alone.",
+  "terminal_observation": {
+    "at": "2026-11-15T01:50:58.858424+00:00",
+    "closing_stack": "d6d9816bb09f7595330862616305e0791e23e61e",
+    "stack_material_delta_from_C27": 0,
+    "stack_receipt_delta": 14,
+    "current_control": "afa3079d74d819f1afb3add83cf50eba63069f16",
+    "authority_route": {
+      "requested_consumer": 47,
+      "last_accepted_integrator": 57,
+      "last_integrator_lease": "ENDED",
+      "last_integrator_terminal": "d6d9816bb09f7595330862616305e0791e23e61e",
+      "current_active_integrator": null,
+      "designated_successor": 60,
+      "successor_state": "PREPARED_NOT_STARTED",
+      "successor_epoch": "S0-C-e12-browser60",
+      "successor_ACK_observed": false,
+      "control": "afa3079d74d819f1afb3add83cf50eba63069f16",
+      "successor_package_blob": "e819f3c3414d18f5895064903b5148d0495ca6ff",
+      "consumer_ACK": "REQUESTED_IN_TERMINAL_HANDOFF_NOT_RECEIVED",
+      "rule": "The requested47 handoff follows formal succession.57 ended;60 is prepared only. A successor must reconcile current HEAD/control/authority and publish its own ACK. No active writer or consumption is inferred from a prepared mission.",
+      "activation": "HOLD: a new integrator ACK alone does not qualify this source package. Complete qualifying evidence and integrator review remain required before material activation under the successor60 package."
+    },
+    "installed09": "PASS4/0 onW6",
+    "diagnostic08": "FAIL0/1 onW6;Runtime56 did not resolve pendingPOST",
+    "source_CHECK02": "FAIL186/3legacygates; composed45NOT_RUN",
+    "acceptance": false
+  }
 }
