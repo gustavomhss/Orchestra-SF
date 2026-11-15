@@ -135,7 +135,15 @@ def validate(root: Path, launch: Path | None):
         sha40 = lambda x: isinstance(x, str) and re.fullmatch(r"[0-9a-f]{40}", x) is not None
         for field in ("material_sha", "material_tree", "planning_sha", "canonical_sha"):
             ensure(sha40(record.get(field)), f"launch {field} must be full lowercase Git SHA")
-        ensure(record.get("current_integrator_ack") != record.get("integrator_71_ack"), "current integrator ACK cannot reuse ended 71 ACK")
+        historical_integrator_refs = {
+            record.get("integrator_71_ack"),
+            "99d404ef15e12161b9043b3ac020bbb814d710dc",
+            "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+            "01efff55ee289cd897f912b9ae96c893b966e658",
+            "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+        }
+        ensure(record.get("current_integrator_ack") not in historical_integrator_refs, "current integrator ACK cannot reuse ended 71/100 authority")
+        ensure(record.get("current_integrator_lease") not in ("S0-C-e13-browser71", "S0-C-e14-browser100"), "current integrator lease cannot reuse ended 71/100 lease")
         previous = record.get("prior_integrator_terminals", {})
         if not isinstance(previous, dict):
             failures.append("prior_integrator_terminals must be an object")
