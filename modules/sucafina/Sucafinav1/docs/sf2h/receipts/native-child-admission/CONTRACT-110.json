@@ -14,7 +14,9 @@
   "code_commit": "d1f2590e3d3b17483f206385cc4f221e38cc405b",
   "code": {
     "path": "apps/cli/src/sucafina-product/native-child-admission.ts",
-    "blob": "13708b27201e3debb9ca9cdb64fa9ebcbd7fffd0"
+    "blob": "9ebc40835ab3e8098f3b044bbef6eb6b7d1c99ae",
+    "previous_blob": "13708b27201e3debb9ca9cdb64fa9ebcbd7fffd0",
+    "source_static_revision": "type-only SessionSchema import to obey verbatim module syntax"
   },
   "test": {
     "path": "modules/sucafina/Sucafinav1/test/product/native-child-admission/child-admission.test.ts",
@@ -79,5 +81,7 @@
     "Durable task_id continuation requires fresh human rebind, currently refused",
     "No product Actions, real model, Permission UI or compiled source; readiness/watch OFF"
   ],
-  "review": "S1/S2/S3 independent reviews and S0 final acceptance; synthetic component fixtures are not installed C15"
+  "review": "S1/S2/S3 independent reviews and S0 final acceptance; synthetic component fixtures are not installed C15",
+  "test_status": "NOT_RUN",
+  "pr": "https://github.com/gustavomhss/Orchestra-SF/pull/110"
 }

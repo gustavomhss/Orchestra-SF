@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h-native-child-c15-checkpoint-v1",
+  "mission": 110,
+  "status": "OUTPUT_READY_PENDING_OWNER95_106_AND_ACTIONS107_COMPILER108",
+  "role": "S0-B",
+  "lease": "native-child-browser110",
+  "branch": "native-child-admission",
+  "parent_head": "2a17ea4d8897cae935b783f123de8d6fad69d4b1",
+  "source_blob": "9ebc40835ab3e8098f3b044bbef6eb6b7d1c99ae",
+  "test_blob": "3b50f3273c8a28da2a0bf4d3e2cee24c45e188f5",
+  "ack_commit": "04df0aafddcffaead68cb8f6b8f5e88267bfd3cb",
+  "source_commit": "d1f2590e3d3b17483f206385cc4f221e38cc405b",
+  "patch_commit": "2a17ea4d8897cae935b783f123de8d6fad69d4b1",
+  "pr": 110,
+  "pr_draft": true,
+  "merge": false,
+  "owner_comments": [
+    {
+      "mission": 95,
+      "pr": 104,
+      "comment_id": 6893809938,
+      "owner": "native-host-provider",
+      "patch": "assembly/95-token-gate.patch",
+      "status": "AWAITING_OWNER"
+    },
+    {
+      "mission": 106,
+      "pr": 65,
+      "comment_id": 6893810356,
+      "owner": "sf2-stack",
+      "patch": "assembly/106-host-context-post95.patch",
+      "status": "AWAITING_OWNER"
+    },
+    {
+      "mission": 107,
+      "pr": 106,
+      "comment_id": 6893824717,
+      "role": "product-actions-only",
+      "status": "NO_DISPATCH_BY110"
+    },
+    {
+      "mission": 108,
+      "pr": 107,
+      "comment_id": 6893825143,
+      "role": "compiler-guards",
+      "status": "NO_RUN_BY110"
+    }
+  ],
+  "runtime": {
+    "C15_child_provider": "NOT_INSTALLED_NOT_PROVEN",
+    "test_actions": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "readiness": false,
+    "watch": false,
+    "global_release": false
+  },
+  "non_applied_patches": [
+    {
+      "owner": 95,
+      "pre": "5a3e39ff379d51a15f5f601ed9739191ff7071c4",
+      "post": "cf7ee32b50f906bbc2013a830d2ad582bde196fb"
+    },
+    {
+      "owner": 106,
+      "pre": "acdd01117cf8c83e011dd9576c36cf38f5b173c7",
+      "post": "e9a5efd8b5ed3967e765a99f9d1d144814253253"
+    }
+  ],
+  "handoff": "HANDOFF-110.md",
+  "contract": "CONTRACT-110.json",
+  "next": "Owner95 validate and ACK private C15 child ticket/C09 receipts; integrator106 reconcile and apply patch; 107 Actions; 108 compiler; reviewers; S0 acceptance only after real evidence"
+}
