@@ -269,6 +269,8 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
       context.binding.projectId === resources.identity.projectId
 
     acquiringReads.set(request, close)
+    // A pending historical attestation occupies a slot only until this Request/lease deadline.
+    timer = setTimeout(close, Math.max(0, Math.min(until - now(), monotonicUntil - performance.now())))
     try {
       const generation = await observeSfRoutineNative(input.generation, signal)
       if (!sync() || generation === undefined || !Number.isSafeInteger(generation) ||
@@ -295,7 +297,6 @@ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistr
       if (readEntries.has(request) || !sync()) return undefined
       readEntries.set(request, entry)
       acquiringReads.delete(request)
-      timer = setTimeout(close, Math.max(0, until - now()))
       request.signal.addEventListener("abort", close, { once: true })
       evidence.signal.addEventListener("abort", close, { once: true })
       if (!await current()) return undefined
