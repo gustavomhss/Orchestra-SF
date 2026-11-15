@@ -3,12 +3,13 @@ import { AsyncLocalStorage } from "node:async_hooks"
 import { constants } from "node:fs"
 import { lstat, mkdir, open, realpath } from "node:fs/promises"
 import { isAbsolute, join, parse, resolve, sep } from "node:path"
-import type { LocalStore } from "./local-contract.ts"
+import type { AuthLimits, LocalStore } from "./local-contract.ts"
+import { createAuthenticationSecrets, initializeAuthentication } from "./auth-maintenance.ts"
 import type { Snapshot, TransactionOptions } from "./contract.ts"
 import type { BlobTransaction } from "./assets.ts"
 import type { Surface } from "../src/identity.ts"
 
-export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number } = {}): Promise<LocalStore> {
+export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number; authentication?: Partial<AuthLimits> } = {}): Promise<LocalStore> {
   if (!isAbsolute(directory)) throw new Error("Local storage requires an absolute dedicated directory")
   const timeout = options.lockTimeoutMs ?? 5000
   if (!Number.isFinite(timeout) || timeout < 0) throw new Error("Invalid lock timeout")
@@ -60,23 +61,27 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
       throw error
     }
   }
-  const initial = connect()
-  try {
-    await retryLock(() => initial.exec("PRAGMA journal_mode=WAL"), timeout)
-    await retryLock(() => initial.exec("BEGIN IMMEDIATE"), timeout)
+  const authentication = await (async () => {
+    const initial = connect()
     try {
-      initial.exec(`
-        CREATE TABLE IF NOT EXISTS snapshots (surface TEXT PRIMARY KEY, payload TEXT NOT NULL);
-        CREATE TABLE IF NOT EXISTS blobs (surface TEXT NOT NULL, key TEXT NOT NULL, payload BLOB NOT NULL, type TEXT NOT NULL, PRIMARY KEY (surface, key));
-        CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
-        COMMIT;
-      `)
+      await retryLock(() => initial.exec("PRAGMA journal_mode=WAL"), timeout)
+      await retryLock(() => initial.exec("BEGIN IMMEDIATE"), timeout)
+      try {
+        initial.exec(`
+          CREATE TABLE IF NOT EXISTS snapshots (surface TEXT PRIMARY KEY, payload TEXT NOT NULL);
+          CREATE TABLE IF NOT EXISTS blobs (surface TEXT NOT NULL, key TEXT NOT NULL, payload BLOB NOT NULL, type TEXT NOT NULL, PRIMARY KEY (surface, key));
+          CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
+        `)
+        const limits = initializeAuthentication(initial, options.authentication)
+        initial.exec("COMMIT")
+        return limits
+      } finally {
+        if (initial.inTransaction) initial.exec("ROLLBACK")
+      }
     } finally {
-      if (initial.inTransaction) initial.exec("ROLLBACK")
+      initial.close()
     }
-  } finally {
-    initial.close()
-  }
+  })()
 
   // This is a memo of the pure v1 decoder, not of a transaction or authority.
   // Every caller still observes SQL under the existing lock. Only immutable
@@ -187,6 +192,28 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
     void pending.then(() => active.delete(pending), () => active.delete(pending))
     return pending
   }
+
+  const secrets = createAuthenticationSecrets({
+    limits: authentication,
+    // Authority must observe current committed auth state, independently of an
+    // older business snapshot. No write or second business transaction is opened.
+    read: <T>(work: (db: Database) => T): T => {
+      if (lifecycle.closed) throw new Error("Local store is disposed")
+      const scope = context.getStore()
+      if (scope) requireScope(scope)
+      const db = connect()
+      try {
+        const value = work(db)
+        if (scope) requireScope(scope)
+        return value
+      } finally { db.close() }
+    },
+    write: <T>(work: (db: Database) => T) => operation(true, async (db) => {
+      const value = work(db)
+      db.exec("COMMIT")
+      return value
+    }),
+  })
 
   return {
     readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
@@ -413,30 +440,7 @@ export async function openLocalStore(directory: string, options: { lockTimeoutMs
         }
         return result.value
       }, transactionOptions?.signal),
-    secrets: {
-      put: (key, bytes, expiresAt) => operation(true, async (db) => {
-        if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")
-        db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?) ON CONFLICT (key) DO UPDATE SET payload=excluded.payload, expires_at=excluded.expires_at").run(key, bytes, expiresAt)
-        db.exec("COMMIT")
-      }),
-      // Authentication runs while the business writer owns the lock. This must never acquire a write lock, even for expired records.
-      get: (key, at) => operation(false, async (db) => {
-        if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
-        const row = db.query<{ payload: Uint8Array }, [string, number]>("SELECT payload FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
-        return row ? new Uint8Array(row.payload) : undefined
-      }),
-      take: (key, at) => operation(true, async (db) => {
-        if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
-        const row = db.query<{ payload: Uint8Array }, [string, number]>("SELECT payload FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
-        db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
-        db.exec("COMMIT")
-        return row ? new Uint8Array(row.payload) : undefined
-      }),
-      remove: (key) => operation(true, async (db) => {
-        db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
-        db.exec("COMMIT")
-      }),
-    },
+    secrets,
     dispose: () => {
       if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
       lifecycle.closed = true

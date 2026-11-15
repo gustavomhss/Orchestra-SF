@@ -1,0 +1,135 @@
+{
+  "schema": "sf2h.auth72.ci-ledger.v1",
+  "observed_at": "2026-11-15 03:21:07 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "policy": {
+    "execution": "GitHub Actions only through unchanged test-ci request interface",
+    "new_workflows": false,
+    "local_product_execution": false,
+    "local_typecheck": false,
+    "local_guards": false,
+    "full_epic": false,
+    "timeout_ms": 120000,
+    "timeout_policy": "Unchanged uploader default; no increase",
+    "sequential_mission_runs": true,
+    "source_pass_is_composed_pass": false
+  },
+  "B0": {
+    "purpose": "Executed before-fix counterexample for M70-AUTH-01; no product modifications to C28",
+    "W": "0f93897311a41b938ff321e9734ba99c3e92e2a4",
+    "tree": "6d0b5f26c87532451e675324635057c483ee5af7",
+    "parent": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "S": "e0a94d9c1b2abc6e957aa0886587fba8bca7a091",
+    "S_tree": "b8565e48822576193a38494eb21dc3759e0be763",
+    "S_parent": "0f93897311a41b938ff321e9734ba99c3e92e2a4",
+    "runner_delta": [
+      ".ci-run.json"
+    ],
+    "source_delta": [
+      "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/fixture.ts",
+      "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts"
+    ],
+    "request": "ci/B0-request.json",
+    "request_blob": "ef4617f972f5323d429899ab17b2016409ff18f1",
+    "branch": "ci-run-linux-astra-m72-0f938973-unknown-b0",
+    "run": 43671182262,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671182262",
+    "attempt": 1,
+    "head_sha": "e0a94d9c1b2abc6e957aa0886587fba8bca7a091",
+    "conclusion": "failure",
+    "classification": "EXPECTED_FAILURE_REAL_PRODUCT_COUNTEREXAMPLE",
+    "job": 132681354612,
+    "cleanup_job": 132681780474,
+    "cleanup": "success",
+    "artifacts": [],
+    "results": {
+      "pass": 0,
+      "fail": 1,
+      "filtered": 1,
+      "expect_calls": 50,
+      "files": 1,
+      "tests": 1,
+      "duration_ms": 208
+    },
+    "counterexample": {
+      "requests": 16,
+      "never_issued_handles": 32,
+      "authentication_payloads_rows": {
+        "before": 1,
+        "after": 33
+      },
+      "authentication_payloads_bytes": {
+        "before": 221,
+        "after": 253
+      },
+      "explanation": "32 legacy one-byte revocation markers were created for never-issued handles; failure is the equality assertion after successful 204 logouts, not fixture setup."
+    },
+    "omni": {
+      "nonce": "802dae79048c698af38724eee69e6470",
+      "status": "NOT_APPLICABLE",
+      "declaring_tests": 0,
+      "spawn": 0,
+      "delegated": 0
+    },
+    "log": "ci/B0-test-excerpt.log",
+    "exact_control_files": "ci/B0-source/",
+    "comparison_limits": "B0 and R1 retain the same no-growth discriminator. Entire helper/test bytes differ: R1 additionally supports a lockTimeout fixture option and asserts new bounded stats after the shared equality. No byte-identical claim."
+  },
+  "R1": {
+    "purpose": "Corrected W1 source regressions, not readonly59 or installed Microsoft composition",
+    "W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+    "S": "dda8ba9d0624b921d7b206f96c55ea9aa25d4955",
+    "S_tree": "3776c744a50643a6c905ab075ac88c2ac4098903",
+    "S_parent": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "runner_delta": [
+      ".ci-run.json"
+    ],
+    "request": "ci/R1-request.json",
+    "request_blob": "84cab68d43229fd63767c1ca057db134823d8652",
+    "branch": "ci-run-linux-astra-m72-22b4e97c-retention-r1",
+    "run": 43671466268,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268",
+    "attempt": 1,
+    "head_sha": "dda8ba9d0624b921d7b206f96c55ea9aa25d4955",
+    "conclusion": "success",
+    "job": 132682240447,
+    "cleanup_job": 132682737016,
+    "cleanup": "success",
+    "artifacts": [],
+    "results": {
+      "pass": 138,
+      "skip": 2,
+      "fail": 0,
+      "expect_calls": 1279,
+      "files": 11,
+      "tests": 140,
+      "duration_ms": 14380,
+      "new_source_tests_pass": 24,
+      "existing_tests_pass": 114
+    },
+    "skips": [
+      "rejects foreign UID directory (requires root fixture privileges)",
+      "rejects foreign UID database (requires root fixture privileges)"
+    ],
+    "skips_provenance": "Both are unchanged preexisting local-store tests; no new skips, timeouts or weakened foreign fixtures.",
+    "omni": {
+      "nonce": "b347fa51a8af27ecaa03df6be0fb47ba",
+      "status": "NOT_APPLICABLE",
+      "declaring_tests": 0,
+      "spawn": 0,
+      "delegated": 0
+    },
+    "runner": "bun test v1.3.14 (0d9b296a)",
+    "log": "ci/R1-test-excerpt.log",
+    "before_after": "Same unknown-handle no-growth discriminator now passes; row/byte equality and zero pending revocations asserted, not a claimed destructive capacity benchmark."
+  },
+  "artifact_policy": "The unchanged Bun lane publishes no test artifacts for these selections; [] was queried through GitHub MCP. Durable excerpts preserve actual test output, requests and immutable run/job/source identities.",
+  "dedup": "Each unique W/S/request was looked up before creating its ci-run ref; B0 terminal preceded R1 dispatch. No mission72 run left in flight.",
+  "pending": [
+    "45 compiler and guards receipt",
+    "71 applied readonly59+72 composition and affected installed lifecycle tests",
+    "Post-intake cold review on composed target",
+    "S0 global selections/AM/reviews/C-G7D-G8"
+  ]
+}

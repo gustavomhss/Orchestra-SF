@@ -1,0 +1,42 @@
+{
+  "schema": "sf2h.auth72.compiler-request.v1",
+  "owner": 45,
+  "status": "REQUESTED_NOT_RUN_BY_72_NO_AUTHORITATIVE_45_RECEIPT",
+  "request_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888426195",
+  "source": {
+    "branch": "auth-retention-fix",
+    "W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+    "draft_pr": 84
+  },
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "observed_dev": "a1d37698a7bb097c1578f827eba6a19b9917ef07",
+  "requirements": [
+    "Use existing45 workflow/request interface and dedup on exact W/tree/commands/config/base.",
+    "Record actual dev/HEAD/tree, commands, diagnostics grouped own/inherited, job/run URLs and conclusion.",
+    "No workflow or dependency changes needed; no Protocol/Server HttpApi change, so regeneration not applicable.",
+    "Source W1 test R1 does not substitute compiler/guards. Documentation-only terminal descendant does not change tested product blobs; do not relabel W1 tests as terminal-head execution.",
+    "A71 composed candidate needs its own exact-head request and proof, especially if74 changes entry/CLI."
+  ],
+  "last_check": {
+    "time": "2026-11-15 03:21:07 UTC",
+    "surface": "PR32 issue comments read through GitHub MCP",
+    "result": "Request present; no response identifying W1 compiler/guards receipt was observed."
+  },
+  "source_after_request_changed": false,
+  "authority": {
+    "local_execution": false,
+    "workflow_taken": false,
+    "refs45_moved": false,
+    "global_release": false
+  }
+}

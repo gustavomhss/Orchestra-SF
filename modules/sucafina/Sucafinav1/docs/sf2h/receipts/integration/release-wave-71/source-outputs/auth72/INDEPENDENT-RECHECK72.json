@@ -1,0 +1,179 @@
+{
+  "schema": "mission72.independent-cold-recheck.v1",
+  "reviewed_at": "2026-11-15 03:18:19 UTC",
+  "reviewer": "independent child agent /root/ci_and_readonly; authored neither identity/store implementation nor auth-maintenance implementation",
+  "independence": {
+    "product_or_test_edits": false,
+    "local_product_execution": false,
+    "remote_mutations": false,
+    "source_reads": "GitHub MCP and scratch mirrors",
+    "static_review_only_until_actions_logs": true,
+    "authored_five_product_files": false,
+    "authored_twenty_four_source_regressions": false,
+    "authored_material": "Only inert composition proposals/reference mirrors and this independent review report."
+  },
+  "verdict": "NO_OPEN_BLOCKING_FINDING_SOURCE_AND_R1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "sha": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "blob": "d82b40928a235f2d249e45e59732f281dfded97f",
+        "scratch_match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+        "scratch_match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "blob": "7cca20a0fc9741c0b57bda9684e5e69fedcc027b",
+        "scratch_match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "blob": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+        "scratch_match": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+        "scratch_match": true
+      }
+    ]
+  },
+  "findings": [
+    {
+      "id": "CR72-01",
+      "state": "RESOLVED_AT_W1",
+      "before": "Unconditional finally removed the local immediate revocation fence after admission/COMMIT failure, allowing delayed Graph completion after a failed logout to ignore cancellation intent.",
+      "after": "Successful write promise releases the fence after COMMIT. Failure clears only the in-flight promise, retains one fixed safe expiry and permits retry. Collection removes expired failed entries without renewing lifetime.",
+      "qualification": "No claim that an already successful 204 logout could be bypassed in the original candidate.",
+      "hosted_regression": "CR72-01 failed durable logout keeps its fence until a successful retry",
+      "hosted_result": "PASS R1 job132682240447"
+    },
+    {
+      "id": "CR72-COMPOSED-TEST-SCOPE",
+      "state": "CORRECTED_IN_INERT_TEST_ONLY",
+      "before": "Composed readonly test launched logout inside readSnapshotRoot AsyncLocalStorage scope, so it would attempt a forbidden nested write.",
+      "after": "Logout is launched outside the root callback while Graph is held; Graph is released before awaiting queued durable logout.",
+      "execution": "INERT_NOT_RUN; two readonly composition tests excluded from source qualification."
+    }
+  ],
+  "inspected_invariants": [
+    "Durable parent pending/completed/revoked correlation survives consumed challenge expiry and is required for child admission.",
+    "Unknown valid-format handles allocate neither persistent row nor pending-map entry.",
+    "Atomic writer-locked admission enforces durable shared policy, record/challenge/byte/payload caps without evicting valid state.",
+    "Session ciphertext uses unchanged AES-256-GCM and storage-key AAD; refresh preserves original absolute expiry.",
+    "Same-store immediate fence precedes first await; fresh committed metadata reads preserve cross-instance/restart revocation.",
+    "Fixed maximum login correlation horizon is challenge expiry plus 28,800,000 ms; no logout retry extends the durable deadline.",
+    "Refresh promise map admission is bounded even when prior generations expire and are collected while provider promises remain unresolved.",
+    "Finite managed backlog drains through indexed payload-first collection; quota rejects new issuance while over cap.",
+    "C28 local-store diff changes auth initialization and secrets wiring only; readonly59's four store hunks require composition by71 and are not replaced in source72.",
+    "Local entry starts cleanup outside request/business scopes and disposes maintenance before the store.",
+    "Null token/person cases continue to fail closed; refresh does not change the subject."
+  ],
+  "limits": {
+    "logical_records": 4096,
+    "challenges": 512,
+    "total_payload_bytes": 33554432,
+    "individual_payload_bytes": 65536,
+    "combined_deletions_per_batch": 128,
+    "default_interval_ms": 60000,
+    "max_session_ms": 28800000,
+    "max_challenge_ms": 600000,
+    "max_login_correlation_after_challenge_expiry_ms": 28800000,
+    "interpretation": "Logical records count issuance rows plus unmatched legacy payload rows. At most two managed auth rows per logical record; byte cap is payload table bytes, not SQLite physical file size."
+  },
+  "legacy": {
+    "review": "Existing live managed ciphertext and legacy marker rows remain readable and counted. Revoke/take converts a known logical key without raising logical key count. No eager unbounded migration occurs.",
+    "qualification": "Source test covers over-cap legacy backlog retirement; mixed old/new binaries during a rolling upgrade were not exercised."
+  },
+  "evidence": {
+    "B0": {
+      "run": 43671182262,
+      "job": 132681354612,
+      "source_with_control": "0f93897311a41b938ff321e9734ba99c3e92e2a4",
+      "runner": "e0a94d9c1b2abc6e957aa0886587fba8bca7a091",
+      "source_parent": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "only_added_files": [
+        "test/product/auth-retention-fix/fixture.ts",
+        "test/product/auth-retention-fix/unknown-handles.test.ts"
+      ],
+      "result": "EXPECTED_FAILURE",
+      "pass": 0,
+      "fail": 1,
+      "observed": {
+        "payload_rows_before": 1,
+        "payload_rows_after": 33,
+        "payload_table_bytes_before": 221,
+        "payload_table_bytes_after": 253
+      },
+      "meaning": "Sixteen same-origin logout requests with two never-issued handles each allocated32 legacy markers on C28."
+    },
+    "R1": {
+      "run": 43671466268,
+      "job": 132682240447,
+      "cleanup_job": 132682737016,
+      "runner": "dda8ba9d0624b921d7b206f96c55ea9aa25d4955",
+      "runner_parent": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "runner_only_changed_file": ".ci-run.json",
+      "workflow": ".github/workflows/test-ci.yml",
+      "event": "push",
+      "attempt": 1,
+      "status": "completed",
+      "conclusion": "success",
+      "pass": 138,
+      "skip": 2,
+      "fail": 0,
+      "expect_calls": 1279,
+      "test_count": 140,
+      "file_count": 11,
+      "test_duration_seconds": 14.38,
+      "new_regressions_passed": 24,
+      "skips": "Inherited local-store foreign UID directory/database tests require root fixture privileges.",
+      "omni_nonce": "b347fa51a8af27ecaa03df6be0fb47ba",
+      "omni_verdict": "not applicable (focused: no declaring test ran); no spawn or delegation",
+      "artifacts": [],
+      "cleanup": "success and runner ref independently returned404",
+      "request": {
+        "package": "sucafina",
+        "packageSelector": "packages/sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+          "./Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+          "./Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+          "./Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+          "./Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+          "./Sucafinav1/test/local-identity.test.ts",
+          "./Sucafinav1/test/local-store.test.ts",
+          "./Sucafinav1/test/microsoft-session.test.ts",
+          "./Sucafinav1/test/microsoft-entra-client.test.ts",
+          "./Sucafinav1/test/microsoft-configuration.test.ts",
+          "./Sucafinav1/test/operator-identity.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      }
+    }
+  },
+  "not_claimed": [
+    "readonly59 composed snapshot execution",
+    "microsoft-composition fixture-map qualification",
+    "compiler or guards45 PASS",
+    "live Microsoft tenant/Graph provisioning proof",
+    "integrated sf2-stack qualification",
+    "FINAL campaign/epic acceptance"
+  ],
+  "status": "PASS",
+  "scope": "bounded source recheck",
+  "finding_status": "NO_BLOCKING_FINDING",
+  "global_authority": "S0/71/45; no composed, integrated or FINAL global PASS asserted."
+}

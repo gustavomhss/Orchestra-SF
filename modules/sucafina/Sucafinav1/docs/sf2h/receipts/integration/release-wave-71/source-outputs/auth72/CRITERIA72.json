@@ -1,0 +1,1092 @@
+{
+  "schema": "sf2h.auth-retention-fix.criteria.v1",
+  "mission": 72,
+  "branch": "auth-retention-fix",
+  "finding": "M70-AUTH-01",
+  "disposition": "SOURCE_R1_AND_INDEPENDENT_RECHECK_DONE_COMPOSITION_AND_FINAL_ACCEPTANCE_PENDING",
+  "GLOBAL_RELEASE": false,
+  "scope_note": "Matriz restrita ao grant72. Não declara contagem ou fechamento de todos os critérios da campanha.",
+  "normative_sources": {
+    "mission_packet": {
+      "commit": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/auth-retention-fix.json",
+      "blob": "3a15dc68cfab3e40214db67c4d2d27484bba1990",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1f01a01f51521ae39b7a4e730acefde3b9999891/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/auth-retention-fix.json"
+    },
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "actor_pack": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-B.json",
+      "blob": "7597a7e508228ac2878a9061887ac77fc70ad009",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-B.json",
+      "note": "Pacote completo lido; o espelho WP10 foi consultado para os critérios exatos de T03, sem ler todos os actor packs."
+    },
+    "common": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    "wp10": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.md",
+      "blob": "a8e15e10c2353ad4f21ef266f84b72c46cbda755",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP10.md"
+    },
+    "review70": {
+      "release_commit": "9c6946c31887ca1899a99ce120921c8bf937e721",
+      "reviewed_source": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "finding_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9c6946c31887ca1899a99ce120921c8bf937e721/modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/FINDINGS70.json",
+      "remediation_url": "https://github.com/gustavomhss/Orchestra-SF/blob/9c6946c31887ca1899a99ce120921c8bf937e721/modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/REMEDIATION70.md",
+      "original_evidence": "STATIC_CAUSAL_NOT_EXECUTED",
+      "severity": "P2 / MEDIUM",
+      "mandatory": true
+    }
+  },
+  "source_identity": {
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "W1": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "W1_tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+    "S": "dda8ba9d0624b921d7b206f96c55ea9aa25d4955",
+    "S_tree": "3776c744a50643a6c905ab075ac88c2ac4098903",
+    "S_parents": [
+      "22b4e97cfbb22703eeedb34af3b33ba74d323806"
+    ],
+    "W1_to_S": [
+      {
+        "path": ".ci-run.json",
+        "status": "added",
+        "blob": "84cab68d43229fd63767c1ca057db134823d8652"
+      }
+    ],
+    "independent_of_delivery_commit": true,
+    "note": "Evidência é atribuída a W1/S, não a um futuro candidato integrado ou ao commit documental que contém esta matriz."
+  },
+  "evidence": {
+    "CI_receipt": "CI72.json",
+    "B0": {
+      "status": "EXPECTED_BEHAVIORAL_FAILURE_OBSERVED",
+      "W0": "0f93897311a41b938ff321e9734ba99c3e92e2a4",
+      "W0_tree": "6d0b5f26c87532451e675324635057c483ee5af7",
+      "S0": "e0a94d9c1b2abc6e957aa0886587fba8bca7a091",
+      "S0_tree": "b8565e48822576193a38494eb21dc3759e0be763",
+      "run_id": 43671182262,
+      "job_id": 132681354612,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671182262/job/132681354612",
+      "selected_test": "unknown.no-allocation",
+      "pass": 0,
+      "fail": 1,
+      "filtered_out": 1,
+      "expectations": 50,
+      "files": 1,
+      "observation": {
+        "logouts": 16,
+        "invented_handles": 32,
+        "payload_rows_before": 1,
+        "payload_rows_after": 33,
+        "payload_bytes_before": 221,
+        "payload_bytes_after": 253
+      },
+      "failure_boundary": "Igualdade física de contagem/bytes da tabela; não falha de setup.",
+      "comparison_note": "O discriminante de igualdade física permanece em R1. Fixture e arquivo completo não são byte-identical: lockTimeoutMs e stats posterior foram acrescentados.",
+      "scope_note": "B0 não reproduziu executavelmente todos os caminhos de crescimento descritos na revisão70."
+    },
+    "R1": {
+      "run_id": 43671466268,
+      "job_id": 132682240447,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447",
+      "attempt": 1,
+      "runner": "ubuntu-24.04",
+      "workflow": "test-ci",
+      "run_conclusion": "success",
+      "job_conclusion": "success",
+      "started_at": "2026-11-15T03:14:43Z",
+      "run_updated_at": "2026-11-15T03:16:53Z",
+      "pass": 138,
+      "skip": 2,
+      "fail": 0,
+      "expectations": 1279,
+      "collected_tests": 140,
+      "files": 11,
+      "test_duration_seconds": 14.38,
+      "new_tests_pass": 24,
+      "new_tests_skip": 0,
+      "new_tests_fail": 0,
+      "inherited_skips": [
+        {
+          "name": "rejects foreign UID directory (requires root fixture privileges)",
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts"
+        },
+        {
+          "name": "rejects foreign UID database (requires root fixture privileges)",
+          "path": "modules/sucafina/Sucafinav1/test/local-store.test.ts"
+        }
+      ],
+      "selection": [
+        "./Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+        "./Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+        "./Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+        "./Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+        "./Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+        "./Sucafinav1/test/local-identity.test.ts",
+        "./Sucafinav1/test/local-store.test.ts",
+        "./Sucafinav1/test/microsoft-session.test.ts",
+        "./Sucafinav1/test/microsoft-entra-client.test.ts",
+        "./Sucafinav1/test/microsoft-configuration.test.ts",
+        "./Sucafinav1/test/operator-identity.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "fixture": "JWTs assinados/PKCE/nonce/cliente OIDC reais sobre transporte Microsoft sintético; SQLite real.",
+      "qualification_limits": [
+        "Não é prova de tenant Microsoft corporativo/B2B/consentimento/proxy.",
+        "Não executou os dois casos readonly59 inertes nem qualificou a composição final de local/entry.",
+        "Omni control explicitamente não aplicável; este run não prova Omni.",
+        "Não substitui checks/typecheck/guards de45 ou gates finais do candidato composto."
+      ],
+      "metadata_and_logs_read_via": "GitHub MCP",
+      "local_product_execution": false
+    }
+  },
+  "limits": {
+    "scope": "Uma política durável por instalação SQLite; quotas de emissão Microsoft gerenciada compartilhadas por conexões/instâncias que usam a implementação nova.",
+    "trusted_generic_put_compatibility": "put legado para chaves não gerenciadas permanece sem esta quota para adapters locais confiáveis e pode excedê-la por esse caminho interno. Esses payloads contam contra a admissão gerenciada, que falha fechada sem capacidade. O cap não é universal para qualquer writer com acesso ao banco.",
+    "defaults": {
+      "maxRecords": 4096,
+      "maxChallenges": 512,
+      "maxBytes": 33554432,
+      "maxPayloadBytes": 65536,
+      "batchSize": 128,
+      "maintenanceIntervalMs": 60000
+    },
+    "configuration": "Overrides iniciais inteiros positivos, inferiores ou iguais aos máximos de fábrica. Reopen sem override adota política existente; override divergente falha. Não há alteração online implícita.",
+    "record_metric": "COUNT(authentication_issuance) + payloads sem linha correspondente de emissão; todos os estados contam. Pai e sessão são registros distintos.",
+    "challenge_metric": "Emissões login nos estados issued/pending + payloads de challenge legado sem emissão correspondente.",
+    "byte_metric": "Soma de length(payload) de toda a tabela, inclusive ciphertext, marcadores legados de um byte e valores de adapters genéricos confiáveis. Não mede tamanho físico do arquivo, WAL, índices ou memória total.",
+    "memory_caps": {
+      "pending_revocations_per_store": 4096,
+      "pending_refreshes_per_identity": 4096,
+      "actual_cap": "Acompanha maxRecords da política persistida; promises/intenções não são desalojadas para admitir trabalho novo."
+    },
+    "saturation": {
+      "login_status": 503,
+      "callback_status": 403,
+      "refresh_behavior": "Preserva payload anterior se a substituição exceder o cap individual ou total.",
+      "valid_eviction": false
+    },
+    "unknown_handles": {
+      "persistent_rows_added": 0,
+      "map_entries_added": 0,
+      "response": "204 e limpeza de cookies sem escrita; formato válido não comprova emissão."
+    },
+    "legacy_overcap": "Backlog legado é contado; novos registros recusados até liberar capacidade. Não há limpeza destrutiva na abertura nem desalojamento de legado válido.",
+    "physical_storage": "DELETE não promete compactação imediata do SQLite/WAL ou apagamento seguro. Sem VACUUM nesta missão."
+  },
+  "retention": {
+    "maxChallengeMs": 600000,
+    "maxSessionMs": 28800000,
+    "issued_challenge": "retainUntil = expiresAt",
+    "consumed_or_completed_challenge": "retainUntil = challenge.expiresAt + 28800000; no máximo 29400000 ms após emissão com TTL máximo",
+    "session": "retainUntil = expiração absoluta original; refresh não desloca o prazo",
+    "repeated_logout": "Preserva expiresAt e retainUntil; não renova retenção",
+    "failed_local_revocation": "Fence retido até horizonte fixo. Para login inclui challenge expiry+8h porque um peer pode consumir enquanto a escrita aguarda. Para sessão usa expiração absoluta.",
+    "cleanup": "Até128linhas SQL agregadas por passagem padrão; payloads expirados e depois correlações com horizonte seguro.",
+    "schedule": "Passagem inicial + timer60s fora de contexto request/business; singleflight; dispose cancela timer e drena lote admitido.",
+    "physical_removal_latency": "Depende de backlog e disponibilidade do writer/processo. 60s não é SLA de esvaziamento; validade lógica termina na expiração independentemente de GC."
+  },
+  "tests": [
+    {
+      "id": "unknown.no-allocation",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+      "name": "same-origin logout with never-issued syntactic handles allocates no persistent authentication state",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+      "expected_behavior": "16 logouts com 32 handles sintáticos nunca emitidos preservam todas as contagens/tamanhos; pendingRevocations permanece zero; challenge real ainda conclui.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "unknown.idempotent",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+      "name": "repeated logout of a known handle is idempotent across identities",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+      "expected_behavior": "Logout repetido em duas identidades não cria registros nem desloca expiresAt/retainUntil; a sessão permanece negada.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "retention.challenge-boundary",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "name": "abandoned challenge is unreadable and physically collectible exactly at its expiry",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "expected_behavior": "Challenge é legível a T-1 ms, ilegível em T e coletado com sua correlação; leitura vencida não faz escrita.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "retention.absolute-session",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "name": "refresh never moves absolute session expiry and idle collection reclaims its ciphertext",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "expected_behavior": "Refresh conserva expiração absoluta; sessão é válida a T-1 ms, negada em T e seu ciphertext é retirado por collect.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "retention.pending-parent",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "name": "collection after challenge TTL preserves consumed correlation and cross-instance cancellation",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "expected_behavior": "Após take, GC no TTL do challenge preserva pai pending até challenge expiry+8h; peer cancela e callback não emite sessão.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "retention.safe-horizon",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "name": "a callback beyond the fixed retention horizon cannot resurrect a purged parent",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "expected_behavior": "Pai permanece a retainUntil-1 ms; em retainUntil pode ser coletado; emissão derivada e callback tardio são recusados.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "retention.batch-budget",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "name": "each collector pass has one total deletion budget across payloads and handles",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+      "expected_behavior": "Com batchSize3, cada passagem remove no máximo três linhas entre ambas as tabelas e o backlog avança até zero.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "capacity.shared-records",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "name": "two stores share the record cap and never evict an issued challenge or revocation fence",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "expected_behavior": "Dois stores concorrentes compartilham cap3, recusam a quarta emissão e preservam registros emitidos/revogados até coleta segura.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "capacity.challenge-cap",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "name": "challenge admission has its own shared cap before the total record cap is reached",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "expected_behavior": "Cap de dois challenges recusa nova emissão apesar de ainda existir capacidade no limite total.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "capacity.session-admission",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "name": "a consumed challenge cannot mint a session past the global record cap",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "expected_behavior": "Callback não ganha uma sessão quando o limite total está cheio; pai consumido continua pending e outro challenge é preservado.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "capacity.payload-bytes",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "name": "total ciphertext and individual payload limits reject admission without losing prior records",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "expected_behavior": "Cap total64bytes e individual32bytes são verificados; retirar payload com take libera bytes e conserva correlação contada.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "capacity.refresh-preservation",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "name": "oversized refresh writes preserve the signed session bytes, deadline and person",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "expected_behavior": "Refresh acima do cap individual4096 ou total8192 preserva exatamente ciphertext anterior, AuthHandle e pessoa válida.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "capacity.persisted-policy",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "name": "lower capacity persists across reopen and a peer cannot silently raise it",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "expected_behavior": "Reopen sem override adota a política persistida; solicitação explícita divergente é recusada.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "capacity.legacy-backlog",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "name": "an over-cap legacy backlog is counted at reopen and retires only in bounded batches",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+      "expected_behavior": "Cinco payloads legados contam contra cap3; abertura não os apaga; lotes de dois retiram apenas vencidos e preservam o payload válido.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "races.consumed-restart",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "name": "consumed challenge remains cancellable in another instance and after reopening the store",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "expected_behavior": "Segredo já retirado por take não elimina cancelamento: peer revoga, reopen mantém negativa e callback pendente não cria sessão.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "races.before-session-write",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "name": "logout during a pending callback session write cannot expose a late credential",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "expected_behavior": "Logout em outra instância antes de authentication.issue impede credencial tardia.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "races.after-session-write",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "name": "a callback paused after committing the session still observes another instance logout",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "expected_behavior": "Logout depois do commit da sessão e antes do retorno do callback impede cookie e remove payload da sessão.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "races.duplicate-callback",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "name": "two instances cannot redeem the same challenge twice",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "expected_behavior": "Duas instâncias resgatam uma única vez; uma resposta303 e uma403, com um único token POST.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "races.refresh-restart",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "name": "restarted identity rejects copied session and late refresh after a durable logout",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "expected_behavior": "Logout durável vence a escrita tardia de refresh; reopen nega cópia do cookie e não reaparece payload de sessão.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "races.graph-logout",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "name": "another instance logout denies a Graph result already in flight",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "expected_behavior": "Graph em andamento não produz ator depois de logout concluído na outra instância.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "races.refresh-generations",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "name": "hung refresh admissions remain bounded across expired and collected session generations",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "expected_behavior": "Com cap3, três refreshes pendentes sobrevivem à expiração/GC de suas gerações; quarta sessão válida não inicia quarta chamada de refresh.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "races.failed-logout-fence",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "name": "CR72-01 failed durable logout keeps its fence until a successful retry",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "expected_behavior": "Writer real retido força timeout40ms/logout503; fence permanece revoked e Graph termina null; retry204 zera pendingRevocations e persiste após reopen.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "maintenance.idle",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+      "name": "idle lifecycle reclaims expired rows in bounded passes without an authentication request",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+      "expected_behavior": "Timer executa lotes unitários até retirar registros expirados sem nova requisição de autenticação; dispose interrompe os ciclos.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    },
+    {
+      "id": "maintenance.single-flight",
+      "id_kind": "LOCAL_TEST_REFERENCE_NOT_CANONICAL_CRITERION",
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+      "name": "maintenance is single flight and disposal waits for its admitted batch",
+      "source_url": "https://github.com/gustavomhss/Orchestra-SF/blob/22b4e97cfbb22703eeedb34af3b33ba74d323806/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+      "expected_behavior": "Chamadas simultâneas compartilham o lote em andamento; dispose aguarda sua conclusão.",
+      "observed": "PASS",
+      "evidence": "R1",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671466268/job/132682240447"
+    }
+  ],
+  "existing_regressions": {
+    "evidence": "R1",
+    "selected_files": [
+      "modules/sucafina/Sucafinav1/test/local-identity.test.ts",
+      "modules/sucafina/Sucafinav1/test/local-store.test.ts",
+      "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+      "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+      "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+      "modules/sucafina/Sucafinav1/test/operator-identity.test.ts"
+    ],
+    "observed_controls": [
+      "HTTPS uses opaque scoped cookies and actual encrypted private persistence",
+      "origin, installation and resource-tenant boundaries reject the same opaque cookie",
+      "absolute session expiry cannot be extended by refresh",
+      "tampering, AAD record relocation, wrong keys and changed operator identities fail closed",
+      "logout fences a pending authorization inside the real business transaction"
+    ],
+    "note": "Suítes legadas não foram enfraquecidas; os dois skips herdados estão discriminados em R1."
+  },
+  "mission_acceptance": [
+    {
+      "criterion": "mission72.acceptance[0]",
+      "requirement": "Correlação durável de emissão/consumo/pending/revogação entre instâncias; handle nunca emitido sem armazenamento; callback consumido ainda cancelável.",
+      "status": "SOURCE_BEHAVIOR_PROVEN",
+      "implementation": [
+        "authentication_issuance",
+        "take atômico para pending",
+        "issue vinculado a pai pending",
+        "revoke condicionado à emissão"
+      ],
+      "tests": [
+        {
+          "test": "unknown.no-allocation",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "unknown.idempotent",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.consumed-restart",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.before-session-write",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.after-session-write",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.duplicate-callback",
+          "evidence": "R1",
+          "observed": "PASS"
+        }
+      ],
+      "limitation": "Não prova rollout com callback antigo cujo take já apagou a única correlação."
+    },
+    {
+      "criterion": "mission72.acceptance[1]",
+      "requirement": "Emissão limitada, índices/GC por lotes independente de endpoint/operator, sem desalojamento válido/escrita aninhada, preservando crypto/AAD/expiração/fronteiras.",
+      "status": "SOURCE_MODULE_PROVEN_COMPOSITION_PENDING",
+      "implementation": [
+        "Admissão e contagem atômicas no writer SQLite",
+        "Política persistida",
+        "Índices expiry",
+        "Ciclo de manutenção fora do request",
+        "AES-GCM/AAD e expiração absoluta preservados"
+      ],
+      "tests": [
+        {
+          "test": "capacity.shared-records",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "capacity.challenge-cap",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "capacity.session-admission",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "capacity.payload-bytes",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "capacity.refresh-preservation",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "capacity.persisted-policy",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "capacity.legacy-backlog",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "retention.challenge-boundary",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "retention.absolute-session",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "retention.batch-budget",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "maintenance.idle",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "maintenance.single-flight",
+          "evidence": "R1",
+          "observed": "PASS"
+        }
+      ],
+      "existing_regression_evidence": "R1",
+      "remaining": [
+        "Qualificar ligação de lifecycle no candidato composto exato.",
+        "Executar composto readonly59, inclusive poison de manutenção aninhada.",
+        "Concluir checks45."
+      ]
+    },
+    {
+      "criterion": "mission72.acceptance[2]",
+      "requirement": "Corridas de callback/logout/refresh/Graph, duas instâncias, restart, duplicata, GC e limite de expiração; medir contagens/bytes sem carga destrutiva.",
+      "status": "SOURCE_SELECTED_RACES_PROVEN",
+      "tests": [
+        {
+          "test": "races.consumed-restart",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.before-session-write",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.after-session-write",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.duplicate-callback",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.refresh-restart",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.graph-logout",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.refresh-generations",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "races.failed-logout-fence",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "retention.challenge-boundary",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "retention.absolute-session",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "retention.pending-parent",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "retention.safe-horizon",
+          "evidence": "R1",
+          "observed": "PASS"
+        },
+        {
+          "test": "retention.batch-budget",
+          "evidence": "R1",
+          "observed": "PASS"
+        }
+      ],
+      "measurement": "Contagens SQL/bytes e chamadas observadas; payloads/tokens não são emitidos como evidência.",
+      "limitation": "Cenários discriminantes executados não equivalem a prova exaustiva de todos os escalonamentos ou capacidade produtiva."
+    },
+    {
+      "criterion": "mission72.acceptance[3]",
+      "requirement": "Base C28, composição readonly59 por71, paths/API/semântica preservados e rechecagem fria independente depois do release.",
+      "status": "SOURCE_RECHECK_DONE_COMPOSITION_AND_FINAL_RECHECK_PENDING",
+      "source_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "materials": [
+        "owned/MANIFEST.json",
+        "owned/source-and-tests.patch",
+        "composition/readonly59/manifest.json",
+        "composition/readonly59/auth-on-readonly59.patch",
+        "composition/readonly59/readonly-composed.test.ts.txt",
+        "composition/composition-pointer-manifest.json"
+      ],
+      "authored_composition_tests": [
+        "readonly.external-logout",
+        "readonly.nested-maintenance-poison"
+      ],
+      "executed_composition_tests": 0,
+      "remaining": [
+        "71 ACK e composição com pre/postimages exatos.",
+        "Novo mapa/pointer Microsoft coerente, preservando mapa55/archives49.",
+        "Rechecagem independente do candidato composto/final sem autoria da seção; a rechecagem de origem W1/R1 já está concluída em INDEPENDENT-RECHECK72."
+      ]
+    }
+  ],
+  "review70": {
+    "finding": "M70-AUTH-01",
+    "status": "SOURCE_RECHECK_NO_OPEN_BLOCKING_FINDING_COMPOSITION_AND_FINAL_PENDING",
+    "closed": false,
+    "impact": "Crescimento persistente e retenção desnecessária de ciphertext, com consumo potencial de SQLite/memória/CPU. OOM/indisponibilidade não foram medidos.",
+    "excluded_claims": [
+      "Plaintext de tokens",
+      "Sessão expirada aceita",
+      "Bypass OIDC",
+      "Aceitação do tenant corporativo"
+    ],
+    "before": "B0 confirma crescimento por handles nunca emitidos; os demais caminhos eram achados causais estáticos70.",
+    "after": "R1 cobre ausência de alocação, expiração/coleta, capacidade compartilhada e preservação das corridas.",
+    "required_corrections": [
+      {
+        "source_path": "findings[id=M70-AUTH-01].correction.required[0]",
+        "requirement": "Registrar duravelmente emissão/consumo/revogação e correlação de callback em andamento.",
+        "tests": [
+          {
+            "test": "races.consumed-restart",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "races.duplicate-callback",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "retention.pending-parent",
+            "evidence": "R1",
+            "observed": "PASS"
+          }
+        ],
+        "status": "SOURCE_PROVEN"
+      },
+      {
+        "source_path": "findings[id=M70-AUTH-01].correction.required[1]",
+        "requirement": "Não persistir revogação para handle nunca emitido; preservar cancelamento de challenge já consumido por callback pendente.",
+        "tests": [
+          {
+            "test": "unknown.no-allocation",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "races.consumed-restart",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "races.before-session-write",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "races.after-session-write",
+            "evidence": "R1",
+            "observed": "PASS"
+          }
+        ],
+        "status": "SOURCE_PROVEN"
+      },
+      {
+        "source_path": "findings[id=M70-AUTH-01].correction.required[2]",
+        "requirement": "Expurgo por lotes fora de leituras/transações de negócio e capacidade compartilhada.",
+        "tests": [
+          {
+            "test": "retention.batch-budget",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "capacity.shared-records",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "capacity.challenge-cap",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "capacity.legacy-backlog",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "maintenance.idle",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "maintenance.single-flight",
+            "evidence": "R1",
+            "observed": "PASS"
+          }
+        ],
+        "status": "SOURCE_MODULE_PROVEN_READONLY_COMPOSITION_PENDING"
+      },
+      {
+        "source_path": "findings[id=M70-AUTH-01].correction.required[3]",
+        "requirement": "Fences até nenhum callback/sessão derivada admissível sobreviver; preservar criptografia/idempotência.",
+        "tests": [
+          {
+            "test": "retention.pending-parent",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "retention.safe-horizon",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "unknown.idempotent",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "races.refresh-restart",
+            "evidence": "R1",
+            "observed": "PASS"
+          },
+          {
+            "test": "races.failed-logout-fence",
+            "evidence": "R1",
+            "observed": "PASS"
+          }
+        ],
+        "existing_regression_evidence": "R1",
+        "status": "SOURCE_PROVEN"
+      }
+    ],
+    "remediation_design_mapping": [
+      {
+        "section": "AUTH-01/Desenho proposto/item1",
+        "consequence": "Registro durável e compartilhado condiciona admissão/cancelamento.",
+        "tests": [
+          "races.consumed-restart",
+          "capacity.shared-records"
+        ]
+      },
+      {
+        "section": "AUTH-01/Desenho proposto/item2",
+        "consequence": "take remove segredo e conserva pending atomicamente.",
+        "tests": [
+          "races.duplicate-callback",
+          "retention.pending-parent"
+        ]
+      },
+      {
+        "section": "AUTH-01/Desenho proposto/item3",
+        "consequence": "Desconhecido não aloca; conhecido só204 após persistência, com fence imediato.",
+        "tests": [
+          "unknown.no-allocation",
+          "unknown.idempotent",
+          "races.failed-logout-fence"
+        ]
+      },
+      {
+        "section": "AUTH-01/Desenho proposto/item4",
+        "consequence": "Ausência de payload após take não elimina correlação/cancelamento.",
+        "tests": [
+          "races.consumed-restart"
+        ]
+      },
+      {
+        "section": "AUTH-01/Desenho proposto/item5",
+        "consequence": "Pai consumido conserva challenge expiry+8h, independente de lifetime curto do peer.",
+        "tests": [
+          "retention.pending-parent",
+          "retention.safe-horizon"
+        ]
+      },
+      {
+        "section": "AUTH-01/Desenho proposto/item6",
+        "consequence": "GC indexado, incremental, ocioso e independente de operator; qualificação da ligação e readonly pendente.",
+        "tests": [
+          "retention.batch-budget",
+          "maintenance.idle",
+          "maintenance.single-flight"
+        ],
+        "composed_not_run": [
+          "readonly.nested-maintenance-poison"
+        ]
+      },
+      {
+        "section": "AUTH-01/Desenho proposto/item7",
+        "consequence": "Quotas persistidas compartilhadas, sem desalojar válidos; Maps também limitados.",
+        "tests": [
+          "capacity.shared-records",
+          "capacity.challenge-cap",
+          "capacity.persisted-policy",
+          "races.refresh-generations",
+          "unknown.no-allocation"
+        ]
+      },
+      {
+        "section": "AUTH-01/Desenho proposto/item8",
+        "consequence": "Coleta respeita horizonte seguro; bytes de payload e tamanho físico SQLite são métricas diferentes.",
+        "tests": [
+          "retention.safe-horizon",
+          "capacity.legacy-backlog"
+        ],
+        "physical_compaction": "NOT_IMPLEMENTED_NOT_CLAIMED"
+      }
+    ],
+    "recheck": {
+      "required": true,
+      "status": "SOURCE_DONE_COMPOSED_AND_FINAL_PENDING",
+      "source_review": {
+        "status": "DONE",
+        "verdict": "NO_OPEN_BLOCKING_FINDING_SOURCE_AND_R1",
+        "reviewer": "/root/ci_and_readonly",
+        "authored_five_product_files": false,
+        "authored_twenty_four_source_regressions": false,
+        "source_sha": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+        "evidence": ["INDEPENDENT-RECHECK72.md", "INDEPENDENT-RECHECK72.json"],
+        "scope_limit": "Revisor produziu propostas inertes de composição; esse parecer não aceita a própria proposta nem o candidato composto/final."
+      },
+      "composed_final_review": {
+        "status": "PENDING",
+        "owner": "Revisor independente designado, sem autoria da seção"
+      },
+      "owner": "Rechecagem de origem por /root/ci_and_readonly concluída; rechecagem composta/final por revisor sem autoria pendente",
+      "evidence_to_recheck": [
+        "W1/S/R1 e CI72.json",
+        "Delta causal contra FINDINGS70/REMEDIATION70",
+        "B0 vsR1 sem alegar fixture byte-identical",
+        "Composição readonly59 e novo mapa/pointer",
+        "Limitações de rollout/migração/armazenamento físico"
+      ],
+      "source_cases": [
+        "races.consumed-restart",
+        "races.before-session-write",
+        "races.after-session-write",
+        "races.duplicate-callback",
+        "races.refresh-restart",
+        "races.graph-logout",
+        "races.refresh-generations",
+        "races.failed-logout-fence"
+      ],
+      "acceptance_authority": "71 integra após ACK;45 conserva checks;S0 conserva aceite final."
+    }
+  },
+  "canonical_review_criteria": [
+    {
+      "id": "WP10.T03.QLT.01",
+      "text": "Pareceres citam cenário, comportamento e consequência; evitar notas genéricas ou placares sem evidência.",
+      "status": "SOURCE_INDEPENDENT_RECHECK_DONE_FINAL_SCOPE_PENDING",
+      "evidence": [
+        "RETENTION-DESIGN72.md",
+        "tests[].expected_behavior",
+        "B0/R1",
+        "review70"
+      ],
+      "note": "Os totais acompanham os cenários; INDEPENDENT-RECHECK72 registra o julgamento independente concluído de W1/R1. O candidato composto/final permanece fora desse aceite."
+    },
+    {
+      "id": "WP10.T03.QLT.40",
+      "text": "Achado registra critério/evidência/impacto/correção/recheck e SHA.",
+      "status": "SOURCE_INDEPENDENT_RECHECK_DONE_FINAL_SCOPE_PENDING",
+      "evidence": [
+        "normative_sources",
+        "source_identity",
+        "review70",
+        "evidence",
+        "mission_acceptance"
+      ],
+      "note": "Finding sem bloqueio aberto no recheck independente de origem W1/R1; composição e revisão do candidato final continuam abertas."
+    },
+    {
+      "id": "WP10.T03.INV.40",
+      "text": "Escrever uma correção remove o direito de aceitar aquela seção independentemente.",
+      "status": "PRESERVED_NO_SELF_ACCEPTANCE",
+      "authors": "mission72 implementation/test authors",
+      "source_independent_reviewer": "/root/ci_and_readonly; não escreveu os cinco arquivos de produto ou os 24 testes de origem",
+      "final_independent_acceptor": null
+    },
+    {
+      "id": "WP10.T03.CHK.03",
+      "text": "Recibo de autor não conta como parecer independente; correção relevante invalida evidência afetada.",
+      "status": "PRESERVED_SCOPED_SOURCE_EVIDENCE",
+      "note": "R1 vale para W1/S e seletores observados. Não é prova do candidato integrado ou dos dois casos inertes."
+    },
+    {
+      "id": "WP10.T03.CHK.40",
+      "text": "Cada seção dos três pareceres identifica reviewer e authors; seção com interseção não fecha aceite até ser reatribuída.",
+      "status": "PENDING_FINAL_INDEPENDENT_REVIEW_ASSIGNMENT",
+      "note": "A autoria desta matriz/testes não é reclassificada como independência."
+    },
+    {
+      "id": "WP10.T03.DOD.01",
+      "text": "Três juízes independentes emitem aceite fundamentado no candidato final, após correções necessárias.",
+      "status": "OPEN_NOT_CLOSED_BY_MISSION72_SOURCE_RUN"
+    }
+  ],
+  "CR72_01": {
+    "problem": "Descartar incondicionalmente o fence após falha de admissão/commit permite que autorização Graph em andamento volte a ver sessão ativa.",
+    "correction": "Preservar intenção limitada até horizonte fixo quando a escrita falha; liberar apenas promise para permitir retry; remover intenção após sucesso durável.",
+    "test": "races.failed-logout-fence",
+    "evidence": "R1",
+    "observed": "PASS",
+    "semantics": "503 não declara revogação durável. Fence de tentativa fracassada é local e pode se perder após crash; retry204 é a prova durável e entre instâncias/reopen."
+  },
+  "readonly59_composition": {
+    "status": "INERT_NOT_RUN",
+    "owner": "71",
+    "runtime_api_owner": "59",
+    "preserved_api": "readSnapshotRoot?: <T>(work:()=>Promise<T>, options?:TransactionOptions)=>Promise<T>",
+    "material": "composition/readonly59/readonly-composed.test.ts.txt",
+    "tests": [
+      {
+        "id": "readonly.external-logout",
+        "name": "readonly59 Graph completion observes logout before its queued durable write",
+        "status": "NOT_RUN",
+        "scenario": "Raiz inicia somente authenticate; fora do callback, aguardar Graph e iniciar logout; liberar Graph, exigir null e depois logout204."
+      },
+      {
+        "id": "readonly.nested-maintenance-poison",
+        "name": "catching nested maintenance rejection cannot rescue a poisoned readonly59 root",
+        "status": "NOT_RUN",
+        "scenario": "Tentativa collect aninhada rejeita e contamina root mesmo se o caller capturar o erro."
+      }
+    ],
+    "locking_note": "readonly59 ainda conserva BEGIN IMMEDIATE. Não esperar commit de peer enquanto o writer da raiz permanece retido.",
+    "source_run_does_not_qualify_composition": true
+  },
+  "rollout_limitations": [
+    {
+      "id": "MIXED_OLD_NEW_WRITERS",
+      "status": "NOT_QUALIFIED",
+      "detail": "Callback antigo pode ter consumido/apagado challenge sem emissão durável; novo código não distingue essa história de handle nunca emitido. Writers antigos também não obedecem à nova quota. Compatibilidade de payload legado não prova rollout misto ao vivo.",
+      "required_owner_action": "Definir e qualificar implantação coordenada sem callbacks/writers antigos em andamento; preservar dados/keys. Nenhum restart/deploy executado nesta missão."
+    },
+    {
+      "id": "LEGACY_OVER_CAP",
+      "status": "FAIL_CLOSED_ADMISSION",
+      "detail": "Dados anteriores acima da quota são contados; não são desalojados se válidos. Progresso por lotes não promete redução imediata a um cap físico."
+    },
+    {
+      "id": "PHYSICAL_STORAGE",
+      "status": "COMPACTION_NOT_CLAIMED",
+      "detail": "Limites são de registros/bytes de payload e trabalho por lote; DELETE não promete reduzir imediatamente arquivo/WAL ou apagar com segurança páginas livres."
+    },
+    {
+      "id": "EXTERNAL_MICROSOFT",
+      "status": "NOT_PROVEN",
+      "detail": "Fixture sintética criptográfica não comprova tenant/B2B/consentimento/ingresso/proxy reais."
+    }
+  ],
+  "outstanding_gates": [
+    {
+      "gate": "71_ACK_COMPOSITION",
+      "status": "PENDING",
+      "owner": "71"
+    },
+    {
+      "gate": "INDEPENDENT_COLD_RECHECK_COMPOSED_AND_FINAL",
+      "status": "PENDING",
+      "owner": "Revisor independente designado"
+    },
+    {
+      "gate": "READONLY59_TWO_COMPOSED_TESTS",
+      "status": "NOT_RUN",
+      "owner": "71/lane Actions autorizado"
+    },
+    {
+      "gate": "INSTALLED_LIFECYCLE_AND_MICROSOFT_COMPOSITION_POINTERS",
+      "status": "COMPOSED_QUALIFICATION_PENDING",
+      "owner": "71"
+    },
+    {
+      "gate": "CHECKS_TYPECHECK_GUARDS",
+      "status": "PENDING",
+      "owner": "45"
+    },
+    {
+      "gate": "FINAL_CANDIDATE_SELECTIONS_AM_REVIEWS_C_G7_D_G8",
+      "status": "OPEN",
+      "owner": "S0/final campaign owners"
+    },
+    {
+      "gate": "OTHER_REVIEW70_FINDINGS_AND_G01_G02_G03",
+      "status": "UNCHANGED_OPEN_NOT_CLOSED_BY_R1",
+      "owner": "Respective authorized owners"
+    }
+  ]
+}
+

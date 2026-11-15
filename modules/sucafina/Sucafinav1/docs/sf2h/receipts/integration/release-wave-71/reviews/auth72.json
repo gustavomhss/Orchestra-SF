@@ -1,0 +1,1126 @@
+{
+  "schema": "mission71.auth72.integration-review.v1",
+  "reviewer": "/root/review_runtime59",
+  "status": "READY_TO_COMPOSE_HELD_ATOMIC14",
+  "summary": "Release terminal72 and its complete owner composition proposal are ready for selective candidate composition on C37. Source test evidence is verified; composed execution, installed lifecycle and independent final acceptance remain pending.",
+  "remote_mutations": 0,
+  "product_execution": 0,
+  "CI_dispatches": 0,
+  "compiler_or_guard_runs": 0,
+  "authority": {
+    "owner72_terminal": "2690de74b0581130ae92e1129d986d31d1663fe8",
+    "authority_blob": "592418aa1b71dc20c16965b51a7b9a1eb0b9dc72",
+    "lease": "ENDED_ON_TERMINAL_RECEIPT_PUBLICATION",
+    "release": "TERMINAL_SOURCE_RELEASE_CHECKS_AND_COMPOSED_VALIDATION_PENDING",
+    "sole_stack_writer": 71,
+    "checks": 45,
+    "final_acceptance": "S0",
+    "review_independence": "Reviewer authored no source72 or source59 product/test file. Metadata-only map reconciliation is integration work; this report does not claim independent acceptance of the final candidate."
+  },
+  "source": {
+    "branch": "auth-retention-fix",
+    "PR": 84,
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+    "W_tree": "8b36c0ebd5412251c15b33b6cb726fcbedddce45",
+    "terminal": "2690de74b0581130ae92e1129d986d31d1663fe8",
+    "terminal_tree": "a4ad8a365b3e9e9b3eb3041eccd5c97b7b067156",
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/",
+    "base_to_W": "11 source/test paths and ACK72 only. No existing test modifications, dependency changes, locks or workflow edits.",
+    "W_to_terminal": "One documentation-only descendant; 52 receipt changes. Active source unchanged."
+  },
+  "target": {
+    "candidate": "C37",
+    "sha": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "tree": "94be5190a25b973af4ca647db5149e2ecec6df37",
+    "parent": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+    "readback": "62 exact targeted Git-tree bindings. All14 composition preimages/modes match: five existing and nine absent. Six original49 archived pre/post blobs preserved. No truncated tree.",
+    "C36_to_C37": "Actual compare one descendant, 33 files; seven73 material paths and26 namespace71 receipts. No72 material overlap.",
+    "C37_application": "81f469822a2756b3e1ca87effbf5fd865a56010d; full73 diff inspected against full C36 consumer. Adds canonical procurement visibility preflight/final checks; fresh authentication remains inside transaction.",
+    "CAS_requirement": "Integrator re-read current stack HEAD/authority immediately before CAS. If another release changes any preimage or entry/installation/serve, reconcile again and regenerate map.",
+    "readback_entries": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20",
+        "expectedPreimage": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20",
+        "expectedPreimage": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20",
+        "expectedPreimage": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "type": "blob",
+        "parentTree": "366b3abc728188247d04770d8186ed206803b331",
+        "expectedPreimage": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix",
+        "parentTree": "5144e03244913c50387f62008fbc759b5a525f65",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/fixture.ts",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix",
+        "parentTree": "5144e03244913c50387f62008fbc759b5a525f65",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix",
+        "parentTree": "5144e03244913c50387f62008fbc759b5a525f65",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix",
+        "parentTree": "5144e03244913c50387f62008fbc759b5a525f65",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix",
+        "parentTree": "5144e03244913c50387f62008fbc759b5a525f65",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix",
+        "parentTree": "5144e03244913c50387f62008fbc759b5a525f65",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix",
+        "parentTree": "5144e03244913c50387f62008fbc759b5a525f65",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+        "type": "blob",
+        "parentTree": "a4dc9decb864af1866cb7df833189eb9f23761d7",
+        "expectedPreimage": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json",
+        "exists": false,
+        "absentAt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix",
+        "parentTree": "e52d66a718175e6581fd41bd9ce7a0acc05facf9",
+        "expectedPreimage": null,
+        "preimageMatch": true,
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+        "type": "blob",
+        "parentTree": "a4dc9decb864af1866cb7df833189eb9f23761d7",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/package.json",
+        "exists": true,
+        "mode": "100644",
+        "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+        "type": "blob",
+        "parentTree": "bd8f1fa29f65914ec76a159929be2b8246a9f85a",
+        "sameAsC36": true
+      },
+      {
+        "path": ".github/workflows/test-ci.yml",
+        "exists": true,
+        "mode": "100644",
+        "blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+        "type": "blob",
+        "parentTree": "b745357053524128e5164d9addacfcaf3967afa7",
+        "sameAsC36": true
+      },
+      {
+        "path": "script/test-ci-request.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+        "type": "blob",
+        "parentTree": "b85b0d4f7b39b667061d70dc9bafb578d21f82e1",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/package.json",
+        "exists": true,
+        "mode": "100644",
+        "blob": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+        "type": "blob",
+        "parentTree": "a56ce6b0ef9ae25f69b9f3c9c40e9d4212a22060",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+        "exists": true,
+        "mode": "100644",
+        "blob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+        "type": "blob",
+        "parentTree": "a56ce6b0ef9ae25f69b9f3c9c40e9d4212a22060",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "0e812842ad0d534998c182100a8466548d70e915",
+        "type": "blob",
+        "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+        "type": "blob",
+        "parentTree": "b33b17fe2193bcc2376532f2278ab2de98485644",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "db487cd1b6263835302e9bcf80499d18531aa592",
+        "type": "blob",
+        "parentTree": "f9dfd17a54d4614dc3e4250ddd2154005316f4a4",
+        "sameAsC36": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/installation.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "type": "blob",
+        "parentTree": "25727bacbfc38218d798644b0930d99d6d8f8e03",
+        "sameAsC36": true
+      },
+      {
+        "path": "apps/cli/src/commands/handlers/serve.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "type": "blob",
+        "parentTree": "d2089628b13ceb98b867f0f8293319d3c89206d5",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+        "exists": true,
+        "mode": "100644",
+        "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+        "type": "blob",
+        "parentTree": "9fe8c16966ee0c32f13a8715946f1508c2d20cd4",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/mission49-installation-manifest.json",
+        "exists": true,
+        "mode": "100644",
+        "blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+        "type": "blob",
+        "parentTree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "sameAsC36": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/assets.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "11f6dd1e28bcebdcdbc40a68a31cc033e0f4e377",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/src/identity.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+        "type": "blob",
+        "parentTree": "e24e851cc0b956f12f5de56ad6126de13f621b3d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/index.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "91facf5b78b1d7150a28a25749057e474acb7fe7",
+        "type": "blob",
+        "parentTree": "a56ce6b0ef9ae25f69b9f3c9c40e9d4212a22060"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+        "type": "blob",
+        "parentTree": "e24e851cc0b956f12f5de56ad6126de13f621b3d"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-backups.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "14f56cbb337471ae51395885d7cb5080dc43d8d2",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-recovery.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "d5ef708b8a6c56b9c7211815136c55970c15056c",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-jobs.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "7998724814bfe2c3009da05cf9fed4c6865b147a",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/operations.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "4bc3ee2d64608863634c8d0b48492b7c809ba6dd",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-bootstrap.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "2a500cc44ebbc1018597172584dec146cef7fbb3",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-configuration.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "9fd36deee7a2ef4b3584faa7f49b682d0304741f",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "d4847ae8096764205e00ccfaedf36a9f84f66a83",
+        "type": "blob",
+        "parentTree": "505ceec75a22464874e6f8420a1476e2887c9a20"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-inventory.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "ddc5323d714c58de2d5b47eed2563176099f15b5",
+        "type": "blob",
+        "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-projections.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "4e0fd90ab35f9c03d79d4a1bb65b7bdc7385681c",
+        "type": "blob",
+        "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/bi-http.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "e6487e027dd56ae682c572ac52778217f7ef1627",
+        "type": "blob",
+        "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+        "type": "blob",
+        "parentTree": "5ce36abd3a041423509447911f996acdae03ab48"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/html.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "ff0d2f99aa1b5eb92a6687194df193ec408e7e2c",
+        "type": "blob",
+        "parentTree": "5ce36abd3a041423509447911f996acdae03ab48"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/decision-controls-link.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "3f23b1f85a644bab57c7d7df9813794e285ef7de",
+        "type": "blob",
+        "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+        "type": "blob",
+        "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/host-presentation.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "70725d5dcd4c76893b8c8a85350bcd83ef796734",
+        "type": "blob",
+        "parentTree": "4ec2c21cd1499be07162233f10c8af5819980f66"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "type": "blob",
+        "parentTree": "61bd54abd18a5c127eb96477cee4f27d4c10e183"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+        "exists": true,
+        "mode": "100644",
+        "blob": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+        "type": "blob",
+        "parentTree": "61bd54abd18a5c127eb96477cee4f27d4c10e183"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/generated/bi-entry.txt",
+        "exists": true,
+        "mode": "100644",
+        "blob": "a7b15ec986701b297afd9b09d6d0a012ff23c438",
+        "type": "blob",
+        "parentTree": "413a6ffe2842c42c4d5569a781d49738a43a1f41"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "exists": true,
+        "mode": "100644",
+        "blob": "bd7df025e12aa457898f48fcf9634273ec5be381",
+        "type": "blob",
+        "parentTree": "61bd54abd18a5c127eb96477cee4f27d4c10e183"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/local-entry.preimage.txt",
+        "exists": true,
+        "mode": "100644",
+        "blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
+        "type": "blob",
+        "parentTree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "archiveMatch": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/local-entry.postimage.txt",
+        "exists": true,
+        "mode": "100644",
+        "blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
+        "type": "blob",
+        "parentTree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "archiveMatch": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-installation.preimage.txt",
+        "exists": true,
+        "mode": "100644",
+        "blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+        "type": "blob",
+        "parentTree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "archiveMatch": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-installation.postimage.txt",
+        "exists": true,
+        "mode": "100644",
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "type": "blob",
+        "parentTree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "archiveMatch": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-serve.preimage.txt",
+        "exists": true,
+        "mode": "100644",
+        "blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
+        "type": "blob",
+        "parentTree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "archiveMatch": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration/cli-serve.postimage.txt",
+        "exists": true,
+        "mode": "100644",
+        "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "type": "blob",
+        "parentTree": "bcfd6f54debe8a2cfcd0ec6234fb5ead14a026b4",
+        "archiveMatch": true
+      }
+    ]
+  },
+  "material": {
+    "file_count": 14,
+    "product_paths": 5,
+    "own_test_and_helper_paths": 7,
+    "foreign_fixture_pointer_paths": 1,
+    "new_composition_map_paths": 1,
+    "whole_source_branch_copied": false,
+    "code_invented_by_reviewer": false,
+    "source_local_store_replacement_forbidden": "Source72 local-store7cca20a0fc9741c0b57bda9684e5e69fedcc027b is C28+72 and would discard59. Use composed d9eaac043514141abb2f1f978a6fd2ceaf4040d6 over a36440a750d5671a34c3ab41b2af48093af9f7ee.",
+    "composition_file": "composition-material.json",
+    "full_patch": "composition-C37.patch",
+    "postimages_directory": "postimages/",
+    "hash_reconstruction": "hash-verification.json",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "mode": "100644",
+        "preimage": {
+          "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+          "sha256": "f2d00caedd14b3c1f9dd25aca416a7ec02af08aaca8195fe1536d24316eb5e9b",
+          "bytes": 16747
+        },
+        "postimage": {
+          "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+          "sha256": "cfdea480c3ed807546c055440c76b7e72e3ea223f0750748040e51bd22261f4c",
+          "bytes": 18923
+        },
+        "hunks": 7,
+        "source_proposal_postimage": {
+          "blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+          "sha256": "cfdea480c3ed807546c055440c76b7e72e3ea223f0750748040e51bd22261f4c",
+          "bytes": 18923
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "mode": "100644",
+        "preimage": {
+          "blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+          "sha256": "8e25f74ef1b5bf135c60d3112f4e0ae18e2020428d7a7c35bba1917c73caad33",
+          "bytes": 35607
+        },
+        "postimage": {
+          "blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+          "sha256": "6b1f46d45dd77c73d266d4955daeabca6f0174daebd14f320add49801fb21b2f",
+          "bytes": 35140
+        },
+        "hunks": 4,
+        "source_proposal_postimage": {
+          "blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+          "sha256": "6b1f46d45dd77c73d266d4955daeabca6f0174daebd14f320add49801fb21b2f",
+          "bytes": 35140
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "mode": "100644",
+        "preimage": {
+          "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+          "sha256": "d7f7fd24f13c767d9871008392d313e52c36a981160da3069ad727bf1d3fb079",
+          "bytes": 2576
+        },
+        "postimage": {
+          "blob": "d82b40928a235f2d249e45e59732f281dfded97f",
+          "sha256": "1f607243ba2d0cde805e4faf3ebb749da1a30db98f7dccd258646e34abb12347",
+          "bytes": 3784
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "d82b40928a235f2d249e45e59732f281dfded97f",
+          "sha256": "1f607243ba2d0cde805e4faf3ebb749da1a30db98f7dccd258646e34abb12347",
+          "bytes": 3784
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+          "sha256": "66499d3021695f63a61178d516aad8e0fe9363cffa7c8de388952ec7dd75c981",
+          "bytes": 18419
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+          "sha256": "66499d3021695f63a61178d516aad8e0fe9363cffa7c8de388952ec7dd75c981",
+          "bytes": 18419
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "mode": "100644",
+        "preimage": {
+          "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "sha256": "e5684cd6dd4c61a8304791ee3b17bd26c8f35ab70a9907de68a66f722221f52f",
+          "bytes": 25080
+        },
+        "postimage": {
+          "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+          "sha256": "addaab0dca8ce1addcb155808a841c4ac05a55e6dbe630ee874fa69f5f3067fb",
+          "bytes": 25564
+        },
+        "hunks": 4,
+        "source_proposal_postimage": {
+          "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+          "sha256": "addaab0dca8ce1addcb155808a841c4ac05a55e6dbe630ee874fa69f5f3067fb",
+          "bytes": 25564
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "a26bfa284dd7713d2204ff48628181a95743cbd1",
+          "sha256": "f95dd984247b20043e0b9b17ff9f29a5d1321780e354b040981271cc76ad55f7",
+          "bytes": 8040
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "a26bfa284dd7713d2204ff48628181a95743cbd1",
+          "sha256": "f95dd984247b20043e0b9b17ff9f29a5d1321780e354b040981271cc76ad55f7",
+          "bytes": 8040
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/fixture.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "f0b23f1dcbc3529cd215ac6d58b9caf351be5e77",
+          "sha256": "dbf2a7edf01d5cd84dd3a5dfbfc4ca052548132811d1057c618e42732da58c9b",
+          "bytes": 6407
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "f0b23f1dcbc3529cd215ac6d58b9caf351be5e77",
+          "sha256": "dbf2a7edf01d5cd84dd3a5dfbfc4ca052548132811d1057c618e42732da58c9b",
+          "bytes": 6407
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "5cef79fa21cf23094ce554360f48a67f699295ba",
+          "sha256": "40f22275f32a77bb233f35c89897b022d0fb5add19b62dff2697375586ddab9f",
+          "bytes": 2473
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "5cef79fa21cf23094ce554360f48a67f699295ba",
+          "sha256": "40f22275f32a77bb233f35c89897b022d0fb5add19b62dff2697375586ddab9f",
+          "bytes": 2473
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+          "sha256": "a1a3444cd522b3b762cb989a84396f129007e52249b98c82f6c42e5910db6381",
+          "bytes": 8378
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+          "sha256": "a1a3444cd522b3b762cb989a84396f129007e52249b98c82f6c42e5910db6381",
+          "bytes": 8378
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "531a79bcc0ad1398ea04dd150f26bf0eb421cbf6",
+          "sha256": "65fbe474d1407534fd0075d04de6fd6c6df503c502f3f3bfde5f9228c22a2f5b",
+          "bytes": 5913
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "531a79bcc0ad1398ea04dd150f26bf0eb421cbf6",
+          "sha256": "65fbe474d1407534fd0075d04de6fd6c6df503c502f3f3bfde5f9228c22a2f5b",
+          "bytes": 5913
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "7b443c1ab5ac4177c49c4f922a823df10a160d38",
+          "sha256": "5da94492a46865e6a813092e326fc2edf8e93d5a9561cc245025d8b66c7e19cd",
+          "bytes": 2299
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "7b443c1ab5ac4177c49c4f922a823df10a160d38",
+          "sha256": "5da94492a46865e6a813092e326fc2edf8e93d5a9561cc245025d8b66c7e19cd",
+          "bytes": 2299
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a",
+          "sha256": "4f3e1036430280bccb688fbaf952a042a7bea9295973aa2b8f1006993ae5af67",
+          "bytes": 2047
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a",
+          "sha256": "4f3e1036430280bccb688fbaf952a042a7bea9295973aa2b8f1006993ae5af67",
+          "bytes": 2047
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+        "mode": "100644",
+        "preimage": {
+          "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+          "sha256": "020a65af381b94ded41ad516d08c8337a4a5d62ed9676a353136172e31907c1e",
+          "bytes": 3543
+        },
+        "postimage": {
+          "blob": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb",
+          "sha256": "32f15206babcacc7feb4487325207335d0c802b23e79cda2a4b6fb3932ea8af9",
+          "bytes": 3611
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb",
+          "sha256": "32f15206babcacc7feb4487325207335d0c802b23e79cda2a4b6fb3932ea8af9",
+          "bytes": 3611
+        },
+        "reconciliation": "Exact owner72 composed proposal"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json",
+        "mode": "100644",
+        "preimage": null,
+        "postimage": {
+          "blob": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24",
+          "sha256": "cc4485fe74ff9896a9e9812bbcbaa2de13ab1d3363c6842c93f58d35d602b528",
+          "bytes": 2691
+        },
+        "hunks": 1,
+        "source_proposal_postimage": {
+          "blob": "d6de43f85ab5a252835a90451dad76356b811c34",
+          "sha256": "f4868457d849095c4f52e78e091a552bbd6cf40c133aed35ea8435ee4dcf4a90",
+          "bytes": 2663
+        },
+        "reconciliation": "C37 metadata-only rebind; historical files and lineage unchanged"
+      }
+    ]
+  },
+  "patch_review": {
+    "source11": "Complete source-and-tests.patch:11files23hunks, exact all preimage context and complete output identical to published source blobs.",
+    "product5": "Complete product.patch:5files17hunks, independently reconstructs same source outputs.",
+    "owner_composed14": "Complete COMPOSED-C32.patch:14files26hunks. Despite historical filename, every preimage is exactly C37. All claimed byte counts/Gitblob/SHA256 verified.",
+    "readonly_overlay": "4 auth-only hunks against exact post59 store; reconstructed output equals full composed proposal. Existing readonly root flags, readSnapshotRoot, write poisoning, dispose guards, writer admission, codec/materialization and all business transaction code outside those auth hunks remain byte-for-byte.",
+    "pointer_map": "2 hunks exactly match owner's complete proposal. Foreign fixture changes only the composition-map pointer; all original49 archive checks/assertions/import path checks retained.",
+    "metadata_rebind": "Three fields in new map only: target_base=C37, composition_mission=71, validation=NOT_RUN queued qualification. Original source49 lineage/files array unchanged. Archive source72 map d6de43... separately; active rebound map4e7c02... is not represented as source-owned bytes.",
+    "no_weakening": "No source test removals, assertion changes, skips, budget changes, name filters or workflow edits introduced by this composition.",
+    "verified_hashes": {
+      "source_patch": {
+        "files": 11,
+        "hunks": 23,
+        "all_preimage_contexts_exact": true,
+        "all_postimages_equal_source": true,
+        "blob": "841f726795244c5d7c3779afd843572d684bb982",
+        "sha256": "729dba63bab48a3c098b077d807bb339c83323ec1e17d37cc9bfb8587c93784f",
+        "bytes": 72324
+      },
+      "product_patch": {
+        "files": 5,
+        "hunks": 17,
+        "all_equal_owned_source": true,
+        "blob": "e76c102dbc8f33c812c7f47b75f1525242c4868a",
+        "sha256": "3917b56f6430af77c47b2387c1035c13a6e7181b04195fec939fd83fb1b15f99",
+        "bytes": 37484
+      },
+      "owner_composed_patch": {
+        "files": 14,
+        "hunks": 26,
+        "all_preimages_and_postimages_exact": true,
+        "blob": "854be42d5eb4485022299276f5ab16b9f33506b7",
+        "sha256": "8f7a408350449f9a7b29796660f0df18e3522a6c45577a9c276a79869e7973d1",
+        "bytes": 79415
+      },
+      "readonly59_overlay": {
+        "files": 1,
+        "hunks": 4,
+        "matches_complete_composed_patch": true,
+        "blob": "a5ccd872e5622471c809d366581f01cbe92ebd8e",
+        "sha256": "3a1c0f09e91fb1cd83b93986421901880f423a7fd8d4a28f97795b3ec32ff867",
+        "bytes": 6042
+      },
+      "pointer_map_patch": {
+        "files": 2,
+        "hunks": 2,
+        "matches_complete_composed_patch": true,
+        "blob": "bb0451baa4657b1da6395eff5f4c8ec62fd22fd7",
+        "sha256": "e61464e8bb18bae60c26198ff01c21c5915e9f0c340fa7bf3a720bb39b64591a",
+        "bytes": 5407
+      },
+      "rebound_complete_patch": {
+        "files": 14,
+        "hunks": 26,
+        "all_contexts_and_postimages_exact": true,
+        "blob": "575744ad21f4981a9d44150bd9dc4a67a07489ee",
+        "sha256": "6c9e5840d82a755e33193fd9812c7295392b6d50a7aefe74c9336577944aa94e",
+        "bytes": 79443
+      },
+      "map_rebind": {
+        "source": {
+          "blob": "d6de43f85ab5a252835a90451dad76356b811c34",
+          "sha256": "f4868457d849095c4f52e78e091a552bbd6cf40c133aed35ea8435ee4dcf4a90",
+          "bytes": 2663
+        },
+        "composed": {
+          "blob": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24",
+          "sha256": "cc4485fe74ff9896a9e9812bbcbaa2de13ab1d3363c6842c93f58d35d602b528",
+          "bytes": 2691
+        },
+        "changed_fields": [
+          "target_base",
+          "composition_mission",
+          "validation"
+        ],
+        "lineage_files_array_byte_values_preserved": true
+      }
+    }
+  },
+  "semantic_review": [
+    "Durable authentication_issuance preserves issued/pending/completed/active/revoked metadata after ciphertext take. A child session requires same-namespace still-pending unexpired parent; unique parent index and writer serialization prevent duplicate children.",
+    "Unknown syntactic login/session handles cause no durable row, pending-map entry or write admission. Known logout places its immediate bounded local fence before awaiting the existing writer queue; 204 follows durable success, 503 does not claim persistence.",
+    "CR72-01 is repaired: failed writer admission/commit clears only the in-flight promise, retaining the fixed-horizon fence for local authorization and permitting retry. Success removes the fence after durable commit; crash after503 is explicitly outside durable proof.",
+    "Managed issuance shares persisted capacity across stores:4096 logical records,512 issued/pending challenges,32MiB payloads,64KiB each; tighter initial policy persists and divergent reopening fails. Refusal preserves current live credentials. Refresh preserves exact absolute deadline and subject and cannot recreate missing/revoked state.",
+    "Collector uses expiry indexes and one aggregate128-row deletion budget; consumed parent retention reaches challenge expiry+8h and is never shortened to a peer's shorter session duration. Payload-first bounded collection does not evict valid state.",
+    "Authentication reads use a fresh synchronous SELECT connection with lifecycle and inherited scope checks, not the older business snapshot. The connection is not opened with a database readonly flag; the supplied read work performs no mutations. Writes remain in existing operation(true) and poison nested readonly attempts.",
+    "Readonly59 still owns BEGIN IMMEDIATE. A second writer cannot commit while that root holds the SQLite writer. The proposed composed test starts logout outside root AsyncLocalStorage, releases Graph/root, then waits for durable logout; nested collect rejection contaminates the root even when caught.",
+    "Entry starts auth maintenance after successful configured composition or in the unconfigured branch, independent of operator backup jobs and HTTP traffic. Dispose stops/drains auth maintenance before jobs/store. Existing generic local/operator adapters retain their signatures; Microsoft creation requires the durable authentication capability.",
+    "PKCE, nonce, AES-256-GCM, storage-key AAD, opaque cookies, tenant/client/origin/mount/key binding, subject checks, absolute session expiration and fresh post-Graph revocation checks preserved.",
+    "Current runtime/application consumer authenticates in the business transaction; 73 adds visibility guards without changing that call boundary. Entry and CLI adapters still load installed canonical code and preserve configured ingress and privacy controls. This review does not convert those static paths into installed proof."
+  ],
+  "dependencies": {
+    "direct_import_edges": 55,
+    "direct_import_paths": 37,
+    "source_target_bindings": 74,
+    "source_target_identical_at_C36": 29,
+    "expected_nonunit_differences": [
+      "runtime/contract.ts post59",
+      "product/integration/source-lifecycle.ts post59",
+      "runtime/local-scanner.ts post63"
+    ],
+    "own72_differences": 5,
+    "new72_dependencies_satisfied_by_atomic_unit": [
+      "runtime/auth-maintenance.ts",
+      "test/product/auth-retention-fix/fixture.ts"
+    ],
+    "later_C37_difference": "runtime/application.ts post73; inspected full diff and current Git blob, retained.",
+    "critical_declared_pins_verified": 17,
+    "full_code_reads": [
+      "All11 active source72 source/test/helper files; full composed LocalStore677lines; full entry314lines; two composed readonly cases; foreign fixture proposed postimage; full product patch and exact reconstruction of all complete patches.",
+      "runtime/entra-client.ts",
+      "runtime/microsoft-installation.ts",
+      "runtime/operator-identity.ts",
+      "test/microsoft-login/oidc-fixture.ts",
+      "apps/cli/src/sucafina-product/installation.ts",
+      "apps/cli/src/commands/handlers/serve.ts",
+      "index.ts",
+      "runtime/local-jobs.ts",
+      "runtime/assets.ts",
+      "src/identity.ts",
+      "runtime/local-configuration.ts"
+    ],
+    "consumer_targeted_read": "runtime/application.ts full fetched, authentication transaction/upload/download and lifecycle consumers inspected; full73 diff inspected. Existing59 SourcePersistence/read-snapshot/contracts read in prior delegated review and exact current pins retained.",
+    "missing_released_dependency": false,
+    "compiler_closure": false,
+    "limit": "Static explicit import strings, Git tree presence/mode/blob and inspected consumer boundaries. Not --showConfig, --listFiles, a complete dynamic graph, typecheck or installed qualification.",
+    "bindings_file": "direct-dependency-bindings.json"
+  },
+  "proof": {
+    "B0": {
+      "W": "0f93897311a41b938ff321e9734ba99c3e92e2a4",
+      "W_tree": "6d0b5f26c87532451e675324635057c483ee5af7",
+      "S": "e0a94d9c1b2abc6e957aa0886587fba8bca7a091",
+      "S_tree": "b8565e48822576193a38494eb21dc3759e0be763",
+      "run": 43671182262,
+      "job": 132681354612,
+      "cleanup_job": 132681780474,
+      "conclusion": "failure",
+      "counts": {
+        "pass": 0,
+        "fail": 1,
+        "filtered": 1,
+        "expects": 50,
+        "files": 1
+      },
+      "counterexample": "16 same-origin logouts with32 never-issued handles: physical payload rows1→33, payload bytes221→253. Actual log comparison failure, not setup failure.",
+      "scope": "Only fixture and unknown-handles test added overC28; no product change. Name-filtered baseline; B0/R1 fixtures are not byte-identical."
+    },
+    "R1": {
+      "W": "22b4e97cfbb22703eeedb34af3b33ba74d323806",
+      "S": "dda8ba9d0624b921d7b206f96c55ea9aa25d4955",
+      "S_tree": "3776c744a50643a6c905ab075ac88c2ac4098903",
+      "run": 43671466268,
+      "job": 132682240447,
+      "cleanup_job": 132682737016,
+      "conclusion": "success",
+      "attempt": 1,
+      "event": "push",
+      "workflow": ".github/workflows/test-ci.yml",
+      "counts": {
+        "pass": 138,
+        "skip": 2,
+        "fail": 0,
+        "expects": 1279,
+        "tests": 140,
+        "files": 11,
+        "duration_seconds": 14.38,
+        "new_pass": 24,
+        "existing_pass": 114
+      },
+      "skips": "Only existing foreign UID directory/database cases requiring root fixture privileges.",
+      "artifacts": 0,
+      "runner_ref_after_cleanup": "404",
+      "omni": "Actual nonce-bound NOT_APPLICABLE;0 spawn/delegation. No Omni proof.",
+      "scope": "Real SQLite and real crypto/OIDC client against synthetic transport, plus six existing suites; no installed entry/CLI/lifecycle proof, no composed59 roots, no Microsoft tenant proof."
+    },
+    "snapshot_identity": "Independent Git commits confirm each runner S has sole parent W; independent compares show .ci-run.json is the only delta. Actual normalized requests fetched from both runner commits. Actual runs, job metadata, job logs and cleanup conclusions read via MCP.",
+    "independent_source_recheck": {
+      "reviewer": "/root/ci_and_readonly in owner72 session",
+      "result": "NO_OPEN_BLOCKING_FINDING_SOURCE_AND_R1",
+      "not_final_candidate_acceptance": true
+    },
+    "current_composed_execution": "NOT_RUN"
+  },
+  "finding70": {
+    "id": "M70-AUTH-01",
+    "source": "SOURCE_FIX_AND_SELECTED_REGRESSIONS_VERIFIED",
+    "candidate_after_composition": "FIX_COMPOSED_RECHECK_PENDING",
+    "closed": false,
+    "new_blocking_static_findings": []
+  },
+  "map_atomicity": {
+    "entry_post": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+    "installation_post": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "serve_post": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+    "fixture_pre": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+    "fixture_post": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb",
+    "new_map_post": "4e7c02f9042ab6644ec6ec6665ed22467ae7df24",
+    "old55_map_preserved": "302334c0e5a50c681005d6c6463132abce84d8b1",
+    "original49_manifest_preserved": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+    "all_original49_archived_pre_post_blobs_match": true,
+    "later74_rule": "Any later change to entry/installation/serve must regenerate active composition map and keep fixture pointer/assertions atomic; do not replay old source72 whole snapshot or old map blindly."
+  },
+  "limits_and_holds": [
+    "C28 HOLDs,56 pending regressions/IDs, P03 source59 FAIL_HELD, M31/MI07, Microsoft live, native activation, installed operations, AM/eight final selections/three independent FINAL reviews/C-G7/D-G8 remain open.",
+    "This unit does not close EA66-LEGACY-EGRESS; current73 application preimage for future owner remains81f469822a2756b3e1ca87effbf5fd865a56010d. Other findings70 remain assigned to their owners.",
+    "Managed capacity is not a global quota on trusted generic put, which remains available to operator/local adapters; all such payload bytes count against managed issuance.",
+    "Counts and DELETE are not SQLite/WAL compaction, secure erasure or60-second full-backlog SLA. Legacy over-cap data is counted and admission fails closed until bounded safe collection frees capacity.",
+    "Mixed old/new live writers are not qualified: an old consumed challenge lacks durable issuance history. Operational owner must coordinate deployment/drain separately; mission71 performs none.",
+    "Known logout503 fences locally only until fixed horizon; no durable cross-process or crash guarantee without successful retry.",
+    "Source72 proposed two readonly composition cases and installed map/lifecycle request remain NOT_RUN. Source R1 counts cannot be relabeled as candidate counts."
+  ],
+  "validation_queue": [
+    {
+      "owner": "45",
+      "status": "NOT_RUN_BY_71",
+      "work": "Exact eventual composed W/tree module bun typecheck and root guards via45 existing request interface; preserve source request as historical only."
+    },
+    {
+      "owner": "Authorized product validation owner / S0",
+      "status": "QUEUED_NOT_DISPATCHED",
+      "request": "requests.json",
+      "work": "14 explicit files from owner72 composition request,120000ms,no filter, no increased timeout; bind runner S solely by .ci-run.json to actual future composed W and gather real logs."
+    },
+    {
+      "owner": "Independent designated cold reviewer",
+      "status": "PENDING",
+      "work": "Re-review actual composed/final candidate, source correction and source evidence; no self-acceptance of authored sections."
+    },
+    {
+      "owner": "74 or authorized successor",
+      "status": "HELD_AWAIT_EXPLICIT_RELEASE",
+      "work": "Serial reconcile future transport entry/CLI hunks and regenerate map from actual postimages; source72 does not resolve M70-HTTP-01."
+    }
+  ],
+  "read_artifacts": [
+    "ACK72.json",
+    "AUTHORITY72.json",
+    "BUNDLE72-MANIFEST.json",
+    "CI72.json",
+    "CRITERIA72.json",
+    "DEPENDENCIES72.json",
+    "HANDOFF72.md",
+    "INDEPENDENT-RECHECK72.json",
+    "INDEPENDENT-RECHECK72.md",
+    "REQUEST-45.json",
+    "REQUEST72-71-COMPOSITION.md",
+    "RETENTION-DESIGN72.md",
+    "TARGET-RECONCILIATION72.json",
+    "owned/MANIFEST.json",
+    "owned/source-and-tests.patch",
+    "owned/product.patch",
+    "composition/COMPOSED-C32-MANIFEST.json",
+    "composition/COMPOSED-C32.patch",
+    "composition/readonly59/manifest.json",
+    "composition/readonly59/auth-on-readonly59.patch",
+    "composition/readonly59/local-store.postimage.ts.txt",
+    "composition/readonly59/readonly-composed.test.ts.txt",
+    "composition/composition-pointer-manifest.json",
+    "composition/composition-pointer-and-map.patch",
+    "composition/microsoft49-composition.json",
+    "composition/integration-fixture.postimage.ts.txt",
+    "composition/REQUEST-COMPOSED71.json"
+  ],
+  "GLOBAL_RELEASE": false,
+  "functional_findings_closed": 0
+}

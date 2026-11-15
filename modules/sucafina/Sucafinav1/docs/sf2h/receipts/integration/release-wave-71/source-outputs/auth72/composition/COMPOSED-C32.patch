@@ -1,0 +1,1372 @@
+--- a/modules/sucafina/Sucafinav1/runtime/local-identity.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-identity.ts
+@@ -32,12 +32,15 @@
+     throw new Error("Explicit HTTPS origin required")
+   if (!uuid.test(options.tenantId) || !uuid.test(options.clientId) || options.client.tenantId !== options.tenantId || options.client.clientId !== options.clientId || options.client.profile !== "web-confidential")
+     throw new Error("Fixed Microsoft tenant and confidential client required")
++  if (!options.secrets.authentication) throw new Error("Durable authentication lifecycle required")
+   return createIdentity(options, ["microsoft", options.tenantId, options.clientId])
+ }
+ 
+ /** Cookies contain opaque handles; credentials and PKCE material stay encrypted in the private store. */
+ function createIdentity(input: IdentityOptions, binding: string[]): LocalIdentity {
+-  const options = Object.freeze({ ...input, client: Object.freeze({ ...input.client }), secrets: Object.freeze({ ...input.secrets }) })
++  const options = Object.freeze({ ...input, client: Object.freeze({ ...input.client }), secrets: Object.freeze({ ...input.secrets,
++    ...(input.secrets.authentication ? { authentication: Object.freeze({ ...input.secrets.authentication }) } : {}),
++  }) })
+   const origin = new URL(options.origin)
+   if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(options.mount) || options.key.byteLength !== 32)
+     throw new Error("Invalid identity configuration")
+@@ -56,10 +59,25 @@
+     return url.origin === options.origin && (url.pathname === options.mount || url.pathname.startsWith(`${options.mount}/`))
+   }
+   const revoked = async (kind: string, id: string) => {
++    // The final synchronous lookup sees committed revocation even if an earlier
++    // credential read was admitted before another instance completed logout.
++    if (options.secrets.authentication) {
++      const auth = options.secrets.authentication
++      const storageKey = slot(kind, id)
++      if (auth.inspect(storageKey, now())?.state === "revoked") return true
++      const legacy = await options.secrets.get(slot(`revoked-${kind}`, id), now())
++      return Boolean(legacy) || auth.inspect(storageKey, now())?.state === "revoked"
++    }
+     const storageKey = slot(`revoked-${kind}`, id)
+     return (retiring.get(storageKey) ?? 0) > now() || Boolean(await options.secrets.get(storageKey, now())) || (retiring.get(storageKey) ?? 0) > now()
+   }
+   const retire = async (kind: string, id: string) => {
++    if (options.secrets.authentication) {
++      // revoke inspects issuance and installs its immediate fence synchronously;
++      // an unknown cookie neither allocates a fence nor acquires a write slot.
++      await options.secrets.authentication.revoke(slot(kind, id), now())
++      return
++    }
+     const storageKey = slot(`revoked-${kind}`, id)
+     retiring.forEach((expires, key) => { if (expires <= now()) retiring.delete(key) })
+     // Fence pending work immediately, including reads inside an older business transaction.
+@@ -121,8 +139,8 @@
+         if (request.headers.get("origin") !== options.origin || request.headers.get("sec-fetch-site") === "cross-site") return error(403)
+         const id = handle(request, "session")
+         const login = handle(request, "login")
+-        if (login) await retire("login", login)
+-        if (id) await retire("session", id)
++        const retired = await Promise.all([...(login ? [retire("login", login)] : []), ...(id ? [retire("session", id)] : [])]).then(() => true, () => false)
++        if (!retired) return error(503)
+         const responseHeaders = headers()
+         responseHeaders.append("set-cookie", cookie("session", "", 0))
+         responseHeaders.append("set-cookie", cookie("login", "", 0))
+@@ -133,9 +151,12 @@
+         const state = randomBytes(32).toString("hex")
+         const verifier = randomBytes(32).toString("base64url")
+         const login: Login = { nonce: randomBytes(32).toString("hex"), verifier, returnTo: safeReturn(url.searchParams.get("returnTo"), options.mount), expiresAt: now() + loginSeconds * 1000 }
++        const admitted = options.secrets.authentication
++          ? await options.secrets.authentication.issue({ key: slot("login", state), value: seal(slot("login", state), login), expiresAt: login.expiresAt, at: now() }).catch(() => false)
++          : await options.secrets.put(slot("login", state), seal(slot("login", state), login), login.expiresAt).then(() => true)
++        if (!admitted) return error(503)
+         const destination = await options.client.authorization({ state, nonce: login.nonce, challenge: createHash("sha256").update(verifier).digest("base64url"), redirectUri: `${options.origin}${options.mount}/auth/callback` }).catch(() => undefined)
+-        if (!destination || login.expiresAt <= now()) return error(503)
+-        await options.secrets.put(slot("login", state), seal(slot("login", state), login), login.expiresAt)
++        if (!destination || login.expiresAt <= now()) { await retire("login", state); return error(503) }
+         const responseHeaders = headers()
+         responseHeaders.set("location", destination)
+         responseHeaders.append("set-cookie", cookie("login", state, loginSeconds))
+@@ -158,7 +179,10 @@
+       const id = randomBytes(32).toString("hex")
+       const createdAt = now()
+       const value: Session = { ...result, createdAt, login: state, expiresAt: createdAt + sessionSeconds * 1000 }
+-      await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt)
++      const admitted = options.secrets.authentication
++        ? await options.secrets.authentication.issue({ key: slot("session", id), value: seal(slot("session", id), value), expiresAt: value.expiresAt, at: createdAt, parent: storageKey }).catch(() => false)
++        : await options.secrets.put(slot("session", id), seal(slot("session", id), value), value.expiresAt).then(() => true)
++      if (!admitted) return new Response("Authentication unavailable", { status: 403, headers: responseHeaders })
+       // A logout may finish while code redemption or persistence is pending.
+       if (await revoked("login", state) || value.expiresAt <= now() || login.expiresAt <= now()) {
+         await retire("session", id)
+@@ -173,6 +197,9 @@
+       if (!current || current.value.tokens.expiresAt > now() + 60000) return
+       const pending = refreshing.get(current.handle)
+       if (pending) return pending
++      // A stalled provider may outlive expiry and collection of its session.
++      // Keep those in-flight promises bounded without evicting live work.
++      if (options.secrets.authentication && refreshing.size >= options.secrets.authentication.limits.maxRecords) return
+       const work = (async () => {
+         if (!current.value.tokens.refreshToken) return
+         const refreshed = await options.client.refresh(current.value.tokens.refreshToken).catch(() => undefined)
+@@ -181,7 +208,7 @@
+         if (!validPerson(person) || person.id !== current.value.person.id) return
+         if (!await session(request)) return
+         const value: Session = { ...current.value, person, tokens: { ...refreshed, refreshToken: refreshed.refreshToken ?? current.value.tokens.refreshToken, idToken: refreshed.idToken ?? current.value.tokens.idToken } }
+-        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt)
++        await options.secrets.put(slot("session", current.handle), seal(slot("session", current.handle), value), value.expiresAt, now())
+         // Keep the durable marker authoritative even when logout wins between the check and put.
+         if (!await session(request)) await options.secrets.remove(slot("session", current.handle))
+       })().finally(() => refreshing.delete(current.handle))
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -3,12 +3,13 @@
+ import { constants } from "node:fs"
+ import { lstat, mkdir, open, realpath } from "node:fs/promises"
+ import { isAbsolute, join, parse, resolve, sep } from "node:path"
+-import type { LocalStore } from "./local-contract.ts"
++import type { AuthLimits, LocalStore } from "./local-contract.ts"
++import { createAuthenticationSecrets, initializeAuthentication } from "./auth-maintenance.ts"
+ import type { Snapshot, TransactionOptions } from "./contract.ts"
+ import type { BlobTransaction } from "./assets.ts"
+ import type { Surface } from "../src/identity.ts"
+ 
+-export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number } = {}): Promise<LocalStore> {
++export async function openLocalStore(directory: string, options: { lockTimeoutMs?: number; authentication?: Partial<AuthLimits> } = {}): Promise<LocalStore> {
+   if (!isAbsolute(directory)) throw new Error("Local storage requires an absolute dedicated directory")
+   const timeout = options.lockTimeoutMs ?? 5000
+   if (!Number.isFinite(timeout) || timeout < 0) throw new Error("Invalid lock timeout")
+@@ -60,23 +61,27 @@
+       throw error
+     }
+   }
+-  const initial = connect()
+-  try {
+-    await retryLock(() => initial.exec("PRAGMA journal_mode=WAL"), timeout)
+-    await retryLock(() => initial.exec("BEGIN IMMEDIATE"), timeout)
++  const authentication = await (async () => {
++    const initial = connect()
+     try {
+-      initial.exec(`
+-        CREATE TABLE IF NOT EXISTS snapshots (surface TEXT PRIMARY KEY, payload TEXT NOT NULL);
+-        CREATE TABLE IF NOT EXISTS blobs (surface TEXT NOT NULL, key TEXT NOT NULL, payload BLOB NOT NULL, type TEXT NOT NULL, PRIMARY KEY (surface, key));
+-        CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
+-        COMMIT;
+-      `)
++      await retryLock(() => initial.exec("PRAGMA journal_mode=WAL"), timeout)
++      await retryLock(() => initial.exec("BEGIN IMMEDIATE"), timeout)
++      try {
++        initial.exec(`
++          CREATE TABLE IF NOT EXISTS snapshots (surface TEXT PRIMARY KEY, payload TEXT NOT NULL);
++          CREATE TABLE IF NOT EXISTS blobs (surface TEXT NOT NULL, key TEXT NOT NULL, payload BLOB NOT NULL, type TEXT NOT NULL, PRIMARY KEY (surface, key));
++          CREATE TABLE IF NOT EXISTS authentication_payloads (key TEXT PRIMARY KEY, payload BLOB NOT NULL, expires_at REAL NOT NULL);
++        `)
++        const limits = initializeAuthentication(initial, options.authentication)
++        initial.exec("COMMIT")
++        return limits
++      } finally {
++        if (initial.inTransaction) initial.exec("ROLLBACK")
++      }
+     } finally {
+-      if (initial.inTransaction) initial.exec("ROLLBACK")
+-    }
+-  } finally {
+-    initial.close()
+-  }
++      initial.close()
++    }
++  })()
+ 
+   // This is a memo of the pure v1 decoder, not of a transaction or authority.
+   // Every caller still observes SQL under the existing lock. Only immutable
+@@ -187,6 +192,28 @@
+     void pending.then(() => active.delete(pending), () => active.delete(pending))
+     return pending
+   }
++
++  const secrets = createAuthenticationSecrets({
++    limits: authentication,
++    // Authority must observe current committed auth state, independently of an
++    // older business snapshot. No write or second business transaction is opened.
++    read: <T>(work: (db: Database) => T): T => {
++      if (lifecycle.closed) throw new Error("Local store is disposed")
++      const scope = context.getStore()
++      if (scope) requireScope(scope)
++      const db = connect()
++      try {
++        const value = work(db)
++        if (scope) requireScope(scope)
++        return value
++      } finally { db.close() }
++    },
++    write: <T>(work: (db: Database) => T) => operation(true, async (db) => {
++      const value = work(db)
++      db.exec("COMMIT")
++      return value
++    }),
++  })
+ 
+   return {
+     readSnapshotRoot: <T>(work: () => Promise<T>, transactionOptions?: TransactionOptions) =>
+@@ -413,30 +440,7 @@
+         }
+         return result.value
+       }, transactionOptions?.signal),
+-    secrets: {
+-      put: (key, bytes, expiresAt) => operation(true, async (db) => {
+-        if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")
+-        db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?) ON CONFLICT (key) DO UPDATE SET payload=excluded.payload, expires_at=excluded.expires_at").run(key, bytes, expiresAt)
+-        db.exec("COMMIT")
+-      }),
+-      // Authentication runs while the business writer owns the lock. This must never acquire a write lock, even for expired records.
+-      get: (key, at) => operation(false, async (db) => {
+-        if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
+-        const row = db.query<{ payload: Uint8Array }, [string, number]>("SELECT payload FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
+-        return row ? new Uint8Array(row.payload) : undefined
+-      }),
+-      take: (key, at) => operation(true, async (db) => {
+-        if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
+-        const row = db.query<{ payload: Uint8Array }, [string, number]>("SELECT payload FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
+-        db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
+-        db.exec("COMMIT")
+-        return row ? new Uint8Array(row.payload) : undefined
+-      }),
+-      remove: (key) => operation(true, async (db) => {
+-        db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
+-        db.exec("COMMIT")
+-      }),
+-    },
++    secrets,
+     dispose: () => {
+       if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
+       lifecycle.closed = true
+--- a/modules/sucafina/Sucafinav1/runtime/local-contract.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-contract.ts
+@@ -3,11 +3,32 @@
+ import type { RoleRow, ResolvedActor, Surface } from "../src/identity.ts"
+ 
+ /** Authentication records are separate from business snapshots and their backups. Payloads are encrypted by identity. */
++export type AuthLimits = { maxRecords: number; maxChallenges: number; maxBytes: number; maxPayloadBytes: number; batchSize: number }
++export type AuthHandle = {
++  kind: "login" | "session"
++  state: "issued" | "pending" | "completed" | "active" | "revoked"
++  expiresAt: number
++  retainUntil: number
++  parent?: string
++}
++export type AuthUsage = { records: number; handles: number; payloads: number; bytes: number; pendingRevocations: number }
++export type AuthenticationSecrets = {
++  readonly limits: Readonly<AuthLimits>
++  /** Atomically admits an issued challenge or one session derived from a consumed challenge. */
++  issue: (input: { key: string; value: Uint8Array; expiresAt: number; at: number; parent?: string }) => Promise<boolean>
++  /** Fresh committed metadata; synchronous so cancellation can fence work before its first await. */
++  inspect: (key: string, at: number) => AuthHandle | undefined
++  revoke: (key: string, at: number) => Promise<void>
++  collect: (at: number) => Promise<{ payloads: number; handles: number }>
++  stats: () => Promise<AuthUsage>
++}
+ export type LocalSecrets = {
+-  put: (key: string, value: Uint8Array, expiresAt: number) => Promise<void>
++  put: (key: string, value: Uint8Array, expiresAt: number, at?: number) => Promise<void>
+   get: (key: string, at: number) => Promise<Uint8Array | undefined>
+   take: (key: string, at: number) => Promise<Uint8Array | undefined>
+   remove: (key: string) => Promise<void>
++  /** Required by the Microsoft composition; optional only for retained local adapters. */
++  authentication?: AuthenticationSecrets
+ }
+ export type LocalStore = Persistence & AssetPersistence & { secrets: LocalSecrets; dispose: () => Promise<void> }
+ export type DirectoryPerson = { id: string; name: string }
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts
+@@ -0,0 +1,293 @@
++import type { Database } from "bun:sqlite"
++import type { AuthHandle, AuthLimits, LocalSecrets } from "./local-contract.ts"
++
++export const MAX_SESSION_MS = 28_800_000
++export const AUTH_LIMITS: Readonly<AuthLimits> = Object.freeze({
++  maxRecords: 4096, maxChallenges: 512, maxBytes: 33_554_432, maxPayloadBytes: 65_536, batchSize: 128,
++})
++
++type IssuanceRow = { kind: AuthHandle["kind"]; state: AuthHandle["state"]; expires_at: number; retain_until: number; parent_key: string | null }
++type PayloadRow = { payload: Uint8Array; expires_at: number }
++type Usage = { records: number; handles: number; payloads: number; bytes: number; challenges: number }
++
++/** Called inside the store's existing initialization transaction. Reopen adopts one durable policy. */
++export function initializeAuthentication(db: Database, requested: Partial<AuthLimits> = {}): Readonly<AuthLimits> {
++  const names = Object.keys(AUTH_LIMITS) as (keyof AuthLimits)[]
++  for (const key of Object.keys(requested)) {
++    if (!names.includes(key as keyof AuthLimits)) throw new Error("Unknown authentication limit")
++    const value = requested[key as keyof AuthLimits]
++    if (!Number.isSafeInteger(value) || Number(value) < 1 || Number(value) > AUTH_LIMITS[key as keyof AuthLimits])
++      throw new Error("Invalid authentication limit")
++  }
++  db.exec(`
++    CREATE TABLE IF NOT EXISTS authentication_issuance (
++      key TEXT PRIMARY KEY,
++      kind TEXT NOT NULL CHECK (kind IN ('login', 'session')),
++      state TEXT NOT NULL CHECK (state IN ('issued', 'pending', 'completed', 'active', 'revoked')),
++      expires_at REAL NOT NULL,
++      retain_until REAL NOT NULL,
++      parent_key TEXT
++    );
++    CREATE INDEX IF NOT EXISTS authentication_payloads_expiry ON authentication_payloads (expires_at, key);
++    CREATE INDEX IF NOT EXISTS authentication_issuance_expiry ON authentication_issuance (retain_until, key);
++    CREATE UNIQUE INDEX IF NOT EXISTS authentication_session_parent ON authentication_issuance (parent_key) WHERE kind = 'session' AND parent_key IS NOT NULL;
++    CREATE TABLE IF NOT EXISTS authentication_limits (singleton INTEGER PRIMARY KEY CHECK (singleton = 1), policy TEXT NOT NULL);
++  `)
++  const stored = db.query<{ policy: string }, []>("SELECT policy FROM authentication_limits WHERE singleton = 1").get()
++  if (!stored) {
++    const policy = Object.freeze({ ...AUTH_LIMITS, ...requested })
++    db.query("INSERT INTO authentication_limits (singleton, policy) VALUES (1, ?)").run(JSON.stringify(policy))
++    return policy
++  }
++  const policy: unknown = JSON.parse(stored.policy)
++  if (!policy || typeof policy !== "object" || Array.isArray(policy) || Object.keys(policy).length !== names.length)
++    throw new Error("Invalid persisted authentication policy")
++  for (const key of names) {
++    const value = (policy as Record<string, unknown>)[key]
++    if (!Number.isSafeInteger(value) || Number(value) < 1 || Number(value) > AUTH_LIMITS[key] ||
++      (requested[key] !== undefined && requested[key] !== value)) throw new Error("Authentication policy mismatch")
++  }
++  return Object.freeze(policy as AuthLimits)
++}
++
++/** The supplied read opens a fresh read-only connection; write owns admission and COMMIT. */
++export function createAuthenticationSecrets(options: {
++  read: <T>(work: (db: Database) => T) => T
++  write: <T>(work: (db: Database) => T) => Promise<T>
++  limits: Readonly<AuthLimits>
++}): LocalSecrets {
++  const pending = new Map<string, { handle: AuthHandle; retainUntil: number; promise?: Promise<void> }>()
++  const current = (db: Database, key: string, at: number): AuthHandle | undefined => {
++    const keyParts = managed(key)
++    if (!keyParts) return
++    const retiring = pending.get(key)
++    // Failed cancellation still fences local work. Its fixed horizon covers a peer
++    // consuming the challenge while the original writer was waiting for admission.
++    if (retiring && retiring.retainUntil > at) return { ...retiring.handle, state: "revoked", retainUntil: retiring.retainUntil }
++    const row = db.query<IssuanceRow, [string]>("SELECT kind, state, expires_at, retain_until, parent_key FROM authentication_issuance WHERE key = ?").get(key)
++    const marker = db.query<{ expires_at: number }, [string, number]>("SELECT expires_at FROM authentication_payloads WHERE key = ? AND expires_at > ?")
++      .get(`${keyParts.namespace}:revoked-${keyParts.kind}:${keyParts.digest}`, at)
++    if (marker) return { kind: keyParts.kind, state: "revoked", expiresAt: row?.expires_at ?? marker.expires_at, retainUntil: Math.max(row?.retain_until ?? 0, marker.expires_at), ...(row?.parent_key ? { parent: row.parent_key } : {}) }
++    if (row) return row.retain_until > at ? { kind: row.kind, state: row.state, expiresAt: row.expires_at, retainUntil: row.retain_until, ...(row.parent_key ? { parent: row.parent_key } : {}) } : undefined
++    const legacy = db.query<{ expires_at: number }, [string, number]>("SELECT expires_at FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
++    if (legacy) return { kind: keyParts.kind, state: keyParts.kind === "login" ? "issued" : "active", expiresAt: legacy.expires_at, retainUntil: legacy.expires_at }
++  }
++  const permitted = (db: Database, key: string, at: number) => {
++    const handle = current(db, key, at)
++    if (!handle || handle.expiresAt <= at || !["issued", "active"].includes(handle.state)) return false
++    if (!handle.parent) return true
++    const parent = current(db, handle.parent, at)
++    return parent?.state === "completed" && parent.retainUntil >= handle.expiresAt
++  }
++  const inspect = (key: string, at: number) => {
++    clock(at)
++    return options.read((db) => current(db, key, at))
++  }
++  const usage = (db: Database): Usage => db.query<Usage, []>(`
++    SELECT
++      (SELECT COUNT(*) FROM authentication_issuance) +
++        (SELECT COUNT(*) FROM authentication_payloads AS p WHERE NOT EXISTS (SELECT 1 FROM authentication_issuance AS h WHERE h.key = p.key)) AS records,
++      (SELECT COUNT(*) FROM authentication_issuance) AS handles,
++      (SELECT COUNT(*) FROM authentication_payloads) AS payloads,
++      (SELECT COALESCE(SUM(length(payload)), 0) FROM authentication_payloads) AS bytes,
++      (SELECT COUNT(*) FROM authentication_issuance WHERE kind = 'login' AND state IN ('issued', 'pending')) +
++        (SELECT COUNT(*) FROM authentication_payloads AS p WHERE length(p.key) = 135 AND substr(p.key, 65, 7) = ':login:' AND NOT EXISTS (SELECT 1 FROM authentication_issuance AS h WHERE h.key = p.key)) AS challenges
++  `).get()!
++  const payload = (db: Database, key: string, at: number) => db.query<PayloadRow, [string, number]>("SELECT payload, expires_at FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
++  const markRevoked = (db: Database, key: string, handle: AuthHandle) => {
++    // Conversion preserves the existing logical key and its fixed lifetime; it never admits an unknown handle.
++    db.query("INSERT INTO authentication_issuance (key, kind, state, expires_at, retain_until, parent_key) VALUES (?, ?, 'revoked', ?, ?, ?) ON CONFLICT(key) DO UPDATE SET state = 'revoked'")
++      .run(key, handle.kind, handle.expiresAt, handle.retainUntil, handle.parent ?? null)
++    db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
++  }
++  return {
++    async put(key, value, expiresAt, at = Date.now()) {
++      if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")
++      const kind = managed(key)?.kind
++      if (kind) {
++        clock(at)
++        if (value.byteLength > options.limits.maxPayloadBytes) return
++      }
++      const bytes = new Uint8Array(value)
++      await options.write((db) => {
++        if (kind) {
++          // Managed issuance uses issue(). A refresh only replaces a still-live existing session at its original deadline.
++          if (kind !== "session" || !permitted(db, key, at)) return
++          const previous = payload(db, key, at)
++          const handle = current(db, key, at)
++          if (!previous || !handle || expiresAt !== previous.expires_at || expiresAt !== handle.expiresAt || expiresAt <= at) return
++          const counted = usage(db)
++          if (counted.bytes - previous.payload.byteLength + bytes.byteLength > options.limits.maxBytes) return
++          db.query("UPDATE authentication_payloads SET payload = ? WHERE key = ?").run(bytes, key)
++          return
++        }
++        db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?) ON CONFLICT (key) DO UPDATE SET payload=excluded.payload, expires_at=excluded.expires_at").run(key, bytes, expiresAt)
++      })
++    },
++    async get(key, at) {
++      clock(at)
++      return options.read((db) => {
++        if (managed(key) && !permitted(db, key, at)) return
++        const row = payload(db, key, at)
++        return row ? new Uint8Array(row.payload) : undefined
++      })
++    },
++    async take(key, at) {
++      clock(at)
++      return options.write((db) => {
++        const kind = managed(key)?.kind
++        if (!kind) {
++          const row = payload(db, key, at)
++          db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
++          return row ? new Uint8Array(row.payload) : undefined
++        }
++        if (!permitted(db, key, at)) return
++        const handle = current(db, key, at)
++        const row = payload(db, key, at)
++        if (!handle || !row) return
++        if (kind === "session") {
++          markRevoked(db, key, handle)
++          return new Uint8Array(row.payload)
++        }
++        const retainUntil = handle.expiresAt + MAX_SESSION_MS
++        if (!Number.isSafeInteger(retainUntil)) throw new Error("Invalid authentication retention")
++        db.query("INSERT INTO authentication_issuance (key, kind, state, expires_at, retain_until, parent_key) VALUES (?, 'login', 'pending', ?, ?, NULL) ON CONFLICT(key) DO UPDATE SET state = 'pending', retain_until = excluded.retain_until")
++          .run(key, handle.expiresAt, retainUntil)
++        db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
++        return new Uint8Array(row.payload)
++      })
++    },
++    async remove(key) {
++      await options.write((db) => {
++        const kind = managed(key)?.kind
++        if (kind) {
++          const row = db.query<IssuanceRow, [string]>("SELECT kind, state, expires_at, retain_until, parent_key FROM authentication_issuance WHERE key = ?").get(key)
++          const legacy = row ? undefined : db.query<{ expires_at: number }, [string]>("SELECT expires_at FROM authentication_payloads WHERE key = ?").get(key)
++          if (row || legacy) markRevoked(db, key, { kind, state: "revoked", expiresAt: row?.expires_at ?? legacy!.expires_at, retainUntil: row?.retain_until ?? legacy!.expires_at, ...(row?.parent_key ? { parent: row.parent_key } : {}) })
++        }
++        db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
++      })
++    },
++    authentication: {
++      limits: options.limits,
++      inspect,
++      async issue(input) {
++        clock(input.at)
++        const keyParts = managed(input.key)
++        if (!keyParts || !Number.isSafeInteger(input.expiresAt) || input.expiresAt <= input.at || input.value.byteLength > options.limits.maxPayloadBytes) return false
++        if (input.expiresAt - input.at > (keyParts.kind === "login" ? 600_000 : MAX_SESSION_MS)) return false
++        const parentParts = input.parent ? managed(input.parent) : undefined
++        if (keyParts.kind === "login" ? input.parent !== undefined : !parentParts || parentParts.kind !== "login" || parentParts.namespace !== keyParts.namespace) return false
++        const bytes = new Uint8Array(input.value)
++        return options.write((db) => {
++          if (db.query<{ found: number }, [string, string]>("SELECT 1 AS found FROM authentication_issuance WHERE key = ? UNION ALL SELECT 1 AS found FROM authentication_payloads WHERE key = ? LIMIT 1").get(input.key, input.key) || current(db, input.key, input.at)) return false
++          const parent = input.parent ? current(db, input.parent, input.at) : undefined
++          if (keyParts.kind === "session" && (!parent || parent.state !== "pending" || parent.expiresAt <= input.at || parent.retainUntil < input.expiresAt)) return false
++          const counted = usage(db)
++          if (counted.records >= options.limits.maxRecords || counted.bytes + bytes.byteLength > options.limits.maxBytes ||
++            (keyParts.kind === "login" && counted.challenges >= options.limits.maxChallenges)) return false
++          db.query("INSERT INTO authentication_issuance (key, kind, state, expires_at, retain_until, parent_key) VALUES (?, ?, ?, ?, ?, ?)")
++            .run(input.key, keyParts.kind, keyParts.kind === "login" ? "issued" : "active", input.expiresAt, input.expiresAt, input.parent ?? null)
++          db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?)").run(input.key, bytes, input.expiresAt)
++          if (input.parent) db.query("UPDATE authentication_issuance SET state = 'completed' WHERE key = ? AND state = 'pending'").run(input.parent)
++          return true
++        })
++      },
++      revoke(key, at) {
++        clock(at)
++        const existing = pending.get(key)
++        if (existing?.promise) return existing.promise
++        if (existing && existing.retainUntil <= at) pending.delete(key)
++        const retry = existing && existing.retainUntil > at ? existing : undefined
++        // A failed attempt's local revoked state must not suppress its durable retry.
++        const handle = retry?.handle ?? inspect(key, at)
++        if (!handle || handle.state === "revoked") return Promise.resolve()
++        if (!retry && pending.size >= options.limits.maxRecords) return Promise.reject(new Error("Authentication cancellation capacity exhausted"))
++        // Set this fence synchronously, before writer admission; older business readers can be awaiting Graph.
++        const entry = retry ?? {
++          handle,
++          retainUntil: handle.kind === "login" ? Math.max(handle.retainUntil, handle.expiresAt + MAX_SESSION_MS) : handle.expiresAt,
++          promise: undefined as Promise<void> | undefined,
++        }
++        pending.set(key, entry)
++        entry.promise = options.write((db) => {
++          const row = db.query<IssuanceRow, [string]>("SELECT kind, state, expires_at, retain_until, parent_key FROM authentication_issuance WHERE key = ?").get(key)
++          const legacy = row ? undefined : payload(db, key, at)
++          if (!row && !legacy) return
++          // A callback may have consumed the challenge after inspect(): retain its upgraded horizon.
++          markRevoked(db, key, { ...handle, expiresAt: row?.expires_at ?? handle.expiresAt, retainUntil: row?.retain_until ?? handle.retainUntil, ...(row?.parent_key ? { parent: row.parent_key } : {}) })
++        }).then(() => {
++          if (pending.get(key) === entry) pending.delete(key)
++        }, (error: unknown) => {
++          // Admission/COMMIT failure did not revoke durably. Preserve intent and
++          // release only the in-flight promise so a later logout can retry it.
++          entry.promise = undefined
++          throw error
++        })
++        return entry.promise
++      },
++      async collect(at) {
++        clock(at)
++        for (const [key, entry] of pending) {
++          if (!entry.promise && entry.retainUntil <= at) pending.delete(key)
++        }
++        return options.write((db) => {
++          const payloads = db.query("DELETE FROM authentication_payloads WHERE key IN (SELECT key FROM authentication_payloads WHERE expires_at <= ? ORDER BY expires_at, key LIMIT ?)").run(at, options.limits.batchSize).changes
++          const handles = payloads < options.limits.batchSize
++            ? db.query("DELETE FROM authentication_issuance WHERE key IN (SELECT h.key FROM authentication_issuance AS h WHERE h.retain_until <= ? AND NOT EXISTS (SELECT 1 FROM authentication_payloads AS p WHERE p.key = h.key AND p.expires_at > ?) ORDER BY h.retain_until, h.key LIMIT ?)")
++              .run(at, at, options.limits.batchSize - payloads).changes : 0
++          return { payloads, handles }
++        })
++      },
++      async stats() {
++        const counted = options.read(usage)
++        return { records: counted.records, handles: counted.handles, payloads: counted.payloads, bytes: counted.bytes, pendingRevocations: pending.size }
++      },
++    },
++  }
++}
++
++/** Start at composition, outside request/business scopes. No endpoint traffic or operator profile is needed. */
++export function startAuthMaintenance(options: { secrets: LocalSecrets; now?: () => number; intervalMs?: number }) {
++  const authentication = options.secrets.authentication
++  if (!authentication) throw new Error("Authentication maintenance capability required")
++  const interval = options.intervalMs ?? 60_000
++  if (!Number.isSafeInteger(interval) || interval < 1 || interval > 2_147_483_647) throw new Error("Invalid authentication maintenance interval")
++  const state = { closed: false, pending: undefined as Promise<void> | undefined, lastSuccess: undefined as number | undefined, error: undefined as string | undefined, payloads: 0, handles: 0 }
++  const runOnce = () => {
++    if (state.closed) return Promise.resolve()
++    if (state.pending) return state.pending
++    const at = options.now?.() ?? Date.now()
++    state.pending = authentication.collect(at).then((removed) => {
++      state.payloads += removed.payloads
++      state.handles += removed.handles
++      state.lastSuccess = at
++      state.error = undefined
++    }, (error: unknown) => {
++      state.error = "AUTH_MAINTENANCE_FAILED"
++      throw error
++    }).finally(() => { state.pending = undefined })
++    return state.pending
++  }
++  const timer = setInterval(() => { void runOnce().catch(() => undefined) }, interval)
++  timer.unref()
++  void runOnce().catch(() => undefined)
++  return {
++    runOnce,
++    status: () => ({ running: Boolean(state.pending), closed: state.closed, lastSuccess: state.lastSuccess, error: state.error, payloads: state.payloads, handles: state.handles }),
++    async dispose() {
++      state.closed = true
++      clearInterval(timer)
++      await state.pending?.catch(() => undefined)
++    },
++  }
++}
++
++function managed(key: string) {
++  const match = /^([a-f0-9]{64}):(login|session):([a-f0-9]{64})$/.exec(key)
++  return match ? { namespace: match[1]!, kind: match[2] as "login" | "session", digest: match[3]! } : undefined
++}
++
++function clock(at: number) {
++  if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
++}
+--- a/modules/sucafina/Sucafinav1/local/entry.ts
++++ b/modules/sucafina/Sucafinav1/local/entry.ts
+@@ -3,6 +3,7 @@
+ import { randomUUID } from "node:crypto"
+ import { createModule } from "../index.ts"
+ import { openLocalStore } from "../runtime/local-store.ts"
++import { startAuthMaintenance } from "../runtime/auth-maintenance.ts"
+ import { createEntraClient } from "../runtime/entra-client.ts"
+ import { createOperatorIdentity } from "../runtime/operator-identity.ts"
+ import { documentHtml, esc, pageMain } from "../src/screen-shell.ts"
+@@ -98,10 +99,13 @@
+       ...(operator && services.jobs ? { maintenance: services.jobs.status().error ? "degraded" : services.jobs.status().lastSuccess ? "active" : "starting" } : {}),
+     }), { headers: { "Cache-Control": "no-store", "Content-Type": "application/json" } })
+   }
+-  if (!client && !operator) return {
+-    mount: config.mount,
+-    handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
+-    dispose: () => store.dispose(),
++  if (!client && !operator) {
++    const authMaintenance = startAuthMaintenance({ secrets: store.secrets })
++    return {
++      mount: config.mount,
++      handler: async (request: Request) => status(request) ?? new Response("Microsoft 365 application is not configured. Set tenantId and clientId in the private installation configuration, then start this isolated instance again.", { status: 503, headers: { "Cache-Control": "no-store", "Content-Type": "text/plain; charset=utf-8" } }),
++      dispose: async () => { await authMaintenance.dispose(); await store.dispose() },
++    }
+   }
+   for (const surface of ["dashboard", "planner", "procurement"] as const) await store.initializeSources(surface)
+   const identity = microsoft ? microsoft.createIdentity(store.secrets) : operator
+@@ -156,6 +160,9 @@
+     maxJsonBytes: 2 * 1024 * 1024,
+     assets,
+   })
++  // Started only after composition succeeds, outside request/business scopes.
++  // Auth retention runs for Microsoft too, independently of operator backup jobs.
++  const authMaintenance = startAuthMaintenance({ secrets: store.secrets })
+   return {
+     mount: config.mount,
+     ...(runtime ? { host: runtime.contributions } : {}),
+@@ -242,7 +249,7 @@
+       return localChrome(response)
+ 
+     },
+-    async dispose() { await jobs.dispose(); await store.dispose() },
++    async dispose() { await authMaintenance.dispose(); await jobs.dispose(); await store.dispose() },
+   }
+ 
+   function localChrome(response: Response) {
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/capacity.test.ts
+@@ -0,0 +1,139 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { randomBytes } from "node:crypto"
++import { join } from "node:path"
++import { cookieHandle, noSessionCookie, retentionFixture } from "./fixture.ts"
++
++test("two stores share the record cap and never evict an issued challenge or revocation fence", async () => {
++  const f = await retentionFixture({ loginSeconds: 1, authentication: { maxRecords: 3, maxChallenges: 3 } })
++  const peer = f.makeIdentity((await f.open()).secrets)
++  const responses = await Promise.all(Array.from({ length: 4 }, (_, index) =>
++    (index % 2 ? peer : f.identity).handle(f.request("/auth/login"))))
++  expect(responses.map((response) => response?.status).sort()).toEqual([303, 303, 303, 503])
++  const admitted = responses.filter((response) => response?.status === 303)
++  for (const response of admitted) {
++    const state = new URL(response!.headers.get("location")!).searchParams.get("state")!
++    expect(f.auth.inspect(f.storageKey("login", state), f.provider.clock.value)!.state).toBe("issued")
++    expect(await f.store.secrets.get(f.storageKey("login", state), f.provider.clock.value)).toBeDefined()
++  }
++  const cookie = admitted[0]!.headers.getSetCookie()[0].split(";")[0]
++  expect((await f.logout(cookie, peer))?.status).toBe(204)
++  expect((await f.auth.stats()).records).toBe(3)
++  expect((await f.identity.handle(f.request("/auth/login")))?.status).toBe(503)
++  f.provider.clock.value += 1000
++  await f.auth.collect(f.provider.clock.value)
++  expect((await f.auth.stats()).records).toBe(0)
++  expect((await peer.handle(f.request("/auth/login")))?.status).toBe(303)
++})
++
++test("challenge admission has its own shared cap before the total record cap is reached", async () => {
++  const f = await retentionFixture({ authentication: { maxRecords: 8, maxChallenges: 2 } })
++  const second = await f.open()
++  const peer = f.makeIdentity(second.secrets)
++  await f.start()
++  await f.start(peer)
++  expect((await second.secrets.authentication!.stats()).records).toBe(2)
++  expect((await peer.handle(f.request("/auth/login")))?.status).toBe(503)
++  expect((await f.auth.stats()).records).toBe(2)
++})
++
++test("a consumed challenge cannot mint a session past the global record cap", async () => {
++  const f = await retentionFixture({ authentication: { maxRecords: 2, maxChallenges: 2 } })
++  const begun = await f.start()
++  const unconsumed = await f.start()
++  noSessionCookie(await begun.callback())
++  expect(f.auth.inspect(f.storageKey("login", begun.state), f.provider.clock.value)!.state).toBe("pending")
++  expect(await f.store.secrets.get(f.storageKey("login", unconsumed.state), f.provider.clock.value)).toBeDefined()
++  expect(f.payloadCounts().sessions).toBe(0)
++  expect((await f.auth.stats()).records).toBe(2)
++})
++
++test("total ciphertext and individual payload limits reject admission without losing prior records", async () => {
++  const f = await retentionFixture({ authentication: { maxRecords: 8, maxChallenges: 8, maxBytes: 64, maxPayloadBytes: 32 } })
++  const at = f.provider.clock.value
++  const first = f.storageKey("login", randomBytes(32).toString("hex"))
++  const second = f.storageKey("login", randomBytes(32).toString("hex"))
++  const third = f.storageKey("login", randomBytes(32).toString("hex"))
++  const value = randomBytes(32)
++  expect(await f.auth.issue({ key: first, value, expiresAt: at + 1000, at })).toBe(true)
++  expect(await f.auth.issue({ key: second, value, expiresAt: at + 1000, at })).toBe(true)
++  expect(await f.auth.issue({ key: third, value: randomBytes(1), expiresAt: at + 1000, at })).toBe(false)
++  expect((await f.auth.stats()).bytes).toBe(64)
++  expect(await f.store.secrets.get(first, at)).toEqual(value)
++  expect(await f.store.secrets.get(second, at)).toEqual(value)
++  await f.store.secrets.take(first, at)
++  expect(await f.auth.issue({ key: third, value: randomBytes(33), expiresAt: at + 1000, at })).toBe(false)
++  expect((await f.auth.stats()).records).toBe(2)
++  expect((await f.auth.stats()).bytes).toBe(32)
++  expect(await f.auth.issue({ key: third, value, expiresAt: at + 1000, at })).toBe(true)
++  expect((await f.auth.stats()).bytes).toBe(64)
++  expect((await f.auth.stats()).records).toBe(3)
++  expect(f.auth.inspect(first, at)!.state).toBe("pending")
++})
++
++test("oversized refresh writes preserve the signed session bytes, deadline and person", async () => {
++  const f = await retentionFixture({ authentication: { maxBytes: 8192, maxPayloadBytes: 4096 } })
++  const signed = await f.login()
++  const at = f.provider.clock.value
++  const key = f.storageKey("session", cookieHandle(signed.sessionCookie))
++  const prior = (await f.store.secrets.get(key, at))!
++  const handle = f.auth.inspect(key, at)!
++  const person = await f.identity.person(f.request("/planner", signed.sessionCookie))
++  expect(person).not.toBeNull()
++  expect(prior.byteLength).toBeLessThan(f.auth.limits.maxPayloadBytes)
++  await f.store.secrets.put(key, randomBytes(f.auth.limits.maxPayloadBytes + 1), handle.expiresAt, at)
++  expect(await f.store.secrets.get(key, at)).toEqual(prior)
++  expect(f.auth.inspect(key, at)).toEqual(handle)
++
++  // Fill the remaining byte budget with other admitted ciphertext, leaving the
++  // live session's replacement within the individual limit but above the total.
++  let remaining = f.auth.limits.maxBytes - (await f.auth.stats()).bytes
++  while (remaining > 0) {
++    const size = Math.min(remaining, f.auth.limits.maxPayloadBytes)
++    expect(await f.auth.issue({ key: f.storageKey("login", randomBytes(32).toString("hex")),
++      value: randomBytes(size), expiresAt: at + 1000, at })).toBe(true)
++    remaining -= size
++  }
++  expect((await f.auth.stats()).bytes).toBe(f.auth.limits.maxBytes)
++  const larger = new Uint8Array(prior.byteLength + 1)
++  larger.set(prior)
++  await f.store.secrets.put(key, larger, handle.expiresAt, at)
++  expect(await f.store.secrets.get(key, at)).toEqual(prior)
++  expect(f.auth.inspect(key, at)).toEqual(handle)
++  expect((await f.auth.stats()).bytes).toBe(f.auth.limits.maxBytes)
++  expect(await f.identity.person(f.request("/planner", signed.sessionCookie))).toEqual(person)
++})
++
++test("lower capacity persists across reopen and a peer cannot silently raise it", async () => {
++  const f = await retentionFixture({ authentication: { maxRecords: 3, maxChallenges: 2, batchSize: 1 } })
++  const saved = f.auth.limits
++  await f.store.dispose()
++  const restarted = await f.open()
++  expect(restarted.secrets.authentication!.limits).toEqual(saved)
++  await expect(f.open({ maxRecords: 4 })).rejects.toThrow()
++  expect(restarted.secrets.authentication!.limits.maxRecords).toBe(3)
++})
++
++test("an over-cap legacy backlog is counted at reopen and retires only in bounded batches", async () => {
++  const f = await retentionFixture({ authentication: { maxRecords: 3, maxChallenges: 2, batchSize: 2 } })
++  await f.store.dispose()
++  const db = new Database(join(f.directory, "installation.sqlite"), { strict: true })
++  const value = randomBytes(32)
++  try {
++    const insert = db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?)")
++    insert.run("legacy-live", value, f.provider.clock.value + 1000)
++    for (let index = 0; index < 4; index++) insert.run(`legacy-expired-${index}`, value, f.provider.clock.value)
++  } finally { db.close() }
++  const restarted = await f.open()
++  const auth = restarted.secrets.authentication!
++  const identity = f.makeIdentity(restarted.secrets)
++  expect((await auth.stats()).records).toBe(5)
++  expect((await identity.handle(f.request("/auth/login")))?.status).toBe(503)
++  expect(await auth.collect(f.provider.clock.value)).toEqual({ payloads: 2, handles: 0 })
++  expect((await auth.stats()).records).toBe(3)
++  expect((await identity.handle(f.request("/auth/login")))?.status).toBe(503)
++  expect(await auth.collect(f.provider.clock.value)).toEqual({ payloads: 2, handles: 0 })
++  expect(await restarted.secrets.get("legacy-live", f.provider.clock.value)).toEqual(value)
++  expect((await identity.handle(f.request("/auth/login")))?.status).toBe(303)
++  expect((await auth.stats()).records).toBe(2)
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/fixture.ts
+@@ -0,0 +1,101 @@
++import { afterEach, expect } from "bun:test"
++import { Database } from "bun:sqlite"
++import { createHash, randomBytes } from "node:crypto"
++import { mkdtemp, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { createMicrosoftIdentity } from "../../../runtime/local-identity.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import type { LocalIdentity, LocalSecrets } from "../../../runtime/local-contract.ts"
++import { clientId, group, microsoftFixture, tenant } from "../../microsoft-login/oidc-fixture.ts"
++
++export const origin = "https://retention.synthetic.example"
++export const mount = "/sucafina"
++export const context = { surface: "planner" as const, roleMap: [
++  { surface: "planner" as const, role: "viewer", entra: `group:${group}`, version: 0, by: "synthetic-owner" },
++] }
++const cleanups: (() => Promise<void>)[] = []
++afterEach(async () => { for (const cleanup of cleanups.splice(0).reverse()) await cleanup() })
++
++type AuthenticationLimits = NonNullable<Parameters<typeof openLocalStore>[1]>["authentication"]
++
++export async function retentionFixture(input: { sessionSeconds?: number; loginSeconds?: number; tokenSeconds?: number; authentication?: AuthenticationLimits; lockTimeoutMs?: number } = {}) {
++  const provider = await microsoftFixture({ tokenSeconds: input.tokenSeconds })
++  const directory = await mkdtemp(join(tmpdir(), "sf-auth-retention-"))
++  cleanups.push(() => rm(directory, { recursive: true, force: true }))
++  const open = async (authentication?: AuthenticationLimits) => {
++    const store = await openLocalStore(directory, { ...(authentication ? { authentication } : {}),
++      ...(input.lockTimeoutMs !== undefined ? { lockTimeoutMs: input.lockTimeoutMs } : {}) })
++    cleanups.push(() => store.dispose())
++    return store
++  }
++  const store = await open(input.authentication)
++  const options = { origin, mount, tenantId: tenant, clientId, client: provider.client, secrets: store.secrets,
++    key: randomBytes(32), now: () => new Date(provider.clock.value), sessionSeconds: input.sessionSeconds, loginSeconds: input.loginSeconds }
++  const identity = createMicrosoftIdentity(options)
++  const makeIdentity = (secrets: LocalSecrets = store.secrets, lifetimes: { sessionSeconds?: number; loginSeconds?: number } = {}) => createMicrosoftIdentity({ ...options, secrets, ...lifetimes })
++  const request = (path: string, cookies?: string, init: RequestInit = {}) => new Request(`${origin}${mount}${path}`, {
++    ...init, headers: { ...(cookies ? { cookie: cookies } : {}), ...Object.fromEntries(new Headers(init.headers)) },
++  })
++  const start = async (target: LocalIdentity = identity) => {
++    const response = await target.handle(request("/auth/login"))
++    expect(response?.status).toBe(303)
++    const destination = response!.headers.get("location")!
++    const state = new URL(destination).searchParams.get("state")!
++    const code = await provider.issueCode(destination)
++    const loginCookie = response!.headers.getSetCookie().find((cookie) => cookie.includes("_login="))!.split(";")[0]
++    const callbackRequest = () => request(`/auth/callback?state=${state}&code=${encodeURIComponent(code)}`, loginCookie)
++    return { response: response!, state, code, loginCookie, callbackRequest, callback: (consumer: LocalIdentity = target) => consumer.handle(callbackRequest()) }
++  }
++  const login = async (target: LocalIdentity = identity) => {
++    const begun = await start(target)
++    const response = await begun.callback()
++    expect(response?.status).toBe(303)
++    const sessionCookie = response!.headers.getSetCookie().find((cookie) => cookie.includes("_session="))!.split(";")[0]
++    return { ...begun, response: response!, sessionCookie }
++  }
++  const logout = (cookies: string, target: LocalIdentity = identity) => target.handle(request("/auth/logout", cookies, { method: "POST", headers: { origin } }))
++  const payloadCounts = () => {
++    const db = new Database(join(directory, "installation.sqlite"), { readonly: true, strict: true })
++    try {
++      return db.query<{ rows: number; bytes: number; sessions: number }, []>("SELECT count(*) AS rows, coalesce(sum(length(payload)), 0) AS bytes, coalesce(sum(key LIKE '%:session:%'), 0) AS sessions FROM authentication_payloads").get()!
++    } finally { db.close() }
++  }
++  const authenticationRows = () => {
++    const db = new Database(join(directory, "installation.sqlite"), { readonly: true, strict: true })
++    try {
++      const tables = db.query<{ name: string }, []>("SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE 'authentication_%' ORDER BY name").all()
++      return Object.fromEntries(tables.map(({ name }) => {
++        if (!/^authentication_[a-z_]+$/.test(name)) throw new Error("Unexpected authentication table name")
++        return [name, db.query<{ rows: number }, []>(`SELECT count(*) AS rows FROM ${name}`).get()!.rows]
++      }))
++    } finally { db.close() }
++  }
++  const storageKey = (kind: "login" | "session", handle: string) => {
++    const namespace = createHash("sha256").update(JSON.stringify([origin, mount, "microsoft", tenant, clientId])).digest("hex")
++    return `${namespace}:${kind}:${createHash("sha256").update(handle).digest("hex")}`
++  }
++  return { provider, directory, store, auth: store.secrets.authentication!, options, identity, makeIdentity, open, request, start, login, logout, payloadCounts, authenticationRows, storageKey }
++}
++
++export function cookieHandle(cookie: string) { return cookie.slice(cookie.indexOf("=") + 1) }
++
++export async function within<T>(promise: Promise<T>, milliseconds = 2000): Promise<T> {
++  let timer: ReturnType<typeof setTimeout> | undefined
++  try {
++    return await Promise.race([promise, new Promise<never>((_, reject) => {
++      timer = setTimeout(() => reject(new Error("Timed out waiting for authentication lifecycle")), milliseconds)
++    })])
++  } finally { clearTimeout(timer) }
++}
++
++export function barrier() {
++  const entered = Promise.withResolvers<void>()
++  const released = Promise.withResolvers<void>()
++  return { entered: entered.promise, release: () => released.resolve(), hold: () => { entered.resolve(); return released.promise } }
++}
++
++export function noSessionCookie(response: Response | undefined) {
++  expect(response?.status).toBe(403)
++  expect(response!.headers.getSetCookie().some((cookie) => cookie.includes("_session=") && !cookie.includes("Max-Age=0"))).toBe(false)
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts
+@@ -0,0 +1,67 @@
++import { expect, test } from "bun:test"
++import { startAuthMaintenance } from "../../../runtime/auth-maintenance.ts"
++import { barrier, retentionFixture, within } from "./fixture.ts"
++
++test("idle lifecycle reclaims expired rows in bounded passes without an authentication request", async () => {
++  const f = await retentionFixture({ loginSeconds: 1, authentication: { batchSize: 1 } })
++  await f.start()
++  await f.start()
++  f.provider.clock.value += 1000
++  const requests = f.provider.requests.length
++  const drained = Promise.withResolvers<void>()
++  let passes = 0
++  const lifecycle = startAuthMaintenance({
++    secrets: { ...f.store.secrets, authentication: { ...f.auth, async collect(at) {
++      const result = await f.auth.collect(at)
++      expect(result.handles + result.payloads).toBeLessThanOrEqual(1)
++      passes++
++      if ((await f.auth.stats()).records === 0) drained.resolve()
++      return result
++    } } },
++    now: () => f.provider.clock.value,
++    intervalMs: 5,
++  })
++  try {
++    await within(drained.promise)
++    expect(passes).toBeGreaterThanOrEqual(4)
++    expect((await f.auth.stats()).payloads).toBe(0)
++    expect((await f.auth.stats()).handles).toBe(0)
++    expect(f.provider.requests).toHaveLength(requests)
++    await lifecycle.dispose()
++    const stoppedAt = passes
++    await new Promise((resolve) => setTimeout(resolve, 20))
++    expect(passes).toBe(stoppedAt)
++  } finally { await lifecycle.dispose() }
++})
++
++test("maintenance is single flight and disposal waits for its admitted batch", async () => {
++  const f = await retentionFixture({ loginSeconds: 1 })
++  await f.start()
++  f.provider.clock.value += 1000
++  const gate = barrier()
++  let calls = 0
++  const lifecycle = startAuthMaintenance({
++    secrets: { ...f.store.secrets, authentication: { ...f.auth, async collect(at) {
++      calls++
++      await gate.hold()
++      return f.auth.collect(at)
++    } } },
++    now: () => f.provider.clock.value,
++    intervalMs: 60000,
++  })
++  const first = lifecycle.runOnce()
++  const second = lifecycle.runOnce()
++  await gate.entered
++  try {
++    expect(calls).toBe(1)
++    let disposed = false
++    const closing = lifecycle.dispose().then(() => { disposed = true })
++    await Promise.resolve()
++    expect(disposed).toBe(false)
++    gate.release()
++    await within(Promise.all([first, second, closing]))
++    expect(disposed).toBe(true)
++    expect(calls).toBe(1)
++    expect((await f.auth.stats()).records).toBe(0)
++  } finally { gate.release(); await lifecycle.dispose() }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts
+@@ -0,0 +1,182 @@
++import { expect, test } from "bun:test"
++import { barrier, context, cookieHandle, noSessionCookie, retentionFixture, within } from "./fixture.ts"
++
++test("consumed challenge remains cancellable in another instance and after reopening the store", async () => {
++  const f = await retentionFixture({ sessionSeconds: 1 })
++  const second = await f.open()
++  const peer = f.makeIdentity(second.secrets, { sessionSeconds: 28800 })
++  const begun = await f.start()
++  const gate = barrier()
++  f.provider.hooks.before = async (request) => { if (request.url === f.provider.metadata.token_endpoint) await gate.hold(); return undefined }
++  const pending = begun.callback()
++  await gate.entered
++  try {
++    expect(await f.store.secrets.get(f.storageKey("login", begun.state), f.provider.clock.value)).toBeUndefined()
++    expect((await f.logout(begun.loginCookie, peer))?.status).toBe(204)
++    await second.dispose()
++    const reopened = await f.open()
++    const restarted = f.makeIdentity(reopened.secrets)
++    noSessionCookie(await begun.callback(restarted))
++    f.provider.clock.value += 2000
++    gate.release()
++    noSessionCookie(await pending)
++    expect(f.payloadCounts().sessions).toBe(0)
++  } finally { gate.release(); await pending }
++})
++
++test("logout during a pending callback session write cannot expose a late credential", async () => {
++  const f = await retentionFixture()
++  const second = await f.open()
++  const peer = f.makeIdentity(second.secrets)
++  const gate = barrier()
++  const identity = f.makeIdentity({ ...f.store.secrets, authentication: { ...f.auth, async issue(input) {
++    if (input.key.includes(":session:")) await gate.hold()
++    return f.auth.issue(input)
++  } } })
++  const begun = await f.start(identity)
++  const pending = begun.callback()
++  await gate.entered
++  try {
++    expect((await f.logout(begun.loginCookie, peer))?.status).toBe(204)
++    gate.release()
++    noSessionCookie(await pending)
++    expect(f.payloadCounts().sessions).toBe(0)
++  } finally { gate.release(); await pending }
++})
++
++test("a callback paused after committing the session still observes another instance logout", async () => {
++  const f = await retentionFixture()
++  const second = await f.open()
++  const peer = f.makeIdentity(second.secrets)
++  const gate = barrier()
++  const identity = f.makeIdentity({ ...f.store.secrets, authentication: { ...f.auth, async issue(input) {
++    const issued = await f.auth.issue(input)
++    if (input.key.includes(":session:")) await gate.hold()
++    return issued
++  } } })
++  const begun = await f.start(identity)
++  const pending = begun.callback()
++  await gate.entered
++  try {
++    expect(f.payloadCounts().sessions).toBe(1)
++    expect((await f.logout(begun.loginCookie, peer))?.status).toBe(204)
++    gate.release()
++    noSessionCookie(await pending)
++    expect(f.payloadCounts().sessions).toBe(0)
++  } finally { gate.release(); await pending }
++})
++
++test("two instances cannot redeem the same challenge twice", async () => {
++  const f = await retentionFixture()
++  const peer = f.makeIdentity((await f.open()).secrets)
++  const begun = await f.start()
++  const responses = await Promise.all([begun.callback(), begun.callback(peer)])
++  expect(responses.map((response) => response?.status).sort()).toEqual([303, 403])
++  expect(f.provider.requests.filter((request) => request.url === f.provider.metadata.token_endpoint)).toHaveLength(1)
++  expect(f.payloadCounts().sessions).toBe(1)
++})
++
++test("restarted identity rejects copied session and late refresh after a durable logout", async () => {
++  const f = await retentionFixture({ tokenSeconds: 90 })
++  const signed = await f.login()
++  const peer = f.makeIdentity((await f.open()).secrets)
++  const gate = barrier()
++  const identity = f.makeIdentity({ ...f.store.secrets, async put(key, value, expiresAt, at) {
++    if (key.includes(":session:")) await gate.hold()
++    await f.store.secrets.put(key, value, expiresAt, at)
++  } })
++  f.provider.clock.value += 40000
++  const refreshing = identity.prepare(f.request("/planner", signed.sessionCookie))
++  await gate.entered
++  try {
++    expect((await f.logout(signed.sessionCookie, peer))?.status).toBe(204)
++    const reopened = await f.open()
++    const restarted = f.makeIdentity(reopened.secrets)
++    expect(await restarted.person(f.request("/planner", signed.sessionCookie))).toBeNull()
++    gate.release()
++    await refreshing
++    expect(await restarted.person(f.request("/planner", signed.sessionCookie))).toBeNull()
++    expect(await restarted.authenticate(f.request("/planner", signed.sessionCookie), context)).toBeNull()
++    expect(f.payloadCounts().sessions).toBe(0)
++  } finally { gate.release(); await refreshing }
++})
++
++test("another instance logout denies a Graph result already in flight", async () => {
++  const f = await retentionFixture()
++  const signed = await f.login()
++  const peer = f.makeIdentity((await f.open()).secrets)
++  const gate = barrier()
++  f.provider.hooks.before = async (request) => { if (new URL(request.url).pathname === "/v1.0/me/checkMemberGroups") await gate.hold(); return undefined }
++  const authorizing = f.identity.authenticate(f.request("/planner", signed.sessionCookie), context)
++  await gate.entered
++  try {
++    expect((await f.logout(signed.sessionCookie, peer))?.status).toBe(204)
++    gate.release()
++    expect(await authorizing).toBeNull()
++  } finally { gate.release(); await authorizing }
++})
++
++test("hung refresh admissions remain bounded across expired and collected session generations", async () => {
++  const f = await retentionFixture({ tokenSeconds: 90, authentication: { maxRecords: 3, maxChallenges: 3 } })
++  const gates = Array.from({ length: 3 }, () => barrier())
++  const pending: Promise<void>[] = []
++  let refreshRequests = 0
++  f.provider.hooks.before = async (request) => {
++    if (request.url === f.provider.metadata.token_endpoint &&
++      new URLSearchParams(await request.clone().text()).get("grant_type") === "refresh_token") {
++      const gate = gates[refreshRequests++]
++      if (gate) await gate.hold()
++    }
++    return undefined
++  }
++  try {
++    for (const gate of gates) {
++      const signed = await f.login()
++      f.provider.clock.value += 40000
++      pending.push(f.identity.prepare(f.request("/planner", signed.sessionCookie)))
++      await within(gate.entered)
++      expect(refreshRequests).toBe(pending.length)
++      const parent = f.auth.inspect(f.storageKey("login", signed.state), f.provider.clock.value)!
++      f.provider.clock.value = parent.retainUntil + 1
++      await f.auth.collect(f.provider.clock.value)
++      expect((await f.auth.stats()).records).toBe(0)
++    }
++    const fourth = await f.login()
++    f.provider.clock.value += 40000
++    await within(f.identity.prepare(f.request("/planner", fourth.sessionCookie)))
++    expect(refreshRequests).toBe(3)
++    expect(await f.identity.person(f.request("/planner", fourth.sessionCookie))).not.toBeNull()
++  } finally {
++    for (const gate of gates) gate.release()
++    await within(Promise.allSettled(pending))
++  }
++})
++
++test("CR72-01 failed durable logout keeps its fence until a successful retry", async () => {
++  const f = await retentionFixture({ lockTimeoutMs: 40 })
++  const signed = await f.login()
++  const key = f.storageKey("session", cookieHandle(signed.sessionCookie))
++  const gate = barrier()
++  f.provider.hooks.before = async (request) => {
++    if (new URL(request.url).pathname === "/v1.0/me/checkMemberGroups") await gate.hold()
++    return undefined
++  }
++  const authorizing = f.store.transaction("planner", async () => ({
++    commit: false,
++    value: await f.identity.authenticate(f.request("/planner", signed.sessionCookie), context),
++  }))
++  try {
++    await within(gate.entered)
++    // The real business writer remains held until Graph completes, forcing the
++    // queued logout to exhaust admission without committing its durable marker.
++    expect((await within(f.logout(signed.sessionCookie)))?.status).toBe(503)
++    expect(f.auth.inspect(key, f.provider.clock.value)!.state).toBe("revoked")
++    gate.release()
++    expect(await within(authorizing)).toBeNull()
++    expect((await f.logout(signed.sessionCookie))?.status).toBe(204)
++    expect((await f.auth.stats()).pendingRevocations).toBe(0)
++    const reopened = await f.open()
++    const restarted = f.makeIdentity(reopened.secrets)
++    expect(await restarted.person(f.request("/planner", signed.sessionCookie))).toBeNull()
++  } finally { gate.release(); await authorizing.catch(() => undefined) }
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/retention.test.ts
+@@ -0,0 +1,111 @@
++import { expect, test } from "bun:test"
++import { randomBytes } from "node:crypto"
++import { barrier, cookieHandle, noSessionCookie, retentionFixture } from "./fixture.ts"
++
++test("abandoned challenge is unreadable and physically collectible exactly at its expiry", async () => {
++  const f = await retentionFixture({ loginSeconds: 1 })
++  const begun = await f.start()
++  const key = f.storageKey("login", begun.state)
++  const issued = f.auth.inspect(key, f.provider.clock.value)!
++  expect(issued.state).toBe("issued")
++  expect(issued.retainUntil).toBe(issued.expiresAt)
++  f.provider.clock.value = issued.expiresAt - 1
++  expect(await f.store.secrets.get(key, f.provider.clock.value)).toBeDefined()
++  expect(await f.auth.collect(f.provider.clock.value)).toEqual({ payloads: 0, handles: 0 })
++  f.provider.clock.value++
++  expect(await f.store.secrets.get(key, f.provider.clock.value)).toBeUndefined()
++  // Expired reads remain read only; the lifecycle collector owns physical deletion.
++  expect((await f.auth.stats()).payloads).toBe(1)
++  expect(await f.auth.collect(f.provider.clock.value)).toEqual({ payloads: 1, handles: 1 })
++  expect((await f.auth.stats()).records).toBe(0)
++  noSessionCookie(await begun.callback())
++})
++
++test("refresh never moves absolute session expiry and idle collection reclaims its ciphertext", async () => {
++  const f = await retentionFixture({ sessionSeconds: 120, tokenSeconds: 90 })
++  const signed = await f.login()
++  const key = f.storageKey("session", cookieHandle(signed.sessionCookie))
++  const original = f.auth.inspect(key, f.provider.clock.value)!
++  f.provider.clock.value += 40000
++  await f.identity.prepare(f.request("/planner", signed.sessionCookie))
++  expect(f.auth.inspect(key, f.provider.clock.value)!.expiresAt).toBe(original.expiresAt)
++  expect(f.auth.inspect(key, f.provider.clock.value)!.retainUntil).toBe(original.retainUntil)
++  f.provider.clock.value = original.expiresAt - 1
++  expect(await f.identity.person(f.request("/planner", signed.sessionCookie))).not.toBeNull()
++  f.provider.clock.value++
++  expect(await f.identity.person(f.request("/planner", signed.sessionCookie))).toBeNull()
++  expect(f.payloadCounts().sessions).toBe(1)
++  await f.auth.collect(f.provider.clock.value)
++  expect(f.payloadCounts().sessions).toBe(0)
++  expect((await f.auth.stats()).records).toBe(1)
++})
++
++test("collection after challenge TTL preserves consumed correlation and cross-instance cancellation", async () => {
++  const f = await retentionFixture({ loginSeconds: 1, sessionSeconds: 1 })
++  const peer = f.makeIdentity((await f.open()).secrets, { sessionSeconds: 28800 })
++  const begun = await f.start()
++  const key = f.storageKey("login", begun.state)
++  const gate = barrier()
++  f.provider.hooks.before = async (request) => { if (request.url === f.provider.metadata.token_endpoint) await gate.hold(); return undefined }
++  const pending = begun.callback()
++  await gate.entered
++  try {
++    const consumed = f.auth.inspect(key, f.provider.clock.value)!
++    expect(consumed.state).toBe("pending")
++    expect(consumed.retainUntil).toBe(consumed.expiresAt + 28800000)
++    f.provider.clock.value = consumed.expiresAt
++    expect(await f.auth.collect(f.provider.clock.value)).toEqual({ payloads: 0, handles: 0 })
++    expect((await f.auth.stats()).records).toBe(1)
++    expect((await f.logout(begun.loginCookie, peer))?.status).toBe(204)
++    expect(f.auth.inspect(key, f.provider.clock.value)!.state).toBe("revoked")
++    expect(f.auth.inspect(key, f.provider.clock.value)!.retainUntil).toBe(consumed.retainUntil)
++    gate.release()
++    noSessionCookie(await pending)
++    expect(f.payloadCounts().sessions).toBe(0)
++  } finally { gate.release(); await pending }
++})
++
++test("a callback beyond the fixed retention horizon cannot resurrect a purged parent", async () => {
++  const f = await retentionFixture({ loginSeconds: 1 })
++  const begun = await f.start()
++  const key = f.storageKey("login", begun.state)
++  const gate = barrier()
++  f.provider.hooks.before = async (request) => { if (request.url === f.provider.metadata.token_endpoint) await gate.hold(); return undefined }
++  const pending = begun.callback()
++  await gate.entered
++  try {
++    const consumed = f.auth.inspect(key, f.provider.clock.value)!
++    f.provider.clock.value = consumed.retainUntil - 1
++    expect(await f.auth.collect(f.provider.clock.value)).toEqual({ payloads: 0, handles: 0 })
++    f.provider.clock.value++
++    expect(await f.auth.collect(f.provider.clock.value)).toEqual({ payloads: 0, handles: 1 })
++    expect((await f.auth.stats()).records).toBe(0)
++    expect(await f.auth.issue({ key: f.storageKey("session", randomBytes(32).toString("hex")), value: randomBytes(32),
++      expiresAt: f.provider.clock.value + 1000, at: f.provider.clock.value, parent: key })).toBe(false)
++    gate.release()
++    noSessionCookie(await pending)
++    expect((await f.auth.stats()).records).toBe(0)
++  } finally { gate.release(); await pending }
++})
++
++test("each collector pass has one total deletion budget across payloads and handles", async () => {
++  const f = await retentionFixture({ loginSeconds: 1, authentication: { batchSize: 3 } })
++  for (let index = 0; index < 5; index++) await f.start()
++  f.provider.clock.value += 1000
++  const before = await f.auth.stats()
++  expect(before.handles + before.payloads).toBe(10)
++  let removed = 0
++  for (let pass = 0; pass < 10 && removed < 10; pass++) {
++    const previous = await f.auth.stats()
++    const result = await f.auth.collect(f.provider.clock.value)
++    const count = result.handles + result.payloads
++    expect(count).toBeGreaterThan(0)
++    expect(count).toBeLessThanOrEqual(3)
++    const current = await f.auth.stats()
++    expect(previous.handles + previous.payloads - current.handles - current.payloads).toBe(count)
++    removed += count
++    if (pass === 0) expect(current.handles + current.payloads).toBeGreaterThan(0)
++  }
++  expect(removed).toBe(10)
++  expect((await f.auth.stats()).records).toBe(0)
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts
+@@ -0,0 +1,40 @@
++import { expect, test } from "bun:test"
++import { randomBytes } from "node:crypto"
++import { cookieHandle, retentionFixture } from "./fixture.ts"
++
++test("same-origin logout with never-issued syntactic handles allocates no persistent authentication state", async () => {
++  const f = await retentionFixture()
++  const begun = await f.start()
++  const loginName = begun.loginCookie.split("=")[0]
++  const sessionName = loginName.replace(/_login$/, "_session")
++  const before = { tables: f.authenticationRows(), payloads: f.payloadCounts() }
++  for (let index = 0; index < 16; index++) {
++    const cookies = `${loginName}=${randomBytes(32).toString("hex")}; ${sessionName}=${randomBytes(32).toString("hex")}`
++    const result = await f.logout(cookies)
++    expect(result?.status).toBe(204)
++    expect(result!.headers.getSetCookie()).toHaveLength(2)
++    expect(result!.headers.getSetCookie().every((cookie) => cookie.includes("Max-Age=0"))).toBe(true)
++  }
++  expect({ tables: f.authenticationRows(), payloads: f.payloadCounts() }).toEqual(before)
++  expect((await f.auth.stats()).pendingRevocations).toBe(0)
++  // Rejecting forged handles must not impair the separately issued real challenge.
++  expect((await begun.callback())?.status).toBe(303)
++})
++
++test("repeated logout of a known handle is idempotent across identities", async () => {
++  const f = await retentionFixture()
++  const peer = f.makeIdentity((await f.open()).secrets)
++  const signed = await f.login()
++  const key = f.storageKey("session", cookieHandle(signed.sessionCookie))
++  const original = f.auth.inspect(key, f.provider.clock.value)!
++  expect((await f.logout(signed.sessionCookie))?.status).toBe(204)
++  const retained = { tables: f.authenticationRows(), payloads: f.payloadCounts() }
++  f.provider.clock.value += 1000
++  for (let index = 0; index < 8; index++) expect((await f.logout(signed.sessionCookie, index % 2 ? peer : f.identity))?.status).toBe(204)
++  expect({ tables: f.authenticationRows(), payloads: f.payloadCounts() }).toEqual(retained)
++  const revoked = f.auth.inspect(key, f.provider.clock.value)!
++  expect(revoked.state).toBe("revoked")
++  expect(revoked.retainUntil).toBe(original.retainUntil)
++  expect(revoked.expiresAt).toBe(original.expiresAt)
++  expect(await peer.person(f.request("/planner", signed.sessionCookie))).toBeNull()
++})
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts
+@@ -0,0 +1,44 @@
++import { expect, test } from "bun:test"
++import { barrier, context, retentionFixture, within } from "./fixture.ts"
++
++// Installed only in the hosted composition of readonly59 plus mission72.
++// The source72 snapshot deliberately does not invent or replace readonly59's API.
++test("readonly59 Graph completion observes logout before its queued durable write", async () => {
++  const f = await retentionFixture()
++  expect(f.store.readSnapshotRoot).toBeDefined()
++  const signed = await f.login()
++  const gate = barrier()
++  f.provider.hooks.before = async (request) => {
++    if (new URL(request.url).pathname === "/v1.0/me/checkMemberGroups") await gate.hold()
++    return undefined
++  }
++  let logout: Promise<Response | undefined> | undefined
++  const reading = f.store.readSnapshotRoot!(() =>
++    f.identity.authenticate(f.request("/planner", signed.sessionCookie), context))
++  try {
++    await within(gate.entered)
++    // Logout installs its local fence before waiting behind the root writer.
++    // Start it outside the root callback so it does not inherit that scope;
++    // awaiting its durable result before releasing Graph would block the queue.
++    logout = f.logout(signed.sessionCookie)
++    gate.release()
++    expect(await within(reading)).toBeNull()
++    expect(logout).toBeDefined()
++    expect((await within(logout!))?.status).toBe(204)
++  } finally { gate.release(); await reading.catch(() => undefined); await logout }
++})
++
++test("catching nested maintenance rejection cannot rescue a poisoned readonly59 root", async () => {
++  const f = await retentionFixture()
++  expect(f.store.readSnapshotRoot).toBeDefined()
++  const begun = await f.start()
++  const before = await f.auth.stats()
++  let rejected = false
++  await expect(f.store.readSnapshotRoot!(async () => {
++    try { await f.auth.collect(f.provider.clock.value) } catch { rejected = true }
++    return "caller caught attempted auth write"
++  })).rejects.toThrow()
++  expect(rejected).toBe(true)
++  expect(await f.auth.stats()).toEqual(before)
++  expect((await begun.callback())?.status).toBe(303)
++})
+--- a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
+@@ -20,7 +20,7 @@
+   const postimage = await readFile(path.join(receipts, entry.postimage))
+   const canonical = await readFile(path.join(repository, target))
+   if (sha256(preimage) !== entry.preimage_sha256 || blob(preimage) !== entry.source_blob || sha256(postimage) !== entry.postimage_sha256 || blob(postimage) !== entry.postimage_blob) throw new Error("Integration artifact drift")
+-  const composition = JSON.parse(await readFile(path.join(intake, "microsoft49-composition.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
++  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
+   if (composition.schema !== "sf2h.microsoft49-composition.v1" || composition.source_release !== "74ba5b7f71182e531049b8c56fe304c3bec4c3db" || composition.source_manifest_blob !== blob(manifestBytes) || !Array.isArray(composition.files) || composition.files.length !== manifest.files.length || new Set(composition.files.map((file) => file.path)).size !== manifest.files.length || composition.files.some((file) => !manifest.files.some((source) => source.path === file.path && source.postimage_blob === file.source_postimage_blob && source.postimage_sha256 === file.source_postimage_sha256))) throw new Error("Integration composition mapping drift")
+   const installed = composition.files.find((file) => file.path === target)
+   if (!installed || blob(canonical) !== installed.postimage_blob || sha256(canonical) !== installed.postimage_sha256) throw new Error("Integration installed source drift requires owner reconciliation")
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json
+@@ -0,0 +1,50 @@
++{
++  "schema": "sf2h.microsoft49-composition.v1",
++  "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
++  "source_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
++  "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
++  "target_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
++  "source_tests_do_not_qualify_composition": true,
++  "validation": "NOT_RUN. Exact candidate mapping for authorized mission72 hosted qualification; original49 artifacts and assertions retained. This map does not prove installed or global acceptance.",
++  "files": [
++    {
++      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
++      "mode": "100644",
++      "target_preimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
++      "postimage_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
++      "postimage_sha256": "addaab0dca8ce1addcb155808a841c4ac05a55e6dbe630ee874fa69f5f3067fb",
++      "bytes": 25564,
++      "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
++      "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
++      "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
++    },
++    {
++      "path": "apps/cli/src/sucafina-product/installation.ts",
++      "mode": "100644",
++      "target_preimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
++      "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
++      "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
++      "bytes": 5315,
++      "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
++      "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
++      "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
++    },
++    {
++      "path": "apps/cli/src/commands/handlers/serve.ts",
++      "mode": "100644",
++      "target_preimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
++      "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
++      "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
++      "bytes": 8960,
++      "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
++      "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
++      "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
++    }
++  ],
++  "composition_mission": 72,
++  "previous_composition": {
++    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
++    "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
++    "preserved_byte_for_byte": true
++  }
++}

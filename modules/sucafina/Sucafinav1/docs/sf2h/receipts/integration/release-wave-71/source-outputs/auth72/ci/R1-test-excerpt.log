@@ -1,0 +1,174 @@
+2026-11-15T03:16:30.5962541Z bun test v1.3.14 (0d9b296a)
+2026-11-15T03:16:30.6102310Z 
+2026-11-15T03:16:30.6103304Z Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts:
+2026-11-15T03:16:31.5348750Z (pass) same-origin logout with never-issued syntactic handles allocates no persistent authentication state [896.20ms]
+2026-11-15T03:16:31.6049854Z (pass) repeated logout of a known handle is idempotent across identities [70.11ms]
+2026-11-15T03:16:31.6052174Z 
+2026-11-15T03:16:31.6052649Z Sucafinav1/test/product/auth-retention-fix/retention.test.ts:
+2026-11-15T03:16:31.6756580Z (pass) abandoned challenge is unreadable and physically collectible exactly at its expiry [69.14ms]
+2026-11-15T03:16:31.7911758Z (pass) refresh never moves absolute session expiry and idle collection reclaims its ciphertext [115.41ms]
+2026-11-15T03:16:31.8747886Z (pass) collection after challenge TTL preserves consumed correlation and cross-instance cancellation [83.68ms]
+2026-11-15T03:16:31.9518556Z (pass) a callback beyond the fixed retention horizon cannot resurrect a purged parent [77.03ms]
+2026-11-15T03:16:32.0226405Z (pass) each collector pass has one total deletion budget across payloads and handles [70.77ms]
+2026-11-15T03:16:32.0227006Z 
+2026-11-15T03:16:32.0227393Z Sucafinav1/test/product/auth-retention-fix/capacity.test.ts:
+2026-11-15T03:16:32.0824186Z (pass) two stores share the record cap and never evict an issued challenge or revocation fence [57.86ms]
+2026-11-15T03:16:32.1434574Z (pass) challenge admission has its own shared cap before the total record cap is reached [61.04ms]
+2026-11-15T03:16:32.2416665Z (pass) a consumed challenge cannot mint a session past the global record cap [98.21ms]
+2026-11-15T03:16:32.2973541Z (pass) total ciphertext and individual payload limits reject admission without losing prior records [55.67ms]
+2026-11-15T03:16:32.4170938Z (pass) oversized refresh writes preserve the signed session bytes, deadline and person [119.75ms]
+2026-11-15T03:16:32.4954340Z (pass) lower capacity persists across reopen and a peer cannot silently raise it [78.35ms]
+2026-11-15T03:16:32.5625281Z (pass) an over-cap legacy backlog is counted at reopen and retires only in bounded batches [67.09ms]
+2026-11-15T03:16:32.5625665Z 
+2026-11-15T03:16:32.5625893Z Sucafinav1/test/product/auth-retention-fix/races.test.ts:
+2026-11-15T03:16:32.6963028Z (pass) consumed challenge remains cancellable in another instance and after reopening the store [131.88ms]
+2026-11-15T03:16:32.7948299Z (pass) logout during a pending callback session write cannot expose a late credential [98.54ms]
+2026-11-15T03:16:32.8703021Z (pass) a callback paused after committing the session still observes another instance logout [75.48ms]
+2026-11-15T03:16:32.9585777Z (pass) two instances cannot redeem the same challenge twice [88.27ms]
+2026-11-15T03:16:33.0867870Z (pass) restarted identity rejects copied session and late refresh after a durable logout [128.16ms]
+2026-11-15T03:16:33.1610306Z (pass) another instance logout denies a Graph result already in flight [74.26ms]
+2026-11-15T03:16:33.3022428Z (pass) hung refresh admissions remain bounded across expired and collected session generations [141.12ms]
+2026-11-15T03:16:33.3894749Z (pass) CR72-01 failed durable logout keeps its fence until a successful retry [87.26ms]
+2026-11-15T03:16:33.3895223Z 
+2026-11-15T03:16:33.3895624Z Sucafinav1/test/product/auth-retention-fix/maintenance.test.ts:
+2026-11-15T03:16:33.6233185Z (pass) idle lifecycle reclaims expired rows in bounded passes without an authentication request [232.33ms]
+2026-11-15T03:16:33.6610863Z (pass) maintenance is single flight and disposal waits for its admitted batch [37.77ms]
+2026-11-15T03:16:33.6611708Z 
+2026-11-15T03:16:33.6611969Z Sucafinav1/test/local-identity.test.ts:
+2026-11-15T03:16:33.6647174Z (pass) PKCE credentials stay encrypted, cookies scoped and callback single-use [1.75ms]
+2026-11-15T03:16:33.6651719Z (pass) unsafe return destination https://attacker.example falls back inside module [0.48ms]
+2026-11-15T03:16:33.6655160Z (pass) unsafe return destination //attacker.example falls back inside module [0.35ms]
+2026-11-15T03:16:33.6685297Z (pass) unsafe return destination /sucafina/auth/logout falls back inside module [0.33ms]
+2026-11-15T03:16:33.6686305Z (pass) unsafe return destination /sucafina/../api falls back inside module [0.21ms]
+2026-11-15T03:16:33.6708291Z (pass) unsafe return destination /sucafina/planner\@attacker.example falls back inside module [0.15ms]
+2026-11-15T03:16:33.6709718Z (pass) callback requires matching browser state and expiry [0.39ms]
+2026-11-15T03:16:33.6710745Z (pass) authentication reads only, refresh is explicit and membership resolves fresh in selected surface [1.37ms]
+2026-11-15T03:16:33.6711398Z (pass) refresh cannot adopt a different directory identity [0.90ms]
+2026-11-15T03:16:33.6711911Z (pass) tampering or a different installation key fails closed [0.89ms]
+2026-11-15T03:16:33.6712474Z (pass) logout requires same-origin POST and revokes copied browser cookie [1.10ms]
+2026-11-15T03:16:33.6712806Z 
+2026-11-15T03:16:33.6712964Z Sucafinav1/test/local-store.test.ts:
+2026-11-15T03:16:33.6889812Z (pass) current snapshots are isolated copies in a live transaction and expire with its scope [12.45ms]
+2026-11-15T03:16:33.6989036Z (pass) current and nested snapshot copies preserve codec normalization and isolate staged mutations [9.92ms]
+2026-11-15T03:16:33.7098481Z (pass) current and nested snapshot copies retain codec rejection and snapshot validation [10.91ms]
+2026-11-15T03:16:33.7424421Z (pass) all-surface transaction exposes staged nested reads and rejects nested writes [32.61ms]
+2026-11-15T03:16:33.7529312Z (pass) real SQLite persists the entire snapshot, binary blobs and undefined across reopen [10.48ms]
+2026-11-15T03:16:33.7619832Z (pass) codec preserves sentinel-shaped objects, tagged-looking arrays and nested undefined [9.07ms]
+2026-11-15T03:16:33.7717281Z (pass) false rolls back state, versions, sequences, audit, notices and blob additions/removals [9.70ms]
+2026-11-15T03:16:33.7811373Z (pass) throw rolls back state, versions, sequences, audit, notices and blob additions/removals [9.40ms]
+2026-11-15T03:16:33.7908141Z (pass) abort rolls back state, versions, sequences, audit, notices and blob additions/removals [9.67ms]
+2026-11-15T03:16:33.7970620Z (pass) unsupported codec value NaN rejects without modifying persisted state [6.23ms]
+2026-11-15T03:16:33.8025634Z (pass) unsupported codec value Infinity rejects without modifying persisted state [5.48ms]
+2026-11-15T03:16:33.8081341Z (pass) unsupported codec value -Infinity rejects without modifying persisted state [5.58ms]
+2026-11-15T03:16:33.8139018Z (pass) unsupported codec value () => 1 rejects without modifying persisted state [5.72ms]
+2026-11-15T03:16:33.8193562Z (pass) unsupported codec value [object Object] rejects without modifying persisted state [5.46ms]
+2026-11-15T03:16:33.8248130Z (pass) cyclic state rejects atomically [5.45ms]
+2026-11-15T03:16:33.8662057Z (pass) independent instances serialize different-record writes without replay [41.35ms]
+2026-11-15T03:16:33.9048899Z (pass) independent instances serialize same-record CAS writes without replay [38.70ms]
+2026-11-15T03:16:33.9157270Z (pass) surface namespaces isolate identical blob keys and snapshots [10.83ms]
+2026-11-15T03:16:34.0044361Z (pass) pending lock cancellation never invokes work [88.67ms]
+2026-11-15T03:16:34.0935093Z (pass) pending lock timeout never invokes work [89.05ms]
+2026-11-15T03:16:34.1208800Z (pass) secrets get is read-only inside a business write; expiry, atomic take and removal persist [27.38ms]
+2026-11-15T03:16:34.1309903Z (pass) blob capabilities expire after callback and dispose drains work while prohibiting new operations [10.08ms]
+2026-11-15T03:16:34.1311059Z (pass) relative and memory paths are rejected before opening storage [0.17ms]
+2026-11-15T03:16:34.1371906Z (pass) an existing accessible directory is rejected without changing its permissions [6.03ms]
+2026-11-15T03:16:34.1431652Z (pass) a corrupt existing SQLite file rejects rather than returning an empty installation [5.94ms]
+2026-11-15T03:16:34.1499742Z (pass) corrupt stored snapshot payload rejects before callback instead of synthesizing empty state [6.83ms]
+2026-11-15T03:16:34.1556094Z (pass) already aborted transactions never invoke callback [5.65ms]
+2026-11-15T03:16:34.1566361Z (pass) rejects directory symlinks without creating storage through an alias [1.03ms]
+2026-11-15T03:16:34.1572987Z (pass) rejects ancestor symlinks without creating storage through an alias [0.59ms]
+2026-11-15T03:16:34.1630578Z (pass) rejects database symlinks without creating storage through an alias [5.76ms]
+2026-11-15T03:16:34.1685409Z (pass) creating nested private directories preserves existing parent permissions [5.43ms]
+2026-11-15T03:16:34.1686863Z (skip) rejects foreign UID directory (requires root fixture privileges)
+2026-11-15T03:16:34.1954370Z (skip) rejects foreign UID database (requires root fixture privileges)
+2026-11-15T03:16:34.1955287Z (pass) malformed but encodable snapshot rejects before commit and rolls back staged bytes [26.88ms]
+2026-11-15T03:16:34.4090449Z (pass) one SQLite store survives a mixed concurrent burst across surfaces, secrets and binary assets without lost or replayed writes [213.56ms]
+2026-11-15T03:16:40.2021904Z (pass) dispose drains already admitted mixed operations and cancelled work without admitting late writes [5793.11ms]
+2026-11-15T03:16:40.4216479Z (pass) same-instance abort before admission never invokes work or lets a later operation overtake its active predecessor [219.47ms]
+2026-11-15T03:16:40.5420620Z (pass) same-instance timeout before admission never invokes work or lets a later operation overtake its active predecessor [120.38ms]
+2026-11-15T03:16:40.5421118Z 
+2026-11-15T03:16:40.5421297Z Sucafinav1/test/microsoft-session.test.ts:
+2026-11-15T03:16:40.6487242Z (pass) HTTPS uses opaque scoped cookies and actual encrypted private persistence [103.96ms]
+2026-11-15T03:16:40.7718535Z (pass) HTTPS identity rejects insecure origins, wrong client profile and unbounded lifetimes [123.11ms]
+2026-11-15T03:16:40.8458861Z (pass) browser state, callback parameters and expiry fail closed before token redemption [74.04ms]
+2026-11-15T03:16:40.9610997Z (pass) provider error, missing or duplicate code consume the one-time callback [115.22ms]
+2026-11-15T03:16:41.0284896Z (pass) HTTPS confidential callback rejects invalid tenant without establishing a private session [67.35ms]
+2026-11-15T03:16:41.2199276Z (pass) HTTPS confidential callback rejects invalid audience without establishing a private session [191.40ms]
+2026-11-15T03:16:41.2836110Z (pass) HTTPS confidential callback rejects invalid nonce without establishing a private session [63.62ms]
+2026-11-15T03:16:41.3752833Z (pass) HTTPS confidential callback rejects invalid expired without establishing a private session [91.77ms]
+2026-11-15T03:16:41.4676539Z (pass) HTTPS confidential callback rejects invalid signature without establishing a private session [92.35ms]
+2026-11-15T03:16:41.5285131Z (pass) HTTPS confidential callback rejects invalid algorithm without establishing a private session [60.81ms]
+2026-11-15T03:16:41.7033880Z (pass) unsafe return targets stay within real Sucafina surfaces [174.85ms]
+2026-11-15T03:16:41.8833975Z (pass) immutable individual subjects receive only current assigned surface roles [180.06ms]
+2026-11-15T03:16:41.9662065Z (pass) copied cookie stays revoked after reopening the actual private store [82.77ms]
+2026-11-15T03:16:42.0755923Z (pass) absolute session expiry cannot be extended by refresh [109.39ms]
+2026-11-15T03:16:42.1501408Z (pass) logout wins an in-flight refresh and the copied cookie never revives [74.50ms]
+2026-11-15T03:16:42.2059225Z (pass) logout cancels callback redemption even before a session exists [55.77ms]
+2026-11-15T03:16:42.3137281Z (pass) callback expiry while the provider is pending cannot create a session [107.80ms]
+2026-11-15T03:16:42.6111392Z (pass) authorization awaiting Graph cannot emit identity after logout or session expiry [297.37ms]
+2026-11-15T03:16:42.6847849Z (pass) directory lookup cannot return private identity after logout [73.68ms]
+2026-11-15T03:16:42.7706688Z (pass) logout fences a pending authorization inside the real business transaction [85.85ms]
+2026-11-15T03:16:42.8314700Z (pass) durable logout wins between refresh validation and the real private-store write [60.75ms]
+2026-11-15T03:16:42.9155167Z (pass) origin, installation and resource-tenant boundaries reject the same opaque cookie [84.04ms]
+2026-11-15T03:16:42.9953336Z (pass) identity pins caller configuration and method references for its full lifetime [79.81ms]
+2026-11-15T03:16:43.0513780Z (pass) logout requires exact same-origin POST and ignores forwarded origins [56.04ms]
+2026-11-15T03:16:43.0514458Z 
+2026-11-15T03:16:43.0514768Z Sucafinav1/test/microsoft-entra-client.test.ts:
+2026-11-15T03:16:43.1155649Z (pass) confidential web flow uses minimum scopes and sends the private credential only to token POST [62.49ms]
+2026-11-15T03:16:43.1755943Z (pass) web mode accepts the guest object in the resource tenant and ignores home identity and role/name/email claims [59.98ms]
+2026-11-15T03:16:43.2657381Z (pass) web directory exposes only the authenticated user and never asks for guest-forbidden directory enumeration [90.16ms]
+2026-11-15T03:16:43.3232395Z (pass) web authorization resolves immutable IDs and rereads removal with no display-name queries [57.50ms]
+2026-11-15T03:16:43.4081992Z (pass) role mapping cannot change privilege while a directory resolution is pending [84.92ms]
+2026-11-15T03:16:43.4745115Z (pass) web mode refuses noncanonical or legacy mappings: Guest [66.34ms]
+2026-11-15T03:16:43.5080630Z (pass) web mode refuses noncanonical or legacy mappings: Administrator [33.57ms]
+2026-11-15T03:16:43.5628722Z (pass) web mode refuses noncanonical or legacy mappings: 44444444-4444-4444-8444-444444444444 [54.76ms]
+2026-11-15T03:16:43.6100766Z (pass) web mode refuses noncanonical or legacy mappings: group:44444444-4444-4444-8444-444444444444  [47.15ms]
+2026-11-15T03:16:43.7226761Z (pass) web mode refuses noncanonical or legacy mappings: group:not-an-id [112.61ms]
+2026-11-15T03:16:43.7893582Z (pass) web mode refuses noncanonical or legacy mappings: person:admin@example.test [66.59ms]
+2026-11-15T03:16:43.8425501Z (pass) web mode refuses invented product roles before directory lookup [51.76ms]
+2026-11-15T03:16:43.8426638Z (pass) confidential profile cannot silently downgrade or receive a public-client secret [0.30ms]
+2026-11-15T03:16:43.8846916Z (pass) invalid private credential fails before token POST (0 chars) [43.32ms]
+2026-11-15T03:16:43.9316470Z (pass) invalid private credential fails before token POST (1 chars) [46.95ms]
+2026-11-15T03:16:44.0148160Z (pass) invalid private credential fails before token POST (20 chars) [82.95ms]
+2026-11-15T03:16:44.1052216Z (pass) invalid private credential fails before token POST (4097 chars) [90.44ms]
+2026-11-15T03:16:44.1581546Z (pass) private credential provider failure is sanitized [53.05ms]
+2026-11-15T03:16:44.1963758Z (pass) client snapshots application/profile/transport and credential provider [38.23ms]
+2026-11-15T03:16:44.3318296Z (pass) confidential profile rejects missing or unsupported token type: undefined [135.27ms]
+2026-11-15T03:16:44.3934411Z (pass) confidential profile rejects missing or unsupported token type: MAC [61.59ms]
+2026-11-15T03:16:44.4356537Z (pass) confidential profile rejects missing or unsupported token type: bearer [42.38ms]
+2026-11-15T03:16:44.4357012Z 
+2026-11-15T03:16:44.4357321Z Sucafinav1/test/microsoft-configuration.test.ts:
+2026-11-15T03:16:44.4472908Z (pass) Microsoft configuration is explicit, immutable, minimal and separate from the agent workspace [6.32ms]
+2026-11-15T03:16:44.4548851Z (pass) missing, unsafe, legacy or incoherent Microsoft configuration fails closed [7.60ms]
+2026-11-15T03:16:44.4627334Z (pass) private files reject permissive modes, symlinks, hardlinks and missing credentials [7.83ms]
+2026-11-15T03:16:44.4673603Z (pass) credentials cannot be placed in, above or aliased into the configured workspace [4.66ms]
+2026-11-15T03:16:44.4759389Z (pass) durable tenant/client pin prevents cross-tenant reuse after a configuration change [8.56ms]
+2026-11-15T03:16:44.4783964Z (pass) explicit principal grants preserve canonical operations without granting roles [2.46ms]
+2026-11-15T03:16:44.5867483Z (pass) fixed proxy transport never infers the public origin from forwarded headers [108.31ms]
+2026-11-15T03:16:44.5867855Z 
+2026-11-15T03:16:44.5868033Z Sucafinav1/test/operator-identity.test.ts:
+2026-11-15T03:16:44.6067734Z (pass) local helper issues encrypted single-use credentials and scoped opaque eight-hour sessions [16.85ms]
+2026-11-15T03:16:44.6227652Z (pass) authentication grants only the selected local surface and performs only secret reads [15.97ms]
+2026-11-15T03:16:44.6429570Z (pass) expired credentials fail even when their storage expiry is extended [20.20ms]
+2026-11-15T03:16:44.6732780Z (pass) tampering, AAD record relocation, wrong keys and changed operator identities fail closed [30.18ms]
+2026-11-15T03:16:44.6844708Z (pass) auth routing has no HTTP enrollment grant and requires the configured origin [11.30ms]
+2026-11-15T03:16:44.7022757Z (pass) logout requires exact Origin and POST, persists revocation before removing and rejects replay [17.81ms]
+2026-11-15T03:16:44.7249263Z (pass) cookie namespace isolates mounts and operators, malformed or duplicate handles fail closed [22.64ms]
+2026-11-15T03:16:44.7303812Z (pass) configuration rejects non-loopback or noncanonical origins, malformed mounts, keys and OS identities [5.44ms]
+2026-11-15T03:16:44.7463014Z (pass) logout wins when an authentication read was already in flight [15.93ms]
+2026-11-15T03:16:44.7580075Z (pass) empty or unsupported runtime contexts fail closed without consulting group maps [11.67ms]
+2026-11-15T03:16:44.7961809Z (pass) private file enrollment allows cross-site GET but redirects without credentials and suppresses referrers [38.16ms]
+2026-11-15T03:16:44.8076554Z (pass) valid local cookies cannot authenticate a foreign request URL or inherit corporate roles [11.48ms]
+2026-11-15T03:16:44.8251739Z (pass) enrollment and session remain valid until one millisecond before their exact TTL boundary [17.50ms]
+2026-11-15T03:16:44.8378927Z (pass) explicit local buyer policy grants buyer only on Procurement and never changes the identity [12.71ms]
+2026-11-15T03:16:44.9772411Z 
+2026-11-15T03:16:44.9773839Z omni positive control [b347fa51a8af27ecaa03df6be0fb47ba]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-15T03:16:44.9775067Z 2 tests skipped:
+2026-11-15T03:16:44.9776003Z (skip) rejects foreign UID directory (requires root fixture privileges)
+2026-11-15T03:16:44.9776787Z (skip) rejects foreign UID database (requires root fixture privileges)
+2026-11-15T03:16:44.9777185Z 
+2026-11-15T03:16:44.9777325Z  138 pass
+2026-11-15T03:16:44.9777682Z  2 skip
+2026-11-15T03:16:44.9777961Z  0 fail
+2026-11-15T03:16:44.9778253Z  1279 expect() calls
+2026-11-15T03:16:44.9778618Z Ran 140 tests across 11 files. [14.38s]

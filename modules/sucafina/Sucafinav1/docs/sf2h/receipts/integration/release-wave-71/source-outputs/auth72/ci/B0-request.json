@@ -1,0 +1,14 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/auth-retention-fix/unknown-handles.test.ts",
+    "-t",
+    "same-origin logout with never-issued",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}

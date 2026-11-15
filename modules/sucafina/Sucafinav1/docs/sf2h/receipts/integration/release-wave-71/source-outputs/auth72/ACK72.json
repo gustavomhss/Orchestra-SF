@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.auth-retention-fix.ack.v1",
+  "mission": 72,
+  "status": "ACKNOWLEDGED_IN_PROGRESS",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "authority": {
+    "branch": "auth-retention-fix",
+    "observed_head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "lease_epoch": "auth-retention-browser72",
+    "writer": "/root",
+    "model": "GPT-6 Astra Pro (session-declared)",
+    "backend_session_id": null,
+    "session_limit": "Four collaboration slots including root; no launch of campaign controllers or other native sessions",
+    "source": "Explicit user mission72; pinned package1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "consumer": "71 sole sf2-stack integrator;45 compiler/guards;S0 final acceptance",
+    "previous_source_writers": "49/59 terminal per package and PR72 terminal608763f1765e0eac34565a3668d330bb1cdbd140",
+    "target_observed": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "target_ack71_observed": false
+  },
+  "reads": {
+    "mission_package": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "planning": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "root_agents_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "plan": [
+      "START.md",
+      "WORKFLOW.md",
+      "execution/COMMON.md",
+      "execution/actors/S0-B.json",
+      "work-packages/WP10.md (T03 criteria)"
+    ],
+    "review70": "9c6946c31887ca1899a99ce120921c8bf937e721",
+    "source": "C28 canonical identity/store/contract/entry and real Microsoft/local storage consumers",
+    "nested_agents": "No AGENTS in modules, modules/sucafina, Sucafinav1, runtime or test tree inspected"
+  },
+  "paths": [
+    "runtime/local-identity.ts",
+    "runtime/local-store.ts (auth only)",
+    "runtime/local-contract.ts (auth secrets maintenance contract only)",
+    "runtime/auth-maintenance.ts",
+    "local/entry.ts (auth lifecycle only)",
+    "test/product/auth-retention-fix/",
+    "docs/sf2h/receipts/auth-retention-fix/"
+  ],
+  "criteria": [
+    "M70-AUTH-01",
+    "mission72.acceptance[0]",
+    "mission72.acceptance[1]",
+    "mission72.acceptance[2]",
+    "mission72.acceptance[3]",
+    "WP10.T03.QLT.01",
+    "WP10.T03.QLT.40",
+    "CAMP.INV.02",
+    "CAMP.INV.04",
+    "CAMP.CMP.02"
+  ],
+  "design": [
+    "Durable issued/pending/completed/revoked correlation; atomic ciphertext consumption",
+    "Shared finite SQLite records/challenges/ciphertext limits; fail closed on admission, no live eviction",
+    "Fixed retention from challenge/absolute expiry; bounded indexed batches independent of endpoint/operator",
+    "Synchronous known-handle inspection plus immediate bounded pending fence before awaiting write; unknown no allocation",
+    "Fresh read-only auth view with original transaction lifetime checks; no nested write",
+    "Keep encryption/AAD,PKCE/nonce/tenant/origin,absolute expiry; refresh remains observable via put",
+    "Preserve all four readonly59 hunks in separately pinned composition patch for71"
+  ],
+  "validation": {
+    "product_tests": "Only surgical existing Actions snapshot/request protocol; no local tests",
+    "checks": "45 owns package bun typecheck and root guards; explicit request after W",
+    "independent_recheck": "Required after source release; design review alone is not acceptance",
+    "global_release": false
+  }
+}
