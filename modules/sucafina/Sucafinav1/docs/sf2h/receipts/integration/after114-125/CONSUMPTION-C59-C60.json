@@ -1,0 +1,114 @@
+{
+  "schema": "sf2h.integration125.incremental-consumption.v1",
+  "campaign": "sf2h-integral-20261112",
+  "integrator": "S0-C/C00/I00",
+  "lease": "S0-C-e18-browser125",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "preceding_material": {
+    "candidate": "C58",
+    "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816",
+    "status": "COMPOSED_NOT_FROZEN"
+  },
+  "increments": [
+    {
+      "id": "C59",
+      "commit": "a0d7296dbaebfe14126cb174133dff2bf04fc71a",
+      "tree": "5739761dca6948484851820ccb23d4f7230f8165",
+      "parent": "22a9d20dddbdbc2f8d9dbd426bd3720a4b6e0a85",
+      "source": {
+        "mission": 121,
+        "pr": 117,
+        "branch": "creation-proof-repair",
+        "source_material": "1091aa090f9e401ece1b52b2aa74138560d04c88",
+        "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-proof-repair/SOURCE-VERIFICATION121.json"
+      },
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+          "pre": "8cf4f844307206880abd163e4f836a582670e617",
+          "post": "c09dcbaf40a92ae15a96dd7046e1eebc7d7cc58c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts",
+          "pre": "46ab9222309a5856e931d033261f3438b1ce939b",
+          "post": "b55071dcdc67e28d139d8ecc25a433371e03c8ba"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+          "pre": "eda13fa8d39b6dd378849ca57ce9b710bbe40e87",
+          "post": "8057df81b00d687ff99ec0417bba15814ffe5cd3"
+        }
+      ],
+      "review": "Three closed typed UI-only context and untrusted POST decoding changes; preserved original assertions, timeout, no automatic replay; no product source, browser pool, or policy change",
+      "checks": {
+        "remote_exact_preimages": true,
+        "remote_source_postimages": true,
+        "remote_consumer_postimages": true,
+        "hosted_119": "PENDING",
+        "actions_120": "PENDING"
+      }
+    },
+    {
+      "id": "C60",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "tree": "667e4245b01875e6c3df83afae7630303ed146af",
+      "parent": "a0d7296dbaebfe14126cb174133dff2bf04fc71a",
+      "source": {
+        "mission": 122,
+        "pr": 126,
+        "branch": "residual-type-repair",
+        "source_material": "4ab69f8ae6b7d734f6b96002e3937f2ba32b0f7e",
+        "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/residual-type-repair/PREPOST122.json"
+      },
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/bi-services.ts",
+          "pre": "597b5c3b536c2416d9d7d39c7d4329ce5c4183ff",
+          "post": "e818019f23e449468577175d5c78e53dbf0fb9b2"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "pre": "78574180369c9495cbe5e5d3e569bb500fbff277",
+          "post": "9c666e7463b49a7c0cdeadb705b3266089d10bfb"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts",
+          "pre": "03c918632f8c7bf40e1b4bbb91e71a6ae3de74ac",
+          "post": "37f0705ae3e26354846b53bfb3891185aa8ec96f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+          "pre": "88c0cbf4dd0fe2b2dd856ecf7819b0bd613e33f7",
+          "post": "c31bbd1d6964eb70a72fc6633a7ef9b969dead92"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+          "pre": "68973132641e5eb09cce84383156235d87e296d9",
+          "post": "93bf104ddcb5810efef3edb6648fdf26627fa979"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/relations-fixture.ts",
+          "pre": "be5780125d823cc73323f16683d52e962d79d5a5",
+          "post": "d7983764984d04dba911819b004701866810e179",
+          "origin": "mission122 explicit OWNER-RELATIONS-122.patch; applied by sole integrator for shared fixture"
+        }
+      ],
+      "review": "Five scoped type corrections and one owner-authenticated C08 producer fixture patched atomically; preserve 409/403/400/503 semantics and fail-closed consumers. Proposed shared blob matches exactly.",
+      "checks": {
+        "remote_exact_preimages": true,
+        "remote_source_postimages": true,
+        "remote_consumer_postimages": true,
+        "hosted_119": "PENDING",
+        "actions_120": "PENDING"
+      }
+    }
+  ],
+  "status": "SOURCE_BLOBS_CONSUMED_NOT_QUALIFIED",
+  "consumer_ack": "COMPOSED_EXACT; not CI/FINAL acceptance",
+  "integrator_write_scope": "authorized released product post-blobs and reconciled shared owner patch",
+  "no_raw_branch_merge": true,
+  "local_tests": false,
+  "global_release": false
+}
