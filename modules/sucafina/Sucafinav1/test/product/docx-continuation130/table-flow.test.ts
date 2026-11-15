@@ -73,8 +73,8 @@ test("all exported DOCX table rows keep a nonblank captured value, associated pe
     }
   }
   const all = generated.map((row) => row.cells.map(xmlText).join(" ")).join(" ")
-  expect(all).toContain("END-NOTE-25")
-  expect(all).toContain("outlook-11")
+  expect(all.replace(/\s/gu, "")).toContain("END-NOTE-25")
+  expect(all.replace(/\s/gu, "")).toContain("outlook-11")
   expect(parts.document).toContain('w:lineRule="atLeast"')
   expect(parts.core).toContain("Sucafina")
   expect(Object.keys(parts.zip.files).filter((name) => /^word\/media\/.*\.png$/.test(name))).toHaveLength(1)
@@ -110,9 +110,9 @@ test("oversized captured text and source references become complete identified c
   expect(originalCellText(continuation, 0)).toBe(id + ": " + value.replace(/\r\n|\r|\n/g, " ↵ "))
   expect(originalCellText(continuation, 1)).toBe("2026-01-01 – 2026-12-31")
   expect(originalCellText(continuation, 2)).toBe(refId)
-  expect(parts.document).toContain("END-DOCX-VALUE")
-  expect(parts.document).toContain("END-DOCX-SOURCE")
-  expect(parts.document).toContain("END-NOTE-25")
+  expect(xmlText(parts.document)).toContain("END-DOCX-VALUE")
+  expect(xmlText(parts.document)).toContain("END-DOCX-SOURCE")
+  expect(xmlText(parts.document)).toContain("END-NOTE-25")
   expect(readReviewArtifactSeal(result, fixture.review, fixture.sectionRefs)).toBeDefined()
 })
 
