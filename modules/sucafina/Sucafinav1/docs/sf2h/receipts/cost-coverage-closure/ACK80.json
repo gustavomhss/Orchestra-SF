@@ -1,0 +1,106 @@
+{
+  "schema": "sf2h.cost-coverage-closure.ack.v1",
+  "mission": 80,
+  "state": "ACKNOWLEDGED",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission_pin": "a1d5e9f95d5b38b85c1b53f1ebc2bec11b7759c1",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source": {
+    "branch": "cost-coverage-fix",
+    "observed_head": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "tree": "a4881429b5d4e835b81c5619264cb8b0238d19f8",
+    "cost_coverage_preimage": "e913189a675bbcfa81a657f58d2255eac3b6dce2"
+  },
+  "target": {
+    "branch": "sf2-stack",
+    "observed_head": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "integrator": 71,
+    "lease": "S0-C-e13-browser71",
+    "ACK": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "cost_coverage_same_preimage": true
+  },
+  "writer": {
+    "actor": "S4-A canonical C10 coverage owner / mission80",
+    "lease_epoch": "cost-coverage-browser80",
+    "agent": "/root",
+    "session_id": null,
+    "model_declared_by_host": "GPT-6 Astra Pro",
+    "model_effective_receipt": null,
+    "limits": "Provider model slug/session UUID are not exposed. No fabricated native receipt. Root is the sole remote writer; auxiliary agents read/review or author disjoint local tests only."
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+    "modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cost-coverage-closure/"
+  ],
+  "criterion_ids": [
+    "WP11.T02.CHK.01",
+    "WP11.T02.CHK.03",
+    "WP11.T02.CHK.20",
+    "WP11.T02.CHK.21",
+    "WP11.T02.INV.01",
+    "WP11.T02.INV.20",
+    "WP11.T02.QLT.01",
+    "WP11.T02.QLT.20",
+    "WP11.T02.CMP.01",
+    "WP11.T02.CMP.20",
+    "WP11.T03.CHK.01",
+    "WP11.T03.CHK.20",
+    "WP11.INV.20",
+    "WP11.CMP.20"
+  ],
+  "consumer_criteria": [
+    "WP05.T05.CHK.01",
+    "WP05.T05.CHK.20",
+    "WP05.T05.CMP.20",
+    "WP05.T05.INV.20"
+  ],
+  "read_receipt": {
+    "AGENTS": {
+      "ref": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "nested": "No AGENTS found in modules, modules/sucafina or Sucafinav1 product/test/docs subtree."
+    },
+    "planning": [
+      "START.md",
+      "WORKFLOW.md",
+      "execution/COMMON.md",
+      "execution/actors/S4-A.json",
+      "specs/product-acceptance.md",
+      "specs/resident-runtime.md"
+    ],
+    "full_pack_team_read": true,
+    "source62": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+    "source62_diagnostic": "OBSERVED_FAILURE_STATIC_CAUSE_NOT_FIXED",
+    "source62_criteria": "CRITERIA-DELTA-R6.json; installed numeric outcomes not reached",
+    "source_dependencies": [
+      "product/contracts/{canonical,coverage-inventory,decisions,business-context}.ts",
+      "product/decisions/{baseline-coverage,coverage-classification}.ts",
+      "test/product/wp11/renewal-coverage-fixture.ts"
+    ]
+  },
+  "execution": {
+    "tests": "GitHub Actions only, existing .ci-run.json protocol, one80 run in flight, deduplicate material tree/request/config/fixtures.",
+    "compiler_guards": "Request45 existing lane; never assume its refs or write workflow.",
+    "local_product_tests": 0,
+    "do_not_repeat": [
+      "installed POST journeys74/79",
+      "P03 owned76"
+    ],
+    "unchanged_external_writers": [
+      "76 criterion-comparison/result-store/state-provider",
+      "52 Decisions UI",
+      "74/79 HTTP",
+      "71 target integration"
+    ],
+    "scope": "Canonical C10 stability/ownership and mandatory numeric oracles; no formulas/schema/financial policy change."
+  },
+  "first_hypothesis": "Included-null entry is downgraded to pending but uncategorized-component is derived from pre-downgrade input.entries; persisted accepted entries therefore reassess to a different issue set. Needs real causal red-green Actions.",
+  "acceptance_limits": [
+    "A source coverage PASS is not installed BI/native/solver/global acceptance.",
+    "Positive N-A installed remains OPEN without a real authorized applicability producer.",
+    "Original case and ChoiceRecord history and55000/15000 expectations remain unchanged."
+  ],
+  "GLOBAL_RELEASE": false
+}
