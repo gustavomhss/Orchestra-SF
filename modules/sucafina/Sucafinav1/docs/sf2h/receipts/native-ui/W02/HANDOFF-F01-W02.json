@@ -1,0 +1,121 @@
+{
+  "schema": "sf2h.native-ui.ux20.F01.handoff.v1",
+  "seat": "W02",
+  "order": "F01",
+  "branch": "sf-ux-w02",
+  "head_sha": "4fd888c3f16e645f42110ff8d76ab781b1d14b1c",
+  "head_tree": "ebd002b7b42a55bf16e6c2490b5cbdf94c4b677b",
+  "target": "sf2-stack",
+  "target_head_at_handoff": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+  "target_pr": 65,
+  "output_state": "ARTIFACT_READY_PARTIAL_BLOCKED",
+  "owner": "114 sole integrator/I00",
+  "ci_owner": "120",
+  "compiler_guards_owner": "119",
+  "auth": {
+    "ack": "ACK-F01-W02.json",
+    "lease": "ux-native-w02-e1",
+    "integration_admission": "NOT_OBSERVED",
+    "lease_assertion": "AUTHORING_USER_DIRECT_ONLY; NO CLAIM OF C00 GO"
+  },
+  "code_paths": [
+    "packages/schema/src/sucafina/context.ts",
+    "packages/client/src/sucafina/context.ts",
+    "packages/protocol/src/groups/sucafina.ts",
+    "packages/server/src/sucafina-installations.ts",
+    "packages/server/src/handlers/sucafina.ts",
+    "apps/cli/src/sucafina-product/native-ui/context.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/drafts.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/index.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+    "packages/app-shell/test-browser/sucafina-native/context.test.ts"
+  ],
+  "receipt_paths": [
+    "ACK-F01-W02.json",
+    "PATCHES-SHARED-F01.json",
+    "HANDOFF-F01-W02.json"
+  ],
+  "implementation": [
+    "70 typed routes preserved from frozen route-signatures and canonical unpadded opaque ref codec",
+    "strict installation descriptor, expected binding, context stamp and 70 catalog family/resource pairs",
+    "strict select=ids branch never reads old Location/directory, select=location delegates only to I00-admitted Location",
+    "native owner selection prevents URL A inheriting shell B; URL must carry complete triple or none",
+    "atomic navigation commit and voluntary draft discard guard; former owner purged before new commit",
+    "owner state outside ChapterBoundary; generation and AbortSignal fences; immediate purge on logout/revoked/owner change",
+    "quarantined draft requires same immutable tuple and producer per-record/field/action revalidation before restore to new epoch",
+    "GET context validates exact query/origin/runtime identity and authority result schema; no synthetic stamps/grants",
+    "UI67 leaf copy, protocol group, server discovery and typed context transport client",
+    "browser test oracles W02 authored; no tests run locally"
+  ],
+  "status_by_output": [
+    {
+      "id": "schema-types",
+      "state": "ARTIFACT_READY_UNVERIFIED"
+    },
+    {
+      "id": "navigation-atomic",
+      "state": "ARTIFACT_READY_UNVERIFIED",
+      "requires": "I00 uses requestNativeTransition for sidebar/link/keyboard/history/reload/connection-gate"
+    },
+    {
+      "id": "provider-drafts",
+      "state": "ARTIFACT_READY_UNVERIFIED",
+      "requires": "F02 transport + S03 draft controller factory; I00 provider mounted outside keyed chapter"
+    },
+    {
+      "id": "protocol-and-discovery",
+      "state": "ARTIFACT_READY_UNVERIFIED",
+      "requires": "114 applies four shared registration patches and supplies trusted selected connection/Location adapter"
+    },
+    {
+      "id": "native-context-producer",
+      "state": "BLOCKED_CONTRACT",
+      "requires": "114 exposes real readContext/currentBinding through nativeUiProducts on SfHostServices, reusing product-authority private authentic principal/stamp. Without it endpoint truthfully returns 503 host-unavailable"
+    },
+    {
+      "id": "UI67-context-picker",
+      "state": "BLOCKED_INTEGRATION",
+      "requires": "I00 supplies navigation selection action/route builders; F01 provider frozen props only expose read accessor; do not add invented shell callbacks"
+    },
+    {
+      "id": "integration-C00",
+      "state": "NOT_ADMITTED",
+      "requires": "114 explicit per-output acceptance/lease"
+    },
+    {
+      "id": "test-ci",
+      "state": "NOT_RUN",
+      "requires": "120 only, GitHub Actions surgical request"
+    },
+    {
+      "id": "compiler",
+      "state": "NOT_RUN",
+      "requires": "119 only, hosted compile/guards"
+    }
+  ],
+  "shared_patches": "PATCHES-SHARED-F01.json: six full UTF8 postimages, exact Git pre/post blob SHA and target source paths, not applied",
+  "required_integrator_order": [
+    "Reconcile new sf2-stack HEAD + W02 output, verify preimages; no direct shared mutation by W02",
+    "Reconcile F02 common/transport types, S03 draft adapter and F03 frame/states before typecheck",
+    "Implement original authoritative context reader in product host without inventing policyVersion or accessRevision; allow only real source operation availability",
+    "Wire selected-connection SucafinaSource, no LocationMiddleware for select=ids; real admitted Location resolver for select=location",
+    "Apply shared patches by 114 with full pre/postimage revalidation and compose APP outside ChapterBoundary",
+    "120 dispatch Actions tests including W02 browser regression + authorization matrix; 119 compiler/guards; capture run/artifact IDs",
+    "Only after producer/CI qualified may 114 change from ARTIFACT_READY to INTEGRATED/QUALIFIED"
+  ],
+  "safety_proof": [
+    "no local tests, no gh Actions dispatch, no merge, no deployment, no Azure",
+    "no other authors' paths mutated",
+    "no new server listener/standalone app/iframe",
+    "no fabricated principal/role/grant/operational state",
+    "independent outputs remain in W02 until sole integrator"
+  ],
+  "caveats": [
+    "Integration admission not observed from 114 even though direct author task authorized independent work",
+    "Shared registration postimages were computed against sf2-stack at authoring; 114 must rebase on current target",
+    "Existing native authority lacks public read-only stamp producer; requires 114/owner coordination; context read intentionally fail-closed until implemented",
+    "Real-world correctness, compilation and per-output source qualification await 119/120 hosted runs"
+  ]
+}
