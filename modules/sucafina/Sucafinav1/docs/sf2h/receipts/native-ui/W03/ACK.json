@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "mission_id": "UX20-W03",
+  "order": "F02",
+  "output": "F02",
+  "actor": "new ChatGPT GPT-6 session, user-invoked W03",
+  "requested_label": "Astra",
+  "effective_model": "GPT-6",
+  "github_actor": "gustavomhss",
+  "session_id": null,
+  "session_id_reason": "not exposed by current ChatGPT/GitHub connector",
+  "branch": "sf-ux-w03",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "shared_cohort_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "shared_cohort_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+  "source_pins": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "identity": {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+      "blob_current": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+      "blob_historical": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "delta": "durable authentication issue/revoke and current revocation fence; use C58 producer, never restore historical"
+    }
+  },
+  "locked_contract_blobs": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81"
+  },
+  "required_families": [
+    "ctx",
+    "domain-read",
+    "transport"
+  ],
+  "allowlist": [
+    "packages/client/src/sucafina/transport.ts",
+    "packages/client/src/sucafina/transport/**",
+    "packages/schema/src/sucafina/common.ts",
+    "apps/cli/src/sucafina-product/native-ui/router.ts",
+    "apps/cli/src/sucafina-product/native-ui/transport/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W03/**"
+  ],
+  "integration_owner": "114/S0-C-e17-browser114/sf2-stack/PR65",
+  "testing_owner": "120/PR106",
+  "compiler_owner": "119/PR107",
+  "lease": {
+    "epoch": "ux-native-w03-e1",
+    "state": "ACK_PUBLISHED_AWAITING_114_PER_OUTPUT_ADMISSION",
+    "user_authorization": "explicit W03 instruction in current conversation",
+    "not_claimed": "114 admission/approval/active lease not observed"
+  },
+  "expected_dependency": "F01 (authoring independent on frozen ctx, integration and qualification require real producer)",
+  "boundaries": {
+    "generated": false,
+    "shared_paths": false,
+    "backend_parallel": false,
+    "local_tests": false,
+    "merge": false,
+    "deploy": false,
+    "azure": false
+  },
+  "verification": {
+    "branch_at_ack": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "contract_catalog_operations": 305,
+    "source_identity_delta_reviewed": true,
+    "ci": "NOT_RUN"
+  },
+  "status": "PREFLIGHT_ACK_NOT_ARTIFACT_READY"
+}
