@@ -27,14 +27,15 @@
     "ux_normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
     "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
     "branch_protocol_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
-    "normative_protocol_blob": "0151a8e62... (exact pinned in packet; branch contains updated coordinator references, COMMON overrides outdated 105/101/45)",
+    "normative_protocol_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
     "component_signatures_blob": "e283b2021697fb6666e88a13707cb05469540ae0",
     "component_locks_blob": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
     "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
     "component_contracts_blob": "5e53813bff5c4f515f9122393e308ad5336b041a",
     "source_planner_http": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
     "source_monthly_edit": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
-    "source_monthly_host": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5"
+    "source_monthly_host": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5",
+    "protocol_semantic_delta": "Branch 4a50abf updates obsolete coordinator/CI actor references; normative 0151a8e governs with cohort COMMON routing 114/120/119. No monthly-grid contract delta observed."
   },
   "staging": {
     "why": "No S0/114 per-output W07/S02 GO or activated lease was observed; receipt-only text source is inert and cannot be imported, compiled, discovered by Bun's *.test.ts scan, or mistaken for integrated product.",
@@ -173,5 +174,18 @@
     "120 PR106",
     "119 PR107"
   ],
-  "handoff": "Inert full source delivered now; writer lease remains unactivated; NOT ARTIFACT_READY nor qualification. No inferred release/expiry."
+  "handoff": "Inert full source delivered now; writer lease remains unactivated; NOT ARTIFACT_READY nor qualification. No inferred release/expiry.",
+  "validation": {
+    "kind": "REMOTE_SOURCE_READBACK_ONLY",
+    "local_tests": false,
+    "local_parser": false,
+    "local_typecheck": false,
+    "github_actions": false,
+    "per_output_admission": false,
+    "pr": 124,
+    "pr_state": "DRAFT",
+    "pr_base": "sf2-stack",
+    "pr_base_at_creation": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+    "pr_head_at_creation": "34282544914d5a406617317e609e5198897d52e8"
+  }
 }
