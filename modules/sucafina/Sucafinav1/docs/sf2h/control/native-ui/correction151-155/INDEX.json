@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.correction151-155-index.v1",
+  "state": "PREPARED_NOT_STARTED",
+  "native_goal": "paused",
+  "global_release": false,
+  "causal_run": 43758731378,
+  "missions": [
+    {
+      "mission": 151,
+      "title": "A07 — saída estrita de reuniões e relatórios",
+      "branch": "sf-ux-a07",
+      "pr": 141,
+      "epoch": "ux-native-a07-e2-browser151",
+      "head": "26dd487d65122946123b18334e16894f7f0ac305"
+    },
+    {
+      "mission": 152,
+      "title": "A09 — importação real dos schemas de rotinas",
+      "branch": "sf-ux-a09",
+      "pr": 140,
+      "epoch": "ux-native-a09-e2-browser152",
+      "head": "8a9a252f44510f4b25e91387c7a5b8b1fd3dffb9"
+    },
+    {
+      "mission": 153,
+      "title": "A12 — wire V1, CAS e rejeição de campos extra",
+      "branch": "sf-ux-a12",
+      "pr": 144,
+      "epoch": "ux-native-a12-e2-browser153",
+      "head": "71af849aee29863334ea115844d454512786ac27"
+    },
+    {
+      "mission": 154,
+      "title": "A13 — consultas vazias não aceitam concessões",
+      "branch": "sf-ux-a13",
+      "pr": 139,
+      "epoch": "ux-native-a13-e2-browser154",
+      "head": "6c72b5d8e7cbaddf39a14f1640057488e53fe79d"
+    },
+    {
+      "mission": 155,
+      "title": "A15 — Schema.Record compatível com Effect instalado",
+      "branch": "sf-ux-a15",
+      "pr": 137,
+      "epoch": "ux-native-a15-e2-browser155",
+      "head": "51df0d66fb71fa6896ed50180270d39fbe1b316b"
+    }
+  ],
+  "unchanged_authorities": [
+    132,
+    133,
+    134,
+    135,
+    136,
+    137,
+    138,
+    139,
+    140,
+    141,
+    142,
+    143,
+    144,
+    145,
+    146,
+    147,
+    148,
+    149,
+    150
+  ],
+  "note": "132 integrates,149 compiles,150 product CI; authors151–155 replace only prior A07/A09/A12/A13/A15 future writer authority. No new native supervisor or Goal resume."
+}
