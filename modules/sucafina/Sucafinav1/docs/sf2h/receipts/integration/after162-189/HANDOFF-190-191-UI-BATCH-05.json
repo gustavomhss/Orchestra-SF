@@ -1,0 +1,25 @@
+{
+  "schema": "sf2h.189.UI.handoff.v1",
+  "mission": 189,
+  "epoch": "S0-C-e21-browser189",
+  "material_W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+  "tree": "7b4dc2d6f2d2dc28bf4f2cd9b54ffd2d5440bc8a",
+  "source_missions": [
+    182,
+    183,
+    184
+  ],
+  "compiler190": "Request packages/app-shell hosted typecheck on final coherent W; 183/182/184 no client generator impact, dedup prior W.",
+  "product191": {
+    "runner": "existing test:ci only",
+    "selectors": [
+      "./test-browser/sucafina-native/s01.test.ts",
+      "./test-browser/sucafina-native/page-frame.test.ts",
+      "./test-browser/sucafina-native/s05.test.ts"
+    ],
+    "args": "--timeout 120000; maintain original test assertions and no skip",
+    "dependency": "real Platform fixture140 already present",
+    "proof": "No new run recorded; need W/S/job and inner cases"
+  },
+  "GLOBAL_RELEASE": false
+}

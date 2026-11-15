@@ -1,0 +1,108 @@
+{
+  "schema": "sf2h.integration.source-consumption.v1",
+  "mission": 189,
+  "epoch": "S0-C-e21-browser189",
+  "campaign": "sf2h-integral-20261112",
+  "actor": {
+    "effective_model": "GPT-6",
+    "runtime_session_id": null
+  },
+  "source_heads": {
+    "182": "0d3c1006d8951001d9fce911ca587a89e1711d25",
+    "183": "3af72005104564c027c008ea61211848ff0cc9b2",
+    "184": "287176a823a4f75371528b03ff72060874fe0b5d"
+  },
+  "accepted_branch": "sf2-stack",
+  "pr": 65,
+  "consumer_before": "6607c60d2a2be183d59c2e929b3ff06633e1cb54",
+  "material_commits": [
+    {
+      "W": "4032255351f71bf4e7cd81a38e64160c4a540e13",
+      "tree": "65482c1cb7d2826cb0410e5799c1aaa70b33cad9",
+      "mission": 183
+    },
+    {
+      "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "tree": "7b4dc2d6f2d2dc28bf4f2cd9b54ffd2d5440bc8a",
+      "missions": [
+        182,
+        184
+      ]
+    }
+  ],
+  "files": [
+    {
+      "source_mission": 183,
+      "source_sha": "3af72005104564c027c008ea61211848ff0cc9b2",
+      "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "pre_blob": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+      "post_blob": "f07bb3371702d5b00c481bcfed89d682eecd1699",
+      "material_W": "4032255351f71bf4e7cd81a38e64160c4a540e13",
+      "remote_readback": "MATCH"
+    },
+    {
+      "source_mission": 182,
+      "source_sha": "0d3c1006d8951001d9fce911ca587a89e1711d25",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+      "pre_blob": "06165f1ac7c6b9918a712570caa6a076559f2ec7",
+      "post_blob": "26656f573f877496925993e2c702df7aa926251a",
+      "material_W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "remote_readback": "MATCH"
+    },
+    {
+      "source_mission": 182,
+      "source_sha": "0d3c1006d8951001d9fce911ca587a89e1711d25",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+      "pre_blob": "7084c442f96e3b7d0f91b66027118df6eb003ebc",
+      "post_blob": "15433e5b73a4234e7dfb6df3bdb327c88fb83e7d",
+      "material_W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "remote_readback": "MATCH"
+    },
+    {
+      "source_mission": 182,
+      "source_sha": "0d3c1006d8951001d9fce911ca587a89e1711d25",
+      "path": "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+      "pre_blob": "aa17ece934eb35f54602b6de99bcc39da39d1fed",
+      "post_blob": "92024c7caa2f5e10d243c6feff71abb4b2a1b7f0",
+      "material_W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "remote_readback": "MATCH"
+    },
+    {
+      "source_mission": 184,
+      "source_sha": "287176a823a4f75371528b03ff72060874fe0b5d",
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "pre_blob": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+      "post_blob": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "material_W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "remote_readback": "MATCH"
+    },
+    {
+      "source_mission": 184,
+      "source_sha": "287176a823a4f75371528b03ff72060874fe0b5d",
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "pre_blob": "f7d032d5fdded022f40270727035577ae08228db",
+      "post_blob": "5d02157e04299a299cd3c4fada3dd19913a59598",
+      "material_W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "remote_readback": "MATCH"
+    }
+  ],
+  "reconciled_paths": [
+    {
+      "mission": 182,
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+      "source_blob": "5ac932898531625f64037dd0da9c1d2b5d894b1c",
+      "consumer_composed_blob": "26656f573f877496925993e2c702df7aa926251a",
+      "source_patch": "fix182/CONSUMER-162-INERT.patch",
+      "disposition": "post140 source-adaptation; preimage exact, consumer proposal remotely checked"
+    }
+  ],
+  "preserved_contracts": [
+    "S01 four assertions and existing PlatformProvider/fixture140",
+    "F03 denied/private chart states and filtered-empty/loading/partial/unknown distinctions",
+    "S05 textarea exact owner draft, unavailable/outcome-unknown, owner fencing without leak, original CRLF payload"
+  ],
+  "shared_fixture_unchanged": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15",
+  "hosted_status": "NOT_RUN_FOR_NEW_C",
+  "local_checks": "NOT_RUN_PROHIBITED",
+  "global_release": false
+}
