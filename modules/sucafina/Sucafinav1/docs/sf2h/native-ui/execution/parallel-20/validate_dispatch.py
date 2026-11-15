@@ -41,6 +41,10 @@ def validate(root: Path, launch: Path | None):
     pack = root / "parallel-20"
     data = read(pack / "dispatch.json")
     main = read(root / "manifest.json")
+    source = data["source"]
+    ensure(source.get("branch") == "ux-20-dispatch" and source.get("pull_request") == 99, "normative source must identify PR99/ux-20-dispatch")
+    launch_template = read(pack / "launch-record.template.json")
+    ensure(launch_template.get("planning_sha") == source.get("commit") and launch_template.get("planning_branch") == source.get("branch"), "launch-record provenance differs from normative source")
     catalog = read(root / "contract-catalog.json")
     surface = read(root / "surface-manifest.json")
     locks = read(root / "component-locks.json")
@@ -62,6 +66,7 @@ def validate(root: Path, launch: Path | None):
     ensure(len(cards) == 20, "C00 + W01..W19 exactly")
     ensure([c["seat"] for c in cards] == ["C00"] + [f"W{i:02d}" for i in range(1, 20)], "seat identity/order")
     ensure(cards[0]["work_order_id"] == "I00" and cards[0]["role"] == "supervisor-integrator", "C00 sole I00")
+    ensure("FASE A — PREFLIGHT SOMENTE LEITURA" in cards[0]["prompt"], "C00 must allow documentary read-only bootstrap without prior GO")
     ensure(all(c["status"] == "WAITING_SOURCE_AND_OWNER_PREFLIGHT" for c in cards), "cannot pre-authorize any worker")
     seen = {}
     for card in cards:
@@ -127,8 +132,16 @@ def validate(root: Path, launch: Path | None):
         ensure(record.get("planning_sha") == data["source"]["commit"], "launch pin differs from design")
         ensure(record.get("canonical_sha") == main["canonical"]["commit"], "launch canonical differs")
         active = record.get("leases", [])
-        ensure(all(x.get("actor") and x.get("branch") and x.get("lease_id") and x.get("order_id") and x.get("owner_ack") for x in active if isinstance(x, dict)), "lease missing observed facts")
-        ensure(len(active) <= min(19, record.get("observed_actor_slots", 0)), "leases exceed actual writer capacity")
+        if not isinstance(active, list):
+            failures.append("launch leases must be an array")
+            active = []
+        slots = record.get("observed_actor_slots")
+        if type(slots) is not int or slots < 0:
+            failures.append("observed_actor_slots must be a nonnegative integer")
+            slots = 0
+        ensure(all(isinstance(x, dict) and x.get("actor") and x.get("branch") and x.get("lease_id") and x.get("order_id") and x.get("owner_ack") for x in active), "lease missing observed facts or nonobject lease")
+        ensure(len({x.get("lease_id") for x in active if isinstance(x, dict)}) == len(active), "duplicate/malformed lease IDs")
+        ensure(len(active) <= min(19, slots), "leases exceed actual writer capacity")
         warnings.append("The validator cannot cryptographically prove S0/71/45 authority, release status, current material SHA, active leases or CI; verify externally. No GO is issued.")
         launch_state = "FORMAT_CHECK_ONLY_NOT_AUTHORIZATION"
     else:
@@ -143,4 +156,8 @@ if __name__ == "__main__":
     parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parent.parent)
     parser.add_argument("--launch", type=Path)
     args = parser.parse_args()
-    raise SystemExit(validate(args.root.resolve(), args.launch.resolve() if args.launch else None))
+    try:
+        raise SystemExit(validate(args.root.resolve(), args.launch.resolve() if args.launch else None))
+    except (OSError, ValueError, TypeError, KeyError, AttributeError) as exc:
+        print(json.dumps({"status": "DOCUMENTARY_DISPATCH_STRUCTURE_FAIL", "errors": [f"{type(exc).__name__}: {exc}"], "product_test_status": "NOT_RUN", "authorized_to_write_product": False}, indent=2, ensure_ascii=False))
+        raise SystemExit(2)
