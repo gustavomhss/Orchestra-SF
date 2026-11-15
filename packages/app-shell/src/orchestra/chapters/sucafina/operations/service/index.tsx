@@ -38,7 +38,7 @@ type ReadState = Readonly<{
   refresh: number
   editor: Editor | null
   submitting: boolean
-  operationState: "idle" | "saved" | "failed" | "unknown"
+  operationState: "idle" | "saved" | "failed" | "unknown" | "conflict"
   errorText: string | null
 }>
 const sourceKey = (part: string) => ("sf.cap11." + part) as SfCopyKey
@@ -109,6 +109,15 @@ function isValid(action: SfServiceAction, values: DraftValues, page: SfServicePa
 
 }
 
+function serviceReadState(page: SfServicePage): "ready" | "empty" | "filtered-empty" {
+  const records = [
+    ...(page.data.opsTickets ?? []), ...(page.data.opsSLA ?? []),
+    ...(page.data.opsHeatmap ?? []),
+  ]
+  if (records.length === 0) return "empty"
+  return records.some((row) => row.year === page.selection.year) ? "ready" : "filtered-empty"
+}
+
 function reviewFields(action: SfServiceAction, values: DraftValues): SfReviewField[] {
   return sourceFields(action, values).map((field) => ({
     path: field,
@@ -146,6 +155,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   }
   const can = (action: SfServiceAction) =>
     state.page?.allowedActionIds.includes(action) === true &&
+    !["unknown", "conflict"].includes(state.operationState) &&
     owner.state().status === "ready" && !!owner.ready()
   const activeDraft = () => {
     state.editor
@@ -205,6 +215,16 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       setState("state", "unavailable")
       setState("errorText", t(commonKey("unavailable")))
     }
+  }
+
+  const changeSelection = (field: "year" | "month", value: number) => {
+    // F01 retains drafts across periods; park the UI reference, not the draft.
+    if (state.editor) {
+      setState("editor", null)
+      draft = undefined
+      draftOwner = undefined
+    }
+    setState(field, value)
   }
 
   // Owner + generation + selected period + refresh are the only read inputs.
@@ -286,8 +306,23 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
         return
       }
       const value = body.value
+      const editing = state.editor
+      if (editing && draft && !submitted && String(editing.scope).startsWith(
+        "CAP11:" + editing.action + ":" + value.selection.year + "-" + value.selection.month
+      )) {
+        const currentVersion = editing.action === "save-categories" || editing.action === "save-items"
+          ? serviceListVersion(value, editing.action === "save-categories" ? "opsCats" : "opsHmItems")
+          : serviceMonthVersion(value)
+        if (currentVersion !== editing.version) {
+          draft.receiveRemote({
+            baseVersion: currentVersion,
+            value: initialValues(value, editing.action, editing.item),
+          })
+          setState("operationState", "conflict")
+        }
+      }
       setState("page", value)
-      setState("state", "ready")
+      setState("state", serviceReadState(value))
       if (submitted && submitted.owner === ownerState.ownerKey &&
         submitted.year === value.selection.year && submitted.month === value.selection.month) {
         if (draft) {
@@ -295,10 +330,16 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
           const newVersion = submitted.action === "save-categories" || submitted.action === "save-items"
             ? serviceListVersion(value, submitted.action === "save-categories" ? "opsCats" : "opsHmItems")
             : serviceMonthVersion(value)
-          draft.confirmSave({
-            kind: "projected", operationRef: submitted.operationRef,
-            baseVersion: newVersion, value: projected,
-          })
+          const sourcePresent =
+            submitted.action === "save-tickets" ? !!serviceCurrentTickets(value) :
+            submitted.action === "save-sla" ? !!serviceCurrentSla(value) :
+            submitted.action === "save-heatmap" ?
+              !!serviceCurrentHeatmap(value, untrack(() => state.editor?.item ?? "")) : true
+          draft.confirmSave(sourcePresent
+            ? { kind: "projected", operationRef: submitted.operationRef,
+                baseVersion: newVersion, value: projected }
+            : { kind: "confirmed-without-projection", operationRef: submitted.operationRef,
+                resultVersion: newVersion })
         }
         submitted = undefined
         draft = undefined
@@ -357,7 +398,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
         : serviceMonthVersion(page)
     )) {
       draft?.setPhase("conflict")
-      setState("state", "conflict")
+      setState("operationState", "conflict")
       return
     }
     const request = new AbortController()
@@ -463,7 +504,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       if (!result.body.ok) {
         if (result.status === 409 || result.body.status === 409) {
           draft?.setPhase("conflict")
-          setState("state", "conflict")
+          setState("operationState", "conflict")
         } else {
           draft?.setPhase("validation-error")
         }
@@ -514,16 +555,16 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       </Show>
     </label>
   )
-  const reviewState = () => state.state === "conflict" ? "conflict" :
+  const reviewState = () => state.operationState === "conflict" ? "conflict" :
     state.operationState === "unknown" ? "outcome-unknown" :
     state.operationState === "failed" ? "invalid" : state.state
-  const reviewSnapshot = (values: DraftValues, original: boolean): SfReviewSnapshot => {
+  const reviewSnapshot = (values: DraftValues, original: boolean, version = state.editor!.version): SfReviewSnapshot => {
     const editor = state.editor!
     if (original && editor.identity.kind === "new")
       return { kind: "not-provided", reason: message(commonKey("empty")) }
     return original
       ? { kind: "persisted", ref: editor.identity.kind === "record" ? editor.identity.recordRef : asRef(""),
-        version: editor.version, fields: reviewFields(editor.action, values) }
+        version, fields: reviewFields(editor.action, values) }
       : { kind: "draft",
         intentRef: editor.identity.kind === "new" ? editor.identity.newIntentRef : asIntent("u04:" + editor.scope),
         sourceRef: editor.identity.kind === "record" ? editor.identity.recordRef : null,
@@ -554,7 +595,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
       onLayoutMode={() => undefined}
     >
       <section class="sf-ops-service" data-sf-surface="CAP11" data-sf-read-state={state.state}>
-        <Show when={state.page && state.state === "ready"} fallback={
+        <Show when={state.page && ["ready", "empty", "filtered-empty", "partial"].includes(state.state)} fallback={
           <SfStatePanel
             state={state.state}
             messageKey={state.state === "loading" ? commonKey("loading") :
@@ -565,14 +606,17 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             onRetryRead={() => { setState("refresh", (value) => value + 1) }}
           />
         }>
+          <Show when={state.state === "empty" || state.state === "filtered-empty"}>
+            <p role="status">{t(state.state === "empty" ? commonKey("empty") : commonKey("filterEmpty"))}</p>
+          </Show>
           <div class="sf-ops-period" role="group" aria-label={t(sourceKey("section.month"))}>
             <label>{t(sourceKey("field.year.label"))}
-              <select value={displayedYear()} onChange={(event) => setState("year", Number(event.currentTarget.value))}>
+              <select value={displayedYear()} onChange={(event) => changeSelection("year", Number(event.currentTarget.value))}>
                 <For each={SERVICE_YEARS}>{(year) => <option value={year}>{year}</option>}</For>
               </select>
             </label>
             <label>{t(sourceKey("field.month.label"))}
-              <select value={displayedMonth()} onChange={(event) => setState("month", Number(event.currentTarget.value))}>
+              <select value={displayedMonth()} onChange={(event) => changeSelection("month", Number(event.currentTarget.value))}>
                 <For each={SERVICE_MONTHS}>{(month) => <option value={month}>{month}</option>}</For>
               </select>
             </label>
@@ -696,6 +740,12 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
             </button>
           </section>
 
+          <Show when={state.operationState === "conflict"}>
+            <p role="alert">{t(commonKey("conflict"))}</p>
+            <button type="button" onClick={() => setState("refresh", (value) => value + 1)}>
+              {t(commonKey("retry"))}
+            </button>
+          </Show>
           <Show when={state.operationState === "saved"}>
             <p role="status">{t(commonKey("saved"))}</p>
           </Show>
@@ -717,7 +767,10 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                     scope: { kind: "data", text: serviceRecordId(state.page!.selection.year, state.page!.selection.month) },
                   }}
                   base={reviewSnapshot(activeDraft()!.base ?? {}, true)}
-                  current={reviewSnapshot(activeDraft()!.base ?? {}, true)}
+                  current={reviewSnapshot(
+                     activeDraft()!.conflict?.current ?? activeDraft()!.base ?? {}, true,
+                     activeDraft()!.conflict?.currentVersion ?? state.editor!.version,
+                   )}
                   proposed={reviewSnapshot(currentFields(), false)}
                   effects={[{
                     id: state.editor!.action,
@@ -746,6 +799,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                   onConfirm={() => { void submitReviewed() }}
                   onRevise={() => { setState("editor", "review", false); draft?.setPhase("dirty") }}
                   onCancel={() => setState("editor", "review", false)}
+                   onReconcile={() => setState("refresh", (value) => value + 1)}
                 />
               }>
                 <form onSubmit={(event) => { event.preventDefault(); showReview() }}>
@@ -811,7 +865,13 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                     <button type="button" onClick={() => {
                       const snapshot = activeDraft()
                       if (snapshot?.dirty && !window.confirm(t(commonKey("navigationDiscard")))) return
+                      const editor = state.editor
                       draft?.discard()
+                      if (editor) owner.ready()?.drafts.discard({
+                        surfaceId: "CAP11", identity: editor.identity, editScopeKey: editor.scope,
+                      })
+                      draft = undefined
+                      draftOwner = undefined
                       setState("editor", null)
                     }}>{t(commonKey("discard"))}</button>
                   </div>
