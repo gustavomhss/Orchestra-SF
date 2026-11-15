@@ -91,6 +91,52 @@ function pick(source: unknown, keys: readonly string[]): Record<string, unknown>
       .map((key) => [key, structuredClone(record[key])]),
   )
 }
+function selectApproval(value: unknown) {
+  if (value === null) return null
+  const approval = pick(value, ["amount"])
+  if (Object.hasOwn(object(value), "steps"))
+    approval.steps = rows(object(value).steps).map((step) =>
+      pick(step, ["holderId", "status", "levelName"]))
+  return approval
+}
+function selectCriterion(value: Record<string, unknown>) {
+  return pick(value, ["id", "name", "weight", "auto", "required"])
+}
+function selectQuote(value: Record<string, unknown>) {
+  const quote = pick(value, quoteKeys.filter((key) => key !== "attachments"))
+  if (Object.hasOwn(value, "attachments"))
+    quote.attachments = rows(value.attachments).map((row) => pick(row, ["id", "name"]))
+  return quote
+}
+function selectSourcing(value: unknown) {
+  if (value === null) return null
+  const source = object(value)
+  const result = pick(source, sourceKeys.filter((key) => !["quotes", "weights", "approval"].includes(key)))
+  if (Object.hasOwn(source, "quotes"))
+    result.quotes = rows(source.quotes).map(selectQuote)
+  if (Object.hasOwn(source, "approval"))
+    result.approval = selectApproval(source.approval)
+  if (Object.hasOwn(source, "weights")) {
+    const weights = object(source.weights)
+    const normalized = pick(weights, ["tech", "comm"])
+    if (Object.hasOwn(weights, "criteria"))
+      normalized.criteria = rows(weights.criteria).map(selectCriterion)
+    if (Object.hasOwn(weights, "commCriteria"))
+      normalized.commCriteria = rows(weights.commCriteria).map(selectCriterion)
+    result.weights = normalized
+  }
+  return result
+}
+function selectPurchaseOrder(value: unknown) {
+  if (value === null) return null
+  const source = object(value)
+  const order = pick(source, orderKeys.filter((key) => !["lines", "approval"].includes(key)))
+  if (Object.hasOwn(source, "lines"))
+    order.lines = rows(source.lines).map((line) => pick(line, ["id", "desc", "description", "unit", "notes", "qty", "unitPrice"]))
+  if (Object.hasOwn(source, "approval"))
+    order.approval = selectApproval(source.approval)
+  return order
+}
 /** All data passed here has already crossed domain.view's current visibility boundary. */
 function selectRequest(source: Record<string, unknown>, detail: boolean) {
   if (!detail) {
@@ -101,14 +147,12 @@ function selectRequest(source: Record<string, unknown>, detail: boolean) {
   const request = pick(source, requestKeys.filter((key) => !["pr", "sourcing", "po", "history"].includes(key)))
   if (Object.hasOwn(source, "pr"))
     request.pr = source.pr === null ? null : pick(source.pr, requisitionKeys)
-  if (Object.hasOwn(source, "sourcing")) {
-    const data = pick(source.sourcing, sourceKeys.filter((key) => key !== "quotes"))
-    if (Object.hasOwn(object(source.sourcing), "quotes"))
-      data.quotes = rows(object(source.sourcing).quotes).map((quote) => pick(quote, quoteKeys))
-    request.sourcing = source.sourcing === null ? null : data
-  }
+  if (Object.hasOwn(source, "sourcing"))
+    request.sourcing = selectSourcing(source.sourcing)
   if (Object.hasOwn(source, "po"))
-    request.po = source.po === null ? null : pick(source.po, orderKeys)
+    request.po = selectPurchaseOrder(source.po)
+  if (Object.hasOwn(source, "prApproval"))
+    request.prApproval = selectApproval(source.prApproval)
   if (Object.hasOwn(source, "history"))
     request.history = rows(source.history).map((entry) => pick(entry, ["at", "by", "action", "note"]))
   return request
@@ -117,6 +161,12 @@ function selectSupplier(source: Record<string, unknown>, includeBank: boolean) {
   const safe = pick(source, includeBank ? [...supplierKeys, ...bankKeys] : supplierKeys)
   if (Object.hasOwn(source, "history"))
     safe.history = rows(source.history).map((entry) => pick(entry, ["field"]))
+  if (Object.hasOwn(source, "contacts"))
+    safe.contacts = rows(source.contacts).map((entry) => pick(entry, ["name", "email", "phone"]))
+  if (Object.hasOwn(source, "commercial"))
+    safe.commercial = pick(source.commercial, ["notes"])
+  if (Object.hasOwn(source, "compliance"))
+    safe.compliance = pick(source.compliance, ["notes"])
   return safe
 }
 function versionsFor(view: View, keys: readonly string[]) {
@@ -179,8 +229,8 @@ function pageData(
   if (capability === "CAP24") {
     // The existing source routine owns aggregate/FX semantics. Browser never re-sums.
     const rates = { currency: text(formSettings.currency), fxRates: rows(formSettings.fxRates)
-      .filter((entry): entry is { code: string; rate: number } => typeof entry.code === "string" && typeof entry.rate === "number")
-      .map((entry) => ({ code: entry.code, rate: entry.rate })) }
+      .flatMap((entry) => typeof entry.code === "string" && typeof entry.rate === "number"
+        ? [{ code: entry.code, rate: entry.rate }] : []) }
     return {
       data: { requests: requestsSummary, formSettings, metrics: procurementDashboard(requests.filter(hasRequestShape), rates) },
       versions: {},
