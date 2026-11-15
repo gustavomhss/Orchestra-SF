@@ -6,8 +6,15 @@
  * bun script/sf2h/proofs/am01/correlate-hosted-evidence.ts <hosted-runs.json>
  *
  * Input: {
- *   schema: "sf2h.am01.hosted-input.v1", candidateSha, snapshotSha,
- *   runs: [{ id, url, headSha, conclusion, selectedFiles, log }]
+ *   schema: "sf2h.am01.hosted-input.v2", candidateSha, candidateTreeSha,
+ *   sucafinaSubtreeSha,
+ *   runs: [{ id, url, headSha, candidateSha, sucafinaSubtreeSha,
+ *     ciRequestSha256, conclusion, selectedFiles, log }]
+ * }
+ * Each .ci-run.json produces a DIFFERENT snapshot commit. 164 must verify
+ * that every snapshot's product subtree equals the same integrated C and
+ * that only the allowed CI request differs elsewhere; this correlator never
+ * substitutes one GitHub SHA for another.
  * }
  * Raw logs, run IDs, selections, head and URL must originate from the same
  * GitHub Actions observations. This file cannot certify the transport.
@@ -40,8 +47,10 @@ const assignments = [
 ] as const
 
 type Json = Record<string, unknown>
-type Run = { id: number; url: string; headSha: string; conclusion: string; selectedFiles: string[]; log: string }
-type Input = { schema: string; candidateSha: string; snapshotSha: string; runs: Run[] }
+type Run = { id: number; url: string; headSha: string; candidateSha: string;
+  sucafinaSubtreeSha: string; ciRequestSha256: string; conclusion: string; selectedFiles: string[]; log: string }
+type Input = { schema: string; candidateSha: string; candidateTreeSha: string;
+  sucafinaSubtreeSha: string; runs: Run[] }
 const sha40 = /^[0-9a-f]{40}$/
 const sha64 = /^[0-9a-f]{64}$/
 
@@ -76,8 +85,9 @@ function sameRef(left: Json, right: Json) {
 }
 
 async function correlate(input: Input) {
-  assert(input.schema === "sf2h.am01.hosted-input.v1", "unsupported hosted input schema")
-  assert(sha40.test(input.candidateSha) && sha40.test(input.snapshotSha), "missing verified candidate or snapshot")
+  assert(input.schema === "sf2h.am01.hosted-input.v2", "unsupported hosted input schema")
+  assert(sha40.test(input.candidateSha) && sha40.test(input.candidateTreeSha) &&
+    sha40.test(input.sucafinaSubtreeSha), "missing candidate commit/tree or product subtree")
   assert(Array.isArray(input.runs) && input.runs.length > 0, "no hosted Actions run evidence")
   const root = path.resolve(import.meta.dir, "../../../../modules/sucafina/Sucafinav1/product/ai")
   // Real loader recalculates SHA-256 of all shipped sources, verifies their
@@ -88,7 +98,9 @@ async function correlate(input: Input) {
   const runEvidence = input.runs.map((run) => {
     assert(Number.isSafeInteger(run.id) && run.id > 0, "missing Actions run identifier")
     assert(run.url === `https://github.com/gustavomhss/Orchestra-SF/actions/runs/${run.id}`, "Actions URL does not match run identifier")
-    assert(run.headSha === input.snapshotSha, "run executed against another snapshot")
+    assert(sha40.test(run.headSha) && run.candidateSha === input.candidateSha &&
+      run.sucafinaSubtreeSha === input.sucafinaSubtreeSha && sha64.test(run.ciRequestSha256),
+      "snapshot/C/product-subtree/request receipt not tied to this candidate")
     assert(run.conclusion === "success", "Actions result is not successful")
     assert(Array.isArray(run.selectedFiles) && run.selectedFiles.length > 0 &&
       new Set(run.selectedFiles).size === run.selectedFiles.length, "missing or duplicate exact selectors")
@@ -98,7 +110,8 @@ async function correlate(input: Input) {
     const tagged = (marker: string) => extract(run.log, marker)
     const catalog = tagged("SF_WP12_NATIVE_MISSION_CATALOG:")
     return {
-      id: run.id, url: run.url, selectedFiles: run.selectedFiles,
+      id: run.id, url: run.url, headSha: run.headSha,
+      ciRequestSha256: run.ciRequestSha256, selectedFiles: run.selectedFiles,
       logSha256: createHash("sha256").update(run.log).digest("hex"),
       catalog, prepared: tagged("SF_WP12_NATIVE_MISSION:"),
       runs: tagged("SF_WP12_NATIVE_MISSION_RUN:"),
@@ -150,14 +163,14 @@ async function correlate(input: Input) {
       const caseRef = item.caseRef && typeof item.caseRef === "object" ? record(item.caseRef) : {}
       const runObservation = run.runs.find((entry) => entry.runRef === item.runRef && entry.skillId === skill.id &&
         entry.nativeSessionId === loaded.nativeSessionId && entry.state === "ready" &&
-        entry.githubSha === input.snapshotSha)
+        entry.githubSha === run.headSha)
       const catalog = run.catalog.find((entry) => entry.phase === "initial" && entry.state === "available" &&
-        entry.githubSha === input.snapshotSha && Array.isArray(entry.intersection) &&
+        entry.githubSha === run.headSha && Array.isArray(entry.intersection) &&
         entry.intersection.some((m) => {
           const model = record(m)
           return `${model.providerID}/${model.id}` === item.actualModel
         }))
-      return !!runObservation && !!catalog && item.githubSha === input.snapshotSha &&
+      return !!runObservation && !!catalog && item.githubSha === run.headSha &&
         typeof item.runRef === "string" && item.runRef.length > 0 && loaded.runId === item.runRef &&
         typeof loaded.nativeSessionId === "string" && loaded.nativeSessionId.length > 0 &&
         typeof loaded.loadedMessageId === "string" && loaded.loadedMessageId.length > 0 &&
@@ -188,6 +201,7 @@ async function correlate(input: Input) {
       additionalQualifiedInvocations: Math.max(accepted.length - 1, 0),
       outputKindsAllowed: skill.outputSchemaRefs,
       runId: first?.run.id ?? null, runUrl: first?.run.url ?? null,
+      ciSnapshotSha: first?.run.headSha ?? null, ciRequestSha256: first?.run.ciRequestSha256 ?? null,
       logSha256: first?.run.logSha256 ?? null,
       runRef: first?.item.runRef ?? null, nativeSessionId: first ? record(first.item.receipt).nativeSessionId : null,
       outputRef: first?.item.outputRef ?? null, outputDigest: first?.item.outputDigest ?? null,
@@ -227,10 +241,13 @@ async function correlate(input: Input) {
   const result = {
     schema: "sf2h.am01.correlation.v1", proof: "AM01", status: "NOT_RUN",
     conclusion: pending.length === 4 && matched.length === 18 ? "ALL_18_WITNESSES_CORRELATED_PENDING_INDEPENDENT_ATTESTATION" : "INCOMPLETE",
-    candidateSha: input.candidateSha, snapshotSha: input.snapshotSha,
+    candidateSha: input.candidateSha, candidateTreeSha: input.candidateTreeSha,
+    sucafinaSubtreeSha: input.sucafinaSubtreeSha,
     manifestDigest: bundle.manifestDigest, profiles: bundle.profiles.length, skills: bundle.skills.length,
     loadedAndRefused: loadCovered, witnesses, reviewerDistinct, portfolioNegative,
-    runs: runEvidence.map((run) => ({ runId: run.id, url: run.url, logSha256: run.logSha256, selectedFiles: run.selectedFiles })),
+    runs: runEvidence.map((run) => ({ runId: run.id, url: run.url,
+      ciSnapshotSha: run.headSha, ciRequestSha256: run.ciRequestSha256,
+      logSha256: run.logSha256, selectedFiles: run.selectedFiles })),
     pending, executionClaim: "Only recorded GitHub Actions logs; no run launched by this correlator",
     authority: "Log provenance, CI request, candidate identity and final approval must be checked by 164/162/independent reviewers",
   }

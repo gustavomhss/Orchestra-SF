@@ -28,12 +28,13 @@
     "codePublishedTree": "c491dd9fd85f8422341fa1d20d2dfb638bb2cee3",
     "patchBlobs": {
       "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts": "3aa9c1e325853678a738a793580c0d0a6f035e33",
-      "script/sf2h/proofs/am01/correlate-hosted-evidence.ts": "c0d5f2434936e7db47e96b22e063ea1c0c78d3b1"
+      "script/sf2h/proofs/am01/correlate-hosted-evidence.ts": "45332299e15db0259c3b4cfd735ba6c99bf96e7a"
     },
     "postCommit": null,
     "postTree": null,
     "postReceiptBlob": null,
-    "postCommitPolicy": "The commit that stores this receipt identifies it; no self-referential SHA is asserted"
+    "postCommitPolicy": "The commit that stores this receipt identifies it; no self-referential SHA is asserted",
+    "correlatorRevisionReason": "Each test-ci .ci-run.json yields a distinct Actions snapshot SHA, even for one product C; v2 ties individual heads to one integrated product subtree and CI request SHA; 164 checks whole diff via GitHub MCP."
   },
   "implementation": [
     {
@@ -1289,7 +1290,24 @@
         "scanner and identity evidence observed",
         "do not repeat previously failed identical C64 runs"
       ],
-      "requiredReceipt": "Pass actual raw job logs, stable GitHub URL, snapshotSHA, selections and run statuses to the correlator; record output/NOT_RUN as appropriate"
+      "requiredReceipt": "Pass actual raw job logs, stable GitHub URL, snapshotSHA, selections and run statuses to the correlator; record output/NOT_RUN as appropriate",
+      "proofInputSchema": "sf2h.am01.hosted-input.v2",
+      "snapshotBinding": {
+        "productCandidateSha": null,
+        "productCandidateTreeSha": null,
+        "sucafinaSubtreeSha": null,
+        "perHostedRun": {
+          "id": null,
+          "url": null,
+          "headSha": null,
+          "candidateSha": null,
+          "sucafinaSubtreeSha": null,
+          "ciRequestSha256": null,
+          "selectedFiles": [],
+          "rawLog": null
+        },
+        "oracle": "Every run has distinct snapshot headSHA; 164 must prove exact integrated product subtree SHA and all other differences solely allowed .ci-run.json, as well as verified GitHub runID/attempt/job/conclusion/request hash."
+      }
     },
     "S3-R3": {
       "action": "Independent review only after actual same-candidate 164 proof and scanner/model/identity, no authorship credit or final signoff from 165"
@@ -1303,7 +1321,8 @@
       "real model/identity/scanner/version provenance",
       "five integrated human consumers and missing-data cases",
       "S3-R3 independent review",
-      "C/8CI/epic/AM01-AM06/3FINAL/D/guards"
+      "C/8CI/epic/AM01-AM06/3FINAL/D/guards",
+      "164 bind multiple CI request-specific snapshot commits to a single integrated C subtree and confirm no other source drift"
     ],
     "evidenceProduced": [
       "ACK GitHub commit",
