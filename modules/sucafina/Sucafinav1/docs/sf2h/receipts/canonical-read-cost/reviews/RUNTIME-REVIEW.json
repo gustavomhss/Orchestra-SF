@@ -1,0 +1,285 @@
+{
+  "schema": "sf2h.canonical-read-cost.independent-runtime-review.v1",
+  "mission": 76,
+  "reviewer": "ci_contract",
+  "state": "MATERIAL_WORK_AND_REGRESSIONS_PASS",
+  "scope": "Independent arithmetic and evidence review of the exact B2/R1 surgical hosted runs, supplementing REVIEW76.json. This reviewer did not execute tests, edit product/tests or mutate remote state.",
+  "baseline": {
+    "W": {
+      "commit": "c9285ddf74eb4260162f6040226e4745dab184ff",
+      "tree": "2d60474a9782481e88d5d1a5e574fe8d9787f371"
+    },
+    "V": {
+      "commit": "a5ab06e87c7280d28264dbaaf9fcf035824bdf12",
+      "tree": "88e78f1578e1e5393d34c372f2cfb8852ea052cf"
+    },
+    "S": {
+      "commit": "8bfce3242f1d7c8d6a224ba1418d6486d52444a8",
+      "tree": "76f9ba99d56edaebdbaf2e42ad2bfa9d301e57b1",
+      "parent": "a5ab06e87c7280d28264dbaaf9fcf035824bdf12"
+    },
+    "run": 43672619431,
+    "job": 132685806297,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43672619431",
+    "run_attempt": 1,
+    "event": "push",
+    "branch": "ci-run-linux-m76-c9285ddf-9c46187e-b2",
+    "status": "completed",
+    "conclusion": "success",
+    "test_step": "success",
+    "cleanup": {
+      "job": 132686754408,
+      "conclusion": "success"
+    },
+    "snapshot_delta": "Only .ci-run.json added to V; independently verified by GitHub MCP comparison."
+  },
+  "candidate": {
+    "W": {
+      "commit": "6854c0f966e4fd78322932181359c3742c53c16d",
+      "tree": "fd815bff71b812debd0a7773e33060fe21427e55"
+    },
+    "V": {
+      "commit": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "tree": "51fedc4707ccb553e95658720678562390e16edc"
+    },
+    "S": {
+      "commit": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+      "tree": "c2734bc867038f87c41010ebfb95fc1c162880bb",
+      "parent": "ccd7384a75efd69da203c7c42f04f3083ceb4974"
+    },
+    "run": 43673023213,
+    "job": 132687025106,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673023213",
+    "run_attempt": 1,
+    "event": "push",
+    "branch": "ci-run-linux-m76-6854c0f9-9c46187e-r1",
+    "status": "completed",
+    "conclusion": "success",
+    "test_step": "success",
+    "cleanup": {
+      "job": 132687910448,
+      "conclusion": "success"
+    },
+    "snapshot_delta": "Only .ci-run.json added to V; independently verified by GitHub MCP comparison."
+  },
+  "shared_request": {
+    "blob": "5c0f8448096ceb9ee17cc9db4d0c0199a7cf2890",
+    "sha256": "9c46187ef0ce77dcd3175394d1f04c4c164e76c989d2bef2a76cd976eaee650c",
+    "byte_identical": true,
+    "value": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+        "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+        "Sucafinav1/test/product/wp11/result-store.test.ts",
+        "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+        "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+        "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+        "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+        "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    }
+  },
+  "source_control": {
+    "B2W_to_W1_changes": [
+      "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-expected.ts"
+    ],
+    "fixed_diagnostic_and_regression_bytes_identical": true,
+    "V1_contains_complete_exact_readonly59_bundle": true,
+    "no_unowned_source_or_workflow_changes": true,
+    "measured_producer_sha256": {
+      "product/host-binding/state-provider.ts": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+      "product/decisions/result-store.ts": "b0c72001c952dacd45fe518cece15ebe9fedc5629f4463a37dde3c95feb8e7de",
+      "product/decisions/criterion-comparison.ts": "0faeabe7da29ded1a5f1297fa4ad9d86190f63042a10622900c9b40cd035b4ef"
+    }
+  },
+  "regression_results": {
+    "B2": {
+      "pass": 58,
+      "fail": 0,
+      "expect_calls": 580,
+      "files": 11,
+      "bun_elapsed_seconds": 121.77
+    },
+    "R1": {
+      "pass": 58,
+      "fail": 0,
+      "expect_calls": 580,
+      "files": 11,
+      "bun_elapsed_seconds": 119.16
+    },
+    "identical_selected_files": true,
+    "bun": "1.3.14 (0d9b296a)",
+    "semantic_controls": [
+      "Retained callback arguments and caller mutation do not change independently returned results.",
+      "Duplicate batch occurrences retain separate output graphs and unchanged callback multiplicity/order.",
+      "Same-version case-objective drift committed by real CAS after the final source callback denies both duplicate occurrences after three fresh C08 reads.",
+      "Stored-result drift, full reference/version changes, source revocation, replay refusal, case/version changes, request/header/lease changes and facade replacement remain rejected in the selected regressions.",
+      "Unselected final-envelope getters and clone errors remain observable.",
+      "Historical calculation persistence, ancestor replay, criterion history, read-before-bind behavior and C08 admission/write guards remain qualified in the selected scope.",
+      "Unsupported canonical value still throws SF_CANONICAL_UNSUPPORTED through the corrected spy wrapper."
+    ]
+  },
+  "work_reduction": {
+    "discriminant_controls": {
+      "scalar_full_stored_hashes": {
+        "B2": 4,
+        "R1": 3
+      },
+      "duplicate_batch_full_stored_hashes": {
+        "B2": 8,
+        "R1": 6
+      },
+      "duplicate_batch_case_hashes": {
+        "B2": 12,
+        "R1": 10
+      },
+      "calculation_source_derivation_hashes": {
+        "B2": 64,
+        "R1": 24,
+        "derivations": 4,
+        "input_references_per_derivation": 6,
+        "distinct_references": 2
+      },
+      "calculation_replay_callbacks": {
+        "B2": 2,
+        "R1": 2
+      },
+      "scalar_callback_events": {
+        "B2": 11,
+        "R1": 11
+      },
+      "duplicate_batch_callback_events": {
+        "B2": 19,
+        "R1": 19
+      }
+    },
+    "composed_diagnostic": {
+      "digest_calls": {
+        "B2": 133103,
+        "R1": 131972,
+        "removed": 1131
+      },
+      "clone_calls": {
+        "B2": 72415,
+        "R1": 72404,
+        "removed": 11
+      },
+      "eliminated_repeated_stored_hashes": {
+        "scalar": 11,
+        "batch": 596,
+        "total": 607
+      },
+      "final_case_hashes": {
+        "B2": 1192,
+        "R1": 668,
+        "removed": 524,
+        "batch_invocations": 334
+      },
+      "eliminated_scalar_final_output_clones": 11,
+      "preserved_opaque_C08_full_clones": {
+        "B2": 2216,
+        "R1": 2216
+      },
+      "all_primitive_call_completed_error_counts_outside_result_store_unchanged": true
+    },
+    "causal_interpretation": "The predicted removals match exactly: 607 repeated full stored-result hashes, 524 repeated hashes of shared private case objects, and 11 redundant scalar output clones. No independent observation, callback or replay count is removed.",
+    "calculation_source_scope": "The composed diagnostic contains no calculationSources callsite. The Set improvement is qualified separately by the calculation-source regression and is not credited as a P03-path reduction."
+  },
+  "equivalence": {
+    "public_counter_rows": 192,
+    "calls_completed_errors_all_identical": true,
+    "callback_order_identical": true,
+    "callback_events": 87440,
+    "callback_order_sha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+    "five_output_digests_identical": true,
+    "output_digests": {
+      "comparison": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73",
+      "rule": "297d2038040a7ab226fe6b625464c19c10eb79f1201a082997f2d0338b493987",
+      "evaluation": "57db0af20092a4f30afc0ea4ff4cef0a4ef8ae4e7b1c7ef4ce82e1db1399e002",
+      "binding": "a9bb95f4b7004d7af4cc3c5dea1b451b7b9cd6e3d8ed3e24a98bf196226acfae",
+      "comparisonAgain": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73"
+    },
+    "declared_workload_equal": true,
+    "fixture_boundary_equal": true
+  },
+  "observer_integrity": {
+    "candidate": {
+      "entryInvocations": 131980,
+      "entryCallsHighWater": 1,
+      "entryResultsHighWater": 1,
+      "phaseClears": 8,
+      "reportClears": 1,
+      "checkpointCallsHighWater": 0,
+      "checkpointResultsHighWater": 0,
+      "residualCallsHighWater": 0,
+      "residualResultsHighWater": 0,
+      "residualCalls": 0,
+      "residualResults": 0,
+      "pendingAtClearHighWater": 0
+    },
+    "pending": 0,
+    "baseline_entry_invocations": 133111,
+    "candidate_entry_invocations": 131980,
+    "expected_entry_reduction": 1131,
+    "entry_calls_and_results_high_water": 1,
+    "after_phase_and_report_residuals_zero": true,
+    "exception_preservation_control": "PASS as part of both diagnostic tests",
+    "arithmetic": {
+      "R1_raw_primitive_rows": 1611,
+      "R1_aggregate_sites": 382,
+      "R1_reaggregation_discrepancies": [],
+      "B2_raw_primitive_rows": 1633,
+      "B2_aggregate_sites": 386,
+      "B2_reaggregation_discrepancies": []
+    },
+    "limitations": [
+      "B0 recorded unbounded Bun spy history and is excluded as a timing/memory comparison baseline.",
+      "B2 and R1 use byte-identical corrected observer/test code; only product and expected-hash marker differ.",
+      "Primitive timing excludes entry clear/stack capture, but measurements still include runtime/GC effects. Public times overlap and are not exclusive CPU.",
+      "Zero residual recorded history does not prove zero in-flight retention or a product heap bound."
+    ]
+  },
+  "materiality_gate": {
+    "verdict": "PASS_FOR_ONE_ORIGINAL_P03_ATTEMPT",
+    "basis": "Measured structural reduction of redundant complete-graph producer traversals plus equivalent real outputs, callback order/multiplicity, independent observations and all selected negative controls.",
+    "no_speed_threshold_applied": true,
+    "elapsed_times": "Single-run descriptive observations only; no speed-ratio assertion or P03 performance prediction.",
+    "limitation": "The larger unresolved C08 and Planner-verifier costs remain. This bounded producer improvement does not establish that P03's dominant cost is fixed."
+  },
+  "outstanding_gates": {
+    "A45": {
+      "state": "PENDING_NOT_ESTABLISHED_BY_THIS_RECEIPT",
+      "validation_ref": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "required": "Exact V1 compiler/generation/guards under central45; not waived."
+    },
+    "P03": {
+      "state": "NO_RESULT_AT_THIS_REVIEW",
+      "prerequisite": "The material-work/regression prerequisite is now met for the exact W1/V1 candidate.",
+      "constraints": "One original run only, preserving all 72 assertions/order, 180000 ms, real producers/history/replay/revocation. Its outcome remains independent."
+    },
+    "integration71": {
+      "state": "NOT_PROVED",
+      "meaning": "Source and isolated V1 validation are not sf2-stack integration proof."
+    }
+  },
+  "evidence_sha256": {
+    "evidence/B2/diagnostic.json": "0b32ddf35f626037e02eac11aa2bdb2cf8e819771ec02f088886d12d8dd3e636",
+    "evidence/B2/summary.json": "f600ff6c4b6d15f6a937aeeede21af48ad926ba4342504fc7fdbc2671cd48990",
+    "evidence/B2/test-output.log": "f9dba347ac6f8eafdbe6b53c190103894c9eea4da2adfa82026d05cecf8b2d6b",
+    "evidence/R1/diagnostic.json": "795d3691a6866cf48153c0ce62c41a286d97ded9e4a38587d7919cc6454c1f7a",
+    "evidence/R1/summary.json": "08ec45737d3b028783d341833f53010c663347094e168dccc14f1c441e167a99",
+    "evidence/R1/test-output.log": "83c5e86c9fdd29eb0861b096dccf26609d69366c6e681a258f6211bc8169b0ac"
+  },
+  "GLOBAL_RELEASE": false
+}

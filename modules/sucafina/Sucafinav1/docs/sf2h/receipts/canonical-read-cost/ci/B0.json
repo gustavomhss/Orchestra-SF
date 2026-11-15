@@ -1,0 +1,290 @@
+{
+  "schema": "sf2h.canonical-read-cost.ci-receipt.v1",
+  "mission": 76,
+  "selection": "B0",
+  "source": {
+    "W": "8b538ad58a1156b2ffdecafce407e72c8532a97d",
+    "tree": "ecf142e3f34321492be6cc019430f3b6d278fd04",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+  },
+  "composition": {
+    "V": "34bcd158f09ce181570c99564dc47ad771ac8210",
+    "tree": "7e162829e2a9561cc390ada18b99e34242331bfa",
+    "dependency59Material": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "rule": "Exactly released59 ninefile overlay on sourceW; source branch excludes foreign paths."
+  },
+  "envelope": {
+    "S": "f2bc6a042c6eff9797bd1f34ee2c6ac4dfc8ffc6",
+    "tree": "b0a15bda9ade745f10ddee27bdc2f3173c0b2165",
+    "onlyDifferenceFromV": ".ci-run.json",
+    "branch": "ci-run-linux-m76-8b538ad5-9c46187e-b0"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "9c46187ef0ce77dcd3175394d1f04c4c164e76c989d2bef2a76cd976eaee650c",
+  "run": {
+    "id": 43671421907,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671421907",
+    "headSha": "f2bc6a042c6eff9797bd1f34ee2c6ac4dfc8ffc6",
+    "status": "completed",
+    "conclusion": "failure",
+    "startedAt": "2026-11-15T03:14:05Z"
+  },
+  "jobs": [
+    {
+      "id": 132682095454,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "failure",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132683016445,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "observed": {
+    "run": 43671421907,
+    "sha": "f2bc6a042c6eff9797bd1f34ee2c6ac4dfc8ffc6",
+    "selected": [
+      "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts"
+    ],
+    "nonce": [
+      "503dfa38ec21b6539a0a6f22198b26c5"
+    ],
+    "verdict": [
+      "omni positive control [503dfa38ec21b6539a0a6f22198b26c5]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "bun": [
+      "bun test v1.3.14 (0d9b296a)"
+    ],
+    "statistics": [
+      " 56 pass",
+      " 2 fail",
+      " 559 expect() calls",
+      "Ran 58 tests across 11 files. [118.26s]"
+    ]
+  },
+  "metrics": {
+    "resultDigests": {
+      "scalar": 4,
+      "duplicateBatch": 8
+    },
+    "diagnostic": "PASS"
+  },
+  "limits": [
+    "56 PASS/2 FAIL; two new test-instrument errors, neither a product change. Failure retained, not relabeled PASS.",
+    "Old spy retained call history. Timing/memory are historical only, not B2/R1 paired baseline."
+  ],
+  "P03": "NOT_SELECTED_NOT_EXECUTED",
+  "GLOBAL_RELEASE": false
+}

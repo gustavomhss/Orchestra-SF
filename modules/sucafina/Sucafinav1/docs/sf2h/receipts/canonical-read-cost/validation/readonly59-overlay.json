@@ -132,5 +132,45 @@
     "P03 and original fixture blobs remain unchanged; source76 tests require the declared59 dependency for readonly capability typing.",
     "No edits to runtime72, executor65, portfolio analysis/production, source61 or Atlas69."
   ],
-  "status": "BASELINE_NOT_RUN"
+  "status": "B2_AND_R1_PASS_ORIGINAL_P03_FAIL",
+  "qualification": {
+    "B2": {
+      "W": "c9285ddf74eb4260162f6040226e4745dab184ff",
+      "V": "a5ab06e87c7280d28264dbaaf9fcf035824bdf12",
+      "S": "8bfce3242f1d7c8d6a224ba1418d6486d52444a8",
+      "run": 43672619431,
+      "pass": 58,
+      "fail": 0,
+      "expects": 580
+    },
+    "R1": {
+      "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+      "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "S": "85b75ff50d77665e963f852cf4c15b1786c9d8b6",
+      "run": 43673023213,
+      "pass": 58,
+      "fail": 0,
+      "expects": 580
+    },
+    "P03": {
+      "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+      "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "S": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+      "run": 43673511994,
+      "pass": 0,
+      "fail": 1,
+      "error": 1,
+      "executedExpects": 24,
+      "preservedExpectLines": 72,
+      "testTimeoutMs": 180000,
+      "status": "FAIL_NOT_CLOSED"
+    },
+    "A45": "REQUESTED_NO_RESULT_OBSERVED",
+    "integration71": "NOT_ESTABLISHED"
+  },
+  "targetObservation": {
+    "commit": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "note": "Four runtime59 production postimages still exact at this observed C35 target; re-read current target before composition. Do not overwrite later72 changes."
+  }
 }

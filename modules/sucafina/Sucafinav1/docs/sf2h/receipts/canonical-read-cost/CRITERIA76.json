@@ -1,0 +1,1396 @@
+{
+  "schema": "sf2h.canonical-read-cost.criterion-evidence.v1",
+  "mission": 76,
+  "branch": "canonical-read-cost",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "state": "PARTIAL_COMPONENT_DELIVERY_P03_FAIL_A45_PENDING_NOT_INTEGRATED",
+  "purpose": "Rastrear cada ID lido no ACK e sua redação normativa exata até evidência limitada ou lacuna explícita; não certificar globalmente as linhas nem modificar o plano.",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+  "source_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "source_candidate": {
+    "W": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "dependency": "Bundle readonly59 exato de nove arquivos; sem autoria76 de runtime."
+  },
+  "read_manifest": {
+    "source": "delivery76/ACK76.json",
+    "criterion_ids": [
+      "CAMP.INV.01",
+      "CAMP.INV.02",
+      "CAMP.INV.03",
+      "CAMP.INV.04",
+      "CAMP.INV.06",
+      "CAMP.INV.07",
+      "CAMP.INV.20",
+      "CAMP.QLT.05",
+      "CAMP.QLT.06",
+      "CAMP.CMP.02",
+      "sf2h-integral-20261112.INV.08",
+      "sf2h-integral-20261112.INV.09",
+      "sf2h-integral-20261112.INV.10",
+      "sf2h-integral-20261112.INV.11",
+      "WP10.T01.CHK.04",
+      "WP10.T01.CHK.10",
+      "WP10.T01.CHK.11",
+      "WP10.T01.CHK.12",
+      "WP10.T01.INV.10",
+      "WP11.T01.CHK.01",
+      "WP11.T01.CHK.02",
+      "WP11.T01.CHK.03",
+      "WP11.T01.CHK.18",
+      "WP11.T02.CHK.01",
+      "WP11.T02.CHK.02",
+      "WP11.T02.CHK.03",
+      "WP11.T02.CHK.20",
+      "WP11.T02.CHK.21",
+      "WP11.T02.CHK.18",
+      "WP11.T03.CHK.01",
+      "WP11.T03.CHK.20",
+      "WP13.T02.CHK.01",
+      "WP13.T02.CHK.02",
+      "WP13.T02.CHK.03",
+      "WP13.T02.CHK.20",
+      "WP13.T02.CHK.18",
+      "WP13.T03.CHK.01",
+      "WP13.T03.CHK.02",
+      "WP13.T03.CHK.03",
+      "WP13.T03.CHK.20",
+      "WP13.T03.CHK.18",
+      "WP13.T04.CHK.02",
+      "WP13.T04.CHK.03",
+      "WP10.T04.INV.10",
+      "WP10.T04.INV.40",
+      "WP10.T04.QLT.01",
+      "WP10.T04.QLT.40",
+      "WP10.T04.CHK.01",
+      "WP10.T04.CHK.02",
+      "WP10.T04.CHK.03"
+    ],
+    "contracts": [
+      "C08",
+      "C09",
+      "C10",
+      "C12"
+    ],
+    "criterion_count": 50,
+    "contract_count": 4,
+    "scope": "Somente os50IDs e4contratos declarados no ACK; não substitui essa lista pelos155IDs do actor pack nem pelos1610 critérios da campanha. O pack completo foi leitura de contexto, não concessão de ownership."
+  },
+  "source_files": [
+    {
+      "local_path": "mission76.json",
+      "bytes": 4779,
+      "sha256": "5c855044864f76d19265e0e3a55092d1b1b3b374c8b79c03e0d7f2d4797f79e2"
+    },
+    {
+      "local_path": "delivery76/ACK76.json",
+      "bytes": 3857,
+      "sha256": "a8f2facf539e0a702049c4ba42735fc9bb2cae57c48a6c147996482f80d83239"
+    },
+    {
+      "local_path": "plan/execution/COMMON.md",
+      "bytes": 45079,
+      "sha256": "a518cf4b3136d5c1126d59304afedf71b5f93168314f1f2f56743dcae719c94e"
+    },
+    {
+      "local_path": "ci_contract/WP10.json",
+      "bytes": 81029,
+      "sha256": "16089521179b33e0c24624fbd41e0929f82440d2efb65ab81b8385b518d3aea3"
+    },
+    {
+      "local_path": "ci_contract/WP11.json",
+      "bytes": 34684,
+      "sha256": "d390c2df5fa5650b4d8512071a2ac3a240a617a3876e1de64ed5363a7b4c7a89"
+    },
+    {
+      "local_path": "ci_contract/WP13.json",
+      "bytes": 27317,
+      "sha256": "a4c0ad67f35986568d3d866f886e7be3bdd0d796c347100346dd28893016497f"
+    },
+    {
+      "local_path": "plan/contracts.json",
+      "bytes": 62685,
+      "sha256": "e9ff1e927e5850da5af156419c6f9a1fcbdc4cec3287fe6a5a5f0b9534d10f44"
+    }
+  ],
+  "coverage_verification": {
+    "criterion_rows": 50,
+    "unique_criterion_ids": 50,
+    "missing_ack_ids": [],
+    "extra_ids": [],
+    "all_texts_copied_exactly": true,
+    "all_contract_content_and_proof_copied_exactly": true,
+    "global_PASS_rows": 0,
+    "planning_files_modified": false,
+    "coverage_state_counts": {
+      "PARTIAL_COMPONENT_COVERAGE": 21,
+      "PROCESS_EVIDENCE_ONLY": 7,
+      "NOT_ESTABLISHED_IN76": 13,
+      "PARTIAL_COMPONENT_COVERAGE_P03_FAILED": 1,
+      "NOT_ESTABLISHED_P03_FAILED": 8
+    }
+  },
+  "coverage_legend": {
+    "PARTIAL_COMPONENT_COVERAGE": "Evidência selecionada sustenta parte da semântica; não fecha o critério integral.",
+    "PARTIAL_COMPONENT_COVERAGE_P03_FAILED": "Há prova parcial de produtor, mas a jornada P03 requerida não concluiu.",
+    "NOT_ESTABLISHED_IN76": "Esta seleção não demonstra o requisito; não significa por si só que o produto viole a semântica.",
+    "NOT_ESTABLISHED_P03_FAILED": "A tentativa integral falhou e não fornece a prova requerida; não atribuir causa matemática/semântica não medida.",
+    "PROCESS_EVIDENCE_ONLY": "Ownership, identidade de snapshots e caminho de execução têm evidência; não é certificação funcional/global."
+  },
+  "gates": {
+    "component_B2_R1": {
+      "state": "SELECTED_COMPONENT_TESTS_PASS",
+      "B2": {
+        "run": 43672619431,
+        "job": 132685806297,
+        "pass": 58,
+        "fail": 0,
+        "expect_calls": 580
+      },
+      "R1": {
+        "run": 43673023213,
+        "job": 132687025106,
+        "pass": 58,
+        "fail": 0,
+        "expect_calls": 580
+      },
+      "limitation": "As seleções não são a matriz completa, oito seleções finais, AM/reviews ou aceite global."
+    },
+    "A45": {
+      "state": "PENDING",
+      "validation_ref": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+      "required": "Compiler/generation/guards pelo owner45 e interface existente; sem dispensa pela passagem de Bun tests."
+    },
+    "P03": {
+      "state": "P03_EXECUTED_FAIL",
+      "run": 43673511994,
+      "attempt": 1,
+      "job": 132688523969,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43673511994",
+      "S": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+      "pass": 0,
+      "fail": 1,
+      "errors": 1,
+      "expect_calls": 24,
+      "test_elapsed_ms": 180011.68,
+      "timeout_ms": 180000,
+      "source_expect_lines": 72,
+      "source_expect_lines_ordered_sha256": "f78152ede2f26602dadf8eaf461e8b2072b1e4edd360ba93811475c290993ba4",
+      "source_test_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+      "source_unchanged": true,
+      "diagnostic_probe_loaded": false,
+      "observed_failure": "stale/portfolio-analysis-changed após await evaluateAndStore; erro em semantic-union-source-scenario.test.ts:50:44.",
+      "interpretation": "24 expect() calls do runner não equivalem a24 das72 linhas expect do arquivo. Último checkpoint concluído prepare:transition-omitted:complete aos5160ms reaparece no deadline180001ms; não identifica função ativa. Counts146500 host.revalidate/12026 cases/4678 verifyOperation/9356 verifySourceProjection são inclusivos, não atribuição causal exclusiva.",
+      "no_reexecution": true
+    },
+    "integration71": {
+      "state": "NOT_PROVED",
+      "consumer": "71 exclusivo writer sf2-stack após ACK",
+      "required": "Consumo explícito, composição com dependências e rechecagem do candidato integrado; source W e V isolado não são essa prova."
+    },
+    "final_campaign_acceptance": {
+      "state": "NOT_QUALIFIED",
+      "required": "Final eight selections, AM/reviews, C-G7 e D-G8, incluindo verificação e guard do envelope; não transferir green de source para integração."
+    }
+  },
+  "evidence": {
+    "B2": {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ci/B2.json",
+      "delivery_branch_url": "https://github.com/gustavomhss/Orchestra-SF/blob/canonical-read-cost/modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ci/B2.json",
+      "local_artifact": "delivery76/ci/B2.json",
+      "sha256": "f677d13a34e6ce1f610b43224d6eea6f72394781f9dd8bff9b011df1485b8d64",
+      "scope": "Baseline hospedado selecionado:58 PASS/0 FAIL/580 expects/11 arquivos; não P03 nem aceite global.",
+      "link_limit": "Link da branch de entrega é mutável; SHA256 e W/V/S internos fixam a evidência usada. O root pode fixar o commit do envelope final."
+    },
+    "R1": {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ci/R1.json",
+      "delivery_branch_url": "https://github.com/gustavomhss/Orchestra-SF/blob/canonical-read-cost/modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ci/R1.json",
+      "local_artifact": "delivery76/ci/R1.json",
+      "sha256": "3d22e26d8f6c00a79394ca37e69afbfd9d3c7ac5d6fbc4c341f28228b962a457",
+      "scope": "Candidato hospedado selecionado:58 PASS/0 FAIL/580 expects/11 arquivos; não P03 nem aceite global.",
+      "link_limit": "Link da branch de entrega é mutável; SHA256 e W/V/S internos fixam a evidência usada. O root pode fixar o commit do envelope final."
+    },
+    "CAUSAL": {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/findings/B2-R1-CAUSAL76.json",
+      "delivery_branch_url": "https://github.com/gustavomhss/Orchestra-SF/blob/canonical-read-cost/modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/findings/B2-R1-CAUSAL76.json",
+      "local_artifact": "prior_evidence/B2-R1-CAUSAL76.json",
+      "sha256": "23e31d9c1b600602d4acd9e208ce3c60c346a96be28fc934a1baba861e6acfef",
+      "scope": "Mesmos testes/probe,1131 digests e11 clones removidos,192 fronteiras/87440 eventos/cinco outputs iguais; tempos e memória descritivos.",
+      "link_limit": "Link da branch de entrega é mutável; SHA256 e W/V/S internos fixam a evidência usada. O root pode fixar o commit do envelope final."
+    },
+    "RUNTIME_REVIEW": {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/reviews/RUNTIME-REVIEW.json",
+      "delivery_branch_url": "https://github.com/gustavomhss/Orchestra-SF/blob/canonical-read-cost/modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/reviews/RUNTIME-REVIEW.json",
+      "local_artifact": "ci_contract/RUNTIME-REVIEW76.json",
+      "sha256": "e5ebcb721df848500b29c8d015b5a046ef1654eed4c615ad5042d835ac17181c",
+      "scope": "Revisor independente confirma trabalho material e regressões; limita explicitamente A45/P03/integração71.",
+      "link_limit": "Link da branch de entrega é mutável; SHA256 e W/V/S internos fixam a evidência usada. O root pode fixar o commit do envelope final."
+    },
+    "MATERIAL_GATE": {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/findings/MATERIAL-GATE.json",
+      "delivery_branch_url": "https://github.com/gustavomhss/Orchestra-SF/blob/canonical-read-cost/modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/findings/MATERIAL-GATE.json",
+      "local_artifact": "delivery76/MATERIAL-GATE.json",
+      "sha256": "772fa8e14def649083da037d9add12a92752ff5e7d5976ab13935ad8d6c3f00c",
+      "scope": "Gate material registrado antes do único P03 original; não transforma o resultado de P03 em sucesso.",
+      "link_limit": "Link da branch de entrega é mutável; SHA256 e W/V/S internos fixam a evidência usada. O root pode fixar o commit do envelope final."
+    },
+    "P03": {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ci/P03.json",
+      "delivery_branch_url": "https://github.com/gustavomhss/Orchestra-SF/blob/canonical-read-cost/modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/ci/P03.json",
+      "local_artifact": "delivery76/ci/P03.json",
+      "sha256": "9b939208c29e32d0af866ab2c87627f2742352bf4484a388c8e849e57563a935",
+      "scope": "Único P03 original:FAIL,0 pass/1 fail/1 error/24 expect calls,180011,68ms; arquivo72expect/ordem/180000ms preservados.",
+      "link_limit": "Link da branch de entrega é mutável; SHA256 e W/V/S internos fixam a evidência usada. O root pode fixar o commit do envelope final."
+    },
+    "P03_REVIEW": {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/reviews/P03-REVIEW.json",
+      "delivery_branch_url": "https://github.com/gustavomhss/Orchestra-SF/blob/canonical-read-cost/modules/sucafina/Sucafinav1/docs/sf2h/receipts/canonical-read-cost/reviews/P03-REVIEW.json",
+      "scope": "Root leu a revisão independente terminal P03_FAIL_TIMEOUT_REPORTED_STALE; seleção original, identidades,72 linhas/ordem/180000ms,24 expect calls, falha,nonce e cleanup corroborados,sem causa exclusiva presumida.",
+      "local_review_read": true,
+      "local_artifact": "ci_contract/P03-REVIEW76.json",
+      "sha256": "b5375def0c623c715897967b8436805dd7c5f31e10ec379cd73b47aab937a222"
+    }
+  },
+  "criteria": [
+    {
+      "id": "CAMP.INV.01",
+      "text": "Domínios continuam como fontes de verdade. UI, BI, relatórios, importação e IA consomem os mesmos contratos; não mantêm cálculos financeiros ou estados de compra paralelos.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 363,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "CAUSAL",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "SQLite/C08/Planner/regras/métrica/replay são reais; as cinco saídas medidas coincidem e nenhum cálculo financeiro paralelo foi introduzido.",
+      "remaining_gap": "Não verifica todos os consumidores UI, BI, relatórios, importação e IA nem a composição integrada.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.INV.02",
+      "text": "Papéis, escopo de dados, holders, locks, versões esperadas e transições legais são preservados. Tornar uma ação fácil de encontrar não amplia autoridade.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 364,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Regressões selecionadas preservam autoridade por chamada, CAS, versões, revogação, headers/lease e recusas de fachadas substituídas.",
+      "remaining_gap": "Papéis, holders, locks e transições de todos os domínios/jornadas continuam fora desta prova de componente.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.INV.03",
+      "text": "Ausência, zero observado, valor herdado, estimativa, valor aprovado e emissão interna mantêm significados distintos; período, versão e moeda não mudam silenciosamente.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 365,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "CAUSAL"
+      ],
+      "observed_support": "Comparação do fixture com training omitido, regras e seus digests de saída permanecem iguais entre as variantes.",
+      "remaining_gap": "Igualdade de outputs neste fixture não qualifica todos os estados de ausência/zero/herança/estimativa, moeda e período no produto.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.INV.04",
+      "text": "Nenhum conteúdo restrito reaparece em busca, contagem, comparação, gráfico, comentário, snapshot, exportação, prompt ou resultado de rotina. Ler ou aplicar revalida acesso atual.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 366,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Leituras de resultado conservam revalidação atual e negativos de fonte/autoridade/revogação.",
+      "remaining_gap": "Busca, contagens, gráficos, comentários, exports, prompts e rotinas não foram auditados integralmente por estes runs.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.INV.06",
+      "text": "Revisão preservada permanece estável. Atualizar a origem não reescreve a reunião passada; acesso revogado não permite recuperar conteúdo privado por histórico.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 368,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Cálculos históricos e replay de ancestrais permanecem nos testes selecionados.",
+      "remaining_gap": "Preservação de reunião/escolha humana e recuperação após revogação na jornada integral não estão provadas; P03 falhou antes de completar o roteiro.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.INV.07",
+      "text": "Um único WP pode escrever cada arquivo. Nenhuma execução usa a frente de cloud/deploy, acessos novos ou alterações no engine de Relay como atalho para cumprir este escopo.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 369,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PROCESS_EVIDENCE_ONLY",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Revisão do delta confirma um único arquivo de produto autorizado e nenhuma alteração de runtime/engine/workflow fora do escopo76.",
+      "remaining_gap": "É evidência de ownership e execução desta entrega, não auditoria de todos os writers da campanha.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.INV.20",
+      "text": "Versão observada não equivale a validade global; soma correta não equivale a custo completo. Nova categoria relevante, revogação e substituição preservam auditoria e exigem estado correto.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 374,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "Fonte atual, versão/encarnação, caso e stored são verificados; fixture omitido mantém os outputs canônicos medidos.",
+      "remaining_gap": "A reavaliação integral de nova categoria e sua auditoria em todos os consumidores permanece sem aceite; P03 terminou FAIL.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.QLT.05",
+      "text": "Com corpus sintético e ambiente declarados em G0, medir navegação, edição e atualização de gráficos. A ação mostra resposta perceptível em até 200 ms, inclusive indicador de trabalho; comparar a conclusão com o baseline e investigar regressão superior a 20% no p95 antes do aceite.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 383,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "Há contagem e tempo síncrono de primitivas, fases de topo e memória de processo descritiva, sem razão de velocidade.",
+      "remaining_gap": "Não foram medidos navegação/edição/gráficos, resposta perceptível200ms ou p95 com corpus G0. As amostras B2/R1 não substituem este critério e P03 falhou.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.QLT.06",
+      "text": "Critérios e evidências são discriminantes: descrevem qual erro real seria detectado. Testar novamente apenas o que mudou ou o que um gate obrigatório exige.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 384,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "CAUSAL",
+        "RUNTIME_REVIEW",
+        "MATERIAL_GATE"
+      ],
+      "observed_support": "Controles discriminam mutação/aliases, clone errors/getters, source drift, autoridade e replay; redução estrutural foi medida antes do P03 original.",
+      "remaining_gap": "A seleção é limitada ao risco dos produtores76 e não fecha todos os critérios/gates obrigatórios da campanha.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "CAMP.CMP.02",
+      "text": "Cobrir leituras e escritas autorizadas/recusadas, dados completos/parciais/ausentes, concorrência, reenvio, referência removida, perda de acesso e retomada depois de falha.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 393,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "C08 e testes de resultado/batch cobrem admissão, recusas, CAS concorrente, retry e mudanças de fonte/caso/lease/fachada.",
+      "remaining_gap": "Não há cobertura integral de todos os dados e jornadas; retomada/portfólio completo e integração permanecem abertos.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "sf2h-integral-20261112.INV.08",
+      "text": "A IA não escolhe ator/papel, não ganha acesso por relacionamento entre registros, não aprova compras nem altera arbitrariamente snapshots; totais e condições são calculados por motores determinísticos.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 370,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "O workflow usa motores determinísticos e portas reais; identidades de callbacks C08 são conservadas e falhas de autoridade continuam recusadas.",
+      "remaining_gap": "As concessões/fontes do fixture são sintéticas declaradas; não há prova de execução real de modelo, UI/native/MCP ou aprovações empresariais.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "sf2h-integral-20261112.INV.09",
+      "text": "Contrato, orçamento, forecast e actual não são intercambiáveis. Desconhecido, categoria omitida e pending não são zero. Comparação completa depende de cobertura C10; simulação e premissa aceita não atualizam o domínio oficial.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 371,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "O fixture omitido e a comparação canônica são preservados sem alterar domínio financeiro oficial.",
+      "remaining_gap": "Não qualifica a distinção de todos os estados financeiros/consumidores nem o cenário posterior de training confirmado; P03 FAIL.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "sf2h-integral-20261112.INV.10",
+      "text": "Artefatos confiáveis de decisão e colaboração têm política explícita de importação: entrada não pode forjar autor/confirmação; substituição de registros invalida referências por encarnação, sem ressuscitá-las por ID textual reutilizado.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 372,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Negativos selecionados recusam substituição de target/encarnação e referência/versionamento alterados.",
+      "remaining_gap": "Importação maliciosa completa e política de todos os artefatos de colaboração não foram executadas nesta seleção.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "sf2h-integral-20261112.INV.11",
+      "text": "Leituras entre superfícies não ocorrem dentro de uma transaction já aberta. A coleta mantém autorização e versões por seção; a escrita em várias áreas produz recibos separados e estado parcial verdadeiro.",
+      "normative_source": {
+        "local_source": "plan/execution/COMMON.md",
+        "line": 373,
+        "planning_status_literal": null
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "RUNTIME_REVIEW",
+        "CAUSAL"
+      ],
+      "observed_support": "A76 preserva as fronteiras de persistência, a âncora Dashboard e o bundle readonly59; não introduz transações entre superfícies nem remove callbacks observados.",
+      "remaining_gap": "A validação isolada não demonstra todos os comandos de escrita multiárea, recibos separados ou retomada em integração71.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T01.CHK.04",
+      "text": "Salvar preferência, revisão, thread/vínculo e recibo/correlação; recarregar em nova sessão autorizada: o estado permanece. Migrar a mesma base antiga duas vezes produz o mesmo estado, sem duplicar registro nem ampliar acesso.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/0/checks/3",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Resultados/bindings usam persistência real; seleção inclui migração aditiva e guardas C08, além de reabertura de cálculos.",
+      "remaining_gap": "Preferência/revisão/thread/vínculo/recibo em nova sessão autorizada e migração repetida de toda a base não foram qualificadas integralmente por76.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T01.CHK.10",
+      "text": "Export JSON/audit/preview do usuário Dashboard não revela memória/documento/HR de outro domínio mesmo com admin local desse surface.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/0/checks/5",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "O source de export/audit/preview não foi alterado por76.",
+      "remaining_gap": "Não foi executada aqui a prova de não divulgação entre domínios via export JSON/audit/preview de administrador local.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T01.CHK.11",
+      "text": "Import com __sfProductV1 ou refs/owners/scannerReceipt fornecidos rejeita metadados e conserva estado confiável; nova encarnação invalida referências.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/0/checks/6",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Os testes C08 selecionados incluem recusa de targets substituídos e estado malformado.",
+      "remaining_gap": "Isso não substitui importação com __sfProductV1/refs/owners/scannerReceipt maliciosos nem prova toda preservação de metadados confiáveis.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T01.CHK.12",
+      "text": "T06/T07 usam a mesma instância Persistence de HTTP/jobs; restart não cria store git ou runtime paralelo.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/0/checks/7",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Diagnóstico usa LocalStore real; runtime e composição T06/T07 não são alterados.",
+      "remaining_gap": "Não demonstra que HTTP/jobs/T06/T07 usam a mesma instância Persistence após restart nem toda composição residente.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T01.INV.10",
+      "text": "Storage central não concede acesso cross-domain nem inventa quarto Surface; commitar domínio e memória não promete transação global.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/0/axioms/invariants/3",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "C08 preserva âncora e autoridade; nenhum quarto Surface ou transação global foi criado no delta76.",
+      "remaining_gap": "Validação local de produtor não prova toda composição domínio+memória e acesso cross-domain em71.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T01.CHK.01",
+      "text": "Criar caso em uma sessão, reiniciar provider real e ler em outra identidade autorizada conserva conteúdo/versão/autoria; ator sem acesso recebe projeção reduzida ou recusa.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/0/checks/0",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Persistência/reabertura de cálculos canônicos, autorização e leituras históricas estão nos testes selecionados.",
+      "remaining_gap": "Não qualifica integralmente criar caso, restart e leitura em outra identidade pelo produto integrado.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T01.CHK.02",
+      "text": "Duas atualizações com expected version idêntica produzem um commit e um conflito com rascunho recuperável, sem perda de dado.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/0/checks/1",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Teste de C08 com comandos concorrentes na mesma versão admite um commit e conserva conflito.",
+      "remaining_gap": "O rascunho recuperável na UI e toda atualização de caso WP11 não são demonstrados pelo controle do provider.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T01.CHK.03",
+      "text": "Import JSON malicioso ou troca de registro com ID reutilizado não fabrica confirmação, não apaga histórico confiável nem mantém vínculo à encarnação antiga como válido.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/0/checks/2",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Casos de target/encarnação substituídos são recusados nos controles selecionados.",
+      "remaining_gap": "Não há prova completa de import JSON malicioso, confirmação forjada e histórico confiável neste run.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T01.CHK.18",
+      "text": "Executar sf_case_read, sf_case_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/0/checks/3",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Portas de caso/C08 reais e concessões sintéticas são usadas no fixture.",
+      "remaining_gap": "UI/native/MCP sf_case_read/sf_case_draft com o mesmo handler e autoridade não foram selecionados; nenhuma paridade nativa é inferida.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T02.CHK.01",
+      "text": "AI-RENEWAL com inventário completo e fontes sintéticas confirmadas: 240000 vs 60000+45000+105000 = 210000; diferença 30000; implantação 70000 produz 235000 e diferença 5000. Taxas/migração/treinamento explicitamente cobertos ou inaplicáveis não são somados duas vezes.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/1/checks/0",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "Preparação real do fixture, comparação, métrica e replay são preservados.",
+      "remaining_gap": "A igualdade dos cinco outputs medidos não comprova todos os oráculos numéricos240000/210000/235000 e consumidores do critério; P03 integral falhou.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T02.CHK.02",
+      "text": "Operação que substituiria contribuição já vinculada troca o componente uma vez; o teste com inclusão duplicada é recusado ou reconciliado pelo domínio.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/1/checks/1",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Duplicatas do retorno batch foram verificadas como grafos independentes.",
+      "remaining_gap": "Esse controle de aliases não demonstra deduplicação financeira de contribuição vinculada; o oráculo de operação duplicada exige sua própria prova.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T02.CHK.03",
+      "text": "Moeda sem FX, custo de saída pending e desconto hipotético mantêm comparação conditioned. Valor 0 confirmado difere de null, categoria omitted e declaração not-applicable sem evidência; nenhum estado desconhecido é promovido a zero.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/1/checks/2",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "CAUSAL"
+      ],
+      "observed_support": "O caminho de comparação com training omitido conserva resultados e razões do produtor canônico.",
+      "remaining_gap": "FX ausente, saída pending, desconto hipotético, zero/null e not-applicable sem evidência não são todos discriminados por este diagnóstico.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T02.CHK.20",
+      "text": "AI-RENEWAL-OMITTED-CATEGORY remove training da entrada, sem linha, sem pending pré-cadastrado e com implementação explicitamente sem treinamento: validador deriva missing-category e knownSubtotal 210000; completeDifference/total coberto ficam indisponíveis e a comparação é conditioned em todos os consumidores.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/1/checks/3",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE_P03_FAILED",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "A preparação do fixture training omitted é real e seu resultado canônico é preservado no workflow limitado.",
+      "remaining_gap": "O requisito inclui todos os consumidores e oráculos explícitos; P03 retorna stale/portfolio-analysis-changed e não qualifica a jornada.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T02.CHK.21",
+      "text": "Na mesma variante, confirmar novo componente training=40000 com fonte torna cobertura completa, total 250000, diferença -10000 e teto de implantação15000. A comparação de custo se inverte, condição mínima 20000 falha e a escolha original mantém subtotal 210000/ressalva pending/versões.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/1/checks/4",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_P03_FAILED",
+      "evidence_ids": [
+        "P03"
+      ],
+      "observed_support": "P03 original foi executado uma vez após o gate material, com arquivo e prazo intactos.",
+      "remaining_gap": "A execução falhou antes de completar a confirmação training40000 e os oráculos posteriores; B2/R1 não confirmam training.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T02.CHK.18",
+      "text": "Executar sf_alternative_draft pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/1/checks/5",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Nenhuma mudança de binding nativo foi incluída.",
+      "remaining_gap": "Não há prova UI/native/MCP sf_alternative_draft nesta seleção.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T03.CHK.01",
+      "text": "Registrar escolha preserva a base financeira; alteração posterior de cotação e nova escolha não modificam o registro original.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/2/checks/0",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_P03_FAILED",
+      "evidence_ids": [
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "Diagnóstico declara que não registra escolha humana; P03 foi tentado sem enfraquecer o teste.",
+      "remaining_gap": "Escolha original, cotação posterior e nova escolha com histórico preservado não foram qualificadas pela tentativa que falhou.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP11.T03.CHK.20",
+      "text": "Registrar escolha condicionada na variante de treinamento omitido; confirmar treinamento 40000 depois conserva a escolha/subtotal/ressalva originais e apresenta nova alternativa250000/diferença -10000 sem reescrever a razão histórica ou autoalterar a escolha.",
+      "normative_source": {
+        "local_source": "ci_contract/WP11.json",
+        "json_pointer": "/tasks/2/checks/3",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_P03_FAILED",
+      "evidence_ids": [
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "O diagnóstico termina antes de escolha/confirmar training e não fabrica ChoiceRecord.",
+      "remaining_gap": "A jornada integral de escolha condicionada e histórico após training40000 permanece não comprovada: P03 FAIL.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T02.CHK.01",
+      "text": "Combinação com duas alterações na mesma contribuição não soma ambas; conflitos são recusados ou explicitamente alternativos.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/1/checks/0",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_P03_FAILED",
+      "evidence_ids": [
+        "P03"
+      ],
+      "observed_support": "A tentativa original passou pelo caminho canônico evaluateAndStore, mas terminou stale.",
+      "remaining_gap": "Não demonstra conflito/alternativas para duas alterações da mesma contribuição; não atribuir o controle de retorno batch a esse requisito financeiro.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T02.CHK.02",
+      "text": "Soma da combinação reconcilia com execução isolada das mesmas operações no adapter; não existe fórmula financeira local concorrente.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/1/checks/1",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_P03_FAILED",
+      "evidence_ids": [
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "O diagnóstico usa comparação/replay do Planner real, sem fórmula financeira nova.",
+      "remaining_gap": "Não prova reconciliação de toda combinação de portfólio com execuções isoladas; P03 não concluiu.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T02.CHK.03",
+      "text": "Corpus com nenhuma combinação que preserve compromissos retorna nenhuma solução elegível e os motivos, sem relaxar critério silenciosamente.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/1/checks/2",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "P03"
+      ],
+      "observed_support": "Nenhum corpus de ausência de solução foi selecionado em B2/R1.",
+      "remaining_gap": "A recusa stale no timeout não é prova do resultado nenhuma-solução-elegível nem de seus motivos.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T02.CHK.20",
+      "text": "Combinação contendo a alternativa training omitida tem subtotal 210000 e não passa como eligible-complete; após training = 40000, total 250000 rompe teto240000 e vantagem mínima 20000. UI/BI/critique usam a mesma versão, sem ranking com categoria oculta.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/1/checks/3",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_P03_FAILED",
+      "evidence_ids": [
+        "P03"
+      ],
+      "observed_support": "P03 original retorna stale/portfolio-analysis-changed após evaluateAndStore e excede180000ms.",
+      "remaining_gap": "Não qualifica elegibilidade/total250000/teto240000/vantagem20000 nem consistência UI/BI/crítica; a falha não é atribuída a aritmética sem evidência.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T02.CHK.18",
+      "text": "Executar sf_portfolio_evaluate pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/1/checks/4",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "O caminho chamado no P03 usa produtores reais, não uma chamada UI/native/MCP validada por esta receipt.",
+      "remaining_gap": "Paridade sf_portfolio_evaluate e concessão/revogação no destino permanecem não demonstradas.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T03.CHK.01",
+      "text": "Base240mil, outros componentes165mil e benefício mínimo20mil resulta em implantação máxima55mil;55mil atende e55mil+1 não atende.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/2/checks/0",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "Regras/métrica canônicas são exercitadas no diagnóstico limitado.",
+      "remaining_gap": "Não foram provados os limites exatos55000 e55001 com base240000/outros165000/vantagem20000 nesta seleção.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T03.CHK.02",
+      "text": "Alterar prazo em compromisso sem regra de cancelamento não cria economia artificial; regra existente determina o efeito.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/2/checks/1",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "A76 não altera regras de prazo/cancelamento.",
+      "remaining_gap": "Ausência de delta não é execução do oráculo de cancelamento/economia; critério continua aberto.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T03.CHK.03",
+      "text": "Amostragem de função não linear não apresenta ponto de corte exato inventado; parâmetros ausentes produzem desconhecido sem curva fictícia.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/2/checks/2",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "A76 não altera o algoritmo de sensibilidade.",
+      "remaining_gap": "Não há prova de amostragem não linear, parâmetros ausentes e ausência de curva fictícia nesta seleção.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T03.CHK.20",
+      "text": "Com training omitido, teto 55000 vale apenas para componentes conhecidos e permanece condicionado. Após training = 40000 confirmado, outros custos205000 produzem teto 15000;15000 atende mínimo 20000 e15001 falha, com a mesma base confirmada.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/2/checks/3",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_P03_FAILED",
+      "evidence_ids": [
+        "CAUSAL",
+        "P03"
+      ],
+      "observed_support": "A variante omitida é usada pelo fixture; o diagnóstico não faz a transição training confirmado.",
+      "remaining_gap": "Limiares condicionados55000 e15000/15001 depois de training40000 não foram qualificados; P03 falhou.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T03.CHK.18",
+      "text": "Executar sf_sensitivity_evaluate pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/2/checks/4",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Nenhum substituto de sucesso nativo foi introduzido.",
+      "remaining_gap": "Não há prova UI/native/MCP sf_sensitivity_evaluate com mesma autoridade/handler nesta seleção.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T04.CHK.02",
+      "text": "Cenário com dois domínios e falha em um usa o estado parcial/retomada WP11 sem implementar outro ledger.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/3/checks/1",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Executores65/Apply e ledger de retomada não foram modificados.",
+      "remaining_gap": "Não foi executado cenário Apply em dois domínios com falha parcial/retomada; ausência de alteração não qualifica C12.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP13.T04.CHK.03",
+      "text": "Alterar preço de um componente vinculado afeta a condição correspondente da escolha e mantém a composição histórica.",
+      "normative_source": {
+        "local_source": "ci_contract/WP13.json",
+        "json_pointer": "/tasks/3/checks/2",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_P03_FAILED",
+      "evidence_ids": [
+        "P03"
+      ],
+      "observed_support": "O diagnóstico não cria escolha humana ou muda preço após escolha.",
+      "remaining_gap": "Condição afetada e composição histórica integral continuam não comprovadas pela tentativa P03 que falhou.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T04.INV.10",
+      "text": "Não mudar CI/validator/engine para ocultar falha; exceção de packaging fica restrita.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/3/axioms/invariants/1",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PROCESS_EVIDENCE_ONLY",
+      "evidence_ids": [
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Revisão do delta confirma ausência de alterações em CI/validator/engine; P03 permanece FAIL explicitamente.",
+      "remaining_gap": "Não concede dispensa de A45, packaging ou guards do envelope.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T04.INV.40",
+      "text": "Playwright SF não substitui Bun browser; checks em outro SHA não viram verde atual. D não recebe o SHA de execução de C; seu receipt aponta C e o envelope mantém o produto intacto.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/3/axioms/invariants/2",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PROCESS_EVIDENCE_ONLY",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Receipts distinguem W/V/S e seleção executada; checks de outro SHA não são promovidos ao candidato e não houve substituição por Playwright.",
+      "remaining_gap": "A45, Bun browser e verificação/guard do envelope D permanecem obrigações separadas.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T04.QLT.01",
+      "text": "Reusar evidência ainda válida e repetir somente o necessário para resolver risco concreto ou gate exigido. Arquivar prova em D não exige novo teste de produto quando o envelope passa, mas exige verificação própria e guard de D.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/3/axioms/quality_standards/0",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PROCESS_EVIDENCE_ONLY",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "MATERIAL_GATE",
+        "P03"
+      ],
+      "observed_support": "B2 corrigiu o risco concreto de retenção do observer; R1 usa os mesmos bytes/seleção e apenas um P03 original ocorreu após o gate material.",
+      "remaining_gap": "Verificação própria e guard de D, além de gates obrigatórios restantes, não são dispensados por reaproveitar a evidência.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T04.QLT.40",
+      "text": "Medirfila/setup/run/coleta e capacidade disponível, sem afirmar que timeout 45 é duração prevista.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/3/axioms/quality_standards/2",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PROCESS_EVIDENCE_ONLY",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "P03"
+      ],
+      "observed_support": "Runs/jobs/horários e tempos de teste foram registrados, sem chamar timeout de duração prevista.",
+      "remaining_gap": "Não há nesta receipt medição completa de fila/setup/coleta e capacidade disponível de todos os executores; A45 continua pendente.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T04.CHK.01",
+      "text": "Mudança de produto depois de um run cria novo C e invalida os critérios afetados até nova verificação; não chamar green antigo de green atual. Apenas adições evidenciais que satisfazem integralmente execution.candidate_delivery podem formar D sem reexecutar o produto C, mantendo seus SHAs e guard próprio de D.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/3/checks/0",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PROCESS_EVIDENCE_ONLY",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Cada execução referencia seu W/V/S; o source candidato é fixo entre R1 e P03 e as alterações de evidência não recebem novo resultado de produto fictício.",
+      "remaining_gap": "A prova de candidato integrado C, envelope D e seus guards continua separada; A45 pendente e71 não integrado.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T04.CHK.02",
+      "text": "As suítes necessárias executam testes reais e não somente passam com zero testes coletados.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/3/checks/1",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "P03"
+      ],
+      "observed_support": "B2/R1 coletaram58 testes reais/580 expects; P03 coletou1 teste, falhou e registrou24 expect calls.",
+      "remaining_gap": "Não fecha outras suítes obrigatórias nem transforma24 expect calls em24 das72 assertions ou em passagem do P03.",
+      "integration71": "NOT_PROVED"
+    },
+    {
+      "id": "WP10.T04.CHK.03",
+      "text": "Não rodar bun test local nem alterar guards para fugir do caminho exigido pelo repositório.",
+      "normative_source": {
+        "local_source": "ci_contract/WP10.json",
+        "json_pointer": "/tasks/3/checks/2",
+        "planning_status_literal": "NOT_RUN"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PROCESS_EVIDENCE_ONLY",
+      "evidence_ids": [
+        "B2",
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Testes de produto foram executados pelo caminho hospedado existente; a revisão não detecta alteração de guards ou workflow fora do contrato.",
+      "remaining_gap": "Evidência processual desta missão, sem certificar toda atividade da campanha ou dispensar checks centrais45.",
+      "integration71": "NOT_PROVED"
+    }
+  ],
+  "contracts": [
+    {
+      "id": "C08",
+      "name": "BusinessPorts e composição nativa",
+      "content": [
+        "bindingIdentity: installationID, hostID, projectID, locationID e policyVersion validados pelo host; nenhum endpoint ou credencial escolhido por texto do modelo",
+        "actorAuthority: principal empresarial autenticado + capabilities verificadas por requisição; selecionar destinatário não concede acesso às fontes",
+        "analysis.create/read/cancel: job com caseID, caseVersion, contextFingerprint, recipeVersion, nativeSessionID e outputSchemaVersion",
+        "routines.catalog/prepareAdmission/readAdmission/readRun: documentID + publishedVersion + parâmetros + write scope + planRevisionID/authorizationID/armRef/childSessionID quando disponíveis",
+        "schedules.create/update/pause/list/readRun: binding de dono/projeto + política existente, sem tratar Schedule como aprovação automática de workflow",
+        "result.write: retorno autenticado, escopado ao job/caso/versão; sem comando genérico de alteração de negócio",
+        "directory.lookup: somente IDs autorizados do diretório existente; sem inferência de identidade por nome",
+        "unavailable e stale são resultados explícitos, jamais dados sintéticos de sucesso",
+        "O integrador monta a contribuição de produto no host já autenticado, sem abrir listener, trocar store ou alterar deployment Azure.",
+        "Adaptador recebe as Services já compostas; não cria um runtime paralelo com credenciais globais nem passa tokens para Sucafina/browser.",
+        "IA de análise pode usar uma sessão dedicada e escopada via SessionV2.Service.create + generate (tool-less) ou prompt com ferramentas estritamente delimitadas; a saída é validada no schema do caso. Isso é análise, não execução de workflow.",
+        "Fluxos Relay usam a sessão Maestro nativa: catálogo publicado, preparação da revisão, review e aprovação, arm/dispatch e leitura do resultado. LLM.generateObject é reutilizável para conteúdo tipado, mas não substitui admissão de workflow.",
+        "Se for usada SessionV2.generate, não reutilizar histórico de outro usuário/caso; cada sessão tem proveniência e escopo verificados. O retorno textual é schema-decoded antes de aceitar operações.",
+        "Routines C08 registra referencia ao workflow interno (arm/binding/session); não inventa external runID nem usa ledger de outra espécie.",
+        "A factory recebe BusinessPorts como dependência explícita; Application/ModuleServices preservam capacidade ausente como erro de feature. Browser nunca recebe credenciais do host.",
+        "Um único adaptador product-handler coordena leitura multi-surface, serviço de casos e propostas de comandos. Comandos finais voltam aos execute/handlers próprios, com actor e CAS revalidados.",
+        "A frente cloud e o integrador têm handoff de patch sobre SHA combinado para host/factory compartilhados: um escreve, o outro consome. Não sobrescrever a frente cloud com um arquivo inteiro baseado em outra revisão.",
+        "Usar Host.Contribution de forma aditiva, respeitando serviços reservados, e Tools.Service no Location correto para ferramentas de produto. Não chamar o registro interno nem criar engine paralelo.",
+        "As capacidades de ferramentas são restringidas efetivamente por Permission/Agent e pelas portas de domínio. advertisedNames é metadata, não autorização. SessionV2.generate é tool-less; a prova de ferramentas restritas usa SessionV2.prompt com a configuração autorizada.",
+        "Persistir namespace protegido para C09–C14, escolhas, confirmações, proveniência, vínculos e recibos locais. Import JSON só substitui os dados de negócio permitidos: preserva metadados canônicos, rejeita os fornecidos no arquivo e invalida referências a encarnações substituídas.",
+        "C15 é a fonte única dos cinco perfis/dezoito skills e C16 define o único binding de execução SF. AgentV2 e SkillV2 são registrados por contribuição de Location, sem substituir serviços reservados, reutilizar IDs de engenharia ou alterar alçadas.",
+        "Tools.Service registra aliases sf_* que recebem Tool.Context nativo e invocam sucafina-workbench em par InMemoryTransport privado, fixado por objeto/generation. McpProvided não transporta identidade SF e NÃO é o caminho deste servidor. UI, agente e MCP convergem em dispatchSfCapability e na mesma porta final.",
+        "Application.authenticate(request,{surface, roleMap(snapshot, surface)}) é reexecutado no destino por request lease só no host; IDs C16 não substituem autenticação. Lease vencida, restart ou principal divergente exige nova ligação autenticada. Rotinas usam somente autoridade revalidável já admitida em C07.",
+        "Estado C09–C17 usa Snapshot.data.__sfProductV1 no surface dashboard existente, protegido por WP10.T01; não é um quarto Surface nem papel dashboard que concede acesso transversal. Domínios continuam pelas portas próprias fora da transação central; cada seção conserva revisão.",
+        "Provider remove __sfProductV1 de projeções genéricas, exports JSON, previews e auditoria visível. Import rejeita metadados SF fornecidos e preserva namespace confiável; substituição atualiza encarnações. Backup operacional conserva política existente e não vira export de negócio.",
+        "C17 compõe DurableMemory síncrono sobre snapshot isolado de Persistence.transaction async. append prepara evento; nenhum sucesso precede commit durável. Documentos/ACLs de outros domínios são coletados antes e revalidados no egress; sem transações aninhadas.",
+        "Empacotamento Atlas usa @orchestra/atlas-boundary/business-memory-ports gerado pelo build canônico com entry de reexports. Sem import runtime @atlas/* não resolvida, cópia manual de engines ou store git para dados SF."
+      ],
+      "proof": "GNATIVE T+20: sf_finance registrado, sf-explicar-forecast carregada por SessionV2.skill com digest observado, caso C09 real, sf_forecast_compare pelo MCP privado ao adapter WP03 real e resultado/proveniência no produto. Todos os 8 packs e C17 completos no G4/aceite. Implementação NOT_RUN.",
+      "normative_source": {
+        "local_source": "plan/contracts.json",
+        "json_pointer": "/7",
+        "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "CAUSAL",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "C08 real, admissão/egress, CAS e callbacks preservados; estado-provider byte-idêntico.",
+      "remaining_gap": "GNATIVE, C15/C16, rotinas, diretório, import/export, host HTTP/jobs e memória Atlas integrados não são qualificados por76."
+    },
+    {
+      "id": "C09",
+      "name": "Caso de decisão e referências",
+      "content": [
+        "caseId, version, state, objective, horizon, currency, criteria, participants autorizados",
+        "sourceRefs com surface/type/id/incarnation/fields/period/version/observedAt e nível de evidência",
+        "alternatives, assumptions, questions, choices append-only, preparedChanges e receipts",
+        "escopo de política reavaliado na leitura; conteúdo privado filtrado inclusive em agregados",
+        "Cada alternativa referencia CostCoverageBasis/Assessment C10; ChoiceRecord captura também basisVersion, cobertura, comparisonStatus e condições não resolvidas da base escolhida. Resolver uma omissão cria nova revisão; a escolha humana histórica e sua ressalva continuam recuperáveis.",
+        "BusinessEvidenceRef C17 substitui referências livres nas contribuições novas; sourceRefs legados são normalizados sem fabricar origem/hash. Ledger C09 continua fonte oficial; Atlas contém projeções derivadas com outputRef/eventId, nunca outra escolha oficial."
+      ],
+      "proof": "Contrato validado por consumidor real e pacote de prova associado; fixtures somente aceleram desenvolvimento.",
+      "normative_source": {
+        "local_source": "plan/contracts.json",
+        "json_pointer": "/8",
+        "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "evidence_ids": [
+        "R1",
+        "CAUSAL",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Casos/resultados persistidos, referências completas, leitura histórica e fonte/autoridade estão nos controles selecionados.",
+      "remaining_gap": "Escolha humana append-only e histórico após confirmação/revogação na jornada integral permanecem não comprovados; P03 FAIL."
+    },
+    {
+      "id": "C10",
+      "name": "Simulação e operações de cenário",
+      "content": [
+        "Operações tipadas substituem contribuição vinculada uma vez, em cenário copiado sem alteração oficial. Preview, comparação, sensibilidade e aplicação validada usam a mesma regra de domínio.",
+        "CostCoverageBasis = {id, version, decisionType, categoryIds, sourceRefs, additionalCategoryIds}. Para renewal-transition-v1, avaliar service, service_overlap, implementation, contract_exit, migration, taxes, training, internal_costs e other_relevant_costs. São categorias de investigação do custo pertinente ao caso; não estabelecem alíquotas, obrigações fiscais, custos presumidos ou recomendação financeira. Outros tipos de decisão declaram seu inventário em WP00.T02; tipo ainda sem inventário mantém cobertura pendente.",
+        "O inventário é versionado e vem da configuração do tipo de decisão/caso autorizada, nunca é inferido somente das linhas existentes. O conjunto obrigatório não pode ser reduzido para fazer a cobertura passar; categoria adicional pertinente é incorporada com versão/base rastreáveis. Completo significa cobertura do inventário declarado naquele escopo, não garantia de que nenhum custo desconhecido existe no mundo.",
+        "CostCoverageAssessment = {basisId, basisVersion, alternativeId, alternativeVersion, currency, horizon, entries, derivedMissingCategoryIds, coverageState, issues, evaluatedSourceRefs}. Para cada categoryId esperado existe exatamente uma CostCoverageEntry, ou o validador deriva pending(reason=missing-category) sem fabricar uma linha de custo.",
+        "CostCoverageEntry é união discriminada: included {categoryId, componentRefs, evidenceRefs, scopeNote}; not-applicable {categoryId, justification, evidenceRefs}; pending {categoryId, reason, questionRef?}. included exige ao menos um componente existente e indicação do que está coberto; not-applicable exige razão verificável no escopo e fonte acessível, não uma frase sem suporte. Sem justificativa/evidência ou fonte atual, a condição é pending. pending não contém valor presumido.",
+        "Componentes mantêm amount: number|null, currency, period, sourceRefs e evidenceState: confirmed|estimated|hypothetical|absent. Zero confirmado é amount=0 com fonte e included; omissão, null, falta de FX e ausência de fonte não são zero. Categoria incluída por componente sem valor/fonte utilizável mantém questão pendente. A mesma parcela pode cobrir mais de uma categoria quando a fonte o declara; a soma usa component identity uma vez, sem somar linhas de cobertura.",
+        "coverageState = complete somente quando todas as categorias do inventário estão resolvidas como included válido ou not-applicable suportado; pending quando qualquer categoria está ausente/não resolvida; unavailable quando a projeção autorizada não pode expor a avaliação necessária. Revogação ou substituição de fonte exige nova projeção, nunca conserva um selo completo por cache.",
+        "ScenarioResult = {components, knownSubtotal, total: number|null, currency, horizon, sourceRefs, costCoverage, comparisonStatus, unresolvedConditions, restrictions}. knownSubtotal soma os componentes quantificados pelo motor; total plenamente coberto só é publicável como tal quando a cobertura e a quantificação permitem. Um subtotal pode ser apresentado, sempre com a lista de categorias/condições pendentes e sem rótulo de custo total completo.",
+        "ScenarioComparison = {baselineResultRef, alternativeResultRef, costCoverageRefs, comparisonStatus: complete|conditioned|incompatible|unavailable, knownDifference, completeDifference: number|null, criterionResults, unresolvedConditions}. complete exige ambas as alternativas no mesmo horizonte/moeda/base compatível, inventários resolvidos, componentes/evidências atuais confirmados e nenhum custo/FX pertinente desconhecido. estimated/hypothetical/pending permite análise condicionada; bases incompatíveis ou acesso insuficiente permanecem explícitos. A viabilidade de prazo e outros critérios é independente da completude financeira.",
+        "Quando comparisonStatus=conditioned, knownDifference e um limiar calculado com os componentes disponíveis são rotulados como condicionados às lacunas declaradas; não são benefício confirmado, economia realizada, preferência plenamente validada nem recomendação de compra. Nenhum algoritmo de ranking, crítico, export, UI ou portfólio pode promover conditioned a complete por ter a soma correta.",
+        "WP11 produz e persiste a avaliação C10 junto à versão da alternativa; WP03 fornece valores/calculadora; WP13 agrega a cobertura dos candidatos e das interações declaradas sem esconder categoria pendente. Uma combinação com custo pertinente desconhecido é incomplete/conditioned e não eligible-complete, mesmo se o subtotal atender ao teto.",
+        "UI WP01, BI WP05, crítica WP12, portfólio WP13 e rotinas WP09 consomem o mesmo ScenarioResult/ScenarioComparison e costCoverageRefs; mostram a mesma condição, categorias e razões. BI usa tabela equivalente e não desenha uma barra zero para custo desconhecido. Falta/falha da avaliação impede o selo completo, mas preserva o trabalho autorizado e as parcelas conhecidas.",
+        "ChoiceRecord preserva alternativeVersion, basisVersion, costCoverage, comparisonStatus, critério, valores e fontes usados na escolha. Resolução posterior de categoria recalcula via WP03 e reavalia via WP14; produz antes/depois, condição afetada e opção de reconsiderar. Não reescreve a base escolhida nem muda automaticamente a escolha ou as aprovações.",
+        "Sensibilidade usa limites explícitos e informa o conjunto de custos em que o limiar é válido; categoria pendente condiciona o limiar. Não inventar probabilidades, causalidade, regras fiscais, capacidade por FTE ou custos para completar o inventário."
+      ],
+      "proof": "AI-RENEWAL completo reconcilia 240000 vs 210000, vantagem 30000 e teto 55000. AI-RENEWAL-OMITTED-CATEGORY remove inteiramente training e produz missing-category/conditioned, sem zero fictício. Confirmar training=40000 muda total para 250000, diferença para -10000 e teto para 15000; UI/BI/crítica/portfólio consomem a mesma revisão, e ChoiceRecord original fica preservado.",
+      "normative_source": {
+        "local_source": "plan/contracts.json",
+        "json_pointer": "/9",
+        "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE_P03_FAILED",
+      "evidence_ids": [
+        "R1",
+        "CAUSAL",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Planner/comparison/criterion/replay reais e outputs iguais no fixture training omitted; Set mantém identidade integral das fontes.",
+      "remaining_gap": "Prova completa AI-RENEWAL/omissão/confirmar training/consumidores/ChoiceRecord não concluiu. P03 FAIL não é substituído pela microprova."
+    },
+    {
+      "id": "C12",
+      "name": "Mudanças preparadas e recibos",
+      "content": [
+        "PreparedChange id/case/version/target/expectedVersion/operation/preview/requiredAuthority/idempotencyKey",
+        "confirmação contextual e execução separada por domínio, com revalidação no destino",
+        "receipt planned/applied/awaiting-approval/conflict/failed/cancelled; recuperação só das operações não aplicadas",
+        "escolha de gestão distinta das aprovações PR/sourcing/PO; não prometer transação global",
+        "Cada comando preparado leva idempotencyKey e digest de conteúdo/ator/target/encarnação. O adapter WP10 consulta e grava o recibo no MESMO snapshot/commit da mutação daquele domínio. Retry idêntico revalida acesso e retorna o recibo; mesma chave com digest diferente é conflito. O caso central reconcilia recibos depois e pode estar parcialmente atualizado; nunca repetir uma mutação porque a resposta se perdeu."
+      ],
+      "proof": "Interromper depois do commit no domínio e antes de atualizar o caso; retry produz um único efeito financeiro e reconcilia o recibo autorizado. Mesma chave com outro conteúdo falha. Não existe atomicidade global.",
+      "normative_source": {
+        "local_source": "plan/contracts.json",
+        "json_pointer": "/11",
+        "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+      },
+      "criterion_verdict": "NOT_QUALIFIED_GLOBALLY",
+      "coverage_state": "NOT_ESTABLISHED_IN76",
+      "evidence_ids": [
+        "R1",
+        "CAUSAL",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Não houve alteração dos executores65/Apply ou criação de ledger paralelo.",
+      "remaining_gap": "Falha pós-commit de domínio, reconciliação/idempotência de Apply e estado parcial real exigem prova própria; não foram exercitados nesta missão."
+    }
+  ],
+  "mission_acceptance": [
+    {
+      "selector": "mission76.acceptance[0]",
+      "selector_is_normative_criterion_id": false,
+      "text": "105khostrevalidations/8706casesreads/92rulesareinclusiveobservationsnotexclusivecause. Attributeboundedexactcallmultiplicity/cost, identify redundantproducerwork while preservingallindependentadmission/finalobservations andactualreplayrequirements.",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "mission_verdict": "BOUNDED_CAUSAL_ATTRIBUTION_AND_WORK_REDUCTION_DEMONSTRATED",
+      "evidence_ids": [
+        "CAUSAL",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Callsites, multiplicidade, custo síncrono e fronteiras foram medidos; remoção1131/11 confirmada sem retirar observações/callbacks/replay.",
+      "remaining_gap": "Não identifica causa exclusiva nem resolve predominância do timeout P03; contadores do deadline permanecem inclusivos."
+    },
+    {
+      "selector": "mission76.acceptance[1]",
+      "selector_is_normative_criterion_id": false,
+      "text": "Do notapply58rejectedprojectionthatomitsunselectedcloneerrors/getters/sideeffectsorselectscasebeforeclone. No changinganchor,cacheauthority, skipopaque callbackclones,globalmodelmocks orlowerdatafixture. Anyfastpathrequiresclosedtrustedselectoridentitywithsameobservationalcontract andrealnegativeproof.",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "mission_verdict": "DELIVERED_CHANGE_PRESERVES_REJECTED58_BOUNDARIES",
+      "evidence_ids": [
+        "R1",
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Nenhuma projeção C08 nova ou mudança de âncora; state-provider/criterion-comparison idênticos; clone integral final e negativos de getter/erro preservados.",
+      "remaining_gap": "Equivalência é sustentada pelos controles selecionados, não prova universal de toda entrada; não autoriza projeções futuras."
+    },
+    {
+      "selector": "mission76.acceptance[2]",
+      "selector_is_normative_criterion_id": false,
+      "text": "Do notedit72LocalStore/auth, runtime/contract/read-snapshot, Portfolioanalysis/production,61mixedsource,65Apply,69Atlas. Usequalified59releaseinisolatedmanifestedvalidationoverlayor71candidate;neverwholebranchreset.",
+      "coverage_state": "PROCESS_EVIDENCE_ONLY",
+      "mission_verdict": "OWNERSHIP_AND_OVERLAY_CONSTRAINT_SATISFIED",
+      "evidence_ids": [
+        "RUNTIME_REVIEW"
+      ],
+      "observed_support": "Mudança de produto apenas result-store; readonly59 foi aplicado como bundle isolado exato, sem reset de branch inteira.",
+      "remaining_gap": "Validação isolada não é integração71; checks45 pendentes."
+    },
+    {
+      "selector": "mission76.acceptance[3]",
+      "selector_is_normative_criterion_id": false,
+      "text": "Implementmaterialsafechangeanddiscriminantregressionsfirst;onlythenoneoriginalP03with72expect/order/180000andallrealproducers/history/replay/revocationunchanged. Ifno causalownedfixexists, completecounterexampleandminimalexternalownerpatch ratherthanunchangedtimeouts.",
+      "coverage_state": "MATERIAL_QUALIFIED_P03_EXECUTED_FAIL",
+      "mission_verdict": "REQUIRED_SEQUENCE_SATISFIED_ORIGINAL_P03_FAIL",
+      "evidence_ids": [
+        "MATERIAL_GATE",
+        "R1",
+        "P03"
+      ],
+      "observed_support": "Gate material e regressões precedem o único P03 original;72 linhas expect/ordem/180000ms intactos.",
+      "remaining_gap": "P03 terminou FAIL após24 expect calls; requisito de qualificação integral não está satisfeito e não se repete sem novo trabalho autorizado."
+    },
+    {
+      "selector": "mission76.acceptance[4]",
+      "selector_is_normative_criterion_id": false,
+      "text": "Independentmeasurementsamework/callbackcounts,memory/clonebehaviorandsourcefreshness; no assertflakyspeedratio. Do notclaimP03closedfrommicrobenchmark orcompletionbeforeallassertions.",
+      "coverage_state": "PARTIAL_COMPONENT_COVERAGE",
+      "mission_verdict": "MEASUREMENT_AND_REPORTING_CONSTRAINT_SATISFIED_WITH_LIMITS",
+      "evidence_ids": [
+        "CAUSAL",
+        "RUNTIME_REVIEW",
+        "P03"
+      ],
+      "observed_support": "Revisão independente confirma mesmos counts públicos, callbacks e outputs; memória/tempo descritos com limites e sem speed ratio.",
+      "remaining_gap": "Não há prova de heap do produto ou encerramento P03; B0 excluído da comparação temporal por retenção do spy antigo."
+    }
+  ],
+  "global_limits": [
+    "O fixture usa fontes e concessões humanas sintéticas declaradas; SQLite, C08, Planner, regras, métricas, replay e persistência de binding são reais.",
+    "B2/R1 não executam escolha humana, confirmação de training, histórico final e revogação integral. P03 original executado uma vez permanece FAIL.",
+    "Igualdade de192 registros públicos,87440 eventos e5 outputs não demonstra universalidade nem substitui os oráculos específicos de cada critério.",
+    "Tempos inclusivos não se somam como custo exclusivo; B2/R1 são amostras instrumentadas e não há alegação de speedup/p95 ou heap do produto.",
+    "Nenhuma linha normativa foi alterada para acomodar o resultado. Sem PASS global, sem aceite implícito de71/45/S0, sem relaxamento de72 assertions ou180000ms."
+  ],
+  "GLOBAL_RELEASE": false,
+  "root_review_addendum": {
+    "analyst_original_sha256": "0bd973358b3c257ed8a4c8260fc4149bcfac3cbfc344cc519d7f242540271542",
+    "changes": [
+      "Linked and read the now-complete independent P03 review.",
+      "Refreshed root P03 receipt hash after explicit fixture-path naming.",
+      "Distinguished fulfilled ownership/measurement/sequence constraints from unresolved integral P03 qualification; no campaign criterion promoted to global PASS."
+    ],
+    "GLOBAL_RELEASE": false
+  }
+}

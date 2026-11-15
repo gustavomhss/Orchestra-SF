@@ -1,0 +1,122 @@
+{
+  "schema": "sf2h.canonical-read-cost.consumer-release.v1",
+  "mission": 76,
+  "epoch": "canonical-read-browser76",
+  "state": "EXPLICIT_BOUNDED_SOURCE_RELEASE_P03_FAIL_A45_PENDING",
+  "source_branch": "canonical-read-cost",
+  "PR": 87,
+  "source_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "product_W": "6854c0f966e4fd78322932181359c3742c53c16d",
+  "product_tree": "fd815bff71b812debd0a7773e33060fe21427e55",
+  "validation_V": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+  "validation_tree": "51fedc4707ccb553e95658720678562390e16edc",
+  "authorization": {
+    "producer": "76 releases the complete one-producer/six-test source bundle and evidence for selective reconciliation by71. The original P03 failure and pending compiler gates travel with the release.",
+    "consumer": 71,
+    "consumer_authority": "User-authorized sole sf2-stack writer under reconciled71 lease;76 does not grant or extend foreign authority.",
+    "intake": "Read current target, verify every preimage and complete dependency closure, apply only source76 material plus receipts, preserve unrelated target changes, publish a composed C/tree and consumer ACK. Never reset stack to W76 or blindly overwrite72 with the historical59 validation overlay.",
+    "qualification": "Selected source regressions and measured work removal PASS. Not a P03/global/integration/compiler/native PASS.",
+    "external_candidate": "external/EXTERNAL-CANDIDATE76.patch is inert and outside the source bundle. It requires an assigned Planner owner and the stated negative controls before application."
+  },
+  "qualification": {
+    "baseline": {
+      "run": 43672619431,
+      "pass": 58,
+      "fail": 0,
+      "expect_calls": 580,
+      "files": 11
+    },
+    "candidate": {
+      "run": 43673023213,
+      "pass": 58,
+      "fail": 0,
+      "expect_calls": 580,
+      "files": 11
+    },
+    "material": {
+      "removed_digests": 1131,
+      "removed_clones": 11,
+      "unchanged_public_boundary_records": 192,
+      "unchanged_callback_events": 87440,
+      "identical_output_digests": 5,
+      "proof": "findings/B2-R1-CAUSAL76.json",
+      "scope": "Bounded real canonical producer workflow; no claimed speedup or originalP03 prediction."
+    },
+    "originalP03": {
+      "run": 43673511994,
+      "job": 132688523969,
+      "S": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+      "state": "FAIL_NOT_CLOSED",
+      "pass": 0,
+      "fail": 1,
+      "error": 1,
+      "expect_calls": 24,
+      "assertion_lines_preserved": 72,
+      "timeout_ms": 180000,
+      "case_elapsed_ms": 180011.68,
+      "attempts76": 1,
+      "error_reason": "portfolio-analysis-changed",
+      "receipt": "ci/P03.json"
+    },
+    "historicalFailures": {
+      "B0": "56PASS/2FAIL/559expects;two new instrument faults corrected;historical old-spy timing excluded",
+      "B1": "3PASS/0FAIL/42expects focused harness correction"
+    },
+    "compiler45": {
+      "state": "REQUESTED_NO_RESULT_OBSERVED",
+      "request": "checks/REQUEST-45.json",
+      "request_url": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888586763"
+    }
+  },
+  "required_evidence": {
+    "manifest": "delivery/MANIFEST.json",
+    "full_source_patch": "delivery/source-and-tests.patch",
+    "product_patch": "delivery/product.patch",
+    "reconstruction": "delivery/patch-check.json",
+    "dependency_closure": "delivery/DEPENDENCY-CLOSURE.json",
+    "evidence_index": "delivery/EVIDENCE-INDEX.json",
+    "criteria": "CRITERIA76.json",
+    "material_gate": "findings/MATERIAL-GATE.json",
+    "causal_findings": "findings/FINDINGS76.md",
+    "source_review": "reviews/SOURCE-REVIEW.json",
+    "runtime_review": "reviews/RUNTIME-REVIEW.json",
+    "original_review": "reviews/P03-REVIEW.json",
+    "handoff": "HANDOFF-71.md",
+    "authority": "AUTHORITY-FINAL.json"
+  },
+  "target_observed": {
+    "commit": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "result_store_preimage": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+    "four_runtime59_production_blobs_exact": true,
+    "note": "ObservedC35 only; composition still belongs to71 and must refreshcurrenttarget."
+  },
+  "consumer_ACK": "REQUESTED_BY_TERMINAL_HANDOFF_NOT_YET_OBSERVED",
+  "remaining": [
+    {
+      "owner": 45,
+      "item": "Compiler and guards on exact V/C; pending, not waived."
+    },
+    {
+      "owner": 71,
+      "item": "Selective intake, dependency reconciliation and exact composed proof/ACK."
+    },
+    {
+      "owner": "71/S0 with assigned producer owners",
+      "item": "OriginalP03 remains failed. Residual C08 fullclone and independent Planner verification costs remain; no unchanged retry by76."
+    },
+    {
+      "owner": "S0 and existing gate owners",
+      "item": "Final eight selections, AM/reviews/C-G7D-G8 and native/human/global acceptance remain open."
+    }
+  ],
+  "preserved": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "GLOBAL_RELEASE": false
+}

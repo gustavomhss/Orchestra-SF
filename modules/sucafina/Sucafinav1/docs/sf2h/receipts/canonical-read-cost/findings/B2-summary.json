@@ -1,0 +1,58 @@
+{
+  "summary": {
+    "run": 43672619431,
+    "job": 132685806297,
+    "selected": [
+      "Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-persistence.test.ts",
+      "Sucafinav1/test/product/wp11/criterion-rules.test.ts",
+      "Sucafinav1/test/product/wp11/result-store.test.ts",
+      "Sucafinav1/test/product/wp11/calculation-history.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "Sucafinav1/test/product/wp10/acceptance/state-provider.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/units-observation.test.ts",
+      "Sucafinav1/test/product/review-fixes/finance-resume-performance/historical-batch-fences.test.ts"
+    ],
+    "nonce": [
+      "e5bdb67b0250a4bcabb34c2e293468b0"
+    ],
+    "verdict": [
+      "omni positive control [e5bdb67b0250a4bcabb34c2e293468b0]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "bun": [
+      "bun test v1.3.14 (0d9b296a)"
+    ],
+    "statistics": [
+      " 58 pass",
+      " 0 fail",
+      " 580 expect() calls",
+      "Ran 58 tests across 11 files. [121.77s]"
+    ]
+  },
+  "metrics": {
+    "result-digests": {
+      "scalar": 4,
+      "duplicateBatch": 8,
+      "duplicateBatchCaseHashes": 12,
+      "scalarCallbacks": 11,
+      "duplicateBatchCallbacks": 19
+    },
+    "calculation-sources": {
+      "inputReferencesPerDerivation": 6,
+      "distinctSourceReferences": 2,
+      "digests": 64,
+      "replayCallbacks": 2,
+      "producerLines": {
+        "first": 271,
+        "last": 274
+      },
+      "callsites": [
+        "product/decisions/result-store.ts:272:275",
+        "product/decisions/result-store.ts:272:299"
+      ],
+      "firstStack": "Error\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts:114:25)\n    at digestSfValue (unknown)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:272:275)\n    at findIndex (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:272:255)\n    at filter (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:103:236)\n    at processTicksAndRejections (native:7:39)"
+    }
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.canonical-read-cost.baseline-harness-correction.v1",
+  "run": 43671421907,
+  "job": 132682095454,
+  "W": "8b538ad58a1156b2ffdecafce407e72c8532a97d",
+  "V": "34bcd158f09ce181570c99564dc47ad771ac8210",
+  "S": "f2bc6a042c6eff9797bd1f34ee2c6ac4dfc8ffc6",
+  "result": {
+    "pass": 56,
+    "fail": 2,
+    "tests": 58,
+    "files": 11,
+    "expects": 559,
+    "durationSeconds": 118.26
+  },
+  "diagnostic": "PASS",
+  "existingSelectedTests": "54 PASS",
+  "cause": [
+    {
+      "test": "private observations...",
+      "received": 0,
+      "expected": 3,
+      "root": "The test helper increments trace.reads inside optional-hook call arguments. With no hook, JavaScript skips evaluating the increment.",
+      "fix": "Increment trace.reads before optional call; retain 3-read refusal oracle."
+    },
+    {
+      "test": "calculation sources...",
+      "received": 0,
+      "expected": ">0",
+      "root": "CryptoHasher stack function-name filter did not attribute actual digest calls; successful value,2 real replays andsource expectations passed before observer assertion.",
+      "fix": "Observe original canonical digest through live import and match exact calculationSources source line range; retain allsemantic assertions."
+    }
+  ],
+  "B1": {
+    "W": "01bc5935280d512d25e096cf0fd5834f76489a7b",
+    "V": "7bcbf91c8c04b99eed1024ca8bbfb56dd3aa575b",
+    "S": "842b77450aa299a421d179ead9ff9abf734419cd",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "rule": "Re-run only changed regression file. Diagnostic threefilebytes andproduction remain exactB0; preserve B0 failure evidence."
+  },
+  "p03": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}

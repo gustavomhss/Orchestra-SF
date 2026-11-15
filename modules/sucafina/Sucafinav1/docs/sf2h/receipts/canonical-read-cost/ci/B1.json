@@ -1,0 +1,286 @@
+{
+  "schema": "sf2h.canonical-read-cost.ci-receipt.v1",
+  "mission": 76,
+  "selection": "B1",
+  "source": {
+    "W": "01bc5935280d512d25e096cf0fd5834f76489a7b",
+    "tree": "0a9a5bfed9feef4642496a7ccfd8bcbb697fe130",
+    "base": "faa30fddb7e7b61696b66fd069f51cf18c51125f"
+  },
+  "composition": {
+    "V": "7bcbf91c8c04b99eed1024ca8bbfb56dd3aa575b",
+    "tree": "f289f67a875d8e5078fbb4586fbe129a21c80a1e",
+    "dependency59Material": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+    "rule": "Exactly released59 ninefile overlay on sourceW; source branch excludes foreign paths."
+  },
+  "envelope": {
+    "S": "842b77450aa299a421d179ead9ff9abf734419cd",
+    "tree": "691cfde235e1e2e437c74e3bd55e1307a8c802b4",
+    "onlyDifferenceFromV": ".ci-run.json",
+    "branch": "ci-run-linux-m76-01bc5935-2e16e768-b1"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "requestSha256": "2e16e768094e6627c1e72f812c0c4f2a6b4cf4f49ef3b44053ee5d674cc46212",
+  "run": {
+    "id": 43671961465,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671961465",
+    "headSha": "842b77450aa299a421d179ead9ff9abf734419cd",
+    "status": "completed",
+    "conclusion": "success",
+    "startedAt": "2026-11-15T03:21:02Z"
+  },
+  "jobs": [
+    {
+      "id": 132683752972,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132684163487,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "observed": {
+    "run": 43671961465,
+    "sha": "842b77450aa299a421d179ead9ff9abf734419cd",
+    "selected": [
+      "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts"
+    ],
+    "nonce": [
+      "c7268b1130bd0a4b83573216cf43add0"
+    ],
+    "verdict": [
+      "omni positive control [c7268b1130bd0a4b83573216cf43add0]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+    ],
+    "bun": [
+      "bun test v1.3.14 (0d9b296a)"
+    ],
+    "statistics": [
+      " 3 pass",
+      " 0 fail",
+      " 42 expect() calls",
+      "Ran 3 tests across 1 file. [700.00ms]"
+    ]
+  },
+  "metrics": {
+    "result-digests": {
+      "scalar": 4,
+      "duplicateBatch": 8,
+      "scalarCallbacks": 11,
+      "duplicateBatchCallbacks": 19
+    },
+    "calculation-sources": {
+      "inputReferencesPerDerivation": 6,
+      "distinctSourceReferences": 2,
+      "digests": 64,
+      "replayCallbacks": 2,
+      "producerLines": {
+        "first": 271,
+        "last": 274
+      },
+      "callsites": [
+        "product/decisions/result-store.ts:272:275",
+        "product/decisions/result-store.ts:272:299"
+      ],
+      "firstStack": "Error\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts:94:25)\n    at digestSfValue (unknown)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:272:275)\n    at findIndex (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:272:255)\n    at filter (native:1:11)\n    at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/product/decisions/result-store.ts:103:236)"
+    }
+  },
+  "limits": [
+    "Re-ran only corrected regression file;3PASS/0FAIL/42expects.",
+    "B0 diagnostic and54existingtests are unaffected by these two test/helper corrections. Later finalcase control introduced forB2 is not attributed toB1."
+  ],
+  "P03": "NOT_SELECTED_NOT_EXECUTED",
+  "GLOBAL_RELEASE": false
+}
