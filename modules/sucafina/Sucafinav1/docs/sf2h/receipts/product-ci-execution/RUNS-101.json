@@ -1,0 +1,566 @@
+{
+  "schema": "sf2h.product-ci101.results.v1",
+  "mission": 101,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "immutable_acceptance": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "actor": {
+    "model": "GPT-6",
+    "label": "Astra",
+    "runtime_session_id": null,
+    "github_actor": "gustavomhss",
+    "lease": "product-ci-browser101"
+  },
+  "product_material": {
+    "C": "C51",
+    "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+    "subsequent_sf2_stack_head": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+    "post_W_changes": "documentation only; product same"
+  },
+  "execution": {
+    "provider": "GitHub Actions existing test:ci/.ci-run.json",
+    "dispatched": 6,
+    "run_success": 4,
+    "run_failure": 2,
+    "total_bun_pass": 46,
+    "total_bun_fail": 6,
+    "total_bun_errors": 5,
+    "notes": "5 import errors in lane90 do not represent 5 failed behavioral oracles; zero native behavior cases ran. All named test selections were real and observed, no local tests."
+  },
+  "lanes": [
+    {
+      "mission": 94,
+      "lane": "HTTP94",
+      "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "Wtree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+      "S": "2821a0deb51fd9b73eed031acee0dc2158b48333",
+      "Stree": "ba800430fc5c568e0b9cc0cf56506c060074f4e7",
+      "request_blob": "fae4070426285185645d14fe5201ce0030c064d7",
+      "branch": "ci-run-linux-sf101-c51-http94-1",
+      "compare": {
+        "base": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+        "changed_paths": [
+          ".ci-run.json"
+        ],
+        "status": "ahead",
+        "ahead": 1
+      },
+      "workflow": ".github/workflows/test-ci.yml",
+      "os": "ubuntu-24.04",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "env": {},
+        "args": [
+          "./Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+          "./Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+          "./Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+          "--timeout",
+          "30000"
+        ]
+      },
+      "selected_files": [
+        "Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+        "Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+        "Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts"
+      ],
+      "effective_named_files": 3,
+      "timeout_ms": 30000,
+      "run": {
+        "id": 43682386656,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682386656",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "job_id": 132715603251,
+        "job_conclusion": "success",
+        "cleanup_job_id": 132715952409,
+        "cleanup_conclusion": "success"
+      },
+      "tests": {
+        "pass": 7,
+        "fail": 0,
+        "errors": 0,
+        "expect": 201,
+        "files": 3,
+        "verdict": "SUCCESS"
+      },
+      "control": {
+        "omni": "N/A focused; no declaring omni test executed or delegated",
+        "negative_no_transfer": true
+      },
+      "failure_classification": null,
+      "detail": null,
+      "failure_witness": null,
+      "artifacts": []
+    },
+    {
+      "mission": 87,
+      "lane": "FIRST_SAVE87",
+      "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "Wtree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+      "S": "32c186de11afc265a47aa06355ba560b5e89650b",
+      "Stree": "fff10cd2cc07e25a0767268be7cc56f18403d816",
+      "request_blob": "9e17fe415e16abcfc46c2aad23f224760f3a5b38",
+      "branch": "ci-run-linux-sf101-c51-87-1",
+      "compare": {
+        "base": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+        "changed_paths": [
+          ".ci-run.json"
+        ],
+        "status": "ahead",
+        "ahead": 1
+      },
+      "workflow": ".github/workflows/test-ci.yml",
+      "os": "ubuntu-24.04",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "env": {},
+        "args": [
+          "Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+          "Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+          "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "--timeout",
+          "120000"
+        ]
+      },
+      "selected_files": [
+        "Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+        "Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+        "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+      ],
+      "effective_named_files": 3,
+      "timeout_ms": 120000,
+      "run": {
+        "id": 43682448571,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682448571",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "failure",
+        "job_id": 132715780313,
+        "job_conclusion": "failure",
+        "cleanup_job_id": 132716148751,
+        "cleanup_conclusion": "success"
+      },
+      "tests": {
+        "pass": 12,
+        "fail": 1,
+        "errors": 0,
+        "expect": 213,
+        "files": 3,
+        "verdict": "FAILURE"
+      },
+      "control": {
+        "omni": "N/A focused; no declaring omni test executed or delegated",
+        "negative_no_transfer": true
+      },
+      "failure_classification": "PRODUCT_HTTP_AUTH_CONTRACT",
+      "detail": null,
+      "failure_witness": {
+        "oracle": "Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts:269",
+        "test_name": "outcome HTTP refuses foreign actor, missing/wrong key, wrong case/incarnation and stale source without any lookup writes",
+        "expected_http_codes": [
+          503,
+          403,
+          403,
+          403,
+          403,
+          403,
+          400
+        ],
+        "received_http_codes": [
+          503,
+          403,
+          403,
+          403,
+          403,
+          503,
+          400
+        ],
+        "diff": "Missing Idempotency-Key produced 503 instead of 403",
+        "writer_comment_id": 6889947700
+      },
+      "artifacts": []
+    },
+    {
+      "mission": 97,
+      "lane": "DENIED_READ97",
+      "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "Wtree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+      "S": "35f020ff7f0e2d717746a41f44b13fda6900363b",
+      "Stree": "6ff671dcabbc42b5fdc787650cf8aec93e20b96d",
+      "request_blob": "937267e7c1234acc10b5528c0d695e2c44f64f6c",
+      "branch": "ci-run-linux-sf101-c51-97-1",
+      "compare": {
+        "base": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+        "changed_paths": [
+          ".ci-run.json"
+        ],
+        "status": "ahead",
+        "ahead": 1
+      },
+      "workflow": ".github/workflows/test-ci.yml",
+      "os": "ubuntu-24.04",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "env": {},
+        "args": [
+          "Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+          "--timeout",
+          "120000"
+        ]
+      },
+      "selected_files": [
+        "Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts"
+      ],
+      "effective_named_files": 2,
+      "timeout_ms": 120000,
+      "run": {
+        "id": 43682451927,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682451927",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "job_id": 132715790691,
+        "job_conclusion": "success",
+        "cleanup_job_id": 132716486330,
+        "cleanup_conclusion": "success"
+      },
+      "tests": {
+        "pass": 5,
+        "fail": 0,
+        "errors": 0,
+        "expect": 944,
+        "files": 2,
+        "verdict": "SUCCESS"
+      },
+      "control": {
+        "omni": "N/A focused; no declaring omni test executed or delegated",
+        "negative_no_transfer": true
+      },
+      "failure_classification": null,
+      "detail": "Original unrelaxed composed-storage and bound-source preflight passed. Functional scoped test only; visual and final acceptances separate.",
+      "failure_witness": null,
+      "artifacts": []
+    },
+    {
+      "mission": 98,
+      "lane": "DOCX98_TYPOGRAPHY",
+      "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "Wtree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+      "S": "20946d5ea64d1da1512fad06ce606dadf658f2b3",
+      "Stree": "069d8880881c9349f944216f021ca6a7d37093fe",
+      "request_blob": "954abee7d760c3dc4a70738438a0b3deec6913be",
+      "branch": "ci-run-linux-sf101-c51-docx-1",
+      "compare": {
+        "base": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+        "changed_paths": [
+          ".ci-run.json"
+        ],
+        "status": "ahead",
+        "ahead": 1
+      },
+      "workflow": ".github/workflows/test-ci.yml",
+      "os": "ubuntu-24.04",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "env": {},
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/report-title-fix/title-typography.test.ts"
+        ]
+      },
+      "selected_files": [
+        "Sucafinav1/test/product/report-title-fix/title-typography.test.ts"
+      ],
+      "effective_named_files": 1,
+      "timeout_ms": 120000,
+      "run": {
+        "id": 43682453714,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682453714",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "job_id": 132715796194,
+        "job_conclusion": "success",
+        "cleanup_job_id": 132716189448,
+        "cleanup_conclusion": "success"
+      },
+      "tests": {
+        "pass": 8,
+        "fail": 0,
+        "errors": 0,
+        "expect": 124,
+        "files": 1,
+        "verdict": "SUCCESS"
+      },
+      "control": {
+        "omni": "N/A focused; no declaring omni test executed or delegated",
+        "negative_no_transfer": true
+      },
+      "failure_classification": null,
+      "detail": "Two genuine producer flows x short/long opaque/extreme/Unicode; structural and XML/content, not independent page visual signoff.",
+      "failure_witness": null,
+      "artifacts": []
+    },
+    {
+      "mission": 98,
+      "lane": "DOCX98_READER88",
+      "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "Wtree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+      "S": "243bb2bcb8145f18e47a5dcd5ef638e2bfc5cef0",
+      "Stree": "49f8f6a8cf5806cded326065cbcca5988f01da42",
+      "request_blob": "13dccd49431f02d07b461420d35ae4e724865e2c",
+      "branch": "ci-run-linux-sf101-c51-reader-1",
+      "compare": {
+        "base": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+        "changed_paths": [
+          ".ci-run.json"
+        ],
+        "status": "ahead",
+        "ahead": 1
+      },
+      "workflow": ".github/workflows/test-ci.yml",
+      "os": "ubuntu-24.04",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "env": {},
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts"
+        ]
+      },
+      "selected_files": [
+        "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts"
+      ],
+      "effective_named_files": 5,
+      "timeout_ms": 120000,
+      "run": {
+        "id": 43682455278,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682455278",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "success",
+        "job_id": 132715801639,
+        "job_conclusion": "success",
+        "cleanup_job_id": 132716632536,
+        "cleanup_conclusion": "success"
+      },
+      "tests": {
+        "pass": 14,
+        "fail": 0,
+        "errors": 0,
+        "expect": 1756,
+        "files": 5,
+        "verdict": "SUCCESS"
+      },
+      "control": {
+        "omni": "N/A focused; no declaring omni test executed or delegated",
+        "negative_no_transfer": true
+      },
+      "failure_classification": null,
+      "detail": "Functional step SUCCESS; reader technical COMPLETED, visual PENDING_INDEPENDENT_HUMAN_PAGE_SHEET_SLIDE_REVIEW",
+      "failure_witness": null,
+      "artifacts": [
+        {
+          "id": 14148499941
+        }
+      ]
+    },
+    {
+      "mission": 90,
+      "lane": "NATIVE90_COMPONENT",
+      "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "Wtree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+      "S": "a856513eb61ca0d7c1cb7ddaf03a2b911e737d05",
+      "Stree": "758172dd1d91d8c59ac5aacb41d9ff2d8b01db45",
+      "request_blob": "cf5010e5fad453917badd6507bb33a01bb1a3660",
+      "branch": "ci-run-linux-sf101-c51-90-1",
+      "compare": {
+        "base": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+        "changed_paths": [
+          ".ci-run.json"
+        ],
+        "status": "ahead",
+        "ahead": 1
+      },
+      "workflow": ".github/workflows/test-ci.yml",
+      "os": "ubuntu-24.04",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "env": {},
+        "args": [
+          "Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+          "Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+          "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+          "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+          "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+          "--timeout",
+          "120000"
+        ]
+      },
+      "selected_files": [
+        "Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+        "Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+        "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts"
+      ],
+      "effective_named_files": 5,
+      "timeout_ms": 120000,
+      "run": {
+        "id": 43682450677,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682450677",
+        "attempt": 1,
+        "status": "completed",
+        "conclusion": "failure",
+        "job_id": 132715786509,
+        "job_conclusion": "failure",
+        "cleanup_job_id": 132716169886,
+        "cleanup_conclusion": "success"
+      },
+      "tests": {
+        "pass": 0,
+        "fail": 5,
+        "errors": 5,
+        "expect": 0,
+        "files": 5,
+        "verdict": "FAILURE"
+      },
+      "control": {
+        "omni": "N/A focused; no declaring omni test executed or delegated",
+        "negative_no_transfer": true
+      },
+      "failure_classification": "PRODUCT_IMPORT_MISSING_EXPORT",
+      "detail": null,
+      "failure_witness": {
+        "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+        "symptom": "SyntaxError: Export named 'observeSfRoutineNative' not found in module",
+        "scope": "All 5 selected specs abort during module loading; no behavioral test executed",
+        "secondary_source_observation": "bounded<T> references timeoutMs without declaration in same C51 source file",
+        "writer_comment_id": 6889948153
+      },
+      "artifacts": []
+    }
+  ],
+  "render": {
+    "archive": {
+      "actions_run_id": 43682455278,
+      "artifact_id": 14148499941,
+      "name": "sf66-exports-243bb2bcb8145f18e47a5dcd5ef638e2bfc5cef0-ubuntu-24.04-1",
+      "reported_artifact_bytes": 16053071,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682455278/artifacts/14148499941",
+      "locally_inspected_zip": "sf101-reader88-C51.zip",
+      "manifest_path": "_inspection/manifest.json",
+      "manifest_sha256": "e562aeb561e48e5dd205227b44b29e3e35fbba52f8e14bdb001d9bc4cbf46fb6",
+      "manifest_schema": "sf88-export-visual-reader-v1",
+      "manifest_snapshot": "243bb2bcb8145f18e47a5dcd5ef638e2bfc5cef0",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "request_sha256": "f13c19240663e820eb6a17fc4ab038c2e8bb7ae8d76c4f4c4d6102c3d02cf919",
+      "originals_before_count": 25,
+      "originals_after_count": 25,
+      "allOriginalsByteIdentical": true,
+      "mandatory_case_ids": 12,
+      "missing_mandatory": [],
+      "readerVerdict": "COMPLETED",
+      "visualInspection": "PENDING_INDEPENDENT_HUMAN_PAGE_SHEET_SLIDE_REVIEW",
+      "pdf_count": 12,
+      "png_count": 139,
+      "tools": {
+        "python": "3.12.3",
+        "libreoffice": "24.2.7.2",
+        "poppler": "24.02.0",
+        "fontconfig": "DejaVu Sans"
+      }
+    },
+    "original_sha256": {
+      "planner-viewer": "901ad62b30392199a92fd2b3f1909d210b455bdea291079db5d8140c03cf14e0",
+      "dashboard-backup": "b28668a0a42fb47fc46a28152bf9711d7451cedf42a39a7b25971a6bdac3c1d7",
+      "members-admin": "24511bd3d528f5d89fec054b936a47f3ef7f2d8451ab8db6e5668927c3ffd9fe",
+      "opex-template": "b55ac0e345f9376eeb86af7d43b046b4a998884f74961cd190ae8a004b4b76de",
+      "procurement-register": "5c6a777f2bf17cf1c2b7015304861d8bbae589a46ad1982237147b919389ef81",
+      "purchase-order": "a3db32b6f749e12dc7be488ae1e623ece1123f4a5a4629061065472d92f5d24c",
+      "suppliers-buyer": "c2be0f72d297a77d6fcb278fb48f9eadbfc13f52b52b621e1f8bc6eacc160b22",
+      "after-drift-docx": "1473f074ba6efdca1bef4d6352050a93d31b5841f29acaad93d86c23d2458c31",
+      "after-drift-pptx": "cdeba27b141b8b66015e0cd036521bddfd884bf181d148430debc2985c8a80e8",
+      "composed-docx": "e76815d22f0ad16726fc3187c63df46bce87b17847cee66498389253160e1d2a",
+      "composed-pptx": "ed25364c4fdfcd8c23690ab46f54d704a3a8631f77c7cb3ee6900641f6c20a9a",
+      "legacy-egress-control": "1abc41042d4cabc066de3cf6584f1858804ea85cef3618713fcd1ff96df2f1ae"
+    },
+    "key_generated_render_sha256": {
+      "after-drift-docx": {
+        "pdf": "6c77c9633335a0c2dc2b8d95873fe1c12b9ace474374d9f7320e5d6a36fafbc9",
+        "page01_png": "d2339517c9bc1f0616c885dd8b6c80d62dbe15bf2d7dc734a3ced07f0c7e4bd8",
+        "pages": 15
+      },
+      "composed-docx": {
+        "pdf": "c3d3907dd9fb8971c23b1dcde86c20c6bd2a358411ac320c6451b1b4e718be7c",
+        "page01_png": "a38c1885efa56de778d5e7ab3175e83839f83c8745233a4e6991d81389152727",
+        "pages": 15
+      }
+    },
+    "complete_page_and_original_hashes_in": "GitHub Actions artifact/_inspection/manifest.json; SHA256 above. No source PDF/PNG was modified by inspection; NO visual verdict assigned."
+  },
+  "historical_dedup": {
+    "p03_original": {
+      "run": 43681302722,
+      "status": "FAILURE",
+      "owner": 99,
+      "do_not_repeat": true
+    },
+    "p03_causal_r2": {
+      "run": 43681797855,
+      "status": "SUCCESS",
+      "cannot_transfer_to_original": true
+    },
+    "historical_88": {
+      "run": 43678123870,
+      "status": "FAILURE_PRE97",
+      "cannot_qualify_C51": true
+    }
+  },
+  "gates": {
+    "functional": "4 selection PASS,2 selection FAIL",
+    "reader_technical": "COMPLETED_REAL_ARTIFACT",
+    "visual": "PENDING_INDEPENDENT_REVIEW_91_93",
+    "native_installed": "NOT_PROVEN",
+    "first_save_reload_ui": "NOT_PROVEN",
+    "P03": "FAIL_OPEN",
+    "typecheck_guards": "OWNER45_NOT_EXECUTED_BY101",
+    "final_eight": "NOT_RUN",
+    "G7": "OPEN",
+    "G8": "OPEN",
+    "AM": "NOT_PROVEN",
+    "GLOBAL_RELEASE": false
+  }
+}

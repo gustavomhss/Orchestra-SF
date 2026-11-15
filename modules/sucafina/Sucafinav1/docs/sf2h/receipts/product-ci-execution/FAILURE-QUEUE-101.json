@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.product-ci101.failure_queue.v1",
+  "mission": 101,
+  "material": {
+    "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+    "version": "C51"
+  },
+  "failed": [
+    {
+      "lane": "FIRST_SAVE87",
+      "type": "PRODUCT_CONTRACT",
+      "run_id": 43682448571,
+      "job_id": 132715780313,
+      "attempt": 1,
+      "expected": "missing Idempotency-Key ->403",
+      "actual": "503",
+      "path": "modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts:269",
+      "source_pr": 92,
+      "posted_comment": 6889947700,
+      "integrator_pr": 65,
+      "integrator_comment": 6889948537,
+      "owner_action": "Inspect and patch host outcome HTTP without changing oracles, requalify on changed material candidate through mission101."
+    },
+    {
+      "lane": "NATIVE90_COMPONENT",
+      "type": "PRODUCT_IMPORT",
+      "run_id": 43682450677,
+      "job_id": 132715786509,
+      "attempt": 1,
+      "expected": "5 native component specs load then test behavior",
+      "actual": "all 5 import fail: observeSfRoutineNative named export not found",
+      "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+      "secondary": "bounded references undefined timeoutMs",
+      "source_pr": 96,
+      "posted_comment": 6889948153,
+      "integrator_pr": 65,
+      "integrator_comment": 6889948537,
+      "owner_action": "Fix missing function/export/declaration in original product producer; do not activate native provider or claim installed."
+    }
+  ],
+  "infrastructure_failures": [],
+  "not_yet_accepted": [
+    "87 browser reload",
+    "native C15 real host",
+    "P03 original",
+    "VIS88_001 independent visual",
+    "all S0 final gates"
+  ],
+  "new_integrator_lease": "NOT_APPOINTED; mission100 explicit terminal ended and requires S0",
+  "status": "OPEN_NOT_SUPPRESSED"
+}
