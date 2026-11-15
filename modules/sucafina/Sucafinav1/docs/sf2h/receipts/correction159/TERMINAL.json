@@ -1,0 +1,213 @@
+{
+  "schema": "sf2h.review-correction-terminal.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 159,
+  "slot": "N28",
+  "work_order": "U32",
+  "pr": 152,
+  "branch": "sf-ux-n28",
+  "epoch": "ux-native-n28-e2-browser159",
+  "actor": "ChatGPT via GitHub MCP",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "NOT_EXPOSED",
+  "state": "ARTIFACT_READY_INTEGRATION_PENDING_QUALIFICATION_NOT_RUN",
+  "release": false,
+  "native_goal": "paused",
+  "global_release": false,
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction159/ACK.json",
+    "blob": "f3f6d7fd9e2b6d4c23a5f6727068cc1d5fb1c96c",
+    "commit": "ad864ee17fccaff247717b70b644c3c9c56829c3",
+    "fence_prepared_head": "12e4f098ac9e7ed3035de7a7c66d4a26d8f47dcd"
+  },
+  "author_source": {
+    "input_head": "ad864ee17fccaff247717b70b644c3c9c56829c3",
+    "implementation_commit": "6feeea73ac6bdde67a7b0f51b74b6ffa9ed56fc0",
+    "regression_refinement_commit": "a73eb45fb5cd1f6ec06776e53dcf193635b1de8a",
+    "author_source_tree": "1958c9b1c313613f48ea2554feabb2cbd54c8e77",
+    "patch_url": "https://github.com/gustavomhss/Orchestra-SF/compare/ad864ee17fccaff247717b70b644c3c9c56829c3...a73eb45fb5cd1f6ec06776e53dcf193635b1de8a"
+  },
+  "consumer_base": {
+    "branch": "sf2-stack",
+    "observed_head": "8094e599e3d18609e269548d24619a3246fbc735",
+    "observed_tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+    "source_consumer_preimages_verified": true,
+    "consumer_postimages_not_yet_applied": true
+  },
+  "exact_patch": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+      "base_consumer_preimage": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+      "source_branch_preimage": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+      "source_branch_postimage": "933426ea548c2c82c115f34c2f099df82379daee",
+      "expected_consumer_postimage_after_132": "933426ea548c2c82c115f34c2f099df82379daee",
+      "findings": [
+        "PRE147-R02-01",
+        "PRE147-R02-03"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+      "base_consumer_preimage": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+      "source_branch_preimage": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+      "source_branch_postimage": "638ca5f806f1d11b8549972ba5559b4913ba4e6b",
+      "expected_consumer_postimage_after_132": "638ca5f806f1d11b8549972ba5559b4913ba4e6b",
+      "findings": [
+        "PRE147-R02-01",
+        "PRE147-R02-02",
+        "PRE147-R02-03"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/preserved.css",
+      "base_consumer_preimage": "4ac44aec2709c0ba63c018013007aaaa74509b86",
+      "source_branch_preimage": "4ac44aec2709c0ba63c018013007aaaa74509b86",
+      "source_branch_postimage": "98130fd7eda65142e8f18e55524bf546a79ffa1e",
+      "expected_consumer_postimage_after_132": "98130fd7eda65142e8f18e55524bf546a79ffa1e",
+      "findings": [
+        "PRE147-R02-02",
+        "PRE147-R02-03"
+      ]
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+      "base_consumer_preimage": "ce8f1423df32e6dc7eb4fde0a1c066bc71c3db9b",
+      "source_branch_preimage": "ce8f1423df32e6dc7eb4fde0a1c066bc71c3db9b",
+      "source_branch_postimage": "01de7a90c2514ab532815f68896cd164e2709f98",
+      "expected_consumer_postimage_after_132": "01de7a90c2514ab532815f68896cd164e2709f98",
+      "findings": [
+        "PRE147-R02-01",
+        "PRE147-R02-02",
+        "PRE147-R02-03"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts",
+      "base_consumer_preimage": "b12487eff9524cd679d6bc9a6b23236bd5f68af3",
+      "source_branch_preimage": "b12487eff9524cd679d6bc9a6b23236bd5f68af3",
+      "source_branch_postimage": "134a2b5c3c968b86a6061af994c2ba2a10e64a75",
+      "expected_consumer_postimage_after_132": "134a2b5c3c968b86a6061af994c2ba2a10e64a75",
+      "findings": [
+        "PRE147-R02-01",
+        "PRE147-R02-02",
+        "PRE147-R02-03"
+      ]
+    }
+  ],
+  "source_pins_read_not_modified": [
+    {
+      "path": "packages/schema/src/sucafina/reviews.ts",
+      "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+      "branch_note": "source available on sf2-stack, absent in isolated N28 author source branch"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "blob": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a"
+    },
+    {
+      "path": "packages/client/src/sucafina/reviews.ts",
+      "blob": "44e81eed03b55299bf19697a45b8e8132b047c4d",
+      "branch_note": "consumer base sf2-stack"
+    }
+  ],
+  "finding_map": [
+    {
+      "id": "PRE147-R02-01",
+      "status": "PATCH_AUTHORED_STATIC_RECHECK_PENDING",
+      "criteria": [
+        "U32-AC01",
+        "U32-AC02",
+        "R02-AC01"
+      ],
+      "change": "Reject absent, mixed or unequal installation/project scopes before displaying a diff, while retaining period, section, currency, engine guards.",
+      "proof": "STATIC_CODE_CHANGE_NOT_HOSTED_PROOF"
+    },
+    {
+      "id": "PRE147-R02-02",
+      "status": "PATCH_AUTHORED_STATIC_RECHECK_PENDING",
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC01"
+      ],
+      "change": "Show exact prior/current value, currency, unit, evidenceState and declared missing fields; zero, explicit null and absent remain distinct; no FX or numeric delta.",
+      "proof": "STATIC_CODE_CHANGE_NOT_HOSTED_PROOF"
+    },
+    {
+      "id": "PRE147-R02-03",
+      "status": "PATCH_AUTHORED_STATIC_RECHECK_PENDING",
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC02"
+      ],
+      "change": "Distinguish numeric value edits from metadata and source-only changes in per-value Evidence, projection components, section references, projection version/context sourceRefs and review sourceRefs; display incarnation/version/observedAt when present.",
+      "proof": "STATIC_CODE_CHANGE_NOT_HOSTED_PROOF"
+    }
+  ],
+  "regression_coverage": {
+    "path": "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts",
+    "kind": "REAL_HOST_BACKED_ENV_REFERENCES_NO_MOCK_PAYLOADS",
+    "cases": [
+      "same-scope prior/current original read and compatible/incompatible determination",
+      "different installation preserved cuts: incompatible or current producer denies second read, no joined diff",
+      "different project preserved cuts: incompatible or current producer denies second read, no joined diff",
+      "100 USD to 100 EUR with confirmed to estimated and same numeral",
+      "0 to explicit null, explicit null to 0",
+      "value-only provenance source revision with same amount",
+      "section source version/incarnation/observedAt with same scalar"
+    ],
+    "required_inputs": "Existing SF_N28_PREVIOUS_REVIEW_REF/CURRENT_REVIEW_REF plus dedicated SF_N28_{INSTALLATION,PROJECT,CURRENCY,ZERO,NULL,SOURCE,SECTION_SOURCE}_* authentic producer references and expected source values. CI150 must verify identities/cutoffs/owner before invoking selectors.",
+    "execution": "NOT_RUN"
+  },
+  "verification": {
+    "local_tests": "NOT_RUN_BY_MISSION_RULE",
+    "local_typecheck": "NOT_RUN_BY_MISSION_RULE",
+    "local_parser": "NOT_RUN_BY_MISSION_RULE",
+    "local_build": "NOT_RUN_BY_MISSION_RULE",
+    "github_actions": "NOT_DISPATCHED_OWNER_150",
+    "compiler_and_guards": "NOT_DISPATCHED_OWNER_149",
+    "independent_review": "PENDING_INTEGRATED_BLOB",
+    "source_vs_consumer": "BASE_PREIMAGES_VERIFIED_POST_NOT_INTEGRATED"
+  },
+  "paths_preserved": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+    "packages/schema/**",
+    "packages/client/**",
+    "apps/cli/**",
+    "shared registries/global i18n/generated/engines"
+  ],
+  "shared_seam": {
+    "owner": "151/A07 + 132",
+    "operation": "projection.review",
+    "status": "UNCHANGED_NO_SHARED_API_PATCH_CLAIMED",
+    "followup": "Any shared source/codec mismatch requires patch to the actual owner under an explicit lease, not a product writer edit."
+  },
+  "next_action": [
+    {
+      "owner": "132",
+      "action": "Consume the five exact postimage blobs from PR152 into sf2-stack using current CAS; verify preimages and re-check schema/source pins; issue consumer ACK with exact composed SHA."
+    },
+    {
+      "owner": "149",
+      "action": "After causally new coherent integration, run compiler/typecheck/guards and owned codegen as required; report real run and artifacts; do not repeat unchanged C64."
+    },
+    {
+      "owner": "150",
+      "action": "After source and installed F04 fixture readiness, request only new U32 hosted tests for scope incompatibility/denied second read, currency/evidence 100->100, null/zero, source-only revision/incarnation/observation; capture run SHA/fixture identity and artifacts."
+    },
+    {
+      "owner": "independent R02 reviewer",
+      "action": "Reassess PRE147-R02-01/02/03 against exact 132 integrated blobs and real 150 outputs; do not close on source-ready alone."
+    }
+  ],
+  "terminal_disposition": "HANDOFF_TO_132_WITH_SOURCE_READY; NO_RELEASE_OR_TEST_PASS_CLAIM"
+}
