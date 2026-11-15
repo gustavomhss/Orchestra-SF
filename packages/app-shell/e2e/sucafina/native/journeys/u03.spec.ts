@@ -8,9 +8,9 @@ import { expect, test, type Page } from "@playwright/test"
 test.use({ trace: "off", video: "off", screenshot: "off" })
 test.describe.configure({ retries: 0, timeout: 120_000 })
 
-function installedUrl(path: string) {
+function installedUrl(path: string, ownerQuery?: string) {
   const origin = process.env.SF2H_TEST_ORIGIN
-  const owner = process.env.SF2H_TEST_OWNER_QUERY
+  const owner = ownerQuery ?? process.env.SF2H_TEST_OWNER_QUERY
   if (!origin || !owner || process.env.SF2H_TEST_ISOLATED !== "1")
     throw new Error("120 must supply an isolated real installed Sf owner: SF2H_TEST_ORIGIN, SF2H_TEST_OWNER_QUERY, SF2H_TEST_ISOLATED=1")
   const url = new URL(path, origin)
@@ -29,7 +29,10 @@ async function visit(page: Page, cap: "CAP06" | "CAP07") {
   expect(body).toMatchObject({ status: "ok", value: { capabilityId: cap } })
   await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
   await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
-  return body as { status: "ok"; value: {
+  return body as { status: "ok"; context: {
+    installationId: string; projectId: string; hostId: string; principalRef: string
+    policyVersion: string; accessRevision: string
+  }; value: {
     data: Record<string, unknown>; versions: Record<string, number>; allowedActionIds: string[]
   } }
 }
@@ -102,4 +105,80 @@ test.describe("N14 U03 / CAP06-CAP07", () => {
     // Browser-zoom proof remains with 120's real zoom instrumentation;
     // CSS font scaling and 320px reflow are not mislabeled as browser zoom.
   })
+  test("PRE-R01-146-004 authorized Open team structure preserves owner, period, keyboard, history and focus", async ({ page }, info) => {
+    info.annotations.push({ type: "finding", description: "PRE-R01-146-004 / U03-AC02 / U03-AC03 / NAV-01 / Q02" })
+    await page.setViewportSize({ width: 320, height: 900 })
+    const source = await visit(page, "CAP06")
+    const sourceUrl = new URL(page.url())
+    const action = page.locator('[data-sf-action="open-team-structure"] button')
+    await expect(action).toHaveAccessibleName(/^(Open team structure|Abrir estrutura)$/)
+    await expect(action).toBeEnabled()
+    await noDocumentOverflow(page)
+    await action.focus()
+    await expect(action).toBeFocused()
+
+    const destinationRead = page.waitForResponse((response) =>
+      response.request().method() === "GET" &&
+      new URL(response.url()).pathname.endsWith("/api/ui/pages/CAP07"))
+    await page.keyboard.press("Enter")
+    const response = await destinationRead
+    expect(response.status(), "CAP07 must be read through the actual authorized producer").toBe(200)
+    const target: unknown = await response.json()
+    expect(target).toMatchObject({ status: "ok", context: source.context, value: { capabilityId: "CAP07" } })
+    await expect(page).toHaveURL(/\/orchestra\/sf-people\/structure(?:\?|$)/)
+    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
+    await expect(page.getByRole("heading", { name: /^(Team Structure|Estrutura da equipe)$/ })).toBeVisible()
+    await expect(page.locator('[data-sf-frame="page"]')).toBeVisible()
+    await noDocumentOverflow(page)
+
+    const destinationUrl = new URL(page.url())
+    expect(destinationUrl.origin).toBe(sourceUrl.origin)
+    for (const selector of ["server", "project", "installation", "year", "month"])
+      expect(destinationUrl.searchParams.getAll(selector), selector + " must preserve the source owner/period")
+        .toEqual(sourceUrl.searchParams.getAll(selector))
+    const focusMovedToDestination = await page.evaluate(() => {
+      const frame = document.querySelector('[data-sf-frame="page"]')
+      const focused = document.activeElement
+      return !!frame && !!focused && focused !== document.body &&
+        focused !== document.documentElement && frame.contains(focused)
+    })
+    expect(focusMovedToDestination, "Keyboard focus must land within the newly authorized CAP07 page").toBe(true)
+
+    await page.goBack()
+    await expect(page).toHaveURL(/\/orchestra\/sf-people\/overview(?:\?|$)/)
+    const restoredUrl = new URL(page.url())
+    expect(restoredUrl.origin).toBe(sourceUrl.origin)
+    for (const selector of ["server", "project", "installation", "year", "month"])
+      expect(restoredUrl.searchParams.getAll(selector), selector + " must survive browser back")
+        .toEqual(sourceUrl.searchParams.getAll(selector))
+    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
+    await expect(page.locator('[data-sf-action="open-team-structure"] button')).toBeFocused()
+    await noDocumentOverflow(page)
+  })
+
+  test("PRE-R01-146-004 CAP06-only principal cannot open CAP07 through the primary action", async ({ page }, info) => {
+    info.annotations.push({ type: "finding", description: "PRE-R01-146-004 / U03-AC02 / denied role / no cross-owner fallback" })
+    const deniedOwner = process.env.SF2H_TEST_CAP06_ONLY_OWNER_QUERY
+    if (!deniedOwner)
+      throw new Error("150 must supply a real CAP06-readable/CAP07-denied installation owner (SF2H_TEST_CAP06_ONLY_OWNER_QUERY)")
+    const originUrl = installedUrl("/orchestra/sf-people/overview", deniedOwner)
+    const sourceRead = page.waitForResponse((response) => response.request().method() === "GET" &&
+      new URL(response.url()).pathname.endsWith("/api/ui/pages/CAP06"))
+    await page.goto(originUrl)
+    const response = await sourceRead
+    expect(response.status()).toBe(200)
+    const projection: unknown = await response.json()
+    expect(projection).toMatchObject({ status: "ok", value: { capabilityId: "CAP06" } })
+    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
+    const action = page.locator('[data-sf-action="open-team-structure"] button')
+    await expect(action).toHaveAccessibleName(/^(Open team structure|Abrir estrutura)$/)
+    await expect(action).toBeDisabled()
+    await expect(page.locator('[data-sf-action="open-team-structure"] .sf-action-reason'))
+      .toHaveText(/^(You do not have access to this content\.|Você não tem acesso a este conteúdo\.)$/)
+    await page.keyboard.press("Tab")
+    await expect(action).not.toBeFocused()
+    await expect(page).toHaveURL(originUrl)
+    await expect(page.locator('[data-sf-state="ready"]')).toBeVisible()
+  })
+
 })
