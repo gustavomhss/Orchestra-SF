@@ -142,6 +142,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   let draftOwner: SfOwnerKey | undefined
   let submitted: Readonly<{ operationRef: SfOperationRef; action: SfServiceAction; owner: SfOwnerKey; year: number; month: number }> | undefined
   let routeEntryConsumed: string | undefined
+  let editorTrigger: HTMLElement | null = null
   const pendingRequests = new Set<AbortController>()
   onCleanup(() => {
     for (const request of pendingRequests) request.abort()
@@ -173,6 +174,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     const active = owner.ready()
     const key = currentOwner()
     if (!page || !active || !key || !can(action)) return
+    editorTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null
     const version = action === "save-categories" || action === "save-items"
       ? serviceListVersion(page, action === "save-categories" ? "opsCats" : "opsHmItems")
       : serviceMonthVersion(page)
@@ -217,6 +219,13 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     }
   }
 
+  function closeEditor() {
+    setState("editor", null)
+    const trigger = editorTrigger
+    editorTrigger = null
+    if (trigger?.isConnected) queueMicrotask(() => { if (trigger.isConnected) trigger.focus() })
+  }
+
   function discardCurrent() {
     const editor = state.editor
     const snapshot = activeDraft()
@@ -228,7 +237,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
     })
     draft = undefined
     draftOwner = undefined
-    setState("editor", null)
+    closeEditor()
     setState("operationState", "idle")
     setState("errorText", null)
   }
@@ -667,6 +676,27 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
               </table>
             </div>
             <Show when={(state.page!.data.opsTickets ?? []).length === 0}><p>{t(commonKey("empty"))}</p></Show>
+            <h3>{t(sourceKey("section.openedClosed"))}</h3>
+            <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.openedClosed"))} tabindex="0">
+              <table>
+                <thead><tr>
+                  <th scope="col">{t(sourceKey("table.month"))}</th>
+                  <th scope="col">{t(sourceKey("table.opened"))}</th>
+                  <th scope="col">{t(sourceKey("table.closed"))}</th>
+                </tr></thead>
+                <tbody>
+                  <For each={SERVICE_MONTHS}>{(month) => (
+                    <tr>
+                      <th scope="row">{month}</th>
+                      <td>{state.page!.data.display?.opened[month - 1] == null
+                        ? t(sourceKey("table.noData")) : String(state.page!.data.display!.opened[month - 1])}</td>
+                      <td>{state.page!.data.display?.closed[month - 1] == null
+                        ? t(sourceKey("table.noData")) : String(state.page!.data.display!.closed[month - 1])}</td>
+                    </tr>
+                  )}</For>
+                </tbody>
+              </table>
+            </div>
             <button type="button" disabled={!can("save-tickets")} onClick={() => openEditor("save-tickets")}>
               {t(sourceKey("action.save-tickets"))}
             </button>
@@ -691,6 +721,29 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                       </For>
                     </tr>}
                   </For>
+                </tbody>
+              </table>
+            </div>
+            <h3>{t(sourceKey("section.slaTrend"))}</h3>
+            <div class="sf-ops-table" role="region" aria-label={t(sourceKey("section.slaTrend"))} tabindex="0">
+              <table>
+                <thead><tr>
+                  <th scope="col">{t(sourceKey("table.month"))}</th>
+                  <th scope="col">{t(sourceKey("table.incidentSla"))}</th>
+                  <th scope="col">{t(sourceKey("table.serviceSla"))}</th>
+                  <th scope="col">{t(sourceKey("table.availability"))}</th>
+                </tr></thead>
+                <tbody>
+                  <For each={SERVICE_MONTHS}>{(month) => {
+                    const row = (state.page!.data.opsSLA ?? []).find((source) =>
+                      source.year === state.page!.selection.year && source.month === month)
+                    return <tr>
+                      <th scope="row">{month}</th>
+                      <For each={SERVICE_SLA_FIELDS}>{(name) =>
+                        <td>{row?.[name] == null ? t(sourceKey("table.noData")) : String(row[name])}</td>}
+                      </For>
+                    </tr>
+                  }}</For>
                 </tbody>
               </table>
             </div>
@@ -777,7 +830,13 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
           </Show>
 
           <Show when={state.editor && activeDraft()}>
-            <section class="sf-ops-editor" aria-labelledby="sf-cap11-editor-title">
+            <section class="sf-ops-editor" aria-labelledby="sf-cap11-editor-title" aria-busy={state.submitting}
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && !state.editor?.review && !state.submitting) {
+                  event.stopPropagation()
+                  closeEditor()
+                }
+              }}>
               <h2 id="sf-cap11-editor-title">{t(heading())}</h2>
               <Show when={!state.editor!.review} fallback={
                 <SfChangeReview
@@ -879,7 +938,7 @@ export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
                     <button type="submit" disabled={state.submitting || !isValid(state.editor!.action, currentFields(), state.page!)}>
                       {t(commonKey("review"))}
                     </button>
-                    <button type="button" onClick={() => setState("editor", null)}>
+                    <button type="button" onClick={closeEditor}>
                       {t(commonKey("close"))}
                     </button>
                     <button type="button" disabled={state.submitting || state.operationState === "unknown"}

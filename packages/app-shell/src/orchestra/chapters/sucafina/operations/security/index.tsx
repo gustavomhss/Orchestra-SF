@@ -70,6 +70,11 @@ const stringOf = (value: string | boolean | undefined) => typeof value === "stri
 const booleanOf = (value: string | boolean | undefined) => value === true
 const rowId = (row: { id?: number | string | null } | undefined) => row?.id == null ? null : String(row.id)
 const fields = ["title", "date", "impact", "notes"] as const
+const SECURITY_TRENDS = [
+  { section: "socTrend", fields: ["socTP", "socFP", "socEPS", "socIPs", "socClosure"] },
+  { section: "socSeverity", fields: ["socCritical", "socHigh", "socMedium", "socLow", "socPending"] },
+  { section: "patchTrend", fields: ["patch", "patchEndpoint", "patchServer"] },
+] as const
 
 function departmentsOf(value: string | boolean | undefined): Department[] {
   if (typeof value !== "string") return []
@@ -192,6 +197,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
     id: string | null; owner: SfOwnerKey; year: number; month: number
   }> | undefined
   let routeEntryConsumed: string | undefined
+  let editorTrigger: HTMLElement | null = null
   const pendingRequests = new Set<AbortController>()
   onCleanup(() => {
     for (const request of pendingRequests) request.abort()
@@ -220,6 +226,13 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const displayedMonth = () => state.page?.selection.month ?? state.month
   const refresh = () => setState("refresh", (value) => value + 1)
 
+  function closeEditor() {
+    setState("editor", null)
+    const trigger = editorTrigger
+    editorTrigger = null
+    if (trigger?.isConnected) queueMicrotask(() => { if (trigger.isConnected) trigger.focus() })
+  }
+
   function discardCurrent() {
     const editor = state.editor
     const snapshot = activeDraft()
@@ -231,7 +244,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
     })
     draft = undefined
     draftOwner = undefined
-    setState("editor", null)
+    closeEditor()
     setState("operationState", "idle")
     setState("errorText", null)
   }
@@ -251,6 +264,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
     const active = owner.ready()
     const ownerKey = currentOwner()
     if (!page || !active || !ownerKey || state.submitting) return
+    editorTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null
     const command = (destructive ? "delete-" : "save-") + entity as SecurityCommand
     if (!can(command)) return
     if (destructive && !id) return
@@ -714,6 +728,32 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                 </div>
               )}</For>
             </div>
+            <For each={SECURITY_TRENDS}>{(trend) => (
+              <section aria-label={t(key("section." + trend.section))}>
+                <h3>{t(key("section." + trend.section))}</h3>
+                <div class="sf-security-table" role="region" tabindex="0"
+                  aria-label={t(key("section." + trend.section))}>
+                  <table>
+                    <thead><tr>
+                      <th scope="col">{t(key("table.month"))}</th>
+                      <For each={trend.fields}>{(name) =>
+                        <th scope="col">{t(key("field." + name + ".label"))}</th>}
+                      </For>
+                    </tr></thead>
+                    <tbody><For each={SECURITY_MONTHS}>{(month) => {
+                      const source = (state.page!.data.secKpi ?? []).find((row) =>
+                        row.year === state.page!.selection.year && row.month === month)
+                      return <tr>
+                        <th scope="row">{month}</th>
+                        <For each={trend.fields}>{(name) => (
+                          <td>{source?.[name] == null ? t(key("table.noData")) : String(source[name])}</td>
+                        )}</For>
+                      </tr>
+                    }}</For></tbody>
+                  </table>
+                </div>
+              </section>
+            )}</For>
             <div class="sf-security-table" role="region" aria-label={t(key("section.kpi"))} tabindex="0">
               <table>
                 <thead><tr><th>{t(key("table.month"))}</th>
@@ -876,7 +916,13 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
           </Show>
 
           <Show when={state.editor && activeDraft()}>
-            <section class="sf-security-editor" aria-labelledby="sf-cap12-editor">
+            <section class="sf-security-editor" aria-labelledby="sf-cap12-editor" aria-busy={state.submitting}
+              onKeyDown={(event) => {
+                if (event.key === "Escape" && !state.editor?.review && !state.submitting) {
+                  event.stopPropagation()
+                  closeEditor()
+                }
+              }}>
               <h2 id="sf-cap12-editor">{t(editTitle())}</h2>
               <Show when={!state.editor!.review} fallback={
                 <SfChangeReview
@@ -1010,7 +1056,7 @@ export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
                     <button type="submit" disabled={state.submitting || !validForm(state.editor!, values(), state.page!)}>
                       {t(common("review"))}
                     </button>
-                    <button type="button" onClick={() => setState("editor", null)}>
+                    <button type="button" onClick={closeEditor}>
                       {t(common("close"))}
                     </button>
                     <button type="button" disabled={state.submitting || state.operationState === "unknown"}
