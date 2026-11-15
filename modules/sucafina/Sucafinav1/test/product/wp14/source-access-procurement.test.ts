@@ -35,10 +35,10 @@ test("Procurement evidence is read through current source and domain ports", asy
     const first = await resolver.resolve(issued.value, call)
     expect(first.status).toBe("ok")
     if (first.status !== "ok") return
-    const access = createSfProcurementSourceAccess({ host, resolve: resolver.resolve, procurement: port })
+    const access = createSfProcurementSourceAccess({ host, resolve: { resolve: resolver.resolve }, procurement: port })
     expect((await access(first.value.evidence, call)).state).toBe("fresh")
     let resolutions = 0
-    const racing = createSfProcurementSourceAccess({ host, resolve: async (ref, context) => { const result = await resolver.resolve(ref, context); resolutions += 1; if (resolutions === 2) session.active = false; return result }, procurement: port })
+    const racing = createSfProcurementSourceAccess({ host, resolve: { resolve: async (ref, context) => { const result = await resolver.resolve(ref, context); resolutions += 1; if (resolutions === 2) session.active = false; return result } }, procurement: port })
     expect((await racing(first.value.evidence, call)).state).toBe("unavailable")
     expect(resolutions).toBe(2)
     session.active = false

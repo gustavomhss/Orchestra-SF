@@ -23,6 +23,7 @@ import { createReviewApplication } from "../../../product/reviews/application.ts
 import type { ReviewAgendaCatalog } from "../../../product/reviews/agenda-picker.ts"
 import type { ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
 import { object, rows } from "../../../runtime/contract.ts"
+import type { Actor } from "../../../runtime/contract.ts"
 import { validReportArtifactMetadata, validateReportArtifact } from "../../../runtime/artifact.ts"
 import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
 import { DashboardPeople } from "../../../runtime/dashboard-people.ts"
@@ -72,7 +73,7 @@ export async function createExportArtifactFixture(options: { maxBytes?: number }
     })
   }
   const note = "Café, ação e e\u0301; literal <scope> & evidence. " + "Complete source note. ".repeat(12) + "END-EXPORT-66-NOTE"
-  const actor = { id: owner, roles: ["admin"], canWrite: true }
+  const actor: Actor = { id: owner, roles: ["admin"], canWrite: true }
   const environment = (id = randomUUID()) => ({ at: clock.at, id: () => id, directory: [{ id: owner, name: "Synthetic export owner" }] })
   await persistence.transaction("dashboard", async (snapshot) => {
     const project = DashboardPortfolio.domain.execute(snapshot, actor, { page: "All Projects", action: "save", version: 0,
