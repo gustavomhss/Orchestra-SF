@@ -1,0 +1,55 @@
+{
+  "schema": "sf2h.am05.ack.v1",
+  "mission": 169,
+  "kind": "qualification",
+  "status": "ACK_SOURCE_RECONCILED",
+  "epoch": "proof-am05-e1-browser169",
+  "branch": "sf-am05-proof",
+  "expected_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "expected_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "campaign": "sf2h-integral-20261112",
+  "effective_chat_model": "GPT-6",
+  "claimed_native_model": null,
+  "native_session_id": null,
+  "actual_native_actor": null,
+  "goal": "paused",
+  "global_release": false,
+  "allowlist": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/**",
+    "packages/app-shell/e2e/sucafina/native/integrated-proofs/am05/**",
+    "script/sf2h/proofs/am05/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/**"
+  ],
+  "inputs": {
+    "handoff_169": {
+      "commit": "c5947d78329f4f0cf3666fa27d38364c67009688",
+      "blob": "48c66d29bf648864c48c42cfcfe7b0a7a35d7793"
+    },
+    "canonical_plan_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+    "actor_S0_A_blob": "6ff8de164c225698f97a1457817a4b31b1af5eec",
+    "actor_S0_A_sha256": "9eba95a91797a0c57934ee5be337dca38d278cc48296014fb9454f17cd4f2f37",
+    "common_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "start_blob": "522782bb7e113124a937d7ef17313032be9d6850",
+    "workflow_blob": "043205bee6031b4517a98591b3588fca0ab12925",
+    "atlas_memory_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+    "atlas_store_blob": "0d7a1fa1d0f138d99fd0dc358ab898ebf828dcbf",
+    "atlas_scanner_blob": "11922bec60a7b9223f6f11043b02a63885b55b31",
+    "business_context_blob": "12d6b27c52e29ac0cb8ccc65fba63ad20ddbc4ef",
+    "atlas_boundary_package_blob": "6a5e7bddf5b9ea31dd0fb795f38be4fc98a231b7"
+  },
+  "ownership": {
+    "sole_integrator": "162/S0-C-e20-browser162/PR65",
+    "compiler": "163/compiler-e4-browser163/PR107",
+    "hosted_ci": "164/product-ci-e4-browser164/PR106"
+  },
+  "execution": {
+    "local_test": "NOT_RUN",
+    "local_typecheck": "NOT_RUN",
+    "local_build": "NOT_RUN",
+    "local_parsers": "NOT_RUN",
+    "real_scanner": "NOT_RUN",
+    "native_model_runtime": "NOT_RUN"
+  },
+  "ack_note": "ACK records source/lease reconciliation only. It does not claim native host admission, scanner execution, CI, integration, AM05 PASS or release. New proof and terminal handoff will follow in separate append-only files."
+}
