@@ -19,35 +19,35 @@ import {
   SfSourceRecordSource, SfSourceCostCoverageBasis, SfSourceEvidenceInput,
 } from "./decisions/source-contracts.ts"
 
-const text = Schema.String.pipe(Schema.minLength(1), Schema.maxLength(16384))
-const digest = Schema.String.pipe(Schema.pattern(/^[a-f0-9]{64}$/))
-const version = Schema.Int.pipe(Schema.greaterThanOrEqualTo(1))
-const nonnegative = Schema.Int.pipe(Schema.greaterThanOrEqualTo(0))
-const surface = Schema.Literal("dashboard", "planner", "procurement")
-const period = Schema.Struct({ start: Schema.String.pipe(Schema.pattern(/^\d{4}-\d{2}-\d{2}$/)), end: Schema.String.pipe(Schema.pattern(/^\d{4}-\d{2}-\d{2}$/)) })
+const text = Schema.String.pipe(Schema.check(Schema.isMinLength(1)), Schema.check(Schema.isMaxLength(16384)))
+const digest = Schema.String.pipe(Schema.check(Schema.isPattern(/^[a-f0-9]{64}$/)))
+const version = Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(1)))
+const nonnegative = Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0)))
+const surface = Schema.Literals(["dashboard", "planner", "procurement"])
+const period = Schema.Struct({ start: Schema.String.pipe(Schema.check(Schema.isPattern(/^\d{4}-\d{2}-\d{2}$/))), end: Schema.String.pipe(Schema.check(Schema.isPattern(/^\d{4}-\d{2}-\d{2}$/))) })
 export const SfDecisionCaseRef = Schema.Struct({id:text,incarnation:text,version})
 const alternativeRef = Schema.Struct({id:text,version})
 const evidenceBase = {
  schema:Schema.Literal("sf-evidence-v1"),refId:text,installationId:text,projectId:text,refDigest:text,
- evidenceLevel:Schema.Literal("observed","claim","assumption","proposal","decision"),
+ evidenceLevel:Schema.Literals(["observed","claim","assumption","proposal","decision"]),
 }
 const recordEvidence = Schema.Struct({
  ...evidenceBase,kind:Schema.Literal("record"),
  target:Schema.Struct({surface,recordType:text,recordId:text,incarnation:text,version:nonnegative,fields:Schema.Array(text),period:Schema.optional(period),projectionDigest:text}),
 })
-const coverageEntry = Schema.Union(
+const coverageEntry = Schema.Union([
  Schema.Struct({status:Schema.Literal("included"),categoryId:text,componentRefs:Schema.Array(text),evidenceRefs:Schema.Array(SfSourceEvidenceInput),scopeNote:Schema.String}),
  Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(SfSourceEvidenceInput)}),
  Schema.Struct({status:Schema.Literal("pending"),categoryId:text,reason:text,questionRef:Schema.optional(text)}),
-)
+])
 const coverageAssessmentBase = {basisId:text,basisVersion:nonnegative,alternativeId:text,alternativeVersion:nonnegative,currency:text,horizon:period,issues:Schema.Array(text),evaluatedSourceRefs:Schema.Array(SfSourceEvidenceInput)}
-const coverageAssessment = Schema.Union(
- Schema.Struct({...coverageAssessmentBase,coverageState:Schema.Literal("complete"),entries:Schema.Array(Schema.Union(
+const coverageAssessment = Schema.Union([
+ Schema.Struct({...coverageAssessmentBase,coverageState:Schema.Literal("complete"),entries:Schema.Array(Schema.Union([
   Schema.Struct({status:Schema.Literal("included"),categoryId:text,componentRefs:Schema.Array(text),evidenceRefs:Schema.Array(SfSourceEvidenceInput),scopeNote:Schema.String}),
   Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(SfSourceEvidenceInput)})
- )),derivedMissingCategoryIds:Schema.Tuple()}),
- Schema.Struct({...coverageAssessmentBase,coverageState:Schema.Literal("pending","unavailable"),entries:Schema.Array(coverageEntry),derivedMissingCategoryIds:Schema.Array(text)})
-)
+ ])),derivedMissingCategoryIds:Schema.Tuple([])}),
+ Schema.Struct({...coverageAssessmentBase,coverageState:Schema.Literals(["pending","unavailable"]),entries:Schema.Array(coverageEntry),derivedMissingCategoryIds:Schema.Array(text)})
+])
 const classification = Schema.Struct({
  schema:Schema.Literal("sf-coverage-classification-v1"),caseRef:SfDecisionCaseRef,basis:SfSourceCostCoverageBasis,source:recordEvidence,
  version:nonnegative,mappings:Schema.Array(Schema.Struct({
@@ -56,7 +56,7 @@ const classification = Schema.Struct({
  })),notApplicableEntries:Schema.optional(Schema.Array(Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(SfSourceEvidenceInput)}))),classificationDigest:digest,
 })
 const sensitivity = Schema.Struct({baselineRef:text,parameterRef:text,parameterUnit:text,resultUnit:text,engineVersion:text,sourceRefs:Schema.Array(SfSourceEvidenceInput)})
-const criterionRequest = Schema.Struct({caseRef:SfDecisionCaseRef,criterionId:text,metricRef:text,operator:Schema.Literal("lte","gte","eq"),value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(SfSourceEvidenceInput),expectedRuleVersion:nonnegative,sensitivity:Schema.optional(sensitivity)})
+const criterionRequest = Schema.Struct({caseRef:SfDecisionCaseRef,criterionId:text,metricRef:text,operator:Schema.Literals(["lte","gte","eq"]),value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(SfSourceEvidenceInput),expectedRuleVersion:nonnegative,sensitivity:Schema.optional(sensitivity)})
 const selectionInput = Schema.Struct({caseRef:SfDecisionCaseRef,baselineAlternativeId:text,alternativeId:text,criteria:Schema.Array(text),expectedVersion:nonnegative})
 const selectionValue = Schema.Struct({
  schema:Schema.Literal("sf-portfolio-selection-v1"),selectionRef:text,caseRef:SfDecisionCaseRef,
@@ -64,21 +64,21 @@ const selectionValue = Schema.Struct({
  comparisonDigest:digest,version,principalRef:text,accessRevision:text,policyVersion:text,createdAt:text,selectionDigest:digest,
 })
 const receipt = Schema.Struct({caseRef:SfDecisionCaseRef,resultRef:Schema.optional(text)})
-const reviewFieldValue = Schema.Union(Schema.Null,Schema.String,Schema.Number,Schema.Boolean)
+const reviewFieldValue = Schema.Union([Schema.Null,Schema.String,Schema.Number,Schema.Boolean])
 const reviewField = Schema.Struct({field:text,before:reviewFieldValue,after:reviewFieldValue,beforeCurrency:Schema.optional(text),afterCurrency:Schema.optional(text)})
 const receiptView = Schema.Struct({
  id:text,idempotencyKey:text,commandDigest:digest,targetIncarnation:text,principalRef:text,surface,version:nonnegative,at:text,
- status:Schema.Literal("applied","awaiting-approval","conflict","failed","cancelled"),resultRef:Schema.optional(text),errors:Schema.Array(text),
+ status:Schema.Literals(["applied","awaiting-approval","conflict","failed","cancelled"]),resultRef:Schema.optional(text),errors:Schema.Array(text),
 })
 const reviewValue = Schema.Struct({reviewDigest:digest,changeId:text,choiceId:text,surface,
  target:Schema.Struct({type:text,id:text,label:Schema.optional(text)}),
- expectedVersion:nonnegative,state:Schema.Literal("planned","applied","awaiting-approval","conflict","failed","cancelled"),fields:Schema.Array(reviewField),receipt:Schema.optional(receiptView)})
+ expectedVersion:nonnegative,state:Schema.Literals(["planned","applied","awaiting-approval","conflict","failed","cancelled"]),fields:Schema.Array(reviewField),receipt:Schema.optional(receiptView)})
 const resultFailure = Schema.Struct({
- status:Schema.Literal("unauthenticated","needs-input","stale","denied","unavailable","conflict","provider-conflict","failed","invalid"),
+ status:Schema.Literals(["unauthenticated","needs-input","stale","denied","unavailable","conflict","provider-conflict","failed","invalid"]),
  reason:Schema.optional(Schema.String),
 })
-const portResult = <A,I,R>(value:Schema.Schema<A,I,R>) => Schema.Union(Schema.Struct({status:Schema.Literal("ok"),value}),resultFailure)
-const workbenchResult = <A,I,R>(value:Schema.Schema<A,I,R>) => Schema.Union(Schema.Struct({status:Schema.Literal("ok"),value,outputRef:Schema.optional(text)}),resultFailure)
+const portResult = <S extends Schema.Top>(value:S) => Schema.Union([Schema.Struct({status:Schema.Literal("ok"),value}),resultFailure])
+const workbenchResult = <S extends Schema.Top>(value:S) => Schema.Union([Schema.Struct({status:Schema.Literal("ok"),value,outputRef:Schema.optional(text)}),resultFailure])
 const choiceOptions = Schema.Struct({
  cases:Schema.Array(Schema.Struct({ref:text,title:text,version:nonnegative})),
  selected:Schema.optional(Schema.Struct({caseRef:SfDecisionCaseRef,title:text,choices:Schema.Array(Schema.Struct({
@@ -105,24 +105,24 @@ const controlsValue = Schema.Struct({
  }))
 })
 const sourceRef = Schema.Struct({surface,type:text,id:text,incarnation:text,version:nonnegative,fields:Schema.Array(text),period,observedAt:text})
-const decisionCondition = Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,scenarioRefs:Schema.Tuple(text,text),source:sourceRef,
+const decisionCondition = Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,scenarioRefs:Schema.Tuple([text,text]),source:sourceRef,
  evidence:recordEvidence,fields:Schema.Array(text),period,criterionId:text,recipientRef:text,destination:text,label:text})
 const decisionCoverage = Schema.Struct({caseRef:SfDecisionCaseRef,source:recordEvidence,basis:SfSourceCostCoverageBasis,entries:Schema.Array(coverageEntry),expectedVersion:nonnegative})
 const prepareChanges = Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,operations:SfSourceInput_sf_change_prepare.fields.operations})
 const decisionReview = Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,changeId:text})
-const decisionRecover = Schema.Union(
+const decisionRecover = Schema.Union([
  Schema.Struct({caseRef:SfDecisionCaseRef,choiceId:text,changeId:text,reviewDigest:digest}),
  Schema.Struct({purpose:Schema.Literal("recover"),caseRef:SfDecisionCaseRef,choiceId:text,changeId:text})
-)
+])
 const caseStamp = Schema.Struct({installationId:text,projectId:text,hostId:text,principalRef:text,policyVersion:text,accessRevision:text})
 const caseListValue = Schema.Struct({cases:Schema.Array(Schema.Struct({caseRef:text,title:text,version:nonnegative}))})
 const caseViewValue = Schema.Struct({projection:SfSourceCaseRead,returnTo:Schema.optional(text)})
-const projectionResult = <A,I,R>(value:Schema.Schema<A,I,R>) => Schema.Union(Schema.Struct({status:Schema.Literal("ok"),context:caseStamp,value}),resultFailure)
+const projectionResult = <S extends Schema.Top>(value:S) => Schema.Union([Schema.Struct({status:Schema.Literal("ok"),context:caseStamp,value}),resultFailure])
 const caseQuery = Schema.Struct({caseRef:text,returnTo:Schema.optional(text)})
 const casesQuery = Schema.Struct({})
 const controlsQuery = Schema.Struct({case:Schema.optional(text),source:Schema.optional(text),scenario:Schema.optional(text),baseline:Schema.optional(text),parameter:Schema.optional(text)})
 const choiceQuery = Schema.Struct({case:Schema.optional(text)})
-const committedReceipt = Schema.Struct({receiptId:text,surface,version:nonnegative,outcome:Schema.Literal("applied","conflict","failed")})
+const committedReceipt = Schema.Struct({receiptId:text,surface,version:nonnegative,outcome:Schema.Literals(["applied","conflict","failed"])})
 
 /** mode=workbench: listed -> encodeCaseRef -> sf_case_read each visible case; catalog workbench */
 export const SfProjectionCases = {operationId:"projection.cases",input:casesQuery,output:projectionResult(caseListValue),method:"GET",pathTemplate:"{mount}/api/ui/projections/cases",effect:"read",responseMode:"json"} as const

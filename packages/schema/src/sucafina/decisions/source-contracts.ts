@@ -39,141 +39,141 @@ export type SfEvidenceRef = Readonly<{
  | Readonly<{kind:"policy";target:Readonly<{packageId:string;version:string;sourceDigest:string;ruleId:string;reviewRef:string;scope:string}>}>
 )
 
-const Input_BusinessEvidenceRef: Schema.Schema<SfEvidenceRef> = Schema.Union(Schema.Struct({
+const Input_BusinessEvidenceRef: Schema.Schema<SfEvidenceRef> = Schema.Union([Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
-  "refId": Schema.String.pipe(Schema.minLength(1)),
-  "installationId": Schema.String.pipe(Schema.minLength(1)),
-  "projectId": Schema.String.pipe(Schema.minLength(1)),
-  "refDigest": Schema.String.pipe(Schema.pattern(new RegExp("^[a-f0-9]{64}$"))),
-  "evidenceLevel": Schema.Literal("observed", "claim", "assumption", "proposal", "decision"),
+  "refId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "installationId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "projectId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "refDigest": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[a-f0-9]{64}$")))),
+  "evidenceLevel": Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
   "kind": Schema.Literal("record"),
   "target": Schema.Struct({
-  "surface": Schema.Literal("dashboard", "planner", "procurement"),
-  "recordType": Schema.String.pipe(Schema.minLength(1)),
-  "recordId": Schema.String.pipe(Schema.minLength(1)),
-  "incarnation": Schema.String.pipe(Schema.minLength(1)),
-  "version": Schema.Int.pipe(Schema.greaterThanOrEqualTo(0)),
-  "fields": Schema.Array(Schema.String.pipe(Schema.minLength(1))),
+  "surface": Schema.Literals(["dashboard", "planner", "procurement"]),
+  "recordType": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "recordId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "incarnation": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "version": Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0))),
+  "fields": Schema.Array(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
   "period": Schema.optional(Schema.Struct({
-  "start": Schema.String.pipe(Schema.pattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$"))),
-  "end": Schema.String.pipe(Schema.pattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$"))),
+  "start": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")))),
+  "end": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")))),
 })),
-  "projectionDigest": Schema.String.pipe(Schema.minLength(1)),
+  "projectionDigest": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
 }),
 }), Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
-  "refId": Schema.String.pipe(Schema.minLength(1)),
-  "installationId": Schema.String.pipe(Schema.minLength(1)),
-  "projectId": Schema.String.pipe(Schema.minLength(1)),
-  "refDigest": Schema.String.pipe(Schema.pattern(new RegExp("^[a-f0-9]{64}$"))),
-  "evidenceLevel": Schema.Literal("observed", "claim", "assumption", "proposal", "decision"),
+  "refId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "installationId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "projectId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "refDigest": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[a-f0-9]{64}$")))),
+  "evidenceLevel": Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
   "kind": Schema.Literal("document"),
   "target": Schema.Struct({
-  "documentId": Schema.String.pipe(Schema.minLength(1)),
-  "incarnation": Schema.String.pipe(Schema.minLength(1)),
-  "revision": Schema.Int.pipe(Schema.greaterThanOrEqualTo(0)),
+  "documentId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "incarnation": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "revision": Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0))),
   "blobDigest": Schema.Struct({
   "algorithm": Schema.Literal("sha256"),
-  "value": Schema.String.pipe(Schema.pattern(new RegExp("^[a-f0-9]{64}$"))),
+  "value": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[a-f0-9]{64}$")))),
 }),
   "segment": Schema.Struct({
-  "start": Schema.Int.pipe(Schema.greaterThanOrEqualTo(0)),
-  "end": Schema.Int.pipe(Schema.greaterThanOrEqualTo(0)),
+  "start": Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0))),
+  "end": Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0))),
   "unit": Schema.Literal("utf16"),
   "textDigest": Schema.Struct({
   "algorithm": Schema.Literal("sha256"),
-  "value": Schema.String.pipe(Schema.pattern(new RegExp("^[a-f0-9]{64}$"))),
+  "value": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[a-f0-9]{64}$")))),
 }),
 }),
-  "ragSourceId": Schema.optional(Schema.String.pipe(Schema.minLength(1))),
-  "ragRevisionId": Schema.optional(Schema.String.pipe(Schema.minLength(1))),
+  "ragSourceId": Schema.optional(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
+  "ragRevisionId": Schema.optional(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
   "ragSourceHash": Schema.optional(Schema.Struct({
   "algorithm": Schema.Literal("blake3"),
-  "value": Schema.String.pipe(Schema.minLength(1)),
+  "value": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
 })),
-  "fieldCandidateId": Schema.optional(Schema.String.pipe(Schema.minLength(1))),
-  "confirmationVersion": Schema.optional(Schema.Int.pipe(Schema.greaterThanOrEqualTo(0))),
+  "fieldCandidateId": Schema.optional(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
+  "confirmationVersion": Schema.optional(Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0)))),
 }),
 }), Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
-  "refId": Schema.String.pipe(Schema.minLength(1)),
-  "installationId": Schema.String.pipe(Schema.minLength(1)),
-  "projectId": Schema.String.pipe(Schema.minLength(1)),
-  "refDigest": Schema.String.pipe(Schema.pattern(new RegExp("^[a-f0-9]{64}$"))),
-  "evidenceLevel": Schema.Literal("observed", "claim", "assumption", "proposal", "decision"),
+  "refId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "installationId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "projectId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "refDigest": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[a-f0-9]{64}$")))),
+  "evidenceLevel": Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
   "kind": Schema.Literal("calculation"),
   "target": Schema.Struct({
-  "calculationId": Schema.String.pipe(Schema.minLength(1)),
-  "runId": Schema.String.pipe(Schema.minLength(1)),
-  "engineVersion": Schema.String.pipe(Schema.minLength(1)),
-  "inputDigest": Schema.String.pipe(Schema.minLength(1)),
-  "resultDigest": Schema.String.pipe(Schema.minLength(1)),
+  "calculationId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "runId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "engineVersion": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "inputDigest": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "resultDigest": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
   "sourceRefs": Schema.Array(Schema.suspend(() => Input_BusinessEvidenceRef)),
   "period": Schema.Struct({
-  "start": Schema.String.pipe(Schema.pattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$"))),
-  "end": Schema.String.pipe(Schema.pattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$"))),
+  "start": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")))),
+  "end": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")))),
 }),
-  "currency": Schema.String.pipe(Schema.pattern(new RegExp("^[A-Z]{3}$"))),
+  "currency": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[A-Z]{3}$")))),
 }),
 }), Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
-  "refId": Schema.String.pipe(Schema.minLength(1)),
-  "installationId": Schema.String.pipe(Schema.minLength(1)),
-  "projectId": Schema.String.pipe(Schema.minLength(1)),
-  "refDigest": Schema.String.pipe(Schema.pattern(new RegExp("^[a-f0-9]{64}$"))),
-  "evidenceLevel": Schema.Literal("observed", "claim", "assumption", "proposal", "decision"),
+  "refId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "installationId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "projectId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "refDigest": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[a-f0-9]{64}$")))),
+  "evidenceLevel": Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
   "kind": Schema.Literal("receipt"),
   "target": Schema.Struct({
-  "surface": Schema.Literal("dashboard", "planner", "procurement"),
-  "receiptId": Schema.String.pipe(Schema.minLength(1)),
-  "idempotencyKey": Schema.String.pipe(Schema.minLength(1)),
-  "targetIncarnation": Schema.String.pipe(Schema.minLength(1)),
-  "commandDigest": Schema.String.pipe(Schema.minLength(1)),
-  "version": Schema.Int.pipe(Schema.greaterThanOrEqualTo(0)),
+  "surface": Schema.Literals(["dashboard", "planner", "procurement"]),
+  "receiptId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "idempotencyKey": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "targetIncarnation": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "commandDigest": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "version": Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0))),
 }),
 }), Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
-  "refId": Schema.String.pipe(Schema.minLength(1)),
-  "installationId": Schema.String.pipe(Schema.minLength(1)),
-  "projectId": Schema.String.pipe(Schema.minLength(1)),
-  "refDigest": Schema.String.pipe(Schema.pattern(new RegExp("^[a-f0-9]{64}$"))),
-  "evidenceLevel": Schema.Literal("observed", "claim", "assumption", "proposal", "decision"),
+  "refId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "installationId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "projectId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "refDigest": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[a-f0-9]{64}$")))),
+  "evidenceLevel": Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
   "kind": Schema.Literal("case-event"),
   "target": Schema.Struct({
-  "caseId": Schema.String.pipe(Schema.minLength(1)),
-  "caseIncarnation": Schema.String.pipe(Schema.minLength(1)),
-  "caseVersion": Schema.Int.pipe(Schema.greaterThanOrEqualTo(0)),
-  "eventId": Schema.String.pipe(Schema.minLength(1)),
-  "outputDigest": Schema.String.pipe(Schema.minLength(1)),
+  "caseId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "caseIncarnation": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "caseVersion": Schema.Int.pipe(Schema.check(Schema.isGreaterThanOrEqualTo(0))),
+  "eventId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "outputDigest": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
   "evidenceRefs": Schema.Array(Schema.suspend(() => Input_BusinessEvidenceRef)),
 }),
 }), Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
-  "refId": Schema.String.pipe(Schema.minLength(1)),
-  "installationId": Schema.String.pipe(Schema.minLength(1)),
-  "projectId": Schema.String.pipe(Schema.minLength(1)),
-  "refDigest": Schema.String.pipe(Schema.pattern(new RegExp("^[a-f0-9]{64}$"))),
-  "evidenceLevel": Schema.Literal("observed", "claim", "assumption", "proposal", "decision"),
+  "refId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "installationId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "projectId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "refDigest": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[a-f0-9]{64}$")))),
+  "evidenceLevel": Schema.Literals(["observed", "claim", "assumption", "proposal", "decision"]),
   "kind": Schema.Literal("policy"),
   "target": Schema.Struct({
-  "packageId": Schema.String.pipe(Schema.minLength(1)),
-  "version": Schema.String.pipe(Schema.minLength(1)),
-  "sourceDigest": Schema.String.pipe(Schema.minLength(1)),
-  "ruleId": Schema.String.pipe(Schema.minLength(1)),
-  "reviewRef": Schema.String.pipe(Schema.minLength(1)),
-  "scope": Schema.String.pipe(Schema.minLength(1)),
+  "packageId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "version": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "sourceDigest": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "ruleId": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "reviewRef": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "scope": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
 }),
-}))
+})])
 
 const Input_ScenarioOperation = Schema.Struct({
-  "kind": Schema.Literal("replace", "defer", "include", "exclude"),
-  "targetRef": Schema.String.pipe(Schema.minLength(1)),
-  "replacementRef": Schema.optional(Schema.String.pipe(Schema.minLength(1))),
+  "kind": Schema.Literals(["replace", "defer", "include", "exclude"]),
+  "targetRef": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "replacementRef": Schema.optional(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
   "amount": Schema.optional(Schema.Number),
-  "currency": Schema.optional(Schema.String.pipe(Schema.pattern(new RegExp("^[A-Z]{3}$")))),
+  "currency": Schema.optional(Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[A-Z]{3}$"))))),
   "period": Schema.optional(Schema.Struct({
-  "start": Schema.String.pipe(Schema.pattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$"))),
-  "end": Schema.String.pipe(Schema.pattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$"))),
+  "start": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")))),
+  "end": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")))),
 })),
 })
 
@@ -185,7 +185,7 @@ const Output_AuthorizedCaseProjection_147 = Schema.Struct({
   "checkedAt": Schema.String,
 })
 
-const Output_BusinessEvidenceRef_9: Schema.Schema<SfEvidenceRef> = Schema.Union(Schema.suspend(() => Output_Shape_10), Schema.suspend(() => Output_Shape_14), Schema.suspend(() => Output_Shape_19), Schema.suspend(() => Output_Shape_21), Schema.suspend(() => Output_Shape_23), Schema.suspend(() => Output_Shape_25))
+const Output_BusinessEvidenceRef_9: Schema.Schema<SfEvidenceRef> = Schema.Union([Schema.suspend(() => Output_Shape_10), Schema.suspend(() => Output_Shape_14), Schema.suspend(() => Output_Shape_19), Schema.suspend(() => Output_Shape_21), Schema.suspend(() => Output_Shape_23), Schema.suspend(() => Output_Shape_25)])
 
 const Output_CaseLedgerEvent_138 = Schema.Struct({
   "id": Schema.String,
@@ -202,7 +202,7 @@ const Output_CaseLedgerEvent_138 = Schema.Struct({
   "outputDigest": Schema.String,
 })
 
-const Output_ChoiceRecord_153 = Schema.Union(Schema.suspend(() => Output_Shape_154), Schema.suspend(() => Output_Shape_156))
+const Output_ChoiceRecord_153 = Schema.Union([Schema.suspend(() => Output_Shape_154), Schema.suspend(() => Output_Shape_156)])
 
 const Output_CommandReceiptView_159 = Schema.Struct({
   "id": Schema.String,
@@ -218,7 +218,7 @@ const Output_CommandReceiptView_159 = Schema.Struct({
   "errors": Schema.Array(Schema.String),
 })
 
-const Output_CostCoverageAssessment_40 = Schema.Union(Schema.suspend(() => Output_Shape_34), Schema.suspend(() => Output_Shape_41))
+const Output_CostCoverageAssessment_40 = Schema.Union([Schema.suspend(() => Output_Shape_34), Schema.suspend(() => Output_Shape_41)])
 
 const Output_CostCoverageBasis_45 = Schema.Struct({
   "id": Schema.String,
@@ -229,16 +229,16 @@ const Output_CostCoverageBasis_45 = Schema.Struct({
   "additionalCategoryIds": Schema.Array(Schema.String),
 })
 
-const Output_CostCoverageEntry_43 = Schema.Union(Schema.suspend(() => Output___type_36), Schema.suspend(() => Output___type_37), Schema.suspend(() => Output___type_44))
+const Output_CostCoverageEntry_43 = Schema.Union([Schema.suspend(() => Output___type_36), Schema.suspend(() => Output___type_37), Schema.suspend(() => Output___type_44)])
 
 const Output_Digest_16 = Schema.Struct({
   "algorithm": Schema.Literal("sha256"),
   "value": Schema.String,
 })
 
-const Output_EvidenceState_33 = Schema.Union(Schema.Literal("confirmed"), Schema.Literal("estimated"), Schema.Literal("hypothetical"), Schema.Literal("absent"))
+const Output_EvidenceState_33 = Schema.Union([Schema.Literal("confirmed"), Schema.Literal("estimated"), Schema.Literal("hypothetical"), Schema.Literal("absent")])
 
-const Output_IntentFrame_46 = Schema.Union(Schema.suspend(() => Output_Shape_47), Schema.suspend(() => Output_Shape_51))
+const Output_IntentFrame_46 = Schema.Union([Schema.suspend(() => Output_Shape_47), Schema.suspend(() => Output_Shape_51)])
 
 const Output_Period_6 = Schema.Struct({
   "start": Schema.String,
@@ -285,7 +285,7 @@ const Output_QuestionProposal_55 = Schema.Struct({
   "expectedCaseVersion": Schema.Number,
 })
 
-const Output_ScenarioComparison_62 = Schema.Union(Schema.suspend(() => Output_Shape_63), Schema.suspend(() => Output_Shape_66))
+const Output_ScenarioComparison_62 = Schema.Union([Schema.suspend(() => Output_Shape_63), Schema.suspend(() => Output_Shape_66)])
 
 const Output_ScenarioOperation_4 = Schema.Struct({
   "kind": Schema.suspend(() => Output_Shape_5),
@@ -302,7 +302,7 @@ const Output_ScenarioRequest_3 = Schema.Struct({
   "assumptions": Schema.Array(Schema.suspend(() => Output___type_7)),
 })
 
-const Output_ScenarioResult_28 = Schema.Union(Schema.suspend(() => Output_Shape_29), Schema.suspend(() => Output_Shape_38))
+const Output_ScenarioResult_28 = Schema.Union([Schema.suspend(() => Output_Shape_29), Schema.suspend(() => Output_Shape_38)])
 
 const Output_Shape_10 = Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
@@ -315,7 +315,7 @@ const Output_Shape_10 = Schema.Struct({
   "target": Schema.suspend(() => Output___type_12),
 })
 
-const Output_Shape_11 = Schema.Union(Schema.Literal("observed"), Schema.Literal("claim"), Schema.Literal("assumption"), Schema.Literal("proposal"), Schema.Literal("decision"))
+const Output_Shape_11 = Schema.Union([Schema.Literal("observed"), Schema.Literal("claim"), Schema.Literal("assumption"), Schema.Literal("proposal"), Schema.Literal("decision")])
 
 const Output_Shape_14 = Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
@@ -328,11 +328,11 @@ const Output_Shape_14 = Schema.Struct({
   "target": Schema.suspend(() => Output___type_15),
 })
 
-const Output_Shape_140 = Schema.Union(Schema.Literal("analysis-accepted"), Schema.Literal("choice-recorded"), Schema.Literal("reconsideration-accepted"))
+const Output_Shape_140 = Schema.Union([Schema.Literal("analysis-accepted"), Schema.Literal("choice-recorded"), Schema.Literal("reconsideration-accepted")])
 
-const Output_Shape_141 = Schema.Union(Schema.Literal("draft"), Schema.Literal("investigating"), Schema.Literal("comparing"), Schema.Literal("chosen"), Schema.Literal("partially-applied"), Schema.Literal("applied"), Schema.Literal("reconsidering"), Schema.Literal("closed"))
+const Output_Shape_141 = Schema.Union([Schema.Literal("draft"), Schema.Literal("investigating"), Schema.Literal("comparing"), Schema.Literal("chosen"), Schema.Literal("partially-applied"), Schema.Literal("applied"), Schema.Literal("reconsidering"), Schema.Literal("closed")])
 
-const Output_Shape_143 = Schema.Union(Schema.suspend(() => Output_Shape_144), Schema.suspend(() => Output_Shape_145))
+const Output_Shape_143 = Schema.Union([Schema.suspend(() => Output_Shape_144), Schema.suspend(() => Output_Shape_145)])
 
 const Output_Shape_144 = Schema.Struct({
   "installationId": Schema.String,
@@ -375,9 +375,9 @@ const Output_Shape_148 = Schema.Struct({
   "receipts": Schema.Array(Schema.suspend(() => Output_CommandReceiptView_159)),
 })
 
-const Output_Shape_150 = Schema.Union(Schema.Literal("confirmed"), Schema.Literal("rejected"), Schema.Literal("open"))
+const Output_Shape_150 = Schema.Union([Schema.Literal("confirmed"), Schema.Literal("rejected"), Schema.Literal("open")])
 
-const Output_Shape_152 = Schema.Union(Schema.Literal("open"), Schema.Literal("answered"))
+const Output_Shape_152 = Schema.Union([Schema.Literal("open"), Schema.Literal("answered")])
 
 const Output_Shape_154 = Schema.Struct({
   "id": Schema.String,
@@ -415,9 +415,9 @@ const Output_Shape_156 = Schema.Struct({
   "costCoverage": Schema.suspend(() => Output_CostCoverageAssessment_40),
 })
 
-const Output_Shape_158 = Schema.Union(Schema.Literal("failed"), Schema.Literal("conflict"), Schema.Literal("applied"), Schema.Literal("planned"), Schema.Literal("awaiting-approval"), Schema.Literal("cancelled"))
+const Output_Shape_158 = Schema.Union([Schema.Literal("failed"), Schema.Literal("conflict"), Schema.Literal("applied"), Schema.Literal("planned"), Schema.Literal("awaiting-approval"), Schema.Literal("cancelled")])
 
-const Output_Shape_160 = Schema.Union(Schema.Literal("failed"), Schema.Literal("conflict"), Schema.Literal("applied"), Schema.Literal("awaiting-approval"), Schema.Literal("cancelled"))
+const Output_Shape_160 = Schema.Union([Schema.Literal("failed"), Schema.Literal("conflict"), Schema.Literal("applied"), Schema.Literal("awaiting-approval"), Schema.Literal("cancelled")])
 
 const Output_Shape_19 = Schema.Struct({
   "schema": Schema.Literal("sf-evidence-v1"),
@@ -463,7 +463,7 @@ const Output_Shape_25 = Schema.Struct({
   "target": Schema.suspend(() => Output___type_26),
 })
 
-const Output_Shape_27 = Schema.Union(Schema.Literal("confirmed"), Schema.Literal("estimated"), Schema.Literal("hypothetical"), Schema.Literal("absent"))
+const Output_Shape_27 = Schema.Union([Schema.Literal("confirmed"), Schema.Literal("estimated"), Schema.Literal("hypothetical"), Schema.Literal("absent")])
 
 const Output_Shape_29 = Schema.Struct({
   "id": Schema.String,
@@ -480,7 +480,7 @@ const Output_Shape_29 = Schema.Struct({
   "total": Schema.Number,
 })
 
-const Output_Shape_31 = Schema.Union(Schema.Null, Schema.Number)
+const Output_Shape_31 = Schema.Union([Schema.Null, Schema.Number])
 
 const Output_Shape_34 = Schema.Struct({
   "basisId": Schema.String,
@@ -496,7 +496,7 @@ const Output_Shape_34 = Schema.Struct({
   "derivedMissingCategoryIds": Schema.Array(Schema.Never),
 })
 
-const Output_Shape_35 = Schema.Union(Schema.suspend(() => Output___type_36), Schema.suspend(() => Output___type_37))
+const Output_Shape_35 = Schema.Union([Schema.suspend(() => Output___type_36), Schema.suspend(() => Output___type_37)])
 
 const Output_Shape_38 = Schema.Struct({
   "id": Schema.String,
@@ -513,7 +513,7 @@ const Output_Shape_38 = Schema.Struct({
   "total": Schema.Null,
 })
 
-const Output_Shape_39 = Schema.Union(Schema.Literal("unavailable"), Schema.Literal("conditioned"), Schema.Literal("incompatible"))
+const Output_Shape_39 = Schema.Union([Schema.Literal("unavailable"), Schema.Literal("conditioned"), Schema.Literal("incompatible")])
 
 const Output_Shape_41 = Schema.Struct({
   "basisId": Schema.String,
@@ -529,7 +529,7 @@ const Output_Shape_41 = Schema.Struct({
   "derivedMissingCategoryIds": Schema.Array(Schema.String),
 })
 
-const Output_Shape_42 = Schema.Union(Schema.Literal("pending"), Schema.Literal("unavailable"))
+const Output_Shape_42 = Schema.Union([Schema.Literal("pending"), Schema.Literal("unavailable")])
 
 const Output_Shape_47 = Schema.Struct({
   "objective": Schema.String,
@@ -543,7 +543,7 @@ const Output_Shape_47 = Schema.Struct({
   "importPreviewRef": Schema.optional(Schema.Never),
 })
 
-const Output_Shape_5 = Schema.Union(Schema.Literal("replace"), Schema.Literal("defer"), Schema.Literal("include"), Schema.Literal("exclude"))
+const Output_Shape_5 = Schema.Union([Schema.Literal("replace"), Schema.Literal("defer"), Schema.Literal("include"), Schema.Literal("exclude")])
 
 const Output_Shape_51 = Schema.Struct({
   "objective": Schema.String,
@@ -568,7 +568,7 @@ const Output_Shape_63 = Schema.Struct({
   "completeDifference": Schema.Number,
 })
 
-const Output_Shape_65 = Schema.Union(Schema.Literal("satisfied"), Schema.Literal("failed"), Schema.Literal("unknown"))
+const Output_Shape_65 = Schema.Union([Schema.Literal("satisfied"), Schema.Literal("failed"), Schema.Literal("unknown")])
 
 const Output_Shape_66 = Schema.Struct({
   "baselineResultRef": Schema.String,
@@ -581,7 +581,7 @@ const Output_Shape_66 = Schema.Struct({
   "completeDifference": Schema.Null,
 })
 
-const Output_Shape_8 = Schema.Union(Schema.Null, Schema.String, Schema.Number, Schema.Literal(false), Schema.Literal(true))
+const Output_Shape_8 = Schema.Union([Schema.Null, Schema.String, Schema.Number, Schema.Literal(false), Schema.Literal(true)])
 
 const Output_SourceRef_32 = Schema.Struct({
   "surface": Schema.suspend(() => Output_Surface_13),
@@ -594,7 +594,7 @@ const Output_SourceRef_32 = Schema.Struct({
   "observedAt": Schema.String,
 })
 
-const Output_Surface_13 = Schema.Union(Schema.Literal("dashboard"), Schema.Literal("planner"), Schema.Literal("procurement"))
+const Output_Surface_13 = Schema.Union([Schema.Literal("dashboard"), Schema.Literal("planner"), Schema.Literal("procurement")])
 
 const Output_UnresolvedCondition_50 = Schema.Struct({
   "id": Schema.String,
@@ -770,46 +770,46 @@ const Output___type_7 = Schema.Struct({
 })
 
 export const SfSourceInput_sf_case_draft = Schema.Struct({
-  "objective": Schema.String.pipe(Schema.minLength(1)),
+  "objective": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
   "horizon": Schema.Struct({
-  "start": Schema.String.pipe(Schema.pattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$"))),
-  "end": Schema.String.pipe(Schema.pattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$"))),
+  "start": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")))),
+  "end": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^\\d{4}-\\d{2}-\\d{2}$")))),
 }),
-  "currency": Schema.String.pipe(Schema.pattern(new RegExp("^[A-Z]{3}$"))),
-  "criteria": Schema.Array(Schema.String.pipe(Schema.minLength(1))),
+  "currency": Schema.String.pipe(Schema.check(Schema.isPattern(new RegExp("^[A-Z]{3}$")))),
+  "criteria": Schema.Array(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
   "sourceRefs": Schema.Array(Schema.suspend(() => Input_BusinessEvidenceRef)),
 })
 
 export const SfSourceInput_sf_change_prepare = Schema.Struct({
-  "caseRef": Schema.String.pipe(Schema.minLength(1)),
-  "choiceRef": Schema.String.pipe(Schema.minLength(1)),
+  "caseRef": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "choiceRef": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
   "operations": Schema.Array(Schema.suspend(() => Input_ScenarioOperation)),
 })
 
 export const SfSourceInput_sf_question_prepare = Schema.Struct({
-  "caseRef": Schema.String.pipe(Schema.minLength(1)),
+  "caseRef": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
   "question": Schema.Struct({
-  "text": Schema.String.pipe(Schema.minLength(1)),
-  "criterionRef": Schema.optional(Schema.String.pipe(Schema.minLength(1))),
+  "text": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "criterionRef": Schema.optional(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
 }),
   "sourceRefs": Schema.Array(Schema.suspend(() => Input_BusinessEvidenceRef)),
-  "recipientRef": Schema.optional(Schema.String.pipe(Schema.minLength(1))),
+  "recipientRef": Schema.optional(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
 })
 
 export const SfSourceInput_sf_scenario_simulate = Schema.Struct({
-  "baseRef": Schema.String.pipe(Schema.minLength(1)),
+  "baseRef": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
   "operations": Schema.Array(Schema.suspend(() => Input_ScenarioOperation)),
   "assumptions": Schema.Array(Schema.Struct({
-  "id": Schema.String.pipe(Schema.minLength(1)),
-  "value": Schema.Union(Schema.String, Schema.Number, Schema.Boolean, Schema.Null),
+  "id": Schema.String.pipe(Schema.check(Schema.isMinLength(1))),
+  "value": Schema.Union([Schema.String, Schema.Number, Schema.Boolean, Schema.Null]),
   "evidenceRefs": Schema.Array(Schema.suspend(() => Input_BusinessEvidenceRef)),
-  "state": Schema.Literal("confirmed", "estimated", "hypothetical", "absent"),
+  "state": Schema.Literals(["confirmed", "estimated", "hypothetical", "absent"]),
 })),
 })
 
 export const SfSourceInput_sf_scenario_compare = Schema.Struct({
-  "scenarioRefs": Schema.Array(Schema.String.pipe(Schema.minLength(1))),
-  "criteria": Schema.Array(Schema.String.pipe(Schema.minLength(1))),
+  "scenarioRefs": Schema.Array(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
+  "criteria": Schema.Array(Schema.String.pipe(Schema.check(Schema.isMinLength(1)))),
 })
 
 export const SfSourceCaseRead = Output_AuthorizedCaseProjection_147
@@ -836,7 +836,7 @@ const Output_DomainProjection_58 = Schema.Struct({
   "missing": Schema.Array(Schema.suspend(() => Output___type_88)),
 })
 
-const Output_PortfolioCombination_78 = Schema.Union(Schema.suspend(() => Output_Shape_79), Schema.suspend(() => Output_Shape_81), Schema.suspend(() => Output_Shape_82), Schema.suspend(() => Output_Shape_83))
+const Output_PortfolioCombination_78 = Schema.Union([Schema.suspend(() => Output_Shape_79), Schema.suspend(() => Output_Shape_81), Schema.suspend(() => Output_Shape_82), Schema.suspend(() => Output_Shape_83)])
 
 const Output_PortfolioResult_77 = Schema.Struct({
   "combinations": Schema.Array(Schema.suspend(() => Output_PortfolioCombination_78)),
@@ -886,11 +886,11 @@ const Output_SensitivityResult_67 = Schema.Struct({
   "evidenceRefs": Schema.Array(Schema.suspend(() => Output_BusinessEvidenceRef_9)),
 })
 
-const Output_Shape_60 = Schema.Union(Schema.suspend(() => Output___type_61), Schema.suspend(() => Output___type_76))
+const Output_Shape_60 = Schema.Union([Schema.suspend(() => Output___type_61), Schema.suspend(() => Output___type_76)])
 
-const Output_Shape_70 = Schema.Union(Schema.suspend(() => Output___type_71), Schema.suspend(() => Output___type_72), Schema.suspend(() => Output___type_74))
+const Output_Shape_70 = Schema.Union([Schema.suspend(() => Output___type_71), Schema.suspend(() => Output___type_72), Schema.suspend(() => Output___type_74)])
 
-const Output_Shape_75 = Schema.Union(Schema.Literal("complete"), Schema.Literal("unavailable"), Schema.Literal("conditioned"), Schema.Literal("incompatible"))
+const Output_Shape_75 = Schema.Union([Schema.Literal("complete"), Schema.Literal("unavailable"), Schema.Literal("conditioned"), Schema.Literal("incompatible")])
 
 const Output_Shape_79 = Schema.Struct({
   "analysis": Schema.optional(Schema.suspend(() => Output___type_80)),
@@ -940,11 +940,11 @@ const Output_Shape_83 = Schema.Struct({
   "comparisonStatus": Schema.suspend(() => Output_Shape_75),
 })
 
-const Output_Shape_86 = Schema.Union(Schema.Literal("record"), Schema.Literal("month"), Schema.Literal("year"), Schema.Literal("aggregate"))
+const Output_Shape_86 = Schema.Union([Schema.Literal("record"), Schema.Literal("month"), Schema.Literal("year"), Schema.Literal("aggregate")])
 
-const Output_Shape_87 = Schema.Union(Schema.Null, Schema.suspend(() => Output_Shape_10), Schema.suspend(() => Output_Shape_14), Schema.suspend(() => Output_Shape_19), Schema.suspend(() => Output_Shape_21), Schema.suspend(() => Output_Shape_23), Schema.suspend(() => Output_Shape_25))
+const Output_Shape_87 = Schema.Union([Schema.Null, Schema.suspend(() => Output_Shape_10), Schema.suspend(() => Output_Shape_14), Schema.suspend(() => Output_Shape_19), Schema.suspend(() => Output_Shape_21), Schema.suspend(() => Output_Shape_23), Schema.suspend(() => Output_Shape_25)])
 
-const Output_Shape_89 = Schema.Union(Schema.Literal("unavailable"), Schema.Literal("not-applicable"), Schema.Literal("missing"), Schema.Literal("restricted"), Schema.Literal("incompatible-currency"), Schema.Literal("missing-fx"), Schema.Literal("missing-rate"), Schema.Literal("unconfirmed"))
+const Output_Shape_89 = Schema.Union([Schema.Literal("unavailable"), Schema.Literal("not-applicable"), Schema.Literal("missing"), Schema.Literal("restricted"), Schema.Literal("incompatible-currency"), Schema.Literal("missing-fx"), Schema.Literal("missing-rate"), Schema.Literal("unconfirmed")])
 
 const Output___type_61 = Schema.Struct({
   "kind": Schema.Literal("scenario"),
