@@ -1,0 +1,62 @@
+diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts
+index e54f5541b3fb64c8b9412c1c4a18487938fd063b..9f2edb98f220c741e9b5cbb9c80b7ebf916867cc 100644
+--- a/modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts
++++ b/modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts
+@@ -76,6 +76,32 @@ describe("A07 closed schema / source equivalence", () => {
+     expect(accepts(SfReviewsReviewSource.output, { links: [{ label: "source", url: "/dashboard", auth: "token" }] })).toBe(false)
+   })
+ 
++  test("review-source JSON closes nested links and both outer envelopes", () => {
++    const link = { label: "source", url: "/dashboard?page=IT" }
++    expect(accepts(SfReviewsReviewSource.output, {
++      links: [link, { label: "secondary", url: "/dashboard?page=Finance" }],
++    })).toBe(true)
++    expect(accepts(SfReviewsReviewSource.output, {
++      links: [{ ...link, auth: "token" }],
++    })).toBe(false)
++    expect(accepts(SfReviewsReviewSource.output, {
++      links: [{ ...link, headers: { Authorization: "token" } }],
++    })).toBe(false)
++    expect(accepts(SfReviewsReviewSource.output, {
++      links: [link], principalRef: "someone-else",
++    })).toBe(false)
++    expect(accepts(SfReviewsReviewSource.output, { status: "unavailable" })).toBe(true)
++    expect(accepts(SfReviewsReviewSource.output, {
++      status: "denied", reason: "source-outside-preserved-review",
++    })).toBe(true)
++    expect(accepts(SfReviewsReviewSource.output, {
++      status: "unavailable", auth: "token",
++    })).toBe(false)
++    expect(accepts(SfReviewsReviewSource.output, {
++      status: "ok", value: { links: [link] },
++    })).toBe(false)
++  })
++
+   test("Office form selection remains format-specific and never decodes HTML/bytes", () => {
+     const input = { year: "2026", topic: ["Executive Summary"], title: "Quarterly" }
+     expect(accepts(SfReviewsExportDocx.input, input)).toBe(true)
+diff --git a/packages/schema/src/sucafina/reviews.ts b/packages/schema/src/sucafina/reviews.ts
+index d1918f40360e8ec86289e6fcb90f7901c4b280ee..0ec7bf14691c82c179c9291c167616d84b6c39bb 100644
+--- a/packages/schema/src/sucafina/reviews.ts
++++ b/packages/schema/src/sucafina/reviews.ts
+@@ -177,10 +177,16 @@ export const SfReviewsExportPptx = {
+ export const SfReviewsReviewSource = {
+   operationId: "reviews.review-source" as const,
+   input: Schema.Struct({ reviewRef: Text, referenceId: Text }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+-  // The installed producer returns {links}, not a synthetic PortResult.ok.
+-  output: Schema.Union([Schema.Struct({
+-    links: Schema.Array(Schema.Struct({ label: Text, url: Text })),
+-  }), Error]),
++  // The producer returns {links} or a real status envelope, never a
++  // synthetic PortResult.ok. Close each link before decoding can strip an
++  // unexpected authority field; also close the outer/status envelopes.
++  output: Schema.Union([
++    Schema.Struct({
++      links: Schema.Array(Schema.Struct({ label: Text, url: Text })
++        .annotate({ parseOptions: { onExcessProperty: "error" } })),
++    }).annotate({ parseOptions: { onExcessProperty: "error" } }),
++    Error.annotate({ parseOptions: { onExcessProperty: "error" } }),
++  ]),
+ }
+ export const SfReviewsReviewUpdate = {
+   operationId: "reviews.review-update" as const,

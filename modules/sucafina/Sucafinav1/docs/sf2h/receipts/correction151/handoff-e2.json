@@ -1,0 +1,163 @@
+{
+  "schema": "sf2h.correction151.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 151,
+  "order": "A07",
+  "branch": "sf-ux-a07",
+  "pr": 141,
+  "epoch": "ux-native-a07-e2-browser151",
+  "actor": "ChatGPT via GitHub MCP",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction151/ACK-e2.json",
+    "sha": "716cb7ae7b6af48e8384b57bc60f4f14f8f5c242",
+    "tree": "45d8d61da9a5f539337c910672cafb7b8fcb3514"
+  },
+  "code": {
+    "commit": "163915abef06a60da127d05b61fc6e03653fee9d",
+    "tree": "503bd36204959d69a8e83cd378c699714d9a789f",
+    "parent": "716cb7ae7b6af48e8384b57bc60f4f14f8f5c242",
+    "state": "ARTIFACT_READY_NOT_CONSUMED",
+    "files": [
+      {
+        "path": "packages/schema/src/sucafina/reviews.ts",
+        "sourceBefore": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+        "sourceAfter": "0ec7bf14691c82c179c9291c167616d84b6c39bb",
+        "consumerBefore": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+        "consumerPlannedAfter": "0ec7bf14691c82c179c9291c167616d84b6c39bb"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts",
+        "sourceBefore": "e54f5541b3fb64c8b9412c1c4a18487938fd063b",
+        "sourceAfter": "9f2edb98f220c741e9b5cbb9c80b7ebf916867cc",
+        "consumerBefore": "e54f5541b3fb64c8b9412c1c4a18487938fd063b",
+        "consumerPlannedAfter": "9f2edb98f220c741e9b5cbb9c80b7ebf916867cc"
+      }
+    ]
+  },
+  "consumer_132": {
+    "pr": 65,
+    "branch": "sf2-stack",
+    "observed_head": "8094e599e3d18609e269548d24619a3246fbc735",
+    "observed_tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+    "consumer_state": "PREIMAGE_ONLY_NOT_APPLIED",
+    "application_note": "For these exact two paths, current132 preimage equals pre-correction blob. Planned postimage equals A07 authored blob; do not claim consumer integration until132 commits/readbacks.",
+    "patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction151/A07-151-e2.patch",
+      "format": "git-unified-diff",
+      "source_commit": "163915abef06a60da127d05b61fc6e03653fee9d",
+      "paths": [
+        "packages/schema/src/sucafina/reviews.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts"
+      ],
+      "applicability": "Exact consumer preimage matched at observed_head; recheck live SHA/CAS before patch."
+    },
+    "instructions": [
+      "132 alone applies ONLY these two changed source/test paths to sf2-stack; preserve all other current user/writer changes and prior integration. Do not merge sf-ux-a07 whole ancestry.",
+      "Re-read current132 head and exact path blob preimages before applying; if either changed, reconcile the narrow causal hunks with the newer consumer content rather than overwriting.",
+      "After successful select-copy and CAS/force=false update of sf2-stack, read back final consumer blobs and record consumer ACK. A PR comment does not constitute consumer ACK.",
+      "Then request compiler149/PR107 targeted schema/client/apps-cli checks and guards, and dispatcher150/PR106 hosted A07 reviews.test.ts on a new causally changed integrated W snapshot. No epic or duplicate unchanged-run dispatch."
+    ]
+  },
+  "finding": {
+    "origin_pr": 141,
+    "comment_id": 6901001708,
+    "run": 43758731378,
+    "job": 132948475697,
+    "attempt": 1,
+    "input_W": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+    "input_tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7",
+    "test": "modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts:75-76",
+    "cause": "Nested Schema.Struct for links[] accepted extra authority `auth` due to missing effective strictness in decoded output.",
+    "correction": "Nested link Schema.Struct, outer {links} Struct and status Error branch each annotated onExcessProperty:error in actual SfReviewsReviewSource.output schema.",
+    "original_assertion": "PRESERVED_UNCHANGED",
+    "new_assertions": 8,
+    "new_test": "review-source JSON closes nested links and both outer envelopes",
+    "verified_finding_state": "FIX_AUTHORED_RECHECK_PENDING",
+    "status_503_caveat": "Title mentions 503; CI failure is nested auth assertion, not 503 behavior evidence."
+  },
+  "producer_compatibility": {
+    "source": "apps/cli/src/sucafina-product/extended-http.ts",
+    "blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+    "existing_wire": "{links:[{label,url}]} or {status:<real status>,reason?:string}; review-source is not {status:'ok',value:{links}}",
+    "status_literals": [
+      "needs-input",
+      "stale",
+      "denied",
+      "unavailable",
+      "conflict",
+      "provider-conflict",
+      "failed",
+      "invalid"
+    ],
+    "dashboard_pinned_blob": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+    "catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host_signatures_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "client_unchanged": {
+      "path": "packages/client/src/sucafina/reviews.ts",
+      "blob": "44e81eed03b55299bf19697a45b8e8132b047c4d"
+    },
+    "host_projection_unchanged": {
+      "path": "apps/cli/src/sucafina-product/native-ui/reviews.ts",
+      "blob": "920ea5f414dfc87c939cbc12cff88d28481bf95a"
+    }
+  },
+  "criteria": {
+    "A07-AC01": "Producer link label/url unchanged; error reason optional and actual status literal union retained; no runtime approval claimed.",
+    "A07-AC02": "Nested auth/headers, outer principalRef, failure auth and fabricated status:ok rejected by new regressions; no generic command, permission grant or snapshot added.",
+    "A07-AC03": "Existing operation-key/current-authority/expected-version behavior left unchanged; no installed/same-C requalification yet.",
+    "WP07": [
+      "WP07.T01",
+      "WP07.T02",
+      "WP07.T03",
+      "WP07.T04"
+    ],
+    "criteria_preserved": "Original 86 WP07 criteria and all five canonical axiom families inherited unchanged; no claims of complete UX/Office export qualified."
+  },
+  "validation": {
+    "prior_hosted": {
+      "run": 43758731378,
+      "job": 132948475697,
+      "results": {
+        "pass": 48,
+        "fail": 7,
+        "errors": 2,
+        "expects": 338
+      },
+      "A07": "FAIL_NESTED_AUTH"
+    },
+    "after_code": {
+      "local_test": "NOT_RUN_PROHIBITED",
+      "local_typecheck": "NOT_RUN_PROHIBITED",
+      "parser": "NOT_RUN_PROHIBITED",
+      "guard": "NOT_RUN_BY_AUTHOR",
+      "hosted_A07": "NOT_RUN_NEW_CODE",
+      "compiler149": "REQUEST_PENDING",
+      "CI150": "REQUEST_PENDING",
+      "SDK": "NOT_RUN_BY_AUTHOR",
+      "integrated": "NOT_CONSUMED",
+      "installed_auth": "NOT_PROVEN"
+    },
+    "next_checks": [
+      "150 (PR106): after132 consumer ACK, only targeted modules/sucafina/Sucafinav1/test/native-ui-contract/reviews.test.ts on freshly composed W/new snapshot; verify original assertion line76 and new 8 expectations.",
+      "149 (PR107): on new composed material, targeted packages/schema, packages/client, apps/cli typecheck/guard and SDK assessment/generation only when required by actual public wiring; avoid unchanged C64.",
+      "Do not repeat prior broad failed W, do not dispatch epic/full8 or claim 503 behavior fixed from unrelated assertion."
+    ]
+  },
+  "protected": "No shared wiring, package exports, generated, producer, foreign test, engine, deploy, Azure or Goal changes.",
+  "release": {
+    "status": "ARTIFACT_READY",
+    "GLOBAL_RELEASE": false,
+    "GOAL": "PAUSED",
+    "branch_merged": false,
+    "release_claim": false,
+    "remaining": [
+      "132 consumer commit/ACK",
+      "149 targeted checks/guards and SDK assessment",
+      "150 hosted causal recheck",
+      "original same-C/native qualification"
+    ]
+  }
+}
