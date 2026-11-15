@@ -1,4 +1,4 @@
-import { For, Show, createSignal, createUniqueId } from "solid-js"
+import { For, Show, createEffect, createSignal, createUniqueId } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
 import { SF_S05_COPY } from "@/i18n/orchestra-chapters/sf-s05"
@@ -41,6 +41,10 @@ function mayDisplay(state: SfUiState) {
 
 function mayEdit(state: SfUiState) {
   return state === "ready" || state === "empty"
+}
+
+function revoked(state: SfUiState) {
+  return state === "denied" || state === "session-expired"
 }
 
 const stateCopy: Partial<Record<SfUiState, SfSharedCopyKey>> = {
@@ -91,6 +95,12 @@ export function SfRelations(props: SfRelationsProps) {
   })
   const [createFence, setCreateFence] = createSignal<{ sourceRef: string; targetRef: string; kind: string }>()
   const [removeFences, setRemoveFences] = createSignal<readonly Readonly<{ ref: string; version: string | number }>[]>([])
+  createEffect(() => {
+    if (!revoked(props.state)) return
+    setSelection({ sourceRef: props.sourceRef, query: "", targetRef: "", kind: "" })
+    setCreateFence(undefined)
+    setRemoveFences([])
+  })
   const selectedTarget = () => selection.sourceRef === props.sourceRef
     ? props.candidates.find((target) => target.ref === selection.targetRef)
     : undefined
@@ -316,7 +326,22 @@ export function SfQuestion(props: SfQuestionProps) {
   const copy = useCopy()
   const uid = createUniqueId()
   const [answerFence, setAnswerFence] = createSignal<{ questionRef: string; answerVersion: string | number | undefined }>()
+  const [answerHasText, setAnswerHasText] = createSignal(false)
   let answerInput: HTMLTextAreaElement | undefined
+  // Answer text is never copied into a second application store. Purge the
+  // native input on owner/source switch or actual revocation, not on timeout.
+  createEffect(() => {
+    void props.questionRef
+    void props.sourceRef
+    if (answerInput) answerInput.value = ""
+    setAnswerHasText(false)
+  })
+  createEffect(() => {
+    if (!revoked(props.state)) return
+    if (answerInput) answerInput.value = ""
+    setAnswerHasText(false)
+    setAnswerFence(undefined)
+  })
   const recipients = () => props.recipientOptions.filter((option) => option.available)
   const selected = () => recipients().some((option) => option.ref === props.question.recipientRef)
   const editableQuestion = () => mayEdit(props.state) && !props.answer
@@ -332,6 +357,7 @@ export function SfQuestion(props: SfQuestionProps) {
     const text = answerInput?.value
     if (!canAnswer() || !text?.trim() || !props.questionRef) return
     setAnswerFence({ questionRef: props.questionRef, answerVersion: props.answer?.version })
+    setAnswerHasText(false)
     props.onAnswer({ questionRef: props.questionRef, text })
   }
   return (
@@ -397,9 +423,9 @@ export function SfQuestion(props: SfQuestionProps) {
             <label class="sf-collab-field" for={uid + "-answer"}>
               <span>{copy.key("sf.s05.question.answer")}</span>
               <textarea id={uid + "-answer"} rows={3} ref={answerInput}
-                disabled={!canAnswer()} />
+                disabled={!canAnswer()} onInput={(event) => setAnswerHasText(event.currentTarget.value.trim().length > 0)} />
             </label>
-            <button type="submit" class="mx-btn primary" disabled={!canAnswer()}>
+            <button type="submit" class="mx-btn primary" disabled={!canAnswer() || !answerHasText()}>
               {copy.key("sf.s05.question.answerSubmit")}
             </button>
           </form>
