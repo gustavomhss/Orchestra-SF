@@ -21,7 +21,7 @@ type Version = Page["data"]["versions"][number]
 
 const key = (value: keyof typeof SF_U06_COPY | "sf.common.empty" | "sf.common.loading" |
   "sf.common.unavailable" | "sf.common.noAccess" | "sf.common.invalidLink" |
-  "sf.common.stale" | "sf.common.loginAgain" | "sf.common.partial" |
+  "sf.common.stale" | "sf.common.loginAgain" | "sf.common.partial" | "sf.common.removed" |
   "sf.common.observedZero"): SfCopyKey => value as SfCopyKey
 const message = (value: keyof typeof SF_U06_COPY, params?: Record<string, string | number>): SfMessage =>
   ({ key: key(value), params })
@@ -116,6 +116,13 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
       }
       const body = result.body
       if (body.status === "ok") {
+        // Never display the producer's default as a different explicitly
+        // requested fiscal plan; a missing ref is a removed/not-found state.
+        if (version && (body.value.data.selectedVersion?.id !== version ||
+          (year !== undefined && body.value.data.selectedVersion?.year !== year))) {
+          setView({ state: "not-found", page: undefined, selectedMonth: null, request })
+          return
+        }
         setView({
           state: body.value.data.versions.length ? "ready" : "empty",
           page: body.value,
@@ -141,13 +148,19 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
   const open = (destination: "overview" | "versions" | "compare" | "import", options?: { year?: number; version?: string; filter?: string }) =>
     navigate(plannerHref(props.route, destination, options))
   const versionOptions = () => page()?.data.versions.filter((version) => year() === undefined || version.year === year()) ?? []
-  const canCompare = () => !!owner.ready()?.context.destinations.find((item) => item.capabilityId === "CAP23" && item.canRead)
+  const canCompare = () => {
+    const ready = owner.ready()
+    const dest = ready?.context.destinations.find((item) => item.capabilityId === "CAP23")
+    const read = ready?.context.availability.find((item) => item.family === "planner" && item.resource === "CAP23")
+      ?.operations.find((item) => item.operationId === "domain.page.CAP23")
+    return !!dest?.canRead && read?.state === "ready"
+  }
   const importReady = () => {
     const ready = owner.ready()
-    if (!ready || !page()) return false
+    if (!ready || !page() || view.state !== "ready") return false
     const dest = ready.context.destinations.find((item) => item.capabilityId === "CAP17")
     const resource = ready.context.availability.find((item) => item.family === "planner" && item.resource === "CAP17")
-    return !!dest?.allowedActionIds.includes("import-workbook") &&
+    return !!dest?.canRead && !!dest.allowedActionIds.includes("import-workbook") &&
       !!page()?.allowedActionIds.includes("import-workbook") &&
       resource?.operations.some((item) => item.operationId === "domain.command.CAP17.import-workbook" && item.state === "ready") === true
   }
@@ -155,6 +168,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
     switch (view.state) {
       case "loading": return key("sf.common.loading")
       case "empty": return key("sf.u06.noVersion")
+      case "not-found": return key("sf.common.removed")
       case "denied": return key("sf.common.noAccess")
       case "session-expired": return key("sf.common.loginAgain")
       case "invalid": return key("sf.common.invalidLink")
@@ -242,6 +256,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
         state={view.state}
         messageKey={stateMessage()}
         onRetryRead={() => setView("request", (value) => value + 1)}
+        onBack={() => open("versions", { year: props.route.query.year })}
       >
         <Show when={page()}>
           {(loaded) => (
@@ -335,7 +350,7 @@ export function SfPlannerOverviewView(props: SfSurfaceProps<"CAP17">) {
                           {(version) => <option value={version.id}>{version.name}</option>}
                         </For>
                       </select>
-                      <button class="mx-btn" type="button" onClick={() => open("compare", { year: year() })}>
+                      <button class="mx-btn" type="button" disabled={!canCompare()} onClick={() => open("compare", { year: year() })}>
                         {copy.t(key("sf.u06.compareBudgets"))}
                       </button>
                     </div>

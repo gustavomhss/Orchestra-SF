@@ -19,7 +19,7 @@ type Summary = NonNullable<OverviewPage["data"]["summary"]>
 const key = (value: keyof typeof SF_U46_COPY | keyof typeof SF_U06_COPY |
   "sf.common.loading" | "sf.common.empty" | "sf.common.unavailable" |
   "sf.common.noAccess" | "sf.common.loginAgain" | "sf.common.invalidLink" |
-  "sf.common.partial" | "sf.common.stale"): SfCopyKey => value as SfCopyKey
+  "sf.common.partial" | "sf.common.stale" | "sf.common.filterEmpty" | "sf.common.removed"): SfCopyKey => value as SfCopyKey
 const data = (text: string) => ({ kind: "data" as const, text })
 const months = Array.from({ length: 12 }, (_, index) => String(index + 1))
 
@@ -108,7 +108,8 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
     ]).then(([first, second]) => {
       if (abort.signal.aborted || generation !== model.owner.generation()) return
       if (first.kind !== "response" || second.kind !== "response") {
-        setComparison("state", "unavailable")
+        setComparison("state", first.kind !== "response" && first.reason === "outcome-unknown" ||
+          second.kind !== "response" && second.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable")
         return
       }
       if (first.body.status !== "ok" || second.body.status !== "ok") {
@@ -147,6 +148,9 @@ export function SfPlannerCompareView(props: SfSurfaceProps<"CAP23">) {
     switch (comparison.state) {
       case "loading": return key("sf.common.loading")
       case "empty": return key("sf.common.empty")
+      case "partial": return key("sf.common.partial")
+      case "filtered-empty": return key("sf.common.filterEmpty")
+      case "not-found": return key("sf.common.removed")
       case "denied": return key("sf.common.noAccess")
       case "session-expired": return key("sf.common.loginAgain")
       case "invalid": return key("sf.common.invalidLink")

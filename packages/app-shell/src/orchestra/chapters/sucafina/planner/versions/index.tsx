@@ -43,7 +43,7 @@ const key = (value: keyof typeof SF_U46_COPY | "sf.common.loading" | "sf.common.
   "sf.common.stale" | "sf.common.loginAgain" | "sf.common.partial" |
   "sf.common.operationUnknown" | "sf.common.conflict" | "sf.common.saved" |
   "sf.common.review" | "sf.common.currentSource" | "sf.common.returnToList" |
-  "sf.common.pending" | "sf.common.failed" | "sf.common.filterEmpty"): SfCopyKey => value as SfCopyKey
+  "sf.common.pending" | "sf.common.failed" | "sf.common.filterEmpty" | "sf.common.removed"): SfCopyKey => value as SfCopyKey
 const msg = (value: keyof typeof SF_U46_COPY, params?: Record<string, string | number>): SfMessage =>
   ({ key: key(value), params })
 const data = (text: string) => ({ kind: "data" as const, text })
@@ -57,6 +57,7 @@ function stateCopy(value: SfUiState): SfCopyKey {
     case "loading": return key("sf.common.loading")
     case "empty": return key("sf.common.empty")
     case "filtered-empty": return key("sf.common.filterEmpty")
+    case "not-found": return key("sf.common.removed")
     case "denied": return key("sf.common.noAccess")
     case "session-expired": return key("sf.common.loginAgain")
     case "invalid": return key("sf.common.invalidLink")
@@ -306,7 +307,7 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
       : !!created && createdRevision !== undefined && current.data.versions.length > verified.beforeCount
       : verified.action === "copy" ? !!created && createdRevision !== undefined &&
           created.id !== verified.versionId && created.year === reviewed?.version?.year &&
-          (!reviewed.copyNameProvided || created.name === reviewed.proposed.name)
+          (!reviewed?.copyNameProvided || created.name === reviewed?.proposed.name)
       : verified.action === "official" ? !!projected?.official && projected.locked
       : verified.action === "lock" ? !!projected?.locked
       : verified.action === "unlock" ? !!projected && !projected.locked
@@ -336,11 +337,15 @@ export function SfPlannerVersionsView(props: SfSurfaceProps<"CAP23">) {
   const reviewBase = (request: Review): SfReviewSnapshot | null => request.first || !request.version
     ? null : { kind: "persisted", ref: request.versionId as SfRef, version: request.expected,
       fields: fields({ name: request.version.name, year: request.version.year }) }
-  const reviewProposed = (request: Review): SfReviewSnapshot => ({
-    kind: "draft", intentRef: request.ref as unknown as SfIntentRef,
-    sourceRef: request.first ? null : request.versionId as SfRef,
-    sourceVersion: request.first ? null : request.expected, fields: fields(request.proposed),
-  })
+  // The first version receives its name and year on the server. Never preview
+  // the page selection as if those values were a confirmed source proposal.
+  const reviewProposed = (request: Review): SfReviewSnapshot => request.first
+    ? { kind: "not-provided", reason: msg("sf.u46.firstDescription") }
+    : {
+        kind: "draft", intentRef: request.ref as unknown as SfIntentRef,
+        sourceRef: request.versionId as SfRef,
+        sourceVersion: request.expected, fields: fields(request.proposed),
+      }
   const visibleReview = () => model.owner.state().status === "ready" && !!page() && !!screen.review
   const reviewAction = (request: Review): SfReviewPurpose => request.first ? "create" : request.action
 
