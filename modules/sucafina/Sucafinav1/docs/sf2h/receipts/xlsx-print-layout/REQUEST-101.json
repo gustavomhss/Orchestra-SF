@@ -1,0 +1,91 @@
+{
+  "schema": "sf2h.mission102.ci-request.v1",
+  "mission": 102,
+  "request_for": "101 sole product test dispatcher",
+  "repository": "gustavomhss/Orchestra-SF",
+  "productBranch": "xlsx-print-layout",
+  "sourceCommit": "104bf61f67da9740024f38427c1580ba29f36e99",
+  "sourceTree": "a30bf96023767bb27fc803060f0653554bf34286",
+  "baselineC51": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "integrator": "100, sole writer sf2-stack",
+  "sourcePr": 105,
+  "deduplication": "101 must inspect running/completed W/S/runs for identical source tree, validator/config/fixtures and selection before queuing any request. Do not create duplicate.",
+  "requests": [
+    {
+      "priority": 1,
+      "selection": [
+        "Sucafinav1/test/product/xlsx-print-layout/print-layout.test.ts"
+      ],
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "os": "linux",
+      "purpose": "four scenarios normal/empty/wide/long, nine XLSX sheets, OOXML CRC, format/source/privileged-data regressions; emit actual files, new SHA-256 manifests and base64 log chunks",
+      "expectedSource": "commit 104bf61f67da9740024f38427c1580ba29f36e99",
+      "workflowReaderAutoRuns": false,
+      "workflowReaderReason": "test-ci.yml sf66_exports accepts only export-artifact-closure/*.test.ts",
+      "observed": {
+        "W": null,
+        "S": null,
+        "run": null,
+        "job": null,
+        "artifact": null,
+        "result": "NOT_RUN"
+      }
+    },
+    {
+      "priority": 2,
+      "selection": [
+        "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts"
+      ],
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "os": "linux",
+      "purpose": "real authenticated normal Planner/Members/OPEX artifact producers and reader88 auto-render PDF/PNG with source/hash manifest",
+      "expectedSource": "commit 104bf61f67da9740024f38427c1580ba29f36e99",
+      "workflowReaderAutoRuns": true,
+      "observed": {
+        "W": null,
+        "S": null,
+        "run": null,
+        "job": null,
+        "artifact": null,
+        "result": "NOT_RUN"
+      }
+    }
+  ],
+  "visualRecheck": {
+    "reader": "script/sf2h/export-visual/reader.py (existing reader88, no edits by102)",
+    "historical": {
+      "sourceW": "a1be5ae4e7e934ca1c47674ee0b166cc560e2b31",
+      "snapshotS": "a952f1b3ce48b15473f4b07810e79efd05d759fd",
+      "runId": 43678123870,
+      "jobId": 132702648942,
+      "artifactId": 14146978247,
+      "pageCounts": {
+        "planner-viewer": 21,
+        "members-admin": 6,
+        "opex-template": 2
+      }
+    },
+    "instructions": [
+      "101/88: validate reader compatibility and capture the eight scenario Planner/Members outputs plus template header-only with new bytes/digests; no workflow edits under102",
+      "All nine worksheets must be independently inspected: Planner Info/OPEX/CAPEX/Headcount/Rate cards/FX rates; Members All Members/Summary by Leader; template OPEX. Reader88's workbook sheet views are OOXML/HTML, NOT native PDF per-sheet attribution; establish per-sheet PDF/PNG correlation using genuine hosted outputs and inspect legibility or mark NOT_VERIFIED",
+      "Run realistic normal, empty, wide and long datasets; verify readable body text, headers, no clipped columns, no sparse overflow, no privacy exposure, no data/formula/content/style/name/order loss; compare genuine before/after not page totals alone",
+      "Preserve historical artifact SHA256; regenerated binaries must have NEW source W/S/run/job/artifact IDs, SHA256 manifests and provenance; do not label old runs as rechecks",
+      "If a hosted tool cannot render scenario outputs without modifying a protected workflow, report exact missing artifact/log and block visual PASS rather than inventing evidence",
+      "Record functional and visual verdicts separately; never infer source PASS means installed acceptance or GLOBAL_RELEASE"
+    ],
+    "expected": {
+      "physicalPdfPngBeforeAfter": "PENDING",
+      "pageBySheet": "PENDING",
+      "qualifiedFonts": "Aptos fallback is separate finding",
+      "reviewers": [
+        91,
+        93
+      ]
+    }
+  },
+  "gate": "NOT_RUN — request only. Epic/full suite forbidden before 100 freezes C; 45 owns compiler/guards only."
+}

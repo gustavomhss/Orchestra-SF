@@ -1,0 +1,88 @@
+{
+  "schema": "sf2h.mission102.handoff.v1",
+  "mission": 102,
+  "status": "READY_FOR_HOSTED_VALIDATION_NOT_VISUALLY_ACCEPTED",
+  "productHead": "104bf61f67da9740024f38427c1580ba29f36e99",
+  "productTree": "a30bf96023767bb27fc803060f0653554bf34286",
+  "branch": "xlsx-print-layout",
+  "pr": 105,
+  "target": "sf2-stack",
+  "integrator": 100,
+  "lease": "xlsx-layout-browser102",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "baseC51": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "ackCommit": "229c070a8e31e8f4de311297cc35bb924a09efaa",
+  "codeCommit": "0376b4dac490ca64968dc03196248726075a3ef6",
+  "testCommits": [
+    "2baa04fa371bf9a7a9485c00136e9dc30b343073",
+    "104bf61f67da9740024f38427c1580ba29f36e99"
+  ],
+  "writePaths": [
+    "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+    "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+    "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/xlsx-print-layout/"
+  ],
+  "prepost": "PREPOST-102.md",
+  "ciRequest": "REQUEST-101.json",
+  "sourceBlobHashes": {
+    "workbooksBefore": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+    "workbooksAfter": "567042ed8fadf2f1354947a60df8ababe332ae1d",
+    "downloadsBefore": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+    "downloadsAfter": "ac73b9edc44bd5c8a616ce583084969d2a69e771",
+    "testAfter": "041ed70f302f0b0f4d13c6e8bea07f19e85f4c49"
+  },
+  "observedCI": {
+    "sourceW": null,
+    "snapshotS": null,
+    "runId": null,
+    "jobId": null,
+    "artifactId": null,
+    "status": "NOT_RUN_AS_OF_HANDOFF",
+    "failure": null
+  },
+  "historicalCI": {
+    "runId": 43678123870,
+    "jobId": 132702648942,
+    "artifactId": 14146978247,
+    "sourceW": "a1be5ae4e7e934ca1c47674ee0b166cc560e2b31",
+    "snapshotS": "a952f1b3ce48b15473f4b07810e79efd05d759fd",
+    "counts": {
+      "planner": 21,
+      "members": 6,
+      "opex": 2
+    }
+  },
+  "integratorActions": [
+    "consume only exact blobs from PR105 after 101 hosted source tests and 91/93 visual independent review; do not merge whole feature branch or rewrite unrelated owner paths",
+    "preserve PR93 historical artifacts/hashes; requalify based on new W/S/run/job/sha256 manifests",
+    "do not mark final C or GLOBAL_RELEASE"
+  ],
+  "validators": [
+    {
+      "mission": 101,
+      "task": "hosted source tests and PDF/PNG renders; dedupe selection/snapshot"
+    },
+    {
+      "mission": 88,
+      "task": "reuse reader88 as-is; help establish per-sheet visual correspondence"
+    },
+    {
+      "mission": 91,
+      "pr": 100,
+      "task": "independent functional and visual recheck"
+    },
+    {
+      "mission": 93,
+      "pr": 98,
+      "task": "independent runtime/render/OOXML recheck"
+    }
+  ],
+  "openCriteria": [
+    "Source real HTTP / OOXML test: NOT_RUN",
+    "Visual compare all worksheet PDF/PNG before/after and four scenarios: NOT_RUN",
+    "Independent reviewers91/93: NOT_RECHECKED",
+    "Aptos/other88 findings outside102: OPEN"
+  ],
+  "globalRelease": false
+}
