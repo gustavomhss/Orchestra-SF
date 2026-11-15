@@ -1,0 +1,50 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "mission": 126,
+  "id": "Q01",
+  "output": "ACK",
+  "lease_epoch": "native-q01-e1",
+  "status": "ACK_REAL_SCOPED_AUTHORING",
+  "branch": "sf-qual-navigation",
+  "expected_head": "ef88762b673b6875d1012fd55f74681688b05853",
+  "observed_head": "ef88762b673b6875d1012fd55f74681688b05853",
+  "actor": {
+    "github_login": "gustavomhss",
+    "logical_role": "Q01 qualification-author (not FINAL reviewer)",
+    "model": "GPT-6",
+    "session_id": null,
+    "session_id_disclosure": "Not exposed by available tooling; no ID invented"
+  },
+  "sources": {
+    "mission": {
+      "ref": "a0e8ad664294a7a702c994d1cb90800d37e8d4d9",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/126.json"
+    },
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "product_baseline": "8a73afab60036c11fed15f6365a2b2930ee289d9",
+    "surface_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "work_order": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/Q01.json"
+  },
+  "authorization": "S0 scoped exclusive authoring after real ACK, not an integration or test grant",
+  "owned_spec_paths": [
+    "packages/app-shell/e2e/sucafina/native/pilot-isolation.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/navigation.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/isolation.spec.ts",
+    "packages/app-shell/e2e/sucafina/native/compatibility.spec.ts",
+    "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts"
+  ],
+  "preimages": {
+    "all_five": "ABSENT_at_observed_head"
+  },
+  "boundaries": {
+    "integrator": 125,
+    "compiler": 128,
+    "hosted_ci": 129,
+    "local_tests": "NOT_RUN",
+    "actions": "NOT_TRIGGERED",
+    "global_release": false
+  },
+  "decision": "Proceed pilot then full authorship against public F01/F02/F04 contracts; unavailable real actor sessions/D01 gate only qualification"
+}
