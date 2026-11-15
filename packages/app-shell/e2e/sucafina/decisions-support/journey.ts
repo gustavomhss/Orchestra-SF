@@ -1,6 +1,6 @@
 import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
 import { startPlannerInstallation } from "../wp03/installation-fixture"
-import { clickForResponse } from "./command-response"
+import { clickForResponse, type CommandResponse } from "./command-response"
 
 export const draft = {
   objective: "CI Decisions — annual service decision",
@@ -10,7 +10,7 @@ export const draft = {
   sourceRefs: [],
 }
 
-export function isCommand(request: Request, mode: string, method = "POST") {
+export function isCommand(request: Pick<Request, "url" | "method">, mode: string, method = "POST") {
   const url = new URL(request.url())
   return request.method() === method && url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
 }
@@ -108,10 +108,10 @@ export async function fillDecision(page: Page, objective: string) {
 
 export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
   await expect(button).toBeEnabled()
-  return clickForResponse(page, button, (request) => isCommand(request, mode, method), (response) => readReply(response, observations))
+  return clickForResponse(page, button, `${new URL(page.url()).origin}/sucafina/dashboard*`, (request) => isCommand(request, mode, method), (response) => readReply(response, observations))
 }
 
-export async function readReply(response: Response, observations: Record<string, unknown>[]) {
+export async function readReply(response: CommandResponse, observations: Record<string, unknown>[]) {
   const contentType = response.headers()["content-type"] ?? ""
   const record = { mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(), contentType }
   observations.push(record)

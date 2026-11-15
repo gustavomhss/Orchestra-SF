@@ -80,7 +80,7 @@ export async function changePlannerSource(page: Page, origin: string, versionId:
 
 async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
   await expect(button).toBeEnabled()
-  return clickForResponse(page, button, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action, async (response) => {
+  return clickForResponse(page, button, `${new URL(page.url()).origin}/sucafina/planner*`, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action, async (response) => {
     expect(response.status()).toBe(200)
     expect(response.headers()["content-type"]).toContain("application/json")
     const result = asRecord(await response.json())
