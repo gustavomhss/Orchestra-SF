@@ -1,0 +1,139 @@
+{
+  "schema": "sf2h.correction-author-artifact.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission": 135,
+  "seat": "W17",
+  "work_order": "A05",
+  "finding": "C64-native5-portfolio-3-refusals",
+  "state": "ARTIFACT_READY_NOT_INTEGRATED_NOT_QUALIFIED",
+  "not_integrated": true,
+  "not_qualified": true,
+  "global_release": false,
+  "native_goal": "paused",
+  "authority": {
+    "actor": "fresh ChatGPT GPT-6 / linked GitHub gustavomhss",
+    "session_id": null,
+    "session_id_explanation": "Not exposed",
+    "branch": "sf-ux-w17",
+    "pr": 134,
+    "epoch": "ux-native-w17-e3",
+    "fence_blob": "45952e7e6c60fa54fa18043557c98478127f92c9",
+    "original_observed_head": "373fc83bd97ddade3b08c7173a062cd7208fb5cd",
+    "ack_commit": "e2479bb941558efaad43e9acb2cd17218fe8a5d4",
+    "previous_epoch": "ux-native-w17-e2 REVOKED_FOR_FUTURE_WRITES",
+    "previous_actor_termination": "NOT_CLAIMED"
+  },
+  "source": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "C64_material": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "C64_tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+    "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70",
+    "producer_path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+    "pinned_producer_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "consumer_current_producer_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "producer_changed": false
+  },
+  "authored": {
+    "pre_ack_head": "373fc83bd97ddade3b08c7173a062cd7208fb5cd",
+    "ack_head": "e2479bb941558efaad43e9acb2cd17218fe8a5d4",
+    "implementation_head": "1cd6e321488e795113218a73a87049df4c7bb029",
+    "implementation_tree": "2a3fc02f2052680361435ea9200091bf4c1b875e",
+    "files": [
+      {
+        "path": "packages/schema/src/sucafina/portfolio.ts",
+        "original_blob": "2ba680ae66d493b8f04c5d921773ac3a56f66829",
+        "source_pre_blob": "2ba680ae66d493b8f04c5d921773ac3a56f66829",
+        "source_post_blob": "708731dbbaf1fe69664715a4f34007976a4b0476",
+        "consumer_pre_blob": "2ba680ae66d493b8f04c5d921773ac3a56f66829",
+        "consumer_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+        "change": "bounded strict codec + additive regression specs"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+        "original_blob": "5453346c462d1f0f3e21db5b3822c502713ab294",
+        "source_pre_blob": "5453346c462d1f0f3e21db5b3822c502713ab294",
+        "source_post_blob": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+        "consumer_pre_blob": "5453346c462d1f0f3e21db5b3822c502713ab294",
+        "consumer_head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+        "change": "bounded strict codec + additive regression specs"
+      }
+    ],
+    "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction135/PATCH-e3.patch",
+    "all_author_changes_ownership_checked": true,
+    "shared_paths_written": [],
+    "other_author_commits_preserved": true
+  },
+  "defect": {
+    "cause": "Effect v4 Schema.Struct defaults onExcessProperty=ignore, strips unknown input/output fields before assertions",
+    "proof_run": 43738115971,
+    "proof_job": 132885115197,
+    "cases": [
+      {
+        "test_line": 37,
+        "oracle": "CaseRef extra installationId, top-level auth => reject",
+        "pre": "FAIL; accepted unknown"
+      },
+      {
+        "test_line": 54,
+        "oracle": "selection extra input/request assumeApproval => reject",
+        "pre": "FAIL; accepted unknown"
+      },
+      {
+        "test_line": 68,
+        "oracle": "refusal envelope extra previousPrincipal => reject",
+        "pre": "FAIL; accepted unknown"
+      }
+    ],
+    "implementation": "Strict parse against original unknown value at each of 10 operation boundaries, recursive on all nested structs; retain typed result, refusal reason and shape; no new permissions or grants"
+  },
+  "regression_specs": {
+    "file": "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+    "pre_existing_tests_preserved": true,
+    "added": [
+      "closed input accepts exact valid and rejects principalRef/CaseRef.authorization/request.scope.grant/request.operations.privileged/sensitivity unit expectedPrincipal",
+      "closed output preserves canonical ok/list and original seven distinct refusals with exact reasons; rejects nested privateAuthority and approval"
+    ],
+    "existing": [
+      "all ten operation ids/closed catalog",
+      "CAS id/incarnation/positive version",
+      "digests/selection",
+      "7 canonical refusal statuses/reasons",
+      "zero vs null financial amounts",
+      "sensitivity sampled/exact zero/unavailable",
+      "outcome-unknown must not auto-retry"
+    ],
+    "status": "WRITTEN_NOT_EXECUTED"
+  },
+  "checks": {
+    "previous_C64_native5": "FAILED_OBSERVED run43738115971 (three relevant assertions)",
+    "after_e3_hosted_native": "NOT_RUN",
+    "after_e3_schema_typecheck": "NOT_RUN",
+    "after_e3_client_typecheck": "NOT_RUN",
+    "after_e3_cli_typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "SDK_generate": "NOT_RUN_NO_PROTOCOL_OR_HTTPAPI_CHANGE_IN_135",
+    "installed_auth_pilot": "NOT_RUN",
+    "full_suite": "NOT_RUN",
+    "qualification": "NOT_PROVEN"
+  },
+  "handoff": {
+    "integrator": "132 / S0-C-e19-browser132 / PR65 / sf2-stack",
+    "compiler": "128 / PR107",
+    "product_ci": "129 / PR106",
+    "instructions": "Integrate only these exact two-file hunks into current consumer material (not stale branch bulk import), preserve all other writers, confirm installed F01/F02 and consumer preimages, publish actual consumer ACK with integrated commit and postblobs",
+    "hosted_check_request": "Once coherent integrated material exists, 129 select portfolio.test.ts plus affected transitive consumers, dedup by tree/selection; 128 run hosted schema/client/cli typechecks and guards; no local validation or new dispatcher",
+    "consumer_ACK": "PENDING",
+    "source_output_acceptance": "NOT_PROVEN",
+    "no_new_writer": true,
+    "global_release": false
+  },
+  "open_causes": [
+    "Consumer ACK from132 missing",
+    "After-change hosted tests 129 not run",
+    "After-change compiler/guards 128 not run",
+    "Full original campaign gates, independent FINAL, C/G7 and D/G8 remain pending"
+  ]
+}
