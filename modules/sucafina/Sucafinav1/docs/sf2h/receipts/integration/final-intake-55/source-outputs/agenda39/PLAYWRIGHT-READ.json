@@ -1,0 +1,31 @@
+{
+  "source_repository": "microsoft/playwright",
+  "access": "GitHub MCP only",
+  "required_guides_read": [
+    "docs/src/best-practices-js.md",
+    "docs/src/actionability.md",
+    "docs/src/test-assertions-js.md"
+  ],
+  "additional_sections_read": {
+    "docs/src/locators.md": "Introduction, roles, labels, scoped filtering, matching inside a locator, lists/count/text, strictness",
+    "docs/src/network.md": "Network events and response waits registered before action",
+    "docs/src/browser-contexts.md": "Complete isolation guide"
+  },
+  "blobs": {
+    "best-practices-js.md": "02e1e4db6baea68e725040646396e09a29584420",
+    "actionability.md": "848df596771406a7c4d7b2e6120f95b01330a756",
+    "test-assertions-js.md": "97eb22aa6c5839c4f83be974fef260221d6494e2",
+    "locators.md": "a4307c3b47fc1cf6c048e5f94c98b5dcbb6bcb9a",
+    "network.md": "fb24a1855d418e4c9291d8e2656dcc51c3dbf2e4",
+    "browser-contexts.md": "d34759c18549026d7cba3558ce8357d6e441c4c7"
+  },
+  "applied": [
+    "Role/label locators scoped to unique preparation/picker regions",
+    "Response waits before the UI action that causes them",
+    "Web-first readiness and complete-list assertions",
+    "No first/last/nth selectors to mask ambiguity",
+    "No sleeps, manual action retries, assertions weakened or timeouts increased",
+    "Existing isolated production Reports fixture retained; no replacement app"
+  ],
+  "test_execution": "NOT_RUN"
+}

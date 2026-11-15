@@ -13,6 +13,7 @@ import type { SfBiHumanChoiceReader } from "./bi-artifacts.ts"
 import { createSfReviewCollaboration } from "./review-collaboration.ts"
 import type { ReviewThreadRecipientAuthority } from "../../../../modules/sucafina/Sucafinav1/product/collaboration/recipient-authority.ts"
 import { createSfReviewServices } from "./review-services.ts"
+import { createSfReviewAgendaServices } from "./review-agenda-services.ts"
 import type { SfReviewReaders } from "./review-services.ts"
 import { createSfExtendedAssets } from "./extended-assets.ts"
 import { createSfExtendedHttp } from "./extended-http.ts"
@@ -50,7 +51,8 @@ export function createSfExtendedBusinessServices(input: {
   const choices = createSfAnalysisChoiceServices({ ...input, portfolio: portfolioServices, biArtifacts: biArtifacts.store })
   const biSelection = createStoredContextualBiSelectionReader({ approvedViews: biViews.map((view) => ({ id: view.id, version: 1, allowedFilters: [] })),
     readHumanChoice: input.readHumanBiChoice ?? choices.readBi, readArtifact: biArtifacts.store.read, revalidate: input.authority.host.revalidate })
-  const reviewServices = createSfReviewServices({ ...input, portfolio: portfolioServices, bi, readers: input.reviewReaders })
+  const reviewAgenda = createSfReviewAgendaServices(input)
+  const reviewServices = createSfReviewServices({ ...input, portfolio: portfolioServices, bi, readers: input.reviewReaders, agenda: reviewAgenda })
   const reviews = reviewServices.application
   if (reviews && reviewServices.historical) input.business.bindReviewCollaboration(createSfReviewCollaboration({ authority: input.authority,
     application: reviews, evidence: reviewServices.historical.evidence, recipientAuthority: input.reviewRecipientAuthority }))
@@ -66,7 +68,7 @@ export function createSfExtendedBusinessServices(input: {
       requiredAuthority: { read: ["cases:read"], draft: ["cases:write"], receipt: ["cases:read"], alternative: ["cases:read"], change: ["cases:read"] } })
       .filter((descriptor) => descriptor.id === "sf_change_prepare" || descriptor.id === "sf_alternative_draft"),
   ]
-  const http = createSfExtendedHttp({ ...input, bi, reviews, assets, reviewEvidence: reviewServices.historical?.evidence })
+  const http = createSfExtendedHttp({ ...input, bi, reviews, assets, reviewEvidence: reviewServices.historical?.evidence, reviewAgenda })
   const choiceHttp = createSfAnalysisChoiceHttp({ authority: input.authority, origin: input.origin, choices, artifacts: biArtifacts.store,
     alternatives: alternatives.choices, business: input.business })
   let disposed = false

@@ -1,0 +1,95 @@
+{
+  "schema": "orchestra-sf.mission39.independent-static-review.v1",
+  "reviewer": "agenda_proof",
+  "scope": "Current scratch product postimages; no product execution",
+  "result": "NO_ADDITIONAL_CONFIRMED_OWNED_DELTA_BLOCKER; AUDIT_FENCE_STATIC_RISK_NOT_REPRODUCED_IN_W6_PROOF",
+  "inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts",
+      "sha256": "6737a08afb0339aeaa7d21ae7fcb6535520e90e7c1ad38e67c31acacff36e9c3",
+      "read": "full"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+      "sha256": "44efe324e9ea1e43b658b95ac04a84c78e4095811dcdeedfe33b4ce1185d373f",
+      "read": "full"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/review-agenda-services.ts",
+      "sha256": "3f9606cedc977c10dea64f6a76715bdbe373858d1ff21c2c77acd7abdb867a9d",
+      "read": "full"
+    }
+  ],
+  "supporting_reads": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/selection.ts",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073",
+      "scope": "Forecast selectedSides, dashboard recordRefs, procurement identity and preserved section selection"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts",
+      "ref": "c1bd1c91b0e0d32db3074408e815e36107384073",
+      "scope": "Preparation client, POST idempotency and error propagation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/review-first-agenda/integration-session33/postimages/apps/cli/src/sucafina-product/extended-browser.ts.txt",
+      "scope": "Shared proposal private-read/probe/clearPrivate and guarded preparation mount"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+      "scope": "Authored assertions for selection/order/removal, mixed periods, drift and revocation. Read only; no claims of results."
+    }
+  ],
+  "observations": [
+    "Discovery only offers selectors from existing authorized producers; no successful catalog auto-adds an item. Date/domain changes clear options while keeping selected items.",
+    "Dashboard options resolve page evidence; Planner options compare real version refs and recheck version/evidence identity; Procurement options use an immutable per-period producer closure, individual issuance/read and final evidence rechecks.",
+    "HTTP discovery accepts only the known query keys and ui admission, rejects duplicated/injected query fields, and validates the same request/intent/authority again before returning no-store data.",
+    "Source refresh is explicit. Editing selected items invalidates the preview; stale/conflict/needs-input hide captured values and require a fresh preview plus a new preserve click. Existing record selections and section order are retained.",
+    "Unconfirmed preserve keeps the exact pending payload and disables edits. Explicit retry uses that payload through the existing client's stable idempotency key.",
+    "Revocation erases selectors, notes, preview, material, review reference and routine selection, increments generations, and closes the picker. Pending responses check generations before publishing results.",
+    "The shared mount guards preparation/discovery and probes after recoverable transport failures. This review did not equate a generic unavailable result with revocation.",
+    "discover/discoveryPeriod remain optional additions. Existing item callers and routine/contribution flows retain their entry points; Procurement contract reads and non-sf-procurement reads delegate to existing producers.",
+    "Potential forecast-side removal concern was checked against selection.ts: selectedSides uses recordRefs and skips absent sides, so a removed side is not re-added by a subsequent preview."
+  ],
+  "owned_delta_findings": [],
+  "static_risk_reclassified_after_W6": {
+    "id": "M39-DEPENDENCY-REVIEW-READ-AUDIT-FENCE",
+    "priority": "UNASSIGNED_STATIC_HYPOTHESIS; PREVIOUS_P1_CLASSIFICATION_WITHDRAWN",
+    "kind": "shared dependency; not an additional owned picker/workspace/catalog defect",
+    "status": "NOT_REPRODUCED_IN_W6_PROOF; NOT_A_CONFIRMED_BLOCKER",
+    "evidence": "DEPENDENCY-RECONCILIATION-LATE.json",
+    "conditional_path": "Fresh Dashboard evidence can call a canonical read that commits member audits while the protected reader hashes full snapshots. This static review did not establish that W6 uses that fresh-evidence path instead of the available historical path.",
+    "observed_counterevidence": "Root reports W6 passed HTTP200/status-ok preservation, lost-body recovery and explicit idempotent retry, refs/periods/counts, source drift to130 and exact SQLite C05 reopen. These observations contradict the suggested preservation/reopen blocker.",
+    "remaining_failure": "W6 failed only later at the meeting heading after Open meeting, test line244; selector/literal diagnosis remains with the tests owner.",
+    "disposition": "No audit patch, fence change, extra test dispatch or expanded implementation scope is proposed or delegated. Preserve the existing integrity checks.",
+    "qualification": "Static hypothesis NOT REPRODUCED IN THIS PROOF. The root supplied the Actions observations; this reviewer did not execute or independently fetch the run. W6 itself is not claimed passed."
+  },
+  "evidence_reconciliation_W6": {
+    "run": 43653108315,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653108315",
+    "supersedes": "The earlier P1 shared-blocker assessment in this scratch receipt.",
+    "runtime_acceptance": "No full-scenario PASS claimed; preservation and reopen assertions passed before a later heading failure, per root's observed evidence."
+  },
+  "separate_dependency": "Reports36's integration42 M42-R36-AMBIGUOUS-THREAD-READ-PURGE HOLD is separate and remains recorded; this static review does not waive it.",
+  "execution": {
+    "local_tests": 0,
+    "builds": 0,
+    "typechecks": 0,
+    "servers": 0,
+    "workflows": 0,
+    "remote_mutations": 0,
+    "modified_product_files": 0
+  },
+  "final_runtime_addendum_by_root": {
+    "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+    "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+    "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+    "status": "3 PASS / 0 FAIL / 136 expect calls",
+    "scope": "Three focused first-use tests; no installed bundle qualification. DISCOVERY-AFTER-CAPTURE-LIMIT remains OBSERVED_NOT_RESOLVED."
+  },
+  "terminal_receipt_review": {
+    "reviewer": "agenda_backend",
+    "status": "PASS_STATIC_AFTER_HISTORICAL_WORDING_CORRECTION",
+    "scope": "W/S/run/log08, source versus bundle status, NOT_RUN checks, unresolved post-capture limit, inert patches and source36 closure pins. This is not an S0 final independent review."
+  }
+}

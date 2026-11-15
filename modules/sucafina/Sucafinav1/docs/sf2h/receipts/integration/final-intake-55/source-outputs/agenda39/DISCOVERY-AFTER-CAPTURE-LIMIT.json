@@ -1,0 +1,28 @@
+{
+  "schema": "m39-discovery-after-capture-limit-v1",
+  "id": "M39-C9-DISCOVERY-AFTER-LARGE-CAPTURE",
+  "status": "OBSERVED_NOT_RESOLVED",
+  "source_W": "cb092403e7234a4b6294cfa6819448d1a3917d0c",
+  "request_S": "7ef9ad32d113273297341bbd8f5607ca443796b6",
+  "base": "c1bd1c91b0e0d32db3074408e815e36107384073",
+  "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653855014",
+  "log": "actions/07-43653855014.log",
+  "observed": "After preserving a six-section C05, mutating the Planner source, reopening SQLite, opening and reloading the meeting and navigating three topics with exact C05 equality, a new Dashboard catalog request had no observed response within the existing 30000ms response wait. The first test failed at its late discover(Talent Review) step after 232105.51ms. The second per-source authorization test passed in 23986.32ms.",
+  "not_established": [
+    "The underlying catalog request's eventual status or completion time was not observed.",
+    "This observation does not establish a root cause, deadlock, authorization defect or data leak.",
+    "No performance fix or success for this exact post-capture discovery case is claimed.",
+    "The later persistence implementation published to sf2-stack was not transplanted into the C9 source branch or qualified by this run."
+  ],
+  "proof_partition": {
+    "first_use_positive": "Retain all first-use selection, preview, immutable C05, lost-response retry, SQLite and meeting/reload/navigation assertions. Retain revocation followed by historical GET 403, no private Procurement text and unchanged single stored C05.",
+    "per_source_negative": "Keep the independent forged/copied selector, Talent, Procurement period and injected-query test unchanged.",
+    "fresh_preparation_negative": "Move the full private Talent preview and real authorized 200 catalog response held across revocation into a separate fresh real-producer fixture. Retain every purge/late-response assertion and additionally require zero reviews before and after.",
+    "reason": "The mission's first-preparation privacy behavior has an independent precondition of no historical review. Separating it avoids coupling its execution to a later large historical corpus while retaining the observed post-capture limit as an open handoff item."
+  },
+  "timeouts_changed": false,
+  "sleeps_added": false,
+  "assertions_removed": false,
+  "product_changes_for_this_partition": false,
+  "consumer": "session33 must reconcile this observation against the explicitly composed runtime and exact source closure before claiming bundle acceptance. Do not raise timeouts, ignore the failed run, or infer resolution from the fresh-fixture test."
+}

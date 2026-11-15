@@ -1,0 +1,48 @@
+Source: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43649352799
+Job: 132614130346
+W: 15787c499bfcb9e0eb41e864a99aeca97af43c07
+S: 13056068abb0727b19f04209e10e69bc71661611
+Excerpt: selected test file through Bun summary; timestamps preserved, ANSI colors removed.
+
+2026-11-14T22:42:12.5644292Z Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts:
+2026-11-14T22:42:26.0512003Z WP07 browser: Chrome closed; owned group has no live members and transport is disconnected {
+2026-11-14T22:42:26.0512325Z   pendingCloseRPCs: [],
+2026-11-14T22:42:26.0512469Z }
+2026-11-14T22:42:26.0528298Z 72 |     const view = page.locator('section[aria-label="Prepare review"]')
+2026-11-14T22:42:26.0528794Z 73 |     const chosen = view.getByRole("list", { name: "Selected agenda", exact: true })
+2026-11-14T22:42:26.0529244Z 74 |     const headings = view.getByRole("heading", { level: 3 })
+2026-11-14T22:42:26.0529855Z 75 |     await playwright.expect(view.getByRole("button", { name: "Load selection", exact: true })).toBeDisabled()
+2026-11-14T22:42:26.0530507Z 76 |     await view.getByRole("button", { name: "Discover agenda topics", exact: true }).click()
+2026-11-14T22:42:26.0531701Z 77 |     await playwright.expect(view.getByRole("button", { name: "Add Forecast · Agenda candidate", exact: true })).toBeVisible()
+2026-11-14T22:42:26.0532637Z                                                                                                                     ^
+2026-11-14T22:42:26.0533016Z error: expect(locator).toBeVisible() failed
+2026-11-14T22:42:26.0533190Z 
+2026-11-14T22:42:26.0533741Z Locator: locator('section[aria-label="Prepare review"]').getByRole('button', { name: 'Add Forecast · Agenda candidate', exact: true })
+2026-11-14T22:42:26.0534231Z Expected: visible
+2026-11-14T22:42:26.0534406Z Timeout: 5000ms
+2026-11-14T22:42:26.0534541Z Error: element(s) not found
+2026-11-14T22:42:26.0534630Z 
+2026-11-14T22:42:26.0534679Z Call log:
+2026-11-14T22:42:26.0534887Z   - Expect "to.be.visible" with timeout 5000ms
+2026-11-14T22:42:26.0535572Z   - waiting for locator('section[aria-label="Prepare review"]').getByRole('button', { name: 'Add Forecast · Agenda candidate', exact: true })
+2026-11-14T22:42:26.0535937Z 
+2026-11-14T22:42:26.0535997Z  matcherResult: {
+2026-11-14T22:42:26.0537386Z   message: "expect(locator).toBeVisible() failed\n\nLocator: locator('section[aria-label=\"Prepare review\"]').getByRole('button', { name: 'Add Forecast · Agenda candidate', exact: true })\nExpected: visible\nTimeout: 5000ms\nError: element(s) not found\n\nCall log:\n  - Expect \"to.be.visible\" with timeout 5000ms\n  - waiting for locator('section[aria-label=\"Prepare review\"]').getByRole('button', { name: 'Add Forecast · Agenda candidate', exact: true })\n",
+2026-11-14T22:42:26.0538614Z   pass: false,
+2026-11-14T22:42:26.0538788Z   actual: undefined,
+2026-11-14T22:42:26.0538981Z   name: "toBeVisible",
+2026-11-14T22:42:26.0539170Z   expected: "visible",
+2026-11-14T22:42:26.0539848Z   log: [ "  - Expect \"to.be.visible\" with timeout 5000ms", "  - waiting for locator('section[aria-label=\"Prepare review\"]').getByRole('button', { name: 'Add Forecast · Agenda candidate', exact: true })" ],
+2026-11-14T22:42:26.0540279Z   timeout: 5000,
+2026-11-14T22:42:26.0540463Z },
+2026-11-14T22:42:26.0540527Z 
+2026-11-14T22:42:26.0540840Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts:77:112)
+2026-11-14T22:42:26.0557879Z (fail) first agenda uses three real domains, preserves edits through drift and reload, and fences a late response after revocation [13150.04ms]
+2026-11-14T22:42:42.3027134Z (pass) discovery is per source, denies forged and private selectors, and keeps independent Procurement periods [16246.81ms]
+2026-11-14T22:42:42.3031659Z omni positive control [4e7284b59bf275f61090d10076b65bb0]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T22:42:42.3032202Z 
+2026-11-14T22:42:42.3032283Z  1 pass
+2026-11-14T22:42:42.3032443Z  1 fail
+2026-11-14T22:42:42.3032612Z  28 expect() calls
+2026-11-14T22:42:42.3032841Z Ran 2 tests across 1 file. [29.76s]
+

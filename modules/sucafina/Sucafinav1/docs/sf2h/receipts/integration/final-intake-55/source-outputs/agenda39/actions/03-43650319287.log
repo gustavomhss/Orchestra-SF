@@ -1,0 +1,44 @@
+Source: https://github.com/gustavomhss/Orchestra-SF/actions/runs/43650319287
+Job: 132617093718
+W: 21da1ab4a6208925fe7677595b38b595cabf67f5
+S: 2108012e41071a7f5a030d99a50b572ee715a0bc
+Excerpt: selected test file through Bun summary; timestamps preserved, ANSI colors removed.
+
+2026-11-14T22:53:42.8421873Z Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts:
+2026-11-14T22:54:07.3152186Z WP07 browser: Chrome closed; owned group has no live members and transport is disconnected {
+2026-11-14T22:54:07.3153144Z   pendingCloseRPCs: [],
+2026-11-14T22:54:07.3153574Z }
+2026-11-14T22:54:07.3164164Z 136 |     expect(mixed.sections.map((section) => section.period)).toEqual([...Array(5).fill(f.period), { start: "2026-01-01", end: "2026-01-31" }])
+2026-11-14T22:54:07.3166116Z 137 |     expect(mixed.sections.find((section) => section.title === "Projects")?.recordCount).toBe(1)
+2026-11-14T22:54:07.3168211Z 138 |     expect(new Set(mixed.sections.flatMap((section) => section.projection.context.sourceRefs.map((ref) => ref.surface)))).toEqual(new Set(["dashboard", "planner", "procurement"]))
+2026-11-14T22:54:07.3169711Z 139 |     const afterSelection = await f.snapshots()
+2026-11-14T22:54:07.3170463Z 140 |     expect(afterSelection.dashboard.audit.slice(0, before.dashboard.audit.length)).toEqual(before.dashboard.audit)
+2026-11-14T22:54:07.3171752Z 141 |     for (const entry of afterSelection.dashboard.audit.slice(before.dashboard.audit.length)) expect(entry).toMatchObject({ record: "members:private-member", was: null, became: null })
+2026-11-14T22:54:07.3172998Z                                                                                                                  ^
+2026-11-14T22:54:07.3173467Z error: expect(received).toMatchObject(expected)
+2026-11-14T22:54:07.3173696Z 
+2026-11-14T22:54:07.3173781Z   {
+2026-11-14T22:54:07.3173979Z -   "became": null,
+2026-11-14T22:54:07.3174282Z +   "at": "2026-11-13T00:00:00.000Z",
+2026-11-14T22:54:07.3174549Z +   "became": {
+2026-11-14T22:54:07.3174805Z +     "member": "private-member",
+2026-11-14T22:54:07.3175064Z +     "read": true,
+2026-11-14T22:54:07.3175267Z +   },
+2026-11-14T22:54:07.3175508Z     "record": "members:private-member",
+2026-11-14T22:54:07.3176016Z     "was": null,
+2026-11-14T22:54:07.3176286Z +   "who": "person",
+2026-11-14T22:54:07.3176499Z   }
+2026-11-14T22:54:07.3176601Z 
+2026-11-14T22:54:07.3176697Z - Expected  - 1
+2026-11-14T22:54:07.3176905Z + Received  + 6
+2026-11-14T22:54:07.3177029Z 
+2026-11-14T22:54:07.3177627Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts:141:108)
+2026-11-14T22:54:07.3179046Z (fail) first agenda uses three real domains, preserves edits through drift and reload, and fences a late response after revocation [23950.50ms]
+2026-11-14T22:54:29.3370052Z (pass) discovery is per source, denies forged and private selectors, and keeps independent Procurement periods [22019.56ms]
+2026-11-14T22:54:29.3374548Z 
+2026-11-14T22:54:29.3376524Z omni positive control [58ad29884218ffd5a3a7b683b8730342]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-14T22:54:29.3377671Z  1 pass
+2026-11-14T22:54:29.3377926Z  1 fail
+2026-11-14T22:54:29.3378206Z  56 expect() calls
+2026-11-14T22:54:29.3378579Z Ran 2 tests across 1 file. [46.52s]
+

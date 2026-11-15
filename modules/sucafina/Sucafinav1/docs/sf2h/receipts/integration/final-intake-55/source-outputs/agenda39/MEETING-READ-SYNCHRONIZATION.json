@@ -1,0 +1,16 @@
+{
+  "schema": "m39-meeting-read-synchronization-v1",
+  "observedCandidate": "8a53d820d2b5553d98901819a23f31fea4a5d43b",
+  "observedRun": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653108315",
+  "observedResult": "1 pass, 1 fail, 106 expect calls. Preserve, exact lost-body retry, C05 values/references/periods, source mutation and SQLite reopen equality passed. The first meeting heading was not visible within the ordinary 5 second assertion after navigation.",
+  "literalContracts": [
+    { "path": "modules/sucafina/Sucafinav1/product/reviews/browser.ts", "blob": "ea194a5c8cf0624c278c8dc2bf81c0dac6222887", "behavior": "read awaits the same-origin review-read HTTP response and JSON body before returning the authorized capture." },
+    { "path": "modules/sucafina/Sucafinav1/product/reviews/meeting.ts", "blob": "4b148e2bfea0e356641c18f0821e503b18e33590", "behavior": "show awaits input.read before rendering the section heading; initial mounting and every Next topic start show asynchronously." }
+  ],
+  "correction": "Arm an exact review-read/reviewRef response wait before Open meeting, reload and each Next topic. Await its real body; require HTTP 200, status ok and complete equality with the preserved C05. Then assert the original exact heading.",
+  "unchanged": ["All existing assertions and selectors", "Ordinary Playwright assertion timeouts", "Test timeout", "Product and shared browser/discussion files"],
+  "sleeps": false,
+  "timeoutOverridesAdded": false,
+  "localTests": "NOT_RUN",
+  "auditFence": "The static audit/fence concern did not block the W6 six-section preserve/reopen flow. No shared integrity change was made or proposed for application on that evidence. The focused proof is not a qualification of every composition or the installed bundle."
+}

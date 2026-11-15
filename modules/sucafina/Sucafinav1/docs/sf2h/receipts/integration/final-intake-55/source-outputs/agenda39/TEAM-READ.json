@@ -1,0 +1,27 @@
+{
+  "schema": "review-first-agenda-team-read/v1",
+  "complete_pack_read_collectively": true,
+  "mission_source_sha": "edee66d9a22ab4a3090e6b461953e783b9910ca8",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base_sha": "c1bd1c91b0e0d32db3074408e815e36107384073",
+  "method": "Full source bodies through GitHub MCP; bounded local rereads of exact materializations; no test execution during reading.",
+  "read_files": [
+    "COMMON.json",
+    "review-first-agenda.json",
+    "AGENTS.md",
+    "docs/sf2h-plan/execution/actors/S3-A.json",
+    "docs/sf2h-plan/execution/COMMON.md",
+    "docs/sf2h-plan/START.md",
+    "docs/sf2h-plan/WORKFLOW.md",
+    "docs/sf2h-plan/specs/product-acceptance.md",
+    "docs/sf2h-plan/specs/resident-runtime.md"
+  ],
+  "coverage": {
+    "root": "All pack top-level metadata, write_authority/allocation/workflow/completion/selection/criterion and source receipt indexes; full WP07 task/axiom/edge requirements; COMMON/mission/AGENTS/START/WORKFLOW.",
+    "agenda_backend": "All 17 contracts; entire resident/profile/skills/packs/routes/aliases/integrated AM sections; resident_ui, gates and interfaces; both mandatory appendices; all canonical domain sources used by implementation.",
+    "agenda_proof": "All 86 proof_bindings; evidence, execution_proofs AM01-AM06, numeric_oracles, dependency_context, coverage, handoffs, consumer edges, code_sources; full mandatory appendices and runtime/reports.ts, parity-reports.test.ts, reports-runtime.test.ts.",
+    "agenda_tests": "Complete task and security obligations used by tests; real authority, fixtures, producer/consumer and C05/C08 reader implementations."
+  },
+  "agents": "Root AGENTS applies to CLI/product/test. Applicable app-shell/e2e AGENTS and required Playwright guides read by agenda_proof. MCP absence checked for additional CLI/product ancestors.",
+  "hash_note": "READ-LEDGER.json labels local materialization hashes separately from fetched remote blobs. Some scratch reads contain an extra terminal LF; consumable patch manifests prove exact remote preimages and normalized complete postimages."
+}

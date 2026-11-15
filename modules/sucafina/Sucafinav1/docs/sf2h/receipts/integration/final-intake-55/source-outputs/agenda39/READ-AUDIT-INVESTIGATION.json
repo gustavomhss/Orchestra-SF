@@ -1,0 +1,86 @@
+{
+  "schema": "m39-read-audit-investigation-v1",
+  "status": "STATIC_HYPOTHESIS_NOT_REPRODUCED_IN_W6",
+  "scope": "Nota scratch para sessão33; não é patch, finding P1, gate PASS nem autorização de testes.",
+  "base": "c1bd1c91b0e0d32db3074408e815e36107384073",
+  "observed": {
+    "source": "Resultado do run6 comunicado pelo root; nenhuma execução local por este agente.",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653108315",
+    "passed_in_six_section_flow": [
+      "C17 real inicializado; preserve respondeu HTTP 200 / status ok.",
+      "Perda simulada somente do corpo de resposta após commit real.",
+      "Retry preservou o mesmo id/key/body e a mesma captura C05.",
+      "Referências, períodos e contagens preservados.",
+      "Origem Planner alterada para 130, SQLite reaberto, captura anterior permaneceu exatamente igual."
+    ],
+    "remaining_failure_at_that_run": "Primeiro heading da reunião ainda não observado; root informou correção de espera causal de HTTP/navegação para W7.",
+    "limitation": "O sucesso desse fluxo não prova todos os tamanhos de pauta, todos os ramos do classificador ou bundle/campanha PASS."
+  },
+  "confirmed_composition_fix": {
+    "issue": "A fixture inicialmente não chamava business.initializeAtlas; business.context.resolve retornava unavailable para Dashboard/Planner. O wrapper de agenda cobre Procurement somente.",
+    "correction": "Inicializar a composição canônica com scanner undefined e metadados explicitamente da fixture. Gates C17/C05 e retornos não foram relaxados.",
+    "business_services_blob": "ce3a281bf07819f90af7fad10f98861980f3273b"
+  },
+  "history_semantics": [
+    "ReviewHistory.currentSource reabre scope corrente e exige versão exata; historicalSource exige captura C05 com recibo C08 íntegro e reautoriza o scope.",
+    "ReviewHistory.evidence consulta primeiro o leitor C17 real. O fallback histórico usa a projeção capturada e revalida a linhagem; não transforma a primeira seleção em revisão anterior.",
+    "createReviewPort.preserve revalida seleção/evidências antes da escrita C08. O callback de gravação copia a captura e cria o recibo; não chama revalidateEvidence. A reabertura do recibo ocorre depois da transação.",
+    "O leitor protegido conserva caminho legacyRead para resultados que snapshotBoundReview não classifica como fechados em snapshots; esse caminho faz duas leituras canônicas e iguala corpo/recibo/autoridade."
+  ],
+  "bounded_hypothesis": {
+    "mechanism": "Dashboard page evidence pode chamar dashboard.read, que acrescenta auditoria Budget/People. O leitor protegido compara fences de snapshots completos. Um resultado pequeno classificado como snapshotBoundReview poderia divergir entre as tentativas por esse efeito.",
+    "why_w6_may_pass": "snapshotBoundReview retorna false também quando excede 20.000 nós. A pauta de 6 seções contém 157 valores somente no Forecast anual, repetindo referências em sourceRefs/drilldown, além de Budget e outras fontes. A delegação existente para legacyRead é explicação estática consistente.",
+    "uncertainty": "O ramo efetivamente seguido em W6 não foi instrumentado. Não se afirma que o limite foi atingido nem que o histórico suprimiu auditoria. O risco de uma pauta menor não foi reproduzido.",
+    "rejected_scope_expansion": "Nenhum helper/patch de audit-fence foi criado; não desligar guard, ignorar audit, adicionar fallback genérico por divergência ou enfraquecer assertions."
+  },
+  "source_blobs": {
+    "review_read_integrity": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+    "source_access": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+    "dashboard_port": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+    "dashboard_budget": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+    "dashboard_people": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+    "local_store": "b753e3ffbfcdc06de373388845c686afac26dec8",
+    "state_provider": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c"
+  },
+  "recommended_for_session33": {
+    "status": "NOT_RUN; sugestões para seleção cirúrgica autorizada/deduplicada em Actions, não novo dispatch nem nona seleção Reports.",
+    "focused_cases": [
+      "Composição real: pauta curta Budget com pelo menos 1 membro, abaixo do limite classificador, preservar/reabrir e consumir no grupo final C08; observar ramo do classificador sem mudar decisões.",
+      "Controle equivalente sem membros, mantendo corpo, recibo, fontes e gates reais.",
+      "Negativas durante a prova: append externo com aparência de recibo de leitura, reescrita do prefixo audit, alteração não-audit ou C08 sem versão devem impedir reutilização de fence.",
+      "Preservar os testes existentes de nested commit proibido e poisoning, identidade física/scoped source e mudanças sem versão."
+    ],
+    "canonical_tests": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-fence-read.test.ts",
+        "blob": "95e7346201b9a7356b2372f5b3631611baec361b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/source-read-fence.test.ts",
+        "blob": "2c9b74d38ba911f04b7b04ee0d9b6a37579bc2e4"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+        "blob": "75345c83f32b517c895c352e64bf5eb15645e398"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/review-history-composition.test.ts",
+        "blob": "1a68cba2878268f21a3f052bf802e965f55c2d91"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/dashboard-review-history.test.ts",
+        "blob": "65830f907e4f0605ef4d746da436adebd73d91fb"
+      }
+    ]
+  },
+  "local_tests": "NOT_RUN",
+  "remote_mutations_by_this_agent": "NONE",
+  "implementation_changes": "NONE",
+  "final_runtime_addendum_by_root": {
+    "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+    "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+    "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+    "status": "3 PASS / 0 FAIL / 136 expect calls",
+    "scope": "Three focused first-use tests; no installed bundle qualification. DISCOVERY-AFTER-CAPTURE-LIMIT remains OBSERVED_NOT_RESOLVED."
+  }
+}

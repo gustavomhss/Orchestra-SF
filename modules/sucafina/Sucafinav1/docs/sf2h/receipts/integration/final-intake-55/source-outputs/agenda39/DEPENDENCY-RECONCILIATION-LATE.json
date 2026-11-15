@@ -1,0 +1,299 @@
+{
+  "schema": "orchestra-sf.mission39.dependency-reconciliation.v1",
+  "recorded_at": "2026-11-14 23:22:12 UTC",
+  "mission": 39,
+  "reviewer": "agenda_proof",
+  "disposition": "NO_PUBLISHED_REVIEW_READ_FENCE_FIX_FOUND_IN_INSPECTED_HEADS",
+  "scope": "Read-only GitHub MCP comparison of exact source blobs and published handoffs. This note does not authorize consuming a source branch or changing shared product code.",
+  "identities": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "input_C9": {
+      "commit": "c1bd1c91b0e0d32db3074408e815e36107384073",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/c1bd1c91b0e0d32db3074408e815e36107384073"
+    },
+    "observed_sf2_stack": {
+      "commit": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "ref": "refs/heads/sf2-stack",
+      "ref_read_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/ref/heads/sf2-stack",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "qualification": "The branch resolved to this immutable commit during this investigation. This is not a claim about future branch heads."
+    },
+    "PR27": {
+      "number": 27,
+      "head": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/27",
+      "sourceW": "73b716b89d84dfba10070cf4a9369ca9c9e75159",
+      "qualification": "Terminal head has only owned receipts after sourceW, as declared by HANDOFF36. Source branch is divergent from composed C9."
+    }
+  },
+  "read_integrity": {
+    "finding": "review-read-integrity.ts is byte-identical to C9; default localSnapshotReaders wiring and relevant host/business/readers are unchanged.",
+    "unchanged_files": [
+      {
+        "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "C9_blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+        "stack_blob": "2a04d86546c1c5361ec523a5f7c7189b5a8d2d65",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/review-read-integrity.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/review-read-integrity.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-services.ts",
+        "C9_blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+        "stack_blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/review-services.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/review-services.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-history.ts",
+        "C9_blob": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+        "stack_blob": "965ad8445deb9b97d1f1c76f18d4036bc2006975",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/review-history.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/review-history.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-resident-readers.ts",
+        "C9_blob": "d5b1a0cb4e4f78caffe18d3d7c468c8d68ff200f",
+        "stack_blob": "d5b1a0cb4e4f78caffe18d3d7c468c8d68ff200f",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/review-resident-readers.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/review-resident-readers.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-services.ts",
+        "C9_blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+        "stack_blob": "9084d0d376a5135aa5804b002d8068ac09f89f83",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/dashboard-services.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/dashboard-services.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "C9_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+        "stack_blob": "2bf1e6e66c13dd099029ec16b1f1ddf1f698dae6",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/host-context.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/host-context.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/source-fence-read.ts",
+        "C9_blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+        "stack_blob": "5f1c4b43162aa2ba3eae9a7c57862cd41df0af18",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/source-fence-read.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/source-fence-read.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "C9_blob": "ce3a281bf07819f90af7fad10f98861980f3273b",
+        "stack_blob": "ce3a281bf07819f90af7fad10f98861980f3273b",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/business-services.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/business-services.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+        "C9_blob": "4cadc40037fefb895a7c77d53125922fa747b479",
+        "stack_blob": "4cadc40037fefb895a7c77d53125922fa747b479",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/extended-business-services.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/extended-business-services.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-collaboration.ts",
+        "C9_blob": "0912fc1f33fb1b4fe81d92eeb509c7806ab1a380",
+        "stack_blob": "0912fc1f33fb1b4fe81d92eeb509c7806ab1a380",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/review-collaboration.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/review-collaboration.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+        "C9_blob": "0da7d51672dc2519019f7880806d61c529456aa9",
+        "stack_blob": "0da7d51672dc2519019f7880806d61c529456aa9",
+        "equal": true,
+        "C9_url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/apps/cli/src/sucafina-product/review-collaboration-binding.ts",
+        "stack_url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/apps/cli/src/sucafina-product/review-collaboration-binding.ts"
+      }
+    ],
+    "directory_comparison": {
+      "method": "Compare complete Contents API inventories of apps/cli/src/sucafina-product at both immutable SHAs; do not rely on the GitHub compare endpoint's 300-file cap.",
+      "C9_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/apps/cli/src/sucafina-product?ref=c1bd1c91b0e0d32db3074408e815e36107384073",
+      "stack_url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/contents/apps/cli/src/sucafina-product?ref=31578c35c1e66371647f1e00ceefff1cdb85fed3",
+      "changed": [
+        {
+          "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+          "C9_blob": "77563520dbfa9cab5876c0312eba294cb579e11d",
+          "stack_blob": "986450eb9b3a2bf9feb73f8071d8f05e38f1e515"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-coverage-read.ts",
+          "C9_blob": null,
+          "stack_blob": "cfbff030208adb764f392f637ff7b903c0c64199"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+          "C9_blob": "e8a931a3d0788d0c6899e9550fbe069a4a5dc7de",
+          "stack_blob": "149cc8fb12dd54b6622842cfa4e0c1a2e2bf4f93"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "C9_blob": "30ffcb8353cdf478808fbb8d6bc67b48b10a6109",
+          "stack_blob": "e1392759f00d6d42477249823bbb6b3cec51601c"
+        }
+      ],
+      "removed": []
+    },
+    "PR27_reader_observation": {
+      "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+      "result": "HTTP404_NOT_FOUND",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64/apps/cli/src/sucafina-product/review-read-integrity.ts",
+      "qualification": "Absence in the divergent Reports source branch is not a deletion or fix of the C9 composed reader."
+    },
+    "mechanism": "The protected reader still hashes complete snapshots in its fence and requires equality before/after canonical reads. It retains the two-attempt limit. No special handling of read-generated audit entries was added.",
+    "runtime_claim": "STATIC_RISK_NOT_REPRODUCED_IN_W6_PROOF; NOT_A_CONFIRMED_BLOCKER",
+    "producer_audit_evidence": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "blob": "41741c5131ea66242c881126c22c6d03cfd9c3c3",
+        "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/modules/sucafina/Sucafinav1/product/decision-memory/source-access.ts",
+        "read_scope": "createSfDashboardSourceAccess, lines20-60",
+        "fact": "Fresh Dashboard evidence issues and checks continuity, then calls input.dashboard.read at line55."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+        "blob": "b5acfaf9b03c4e03a60c375248cf2ecbd1f32811",
+        "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/modules/sucafina/Sucafinav1/product/dashboard/port.ts",
+        "read_scope": "read admission and transaction, lines144-184",
+        "fact": "The canonical read captures auditStart, projects the source, and returns commit:true when the audit grew (lines170-176)."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "blob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+        "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+        "read_scope": "domain.view, lines59-86",
+        "fact": "Aggregate views append one members:id audit per member with was:null and became:null (lines71-79)."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "blob": "de499e6d34af826add34bee4125bcfba4e57ddb8",
+        "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/modules/sucafina/Sucafinav1/runtime/dashboard-people.ts",
+        "read_scope": "readMembers, lines161-180",
+        "fact": "Individual member reads append members:id audits with became:{read:true,member:id}."
+      }
+    ]
+  },
+  "local_store": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "C9": {
+      "blob": "b753e3ffbfcdc06de373388845c686afac26dec8",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c1bd1c91b0e0d32db3074408e815e36107384073/modules/sucafina/Sucafinav1/runtime/local-store.ts"
+    },
+    "stack": {
+      "blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/modules/sucafina/Sucafinav1/runtime/local-store.ts"
+    },
+    "review": "Complete line diff read in memory. Changes add a bounded pure-decoder memo and lazy materialization. currentSnapshots and cloneSnapshot continue copying and validating the complete snapshots, including audit.",
+    "conclusion": "The published local-store optimization leaves currentSnapshots and cloneSnapshot unchanged. That fact alone does not establish a failing review-read path; W6 passed the preservation and exact C05 reopen assertions described below."
+  },
+  "published_handoffs": {
+    "Reports36": {
+      "handoff": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/HANDOFF.md",
+        "blob": "b9f8f74f56b131a527b8115d1bca075485c5190c",
+        "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/HANDOFF.md"
+      },
+      "release": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/CONSUMER-RELEASE.json",
+        "blob": "427cb8a0e258017efae99efe4ebeaf938f981872",
+        "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/CONSUMER-RELEASE.json"
+      },
+      "binding_manifest": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/shared-patches/review-discussion-binding/manifest.json",
+        "blob": "953a2f3b5813c41dc5e5967896547be04fd05924",
+        "ref": "eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/eea139fb9f7f13400ad7bbe1e67f18ffaeaaec64/modules/sucafina/Sucafinav1/docs/sf2h/receipts/reports-draft-and-journey/shared-patches/review-discussion-binding/manifest.json"
+      },
+      "conclusion": "The three released inert bundles concern installation router, discussion binding, and E2E check. None proposes a review-read-integrity or read-audit fence correction."
+    },
+    "integration33": {
+      "handoff": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/HANDOFF.md",
+        "blob": "68531a8e0b819699b29bbb83d4a2244218d3791f",
+        "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/latest-intake-33/HANDOFF.md"
+      },
+      "conclusion": "Reports36 and first-agenda39 remain explicit producer obligations; nonplain C05 source leases remain an open dependency."
+    },
+    "integration42": {
+      "handoff": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md",
+        "blob": "ab93cb029d7fea936d7df7c7c2a89284f19a2a08",
+        "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/HANDOFF.md"
+      },
+      "finding": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json",
+        "blob": "c0e1c3baff457e94f18e7d7a7d8c2179e541209d",
+        "ref": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/31578c35c1e66371647f1e00ceefff1cdb85fed3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/rolling-intake-42/reports36-semantic-review.json"
+      },
+      "finding_id": "M42-R36-AMBIGUOUS-THREAD-READ-PURGE",
+      "status": "HOLD_SEMANTIC_CONTRADICTION",
+      "ack": "ACK42-03-REPORTS36",
+      "disposition": "42 Reports36 receipts and 10 owned postimages archived inert; all14 atomic active targets held.",
+      "cause": "Reports36 client interprets thread-read/thread-access-unavailable as lost(), but current readers also return that reason for authorized concurrent digest drift or storage failure; this may purge recoverable drafts without proof of revocation.",
+      "separation": "This is a separate producer/consumer semantic HOLD. It is neither a fix nor runtime reproduction of the complete-snapshot review fence hypothesis.",
+      "qualification": "The finding itself is a published static source/contract counterexample, not a runtime reproduction."
+    }
+  },
+  "conclusion": {
+    "selective_fix_available": false,
+    "statement": "No published active or inert audit/fence change was identified in the inspected heads and named handoffs. A required fix is not established: W6 contradicts the previously suggested blocker. No audit patch, branch consumption, dispatcher action or extra implementation scope is proposed by this note.",
+    "remaining_risk": "Static, conditional hypothesis only: canonical Dashboard reads can append member audits, while the protected reader compares full snapshots. This review did not establish that the failing execution enters that fresh-evidence path rather than the available historical path. W6 passed preserve, idempotent recovery, references/periods/counts, source drift to130, and exact SQLite C05 reopen. Therefore the audit/fence hypothesis is NOT_REPRODUCED_IN_W6_PROOF and is not a confirmed P1 or blocker.",
+    "separate_Reports_dependency": "Consumption of the Reports36 discussion boundary remains subject to the published integration42 semantic HOLD; mission39's inert proposal does not waive it."
+  },
+  "evidence_reconciliation_W6": {
+    "run": 43653108315,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43653108315",
+    "source": "Parent root's observed Actions evidence supplied in this task; this reviewer did not execute or independently fetch this run.",
+    "passed_assertions_reported": [
+      "Preserve returns HTTP200 with status ok.",
+      "Lost response body and explicit idempotent retry preserve the same result.",
+      "Preserved references, periods and section counts match.",
+      "Current source changes to130 without replacing C05.",
+      "SQLite reopen returns the exact preserved C05 body."
+    ],
+    "remaining_failure_reported": "Meeting heading after Open meeting, first-agenda.test.ts line244; exact selector/literal under investigation by the tests owner.",
+    "run_is_not_claimed_passed": true,
+    "supersedes": "Earlier characterization of the audit/fence hypothesis as a P1 shared blocker.",
+    "disposition": "STATIC_RISK_NOT_REPRODUCED_IN_THIS_PROOF; NO_AUDIT_PATCH_OR_EXTRA_SCOPE"
+  },
+  "actions": {
+    "remote_reads": "GitHub MCP only",
+    "remote_mutations": 0,
+    "local_product_execution": 0,
+    "local_tests": 0,
+    "typechecks": 0,
+    "workflows_dispatched": 0,
+    "modified_paths": [
+      "review39/proof/DEPENDENCY-RECONCILIATION-LATE.json"
+    ]
+  },
+  "final_runtime_addendum_by_root": {
+    "W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+    "S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+    "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654981768",
+    "status": "3 PASS / 0 FAIL / 136 expect calls",
+    "scope": "Three focused first-use tests; no installed bundle qualification. DISCOVERY-AFTER-CAPTURE-LIMIT remains OBSERVED_NOT_RESOLVED."
+  }
+}

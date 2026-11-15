@@ -1,0 +1,95 @@
+{
+  "schema": "sf2h.final-intake-55.dependency-closure.v1",
+  "increment": 1,
+  "candidate_symbol": "C21",
+  "parent": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+  "source_release": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+  "relative_imports": {
+    "edges": 167,
+    "unique_targets": 81,
+    "resolved": 81,
+    "missing": 0,
+    "method": "Full static source import path resolution against C20+selected13; not compiler proof."
+  },
+  "composition": [
+    {
+      "edge": "extended-business-services -> review-agenda-services -> review-services",
+      "result": "COMPLETE",
+      "details": "Actual extended service factory creates agenda with existing authority/business/persistence and passes authorized Procurement/evidence adapters to historical C05 readers; unchanged CurrentChoice/host composition consumes this factory."
+    },
+    {
+      "edge": "extended-http -> agenda HTTP -> scoped discovery",
+      "result": "COMPLETE",
+      "details": "Mounts discovery before existing reviews route; period is supplied to first-use bootstrap. Existing review/history path stays installed."
+    },
+    {
+      "edge": "extended-browser -> agenda-picker -> workspace",
+      "result": "COMPLETE",
+      "details": "Discovery retains generation/closed check; first-use empty agenda can be edited while successor with empty reconstructed items remains inert; no historical selection silently replaced."
+    },
+    {
+      "edge": "real canonical producers -> first-agenda tests and Reports helper",
+      "result": "AVAILABLE_WITH_PROOF_PENDING",
+      "details": "Nine owned files include all local fixtures/support; no executable C9 blob pin is enforced. Three first-use tests use real composed imports. Three Reports helpers are available but reports.spec.ts remains untouched pending48."
+    }
+  ],
+  "shared_preimages": [
+    {
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "preimage": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "postimage": "da98ee9b674a1d7b4f3ba2c8a230745c33ccdbd7"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "preimage": "4cadc40037fefb895a7c77d53125922fa747b479",
+      "postimage": "ff43e324d280498e629f867d0ac93714bdf608cc"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "preimage": "d8e0d149e37c640db8957f3e917f867088923d93",
+      "postimage": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "preimage": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "postimage": "480dcc9c1b299542552e8a6a2e4e3ce2a659db10"
+    }
+  ],
+  "held_reports_dependency": {
+    "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+    "source39_pin": "b145caac8a47e029aded4418253488d250d680e1",
+    "decision": "No adoption of Reports spec/state proposals in55 Agenda intake; owner48 must reconcile complete release."
+  },
+  "checks45": {
+    "packages": [
+      "modules/sucafina",
+      "apps/cli",
+      "packages/app-shell"
+    ],
+    "commands": [
+      "bun typecheck",
+      "bun run check:guards --base origin/dev"
+    ],
+    "strict_E2E": "Include original operations.spec.ts, decisions.spec.ts, reports.spec.ts plus all transitive helpers, including newly added Agenda support."
+  },
+  "functional_qualifier_inputs": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+    ],
+    "env": {},
+    "status": "INPUT_ONLY_NOT_DISPATCHED",
+    "other_obligations": "Preserve original eight recipes and full affected consumers; Reports nominal requires explicit48 closure; post-capture timeout still must be investigated."
+  },
+  "no_pass_transfer": true,
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "CI": 0,
+    "AM": 0
+  },
+  "GLOBAL_RELEASE": false
+}

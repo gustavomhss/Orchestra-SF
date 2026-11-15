@@ -1,0 +1,107 @@
+{
+  "schema": "m39-input-closure-v1",
+  "mission": 39,
+  "finding": "M27-C05-FIRST-AGENDA",
+  "T0": "2026-11-13T04:01:10Z",
+  "lease_epoch": "review-agenda-browser39",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "edee66d9a22ab4a3090e6b461953e783b9910ca8",
+  "product_base": "c1bd1c91b0e0d32db3074408e815e36107384073",
+  "source_W": "41e80edb7a78ad77ffad66f1c7c1da336e4247e1",
+  "source_tree": "67a162ef4324647580e88a6140c833b3f9ca8603",
+  "request_S": "2027505c925a9a6dbac950c26fb1ab149140c760",
+  "request_tree": "c006a7731d1f985703e57777e10a7e934e640f8c",
+  "integration_observed": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+  "reports36_observed": "7b13bec80d33c0c3a07190dc9df86069479979db",
+  "preimage_checks": [
+    {
+      "kind": "stack",
+      "path": "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+      "ref": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "expected": "8530268bff37cad2f9158a78f80a3dc4529d32aa",
+      "blob": "8530268bff37cad2f9158a78f80a3dc4529d32aa",
+      "matches": true,
+      "error": false
+    },
+    {
+      "kind": "stack",
+      "path": "apps/cli/src/sucafina-product/review-services.ts",
+      "ref": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "expected": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "blob": "c07d55c714b4c85ee41abb4d287ce5861500086d",
+      "matches": true,
+      "error": false
+    },
+    {
+      "kind": "stack",
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "ref": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "expected": "4cadc40037fefb895a7c77d53125922fa747b479",
+      "blob": "4cadc40037fefb895a7c77d53125922fa747b479",
+      "matches": true,
+      "error": false
+    },
+    {
+      "kind": "stack",
+      "path": "apps/cli/src/sucafina-product/extended-http.ts",
+      "ref": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "expected": "d8e0d149e37c640db8957f3e917f867088923d93",
+      "blob": "d8e0d149e37c640db8957f3e917f867088923d93",
+      "matches": true,
+      "error": false
+    },
+    {
+      "kind": "stack",
+      "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+      "ref": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+      "expected": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "blob": "83ecd80669c759dc65cc621543af2b5ebd9f9ac0",
+      "matches": true,
+      "error": false
+    },
+    {
+      "kind": "reports",
+      "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+      "ref": "7b13bec80d33c0c3a07190dc9df86069479979db",
+      "expected": "c332c865c9241df073553b1ddc8dfcb6af65399a",
+      "blob": "5084806ef5e7a8373dd753ba4acb7d463d9f8132",
+      "matches": false,
+      "error": false
+    },
+    {
+      "kind": "reports",
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-state.ts",
+      "ref": "7b13bec80d33c0c3a07190dc9df86069479979db",
+      "expected": "a32cac26786e4ace96490f719677370e42f87958",
+      "blob": "a32cac26786e4ace96490f719677370e42f87958",
+      "matches": true,
+      "error": false
+    }
+  ],
+  "reconciled_at": "2026-11-14 23:35:51 UTC",
+  "reports_reconciliation": "The old Reports spec preimage mismatch was explicitly reconciled to source36@7b13bec80d33c0c3a07190dc9df86069479979db; see reports-session36/manifest.json. All owner36 draft/reconciliation changes remain intact.",
+  "source_manifest": "SOURCE-MANIFEST.json",
+  "complete_reads": [
+    "TEAM-READ.json",
+    "READ-LEDGER.json",
+    "PLAYWRIGHT-READ.json"
+  ],
+  "dependency_policy": "Explicit C9 base retained. No whole source branch or moving control snapshot was imported. Shared target files are read-only in this branch; patches are inert and pinned by path/blob.",
+  "backbone_preserved": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "S3A_bindings": 86
+  },
+  "final_reports_proposal": {
+    "ref": "7b13bec80d33c0c3a07190dc9df86069479979db",
+    "spec_preimage_blob": "5084806ef5e7a8373dd753ba4acb7d463d9f8132",
+    "spec_postimage_blob": "1e32418941128da350ce00a528e759d5dcc6d111",
+    "patch_sha256": "fc76d71ad25f3eb11b7a7e64efa9862439860bc0d3cc3f7c49c55b05bd00e7c1",
+    "required_dependency": {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+      "blob": "b145caac8a47e029aded4418253488d250d680e1"
+    }
+  }
+}
