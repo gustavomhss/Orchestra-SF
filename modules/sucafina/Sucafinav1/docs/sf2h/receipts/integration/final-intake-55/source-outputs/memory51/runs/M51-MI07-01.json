@@ -1,0 +1,132 @@
+{
+  "schema": "sf2h.memory-history-closure.run.v1",
+  "mission": 51,
+  "id": "M51-MI07-01",
+  "state": "FAIL_BEFORE_MEMORY",
+  "conclusion": "failure",
+  "W": "4f736943df7916964a231461d33ae0c84e5f2c01",
+  "Wtree": "10e4b9c793c528c2172b08eadd954710386d8dda",
+  "S": "0a0b1a9110bdf2e068745f284c97c86f3d0cd2e4",
+  "Stree": "c32b96f0a9cd9220391166852897bb2331082260",
+  "run": 43654082252,
+  "job": 132628655525,
+  "cleanupJob": 132629091368,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43654082252",
+  "event": "push",
+  "attempt": 1,
+  "branch": "ci-run-linux-astra-wp10-4f736943-6d6531c8-m51-01",
+  "createdAt": "2026-11-14T23:36:22Z",
+  "completedAt": "2026-11-14T23:38:15Z",
+  "selection": {
+    "requestBlob": "6d6531c8be34410efe3366662c437556ff65b1d0",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "./Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {
+        "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+      }
+    },
+    "files": 1,
+    "tests": 1,
+    "pass": 0,
+    "fail": 1,
+    "skippedTests": 0,
+    "expects": "NOT_REPORTED_BY_BUN",
+    "testMs": 843.11,
+    "bunRunMs": 1329
+  },
+  "failure": {
+    "phase": "procurement.capture-original",
+    "phaseMs": 18,
+    "elapsedMs": 825,
+    "aborted": false,
+    "reason": "financial-approval-command-unavailable",
+    "error": "Original source capture unavailable: financial-approval-command-unavailable",
+    "file": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+    "line": 240,
+    "completeMemoryJourneyStarted": false,
+    "memoryPhasesExecuted": 0,
+    "corruptionReplayRevocationTailExecuted": false,
+    "deadlineTriggered": false
+  },
+  "phases": [
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "started",
+      "elapsedMs": 19
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "returned",
+      "phaseMs": 236,
+      "elapsedMs": 256,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "started",
+      "elapsedMs": 256
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "returned",
+      "phaseMs": 226,
+      "elapsedMs": 482,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "started",
+      "elapsedMs": 807
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "returned",
+      "phaseMs": 18,
+      "elapsedMs": 825,
+      "aborted": false
+    }
+  ],
+  "omni": {
+    "status": "pass",
+    "nonce": "ae55676a866d14d70f0ca28bc2b4d94f",
+    "declaredTests": 1,
+    "spawns": 2,
+    "delegated": 0
+  },
+  "runner": {
+    "test": "ubuntu-24.04",
+    "requestValidation": "PASS",
+    "setup": "PASS",
+    "testStep": "FAIL",
+    "cleanup": "SUCCESS"
+  },
+  "logs": {
+    "path": "logs/M51-MI07-01.log.txt",
+    "gitBlob": "f366184c022c1640ae7660e4ea7e23b1af4b56e1",
+    "chars": 70916,
+    "format": "Exact decoded GitHub job log; unedited"
+  },
+  "artifacts": {
+    "observed": [],
+    "requiredByThisBunLane": false,
+    "note": "This workflow uploads generic test evidence only for Playwright; Bun evidence is the exact job log."
+  },
+  "diagnosticConclusion": "The intact test is blocked by Procurement37's explicit financial-policy hold before archive capture. No Memory performance conclusion is supported. The historical225000ms timeout remains open.",
+  "repeated": false,
+  "substituteTestsRun": 0,
+  "fullEpic": false,
+  "localExecution": false
+}

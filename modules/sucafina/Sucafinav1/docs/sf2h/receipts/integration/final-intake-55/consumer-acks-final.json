@@ -1,0 +1,109 @@
+{
+  "schema": "sf2h.final-intake-55.consumer-acks.v1",
+  "mission": 55,
+  "recorded_at": "2026-11-15 00:37:12 UTC",
+  "consumer": "S0-C55, sole sf2-stack writer",
+  "latest_candidate": {
+    "symbol": "C23",
+    "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+    "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe"
+  },
+  "ACKs": [
+    {
+      "id": "ACK55-01",
+      "source_mission": 39,
+      "source_release": "3ed1745b776ef2a6d31cae70d7b54a54545ffcf0",
+      "candidate": {
+        "symbol": "C21",
+        "commit": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+        "tree": "644e41cfc5e8b291b4bf61bd16c8dcae41b14d1b",
+        "parent": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+        "source_mission": 39,
+        "material_paths": 13,
+        "archived_source_blobs": 46
+      },
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/increment-01.json",
+      "closure": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/dependency-closure-01.json",
+      "state": "CONSUMED_MATERIAL_PENDING_COMPOSED_QUALIFICATION",
+      "scope": "Agenda39 coherent13-path first-use unit; Reports proposals remain inert",
+      "source_green_transfers": false
+    },
+    {
+      "id": "ACK55-02",
+      "source_mission": 49,
+      "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
+      "candidate": {
+        "symbol": "C22",
+        "commit": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+        "tree": "3f065ae6a43af17680ce18ee79aa067986cf8920",
+        "parent": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+        "source_mission": 49,
+        "material_paths": 20,
+        "additional_material_mapping": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+        "additional_material_mapping_blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+        "archived_source_blobs": 23,
+        "original_fixture_supplement": true
+      },
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/increment-02.json",
+      "closure": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/dependency-closure-02.json",
+      "state": "CONSUMED_MATERIAL_PENDING_COMPOSED_QUALIFICATION",
+      "scope": "Microsoft49 auth+entry+CLI+Node20-path atomic unit; CurrentChoice preserved; canonical fixture/map material",
+      "source_green_transfers": false
+    },
+    {
+      "id": "ACK55-03",
+      "source_mission": "50/P02",
+      "source_release": "c01520cb6a09e580897ebdb46e75e40a536b80be",
+      "candidate": {
+        "symbol": "C23",
+        "commit": "25ed395829f9ec5f06a80c70467c23b25376f853",
+        "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+        "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+        "source_mission": "50/P02",
+        "material_paths": 2,
+        "archived_source_blobs": 38
+      },
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/increment-03.json",
+      "closure": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/dependency-closure-03.json",
+      "state": "CONSUMED_MATERIAL_PENDING_COMPOSED_QUALIFICATION",
+      "scope": "Portfolio50 releasedP02 two-path history correction only; P03 and54 held",
+      "source_green_transfers": false
+    }
+  ],
+  "diagnostic_ACK": {
+    "id": "ACK55-M51-DIAGNOSIS",
+    "source": "51de99e5c663dc31ce1bcf4b1f694399a0cf33c9",
+    "state": "CONSUME_DIAGNOSTIC_ONLY_NO_NEW_PRODUCT_CANDIDATE",
+    "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51",
+    "tree": "0e17c0365d57180dd4468b41be4c95088d3aa787",
+    "finding": "M51-MI07-PROCUREMENT-CAPTURE-BLOCKED",
+    "Memory40": "C19 preserved; no reapplication",
+    "MI07": "OPEN"
+  },
+  "withheld_consumer_ACKs": [
+    48,
+    52,
+    53,
+    54,
+    56
+  ],
+  "withheld_rule": "No material acceptance for ongoing sources or proposals without explicit release. Source census fixes each observed head and reason.",
+  "communication": "Own repository handoff and PR65 description only; no producer ref writes or person-directed messages.",
+  "execution": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "preflights": "NOT_RUN",
+    "CI_dispatches": 0,
+    "epic_dispatches": 0,
+    "AM": "NOT_RUN",
+    "source_branch_writes": 0,
+    "dev_merge": false,
+    "deploy": false,
+    "Azure": false,
+    "credentials_created_or_read": false
+  },
+  "GLOBAL_RELEASE": false
+}

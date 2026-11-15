@@ -1,0 +1,112 @@
+{
+  "schema": "sf2h.memory-history-closure.findings.v1",
+  "mission": 51,
+  "findings": [
+    {
+      "id": "M51-MI07-PROCUREMENT-CAPTURE-BLOCKED",
+      "state": "EXTERNAL_CONTRACT_BLOCKED",
+      "mandatory": true,
+      "owner": "S0/WP00 + Procurement/C12",
+      "consumer": 47,
+      "related": "M31-FINANCIAL-APPROVAL",
+      "observed": {
+        "W": "4f736943df7916964a231461d33ae0c84e5f2c01",
+        "S": "0a0b1a9110bdf2e068745f284c97c86f3d0cd2e4",
+        "run": 43654082252,
+        "job": 132628655525,
+        "phase": "procurement.capture-original",
+        "elapsedMs": 825,
+        "reason": "financial-approval-command-unavailable"
+      },
+      "provenance": {
+        "source37": "ab2a967125b3c767067797a27b919466020fbd82",
+        "integration": "C15",
+        "integrationManifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/increment-03.json",
+        "integrationManifestBlob": "15ad5a0640c312e03d32e7c1cb74187c9d3a3eba",
+        "integrationDecision": "ACCEPTED_COMPLETE_24_PATH_PROCUREMENT37_UNIT_WITH_FINANCIAL_HOLD",
+        "financialAuditBlob": "4d77fd48977058d6033a89592463198b76d87b65",
+        "financialAuditState": "NO_COMPATIBLE_CANONICAL_COMMAND_FOR_CURRENT_PR_REPLACEMENT"
+      },
+      "callChain": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts",
+          "blob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+          "lines": "205,235-243",
+          "fact": "Original PR100/draft, chosen replace150/USD/period; real human prepareDomainCommands must return ok and exactly1 command before Atlas emission."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/business-services.ts",
+          "blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+          "lines": "429-435",
+          "fact": "Installed real Procurement decision host."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+          "blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+          "lines": "114-131",
+          "fact": "Revalidates human/case/choice; bridge.prepareScenario; line125 returns any failure before line128 private captureSource."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+          "preimage": "bdea5d497b4e8fa7e540cfb44d427cd3696678db",
+          "postimage": "7fce64e7e213693d505f9bc6e08835468b7ead41",
+          "fact": "Current replace amount preparation revalidates real source, then deliberately needs-input financial-approval-command-unavailable; no ok path exists."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+          "preimage": "e613a1bf32fe1ee75574139cf699c34843cf25d1",
+          "postimage": "517f50991fb7f057aff943c9e0b626ef6ddc91d6",
+          "lines": "91-98",
+          "fact": "Noneditable stages refused; same value refused as no-op; any remaining values.pr.estAmount refused by financial hold."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/procurement/prepared-review.ts",
+          "preimage": "c8d476a1be6d2b839a087b2bc248293014599791",
+          "postimage": "b7d25206bb7ba11d20b293495f09e6cb70430a84",
+          "lines": "13-15",
+          "fact": "Retained numeric commands cannot bypass policy through review."
+        }
+      ],
+      "cause": "The canonical PR edit and completed financial approval states do not intersect for a still-unwritten replacement. submit_pr already writes/freezes the submitted amount; final approve enters sourcing; saving after approval cannot represent the same pending replacement. Mission37 intentionally preserved this contract gap rather than fabricate approval.",
+      "captureCoupling": {
+        "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+        "captureLines": "67-102",
+        "capturePublic": false,
+        "onlyCallSite": 128,
+        "historicalReaderLines": "325-352",
+        "continuityLines": "393-401",
+        "fact": "Historical source resolution and continuity require the genuine C08 archive. There is no public independent capture capability; manually seeding it or only emitting Atlas does not preserve this original test."
+      },
+      "safeOwnedFixAvailable": false,
+      "safeFixtureOnlyAdaptationAvailable": false,
+      "forbiddenWorkarounds": [
+        "Remove37 financial hold",
+        "Treat management choice/checkbox as approval",
+        "Forge prApproval or archive",
+        "Grant a permissive provider",
+        "Switch to no-op/smaller data/different operation",
+        "Change original ok/one-command assertions",
+        "Silently roll back Procurement37 or test C13 as if current C18/C19",
+        "Raise225000/240000 budgets or skip the tail"
+      ],
+      "executableExternalCorrectionPatch": {
+        "status": "NOT_PRODUCED_CONTRACT_DECISION_REQUIRED",
+        "reason": "No available canonical capability can make this exact current producer return ok while preserving37 policy and original assertion. A made-up postimage would bypass the mandated financial gate. No external source was edited."
+      },
+      "requiredOwnerAction": [
+        "S0/WP00 + Procurement/C12 resolves the effect/order contract for M31-FINANCIAL-APPROVAL and publishes a complete compatible implementation with pre/postimages and authentic positive/negative proof.",
+        "Alternatively, owner may explicitly authorize a separate current-authority archival-capture contract reusing the private real producer. That changes the original preparation precondition/assertion and requires explicit test-contract reauthorization; it is not a fixture-only fix within51.",
+        "47 selectively integrates the released exact dependency. Only then successor Memory reruns the full original MI07 on a new fixed composition, preserving all still-authorized assertions, corruption/replay/revocation and original budgets."
+      ],
+      "retryCondition": "Material released compatible producer/contract patch, reconciled authority, exact new W/S manifest and dedup. No unchanged retry."
+    }
+  ],
+  "remaining": {
+    "MI07": "OPEN; prior225000ms timeout not requalified",
+    "Finance34PerformanceInMI07": "NOT_MEASURED",
+    "Memory40Fix": "PRESERVED_EXACT_SOURCE_AND_OVERLAY; now admitted by47 in C19",
+    "AM05": "OPEN",
+    "compiler45": "REQUESTED_NOT_RUN_FOR_THIS_CANDIDATE",
+    "globalRelease": false
+  }
+}

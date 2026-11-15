@@ -1,0 +1,427 @@
+{
+  "run": 43637227753,
+  "job": 132576581546,
+  "W": "ab511e9ab2dcb0f64b34bea944533cdbf7ed98e7",
+  "S": "e63511737be687a2e42f9a15706a229db42a31c1",
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 1,
+  "expects": 687,
+  "seconds": 225.71,
+  "lastPhase": {
+    "fixture": "historical-memory",
+    "phase": "memory.fence-final-request-headers",
+    "state": "returned",
+    "phaseMs": 18805,
+    "elapsedMs": 225014,
+    "aborted": true
+  },
+  "phases": [
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "started",
+      "elapsedMs": 27
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.ensure",
+      "state": "returned",
+      "phaseMs": 405,
+      "elapsedMs": 431,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "started",
+      "elapsedMs": 431
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "scanner.version",
+      "state": "returned",
+      "phaseMs": 292,
+      "elapsedMs": 723,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "started",
+      "elapsedMs": 1156
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "procurement.capture-original",
+      "state": "returned",
+      "phaseMs": 122,
+      "elapsedMs": 1278,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "started",
+      "elapsedMs": 1278
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "atlas.emit-ledger",
+      "state": "returned",
+      "phaseMs": 2106,
+      "elapsedMs": 3385,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "started",
+      "elapsedMs": 3402
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.resolve-original",
+      "state": "returned",
+      "phaseMs": 396,
+      "elapsedMs": 3798,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "started",
+      "elapsedMs": 3798
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.prepare",
+      "state": "returned",
+      "phaseMs": 41219,
+      "elapsedMs": 45017,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "started",
+      "elapsedMs": 45018
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.verify",
+      "state": "returned",
+      "phaseMs": 41563,
+      "elapsedMs": 86581,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.accept-output",
+      "state": "started",
+      "elapsedMs": 86610
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.accept-output",
+      "state": "returned",
+      "phaseMs": 41599,
+      "elapsedMs": 128209,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.exclude-history-and-isolate",
+      "state": "started",
+      "elapsedMs": 128209
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.exclude-history-and-isolate",
+      "state": "returned",
+      "phaseMs": 18912,
+      "elapsedMs": 147122,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-source",
+      "state": "started",
+      "elapsedMs": 147137
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-source",
+      "state": "returned",
+      "phaseMs": 12247,
+      "elapsedMs": 159384,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-capture",
+      "state": "started",
+      "elapsedMs": 159402
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-capture",
+      "state": "returned",
+      "phaseMs": 12382,
+      "elapsedMs": 171784,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-principal",
+      "state": "started",
+      "elapsedMs": 171808
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-principal",
+      "state": "returned",
+      "phaseMs": 10673,
+      "elapsedMs": 182480,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-clock",
+      "state": "started",
+      "elapsedMs": 182497
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-clock",
+      "state": "returned",
+      "phaseMs": 12959,
+      "elapsedMs": 195455,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-lease",
+      "state": "started",
+      "elapsedMs": 195467
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-lease",
+      "state": "returned",
+      "phaseMs": 10730,
+      "elapsedMs": 206197,
+      "aborted": false
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-final-request-headers",
+      "state": "started",
+      "elapsedMs": 206209
+    },
+    {
+      "fixture": "historical-memory",
+      "phase": "memory.fence-final-request-headers",
+      "state": "returned",
+      "phaseMs": 18805,
+      "elapsedMs": 225014,
+      "aborted": true
+    }
+  ],
+  "counts": [
+    {
+      "phase": "memory.resolve-original",
+      "persistenceCalls": 105,
+      "rootPersistenceCalls": 25,
+      "nestedPersistenceCalls": 80,
+      "groupedEvidenceFences": 2,
+      "c08Reads": 5,
+      "caseReads": 0,
+      "caseFences": 0,
+      "evidenceContextReads": 0,
+      "groupedCaseContextReads": 0,
+      "atlasCanonicalReads": 0,
+      "atlasCanonicalCompleted": 0,
+      "groupedAtlasReads": 0,
+      "groupedAtlasCompleted": 0
+    },
+    {
+      "phase": "memory.prepare",
+      "persistenceCalls": 9996,
+      "rootPersistenceCalls": 2216,
+      "nestedPersistenceCalls": 7780,
+      "groupedEvidenceFences": 88,
+      "c08Reads": 690,
+      "caseReads": 24,
+      "caseFences": 36,
+      "evidenceContextReads": 6,
+      "groupedCaseContextReads": 4,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2,
+      "groupedAtlasReads": 2,
+      "groupedAtlasCompleted": 2
+    },
+    {
+      "phase": "memory.verify",
+      "persistenceCalls": 10038,
+      "rootPersistenceCalls": 2258,
+      "nestedPersistenceCalls": 7780,
+      "groupedEvidenceFences": 88,
+      "c08Reads": 702,
+      "caseReads": 36,
+      "caseFences": 48,
+      "evidenceContextReads": 6,
+      "groupedCaseContextReads": 4,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2,
+      "groupedAtlasReads": 2,
+      "groupedAtlasCompleted": 2
+    },
+    {
+      "phase": "memory.accept-output",
+      "persistenceCalls": 10038,
+      "rootPersistenceCalls": 2258,
+      "nestedPersistenceCalls": 7780,
+      "groupedEvidenceFences": 88,
+      "c08Reads": 702,
+      "caseReads": 36,
+      "caseFences": 48,
+      "evidenceContextReads": 6,
+      "groupedCaseContextReads": 4,
+      "atlasCanonicalReads": 2,
+      "atlasCanonicalCompleted": 2,
+      "groupedAtlasReads": 2,
+      "groupedAtlasCompleted": 2
+    },
+    {
+      "phase": "memory.exclude-history-and-isolate",
+      "persistenceCalls": 4557,
+      "rootPersistenceCalls": 987,
+      "nestedPersistenceCalls": 3570,
+      "groupedEvidenceFences": 36,
+      "c08Reads": 320,
+      "caseReads": 10,
+      "caseFences": 15,
+      "evidenceContextReads": 2,
+      "groupedCaseContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "groupedAtlasReads": 1,
+      "groupedAtlasCompleted": 1
+    },
+    {
+      "phase": "memory.fence-source",
+      "persistenceCalls": 2822,
+      "rootPersistenceCalls": 212,
+      "nestedPersistenceCalls": 2610,
+      "groupedEvidenceFences": 12,
+      "c08Reads": 186,
+      "caseReads": 6,
+      "caseFences": 7,
+      "evidenceContextReads": 2,
+      "groupedCaseContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "groupedAtlasReads": 1,
+      "groupedAtlasCompleted": 1
+    },
+    {
+      "phase": "memory.fence-capture",
+      "persistenceCalls": 2876,
+      "rootPersistenceCalls": 266,
+      "nestedPersistenceCalls": 2610,
+      "groupedEvidenceFences": 12,
+      "c08Reads": 189,
+      "caseReads": 6,
+      "caseFences": 8,
+      "evidenceContextReads": 2,
+      "groupedCaseContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "groupedAtlasReads": 1,
+      "groupedAtlasCompleted": 1
+    },
+    {
+      "phase": "memory.fence-principal",
+      "persistenceCalls": 2319,
+      "rootPersistenceCalls": 29,
+      "nestedPersistenceCalls": 2290,
+      "groupedEvidenceFences": 4,
+      "c08Reads": 147,
+      "caseReads": 6,
+      "caseFences": 7,
+      "evidenceContextReads": 2,
+      "groupedCaseContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "groupedAtlasReads": 1,
+      "groupedAtlasCompleted": 1
+    },
+    {
+      "phase": "memory.fence-clock",
+      "persistenceCalls": 2875,
+      "rootPersistenceCalls": 265,
+      "nestedPersistenceCalls": 2610,
+      "groupedEvidenceFences": 12,
+      "c08Reads": 189,
+      "caseReads": 6,
+      "caseFences": 8,
+      "evidenceContextReads": 2,
+      "groupedCaseContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "groupedAtlasReads": 1,
+      "groupedAtlasCompleted": 1
+    },
+    {
+      "phase": "memory.fence-lease",
+      "persistenceCalls": 2318,
+      "rootPersistenceCalls": 28,
+      "nestedPersistenceCalls": 2290,
+      "groupedEvidenceFences": 4,
+      "c08Reads": 147,
+      "caseReads": 6,
+      "caseFences": 7,
+      "evidenceContextReads": 2,
+      "groupedCaseContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "groupedAtlasReads": 1,
+      "groupedAtlasCompleted": 1
+    },
+    {
+      "phase": "memory.fence-final-request-headers",
+      "persistenceCalls": 4353,
+      "rootPersistenceCalls": 863,
+      "nestedPersistenceCalls": 3490,
+      "groupedEvidenceFences": 34,
+      "c08Reads": 306,
+      "caseReads": 8,
+      "caseFences": 11,
+      "evidenceContextReads": 2,
+      "groupedCaseContextReads": 2,
+      "atlasCanonicalReads": 1,
+      "atlasCanonicalCompleted": 1,
+      "groupedAtlasReads": 1,
+      "groupedAtlasCompleted": 1
+    }
+  ],
+  "countedCalls": {
+    "persistenceCalls": 52297,
+    "rootPersistenceCalls": 9407,
+    "nestedPersistenceCalls": 42890,
+    "groupedEvidenceFences": 380,
+    "c08Reads": 3583,
+    "caseReads": 144,
+    "caseFences": 195,
+    "evidenceContextReads": 32,
+    "groupedCaseContextReads": 26,
+    "atlasCanonicalReads": 13,
+    "atlasCanonicalCompleted": 13,
+    "groupedAtlasReads": 13,
+    "groupedAtlasCompleted": 13
+  },
+  "failure": "error: historical-memory exceeded its 225000ms cooperative deadline",
+  "omni": "omni positive control [f0806026496b389c2a52c40365a9347b]: pass (declared: 1 test(s) in Sucafinav1/test/product/wp10/analysis-composition/historical-memory.test.ts); 2 omni spawn(s), 0 delegated.",
+  "rule": "Actual prior logged failure preserved, not treated as success. Counts are calls, not physical disk I/O."
+}

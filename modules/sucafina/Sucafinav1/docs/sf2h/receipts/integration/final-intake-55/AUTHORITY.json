@@ -1,0 +1,188 @@
+{
+  "schema": "sf2h.final-intake-55.authority.v1",
+  "mission": 55,
+  "actor": "S0-C",
+  "epoch": "S0-C-e10-browser55",
+  "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "recorded_at": "2026-11-15 00:37:12 UTC",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "authority_source": {
+    "control": "c1df70b2fedd2183d243a523fbfef9c7c6ddff35",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/rolling-final-intake.json",
+    "blob": "b97e6d28f9d69da3f2737b31739bb69e2318d356",
+    "direct_user_instruction": "Execute missão55 as47 successor, same sf2-stack andPR65, solewriter viaGitHubMCP/CAS, no tests/typechecks/guards/CI/AM."
+  },
+  "predecessor": {
+    "mission": 47,
+    "terminal": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "tree": "ccfd6a27e927d27994b35b7de948c58cbe643ff3",
+    "authority_blob": "076d2b0c277c7101b387e3d76ff80d3423d85c8a",
+    "handoff_blob": "38505e14a10af389bc8f467f67ea5293572280c7",
+    "ended_explicitly": true,
+    "initial_head_matched": true,
+    "original_eight_candidates": [
+      {
+        "symbol": "C13",
+        "source": 34,
+        "sha": "31578c35c1e66371647f1e00ceefff1cdb85fed3"
+      },
+      {
+        "symbol": "C14",
+        "source": 38,
+        "sha": "03ce926754d7ac0039fbb38470229f13c1623696"
+      },
+      {
+        "symbol": "C15",
+        "source": 37,
+        "sha": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364"
+      },
+      {
+        "symbol": "C16",
+        "source": 44,
+        "sha": "6cc6e94535e48d43f17794e6c6e4d171dfdab18c"
+      },
+      {
+        "symbol": "C17",
+        "source": 41,
+        "sha": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+      },
+      {
+        "symbol": "C18",
+        "source": 43,
+        "sha": "ee1a3ea147ab7d7f4f6b231217e623456e294c84"
+      },
+      {
+        "symbol": "C19",
+        "source": 40,
+        "sha": "5b11f1460fa44426626ea7674ccb8baf0a083e0a"
+      },
+      {
+        "symbol": "C20",
+        "source": 46,
+        "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+        "tree": "b51fce068f7cee96e6f22013d729087643e3b684"
+      }
+    ]
+  },
+  "initial_ack": {
+    "commit": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+    "tree": "2503a6c19b1c654d0ebd571fb20caf5d438b55d4",
+    "blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "accepted_at": "2026-11-15T00:19:56Z",
+    "published_before_first_material": true
+  },
+  "control_reconciliation": {
+    "closing": "3796e60a25c6478a38f0fc98997a8582d1356b37",
+    "only_new_authority": "56 boundedruntime/local-store.ts onruntime-read-cost, sourcebranch atC21;55stackauthorityunchanged",
+    "mission55_blob_unchanged": true,
+    "source_census": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-census-final.json",
+    "no_takeover45_or_sources": true
+  },
+  "writer": "Root55 only for sf2-stack; threehelpers remote read-only, not source owners orFINALcampaignreviewers",
+  "latest_material": {
+    "symbol": "C23",
+    "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+    "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe"
+  },
+  "material_candidates": [
+    {
+      "symbol": "C21",
+      "commit": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+      "tree": "644e41cfc5e8b291b4bf61bd16c8dcae41b14d1b",
+      "parent": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+      "source_mission": 39,
+      "material_paths": 13,
+      "archived_source_blobs": 46
+    },
+    {
+      "symbol": "C22",
+      "commit": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+      "tree": "3f065ae6a43af17680ce18ee79aa067986cf8920",
+      "parent": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+      "source_mission": 49,
+      "material_paths": 20,
+      "additional_material_mapping": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "additional_material_mapping_blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+      "archived_source_blobs": 23,
+      "original_fixture_supplement": true
+    },
+    {
+      "symbol": "C23",
+      "commit": "25ed395829f9ec5f06a80c70467c23b25376f853",
+      "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+      "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+      "source_mission": "50/P02",
+      "material_paths": 2,
+      "archived_source_blobs": 38
+    }
+  ],
+  "intake_status": "THREE_RELEASED_MATERIAL_CANDIDATES_C21_C22_C23_PUBLISHED; READY_INTAKES_COMPLETE; QUALIFICATION_OPEN",
+  "diagnosis_only": {
+    "source": 51,
+    "archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51",
+    "no_new_product_candidate": true
+  },
+  "publication": {
+    "branch": "sf2-stack",
+    "pr": 65,
+    "expected_parent": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "expected_parent_tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+    "remote": "GitHub MCP tree/commit/update_ref with CASexpected_sha force:false",
+    "scope": "Fourteen new ownfinalreceipts + exact16-blob Memory51diagnosticarchive; no modification of C23material/testinputs, earlierreceipt/history, control orproducerrefs.",
+    "source_branch_changes": false,
+    "merge": false
+  },
+  "terminal_commit_rule": "Resolve the containing Git commit and tree. Exact terminal SHA/tree are recorded after readback in PR65 and final completion; no recursive self-SHA is fabricated. This documentation-only child is not a new material candidate, CI snapshot or accepted D/G8.",
+  "lease": {
+    "epoch": "S0-C-e10-browser55",
+    "state": "ENDED",
+    "ends_at": "Successful CAS publication of the containing terminal documentation commit on sf2-stack",
+    "further_product_writes": false,
+    "continuation_rule": "Any later integrator reconciles this terminal HEAD, current control and source authorities, then publishes an explicit successor ACK. Readback and PR65 metadata closure do not extend product-write authority. No source branch is assigned to55."
+  },
+  "preserved": {
+    "C20_and_eight_previous_intakes": true,
+    "original56_items_and_digests": true,
+    "original17_findings": true,
+    "originalcriteria1610": true,
+    "sourceFAILs": true,
+    "Reports36HOLD": true,
+    "Native41realadmissionHOLD": true,
+    "PortfolioP03HOLD": true,
+    "financialM31mandatory": true,
+    "MemoryMI07OPEN": true
+  },
+  "next": "45 receives exact C23+config/inputmanifest and retains checks. S0 retains finalepic/acceptance.48/52/53/54/56 remain sources awaiting explicitrelease;Memorysuccessor requires compatible releasedfinancialcapturecontract andnewauthority. FuturecompositionsmustpreserveCurrentChoice/Microsoft/Agenda/P02 andupdatefixturepins.",
+  "execution": {
+    "tests": "NOT_RUN",
+    "typechecks": "NOT_RUN",
+    "builds": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "preflights": "NOT_RUN",
+    "CI_dispatches": 0,
+    "epic_dispatches": 0,
+    "AM": "NOT_RUN",
+    "source_branch_writes": 0,
+    "dev_merge": false,
+    "deploy": false,
+    "Azure": false,
+    "credentials_created_or_read": false
+  },
+  "gates": {
+    "checks_owner": 45,
+    "epic_owner": "S0",
+    "final_acceptance": "S0",
+    "C_G7": "OPEN",
+    "D_G8": "OPEN",
+    "AM01_AM06": "OPEN",
+    "three_FINAL_reviews": "OPEN",
+    "eight_functional_selections": "OPEN",
+    "target_tests": "NOT_RUN",
+    "GLOBAL_RELEASE": false
+  },
+  "GLOBAL_RELEASE": false
+}

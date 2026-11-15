@@ -1,0 +1,125 @@
+{
+  "schema": "sf2h.final-intake-55.candidates.v1",
+  "mission": 55,
+  "recorded_at": "2026-11-15 00:37:12 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "predecessor_terminal": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+  "predecessor_candidates": [
+    {
+      "symbol": "C13",
+      "source": 34,
+      "sha": "31578c35c1e66371647f1e00ceefff1cdb85fed3"
+    },
+    {
+      "symbol": "C14",
+      "source": 38,
+      "sha": "03ce926754d7ac0039fbb38470229f13c1623696"
+    },
+    {
+      "symbol": "C15",
+      "source": 37,
+      "sha": "0fe4f1105e8e1e71ce07fa3fbf51bd9ff01a7364"
+    },
+    {
+      "symbol": "C16",
+      "source": 44,
+      "sha": "6cc6e94535e48d43f17794e6c6e4d171dfdab18c"
+    },
+    {
+      "symbol": "C17",
+      "source": 41,
+      "sha": "08ff8221ebfd86e3ae2c55fb4687b3fb0cced87c"
+    },
+    {
+      "symbol": "C18",
+      "source": 43,
+      "sha": "ee1a3ea147ab7d7f4f6b231217e623456e294c84"
+    },
+    {
+      "symbol": "C19",
+      "source": 40,
+      "sha": "5b11f1460fa44426626ea7674ccb8baf0a083e0a"
+    },
+    {
+      "symbol": "C20",
+      "source": 46,
+      "sha": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+      "tree": "b51fce068f7cee96e6f22013d729087643e3b684"
+    }
+  ],
+  "ACK55": {
+    "sha": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+    "tree": "2503a6c19b1c654d0ebd571fb20caf5d438b55d4",
+    "blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d"
+  },
+  "candidates": [
+    {
+      "symbol": "C21",
+      "commit": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+      "tree": "644e41cfc5e8b291b4bf61bd16c8dcae41b14d1b",
+      "parent": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+      "source_mission": 39,
+      "material_paths": 13,
+      "archived_source_blobs": 46,
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/increment-01.json",
+      "dependency_closure": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/dependency-closure-01.json",
+      "qualification": "NOT_RUN"
+    },
+    {
+      "symbol": "C22",
+      "commit": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+      "tree": "3f065ae6a43af17680ce18ee79aa067986cf8920",
+      "parent": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+      "source_mission": 49,
+      "material_paths": 20,
+      "additional_material_mapping": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "additional_material_mapping_blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+      "archived_source_blobs": 23,
+      "original_fixture_supplement": true,
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/increment-02.json",
+      "dependency_closure": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/dependency-closure-02.json",
+      "qualification": "NOT_RUN"
+    },
+    {
+      "symbol": "C23",
+      "commit": "25ed395829f9ec5f06a80c70467c23b25376f853",
+      "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+      "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+      "source_mission": "50/P02",
+      "material_paths": 2,
+      "archived_source_blobs": 38,
+      "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/increment-03.json",
+      "dependency_closure": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/dependency-closure-03.json",
+      "qualification": "NOT_RUN"
+    }
+  ],
+  "last_material": {
+    "symbol": "C23",
+    "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+    "parent": "713e979cdea58f822ddaa91abe64b4e9531391fe"
+  },
+  "canonical_material_paths": 35,
+  "additional_test_input": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+    "introduced_in": "C22",
+    "unchanged_in": "C23"
+  },
+  "archived_released_source_blobs": 107,
+  "qualification": {
+    "checks_owner": 45,
+    "epic_owner": "S0",
+    "final_acceptance": "S0",
+    "C_G7": "OPEN",
+    "D_G8": "OPEN",
+    "AM01_AM06": "OPEN",
+    "three_FINAL_reviews": "OPEN",
+    "eight_functional_selections": "OPEN",
+    "target_tests": "NOT_RUN",
+    "GLOBAL_RELEASE": false
+  },
+  "terminal_rule": "The containing final receipt commit is a documentation-only child of C23, not a fourth material candidate, not a CI snapshot and not accepted D/G8. Exact terminal SHA/tree are recorded after readback in PR65."
+}

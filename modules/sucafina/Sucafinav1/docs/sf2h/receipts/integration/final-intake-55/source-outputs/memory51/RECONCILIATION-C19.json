@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h.memory-history-closure.reconciliation.v1",
+  "mission": 51,
+  "observedAt": "2026-11-14T23:40:14Z",
+  "source": {
+    "head": "f2794784551e25ce2a2f56f408506cd790fae976",
+    "expectedTerminalParent": "f2794784551e25ce2a2f56f408506cd790fae976",
+    "source40ProductPreserved": true
+  },
+  "control": {
+    "head": "f2383d1248a130e05a9e6667516023ecea70389e",
+    "mission51Unchanged": true
+  },
+  "integration": {
+    "head": "5b11f1460fa44426626ea7674ccb8baf0a083e0a",
+    "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
+    "name": "C19",
+    "parent": "ee1a3ea147ab7d7f4f6b231217e623456e294c84",
+    "soleWriter": 47,
+    "authorityBlob": "30c4d74544dfe16a680757f9b9ce86a4a9de6ccf",
+    "authorityState": "ACCEPTED_SUCCESSION_INTAKE_ACTIVE",
+    "backendLiveness": "NOT_QUERIED_NOT_INFERRED"
+  },
+  "memory40": {
+    "status": "CONSUMED_BY47",
+    "ack": "ACK47-07",
+    "manifestBlob": "b66315bee1beb26070e6ff4b6ab236f7a3dc6c4d",
+    "release": "1136abe85d0dee1e5d43d7c3ebaaa3dd5932fd90",
+    "postimages": {
+      "businessContext": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "atlasMemory": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d"
+    },
+    "matchesW51": true,
+    "source40RequestInACK51": "Satisfied later by47; historical ACK retains its truthful earlier NOT_YET_APPLIED observation."
+  },
+  "originalMI07": {
+    "blob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+    "unchanged": true
+  },
+  "procurementGate": {
+    "blob": "7fce64e7e213693d505f9bc6e08835468b7ead41",
+    "unchangedFromTestedW": true,
+    "reason": "financial-approval-command-unavailable"
+  },
+  "deltaC18toC19": {
+    "totalPaths": 32,
+    "runtimePaths": 2,
+    "ownMemory40TestFilesAdded": 4,
+    "documentationFilesAdded": 26,
+    "rule": "Both runtime postimages equal validation W. Added tests are the released40 namespace, not the MI07 selected file or helpers. C19 itself was not dispatched by51."
+  },
+  "noAutomaticRetest": {
+    "reason": "Current gate bytes and full original MI07 unchanged; the known external financial blocker persists. Do not spend another identical failing run merely because47 integrated40 later."
+  },
+  "compiler45": {
+    "branch": "astra-compose",
+    "pr": 32,
+    "observedHead": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "publishedTerminal": "26 COMPILER_NOT_RUN",
+    "new45ACKObserved": false,
+    "backendStatus": "UNKNOWN",
+    "requestedW": "4f736943df7916964a231461d33ae0c84e5f2c01",
+    "status": "REQUESTED_IN_MANIFEST_NOT_RUN_BY51",
+    "noDuplicateWorkflow": true
+  }
+}
