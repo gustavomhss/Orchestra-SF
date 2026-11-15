@@ -1,0 +1,123 @@
+diff --git a/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts b/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts
+--- a/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts
++++ b/modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts
+@@ -3,7 +3,6 @@ import type { ScenarioRequest } from "../contracts/operations.ts"
+ import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../contracts/ports.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import type { PlannerScenarioInputs } from "./scenario-port.ts"
+-import { projectionDigest } from "./scenario-comparison-port.ts"
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { PortResult } from "../contracts/ports.ts"
+ import { roleMap } from "../../runtime/admin.ts"
+@@ -91,6 +90,18 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
+     const sourceAgain = await input.sources.resolveForecastSource(scenario.baseRef, context)
+     const resolvedAgain = await resolve()
+     const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? canonicalSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : canonicalSfValue(entry)
+-    return again.status === "ok" && projectionDigest(again.value.baseline) === projectionDigest(values) && sourceAgain.status === "ok" && sourceAgain.value.evidence.refDigest === source.value.evidence.refDigest && resolvedAgain.length === resolved.length && resolvedAgain.every((entry, index) => stable(entry) === stable(resolved[index]!)) && !request.signal.aborted && await input.host.revalidate(context)
++    // ProjectionDigest's two nested SHA256 computations proved only equality at
++    // this read-back fence. Compare the identical canonicalized content directly
++    // instead; SHA256 evidence publication and the source projection verification
++    // in the planner transaction above remain unchanged. Both observations are
++    // taken independently, including all getters, asynchronous hosts and revocation.
++    const stableProjection = (value: typeof values) => canonicalSfValue({
++      ...value,
++      context: { ...value.context, sourceRefs: value.context.sourceRefs.map((ref) => ({ ...ref, observedAt: "" })) },
++      components: value.components.map((component) => ({
++        ...component, sourceRefs: component.sourceRefs.map((ref) => ({ ...ref, observedAt: "" })),
++      })),
++    })
++    return again.status === "ok" && stableProjection(again.value.baseline) === stableProjection(values) && sourceAgain.status === "ok" && sourceAgain.value.evidence.refDigest === source.value.evidence.refDigest && resolvedAgain.length === resolved.length && resolvedAgain.every((entry, index) => stable(entry) === stable(resolved[index]!)) && !request.signal.aborted && await input.host.revalidate(context)
+   }
+ }
+
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+--- a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+@@ -35,6 +35,12 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
+ type ResultSelection = { references: readonly string[]; fixedCaseId?: string; skip?: (index: number) => boolean }
+ const resultReads = new WeakMap<object, ResultSelection>()
+ 
++type SfDecisionReadValue = {
++  stored: NonNullable<SfProductState["decisionResults"]>[string]
++  current: SfProductState["cases"][string] | undefined
++}
++export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext): (state: Readonly<SfProductState>, authority: SfStateAuthority) => SfDecisionReadValue | undefined
++export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId: string): (state: Readonly<SfProductState>, authority: SfStateAuthority) => { stored: SfDecisionReadValue["stored"] | undefined; current: SfDecisionReadValue["current"] } | undefined
+ export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId?: string) {
+   const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
+     if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
+@@ -87,7 +93,7 @@ function projectResultRead(state: SfProductState, selection: ResultSelection): S
+   for (const [index, ref] of selection.references.entries()) {
+     if (selection.skip?.(index)) continue
+     const field = Object.getOwnPropertyDescriptor(results, ref)
+-    if (!field) { if (ref in results) return undefined }
++    if (!field) { if (ref in results || ref in Object.prototype) return undefined }
+     else {
+       if (!field.enumerable || !("value" in field)) return undefined
+       chosenResults[ref] = field.value
+@@ -105,7 +111,7 @@ function projectResultRead(state: SfProductState, selection: ResultSelection): S
+     if (caseId === null) return undefined
+     if (caseId === undefined) continue
+     const current = Object.getOwnPropertyDescriptor(cases, caseId)
+-    if (!current) { if (caseId in cases) return undefined; continue }
++    if (!current) { if (caseId in cases || caseId in Object.prototype) return undefined; continue }
+     if (!current.enumerable || !("value" in current)) return undefined
+     chosenCases[caseId] = current.value
+   }
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts b/modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts
+--- a/modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts
+@@ -1,5 +1,5 @@
+ import { expect, test } from "bun:test"
+-import type { SfProductState } from "../../../product/contracts/state.ts"
++import type { SfProductState, SfStateAuthority } from "../../../product/contracts/state.ts"
+ import { selectSfDecisionResult } from "../../../product/host-binding/state-provider.ts"
+ import { createCalculationFixture } from "../planner-p03-finish/calculation-fixture.ts"
+ 
+@@ -92,3 +92,31 @@ test("C08 selected result fallback preserves accessor effects, noncloneable fail
+     await f.cleanup()
+   }
+ }, 60000)
++
++test("C08 projection keeps null-prototype inherited-key behavior for missing results and cases", async () => {
++  const f = await createCalculationFixture()
++  const transaction = f.fixture.store.transaction
++  try {
++    f.fixture.store.transaction = (surface, work, options) => transaction(surface, async (snapshot, blobs) => {
++      if (surface === "dashboard") {
++        const state = snapshot.data.__sfProductV1 as SfProductState
++        if (state.decisionResults) Object.setPrototypeOf(state.decisionResults, null)
++        Object.setPrototypeOf(state.cases, null)
++      }
++      return work(snapshot, blobs)
++    }, options)
++    const request = f.fixture.request
++    const context = f.fixture.context
++    const settle = async <T>(read: (state: Readonly<SfProductState>, authority: SfStateAuthority) => T) => {
++      try { return { outcome: "returned", result: await f.settings.state.read(request, "cases", read) } }
++      catch (cause) { return { outcome: "threw", name: cause instanceof Error ? cause.name : String(cause), message: cause instanceof Error ? cause.message : "" } }
++    }
++    const absent = selectSfDecisionResult("constructor", context)
++    expect(await settle(absent)).toEqual(await settle((state, authority) => absent(state, authority)))
++    const fixed = selectSfDecisionResult(f.original.resultRef, context, "constructor")
++    expect(await settle(fixed)).toEqual(await settle((state, authority) => fixed(state, authority)))
++  } finally {
++    f.fixture.store.transaction = transaction
++    await f.cleanup()
++  }
++}, 60000)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts
+--- a/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts
++++ b/modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts
+@@ -2,7 +2,7 @@
+ export const diagnosticExpected = {
+   label: "p03-causal-closure99",
+   producers: {
+-    "product/host-binding/state-provider.ts": "acc07d5f12aa1818a72d6ab9ac8ced36489739485d661d72b5a02249d5d34b8f",
++    "product/host-binding/state-provider.ts": "ad281c453361fd1015c0bfce9a3421eda65bda21f8848d8ac3a2c3cccfc38939",
+     "product/decisions/result-store.ts": "3f238642d247269a807353378a7d5f68b9c36c9ca5deb7a2a13be3d8f00ae6e5",
+     "product/decisions/criterion-comparison.ts": "0faeabe7da29ded1a5f1297fa4ad9d86190f63042a10622900c9b40cd035b4ef",
+   },
+

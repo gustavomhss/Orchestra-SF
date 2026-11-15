@@ -1,0 +1,55 @@
+{
+  "schema": "sf2h.p03-causal-closure.revision-chain.v1",
+  "base_7f": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+  "initial_complete_patch": "delivery/PRODUCT-AND-TESTS99.patch",
+  "after_initial_complete_patch": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+  "delta_patch": "delivery/DELTA-F2-99.patch",
+  "delta_commits_in_order": [
+    "3d03ef50f4d47b27b8f660c061d6c55d3a64e5e7",
+    "a3cca4abea8ad81782f97633568fe3a2c0175356"
+  ],
+  "candidate_product_commit": "a3cca4abea8ad81782f97633568fe3a2c0175356",
+  "candidate_tree": "c80233703ba6fd058024d9054b09848d1887ed42",
+  "parts": [
+    {
+      "commit": "3d03ef50f4d47b27b8f660c061d6c55d3a64e5e7",
+      "file": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts"
+    },
+    {
+      "commit": "a3cca4abea8ad81782f97633568fe3a2c0175356",
+      "file": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts"
+    },
+    {
+      "commit": "a3cca4abea8ad81782f97633568fe3a2c0175356",
+      "file": "modules/sucafina/Sucafinav1/test/product/p03-causal-closure/result-read-projection.test.ts"
+    },
+    {
+      "commit": "a3cca4abea8ad81782f97633568fe3a2c0175356",
+      "file": "modules/sucafina/Sucafinav1/test/product/planner-p03-finish/diagnostic-expected.ts"
+    }
+  ],
+  "limits": "Apply original complete patch first and second delta to same 7f base; commit metadata must be reconciled by sole integrator71; use current target preimages, do not cherry-pick entire branch.",
+  "R2": {
+    "run": 43681797855,
+    "status": "pass",
+    "pass": 21,
+    "expect": 232,
+    "diagnostic_ms": 30846.74
+  },
+  "R3": {
+    "run": 43682264507,
+    "status": "pass",
+    "pass": 22,
+    "expect": 234,
+    "callback_events": 87440,
+    "callback_sha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+    "diagnostic_ms": 29452.99
+  },
+  "P03": {
+    "run": 43682515795,
+    "status": "RUNNING",
+    "assertions": 72,
+    "timeout_ms": 180000
+  },
+  "no_global_release": true
+}

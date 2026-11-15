@@ -35,6 +35,12 @@ export function selectSfCase(id: string, context: TrustedDomainContext) {
 type ResultSelection = { references: readonly string[]; fixedCaseId?: string; skip?: (index: number) => boolean }
 const resultReads = new WeakMap<object, ResultSelection>()
 
+type SfDecisionReadValue = {
+  stored: NonNullable<SfProductState["decisionResults"]>[string]
+  current: SfProductState["cases"][string] | undefined
+}
+export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext): (state: Readonly<SfProductState>, authority: SfStateAuthority) => SfDecisionReadValue | undefined
+export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId: string): (state: Readonly<SfProductState>, authority: SfStateAuthority) => { stored: SfDecisionReadValue["stored"] | undefined; current: SfDecisionReadValue["current"] } | undefined
 export function selectSfDecisionResult(resultRef: string, context: TrustedDomainContext, fixedCaseId?: string) {
   const read = (state: Readonly<SfProductState>, authority: SfStateAuthority) => {
     if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion || authority.accessRevision !== context.binding.accessRevision) return undefined
@@ -87,7 +93,7 @@ function projectResultRead(state: SfProductState, selection: ResultSelection): S
   for (const [index, ref] of selection.references.entries()) {
     if (selection.skip?.(index)) continue
     const field = Object.getOwnPropertyDescriptor(results, ref)
-    if (!field) { if (ref in results) return undefined }
+    if (!field) { if (ref in results || ref in Object.prototype) return undefined }
     else {
       if (!field.enumerable || !("value" in field)) return undefined
       chosenResults[ref] = field.value
@@ -105,7 +111,7 @@ function projectResultRead(state: SfProductState, selection: ResultSelection): S
     if (caseId === null) return undefined
     if (caseId === undefined) continue
     const current = Object.getOwnPropertyDescriptor(cases, caseId)
-    if (!current) { if (caseId in cases) return undefined; continue }
+    if (!current) { if (caseId in cases || caseId in Object.prototype) return undefined; continue }
     if (!current.enumerable || !("value" in current)) return undefined
     chosenCases[caseId] = current.value
   }
