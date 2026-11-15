@@ -23,7 +23,7 @@ test("AM01 shared recall runs under all five real profiles and reopens five sepa
   await withWp12NativeMissionHost({
     label: "am01-five-profile-recall",
     initialize: initializeWp12ScenarioSources,
-    operations: [...WP12_SCENARIO_OPERATIONS, ...requiredTools],
+    operations: [...WP12_SCENARIO_OPERATIONS, ...requiredTools, "sf_evidence_get"],
     humanActions: WP12_SCENARIO_HUMAN_ACTIONS,
   }, async ({ open }) => {
     const first = await open("initial", async (context) => {
