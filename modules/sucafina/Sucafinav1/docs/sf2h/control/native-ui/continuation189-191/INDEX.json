@@ -1,0 +1,970 @@
+{
+  "schema": "sf2h.continuation189-191-index.v1",
+  "state": "PREPARED_NOT_STARTED",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "native_goal": "paused",
+  "global_release": false,
+  "missions": [
+    {
+      "mission": 189,
+      "title": "Integrar entregas prontas e fechar conexões reais",
+      "branch": "sf2-stack",
+      "pr": 65,
+      "epoch": "S0-C-e21-browser189",
+      "head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab"
+    },
+    {
+      "mission": 190,
+      "title": "Compilar, consumir SDK e verificar guards",
+      "branch": "sf-compiler-checks",
+      "pr": 107,
+      "epoch": "compiler-e5-browser190",
+      "head": "3e3c8f616637292e5bf0be409d86f9ae6cdc6010"
+    },
+    {
+      "mission": 191,
+      "title": "CI cirúrgico e provas nos lotes integrados",
+      "branch": "sf-ci-validation",
+      "pr": 106,
+      "epoch": "product-ci-e5-browser191",
+      "head": "211e6c0b40512c1d016b04c1095b5872ec56b807"
+    }
+  ],
+  "source_heads": [
+    {
+      "mission": 165,
+      "branch": "sf-am01-proof",
+      "epoch": "proof-am01-e1-browser165",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/",
+      "head": "1a28bc587548f7bce8c514715db2ce122fe8b7c0",
+      "tree": "1d0b7e6a845fc1e0dec44d1f33dfc3fd8ce79ffd",
+      "message": "fix(sf): correlate AM01 across distinct CI request snapshots of one candidate [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/ack-proof-am01-e1-browser165.json",
+          "name": "ack-proof-am01-e1-browser165.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a28bc587548f7bce8c514715db2ce122fe8b7c0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/ack-proof-am01-e1-browser165.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/terminal-proof-am01-e1-browser165.json",
+          "name": "terminal-proof-am01-e1-browser165.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a28bc587548f7bce8c514715db2ce122fe8b7c0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/terminal-proof-am01-e1-browser165.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/terminal-proof-am01-e1-browser165.json",
+          "name": "terminal-proof-am01-e1-browser165.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1a28bc587548f7bce8c514715db2ce122fe8b7c0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/terminal-proof-am01-e1-browser165.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 166,
+      "branch": "sf-am02-proof",
+      "epoch": "proof-am02-e1-browser166",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/",
+      "head": "88febfc1248b5fb6b1a76737d41c9a57e144646a",
+      "tree": "e930b4673acba13220390005255d7b6051595be4",
+      "message": "docs(sf): terminal AM02 handoff with PR180 and posted 162/163/164 requests [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/ack.json",
+          "name": "ack.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/88febfc1248b5fb6b1a76737d41c9a57e144646a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/ack.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/am02-coverage-handoff.json",
+          "name": "am02-coverage-handoff.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/88febfc1248b5fb6b1a76737d41c9a57e144646a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/am02-coverage-handoff.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/terminal.json",
+          "name": "terminal.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/88febfc1248b5fb6b1a76737d41c9a57e144646a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/terminal.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/am02-coverage-handoff.json",
+          "name": "am02-coverage-handoff.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/88febfc1248b5fb6b1a76737d41c9a57e144646a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/am02-coverage-handoff.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/terminal.json",
+          "name": "terminal.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/88febfc1248b5fb6b1a76737d41c9a57e144646a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/terminal.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 167,
+      "branch": "sf-am03-proof",
+      "epoch": "proof-am03-e1-browser167",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/",
+      "head": "7b766859a90aa7b028240dc7013ce9ee77983958",
+      "tree": "2e6e0a91d8fc8e37d74ba5b18c2640079f4a87cc",
+      "message": "docs(sf): pin final AM03 correlation code blob and CI source tree [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b766859a90aa7b028240dc7013ce9ee77983958/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/TERMINAL-167.json",
+          "name": "TERMINAL-167.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b766859a90aa7b028240dc7013ce9ee77983958/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/TERMINAL-167.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/TERMINAL-167.json",
+          "name": "TERMINAL-167.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b766859a90aa7b028240dc7013ce9ee77983958/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/TERMINAL-167.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 168,
+      "branch": "sf-am04-proof",
+      "epoch": "proof-am04-e1-browser168",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/",
+      "head": "0dcf98aeb738374ac91b6291b00691e305122ce4",
+      "tree": "c45fe202741d8a70af2ffb8be9f17592784b7b36",
+      "message": "test(sf): add fail-closed AM04 evidence correlator and handoffs",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/ack.json",
+          "name": "ack.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0dcf98aeb738374ac91b6291b00691e305122ce4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/ack.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-162.json",
+          "name": "handoff-162.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0dcf98aeb738374ac91b6291b00691e305122ce4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-162.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-terminal.json",
+          "name": "handoff-terminal.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0dcf98aeb738374ac91b6291b00691e305122ce4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-terminal.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/proof-matrix.json",
+          "name": "proof-matrix.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0dcf98aeb738374ac91b6291b00691e305122ce4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/proof-matrix.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/request-163.json",
+          "name": "request-163.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0dcf98aeb738374ac91b6291b00691e305122ce4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/request-163.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/request-164.json",
+          "name": "request-164.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0dcf98aeb738374ac91b6291b00691e305122ce4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/request-164.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-162.json",
+          "name": "handoff-162.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0dcf98aeb738374ac91b6291b00691e305122ce4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-162.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-terminal.json",
+          "name": "handoff-terminal.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0dcf98aeb738374ac91b6291b00691e305122ce4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-terminal.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 169,
+      "branch": "sf-am05-proof",
+      "epoch": "proof-am05-e1-browser169",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/",
+      "head": "2080abb393f2f03bc3cf313e67802b3935dc609f",
+      "tree": "9aa0aa65712f14d3c39b86367965ec4045bf4f77",
+      "message": "docs(sf-am05): publish immutable terminal handoff and no-release evidence [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/HANDOFF.md",
+          "name": "HANDOFF.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2080abb393f2f03bc3cf313e67802b3935dc609f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/ack.json",
+          "name": "ack.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2080abb393f2f03bc3cf313e67802b3935dc609f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/ack.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/coverage.json",
+          "name": "coverage.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2080abb393f2f03bc3cf313e67802b3935dc609f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/coverage.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/requests-163-164.json",
+          "name": "requests-163-164.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2080abb393f2f03bc3cf313e67802b3935dc609f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/requests-163-164.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/terminal.json",
+          "name": "terminal.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2080abb393f2f03bc3cf313e67802b3935dc609f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/terminal.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/HANDOFF.md",
+          "name": "HANDOFF.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2080abb393f2f03bc3cf313e67802b3935dc609f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/terminal.json",
+          "name": "terminal.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2080abb393f2f03bc3cf313e67802b3935dc609f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/terminal.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 170,
+      "branch": "sf-am06-proof",
+      "epoch": "proof-am06-e1-browser170",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/",
+      "head": "83c0401dc15e811834bb3495d56a60787bd5c33b",
+      "tree": "7a73f4ce988deaa1dd95f44ee20dc965bf98a139",
+      "message": "docs(sf): hand off AM06 surgical CI and unresolved native witnesses",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/ack.json",
+          "name": "ack.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/83c0401dc15e811834bb3495d56a60787bd5c33b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/ack.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/handoff.json",
+          "name": "handoff.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/83c0401dc15e811834bb3495d56a60787bd5c33b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/handoff.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/handoff.json",
+          "name": "handoff.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/83c0401dc15e811834bb3495d56a60787bd5c33b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/handoff.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 171,
+      "branch": "sf-ux-a12",
+      "epoch": "ux-native-a12-e3-browser171",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/",
+      "head": "6520f5f0cbce97672273ea598347bc199a73588b",
+      "tree": "7240072c22652e379afe08bbe982a0e22d24ca1d",
+      "message": "docs(sf): archive exact four-file unified A12 patch and preimages",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6520f5f0cbce97672273ea598347bc199a73588b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/PATCH.diff",
+          "name": "PATCH.diff",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6520f5f0cbce97672273ea598347bc199a73588b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/PATCH.diff"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/REQUESTS-162-163-164.json",
+          "name": "REQUESTS-162-163-164.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6520f5f0cbce97672273ea598347bc199a73588b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/REQUESTS-162-163-164.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6520f5f0cbce97672273ea598347bc199a73588b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/S0-FENCE.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/TERMINAL.json",
+          "name": "TERMINAL.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6520f5f0cbce97672273ea598347bc199a73588b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/TERMINAL.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/protected-shared-inert-patch.json",
+          "name": "protected-shared-inert-patch.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6520f5f0cbce97672273ea598347bc199a73588b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/protected-shared-inert-patch.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/protected-shared-inert-patch.md",
+          "name": "protected-shared-inert-patch.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6520f5f0cbce97672273ea598347bc199a73588b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/protected-shared-inert-patch.md"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/TERMINAL.json",
+          "name": "TERMINAL.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6520f5f0cbce97672273ea598347bc199a73588b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/TERMINAL.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 172,
+      "branch": "sf-ux-w02",
+      "epoch": "ux-native-w02-e3-browser172",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/",
+      "head": "7be8d20208226e0ccbd6a45a13f9e1ad3748a441",
+      "tree": "047e071d73af83185319d093bd27766f0ae8804b",
+      "message": "docs(sf): terminal F01 handoff with exact sources, negative evidence and 162/163/164 requests [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/ACK-172.json",
+          "name": "ACK-172.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7be8d20208226e0ccbd6a45a13f9e1ad3748a441/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/ACK-172.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/HANDOFF-172.json",
+          "name": "HANDOFF-172.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7be8d20208226e0ccbd6a45a13f9e1ad3748a441/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/HANDOFF-172.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/HANDOFF-172.md",
+          "name": "HANDOFF-172.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7be8d20208226e0ccbd6a45a13f9e1ad3748a441/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/HANDOFF-172.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/PATCHES-162-F01.json",
+          "name": "PATCHES-162-F01.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7be8d20208226e0ccbd6a45a13f9e1ad3748a441/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/PATCHES-162-F01.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7be8d20208226e0ccbd6a45a13f9e1ad3748a441/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/HANDOFF-172.json",
+          "name": "HANDOFF-172.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7be8d20208226e0ccbd6a45a13f9e1ad3748a441/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/HANDOFF-172.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/HANDOFF-172.md",
+          "name": "HANDOFF-172.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7be8d20208226e0ccbd6a45a13f9e1ad3748a441/modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/HANDOFF-172.md"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 173,
+      "branch": "sf-ux-w16",
+      "epoch": "native-fix-e1-browser173",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/",
+      "head": "1710bfd33d0db91be4eee3158e25da995f6d87e3",
+      "tree": "a827682cc5807f1df8216790260065e6d2ab0eeb",
+      "message": "docs(sf): terminal 173 Effect source handoff to 162/163/164 [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/ACK-173.json",
+          "name": "ACK-173.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1710bfd33d0db91be4eee3158e25da995f6d87e3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/ACK-173.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/CHECKPOINT-173.json",
+          "name": "CHECKPOINT-173.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1710bfd33d0db91be4eee3158e25da995f6d87e3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/CHECKPOINT-173.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/HANDOFF-173.json",
+          "name": "HANDOFF-173.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1710bfd33d0db91be4eee3158e25da995f6d87e3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/HANDOFF-173.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/HANDOFF-173.md",
+          "name": "HANDOFF-173.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1710bfd33d0db91be4eee3158e25da995f6d87e3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/HANDOFF-173.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/PATCH-173.diff",
+          "name": "PATCH-173.diff",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1710bfd33d0db91be4eee3158e25da995f6d87e3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/PATCH-173.diff"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1710bfd33d0db91be4eee3158e25da995f6d87e3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/HANDOFF-173.json",
+          "name": "HANDOFF-173.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1710bfd33d0db91be4eee3158e25da995f6d87e3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/HANDOFF-173.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/HANDOFF-173.md",
+          "name": "HANDOFF-173.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1710bfd33d0db91be4eee3158e25da995f6d87e3/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix173/HANDOFF-173.md"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 174,
+      "branch": "sf-ux-w15",
+      "epoch": "native-fix-e1-browser174",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/",
+      "head": "0bcf034da608b5a89576f5e43fcd66349b397baa",
+      "tree": "74ff9f45f299827a21668e18e0337e688a6a8cab",
+      "message": "docs(sf): finalize verified Planner fix174 handoff [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0bcf034da608b5a89576f5e43fcd66349b397baa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/EVIDENCE.json",
+          "name": "EVIDENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0bcf034da608b5a89576f5e43fcd66349b397baa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/EVIDENCE.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/HANDOFF.md",
+          "name": "HANDOFF.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0bcf034da608b5a89576f5e43fcd66349b397baa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/PATCH-162.md",
+          "name": "PATCH-162.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0bcf034da608b5a89576f5e43fcd66349b397baa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/PATCH-162.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/REQUESTS-163-164.json",
+          "name": "REQUESTS-163-164.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0bcf034da608b5a89576f5e43fcd66349b397baa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/REQUESTS-163-164.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0bcf034da608b5a89576f5e43fcd66349b397baa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/HANDOFF.md",
+          "name": "HANDOFF.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0bcf034da608b5a89576f5e43fcd66349b397baa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix174/HANDOFF.md"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 175,
+      "branch": "sf-ux-w17",
+      "epoch": "native-fix-e1-browser175",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/",
+      "head": "7b1a076f2f9270fc37c136245232e6d4b7674881",
+      "tree": "58b4ebcc2c85e1f18602b77a6646668ddc9b119d",
+      "message": "docs(sf): clarify original strict excess-key rejection in receipt175 [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/ACK-175.json",
+          "name": "ACK-175.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b1a076f2f9270fc37c136245232e6d4b7674881/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/ACK-175.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/ARTIFACT-READY-175.json",
+          "name": "ARTIFACT-READY-175.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b1a076f2f9270fc37c136245232e6d4b7674881/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/ARTIFACT-READY-175.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/HANDOFF-175.md",
+          "name": "HANDOFF-175.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b1a076f2f9270fc37c136245232e6d4b7674881/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/HANDOFF-175.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/PATCH-175.patch",
+          "name": "PATCH-175.patch",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b1a076f2f9270fc37c136245232e6d4b7674881/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/PATCH-175.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b1a076f2f9270fc37c136245232e6d4b7674881/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/S0-FENCE.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/SOURCE-PATCH-175.json",
+          "name": "SOURCE-PATCH-175.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b1a076f2f9270fc37c136245232e6d4b7674881/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/SOURCE-PATCH-175.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/HANDOFF-175.md",
+          "name": "HANDOFF-175.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7b1a076f2f9270fc37c136245232e6d4b7674881/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix175/HANDOFF-175.md"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 176,
+      "branch": "sf-ux-a11",
+      "epoch": "native-fix-e1-browser176",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/",
+      "head": "2baa39cef66153d75a363958fe716d80ed1c2081",
+      "tree": "8d544d8967c4fb7fd37087ab2232c82c9094bef3",
+      "message": "docs(sf): hand off fenced A11 SelectionResolved fix to 162 163 164 [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/ACK-176.json",
+          "name": "ACK-176.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2baa39cef66153d75a363958fe716d80ed1c2081/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/ACK-176.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/HANDOFF-176.md",
+          "name": "HANDOFF-176.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2baa39cef66153d75a363958fe716d80ed1c2081/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/HANDOFF-176.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/PATCH-162.json",
+          "name": "PATCH-162.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2baa39cef66153d75a363958fe716d80ed1c2081/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/PATCH-162.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2baa39cef66153d75a363958fe716d80ed1c2081/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/HANDOFF-176.md",
+          "name": "HANDOFF-176.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2baa39cef66153d75a363958fe716d80ed1c2081/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix176/HANDOFF-176.md"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 177,
+      "branch": "sf-ux-w14",
+      "epoch": "native-fix-e1-browser177",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/",
+      "head": "dc4beff8175629b1d62cd972d8393b7cd817054c",
+      "tree": "b39673f53421e6bc51bdef97ad1dc008137b9c33",
+      "message": "docs(sf): handoff fix177 A01 selective closure to integrator 162 [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc4beff8175629b1d62cd972d8393b7cd817054c/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/HANDOFF.json",
+          "name": "HANDOFF.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc4beff8175629b1d62cd972d8393b7cd817054c/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/HANDOFF.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/PATCH-162.md",
+          "name": "PATCH-162.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc4beff8175629b1d62cd972d8393b7cd817054c/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/PATCH-162.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc4beff8175629b1d62cd972d8393b7cd817054c/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/HANDOFF.json",
+          "name": "HANDOFF.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dc4beff8175629b1d62cd972d8393b7cd817054c/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/HANDOFF.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 178,
+      "branch": "sf-ux-a10",
+      "epoch": "native-fix-e1-browser178",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/",
+      "head": "51e229ccbc24edbacd2634aa7390dda8fef5a28d",
+      "tree": "594bfa1d7b89849846e561abbf027a4d3061d5f5",
+      "message": "docs(sf2h): hand off complete fix178 patch and hosted validation requests",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/ACK-178.json",
+          "name": "ACK-178.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/51e229ccbc24edbacd2634aa7390dda8fef5a28d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/ACK-178.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/HANDOFF-178.json",
+          "name": "HANDOFF-178.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/51e229ccbc24edbacd2634aa7390dda8fef5a28d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/HANDOFF-178.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/PATCH-178.diff",
+          "name": "PATCH-178.diff",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/51e229ccbc24edbacd2634aa7390dda8fef5a28d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/PATCH-178.diff"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/51e229ccbc24edbacd2634aa7390dda8fef5a28d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/HANDOFF-178.json",
+          "name": "HANDOFF-178.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/51e229ccbc24edbacd2634aa7390dda8fef5a28d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix178/HANDOFF-178.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 179,
+      "branch": "sf-ux-a09",
+      "epoch": "native-fix-e1-browser179",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/",
+      "head": "3b93d1c9cca27fde60896fbf42af1b6ead637b75",
+      "tree": "1cf6e5be10cc86f0544891fe6df8d519cfc64666",
+      "message": "docs(sf): handoff routines fix179 and inert integration seam",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/HANDOFF.json",
+          "name": "HANDOFF.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/HANDOFF.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/HANDOFF.md",
+          "name": "HANDOFF.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/INERT-162.diff",
+          "name": "INERT-162.diff",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/INERT-162.diff"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/INERT-162.json",
+          "name": "INERT-162.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/INERT-162.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/PATCH.diff",
+          "name": "PATCH.diff",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/PATCH.diff"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/REQUESTS-163-164.json",
+          "name": "REQUESTS-163-164.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/REQUESTS-163-164.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/HANDOFF.json",
+          "name": "HANDOFF.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/HANDOFF.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/HANDOFF.md",
+          "name": "HANDOFF.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3b93d1c9cca27fde60896fbf42af1b6ead637b75/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/HANDOFF.md"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 180,
+      "branch": "sf-ux-a14",
+      "epoch": "native-fix-e1-browser180",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/",
+      "head": "c9afc262f7cfac3b4a11e2ad10922d0f893ea671",
+      "tree": "48397cf453f59a9f12c4824075cd66c8fbdfe597",
+      "message": "docs(sf): hand off mission 180 source fix to integrator",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9afc262f7cfac3b4a11e2ad10922d0f893ea671/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/HANDOFF.md",
+          "name": "HANDOFF.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9afc262f7cfac3b4a11e2ad10922d0f893ea671/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9afc262f7cfac3b4a11e2ad10922d0f893ea671/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/S0-FENCE.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/TERMINAL.json",
+          "name": "TERMINAL.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9afc262f7cfac3b4a11e2ad10922d0f893ea671/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/TERMINAL.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/HANDOFF.md",
+          "name": "HANDOFF.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9afc262f7cfac3b4a11e2ad10922d0f893ea671/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/HANDOFF.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/TERMINAL.json",
+          "name": "TERMINAL.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c9afc262f7cfac3b4a11e2ad10922d0f893ea671/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix180/TERMINAL.json"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 181,
+      "branch": "sf-ux-w01",
+      "epoch": "native-fix-e1-browser181",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/",
+      "head": "d234efa53262b2bcf157292be1a5aa729c3adb11",
+      "tree": "8e1be1c190ffbd494c1f69d38886d79631916d68",
+      "message": "docs(sf): handoff D01 codec fix181 with exact consumer patch [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/ACK181.json",
+          "name": "ACK181.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d234efa53262b2bcf157292be1a5aa729c3adb11/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/ACK181.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/HANDOFF181.md",
+          "name": "HANDOFF181.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d234efa53262b2bcf157292be1a5aa729c3adb11/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/HANDOFF181.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/PATCH181.patch",
+          "name": "PATCH181.patch",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d234efa53262b2bcf157292be1a5aa729c3adb11/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/PATCH181.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/RESULT181.json",
+          "name": "RESULT181.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d234efa53262b2bcf157292be1a5aa729c3adb11/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/RESULT181.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d234efa53262b2bcf157292be1a5aa729c3adb11/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/HANDOFF181.md",
+          "name": "HANDOFF181.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d234efa53262b2bcf157292be1a5aa729c3adb11/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix181/HANDOFF181.md"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 182,
+      "branch": "sf-ux-w04",
+      "epoch": "native-fix-e1-browser182",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/",
+      "head": "2304f06ce4a1269034ba7db94211c639878b3d1a",
+      "tree": "bc8e570705e64c5ce6ff31151f74cbcf4351f273",
+      "message": "fix(sf): reexport F03 chart unit type for BI consumer [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/ACK-182.json",
+          "name": "ACK-182.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2304f06ce4a1269034ba7db94211c639878b3d1a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/ACK-182.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/CONSUMER-162-INERT.patch",
+          "name": "CONSUMER-162-INERT.patch",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2304f06ce4a1269034ba7db94211c639878b3d1a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/CONSUMER-162-INERT.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2304f06ce4a1269034ba7db94211c639878b3d1a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/S0-FENCE.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/SOURCE-FIX182.patch",
+          "name": "SOURCE-FIX182.patch",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/2304f06ce4a1269034ba7db94211c639878b3d1a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/SOURCE-FIX182.patch"
+        }
+      ],
+      "handoffs": [],
+      "release_observation": "NO_TERMINAL_HANDOFF_AT_CUT"
+    },
+    {
+      "mission": 183,
+      "branch": "sf-ux-w06",
+      "epoch": "native-fix-e1-browser183",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/",
+      "head": "3af72005104564c027c008ea61211848ff0cc9b2",
+      "tree": "7751651c99d9f150381a34a641290e5c589b40ff",
+      "message": "docs(sf2h): hand off fix183 provider patch to integrator162 [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3af72005104564c027c008ea61211848ff0cc9b2/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/HANDOFF-183.json",
+          "name": "HANDOFF-183.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3af72005104564c027c008ea61211848ff0cc9b2/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/HANDOFF-183.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/HANDOFF-183.md",
+          "name": "HANDOFF-183.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3af72005104564c027c008ea61211848ff0cc9b2/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/HANDOFF-183.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/PATCH-S01-183.patch",
+          "name": "PATCH-S01-183.patch",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3af72005104564c027c008ea61211848ff0cc9b2/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/PATCH-S01-183.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3af72005104564c027c008ea61211848ff0cc9b2/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/HANDOFF-183.json",
+          "name": "HANDOFF-183.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3af72005104564c027c008ea61211848ff0cc9b2/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/HANDOFF-183.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/HANDOFF-183.md",
+          "name": "HANDOFF-183.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3af72005104564c027c008ea61211848ff0cc9b2/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/HANDOFF-183.md"
+        }
+      ],
+      "release_observation": "AUTHOR_HANDOFF_AVAILABLE_VERIFY_RELEASE_INPUTS"
+    },
+    {
+      "mission": 184,
+      "branch": "sf-ux-w10",
+      "epoch": "native-fix-e1-browser184",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/",
+      "head": "ee13ca9c8f86b69e2cab60734ea8947cbf241fb8",
+      "tree": "8d6488459206443dae58bc7d278d711ade15c02b",
+      "message": "test(sf2h): assert actual CRLF bytes in thread reply [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ee13ca9c8f86b69e2cab60734ea8947cbf241fb8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/ee13ca9c8f86b69e2cab60734ea8947cbf241fb8/modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [],
+      "release_observation": "NO_TERMINAL_HANDOFF_AT_CUT"
+    },
+    {
+      "mission": 185,
+      "branch": "sf-ux-n22",
+      "epoch": "closure-e1-browser185",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure185/",
+      "head": "3429cf23157a56b6ff5d5b4794d1207fad31f1fa",
+      "tree": "c899ac69b1ab3643d5ec4361d06466e110d71566",
+      "message": "docs(sf): transfer skipped-journey closure to fresh mission185 [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure185/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3429cf23157a56b6ff5d5b4794d1207fad31f1fa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure185/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [],
+      "release_observation": "NO_TERMINAL_HANDOFF_AT_CUT"
+    },
+    {
+      "mission": 186,
+      "branch": "sf-ux-n13",
+      "epoch": "closure-e1-browser186",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure186/",
+      "head": "9d0e41d003800a8da2f7d60f67433fdf71d88916",
+      "tree": "ada65562adf6999f5bc2dc4ab5b62c411a110353",
+      "message": "docs(sf): transfer skipped-journey closure to fresh mission186 [skip ci]",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure186/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9d0e41d003800a8da2f7d60f67433fdf71d88916/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure186/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [],
+      "release_observation": "NO_TERMINAL_HANDOFF_AT_CUT"
+    },
+    {
+      "mission": 187,
+      "branch": "sf-ux-w05",
+      "epoch": "closure-e1-browser187",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/",
+      "head": "1720fadc93ba64f3a2058eee3802f285c26ed5ca",
+      "tree": "f91c81f48d4743284fb03375795ea9eb95a02a7c",
+      "message": "docs(sf): acknowledge closure187 F04 epoch and source pins",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/ACK.json",
+          "name": "ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1720fadc93ba64f3a2058eee3802f285c26ed5ca/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/S0-FENCE.json",
+          "name": "S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1720fadc93ba64f3a2058eee3802f285c26ed5ca/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure187/S0-FENCE.json"
+        }
+      ],
+      "handoffs": [],
+      "release_observation": "NO_TERMINAL_HANDOFF_AT_CUT"
+    },
+    {
+      "mission": 188,
+      "branch": "sf-guard-evidence",
+      "epoch": "closure-e1-browser188",
+      "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure188/",
+      "head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+      "tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+      "message": "fix(sf): integrate released N10 Today/private search and N11 Work/desktop owner-state leaves (156-157) [skip ci]",
+      "receipt_read_error": true
+    }
+  ],
+  "routing": {
+    "sole_integrator": "189/S0-C-e21-browser189/PR65",
+    "compiler": "190/compiler-e5-browser190/PR107",
+    "product_ci": "191/product-ci-e5-browser191/PR106",
+    "predecessors": "162/163/164 future write/dispatch revoked by three actual CAS fences; history/results preserved"
+  },
+  "note": "Only three continuation roles replaced. Source165–188unchanged. Restore23alreadyintegratedunits,doNOTredo133–160. New18sourcehandoffs and original161seamreadyforverification; actualproductcode/proofsrequired."
+}
