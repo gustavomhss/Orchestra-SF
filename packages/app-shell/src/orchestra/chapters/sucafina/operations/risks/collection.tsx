@@ -496,9 +496,9 @@ export function SfNativeCollection<Id extends Cap, Row extends Entity, Values ex
                     <Show when={store.mode === "review-save" && activeState()?.availability === "active" ? draft() : null}>
                       {(active) => {
                         const current = () => active().controller.snapshot()
-                        const sourceVersion = () => current().availability === "active" ? current().baseVersion : null
-                        const proposedFields = () => current().availability === "active"
-                          ? reviewFields(active().entity, current().value) : []
+                        const sourceVersion = () => { const state = current(); return state.availability === "active" ? state.baseVersion : null }
+                        const proposedFields = () => { const state = current(); return state.availability === "active"
+                          ? reviewFields(active().entity, state.value) : [] }
                         return <SfChangeReview
                           operation={{ ref: active().operationRef, label: message(spec.primary),
                             scope: { kind: "message", message: message(spec.title) } }}
