@@ -181,7 +181,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
               <Show when={canEdit("save-users")}>
                 <SfU02Edit surfaceId="CAP01" operationId="domain.command.CAP01.save-users"
                   actionId="save-users" labelKey="sf.u02.editUsers" valueLabelKey="sf.u02.users"
-                  value={knownNumber(users()?.users)} version={versions()["itUsersMonthly:" + String(users()?.id ?? "")] ?? 0}
+                  value={knownNumber(users()?.users)} version={versions()["itUsersMonthly:" + String(users()?.id ?? "")] ?? (users()?.id === undefined ? 0 : undefined)}
                   recordId={users()?.id === undefined ? undefined : String(users()?.id)} year={year()!} month={month()!}
                   scope={String(year()) + ":" + String(month()) + ":users"} integerOnly min={0}
                   admitted={canEdit("save-users")} drafts={ready().drafts}
@@ -196,7 +196,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                 <SfU02Edit surfaceId="CAP01" operationId="domain.command.CAP01.save-benchmark"
                   actionId="save-benchmark" labelKey="sf.u02.editBenchmark" valueLabelKey="sf.u02.benchmark"
                   value={knownNumber(benchmark()?.value)}
-                  version={versions()["costPerUserBenchmarks:" + String(benchmark()?.id ?? "")] ?? 0}
+                  version={versions()["costPerUserBenchmarks:" + String(benchmark()?.id ?? "")] ?? (benchmark()?.id === undefined ? 0 : undefined)}
                   recordId={benchmark()?.id === undefined ? undefined : String(benchmark()?.id)}
                   year={year()!} month={month()!} scope={String(year()) + ":benchmark"} integerOnly={false} min={0}
                   admitted={canEdit("save-benchmark")} drafts={ready().drafts}
