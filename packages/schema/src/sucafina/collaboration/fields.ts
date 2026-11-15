@@ -185,16 +185,15 @@ const SfCoverageBase = {
   currency: Schema.String, horizon: SfPeriod, issues: Schema.Array(Schema.String),
   evaluatedSourceRefs: Schema.Array(SfEvidenceRef),
 }
-export const SfCostCoverage = Schema.Union([
-  Schema.Struct({
-    ...SfCoverageBase, coverageState: Schema.Literal("complete"),
-    entries: Schema.Array(SfCoverageWithoutPending), derivedMissingCategoryIds: Schema.Tuple([]),
-  }),
-  Schema.Struct({
-    ...SfCoverageBase, coverageState: Schema.Literals(["pending", "unavailable"]),
-    entries: Schema.Array(SfCoverageEntry), derivedMissingCategoryIds: Schema.Array(Schema.String),
-  }),
-])
+const SfCompleteCoverage = Schema.Struct({
+  ...SfCoverageBase, coverageState: Schema.Literal("complete"),
+  entries: Schema.Array(SfCoverageWithoutPending), derivedMissingCategoryIds: Schema.Tuple([]),
+})
+const SfIncompleteCoverage = Schema.Struct({
+  ...SfCoverageBase, coverageState: Schema.Literals(["pending", "unavailable"]),
+  entries: Schema.Array(SfCoverageEntry), derivedMissingCategoryIds: Schema.Array(Schema.String),
+})
+export const SfCostCoverage = Schema.Union([SfCompleteCoverage, SfIncompleteCoverage])
 const SfScenarioBase = {
   id: Schema.String, version: SfNonNegative, components: Schema.Array(SfProjectionComponent),
   currency: Schema.String, horizon: SfPeriod, sourceRefs: Schema.Array(SfEvidenceRef),
@@ -202,7 +201,7 @@ const SfScenarioBase = {
 }
 export const SfScenarioResult = Schema.Union([
   Schema.Struct({
-    ...SfScenarioBase, comparisonStatus: Schema.Literal("complete"), costCoverage: SfCostCoverage,
+    ...SfScenarioBase, comparisonStatus: Schema.Literal("complete"), costCoverage: SfCompleteCoverage,
     knownSubtotal: Schema.Finite, total: Schema.Finite,
   }),
   Schema.Struct({
@@ -229,6 +228,10 @@ export const SfScenarioComparison = Schema.Union([
     knownDifference: SfAmount, completeDifference: Schema.Null,
   }),
 ])
+const SfUnresolvedCondition = Schema.Struct({
+  id: Schema.String, category: Schema.String, reason: Schema.String,
+  evidenceRefs: Schema.Array(SfEvidenceRef), questionRef: Schema.optional(Schema.String),
+})
 const SfSensitivityBase = {
   scenarioRef: Schema.String, parameterRef: Schema.String,
   bounds: Schema.Struct({ minimum: Schema.Finite, maximum: Schema.Finite, steps: Schema.Finite }),
@@ -240,7 +243,7 @@ const SfSensitivityBase = {
   resultUnit: Schema.optional(Schema.String), engineVersion: Schema.String,
   costCoverageRefs: Schema.Array(Schema.String),
   comparisonStatus: Schema.Literals(["complete", "conditioned", "incompatible", "unavailable"]),
-  unresolvedConditions: Schema.Array(Schema.String), evidenceRefs: Schema.Array(SfEvidenceRef),
+  unresolvedConditions: Schema.Array(SfUnresolvedCondition), evidenceRefs: Schema.Array(SfEvidenceRef),
 }
 export const SfSensitivity = Schema.Struct({
   ...SfSensitivityBase,
@@ -250,7 +253,7 @@ export const SfSensitivity = Schema.Struct({
     Schema.Struct({ state: Schema.Literal("unavailable"), reason: Schema.String }),
   ]),
 })
-const SfPortfolioCombination = Schema.Struct({
+const SfPortfolioBase = {
   analysis: Schema.optional(Schema.Struct({
     scenarioResultRef: Schema.String, scenario: SfScenarioResult,
     comparisonRef: Schema.String, comparison: SfScenarioComparison,
@@ -258,9 +261,21 @@ const SfPortfolioCombination = Schema.Struct({
   id: Schema.String, caseRefs: Schema.Array(Schema.String),
   components: Schema.Array(SfProjectionComponent), costCoverageRefs: Schema.Array(Schema.String),
   conflicts: Schema.Array(Schema.String), restrictions: Schema.Array(Schema.String),
-  eligibility: Schema.Literals(["eligible-complete", "conditioned", "unavailable", "ineligible"]),
-  comparisonStatus: Schema.Literals(["complete", "conditioned", "incompatible", "unavailable"]),
-})
+}
+const SfPortfolioCombination = Schema.Union([
+  Schema.Struct({
+    ...SfPortfolioBase, eligibility: Schema.Literal("eligible-complete"),
+    comparisonStatus: Schema.Literal("complete"),
+  }),
+  Schema.Struct({
+    ...SfPortfolioBase, eligibility: Schema.Literals(["conditioned", "ineligible"]),
+    comparisonStatus: Schema.Literals(["complete", "conditioned", "incompatible", "unavailable"]),
+  }),
+  Schema.Struct({
+    ...SfPortfolioBase, eligibility: Schema.Literal("unavailable"),
+    comparisonStatus: Schema.Literals(["conditioned", "incompatible", "unavailable"]),
+  }),
+])
 export const SfPortfolioResult = Schema.Struct({
   combinations: Schema.Array(SfPortfolioCombination),
   limitations: Schema.Array(Schema.String), evidenceRefs: Schema.Array(SfEvidenceRef),
