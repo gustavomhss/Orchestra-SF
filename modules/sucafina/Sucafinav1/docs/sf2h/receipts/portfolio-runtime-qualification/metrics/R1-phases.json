@@ -1,0 +1,410 @@
+[
+  {
+    "timestamp": "2026-11-15T01:08:45.4805102Z",
+    "phase": "compose-before:start",
+    "elapsedMs": 6330,
+    "criterionEvaluations": {
+      "calls": 0,
+      "completed": 0,
+      "totalElapsedMs": 0,
+      "maximumElapsedMs": 0
+    },
+    "boundaries": {
+      "elapsedMs": 6330,
+      "active": [],
+      "counts": {}
+    }
+  },
+  {
+    "timestamp": "2026-11-15T01:09:10.5497694Z",
+    "phase": "compose-before:complete",
+    "elapsedMs": 31401,
+    "criterionEvaluations": {
+      "calls": 12,
+      "completed": 12,
+      "totalElapsedMs": 20076,
+      "maximumElapsedMs": 1691
+    },
+    "boundaries": {
+      "elapsedMs": 31400,
+      "active": [],
+      "counts": {
+        "storage.transaction.dashboard": {
+          "calls": 1684,
+          "completed": 1684,
+          "elapsedMs": 33709,
+          "maximumMs": 7628
+        },
+        "storage.transaction.planner": {
+          "calls": 4648,
+          "completed": 4648,
+          "elapsedMs": 14546,
+          "maximumMs": 30
+        },
+        "storage.currentSnapshots": {
+          "calls": 33,
+          "completed": 33,
+          "elapsedMs": 112,
+          "maximumMs": 8
+        },
+        "planner.compareScenarios": {
+          "calls": 3,
+          "completed": 3,
+          "elapsedMs": 22098,
+          "maximumMs": 7393
+        },
+        "rules.evaluate": {
+          "calls": 12,
+          "completed": 12,
+          "elapsedMs": 20076,
+          "maximumMs": 1691
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2026-11-15T01:09:10.5503234Z",
+    "phase": "baseline:start",
+    "elapsedMs": 31401,
+    "criterionEvaluations": {
+      "calls": 12,
+      "completed": 12,
+      "totalElapsedMs": 20076,
+      "maximumElapsedMs": 1691
+    },
+    "boundaries": {
+      "elapsedMs": 31400,
+      "active": [],
+      "counts": {
+        "storage.transaction.dashboard": {
+          "calls": 1684,
+          "completed": 1684,
+          "elapsedMs": 33709,
+          "maximumMs": 7628
+        },
+        "storage.transaction.planner": {
+          "calls": 4648,
+          "completed": 4648,
+          "elapsedMs": 14546,
+          "maximumMs": 30
+        },
+        "storage.currentSnapshots": {
+          "calls": 33,
+          "completed": 33,
+          "elapsedMs": 112,
+          "maximumMs": 8
+        },
+        "planner.compareScenarios": {
+          "calls": 3,
+          "completed": 3,
+          "elapsedMs": 22098,
+          "maximumMs": 7393
+        },
+        "rules.evaluate": {
+          "calls": 12,
+          "completed": 12,
+          "elapsedMs": 20076,
+          "maximumMs": 1691
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2026-11-15T01:09:27.1643115Z",
+    "phase": "baseline:complete",
+    "status": "ok",
+    "elapsedMs": 48015,
+    "criterionEvaluations": {
+      "calls": 20,
+      "completed": 20,
+      "totalElapsedMs": 33381,
+      "maximumElapsedMs": 1691
+    },
+    "boundaries": {
+      "elapsedMs": 48014,
+      "active": [],
+      "counts": {
+        "storage.transaction.dashboard": {
+          "calls": 2816,
+          "completed": 2816,
+          "elapsedMs": 57458,
+          "maximumMs": 7628
+        },
+        "storage.transaction.planner": {
+          "calls": 7771,
+          "completed": 7771,
+          "elapsedMs": 24147,
+          "maximumMs": 30
+        },
+        "storage.currentSnapshots": {
+          "calls": 52,
+          "completed": 52,
+          "elapsedMs": 181,
+          "maximumMs": 8
+        },
+        "planner.compareScenarios": {
+          "calls": 5,
+          "completed": 5,
+          "elapsedMs": 36750,
+          "maximumMs": 7393
+        },
+        "rules.evaluate": {
+          "calls": 20,
+          "completed": 20,
+          "elapsedMs": 33380,
+          "maximumMs": 1691
+        },
+        "analysis.evaluate": {
+          "calls": 1,
+          "completed": 1,
+          "elapsedMs": 15192,
+          "maximumMs": 15192
+        },
+        "analysis.select": {
+          "calls": 1,
+          "completed": 1,
+          "elapsedMs": 15191,
+          "maximumMs": 15191
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2026-11-15T01:09:27.1655575Z",
+    "phase": "omitted:start",
+    "elapsedMs": 48015,
+    "criterionEvaluations": {
+      "calls": 20,
+      "completed": 20,
+      "totalElapsedMs": 33381,
+      "maximumElapsedMs": 1691
+    },
+    "boundaries": {
+      "elapsedMs": 48015,
+      "active": [],
+      "counts": {
+        "storage.transaction.dashboard": {
+          "calls": 2816,
+          "completed": 2816,
+          "elapsedMs": 57458,
+          "maximumMs": 7628
+        },
+        "storage.transaction.planner": {
+          "calls": 7771,
+          "completed": 7771,
+          "elapsedMs": 24147,
+          "maximumMs": 30
+        },
+        "storage.currentSnapshots": {
+          "calls": 52,
+          "completed": 52,
+          "elapsedMs": 181,
+          "maximumMs": 8
+        },
+        "planner.compareScenarios": {
+          "calls": 5,
+          "completed": 5,
+          "elapsedMs": 36750,
+          "maximumMs": 7393
+        },
+        "rules.evaluate": {
+          "calls": 20,
+          "completed": 20,
+          "elapsedMs": 33380,
+          "maximumMs": 1691
+        },
+        "analysis.evaluate": {
+          "calls": 1,
+          "completed": 1,
+          "elapsedMs": 15192,
+          "maximumMs": 15192
+        },
+        "analysis.select": {
+          "calls": 1,
+          "completed": 1,
+          "elapsedMs": 15191,
+          "maximumMs": 15191
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2026-11-15T01:11:39.1794880Z",
+    "phase": "omitted:complete",
+    "status": "unavailable",
+    "elapsedMs": 180026,
+    "criterionEvaluations": {
+      "calls": 92,
+      "completed": 92,
+      "totalElapsedMs": 160807,
+      "maximumElapsedMs": 3442
+    },
+    "boundaries": {
+      "elapsedMs": 180025,
+      "active": [],
+      "counts": {
+        "storage.transaction.dashboard": {
+          "calls": 11660,
+          "completed": 11660,
+          "elapsedMs": 255582,
+          "maximumMs": 7628
+        },
+        "storage.transaction.planner": {
+          "calls": 32006,
+          "completed": 32006,
+          "elapsedMs": 99127,
+          "maximumMs": 35
+        },
+        "storage.currentSnapshots": {
+          "calls": 202,
+          "completed": 202,
+          "elapsedMs": 667,
+          "maximumMs": 8
+        },
+        "planner.compareScenarios": {
+          "calls": 20,
+          "completed": 20,
+          "elapsedMs": 147835,
+          "maximumMs": 7486
+        },
+        "rules.evaluate": {
+          "calls": 92,
+          "completed": 92,
+          "elapsedMs": 160766,
+          "maximumMs": 3442
+        },
+        "analysis.evaluate": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 131739,
+          "maximumMs": 116547
+        },
+        "analysis.select": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 45707,
+          "maximumMs": 30516
+        },
+        "comparison.proofs": {
+          "calls": 4,
+          "completed": 4,
+          "elapsedMs": 208,
+          "maximumMs": 53
+        },
+        "analysis.persist": {
+          "calls": 1,
+          "completed": 1,
+          "elapsedMs": 70404,
+          "maximumMs": 70404
+        },
+        "comparison.bind": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 32732,
+          "maximumMs": 32732
+        },
+        "comparison.verifyBinding": {
+          "calls": 6,
+          "completed": 6,
+          "elapsedMs": 44635,
+          "maximumMs": 7486
+        },
+        "comparison.read": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 30049,
+          "maximumMs": 21933
+        }
+      }
+    }
+  },
+  {
+    "timestamp": "2026-11-15T01:11:39.1804489Z",
+    "phase": "finally",
+    "elapsedMs": 180027,
+    "criterionEvaluations": {
+      "calls": 92,
+      "completed": 92,
+      "totalElapsedMs": 160807,
+      "maximumElapsedMs": 3442
+    },
+    "boundaries": {
+      "elapsedMs": 180026,
+      "active": [],
+      "counts": {
+        "storage.transaction.dashboard": {
+          "calls": 11660,
+          "completed": 11660,
+          "elapsedMs": 255582,
+          "maximumMs": 7628
+        },
+        "storage.transaction.planner": {
+          "calls": 32006,
+          "completed": 32006,
+          "elapsedMs": 99127,
+          "maximumMs": 35
+        },
+        "storage.currentSnapshots": {
+          "calls": 202,
+          "completed": 202,
+          "elapsedMs": 667,
+          "maximumMs": 8
+        },
+        "planner.compareScenarios": {
+          "calls": 20,
+          "completed": 20,
+          "elapsedMs": 147835,
+          "maximumMs": 7486
+        },
+        "rules.evaluate": {
+          "calls": 92,
+          "completed": 92,
+          "elapsedMs": 160766,
+          "maximumMs": 3442
+        },
+        "analysis.evaluate": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 131739,
+          "maximumMs": 116547
+        },
+        "analysis.select": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 45707,
+          "maximumMs": 30516
+        },
+        "comparison.proofs": {
+          "calls": 4,
+          "completed": 4,
+          "elapsedMs": 208,
+          "maximumMs": 53
+        },
+        "analysis.persist": {
+          "calls": 1,
+          "completed": 1,
+          "elapsedMs": 70404,
+          "maximumMs": 70404
+        },
+        "comparison.bind": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 32732,
+          "maximumMs": 32732
+        },
+        "comparison.verifyBinding": {
+          "calls": 6,
+          "completed": 6,
+          "elapsedMs": 44635,
+          "maximumMs": 7486
+        },
+        "comparison.read": {
+          "calls": 2,
+          "completed": 2,
+          "elapsedMs": 30049,
+          "maximumMs": 21933
+        }
+      }
+    }
+  }
+]

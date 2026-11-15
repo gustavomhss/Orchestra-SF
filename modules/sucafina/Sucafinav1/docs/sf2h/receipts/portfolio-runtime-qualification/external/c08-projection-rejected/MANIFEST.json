@@ -1,0 +1,57 @@
+{
+  "schema": "mission58.external-unqualified-projection.v1",
+  "state": "HELD_STATIC_OBSERVABILITY_GAP_NOT_APPLIED_NOT_TESTED",
+  "base": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+  "owner": "57 / actual host-binding and Decisions owners; outside58",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "mode": "100644",
+      "preimage": {
+        "git_blob": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+        "sha256": "edfd0547919597e0e79e4dbe15670eab2797399cab4c8f627e0a26a8045d8cab",
+        "bytes": 22226,
+        "file": "state-provider.preimage.txt"
+      },
+      "postimage": {
+        "git_blob": "a443f98f20de6c1b815311177e7305860090986b",
+        "sha256": "5ab7af435fd73445816ccdf948d05245da7d153b6099d977ebacc03bbc88698a",
+        "bytes": 25852,
+        "file": "state-provider.postimage.txt"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "mode": "100644",
+      "preimage": {
+        "git_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "sha256": "576dc47430a6072d094c98d4c319d6659f8b58d07a201dc1a50d47bc34679a59",
+        "bytes": 29250,
+        "file": "result-store.preimage.txt"
+      },
+      "postimage": {
+        "git_blob": "79d0be6681c7bc96b27a864ad026ccfc16739933",
+        "sha256": "2629ecd5c380edb842827b34730e9262d1ca030b013e521e6b9c88cb4dcade55",
+        "bytes": 28712,
+        "file": "result-store.postimage.txt"
+      }
+    }
+  ],
+  "patch": {
+    "path": "proposal.patch",
+    "bytes": 13945,
+    "sha256": "736ab187a91dde2159c57743db1c945f1b4c190b6576a9f853de74bb7b3a03a5"
+  },
+  "hypothesis": "Avoid full SfProductState structuredClone for three scalar C08 result observations, while retaining fresh projected graphs and all authority/source/case callbacks. Does not remove runtime dashboard target clone. No measured performance claim.",
+  "not_optimized": [
+    "historicalScenarioBatch",
+    "readByRequest",
+    "write",
+    "criterion preferences",
+    "runtime target clone"
+  ],
+  "gates": "Owner review, typecheck45, selected projection semantics/fallback/alias/authority regressions and actual P03 on a qualified composed input required.",
+  "unresolved_semantic_risk": "Projecting before full structuredClone can skip accessors or clone failures in unrelated SfProductState fields. Frozen context/binding does not prove the snapshot still contains only normalized data after the authorize callback or on opaque persistence ports. Existing selectSfCase precedent is not sufficient proof for this broader projection.",
+  "owner_next": "Do not apply until the owner closes this observability gap or explicitly establishes and tests a narrowed canonical-data contract; preserve all three C08 observations and authorization/source callbacks.",
+  "review": "../../review/CAUSAL-STATIC.json"
+}

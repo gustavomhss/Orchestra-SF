@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.consumer-release.v1",
+  "source": 58,
+  "consumer": 57,
+  "checks_owner": 45,
+  "state": "TERMINAL_EVIDENCE_DELIVERY_P03_FAIL",
+  "evidence_ready_for_intake": true,
+  "qualified_new_product_release": false,
+  "terminal_commit": "CONTAINING_COMMIT",
+  "PR": 37,
+  "execution": {
+    "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+    "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+    "run": 43661532296,
+    "request": "4620fe7c5235107089dc8a0ae32b6915cb46e2a9",
+    "result": "0PASS1FAIL1ERROR24EXPECT_TIMEOUT",
+    "original_assertion_lines": 72,
+    "deadline_ms": 180000
+  },
+  "material_inputs": {
+    "analysis54": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+    "runtime56": "666259511ad459629ef52f48aca20b231b0dff4b",
+    "complete_composition_patch": "composition/W1.patch",
+    "pre_post_manifest": "composition/W1-MANIFEST.json",
+    "dependency_closure": "composition/dependency-closure.json",
+    "new_product_patch58": null
+  },
+  "latest_consumer_candidate": {
+    "symbol": "C27",
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "diagnostic_differences_only_in_P03_closure": true,
+    "legacy_counter_postimage": "0ac3c01f77c013d05ee8fecb69c401acd126b942"
+  },
+  "dispositions": {
+    "R1": "Intake actual FAIL evidence; no green transfer",
+    "runtime56": "Exact source release already consumed by57 inC27; does not prove P03",
+    "legacy": "Applied by57, unfiltered composed case still required perACK56",
+    "C08_projection": "Complete inert rejected hypothesis; NOT_APPLIED_NOT_TESTED, not approved for integration",
+    "anchor_swap": "Held/rejected generic equivalence; not applied",
+    "diagnostic_helper": "Inert draft only; not a new test or qualification"
+  },
+  "consumer_ACK_request": [
+    "Record receipt of terminal58 and its exact W/S/run/hash inventory.",
+    "Keep original P03 and19 mapped criteria HELD; preserve remaining68-criterion matrix states.",
+    "Confirm C27 runtime/analysis and legacy dispositions without reapplying or transferring prior greens.",
+    "Route causal external work to its actual owner; require complete pre/post patches and preservation controls before a new P03.",
+    "Coordinate45 checks on an exact candidate and record unresolved gates; do not take over its workflow.",
+    "Do not repeat the unchanged closure and do not apply rejected proposals as a qualified fix."
+  ],
+  "consumer_ACK_status": "REQUESTED_NOT_OBSERVED_AT_TERMINAL",
+  "GLOBAL_RELEASE": false
+}

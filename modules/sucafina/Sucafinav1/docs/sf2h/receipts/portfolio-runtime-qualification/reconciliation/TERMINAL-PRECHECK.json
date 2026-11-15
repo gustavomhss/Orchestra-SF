@@ -1,0 +1,32 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.terminal-precheck.v1",
+  "mission": 58,
+  "observed_at": "2026-11-15T01:20:22Z",
+  "source_expected_head": "d00a74824c360fc557521ca77097e7593961909e",
+  "source_branch": "astra-wp13",
+  "source_parent_release54": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+  "runtime_release56": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+  "control": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+  "mission_blob": "portfolio-runtime-qualification.json read in full",
+  "stack": {
+    "sha": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "candidate": "C27",
+    "sole_writer": 57,
+    "ACK57_commit": "666ed28668ad3fc0bb9c89fdb57a0da33c57e2e4",
+    "ACK54_blob": "9f6a2598bdbc1e3b71312d794b429c7910d58f5c",
+    "ACK56_blob": "c7167aa6998e519416915fc3fecb884517f6fb39",
+    "reconciliation": "C27-closure.json"
+  },
+  "checks45_ref": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+  "authority58": "Only current manual continuation lease portfolio-runtime-browser58;54/56 remained ended and were not reactivated.",
+  "own_runs": {
+    "run": 43661532296,
+    "all_jobs_terminal": true,
+    "cleanup": "success",
+    "new_dispatches_after_R1": 0
+  },
+  "source_change_boundary": "All58 source commits add only own receipt paths; isolated W overlays exact released blobs and never replaces source/stack tree.",
+  "remote_mutation_interface": "GitHub MCP create_tree/create_commit/update_ref(expected_sha,force:false); temporary test snapshot through existing ci-run interface.",
+  "terminal_semantics": "The containing commit terminates58 only once CAS succeeds. Readback and delivery comments report its resolved SHA; no self-referential SHA is invented."
+}

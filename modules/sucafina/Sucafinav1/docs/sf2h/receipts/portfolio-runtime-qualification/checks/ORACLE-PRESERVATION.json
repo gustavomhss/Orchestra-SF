@@ -1,0 +1,207 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.oracle-preservation.v1",
+  "mission": 58,
+  "baseline_commit": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+  "baseline_test_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+  "W_test_blob": "6effa6053a00758e987e52f0c6fcf9baf9a7906a",
+  "expect_line_count_before": 72,
+  "expect_line_count_after": 72,
+  "ordered_expect_lines_byte_identical": true,
+  "ordered_expect_lines_with_trailing_newline_git_blob": "8ce0388a7756a2e9a4e76ae2906abbface9b17c6",
+  "test_deadline_ms": 180000,
+  "fixture_guard_path": "modules/sucafina/Sucafinav1/test/product/wp11/fixture-trace.ts",
+  "fixture_guard_blob": "23ed2604b5a8b11d392e57f0424d3d806aaf03a1",
+  "fixture_guard_byte_identical_to_C24": true,
+  "fixture_guard_budget_ms": 180000,
+  "request_cli_default_timeout_ms": 120000,
+  "qualification": "Static preservation verified; hosted runtime result recorded separately by root.",
+  "ordered_expect_sequence_sha256": "f78152ede2f26602dadf8eaf461e8b2072b1e4edd360ba93811475c290993ba4",
+  "sequence_file": "checks/original-expect-sequence.txt",
+  "data_and_producers": "All test bytes outside released diagnostic wrappers preserved by complete patch reconstruction; runtime input is exact56. No fixture, algorithm, financial rule, Request or source producer replaced.",
+  "required_journey": {
+    "baseline": 240000,
+    "omitted_known_subtotal": 210000,
+    "training_confirmation": 40000,
+    "confirmed_total": 250000,
+    "advantage_required": 20000,
+    "confirmation": "PRESERVED_NOT_REACHED",
+    "choice_history": "PRESERVED_NOT_REACHED",
+    "replay": "PRESERVED_NOT_REACHED",
+    "revocation": "PRESERVED_NOT_REACHED"
+  },
+  "legacy_foreign_path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+  "legacy_in_W": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+  "legacy_disposition": "NOT_RUN; only57/actual owner may materialize released structural patch",
+  "preserved28": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/handoff.ts",
+      "expected": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "actual": "7a236670dcec3ba93a316c7e41db59daefbaaca4",
+      "base": "7a236670dcec3ba93a316c7e41db59daefbaaca4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/port.ts",
+      "expected": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "actual": "452877ad2c82835fe883ea05dbf15f80f84f51c5",
+      "base": "452877ad2c82835fe883ea05dbf15f80f84f51c5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/result-store.ts",
+      "expected": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "actual": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48",
+      "base": "ee4e54c4b7761109ebddc1a4a2f6e6becea4ba48"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-store.ts",
+      "expected": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "actual": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c",
+      "base": "d2528cc98eabfea36025f25cdb0cb2bf9c54c42c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity-v6.ts",
+      "expected": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "actual": "f675fdca70dd48caa4635cb1542b85bbc25d204c",
+      "base": "f675fdca70dd48caa4635cb1542b85bbc25d204c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/sensitivity.ts",
+      "expected": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "actual": "247a0cdc456f386475f53765e6da2e1db156eba8",
+      "base": "247a0cdc456f386475f53765e6da2e1db156eba8"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/threshold-proof.ts",
+      "expected": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "actual": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b",
+      "base": "ce7d267d126992bc1a0796e2b64e5dc1c87bb12b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/analysis-recovery.test.ts",
+      "expected": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "actual": "d85a362360301686d2c5ca72f3938551c119b38a",
+      "base": "d85a362360301686d2c5ca72f3938551c119b38a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-preview.test.ts",
+      "expected": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "actual": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6",
+      "base": "3d7a0cc397b6afd0877779fdac642bc50e5c40a6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage.test.ts",
+      "expected": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "actual": "775a63f5cd25a68542508f6f8fa154fe7324a2bc",
+      "base": "775a63f5cd25a68542508f6f8fa154fe7324a2bc"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistence-recovery.test.ts",
+      "expected": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "actual": "63f262129fb37adf74013f58ea5fc56bb4ecd79e",
+      "base": "63f262129fb37adf74013f58ea5fc56bb4ecd79e"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/persistent-store.test.ts",
+      "expected": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "actual": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd",
+      "base": "4d89fefdf9a4477b6ab2d8188837a79846ef4efd"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/planner-sensitivity-boundary.test.ts",
+      "expected": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "actual": "e20e97e54d60c156952fbc43fab356cf479221de",
+      "base": "e20e97e54d60c156952fbc43fab356cf479221de"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-fixture.ts",
+      "expected": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "actual": "5b868fdcb3cc9371a6592b000f33ba0b357329c5",
+      "base": "5b868fdcb3cc9371a6592b000f33ba0b357329c5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope-fixture.ts",
+      "expected": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "actual": "d337b1cd730c3ecd4efb40329551a27e8d932e08",
+      "base": "d337b1cd730c3ecd4efb40329551a27e8d932e08"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-read-scope.test.ts",
+      "expected": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "actual": "56d4f7342696245fae89fd00d15a037dd9cb33a4",
+      "base": "56d4f7342696245fae89fd00d15a037dd9cb33a4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-units-boundary.test.ts",
+      "expected": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "actual": "dbbe5f7dc64d3accee536b38ae4196034562cf8f",
+      "base": "dbbe5f7dc64d3accee536b38ae4196034562cf8f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/source-scenario.test.ts",
+      "expected": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "actual": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c",
+      "base": "d5ad83048d49c79d7f83bd13b4f6c81e3d4ca31c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/term-defer-boundary.test.ts",
+      "expected": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "actual": "edb551580d49c817141d3a850be4af36b0a7d647",
+      "base": "edb551580d49c817141d3a850be4af36b0a7d647"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/planner-sensitivity.ts",
+      "expected": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "actual": "9d29046dd40adffc88985be5e1b1603b64491129",
+      "base": "9d29046dd40adffc88985be5e1b1603b64491129"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "expected": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "actual": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "base": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+      "expected": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "actual": "ca583dd473bdfb13299dfe470e301a6a113c0b73",
+      "base": "ca583dd473bdfb13299dfe470e301a6a113c0b73"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity.test.ts",
+      "expected": "0444570a0a961c979f75388fb0708812f98497e5",
+      "actual": "0444570a0a961c979f75388fb0708812f98497e5",
+      "base": "0444570a0a961c979f75388fb0708812f98497e5"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-v6.test.ts",
+      "expected": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "actual": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83",
+      "base": "a22b4625c8375d7c88037e1c66c1a0fee17e5c83"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/coverage-sensitivity-integration.test.ts",
+      "expected": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "actual": "7025de0601768ccc0bec76d8e0675882dee7cda9",
+      "base": "7025de0601768ccc0bec76d8e0675882dee7cda9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-integration.test.ts",
+      "expected": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "actual": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80",
+      "base": "9fefc7bc347bfa123fc718fa9b0000d82dfc8a80"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-c08-integration.test.ts",
+      "expected": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "actual": "d5327a70410a6c52c64b534056939cbfc9eb9483",
+      "base": "d5327a70410a6c52c64b534056939cbfc9eb9483"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp13/handoff-domain-integration.test.ts",
+      "expected": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "actual": "de2315abe69288edc26d66424f676ce5dbe625ea",
+      "base": "de2315abe69288edc26d66424f676ce5dbe625ea"
+    }
+  ],
+  "new_owned_product_edits": 0,
+  "full_criterion_PROMOTED": 0
+}

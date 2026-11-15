@@ -1,0 +1,194 @@
+{
+  "schema": "mission58.causal-static-review.v1",
+  "status": "TERMINATED_P03_FAIL_EXTERNAL_DEPENDENCY_HELD",
+  "reviewer": "analysis54_audit",
+  "evidence_kind": "Static source review; R1 measurements below supplied by mission58 coordinator. No product execution by this reviewer.",
+  "composition": {
+    "W": "0360b382f3db5449adfbd0ced794432b06c5a87e",
+    "S": "1574ee70c81518c80c92935a048b2bb075996d01",
+    "analysis_blob": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+    "production_blob": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+    "runtime56_blob": "666259511ad459629ef52f48aca20b231b0dff4b"
+  },
+  "r1": {
+    "result": "FAIL",
+    "passed_tests": 0,
+    "failed_tests": 1,
+    "completed_expect_calls": 24,
+    "required_original_assertions": 72,
+    "unchanged_timeout_ms": 180000,
+    "phase": "omitted portfolio analysis; persistence completed, previousBinding read crossed the deadline before the independent binding read, selectionAgain and final analysis revalidation",
+    "observed_boundaries": {
+      "omitted_persist_end_elapsed_ms": 171881,
+      "previous_binding_start_elapsed_ms": 171909,
+      "previous_binding_end_elapsed_ms": 180025,
+      "recovery_bind_after_deadline_duration_ms": 0
+    },
+    "counts": {
+      "storage.transaction.dashboard": {
+        "count": 11660,
+        "inclusive_duration_ms": 255582,
+        "max_duration_ms": 7628
+      },
+      "storage.transaction.planner": {
+        "count": 32006,
+        "inclusive_duration_ms": 99127,
+        "max_duration_ms": 35
+      },
+      "storage.currentSnapshots": {
+        "count": 202,
+        "synchronous_duration_ms": 667,
+        "max_duration_ms": 8
+      },
+      "planner.compareScenarios": {
+        "count": 20,
+        "inclusive_duration_ms": 147835
+      },
+      "rules.evaluate": {
+        "count": 92,
+        "inclusive_duration_ms": 160766,
+        "max_duration_ms": 3442
+      },
+      "analysis.select": {
+        "count": 2,
+        "inclusive_duration_ms": 45707,
+        "max_duration_ms": 30516
+      },
+      "analysis.persist": {
+        "count": 1,
+        "inclusive_duration_ms": 70404
+      },
+      "comparison.bind": {
+        "count": 2,
+        "inclusive_duration_ms": 32732,
+        "caveat": "One call occurred at the deadline and lasted zero milliseconds."
+      },
+      "comparison.verifyBinding": {
+        "count": 6,
+        "inclusive_duration_ms": 44635,
+        "max_duration_ms": 7486
+      },
+      "comparison.read": {
+        "count": 2,
+        "inclusive_duration_ms": 30049,
+        "max_duration_ms": 21933,
+        "caveat": "Previous-binding observation was censored by timeout after 8116 ms."
+      }
+    },
+    "limitations": [
+      "Nested inclusive durations overlap and must not be added as CPU time.",
+      "Counts and timings identify repeated canonical/domain work but do not establish clone CPU as the dominant cost.",
+      "No later P03 phase was demonstrated; a completed component test suite does not qualify this journey."
+    ]
+  },
+  "owned_paths_review": {
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "modules/sucafina/Sucafinav1/product/portfolio/production.ts"
+    ],
+    "result": "NO_MATERIAL_CAUSAL_FIX_IDENTIFIED",
+    "findings": [
+      "A54 already avoids the duplicated bind after canonical persistence; its initial previousBinding read, independent binding read and recovery branch remain distinct observations.",
+      "Reusing results across previousBinding, independent binding, selectionAgain, inspect/replay/inspect or case reads would remove or reorder required observations.",
+      "P03 has one candidate, no scenario assumptions and two criteria. The quadratic assumptions loop is empty and criterion/ref search loops are bounded small work; no evidence makes a rewrite causal for this timeout.",
+      "Repeated local hashes of cloned values might permit small pure common-subexpression savings, but no measured phase attributes a material share of the timeout to those expressions.",
+      "The owned code spends its expensive boundaries awaiting canonical ports. This review does not prove that all conceivable optimizations are impossible; it finds no justified owned change sufficient to warrant another run."
+    ],
+    "preserved_requirements": [
+      "All original 72 assertions, order, data, real producers, confirmation, history, replay and revocation",
+      "Existing 180000 ms timeout",
+      "Case version/incarnation, CAS, Request identity, lease and current authorization observations"
+    ],
+    "changes_made": []
+  },
+  "external_projection_review": {
+    "proposal": "c08-result-projection.patch",
+    "proposal_sha256": "736ab187a91dde2159c57743db1c945f1b4c190b6576a9f853de74bb7b3a03a5",
+    "state": "HELD_NOT_APPLIED_NOT_TESTED",
+    "owner": "57 with actual host-binding and Decisions owners; outside mission58 authorized product paths",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+        "preimage": "71ce2ba1b04d3c7f63f7c444ca23dd084a8e2b0c",
+        "proposed_postimage": "a443f98f20de6c1b815311177e7305860090986b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "preimage": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "proposed_postimage": "79d0be6681c7bc96b27a864ad026ccfc16739933"
+      }
+    ],
+    "preserved_on_plain_data_happy_path": [
+      "Three scalar C08 read calls and two C08 authority callbacks on each successful observation",
+      "Existing case/source/replay/host checks and final retained Request identity check",
+      "Cloning the case/result pair together preserves aliases between those returned subgraphs and detaches later observations",
+      "resultRef and previous case ID are copied local primitives, not mutable incoming references exposed to callbacks",
+      "Missing/inherited/accessor principal selector fields use the original full-clone fallback",
+      "No immediate structural readonly type mismatch found; PortfolioComparison aliases PortfolioResult. Typecheck remains A45 authority."
+    ],
+    "blocking_faults": [
+      {
+        "id": "C08-CLONE-ERROR-OMISSION",
+        "mechanism": "readSfState validates map shape, not cloneability of the complete graph after authorize.",
+        "counterexample": "authorize inserts a function into an unselected preferences field. The original structuredClone(state) throws and result-store returns unavailable; projected cloning can succeed and execute the second authorize callback.",
+        "consequence": "Result and callback count can change; frozen context does not certify state cloneability."
+      },
+      {
+        "id": "C08-SELECTION-BEFORE-CLONE",
+        "mechanism": "projectDecisionResult selects the case from stored.caseRef.id before cloning, while the original callback selects after cloning the full state.",
+        "counterexample": "An enumerable getter in stored, visited before caseRef, changes caseRef.id from A to B during cloning. The original clone includes cases A and B and then selects B; the projection has already restricted cases to A.",
+        "consequence": "Own-data descriptors for caseRef.id before cloning do not prove equivalent selected case."
+      },
+      {
+        "id": "C08-UNSELECTED-EFFECTS",
+        "mechanism": "Getters/proxies or clone failures in unselected state are omitted by projection.",
+        "consequence": "Effects before authority comparison and original case selection can differ. No proof covers the whole current state after the first authorize."
+      },
+      {
+        "id": "C08-MALFORMED-OPAQUE-ENVELOPE",
+        "mechanism": "Changing !value to !value?.stored adds a distinct malformed response behavior.",
+        "counterexample": "An opaque state adapter returning value:{} previously causes a rejected access to value.stored.kind; the proposal instead returns unavailable.",
+        "consequence": "The proposal is not strictly behavior-preserving for the opaque adapter path."
+      }
+    ],
+    "release_condition": "Owner must supply a causally measured correction with a proven current-observation data contract or equivalent fallback, then A45 checks and original P03 on an exact 57 composition. The present patch is a rejected/held hypothesis, not a recommended fix."
+  },
+  "external_anchor_review": {
+    "proposal": "Change readPortfolioSnapshot root surface from dashboard to procurement",
+    "state": "HELD_NOT_APPLIED_NOT_TESTED",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+        "blob": "db487cd1b6263835302e9bcf80499d18531aa592"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f"
+      }
+    ],
+    "narrow_support": [
+      "Raw LocalStore56 always takes the global write lock and observes all three SQL surfaces in the same order.",
+      "The helper ignores root target and blob arguments, commits false and retains Request/scope fences.",
+      "Nested writes poison the root and currentSnapshots returns independent graphs.",
+      "Changing the anchor could make Dashboard eligible for the non-target materialization path, but no actual speedup was measured."
+    ],
+    "blocking_fault": "The installed source-lifecycle wrapper runs requireSourceIdentities(snapshot) and initializes guard(surface,snapshot) before work, including commit:false. Changing the root surface changes the metadata/audit prerequisites and can change behavior for partial or corrupt source metadata. The generic Persistence contract also does not promise interchangeable surfaces.",
+    "conclusion": "Raw-fixture equivalence is insufficient to qualify the installed product; do not use a fixture-specific anchor change as proof of a general correction."
+  },
+  "action": {
+    "remote_writes": 0,
+    "product_edits": 0,
+    "local_product_or_heavy_tests": 0,
+    "action_dispatches": 0,
+    "next_owner": "57 remains sole integrator; A45 owns checks.",
+    "retry_rule": "Do not repeat P03 on unchanged inputs or on an unqualified speculative patch. Require an actual causal owner correction with exact inputs and suitable gates."
+  }
+}

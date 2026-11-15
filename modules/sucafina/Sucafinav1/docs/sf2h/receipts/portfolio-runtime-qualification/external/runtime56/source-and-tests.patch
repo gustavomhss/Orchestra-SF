@@ -1,0 +1,1347 @@
+diff --git a/modules/sucafina/Sucafinav1/runtime/local-store.ts b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+index e9da289bdce680f2429904c1e83dec60c39aa2a8..666259511ad459629ef52f48aca20b231b0dff4b 100644
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -82,11 +82,17 @@
+   // Every caller still observes SQL under the existing lock. Only immutable
+   // strings survive requests; each demanded surface gets a fresh object graph.
+   const materializations = new Map<Surface, SnapshotMaterialization>()
+-  const observeSnapshot = (surface: Surface, payload?: string): (() => Snapshot) => {
++  const observeSnapshot = (surface: Surface, payload?: string): { materialize: () => Snapshot; copy?: () => Snapshot } => {
+     const prior = materializations.get(surface)
+-    if (payload !== undefined && prior?.payload === payload) return () => materializeSnapshot(prior)
++    if (payload !== undefined && prior?.payload === payload) {
++      const materialize = () => materializeSnapshot(prior)
++      return { materialize, copy: materialize }
++    }
+     materializations.delete(surface)
+-    if (payload === undefined) return () => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
++    if (payload === undefined) {
++      const empty = (): Snapshot => ({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
++      return { materialize: empty, copy: empty }
++    }
+     const snapshot = decodeSnapshot(payload)
+     const plan = planSnapshotMaterialization(snapshot, payload)
+     if (plan) {
+@@ -98,12 +104,14 @@
+       }
+       materializations.set(surface, plan)
+     }
+-    return () => snapshot
+-  }
+-  const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload)()
++    // New plans remain only in the bounded shared memo. A root captures copy
++    // factories only for hits from its initial memo, whose aggregate already fits.
++    return { materialize: () => snapshot }
++  }
++  const loadSnapshot = (surface: Surface, payload?: string) => observeSnapshot(surface, payload).materialize()
+ 
+   type ReadScope = {
+-    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; poisoned: boolean; readers: number }
++    root: { db: Database; snapshots: Partial<Record<Surface, Snapshot>>; copies?: Partial<Record<Surface, () => Snapshot>>; poisoned: boolean; readers: number }
+     parent?: ReadScope
+     open: boolean
+     signal?: AbortSignal
+@@ -179,10 +187,14 @@
+       const scope = context.getStore()
+       if (!scope) return undefined
+       requireScope(scope)
+-      const snapshots = scope.root.snapshots
+-      if (!snapshots.dashboard || !snapshots.planner || !snapshots.procurement) throw new Error("Local transaction snapshots unavailable")
+-      return { dashboard: cloneSnapshot(snapshots.dashboard), planner: cloneSnapshot(snapshots.planner),
+-        procurement: cloneSnapshot(snapshots.procurement) }
++      const copy = (surface: Surface) => {
++        const materialize = scope.root.copies?.[surface]
++        if (materialize) return materialize()
++        const snapshot = scope.root.snapshots[surface]
++        if (!snapshot) throw new Error("Local transaction snapshots unavailable")
++        return cloneSnapshot(snapshot)
++      }
++      return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
+     },
+     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+       const parent = context.getStore()
+@@ -191,9 +203,10 @@
+         requireScope(parent)
+         transactionOptions?.signal?.throwIfAborted()
+         const scope: ReadScope = { root: parent.root, parent, open: true, signal: transactionOptions?.signal }
+-        const staged = parent.root.snapshots[surface]
+-        const row = staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
+-        const snapshot = staged ? cloneSnapshot(staged) :
++        const materialize = parent.root.copies?.[surface]
++        const staged = materialize ? undefined : parent.root.snapshots[surface]
++        const row = materialize || staged ? undefined : parent.root.db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++        const snapshot = materialize ? materialize() : staged ? cloneSnapshot(staged) :
+           loadSnapshot(surface, row?.payload)
+         const blobs: BlobTransaction = {
+           get: async (key) => {
+@@ -221,11 +234,14 @@
+         }
+       })()
+       return operation(true, async (db) => {
++        const copies: Partial<Record<Surface, () => Snapshot>> = {}
+         const read = (name: Surface) => {
+           const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(name)
+           // Observe and validate changed bytes now, including unrequested surfaces.
+           // The captured materializer never consults SQL or the shared memo again.
+-          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: observeSnapshot(name, row?.payload) }
++          const source = observeSnapshot(name, row?.payload)
++          if (name !== surface && source.copy) copies[name] = source.copy
++          const observed: { materialize?: () => Snapshot; value?: Snapshot } = { materialize: source.materialize }
+           return () => {
+             if (observed.value) return observed.value
+             observed.value = observed.materialize!()
+@@ -234,8 +250,9 @@
+           }
+         }
+         const observed = { dashboard: read("dashboard"), planner: read("planner"), procurement: read("procurement") }
+-        // This container is private to one live root scope. The callback receives
+-        // only its normal target snapshot; nested/current reads still clone.
++        // Only the target escapes to the callback and stays mutable. Non-target
++        // hits emit independent graphs from their captured immutable plans;
++        // misses retain the validated private snapshot and clone on demand.
+         const snapshots = {
+           get dashboard() { return observed.dashboard() }, get planner() { return observed.planner() },
+           get procurement() { return observed.procurement() },
+@@ -254,7 +271,7 @@
+           generations.set(key, generation)
+           snapshot.sfBlobGenerations = Object.fromEntries(generations)
+         }
+-        const scope: ReadScope = { root: { db, snapshots, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
++        const scope: ReadScope = { root: { db, snapshots, copies, poisoned: false, readers: 0 }, open: true, signal: transactionOptions?.signal }
+         const requireOpen = () => {
+           requireScope(scope)
+           if (context.getStore() !== scope) throw new Error("Blob capability used outside its transaction scope")
+@@ -296,6 +313,11 @@
+             return await context.run(scope, () => work(snapshot, blobs))
+           } finally {
+             scope.open = false
++            // Descendants may retain the closed ALS scope. Drop the extra copy
++            // references; untouched lazy observations keep their old bound.
++            delete copies.dashboard
++            delete copies.planner
++            delete copies.procurement
+           }
+         })()
+         transactionOptions?.signal?.throwIfAborted()
+@@ -495,7 +517,9 @@
+   try {
+     // Array.from densifies holes; each path is copied separately, including shared aliases.
+     if (Array.isArray(value)) return Array.from(value, (item) => copyValue(item, ancestors))
+-    return Object.fromEntries(Object.entries(Object.getOwnPropertyDescriptors(value)).map(([key, descriptor]) => {
++    const descriptors = Object.getOwnPropertyDescriptors(value)
++    return Object.fromEntries(Object.keys(descriptors).map((key) => {
++      const descriptor = descriptors[key]!
+       if (!Object.hasOwn(descriptor, "value")) throw new Error("Unsupported snapshot accessor")
+       return [key, copyValue(descriptor.value, ancestors)]
+     }))
+@@ -522,8 +546,11 @@
+ }
+ 
+ // The shared memo retains at most three entries and 16 MiB of UTF-16 strings.
+-// A live root may temporarily retain observed plans evicted during admission;
+-// their combined content is bounded by one additional memo budget until used.
++// A root captures only plans already hit during its admission, a subset of the
++// initial memo: lazy materializers and fresh-copy factories together retain at
++// most one additional memo budget, even after eviction. Newly built plans are
++// never captured for copies. The copy-factory record is cleared when the root closes.
++// The bound counts string content, not decoded graphs, overhead or total heap.
+ // These are optimization limits only: larger/deeper valid v1 snapshots keep
+ // using the original decoder. No new persisted format or acceptance limit.
+ const SNAPSHOT_MATERIALIZATION_UNITS = 8 * 1024 * 1024
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..5834b18e408db1015636479f28edee21ec0c4901
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts
+@@ -0,0 +1,55 @@
++import { expect, test } from "bun:test"
++import { selectSfCase } from "../../../product/host-binding/state-provider.ts"
++import { createStateIsolationFixture } from "../finance-state-read-performance/fixture.ts"
++import { current, record, warm } from "./fixture.ts"
++
++test("non-target state reads keep both real authorization callbacks and reject final lease revocation", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    await warm(f.store)
++    await f.store.transaction("planner", async () => {
++      const first = current(f.store)
++      const selected = await f.state.read(f.request, "cases", selectSfCase("case", f.context))
++      expect(selected).toMatchObject({ status: "ok", value: f.decision })
++      expect(f.controls.checks.map((check) => check.mode)).toEqual(["read", "read"])
++      record(record(first.dashboard.data.__sfProductV1).cases).case = "copy-only"
++      expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toMatchObject({ status: "ok", value: f.decision })
++      expect(f.controls.checks).toHaveLength(4)
++      f.controls.checks.length = 0
++      f.controls.observe = (_snapshot, _request, mode, index) => {
++        if (mode === "read" && index === 2) f.ui.finish(f.context)
++      }
++      expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toEqual({ status: "denied", reason: "product-authority-changed" })
++      expect(f.controls.checks.map((check) => check.request)).toEqual([f.request, f.request])
++      f.controls.observe = undefined
++      f.controls.checks.length = 0
++      expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toEqual({ status: "denied", reason: "product-access-unavailable" })
++      expect(f.controls.checks).toHaveLength(1)
++      return { commit: false, value: undefined }
++    })
++    const admitted = await f.admit()
++    expect(await f.state.read(admitted.request, "cases", selectSfCase("case", admitted.context))).toMatchObject({ status: "ok", value: f.decision })
++  } finally { await f.close() }
++})
++
++test("non-target state reads keep final Request abort and never turn old copies into authority", async () => {
++  const f = await createStateIsolationFixture()
++  try {
++    await warm(f.store)
++    const controller = new AbortController()
++    const admitted = await f.admit("principal", controller.signal)
++    await f.store.transaction("planner", async () => {
++      const before = current(f.store)
++      f.controls.checks.length = 0
++      f.controls.observe = (_snapshot, _request, mode, index) => {
++        if (mode === "read" && index === 2) controller.abort(new Error("fresh observation request aborted"))
++      }
++      await expect(f.state.read(admitted.request, "cases", selectSfCase("case", admitted.context))).rejects.toThrow("fresh observation request aborted")
++      expect(f.controls.checks.map((check) => check.request)).toEqual([admitted.request, admitted.request])
++      expect(current(f.store)).toEqual(before)
++      return { commit: false, value: undefined }
++    })
++    f.controls.observe = undefined
++    expect(await f.state.read(f.request, "cases", selectSfCase("case", f.context))).toMatchObject({ status: "ok", value: f.decision })
++  } finally { await f.close() }
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0a46c9113127542c43aed60951514a7397b5fdb6
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts
+@@ -0,0 +1,315 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { createHash } from "node:crypto"
++import { join } from "node:path"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import { decodeSnapshot, encodeSnapshot } from "../../../runtime/local-store.ts"
++import { current, surfaces, withStores } from "./fixture.ts"
++
++type Surface = typeof surfaces[number]
++type Phase = "admission" | "copies" | "callback" | "settlement"
++type Snapshots = Record<Surface, Snapshot>
++type Row = {
++  __runtimeFreshCopySurface: Surface
++  index: number
++  amount: number
++  quantity: number
++  label: string
++  detail: {
++    __runtimeFreshCopySurface: Surface
++    weight: number
++    tags: number[]
++    optional: undefined
++    minusZero: number
++  }
++}
++
++const rowCounts: Record<Surface, number> = { dashboard: 300, planner: 1200, procurement: 400 }
++const pairs = 6
++const observationsPerRoot = 20
++const marker = "__runtimeFreshCopySurface"
++const phases: Phase[] = ["admission", "copies", "callback", "settlement"]
++const hash = (value: string) => createHash("sha256").update(value).digest("hex")
++const surfaceCounts = (): Record<Surface, number> => ({ dashboard: 0, planner: 0, procurement: 0 })
++
++function fixtureRows(surface: Surface): Row[] {
++  return Array.from({ length: rowCounts[surface] }, (_, index) => ({
++    __runtimeFreshCopySurface: surface,
++    index,
++    amount: 1000 + index * 7,
++    quantity: index + 1,
++    label: `${surface}:${index}:fixed-payload-with-identical-fields-in-both-revisions`,
++    detail: {
++      __runtimeFreshCopySurface: surface,
++      weight: (index % 11) + 0.5,
++      tags: [index, index + 1, index + 2],
++      optional: undefined,
++      minusZero: -0,
++    },
++  }))
++}
++
++function rows(snapshot: Snapshot): Row[] {
++  if (!Array.isArray(snapshot.data.records)) throw new Error("Cost fixture records missing")
++  return snapshot.data.records as Row[]
++}
++
++// Every callback consumes every row. The root's live change affects only its
++// first row; copied/nested mutations must never appear in a later observation.
++function verify(snapshot: Snapshot, surface: Surface, changed: boolean): number {
++  const records = rows(snapshot)
++  if (records.length !== rowCounts[surface] || snapshot.data.surface !== surface || snapshot.data.revision !== (changed ? 1 : 0))
++    throw new Error(`Cost fixture changed shape or revision: ${surface}`)
++  let digest = 0
++  for (let index = 0; index < records.length; index++) {
++    const item = records[index]!
++    const amount = 1000 + index * 7 + (changed && index === 0 ? 13 : 0)
++    if (item[marker] !== surface || item.index !== index || item.amount !== amount || item.quantity !== index + 1 ||
++        item.label !== `${surface}:${index}:fixed-payload-with-identical-fields-in-both-revisions` ||
++        item.detail[marker] !== surface || item.detail.weight !== (index % 11) + 0.5 ||
++        item.detail.tags.length !== 3 || item.detail.tags[0] !== index || item.detail.tags[1] !== index + 1 || item.detail.tags[2] !== index + 2 ||
++        !Object.hasOwn(item.detail, "optional") || item.detail.optional !== undefined || !Object.is(item.detail.minusZero, -0))
++      throw new Error(`Cost fixture lost data, freshness, or normalization: ${surface}/${index}`)
++    digest += item.amount + item.quantity + item.detail.weight + item.detail.tags[0]! + item.detail.tags[1]! + item.detail.tags[2]!
++  }
++  return digest
++}
++
++function changeCopy(snapshot: Snapshot, offset: number) {
++  const item = rows(snapshot)[1]!
++  item.amount = -1000 - offset
++  item.detail.weight = -2000 - offset
++  item.detail.tags[0] = -3000 - offset
++}
++
++function independent(left: Snapshot, right: Snapshot) {
++  expect(left).not.toBe(right)
++  expect(left.data).not.toBe(right.data)
++  expect(rows(left)).not.toBe(rows(right))
++  expect(rows(left)[0]).not.toBe(rows(right)[0])
++  expect(rows(left)[0]!.detail).not.toBe(rows(right)[0]!.detail)
++  expect(rows(left)[0]!.detail.tags).not.toBe(rows(right)[0]!.detail.tags)
++}
++
++type Work = {
++  counts: { root: number; nested: Record<Surface, number>; current: number; callbacks: number; consumedRows: Record<Surface, number> }
++  digest: number
++  order: string[]
++  timing: { totalWallMs: number; rootAdmissionWallMs: number; nestedBeforeCallbackSyncMs: number; currentSnapshotsSyncMs: number; callbackSyncMs: number }
++}
++
++async function workload(store: LocalStore, probe: { phase: Phase }): Promise<Work> {
++  const result: Work = {
++    counts: { root: 0, nested: surfaceCounts(), current: 0, callbacks: 0, consumedRows: surfaceCounts() },
++    digest: 0,
++    order: [],
++    timing: { totalWallMs: 0, rootAdmissionWallMs: 0, nestedBeforeCallbackSyncMs: 0, currentSnapshotsSyncMs: 0, callbackSyncMs: 0 },
++  }
++  const callback = <T>(body: () => T): T => {
++    probe.phase = "callback"
++    const started = performance.now()
++    try { return body() } finally { result.timing.callbackSyncMs += performance.now() - started }
++  }
++  const consume = (snapshot: Snapshot, surface: Surface, changed: boolean) => {
++    result.digest += verify(snapshot, surface, changed)
++    result.counts.consumedRows[surface] += rowCounts[surface]
++  }
++  const nestedCopies: Partial<Record<Surface, Snapshot>> = {}
++  let previous: Snapshots | undefined
++  let first: Snapshots | undefined
++  probe.phase = "admission"
++  const started = performance.now()
++  await store.transaction("dashboard", async (root) => {
++    result.timing.rootAdmissionWallMs = performance.now() - started
++    callback(() => {
++      result.counts.root++
++      result.counts.callbacks++
++      result.order.push("root:dashboard")
++      consume(root, "dashboard", false)
++    })
++    for (let observation = 0; observation < observationsPerRoot; observation++) {
++      // Fixed order: three planner reads, one procurement read, one complete
++      // observation. No driver replacement, skipped callback, or reduced load.
++      for (const surface of ["planner", "planner", "planner", "procurement"] as const) {
++        probe.phase = "copies"
++        const beforeNested = performance.now()
++        await store.transaction(surface, async (snapshot) => {
++          // Nested callbacks enter synchronously after the fresh copy. This is
++          // measured before callback work, never as an inclusive await span.
++          result.timing.nestedBeforeCallbackSyncMs += performance.now() - beforeNested
++          callback(() => {
++            result.counts.nested[surface]++
++            result.counts.callbacks++
++            result.order.push(`nested:${surface}`)
++            consume(snapshot, surface, false)
++            const prior = nestedCopies[surface]
++            if (prior) independent(snapshot, prior)
++            if (previous) independent(snapshot, previous[surface])
++            changeCopy(snapshot, observation)
++            nestedCopies[surface] = snapshot
++          })
++          probe.phase = "settlement"
++          return { commit: false, value: undefined }
++        })
++      }
++      probe.phase = "copies"
++      const beforeCurrent = performance.now()
++      const observed = current(store)
++      result.timing.currentSnapshotsSyncMs += performance.now() - beforeCurrent
++      callback(() => {
++        result.counts.current++
++        result.order.push("current:all")
++        for (const surface of surfaces) {
++          consume(observed[surface], surface, surface === "dashboard" && observation > 0)
++          if (previous) independent(observed[surface], previous[surface])
++          const nested = nestedCopies[surface]
++          if (nested) independent(observed[surface], nested)
++          changeCopy(observed[surface], observation)
++        }
++        independent(observed.dashboard, root)
++        if (observation === 0) {
++          first = observed
++          root.data.revision = 1
++          rows(root)[0]!.amount += 13
++        }
++        // The first observation survives live root mutation and all later
++        // materializations. Its own row-1 mutation is intentionally retained.
++        expect(first!.dashboard.data.revision).toBe(0)
++        expect(rows(first!.dashboard)[0]!.amount).toBe(1000)
++        expect(rows(first!.dashboard)[1]!.amount).toBe(-1000)
++        previous = observed
++      })
++    }
++    probe.phase = "settlement"
++    return { commit: false, value: undefined }
++  })
++  result.timing.totalWallMs = performance.now() - started
++  return result
++}
++
++type PhaseWork = { descriptorCalls: number; descriptorObjectsBySurface: Record<Surface, number>; parseCalls: number; parseCharacters: number; wireParseCalls: number }
++type ProbeWork = Record<Phase, PhaseWork>
++
++function countWork(probe: { phase: Phase }, output: ProbeWork): () => void {
++  const descriptors = Object.getOwnPropertyDescriptors
++  const parse = JSON.parse
++  Object.getOwnPropertyDescriptors = ((value: object) => {
++    const result = descriptors(value)
++    const phase = output[probe.phase]
++    phase.descriptorCalls++
++    const surface: unknown = result[marker]?.value
++    if (surface === "dashboard" || surface === "planner" || surface === "procurement") phase.descriptorObjectsBySurface[surface]++
++    return result
++  }) as typeof Object.getOwnPropertyDescriptors
++  JSON.parse = (...args: Parameters<typeof JSON.parse>) => {
++    const phase = output[probe.phase]
++    phase.parseCalls++
++    phase.parseCharacters += args[0].length
++    if (args[0].startsWith('["sucafina-snapshot",1,')) phase.wireParseCalls++
++    return parse(...args)
++  }
++  return () => {
++    Object.getOwnPropertyDescriptors = descriptors
++    JSON.parse = parse
++  }
++}
++
++function summary(work: Work) {
++  return { counts: work.counts, digest: work.digest, orderHash: hash(work.order.join("\n")) }
++}
++
++function distribution(values: number[]) {
++  const sorted = [...values].sort((left, right) => left - right)
++  return { samples: values, min: sorted[0], median: (sorted[5]! + sorted[6]!) / 2, max: sorted.at(-1) }
++}
++
++// One serial test; wrappers exist only for the final, separately labelled work
++// accounting pass and are restored before logging/assertions. All timed pairs
++// execute with the native globals, in exactly the same fixed workload order.
++test("real SQLite fresh-copy workload preserves load while warm non-target copies avoid descriptor traversal", async () => {
++  await withStores(async (directory, open) => {
++    let store = await open()
++    for (const surface of surfaces) {
++      await store.transaction(surface, async (snapshot) => {
++        snapshot.data = { surface, revision: 0, records: fixtureRows(surface) }
++        snapshot.versions.fixture = { version: 1, by: "runtime-fresh-copy-cost" }
++        snapshot.sequences.fixture = rowCounts[surface]
++        snapshot.audit = [{ who: "fixture", at: "2026-11-14", record: surface, was: undefined, became: "cost-fixture" }]
++        snapshot.notices = [{ kind: "pending", to: ["fixture"], record: surface, at: "2026-11-14" }]
++        return { commit: true, value: undefined }
++      })
++    }
++    await store.dispose()
++    store = await open()
++    const inspectPersisted = () => {
++      const db = new Database(join(directory, "installation.sqlite"), { strict: true })
++      try {
++        return Object.fromEntries(surfaces.map((surface) => {
++          const row = db.query<{ payload: string }, [string]>("SELECT payload FROM snapshots WHERE surface = ?").get(surface)
++          if (!row) throw new Error(`Missing persisted ${surface}`)
++          const decoded = decodeSnapshot(row.payload)
++          const digest = verify(decoded, surface, false)
++          // Full wire bytes and data counts are checked outside timed/probed
++          // work. The same file supplies these inputs to preimage and product.
++          expect(encodeSnapshot(decoded)).toBe(row.payload)
++          return [surface, { rows: rows(decoded).length, characters: row.payload.length, sha256: hash(row.payload), digest }]
++        })) as Record<Surface, { rows: number; characters: number; sha256: string; digest: number }>
++      } finally { db.close() }
++    }
++    const persisted = inspectPersisted()
++    const probe: { phase: Phase } = { phase: "admission" }
++    const expectedOrder = ["root:dashboard", ...Array.from({ length: observationsPerRoot }, () => ["nested:planner", "nested:planner", "nested:planner", "nested:procurement", "current:all"]).flat()]
++    const expected = {
++      counts: {
++        root: 1, nested: { dashboard: 0, planner: 60, procurement: 20 }, current: 20, callbacks: 81,
++        consumedRows: { dashboard: 6300, planner: 96000, procurement: 16000 },
++      },
++      digest: persisted.dashboard.digest * 21 + persisted.planner.digest * 80 + persisted.procurement.digest * 40 + 13 * 19,
++      orderHash: hash(expectedOrder.join("\n")),
++    }
++    const warmup = await workload(store, probe)
++    expect(summary(warmup)).toEqual(expected)
++    const timed: { pair: number; member: "first" | "second"; work: Work }[] = []
++    for (let pair = 0; pair < pairs; pair++) {
++      for (const member of ["first", "second"] as const) {
++        const work = await workload(store, probe)
++        expect(summary(work)).toEqual(expected)
++        timed.push({ pair, member, work })
++      }
++    }
++    const instrumented = Object.fromEntries(phases.map((phase) => [phase, {
++      descriptorCalls: 0, descriptorObjectsBySurface: surfaceCounts(), parseCalls: 0, parseCharacters: 0, wireParseCalls: 0,
++    }])) as ProbeWork
++    const restore = countWork(probe, instrumented)
++    let accounted: Work
++    try { accounted = await workload(store, probe) } finally { restore() }
++    expect(summary(accounted)).toEqual(expected)
++    expect(inspectPersisted()).toEqual(persisted)
++    await store.dispose()
++    store = await open()
++    await store.transaction("dashboard", async () => {
++      const reopened = current(store)
++      for (const surface of surfaces) expect(verify(reopened[surface], surface, false)).toBe(persisted[surface].digest)
++      return { commit: false, value: undefined }
++    })
++    const timings = Object.fromEntries((Object.keys(timed[0]!.work.timing) as (keyof Work["timing"])[]).map((name) => [name, distribution(timed.map((sample) => sample.work.timing[name]))]))
++    console.log("RUNTIME_FRESH_COPY_COST", JSON.stringify({
++      schema: "runtime-fresh-copy-cost/v1", runtime: { bun: Bun.version, platform: process.platform, arch: process.arch },
++      workload: { rowCounts, timedPairs: pairs, measuredRoots: timed.length, warmupRoots: 1, instrumentedRoots: 1, perRoot: expected },
++      persisted, measured: timed.map(({ pair, member, work }) => ({ pair, member, timing: work.timing })), timings,
++      work: instrumented,
++      limits: {
++        timing: "Native globals in all 12 timed roots; wrappers only in one separate work-accounting root. No timing-ratio assertion.",
++        attribution: "Nested admission and currentSnapshots are disjoint synchronous spans; callbackSyncMs excludes them. rootAdmissionWallMs and totalWallMs are wall observations, not additive copy costs.",
++        scope: "Real SQLite/local-store synthetic workload. This is not a Portfolio/P03 run or a proof of composed product latency.",
++      },
++    }))
++    expect(instrumented.admission.wireParseCalls + instrumented.copies.wireParseCalls).toBe(0)
++    expect(instrumented.copies.descriptorObjectsBySurface.dashboard).toBeGreaterThan(0)
++    // Deliberate last oracle: the unmodified preimage prints the same workload
++    // and passes semantic checks above, then fails here because it traverses
++    // immutable non-target graphs on every nested/current fresh observation.
++    expect(instrumented.copies.descriptorObjectsBySurface.planner + instrumented.copies.descriptorObjectsBySurface.procurement).toBe(0)
++  })
++}, 60000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..fbf54acc8bc81a9afa27a5299bca305946597e98
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fixture.ts
+@@ -0,0 +1,72 @@
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { BlobTransaction } from "../../../runtime/assets.ts"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++
++export const surfaces = ["dashboard", "planner", "procurement"] as const
++export const bytes = new Uint8Array([0, 255, 17, 128])
++
++export async function withStores(work: (directory: string, open: () => Promise<LocalStore>) => Promise<void>) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-fresh-copies-"))
++  const stores: LocalStore[] = []
++  await chmod(directory, 0o700)
++  try {
++    await work(directory, async () => {
++      const store = await openLocalStore(directory)
++      stores.push(store)
++      return store
++    })
++  } finally {
++    await Promise.all(stores.map((store) => store.dispose()))
++    await rm(directory, { recursive: true, force: true })
++  }
++}
++
++export function current(store: LocalStore) {
++  const snapshots = store.currentSnapshots?.()
++  if (!snapshots) throw new Error("Fresh snapshot observation unavailable")
++  return snapshots
++}
++
++/** Prime the decoder memo without changing durable bytes or measured callbacks. */
++export async function warm(store: LocalStore) {
++  await store.transaction("dashboard", async () => {
++    current(store)
++    return { commit: false, value: undefined }
++  })
++}
++
++export async function seed(store: LocalStore) {
++  for (const surface of surfaces) {
++    await store.transaction(surface, async (snapshot) => {
++      const shared = { count: 1 }
++      const sparse: unknown[] = new Array(3)
++      sparse[1] = undefined
++      sparse[2] = shared
++      Object.defineProperty(sparse, "extra", { value: "ignored", enumerable: true })
++      const own: Record<string, unknown> = Object.create(null)
++      Object.defineProperty(own, "__proto__", { value: { count: 2 }, enumerable: true })
++      Object.defineProperty(own, "hidden", { value: undefined, enumerable: false })
++      snapshot.data = { surface, left: shared, right: shared, sparse, own, minusZero: -0, optional: undefined, text: "\ud800", toJSON: "ordinary data" }
++      snapshot.versions.seed = { version: 1, by: "fixture" }
++      snapshot.sequences.seed = 1
++      snapshot.audit.push({ who: "fixture", at: "2026-11-14", record: surface, was: undefined, became: shared })
++      snapshot.notices.push({ kind: "pending", to: ["fixture"], record: surface, at: "2026-11-14" })
++      return { commit: true, value: undefined }
++    })
++  }
++}
++
++export function record(value: unknown): Record<string, unknown> {
++  if (value === null || typeof value !== "object" || Array.isArray(value)) throw new Error("Expected object fixture")
++  return value as Record<string, unknown>
++}
++
++export async function read(store: LocalStore, surface: typeof surfaces[number] = "dashboard") {
++  return store.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => ({
++    commit: false, value: { snapshot, blob: await blobs.get("document") },
++  }))
++}
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..a03d190f04a488ac3a7f508b7a521bcd67be63a5
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts
+@@ -0,0 +1,228 @@
++import { expect, test } from "bun:test"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { decodeSnapshot, encodeSnapshot } from "../../../runtime/local-store.ts"
++import { current, read, record, seed, surfaces, warm, withStores } from "./fixture.ts"
++
++for (const target of surfaces) {
++  test(`fresh ${target} root keeps mutable target observations and every non-target graph independent`, async () => {
++    await withStores(async (_directory, open) => {
++      const store = await open()
++      await seed(store)
++      await warm(store)
++      const calls = { root: 0, nested: 0, current: 0 }
++      const observe = () => { calls.current++; return current(store) }
++      const retained = await store.transaction(target, async (snapshot) => {
++        calls.root++
++        const first = observe()
++        expect(first[target]).toEqual(decodeSnapshot(encodeSnapshot(snapshot)))
++        for (const surface of surfaces) {
++          expect(first[surface].data.surface).toBe(surface)
++          expect(first[surface].data.left).not.toBe(first[surface].data.right)
++          expect(Object.is(first[surface].data.minusZero, -0)).toBe(true)
++          expect(Object.hasOwn(first[surface].data, "optional")).toBe(true)
++          expect(first[surface].data.optional).toBeUndefined()
++          expect(first[surface].data.text).toBe("\ud800")
++          expect(first[surface].data.toJSON).toBe("ordinary data")
++          const own = record(first[surface].data.own)
++          expect(Object.getPrototypeOf(own)).toBe(Object.prototype)
++          expect(Object.hasOwn(own, "__proto__")).toBe(true)
++          expect(Object.getOwnPropertyDescriptor(own, "hidden")).toMatchObject({ value: undefined, enumerable: true, writable: true, configurable: true })
++          const sparse = first[surface].data.sparse
++          if (!Array.isArray(sparse)) throw new Error("Sparse fixture unavailable")
++          expect(sparse).toHaveLength(3)
++          expect(Object.hasOwn(sparse, 0)).toBe(true)
++          expect(Object.hasOwn(sparse, 1)).toBe(true)
++          expect(sparse[0]).toBeUndefined()
++          expect(sparse[2]).not.toBe(first[surface].data.left)
++          expect(Object.hasOwn(sparse, "extra")).toBe(false)
++        }
++        const second = observe()
++        for (const surface of surfaces) {
++          expect(second[surface]).not.toBe(first[surface])
++          expect(second[surface].data.left).not.toBe(first[surface].data.left)
++          record(first[surface].data.left).count = 901
++          record(record(first[surface].data.own).__proto__).count = 902
++          first[surface].audit[0]!.who = "copy-only"
++          first[surface].notices[0]!.to.push("copy-only")
++          first[surface].versions.seed!.version = 999
++          first[surface].sequences.seed = 999
++          expect(record(second[surface].data.left).count).toBe(1)
++        }
++        record(snapshot.data.left).count = 3
++        snapshot.data.latest = { observed: true }
++        const third = observe()
++        expect(record(third[target].data.left).count).toBe(3)
++        expect(third[target].data.latest).toEqual({ observed: true })
++        expect(record(second[target].data.left).count).toBe(1)
++        expect(second[target].data).not.toHaveProperty("latest")
++        for (const surface of surfaces) {
++          expect(third[surface].audit[0]!.who).toBe("fixture")
++          expect(third[surface].notices[0]!.to).toEqual(["fixture"])
++          expect(third[surface].versions.seed!.version).toBe(1)
++          expect(third[surface].sequences.seed).toBe(1)
++          await store.transaction(surface, async (nested) => {
++            calls.nested++
++            expect(nested).toEqual(third[surface])
++            expect(nested.data.left).not.toBe(third[surface].data.left)
++            record(nested.data.left).count = 707
++            nested.data.private = "nested-only"
++            const nestedCurrent = observe()
++            expect(nestedCurrent[surface]).toEqual(third[surface])
++            expect(nestedCurrent[surface].data.left).not.toBe(third[surface].data.left)
++            return { commit: false, value: undefined }
++          })
++        }
++        expect(observe()).toEqual(third)
++        return { commit: true, value: second }
++      })
++      expect(calls).toEqual({ root: 1, nested: 3, current: 7 })
++      for (const surface of surfaces) record(retained[surface].data.left).count = 444
++      await store.transaction(target, async () => {
++        const fresh = current(store)
++        for (const surface of surfaces) {
++          expect(record(fresh[surface].data.left).count).toBe(surface === target ? 3 : 1)
++          expect(fresh[surface].data).not.toHaveProperty("private")
++          expect(fresh[surface].data.left).not.toBe(retained[surface].data.left)
++        }
++        return { commit: false, value: undefined }
++      })
++      await store.dispose()
++      const reopened = await open()
++      expect(record((await read(reopened, target)).snapshot.data.left).count).toBe(3)
++    })
++  })
++}
++
++test("transactionAll copies all live mutable graphs and separates aliases across surfaces", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    if (!store.transactionAll) throw new Error("All-surface transaction unavailable")
++    await store.transactionAll(async (snapshots) => {
++      const shared = { value: 1 }
++      for (const surface of surfaces) snapshots[surface].data.shared = shared
++      const first = current(store)
++      shared.value = 2
++      const second = current(store)
++      expect(first.dashboard.data.shared).not.toBe(first.planner.data.shared)
++      expect(first.planner.data.shared).not.toBe(first.procurement.data.shared)
++      for (const surface of surfaces) {
++        expect(first[surface].data.shared).toEqual({ value: 1 })
++        expect(second[surface].data.shared).toEqual({ value: 2 })
++        record(first[surface].data.shared).value = 99
++        await store.transaction(surface, async (nested) => {
++          expect(nested.data.shared).toEqual({ value: 2 })
++          record(nested.data.shared).value = 77
++          expect(current(store)[surface].data.shared).toEqual({ value: 2 })
++          return { commit: false, value: undefined }
++        })
++      }
++      expect(shared.value).toBe(2)
++      return { commit: true, value: undefined }
++    })
++    for (const surface of surfaces) expect((await read(store, surface)).snapshot.data.shared).toEqual({ value: 2 })
++  })
++})
++
++test("a warm root still rejects invalid target values without evaluating accessors or invoking nested work", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const cycle: Record<string, unknown> = {}
++    cycle.self = cycle
++    const calls = { getters: 0, nested: 0 }
++    const cases: { value: unknown; reason: string }[] = [
++      ...[NaN, Infinity, -Infinity, 1n, Symbol("value"), () => true].map((value) => ({ value, reason: "Unsupported local snapshot value" })),
++      { value: cycle, reason: "Cyclic local snapshot" },
++      { value: new Date(0), reason: "Local snapshots require plain objects" },
++      { value: { [Symbol("key")]: true }, reason: "Unsupported symbol properties" },
++      { value: Object.defineProperty({}, "accessor", { get: () => { calls.getters++; return "not read" } }), reason: "Unsupported snapshot accessor" },
++    ]
++    for (const invalid of cases) {
++      await store.transaction("planner", async (snapshot: Snapshot) => {
++        const before = current(store)
++        snapshot.data.invalid = invalid.value
++        expect(() => current(store)).toThrow(invalid.reason)
++        await expect(store.transaction("planner", async () => {
++          calls.nested++
++          return { commit: false, value: undefined }
++        })).rejects.toThrow(invalid.reason)
++        expect(before.planner.data).not.toHaveProperty("invalid")
++        return { commit: false, value: undefined }
++      })
++    }
++    expect(calls).toEqual({ getters: 0, nested: 0 })
++    expect((await read(store, "planner")).snapshot.data).not.toHaveProperty("invalid")
++  })
++})
++
++test("non-target copies remain fresh when valid snapshots exceed the plan depth or missing-value limits", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const deep: Record<string, unknown> = {}
++    const cursor = { value: deep }
++    for (let index = 0; index < 140; index++) {
++      const child = { value: index }
++      cursor.value.child = child
++      cursor.value = child
++    }
++    for (const value of [Array.from({ length: 4097 }, () => undefined), deep]) {
++      await store.transaction("procurement", async (snapshot) => { snapshot.data.fallback = value; return { commit: true, value: undefined } })
++      await warm(store)
++      await store.transaction("dashboard", async () => {
++        const first = current(store)
++        const second = current(store)
++        expect(first.procurement).toEqual(second.procurement)
++        expect(first.procurement.data.fallback).not.toBe(second.procurement.data.fallback)
++        first.procurement.data.fallback = "copy-only"
++        expect(current(store).procurement).toEqual(second.procurement)
++        return { commit: false, value: undefined }
++      })
++    }
++  })
++})
++
++test("warm copies retain metadata validation for versions, audit and private blob generations", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const calls = { nested: 0 }
++    const cases: { install: (snapshot: Snapshot) => void; reason: string }[] = [
++      { install: (snapshot) => { snapshot.versions.seed = { version: -1, by: "invalid" } }, reason: "Corrupt local snapshot contents" },
++      { install: (snapshot) => { Object.assign(snapshot, { audit: [{ who: "invalid", at: "2026-11-14", record: "seed", became: true }] }) }, reason: "Corrupt local snapshot contents" },
++      { install: (snapshot) => { snapshot.sfBlobGenerations = { document: -1 } }, reason: "Corrupt local blob generations" },
++    ]
++    for (const invalid of cases) {
++      await store.transaction("planner", async (snapshot) => {
++        const before = current(store)
++        const generations = snapshot.sfBlobGenerations
++        try {
++          invalid.install(snapshot)
++          expect(() => current(store)).toThrow(invalid.reason)
++          await expect(store.transaction("planner", async () => {
++            calls.nested++
++            return { commit: false, value: undefined }
++          })).rejects.toThrow(invalid.reason)
++          expect(before.planner.versions.seed).toEqual({ version: 1, by: "fixture" })
++          expect(Object.hasOwn(before.planner.audit[0]!, "was")).toBe(true)
++          expect(before.planner.sfBlobGenerations).toBeUndefined()
++        } finally {
++          // Keep the separate private-generation write guard intact on exit.
++          if (generations === undefined) Reflect.deleteProperty(snapshot, "sfBlobGenerations")
++          else snapshot.sfBlobGenerations = generations
++        }
++        return { commit: false, value: undefined }
++      })
++    }
++    expect(calls.nested).toBe(0)
++    const durable = (await read(store, "planner")).snapshot
++    expect(durable.versions.seed).toEqual({ version: 1, by: "fixture" })
++    expect(Object.hasOwn(durable.audit[0]!, "was")).toBe(true)
++    expect(durable.sfBlobGenerations).toBeUndefined()
++  })
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..d2311405a63c142566fd20f0b84cd6797a60f286
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts
+@@ -0,0 +1,219 @@
++import { expect, test } from "bun:test"
++import type { BlobTransaction } from "../../../runtime/assets.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { bytes, current, read, record, seed, warm, withStores } from "./fixture.ts"
++
++for (const mode of ["false", "throw", "abort"] as const) {
++  test(`fresh copies preserve staged blob generations and ${mode} rollback across reopen`, async () => {
++    await withStores(async (_directory, open) => {
++      const store = await open()
++      await seed(store)
++      await warm(store)
++      const before = await read(store)
++      const controller = new AbortController()
++      const calls = { root: 0, nested: 0 }
++      const running = store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
++        calls.root++
++        const old = current(store)
++        record(snapshot.data.left).count = 10
++        await blobs.put("document", bytes, "binary")
++        const staged = current(store)
++        expect(staged.dashboard.sfBlobGenerations?.document).toBe(1)
++        expect(old.dashboard.sfBlobGenerations).toBeUndefined()
++        expect(record(old.dashboard.data.left).count).toBe(1)
++        await store.transaction("procurement", async (nested) => {
++          calls.nested++
++          record(nested.data.left).count = 99
++          expect(record(current(store).procurement.data.left).count).toBe(1)
++          return { commit: false, value: undefined }
++        })
++        if (mode === "throw") throw new Error("fresh-copy callback failed")
++        if (mode === "abort") {
++          controller.abort(new Error("fresh-copy request revoked"))
++          expect(() => current(store)).toThrow("fresh-copy request revoked")
++          await expect(blobs.get("document")).rejects.toThrow("fresh-copy request revoked")
++        }
++        return { commit: mode !== "false", value: "observed" }
++      }, { signal: controller.signal })
++      if (mode === "false") expect(await running).toBe("observed")
++      if (mode === "throw") await expect(running).rejects.toThrow("fresh-copy callback failed")
++      if (mode === "abort") await expect(running).rejects.toThrow("fresh-copy request revoked")
++      expect(calls).toEqual({ root: 1, nested: 1 })
++      expect(await read(store)).toEqual(before)
++      await store.dispose()
++      expect(await read(await open())).toEqual(before)
++    })
++  })
++}
++
++for (const effect of ["nested-commit", "nested-blob", "captured-parent-blob", "secret-write"] as const) {
++  test(`fresh non-target reads cannot hide a caught ${effect} and the root rolls back`, async () => {
++    await withStores(async (_directory, open) => {
++      const store = await open()
++      await seed(store)
++      await warm(store)
++      const before = await read(store)
++      const calls = { root: 0, nested: 0, caught: 0 }
++      await expect(store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
++        calls.root++
++        current(store)
++        snapshot.data.attempt = "must roll back"
++        await blobs.put("document", bytes, "binary")
++        await store.transaction("procurement", async (_nested: Snapshot, nestedBlobs: BlobTransaction) => {
++          calls.nested++
++          current(store)
++          if (effect === "nested-commit") return { commit: true, value: undefined }
++          const attempt = effect === "nested-blob" ? nestedBlobs.put("document", bytes, "binary")
++            : effect === "captured-parent-blob" ? blobs.put("captured", bytes, "binary")
++              : store.secrets.put("nested-secret", bytes, 1000)
++          await attempt.catch(() => { calls.caught++ })
++          return { commit: false, value: undefined }
++        }).catch(() => { calls.caught++ })
++        return { commit: true, value: undefined }
++      })).rejects.toThrow("Nested local write attempted")
++      expect(calls).toEqual({ root: 1, nested: 1, caught: effect === "nested-commit" ? 1 : 2 })
++      expect(await read(store)).toEqual(before)
++      expect(await store.secrets.get("nested-secret", 0)).toBeUndefined()
++      expect(await store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => ({
++        commit: false, value: await blobs.get("captured"),
++      }))).toBeUndefined()
++      await store.dispose()
++      expect(await read(await open())).toEqual(before)
++    })
++  })
++}
++
++test("an outstanding non-target reader prevents commit and cannot complete through a closed root", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const before = await read(store)
++    const started = Promise.withResolvers<void>()
++    const release = Promise.withResolvers<void>()
++    const child: { pending?: Promise<void> } = {}
++    try {
++      await expect(store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
++        current(store)
++        snapshot.data.pending = "must roll back"
++        await blobs.put("document", bytes, "binary")
++        child.pending = store.transaction("planner", async () => {
++          current(store)
++          started.resolve()
++          await release.promise
++          return { commit: false, value: undefined }
++        })
++        void child.pending.catch(() => undefined)
++        await started.promise
++        return { commit: true, value: undefined }
++      })).rejects.toThrow("Nested local read still active")
++      release.resolve()
++      await expect(child.pending).rejects.toThrow("scope has ended")
++      expect(await read(store)).toEqual(before)
++      await store.dispose()
++      expect(await read(await open())).toEqual(before)
++    } finally {
++      release.resolve()
++      await child.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("aborting a nested read closes its observations while the unrevoked parent remains usable", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const controller = new AbortController()
++    const calls = { nested: 0, preaborted: 0 }
++    await store.transaction("dashboard", async (snapshot) => {
++      const before = current(store)
++      await expect(store.transaction("planner", async (nested) => {
++        calls.nested++
++        const copy = current(store)
++        record(nested.data.left).count = 99
++        controller.abort(new Error("nested read revoked"))
++        expect(() => current(store)).toThrow("nested read revoked")
++        expect(copy).toEqual(before)
++        return { commit: false, value: undefined }
++      }, { signal: controller.signal })).rejects.toThrow("nested read revoked")
++      await expect(store.transaction("procurement", async () => {
++        calls.preaborted++
++        return { commit: false, value: undefined }
++      }, { signal: controller.signal })).rejects.toThrow("nested read revoked")
++      expect(current(store)).toEqual(before)
++      snapshot.data.parent = "committed"
++      return { commit: true, value: undefined }
++    })
++    expect(calls).toEqual({ nested: 1, preaborted: 0 })
++    expect((await read(store)).snapshot.data.parent).toBe("committed")
++    expect(record((await read(store, "planner")).snapshot.data.left).count).toBe(1)
++  })
++})
++
++test("closed readers and captured handles cannot borrow a later root generation", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const release = Promise.withResolvers<void>()
++    const retained: { observations?: Promise<unknown>; blobs?: BlobTransaction } = {}
++    await store.transaction("dashboard", async (_snapshot: Snapshot, blobs: BlobTransaction) => {
++      current(store)
++      retained.blobs = blobs
++      retained.observations = release.promise.then(() => current(store))
++      void retained.observations.catch(() => undefined)
++      return { commit: false, value: undefined }
++    })
++    await store.transaction("planner", async () => {
++      const fresh = current(store)
++      release.resolve()
++      await expect(retained.observations).rejects.toThrow("scope has ended")
++      if (!retained.blobs) throw new Error("Captured capability missing")
++      await expect(retained.blobs.get("document")).rejects.toThrow("scope has ended")
++      await expect(retained.blobs.put("document", bytes, "binary")).rejects.toThrow("scope has ended")
++      await expect(retained.blobs.remove("document")).rejects.toThrow("scope has ended")
++      expect(current(store)).toEqual(fresh)
++      return { commit: true, value: undefined }
++    })
++    expect((await read(store)).blob).toBeUndefined()
++    expect(store.currentSnapshots?.()).toBeUndefined()
++  })
++})
++
++test("dispose drains an admitted root with retained plans and refuses later admissions", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const started = Promise.withResolvers<void>()
++    const release = Promise.withResolvers<void>()
++    const calls: string[] = []
++    const running = store.transaction("dashboard", async (snapshot) => {
++      calls.push("admitted")
++      const before = current(store)
++      started.resolve()
++      await release.promise
++      expect(current(store)).toEqual(before)
++      snapshot.data.drained = true
++      return { commit: true, value: undefined }
++    })
++    await started.promise
++    const completions: string[] = []
++    const disposing = store.dispose().then(() => { completions.push("disposed") })
++    try {
++      await expect(store.transaction("dashboard", async () => {
++        calls.push("late")
++        return { commit: false, value: undefined }
++      })).rejects.toThrow("disposed")
++      expect(completions).toEqual([])
++    } finally {
++      release.resolve()
++      await running
++      await disposing
++    }
++    expect(calls).toEqual(["admitted"])
++    expect(completions).toEqual(["disposed"])
++    expect((await read(await open())).snapshot.data.drained).toBe(true)
++  })
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..d6f54942abbef1d9df3d5e73313083ab971f8347
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts
+@@ -0,0 +1,151 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { join } from "node:path"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import { encodeSnapshot } from "../../../runtime/local-store.ts"
++import { current, read, record, seed, surfaces, warm, withStores } from "./fixture.ts"
++
++test("retained copies do not hide commits from another real SQLite handle or survive reopen as aliases", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const other = await open()
++    const before = await store.transaction("dashboard", async () => ({ commit: false, value: current(store) }))
++    // Warm the same instance's decoder memo before the other handle commits.
++    await store.transaction("dashboard", async () => {
++      expect(current(store)).toEqual(before)
++      return { commit: false, value: undefined }
++    })
++    await other.transaction("planner", async (snapshot) => {
++      record(snapshot.data.left).count = 42
++      snapshot.data.updated = "another SQL owner"
++      snapshot.versions.seed = { version: 2, by: "other" }
++      return { commit: true, value: undefined }
++    })
++    const changed = await store.transaction("dashboard", async () => ({ commit: false, value: current(store) }))
++    expect(record(changed.planner.data.left).count).toBe(42)
++    expect(changed.planner.versions.seed).toEqual({ version: 2, by: "other" })
++    await warm(store)
++    const after = await store.transaction("dashboard", async () => {
++      const first = current(store)
++      const second = current(store)
++      expect(record(first.planner.data.left).count).toBe(42)
++      expect(first.planner.versions.seed).toEqual({ version: 2, by: "other" })
++      expect(first.planner.data.updated).toBe("another SQL owner")
++      expect(first.planner.data.left).not.toBe(second.planner.data.left)
++      record(first.planner.data.left).count = 999
++      expect(record(second.planner.data.left).count).toBe(42)
++      return { commit: false, value: second }
++    })
++    expect(record(before.planner.data.left).count).toBe(1)
++    expect(before.planner.data).not.toHaveProperty("updated")
++    await store.dispose()
++    const reopened = await open()
++    expect((await read(reopened, "planner")).snapshot).toEqual(after.planner)
++    record(after.planner.data.left).count = 555
++    expect(record((await read(reopened, "planner")).snapshot.data.left).count).toBe(42)
++  })
++})
++
++test("a changed or deleted non-target SQL row is observed before callback and cannot reuse stale plans", async () => {
++  await withStores(async (directory, open) => {
++    const store = await open()
++    await seed(store)
++    await warm(store)
++    const original = await store.transaction("dashboard", async () => ({ commit: false, value: current(store) }))
++    const db = new Database(join(directory, "installation.sqlite"), { strict: true })
++    try {
++      db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run('{"invalid":"envelope"}', "procurement")
++      const calls: string[] = []
++      await expect(store.transaction("dashboard", async () => {
++        calls.push("invalid row admitted")
++        return { commit: false, value: undefined }
++      })).rejects.toThrow("Unsupported local snapshot encoding")
++      expect(calls).toEqual([])
++      // Restore through the real codec, then ensure a fresh root is admitted.
++      db.query("UPDATE snapshots SET payload = ? WHERE surface = ?").run(encodeSnapshot(original.procurement), "procurement")
++      await store.transaction("dashboard", async () => {
++        calls.push("restored")
++        expect(current(store).procurement).toEqual(original.procurement)
++        return { commit: false, value: undefined }
++      })
++      db.query("DELETE FROM snapshots WHERE surface = ?").run("procurement")
++      await store.transaction("dashboard", async () => {
++        calls.push("deleted")
++        const first = current(store)
++        const second = current(store)
++        expect(first.procurement).toEqual({ data: {}, versions: {}, sequences: {}, audit: [], notices: [] })
++        first.procurement.data.mutated = true
++        expect(second.procurement.data).toEqual({})
++        expect(current(store).procurement.data).toEqual({})
++        return { commit: false, value: undefined }
++      })
++      expect(calls).toEqual(["restored", "deleted"])
++      expect(original.procurement.data.surface).toBe("procurement")
++    } finally { db.close() }
++    await store.dispose()
++    expect((await read(await open(), "procurement")).snapshot.data).toEqual({})
++  })
++})
++
++test("one root retains captured non-target plans safely when admission evicts them from the bounded memo", async () => {
++  await withStores(async (_directory, open) => {
++    const store = await open()
++    for (const surface of surfaces) {
++      await store.transaction(surface, async (snapshot) => {
++        snapshot.data = { surface, text: "x".repeat(1_000_000), nested: { count: 1 } }
++        return { commit: true, value: undefined }
++      })
++    }
++    await warm(store)
++    const before = await store.transaction("dashboard", async () => ({ commit: false, value: current(store) }))
++    // This fixture contains only ordinary JSON values. Its encoded v1 payload,
++    // JSON materialization and empty missing-path list give exact plan units.
++    const units = (snapshot: Snapshot) => encodeSnapshot(snapshot).length + JSON.stringify(snapshot).length + 2
++    const budget = 8 * 1024 * 1024
++    expect(surfaces.reduce((total, surface) => total + units(before[surface]), 0)).toBeLessThan(budget)
++    const other = await open()
++    const changed = await other.transaction("procurement", async (snapshot) => {
++      snapshot.data.text = "y".repeat(3_400_000)
++      record(snapshot.data.nested).count = 2
++      return { commit: true, value: snapshot }
++    })
++    expect(units(changed)).toBeLessThan(budget)
++    expect(units(before.planner) + units(changed)).toBeGreaterThan(budget)
++    // Do not warm the changed bytes here: dashboard/planner must be captured
++    // from the old memo before procurement admission evicts both entries.
++    await store.transaction("procurement", async (snapshot) => {
++      const first = current(store)
++      const second = current(store)
++      expect(first.dashboard).toEqual(before.dashboard)
++      expect(first.planner).toEqual(before.planner)
++      expect(first.procurement).toEqual(changed)
++      for (const surface of surfaces) {
++        expect(first[surface].data.nested).not.toBe(second[surface].data.nested)
++        record(first[surface].data.nested).count = 99
++        first[surface].data.text = "recipient-only"
++      }
++      record(snapshot.data.nested).count = 3
++      const third = current(store)
++      expect(third.dashboard).toEqual(before.dashboard)
++      expect(third.planner).toEqual(before.planner)
++      expect(record(third.procurement.data.nested).count).toBe(3)
++      expect(record(second.procurement.data.nested).count).toBe(2)
++      expect(third.procurement.data.text).toBe(changed.data.text)
++      await store.transaction("dashboard", async (nested) => {
++        expect(nested).toEqual(before.dashboard)
++        record(nested.data.nested).count = 55
++        expect(current(store).dashboard).toEqual(before.dashboard)
++        return { commit: false, value: undefined }
++      })
++      return { commit: false, value: undefined }
++    })
++    expect(record(before.procurement.data.nested).count).toBe(1)
++    expect((before.procurement.data.text as string).length).toBe(1_000_000)
++    await warm(store)
++    expect((await read(store, "procurement")).snapshot).toEqual(changed)
++    await store.dispose()
++    expect((await read(await open(), "procurement")).snapshot).toEqual(changed)
++  })
++})
+diff --git a/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..dbca223c910c74662b4a42150146d666a42f154d
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts
+@@ -0,0 +1,114 @@
++import { expect, test } from "bun:test"
++import { Database } from "bun:sqlite"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import type { Surface } from "../../../src/identity.ts"
++import { encodeSnapshot, openLocalStore } from "../../../runtime/local-store.ts"
++
++const dashboardMarker = "demand-dashboard-persisted"
++
++async function fixture(work: (directory: string, open: () => Promise<LocalStore>) => Promise<void>) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-surface-demand-"))
++  const stores: LocalStore[] = []
++  await chmod(directory, 0o700)
++  try {
++    await work(directory, async () => {
++      const store = await openLocalStore(directory)
++      stores.push(store)
++      return store
++    })
++  } finally {
++    await Promise.all(stores.map((store) => store.dispose()))
++    await rm(directory, { recursive: true, force: true })
++  }
++}
++
++async function seed(store: LocalStore, large = false) {
++  if (!store.transactionAll) throw new Error("All-surface transactions unavailable")
++  await store.transactionAll(async (snapshots) => {
++    for (const surface of ["dashboard", "planner", "procurement"] as const) {
++      snapshots[surface].data.record = { marker: surface === "dashboard" ? dashboardMarker : surface, value: "persisted", optional: undefined, negativeZero: -0 }
++      snapshots[surface].versions.record = { version: 7, by: "original" }
++    }
++    if (large) snapshots.dashboard.data.large = "x".repeat(2 * 1024 * 1024)
++    return { commit: true, value: undefined }
++  })
++}
++
++function rows(directory: string) {
++  const database = new Database(join(directory, "installation.sqlite"), { readonly: true, strict: true })
++  try { return database.query<{ surface: Surface; payload: string }, []>("SELECT surface, payload FROM snapshots ORDER BY surface").all() }
++  finally { database.close() }
++}
++
++function read(store: LocalStore, surface: Surface = "planner") {
++  return store.transaction(surface, async (snapshot) => ({ commit: false, value: snapshot }))
++}
++
++// Observe real parse work without retaining its arguments or replacing results.
++// The marker distinguishes Dashboard materialization from tiny sibling surfaces.
++async function countParses<T>(work: () => Promise<T>) {
++  const parse = JSON.parse
++  const counts = { calls: 0, characters: 0, taggedCalls: 0, taggedCharacters: 0, nativeDashboard: 0, taggedDashboard: 0 }
++  JSON.parse = (text, reviver) => {
++    counts.calls++
++    if (typeof text === "string") {
++      counts.characters += text.length
++      const tagged = text.startsWith('["sucafina-snapshot",')
++      if (tagged) { counts.taggedCalls++; counts.taggedCharacters += text.length }
++      if (text.includes(dashboardMarker)) {
++        if (tagged) counts.taggedDashboard++
++        else counts.nativeDashboard++
++      }
++    }
++    return parse(text, reviver)
++  }
++  try { return { value: await work(), counts } }
++  finally { JSON.parse = parse }
++}
++
++test("one root emits fresh demanded sibling graphs while nested and current snapshots remain independent staged copies", async () => {
++  await fixture(async (directory, open) => {
++    const store = await open()
++    await seed(store)
++    await read(store)
++    const persisted = rows(directory)
++    const dashboard = persisted.find((row) => row.surface === "dashboard")!.payload
++    const observed = await countParses(() => store.transaction("planner", async (parent) => {
++      parent.data.record = { value: "parent stage", optional: undefined, negativeZero: -0 }
++      const child = await read(store, "dashboard")
++      expect(encodeSnapshot(child)).toBe(dashboard)
++      child.data.record = { value: "child mutation" }
++      const sibling = await read(store, "dashboard")
++      expect(encodeSnapshot(sibling)).toBe(dashboard)
++      expect(sibling).not.toBe(child)
++      expect(sibling.data).not.toBe(child.data)
++      const first = store.currentSnapshots?.()
++      if (!first) throw new Error("Current snapshots unavailable")
++      expect(encodeSnapshot(first.dashboard)).toBe(dashboard)
++      expect(first.planner.data.record).toEqual(parent.data.record)
++      expect(first.planner).not.toBe(parent)
++      expect(first.planner.data).not.toBe(parent.data)
++      first.dashboard.data.record = { value: "current Dashboard mutation" }
++      first.planner.data.record = { value: "current Planner mutation" }
++      const second = store.currentSnapshots?.()
++      if (!second) throw new Error("Current snapshots unavailable")
++      expect(encodeSnapshot(second.dashboard)).toBe(dashboard)
++      expect(second.planner.data.record).toEqual({ value: "parent stage", optional: undefined, negativeZero: -0 })
++      expect(second.dashboard).not.toBe(first.dashboard)
++      expect(second.planner).not.toBe(first.planner)
++      expect(second.dashboard.data).not.toBe(first.dashboard.data)
++      expect(second.planner.data).not.toBe(first.planner.data)
++      expect(Object.is((second.planner.data.record as Record<string, unknown>).negativeZero, -0)).toBe(true)
++      expect(Object.hasOwn(second.planner.data.record as object, "optional")).toBe(true)
++      return { commit: false, value: first }
++    }))
++    expect(observed.counts.nativeDashboard).toBe(4)
++    observed.value.dashboard.data.record = { value: "after-scope output mutation" }
++    expect(encodeSnapshot(await read(store, "dashboard"))).toBe(dashboard)
++    expect(rows(directory)).toEqual(persisted)
++  })
++})
