@@ -1,0 +1,659 @@
+{
+  "schema": "sf2h.integration162-intake-delta.v1",
+  "campaign": "sf2h-integral-20261112",
+  "integrator": 162,
+  "integrator_epoch": "S0-C-e20-browser162",
+  "supersedes_routing_only": "All132mentions in source receipts mean current162consumer, samePR65.149compiler/150CI unchanged.",
+  "state": "SOURCE_HANDOFFS_READY_SHARED_SEAMS_PENDING",
+  "native_goal": "paused",
+  "global_release": false,
+  "existing_queue": 21,
+  "additional_inputs": 3,
+  "total_inputs": 24,
+  "total_inputs_are_not_done_tasks": true,
+  "items": [
+    {
+      "mission": 156,
+      "branch": "sf-ux-n10",
+      "pr": 147,
+      "epoch": "ux-native-n10-e2-browser156",
+      "source_head": "678a6787d054d061e94b0340238415cd0aca5f93",
+      "source_tree": "60c0baf147ef2c696f78bf354b94b6d654bdfe59",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/ACK.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/678a6787d054d061e94b0340238415cd0aca5f93/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/ACK.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/OWNER-SEAMS.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/678a6787d054d061e94b0340238415cd0aca5f93/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/OWNER-SEAMS.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/RECEIPT.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/678a6787d054d061e94b0340238415cd0aca5f93/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/RECEIPT.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/678a6787d054d061e94b0340238415cd0aca5f93/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/S0-FENCE.json"
+        }
+      ],
+      "handoff": {
+        "schema": "sf2h.review-correction-terminal-receipt.v1",
+        "mission": 156,
+        "slot": "N10",
+        "campaign": "sf2h-integral-20261112",
+        "epoch": "ux-native-n10-e2-browser156",
+        "actor": {
+          "github_login": "gustavomhss",
+          "tool": "GitHub MCP",
+          "effective_model": "GPT-6",
+          "session_id": null,
+          "session_id_exposed": false,
+          "claims_astra_runtime": false
+        },
+        "branch": "sf-ux-n10",
+        "pr_number": 147,
+        "base_branch": "sf2-stack",
+        "lifecycle": {
+          "s0_fence_blob": "983dbef1be035515281410dcd7c6e680416ccefc",
+          "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+          "prior_process_termination_unproven": true,
+          "goal": "PAUSED",
+          "release": false
+        },
+        "source_checkpoint": {
+          "prepared_head": "fb67474bb2e399047de5a36e2906821e6d0e7348",
+          "prepared_tree": "a75a42b4c5fd85260dd19920d87ee8201be987e9",
+          "ack_commit": "c61d57a61c708f7c1d1465dcb0804f4f6e472c56",
+          "ack_tree": "ced06a7a3dd6180f1d22a5fb0ba6aca89190f540",
+          "ack_blob": "2e6a740509b0215b14cff437430c899af73ea353",
+          "code_commits": [
+            "ca4cc8337e87219dc31381673e06f24d4beca6de",
+            "683c1ae0f7e8c602a2c982b52f93ed444057c11a"
+          ],
+          "code_tree": "297486844c581dabe98c9abae8cda8149a7aa818",
+          "last_code_head": "683c1ae0f7e8c602a2c982b52f93ed444057c11a"
+        },
+        "changed_paths": [
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/home/index.tsx",
+            "pre": "724b6ce9cc60d63c0b1b315297a4417f433a6ead",
+            "post": "55efb87d8bb12a48e55711d3cd8b8af146975cd9",
+            "finding": "PRE-R01-146-005"
+          },
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/search/index.tsx",
+            "pre": "f6c892046752446417e122dbaf740d3d69836ec0",
+            "post": "e89fb68192660909865bb0f8b2e6a0b27c3f77d7",
+            "finding": "PRE-R01-146-003"
+          },
+          {
+            "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u01.ts",
+            "pre": "bf94e13ee695ad6f6bd3d58d4f4697e550ddaae3",
+            "post": "e58c06e265da2346cd7bde0da75c73ce7e2bd46d",
+            "finding": "PRE-R01-146-005"
+          },
+          {
+            "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u42.ts",
+            "pre": "21673e1ceac0e1451e426ad538eb335f9f5531ac",
+            "post": "7d4ba16199b835b3b0f977461b02622659a95a1e",
+            "finding": "PRE-R01-146-003"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/native/journeys/u01.spec.ts",
+            "pre": "1ab35888186a8d669515a634874f4e0ab6c44a0d",
+            "post": "335ffccb6aa231a13700f9f0f8bd76e4f3ee8694",
+            "finding": "PRE-R01-146-005"
+          },
+          {
+            "path": "packages/app-shell/e2e/sucafina/native/journeys/u42.spec.ts",
+            "pre": "e55e5437d2ebd118c89e23a4de52720e880352c9",
+            "post": "211237292a9fbfa7957d09bca2844ffee8740503",
+            "finding": "PRE-R01-146-003"
+          }
+        ],
+        "source_and_consumer": [
+          {
+            "role": "search producer source",
+            "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+            "pre": "402b8a4599807d403065e561a427e230ae5981cb",
+            "post": "UNCHANGED_NOT_OWNER",
+            "seam": "search POST-only bounded body remains pending 153"
+          },
+          {
+            "role": "search operation metadata",
+            "path": "packages/schema/src/sucafina/operation-registry.ts",
+            "pre": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84",
+            "post": "UNCHANGED_NOT_OWNER",
+            "seam": "GET to POST-read 4096 bytes change pending 132/153"
+          },
+          {
+            "role": "search transport",
+            "path": "packages/client/src/sucafina/transport.ts",
+            "pre": "ff509a7b742b81939a15f0439ca7f4a3d4b858e9",
+            "post": "UNCHANGED_NOT_OWNER",
+            "seam": "current GET serializes q, POST-read sends JSON body; desktop proof pending"
+          },
+          {
+            "role": "search schema",
+            "path": "packages/schema/src/sucafina/work.ts",
+            "pre": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+            "post": "UNCHANGED_NOT_OWNER",
+            "seam": "same typed {q} must be source admitted, no arbitrary extra fields"
+          },
+          {
+            "role": "today producer source",
+            "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+            "pre": "402b8a4599807d403065e561a427e230ae5981cb",
+            "post": "UNCHANGED_NOT_OWNER",
+            "seam": "already projects real authorized caseRef/title/version"
+          },
+          {
+            "role": "route parser",
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts",
+            "pre": "c70c68fee7eb3e944c432ad636ef9ba30571b425",
+            "post": "UNCHANGED_NOT_OWNER",
+            "seam": "UI34 route recognized, builder absent"
+          },
+          {
+            "role": "F01 context/navigation",
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+            "pre": "592eef8206c665a1fc908934e258b286fe85609e",
+            "post": "UNCHANGED_NOT_OWNER",
+            "seam": "no public resumeCase callback; 132 to wire"
+          },
+          {
+            "role": "navigation state",
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/index.ts",
+            "pre": "dc264d8c97163922134d09285e1c8d3a38027760",
+            "post": "UNCHANGED_NOT_OWNER",
+            "seam": "reuse requestNativeTransition/return/focus memory"
+          }
+        ],
+        "findings": [
+          {
+            "id": "PRE-R01-146-003",
+            "severity": "P1",
+            "ui": "UI31/U42",
+            "criteria": [
+              "U42-AC01",
+              "U42-AC02",
+              "U42-AC03",
+              "NAV-01",
+              "READ-01"
+            ],
+            "before": "Search {q} serialized to query URL by GET route",
+            "delta": "UI strictly refuses GET and only dispatches when registry publishes real bounded POST-read; new installed test asserts HTTP POST, q absent URI, body exact and page URL unchanged",
+            "status": "CONSUMER_SOURCE_READY_PENDING_A12_153_I00_132",
+            "proof": "STATIC_READ_ONLY",
+            "validation": "NOT_RUN"
+          },
+          {
+            "id": "PRE-R01-146-005",
+            "severity": "P2",
+            "ui": "UI29/U01",
+            "criteria": [
+              "U01-AC01",
+              "U01-AC02",
+              "U01-AC03",
+              "NAV-01",
+              "A11Y-01"
+            ],
+            "before": "Real caseRef present but no action",
+            "delta": "Accessible case-specific resume button gated on optional F01 owner port, source-version/owner/return/focus args, abort/generation fences, denial/removal scrub, installed keyboard/return-focus regression",
+            "status": "UI_CONSUMER_SOURCE_READY_BLOCKED_OWNER_PORT_132",
+            "proof": "STATIC_READ_ONLY",
+            "validation": "NOT_RUN"
+          }
+        ],
+        "proof": {
+          "kind": "STATIC_SOURCE_READ_ONLY",
+          "tests": "NOT_RUN",
+          "typecheck": "NOT_RUN",
+          "parser": "NOT_RUN",
+          "build": "NOT_RUN",
+          "visual": "NOT_RUN",
+          "http_runtime": "NOT_RUN",
+          "desktop_runtime": "NOT_RUN",
+          "ci": "NOT_RUN",
+          "coverage_claim": "NONE",
+          "reason": "User delegated all compiler/CI execution to 149/150 and prohibited local checks/dispatch.",
+          "source_read_verdict": "Original findings confirmed in exact code/metadata; no runtime exploitation or green claims."
+        },
+        "external_seams": {
+          "document": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction156/OWNER-SEAMS.md",
+          "search": {
+            "owner": "153/A12 + 132/I00",
+            "state": "BLOCKED_CONTRACT",
+            "required": "Admit POST-read q in bounded JSON body on exact existing path; close GET, preserve real producer, update desktop broker"
+          },
+          "navigation": {
+            "owner": "132/I00 F01 route builder",
+            "state": "BLOCKED_OWNER",
+            "required": "Expose real resumeCase port and owner-bound returnRef/focus; authorize UI34; no leaf constructed URL"
+          },
+          "integration": {
+            "owner": "132/PR65",
+            "state": "PENDING",
+            "required": "Apply N10 code blobs from same PR onto current sf2-stack, integrate 153 contract, issue consumer ACK"
+          },
+          "compile": {
+            "owner": "149/PR107",
+            "state": "NOT_RUN",
+            "required": "New coherent input after 132/153; no repeat unchanged failed C64"
+          },
+          "ci": {
+            "owner": "150/PR106",
+            "state": "NOT_RUN",
+            "required": "Scoped installed web+desktop request URI/callback/keyboard/denied/removed/focus checks with current candidate; no full epic"
+          }
+        },
+        "inherited_work_orders": [
+          "U01",
+          "U42"
+        ],
+        "read_sources": [
+          "AGENTS.md",
+          "packages/app-shell/AGENTS.md",
+          "packages/app-shell/e2e/AGENTS.md",
+          "SURFACE-SPECS.md NAV-01/READ-01",
+          "COMPONENT-CONTRACTS.md",
+          "component-signatures.ts",
+          "host-signatures.ts",
+          "route-signatures.ts",
+          "manifest.json",
+          "EXECUTION-PROTOCOL.md",
+          "U01 and U42 pinned blobs"
+        ],
+        "unavailable_required_read": {
+          "name": "COMMON.md",
+          "pin": "526e7204b310756e552196bbf3d64037dbbf047c",
+          "failure": "NOT_FOUND by Github blob fetch/path; no content inferred"
+        },
+        "write_policy": {
+          "allowed_only": "N10 current 7 groups including correction156 receipts",
+          "foreign_paths_changed": false,
+          "force": false,
+          "local_execution": false,
+          "dispatcher": false,
+          "goal": "paused"
+        },
+        "terminal_handoff": {
+          "state": "ARTIFACT_READY_PARTIAL_WITH_EXPLICIT_BLOCKERS",
+          "ownership": "RELEASED_FOR_NEXT_BOUNDED_LEASE_AFTER_RECEIPT",
+          "global_release": false,
+          "next": "132 integrator reconcile PR147 code blobs, coordinate 153 admitted privacy-safe POST and expose F01 UI34 navigation port from OWNER-SEAMS.md; then 149 compile/SDK, 150 scoped CI, independent reviewer recheck; no release until all evidence.",
+          "no_stale_authority_or_process_death_claim": true
+        }
+      },
+      "acceptance": "Verify current head/epoch/source and consumer preimages, apply released exact hunks only, implement accepted shared seams under I00, then publish consumerACK and candidate-bound hosted requests. Static/source-ready is not runtime PASS."
+    },
+    {
+      "mission": 157,
+      "branch": "sf-ux-n11",
+      "pr": 158,
+      "epoch": "ux-native-n11-e2-browser157",
+      "source_head": "e1abec0d6d2d67a11cd77ba2527c508b4a849dd1",
+      "source_tree": "aafd20d358d6ad0dbebd6375fce6413932c77314",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1abec0d6d2d67a11cd77ba2527c508b4a849dd1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/S0-FENCE.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/delivery.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1abec0d6d2d67a11cd77ba2527c508b4a849dd1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/delivery.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/owner-seams.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/e1abec0d6d2d67a11cd77ba2527c508b4a849dd1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/owner-seams.md"
+        }
+      ],
+      "handoff": {
+        "schema": "sf2h.native-ui.correction-receipt.v1",
+        "campaign": "sf2h-integral-20261112",
+        "mission": 157,
+        "slot": "N11",
+        "order": "U41",
+        "surface": "UI30",
+        "epoch": "ux-native-n11-e2-browser157",
+        "actor": {
+          "effective_model": "GPT-6",
+          "astra_runtime_exposed": false,
+          "session_id": null,
+          "github_connector_login": "gustavomhss",
+          "connector_login_is_not_session_identity": true
+        },
+        "authority": {
+          "branch": "sf-ux-n11",
+          "pr": 158,
+          "previous_epoch": "ux-native-n11-e1",
+          "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+          "prior_process_terminated_claimed": false,
+          "approved_by_user_in_current_chat": true,
+          "allowlist": [
+            "packages/app-shell/src/orchestra/chapters/sucafina/work/**",
+            "packages/app-shell/src/i18n/orchestra-chapters/sf-u41.ts",
+            "packages/app-shell/e2e/sucafina/native/journeys/u41.spec.ts",
+            "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/**"
+          ]
+        },
+        "ack": {
+          "channel": "GitHub PR #158 comment",
+          "comment_id": 6901383549,
+          "epoch": "ux-native-n11-e2-browser157",
+          "pre_head": "586b1551ec42b9d3fa4918fc3aa6956ba7d84721",
+          "fence_blob": "6129e9d03eaab931c0e874a4c8902a236c3cff95"
+        },
+        "source": {
+          "pre_commit": "586b1551ec42b9d3fa4918fc3aa6956ba7d84721",
+          "pre_tree": "25efd1214d049aaca0c18551d8bf9e0f7f3a41d7",
+          "post_commit": "SEE_PR_158_HEAD_AFTER_CAS",
+          "post_tree": "SEE_PR_158_HEAD_TREE_AFTER_CAS",
+          "files": [
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/work/index.tsx",
+              "pre_blob": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+              "post_blob": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+              "finding_ids": [
+                "PRE-R01-146-001",
+                "PRE-R01-146-006"
+              ]
+            },
+            {
+              "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u41.ts",
+              "pre_blob": "ce36f38be93751fb2a555ec98fe366a628b3a8d6",
+              "post_blob": "de979d8164960b0eb60d9fb30d6ecb22362142a2",
+              "finding_ids": [
+                "PRE-R01-146-001"
+              ]
+            },
+            {
+              "path": "packages/app-shell/e2e/sucafina/native/journeys/u41.spec.ts",
+              "pre_blob": "572ba4ed030182460da282bd56b20f35fa8cda3d",
+              "post_blob": "53bcdf935e2b777c25059fe895c96780b93bbae7",
+              "finding_ids": [
+                "PRE-R01-146-001",
+                "PRE-R01-146-006"
+              ]
+            },
+            {
+              "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/owner-seams.md",
+              "pre_blob": null,
+              "post_blob": "f007199fcdcee02e379a65a24c9c072376481f85",
+              "finding_ids": [
+                "PRE-R01-146-001",
+                "PRE-R01-146-006"
+              ]
+            }
+          ]
+        },
+        "consumer": {
+          "owner": "132",
+          "pr": 65,
+          "pre_commit": "8094e599e3d18609e269548d24619a3246fbc735",
+          "pre_tree": "b064e8c0ef63e9a3eb2bf6b699592fbdb184dee8",
+          "pre_ui30_blob": "32b0d8c14557d08115d57baba9d9f5ce0ccd8ad3",
+          "pre_work_adapter_blob": "402b8a4599807d403065e561a427e230ae5981cb",
+          "pre_native_mount_blob": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+          "post_commit": null,
+          "post_tree": null,
+          "post_status": "NOT_APPLIED_NOT_INTEGRATED",
+          "consumer_ack": null,
+          "expected_product_blobs": {
+            "work/index.tsx": "7be51da49d5b9c70f19afbcf1055fe3d27f61148",
+            "sf-u41.ts": "de979d8164960b0eb60d9fb30d6ecb22362142a2",
+            "u41.spec.ts": "53bcdf935e2b777c25059fe895c96780b93bbae7"
+          }
+        },
+        "observed_causal_findings": [
+          {
+            "id": "PRE-R01-146-001",
+            "severity": "P1",
+            "pre": "Leaf calls projection.work-item while A12 handler list excludes it",
+            "post_leaf": "Retains genuine selectionRef/period/actionRef and selected row owner/kind/state/sourceVersion/observedVersion/destination; rejects missing/mismatched/stale results; denies purge private view; no fake detail",
+            "upstream_pending": "153 supplies real workDestinations.read+verify, 132 mounts handler; no installed proof",
+            "state": "LEAF_PATCH_READY_UPSTREAM_OPEN"
+          },
+          {
+            "id": "PRE-R01-146-006",
+            "severity": "P2",
+            "pre": "safeSourceHref rejects desktop because renderer window.location.origin != producer publicOrigin",
+            "post_leaf": "No renderer-origin comparison. Validates exact source-approved publicOrigin native F01 route from item + work-destination on every click; no arbitrary URLs, query/hash/userinfo, openExternal or DOM direct href. Errors visible with detail retained except denial",
+            "upstream_pending": "132 owner must publish admitted typed source route; frozen D01 has no openUrl; current legacy href rejected",
+            "state": "FAIL_CLOSED_LEAF_PATCH_READY_ROUTE_SEAM_OPEN"
+          }
+        ],
+        "contract_pins": {
+          "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+          "normative_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+          "WP08_T04_blob": "42afe6b6194a9cd4de038743673923609059b6a0",
+          "surface_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+          "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+          "D01_host_signature_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+          "A12_work_schema_blob": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+          "A12_work_adapter_blob": "402b8a4599807d403065e561a427e230ae5981cb"
+        },
+        "criteria": {
+          "U41_AC01": "LEAF_HANDLES_CURRENT_SOURCE_AND_CHECKS; BLOCKED_REAL_PRODUCER_AND_TYPED_DESTINATION",
+          "U41_AC02": "LEAF_STATES_AND_IDENTITY_MATCH; NOT_RUN_DENIED_STALE_INSTALLED",
+          "U41_AC03": "NOT_RUN_REQUIRED_VIEWPORTS_AND_ACCESSIBILITY",
+          "WP08_T04_CHK_01_02_03_04_20_18": "NOT_RUN_REAL_DOMAIN_PROOFS",
+          "WP08_T04_DOD_INV_QLT_CMP_SUC": "NOT_CLOSED_OR_WAIVED",
+          "surface_refs": [
+            "NUI01",
+            "NUI03",
+            "NUI04",
+            "NUI13",
+            "NUI14",
+            "NUI15"
+          ]
+        },
+        "regression_specs": {
+          "path": "packages/app-shell/e2e/sucafina/native/journeys/u41.spec.ts",
+          "cases": [
+            "current selection with real row, owner/ref/version/filter",
+            "approved native source route OR explicit unavailable on legacy href",
+            "real denied owner purges private work",
+            "real stale selection not empty success"
+          ],
+          "uses_mock": false,
+          "fixture_source": "150 approved installed identities and work periods",
+          "status": "NOT_RUN",
+          "reason": "149/150 are sole hosted validators and real A12/132 integration not yet admitted"
+        },
+        "validation": {
+          "local_tests": "NOT_RUN_USER_FORBIDDEN",
+          "local_parser": "NOT_RUN_USER_FORBIDDEN",
+          "typecheck": "NOT_RUN_149_OWNS",
+          "sdk_generation": "NOT_RUN_149_OWNS",
+          "product_ci": "NOT_RUN_150_OWNS",
+          "desktop_runtime": "NOT_RUN_REAL_D01_INSTALLATION_REQUIRED",
+          "reviewer_recheck": "NOT_RUN_AFTER_CONSUMER_INTEGRATION",
+          "release": "NOT_AUTHORIZED"
+        },
+        "delivery": {
+          "state": "ARTIFACT_READY_WITH_BLOCKED_SHARED_SEAMS",
+          "next_action": "132 fetch PR#158 post CAS source blobs and apply only N11 allowlist to candidate after 153 installs actual work-item and owner validates typed F01 source mapping; publish consumer ACK; 149 compile/SDK and 150 surgical installed tests; independent reviewer rechecks.",
+          "shared_seam_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction157/owner-seams.md",
+          "other_writers_modified": false,
+          "global_release": false,
+          "goal": "PAUSED"
+        }
+      },
+      "acceptance": "Verify current head/epoch/source and consumer preimages, apply released exact hunks only, implement accepted shared seams under I00, then publish consumerACK and candidate-bound hosted requests. Static/source-ready is not runtime PASS."
+    },
+    {
+      "mission": 161,
+      "branch": "native-host-provider",
+      "pr": 104,
+      "epoch": "native-producer-e2-browser161",
+      "source_head": "1ba45ae10641aab50e8ddd8377dd8e2714b74aa4",
+      "source_tree": "d3b71e2d8d872f6b409f87acfa20642826ef12d3",
+      "receipt_files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/ACK161.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1ba45ae10641aab50e8ddd8377dd8e2714b74aa4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/ACK161.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/HANDOFF161.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1ba45ae10641aab50e8ddd8377dd8e2714b74aa4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/HANDOFF161.json"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/OWNER132-NATIVE-TERMINAL.patch",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1ba45ae10641aab50e8ddd8377dd8e2714b74aa4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/OWNER132-NATIVE-TERMINAL.patch"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/OWNER132-README.md",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1ba45ae10641aab50e8ddd8377dd8e2714b74aa4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/OWNER132-README.md"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/S0-FENCE.json",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/1ba45ae10641aab50e8ddd8377dd8e2714b74aa4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/S0-FENCE.json"
+        }
+      ],
+      "handoff": {
+        "schema": "sf2h.native-authority-correction-handoff.v1",
+        "campaign": "sf2h-integral-20261112",
+        "mission": 161,
+        "epoch": "native-producer-e2-browser161",
+        "actor": "S0-B/native-authority-producer",
+        "branch": "native-host-provider",
+        "pr": 104,
+        "base_branch": "sf2-stack",
+        "parent": "f1d68585ee081b8cf7a9c9a692c7784dee6591b0",
+        "parent_tree": "cf51b0dbb3175b8a837d41f1dc69dc436c357c3c",
+        "finding": {
+          "id": "R148-NATIVE-01",
+          "classification": "independent-causal-source-review-not-runtime-proof",
+          "status": "SOURCE_CORRECTED_PENDING_OWNER_SEAM_AND_INTEGRATED_REVIEW",
+          "pre_source": {
+            "path": "apps/cli/src/sucafina-product/native-host.ts",
+            "blob": "345468efaa797288d83ec0e0ca60350c6ddd55db",
+            "lines": "328-404"
+          },
+          "mechanism": "C08 reserveSession and C15 reserveSession, SessionV2.create, identity validation, loadSfSkill and Store.narrow were before the previous acquireUseRelease; early returns/interrupts leaked partially created Session and live resources.",
+          "correction": "Outer acquireUseRelease begins before C08; on abort deny/revoke; cleanup via SessionV2.remove only when store row id/parent/agent/model/location matches; C08 marker and C15 owned tombstone never deleted. Inner registration revokes late binding and ticket; successful retained session preserves existing APIs."
+        },
+        "outputs": [
+          {
+            "path": "apps/cli/src/sucafina-product/native-host.ts",
+            "blob": "0c11d6ede57c9d40bf6b1a1a5480d1efa3e7e48d",
+            "preimage": "345468efaa797288d83ec0e0ca60350c6ddd55db",
+            "status": "SOURCE_PATCHED"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/native-host-provider/lifecycle.test.ts",
+            "blob": "89f6bbe2fa429be861eab0bb27777ae947f533c2",
+            "preimage": null,
+            "coverage": "partial component-only fault-injection of canonical public Session.remove cleanup; no installed runtime claim"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/OWNER132-NATIVE-TERMINAL.patch",
+            "blob": "34644970e6dfdf70ca5550f104326ae2d7eab346",
+            "scope": "INERT_OWNER_ONLY",
+            "owner": 132,
+            "consumer_paths": [
+              "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+              "apps/cli/src/sucafina-product/host-context.ts"
+            ],
+            "source_preimages": [
+              "0502f30e054e40049df1283c00d4f5af1545f7c2",
+              "297a4050323d80648684725f9c7e9a8680aa318f"
+            ]
+          }
+        ],
+        "preservation": {
+          "token_gate_blob_unchanged": "5a3e39ff379d51a15f5f601ed9739191ff7071c4",
+          "maestro_rebind_preserved": true,
+          "child110_preserved": true,
+          "forbidden_files_unchanged": [
+            "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+            "apps/cli/src/sucafina-product/host-context.ts"
+          ],
+          "durable_tombstone": "sf:native-session:<sessionID> retained; no retry by same runId",
+          "cold_reload": "isSfOwned remains deny-only; root-private terminal label awaits owner seam"
+        },
+        "criteria": [
+          {
+            "id": "R148-NATIVE-01",
+            "source": "patched",
+            "integrated": "PENDING"
+          },
+          {
+            "id": "C08",
+            "source": "reservation preserved",
+            "terminal": "OWNER132_PATCH_INERT"
+          },
+          {
+            "id": "C15",
+            "source": "owned/revocation preserved",
+            "terminal": "OWNER132_PATCH_INERT"
+          },
+          {
+            "id": "WP10.T06.CHK.03",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP10.T06.CHK.04",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "WP00.T04.CHK.04",
+            "status": "NOT_RUN"
+          },
+          {
+            "id": "AM01-AM06",
+            "status": "NOT_RUN"
+          }
+        ],
+        "evidence": {
+          "source_read": "STATIC_SOURCE_VERIFIED",
+          "tests": "NOT_RUN",
+          "typecheck": "NOT_RUN",
+          "build": "NOT_RUN",
+          "sdk": "NOT_RUN",
+          "hosted_ci": "NOT_RUN",
+          "integrated_runtime": "NOT_RUN",
+          "adversarial_review": "PENDING",
+          "limitation": "The optional root-private durable settlePreparation hook is not composed until owner132 accepts the inert patch. Source-ready is not release."
+        },
+        "consumer_pre_post": {
+          "producer": {
+            "pre": "f1d68585ee081b8cf7a9c9a692c7784dee6591b0",
+            "post": "THIS_COMMIT_TBD_AT_CAS",
+            "source_blob": "0c11d6ede57c9d40bf6b1a1a5480d1efa3e7e48d"
+          },
+          "owner132": {
+            "native_evidence_pre": "0502f30e054e40049df1283c00d4f5af1545f7c2",
+            "host_context_pre": "297a4050323d80648684725f9c7e9a8680aa318f",
+            "post": "INERT_NOT_APPLIED"
+          },
+          "compiler149": {
+            "state": "PENDING_INPUT_COMPOSED_C",
+            "validation": "NOT_RUN"
+          },
+          "ci150": {
+            "state": "PENDING_INPUT_COMPOSED_C",
+            "validation": "NOT_RUN"
+          }
+        },
+        "next_actions": [
+          "132 cherry-pick exact source/test blobs without replacing concurrent sources, review/apply OWNER132-NATIVE-TERMINAL.patch only under its owned paths and state-provider authority, reconcile exact preimages, then integrate to sf2-stack.",
+          "149 compile/SDK/guards only for new composed input and report actual runs; do not reuse unchanged C64 fail.",
+          "150 execute justified hosted CI selection only after 132 composition; preserve request/run/findings identity.",
+          "Independent runtime reviewer recheck integrated correction and child110 after validation; keep Goal paused, no GLOBAL_RELEASE."
+        ]
+      },
+      "acceptance": "Verify current head/epoch/source and consumer preimages, apply released exact hunks only, implement accepted shared seams under I00, then publish consumerACK and candidate-bound hosted requests. Static/source-ready is not runtime PASS."
+    }
+  ],
+  "critical_notes": [
+    "Do not stall the original21readyunits for these3dependency-bound leaves. First real integration batch136/133/134/135/137/138/139 still ready.",
+    "156 UI now refuses GET search until real bounded POST-read admitted; disable/deny alone does not close NAV-01 or full U42. Implement real contract across metadata+producer+codec+desktop safely with current writer/132→162authority; never invent operations or permissions.",
+    "156resumeCase and157sourceRoute/work-item depend on actual F01 owner-bound ports/read+verify and D01 closedbroker; expose only supported typed seams, preserve redaction/revocation/cross-owner denial. Source153declared missing read/verify not enough to mark whole goal blocked; investigate legitimate original public APIs.",
+    "161 source native-host preimage345468 differs from prior material consumerf43e9; owner seam host-context preimage297a405 may differ from current8e9f. Reconcile real current product blobs and preserve recovery/C49/103/111; never blindly replace from author branch.",
+    "161 OWNER132-NATIVE-TERMINAL.patch is INERT proposal, not automatically accepted. Review state-provider authorization invariants and durable tombstone/budget/retry before applying. No privileged settlement bypass/newRequest, no ownership erasure or resumed grants. Failure injection spec is component-only; installed fault/reload/revoke proof remains NOT_RUN.",
+    "162 currently has no visibleACK/productcommit; user reports launched, no inference of stalled/dead browser runtime. Comments do not wake session or acknowledge receipt."
+  ]
+}
