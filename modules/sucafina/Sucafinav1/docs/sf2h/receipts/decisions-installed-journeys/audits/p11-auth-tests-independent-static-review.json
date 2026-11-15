@@ -1,0 +1,133 @@
+{
+  "schema": "sf52-independent-static-test-review-v1",
+  "subject": "P11 auth-read-connection surgical controls",
+  "verdict": "PASS_STATIC_TEN_CASES_PENDING_ACTIONS",
+  "reviewer": "composition_audit",
+  "pins": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p11-auth-read-tests/auth-read-connection.test.ts.txt",
+    "bytes": 15320,
+    "lines": 307,
+    "sha256": "4b0d4cc55ce050c3422dd3ee31e2753cbbc358b6528bc69dd57704f3482819fb",
+    "git_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+    "literal_test_calls": 8,
+    "test_loop_variants": [
+      "replacement",
+      "symlink alias",
+      "missing file"
+    ],
+    "resolved_cases": 10,
+    "expect_calls": 77,
+    "race_guards": 2
+  },
+  "product_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "postimage": "5d7bccf29c38bc6a6b83ec2f2b3d543640b8dada"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+      "postimage": "6f024be93e31329270cc266742038a6e58807b1c"
+    }
+  ],
+  "case_matrix": [
+    {
+      "case": 1,
+      "property": "Warmed auth connection observes peer committed replacements",
+      "mechanism": "Real two-store SQLite; A holds BEGIN IMMEDIATE root, B starts outside its ALS, root still reads original bytes and snapshots, root releases, await B COMMIT, A reads new bytes both directly and in a new canonical root; another replacement is also observed."
+    },
+    {
+      "case": 2,
+      "property": "Managed parent revocation and managed session removal",
+      "mechanism": "Canonical issue/take/session flow. Another store revokes parent and removes sibling session between roots. Child own row remains active but actual parent revocation denies payload; managed put cannot resurrect a revoked session."
+    },
+    {
+      "case": 3,
+      "property": "Time-sensitive expiry without side effects",
+      "mechanism": "Explicit at values before/equal/after expiry within a root; previous time remains readable and both stores' usage statistics remain unchanged. No clock mocking, GC write, or cached expired decision."
+    },
+    {
+      "case": 4,
+      "property": "Detached byte buffers",
+      "mechanism": "Mutating original input and separate returned arrays cannot alter subsequent reads across calls/stores/canonical roots."
+    },
+    {
+      "case": 5,
+      "property": "Closed descendants and aborted scope",
+      "mechanism": "Delayed continuation retains its ended ALS and cannot borrow a newer root. Abort denies get and synchronous inspect; swallowed callback refusal still rejects root. Later valid outside-scope read succeeds."
+    },
+    {
+      "case": 6,
+      "property": "Disposal drain and late admission",
+      "mechanism": "Dispose is started outside the admitted root. New auth reads/inspect fail immediately, admitted root drains, disposal completes and repeated dispose remains safe; other store can still read."
+    },
+    {
+      "case": 7,
+      "property": "Nested write poisoning remains",
+      "mechanism": "After warm reads, caught put/take/remove/collect/revoke failures still poison canonical readonly root. Other store confirms durable payloads/session/usage unchanged. Local pending revocation intent is not confused with a peer durable commit. Final assertions additionally prove the local pending fence reports revoked/denies payload while the independent peer still sees the unchanged active durable session."
+    },
+    {
+      "case": 8,
+      "property": "Physical database replacement",
+      "mechanism": "Creates another real closed SQLite DB, preserves original inode only for cleanup, atomically renames replacement to installation path; get/inspect/stats and both warmed stores reject and cannot hot-adopt the new file."
+    },
+    {
+      "case": 9,
+      "property": "Symlink alias after warmup",
+      "mechanism": "Moves original file aside and installs an alias; all auth entrypoints reject, repeated reads reject, original file restored in finally."
+    },
+    {
+      "case": 10,
+      "property": "Missing file after warmup",
+      "mechanism": "Moves original file away; retained handles cannot return old credentials or silently recreate/adopt a path. Original restored in finally. After all refusals, lstat must still throw ENOENT; auth reads cannot recreate the missing database."
+    }
+  ],
+  "race_and_cleanup": [
+    "Both entered barriers use Promise.race([entered.promise, reading]); an early root rejection propagates rather than leaving the test waiting for an unreachable barrier.",
+    "Every held root/writer/disposal continuation is given a rejection handler, released in finally and awaited before store disposal.",
+    "Cross-store writer starts outside the root ALS and is never awaited inside the held root; no impossible external commit during BEGIN IMMEDIATE is assumed.",
+    "Physical mutations are confined to fresh temp fixtures; restoration executes before withStores disposes instances and recursively removes only that test directory.",
+    "Replacement DB is disposed before rename. No product callback or authority facade is mocked, replaced or instrumented."
+  ],
+  "selection_and_budget": {
+    "resolved_cases": 10,
+    "literal_test_call_sites": 8,
+    "literal_expect_call_sites": 77,
+    "note": "The counts are source syntax, not executed expect totals; helper and loop invocations add runtime assertions.",
+    "timeout_override": false,
+    "skip_or_only": false,
+    "UI_spec_modified": false,
+    "qualification_limit": "These controls supplement the five mandatory installed UI journeys; they do not supply any installed-case PASS."
+  },
+  "objective_blockers": [],
+  "residual_limits": [
+    "Static review only. Bun/SQLite runtime, implicit statement snapshot reset, lock ordering and disposal behavior require the authorized surgical Actions gate.",
+    "The source has no filesystem TOCTOU/ABA proof; it exercises ordinary between-call replacement/alias/removal guards.",
+    "Tests assert observable auth state and failures, not connection allocation counts or a measured performance improvement.",
+    "Existing Auth72 race controls remain the independent evidence for immediate local pending-revocation/logout before durable write completion."
+  ],
+  "activity": {
+    "read_only_sources": true,
+    "pure_text_hashing": true,
+    "product_execution": false,
+    "tests": false,
+    "remote_mutation": false,
+    "dispatch": false
+  },
+  "material": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p11-auth-read-tests/material.json",
+    "sha256": "c19f02abfb7edf7d5ed7dbd3fc5857e8f0bb2aa7444398b1e24adf3c41b78639",
+    "target_path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+    "preimage": null,
+    "patch": {
+      "path": "/workspace/scratch/fec39c0682b3/m52-work/p11-auth-read-tests/complete.patch",
+      "bytes": 15764,
+      "sha256": "145e81bb33503e0f8858f3b68f67889b0c0bfec2636be40a2a0b3da9d63c7ce8"
+    },
+    "textual_reconstruction": "PASS_EXACT_ADDITION_FROM_DEV_NULL"
+  },
+  "draft_superseded": {
+    "review_sha256": "212c04b1f561f6f9ea6cb8ed14784bbee06462124a12dd8d18958d41c3f48632",
+    "test_blob": "cdaf1e8dbb4ea4f1f4de58c6a2f609f136a368b5",
+    "final_delta": "Final draft adds four local-pending-versus-peer assertions and no-file-recreation assertion; both barrier Promise.race guards retained; no deadline or case selection changed."
+  }
+}

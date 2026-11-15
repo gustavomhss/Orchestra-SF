@@ -1,0 +1,100 @@
+{
+  "schema": "mission52-p11-auth-read-connection-test-matrix-v1",
+  "status": "STATIC_REVIEWED_NOT_RUN",
+  "tests": [
+    {
+      "id": "P11-U01",
+      "test_name": "auth reads observe another store's committed replacement after a held C08 root",
+      "boundary": "committed-read-freshness",
+      "oracle": "A is warmed, C08 holds BEGIN IMMEDIATE, B begins outside A ALS and cannot commit; release A, await B COMMIT, then A reads the actual replacement through the same store and a later root. A further B write is visible on the next A call.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U02",
+      "test_name": "auth reads refuse managed sessions revoked or removed by another store between calls",
+      "boundary": "managed-revocation-and-removal",
+      "oracle": "Actual issue(login), take(login), issue(child); peer revokes parent and removes a separate session. Parent state is fresh; active child is unreadable because its parent is revoked; late refresh cannot resurrect a removed session.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U03",
+      "test_name": "auth reads recheck explicit expiry inside C08 without collecting durable rows",
+      "boundary": "explicit-expiry-no-write",
+      "oracle": "Real managed payload changes visibility exactly at explicit expiry inside C08. Earlier-time reread and peer usage show no collection or implicit write.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U04",
+      "test_name": "auth reads return detached bytes across calls, stores and readonly roots",
+      "boundary": "byte-ownership",
+      "oracle": "Input mutation and returned-array mutation cannot alter persistence or subsequent arrays, including C08 reads and a second store.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U05",
+      "test_name": "auth reads reject ended descendants and aborted scopes without borrowing a later root",
+      "boundary": "scope-lifetime-and-cancellation",
+      "oracle": "An ALS descendant resumes after its root ends while a different root is active and must reject; aborted root reads and metadata refuse and cannot be rescued by catching the error. Later valid reads remain possible.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U06",
+      "test_name": "auth reads fail immediately during disposal while the admitted readonly root drains",
+      "boundary": "dispose-drain-and-refusal",
+      "oracle": "A live readonly root is admitted first; dispose outside its ALS immediately rejects new/get/inspect, waits for root drain, remains idempotent, and does not close the peer store.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U07",
+      "test_name": "auth writes caught after warm reads still poison C08 and cannot commit secrets or maintenance",
+      "boundary": "readonly-poison-and-local-fence",
+      "oracle": "Every put/take/remove/collect/revoke attempt is refused in its own C08 root and swallowed rejection still poisons success. Peer payload and statistics remain unchanged. Refused revoke separately retains its local pending fence without durable revocation.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U08",
+      "test_name": "auth reads refuse physical replacement after warming the original installation handle",
+      "boundary": "physical-database-replacement",
+      "oracle": "A fully initialized different real SQLite database atomically replaces installation.sqlite after auth handle warmup. Repeated get/inspect/stats refuse both original handle and new pathname; original inode is retained only for cleanup.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U09",
+      "test_name": "auth reads refuse physical symlink alias after warming the original installation handle",
+      "boundary": "physical-symlink-alias",
+      "oracle": "After warmup the live path becomes a symlink to the same original inode. Reads refuse despite bytes remaining accessible through the alias.",
+      "runtime_status": "NOT_RUN"
+    },
+    {
+      "id": "P11-U10",
+      "test_name": "auth reads refuse physical missing file after warming the original installation handle",
+      "boundary": "physical-file-loss",
+      "oracle": "After warmup the database path disappears. Reads refuse and do not recreate the file; original inode is restored only for cleanup.",
+      "runtime_status": "NOT_RUN"
+    }
+  ],
+  "planned_new_cases": 10,
+  "hosted_gate_selected_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "planned_tests": 10,
+      "scope": "new targeted unit"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+      "planned_tests": 2,
+      "blob": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "planned_tests": 8,
+      "blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be"
+    }
+  ],
+  "planned_gate_total": 20,
+  "deduplication": {
+    "already_covered_by_72": "OIDC/login issuance, Graph in-flight logout, lifecycle retention and collector capacity remain in their existing owner suites. The new file does not reproduce a provider or replace the five UI journeys.",
+    "new_connection_boundary": "Repeated actual SELECTs on one warmed store after peer commits, scope/disposal refusal, detached bytes and physical pathname continuity.",
+    "scope": "No full folder, epic, local run, timeout override, skip, retry, seed-based UI qualification, or benchmark claim."
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "schema": "sf-m52-supplemental-unit-receipt-v4",
+  "unit": 4,
+  "state": "COMPLETED",
+  "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+  "base_tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
+  "base_symbol": "C45_WITH_TERMINAL71_DOCUMENTARY_HEAD",
+  "source": "20944c7cc1ef0fb7254793a421468ac12300356d",
+  "W": "c725f9b8307a84562258c478414ec0b39d428b99",
+  "W_tree": "44d2d591fac429609ff1a1e02c892185cfed4944",
+  "S": "e4202b6c83d9b243400b18594e672ea60987fab4",
+  "S_tree": "45f93b115e91057c43a5e3b69faec17036515fd0",
+  "branch": "ci-run-linux-astra-wp11-c725f9b8-034aa010-m52-u4",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+      "Sucafinav1/test/product/auth-retention-fix/races.test.ts"
+    ],
+    "env": {}
+  },
+  "request_blob": "034aa010a79985ca483d1c74dd218cfbf6597d6e",
+  "request_bytes": 338,
+  "planned_cases": 20,
+  "scoped_files": 3,
+  "preserved_root_entries": 43,
+  "overlays": 31,
+  "retained_from_W13": 28,
+  "shared_changes": 2,
+  "unit_additions": 1,
+  "diagnostic_instrumentation": false,
+  "GLOBAL_RELEASE": false,
+  "dispatched_at": "2026-11-15 05:21:05 UTC",
+  "run_id": 43680704374,
+  "job_id": 132710474992,
+  "cleanup_job_id": 132710864606,
+  "conclusion": "success",
+  "cleanup_conclusion": "success",
+  "scoped_unit_result": "PASS",
+  "passed": 20,
+  "failed": 0,
+  "skipped": 0,
+  "todo": 0,
+  "expects": 194,
+  "files": 3,
+  "duration_ms": 1487.0,
+  "source_tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "sha256": "4b0d4cc55ce050c3422dd3ee31e2753cbbc358b6528bc69dd57704f3482819fb"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+      "blob": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a",
+      "sha256": "4f3e1036430280bccb688fbaf952a042a7bea9295973aa2b8f1006993ae5af67"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "sha256": "a1a3444cd522b3b762cb989a84396f129007e52249b98c82f6c42e5910db6381"
+    }
+  ],
+  "results": [
+    {
+      "name": "auth reads observe another store's committed replacement after a held C08 root",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 25.93,
+      "log_line_number": 860,
+      "log_line": "2026-11-15T05:22:48.4037648Z (pass) auth reads observe another store's committed replacement after a held C08 root [25.93ms]"
+    },
+    {
+      "name": "auth reads refuse managed sessions revoked or removed by another store between calls",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 24.51,
+      "log_line_number": 861,
+      "log_line": "2026-11-15T05:22:48.4283315Z (pass) auth reads refuse managed sessions revoked or removed by another store between calls [24.51ms]"
+    },
+    {
+      "name": "auth reads recheck explicit expiry inside C08 without collecting durable rows",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 14.29,
+      "log_line_number": 862,
+      "log_line": "2026-11-15T05:22:48.4426619Z (pass) auth reads recheck explicit expiry inside C08 without collecting durable rows [14.29ms]"
+    },
+    {
+      "name": "auth reads return detached bytes across calls, stores and readonly roots",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 27.18,
+      "log_line_number": 863,
+      "log_line": "2026-11-15T05:22:48.4698193Z (pass) auth reads return detached bytes across calls, stores and readonly roots [27.18ms]"
+    },
+    {
+      "name": "auth reads reject ended descendants and aborted scopes without borrowing a later root",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 10.28,
+      "log_line_number": 864,
+      "log_line": "2026-11-15T05:22:48.4801085Z (pass) auth reads reject ended descendants and aborted scopes without borrowing a later root [10.28ms]"
+    },
+    {
+      "name": "auth reads fail immediately during disposal while the admitted readonly root drains",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 10.78,
+      "log_line_number": 865,
+      "log_line": "2026-11-15T05:22:48.4908730Z (pass) auth reads fail immediately during disposal while the admitted readonly root drains [10.78ms]"
+    },
+    {
+      "name": "auth writes caught after warm reads still poison C08 and cannot commit secrets or maintenance",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 18.23,
+      "log_line_number": 866,
+      "log_line": "2026-11-15T05:22:48.5091474Z (pass) auth writes caught after warm reads still poison C08 and cannot commit secrets or maintenance [18.23ms]"
+    },
+    {
+      "name": "auth reads refuse physical replacement after warming the original installation handle",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 18.45,
+      "log_line_number": 867,
+      "log_line": "2026-11-15T05:22:48.5276739Z (pass) auth reads refuse physical replacement after warming the original installation handle [18.45ms]"
+    },
+    {
+      "name": "auth reads refuse physical symlink alias after warming the original installation handle",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 8.71,
+      "log_line_number": 868,
+      "log_line": "2026-11-15T05:22:48.5362716Z (pass) auth reads refuse physical symlink alias after warming the original installation handle [8.71ms]"
+    },
+    {
+      "name": "auth reads refuse physical missing file after warming the original installation handle",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "source_test_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "status": "PASS",
+      "duration_ms": 9.46,
+      "log_line_number": 869,
+      "log_line": "2026-11-15T05:22:48.5457372Z (pass) auth reads refuse physical missing file after warming the original installation handle [9.46ms]"
+    },
+    {
+      "name": "readonly59 Graph completion observes logout before its queued durable write",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+      "source_test_blob": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a",
+      "status": "PASS",
+      "duration_ms": 147.43,
+      "log_line_number": 856,
+      "log_line": "2026-11-15T05:22:48.2759910Z (pass) readonly59 Graph completion observes logout before its queued durable write [147.43ms]"
+    },
+    {
+      "name": "catching nested maintenance rejection cannot rescue a poisoned readonly59 root",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/readonly-composed.test.ts",
+      "source_test_blob": "59d5aa8328af3d1542ddb29020fb9b059ec26c5a",
+      "status": "PASS",
+      "duration_ms": 99.03,
+      "log_line_number": 857,
+      "log_line": "2026-11-15T05:22:48.3750410Z (pass) catching nested maintenance rejection cannot rescue a poisoned readonly59 root [99.03ms]"
+    },
+    {
+      "name": "consumed challenge remains cancellable in another instance and after reopening the store",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "source_test_blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "status": "PASS",
+      "duration_ms": 130.5,
+      "log_line_number": 846,
+      "log_line": "2026-11-15T05:22:47.3983604Z (pass) consumed challenge remains cancellable in another instance and after reopening the store [130.50ms]"
+    },
+    {
+      "name": "logout during a pending callback session write cannot expose a late credential",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "source_test_blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "status": "PASS",
+      "duration_ms": 95.28,
+      "log_line_number": 847,
+      "log_line": "2026-11-15T05:22:47.4936778Z (pass) logout during a pending callback session write cannot expose a late credential [95.28ms]"
+    },
+    {
+      "name": "a callback paused after committing the session still observes another instance logout",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "source_test_blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "status": "PASS",
+      "duration_ms": 65.14,
+      "log_line_number": 848,
+      "log_line": "2026-11-15T05:22:47.5588428Z (pass) a callback paused after committing the session still observes another instance logout [65.14ms]"
+    },
+    {
+      "name": "two instances cannot redeem the same challenge twice",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "source_test_blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "status": "PASS",
+      "duration_ms": 148.19,
+      "log_line_number": 849,
+      "log_line": "2026-11-15T05:22:47.7215910Z (pass) two instances cannot redeem the same challenge twice [148.19ms]"
+    },
+    {
+      "name": "restarted identity rejects copied session and late refresh after a durable logout",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "source_test_blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "status": "PASS",
+      "duration_ms": 74.18,
+      "log_line_number": 850,
+      "log_line": "2026-11-15T05:22:47.7812003Z (pass) restarted identity rejects copied session and late refresh after a durable logout [74.18ms]"
+    },
+    {
+      "name": "another instance logout denies a Graph result already in flight",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "source_test_blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "status": "PASS",
+      "duration_ms": 58.84,
+      "log_line_number": 851,
+      "log_line": "2026-11-15T05:22:47.8400188Z (pass) another instance logout denies a Graph result already in flight [58.84ms]"
+    },
+    {
+      "name": "hung refresh admissions remain bounded across expired and collected session generations",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "source_test_blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "status": "PASS",
+      "duration_ms": 147.82,
+      "log_line_number": 852,
+      "log_line": "2026-11-15T05:22:47.9878824Z (pass) hung refresh admissions remain bounded across expired and collected session generations [147.82ms]"
+    },
+    {
+      "name": "CR72-01 failed durable logout keeps its fence until a successful retry",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/auth-retention-fix/races.test.ts",
+      "source_test_blob": "c828e3504a4f9fc0e9cf37c34fe78988e4da93be",
+      "status": "PASS",
+      "duration_ms": 138.93,
+      "log_line_number": 853,
+      "log_line": "2026-11-15T05:22:48.1268733Z (pass) CR72-01 failed durable logout keeps its fence until a successful retry [138.93ms]"
+    }
+  ],
+  "integrity": {
+    "expected_names_exactly_once": true,
+    "file_associations_exact": true,
+    "summary_matches_observations": true,
+    "selected_file_count_matches": true,
+    "expected_case_count_matches": true,
+    "unknown_cases": [],
+    "duplicate_case_names": {},
+    "missing_cases": [],
+    "wrong_file_associations": []
+  },
+  "raw_log": {
+    "job": 132710474992,
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/p11-unit04-43680704374/job-132710474992.log",
+    "sha256": "54047f3dd723718f89838e8bcaa95fb32503e8ed0db76121eb4cd772f93294f4",
+    "bytes": 73817
+  },
+  "normalization_plan": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p11-unit04-normalizer-plan.json",
+    "sha256": "ea26c58b27bb14055ae7472b1276bab9b6da8c09305b3c63567899395a611983"
+  },
+  "authority_at_dispatch": {
+    "source52": "ACTIVE",
+    "source52_commit": "20944c7cc1ef0fb7254793a421468ac12300356d",
+    "target71": "ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS",
+    "base_commit": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+    "not_a_target_write_authorization": true
+  },
+  "limits": [
+    "Only the three explicitly selected Bun files on exact W/C45; not the five installed UI journeys.",
+    "New units use two real SQLite stores, genuine authentication lifecycle and C08; existing owner72 files additionally use their explicit Microsoft provider fixtures.",
+    "A peer writer commits after a held BEGIN IMMEDIATE root exits; no observation claims concurrent COMMIT inside that root.",
+    "Functional unit results do not establish a latency improvement, whole criterion, native or global acceptance.",
+    "No criterion is promoted and all 83 integrated_proofs arrays remain unchanged.",
+    "No approval or financial Apply was exercised. Source52 remains ACTIVE; target71 is terminal.",
+    "No local product execution. All runtime observations originate in the supplied hosted Actions job log."
+  ]
+}

@@ -1,0 +1,117 @@
+{
+  "schema": "sf2h.integration105.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission": 105,
+  "lease_epoch": "S0-C-e15-browser105",
+  "lease_state": "ACTIVE_USER_APPOINTED",
+  "actor": "S0-C sole sf2-stack product integrator successor100",
+  "model_effective": "GPT-6",
+  "ui_session_label": "Astra (requested label, not model identity)",
+  "session_id": null,
+  "session_id_reason": "not exposed by GitHub connector",
+  "github_actor": "gustavomhss",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "plan_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_source_sha": "8819df6169abd94aaa89d50a21f113e5596d2aae",
+  "mission_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/105.json",
+  "mission_blob": "d31292284041294ff3fa8c5a2705a7b627105793",
+  "read_inputs": [
+    {
+      "path": "AGENTS.md",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "ref": "a6abd2c8d321daf1089f4d440027c46209a89cbe"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+      "blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/continuation-100/{HANDOFF-TERMINAL-100.md,AUTHORITY-TERMINAL-100.json,CONSUMPTION-100.json,GATE-QUEUE-100.json,PENDING-OWNERS-100.json}",
+      "ref": "a6abd2c8d321daf1089f4d440027c46209a89cbe"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/ci-routing-correction-101.json",
+      "ref": "8819df6169abd94aaa89d50a21f113e5596d2aae"
+    }
+  ],
+  "reconciled": {
+    "previous_lease": "S0-C-e14-browser100",
+    "previous_lease_state": "ENDED_BY_INTEGRATOR100",
+    "no_later_stack_writer_observed": true,
+    "pr65_state": "OPEN_DRAFT",
+    "start_head": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+    "start_tree": "731f3705bbac15752df8fd69c5f7b1510bb43fc4",
+    "last_material": {
+      "candidate": "C51",
+      "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+      "state": "COMPOSED_NOT_FROZEN"
+    },
+    "material_units_C46_C51": [
+      94,
+      87,
+      88,
+      90,
+      97,
+      98
+    ],
+    "unique_paths": 21
+  },
+  "routing": {
+    "product_CI": 101,
+    "compiler_guards": 45,
+    "independent_reviews": [
+      91,
+      92,
+      93
+    ],
+    "acceptance": "S0",
+    "owner95": "native producer",
+    "owner96": "creation reload",
+    "owner52": "UI/shared host",
+    "owner99": "P03",
+    "owner102": "XLSX",
+    "owner103": "native consumer imports/deadline",
+    "owner104": "first-save 503/403"
+  },
+  "invariants": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "G7": "OPEN",
+    "G8": "OPEN",
+    "AM01_06": "NOT_PROVEN",
+    "final_selectors": 8,
+    "GLOBAL_RELEASE": false
+  },
+  "constraints": [
+    "GitHub MCP only",
+    "non-force expected-head CAS",
+    "no source-branch edits",
+    "no control merge",
+    "no local tests or product dispatch (101 only)",
+    "no dev merge/deploy/Azure/engines/secrets/restart",
+    "selective intake released source only with blob pre/post validation",
+    "no reuse of W76 result-store",
+    "maintain native readiness OFF and P03 FAIL until verified"
+  ],
+  "next": "Verify source release/manifest/preimage/CI W/S/run/job; integrate ready independent patches with CAS and exact receipts; route failures to owners; preserve open gates."
+}

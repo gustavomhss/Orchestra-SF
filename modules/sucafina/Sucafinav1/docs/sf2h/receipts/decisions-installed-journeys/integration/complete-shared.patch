@@ -1,46 +1,3 @@
---- a/apps/cli/src/sucafina-product/installation.ts
-+++ b/apps/cli/src/sucafina-product/installation.ts
-@@ -2,8 +2,8 @@
- import { realpath } from "node:fs/promises"
- import { pathToFileURL } from "node:url"
- import type { Host } from "@orchestra/core/host"
--import { Effect, Layer } from "effect"
--import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
-+import { Cause, Effect, Layer, Option } from "effect"
-+import { Headers, HttpMethod, HttpMiddleware, HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
- import { createSfHostRuntime } from "./host-context"
- import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
- 
-@@ -40,13 +40,26 @@
-     if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
-     // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
-     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
--    const web = yield* HttpServerRequest.toWeb(sanitized)
--    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
-+    const url = HttpServerRequest.toURL(sanitized)
-+    if (Option.isNone(url)) return HttpServerResponse.empty({ status: 503 })
-+    if (url.value.origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
-+    // Consume the bounded body in the server request scope before crossing the Web Request boundary.
-+    const body = HttpMethod.hasBody(sanitized.method) ? yield* sanitized.arrayBuffer.pipe(Effect.orDie) : undefined
-+    const web = new Request(url.value, { method: sanitized.method, headers: sanitized.headers, ...(body === undefined ? {} : { body }) })
-     const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
-     if (!request) return HttpServerResponse.empty({ status: 403 })
-     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
-     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
--  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
-+  }).pipe(Effect.catchCause((cause) => {
-+    for (const reason of cause.reasons) {
-+      if (!Cause.isDieReason(reason)) continue
-+      const defect = reason.defect
-+      // Only the canonical bounded-body error reaches BodyLimit; all other causes remain redacted.
-+      if (HttpServerError.isHttpServerError(defect) && defect.reason._tag === "RequestParseError" &&
-+        defect.reason.cause instanceof Error && defect.reason.cause.message === "maxBytes exceeded") return Effect.die(defect)
-+    }
-+    return Effect.succeed(HttpServerResponse.empty({ status: 503 }))
-+  }))
-   // The listener must install privacy before HttpRouter.serve, outside the request route.
-   // Effect registers a trailing wildcard at both the subtree and its base path.
-   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
 --- /dev/null
 +++ b/apps/cli/src/sucafina-product/decision-case-http.ts
 @@ -0,0 +1,84 @@
@@ -674,70 +631,6 @@
 +    }
 +  }
 +}
---- /dev/null
-+++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json
-@@ -0,0 +1,50 @@
-+{
-+  "schema": "sf2h.microsoft49-composition.v1",
-+  "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
-+  "source_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
-+  "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
-+  "target_base": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
-+  "source_tests_do_not_qualify_composition": true,
-+  "validation": "NOT_RUN. Exact candidate mapping composed by mission71 from terminal72 over C37; queued qualification only; original49 artifacts and assertions retained. This map does not prove installed or global acceptance.",
-+  "files": [
-+    {
-+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
-+      "mode": "100644",
-+      "target_preimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
-+      "postimage_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
-+      "postimage_sha256": "addaab0dca8ce1addcb155808a841c4ac05a55e6dbe630ee874fa69f5f3067fb",
-+      "bytes": 25564,
-+      "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
-+      "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
-+      "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
-+    },
-+    {
-+      "path": "apps/cli/src/sucafina-product/installation.ts",
-+      "mode": "100644",
-+      "target_preimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
-+      "postimage_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
-+      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
-+      "bytes": 6258,
-+      "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
-+      "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
-+      "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
-+    },
-+    {
-+      "path": "apps/cli/src/commands/handlers/serve.ts",
-+      "mode": "100644",
-+      "target_preimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
-+      "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
-+      "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
-+      "bytes": 8960,
-+      "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
-+      "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
-+      "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
-+    }
-+  ],
-+  "composition_mission": 71,
-+  "previous_composition": {
-+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
-+    "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
-+    "preserved_byte_for_byte": true
-+  }
-+}
---- a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
-+++ b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
-@@ -20,7 +20,7 @@
-   const postimage = await readFile(path.join(receipts, entry.postimage))
-   const canonical = await readFile(path.join(repository, target))
-   if (sha256(preimage) !== entry.preimage_sha256 || blob(preimage) !== entry.source_blob || sha256(postimage) !== entry.postimage_sha256 || blob(postimage) !== entry.postimage_blob) throw new Error("Integration artifact drift")
--  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
-+  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
-   if (composition.schema !== "sf2h.microsoft49-composition.v1" || composition.source_release !== "74ba5b7f71182e531049b8c56fe304c3bec4c3db" || composition.source_manifest_blob !== blob(manifestBytes) || !Array.isArray(composition.files) || composition.files.length !== manifest.files.length || new Set(composition.files.map((file) => file.path)).size !== manifest.files.length || composition.files.some((file) => !manifest.files.some((source) => source.path === file.path && source.postimage_blob === file.source_postimage_blob && source.postimage_sha256 === file.source_postimage_sha256))) throw new Error("Integration composition mapping drift")
-   const installed = composition.files.find((file) => file.path === target)
-   if (!installed || blob(canonical) !== installed.postimage_blob || sha256(canonical) !== installed.postimage_sha256) throw new Error("Integration installed source drift requires owner reconciliation")
 --- a/modules/sucafina/Sucafinav1/product/contracts/state.ts
 +++ b/modules/sucafina/Sucafinav1/product/contracts/state.ts
 @@ -7,12 +7,32 @@
@@ -1159,3 +1052,114 @@
 +  }
 +}
 +
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -1,6 +1,6 @@
+ import { Database } from "bun:sqlite"
+ import { AsyncLocalStorage } from "node:async_hooks"
+-import { constants } from "node:fs"
++import { constants, lstatSync, realpathSync } from "node:fs"
+ import { lstat, mkdir, open, realpath } from "node:fs/promises"
+ import { isAbsolute, join, parse, resolve, sep } from "node:path"
+ import type { AuthLimits, LocalStore } from "./local-contract.ts"
+@@ -43,13 +43,16 @@
+       throw new Error("Local database must be a private regular file")
+     return open(path, constants.O_RDWR | constants.O_NOFOLLOW)
+   })
+-  try {
+-    const opened = await file.stat()
+-    if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
+-      throw new Error("Local database must be owned by the current UID at its real path")
+-  } finally {
+-    await file.close()
+-  }
++  const databaseIdentity = await (async () => {
++    try {
++      const opened = await file.stat()
++      if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
++        throw new Error("Local database must be owned by the current UID at its real path")
++      return { dev: opened.dev, ino: opened.ino }
++    } finally {
++      await file.close()
++    }
++  })()
+ 
+   const connect = () => {
+     const db = new Database(path, { strict: true })
+@@ -193,20 +196,44 @@
+     return pending
+   }
+ 
++  // Only synchronous authentication SELECTs use this connection. It never joins
++  // a business root and retains no transaction, cursor, result, or authority.
++  const authenticationRead = { db: undefined as Database | undefined }
++  const closeAuthenticationRead = () => {
++    const db = authenticationRead.db
++    authenticationRead.db = undefined
++    db?.close()
++  }
++  const requireAuthenticationFile = () => {
++    const current = lstatSync(path)
++    if (!current.isFile() || current.isSymbolicLink() || current.uid !== uid || (current.mode & 0o077) !== 0 ||
++      current.dev !== databaseIdentity.dev || current.ino !== databaseIdentity.ino || realpathSync(path) !== path)
++      throw new Error("Local authentication database identity changed or is unsafe")
++  }
+   const secrets = createAuthenticationSecrets({
+     limits: authentication,
+-    // Authority must observe current committed auth state, independently of an
+-    // older business snapshot. No write or second business transaction is opened.
++    // Each SELECT observes current committed auth in autocommit, independently
++    // of an older business snapshot. Reusing a connection never reuses a value.
+     read: <T>(work: (db: Database) => T): T => {
+       if (lifecycle.closed) throw new Error("Local store is disposed")
+       const scope = context.getStore()
+-      if (scope) requireScope(scope)
+-      const db = connect()
+       try {
++        if (scope) requireScope(scope)
++        requireAuthenticationFile()
++        const db = authenticationRead.db ??= connect()
++        if (db.inTransaction) throw new Error("Authentication reads require autocommit")
+         const value = work(db)
++        if (db.inTransaction) throw new Error("Authentication reads require autocommit")
++        requireAuthenticationFile()
++        if (lifecycle.closed) throw new Error("Local store is disposed")
+         if (scope) requireScope(scope)
+         return value
+-      } finally { db.close() }
++      } catch (error) {
++        // Discard the handle before closing it, including failed statements or
++        // filesystem checks. Cleanup must not replace the original refusal.
++        try { closeAuthenticationRead() } catch { /* The read still fails closed. */ }
++        throw error
++      }
+     },
+     write: <T>(work: (db: Database) => T) => operation(true, async (db) => {
+       const value = work(db)
+@@ -444,7 +471,10 @@
+     dispose: () => {
+       if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
+       lifecycle.closed = true
+-      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => { materializations.clear() })
++      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => {
++        try { closeAuthenticationRead() }
++        finally { materializations.clear() }
++      })
+       return lifecycle.disposing
+     },
+   }
+--- a/modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts
++++ b/modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts
+@@ -50,7 +50,11 @@
+   return Object.freeze(policy as AuthLimits)
+ }
+ 
+-/** The supplied read opens a fresh read-only connection; write owns admission and COMMIT. */
++/**
++ * The supplied read observes current committed metadata independently in autocommit.
++ * Its connection may be reused, but no snapshot or value is retained between reads.
++ * The supplied write owns admission and COMMIT.
++ */
+ export function createAuthenticationSecrets(options: {
+   read: <T>(work: (db: Database) => T) => T
+   write: <T>(work: (db: Database) => T) => Promise<T>

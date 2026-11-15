@@ -1,0 +1,62 @@
+{
+  "W": "c725f9b8307a84562258c478414ec0b39d428b99",
+  "W_tree": "44d2d591fac429609ff1a1e02c892185cfed4944",
+  "S": "5e84420631d4b162f38956aef6e0828e23a39e82",
+  "S_tree": "900eae757fddcdb1d6587c6635b84e3e93229dff",
+  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "S_delta": [
+    {
+      "path": ".ci-run.json",
+      "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "status": "added"
+    }
+  ],
+  "original_spec_and_diagnostic_removal": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "expected": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "actual": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "expected": "1761a5d2558c9091d1c02730774751ace44e9131",
+      "actual": "1761a5d2558c9091d1c02730774751ace44e9131"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "expected": "a77da76589ece60a6925bdd20731efbc8f19b597",
+      "actual": "a77da76589ece60a6925bdd20731efbc8f19b597"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "expected": "632a47e792502d7476149d2b790ad447cbd96649",
+      "actual": "632a47e792502d7476149d2b790ad447cbd96649"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "expected": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+      "actual": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf"
+    }
+  ],
+  "all_pins_match": true,
+  "runs_checked": 100,
+  "active_WP11": [],
+  "exact_S": [],
+  "unit_gate": {
+    "run": 43680704374,
+    "job": 132710474992,
+    "cleanup": 132710864606,
+    "job_conclusion": "success",
+    "cleanup_conclusion": "success",
+    "pass": 20,
+    "fail": 0,
+    "expects": 194,
+    "files": 3,
+    "duration_ms": 1487
+  },
+  "test_budget_ms": 180000,
+  "ui_deadline_ms": 10000,
+  "retries": 0,
+  "workers": 1,
+  "repeatEach": 1
+}

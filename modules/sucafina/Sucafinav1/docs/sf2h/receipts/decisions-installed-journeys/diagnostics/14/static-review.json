@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.mission52.diagnostic14.static-review.v1",
+  "recorded_at": "2026-11-15T05:00:42.320049+00:00",
+  "verdict": "PASS_STATIC_TEMPORARY_TIMING_ONLY",
+  "parent_W": "7409883a9a36e20cabef00d25627dec88b4cf094",
+  "parent_tree": "aa6af4444297ef63c9ed6795db20ebc2b9ab3e11",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "preimage": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "postimage": "8b5e8eaa4fb889d4545fa64a19d01b98bd341e73"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "preimage": "1761a5d2558c9091d1c02730774751ace44e9131",
+      "postimage": "13598347275640a234f563b9c5b9d1a44658e740"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "preimage": "a77da76589ece60a6925bdd20731efbc8f19b597",
+      "postimage": "84b36944ced10f2eb11af3ab0002ce09ec5f0d9d"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "preimage": "632a47e792502d7476149d2b790ad447cbd96649",
+      "postimage": "bc6102d2a261632afcebce56fa813c12d6e0d1ee"
+    }
+  ],
+  "material_sha256": "52dddb200103fcf2fd95bb299b98d39d5c584f44e8c5a29ba63c9b2dd1e57929",
+  "patch_sha256": "abde93347fca6d89a0a59a4040438181a43d4b6350d0e9f95c813794f7173f7f",
+  "blocking_findings": [],
+  "checks": {
+    "facade_identity": "No replacement of cases, result-store or scenario-host facade objects. Existing readHistoricalScenarios receives the original captured store, preserving WeakMap capability lookup and scalar fallback identity checks.",
+    "call_identity": "Wrapped calls preserve receiver syntax or explicit .call(input); references/arguments/order remain original. Existing revalidation and freshness observations remain in place.",
+    "compare_signature": "Exported compareScenarios delegates through Parameters/ReturnType of the original async implementation; argument and promise result types remain. No producer fallback, retry or response transformation is added.",
+    "exceptions": "Timing helper returns original result and rethrows the same caught error. HTTP retains existing catch/finally and human.finish.",
+    "transport_and_budgets": "No Request/body/signal construction, fixture, spec, assertion, timeout, workflow or selection change. Only four source paths are instrumented.",
+    "logging": "Constants, per-module counters, performance times and existing result status only. No payload, identifiers, source refs, headers, cookies, tokens, authority fields, projection values or error details are logged.",
+    "type_narrowing": "The currency as USD cast remains inside the preexisting currency===USD branch; it restores the narrowing across a newly introduced logging closure and has no runtime effect.",
+    "blob_validation": "All four pre/post Git blob identities verified textually against full material."
+  },
+  "measurement_limits": [
+    "Temporary instrumentation adds console I/O and promise/microtask overhead; timings are diagnostic and cannot qualify production latency.",
+    "Nested phase durations are inclusive and must not be summed as exclusive work. Counters are per module; identify records by stage and id, while HTTP markers use their sequence/time.",
+    "No C08 clone or canonical hashing primitive is instrumented here; any attribution inside an observed reader phase remains inference until exact lower-level evidence exists.",
+    "No product test/build/tsc or remote mutation/dispatch performed by this reviewer.",
+    "Temporary instrumentation must be removed before final production qualification."
+  ],
+  "GLOBAL_RELEASE": false
+}

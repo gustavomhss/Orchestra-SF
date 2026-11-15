@@ -1,170 +1,158 @@
-# Missão52 — handoff financeiro, revisão5
+# Missão52 — handoff financeiro, revisão8
 
-## Último resultado real: Requests503 no nominal12 sobre C41
+## Último resultado real: Requests503 no nominal15 sobre C45 + P11 isolado
 
-**A jornada financeira obrigatória permanece FAIL antes de qualquer criação ou mutação financeira.** No [nominal12, run43676977918](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43676977918), a navegação para `/sucafina/procurement?page=Requests` retornou HTTP503, `application/json;charset=utf-8`. O DOM registra `{"status":"unavailable","reason":"procurement-queue-unavailable"}`. O formulário original esperado1 foi observado0, sob o limite original10000ms. Duração do caso:15955ms; budget do teste180000ms, retry0.
+**A jornada financeira obrigatória permanece FAIL antes de qualquer criação ou mutação financeira.** No [nominal15, run43680980170](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43680980170), a navegação para `/sucafina/procurement?page=Requests` retornou **HTTP503**, `application/json;charset=utf-8`. O DOM registra `{"status":"unavailable","reason":"procurement-queue-unavailable"}`. O formulário original esperado1 foi observado0, sob a expectativa original10000ms. Duração do caso: **14734ms**; primeiro step10064ms; budget180000ms, retry0.
 
-**Corte de evidência:** este resultado foi realmente executado no W12, filho do C41. Substitui nominal11 como último resultado financeiro funcional; não é uma previsão derivada da auditoria estática. O ledger atual continua M31/MI07 OPEN, mas essa barreira formal posterior não foi alcançada pela UI52. A falha atual é a pré-condição Requests, antes da criação da requisição.
+Este é um resultado efetivamente observado no W15 sobre C45 mais o terminal71 documental, com P11 no candidato isolado. Substitui nominal13 como último resultado financeiro funcional; não foi previsto por diferença estática, Unit04 ou diagnóstico14. A71 permanece ENDED no corte de autoridade executado; source52 `20944c7cc1ef0fb7254793a421468ac12300356d` está ACTIVE no envelope. Este draft não encerra a lease52 nem escreve target.
 
-A identidade permanece **CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt**, `e2e/sucafina/decisions.spec.ts:21`. É o caso2 na ordem do spec e a família financeira obrigatória entre as cinco. O caso5 é recuperação C09 de criação incerta, não recuperação financeira C12.
+A identidade é **CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt**, `e2e/sucafina/decisions.spec.ts:21`. É o caso2 na ordem do spec e a família financeira obrigatória entre as cinco. O caso5 é recuperação C09 de criação incerta, não recuperação financeira C12.
 
-O artifact12 registra `bodyCompleted:false`, `observations:[]`, `requests:[]` e exatamente o GET Procurement503 na captura separada de rede. Nenhuma requisição financeira foi criada. Propostas, evidências financeiras, aprovação, preparação, Apply e recuperação do recibo continuam **NOT_REACHED** nessa jornada. Nenhum erro de setup EADDRINUSE foi observado nesse caso12; os cinco casos produziram observações e logs CLI.
+O artifact15 contém `bodyCompleted:false`, `observations:[]`, `requests:[]` e o GET503 na captura de rede. A assertion falha em `decisions-support/procurement-source.ts:7`, antes de preencher ou enviar o formulário. **Nenhuma requisição financeira foi criada.** Propostas, evidências financeiras, aprovação, preparação, Apply e recuperação de recibo continuam **NOT_REACHED**. O503 não identifica sozinho o ramo interno nem demonstra ausência de identidade do ator.
 
-### Identidades e integridade
+### Identidades e integridade do run15
 
-| Campo | Nominal12 |
+| Campo | Nominal15 |
 | --- | --- |
-| Run / job / cleanup |43676977918 /132699178619 /132700200436; cleanup informado concluído com sucesso |
-| Base material executada |**C41** `1074cf338619a70ddef1ad1f62e32618fc355fed` |
-| Base tree |`3f98ab38aa223eefba708e566a42450d8f1c2a93` |
-| W / tree |`c4883ae51636a4ebbcf9274994e96e2725214e48` / `c96d49c3942283d9beb445d80ba08e3f1538b471` |
-| S / tree |`de56ec928b22ffbaf3b4110262bce3dec0f1441c` / `7faa8bb486b78f1656d6b19db2b256d14bbabc23` |
-| Fonte52 publicada observada anteriormente |`554e4e692318c952fdd1b365eb233d7c1b6d8cf5`, tree `e66b3d1046e3843968ddb48ea478a57456758e99`; não é o W isolado nem novo terminal |
-| Artifact |14146403481,3619081bytes |
-| Artifact SHA256 |`77e83d5cb24f6af50c8c158e393705d082d1147022a5013fc9f2cc9db7e4dfb0` |
-| Playwright runtime original SHA256 |`79724265ee15198c17b2087c8f8d806971b73c8e3060f4c10caff1d9340067c5` |
-| Runtime extraído SHA256 |`7549c51ec55bafee717639942097754c69e11757ab9f7fe53cfcc4b31ab31aea` |
-| Observações financeiras SHA256 |`84435a43220ef8ad1fc55e3cf653149893dfc79bf258523bf92ca9e14be24b34` |
-| DOM error-context financeiro SHA256 |`b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c` |
-| CLI financeiro SHA256 |`6702a2ff88c7c43790666db1388fb7bd72d075d9bb75484c676e4cf6a4a0a3c1` |
+| Run / job / cleanup |43680980170 /132711320639 /132712239127; job failure, cleanup success |
+| Base executada |C45 + terminal71 documental, `384f9eb172f0e6761a2af1e92d8b4bb11d9b01df` |
+| Base tree |`3115f239fe8bcdc5ea38b5089b6208224620d214` |
+| W / tree |`c725f9b8307a84562258c478414ec0b39d428b99` / `44d2d591fac429609ff1a1e02c892185cfed4944` |
+| S / tree |`5e84420631d4b162f38956aef6e0828e23a39e82` / `900eae757fddcdb1d6587c6635b84e3e93229dff` |
+| Source52 publicado / tree |`20944c7cc1ef0fb7254793a421468ac12300356d` / `ca67b33deb0fe3586c996db925922bedcc5d9ac7`, ACTIVE no corte |
+| Código próprio efetivo no envelope |`56239d138ed4ae7cac9ac6b01e68a3ee78d1bf4f`; separado do checkpoint documental e de W/S |
+| Artifact |14148631878,3971407bytes,17arquivos |
+| ZIP SHA256 |`0f5debd1e00cc8296ecf2e1e124cf65fd6ce7d1a9d231858a951d900bbf8bb20` |
+| Recibo consolidado15 SHA256 |`24ab7a11603e37cc9703d83a39f0896c7951ab8a140aa459877162dec6c22f16` |
+| Playwright runtime original SHA256 |`92eb4cd7f216cada183029f6827321838747e995dec8d74e2ac6011ae2c55a04` |
+| Runtime extraído SHA256 |`6eb7ccd34a96dbb9191793b21742ba676b1ae5c3e0bab6511e956de3d5642065` |
+| Observações financeiras SHA256 |`ea915e9246ad04991b194b6f48d60d5ce5317a9f16234064076fc47af1c81e73` |
+| DOM financeiro SHA256 |`b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c` |
+| CLI financeiro SHA256 |`1aeac5dceb263a1f49c3008eb9b644c2e237c9b0899e88d72e43d87f39fe5ff0` |
 
-Os SHAs W/S e suas trees foram relidos via GitHub MCP. O request original do artifact fixa S `de56ec928b22ffbaf3b4110262bce3dec0f1441c`, Playwright, `e2e/sucafina/decisions.spec.ts`, config de produção e `ORCHESTRA_CHANNEL=prod`. Arquivos locais em `/workspace/scratch/fec39c0682b3/m52-audit/nominal12-43676977918/`; este draft usa os artifacts reais, sem inventar um SHA de recibo consolidado ainda não observado.
+O request original fixa S `5e844206…`, Playwright, `e2e/sucafina/decisions.spec.ts`, config de produção e `ORCHESTRA_CHANNEL=prod`. O envelope retém28postimages anteriores e acrescenta os dois arquivos compartilhados P11 e seu teste:31overlays,43entradas de raiz preservadas. Não há instrumentação diagnóstica, profile_records0, nem mudança das cinco identidades/assertions/budgets. Os paths Procurement/C12 e o Application86 não são sobrepostos pelo P11.
 
-### Resultado individual das cinco identidades no mesmo run12
+### Resultados individuais no mesmo run15
 
 | Identidade original | Resultado | Duração | Limite da prova |
 | --- | --- | --- | --- |
-| CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change |FAIL |63624ms |Primeiro POST decision-compare falhou com net::ERR_ABORTED antes de resposta. Regra numérica, escolha e captura P9 não foram alcançadas nesse run. |
-| CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt |FAIL |15955ms |GET Requests503, formulário0; nenhuma mutação financeira. |
-| CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench |PASS |13991ms |Corpo original concluído. |
-| CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200 |PASS |9533ms |Corpo original concluído. |
-| CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting |PASS |9858ms |Corpo original concluído. |
+| CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change |FAIL |68388ms |Duas comparações200/ok e regra numérica registrada200; terceira comparação requestfailed net::ERR_ABORTED sem resposta observada. Choice/histórico/P9 não alcançados. |
+| CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt |FAIL |14734ms |Requests503/form0, nenhuma mutação financeira. |
+| CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench |PASS |11667ms |Corpo original concluído. |
+| CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200 |PASS |7698ms |Corpo original concluído. |
+| CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting |PASS |7351ms |Corpo original concluído. |
 
-Total3PASS/2FAIL, skipped0, flaky0. As cinco identidades e budgets180000ms/retry0 permanecem intactos. Não é4PASS nem aceite integral; os PASS de11 não completam trechos ausentes de12.
+Total **3PASS/2FAIL**, skipped0, flaky0, setup_failed0, retry0. Todos os casos mantêm180000ms; o deadline configurado de comparação da UI é10000ms. A duração HTTP não foi medida neste run. Duração de teste ou step composto não é latência exclusiva do endpoint.
 
-**Histórico preservado:** nominal11/C35 também teve3PASS/2FAIL; J2 Requests503 em14554ms, recibo SHA256 `4e7b727dcbfe576c21132bc228665ba2f78396e924eb11a714e542941e5a6bc5`. J1/11 alcançou escolha200, retry da intenção retida200 e histórico persistido antes de falhar na descoberta do caso após Planner2400→3600. Nominal10 teve0PASS/5FAIL: J1 timeout, demais quatro falhas de setup EADDRINUSE; J2 não navegou em Requests. Esses fatos não são reescritos como resultados12.
+**Histórico preservado:** nominal13/C44 teve3PASS/2FAIL, J2 Requests503 em14880ms e J1 abortado na primeira comparação; seu recibo `3d0da5d176d63e1533222abc5c91c7a8288885288abccdc62d11262fbb056e8c` e os drafts anteriores continuam intactos. Nominal12/C41 também teve3PASS/2FAIL e J2 Requests503 em15955ms. Nominal11/C35 alcançou escolha200/retry retido/histórico antes de falhar após a mudança Planner; isso não preenche os trechos não alcançados em15. Nominal10 teve falha de setup EADDRINUSE em J2 e não é prova de Requests503. O diagnóstico14 e seus tempos instrumentados permanecem uma execução separada.
 
-## Material integrado anterior: C24–C37 e fronteiras de cada release
+## C45 atual: aplicação86 e terminal71 reconciliados
 
-As leituras históricas desta seção permanecem fixadas em seus SHAs. Seus produtores críticos foram relidos no C41, conforme a seção seguinte. Integração material e resultados de fonte não são aceitação instalada52.
-
-| Composição | SHA / tree | Conteúdo relevante |
+| Referência | SHA / tree | Significado |
 | --- | --- | --- |
-|C24 owned53 |`bc51f4446f26cdc5f0f9b3da1c1e916f36221e34` / `97500d1435255a2790b1e6833e5a9391ca70d860` |Ciclo canônico de edição de draft, submit e aprovação do snapshot persistido;2produtos+5testes. |
-|C25 composite53 |`4b15af2d8f8a5b96cdd0a8117951939bde0b9d02` / `ad67f4c0101b341e08de075c2c8ba8e599c4b3a2` |9paths de composição mista. Proposta admission/application53 continua separada e inerte. |
-|C32 MixedSource61 |`3e26a3c2b18b54d891f44adaac76b228a0daf4c0` / `87c3d65399a71f4bbf72c8714f7ee02e662b24e7` |3produtores corrigidos+6testes/fixtures; compatibilidade da projeção Procurement e guardas de autoridade. |
-|C33 C12-recovery65 |`f8c316a3e96447fb2b33555396060e7977d51cfa` / `4c9cc42ad6cd557febf721db14c802d1f2fb9ced` |Intenção original e prova de recibo reforçadas;3produtores+6testes/fixtures. Nenhuma aprovação financeira nova. |
-|C34 exports66 |`4bcafba5d73497f9afbc9ac7965eeab8070b3900` / `a4881429b5d4e835b81c5619264cb8b0238d19f8` |Storage Reports e runtime/artifact; não altera os módulos financeiros analisados. |
-|C35 Workbench68 |`e87e22d163924635bf0b41785c9bc80bf780ac0a` / `be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c` |sf-mcp-bridge, skill-loader e testes; filho diretoC34. É a base real do nominal11. |
-|C36 Atlas69 |`0ccde9be553bf2f8d105ed4da864bb2758756536` / `78d7c23395d92a4a0193fdd545f8aa023af0c55d` |Atlas-memory e business-context, testes e recibos; não acrescenta o comando financeiro ausente. |
-|C37 privacy73 |`bc5eb1e0cead17254a95770e437f6fda826a66fc` / `94be5190a25b973af4ca647db5149e2ecec6df37` |runtime/application e runtime/procurement alterados; fronteira de visibilidade, anexos e apresentação monetária, com holds M31/MI07 explícitos. |
+| C44 executado no nominal13 | `eecbdacb21734695094332deb6142aa35d5c9c3c` / `4d4b149917a2c74cfeb73e45774fe098666c208d` | Base histórica do nominal13, preservada sem transferência para15. |
+| C45 material | `5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d` / `5bb9151ba20f606c42b8a073f246365e49d6e116` | Filho diretoC44, integração de export-egress86 por71. |
+| Terminal71 / base atual P11 | `384f9eb172f0e6761a2af1e92d8b4bb11d9b01df` / `3115f239fe8bcdc5ea38b5089b6208224620d214` | Filho diretoC45,203 arquivos exclusivamente documentais sob o prefixo de recibos71; zero mudança de produto nesse commit. |
+| Source52 | `20944c7cc1ef0fb7254793a421468ac12300356d` / `ca67b33deb0fe3586c996db925922bedcc5d9ac7` | Checkpoint ACTIVE informado pela raiz; separado de W/S isolados e do target. |
 
-O candidato[C32-mixed61.json](https://github.com/gustavomhss/Orchestra-SF/blob/3e26a3c2b18b54d891f44adaac76b228a0daf4c0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C32-mixed61.json), blob `432dd1314ea4087fc7103d109bc12155cc440c03`, está `MATERIAL_COMPOSED_VALIDATION_NOT_RUN`. O candidatoC33 tem blob `2eff431cecdbc73652671bdac45fd6c37a4d59a7`. C35 tem manifesto `C35-workbench68.json`, blob `685d62a3f027e025f8dd102c3c1c46b2cc81dc47`.
+Os dois commits e os produtores financeiros abaixo foram lidos diretamente via GitHub MCP nos SHAs fixos. Os conteúdos lidos foram conferidos contra seus Git blob SHAs. O C45 altera21paths:17 documentos, `runtime/application.ts` e três arquivos de testes/helpers de exportação. O delta de produto é somente a aplicação; o terminal seguinte não acrescenta produto.
 
-### Delta C35→C37: os blobs de Application e Procurement mudaram
+O [candidatoC45-export-egress86](https://github.com/gustavomhss/Orchestra-SF/blob/384f9eb172f0e6761a2af1e92d8b4bb11d9b01df/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C45-export-egress86.json), blob `b9b92cfa33c4058ec5fe8f32a0ba10bc99b9d23c`, permanece `MATERIAL_COMPOSED_VALIDATION_NOT_RUN`, `GLOBAL_RELEASE:false`. A unidade completa86 tinha cinco paths: quatro mudanças foram integradas e o quinto, oracle legado de Procurement `5c25f109c4df835761e8aba8351686174ac6d7aa`, já coincidia com C37. Não houve transferência de 50PASS da fonte86 para a instalação52.
 
-A comparação remota C35→C37 contém2 commits e88paths: C36 altera Atlas-memory/BCS; C37 incorpora privacy73 e a adaptação pontual do oracle legado. A revisão financeira leu os dois patches completos de runtime, os produtores relevantes atuais, o candidato e a release73 original. Os blobs antigos `4edac56…`/`20a3ec5…` pertencem ao corte atéC35 e não são descritos como os atuais.
+### Application mudou; a alteração é limitada à saída de downloads
 
-O [candidatoC37](https://github.com/gustavomhss/Orchestra-SF/blob/bc5eb1e0cead17254a95770e437f6fda826a66fc/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C37-privacy73.json), blob `6ffcca715871d6ed51ea1d201a38a8cf3c4833c0`, está `MATERIAL_COMPOSED_VALIDATION_NOT_RUN` e mantém literalmente `M31/MI07 original held`, sem enfraquecimento de política/papéis/CAS. O target foi escrito pela autoridade71. O achado M70-ISO-01 permanece `FIX_COMPOSED_RECHECK_PENDING`, não fechado.
+`runtime/application.ts` mudou de `81f469822a2756b3e1ca87effbf5fd865a56010d` no C44 para **`a0deff8a3b272019f472aa2f93499d1940a78370`** no C45. Não se afirma que o arquivo inteiro permaneceu igual.
 
-- **`runtime/procurement.ts`, atual `a4ab021f646c0fc819b3afdde18796630fb9603f`:** linhas473–481 passam a conferir visibilidade antes de revelar existência/versão/transição. `create` usa seu próprio slot CAS e não lê um request indicado pelo chamador. Requisições invisíveis retornam404 uniforme; permissões de edição e de criação continuam separadas em485–494. As demais alterações apresentam valores base com `Number(value.toPrecision(15))`; não mudam amounts persistidos, FX, thresholds, matriz, holder ou aprovação. A validação Settings apenas muda de posição de linha; continua exigindo a matriz completa.
-- **`runtime/application.ts`, atual `81f469822a2756b3e1ca87effbf5fd865a56010d`:** aplica `visibleRequests` à preparação e à publicação do upload de anexos quote/signed-po, usando404 quando a requisição não é visível; a preparação de upload também exige principal não vazio e não `local:`. Os acréscimos não fornecem `existingUiContextFor/requestFor` financeiro nem ativam a proposta admission/application53.
-- **Produtores formais e pré-condição:** queue-page, contextFor em business-services, scenario-preparation, decision-host e decision-preparation mantêm exatamente os blobs anteriores, confirmados no C37. A recusa `financial-approval-command-unavailable` permanece em scenario-preparation41–45. O consumer-ack53 relido em C37 mantém `admission:HOLD_INERT`, M31 OPEN e MI07 OPEN.
+A comparação textual direta confirma que todo o prefixo anterior a `serveDownload` e todo o sufixo desde `canViewProcurementRequest` são byte-idênticos. Os únicos acréscimos estão em `serveDownload` e no helper `downloadSnapshotDigest`:
 
-A fonte73 terminal é `4a93f6aa8b8af138774fd1e25a7183e7a84706ba`, tree `e4565e316afbfec64bd576fb2ca08a5f5cf2fa6c`, PR86. [CONSUMER-RELEASE.json](https://github.com/gustavomhss/Orchestra-SF/blob/4a93f6aa8b8af138774fd1e25a7183e7a84706ba/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/CONSUMER-RELEASE.json), blob `cf6df28afb9d22340e525c906342faea12d407dc`, foi relida e é idêntica ao arquivo integrado. Libera composição candidata com checks pendentes, lease encerrada. Sua seleção de fonte, run[43671737333](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671737333), teve29PASS/0FAIL/889assertions e15 testes filtrados. Isso não é prova das cinco jornadas52, do arquivo legado completo, de ClamD nem do C37 instalado. O ajuste legado403→404 em uma assertion é do integrador71; o403 visível de papel inadequado foi preservado.
+- Linhas714/770: a captura autorizada do download inclui digest dos dados públicos e versões.
+- Linhas784–798: após gerar os bytes, uma nova transação somente leitura reautentica principal/papéis e confere ator e digest. Revogação retorna403; fonte pública alterada retorna409; nenhum byte é liberado nesses casos.
+- Linhas815–818: o digest usa `publicSfData(snapshot.data)` e `snapshot.versions`, preservando a exclusão do estado privado de produto.
 
-**Conclusão limitada do delta:** privacy73 não altera a necessidade de moeda/configuração nem fornece aprovação formal do replacement não escrito. Ela também não prova qual ramo produziria uma resposta nova na próxima execução52. O503 funcional continua vinculado ao nominal11/C35, e a próxima jornada deve observar a composição atual.
+O despacho existente nas linhas79–80 chama esse produtor apenas para método diferente de POST com parâmetro **`download`**. A navegação financeira observada é `/sucafina/procurement?page=Requests`, sem esse parâmetro. `application.product` nas linhas68–70 e `productView` nas linhas83–84 ficam idênticos. A86 não adiciona uma ação de moeda, não monta o provider admission53 e não altera submit/approval/Apply. Isso é conclusão estática do delta, não previsão do HTTP de um futuro run15.
 
-### O que61 corrigiu — e o que continua aberto
+A fonte86 terminal é `fe27e295f3cfdf5707716e47021c269d643bc30e`, tree `ecdb27690d87301e20d1f7b86c76b30cd6d7aed5`, lease `egress-privacy-browser86` encerrada. Seu [handoff arquivado](https://github.com/gustavomhss/Orchestra-SF/blob/384f9eb172f0e6761a2af1e92d8b4bb11d9b01df/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/export-egress86/HANDOFF.md), blob `2aa5ada19eaaaf2718f42c6995dc9749f753f031`, informa50PASS/0FAIL/1077assertions no run43675046935, sobre W `e890d8cd79138dcb036a980c877319708dd220ac` e S `a99e224afdd5f830268a81d1087b6a1f43e83bec`. É prova de fonte de exportação/privacidade, não a jornada financeira de Decisões.
 
-A release61 foi relida na fonte terminal `600602f18e4ad95bd66e4d41f5a51211d19f92aa`, tree `c8fa17c6c83d70141b2b68f9e5ce2ed6c4aa8291`. [SOURCE-RELEASE.json](https://github.com/gustavomhss/Orchestra-SF/blob/600602f18e4ad95bd66e4d41f5a51211d19f92aa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/SOURCE-RELEASE.json), blob `cc247a332e0ff10ba3885cc5cff44660b2359196`, é byte-idêntica à cópia integrada. Estado `COMPLETE_BOUNDED_SOURCE_RELEASE_WITH_HELD_ACCEPTANCE`; lease encerrada, autoridade blob `7b454ab1d835ee46239d39edc58756ae227bea9d`.
+### Blobs financeiros relidos no terminal C45
 
-O consumidor anterior exigia `context.sourceRefs` não vazio embora a projeção Procurement canônica possa ter `context.sourceRefs:[]` e `components:[]`, com evidência nos valores.61 corrige esse desencontro com validação estrita de engine, campos, tipos, valor original/currency, refs/drilldown/período/versão e autoridade. Também reforça Request/headers/binding e observações externas antes/depois das leituras históricas Planner. Portanto, não se mantém como defeito atual o antigo desencontro estrutural37 ou a incompatibilidade de forma corrigida em61.
+Os paths sem prefixo na tabela estão sob `modules/sucafina/Sucafinav1/`.
 
-Blobs C32 atuais:
-
-- `scenario-operation-access.ts`: `a59f695365a71614f6189eb6f2c2737c83ba233d`.
-- `recorded-planner-operation-access.ts`: `910701c103aba2866258adf2f3c99fc0bca28b11`.
-- `procurement-composite-planner.ts`: `c6bdeb197675406c933046fb5ede19e92cc047e7`.
-
-A fonte61 executou W `cb0343be4ad2bb8cf9b68e9db746176ab551c955`, S `7dc844027be65913de226178f2b11a9f682d5396`, [run43668842101](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668842101), job132674151887:43PASS/13FAIL,56testes,588assertions;33testes próprios passaram. Os13 cenários herdados falharam no pré-requisito de preparação e não exercitaram suas etapas posteriores. A aceitação histórica C17 de Procurement não foi fechada.
-
-[M31-S0.json](https://github.com/gustavomhss/Orchestra-SF/blob/3e26a3c2b18b54d891f44adaac76b228a0daf4c0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/mixed61/checks/M31-S0.json), blob `a6f59190656be518311cb203d2ad1dd30e255a1f`, mantém explicitamente **M31_closed:false e MI07_closed:false**. Seu testemunho real observa `needs-input / financial-approval-command-unavailable`, HTTP400, arquivo protegido0→0 e nenhuma mudança preparada. É **PASS_FOR_REFUSAL_ONLY**. Não é a jornada52 nem transforma recusa em aprovação positiva.
-
-### O que65 corrigiu — sem criar a preparação financeira ausente
-
-A fonte65 terminal é `165da54e7320605092eede58a7dfc1ff706b13c1`, tree `938b3e5ce6cfac622ca0a6c63c938b9be1e76969`. [AUTHORITY.json](https://github.com/gustavomhss/Orchestra-SF/blob/165da54e7320605092eede58a7dfc1ff706b13c1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/AUTHORITY.json), blob `23008a9b180c914c663b56ed1577cd78836598d0`, encerra a lease e declara `no_new_financial_approval:true`. [HANDOFF.md](https://github.com/gustavomhss/Orchestra-SF/blob/165da54e7320605092eede58a7dfc1ff706b13c1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/HANDOFF.md), blob `7d2b0408198af6d36e17af863f00f53d79616531`, separa expressamente M31 da prova C12.
-
-Os três blobs foram confirmados no target C34:
-
-- `product/decisions/apply.ts`: `a2d08250d5104285dcdee87d86e39076535cf554`.
-- `product/decisions/prepared-apply.ts`: `a2bb5e7f74d7f1ac7c29ff3c604df14e11d30119`.
-- `product/decisions/receipt-review-binding.ts`: `b8c6af0cd15dbafc70c543901ca922701748537a`.
-
-A intenção completa passa a ser persistida na reserva antes do domínio e conferida na recuperação, com request original, escolha única, PreparedChange e autoridade. Mantém transação domínio+recibo e reconciliação do caso separada; reserva sem recibo não autoriza redispatch. Tentativas legadas sem intenção verificável não ganham intenção sintética: a recuperação genérica retorna `original-intent-unverifiable`.
-
-A seleção de fonte65 teve27PASS/0FAIL/824expectations no run[43668690783](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668690783), W `99919e946fa065cbcd458446fc71ab3f50f73267`, S `041e9d7dd055043a1a3de5c8261e399f8da2de73`. O caso Procurement permitido conserva estAmount100; não aprova a substituição140 da jornada52. Nenhum PASS65 é transferido para52. A proposta externa de lookup mínimo do primeiro Hot Topic register permanece inerte; é outro contrato e não prova recuperação financeira nem a criação C09 da jornada5.
-
-## C41 atual: ledger, preimages e preservação das unidades concorrentes
-
-O C41 `1074cf338619a70ddef1ad1f62e32618fc355fed`, tree `3f98ab38aa223eefba708e566a42450d8f1c2a93`, é filho do C40 `eb58cd9e9f8125d879bff260d6d794264b9dc53a`. O intervalo C37→C41 incorpora Auth72/C38, BI62/C39, Operations75/C40 e Dashboard67/C41. A comparação retornou o limite300files; por isso as afirmações críticas usam fetch direto de cada path em C41, não ausência no diff truncado.
-
-| Manifest atual | Blob | Limite financeiro/aceitação |
+| Path | Blob atual | Fato conferido |
 | --- | --- | --- |
-|[C38-auth72.json](https://github.com/gustavomhss/Orchestra-SF/blob/1074cf338619a70ddef1ad1f62e32618fc355fed/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C38-auth72.json) |`6994fe514bd320bc0fdfa1534206c829f22a36eb` |M31/MI07 permanecem held; nova retenção LocalStore preservada, sem transferir prova fonte. |
-|[C39-bi62.json](https://github.com/gustavomhss/Orchestra-SF/blob/1074cf338619a70ddef1ad1f62e32618fc355fed/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C39-bi62.json) |`5a663d9b6cca7ee9f2f68374ce53ba659c374173` |Holds de POST, custo, cobertura, histórico, composição e aceitação financeira continuam. |
-|[C40-operations75.json](https://github.com/gustavomhss/Orchestra-SF/blob/1074cf338619a70ddef1ad1f62e32618fc355fed/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C40-operations75.json) |`50ac7c434ac30595bb3a20068721f6cf72563c73` |Cinco originais75 ainda NOT_RUN no composto; não são as cinco jornadas52. |
-|[C41-dashboard67.json](https://github.com/gustavomhss/Orchestra-SF/blob/1074cf338619a70ddef1ad1f62e32618fc355fed/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C41-dashboard67.json) |`50318dfa6da6682cd6b347b3d71cdce40a6f7820` |Todos os holds C28 Reports/P03 original/M31/MI07 e históricos56 permanecem abertos. |
+| `apps/cli/src/sucafina-product/business-services.ts` | `7f77d2443c220ba153cf38ee538a15a7f9a4b78d` | Byte-idêntico C44→C45. `contextFor`,96–113, exige Request, período autorizado, ator atual e moeda de `formSettings`. |
+| `runtime/procurement.ts` | `a4ab021f646c0fc819b3afdde18796630fb9603f` | Byte-idêntico C44→C45. Mantém privacy73, settings persistidas, matriz e lifecycle canônico. |
+| `product/procurement/queue-page.ts` | `91784d3ea3358565e19b62922c8867f134af9ac4` | Byte-idêntico C44→C45. Requests/My approvals requerem admissão e seleção; unavailable retorna503 sem formulário. |
+| `product/procurement/scenario-preparation.ts` | `82b7d822ec5ca65ba9450cde74c5e8f39da84493` | Byte-idêntico C44→C45. Linhas41–45 mantêm `financial-approval-command-unavailable`. |
+| `product/procurement/decision-host.ts` | `9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635` | Fetch direto no target confirma o produtor conhecido; nenhuma alteração emC45. Preparação válida precede a captura do original. |
+| `product/procurement/decision-preparation.ts` | `b75e0923535f4b91b71a2f2d79eef9cefde45db4` | Byte-idêntico C44→C45. Ciclo53 de editar draft, submit e aprovação de snapshot persistido. |
+| `docs/sf2h/receipts/integration/closure-intake-57/consumer-ack53.json` | `81a26f9dd69634057ea1406626e096205ac78184` | Byte-idêntico; `admission:HOLD_INERT`, M31 OPEN, MI07 OPEN. |
+| `docs/sf2h/receipts/integration/release-wave-71/source-outputs/mixed61/checks/M31-S0.json` | `a6f59190656be518311cb203d2ad1dd30e255a1f` | Fetch direto confirma M31_closed:false, MI07_closed:false e PASS_FOR_REFUSAL_ONLY da fonte61. |
 
-Todos esses manifests registram `MATERIAL_COMPOSED_VALIDATION_NOT_RUN` e `GLOBAL_RELEASE:false` para suas qualificações próprias. A prova real52/12 é delimitada pela tabela acima e não promove os manifests globalmente.
+## BloqueioA — pré-condição Requests observada, causa interna não isolada
 
-O business-services atual `7f77d2443c220ba153cf38ee538a15a7f9a4b78d` adiciona `preparePrivateDraftRead` do Dashboard67 na linha229. O bloco financeiro contextFor96–113 não muda. O W12 usa o postimage `c7f8b5e31b835632fdbe6b6c195ead5f304838f1`; seu patch preserva essa adição e só acrescenta import DomainProjection e callback real projectForecast de Planner. O W12 não altera runtime/application, runtime/procurement, queue-page, scenario-preparation, decision-host, decision-preparation ou os três arquivos65 de C12.
+O último fato UI52 é **HTTP503 Requests/form0 no nominal15**, antes de qualquer mutação financeira. O JSON não identifica qual ramo interno falhou, não demonstra ausência de identidade de ator e não é evidência de erro na aprovação formal, que nem foi alcançada.
 
-Os blobs65 relidos no C41 continuam apply `a2d08250d5104285dcdee87d86e39076535cf554`, prepared-apply `a2bb5e7f74d7f1ac7c29ff3c604df14e11d30119` e receipt-review-binding `b8c6af0cd15dbafc70c543901ca922701748537a`. Privacy73 permanece application `81f469822a2756b3e1ca87effbf5fd865a56010d` e procurement `a4ab021f646c0fc819b3afdde18796630fb9603f`.
+O código fornece uma condição suficiente para a indisponibilidade: `business-services.ts:96–113` obtém a moeda por `domain.view(...).data.formSettings.currency` em transação Procurement autenticada; moeda vazia recusa o contexto. `queue-page.ts:27–28/46–57` converte falha da seleção/contexto/projeção em503 `procurement-queue-unavailable`. Não foi feito SELECT direto no SQLite da jornada para atribuir retrospectivamente esse ramo específico.
 
-O consumer-ack53 atual mantém `HOLD_INERT`, M31 OPEN, MI07 OPEN e nenhuma transferência de testes. O M31-S0 Mixed61 atual mantém `M31_closed:false`, `MI07_closed:false` e PASS_FOR_REFUSAL_ONLY. Assim, nem as correções mistas já integradas, nem65/73/72/62/75/67 eliminam documentalmente a decisão semântica de aprovação futura.
+`runtime/procurement.ts:142–149/679–724/929–942` mantém settings persistidas, sem USD implícito. O formulário canônico é `form[data-page="Settings"][data-command="save"]`, com Save settings, CAS e papel admin. Salvar exige moeda e matriz de aprovação válida; não há ação pública de somente moeda. Preencher USD numa configuração vazia continua insuficiente e o código prevê422 `Invalid matrix or currencies`, sem commit. Esse POST não foi enviado pela missão52.
 
-## Dois bloqueios financeiros atuais, de naturezas distintas
+Reset/defaults, inventar holder ou matriz, mudar thresholds/selfapproval e impor fallback USD seriam decisões de política. Não foram usados para contornar o bloqueio. Uma mensagem mais acionável ou um link a Settings pode melhorar diagnóstico, mas não entrega a pré-condição sem uma decisão autorizada de configuração.
 
-### A. Pré-condição Requests: falha real52, diagnóstico de moeda/configuração estático
+## BloqueioB — aprovação formal do replacement não escrito, estático e NOT_REACHED52
 
-O503 observado no nominal12 não identifica sozinho o ramo interno, nem prova ator ausente. A análise de código demonstra uma causa suficiente: o contexto Procurement exige moeda persistida, e o load de uma instalação sem settings não a estabelece implicitamente. Não houve leitura direta de SQLite nem alteração de configuração para contornar essa pré-condição.
+Os produtores atuais continuam distinguindo **escolha humana** de **aprovação financeira formal**. `scenario-preparation.ts:41–45` documenta que Approve exige uma requisição pending e aprova o valor submetido já persistido. A aprovação final sai dos estágios de edição. Não existe nesse produtor uma aprovação destacada do replacement ainda não escrito, e o retorno permanece `needs-input / financial-approval-command-unavailable`.
 
-Blobs remotos relidos diretamente no C41. Privacy73 continua preservado, e o overlay W12 não altera os produtores Procurement/C12:
+`decision-host.ts:114–131` prepara os comandos reais e devolve qualquer recusa antes de capturar o original protegido. Não é legítimo antecipar ou inventar essa captura para fabricar uma aceitação histórica positiva. `M31-S0.json` da fonte61 confirma apenas a recusa real, HTTP400 e arquivo protegido0→0; seu caso usa100→150 e não é o caso52 de100→140.
 
-| Path | Blob / linhas | Fato |
-| --- | --- | --- |
-|`apps/cli/src/sucafina-product/business-services.ts` |C41 `7f77d2443c220ba153cf38ee538a15a7f9a4b78d`; W12 `c7f8b5e31b835632fdbe6b6c195ead5f304838f1`,96–113 |contextFor revalida ator/período e lê formSettings.currency; moeda ausente recusa contexto. O patch W12 preserva esse trecho e a adição Dashboard67. |
-|`product/procurement/queue-page.ts` |`91784d3ea3358565e19b62922c8867f134af9ac4`,27–28/46–57 |Requests exige seleção autorizada; unavailable retorna503 sem formulário. |
-|`runtime/procurement.ts` |`a4ab021f646c0fc819b3afdde18796630fb9603f`,142–149/679–724/929–942 |Blob atual privacy73. Settings continuam persistidas; sem USD implícito. Save requer moeda e matriz de aprovação válida. |
-|`runtime/application.ts` |`81f469822a2756b3e1ca87effbf5fd865a56010d`,143–148/800–806/822–839 |Blob atual privacy73: visibilidade de anexos e identidade de upload. Delta não ativa a proposta Application/admission53. |
+O ciclo53 válido permite editar draft100→140, submeter140 e aprovar o snapshot140 conforme holder/política. O contrato da jornada52 preserva a PR física100/v1/draft após escolher140, exige aprovação formal exata desse efeito e só então Apply com recuperação de recibo. Editar a PR antes da aprovação, aprovar100 ou tratar Choice como aprovação não satisfaz as assertions originais. M31/MI07 permanecem **abertos por contrato** e **não alcançados no runtime52/15**.
 
-Os paths sem prefixo usam `modules/sucafina/Sucafinav1/`. O formulário Settings é `form[data-page="Settings"][data-command="save"]`, botão Save settings, CAS e papel admin. Não há comando público de somente moeda. Preencher apenas USD em configuração vazia deixa matriz inválida: a previsão estática é422 `Invalid matrix or currencies`, sem commit; esse POST não foi enviado. Reset/defaults, inventar holder/matriz, mudar thresholds/selfapproval ou impor fallback USD seriam escolhas de política não autorizadas52.
+### Correções integradas que devem ser preservadas
 
-O consumer-ack53 foi relido no C41 e permanece blob `81a26f9dd69634057ea1406626e096205ac78184`, com admission **HOLD_INERT**. C31/native64 integra routines.run e origem nativa privada; não fornece o provider financeiro53. Seu manifesto `C31-native64.json`, blob `74fea0e133ca45f43337a6301107690ed16355a0`, conserva holds de origem, Permission/review, Task/Relay, reload/readiness e checks. Nenhuma aceitação64 é transferida à52.
+- **C24/C25,53:** lifecycle de edição/submit/aprovação e composição mista foram integrados. A proposta separada de admission/application53 permanece HOLD_INERT; o consumer-ack registra que não há provider concreto `existingUiContextFor/requestFor` montado por aquela proposta.
+- **C32,MixedSource61:** corrigiu a forma da projeção Procurement e reforçou fontes/autoridade. Não se descreve o antigo desencontro estrutural37 como defeito atual. A release61 mantém M31/MI07 abertos.
+- **C33,C12-recovery65:** reforçou intenção original, reserva, recibo e recuperação. Não introduziu nova aprovação financeira. Apply `a2d08250d5104285dcdee87d86e39076535cf554`, prepared-apply `a2bb5e7f74d7f1ac7c29ff3c604df14e11d30119` e receipt-review-binding `b8c6af0cd15dbafc70c543901ca922701748537a` pertencem ao material integrado preservado; C45/terminal71 não altera esses paths.
+- **C37,privacy73 e C45,egress86:** mantêm visibilidade/privacidade de Requests/anexos e entrega autorizada de downloads. Não fornecem aprovação destacada nem moeda inicial.
+- **C42/C43/C44,80/76/74:** custo, leitura de resultados e transporte foram integrados antes de13. Seus resultados de fonte não são aceitação financeira52; produto89 não foi consumido neste trabalho.
 
-### B. Aprovação da substituição futura: M31/MI07 continuam abertos e NOT_REACHED52
+Os pins completos dessas integrações e suas releases permanecem no draftv6, SHA256 `e38bfcd4ca96ee27cabbb04abe53e86e573599bbbb9f67d837a542e17e30c7f8`, e nos artifacts citados ali. Esta revisão preserva esse histórico sem declarar atuais os blobs de Application anteriores ao86.
 
-A leitura remota C41 confirma `product/procurement/scenario-preparation.ts` blob `82b7d822ec5ca65ba9450cde74c5e8f39da84493`. Linhas41–45 preservam a fronteira: Approve aceita request pending e o valor submetido já persistido; a aprovação final sai dos estágios editáveis. Não existe comando canônico de aprovação destacada do replacement ainda não escrito; retorna `financial-approval-command-unavailable`.
+## Assertions e decisão necessária do proprietário
 
-`product/procurement/decision-host.ts` blob `9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635`, linhas114–131, chama prepareScenario para cada operação, retorna qualquer recusa e só depois captura o original protegido. A captura não pode ser antecipada para fabricar um positivo histórico. `decision-preparation.ts` conserva o blob53 `b75e0923535f4b91b71a2f2d79eef9cefde45db4`.
+A identidade financeira e suas assertions continuam: criação pela UI de USD100/v1/draft; fontes reais Planner e Procurement; alternativas120/140; diferença conhecida1200 e completa null; regra numérica humana; escolha140 com subtotal conhecido2400 e total null; releitura da PR ainda100/v1/draft; aprovação formal exata140 por holder/estágio corretos; Apply C12 e recuperação do único recibo. Essas etapas posteriores a Requests **não foram executadas com sucesso pelo caso15**.
 
-O ciclo53 válido é editar draft100→140, submeter o snapshot140 e aprovar esse snapshot por holder/política atuais. O requisito52 continua sendo manter a PR física100/v1/draft após a escolha140, obter aprovação formal do efeito exato140 e então Apply com recibo recuperável. Trocar a jornada por editar/submeter/aprovar o snapshot ou aprovar100 não satisfaz esse contrato. Choice não concede aprovação. O testemunho61 usa100→150; seus valores e escopo não são confundidos com100→140 da UI52.
+O próximo ato pertence a **S0/WP00 e aos proprietários Procurement/C12 autorizados**. Há duas decisões separadas: liberar uma pré-condição inicial legítima para a instalação e definir o comando canônico compatível de aprovação/admissão do replacement ainda não escrito. Esse comando precisa vincular ator, holder, política, source/target incarnation, case/choice/version, amount/currency e digest; consumo único e recibo recuperável continuam necessários. Não é possível fornecer um patch funcional honesto dessa semântica antes da decisão do proprietário.
 
-## Assertions originais preservadas e decisão do proprietário
+Os cinco casos e seus budgets180000ms, expectativas originais, ações UI e identidades permanecem obrigatórios. O caso financeiro não é removido; suas falhas não viram skips. A missão52 não substitui o fluxo por seeds, chamadas diretas de mutação, aprovação fabricada, componente isolado ou timeout ampliado. A matriz83 da missão continua independente desta revisão; esta auditoria não promove critérios.
 
-A jornada financeira mantém: criação humana USD100/v1/draft; fontes Planner e Procurement reais; alternativas120/140; diferença conhecida1200 e completa null; regra numérica humana; escolha140 com subtotal conhecido2400/total null; releitura da PR ainda100/v1/draft; aprovação exata140 por holder e estágio corretos; Apply C12 e recuperação do recibo único. A execução atual52 não alcançou essas etapas depois de Requests.
+## P11 de autenticação: proposta inerte, sem aprovação financeira
 
-O próximo ato pertence a **S0/WP00 e aos proprietários Procurement/C12 autorizados**: definir/liberar uma pré-condição inicial legítima e, separadamente, o contrato canônico de aprovação/admissão do replacement não escrito. Esse contrato precisa vincular ator, holder, política, source/target incarnation, case/choice/version, amount/currency e digest do comando; consumo único e recibo recuperável continuam obrigatórios. Não é possível oferecer honestamente um patch funcional dessa semântica sem a decisão do proprietário. Diagnóstico ou link para Settings não fecha o bloqueio.
+P11 é um patch compartilhado entregue ao proprietário para qualificação isolada; não está integrado ao target. Os dois arquivos são `runtime/local-store.ts` (`d9eaac043514141abb2f1f978a6fd2ceaf4040d6` → `5d7bccf29c38bc6a6b83ec2f2b3d543640b8dada`) e comentário em `runtime/auth-maintenance.ts` (`af6e6749f7b61e07c419c90a264fdc48f3b32e21` → `6f024be93e31329270cc266742038a6e58807b1c`). O material integral tem SHA256 `03a6d04820708feba67fa634c37b36fa6d4f40d4293911bef9a0504dd0f9284f`; patch `e302481a39c252682c98f9d446de41f7b4b284dc598cfc7f0489bc4ca0838615`.
 
-As quatro jornadas independentes continuam sendo qualificadas pela raiz. As cinco identidades/assertions/budgets permanecem obrigatórias. Não há seed, mutação direta substituindo UI, skip, timeout ampliado, waiver ou aprovação fabricada.
+A proposta reutiliza somente uma conexão de SELECT independente em autocommit, conservando cada leitura de credencial, revalidação e revogação. Mantém checagens de scope, aborto, lifecycle e identidade física do banco antes/depois, sem cache de ator/ACL/valor e sem mudar filas/writers. A ordem real de concorrência é liberar a raiz BEGIN IMMEDIATE antes do COMMIT do peer; a revogação local pendente é outro mecanismo.
 
-## Autoridade, preservação e referências finais desta revisão
+O recibo real de [Unit04, run43680704374](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43680704374), job132710474992, registra **20PASS/0FAIL/194expects**, três arquivos, sobre o mesmo W `c725f9b8307a84562258c478414ec0b39d428b99` usado no nominal15. São dez casos novos P11 e dez controles Auth72 existentes; o recibo tem SHA256 `af67a6584935c670ea3d8cfd0ae5dd4d4ae6fe7fa6bf3c052547a5af4beabbf5`. Esse resultado comprova apenas os contratos selecionados de autenticação. Não aprova a jornada financeira, não promove M31/MI07 e não demonstra ganho de latência. A revisão estática independente atual continua SHA256 `d85a0aa646c46da2b22873365f98eee7dc4847111da01d2cedbdb83fe2e486b6`.
 
-O handoff solicitado continua dirigido a47 pela cadeia de sucessão observada;47 não está ativa. O [ACK71 relido em C41](https://github.com/gustavomhss/Orchestra-SF/blob/1074cf338619a70ddef1ad1f62e32618fc355fed/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/ACK71.json), blob `4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2`, registra a autoridade limitada71, epoch `S0-C-e13-browser71`; o candidatoC41 identifica71 como writer. Esta revisão não cria lease, não reativa47/59/61/65 e não autoriza52 a escrever target. Checks45 e aceite finalS0 permanecem separados.
+O nominal15 executou P11 no candidato isolado e ainda terminou3PASS/2FAIL. J1 alcançou duas comparações200 e registro de regra200, mas a terceira comparação terminou requestfailed sem resposta observada. O run não possui perfis de servidor; não atribuímos o abort a SQL, CPU, P11 ou um estágio do produtor a partir de duração de teste/step. Choice e a captura P9 continuam NOT_REACHED nesse run. O problema financeiro permaneceu a pré-condição Requests, observado novamente em15, sem extrapolação do13.
 
-A auditoria C41 completa dos13 paths críticos e quatro manifests está em `/workspace/scratch/fec39c0682b3/m52-audit/financial-current-c41-read-audit.json`, SHA256 `9e435581d93f248649189f8008365153b88c7033fcac2f7a08a6048eb5abbb9d`. O adendo estático anterior ao run12 está em `financial-current-c41-static.md`, SHA256 `adfcb93a0b6df5715eb90412681c8487f4a9c6038cd807af9a77e27dfb1eff95`; sua marca NOT_RUN descreve aquele corte anterior e foi supersedida aqui pela prova12.
+## Autoridade e destino do handoff
 
-As auditorias anteriores e revisões1–4 ficam preservadas. Em particular, v4 SHA256 `48c6a9d4611265b009bdc531d55427826a3e492335ffdaf9ccd65109de6cdfba` descreve corretamente runtime11/C35 e estáticaC37 naquele momento. O novo resultado não altera seus bytes nem seus fatos históricos. Este v5 é um draft para publicação pela raiz, não terminal remoto já publicado. **GLOBAL_RELEASE=false.**
+O [AUTHORITY terminal71](https://github.com/gustavomhss/Orchestra-SF/blob/384f9eb172f0e6761a2af1e92d8b4bb11d9b01df/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/AUTHORITY.json), blob `8578861cbb3c7a028802e90770a89578e2d2391d`, declara **ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS**, epoch `S0-C-e13-browser71`. Seu [HANDOFF](https://github.com/gustavomhss/Orchestra-SF/blob/384f9eb172f0e6761a2af1e92d8b4bb11d9b01df/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/HANDOFF.md), blob `9d1f4b7169fe32f4fcb35429125fe644e080d54e`, entrega C45, mantém M31/MI07/C12 e exige nova designação S0, reconciliação e ACK para outro writer. O ACK71 histórico `4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2` não mantém a lease ativa após esse terminal.
 
-Nenhum teste, build, typecheck, execução de produto, dispatch, alteração de política ou escrita remota foi realizado por este auditor. As afirmações runtime provêm dos artifacts Actions existentes; as afirmações de contrato provêm dos blobs pinados. Nenhum teste unitário adicional substitui as cinco jornadas UI.
+**47 continua como destinatário solicitado do handoff52**, através da sucessão registrada; não é tratada como integradora ativa.52 não assume autoridade de47,71 ou um sucessor. **Target writes52=0.** Source52 `20944c7cc1ef0fb7254793a421468ac12300356d` permanece ACTIVE conforme o checkpoint atual informado pela raiz; este draft não publica terminal52. O censo71, blob `ca5890ed5addf5924a572dd089fedb001729743b`, fotografa um checkpoint52 mais antigo, `554e4e692318c952fdd1b365eb233d7c1b6d8cf5`; não é usado como HEAD atual da fonte nem como resultado das tentativas posteriores.
+
+Checks/lanes45 e aceite finalS0 conservam seus escopos. Reports48, workflows45, Procurement/C12 e CurrentChoice46 permanecem sob seus proprietários. Nenhum resultado de86, Auth72, componenteP11 ou outro autor é transferido para52. **GLOBAL_RELEASE=false.**
+
+## Limites de aceitação depois do nominal15
+
+O resultado é **3PASS/2FAIL**, com cinco casos executados, zero skips, zero retry e budgets originais. Não há quatro jornadas independentes concluídas neste corte, nem aceite financeiro. O progresso parcial de J1 e os20PASS de autenticação não completam Choice/histórico/P9/C12. A próxima execução precisará de evidência própria no SHA realmente executado; nenhum resultado futuro é presumido.
+
+## Índice de evidências desta revisão
+
+- Auditoria remota atual: `/workspace/scratch/fec39c0682b3/m52-audit/financial-current-c45-read-audit.json`, SHA256 `4c36168a024221e19107612a6d67576310ba5c5d0ae5c04f672b41a8b24d720f`. Inclui os conteúdos diretos atuais, hashes, commitsC45/terminal, manifesto86, autoridade71, consumer53 e M31-S0.
+- Delta textual completo de aplicação: `/workspace/scratch/fec39c0682b3/m52-audit/financial-c44-c45-application.diff`, SHA256 `c0c754f22b5ef7ee3d97478b2c1c6e173428884c62e1e48f994c4a2d0958af89`.
+- Runtime financeiro mais recente: `/workspace/scratch/fec39c0682b3/m52-audit/nominal15-43680980170/nominal-15-receipt.json`, SHA256 `24ab7a11603e37cc9703d83a39f0896c7951ab8a140aa459877162dec6c22f16`; ZIP e evidências individuais na tabela inicial.
+- Extração financeira independente15: `/workspace/scratch/fec39c0682b3/m52-audit/financial-nominal15-final-evidence.json`, SHA256 `666e1c5c041ec81770997034a4649f616a515eed345868aa25fbf4158eccc09d`; confirma título, form0, GET503, nenhuma mutação e pins do envelope.
+- Preimages e análise anteriores: `financial-current-c44-read-audit.json`, SHA256 `49588ae44cba90516744260948de38b19e6e644f8c36685ddec480ad29c4ef4b`; draftv6 e revisões anteriores preservados.
+
+Atividade deste auditor: GitHub MCP somente leitura e escrita de artifacts derivados em scratch. Zero execução de produto, testes, builds, typechecks, dispatches, mudança de política ou escrita remota. O CI pertence à raiz; os resultados citados são recibos existentes, com escopo separado das inferências estáticas.
+

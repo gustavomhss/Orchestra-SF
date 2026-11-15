@@ -1059,3 +1059,313 @@
 +    }
 +  },
 +)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts
+@@ -0,0 +1,307 @@
++import { expect, test } from "bun:test"
++import { chmod, link, lstat, mkdtemp, realpath, rename, rm, symlink } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++
++const at = 1000
++const expiresAt = 10000
++const bytes = new Uint8Array([0, 255, 17, 128])
++
++// Real SQLite stores share one installation. These opaque bytes exercise the
++// LocalSecrets contract; this fixture performs no UI qualification or login.
++async function withStores(work: (input: { directory: string; store: LocalStore; other: LocalStore }) => Promise<void>) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-auth-read-connection-"))
++  const opened: LocalStore[] = []
++  await chmod(directory, 0o700)
++  try {
++    const store = await openLocalStore(directory)
++    opened.push(store)
++    const other = await openLocalStore(directory)
++    opened.push(other)
++    await work({ directory, store, other })
++  } finally {
++    try { await Promise.all(opened.map((store) => store.dispose())) }
++    finally { await rm(directory, { recursive: true, force: true }) }
++  }
++}
++
++function readRoot<T>(store: LocalStore, work: () => Promise<T>, signal?: AbortSignal) {
++  if (!store.readSnapshotRoot) throw new Error("Canonical readonly root is required")
++  return store.readSnapshotRoot(work, signal ? { signal } : undefined)
++}
++
++function authentication(store: LocalStore) {
++  if (!store.secrets.authentication) throw new Error("Canonical authentication lifecycle is required")
++  return store.secrets.authentication
++}
++
++async function issueSession(store: LocalStore, namespace: "a" | "d" = "a") {
++  const auth = authentication(store)
++  const parent = `${namespace.repeat(64)}:login:${"b".repeat(64)}`
++  const key = `${namespace.repeat(64)}:session:${"c".repeat(64)}`
++  expect(await auth.issue({ key: parent, value: bytes, expiresAt, at })).toBe(true)
++  expect(await store.secrets.take(parent, at)).toEqual(bytes)
++  expect(await auth.issue({ key, value: bytes, expiresAt, at, parent })).toBe(true)
++  return { key, parent }
++}
++
++test("auth reads observe another store's committed replacement after a held C08 root", async () => {
++  await withStores(async ({ store, other }) => {
++    await store.secrets.put("opaque-session", bytes, expiresAt, at)
++    expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++    const entered = Promise.withResolvers<void>()
++    const released = Promise.withResolvers<void>()
++    const writer = { committed: false, pending: undefined as Promise<void> | undefined }
++    const reading = readRoot(store, async () => {
++      const before = store.currentSnapshots?.()
++      expect(before).toBeDefined()
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      entered.resolve()
++      await released.promise
++      expect(writer.committed).toBe(false)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      expect(store.currentSnapshots?.()).toEqual(before)
++      return "root-complete"
++    })
++    void reading.catch(() => undefined)
++    try {
++      await Promise.race([entered.promise, reading])
++      // This call originates outside the root's ALS. BEGIN IMMEDIATE keeps its
++      // COMMIT pending until the root ends; never await this writer inside C08.
++      writer.pending = other.secrets.put("opaque-session", new Uint8Array([9, 8, 7]), expiresAt, at)
++        .then(() => { writer.committed = true })
++      void writer.pending.catch(() => undefined)
++      expect(writer.committed).toBe(false)
++      released.resolve()
++      expect(await reading).toBe("root-complete")
++      await writer.pending
++      expect(writer.committed).toBe(true)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(new Uint8Array([9, 8, 7]))
++      expect(await readRoot(store, () => store.secrets.get("opaque-session", at))).toEqual(new Uint8Array([9, 8, 7]))
++      await other.secrets.put("opaque-session", new Uint8Array([6, 5]), expiresAt, at)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(new Uint8Array([6, 5]))
++    } finally {
++      released.resolve()
++      await reading.catch(() => undefined)
++      await writer.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("auth reads refuse managed sessions revoked or removed by another store between calls", async () => {
++  await withStores(async ({ store, other }) => {
++    const revoked = await issueSession(store)
++    const removed = await issueSession(store, "d")
++    const auth = authentication(store)
++    expect(auth.inspect(revoked.parent, at)?.state).toBe("completed")
++    expect(auth.inspect(removed.key, at)?.state).toBe("active")
++    await readRoot(store, async () => {
++      expect(await store.secrets.get(revoked.key, at)).toEqual(bytes)
++      expect(await store.secrets.get(removed.key, at)).toEqual(bytes)
++    })
++    await authentication(other).revoke(revoked.parent, at + 1)
++    await other.secrets.remove(removed.key)
++    await readRoot(store, async () => {
++      expect(auth.inspect(revoked.parent, at + 1)?.state).toBe("revoked")
++      // The child's own row remains active: its real parent revocation must
++      // independently prevent payload release, not just change a cached row.
++      expect(auth.inspect(revoked.key, at + 1)?.state).toBe("active")
++      expect(auth.inspect(removed.key, at + 1)?.state).toBe("revoked")
++      expect(await store.secrets.get(revoked.key, at + 1)).toBeUndefined()
++      expect(await store.secrets.get(removed.key, at + 1)).toBeUndefined()
++    })
++    await store.secrets.put(removed.key, new Uint8Array([9]), expiresAt, at + 1)
++    expect(await store.secrets.get(removed.key, at + 1)).toBeUndefined()
++    expect(await other.secrets.get(revoked.key, at + 1)).toBeUndefined()
++  })
++})
++
++test("auth reads recheck explicit expiry inside C08 without collecting durable rows", async () => {
++  await withStores(async ({ store, other }) => {
++    const session = await issueSession(store)
++    const before = await authentication(other).stats()
++    await readRoot(store, async () => {
++      expect(await store.secrets.get(session.key, expiresAt - 1)).toEqual(bytes)
++      expect(await store.secrets.get(session.key, expiresAt)).toBeUndefined()
++      expect(await store.secrets.get(session.key, expiresAt + 1)).toBeUndefined()
++      // Reading at an expired time neither rewrites nor deletes the opaque row.
++      expect(await store.secrets.get(session.key, expiresAt - 1)).toEqual(bytes)
++      expect(await authentication(store).stats()).toEqual(before)
++    })
++    expect(await authentication(other).stats()).toEqual(before)
++    expect(await other.secrets.get(session.key, expiresAt - 1)).toEqual(bytes)
++  })
++})
++
++test("auth reads return detached bytes across calls, stores and readonly roots", async () => {
++  await withStores(async ({ store, other }) => {
++    const input = new Uint8Array(bytes)
++    await store.secrets.put("opaque-session", input, expiresAt, at)
++    input.fill(7)
++    const first = await store.secrets.get("opaque-session", at)
++    const second = await store.secrets.get("opaque-session", at)
++    if (!first || !second) throw new Error("Persisted opaque payload missing")
++    expect(first).toEqual(bytes)
++    expect(second).toEqual(bytes)
++    expect(first.buffer).not.toBe(input.buffer)
++    expect(second.buffer).not.toBe(first.buffer)
++    first.fill(1)
++    expect(second).toEqual(bytes)
++    await readRoot(store, async () => {
++      const held = await store.secrets.get("opaque-session", at)
++      if (!held) throw new Error("Readonly opaque payload missing")
++      held.fill(2)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++    })
++    expect(await other.secrets.get("opaque-session", at)).toEqual(bytes)
++    expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++  })
++})
++
++test("auth reads reject ended descendants and aborted scopes without borrowing a later root", async () => {
++  await withStores(async ({ store }) => {
++    await store.secrets.put("opaque-session", bytes, expiresAt, at)
++    const release = Promise.withResolvers<void>()
++    const late: { pending?: Promise<Uint8Array | undefined> } = {}
++    try {
++      await readRoot(store, async () => {
++        expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++        late.pending = release.promise.then(() => store.secrets.get("opaque-session", at))
++        void late.pending.catch(() => undefined)
++      })
++      await readRoot(store, async () => {
++        release.resolve()
++        await expect(late.pending).rejects.toThrow("scope has ended")
++        expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      })
++      const controller = new AbortController()
++      await expect(readRoot(store, async () => {
++        expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++        controller.abort(new Error("Authentication request cancelled"))
++        await expect(store.secrets.get("opaque-session", at)).rejects.toThrow("Authentication request cancelled")
++        expect(() => authentication(store).inspect("opaque-session", at)).toThrow("Authentication request cancelled")
++        return "caught-but-invalid"
++      }, controller.signal)).rejects.toThrow("Authentication request cancelled")
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++    } finally {
++      release.resolve()
++      await late.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("auth reads fail immediately during disposal while the admitted readonly root drains", async () => {
++  await withStores(async ({ store, other }) => {
++    await store.secrets.put("opaque-session", bytes, expiresAt, at)
++    const entered = Promise.withResolvers<void>()
++    const released = Promise.withResolvers<void>()
++    const closing = { complete: false, pending: undefined as Promise<void> | undefined }
++    const reading = readRoot(store, async () => {
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      entered.resolve()
++      await released.promise
++      await expect(store.secrets.get("opaque-session", at)).rejects.toThrow("disposed")
++      return "drained"
++    })
++    void reading.catch(() => undefined)
++    try {
++      await Promise.race([entered.promise, reading])
++      closing.pending = store.dispose().then(() => { closing.complete = true })
++      void closing.pending.catch(() => undefined)
++      expect(closing.complete).toBe(false)
++      await expect(store.secrets.get("opaque-session", at)).rejects.toThrow("disposed")
++      expect(() => authentication(store).inspect("opaque-session", at)).toThrow("disposed")
++      released.resolve()
++      expect(await reading).toBe("drained")
++      await closing.pending
++      expect(closing.complete).toBe(true)
++      await store.dispose()
++      await expect(store.secrets.get("opaque-session", at)).rejects.toThrow("disposed")
++      expect(await other.secrets.get("opaque-session", at)).toEqual(bytes)
++    } finally {
++      released.resolve()
++      await reading.catch(() => undefined)
++      await closing.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("auth writes caught after warm reads still poison C08 and cannot commit secrets or maintenance", async () => {
++  await withStores(async ({ store, other }) => {
++    await store.secrets.put("opaque-session", bytes, expiresAt, at)
++    const session = await issueSession(store)
++    const auth = authentication(store)
++    const before = await authentication(other).stats()
++    const attempts = [
++      () => store.secrets.put("opaque-session", new Uint8Array([9]), expiresAt, at),
++      () => store.secrets.take("opaque-session", at),
++      () => store.secrets.remove("opaque-session"),
++      () => auth.collect(expiresAt + 1),
++      () => auth.revoke(session.key, at),
++    ]
++    for (const attempt of attempts) {
++      await expect(readRoot(store, async () => {
++        expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++        await expect(attempt()).rejects.toThrow("Nested local writes are forbidden")
++        return "caught-but-poisoned"
++      })).rejects.toThrow("Nested local write attempted")
++      expect(await other.secrets.get("opaque-session", at)).toEqual(bytes)
++      expect(await other.secrets.get(session.key, at)).toEqual(bytes)
++      expect(await authentication(other).stats()).toEqual(before)
++    }
++    // Rejected durable revocation still fences this process immediately. The
++    // independent store continues to observe the unchanged committed session.
++    expect(auth.inspect(session.key, at)?.state).toBe("revoked")
++    expect(await store.secrets.get(session.key, at)).toBeUndefined()
++    expect(authentication(other).inspect(session.key, at)?.state).toBe("active")
++    expect(await other.secrets.get(session.key, at)).toEqual(bytes)
++  })
++})
++
++for (const mode of ["replacement", "symlink alias", "missing file"] as const) {
++  test(`auth reads refuse physical ${mode} after warming the original installation handle`, async () => {
++    await withStores(async ({ directory, store, other }) => {
++      await store.secrets.put("opaque-session", bytes, expiresAt, at)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      expect(await other.secrets.get("opaque-session", at)).toEqual(bytes)
++      const path = join(directory, "installation.sqlite")
++      const original = join(directory, "original.sqlite")
++      const changed = { original: false, incoming: undefined as string | undefined }
++      try {
++        if (mode === "replacement") {
++          changed.incoming = await mkdtemp(join(await realpath(tmpdir()), "sf-auth-read-replacement-"))
++          await chmod(changed.incoming, 0o700)
++          const replacement = await openLocalStore(changed.incoming)
++          try {
++            await replacement.secrets.put("opaque-session", new Uint8Array([9, 9]), expiresAt, at)
++            expect(await replacement.secrets.get("opaque-session", at)).toEqual(new Uint8Array([9, 9]))
++          } finally { await replacement.dispose() }
++          // Preserve the original inode only for cleanup. The following rename
++          // atomically replaces the live pathname with a different real database.
++          await link(path, original)
++          changed.original = true
++          await rename(join(changed.incoming, "installation.sqlite"), path)
++        } else {
++          await rename(path, original)
++          changed.original = true
++          if (mode === "symlink alias") await symlink(original, path)
++        }
++        await expect(store.secrets.get("opaque-session", at)).rejects.toThrow()
++        expect(() => authentication(store).inspect("opaque-session", at)).toThrow()
++        await expect(authentication(store).stats()).rejects.toThrow()
++        await expect(other.secrets.get("opaque-session", at)).rejects.toThrow()
++        // Discarding a failed handle must not silently adopt the new pathname.
++        await expect(store.secrets.get("opaque-session", at)).rejects.toThrow()
++        if (mode === "missing file") await expect(lstat(path)).rejects.toThrow("ENOENT")
++      } finally {
++        if (changed.original) {
++          await rm(path, { force: true })
++          await rename(original, path)
++        }
++        if (changed.incoming) await rm(changed.incoming, { recursive: true, force: true })
++      }
++    })
++  })
++}

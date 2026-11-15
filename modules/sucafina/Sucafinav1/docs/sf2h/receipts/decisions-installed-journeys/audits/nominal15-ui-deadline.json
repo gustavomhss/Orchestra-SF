@@ -1,0 +1,40 @@
+{
+  "schema": "sf-m52-nominal15-ui-deadline-source-v1",
+  "state": "EXACT_SOURCE_READ_ONLY",
+  "repository": "gustavomhss/Orchestra-SF",
+  "ref": "c725f9b8307a84562258c478414ec0b39d428b99",
+  "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+  "blob": "0a330a1377326e3ea919b4714cada83a208efc39",
+  "configured_decision_compare_deadline_ms": 10000,
+  "same_blob_as_W11_W12_W13": true,
+  "evidence": [
+    {
+      "line": 138,
+      "text": "  const send = async (action, payload, id) => {"
+    },
+    {
+      "line": 140,
+      "text": "    const controller = new AbortController(); const deadline = setTimeout(() => controller.abort(), 10000)"
+    },
+    {
+      "line": 142,
+      "text": "      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', signal: controller.signal, headers: { 'Content-Type': 'application/json', 'Idempotency-Key': id }, body: typeof payload === 'string' ? payload : JSON.stringify(payload) })"
+    },
+    {
+      "line": 149,
+      "text": "    } finally { clearTimeout(deadline) }"
+    },
+    {
+      "line": 169,
+      "text": "      const compared = await send('decision-compare', { caseRef: context.caseRef, baselineAlternativeId: baseline, alternativeId: alternative, criteria }, crypto.randomUUID())"
+    },
+    {
+      "line": 193,
+      "text": "      const response = await fetch(url, { credentials: 'same-origin', cache: 'no-store', signal: AbortSignal.timeout(10000) })"
+    }
+  ],
+  "limits": [
+    "GitHub MCP read of exact immutable W15; no source modification or runtime execution.",
+    "Configured timer is not measured HTTP duration or proof of failure cause."
+  ]
+}

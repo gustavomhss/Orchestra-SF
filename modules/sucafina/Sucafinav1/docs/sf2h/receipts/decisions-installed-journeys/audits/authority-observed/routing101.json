@@ -1,0 +1,13 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "state": "OPERATIONAL_CORRECTION_PREPARED_NOT_ACTIVE",
+  "reason": "Original mission45 explicitly excludes product tests. Subsequent operational packs wrongly routed product test requests to45. ProductCI101 corrects this routing without changing pinnedplan or compiler45 authority.",
+  "authority": "101 single product dispatcher after realACK/reconciliation;45compiler/guards only;100integration;S0 final acceptance",
+  "preserve": "all existing requests/runs/dedup/eightfinalselectors/AM/reviews/G7G8 unchanged",
+  "prior_control_sha": "e917f95c2db396abb39f3338e4fe56b3a9246d08",
+  "missions": [
+    101,
+    102
+  ]
+}

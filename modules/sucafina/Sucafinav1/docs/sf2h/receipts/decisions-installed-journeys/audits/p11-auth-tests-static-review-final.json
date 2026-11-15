@@ -1,0 +1,51 @@
+{
+  "schema": "sf52-independent-test-static-review-v1",
+  "reviewer": "financial_contract",
+  "subject": "P11 auth-read-connection final unit source",
+  "verdict": "PASS_STATIC_NO_BLOCKERS_RUNTIME_RESULT_NOT_ASSESSED",
+  "test": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p11-auth-read-tests/auth-read-connection.test.ts.txt",
+    "sha256": "4b0d4cc55ce050c3422dd3ee31e2753cbbc358b6528bc69dd57704f3482819fb",
+    "git_blob": "f66d5912c35217c90e891251549d6a4a03b77d00",
+    "bytes": 15320,
+    "cases_read": 10
+  },
+  "source_material": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p11-auth-proposal/material.json",
+    "sha256": "03a6d04820708feba67fa634c37b36fa6d4f40d4293911bef9a0504dd0f9284f"
+  },
+  "verified": [
+    "issueSession uses real managed login issue, one-time take and child session issue with valid expiry and retention.",
+    "A warmed reader enters canonical BEGIN IMMEDIATE root; peer writer is created outside ALS and awaited only after root release. The next read checks peer committed bytes and later update.",
+    "Parent revocation leaves own child row active while actual permission refuses its payload; peer remove denies a managed session and later put does not revive it.",
+    "Explicit expiry reads do not collect durable rows; returned Uint8Arrays remain detached.",
+    "Closed ALS descendants cannot borrow later root; abort rejects both async get and synchronous inspect.",
+    "Disposal closes admission immediately, remains pending while active root drains and leaves peer persistence readable.",
+    "Caught put/take/remove/collect/revoke writes poison a readonly root; peer views show no durable mutation or collection.",
+    "Physical replacement uses another real database and preserves/restores original inode; symlink and missing paths refuse before returning old values or adopting changed path.",
+    "Root waiters have explicit release in finally and Promise.race against root failure; no added timer, timeout, fixture seed for UI, mock or provider bypass.",
+    "Final four assertions distinguish local pending revocation from peer durable active session without a peer COMMIT inside C08.",
+    "Missing-file case also checks ENOENT after refusal so reads cannot recreate an empty database."
+  ],
+  "optional_improvements_sent": [
+    "Local pending-revocation assertions included in frozen final source.",
+    "Permission mode remained outside the ten frozen cases; private mode guard reviewed statically, not claimed exercised by this new file."
+  ],
+  "limits": [
+    "This review is static, no Bun execution/compile/CI dispatch.",
+    "Ten additional contract cases do not qualify or replace the five original UI journeys.",
+    "Default test budgets were not changed by the draft."
+  ],
+  "activity": {
+    "product_execution": false,
+    "tests": false,
+    "remote_mutation": false,
+    "dispatch": false
+  },
+  "test_material": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p11-auth-read-tests/material.json",
+    "sha256": "c19f02abfb7edf7d5ed7dbd3fc5857e8f0bb2aa7444398b1e24adf3c41b78639"
+  },
+  "frozen_cases": 10,
+  "ci_limit": "Parent reports Unit04 running; this independent review does not inspect, execute, or infer that runtime result."
+}

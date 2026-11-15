@@ -1,0 +1,297 @@
+import type { Database } from "bun:sqlite"
+import type { AuthHandle, AuthLimits, LocalSecrets } from "./local-contract.ts"
+
+export const MAX_SESSION_MS = 28_800_000
+export const AUTH_LIMITS: Readonly<AuthLimits> = Object.freeze({
+  maxRecords: 4096, maxChallenges: 512, maxBytes: 33_554_432, maxPayloadBytes: 65_536, batchSize: 128,
+})
+
+type IssuanceRow = { kind: AuthHandle["kind"]; state: AuthHandle["state"]; expires_at: number; retain_until: number; parent_key: string | null }
+type PayloadRow = { payload: Uint8Array; expires_at: number }
+type Usage = { records: number; handles: number; payloads: number; bytes: number; challenges: number }
+
+/** Called inside the store's existing initialization transaction. Reopen adopts one durable policy. */
+export function initializeAuthentication(db: Database, requested: Partial<AuthLimits> = {}): Readonly<AuthLimits> {
+  const names = Object.keys(AUTH_LIMITS) as (keyof AuthLimits)[]
+  for (const key of Object.keys(requested)) {
+    if (!names.includes(key as keyof AuthLimits)) throw new Error("Unknown authentication limit")
+    const value = requested[key as keyof AuthLimits]
+    if (!Number.isSafeInteger(value) || Number(value) < 1 || Number(value) > AUTH_LIMITS[key as keyof AuthLimits])
+      throw new Error("Invalid authentication limit")
+  }
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS authentication_issuance (
+      key TEXT PRIMARY KEY,
+      kind TEXT NOT NULL CHECK (kind IN ('login', 'session')),
+      state TEXT NOT NULL CHECK (state IN ('issued', 'pending', 'completed', 'active', 'revoked')),
+      expires_at REAL NOT NULL,
+      retain_until REAL NOT NULL,
+      parent_key TEXT
+    );
+    CREATE INDEX IF NOT EXISTS authentication_payloads_expiry ON authentication_payloads (expires_at, key);
+    CREATE INDEX IF NOT EXISTS authentication_issuance_expiry ON authentication_issuance (retain_until, key);
+    CREATE UNIQUE INDEX IF NOT EXISTS authentication_session_parent ON authentication_issuance (parent_key) WHERE kind = 'session' AND parent_key IS NOT NULL;
+    CREATE TABLE IF NOT EXISTS authentication_limits (singleton INTEGER PRIMARY KEY CHECK (singleton = 1), policy TEXT NOT NULL);
+  `)
+  const stored = db.query<{ policy: string }, []>("SELECT policy FROM authentication_limits WHERE singleton = 1").get()
+  if (!stored) {
+    const policy = Object.freeze({ ...AUTH_LIMITS, ...requested })
+    db.query("INSERT INTO authentication_limits (singleton, policy) VALUES (1, ?)").run(JSON.stringify(policy))
+    return policy
+  }
+  const policy: unknown = JSON.parse(stored.policy)
+  if (!policy || typeof policy !== "object" || Array.isArray(policy) || Object.keys(policy).length !== names.length)
+    throw new Error("Invalid persisted authentication policy")
+  for (const key of names) {
+    const value = (policy as Record<string, unknown>)[key]
+    if (!Number.isSafeInteger(value) || Number(value) < 1 || Number(value) > AUTH_LIMITS[key] ||
+      (requested[key] !== undefined && requested[key] !== value)) throw new Error("Authentication policy mismatch")
+  }
+  return Object.freeze(policy as AuthLimits)
+}
+
+/**
+ * The supplied read observes current committed metadata independently in autocommit.
+ * Its connection may be reused, but no snapshot or value is retained between reads.
+ * The supplied write owns admission and COMMIT.
+ */
+export function createAuthenticationSecrets(options: {
+  read: <T>(work: (db: Database) => T) => T
+  write: <T>(work: (db: Database) => T) => Promise<T>
+  limits: Readonly<AuthLimits>
+}): LocalSecrets {
+  const pending = new Map<string, { handle: AuthHandle; retainUntil: number; promise?: Promise<void> }>()
+  const current = (db: Database, key: string, at: number): AuthHandle | undefined => {
+    const keyParts = managed(key)
+    if (!keyParts) return
+    const retiring = pending.get(key)
+    // Failed cancellation still fences local work. Its fixed horizon covers a peer
+    // consuming the challenge while the original writer was waiting for admission.
+    if (retiring && retiring.retainUntil > at) return { ...retiring.handle, state: "revoked", retainUntil: retiring.retainUntil }
+    const row = db.query<IssuanceRow, [string]>("SELECT kind, state, expires_at, retain_until, parent_key FROM authentication_issuance WHERE key = ?").get(key)
+    const marker = db.query<{ expires_at: number }, [string, number]>("SELECT expires_at FROM authentication_payloads WHERE key = ? AND expires_at > ?")
+      .get(`${keyParts.namespace}:revoked-${keyParts.kind}:${keyParts.digest}`, at)
+    if (marker) return { kind: keyParts.kind, state: "revoked", expiresAt: row?.expires_at ?? marker.expires_at, retainUntil: Math.max(row?.retain_until ?? 0, marker.expires_at), ...(row?.parent_key ? { parent: row.parent_key } : {}) }
+    if (row) return row.retain_until > at ? { kind: row.kind, state: row.state, expiresAt: row.expires_at, retainUntil: row.retain_until, ...(row.parent_key ? { parent: row.parent_key } : {}) } : undefined
+    const legacy = db.query<{ expires_at: number }, [string, number]>("SELECT expires_at FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
+    if (legacy) return { kind: keyParts.kind, state: keyParts.kind === "login" ? "issued" : "active", expiresAt: legacy.expires_at, retainUntil: legacy.expires_at }
+  }
+  const permitted = (db: Database, key: string, at: number) => {
+    const handle = current(db, key, at)
+    if (!handle || handle.expiresAt <= at || !["issued", "active"].includes(handle.state)) return false
+    if (!handle.parent) return true
+    const parent = current(db, handle.parent, at)
+    return parent?.state === "completed" && parent.retainUntil >= handle.expiresAt
+  }
+  const inspect = (key: string, at: number) => {
+    clock(at)
+    return options.read((db) => current(db, key, at))
+  }
+  const usage = (db: Database): Usage => db.query<Usage, []>(`
+    SELECT
+      (SELECT COUNT(*) FROM authentication_issuance) +
+        (SELECT COUNT(*) FROM authentication_payloads AS p WHERE NOT EXISTS (SELECT 1 FROM authentication_issuance AS h WHERE h.key = p.key)) AS records,
+      (SELECT COUNT(*) FROM authentication_issuance) AS handles,
+      (SELECT COUNT(*) FROM authentication_payloads) AS payloads,
+      (SELECT COALESCE(SUM(length(payload)), 0) FROM authentication_payloads) AS bytes,
+      (SELECT COUNT(*) FROM authentication_issuance WHERE kind = 'login' AND state IN ('issued', 'pending')) +
+        (SELECT COUNT(*) FROM authentication_payloads AS p WHERE length(p.key) = 135 AND substr(p.key, 65, 7) = ':login:' AND NOT EXISTS (SELECT 1 FROM authentication_issuance AS h WHERE h.key = p.key)) AS challenges
+  `).get()!
+  const payload = (db: Database, key: string, at: number) => db.query<PayloadRow, [string, number]>("SELECT payload, expires_at FROM authentication_payloads WHERE key = ? AND expires_at > ?").get(key, at)
+  const markRevoked = (db: Database, key: string, handle: AuthHandle) => {
+    // Conversion preserves the existing logical key and its fixed lifetime; it never admits an unknown handle.
+    db.query("INSERT INTO authentication_issuance (key, kind, state, expires_at, retain_until, parent_key) VALUES (?, ?, 'revoked', ?, ?, ?) ON CONFLICT(key) DO UPDATE SET state = 'revoked'")
+      .run(key, handle.kind, handle.expiresAt, handle.retainUntil, handle.parent ?? null)
+    db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
+  }
+  return {
+    async put(key, value, expiresAt, at = Date.now()) {
+      if (!Number.isFinite(expiresAt)) throw new Error("Invalid authentication expiry")
+      const kind = managed(key)?.kind
+      if (kind) {
+        clock(at)
+        if (value.byteLength > options.limits.maxPayloadBytes) return
+      }
+      const bytes = new Uint8Array(value)
+      await options.write((db) => {
+        if (kind) {
+          // Managed issuance uses issue(). A refresh only replaces a still-live existing session at its original deadline.
+          if (kind !== "session" || !permitted(db, key, at)) return
+          const previous = payload(db, key, at)
+          const handle = current(db, key, at)
+          if (!previous || !handle || expiresAt !== previous.expires_at || expiresAt !== handle.expiresAt || expiresAt <= at) return
+          const counted = usage(db)
+          if (counted.bytes - previous.payload.byteLength + bytes.byteLength > options.limits.maxBytes) return
+          db.query("UPDATE authentication_payloads SET payload = ? WHERE key = ?").run(bytes, key)
+          return
+        }
+        db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?) ON CONFLICT (key) DO UPDATE SET payload=excluded.payload, expires_at=excluded.expires_at").run(key, bytes, expiresAt)
+      })
+    },
+    async get(key, at) {
+      clock(at)
+      return options.read((db) => {
+        if (managed(key) && !permitted(db, key, at)) return
+        const row = payload(db, key, at)
+        return row ? new Uint8Array(row.payload) : undefined
+      })
+    },
+    async take(key, at) {
+      clock(at)
+      return options.write((db) => {
+        const kind = managed(key)?.kind
+        if (!kind) {
+          const row = payload(db, key, at)
+          db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
+          return row ? new Uint8Array(row.payload) : undefined
+        }
+        if (!permitted(db, key, at)) return
+        const handle = current(db, key, at)
+        const row = payload(db, key, at)
+        if (!handle || !row) return
+        if (kind === "session") {
+          markRevoked(db, key, handle)
+          return new Uint8Array(row.payload)
+        }
+        const retainUntil = handle.expiresAt + MAX_SESSION_MS
+        if (!Number.isSafeInteger(retainUntil)) throw new Error("Invalid authentication retention")
+        db.query("INSERT INTO authentication_issuance (key, kind, state, expires_at, retain_until, parent_key) VALUES (?, 'login', 'pending', ?, ?, NULL) ON CONFLICT(key) DO UPDATE SET state = 'pending', retain_until = excluded.retain_until")
+          .run(key, handle.expiresAt, retainUntil)
+        db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
+        return new Uint8Array(row.payload)
+      })
+    },
+    async remove(key) {
+      await options.write((db) => {
+        const kind = managed(key)?.kind
+        if (kind) {
+          const row = db.query<IssuanceRow, [string]>("SELECT kind, state, expires_at, retain_until, parent_key FROM authentication_issuance WHERE key = ?").get(key)
+          const legacy = row ? undefined : db.query<{ expires_at: number }, [string]>("SELECT expires_at FROM authentication_payloads WHERE key = ?").get(key)
+          if (row || legacy) markRevoked(db, key, { kind, state: "revoked", expiresAt: row?.expires_at ?? legacy!.expires_at, retainUntil: row?.retain_until ?? legacy!.expires_at, ...(row?.parent_key ? { parent: row.parent_key } : {}) })
+        }
+        db.query("DELETE FROM authentication_payloads WHERE key = ?").run(key)
+      })
+    },
+    authentication: {
+      limits: options.limits,
+      inspect,
+      async issue(input) {
+        clock(input.at)
+        const keyParts = managed(input.key)
+        if (!keyParts || !Number.isSafeInteger(input.expiresAt) || input.expiresAt <= input.at || input.value.byteLength > options.limits.maxPayloadBytes) return false
+        if (input.expiresAt - input.at > (keyParts.kind === "login" ? 600_000 : MAX_SESSION_MS)) return false
+        const parentParts = input.parent ? managed(input.parent) : undefined
+        if (keyParts.kind === "login" ? input.parent !== undefined : !parentParts || parentParts.kind !== "login" || parentParts.namespace !== keyParts.namespace) return false
+        const bytes = new Uint8Array(input.value)
+        return options.write((db) => {
+          if (db.query<{ found: number }, [string, string]>("SELECT 1 AS found FROM authentication_issuance WHERE key = ? UNION ALL SELECT 1 AS found FROM authentication_payloads WHERE key = ? LIMIT 1").get(input.key, input.key) || current(db, input.key, input.at)) return false
+          const parent = input.parent ? current(db, input.parent, input.at) : undefined
+          if (keyParts.kind === "session" && (!parent || parent.state !== "pending" || parent.expiresAt <= input.at || parent.retainUntil < input.expiresAt)) return false
+          const counted = usage(db)
+          if (counted.records >= options.limits.maxRecords || counted.bytes + bytes.byteLength > options.limits.maxBytes ||
+            (keyParts.kind === "login" && counted.challenges >= options.limits.maxChallenges)) return false
+          db.query("INSERT INTO authentication_issuance (key, kind, state, expires_at, retain_until, parent_key) VALUES (?, ?, ?, ?, ?, ?)")
+            .run(input.key, keyParts.kind, keyParts.kind === "login" ? "issued" : "active", input.expiresAt, input.expiresAt, input.parent ?? null)
+          db.query("INSERT INTO authentication_payloads (key, payload, expires_at) VALUES (?, ?, ?)").run(input.key, bytes, input.expiresAt)
+          if (input.parent) db.query("UPDATE authentication_issuance SET state = 'completed' WHERE key = ? AND state = 'pending'").run(input.parent)
+          return true
+        })
+      },
+      revoke(key, at) {
+        clock(at)
+        const existing = pending.get(key)
+        if (existing?.promise) return existing.promise
+        if (existing && existing.retainUntil <= at) pending.delete(key)
+        const retry = existing && existing.retainUntil > at ? existing : undefined
+        // A failed attempt's local revoked state must not suppress its durable retry.
+        const handle = retry?.handle ?? inspect(key, at)
+        if (!handle || handle.state === "revoked") return Promise.resolve()
+        if (!retry && pending.size >= options.limits.maxRecords) return Promise.reject(new Error("Authentication cancellation capacity exhausted"))
+        // Set this fence synchronously, before writer admission; older business readers can be awaiting Graph.
+        const entry = retry ?? {
+          handle,
+          retainUntil: handle.kind === "login" ? Math.max(handle.retainUntil, handle.expiresAt + MAX_SESSION_MS) : handle.expiresAt,
+          promise: undefined as Promise<void> | undefined,
+        }
+        pending.set(key, entry)
+        entry.promise = options.write((db) => {
+          const row = db.query<IssuanceRow, [string]>("SELECT kind, state, expires_at, retain_until, parent_key FROM authentication_issuance WHERE key = ?").get(key)
+          const legacy = row ? undefined : payload(db, key, at)
+          if (!row && !legacy) return
+          // A callback may have consumed the challenge after inspect(): retain its upgraded horizon.
+          markRevoked(db, key, { ...handle, expiresAt: row?.expires_at ?? handle.expiresAt, retainUntil: row?.retain_until ?? handle.retainUntil, ...(row?.parent_key ? { parent: row.parent_key } : {}) })
+        }).then(() => {
+          if (pending.get(key) === entry) pending.delete(key)
+        }, (error: unknown) => {
+          // Admission/COMMIT failure did not revoke durably. Preserve intent and
+          // release only the in-flight promise so a later logout can retry it.
+          entry.promise = undefined
+          throw error
+        })
+        return entry.promise
+      },
+      async collect(at) {
+        clock(at)
+        for (const [key, entry] of pending) {
+          if (!entry.promise && entry.retainUntil <= at) pending.delete(key)
+        }
+        return options.write((db) => {
+          const payloads = db.query("DELETE FROM authentication_payloads WHERE key IN (SELECT key FROM authentication_payloads WHERE expires_at <= ? ORDER BY expires_at, key LIMIT ?)").run(at, options.limits.batchSize).changes
+          const handles = payloads < options.limits.batchSize
+            ? db.query("DELETE FROM authentication_issuance WHERE key IN (SELECT h.key FROM authentication_issuance AS h WHERE h.retain_until <= ? AND NOT EXISTS (SELECT 1 FROM authentication_payloads AS p WHERE p.key = h.key AND p.expires_at > ?) ORDER BY h.retain_until, h.key LIMIT ?)")
+              .run(at, at, options.limits.batchSize - payloads).changes : 0
+          return { payloads, handles }
+        })
+      },
+      async stats() {
+        const counted = options.read(usage)
+        return { records: counted.records, handles: counted.handles, payloads: counted.payloads, bytes: counted.bytes, pendingRevocations: pending.size }
+      },
+    },
+  }
+}
+
+/** Start at composition, outside request/business scopes. No endpoint traffic or operator profile is needed. */
+export function startAuthMaintenance(options: { secrets: LocalSecrets; now?: () => number; intervalMs?: number }) {
+  const authentication = options.secrets.authentication
+  if (!authentication) throw new Error("Authentication maintenance capability required")
+  const interval = options.intervalMs ?? 60_000
+  if (!Number.isSafeInteger(interval) || interval < 1 || interval > 2_147_483_647) throw new Error("Invalid authentication maintenance interval")
+  const state = { closed: false, pending: undefined as Promise<void> | undefined, lastSuccess: undefined as number | undefined, error: undefined as string | undefined, payloads: 0, handles: 0 }
+  const runOnce = () => {
+    if (state.closed) return Promise.resolve()
+    if (state.pending) return state.pending
+    const at = options.now?.() ?? Date.now()
+    state.pending = authentication.collect(at).then((removed) => {
+      state.payloads += removed.payloads
+      state.handles += removed.handles
+      state.lastSuccess = at
+      state.error = undefined
+    }, (error: unknown) => {
+      state.error = "AUTH_MAINTENANCE_FAILED"
+      throw error
+    }).finally(() => { state.pending = undefined })
+    return state.pending
+  }
+  const timer = setInterval(() => { void runOnce().catch(() => undefined) }, interval)
+  timer.unref()
+  void runOnce().catch(() => undefined)
+  return {
+    runOnce,
+    status: () => ({ running: Boolean(state.pending), closed: state.closed, lastSuccess: state.lastSuccess, error: state.error, payloads: state.payloads, handles: state.handles }),
+    async dispose() {
+      state.closed = true
+      clearInterval(timer)
+      await state.pending?.catch(() => undefined)
+    },
+  }
+}
+
+function managed(key: string) {
+  const match = /^([a-f0-9]{64}):(login|session):([a-f0-9]{64})$/.exec(key)
+  return match ? { namespace: match[1]!, kind: match[2] as "login" | "session", digest: match[3]! } : undefined
+}
+
+function clock(at: number) {
+  if (!Number.isFinite(at)) throw new Error("Invalid authentication clock")
+}

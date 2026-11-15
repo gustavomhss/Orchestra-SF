@@ -1,0 +1,5614 @@
+{
+  "schema": "sf2-mission52-diagnostic14-receipt-v1",
+  "mission": 52,
+  "purpose": "DIAGNOSTIC_ONLY_NOT_NOMINAL_ACCEPTANCE",
+  "source_authority": "ACK52_ACTIVE_BOUNDED_SUCCESSION",
+  "source_checkpoint": "20944c7cc1ef0fb7254793a421468ac12300356d",
+  "envelope": {
+    "schema": "sf-m52-diagnostic-envelope-v1",
+    "diagnostic": 14,
+    "state": "DISPATCHED_AWAITING_RESULT",
+    "purpose": "DIAGNOSTIC_ONLY_NOT_ACCEPTANCE",
+    "base": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "base_symbol": "C44",
+    "parent_W": "7409883a9a36e20cabef00d25627dec88b4cf094",
+    "W": "70f356f2736809c59a53cc8a263d44341a073e3d",
+    "W_tree": "842792f40ec39cba0939440e039ea57cbc075994",
+    "S": "047ca9e132329c5e41a1c95df3855f60adf3b295",
+    "S_tree": "a5e78522a7ea38c7f8d907f1828f5df2425bf949",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "branch": "ci-run-linux-astra-wp11-70f356f2-3619f1fd-m52-d14",
+    "preserved_root_entries": 43,
+    "test_budget_ms": 180000,
+    "ui_deadline_ms": 10000,
+    "tests": 5,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "dispatched_at": "2026-11-15 05:01:05 UTC",
+    "static_review": {
+      "path": "m52-audit/diagnostic14-static-review.json",
+      "sha256": "1ed89b71bb005fc8b09850623782ac20af8b5b95d2f13e9c4b49bbe3b8dba08c"
+    }
+  },
+  "run": {
+    "id": 43679231538,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43679231538",
+    "test_job": 132706008571,
+    "test_conclusion": "failure",
+    "cleanup_job": 132707072393,
+    "cleanup_conclusion": "success"
+  },
+  "artifact": {
+    "artifact_id": 14147613797,
+    "bytes": 4355024,
+    "sha256": "f12ea119d80411c0df4b448acd6fcd7d950d1d0e44098fd4c9636dcaf9dab930",
+    "file_count": 17,
+    "files": [
+      "test-ci-evidence/playwright-runtime.json",
+      "test-ci-evidence/playwright-selection.json",
+      "test-ci-evidence/request.json",
+      "test-ci-evidence/benchmark-runtime.json",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png",
+      "packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/video.webm",
+      "packages/app-shell/e2e/playwright-report/data/205e2e407cad9ec78a5157ede9a4df351d342200.md",
+      "packages/app-shell/e2e/playwright-report/data/6b8ba9688e948809bd473de73027546b2e8d6f2f.png",
+      "packages/app-shell/e2e/playwright-report/data/713a5dccac15a6b189bd35dfc6462f319bf9a83a.webm",
+      "packages/app-shell/e2e/playwright-report/data/9288accb2b30c803adb3bb3f775bb850e9adc972.webm",
+      "packages/app-shell/e2e/playwright-report/data/9544b9e1d05cd19a2293c9b8e8246e9138509a32.png",
+      "packages/app-shell/e2e/playwright-report/data/b5b150eaf14defa7fab2fda745c7289257c7e81d.md",
+      "packages/app-shell/e2e/playwright-report/index.html"
+    ]
+  },
+  "stats": {
+    "startTime": "2026-11-15T05:03:17.397Z",
+    "duration": 150812.031,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 12,
+      "configured_budget_ms": 180000,
+      "runtime_status": "failed",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 77543,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create two actual Planner versions through human controls",
+          "duration": 1380
+        },
+        {
+          "title": "discover and inspect authorized sources before attaching them to the saved case",
+          "duration": 4217
+        },
+        {
+          "title": "save the first alternative with an explicit pending cost inventory",
+          "duration": 8119
+        },
+        {
+          "title": "lose the second creation response and explicitly recover the identical request",
+          "duration": 11667
+        },
+        {
+          "title": "reopen the exact alternatives and consume them in the current comparison",
+          "duration": 16938
+        },
+        {
+          "title": "register the explicit limit for the known subtotal increase using current comparison evidence",
+          "duration": 3749
+        }
+      ],
+      "failure": {
+        "message": "Error: The original UI request failed before a response: net::ERR_ABORTED",
+        "stack": "Error: The original UI request failed before a response: net::ERR_ABORTED\n    at Page.failed (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts:67:44)",
+        "location": {
+          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+          "column": 44,
+          "line": 67
+        },
+        "snippet": "   at sucafina/decisions-support/command-response.ts:67\n\n\u001b[0m \u001b[90m 65 |\u001b[39m   \u001b[36mconst\u001b[39m failed \u001b[33m=\u001b[39m (request\u001b[33m:\u001b[39m \u001b[33mRequest\u001b[39m) \u001b[33m=>\u001b[39m {\n \u001b[90m 66 |\u001b[39m     \u001b[36mtry\u001b[39m {\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 67 |\u001b[39m       \u001b[36mif\u001b[39m (matches(request)) pending\u001b[33m.\u001b[39mreject(\u001b[36mnew\u001b[39m \u001b[33mError\u001b[39m(\u001b[32m`The original UI request failed before a response: ${request.failure()?.errorText ?? \"requestfailed\"}`\u001b[39m))\n \u001b[90m    |\u001b[39m                                            \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 68 |\u001b[39m     } \u001b[36mcatch\u001b[39m (error) { pending\u001b[33m.\u001b[39mreject(error) }\n \u001b[90m 69 |\u001b[39m   }\n \u001b[90m 70 |\u001b[39m   page\u001b[33m.\u001b[39mon(\u001b[32m\"requestfailed\"\u001b[39m\u001b[33m,\u001b[39m failed)\u001b[0m"
+      },
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain"
+        },
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/test-failed-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md"
+        }
+      ],
+      "observations": [
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "copy",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-human-command",
+          "action": "save",
+          "httpStatus": 200,
+          "ok": true
+        },
+        {
+          "stage": "planner-sources-created-through-ui",
+          "baselineVersion": "067c244b-6385-4d74-a957-93175803243a",
+          "candidateVersion": "e56f35c8-9590-46d4-b3c8-6764c402a941",
+          "baselineAnnualInput": 1200,
+          "candidateAnnualInput": 2400,
+          "currency": "USD",
+          "year": 2027
+        },
+        {
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "workbench-command",
+          "status": "ok",
+          "outputRef": "case:1f0ef128-2d59-44f7-af6f-6c80b7008447:b9403dd9-8892-436a-99b8-a80d035aec30"
+        },
+        {
+          "mode": "decision-edit",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-edit",
+          "status": "ok"
+        },
+        {
+          "stage": "authorized-sources-attached",
+          "caseRef": {
+            "id": "1f0ef128-2d59-44f7-af6f-6c80b7008447",
+            "incarnation": "b9403dd9-8892-436a-99b8-a80d035aec30",
+            "version": 2
+          },
+          "sources": [
+            {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "planner-version:067c244b-6385-4d74-a957-93175803243a:e94cd580-34d2-4164-b9ea-e83837090465:1",
+              "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+              "projectId": "global",
+              "refDigest": "57c4c84b74796614bded0ac8793fc9f9706344a8b7b68a267d811a876fe7fb45",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "planner",
+                "recordType": "planner-version",
+                "recordId": "067c244b-6385-4d74-a957-93175803243a",
+                "incarnation": "e94cd580-34d2-4164-b9ea-e83837090465",
+                "version": 1,
+                "fields": [
+                  "id",
+                  "name",
+                  "year",
+                  "locked",
+                  "closed",
+                  "hc",
+                  "lists",
+                  "lines",
+                  "projects",
+                  "fx",
+                  "summary",
+                  "hr",
+                  "restrictedHr",
+                  "fteInputsKnown",
+                  "hrMonthStates",
+                  "sharedEntities",
+                  "sharedAllocations"
+                ],
+                "period": {
+                  "start": "2027-01-01",
+                  "end": "2027-12-31"
+                },
+                "projectionDigest": "819fa2745995c8729b839913f95f68e175af4f2f3cb0f2600d3a6cafd6eaeb95"
+              }
+            },
+            {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "planner-version:e56f35c8-9590-46d4-b3c8-6764c402a941:4de3d96a-a72e-40ce-9bf2-d6caaf23835f:1",
+              "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+              "projectId": "global",
+              "refDigest": "01141512c60f171d6af50cb5a401f9f489760025c67f4a3fa02b757e3cfa4bf3",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "planner",
+                "recordType": "planner-version",
+                "recordId": "e56f35c8-9590-46d4-b3c8-6764c402a941",
+                "incarnation": "4de3d96a-a72e-40ce-9bf2-d6caaf23835f",
+                "version": 1,
+                "fields": [
+                  "id",
+                  "name",
+                  "year",
+                  "locked",
+                  "closed",
+                  "hc",
+                  "lists",
+                  "lines",
+                  "projects",
+                  "fx",
+                  "summary",
+                  "hr",
+                  "restrictedHr",
+                  "fteInputsKnown",
+                  "hrMonthStates",
+                  "sharedEntities",
+                  "sharedAllocations"
+                ],
+                "period": {
+                  "start": "2027-01-01",
+                  "end": "2027-12-31"
+                },
+                "projectionDigest": "392f3115e1ef66e94028fe9897b6117db1e924f150d05047cbe13e2f178ed73a"
+              }
+            }
+          ]
+        },
+        {
+          "mode": "decision-coverage",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-coverage",
+          "status": "ok"
+        },
+        {
+          "stage": "human-pending-coverage-saved",
+          "sourceName": "Decisions baseline plan",
+          "title": "Keep the baseline service",
+          "coverage": {
+            "coverageRef": "baseline-coverage:29255c6f988b0220547b1ab62f2d7f66c235894f6ac49d7431b504a3b0a3de31",
+            "version": 1
+          },
+          "registration": {
+            "caseRef": {
+              "id": "1f0ef128-2d59-44f7-af6f-6c80b7008447",
+              "incarnation": "b9403dd9-8892-436a-99b8-a80d035aec30",
+              "version": 2
+            },
+            "source": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "planner-version:067c244b-6385-4d74-a957-93175803243a:e94cd580-34d2-4164-b9ea-e83837090465:1",
+              "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+              "projectId": "global",
+              "refDigest": "57c4c84b74796614bded0ac8793fc9f9706344a8b7b68a267d811a876fe7fb45",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "planner",
+                "recordType": "planner-version",
+                "recordId": "067c244b-6385-4d74-a957-93175803243a",
+                "incarnation": "e94cd580-34d2-4164-b9ea-e83837090465",
+                "version": 1,
+                "fields": [
+                  "id",
+                  "name",
+                  "year",
+                  "locked",
+                  "closed",
+                  "hc",
+                  "lists",
+                  "lines",
+                  "projects",
+                  "fx",
+                  "summary",
+                  "hr",
+                  "restrictedHr",
+                  "fteInputsKnown",
+                  "hrMonthStates",
+                  "sharedEntities",
+                  "sharedAllocations"
+                ],
+                "period": {
+                  "start": "2027-01-01",
+                  "end": "2027-12-31"
+                },
+                "projectionDigest": "819fa2745995c8729b839913f95f68e175af4f2f3cb0f2600d3a6cafd6eaeb95"
+              }
+            },
+            "basis": {
+              "id": "human-cost-inventory:9900a9fe-0cf1-4d61-a7a3-198100530273",
+              "version": 1,
+              "decisionType": "renewal-transition-v1",
+              "categoryIds": [
+                "service",
+                "service_overlap",
+                "implementation",
+                "contract_exit",
+                "migration",
+                "taxes",
+                "training",
+                "internal_costs",
+                "other_relevant_costs"
+              ],
+              "additionalCategoryIds": [],
+              "sourceRefs": [
+                {
+                  "schema": "sf-evidence-v1",
+                  "kind": "record",
+                  "refId": "planner-version:067c244b-6385-4d74-a957-93175803243a:e94cd580-34d2-4164-b9ea-e83837090465:1",
+                  "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+                  "projectId": "global",
+                  "refDigest": "57c4c84b74796614bded0ac8793fc9f9706344a8b7b68a267d811a876fe7fb45",
+                  "evidenceLevel": "observed",
+                  "target": {
+                    "surface": "planner",
+                    "recordType": "planner-version",
+                    "recordId": "067c244b-6385-4d74-a957-93175803243a",
+                    "incarnation": "e94cd580-34d2-4164-b9ea-e83837090465",
+                    "version": 1,
+                    "fields": [
+                      "id",
+                      "name",
+                      "year",
+                      "locked",
+                      "closed",
+                      "hc",
+                      "lists",
+                      "lines",
+                      "projects",
+                      "fx",
+                      "summary",
+                      "hr",
+                      "restrictedHr",
+                      "fteInputsKnown",
+                      "hrMonthStates",
+                      "sharedEntities",
+                      "sharedAllocations"
+                    ],
+                    "period": {
+                      "start": "2027-01-01",
+                      "end": "2027-12-31"
+                    },
+                    "projectionDigest": "819fa2745995c8729b839913f95f68e175af4f2f3cb0f2600d3a6cafd6eaeb95"
+                  }
+                },
+                {
+                  "schema": "sf-evidence-v1",
+                  "kind": "record",
+                  "refId": "planner-version:e56f35c8-9590-46d4-b3c8-6764c402a941:4de3d96a-a72e-40ce-9bf2-d6caaf23835f:1",
+                  "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+                  "projectId": "global",
+                  "refDigest": "01141512c60f171d6af50cb5a401f9f489760025c67f4a3fa02b757e3cfa4bf3",
+                  "evidenceLevel": "observed",
+                  "target": {
+                    "surface": "planner",
+                    "recordType": "planner-version",
+                    "recordId": "e56f35c8-9590-46d4-b3c8-6764c402a941",
+                    "incarnation": "4de3d96a-a72e-40ce-9bf2-d6caaf23835f",
+                    "version": 1,
+                    "fields": [
+                      "id",
+                      "name",
+                      "year",
+                      "locked",
+                      "closed",
+                      "hc",
+                      "lists",
+                      "lines",
+                      "projects",
+                      "fx",
+                      "summary",
+                      "hr",
+                      "restrictedHr",
+                      "fteInputsKnown",
+                      "hrMonthStates",
+                      "sharedEntities",
+                      "sharedAllocations"
+                    ],
+                    "period": {
+                      "start": "2027-01-01",
+                      "end": "2027-12-31"
+                    },
+                    "projectionDigest": "392f3115e1ef66e94028fe9897b6117db1e924f150d05047cbe13e2f178ed73a"
+                  }
+                }
+              ]
+            },
+            "entries": [
+              {
+                "categoryId": "service",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "service_overlap",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "implementation",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "contract_exit",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "migration",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "taxes",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "training",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "internal_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "other_relevant_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              }
+            ],
+            "expectedVersion": 0
+          },
+          "pendingReason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+        },
+        {
+          "mode": "decision-promote",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-promote",
+          "status": "ok"
+        },
+        {
+          "mode": "decision-coverage",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-coverage",
+          "status": "ok"
+        },
+        {
+          "stage": "human-pending-coverage-saved",
+          "sourceName": "Decisions candidate plan",
+          "title": "Consider the candidate service",
+          "coverage": {
+            "coverageRef": "baseline-coverage:d766308c959ca6970bbf8c0249198cb2e935d35a72ad88a886a4bdf2f0e985da",
+            "version": 1
+          },
+          "registration": {
+            "caseRef": {
+              "id": "1f0ef128-2d59-44f7-af6f-6c80b7008447",
+              "incarnation": "b9403dd9-8892-436a-99b8-a80d035aec30",
+              "version": 3
+            },
+            "source": {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "planner-version:e56f35c8-9590-46d4-b3c8-6764c402a941:4de3d96a-a72e-40ce-9bf2-d6caaf23835f:1",
+              "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+              "projectId": "global",
+              "refDigest": "01141512c60f171d6af50cb5a401f9f489760025c67f4a3fa02b757e3cfa4bf3",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "planner",
+                "recordType": "planner-version",
+                "recordId": "e56f35c8-9590-46d4-b3c8-6764c402a941",
+                "incarnation": "4de3d96a-a72e-40ce-9bf2-d6caaf23835f",
+                "version": 1,
+                "fields": [
+                  "id",
+                  "name",
+                  "year",
+                  "locked",
+                  "closed",
+                  "hc",
+                  "lists",
+                  "lines",
+                  "projects",
+                  "fx",
+                  "summary",
+                  "hr",
+                  "restrictedHr",
+                  "fteInputsKnown",
+                  "hrMonthStates",
+                  "sharedEntities",
+                  "sharedAllocations"
+                ],
+                "period": {
+                  "start": "2027-01-01",
+                  "end": "2027-12-31"
+                },
+                "projectionDigest": "392f3115e1ef66e94028fe9897b6117db1e924f150d05047cbe13e2f178ed73a"
+              }
+            },
+            "basis": {
+              "id": "human-cost-inventory:9900a9fe-0cf1-4d61-a7a3-198100530273",
+              "version": 1,
+              "decisionType": "renewal-transition-v1",
+              "categoryIds": [
+                "service",
+                "service_overlap",
+                "implementation",
+                "contract_exit",
+                "migration",
+                "taxes",
+                "training",
+                "internal_costs",
+                "other_relevant_costs"
+              ],
+              "additionalCategoryIds": [],
+              "sourceRefs": [
+                {
+                  "schema": "sf-evidence-v1",
+                  "kind": "record",
+                  "refId": "planner-version:067c244b-6385-4d74-a957-93175803243a:e94cd580-34d2-4164-b9ea-e83837090465:1",
+                  "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+                  "projectId": "global",
+                  "refDigest": "57c4c84b74796614bded0ac8793fc9f9706344a8b7b68a267d811a876fe7fb45",
+                  "evidenceLevel": "observed",
+                  "target": {
+                    "surface": "planner",
+                    "recordType": "planner-version",
+                    "recordId": "067c244b-6385-4d74-a957-93175803243a",
+                    "incarnation": "e94cd580-34d2-4164-b9ea-e83837090465",
+                    "version": 1,
+                    "fields": [
+                      "id",
+                      "name",
+                      "year",
+                      "locked",
+                      "closed",
+                      "hc",
+                      "lists",
+                      "lines",
+                      "projects",
+                      "fx",
+                      "summary",
+                      "hr",
+                      "restrictedHr",
+                      "fteInputsKnown",
+                      "hrMonthStates",
+                      "sharedEntities",
+                      "sharedAllocations"
+                    ],
+                    "period": {
+                      "start": "2027-01-01",
+                      "end": "2027-12-31"
+                    },
+                    "projectionDigest": "819fa2745995c8729b839913f95f68e175af4f2f3cb0f2600d3a6cafd6eaeb95"
+                  }
+                },
+                {
+                  "schema": "sf-evidence-v1",
+                  "kind": "record",
+                  "refId": "planner-version:e56f35c8-9590-46d4-b3c8-6764c402a941:4de3d96a-a72e-40ce-9bf2-d6caaf23835f:1",
+                  "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+                  "projectId": "global",
+                  "refDigest": "01141512c60f171d6af50cb5a401f9f489760025c67f4a3fa02b757e3cfa4bf3",
+                  "evidenceLevel": "observed",
+                  "target": {
+                    "surface": "planner",
+                    "recordType": "planner-version",
+                    "recordId": "e56f35c8-9590-46d4-b3c8-6764c402a941",
+                    "incarnation": "4de3d96a-a72e-40ce-9bf2-d6caaf23835f",
+                    "version": 1,
+                    "fields": [
+                      "id",
+                      "name",
+                      "year",
+                      "locked",
+                      "closed",
+                      "hc",
+                      "lists",
+                      "lines",
+                      "projects",
+                      "fx",
+                      "summary",
+                      "hr",
+                      "restrictedHr",
+                      "fteInputsKnown",
+                      "hrMonthStates",
+                      "sharedEntities",
+                      "sharedAllocations"
+                    ],
+                    "period": {
+                      "start": "2027-01-01",
+                      "end": "2027-12-31"
+                    },
+                    "projectionDigest": "392f3115e1ef66e94028fe9897b6117db1e924f150d05047cbe13e2f178ed73a"
+                  }
+                }
+              ]
+            },
+            "entries": [
+              {
+                "categoryId": "service",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "service_overlap",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "implementation",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "contract_exit",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "migration",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "taxes",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "training",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "internal_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              },
+              {
+                "categoryId": "other_relevant_costs",
+                "status": "pending",
+                "reason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+              }
+            ],
+            "expectedVersion": 0
+          },
+          "pendingReason": "Cost categories still need evidence; a known service amount does not establish complete coverage."
+        },
+        {
+          "mode": "decision-promote",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-promote",
+          "status": "ok"
+        },
+        {
+          "stage": "alternative-response-reconciled",
+          "caseRef": {
+            "id": "1f0ef128-2d59-44f7-af6f-6c80b7008447",
+            "incarnation": "b9403dd9-8892-436a-99b8-a80d035aec30",
+            "version": 4
+          },
+          "originalMutationKey": "aea75d19-1816-43bc-90a0-400910de7cf9",
+          "mutationRequests": 3,
+          "distinctIntentions": 2,
+          "financialApplication": false
+        },
+        {
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-compare",
+          "status": "ok"
+        },
+        {
+          "stage": "persisted-alternatives-compared",
+          "caseRef": {
+            "id": "1f0ef128-2d59-44f7-af6f-6c80b7008447",
+            "incarnation": "b9403dd9-8892-436a-99b8-a80d035aec30",
+            "version": 4
+          },
+          "alternatives": [
+            {
+              "id": "5adeedcb-98a6-48f7-aca0-f5f4febbfd11",
+              "version": 1,
+              "title": "Keep the baseline service",
+              "currency": "USD",
+              "horizon": {
+                "start": "2027-01-01",
+                "end": "2027-12-31"
+              }
+            },
+            {
+              "id": "8a7f30fb-4a26-4735-a236-d3d4393f7b9b",
+              "version": 1,
+              "title": "Consider the candidate service",
+              "currency": "USD",
+              "horizon": {
+                "start": "2027-01-01",
+                "end": "2027-12-31"
+              }
+            }
+          ],
+          "comparison": {
+            "baselineResultRef": "decision-result:716ae7a04ee965efbc8153583980601d2d75e819fd88595a9a2fa529892e3a42",
+            "alternativeResultRef": "decision-result:15dada35bddb3fb0506c30c94ae2d7afe4f47ddac0e418606d3b3a24317cdec0",
+            "costCoverageRefs": [
+              "case-coverage:1f0ef128-2d59-44f7-af6f-6c80b7008447:b9403dd9-8892-436a-99b8-a80d035aec30:5adeedcb-98a6-48f7-aca0-f5f4febbfd11:1",
+              "case-coverage:1f0ef128-2d59-44f7-af6f-6c80b7008447:b9403dd9-8892-436a-99b8-a80d035aec30:8a7f30fb-4a26-4735-a236-d3d4393f7b9b:1"
+            ],
+            "criterionResults": [
+              {
+                "criterionId": "09fcbd81-aa6d-43f8-8133-78691a971902",
+                "state": "unknown",
+                "reason": "criterion-rule-unavailable"
+              }
+            ],
+            "comparisonStatus": "conditioned",
+            "knownDifference": 1200,
+            "completeDifference": null,
+            "unresolvedConditions": [
+              "cost-coverage-unresolved-or-source-mismatch",
+              "coverage:service:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "coverage:service_overlap:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "coverage:implementation:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "coverage:contract_exit:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "coverage:migration:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "coverage:taxes:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "coverage:training:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "coverage:internal_costs:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "coverage:other_relevant_costs:Cost categories still need evidence; a known service amount does not establish complete coverage.",
+              "comparison-requires-complete-current-coverage",
+              "criterion-rules-unavailable"
+            ]
+          },
+          "choiceRecorded": false,
+          "financialApplication": false
+        },
+        {
+          "mode": "decision-list",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-list",
+          "status": "ok"
+        },
+        {
+          "mode": "decision-portfolio-catalog",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-portfolio-catalog",
+          "status": "ok"
+        },
+        {
+          "stage": "portfolio-consumed-identical-alternatives",
+          "caseRef": {
+            "id": "1f0ef128-2d59-44f7-af6f-6c80b7008447",
+            "incarnation": "b9403dd9-8892-436a-99b8-a80d035aec30",
+            "version": 4
+          },
+          "alternativeIds": [
+            "5adeedcb-98a6-48f7-aca0-f5f4febbfd11",
+            "8a7f30fb-4a26-4735-a236-d3d4393f7b9b"
+          ],
+          "portfolioEvaluated": false
+        },
+        {
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-compare",
+          "status": "ok"
+        },
+        {
+          "mode": "decision-controls",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-controls",
+          "status": "ok"
+        },
+        {
+          "mode": "decision-criteria",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-criteria",
+          "status": "ok"
+        },
+        {
+          "stage": "human-numeric-rule-saved",
+          "caseRef": {
+            "id": "1f0ef128-2d59-44f7-af6f-6c80b7008447",
+            "incarnation": "b9403dd9-8892-436a-99b8-a80d035aec30",
+            "version": 4
+          },
+          "criterionId": "09fcbd81-aa6d-43f8-8133-78691a971902",
+          "ruleRef": "criterion-rule:9136a789da2384b18018b2f99dc63da0006b90b09882b8ea61de5506c4f4465c",
+          "ruleVersion": 1,
+          "operator": "lte",
+          "limit": 2000,
+          "unit": "USD",
+          "metricRef": "planner:known-subtotal-difference",
+          "evidenceRefs": [
+            {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "planner-version:067c244b-6385-4d74-a957-93175803243a:e94cd580-34d2-4164-b9ea-e83837090465:1",
+              "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+              "projectId": "global",
+              "refDigest": "57c4c84b74796614bded0ac8793fc9f9706344a8b7b68a267d811a876fe7fb45",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "planner",
+                "recordType": "planner-version",
+                "recordId": "067c244b-6385-4d74-a957-93175803243a",
+                "incarnation": "e94cd580-34d2-4164-b9ea-e83837090465",
+                "version": 1,
+                "fields": [
+                  "id",
+                  "name",
+                  "year",
+                  "locked",
+                  "closed",
+                  "hc",
+                  "lists",
+                  "lines",
+                  "projects",
+                  "fx",
+                  "summary",
+                  "hr",
+                  "restrictedHr",
+                  "fteInputsKnown",
+                  "hrMonthStates",
+                  "sharedEntities",
+                  "sharedAllocations"
+                ],
+                "period": {
+                  "start": "2027-01-01",
+                  "end": "2027-12-31"
+                },
+                "projectionDigest": "819fa2745995c8729b839913f95f68e175af4f2f3cb0f2600d3a6cafd6eaeb95"
+              }
+            },
+            {
+              "schema": "sf-evidence-v1",
+              "kind": "record",
+              "refId": "planner-version:e56f35c8-9590-46d4-b3c8-6764c402a941:4de3d96a-a72e-40ce-9bf2-d6caaf23835f:1",
+              "installationId": "8255e89f-e211-4682-bada-d273b0feb4cf",
+              "projectId": "global",
+              "refDigest": "01141512c60f171d6af50cb5a401f9f489760025c67f4a3fa02b757e3cfa4bf3",
+              "evidenceLevel": "observed",
+              "target": {
+                "surface": "planner",
+                "recordType": "planner-version",
+                "recordId": "e56f35c8-9590-46d4-b3c8-6764c402a941",
+                "incarnation": "4de3d96a-a72e-40ce-9bf2-d6caaf23835f",
+                "version": 1,
+                "fields": [
+                  "id",
+                  "name",
+                  "year",
+                  "locked",
+                  "closed",
+                  "hc",
+                  "lists",
+                  "lines",
+                  "projects",
+                  "fx",
+                  "summary",
+                  "hr",
+                  "restrictedHr",
+                  "fteInputsKnown",
+                  "hrMonthStates",
+                  "sharedEntities",
+                  "sharedAllocations"
+                ],
+                "period": {
+                  "start": "2027-01-01",
+                  "end": "2027-12-31"
+                },
+                "projectionDigest": "392f3115e1ef66e94028fe9897b6117db1e924f150d05047cbe13e2f178ed73a"
+              }
+            }
+          ],
+          "financialApproval": false,
+          "unknownCostsRemainPending": true
+        }
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "27402a9d-e520-42b1-9cde-8ca529c32327"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "8a21d1f4-e612-4e21-b32f-32391c99d70d"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "70d7db46-f548-4313-8b01-c86d8e7223cc"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "4d2951de-dfce-4eb6-b830-9197d7b6badb"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "79788a30-63a5-4517-b707-747f574582db"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "7a7e83b5-5161-42c3-9bdb-32163d013d4e"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "ee63ad83-21e8-4937-a59b-7e9fc60479ab"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "3fa52120-961b-4be2-a48e-489fd2a84cbb"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "c935b4f0-230d-43e2-9287-6ba7f5537e78"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "2db7a127-9c5a-47e0-8a0f-450b733e7bc4"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "3520e967-69da-4632-8797-f1eda4aad470"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "f00a2f87-80c0-4bba-896d-f8008e2b6986"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-command",
+          "operation": "sf_case_draft",
+          "idempotencyKey": "fde55ea3-a93e-430f-80db-a89a68b810ca"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "0586d729-5c04-4e7b-9d00-cec2e9b6325b"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "2ae87d77-ba67-46e6-b0de-611e0ec0bf50"
+        },
+        {
+          "method": "GET",
+          "mode": "bi-options"
+        },
+        {
+          "method": "GET",
+          "mode": "bi-data"
+        },
+        {
+          "method": "GET",
+          "mode": "bi-data"
+        },
+        {
+          "method": "GET",
+          "mode": "bi-data"
+        },
+        {
+          "method": "GET",
+          "mode": "bi-data"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-edit",
+          "idempotencyKey": "253b353d-6659-49bb-8057-ab032ad4dbbb"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "9bb488d6-646d-4449-9e9e-dd99e4b1127e"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "3c9d819e-6fb8-4365-8acb-e67754eb82c1"
+        },
+        {
+          "method": "GET",
+          "mode": "decision-controls"
+        },
+        {
+          "method": "GET",
+          "mode": "bi-options"
+        },
+        {
+          "method": "GET",
+          "mode": "decision-controls"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-coverage",
+          "idempotencyKey": "69a29131-794b-4726-92a6-a63668e63f79"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-promote",
+          "idempotencyKey": "586f71b8-ef57-497e-9e38-e49482315306"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "01c09b05-f58e-4328-ae68-54632d85b391"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "e3f36d9a-5b88-4a17-a232-5719db5928b5"
+        },
+        {
+          "method": "GET",
+          "mode": "decision-controls"
+        },
+        {
+          "method": "GET",
+          "mode": "bi-options"
+        },
+        {
+          "method": "GET",
+          "mode": "decision-controls"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-coverage",
+          "idempotencyKey": "9dc6eb6d-e116-4b3b-ae7a-c2bed7db8a17"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-promote",
+          "idempotencyKey": "aea75d19-1816-43bc-90a0-400910de7cf9"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-promote",
+          "idempotencyKey": "aea75d19-1816-43bc-90a0-400910de7cf9"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "3870036d-59c1-4077-9758-7d8a3f8b0d23"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "fdbe20f9-fd9a-4e98-ba5b-f09f2f2bad9e"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "01ff92a7-5f70-41cd-80cb-df1c92281fb3"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "d18c0c89-5bae-487e-bf84-5acc2aef61e0"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "832173f3-2f92-4599-a3c8-2659211723aa"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "d9e154fe-cfc0-4c74-ac4a-f3cea4bf86d3"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "726a6bab-23a9-4d19-a360-15dbd2d142ff"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-compare",
+          "idempotencyKey": "f49efad2-789e-40d3-937e-dab7a2eb150a"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "6b8d476f-74d0-4171-9661-0d7b118f1549"
+        },
+        {
+          "method": "GET",
+          "mode": "decision-list"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-catalog",
+          "idempotencyKey": "dcfff684-b180-4a2f-b671-3c346e52eb58"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "4b039014-cc2b-4986-938c-2412b449bd38"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "c24d7afc-22e8-4396-a06c-96604bc3e550"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "a89b9b8b-13c6-4a17-9f1a-f42a746c082b"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-compare",
+          "idempotencyKey": "c2c8253d-ab21-40e4-9af7-41c4e5c16c57"
+        },
+        {
+          "method": "GET",
+          "mode": "decision-controls"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-criteria",
+          "idempotencyKey": "c1e340cf-0811-4eee-ba4b-38d4132b3b8c"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-compare",
+          "idempotencyKey": "956173d2-2332-44e2-a8cb-54627c9e3b42"
+        }
+      ],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "application/json; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/planner",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "requestfailed",
+          "method": "POST",
+          "path": "/sucafina/planner",
+          "mode": "workbench-views",
+          "error": "net::ERR_ABORTED"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "bi-options",
+          "httpStatus": 200,
+          "contentType": "application/json"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "bi-data",
+          "httpStatus": 200,
+          "contentType": "application/json"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "bi-data",
+          "httpStatus": 200,
+          "contentType": "application/json"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "bi-data",
+          "httpStatus": 200,
+          "contentType": "application/json"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "bi-data",
+          "httpStatus": 200,
+          "contentType": "application/json"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-edit",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-controls",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "bi-options",
+          "httpStatus": 200,
+          "contentType": "application/json"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-controls",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-coverage",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-promote",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-controls",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "bi-options",
+          "httpStatus": 200,
+          "contentType": "application/json"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-controls",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-coverage",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "requestfailed",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-promote",
+          "error": "net::ERR_CONNECTION_RESET"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-promote",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-list",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-catalog",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-controls",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-criteria",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "requestfailed",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-compare",
+          "error": "net::ERR_ABORTED"
+        }
+      ],
+      "body_completed": false,
+      "observed_snapshot": "047ca9e132329c5e41a1c95df3855f60adf3b295"
+    },
+    {
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 21,
+      "configured_budget_ms": 180000,
+      "runtime_status": "failed",
+      "test_status": "unexpected",
+      "expected_status": "passed",
+      "duration_ms": 14645,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "create the real requisition through its human form",
+          "duration": 10058,
+          "error": {
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+            "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at createRequisition (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts:7:22)\n    at procurementClosureJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:11:21)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:26:5\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:76:5)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+              "column": 22,
+              "line": 7
+            },
+            "snippet": "   at sucafina/decisions-support/procurement-source.ts:7\n\n\u001b[0m \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m`${origin}/sucafina/procurement?page=Requests`\u001b[39m)\n \u001b[90m  6 |\u001b[39m   \u001b[36mconst\u001b[39m form \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form[data-command=\"create\"][data-page=\"Requests\"]'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(form)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\n \u001b[90m    |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m \u001b[32m\"CI Decisions — explicit requisition proposal\"\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Title\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mfill(title)\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Type\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(\u001b[32m\"service\"\u001b[39m)\u001b[0m"
+          }
+        }
+      ],
+      "failure": {
+        "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n",
+        "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('form[data-command=\"create\"][data-page=\"Requests\"]')\nExpected: \u001b[32m1\u001b[39m\nReceived: \u001b[31m0\u001b[39m\nTimeout:  10000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 10000ms\u001b[22m\n\u001b[2m  - waiting for locator('form[data-command=\"create\"][data-page=\"Requests\"]')\u001b[22m\n\u001b[2m    14 × locator resolved to 0 elements\u001b[22m\n\u001b[2m       - unexpected value \"0\"\u001b[22m\n\n    at createRequisition (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts:7:22)\n    at procurementClosureJourney (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-closure.ts:11:21)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:26:5\n    at withInstallation (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/journey.ts:76:5)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions.spec.ts:25:3",
+        "location": {
+          "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/decisions-support/procurement-source.ts",
+          "column": 22,
+          "line": 7
+        },
+        "snippet": "   at sucafina/decisions-support/procurement-source.ts:7\n\n\u001b[0m \u001b[90m  5 |\u001b[39m   \u001b[36mawait\u001b[39m page\u001b[33m.\u001b[39mgoto(\u001b[32m`${origin}/sucafina/procurement?page=Requests`\u001b[39m)\n \u001b[90m  6 |\u001b[39m   \u001b[36mconst\u001b[39m form \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mlocator(\u001b[32m'form[data-command=\"create\"][data-page=\"Requests\"]'\u001b[39m)\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m  7 |\u001b[39m   \u001b[36mawait\u001b[39m expect(form)\u001b[33m.\u001b[39mtoHaveCount(\u001b[35m1\u001b[39m)\n \u001b[90m    |\u001b[39m                      \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m  8 |\u001b[39m   \u001b[36mconst\u001b[39m title \u001b[33m=\u001b[39m \u001b[32m\"CI Decisions — explicit requisition proposal\"\u001b[39m\n \u001b[90m  9 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Title\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mfill(title)\n \u001b[90m 10 |\u001b[39m   \u001b[36mawait\u001b[39m form\u001b[33m.\u001b[39mgetByLabel(\u001b[32m\"Type\"\u001b[39m\u001b[33m,\u001b[39m { exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\u001b[33m.\u001b[39mselectOption(\u001b[32m\"service\"\u001b[39m)\u001b[0m"
+      },
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain"
+        },
+        {
+          "name": "screenshot",
+          "contentType": "image/png",
+          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/test-failed-1.png"
+        },
+        {
+          "name": "video",
+          "contentType": "video/webm",
+          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/video.webm"
+        },
+        {
+          "name": "error-context",
+          "contentType": "text/markdown",
+          "path": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md"
+        }
+      ],
+      "observations": [],
+      "requests": [],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/procurement",
+          "mode": null,
+          "httpStatus": 503,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "body_completed": false,
+      "observed_snapshot": "047ca9e132329c5e41a1c95df3855f60adf3b295"
+    },
+    {
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 35,
+      "configured_budget_ms": 180000,
+      "runtime_status": "passed",
+      "test_status": "expected",
+      "expected_status": "passed",
+      "duration_ms": 10349,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "enter the installed Workbench from the dashboard",
+          "duration": 265
+        },
+        {
+          "title": "submit one explicit human intention",
+          "duration": 1784
+        },
+        {
+          "title": "read the exact saved case and preserve its identity after reload",
+          "duration": 1563
+        },
+        {
+          "title": "save a new human revision and reopen the persisted current version",
+          "duration": 2231
+        }
+      ],
+      "failure": null,
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain"
+        }
+      ],
+      "observations": [
+        {
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "workbench-command",
+          "status": "ok",
+          "outputRef": "case:c1afc911-3048-43c7-98db-cd8f5e8cf04f:25464a5c-84bc-4b54-8c3c-1e0348abeeb3"
+        },
+        {
+          "stage": "case-reopened",
+          "caseRef": "case:c1afc911-3048-43c7-98db-cd8f5e8cf04f:25464a5c-84bc-4b54-8c3c-1e0348abeeb3",
+          "version": 1,
+          "financialApplication": false
+        },
+        {
+          "mode": "decision-edit",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-edit",
+          "status": "ok"
+        },
+        {
+          "stage": "case-edited-and-reopened",
+          "caseRef": "case:c1afc911-3048-43c7-98db-cd8f5e8cf04f:25464a5c-84bc-4b54-8c3c-1e0348abeeb3",
+          "version": 2,
+          "financialApplication": false
+        }
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "5232e8da-39d3-4025-959e-f8423ebf7c53"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "ec7b3a5d-f3dd-4582-82b3-c4dd837cf8df"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-command",
+          "operation": "sf_case_draft",
+          "idempotencyKey": "81317e49-a0e6-4af5-81d5-62b3bc66da0b"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "b7c3accd-79e8-4175-9c3a-b9a1cb75eafb"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "2cffe46f-d139-421d-a811-6e63d038bc8b"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "be0f396f-fb0c-4791-b255-ede4ac02a416"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "1f064634-e363-4a34-9f68-16e7426b30d3"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "b38385c3-6e89-40f1-b5da-380512678d65"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "c0645c26-b19b-4625-a33d-3a4e4ef87a9f"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "85273c9a-d4dd-43f8-9b5f-f214e8c7dabd"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-edit",
+          "idempotencyKey": "c8f522cd-e244-4d73-8dbb-5557253cd7e1"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "d8366adc-542b-4456-adae-b2a8c391ffb4"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "7755700a-d085-4e7f-a5c1-b0360c816dc1"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "ec071837-b004-4271-9bb1-1ce946e04878"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "3760cd56-d63f-4ea3-806b-2a5fdc0c4f45"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "d05e3f4f-eeca-42cd-b7df-0530253ed68e"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "37de6e50-b591-42d6-96ee-5e55842cbf53"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "fe9d3808-a6ba-4d8f-9ebf-626ed65ecb4e"
+        }
+      ],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-edit",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "body_completed": true,
+      "observed_snapshot": "047ca9e132329c5e41a1c95df3855f60adf3b295"
+    },
+    {
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 87,
+      "configured_budget_ms": 180000,
+      "runtime_status": "passed",
+      "test_status": "expected",
+      "expected_status": "passed",
+      "duration_ms": 6933,
+      "retry": 0,
+      "steps": [
+        {
+          "title": "bind discovery to the exact empty case without inventing alternatives",
+          "duration": 241
+        }
+      ],
+      "failure": null,
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain"
+        }
+      ],
+      "observations": [
+        {
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "workbench-command",
+          "status": "ok",
+          "outputRef": "case:5ee34e04-ba82-488c-b774-5884d717b2f5:4ba044c4-deb6-42a6-8e48-497a50cdfe91"
+        },
+        {
+          "mode": "decision-list",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-list",
+          "status": "ok"
+        },
+        {
+          "mode": "decision-portfolio-catalog",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "mode": "decision-portfolio-catalog",
+          "status": "ok"
+        },
+        {
+          "stage": "alternative-catalog",
+          "caseRef": "case:5ee34e04-ba82-488c-b774-5884d717b2f5:4ba044c4-deb6-42a6-8e48-497a50cdfe91",
+          "catalog": {
+            "cases": [
+              {
+                "caseRef": {
+                  "id": "5ee34e04-ba82-488c-b774-5884d717b2f5",
+                  "incarnation": "4ba044c4-deb6-42a6-8e48-497a50cdfe91",
+                  "version": 1
+                },
+                "caseVersion": 1,
+                "objective": "CI Decisions — annual service decision",
+                "horizon": {
+                  "start": "2027-01-01",
+                  "end": "2027-12-31"
+                },
+                "currency": "USD",
+                "criteria": [
+                  {
+                    "id": "eb9ca9f7-9521-46ef-98d6-8177d08e7a25",
+                    "description": "Preserve the declared annual horizon",
+                    "required": true
+                  },
+                  {
+                    "id": "8c4d8067-b4f1-43fa-bd8b-c226ea644085",
+                    "description": "Require explicit human approval before any financial change",
+                    "required": true
+                  }
+                ],
+                "alternatives": []
+              }
+            ],
+            "explorationLimit": {
+              "minimum": 1,
+              "maximum": 1024
+            },
+            "parameterBounds": {
+              "state": "unavailable",
+              "reason": "domain-bounds-not-declared"
+            }
+          }
+        }
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "ca011d9d-276a-41a0-8bdd-16d9253ce727"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "8d646e55-b522-4bb1-ab25-aa4772550294"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-command",
+          "operation": "sf_case_draft",
+          "idempotencyKey": "2e81b78e-9518-4533-b775-8a243560f9a0"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "78c059a5-88ee-4c5a-9b80-a3cfbd1a43cb"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "dbfa2f17-738e-4137-811f-f78f7715bd05"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "4693aa6a-4139-45b2-83c5-de5168557880"
+        },
+        {
+          "method": "GET",
+          "mode": "decision-list"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-catalog",
+          "idempotencyKey": "88103dd6-80f1-4013-8c26-5d93173b4e20"
+        }
+      ],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-command",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-list",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-catalog",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "body_completed": true,
+      "observed_snapshot": "047ca9e132329c5e41a1c95df3855f60adf3b295"
+    },
+    {
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 135,
+      "configured_budget_ms": 180000,
+      "runtime_status": "passed",
+      "test_status": "expected",
+      "expected_status": "passed",
+      "duration_ms": 7419,
+      "retry": 0,
+      "steps": [],
+      "failure": null,
+      "attachments": [
+        {
+          "name": "decisions-observations.json",
+          "contentType": "application/json"
+        },
+        {
+          "name": "wp03-real-cli.log",
+          "contentType": "text/plain"
+        }
+      ],
+      "observations": [
+        {
+          "stage": "creation-response-dropped",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "stage": "lost-response-draft-preserved",
+          "caseRef": "case:f484a357-8364-45c5-b7af-0507893a89a7:464072f3-2546-447c-9358-069e8798c670",
+          "creationSubmits": 1
+        },
+        {
+          "stage": "lost-response-reconciled",
+          "caseRef": "case:f484a357-8364-45c5-b7af-0507893a89a7:464072f3-2546-447c-9358-069e8798c670",
+          "creationSubmits": 1
+        }
+      ],
+      "requests": [
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "c42b3969-7650-4f26-876c-020346391945"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "4aad470a-b95d-4494-872b-f86e34d9a869"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-command",
+          "operation": "sf_case_draft",
+          "idempotencyKey": "1b2128eb-0a18-4d54-be37-dfd48644c589"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-views",
+          "idempotencyKey": "0241a55b-41dd-4bb4-9036-f29e45e8ae8f"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "1f7dc047-0d15-4216-8d4f-a005092fab55"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "2dcc066f-e994-46b8-b080-4ff25f60f102"
+        },
+        {
+          "method": "GET",
+          "mode": "workbench-case"
+        },
+        {
+          "method": "POST",
+          "mode": "workbench-analysis",
+          "idempotencyKey": "f3902f5c-3a2d-4301-87d8-769f980b84b3"
+        },
+        {
+          "method": "POST",
+          "mode": "decision-portfolio-results",
+          "idempotencyKey": "4939c188-3b19-4ea8-a546-8eecd3783149"
+        }
+      ],
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": null,
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "requestfailed",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-command",
+          "error": "net::ERR_CONNECTION_RESET"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-views",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "decision-portfolio-results",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-case",
+          "httpStatus": 200,
+          "contentType": "text/html; charset=utf-8"
+        },
+        {
+          "event": "response",
+          "method": "POST",
+          "path": "/sucafina/dashboard",
+          "mode": "workbench-analysis",
+          "httpStatus": 200,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "body_completed": true,
+      "observed_snapshot": "047ca9e132329c5e41a1c95df3855f60adf3b295"
+    }
+  ],
+  "timing": {
+    "schema": "sf2-mission52-diagnostic-profile-v2",
+    "run_id": 43679231538,
+    "purpose": "DIAGNOSTIC_ONLY_NOT_FINAL_ACCEPTANCE",
+    "profile_records": 270,
+    "allowed_fields_only": true,
+    "pairing_key": [
+      "case_line",
+      "stage",
+      "id"
+    ],
+    "paired_calls": [
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 1,
+        "start": 39313.409547,
+        "end": 39622.340293,
+        "elapsed_ms": 308.9307459999982,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 2,
+        "start": 39622.727272,
+        "end": 39786.556702,
+        "elapsed_ms": 163.82943000000523,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 3,
+        "start": 39788.057146,
+        "end": 39809.606151,
+        "elapsed_ms": 21.54900500000076,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 4,
+        "start": 39810.363509,
+        "end": 39965.434572,
+        "elapsed_ms": 155.07106299999577,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 5,
+        "start": 39966.741089,
+        "end": 39987.495829,
+        "elapsed_ms": 20.754739999996673,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 6,
+        "start": 39988.289849,
+        "end": 40310.502836,
+        "elapsed_ms": 322.212986999999,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 7,
+        "start": 40311.335415,
+        "end": 40464.490468,
+        "elapsed_ms": 153.15505300000223,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 8,
+        "start": 40465.995294,
+        "end": 40616.694281,
+        "elapsed_ms": 150.69898699999612,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 2,
+        "start": 39305.465783,
+        "end": 40620.252162,
+        "elapsed_ms": 1314.7863789999974,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 3,
+        "start": 40620.555061,
+        "end": 40628.698155,
+        "elapsed_ms": 8.14309399999911,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 4,
+        "start": 40628.738817,
+        "end": 40801.811833,
+        "elapsed_ms": 173.0730160000021,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 5,
+        "start": 40801.999155,
+        "end": 40810.258449,
+        "elapsed_ms": 8.259294000003138,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 6,
+        "start": 40810.298735,
+        "end": 40969.959638,
+        "elapsed_ms": 159.6609030000036,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 9,
+        "start": 40976.862586,
+        "end": 41293.163458,
+        "elapsed_ms": 316.3008719999998,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 10,
+        "start": 41293.408081,
+        "end": 41444.908234,
+        "elapsed_ms": 151.50015300000086,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 11,
+        "start": 41446.203883,
+        "end": 41467.144115,
+        "elapsed_ms": 20.940232000000833,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 12,
+        "start": 41467.946941,
+        "end": 41616.668858,
+        "elapsed_ms": 148.7219169999953,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 13,
+        "start": 41617.904294,
+        "end": 41638.532308,
+        "elapsed_ms": 20.628014000001713,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 14,
+        "start": 41639.269706,
+        "end": 41960.381493,
+        "elapsed_ms": 321.11178700000164,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 15,
+        "start": 41961.158252,
+        "end": 42113.940794,
+        "elapsed_ms": 152.78254200000083,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 16,
+        "start": 42115.35598,
+        "end": 42278.39061,
+        "elapsed_ms": 163.03463000000193,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 7,
+        "start": 40970.466264,
+        "end": 42281.932623,
+        "elapsed_ms": 1311.4663589999982,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 8,
+        "start": 42293.418367,
+        "end": 42301.690687,
+        "elapsed_ms": 8.272320000003674,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 9,
+        "start": 42301.752386,
+        "end": 42458.662904,
+        "elapsed_ms": 156.91051799999696,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 10,
+        "start": 42458.855229,
+        "end": 42466.922893,
+        "elapsed_ms": 8.067664000001969,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 11,
+        "start": 42466.96192,
+        "end": 42637.707925,
+        "elapsed_ms": 170.74600500000088,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 12,
+        "start": 42639.466307,
+        "end": 42804.465843,
+        "elapsed_ms": 164.99953599999571,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 13,
+        "start": 42804.565317,
+        "end": 42964.434149,
+        "elapsed_ms": 159.8688320000001,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 17,
+        "start": 42970.615537,
+        "end": 43297.326398,
+        "elapsed_ms": 326.71086099999957,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 18,
+        "start": 43297.563947,
+        "end": 43446.048702,
+        "elapsed_ms": 148.48475499999768,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 19,
+        "start": 43447.273097,
+        "end": 43467.69648,
+        "elapsed_ms": 20.423383000001195,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 20,
+        "start": 43468.427215,
+        "end": 43629.775109,
+        "elapsed_ms": 161.34789399999863,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 21,
+        "start": 43631.051546,
+        "end": 43652.149549,
+        "elapsed_ms": 21.098002999999153,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 22,
+        "start": 43652.894474,
+        "end": 43956.982542,
+        "elapsed_ms": 304.0880679999973,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 23,
+        "start": 43957.769619,
+        "end": 44130.647298,
+        "elapsed_ms": 172.87767900000472,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 24,
+        "start": 44132.095123,
+        "end": 44284.201974,
+        "elapsed_ms": 152.1068510000041,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 14,
+        "start": 42964.461609,
+        "end": 44287.720131,
+        "elapsed_ms": 1323.2585220000037,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 15,
+        "start": 44298.450237,
+        "end": 44306.939119,
+        "elapsed_ms": 8.488882000005106,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 16,
+        "start": 44306.977368,
+        "end": 44479.207504,
+        "elapsed_ms": 172.2301359999983,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 17,
+        "start": 44479.406221,
+        "end": 44487.909686,
+        "elapsed_ms": 8.503465000001597,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 18,
+        "start": 44487.953583,
+        "end": 44660.61918,
+        "elapsed_ms": 172.66559699999925,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "planner.compareScenarios",
+        "id": 1,
+        "start": 39303.700894,
+        "end": 44662.16519,
+        "elapsed_ms": 5358.464295999998,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "decision.compare",
+        "id": 1,
+        "start": 37867.031844,
+        "end": 46111.017139,
+        "elapsed_ms": 8243.985295000006,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 25,
+        "start": 52813.312377,
+        "end": 53118.229305,
+        "elapsed_ms": 304.91692799999873,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 26,
+        "start": 53118.513298,
+        "end": 53289.682167,
+        "elapsed_ms": 171.168869000001,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 27,
+        "start": 53291.081636,
+        "end": 53312.572468,
+        "elapsed_ms": 21.490831999995862,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 28,
+        "start": 53313.332529,
+        "end": 53465.493925,
+        "elapsed_ms": 152.16139600000315,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 29,
+        "start": 53466.752992,
+        "end": 53487.310588,
+        "elapsed_ms": 20.55759599999874,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 30,
+        "start": 53488.068964,
+        "end": 53804.030999,
+        "elapsed_ms": 315.9620350000041,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 31,
+        "start": 53804.912137,
+        "end": 53956.206693,
+        "elapsed_ms": 151.29455600000074,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 32,
+        "start": 53957.727962,
+        "end": 54107.230804,
+        "elapsed_ms": 149.5028420000017,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 20,
+        "start": 52806.609802,
+        "end": 54110.816608,
+        "elapsed_ms": 1304.206806000002,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 21,
+        "start": 54110.886708,
+        "end": 54119.076616,
+        "elapsed_ms": 8.189908000000287,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 22,
+        "start": 54119.128136,
+        "end": 54300.230659,
+        "elapsed_ms": 181.10252300000138,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 23,
+        "start": 54300.446623,
+        "end": 54308.674805,
+        "elapsed_ms": 8.228181999998924,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 24,
+        "start": 54308.719396,
+        "end": 54466.832936,
+        "elapsed_ms": 158.11353999999847,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 33,
+        "start": 54473.694076,
+        "end": 54790.735305,
+        "elapsed_ms": 317.0412290000022,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 34,
+        "start": 54790.98521,
+        "end": 54941.073996,
+        "elapsed_ms": 150.08878600000025,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 35,
+        "start": 54942.399961,
+        "end": 54963.071913,
+        "elapsed_ms": 20.671951999996963,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 36,
+        "start": 54963.884503,
+        "end": 55113.088241,
+        "elapsed_ms": 149.20373799999652,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 37,
+        "start": 55114.372819,
+        "end": 55134.49639,
+        "elapsed_ms": 20.12357100000372,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 38,
+        "start": 55135.242502,
+        "end": 55456.246495,
+        "elapsed_ms": 321.00399299999845,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 39,
+        "start": 55457.040431,
+        "end": 55606.854791,
+        "elapsed_ms": 149.81435999999667,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 40,
+        "start": 55608.225074,
+        "end": 55773.283323,
+        "elapsed_ms": 165.05824900000152,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 25,
+        "start": 54467.103298,
+        "end": 55776.818139,
+        "elapsed_ms": 1309.714841000001,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 26,
+        "start": 55787.331523,
+        "end": 55795.528856,
+        "elapsed_ms": 8.197332999996434,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 27,
+        "start": 55795.567676,
+        "end": 55952.396106,
+        "elapsed_ms": 156.8284300000014,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 28,
+        "start": 55952.606938,
+        "end": 55960.723438,
+        "elapsed_ms": 8.116500000003725,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 29,
+        "start": 55960.761877,
+        "end": 56128.981349,
+        "elapsed_ms": 168.21947200000432,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 30,
+        "start": 56130.418609,
+        "end": 56309.562694,
+        "elapsed_ms": 179.1440849999999,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 31,
+        "start": 56309.642713,
+        "end": 56470.095887,
+        "elapsed_ms": 160.45317400000204,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 41,
+        "start": 56476.412635,
+        "end": 56796.595727,
+        "elapsed_ms": 320.1830919999993,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 42,
+        "start": 56796.831325,
+        "end": 56946.01857,
+        "elapsed_ms": 149.18724500000098,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 43,
+        "start": 56947.280311,
+        "end": 56967.986878,
+        "elapsed_ms": 20.706567000001087,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 44,
+        "start": 56968.729757,
+        "end": 57129.855736,
+        "elapsed_ms": 161.12597899999673,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 45,
+        "start": 57131.066237,
+        "end": 57151.72832,
+        "elapsed_ms": 20.662083000002895,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 46,
+        "start": 57152.436936,
+        "end": 57457.48536,
+        "elapsed_ms": 305.0484240000005,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 47,
+        "start": 57458.261565,
+        "end": 57622.617443,
+        "elapsed_ms": 164.35587800000212,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 48,
+        "start": 57624.049793,
+        "end": 57774.526657,
+        "elapsed_ms": 150.47686400000384,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 32,
+        "start": 56470.124634,
+        "end": 57777.975698,
+        "elapsed_ms": 1307.8510640000022,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 33,
+        "start": 57788.298359,
+        "end": 57796.396888,
+        "elapsed_ms": 8.0985290000026,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 34,
+        "start": 57796.443204,
+        "end": 57968.70355,
+        "elapsed_ms": 172.26034599999548,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 35,
+        "start": 57968.908282,
+        "end": 57977.434742,
+        "elapsed_ms": 8.526460000000952,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 36,
+        "start": 57977.472224,
+        "end": 58136.101731,
+        "elapsed_ms": 158.6295070000051,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "planner.compareScenarios",
+        "id": 19,
+        "start": 52805.22154,
+        "end": 58137.511908,
+        "elapsed_ms": 5332.290368000002,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "decision.compare",
+        "id": 2,
+        "start": 51364.666509,
+        "end": 59565.956525,
+        "elapsed_ms": 8201.290015999999,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 49,
+        "start": 65141.911798,
+        "end": 65458.343497,
+        "elapsed_ms": 316.43169900000066,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 50,
+        "start": 65458.646998,
+        "end": 65607.671714,
+        "elapsed_ms": 149.0247159999999,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 51,
+        "start": 65608.970523,
+        "end": 65629.821464,
+        "elapsed_ms": 20.850940999996965,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 52,
+        "start": 65630.627377,
+        "end": 65793.766439,
+        "elapsed_ms": 163.139062000002,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 53,
+        "start": 65795.034644,
+        "end": 65815.605375,
+        "elapsed_ms": 20.570730999999796,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 54,
+        "start": 65816.315472,
+        "end": 66119.761191,
+        "elapsed_ms": 303.44571899999573,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 55,
+        "start": 66120.599312,
+        "end": 66283.238669,
+        "elapsed_ms": 162.63935699999274,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 56,
+        "start": 66284.662297,
+        "end": 66439.721707,
+        "elapsed_ms": 155.05941000000166,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 38,
+        "start": 65135.266857,
+        "end": 66443.22407,
+        "elapsed_ms": 1307.9572129999942,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 39,
+        "start": 66443.283714,
+        "end": 66451.531731,
+        "elapsed_ms": 8.248016999990796,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 40,
+        "start": 66451.595601,
+        "end": 66622.852406,
+        "elapsed_ms": 171.2568050000118,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 41,
+        "start": 66623.137656,
+        "end": 66631.499895,
+        "elapsed_ms": 8.362238999994588,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 42,
+        "start": 66631.558899,
+        "end": 66791.378733,
+        "elapsed_ms": 159.819834000009,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 57,
+        "start": 66798.236433,
+        "end": 67116.600579,
+        "elapsed_ms": 318.36414600000717,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 58,
+        "start": 67116.86085,
+        "end": 67268.774527,
+        "elapsed_ms": 151.9136770000041,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 59,
+        "start": 67270.018867,
+        "end": 67290.49792,
+        "elapsed_ms": 20.4790529999882,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 60,
+        "start": 67291.228051,
+        "end": 67448.23521,
+        "elapsed_ms": 157.00715900000068,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 61,
+        "start": 67449.508822,
+        "end": 67470.285427,
+        "elapsed_ms": 20.776604999991832,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 62,
+        "start": 67471.045636,
+        "end": 67790.939287,
+        "elapsed_ms": 319.8936510000058,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 63,
+        "start": 67791.731181,
+        "end": 67941.670755,
+        "elapsed_ms": 149.93957400000363,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 64,
+        "start": 67943.09363,
+        "end": 68106.605739,
+        "elapsed_ms": 163.51210900000297,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 43,
+        "start": 66791.693534,
+        "end": 68110.066969,
+        "elapsed_ms": 1318.3734350000013,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 44,
+        "start": 68120.75379,
+        "end": 68128.97649,
+        "elapsed_ms": 8.22269999999844,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 45,
+        "start": 68129.015559,
+        "end": 68287.469867,
+        "elapsed_ms": 158.4543080000003,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 46,
+        "start": 68287.717908,
+        "end": 68295.815957,
+        "elapsed_ms": 8.098048999992898,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 47,
+        "start": 68295.856545,
+        "end": 68476.332672,
+        "elapsed_ms": 180.47612700000172,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 48,
+        "start": 68478.013862,
+        "end": 70691.892793,
+        "elapsed_ms": 2213.8789309999993,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 49,
+        "start": 70692.010633,
+        "end": 72932.571735,
+        "elapsed_ms": 2240.561102000007,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 65,
+        "start": 72939.152954,
+        "end": 73258.154167,
+        "elapsed_ms": 319.0012129999959,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 66,
+        "start": 73258.439703,
+        "end": 73418.160588,
+        "elapsed_ms": 159.72088500000245,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 67,
+        "start": 73420.210161,
+        "end": 73453.688917,
+        "elapsed_ms": 33.478756000011344,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 68,
+        "start": 73454.986199,
+        "end": 73696.116836,
+        "elapsed_ms": 241.13063699999475,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 69,
+        "start": 73697.89435,
+        "end": 73721.90798,
+        "elapsed_ms": 24.013630000001285,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 70,
+        "start": 73722.730971,
+        "end": 74041.591583,
+        "elapsed_ms": 318.86061200000404,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 71,
+        "start": 74042.397301,
+        "end": 74204.884448,
+        "elapsed_ms": 162.48714699999255,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 72,
+        "start": 74206.346138,
+        "end": 74358.533056,
+        "elapsed_ms": 152.1869180000067,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 50,
+        "start": 72932.673309,
+        "end": 74362.033618,
+        "elapsed_ms": 1429.360308999996,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 51,
+        "start": 74372.796532,
+        "end": 74380.887967,
+        "elapsed_ms": 8.091435000009369,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 52,
+        "start": 74380.93211,
+        "end": 74539.604346,
+        "elapsed_ms": 158.67223599999852,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 53,
+        "start": 74541.050568,
+        "end": 74551.234891,
+        "elapsed_ms": 10.184322999994038,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 54,
+        "start": 74551.274837,
+        "end": 74724.435332,
+        "elapsed_ms": 173.16049499998917,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "planner.compareScenarios",
+        "id": 37,
+        "start": 65133.975224,
+        "end": 74725.923176,
+        "elapsed_ms": 9591.947951999995,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "decision.compare",
+        "id": 3,
+        "start": 63716.69527,
+        "end": 76144.95929,
+        "elapsed_ms": 12428.264020000002,
+        "event": "end"
+      }
+    ],
+    "unpaired": [],
+    "planner_intervals": [
+      {
+        "case_line": 12,
+        "stage": "planner.compareScenarios",
+        "id": 1,
+        "start": 39303.700894,
+        "end": 44662.16519,
+        "elapsed_ms": 5358.464295999998,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "planner.compareScenarios",
+        "id": 19,
+        "start": 52805.22154,
+        "end": 58137.511908,
+        "elapsed_ms": 5332.290368000002,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "planner.compareScenarios",
+        "id": 37,
+        "start": 65133.975224,
+        "end": 74725.923176,
+        "elapsed_ms": 9591.947951999995,
+        "event": "end"
+      }
+    ],
+    "inside_planner": [
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 1,
+        "start": 39313.409547,
+        "end": 39622.340293,
+        "elapsed_ms": 308.9307459999982,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 2,
+        "start": 39622.727272,
+        "end": 39786.556702,
+        "elapsed_ms": 163.82943000000523,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 3,
+        "start": 39788.057146,
+        "end": 39809.606151,
+        "elapsed_ms": 21.54900500000076,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 4,
+        "start": 39810.363509,
+        "end": 39965.434572,
+        "elapsed_ms": 155.07106299999577,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 5,
+        "start": 39966.741089,
+        "end": 39987.495829,
+        "elapsed_ms": 20.754739999996673,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 6,
+        "start": 39988.289849,
+        "end": 40310.502836,
+        "elapsed_ms": 322.212986999999,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 7,
+        "start": 40311.335415,
+        "end": 40464.490468,
+        "elapsed_ms": 153.15505300000223,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 8,
+        "start": 40465.995294,
+        "end": 40616.694281,
+        "elapsed_ms": 150.69898699999612,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 2,
+        "start": 39305.465783,
+        "end": 40620.252162,
+        "elapsed_ms": 1314.7863789999974,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 3,
+        "start": 40620.555061,
+        "end": 40628.698155,
+        "elapsed_ms": 8.14309399999911,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 4,
+        "start": 40628.738817,
+        "end": 40801.811833,
+        "elapsed_ms": 173.0730160000021,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 5,
+        "start": 40801.999155,
+        "end": 40810.258449,
+        "elapsed_ms": 8.259294000003138,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 6,
+        "start": 40810.298735,
+        "end": 40969.959638,
+        "elapsed_ms": 159.6609030000036,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 9,
+        "start": 40976.862586,
+        "end": 41293.163458,
+        "elapsed_ms": 316.3008719999998,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 10,
+        "start": 41293.408081,
+        "end": 41444.908234,
+        "elapsed_ms": 151.50015300000086,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 11,
+        "start": 41446.203883,
+        "end": 41467.144115,
+        "elapsed_ms": 20.940232000000833,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 12,
+        "start": 41467.946941,
+        "end": 41616.668858,
+        "elapsed_ms": 148.7219169999953,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 13,
+        "start": 41617.904294,
+        "end": 41638.532308,
+        "elapsed_ms": 20.628014000001713,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 14,
+        "start": 41639.269706,
+        "end": 41960.381493,
+        "elapsed_ms": 321.11178700000164,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 15,
+        "start": 41961.158252,
+        "end": 42113.940794,
+        "elapsed_ms": 152.78254200000083,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 16,
+        "start": 42115.35598,
+        "end": 42278.39061,
+        "elapsed_ms": 163.03463000000193,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 7,
+        "start": 40970.466264,
+        "end": 42281.932623,
+        "elapsed_ms": 1311.4663589999982,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 8,
+        "start": 42293.418367,
+        "end": 42301.690687,
+        "elapsed_ms": 8.272320000003674,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 9,
+        "start": 42301.752386,
+        "end": 42458.662904,
+        "elapsed_ms": 156.91051799999696,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 10,
+        "start": 42458.855229,
+        "end": 42466.922893,
+        "elapsed_ms": 8.067664000001969,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 11,
+        "start": 42466.96192,
+        "end": 42637.707925,
+        "elapsed_ms": 170.74600500000088,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 12,
+        "start": 42639.466307,
+        "end": 42804.465843,
+        "elapsed_ms": 164.99953599999571,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 13,
+        "start": 42804.565317,
+        "end": 42964.434149,
+        "elapsed_ms": 159.8688320000001,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 17,
+        "start": 42970.615537,
+        "end": 43297.326398,
+        "elapsed_ms": 326.71086099999957,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 18,
+        "start": 43297.563947,
+        "end": 43446.048702,
+        "elapsed_ms": 148.48475499999768,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 19,
+        "start": 43447.273097,
+        "end": 43467.69648,
+        "elapsed_ms": 20.423383000001195,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 20,
+        "start": 43468.427215,
+        "end": 43629.775109,
+        "elapsed_ms": 161.34789399999863,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 21,
+        "start": 43631.051546,
+        "end": 43652.149549,
+        "elapsed_ms": 21.098002999999153,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 22,
+        "start": 43652.894474,
+        "end": 43956.982542,
+        "elapsed_ms": 304.0880679999973,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 23,
+        "start": 43957.769619,
+        "end": 44130.647298,
+        "elapsed_ms": 172.87767900000472,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 24,
+        "start": 44132.095123,
+        "end": 44284.201974,
+        "elapsed_ms": 152.1068510000041,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 14,
+        "start": 42964.461609,
+        "end": 44287.720131,
+        "elapsed_ms": 1323.2585220000037,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 15,
+        "start": 44298.450237,
+        "end": 44306.939119,
+        "elapsed_ms": 8.488882000005106,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 16,
+        "start": 44306.977368,
+        "end": 44479.207504,
+        "elapsed_ms": 172.2301359999983,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 17,
+        "start": 44479.406221,
+        "end": 44487.909686,
+        "elapsed_ms": 8.503465000001597,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 18,
+        "start": 44487.953583,
+        "end": 44660.61918,
+        "elapsed_ms": 172.66559699999925,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 25,
+        "start": 52813.312377,
+        "end": 53118.229305,
+        "elapsed_ms": 304.91692799999873,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 26,
+        "start": 53118.513298,
+        "end": 53289.682167,
+        "elapsed_ms": 171.168869000001,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 27,
+        "start": 53291.081636,
+        "end": 53312.572468,
+        "elapsed_ms": 21.490831999995862,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 28,
+        "start": 53313.332529,
+        "end": 53465.493925,
+        "elapsed_ms": 152.16139600000315,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 29,
+        "start": 53466.752992,
+        "end": 53487.310588,
+        "elapsed_ms": 20.55759599999874,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 30,
+        "start": 53488.068964,
+        "end": 53804.030999,
+        "elapsed_ms": 315.9620350000041,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 31,
+        "start": 53804.912137,
+        "end": 53956.206693,
+        "elapsed_ms": 151.29455600000074,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 32,
+        "start": 53957.727962,
+        "end": 54107.230804,
+        "elapsed_ms": 149.5028420000017,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 20,
+        "start": 52806.609802,
+        "end": 54110.816608,
+        "elapsed_ms": 1304.206806000002,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 21,
+        "start": 54110.886708,
+        "end": 54119.076616,
+        "elapsed_ms": 8.189908000000287,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 22,
+        "start": 54119.128136,
+        "end": 54300.230659,
+        "elapsed_ms": 181.10252300000138,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 23,
+        "start": 54300.446623,
+        "end": 54308.674805,
+        "elapsed_ms": 8.228181999998924,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 24,
+        "start": 54308.719396,
+        "end": 54466.832936,
+        "elapsed_ms": 158.11353999999847,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 33,
+        "start": 54473.694076,
+        "end": 54790.735305,
+        "elapsed_ms": 317.0412290000022,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 34,
+        "start": 54790.98521,
+        "end": 54941.073996,
+        "elapsed_ms": 150.08878600000025,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 35,
+        "start": 54942.399961,
+        "end": 54963.071913,
+        "elapsed_ms": 20.671951999996963,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 36,
+        "start": 54963.884503,
+        "end": 55113.088241,
+        "elapsed_ms": 149.20373799999652,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 37,
+        "start": 55114.372819,
+        "end": 55134.49639,
+        "elapsed_ms": 20.12357100000372,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 38,
+        "start": 55135.242502,
+        "end": 55456.246495,
+        "elapsed_ms": 321.00399299999845,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 39,
+        "start": 55457.040431,
+        "end": 55606.854791,
+        "elapsed_ms": 149.81435999999667,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 40,
+        "start": 55608.225074,
+        "end": 55773.283323,
+        "elapsed_ms": 165.05824900000152,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 25,
+        "start": 54467.103298,
+        "end": 55776.818139,
+        "elapsed_ms": 1309.714841000001,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 26,
+        "start": 55787.331523,
+        "end": 55795.528856,
+        "elapsed_ms": 8.197332999996434,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 27,
+        "start": 55795.567676,
+        "end": 55952.396106,
+        "elapsed_ms": 156.8284300000014,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 28,
+        "start": 55952.606938,
+        "end": 55960.723438,
+        "elapsed_ms": 8.116500000003725,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 29,
+        "start": 55960.761877,
+        "end": 56128.981349,
+        "elapsed_ms": 168.21947200000432,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 30,
+        "start": 56130.418609,
+        "end": 56309.562694,
+        "elapsed_ms": 179.1440849999999,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 31,
+        "start": 56309.642713,
+        "end": 56470.095887,
+        "elapsed_ms": 160.45317400000204,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 41,
+        "start": 56476.412635,
+        "end": 56796.595727,
+        "elapsed_ms": 320.1830919999993,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 42,
+        "start": 56796.831325,
+        "end": 56946.01857,
+        "elapsed_ms": 149.18724500000098,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 43,
+        "start": 56947.280311,
+        "end": 56967.986878,
+        "elapsed_ms": 20.706567000001087,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 44,
+        "start": 56968.729757,
+        "end": 57129.855736,
+        "elapsed_ms": 161.12597899999673,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 45,
+        "start": 57131.066237,
+        "end": 57151.72832,
+        "elapsed_ms": 20.662083000002895,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 46,
+        "start": 57152.436936,
+        "end": 57457.48536,
+        "elapsed_ms": 305.0484240000005,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 47,
+        "start": 57458.261565,
+        "end": 57622.617443,
+        "elapsed_ms": 164.35587800000212,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 48,
+        "start": 57624.049793,
+        "end": 57774.526657,
+        "elapsed_ms": 150.47686400000384,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 32,
+        "start": 56470.124634,
+        "end": 57777.975698,
+        "elapsed_ms": 1307.8510640000022,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 33,
+        "start": 57788.298359,
+        "end": 57796.396888,
+        "elapsed_ms": 8.0985290000026,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 34,
+        "start": 57796.443204,
+        "end": 57968.70355,
+        "elapsed_ms": 172.26034599999548,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 35,
+        "start": 57968.908282,
+        "end": 57977.434742,
+        "elapsed_ms": 8.526460000000952,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 36,
+        "start": 57977.472224,
+        "end": 58136.101731,
+        "elapsed_ms": 158.6295070000051,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 49,
+        "start": 65141.911798,
+        "end": 65458.343497,
+        "elapsed_ms": 316.43169900000066,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 50,
+        "start": 65458.646998,
+        "end": 65607.671714,
+        "elapsed_ms": 149.0247159999999,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 51,
+        "start": 65608.970523,
+        "end": 65629.821464,
+        "elapsed_ms": 20.850940999996965,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 52,
+        "start": 65630.627377,
+        "end": 65793.766439,
+        "elapsed_ms": 163.139062000002,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 53,
+        "start": 65795.034644,
+        "end": 65815.605375,
+        "elapsed_ms": 20.570730999999796,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 54,
+        "start": 65816.315472,
+        "end": 66119.761191,
+        "elapsed_ms": 303.44571899999573,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 55,
+        "start": 66120.599312,
+        "end": 66283.238669,
+        "elapsed_ms": 162.63935699999274,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 56,
+        "start": 66284.662297,
+        "end": 66439.721707,
+        "elapsed_ms": 155.05941000000166,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 38,
+        "start": 65135.266857,
+        "end": 66443.22407,
+        "elapsed_ms": 1307.9572129999942,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 39,
+        "start": 66443.283714,
+        "end": 66451.531731,
+        "elapsed_ms": 8.248016999990796,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 40,
+        "start": 66451.595601,
+        "end": 66622.852406,
+        "elapsed_ms": 171.2568050000118,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 41,
+        "start": 66623.137656,
+        "end": 66631.499895,
+        "elapsed_ms": 8.362238999994588,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 42,
+        "start": 66631.558899,
+        "end": 66791.378733,
+        "elapsed_ms": 159.819834000009,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 57,
+        "start": 66798.236433,
+        "end": 67116.600579,
+        "elapsed_ms": 318.36414600000717,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 58,
+        "start": 67116.86085,
+        "end": 67268.774527,
+        "elapsed_ms": 151.9136770000041,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 59,
+        "start": 67270.018867,
+        "end": 67290.49792,
+        "elapsed_ms": 20.4790529999882,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 60,
+        "start": 67291.228051,
+        "end": 67448.23521,
+        "elapsed_ms": 157.00715900000068,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 61,
+        "start": 67449.508822,
+        "end": 67470.285427,
+        "elapsed_ms": 20.776604999991832,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 62,
+        "start": 67471.045636,
+        "end": 67790.939287,
+        "elapsed_ms": 319.8936510000058,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 63,
+        "start": 67791.731181,
+        "end": 67941.670755,
+        "elapsed_ms": 149.93957400000363,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 64,
+        "start": 67943.09363,
+        "end": 68106.605739,
+        "elapsed_ms": 163.51210900000297,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 43,
+        "start": 66791.693534,
+        "end": 68110.066969,
+        "elapsed_ms": 1318.3734350000013,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 44,
+        "start": 68120.75379,
+        "end": 68128.97649,
+        "elapsed_ms": 8.22269999999844,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 45,
+        "start": 68129.015559,
+        "end": 68287.469867,
+        "elapsed_ms": 158.4543080000003,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 46,
+        "start": 68287.717908,
+        "end": 68295.815957,
+        "elapsed_ms": 8.098048999992898,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 47,
+        "start": 68295.856545,
+        "end": 68476.332672,
+        "elapsed_ms": 180.47612700000172,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 48,
+        "start": 68478.013862,
+        "end": 70691.892793,
+        "elapsed_ms": 2213.8789309999993,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.evaluateCriterion",
+        "id": 49,
+        "start": 70692.010633,
+        "end": 72932.571735,
+        "elapsed_ms": 2240.561102000007,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 65,
+        "start": 72939.152954,
+        "end": 73258.154167,
+        "elapsed_ms": 319.0012129999959,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 66,
+        "start": 73258.439703,
+        "end": 73418.160588,
+        "elapsed_ms": 159.72088500000245,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 67,
+        "start": 73420.210161,
+        "end": 73453.688917,
+        "elapsed_ms": 33.478756000011344,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 68,
+        "start": 73454.986199,
+        "end": 73696.116836,
+        "elapsed_ms": 241.13063699999475,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.projectForecast",
+        "id": 69,
+        "start": 73697.89435,
+        "end": 73721.90798,
+        "elapsed_ms": 24.013630000001285,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readHistoricalBatch",
+        "id": 70,
+        "start": 73722.730971,
+        "end": 74041.591583,
+        "elapsed_ms": 318.86061200000404,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 71,
+        "start": 74042.397301,
+        "end": 74204.884448,
+        "elapsed_ms": 162.48714699999255,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "stored.readCase",
+        "id": 72,
+        "start": 74206.346138,
+        "end": 74358.533056,
+        "elapsed_ms": 152.1869180000067,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.resolveMany",
+        "id": 50,
+        "start": 72932.673309,
+        "end": 74362.033618,
+        "elapsed_ms": 1429.360308999996,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 51,
+        "start": 74372.796532,
+        "end": 74380.887967,
+        "elapsed_ms": 8.091435000009369,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 52,
+        "start": 74380.93211,
+        "end": 74539.604346,
+        "elapsed_ms": 158.67223599999852,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateSource",
+        "id": 53,
+        "start": 74541.050568,
+        "end": 74551.234891,
+        "elapsed_ms": 10.184322999994038,
+        "event": "end"
+      },
+      {
+        "case_line": 12,
+        "stage": "scenario.validateCoverage",
+        "id": 54,
+        "start": 74551.274837,
+        "end": 74724.435332,
+        "elapsed_ms": 173.16049499998917,
+        "event": "end"
+      }
+    ],
+    "inside_planner_stage_totals": {
+      "stored.readHistoricalBatch": {
+        "count": 18,
+        "inclusive_elapsed_ms": 5679.508062000008,
+        "maximum_elapsed_ms": 326.71086099999957,
+        "values_ms": [
+          308.9307459999982,
+          322.212986999999,
+          316.3008719999998,
+          321.11178700000164,
+          326.71086099999957,
+          304.0880679999973,
+          304.91692799999873,
+          315.9620350000041,
+          317.0412290000022,
+          321.00399299999845,
+          320.1830919999993,
+          305.0484240000005,
+          316.43169900000066,
+          303.44571899999573,
+          318.36414600000717,
+          319.8936510000058,
+          319.0012129999959,
+          318.86061200000404
+        ]
+      },
+      "stored.readCase": {
+        "count": 36,
+        "inclusive_elapsed_ms": 5704.810367000013,
+        "maximum_elapsed_ms": 241.13063699999475,
+        "values_ms": [
+          163.82943000000523,
+          155.07106299999577,
+          153.15505300000223,
+          150.69898699999612,
+          151.50015300000086,
+          148.7219169999953,
+          152.78254200000083,
+          163.03463000000193,
+          148.48475499999768,
+          161.34789399999863,
+          172.87767900000472,
+          152.1068510000041,
+          171.168869000001,
+          152.16139600000315,
+          151.29455600000074,
+          149.5028420000017,
+          150.08878600000025,
+          149.20373799999652,
+          149.81435999999667,
+          165.05824900000152,
+          149.18724500000098,
+          161.12597899999673,
+          164.35587800000212,
+          150.47686400000384,
+          149.0247159999999,
+          163.139062000002,
+          162.63935699999274,
+          155.05941000000166,
+          151.9136770000041,
+          157.00715900000068,
+          149.93957400000363,
+          163.51210900000297,
+          159.72088500000245,
+          241.13063699999475,
+          162.48714699999255,
+          152.1869180000067
+        ]
+      },
+      "stored.projectForecast": {
+        "count": 18,
+        "inclusive_elapsed_ms": 389.775693999989,
+        "maximum_elapsed_ms": 33.478756000011344,
+        "values_ms": [
+          21.54900500000076,
+          20.754739999996673,
+          20.940232000000833,
+          20.628014000001713,
+          20.423383000001195,
+          21.098002999999153,
+          21.490831999995862,
+          20.55759599999874,
+          20.671951999996963,
+          20.12357100000372,
+          20.706567000001087,
+          20.662083000002895,
+          20.850940999996965,
+          20.570730999999796,
+          20.4790529999882,
+          20.776604999991832,
+          33.478756000011344,
+          24.013630000001285
+        ]
+      },
+      "scenario.resolveMany": {
+        "count": 9,
+        "inclusive_elapsed_ms": 11926.974927999996,
+        "maximum_elapsed_ms": 1429.360308999996,
+        "values_ms": [
+          1314.7863789999974,
+          1311.4663589999982,
+          1323.2585220000037,
+          1304.206806000002,
+          1309.714841000001,
+          1307.8510640000022,
+          1307.9572129999942,
+          1318.3734350000013,
+          1429.360308999996
+        ]
+      },
+      "scenario.validateSource": {
+        "count": 18,
+        "inclusive_elapsed_ms": 150.29839399999764,
+        "maximum_elapsed_ms": 10.184322999994038,
+        "values_ms": [
+          8.14309399999911,
+          8.259294000003138,
+          8.272320000003674,
+          8.067664000001969,
+          8.488882000005106,
+          8.503465000001597,
+          8.189908000000287,
+          8.228181999998924,
+          8.197332999996434,
+          8.116500000003725,
+          8.0985290000026,
+          8.526460000000952,
+          8.248016999990796,
+          8.362238999994588,
+          8.22269999999844,
+          8.098048999992898,
+          8.091435000009369,
+          10.184322999994038
+        ]
+      },
+      "scenario.validateCoverage": {
+        "count": 18,
+        "inclusive_elapsed_ms": 3002.2797980000178,
+        "maximum_elapsed_ms": 181.10252300000138,
+        "values_ms": [
+          173.0730160000021,
+          159.6609030000036,
+          156.91051799999696,
+          170.74600500000088,
+          172.2301359999983,
+          172.66559699999925,
+          181.10252300000138,
+          158.11353999999847,
+          156.8284300000014,
+          168.21947200000432,
+          172.26034599999548,
+          158.6295070000051,
+          171.2568050000118,
+          159.819834000009,
+          158.4543080000003,
+          180.47612700000172,
+          158.67223599999852,
+          173.16049499998917
+        ]
+      },
+      "scenario.evaluateCriterion": {
+        "count": 6,
+        "inclusive_elapsed_ms": 5118.905660000004,
+        "maximum_elapsed_ms": 2240.561102000007,
+        "values_ms": [
+          164.99953599999571,
+          159.8688320000001,
+          179.1440849999999,
+          160.45317400000204,
+          2213.8789309999993,
+          2240.561102000007
+        ]
+      }
+    },
+    "http_markers": [
+      {
+        "case_line": 12,
+        "stage": "http.before-withCase",
+        "at": 37562.673513
+      },
+      {
+        "case_line": 12,
+        "stage": "http.producer-start",
+        "at": 37864.028112,
+        "elapsed": 301.3569789999965
+      },
+      {
+        "case_line": 12,
+        "stage": "http.producer-end",
+        "at": 46113.296889,
+        "elapsed": 8550.624097,
+        "status": "ok"
+      },
+      {
+        "case_line": 12,
+        "stage": "http.after-withCase",
+        "at": 46118.340662,
+        "elapsed": 8555.667986,
+        "status": "ok"
+      },
+      {
+        "case_line": 12,
+        "stage": "http.before-withCase",
+        "at": 51059.081851
+      },
+      {
+        "case_line": 12,
+        "stage": "http.producer-start",
+        "at": 51362.903929,
+        "elapsed": 303.82317599999806
+      },
+      {
+        "case_line": 12,
+        "stage": "http.producer-end",
+        "at": 59567.971512,
+        "elapsed": 8508.890422999997,
+        "status": "ok"
+      },
+      {
+        "case_line": 12,
+        "stage": "http.after-withCase",
+        "at": 59571.124423,
+        "elapsed": 8512.043566,
+        "status": "ok"
+      },
+      {
+        "case_line": 12,
+        "stage": "http.before-withCase",
+        "at": 63410.622654
+      },
+      {
+        "case_line": 12,
+        "stage": "http.producer-start",
+        "at": 63715.044929,
+        "elapsed": 304.42458199999965
+      },
+      {
+        "case_line": 12,
+        "stage": "http.producer-end",
+        "at": 76147.050219,
+        "elapsed": 12736.428613999997,
+        "status": "ok"
+      },
+      {
+        "case_line": 12,
+        "stage": "http.after-withCase",
+        "at": 76150.404504,
+        "elapsed": 12739.782954000002,
+        "status": "ok"
+      }
+    ],
+    "limits": [
+      "Nested stage durations overlap and cannot be added as exclusive CPU.",
+      "Async elapsed includes descendants and waiting; no SQL/CPU/clone exclusive attribution.",
+      "Profile status does not expose a response body or qualify subsequent browser assertions.",
+      "Temporary profiling must be removed before final nominal qualification."
+    ]
+  },
+  "proof_files": [
+    {
+      "path": "m52-audit/diagnostic14-43679231538/artifact-download.json",
+      "bytes": 1769,
+      "sha256": "722eb93242184f0fa3f58558e05b5ce3695bb0977d648c3f71c57796c37adf0c"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/artifact-report-digests.json",
+      "bytes": 562,
+      "sha256": "46954b46acfffe7a514ecb4850d8fedcfdae6b79351142454bab9ab6d29891e4"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/runtime-extracted.json",
+      "bytes": 100188,
+      "sha256": "c6ffa0933ff9bf153e7b130853fcb8344b96b200b6ef870a895ba8d1110ae4d3"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/profile-records.json",
+      "bytes": 38786,
+      "sha256": "9620643891b59f3d72848ce6d11a365a54999117813ef135684a9eddd53a697d"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/profile-summary.json",
+      "bytes": 60188,
+      "sha256": "98a7aedb1cf2f67776ae8eed1001f42b5d71af5812ecdf754dc82cc75c5283f3"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/job-132706008571.log",
+      "bytes": 111604,
+      "sha256": "842a8026979e6d276a2e616466fd41ff990894ec9a77614e6cccfa76336e93f7"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/observations-line-12.json",
+      "bytes": 53847,
+      "sha256": "931dad2c8c5b5415642c1686d69f87333e126eb291cc3c27e62d5d3216645518"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/observations-line-21.json",
+      "bytes": 714,
+      "sha256": "8b690e43929ea7f6f49447d749a6ba6c5eff8b00c2f266d6e7e10711fa0f2278"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/observations-line-35.json",
+      "bytes": 10202,
+      "sha256": "7ad0ffde14e440af6948546b46ee577ef63d99d71e48bc0288fc615ead894979"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/observations-line-87.json",
+      "bytes": 6342,
+      "sha256": "6456e1422512385b02aa63c532f8d65b4df8af9b63bacf78f228bc8b7e16cd51"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/observations-line-135.json",
+      "bytes": 4877,
+      "sha256": "37cef378d17a977d5e69c837350833841e75a8b724b8b39a0f59164d99a51c5b"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/cli-line-12.log",
+      "bytes": 28585,
+      "sha256": "b7dc4e241d5002143e776a2a48ec3c3cbc2ca2e6e430502af9d11047780c8d23"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/cli-line-21.log",
+      "bytes": 272,
+      "sha256": "d6c7829e1e5404df5c2da89f704e7a1fd7e7e64f6f112cc4442008c8a3c2c9d0"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/cli-line-35.log",
+      "bytes": 781,
+      "sha256": "2fad25a7fe9736d7ff1b84c64bceeb77b43d5535a067ed7bfd81ef5594f2939c"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/cli-line-87.log",
+      "bytes": 781,
+      "sha256": "d578b8be6627ef8081f874dad7167e6eb089872d470d4f00d171165ce31cf158"
+    },
+    {
+      "path": "m52-audit/diagnostic14-43679231538/cli-line-135.log",
+      "bytes": 781,
+      "sha256": "8b2851d77780e2cab149b15d3f33b7d0a9c0e6de2adfaad60695ed0cdcab19a1"
+    }
+  ],
+  "instrumentation": {
+    "files": 4,
+    "patch": {
+      "path": "m52-work/diagnostic14/complete.patch",
+      "bytes": 13296,
+      "sha256": "abde93347fca6d89a0a59a4040438181a43d4b6350d0e9f95c813794f7173f7f"
+    },
+    "review": {
+      "path": "m52-audit/diagnostic14-static-review.json",
+      "bytes": 3667,
+      "sha256": "1ed89b71bb005fc8b09850623782ac20af8b5b95d2f13e9c4b49bbe3b8dba08c"
+    },
+    "preserved": [
+      "five original test identities",
+      "all assertions",
+      "180000ms test budgets",
+      "10000ms UI abort",
+      "workers1 retries0 repeat1",
+      "UI-only mutations",
+      "existing source and freshness checks",
+      "same result-store and case facade identities"
+    ]
+  },
+  "findings": [
+    {
+      "fact": "First two comparison responses were HTTP200; their before-withCase to after-withCase server intervals were 8555.667986ms and8512.043566ms.",
+      "scope": "Diagnostic14 only; no transfer to nominal13."
+    },
+    {
+      "fact": "Comparison after numerical rule failed client request with net::ERR_ABORTED. Producer later returned status ok at12739.782954ms measured from before-withCase.",
+      "scope": "Producer marker is not a delivered HTTP response or successful UI assertion."
+    },
+    {
+      "fact": "Planner comparator intervals were5358.464296,5332.290368,9591.947952ms; each retained3resolveMany phases.",
+      "scope": "Inclusive elapsed includes descendants; totals cannot be summed as exclusive CPU."
+    },
+    {
+      "fact": "Numerical criterion evaluations took2213.878931 and2240.561102ms, retaining independent observations.",
+      "scope": "No SQL/auth exclusive time was instrumented."
+    },
+    {
+      "fact": "Financial journey failed RequestsGET503/form0; other3independent journeys passed.",
+      "scope": "Diagnostic execution does not replace nominal results."
+    }
+  ],
+  "inference": {
+    "status": "HYPOTHESIS_FOR_SEPARATE_PROPOSAL",
+    "description": "LocalStore72 opens/closes an independent SQLite connection for each credential read; local operator authentication performs3reads and product authority authenticates3surfaces per principal observation. This may amplify observed repeated producer reads. No authority/value cache or omission of checks is proposed."
+  },
+  "not_reached": [
+    "human choice in diagnostic14",
+    "P9choice source capture",
+    "historical preservation after source change",
+    "financial creation/formal approval/Apply/receipt"
+  ],
+  "criteria_acceptance_fragments_added": 0,
+  "GLOBAL_RELEASE": false,
+  "WP11_DONE": false
+}

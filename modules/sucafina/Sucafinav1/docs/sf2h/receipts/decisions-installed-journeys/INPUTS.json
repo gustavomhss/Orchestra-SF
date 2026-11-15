@@ -2023,27 +2023,151 @@
     "audit": "audits/control-delta-before-p7.json"
   },
   "latest_checkpoint52": {
-    "source_before_publication": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
-    "source_check_parent": "ea8003b703bae61f9a4452261a7780cc38f0c754",
-    "tested_composition": "C41",
-    "tested_base": "1074cf338619a70ddef1ad1f62e32618fc355fed",
-    "unit03": {
-      "run": 43676716309,
-      "pass": 50,
-      "fail": 0,
-      "expects": 306
+    "schema": "sf52.checkpoint15.active.v1",
+    "state": "ACTIVE_FUNCTIONAL_QUALIFICATION_OPEN",
+    "source_parent": "20944c7cc1ef0fb7254793a421468ac12300356d",
+    "source_tree": "ca67b33deb0fe3586c996db925922bedcc5d9ac7",
+    "ACK52": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ACK52.json",
+      "commit": "20944c7cc1ef0fb7254793a421468ac12300356d",
+      "blob": "ee4f18cc45421f300b453b7c385d677b77001ea5"
     },
-    "nominal12": {
-      "run": 43676977918,
-      "pass": 3,
-      "fail": 2,
-      "receipt": "nominal-12.json"
+    "last_nominal": {
+      "number": 15,
+      "run": 43680980170,
+      "job": 132711320639,
+      "cleanup_job": 132712239127,
+      "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "base_tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
+      "W": "c725f9b8307a84562258c478414ec0b39d428b99",
+      "W_tree": "44d2d591fac429609ff1a1e02c892185cfed4944",
+      "S": "5e84420631d4b162f38956aef6e0828e23a39e82",
+      "S_tree": "900eae757fddcdb1d6587c6635b84e3e93229dff",
+      "summary": {
+        "J1": "FAIL at the third decision-compare after two comparisons200 and explicit numeric-rule registration200; no post-rule comparison result, choice or P9 installed history observed",
+        "J2": "FAIL RequestsGET503/procurement-queue-unavailable/form0 before financial mutation",
+        "J3": "PASS",
+        "J4": "PASS",
+        "J5": "PASS",
+        "pass": 3,
+        "fail": 2,
+        "skipped": 0,
+        "timed_out": 0,
+        "flaky": 0,
+        "setup_failed": 0
+      },
+      "receipt": "nominal-15.json",
+      "receipt_sha256": "24ab7a11603e37cc9703d83a39f0896c7951ab8a140aa459877162dec6c22f16"
     },
-    "latest_observed_target": "eecbdacb21734695094332deb6142aa35d5c9c3c",
-    "latest_observed_tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
-    "next_nominal": 13,
-    "next_status": "DISPATCHED_NO_RESULT_YET",
-    "authority": "ACK71 observed; source52 ACTIVE; requested handoff47; no target writes52",
-    "GLOBAL_RELEASE": false
-  }
+    "additional_evidence": {
+      "nominal13": {
+        "run": 43678234266,
+        "summary": {
+          "pass": 3,
+          "fail": 2,
+          "skipped": 0,
+          "timed_out": 0,
+          "flaky": 0,
+          "setup_failed": 0,
+          "J1": "FAIL at first decision-compare requestfailed ERR_ABORTED; source creation, attachment and two alternatives with exact recovery passed; executable numeric rule, choice and P9 history not reached",
+          "J2": "FAIL Requests503/form0 before financial mutation",
+          "J3": "PASS",
+          "J4": "PASS",
+          "J5": "PASS"
+        },
+        "receipt": "nominal-13.json"
+      },
+      "diagnostic14": {
+        "run": 43679231538,
+        "receipt": "diagnostic-14.json",
+        "acceptance_fragments": 0
+      },
+      "unit04": {
+        "run": 43680704374,
+        "passed": 20,
+        "failed": 0,
+        "expects": 194,
+        "files": 3,
+        "duration_ms": 1487,
+        "receipt": "unit-04.json",
+        "scope": "SUPPLEMENTAL_ONLY"
+      }
+    },
+    "criteria": {
+      "literal_count": 83,
+      "original_projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
+      "integrated_proofs_empty_arrays": 83,
+      "fragment_count": 198,
+      "new_whole_criterion_PASS": 0,
+      "receipt": "criteria.json",
+      "integrity": "audits/criteria-integrity.json"
+    },
+    "material": {
+      "P10_paths": 28,
+      "P11_paths": 31,
+      "owned": 10,
+      "shared_owner_proposals": 18,
+      "unit_proposals": 3,
+      "image_index": "delivery/current-image-index.json",
+      "immutable_images_reused": 50,
+      "new_full_images": 5,
+      "prepared_manifest_statuses_are_historical": true
+    },
+    "authority": {
+      "source52": "ACTIVE",
+      "last_nominal_target71": "ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS",
+      "later_target105": "ACTIVE_USER_APPOINTED",
+      "later_target": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "observations": "audits/current-target-after-nominal15.json",
+      "requested_terminal_handoff": 47,
+      "terminal_handoff_issued": false,
+      "consumer_release_issued": false
+    },
+    "constraints": {
+      "five_original_UI_journeys": true,
+      "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+      "test_budget_ms": 180000,
+      "UI_deadline_ms": 10000,
+      "retries": 0,
+      "seeds_or_direct_mutation_replacement": false,
+      "diagnostic14_promoted": false,
+      "local_product_execution": 0,
+      "source_checks02_failure_waived": false
+    },
+    "future_qualification": "NO_FUTURE_RESULT_BOUND_IN_THIS_CHECKPOINT",
+    "GLOBAL_RELEASE": false,
+    "WP11_DONE": false
+  },
+  "checkpoint_history52": [
+    {
+      "source_commit": "20944c7cc1ef0fb7254793a421468ac12300356d",
+      "pointer": "/latest_checkpoint52",
+      "record": {
+        "source_before_publication": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
+        "source_check_parent": "ea8003b703bae61f9a4452261a7780cc38f0c754",
+        "tested_composition": "C41",
+        "tested_base": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+        "unit03": {
+          "run": 43676716309,
+          "pass": 50,
+          "fail": 0,
+          "expects": 306
+        },
+        "nominal12": {
+          "run": 43676977918,
+          "pass": 3,
+          "fail": 2,
+          "receipt": "nominal-12.json"
+        },
+        "latest_observed_target": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+        "latest_observed_tree": "4d4b149917a2c74cfeb73e45774fe098666c208d",
+        "next_nominal": 13,
+        "next_status": "DISPATCHED_NO_RESULT_YET",
+        "authority": "ACK71 observed; source52 ACTIVE; requested handoff47; no target writes52",
+        "GLOBAL_RELEASE": false
+      },
+      "immutable_INPUTS_blob": "f3837e4f5a3cd64b4fdc6e99f3e38091b8ad5883"
+    }
+  ],
+  "retained_metadata_context": "All prior fields, including current_* and pending dispatch statements in earlier records, are immutable historical cuts. latest_checkpoint52 and its explicitly dated later-target observation describe this checkpoint. No earlier claim is retrospectively reinterpreted."
 }

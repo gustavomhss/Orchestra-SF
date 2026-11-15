@@ -1,0 +1,45 @@
+{
+  "number": 101,
+  "id": "product-ci-execution",
+  "branch": "sf-ci-validation",
+  "actor": "S2 CI product dispatcher; explicit execution, separate compiler45",
+  "actor_pack": "execution/actors/S2.json",
+  "lease_epoch": "product-ci-browser101",
+  "scope": "Execução cirúrgica centralizada de produto; única autoridade de despacho de produto após ACK/reconciliação.45 continua somentecompiler/guards, conformepacoteoriginal45. Não herdar o roteamentooperacionalerrôneo comum que lheenviava testesdeproduto.",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/product-ci-execution/",
+    "approved .ci-run.json request snapshots only on existing ci-run-* branches; no workflows change/no product edits"
+  ],
+  "inputs": [
+    "original45@80b0f5d163477b6f5c4281fc0ea1abb55350ea41: missioncomposed-compiler-gates explicitly prohibits producttests",
+    "100checkpoint@38124138d21289a3bd20c86cd8d4e9c78c157417 continuation-100/{CONSUMPTION-100,GATE-QUEUE-100,PENDING-OWNERS-100}.json",
+    "productrequests94/87/88/90/97/98 existingPR32comments and ownsource requestjson;C51material529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "all actualActionsruns incl99 P03failed43681302722/source41744d;notduplicate/control21PASSnotP03PASS"
+  ],
+  "mission": "Executar agora os testescirúrgicos deproduto já pedidos e nuncaexecutados, no candidatoidentificado e integraçãoreal. Não devolver só request para45:45nãoexecuta produto. Usar MCP/interfaceexistente comprovada, umdispatcher, dedup e receiptsreais.",
+  "acceptance": [
+    "AntesACK consultar todos runs/refs/requests ativos,conferir source/tree/seleção/runtime/config/fixture eadotar existentes.101reserva nova execução somenteapósreconciliação;notificar100 e produtores nasPRsinternasqualfilafoiadotada, paraevitarsourcedispatchduplicado. Nãointerromper ou duplicar P03/52 existentes.",
+    "Ler código real script/test-ci-request.ts, module-registry eworkflowtest-ci, snapshotsW/S jádemonstrados antesmontarrequest. Usar alias sucafina/directorymodules/sucafina conformevalidator, sempresumirflags/tooldispatch. SeMCPsóoferececommit/ref,usar apenasprotocoloexistente .ci-run.json+ci-run-* exatovalidado;semgh/push/manualdispatchinventado.",
+    "Priorizarseleçõescompostas94listener/Microsoft,87C08HTTP recovery,97originalcomposed-storage+preflight,98DOCXregression+geração88render,90nativecomponent. Agruparsomentecompatível,manteroráculoslegados eproducerreleaseexata/config. Componentesnativosnãoalegamproviderreal.",
+    "Para98render/88:fonteC51contémreader,gerardocumentosreais eartifacts,manifestohashesbeforeafter/PDFPNG;preservar funcionalverdict evisualseparados. OriginalexporttwoFAIL deve ser requalificado na correçãoC45/97C50,nãorepetirfonteantigacomdefeitoconhecido.",
+    "Para99P03futuro aceitar sópatchcausalnovoowner99,reattachrunfailed jáconhecido,não aumentar180000ms/skip. Para95/96futureoutputsreconciliar100antesprodutosintegrados;fonte eCcomposto declaradosseparados.",
+    "Nenhumproduto/workflowedit. Falha leialog/job/artifact,classifique infra vsproduto eencaminhemenorwitness ao writer+100 imediatamente. Continuar seleções independentes,sempararfilatoda emumFAIL. Retrieslimitados ecausais;semlooprequest/pollvazio.",
+    "Relatóriofinaldesteescopo podeconterFAILabertos reais,nãoGLOBAL_RELEASE. Entregarruns/logs/artifacts/resumecheckpoint/matrizC-gate. C51nãofinal;epic/oito seleçõesfinais sóapósfreezeS0/100explicit;gatescompiler45conservados."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base_sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "expected_head": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "consumer": "100 sole integrator;101 productCI;45 compiler;91–93 independentrechecks",
+  "common": [
+    "Plano fixo dbf9547211d9b0fade619790de7c19c0869b7c7d;T0 2026-11-13T04:01:10Z;preservar15WP74tasks17contratos1610critérios. Ler AGENTS, START,WORKFLOW,COMMON,packcompleto eanexos/critériosatribuídos.",
+    "Nova sessão browser ACK com actualmodel/session/inputsSHA/lease/paths eHEADreconciliados. Silêncio não revoga autoridade.100 única integração sf2-stack;95native96creation97denied98DOCX99P03/52Decisions mantêm paths. Sidebar/Azure do usuário foraescopo.",
+    "GitHub remoto MCP/CASexpectedhead/forcefalse only,semgh/push/devmerge/deploy/Azure/segredos/enginechanges/restart/novoGoal/controller. Goalnativa permanecepausada.",
+    "Nada de testesdeproduto/pesadoslocais/bun test. InterfaceGitHubActions test:ci/request já existente;semnovaplataforma/workflow/serviços. Epic/fullsuite final apenas no bundleC finalaceito. Compiler/typecheck/guards continuamcom45, bun typecheck conformeAGENTS.",
+    "Commitsremotos/PR sf2-stack,source-tree/prepost/dependencyclosure/W-S-runjob/artifacts/results/criteriagaps echeckpointterminalà100/S0. Fonte/fixture/componentPASS não é Caceito/AM/review/GLOBAL_RELEASE."
+  ]
+}

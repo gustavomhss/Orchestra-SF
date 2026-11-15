@@ -1,148 +1,10 @@
 {
-  "base": "1074cf338619a70ddef1ad1f62e32618fc355fed",
-  "base_tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
-  "base_label": "C41",
-  "source": "554e4e692318c952fdd1b365eb233d7c1b6d8cf5",
-  "source_tree": "e66b3d1046e3843968ddb48ea478a57456758e99",
-  "scope_counts": {
-    "owned": 10,
-    "shared": 19,
-    "unit_proposal": 2
-  },
-  "patches": {
-    "candidate-complete": {
-      "path": "m52-work/p9-delivery/candidate-complete.patch",
-      "sha256": "b3570430cff57d6cf5a25e111973b0443931e87b0a0ff70fe722692a64cf4e13",
-      "bytes": 198810,
-      "paths": 31
-    },
-    "owned-source": {
-      "path": "m52-work/p9-delivery/owned-source.patch",
-      "sha256": "27788da912638441572415343d17e7090dc0b5a166eab8136f0765af122ae270",
-      "bytes": 30395,
-      "paths": 10
-    },
-    "shared-proposals": {
-      "path": "m52-work/p9-delivery/shared-proposals.patch",
-      "sha256": "2e85e46507109a4253406f496db8c3e431d013ffc566485ed7f54784a0b37dd1",
-      "bytes": 97036,
-      "paths": 19
-    },
-    "unit-proposals": {
-      "path": "m52-work/p9-delivery/unit-proposals.patch",
-      "sha256": "e14250d814b2f8670281db85a2063b30ecb511cc7a4124b599cb07e82719814f",
-      "bytes": 71379,
-      "paths": 2
-    }
-  },
-  "integrated_dependencies": [
-    {
-      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
-      "origin_sha256_C35": "4e44c93060c70ddebd1f85ecbe78b4ecaca311e19985df4c610c84529085cbee",
-      "origin_bytes_C35": 5363,
-      "current_blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
-      "unchanged_from_C35": true
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
-      "origin_sha256_C35": "8e25f74ef1b5bf135c60d3112f4e0ae18e2020428d7a7c35bba1917c73caad33",
-      "origin_bytes_C35": 35607,
-      "current_blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
-      "unchanged_from_C35": false
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "0e812842ad0d534998c182100a8466548d70e915",
-      "origin_sha256_C35": "52116581fb89dd0065a1fbfe6a82829fe306faa09c46135aa06775ff21ca6f9d",
-      "origin_bytes_C35": 15748,
-      "current_blob": "0e812842ad0d534998c182100a8466548d70e915",
-      "unchanged_from_C35": true
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "3cf82bd82b2716ee689b4c48bd9551540b058287",
-      "origin_sha256_C35": "5d1b5706c68b4ac9489fb9cb5c58aa9f050994329e9361306892599fe71ccbc1",
-      "origin_bytes_C35": 4757,
-      "current_blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
-      "unchanged_from_C35": true
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "35741770154ccea55944674239e5b29cadc3abb6",
-      "origin_sha256_C35": "537af7091d6b55bc3f383265b1049b8ef2f6debb19d75fa8051d165ff413b707",
-      "origin_bytes_C35": 7414,
-      "current_blob": "35741770154ccea55944674239e5b29cadc3abb6",
-      "unchanged_from_C35": true
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
-      "origin_sha256_C35": "13f6495ecd0475d75d38cb91dce6b23ec62e46ff310d8ae63fad9c39f6d96f2c",
-      "origin_bytes_C35": 11882,
-      "current_blob": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
-      "unchanged_from_C35": true
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
-      "origin_sha256_C35": "e5816b6a9aa73bbea88efcde2223afc65e45c1199b2669d460e7bc2edf3e0e3e",
-      "origin_bytes_C35": 16782,
-      "current_blob": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
-      "unchanged_from_C35": true
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
-      "origin_sha256_C35": "4c38ea40691c6fdf24b387d5422272eedbc5dffba4d9a196c284402f9ea8f4a2",
-      "origin_bytes_C35": 6279,
-      "current_blob": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
-      "unchanged_from_C35": true
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
-      "mode": "100644",
-      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
-      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
-      "origin_blob_C35": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
-      "origin_sha256_C35": "12772949b77ceba728dd1d3584ad021beebeedc4fa59c99eff64ff5dbba00d94",
-      "origin_bytes_C35": 9435,
-      "current_blob": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
-      "unchanged_from_C35": true
-    }
-  ],
-  "schema": "sf2h.mission52.p9.candidate-manifest.v1",
-  "status": "NOMINAL12_COMPLETED",
-  "W": "c4883ae51636a4ebbcf9274994e96e2725214e48",
-  "W_tree": "c96d49c3942283d9beb445d80ba08e3f1538b471",
-  "S": "de56ec928b22ffbaf3b4110262bce3dec0f1441c",
-  "S_tree": "7faa8bb486b78f1656d6b19db2b256d14bbabc23",
-  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "schema": "sf52.checkpoint15.product-manifest.v1",
+  "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+  "base_tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
+  "base_label": "C45_WITH_TERMINAL71_DOCUMENTARY_HEAD",
+  "source": "20944c7cc1ef0fb7254793a421468ac12300356d",
+  "source_tree": "ca67b33deb0fe3586c996db925922bedcc5d9ac7",
   "owned": [
     {
       "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
@@ -266,18 +128,6 @@
     }
   ],
   "shared": [
-    {
-      "path": "apps/cli/src/sucafina-product/installation.ts",
-      "mode": "100644",
-      "status": "modified",
-      "preimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
-      "postimage": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
-      "preimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
-      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
-      "preimage_bytes": 5315,
-      "bytes": 6258,
-      "scope": "shared_owner_proposal"
-    },
     {
       "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
       "mode": "100644",
@@ -411,30 +261,6 @@
       "scope": "shared_owner_proposal"
     },
     {
-      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
-      "mode": "100644",
-      "status": "added",
-      "preimage": null,
-      "postimage": "632c6510de2265afc7b8a811a5d8ddc92040180c",
-      "preimage_sha256": null,
-      "postimage_sha256": "c9b73d4b2999f484278ab598ca3381d5163766886564f318824a45e2765de9d5",
-      "preimage_bytes": 0,
-      "bytes": 2691,
-      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
-    },
-    {
-      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
-      "mode": "100644",
-      "status": "modified",
-      "preimage": "3b2f4f8956029b57a1da3f362eb1e2b15a5b3bcb",
-      "postimage": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1",
-      "preimage_sha256": "32f15206babcacc7feb4487325207335d0c802b23e79cda2a4b6fb3932ea8af9",
-      "postimage_sha256": "8866895b5f51b5be71659e030eafa60361f56525f6477fd6b12a290f4ddb97c7",
-      "preimage_bytes": 3611,
-      "bytes": 3608,
-      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
-    },
-    {
       "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
       "mode": "100644",
       "status": "modified",
@@ -493,6 +319,30 @@
       "preimage_bytes": 0,
       "bytes": 14576,
       "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+      "postimage": "5d7bccf29c38bc6a6b83ec2f2b3d543640b8dada",
+      "preimage_sha256": "6b1f46d45dd77c73d266d4955daeabca6f0174daebd14f320add49801fb21b2f",
+      "postimage_sha256": "206c8873d4b9d5a8177a19a9b4e3bc477ae38b9097f3a78c23b2bcfb8e97313e",
+      "preimage_bytes": 35140,
+      "bytes": 36732,
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+      "postimage": "6f024be93e31329270cc266742038a6e58807b1c",
+      "preimage_sha256": "66499d3021695f63a61178d516aad8e0fe9363cffa7c8de388952ec7dd75c981",
+      "postimage_sha256": "cce36f71eea984abbc2bb84614166d54aa63ee11b18d2ef1aac123aa62dcefb8",
+      "preimage_bytes": 18419,
+      "bytes": 18553,
+      "scope": "shared_owner_proposal"
     }
   ],
   "unit_proposal": [
@@ -519,64 +369,434 @@
       "preimage_bytes": 0,
       "bytes": 38618,
       "scope": "UNIT_PROPOSAL_INERT_ON_SOURCE52"
-    }
-  ],
-  "foreign_proposal": [],
-  "unit": {
-    "run_id": 43676716309,
-    "job_id": 132698352149,
-    "cleanup_job_id": 132698758769,
-    "passed": 50,
-    "failed": 0,
-    "expects": 306,
-    "duration_ms": 2700,
-    "W": "c4883ae51636a4ebbcf9274994e96e2725214e48",
-    "S": "61ef9950c8355db002d99c18d91e1265ccfe4d55",
-    "request_blob": "ac4ba49cede79091fe524a891119348be67e2e5f"
-  },
-  "result": {
-    "run": 43676977918,
-    "summary": {
-      "pass": 3,
-      "fail": 2,
-      "skipped": 0,
-      "flaky": 0,
-      "timed_out": 0,
-      "setup_failed": 0,
-      "J1": "FAIL at first decision-compare requestfailed ERR_ABORTED; source creation, attachment and two alternatives with exact recovery passed; executable numeric rule, choice and P9 history not reached",
-      "J2": "FAIL Requests503/form0 before financial mutation",
-      "J3": "PASS",
-      "J4": "PASS",
-      "J5": "PASS"
     },
-    "artifact": {
-      "id": 14146403481,
-      "name": "playwright-ubuntu-24.04-1",
-      "bytes": 3619081,
-      "sha256": "77e83d5cb24f6af50c8c158e393705d082d1147022a5013fc9f2cc9db7e4dfb0",
-      "files": 17
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage": null,
+      "postimage": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "preimage_sha256": null,
+      "postimage_sha256": "4b0d4cc55ce050c3422dd3ee31e2753cbbc358b6528bc69dd57704f3482819fb",
+      "preimage_bytes": null,
+      "bytes": 15320,
+      "scope": "unit_proposal"
+    }
+  ],
+  "foreign": [],
+  "integrated_dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "origin_sha256_C35": "4e44c93060c70ddebd1f85ecbe78b4ecaca311e19985df4c610c84529085cbee",
+      "origin_bytes_C35": 5363,
+      "current_blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "unchanged_from_C35": true,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_RUNTIME59_AUTH72_BASE_WITH_P11_AUTH_READER_PROPOSAL",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "origin_sha256_C35": "8e25f74ef1b5bf135c60d3112f4e0ae18e2020428d7a7c35bba1917c73caad33",
+      "origin_bytes_C35": 35607,
+      "unchanged_from_C35": false,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal.",
+      "base_blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+      "candidate_blob": "5d7bccf29c38bc6a6b83ec2f2b3d543640b8dada",
+      "runtime59_business_block_unchanged": {
+        "bytes": 12842,
+        "sha256": "e01a1534ba56811038f128a79c4f216d0829cf9941dbedeebbd8612162228481"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "0e812842ad0d534998c182100a8466548d70e915",
+      "origin_sha256_C35": "52116581fb89dd0065a1fbfe6a82829fe306faa09c46135aa06775ff21ca6f9d",
+      "origin_bytes_C35": 15748,
+      "current_blob": "0e812842ad0d534998c182100a8466548d70e915",
+      "unchanged_from_C35": true,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+      "origin_sha256_C35": "5d1b5706c68b4ac9489fb9cb5c58aa9f050994329e9361306892599fe71ccbc1",
+      "origin_bytes_C35": 4757,
+      "current_blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+      "unchanged_from_C35": true,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "35741770154ccea55944674239e5b29cadc3abb6",
+      "origin_sha256_C35": "537af7091d6b55bc3f383265b1049b8ef2f6debb19d75fa8051d165ff413b707",
+      "origin_bytes_C35": 7414,
+      "current_blob": "35741770154ccea55944674239e5b29cadc3abb6",
+      "unchanged_from_C35": true,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
+      "origin_sha256_C35": "13f6495ecd0475d75d38cb91dce6b23ec62e46ff310d8ae63fad9c39f6d96f2c",
+      "origin_bytes_C35": 11882,
+      "current_blob": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
+      "unchanged_from_C35": true,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+      "origin_sha256_C35": "e5816b6a9aa73bbea88efcde2223afc65e45c1199b2669d460e7bc2edf3e0e3e",
+      "origin_bytes_C35": 16782,
+      "current_blob": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+      "unchanged_from_C35": true,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
+      "origin_sha256_C35": "4c38ea40691c6fdf24b387d5422272eedbc5dffba4d9a196c284402f9ea8f4a2",
+      "origin_bytes_C35": 6279,
+      "current_blob": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
+      "unchanged_from_C35": true,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+      "mode": "100644",
+      "state": "INTEGRATED_SINCE_C29_INHERITED_WITH_LATER_TARGET_CHANGES_NO_OVERLAY",
+      "owner_source_release": "608763f1765e0eac34565a3668d330bb1cdbd140",
+      "origin_blob_C35": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
+      "origin_sha256_C35": "12772949b77ceba728dd1d3584ad021beebeedc4fa59c99eff64ff5dbba00d94",
+      "origin_bytes_C35": 9435,
+      "current_blob": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
+      "unchanged_from_C35": true,
+      "current_base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "preservation": "Runtime59 integration retained through C45; eight whole-file dependencies inherited without52overlay. LocalStore has the separately identified P11 authentication-only proposal."
+    }
+  ],
+  "scope_counts": {
+    "owned": 10,
+    "shared": 18,
+    "unit_proposal": 3
+  },
+  "patches": {
+    "candidate-complete": {
+      "path": "m52-work/p11-delivery/candidate-complete.patch",
+      "sha256": "86face7ddf974bb96d9bd6c6e3f1ed446c5bce2dfc1aabfc85591ce7e8fbf612",
+      "bytes": 211369,
+      "paths": 31
+    },
+    "owned-source": {
+      "path": "m52-work/p11-delivery/owned-source.patch",
+      "sha256": "27788da912638441572415343d17e7090dc0b5a166eab8136f0765af122ae270",
+      "bytes": 30395,
+      "paths": 10
+    },
+    "shared-proposals": {
+      "path": "m52-work/p11-delivery/shared-proposals.patch",
+      "sha256": "f061cdb9bf3ed7439f66ff2045551d351ef27eea883e76cfeac0fd576ad2aeab",
+      "bytes": 93831,
+      "paths": 18
+    },
+    "unit-proposals": {
+      "path": "m52-work/p11-delivery/unit-proposals.patch",
+      "sha256": "42c706b5d3e0fe82fbce3f09dfdcf06f32d5c7697a81f4b07d16017acc4f0a37",
+      "bytes": 87143,
+      "paths": 3
     }
   },
-  "source52_authority": "ACTIVE",
-  "handoff_requested_to": 47,
-  "target_writer_observed": "71 under its own ACK; zero target writes by52",
-  "source_checks": {
-    "run": 43676572309,
-    "source": "ea8003b703bae61f9a4452261a7780cc38f0c754",
-    "state": "FAIL_INHERITED_NO_NEW_FINDINGS",
-    "typecheck_errors": 130,
-    "gate_errors": 43,
-    "guard_warnings": 18,
-    "scope": "Source only; shared proposals are inert."
-  },
-  "qualification_limits": [
-    "Unit50 is supplemental and cannot replace five UI identities.",
-    "All source patches are complete with exact pre/post images. Shared paths are inert on source52 and only active in the isolated candidate.",
-    "Protected capture does not approve Procurement, alter policy, settle Atlas outbox or grant global release.",
-    "Multiple distinct captured bodies for one refDigest are conservatively refused; observedAt is not normalized."
+  "GLOBAL_RELEASE": false,
+  "retired_overlays": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "postimage": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
+      "reason": "HTTP74 integrated; inherit the canonical bounded stream and its Microsoft74 map/fixture. Historical52 proposal retained in P9 receipts only."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json",
+      "postimage": "632c6510de2265afc7b8a811a5d8ddc92040180c",
+      "postimage_sha256": "c9b73d4b2999f484278ab598ca3381d5163766886564f318824a45e2765de9d5",
+      "reason": "HTTP74 integrated; inherit the canonical bounded stream and its Microsoft74 map/fixture. Historical52 proposal retained in P9 receipts only."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "postimage": "bc427a51fe2f0d86d791fc9010cdbad9524ea5a1",
+      "postimage_sha256": "8866895b5f51b5be71659e030eafa60361f56525f6477fd6b12a290f4ddb97c7",
+      "reason": "HTTP74 integrated; inherit the canonical bounded stream and its Microsoft74 map/fixture. Historical52 proposal retained in P9 receipts only."
+    }
   ],
-  "superseded": {
-    "candidate-with-runtime59.patch": "Historical P7/C28 artifact. Current candidate inherits Runtime59 and later Auth72 without a foreign overlay."
+  "prior_candidate": {
+    "base": "C44",
+    "W": "7409883a9a36e20cabef00d25627dec88b4cf094",
+    "nominal": 13,
+    "run": 43678234266,
+    "result": "3PASS2FAIL; first comparison aborted, financial Requests503; no new rule/choice/history acceptance."
   },
-  "GLOBAL_RELEASE": false
+  "unit_gate": {
+    "run": 43676716309,
+    "W": "c4883ae51636a4ebbcf9274994e96e2725214e48",
+    "pass": 50,
+    "fail": 0,
+    "expects": 306,
+    "scope": "Same P9 domain/helper/C08 code; earlier C41 composition. No whole-C44 unit acceptance inferred."
+  },
+  "new_integrated_dependencies": [
+    {
+      "owner": 76,
+      "integration": "C43",
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "claim": "Inherited current canonical reader; no source PASS or P03 acceptance transferred."
+    },
+    {
+      "owner": 74,
+      "integration": "C44",
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+      "claim": "Inherited unchanged; no52 overlay."
+    },
+    {
+      "owner": 74,
+      "integration": "C44",
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+      "claim": "Inherited unchanged; no52 overlay."
+    },
+    {
+      "owner": 74,
+      "integration": "C44",
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+      "claim": "Inherited unchanged; no52 overlay."
+    }
+  ],
+  "diagnostic_basis": {
+    "W": "70f356f2736809c59a53cc8a263d44341a073e3d",
+    "run": 43679231538,
+    "purpose": "TIMING_ONLY_NOT_ACCEPTANCE",
+    "server_intervals_ms": [
+      8555.667986,
+      8512.043566,
+      12739.782954
+    ],
+    "last_browser_result": "requestfailed net::ERR_ABORTED; producer ok marker is not delivered HTTP",
+    "retained_in_nominal": false
+  },
+  "ownership": "Only10already-owned code paths active in source52. All18shared paths and3unit proposals are inert receipts until owner integration; isolated W only is used for surgical qualification.",
+  "target_authority": {
+    "last_writer": 71,
+    "state": "ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS",
+    "requested_handoff": 47,
+    "writes_by_52": 0,
+    "source_52_state": "ACK52_ACTIVE_BOUNDED_SUCCESSION"
+  },
+  "auth_read_contract": {
+    "dedicated_connection": true,
+    "fresh_SQL_each_read": true,
+    "auth_value_or_authority_cache": false,
+    "inherited_C08_connection": false,
+    "business_snapshot_and_writer_rules_changed": false,
+    "physical_identity_fence": true,
+    "dispose_closes_after_active_drain": true,
+    "original_authentication_invocations_preserved": true,
+    "request_or_test_budgets_changed": false
+  },
+  "prepared_state": "P11_CANDIDATE_NOT_QUALIFIED",
+  "state": "TESTED_C45_3PASS_2FAIL_SOURCE52_ACTIVE_OWNER_INTAKE_NOT_RELEASED",
+  "prepared_manifest": {
+    "path": "delivery/p11-patch-manifest.json",
+    "sha256": "f7dce67e81cd5f623834c53966a3df5494be268ddb5d144474f4cf2b852a6da8"
+  },
+  "checkpoint15": {
+    "schema": "sf52.checkpoint15.active.v1",
+    "state": "ACTIVE_FUNCTIONAL_QUALIFICATION_OPEN",
+    "source_parent": "20944c7cc1ef0fb7254793a421468ac12300356d",
+    "source_tree": "ca67b33deb0fe3586c996db925922bedcc5d9ac7",
+    "ACK52": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ACK52.json",
+      "commit": "20944c7cc1ef0fb7254793a421468ac12300356d",
+      "blob": "ee4f18cc45421f300b453b7c385d677b77001ea5"
+    },
+    "last_nominal": {
+      "number": 15,
+      "run": 43680980170,
+      "job": 132711320639,
+      "cleanup_job": 132712239127,
+      "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "base_tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
+      "W": "c725f9b8307a84562258c478414ec0b39d428b99",
+      "W_tree": "44d2d591fac429609ff1a1e02c892185cfed4944",
+      "S": "5e84420631d4b162f38956aef6e0828e23a39e82",
+      "S_tree": "900eae757fddcdb1d6587c6635b84e3e93229dff",
+      "summary": {
+        "J1": "FAIL at the third decision-compare after two comparisons200 and explicit numeric-rule registration200; no post-rule comparison result, choice or P9 installed history observed",
+        "J2": "FAIL RequestsGET503/procurement-queue-unavailable/form0 before financial mutation",
+        "J3": "PASS",
+        "J4": "PASS",
+        "J5": "PASS",
+        "pass": 3,
+        "fail": 2,
+        "skipped": 0,
+        "timed_out": 0,
+        "flaky": 0,
+        "setup_failed": 0
+      },
+      "receipt": "nominal-15.json",
+      "receipt_sha256": "24ab7a11603e37cc9703d83a39f0896c7951ab8a140aa459877162dec6c22f16"
+    },
+    "additional_evidence": {
+      "nominal13": {
+        "run": 43678234266,
+        "summary": {
+          "pass": 3,
+          "fail": 2,
+          "skipped": 0,
+          "timed_out": 0,
+          "flaky": 0,
+          "setup_failed": 0,
+          "J1": "FAIL at first decision-compare requestfailed ERR_ABORTED; source creation, attachment and two alternatives with exact recovery passed; executable numeric rule, choice and P9 history not reached",
+          "J2": "FAIL Requests503/form0 before financial mutation",
+          "J3": "PASS",
+          "J4": "PASS",
+          "J5": "PASS"
+        },
+        "receipt": "nominal-13.json"
+      },
+      "diagnostic14": {
+        "run": 43679231538,
+        "receipt": "diagnostic-14.json",
+        "acceptance_fragments": 0
+      },
+      "unit04": {
+        "run": 43680704374,
+        "passed": 20,
+        "failed": 0,
+        "expects": 194,
+        "files": 3,
+        "duration_ms": 1487,
+        "receipt": "unit-04.json",
+        "scope": "SUPPLEMENTAL_ONLY"
+      }
+    },
+    "criteria": {
+      "literal_count": 83,
+      "original_projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
+      "integrated_proofs_empty_arrays": 83,
+      "fragment_count": 198,
+      "new_whole_criterion_PASS": 0,
+      "receipt": "criteria.json",
+      "integrity": "audits/criteria-integrity.json"
+    },
+    "material": {
+      "P10_paths": 28,
+      "P11_paths": 31,
+      "owned": 10,
+      "shared_owner_proposals": 18,
+      "unit_proposals": 3,
+      "image_index": "delivery/current-image-index.json",
+      "immutable_images_reused": 50,
+      "new_full_images": 5,
+      "prepared_manifest_statuses_are_historical": true
+    },
+    "authority": {
+      "source52": "ACTIVE",
+      "last_nominal_target71": "ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS",
+      "later_target105": "ACTIVE_USER_APPOINTED",
+      "later_target": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "observations": "audits/current-target-after-nominal15.json",
+      "requested_terminal_handoff": 47,
+      "terminal_handoff_issued": false,
+      "consumer_release_issued": false
+    },
+    "constraints": {
+      "five_original_UI_journeys": true,
+      "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+      "test_budget_ms": 180000,
+      "UI_deadline_ms": 10000,
+      "retries": 0,
+      "seeds_or_direct_mutation_replacement": false,
+      "diagnostic14_promoted": false,
+      "local_product_execution": 0,
+      "source_checks02_failure_waived": false
+    },
+    "future_qualification": "NO_FUTURE_RESULT_BOUND_IN_THIS_CHECKPOINT",
+    "GLOBAL_RELEASE": false,
+    "WP11_DONE": false
+  },
+  "latest_observed_target": {
+    "head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "state": "NOT_QUALIFIED_BY_C45_RESULTS",
+    "authority105": "ACTIVE_USER_APPOINTED",
+    "overlaps": [
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "tested_preimage": "297a4050323d80648684725f9c7e9a8680aa318f",
+        "tested_postimage": "46d3a77a819f4127b073cb8f5572838824019075",
+        "observed_target_blob": "f03ab621e96cfda23456be73bba2d24f24754d36",
+        "state": "OWNER_RECONCILIATION_REQUIRED_NO_RESULT_TRANSFER"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+        "tested_preimage": "2e7b312561f3f027ab070c61e15ecb6886fa169c",
+        "tested_postimage": "1400fa4894c55e99ae7fa18c809be9c2298fc49d",
+        "observed_target_blob": "12d6b27c52e29ac0cb8ccc65fba63ad20ddbc4ef",
+        "state": "OWNER_RECONCILIATION_REQUIRED_NO_RESULT_TRANSFER"
+      }
+    ]
+  },
+  "patch_delivery": {
+    "P11_complete": "candidate-complete.patch",
+    "P11_shared": "integration/complete-shared.patch",
+    "P11_unit": "integration/unit-proposal/complete.patch",
+    "owned_unchanged": {
+      "path": "owned-complete.patch",
+      "commit": "20944c7cc1ef0fb7254793a421468ac12300356d",
+      "git_blob": "e7b04bfbe1d6a21a1dd48a69c01e5df7ad39e02d"
+    },
+    "P10_complete": "delivery/p10/candidate-complete.patch",
+    "P10_shared": "delivery/p10/shared-proposals.patch",
+    "P10_unit_unchanged": {
+      "path": "history/p9-at-20944/integration/unit-proposal/complete.patch",
+      "source_commit": "20944c7cc1ef0fb7254793a421468ac12300356d",
+      "git_blob": "0b082740888cac86e7189646bf0ae3e7553f87c0"
+    },
+    "full_images": "delivery/current-image-index.json"
+  },
+  "historical_manifests_rule": "P9 evidence/patch manifests remain pinned to20944; P10/P11 prepared manifests are byte-identical as-authored snapshots. Actual completed qualification is checkpoint15, not their earlier pending state."
 }

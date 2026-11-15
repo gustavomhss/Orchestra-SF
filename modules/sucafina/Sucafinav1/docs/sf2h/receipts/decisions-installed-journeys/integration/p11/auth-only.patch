@@ -1,0 +1,111 @@
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -1,6 +1,6 @@
+ import { Database } from "bun:sqlite"
+ import { AsyncLocalStorage } from "node:async_hooks"
+-import { constants } from "node:fs"
++import { constants, lstatSync, realpathSync } from "node:fs"
+ import { lstat, mkdir, open, realpath } from "node:fs/promises"
+ import { isAbsolute, join, parse, resolve, sep } from "node:path"
+ import type { AuthLimits, LocalStore } from "./local-contract.ts"
+@@ -43,13 +43,16 @@
+       throw new Error("Local database must be a private regular file")
+     return open(path, constants.O_RDWR | constants.O_NOFOLLOW)
+   })
+-  try {
+-    const opened = await file.stat()
+-    if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
+-      throw new Error("Local database must be owned by the current UID at its real path")
+-  } finally {
+-    await file.close()
+-  }
++  const databaseIdentity = await (async () => {
++    try {
++      const opened = await file.stat()
++      if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
++        throw new Error("Local database must be owned by the current UID at its real path")
++      return { dev: opened.dev, ino: opened.ino }
++    } finally {
++      await file.close()
++    }
++  })()
+ 
+   const connect = () => {
+     const db = new Database(path, { strict: true })
+@@ -193,20 +196,44 @@
+     return pending
+   }
+ 
++  // Only synchronous authentication SELECTs use this connection. It never joins
++  // a business root and retains no transaction, cursor, result, or authority.
++  const authenticationRead = { db: undefined as Database | undefined }
++  const closeAuthenticationRead = () => {
++    const db = authenticationRead.db
++    authenticationRead.db = undefined
++    db?.close()
++  }
++  const requireAuthenticationFile = () => {
++    const current = lstatSync(path)
++    if (!current.isFile() || current.isSymbolicLink() || current.uid !== uid || (current.mode & 0o077) !== 0 ||
++      current.dev !== databaseIdentity.dev || current.ino !== databaseIdentity.ino || realpathSync(path) !== path)
++      throw new Error("Local authentication database identity changed or is unsafe")
++  }
+   const secrets = createAuthenticationSecrets({
+     limits: authentication,
+-    // Authority must observe current committed auth state, independently of an
+-    // older business snapshot. No write or second business transaction is opened.
++    // Each SELECT observes current committed auth in autocommit, independently
++    // of an older business snapshot. Reusing a connection never reuses a value.
+     read: <T>(work: (db: Database) => T): T => {
+       if (lifecycle.closed) throw new Error("Local store is disposed")
+       const scope = context.getStore()
+-      if (scope) requireScope(scope)
+-      const db = connect()
+       try {
++        if (scope) requireScope(scope)
++        requireAuthenticationFile()
++        const db = authenticationRead.db ??= connect()
++        if (db.inTransaction) throw new Error("Authentication reads require autocommit")
+         const value = work(db)
++        if (db.inTransaction) throw new Error("Authentication reads require autocommit")
++        requireAuthenticationFile()
++        if (lifecycle.closed) throw new Error("Local store is disposed")
+         if (scope) requireScope(scope)
+         return value
+-      } finally { db.close() }
++      } catch (error) {
++        // Discard the handle before closing it, including failed statements or
++        // filesystem checks. Cleanup must not replace the original refusal.
++        try { closeAuthenticationRead() } catch { /* The read still fails closed. */ }
++        throw error
++      }
+     },
+     write: <T>(work: (db: Database) => T) => operation(true, async (db) => {
+       const value = work(db)
+@@ -444,7 +471,10 @@
+     dispose: () => {
+       if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
+       lifecycle.closed = true
+-      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => { materializations.clear() })
++      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => {
++        try { closeAuthenticationRead() }
++        finally { materializations.clear() }
++      })
+       return lifecycle.disposing
+     },
+   }
+--- a/modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts
++++ b/modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts
+@@ -50,7 +50,11 @@
+   return Object.freeze(policy as AuthLimits)
+ }
+ 
+-/** The supplied read opens a fresh read-only connection; write owns admission and COMMIT. */
++/**
++ * The supplied read observes current committed metadata independently in autocommit.
++ * Its connection may be reused, but no snapshot or value is retained between reads.
++ * The supplied write owns admission and COMMIT.
++ */
+ export function createAuthenticationSecrets(options: {
+   read: <T>(work: (db: Database) => T) => T
+   write: <T>(work: (db: Database) => T) => Promise<T>

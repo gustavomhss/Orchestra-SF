@@ -469,49 +469,6 @@
 +  page.once("close", closed)
 +  return { completed: completed.promise, close }
  }
---- a/apps/cli/src/sucafina-product/installation.ts
-+++ b/apps/cli/src/sucafina-product/installation.ts
-@@ -2,8 +2,8 @@
- import { realpath } from "node:fs/promises"
- import { pathToFileURL } from "node:url"
- import type { Host } from "@orchestra/core/host"
--import { Effect, Layer } from "effect"
--import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
-+import { Cause, Effect, Layer, Option } from "effect"
-+import { Headers, HttpMethod, HttpMiddleware, HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
- import { createSfHostRuntime } from "./host-context"
- import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
- 
-@@ -40,13 +40,26 @@
-     if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
-     // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
-     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
--    const web = yield* HttpServerRequest.toWeb(sanitized)
--    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
-+    const url = HttpServerRequest.toURL(sanitized)
-+    if (Option.isNone(url)) return HttpServerResponse.empty({ status: 503 })
-+    if (url.value.origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
-+    // Consume the bounded body in the server request scope before crossing the Web Request boundary.
-+    const body = HttpMethod.hasBody(sanitized.method) ? yield* sanitized.arrayBuffer.pipe(Effect.orDie) : undefined
-+    const web = new Request(url.value, { method: sanitized.method, headers: sanitized.headers, ...(body === undefined ? {} : { body }) })
-     const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
-     if (!request) return HttpServerResponse.empty({ status: 403 })
-     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
-     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
--  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
-+  }).pipe(Effect.catchCause((cause) => {
-+    for (const reason of cause.reasons) {
-+      if (!Cause.isDieReason(reason)) continue
-+      const defect = reason.defect
-+      // Only the canonical bounded-body error reaches BodyLimit; all other causes remain redacted.
-+      if (HttpServerError.isHttpServerError(defect) && defect.reason._tag === "RequestParseError" &&
-+        defect.reason.cause instanceof Error && defect.reason.cause.message === "maxBytes exceeded") return Effect.die(defect)
-+    }
-+    return Effect.succeed(HttpServerResponse.empty({ status: 503 }))
-+  }))
-   // The listener must install privacy before HttpRouter.serve, outside the request route.
-   // Effect registers a trailing wildcard at both the subtree and its base path.
-   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
 --- /dev/null
 +++ b/apps/cli/src/sucafina-product/decision-case-http.ts
 @@ -0,0 +1,84 @@
@@ -1145,70 +1102,6 @@
 +    }
 +  }
 +}
---- /dev/null
-+++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json
-@@ -0,0 +1,50 @@
-+{
-+  "schema": "sf2h.microsoft49-composition.v1",
-+  "source_release": "74ba5b7f71182e531049b8c56fe304c3bec4c3db",
-+  "source_candidate": "43bddf0a39a815359a2139da003d6fcf1f86447e",
-+  "source_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
-+  "target_base": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
-+  "source_tests_do_not_qualify_composition": true,
-+  "validation": "NOT_RUN. Exact candidate mapping composed by mission71 from terminal72 over C37; queued qualification only; original49 artifacts and assertions retained. This map does not prove installed or global acceptance.",
-+  "files": [
-+    {
-+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
-+      "mode": "100644",
-+      "target_preimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
-+      "postimage_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
-+      "postimage_sha256": "addaab0dca8ce1addcb155808a841c4ac05a55e6dbe630ee874fa69f5f3067fb",
-+      "bytes": 25564,
-+      "source_preimage_blob": "26a330c62a0e5e9f3e2ea79be0b6854e7dca7363",
-+      "source_postimage_blob": "e1ddec48507fd1cf43e2233acd72061894362f06",
-+      "source_postimage_sha256": "5aabaa139ac45c9ef848ac89091a343c0df9eff447d1fe94a5bbf32f7399cfde"
-+    },
-+    {
-+      "path": "apps/cli/src/sucafina-product/installation.ts",
-+      "mode": "100644",
-+      "target_preimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
-+      "postimage_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
-+      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
-+      "bytes": 6258,
-+      "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
-+      "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
-+      "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
-+    },
-+    {
-+      "path": "apps/cli/src/commands/handlers/serve.ts",
-+      "mode": "100644",
-+      "target_preimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
-+      "postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
-+      "postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
-+      "bytes": 8960,
-+      "source_preimage_blob": "6bfe580422d8b36f7b0ca68f42b3aa42c61d08c4",
-+      "source_postimage_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
-+      "source_postimage_sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4"
-+    }
-+  ],
-+  "composition_mission": 71,
-+  "previous_composition": {
-+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
-+    "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
-+    "preserved_byte_for_byte": true
-+  }
-+}
---- a/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
-+++ b/modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts
-@@ -20,7 +20,7 @@
-   const postimage = await readFile(path.join(receipts, entry.postimage))
-   const canonical = await readFile(path.join(repository, target))
-   if (sha256(preimage) !== entry.preimage_sha256 || blob(preimage) !== entry.source_blob || sha256(postimage) !== entry.postimage_sha256 || blob(postimage) !== entry.postimage_blob) throw new Error("Integration artifact drift")
--  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/auth-retention-fix/composition/microsoft49-composition.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
-+  const composition = JSON.parse(await readFile(path.resolve(import.meta.dir, "../../docs/sf2h/receipts/integration/after-c27-60/microsoft49-composition-52.json"), "utf8")) as { schema: string; source_release: string; source_manifest_blob: string; files: ComposedFile[] }
-   if (composition.schema !== "sf2h.microsoft49-composition.v1" || composition.source_release !== "74ba5b7f71182e531049b8c56fe304c3bec4c3db" || composition.source_manifest_blob !== blob(manifestBytes) || !Array.isArray(composition.files) || composition.files.length !== manifest.files.length || new Set(composition.files.map((file) => file.path)).size !== manifest.files.length || composition.files.some((file) => !manifest.files.some((source) => source.path === file.path && source.postimage_blob === file.source_postimage_blob && source.postimage_sha256 === file.source_postimage_sha256))) throw new Error("Integration composition mapping drift")
-   const installed = composition.files.find((file) => file.path === target)
-   if (!installed || blob(canonical) !== installed.postimage_blob || sha256(canonical) !== installed.postimage_sha256) throw new Error("Integration installed source drift requires owner reconciliation")
 --- a/modules/sucafina/Sucafinav1/product/contracts/state.ts
 +++ b/modules/sucafina/Sucafinav1/product/contracts/state.ts
 @@ -7,12 +7,32 @@
@@ -1630,6 +1523,117 @@
 +  }
 +}
 +
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -1,6 +1,6 @@
+ import { Database } from "bun:sqlite"
+ import { AsyncLocalStorage } from "node:async_hooks"
+-import { constants } from "node:fs"
++import { constants, lstatSync, realpathSync } from "node:fs"
+ import { lstat, mkdir, open, realpath } from "node:fs/promises"
+ import { isAbsolute, join, parse, resolve, sep } from "node:path"
+ import type { AuthLimits, LocalStore } from "./local-contract.ts"
+@@ -43,13 +43,16 @@
+       throw new Error("Local database must be a private regular file")
+     return open(path, constants.O_RDWR | constants.O_NOFOLLOW)
+   })
+-  try {
+-    const opened = await file.stat()
+-    if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
+-      throw new Error("Local database must be owned by the current UID at its real path")
+-  } finally {
+-    await file.close()
+-  }
++  const databaseIdentity = await (async () => {
++    try {
++      const opened = await file.stat()
++      if (!opened.isFile() || opened.uid !== uid || (opened.mode & 0o077) !== 0 || await realpath(path) !== path)
++        throw new Error("Local database must be owned by the current UID at its real path")
++      return { dev: opened.dev, ino: opened.ino }
++    } finally {
++      await file.close()
++    }
++  })()
+ 
+   const connect = () => {
+     const db = new Database(path, { strict: true })
+@@ -193,20 +196,44 @@
+     return pending
+   }
+ 
++  // Only synchronous authentication SELECTs use this connection. It never joins
++  // a business root and retains no transaction, cursor, result, or authority.
++  const authenticationRead = { db: undefined as Database | undefined }
++  const closeAuthenticationRead = () => {
++    const db = authenticationRead.db
++    authenticationRead.db = undefined
++    db?.close()
++  }
++  const requireAuthenticationFile = () => {
++    const current = lstatSync(path)
++    if (!current.isFile() || current.isSymbolicLink() || current.uid !== uid || (current.mode & 0o077) !== 0 ||
++      current.dev !== databaseIdentity.dev || current.ino !== databaseIdentity.ino || realpathSync(path) !== path)
++      throw new Error("Local authentication database identity changed or is unsafe")
++  }
+   const secrets = createAuthenticationSecrets({
+     limits: authentication,
+-    // Authority must observe current committed auth state, independently of an
+-    // older business snapshot. No write or second business transaction is opened.
++    // Each SELECT observes current committed auth in autocommit, independently
++    // of an older business snapshot. Reusing a connection never reuses a value.
+     read: <T>(work: (db: Database) => T): T => {
+       if (lifecycle.closed) throw new Error("Local store is disposed")
+       const scope = context.getStore()
+-      if (scope) requireScope(scope)
+-      const db = connect()
+       try {
++        if (scope) requireScope(scope)
++        requireAuthenticationFile()
++        const db = authenticationRead.db ??= connect()
++        if (db.inTransaction) throw new Error("Authentication reads require autocommit")
+         const value = work(db)
++        if (db.inTransaction) throw new Error("Authentication reads require autocommit")
++        requireAuthenticationFile()
++        if (lifecycle.closed) throw new Error("Local store is disposed")
+         if (scope) requireScope(scope)
+         return value
+-      } finally { db.close() }
++      } catch (error) {
++        // Discard the handle before closing it, including failed statements or
++        // filesystem checks. Cleanup must not replace the original refusal.
++        try { closeAuthenticationRead() } catch { /* The read still fails closed. */ }
++        throw error
++      }
+     },
+     write: <T>(work: (db: Database) => T) => operation(true, async (db) => {
+       const value = work(db)
+@@ -444,7 +471,10 @@
+     dispose: () => {
+       if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
+       lifecycle.closed = true
+-      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => { materializations.clear() })
++      lifecycle.disposing ??= Promise.allSettled([...active]).then(() => {
++        try { closeAuthenticationRead() }
++        finally { materializations.clear() }
++      })
+       return lifecycle.disposing
+     },
+   }
+--- a/modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts
++++ b/modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts
+@@ -50,7 +50,11 @@
+   return Object.freeze(policy as AuthLimits)
+ }
+ 
+-/** The supplied read opens a fresh read-only connection; write owns admission and COMMIT. */
++/**
++ * The supplied read observes current committed metadata independently in autocommit.
++ * Its connection may be reused, but no snapshot or value is retained between reads.
++ * The supplied write owns admission and COMMIT.
++ */
+ export function createAuthenticationSecrets(options: {
+   read: <T>(work: (db: Database) => T) => T
+   write: <T>(work: (db: Database) => T) => Promise<T>
 --- /dev/null
 +++ b/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts
 @@ -0,0 +1,448 @@
@@ -2691,3 +2695,313 @@
 +    }
 +  },
 +)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts
+@@ -0,0 +1,307 @@
++import { expect, test } from "bun:test"
++import { chmod, link, lstat, mkdtemp, realpath, rename, rm, symlink } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import type { LocalStore } from "../../../runtime/local-contract.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++
++const at = 1000
++const expiresAt = 10000
++const bytes = new Uint8Array([0, 255, 17, 128])
++
++// Real SQLite stores share one installation. These opaque bytes exercise the
++// LocalSecrets contract; this fixture performs no UI qualification or login.
++async function withStores(work: (input: { directory: string; store: LocalStore; other: LocalStore }) => Promise<void>) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-auth-read-connection-"))
++  const opened: LocalStore[] = []
++  await chmod(directory, 0o700)
++  try {
++    const store = await openLocalStore(directory)
++    opened.push(store)
++    const other = await openLocalStore(directory)
++    opened.push(other)
++    await work({ directory, store, other })
++  } finally {
++    try { await Promise.all(opened.map((store) => store.dispose())) }
++    finally { await rm(directory, { recursive: true, force: true }) }
++  }
++}
++
++function readRoot<T>(store: LocalStore, work: () => Promise<T>, signal?: AbortSignal) {
++  if (!store.readSnapshotRoot) throw new Error("Canonical readonly root is required")
++  return store.readSnapshotRoot(work, signal ? { signal } : undefined)
++}
++
++function authentication(store: LocalStore) {
++  if (!store.secrets.authentication) throw new Error("Canonical authentication lifecycle is required")
++  return store.secrets.authentication
++}
++
++async function issueSession(store: LocalStore, namespace: "a" | "d" = "a") {
++  const auth = authentication(store)
++  const parent = `${namespace.repeat(64)}:login:${"b".repeat(64)}`
++  const key = `${namespace.repeat(64)}:session:${"c".repeat(64)}`
++  expect(await auth.issue({ key: parent, value: bytes, expiresAt, at })).toBe(true)
++  expect(await store.secrets.take(parent, at)).toEqual(bytes)
++  expect(await auth.issue({ key, value: bytes, expiresAt, at, parent })).toBe(true)
++  return { key, parent }
++}
++
++test("auth reads observe another store's committed replacement after a held C08 root", async () => {
++  await withStores(async ({ store, other }) => {
++    await store.secrets.put("opaque-session", bytes, expiresAt, at)
++    expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++    const entered = Promise.withResolvers<void>()
++    const released = Promise.withResolvers<void>()
++    const writer = { committed: false, pending: undefined as Promise<void> | undefined }
++    const reading = readRoot(store, async () => {
++      const before = store.currentSnapshots?.()
++      expect(before).toBeDefined()
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      entered.resolve()
++      await released.promise
++      expect(writer.committed).toBe(false)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      expect(store.currentSnapshots?.()).toEqual(before)
++      return "root-complete"
++    })
++    void reading.catch(() => undefined)
++    try {
++      await Promise.race([entered.promise, reading])
++      // This call originates outside the root's ALS. BEGIN IMMEDIATE keeps its
++      // COMMIT pending until the root ends; never await this writer inside C08.
++      writer.pending = other.secrets.put("opaque-session", new Uint8Array([9, 8, 7]), expiresAt, at)
++        .then(() => { writer.committed = true })
++      void writer.pending.catch(() => undefined)
++      expect(writer.committed).toBe(false)
++      released.resolve()
++      expect(await reading).toBe("root-complete")
++      await writer.pending
++      expect(writer.committed).toBe(true)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(new Uint8Array([9, 8, 7]))
++      expect(await readRoot(store, () => store.secrets.get("opaque-session", at))).toEqual(new Uint8Array([9, 8, 7]))
++      await other.secrets.put("opaque-session", new Uint8Array([6, 5]), expiresAt, at)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(new Uint8Array([6, 5]))
++    } finally {
++      released.resolve()
++      await reading.catch(() => undefined)
++      await writer.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("auth reads refuse managed sessions revoked or removed by another store between calls", async () => {
++  await withStores(async ({ store, other }) => {
++    const revoked = await issueSession(store)
++    const removed = await issueSession(store, "d")
++    const auth = authentication(store)
++    expect(auth.inspect(revoked.parent, at)?.state).toBe("completed")
++    expect(auth.inspect(removed.key, at)?.state).toBe("active")
++    await readRoot(store, async () => {
++      expect(await store.secrets.get(revoked.key, at)).toEqual(bytes)
++      expect(await store.secrets.get(removed.key, at)).toEqual(bytes)
++    })
++    await authentication(other).revoke(revoked.parent, at + 1)
++    await other.secrets.remove(removed.key)
++    await readRoot(store, async () => {
++      expect(auth.inspect(revoked.parent, at + 1)?.state).toBe("revoked")
++      // The child's own row remains active: its real parent revocation must
++      // independently prevent payload release, not just change a cached row.
++      expect(auth.inspect(revoked.key, at + 1)?.state).toBe("active")
++      expect(auth.inspect(removed.key, at + 1)?.state).toBe("revoked")
++      expect(await store.secrets.get(revoked.key, at + 1)).toBeUndefined()
++      expect(await store.secrets.get(removed.key, at + 1)).toBeUndefined()
++    })
++    await store.secrets.put(removed.key, new Uint8Array([9]), expiresAt, at + 1)
++    expect(await store.secrets.get(removed.key, at + 1)).toBeUndefined()
++    expect(await other.secrets.get(revoked.key, at + 1)).toBeUndefined()
++  })
++})
++
++test("auth reads recheck explicit expiry inside C08 without collecting durable rows", async () => {
++  await withStores(async ({ store, other }) => {
++    const session = await issueSession(store)
++    const before = await authentication(other).stats()
++    await readRoot(store, async () => {
++      expect(await store.secrets.get(session.key, expiresAt - 1)).toEqual(bytes)
++      expect(await store.secrets.get(session.key, expiresAt)).toBeUndefined()
++      expect(await store.secrets.get(session.key, expiresAt + 1)).toBeUndefined()
++      // Reading at an expired time neither rewrites nor deletes the opaque row.
++      expect(await store.secrets.get(session.key, expiresAt - 1)).toEqual(bytes)
++      expect(await authentication(store).stats()).toEqual(before)
++    })
++    expect(await authentication(other).stats()).toEqual(before)
++    expect(await other.secrets.get(session.key, expiresAt - 1)).toEqual(bytes)
++  })
++})
++
++test("auth reads return detached bytes across calls, stores and readonly roots", async () => {
++  await withStores(async ({ store, other }) => {
++    const input = new Uint8Array(bytes)
++    await store.secrets.put("opaque-session", input, expiresAt, at)
++    input.fill(7)
++    const first = await store.secrets.get("opaque-session", at)
++    const second = await store.secrets.get("opaque-session", at)
++    if (!first || !second) throw new Error("Persisted opaque payload missing")
++    expect(first).toEqual(bytes)
++    expect(second).toEqual(bytes)
++    expect(first.buffer).not.toBe(input.buffer)
++    expect(second.buffer).not.toBe(first.buffer)
++    first.fill(1)
++    expect(second).toEqual(bytes)
++    await readRoot(store, async () => {
++      const held = await store.secrets.get("opaque-session", at)
++      if (!held) throw new Error("Readonly opaque payload missing")
++      held.fill(2)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++    })
++    expect(await other.secrets.get("opaque-session", at)).toEqual(bytes)
++    expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++  })
++})
++
++test("auth reads reject ended descendants and aborted scopes without borrowing a later root", async () => {
++  await withStores(async ({ store }) => {
++    await store.secrets.put("opaque-session", bytes, expiresAt, at)
++    const release = Promise.withResolvers<void>()
++    const late: { pending?: Promise<Uint8Array | undefined> } = {}
++    try {
++      await readRoot(store, async () => {
++        expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++        late.pending = release.promise.then(() => store.secrets.get("opaque-session", at))
++        void late.pending.catch(() => undefined)
++      })
++      await readRoot(store, async () => {
++        release.resolve()
++        await expect(late.pending).rejects.toThrow("scope has ended")
++        expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      })
++      const controller = new AbortController()
++      await expect(readRoot(store, async () => {
++        expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++        controller.abort(new Error("Authentication request cancelled"))
++        await expect(store.secrets.get("opaque-session", at)).rejects.toThrow("Authentication request cancelled")
++        expect(() => authentication(store).inspect("opaque-session", at)).toThrow("Authentication request cancelled")
++        return "caught-but-invalid"
++      }, controller.signal)).rejects.toThrow("Authentication request cancelled")
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++    } finally {
++      release.resolve()
++      await late.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("auth reads fail immediately during disposal while the admitted readonly root drains", async () => {
++  await withStores(async ({ store, other }) => {
++    await store.secrets.put("opaque-session", bytes, expiresAt, at)
++    const entered = Promise.withResolvers<void>()
++    const released = Promise.withResolvers<void>()
++    const closing = { complete: false, pending: undefined as Promise<void> | undefined }
++    const reading = readRoot(store, async () => {
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      entered.resolve()
++      await released.promise
++      await expect(store.secrets.get("opaque-session", at)).rejects.toThrow("disposed")
++      return "drained"
++    })
++    void reading.catch(() => undefined)
++    try {
++      await Promise.race([entered.promise, reading])
++      closing.pending = store.dispose().then(() => { closing.complete = true })
++      void closing.pending.catch(() => undefined)
++      expect(closing.complete).toBe(false)
++      await expect(store.secrets.get("opaque-session", at)).rejects.toThrow("disposed")
++      expect(() => authentication(store).inspect("opaque-session", at)).toThrow("disposed")
++      released.resolve()
++      expect(await reading).toBe("drained")
++      await closing.pending
++      expect(closing.complete).toBe(true)
++      await store.dispose()
++      await expect(store.secrets.get("opaque-session", at)).rejects.toThrow("disposed")
++      expect(await other.secrets.get("opaque-session", at)).toEqual(bytes)
++    } finally {
++      released.resolve()
++      await reading.catch(() => undefined)
++      await closing.pending?.catch(() => undefined)
++    }
++  })
++})
++
++test("auth writes caught after warm reads still poison C08 and cannot commit secrets or maintenance", async () => {
++  await withStores(async ({ store, other }) => {
++    await store.secrets.put("opaque-session", bytes, expiresAt, at)
++    const session = await issueSession(store)
++    const auth = authentication(store)
++    const before = await authentication(other).stats()
++    const attempts = [
++      () => store.secrets.put("opaque-session", new Uint8Array([9]), expiresAt, at),
++      () => store.secrets.take("opaque-session", at),
++      () => store.secrets.remove("opaque-session"),
++      () => auth.collect(expiresAt + 1),
++      () => auth.revoke(session.key, at),
++    ]
++    for (const attempt of attempts) {
++      await expect(readRoot(store, async () => {
++        expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++        await expect(attempt()).rejects.toThrow("Nested local writes are forbidden")
++        return "caught-but-poisoned"
++      })).rejects.toThrow("Nested local write attempted")
++      expect(await other.secrets.get("opaque-session", at)).toEqual(bytes)
++      expect(await other.secrets.get(session.key, at)).toEqual(bytes)
++      expect(await authentication(other).stats()).toEqual(before)
++    }
++    // Rejected durable revocation still fences this process immediately. The
++    // independent store continues to observe the unchanged committed session.
++    expect(auth.inspect(session.key, at)?.state).toBe("revoked")
++    expect(await store.secrets.get(session.key, at)).toBeUndefined()
++    expect(authentication(other).inspect(session.key, at)?.state).toBe("active")
++    expect(await other.secrets.get(session.key, at)).toEqual(bytes)
++  })
++})
++
++for (const mode of ["replacement", "symlink alias", "missing file"] as const) {
++  test(`auth reads refuse physical ${mode} after warming the original installation handle`, async () => {
++    await withStores(async ({ directory, store, other }) => {
++      await store.secrets.put("opaque-session", bytes, expiresAt, at)
++      expect(await store.secrets.get("opaque-session", at)).toEqual(bytes)
++      expect(await other.secrets.get("opaque-session", at)).toEqual(bytes)
++      const path = join(directory, "installation.sqlite")
++      const original = join(directory, "original.sqlite")
++      const changed = { original: false, incoming: undefined as string | undefined }
++      try {
++        if (mode === "replacement") {
++          changed.incoming = await mkdtemp(join(await realpath(tmpdir()), "sf-auth-read-replacement-"))
++          await chmod(changed.incoming, 0o700)
++          const replacement = await openLocalStore(changed.incoming)
++          try {
++            await replacement.secrets.put("opaque-session", new Uint8Array([9, 9]), expiresAt, at)
++            expect(await replacement.secrets.get("opaque-session", at)).toEqual(new Uint8Array([9, 9]))
++          } finally { await replacement.dispose() }
++          // Preserve the original inode only for cleanup. The following rename
++          // atomically replaces the live pathname with a different real database.
++          await link(path, original)
++          changed.original = true
++          await rename(join(changed.incoming, "installation.sqlite"), path)
++        } else {
++          await rename(path, original)
++          changed.original = true
++          if (mode === "symlink alias") await symlink(original, path)
++        }
++        await expect(store.secrets.get("opaque-session", at)).rejects.toThrow()
++        expect(() => authentication(store).inspect("opaque-session", at)).toThrow()
++        await expect(authentication(store).stats()).rejects.toThrow()
++        await expect(other.secrets.get("opaque-session", at)).rejects.toThrow()
++        // Discarding a failed handle must not silently adopt the new pathname.
++        await expect(store.secrets.get("opaque-session", at)).rejects.toThrow()
++        if (mode === "missing file") await expect(lstat(path)).rejects.toThrow("ENOENT")
++      } finally {
++        if (changed.original) {
++          await rm(path, { force: true })
++          await rename(original, path)
++        }
++        if (changed.incoming) await rm(changed.incoming, { recursive: true, force: true })
++      }
++    })
++  })
++}

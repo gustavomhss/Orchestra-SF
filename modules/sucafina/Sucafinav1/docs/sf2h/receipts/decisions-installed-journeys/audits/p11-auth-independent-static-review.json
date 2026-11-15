@@ -1,0 +1,103 @@
+{
+  "schema": "sf52-independent-static-review-v1",
+  "reviewer": "composition_audit",
+  "subject": "P11 dedicated authentication autocommit connection",
+  "verdict": "PASS_STATIC_NO_BLOCKERS_PENDING_RUNTIME_QUALIFICATION",
+  "base": {
+    "sha": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+    "tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
+    "material": "C45",
+    "integration71": "ENDED"
+  },
+  "input_material": "/workspace/scratch/fec39c0682b3/m52-work/p11-auth-proposal/material.json",
+  "input_patch": "/workspace/scratch/fec39c0682b3/m52-work/p11-auth-proposal/complete.patch",
+  "verification": {
+    "material_sha256": "03a6d04820708feba67fa634c37b36fa6d4f40d4293911bef9a0504dd0f9284f",
+    "patch_sha256": "e302481a39c252682c98f9d446de41f7b4b284dc598cfc7f0489bc4ca0838615",
+    "patch_bytes": 5114,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "preimage": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+        "postimage": "5d7bccf29c38bc6a6b83ec2f2b3d543640b8dada",
+        "preimage_sha256": "6b1f46d45dd77c73d266d4955daeabca6f0174daebd14f320add49801fb21b2f",
+        "postimage_sha256": "206c8873d4b9d5a8177a19a9b4e3bc477ae38b9097f3a78c23b2bcfb8e97313e",
+        "bytes": 36732,
+        "textual_reconstruction": "PASS_EXACT_NO_FUZZ_OR_OFFSET"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "preimage": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+        "postimage": "6f024be93e31329270cc266742038a6e58807b1c",
+        "preimage_sha256": "66499d3021695f63a61178d516aad8e0fe9363cffa7c8de388952ec7dd75c981",
+        "postimage_sha256": "cce36f71eea984abbc2bb84614166d54aa63ee11b18d2ef1aac123aa62dcefb8",
+        "bytes": 18553,
+        "textual_reconstruction": "PASS_EXACT_NO_FUZZ_OR_OFFSET"
+      }
+    ]
+  },
+  "reviewed_properties": [
+    {
+      "id": "authority-freshness",
+      "finding": "The private authentication handle is separate from every business root and does not issue BEGIN. Every existing auth SELECT and every principal/expiry/revocation check remains. No values, ACLs, resolved actors, or authority decisions are memoized."
+    },
+    {
+      "id": "physical-continuity",
+      "finding": "Database identity derives from the already validated FileHandle stat before it closes. Each auth callback is fenced before/after by lstatSync regular-file/uid/private-mode/dev/ino and realpathSync equality. Missing/changed/unsafe paths fail closed and discard the old handle."
+    },
+    {
+      "id": "scope-lifecycle",
+      "finding": "lifecycle.closed checked before callback and again before returning; inherited requireScope retains all ancestor closure/abort checks before and after the synchronous read."
+    },
+    {
+      "id": "autocommit-guard",
+      "finding": "db.inTransaction must be false before and after work; unexpected transaction or query error discards the reference before close and preserves the original rejection. Existing callbacks use Statement.get and return copies, with no retained iterator or asynchronous callback."
+    },
+    {
+      "id": "dispose",
+      "finding": "Existing refusal from a transaction scope and synchronous closed admission fence remain. Memoized disposal waits admitted active operations, then clears the dedicated handle and closes it once; materializations clear in finally even if close throws."
+    },
+    {
+      "id": "unchanged-writers",
+      "finding": "No changes to operation(write), queue ordering, active tracking, lock retries/timeouts, transactionAll, readSnapshotRoot, currentSnapshots, current authority, C08 namespaces, grants, or policies."
+    },
+    {
+      "id": "documentation",
+      "finding": "Only the createAuthenticationSecrets doc comment changes in the second file. Its statement now describes fresh committed autocommit reads and permits connection reuse without claiming a retained result/snapshot."
+    },
+    {
+      "id": "types",
+      "finding": "node:fs lstatSync/realpathSync are synchronous APIs; FileHandle.stat and lstatSync numeric dev/ino types match. Database type and inTransaction/close were already used in the same module. No new external dependency or API exposed."
+    }
+  ],
+  "objective_blockers": [],
+  "qualification_needed": [
+    "Real Bun/SQLite surgical control: warm store A auth reader, hold A canonical root, start store B revocation/removal and verify it remains pending, release the root, await B commit, then require a new auth read on the warmed A handle to observe that committed change.",
+    "Retain the existing Auth72 local pending-revocation/logout controls for immediate cancellation before durable write admission; do not confuse that fence with a peer commit during a held BEGIN IMMEDIATE root.",
+    "Physical replacement/unlink/symlink/permission changes after warmup must reject without returning prior credentials.",
+    "Closed/aborted scopes and disposal draining/idempotence must preserve denial and resource closure.",
+    "Installed five-case qualification remains required with original assertions/identities/budgets; static approval or component PASS cannot replace it."
+  ],
+  "performance_limit": "D14 showed broad inclusive read/comparison latency and repeated operator authentication. This review establishes the concrete removed connection-open/PRAGMA/close amplification, but provides no isolated timings and does not predict how much wall time it saves.",
+  "residual_limits": [
+    "Filesystem before/after identity checks do not claim atomic protection against arbitrary same-UID ABA replacement between syscalls; the existing path-opening mechanism has comparable external-race limits.",
+    "inTransaction detects explicit transaction contamination; callback discipline and surgical freshness tests must confirm no live statement/cursor retains an implicit snapshot.",
+    "New shared source content is an inert owner proposal/isolated candidate until authorized integration; no release or source-lease takeover is inferred."
+  ],
+  "activity": {
+    "repository_operations": "GitHub MCP GET only",
+    "verification": "Pure-text SHA1/SHA256 and unified-hunk reconstruction",
+    "product_execution": false,
+    "tests": false,
+    "remote_mutation": false,
+    "dispatch": false
+  },
+  "documentary_correction": {
+    "reason": "Correct the proposed concurrency oracle to match the canonical BEGIN IMMEDIATE root; no product or postimage change.",
+    "source": "modules/sucafina/Sucafinav1/runtime/local-store.ts@d9eaac043514141abb2f1f978a6fd2ceaf4040d6: readSnapshotRoot invokes operation(true), which admits BEGIN IMMEDIATE.",
+    "ordering": "Warm store A authentication reader; A holds a canonical business/read root; store B starts revocation/removal and remains uncommitted while the lock is held; release A root; await B commit; A performs a new auth read using its warmed dedicated connection and observes the committed change.",
+    "separate_inflight_fence": "The existing Auth72 pending-revocation/logout fence covers immediate local cancellation before the durable write completes; it is distinct from visibility of another store commit.",
+    "withdrawn_claim": "A peer commits its auth write while the same LocalStore BEGIN IMMEDIATE business/read root remains held.",
+    "supersedes_artifact_sha256": "e154e8e07b5d8602a7231f415a9885c9a054825944c38358bf32e2fe1e5e9457"
+  }
+}
