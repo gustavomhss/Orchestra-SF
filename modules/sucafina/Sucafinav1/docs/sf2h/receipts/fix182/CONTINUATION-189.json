@@ -1,0 +1,47 @@
+{
+  "schema": "sf2h.causal-fix182.authority-reconciliation.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 182,
+  "epoch": "native-fix-e1-browser182",
+  "source_material_commit": "2304f06ce4a1269034ba7db94211c639878b3d1a",
+  "source_material_tree": "bc8e570705e64c5ce6ff31151f74cbcf4351f273",
+  "consumer_previous_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "consumer_previous_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+  "consumer_current_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+  "consumer_current_tree": "5cee64807f55d0ec169801795712844051c47e16",
+  "consumer_proposed_post_tree": "ee81256d7fa479cd5f24f317f319f01b788f03a5",
+  "consumer_current_delta_files": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after162-189/S0-FENCE.json"
+  ],
+  "consumer_fence_blob": "2fcf0d3931adecc9d520a64c8c4385bd910acb6e",
+  "source_f03_blobs_unchanged": true,
+  "consumer_pre_blobs": {
+    "frame": "06165f1ac7c6b9918a712570caa6a076559f2ec7",
+    "states": "7084c442f96e3b7d0f91b66027118df6eb003ebc",
+    "test": "aa17ece934eb35f54602b6de99bcc39da39d1fed"
+  },
+  "consumer_post_blobs_proposed": {
+    "frame": "26656f573f877496925993e2c702df7aa926251a",
+    "states": "15433e5b73a4234e7dfb6df3bdb327c88fb83e7d",
+    "test": "92024c7caa2f5e10d243c6feff71abb4b2a1b7f0"
+  },
+  "inert_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix182/CONSUMER-162-INERT.patch",
+  "inert_patch_blob": "e8f019a6cf5ca9e6ec66bd3922c15aede2db8d1f",
+  "current_authority": {
+    "integrator": 189,
+    "compiler": 190,
+    "product_ci": 191,
+    "integrator_pr": 65
+  },
+  "predecessor_authority_revoked": {
+    "integrator": 162,
+    "compiler": 163,
+    "product_ci": 164
+  },
+  "successor_epoch": "S0-C-e21-browser189",
+  "requested_work": "189 consumes exact F03 patch by CAS on current sf2-stack; after integration 190 checks app-shell typecheck/guards, 191 executes existing Bun page-frame selector with args --timeout 120000 ./test-browser/sucafina-native/page-frame.test.ts",
+  "application": "NOT_APPLIED",
+  "postimage_hosted_tests": "NOT_RUN",
+  "native_goal": "paused",
+  "global_release": false
+}
