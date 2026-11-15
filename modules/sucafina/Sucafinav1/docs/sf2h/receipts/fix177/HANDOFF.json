@@ -1,0 +1,226 @@
+{
+  "schema": "sf2h.native-fix177.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "n": 177,
+  "order": "A01",
+  "branch": "sf-ux-w14",
+  "pr": 133,
+  "epoch": "native-fix-e1-browser177",
+  "actor": "ChatGPT GPT-6",
+  "requested_model": "Astra",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_exposed": false,
+  "status": "ARTIFACT_READY_PATCH_AND_DEPENDENCY_CLOSURE_NOT_INTEGRATED_NOT_QUALIFIED",
+  "native_goal": "paused",
+  "global_release": false,
+  "source": {
+    "prepared_head": "32b69bd448c3141f2d68e39a8021d4ef0bbc31eb",
+    "prepared_tree": "dcbc0774a934c040d68683c140e859860db54876",
+    "ack_commit": "82be0aa3f28775006872d3bedf83a43bdbcb0f10",
+    "ack_tree": "9b36bb93893302a26644c6f46a95a216ea80b22e",
+    "ack_blob": "2aef210095a3e6db47dd230971e9771e5d44b180",
+    "patch_commit": "0da6973b636d98116d381a6902a2f85cd25d619e",
+    "patch_tree": "404eb079f9f2f9b18816e4dc953bafef2f2a436c",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/domain.ts",
+        "pre_blob": "1aa4a2360f94cadfdc49e7e0579f61fb97dfa0f4",
+        "post_blob": "9c5eb4b4139315d20b5ae40a06d58f955984596a",
+        "action": "MODIFIED",
+        "source_code_commit": "0da6973b636d98116d381a6902a2f85cd25d619e"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/domain/projection.ts",
+        "pre_blob": "eae532dae73f282d9cefd66228da15fc26b63040",
+        "post_blob": "eae532dae73f282d9cefd66228da15fc26b63040",
+        "action": "UNCHANGED_FROZEN_DEPENDENCY",
+        "release_exact_blob": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "pre_blob": "1eca59606897df8c2a291bff860e51cb6e3f81ad",
+        "post_blob": "1eca59606897df8c2a291bff860e51cb6e3f81ad",
+        "action": "UNCHANGED_EXISTING_CHECKS"
+      }
+    ],
+    "frozen_contract_blobs": {
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1"
+    }
+  },
+  "consumer": {
+    "owner": 162,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_pre_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "observed_pre_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "historical_compiler_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "historical_compiler_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "preimages": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/domain.ts",
+        "blob": "1aa4a2360f94cadfdc49e7e0579f61fb97dfa0f4"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/domain/projection.ts",
+        "blob": null,
+        "condition": "ABSENT"
+      }
+    ],
+    "proposed_postimages": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/domain.ts",
+        "blob": "9c5eb4b4139315d20b5ae40a06d58f955984596a"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/domain/projection.ts",
+        "blob": "eae532dae73f282d9cefd66228da15fc26b63040"
+      }
+    ],
+    "proposed_post_tree_inert": "532705345c67bcd82057729791c2452a41f94360",
+    "actual_post_head": null,
+    "actual_post_tree": null,
+    "actual_post_commit": null,
+    "condition": "APPLY_ONLY_BY_162_AFTER_HEAD_AND_PREIMAGE_RECHECK;CAS_EXPECTED_SHA;FORCE_FALSE;RECONCILE_DRIFT",
+    "already_consumed_unchanged": [
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts",
+        "blob": "1eca59606897df8c2a291bff860e51cb6e3f81ad"
+      },
+      {
+        "path": "packages/schema/src/sucafina/domain.ts",
+        "blob": "79b0e72d3309da40a1b473802397ed79461cb3bb"
+      },
+      {
+        "path": "packages/schema/src/sucafina/domain/fields.ts",
+        "blob": "3d7e4f0c3379184645101179a3cd6e7aea1b8407"
+      },
+      {
+        "path": "packages/schema/src/sucafina/domain/commands.ts",
+        "blob": "ec7c10bfb9fc3b6c0b92e57169ceb52b3c1bf32f"
+      },
+      {
+        "path": "packages/schema/src/sucafina/domain/product.ts",
+        "blob": "00fc98fb465eec0a52c7b7447e9f6750cbcec784"
+      },
+      {
+        "path": "packages/schema/src/sucafina/domain/operations.ts",
+        "blob": "62083a80afd0cbded2d1cb0cadd82fa8add52828"
+      },
+      {
+        "path": "packages/client/src/sucafina/domain.ts",
+        "blob": "52abf1afa5cc7daf365f695b26ffcccb87135881"
+      }
+    ]
+  },
+  "causal_findings": [
+    {
+      "id": "A01-177-TS2307",
+      "where": "native-ui/domain.ts:9-10",
+      "cause": "W690 and current 162 consumed domain.ts but omitted its frozen dependency domain/projection.ts",
+      "resolution": "selective add original blob eae532dae73f282d9cefd66228da15fc26b63040 only by 162",
+      "evidence": "source helper present, consumer absent",
+      "status": "SOURCE_READY_CONSUMER_PENDING"
+    },
+    {
+      "id": "A01-177-TS2345",
+      "where": "native-ui/domain.ts:122",
+      "cause": "generic Persistence.transaction<T> inferred first denied return, other discriminants incompatible",
+      "resolution": "explicit SfDomainReadOutcome three-state discriminated union and transaction generic",
+      "status": "SOURCE_PATCHED_HOSTED_CHECK_PENDING"
+    },
+    {
+      "id": "A01-177-TS18046",
+      "where": "native-ui/domain.ts:155,156,185,200,201",
+      "cause": "transaction generic collapsed to unknown after incompatible inferred callback",
+      "resolution": "same typed generic with ok narrowing and required data/versions/versionFence",
+      "status": "SOURCE_PATCHED_HOSTED_CHECK_PENDING"
+    },
+    {
+      "id": "A01-177-TS2322",
+      "where": "native-ui/domain.ts:236,240",
+      "cause": "dynamic Object.keys/interpolated CAP id obscured exact closed union, amplified by unresolved helper",
+      "resolution": "mapped typed exact capability-to-domain.page literal route pairs; zero casts",
+      "status": "SOURCE_PATCHED_HOSTED_CHECK_PENDING"
+    }
+  ],
+  "invariants": [
+    "no new producer or domain reimplementation",
+    "same original Request inside current auth transaction",
+    "commit=false denied; audit commit retained when a view needs it",
+    "fresh readContext recheck + same principal/installation/project/host",
+    "source versions fenced after transaction",
+    "unknown/denied/unavailable remain non-ok",
+    "local-admin operator reader genuinely unbound, no mock",
+    "no registry/package export edits",
+    "frozen helper unchanged",
+    "no test changes"
+  ],
+  "shared_seam": {
+    "owner": 162,
+    "patch_location": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/PATCH-162.md",
+    "registry_changes": "NONE_REQUIRED_EXISTING_305_LITERAL_IDS",
+    "package_export_changes": "NONE_REQUIRED_ALREADY_PRESENT",
+    "source_apply_exact_blobs": [
+      "apps/cli/src/sucafina-product/native-ui/domain.ts",
+      "apps/cli/src/sucafina-product/native-ui/domain/projection.ts"
+    ]
+  },
+  "validation": {
+    "local": "NOT_RUN_BY_POLICY",
+    "hosted_163": "NOT_RUN_FOR_CHANGED_CANDIDATE",
+    "hosted_164": "NOT_RUN_FOR_CHANGED_CANDIDATE",
+    "prior_compiler": {
+      "run_id": 43766055614,
+      "job_id": 132971280139,
+      "work_sha": "690a34cdd81c12d7311f3717c19679b950276161",
+      "result": "FAIL_REAL_DOMAIN_DIAGNOSTICS"
+    },
+    "prior_browser": {
+      "run_id": 43766970018,
+      "job_id": 132974180913,
+      "result": "FAILED_OTHER_SLICES_NOT_A01_PROOF"
+    },
+    "acceptance": {
+      "A01-AC01": {
+        "source_observed": "frozen projection preserves whitelists, zero/null/missing, numeric versions",
+        "hosted": "NOT_RUN"
+      },
+      "A01-AC02": {
+        "source_observed": "closed 10 literal route ids, no new opaque dispatch",
+        "hosted": "NOT_RUN"
+      },
+      "A01-AC03": {
+        "source_observed": "original Request, same transaction and post-version fence unchanged",
+        "hosted": "NOT_RUN"
+      }
+    }
+  },
+  "next": {
+    "integrator_162": "Materialize only the two exact blobs into the present sf2-stack tree, reconcile HEAD/preimages, retain all other files, publish actual consumer postcommit/head/tree/blobs and ACK; keep local-admin blocked.",
+    "compiler_163": "After 162 new coherent C/tree only, dedupe actual request; hosted bun typecheck apps/cli, packages/client, packages/schema with existing SDK/export/guard checks; specifically confirm TS2307 TS2345 TS18046 TS2322 at native-ui/domain.ts resolved; no unchanged W690 retry.",
+    "product_ci_164": "After 162 materialization only, existing hosted test:ci/request select exactly modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts; 8 existing tests; dedupe C/tree/selection/runtime/config/fixtures, collect real job log/artifact; do not invent another dispatcher or full suite."
+  },
+  "blockers": [
+    {
+      "id": "A01-LOCAL-ADMIN",
+      "owner": 162,
+      "kind": "BLOCKED_PRODUCER_PORT",
+      "detail": "No original private authorized local operator jobs/backups reader; keep 503 / 403 correctly"
+    },
+    {
+      "id": "A01-F01-LIVE-CONTEXT",
+      "owner": 172,
+      "kind": "BLOCKED_DEPENDENCY",
+      "detail": "Live F01 original request/current binding must be integrated for installed-flow proof"
+    }
+  ],
+  "terminal": {
+    "authoring": "ARTIFACT_READY_HANDOFF_TO_162",
+    "consumer": "PENDING_162",
+    "qualification": "NOT_RUN",
+    "global_release": false
+  }
+}
