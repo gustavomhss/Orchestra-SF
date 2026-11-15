@@ -1,0 +1,52 @@
+{
+  "schema": "sf2h.procurement73.reading.v1",
+  "mission": 73,
+  "completed_at": "2026-11-15T03:14:41.860Z",
+  "pack_read_complete": true,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "sources": [
+    {
+      "path": "START.md",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850"
+    },
+    {
+      "path": "WORKFLOW.md",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925"
+    },
+    {
+      "path": "execution/COMMON.md",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "path": "execution/actors/S2-A.json",
+      "blob": "7327be5449328c356a0f5b242ddc9d2014175e41"
+    },
+    {
+      "path": "specs/product-acceptance.md",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c"
+    },
+    {
+      "path": "specs/resident-runtime.md",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1"
+    }
+  ],
+  "readers": {
+    "root": "Mission, START, WP04 all tasks, contract C01/C02/C03/C08, inherited criteria, ownership and live authority, product and dependencies",
+    "helper": "/root/ci_contract_review: full pack/COMMON/WORKFLOW/START and two appendices through EOF including resident context,111criteria,C01-C17,oracles,AM01-AM06"
+  },
+  "AGENTS": {
+    "path": "AGENTS.md",
+    "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "nested": "No AGENTS in modules or modules/sucafina complete subtree"
+  },
+  "authority_delta": {
+    "ACK71": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "ACK71_blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2",
+    "ACK75": "55c309e3b39f11a09c1796afc755535d4eb70295",
+    "coordination75_comment": 6888339185,
+    "coordination71_comment": 6888341625
+  },
+  "source_only": true,
+  "all_inherited_criteria_preserved": true,
+  "GLOBAL_RELEASE": false
+}

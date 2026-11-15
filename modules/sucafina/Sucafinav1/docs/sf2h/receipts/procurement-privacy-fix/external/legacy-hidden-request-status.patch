@@ -1,0 +1,20 @@
+diff --git a/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts b/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts
+--- a/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts
++++ b/modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts
+@@ -472,15 +472,15 @@
+         action: "save",
+         id,
+         version: 1,
+         values: { pr: { title: "Attack" } },
+       },
+       env,
+     ),
+-  ).toMatchObject({ ok: false, status: 403 })
++  ).toMatchObject({ ok: false, status: 404 })
+   expect(state).toEqual(before)
+   expect(
+     domain.execute(state, owner, { page: "Requests", action: "submit_pr", id, version: 1, values: { pr } }, env).ok,
+   ).toBe(true)
+   const pending = structuredClone(state)
+   expect(
+     domain.execute(state, owner, { page: "Requests", action: "approve", id, version: 2, values: {} }, env),
