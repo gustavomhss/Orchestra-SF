@@ -1,0 +1,22 @@
+{
+  "schema": "sf2h.integration-authority-transfer.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "mission": 162,
+  "logical_actor": "S0-C",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "previous_epoch": "S0-C-e19-browser132",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+  "next_epoch": "S0-C-e20-browser162",
+  "expected_previous_head": "8094e599e3d18609e269548d24619a3246fbc735",
+  "authority": "S0 under explicit user request for fresh sessions to consume delivered source backlog",
+  "reason": "Transfer sole integration authority, preserve all132 product/evidence and existing author/validator lanes. No second integrator or native S0.",
+  "runtime_termination_claimed": false,
+  "limitation": "Browser lifecycle handle not exposed. Authority fencing only, not process kill/token revocation; no inference of death from silence. Late predecessor commits require reconciliation before effects, never force/reset.",
+  "compiler": "149/compiler-e3-browser149/PR107",
+  "product_ci": "150/product-ci-e3-browser150/PR106",
+  "native_goal": "paused",
+  "global_release": false,
+  "state": "PREPARED_NOT_STARTED"
+}
