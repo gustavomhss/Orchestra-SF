@@ -3,8 +3,8 @@
   "source": {
     "repository": "gustavomhss/Orchestra-SF",
     "branch": "ux-20-dispatch",
-    "source_head": "805d7f798dddd138009d9ddf05544cd88360a0a4",
-    "immutable_canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+    "immutable_canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "design_source_head_before_adapter": "805d7f798dddd138009d9ddf05544cd88360a0a4"
   },
   "workflow": "test-ci.yml",
   "method": "ci-run-linux-<request-id> temporary snapshot pushed to existing workflow, cleanup by existing job; do not create a new workflow/controller",
@@ -32,9 +32,24 @@
     "One causal request, source SHA+tree+normalized request evidence",
     "Do not claim GO on green preflight; N0 independent review and leases still required"
   ],
-  "status": "READY_TO_DISPATCH_NOT_EXECUTED",
+  "status": "CAUSAL_FIX_READY_FOR_ACTIONS_RETRY_NOT_EXECUTED",
   "actions_run": null,
   "actions_job": null,
   "actions_attempt": null,
-  "verdict": "NOT_RUN"
+  "verdict": "NOT_RUN",
+  "canonical_materialization": {
+    "strategy": "GitHub Actions only: git fetch exact pinned canonical commit, git show exact campaign blob into ephemeral temp file",
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "expected_blob_sha": "71b56906f8bb190c4d568f60c7511ce1ff63d5f3",
+    "behavior": "Fail closed on missing object, hash mismatch, empty content or git fetch errors; do not mutate the PR99 tree"
+  },
+  "first_actions_attempt": {
+    "run_id": 43706300252,
+    "job_id": 132788011981,
+    "head_sha": "2879168f34bc40b84f0c91f4c473e541a9fc1f15",
+    "conclusion": "failure",
+    "cause": "Canonical campaign absent in PR99 checkout; all three Node test cases stopped at shared existence assertion before Python started",
+    "evidence": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43706300252",
+    "disposition": "FIX_CAUSAL_INPUT_NO_CLAIM_OF_PYTHON_TEST_PASS"
+  }
 }

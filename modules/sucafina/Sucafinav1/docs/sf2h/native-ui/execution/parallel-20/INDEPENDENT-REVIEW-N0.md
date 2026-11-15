@@ -40,3 +40,5 @@ ACK105 publicado no produto em `d083b422b6a587f47873abde4d866e35017ff8b8` (lease
 ## Regra de testes do usuário
 
 NÃO executar Python, unittest, Node, Bun, typecheck ou qualquer teste localmente. Inspecionar W/S/run/job/attempt do workflow GitHub Actions gerado pelo `ACTIONS-PREFLIGHT-REQUEST.json`, logs, conteúdo da request e vínculo com PR99/HEAD. Se faltar execução real, resultado `NOT_RUN`, nunca PASS. A revisão do código/documentos sem execução local é permitida, sem confundir com prova.
+
+**Evidência de pré-teste:** GitHub Actions run [43706300252](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43706300252) concluiu FAIL por campaign ausente no checkout da PR99; os validadores Python **NÃO** iniciaram, portanto zero assertions canônicas foram revalidadas nesse run. Exigir no próximo Actions run Git blob canônico `71b56906…` obtido do SHA `dbf95472…`, com hash comprovado, e depois 3 subtests Node efetivamente completados. Não aceitar o primeiro run como PASS.
