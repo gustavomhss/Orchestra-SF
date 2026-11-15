@@ -143,6 +143,7 @@ test("AM01 shared recall runs under all five real profiles and reopens five sepa
           skillId, caseRef: completed.caseRef, runRef: completed.runRef,
           nativeSessionId: completed.receipt.nativeSessionId,
           sourceDigest: completed.receipt.sourceDigest, instructionsDigest: completed.receipt.instructionsDigest,
+          accessRevision: completed.accessRevision,
           manifestDigest: completed.receipt.manifestDigest, receipt: completed.receipt,
           actualModel: completed.actualModel, toolCallIds: completed.toolCallIds,
           outputRef: actual.output.id, outputDigest: actual.output.outputDigest,
