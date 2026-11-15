@@ -7,7 +7,6 @@ import type { createSfDomainClient } from "@orchestra/client/sucafina/domain"
 type DomainClient = ReturnType<typeof createSfDomainClient>
 type PageCall = Awaited<ReturnType<DomainClient["domain.page.CAP14"]>>
 type PageBody = Extract<PageCall, { kind: "response" }>["body"]
-type PageOk = Extract<PageBody, { status: "ok" }>
 export type SfVendorContract = typeof SfDomainContract.Type
 export type SfVendorSave = Parameters<DomainClient["domain.command.CAP14.save"]>[0]
 export type SfVendorEdit = SfVendorSave["values"]
