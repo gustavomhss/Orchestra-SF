@@ -1,0 +1,97 @@
+{
+  "schema": "sf2h.closure194.artifact.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 194,
+  "previous": 185,
+  "epoch": "source-closure-e1-browser194",
+  "state": "ARTIFACT_READY_BLOCKED_INTEGRATION_AND_INSTALLED_VALIDATION",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_exposure": "NOT_EXPOSED",
+  "authority": {
+    "prepared_head": "97c2c456cd0edf688392faa06bd1dffe6233a890",
+    "prepared_tree": "edce15f23a30e017f15a145d8340b24cfdf93b82",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure194/S0-FENCE.json",
+    "fence_blob": "ccb53748b3017372430be5b8cee4f15e730abb67",
+    "previous_head": "510288e459f47d12364f43b458368a7bc465e87b",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES"
+  },
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "source_packet": {
+    "sha": "e027e7ba4141d42075714939f8d9f686b1fec157",
+    "blob": "5318293873ae6a7228d4e7c1eb1a630e2ab6e31c"
+  },
+  "predecessor_packet": {
+    "sha": "d86c642aaf3f01a10694cf8c83ee8e652cc1ac3b",
+    "mission": 185
+  },
+  "f04": {
+    "handoff_commit": "96c01020db59d9b4f8d44300638418d67ee11fea",
+    "handoff_blob": "fb48f3d79a2644f91237685eccf29a5e703ac972",
+    "artifact_blob": "eb5b45c1417c9a75d59dc926b5b5f5eab1eb53be",
+    "fixture_blob": "cc7818e623e61e4217dfb2ada18ca3e1fa5f7e12",
+    "journeys_blob": "66e269a78af8262764228557e2eeccd29bca1a36",
+    "response_faults_blob": "71adbaaf679331a5a201aae663123ba87bc4a0b5",
+    "current_author_branch_fixture": "ABSENT; only 189 may compose the F04 dependency",
+    "observed_integrator_branch_fixture": "cc7818e623e61e4217dfb2ada18ca3e1fa5f7e12"
+  },
+  "implementation": {
+    "branch": "sf-ux-n22",
+    "pr": 153,
+    "original_preimage_commit": "97c2c456cd0edf688392faa06bd1dffe6233a890",
+    "code_commits": [
+      "41c6e13a7aaad46dd2c2931b95a9e39fe8cfa0fa",
+      "f956939313132c307381714859792db366db19e8"
+    ],
+    "code_head": "f956939313132c307381714859792db366db19e8",
+    "code_tree": "8724b16c504c568143b4f636b7350f0695a486e1",
+    "changed": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+        "pre": "1d59507133649d2ca57c0c30e2507193f35181fd",
+        "post": "01e56d1ac9cb3930f2c0486e15328e136a0a3e04"
+      }
+    ],
+    "unchanged": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure194/S0-FENCE.json",
+        "pre": "ccb53748b3017372430be5b8cee4f15e730abb67",
+        "post": "ccb53748b3017372430be5b8cee4f15e730abb67"
+      }
+    ],
+    "only_owned_code_path_changed": true,
+    "all_six_journeys_retained": true,
+    "skip_count": 0
+  },
+  "validation_request": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure194/VALIDATION-REQUEST-191.json",
+    "pre": null,
+    "post": "fcce1e38a50721283e0d8ccd6d064b36b7fd8502",
+    "status": "NOT_DISPATCHED"
+  },
+  "evidence": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "build": "NOT_RUN",
+    "validators": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "run_ids": [],
+    "job_ids": [],
+    "installed_actors": "NOT_OBSERVED",
+    "consumer_ack": "PENDING"
+  },
+  "blockers": [
+    "189 must apply exact code blob into same material C; F04 present on observed sf2-stack but no installed principal fixture proven here",
+    "191 needs real per-selection manifest/session and authorized second editor BrowserContext for CAS",
+    "U15 case-link source ref/version inherited BLOCKED_CONTRACT on source projection; this test-only lease cannot change shared domain or UI"
+  ],
+  "routing": {
+    "integrator": 189,
+    "product_ci": 191,
+    "compiler": 190,
+    "comments": "NOTICE_ONLY_NOT_ACK"
+  },
+  "global_release": false
+}

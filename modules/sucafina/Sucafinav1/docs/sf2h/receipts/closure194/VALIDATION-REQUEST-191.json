@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h.closure194.surgical-validation.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 194,
+  "source_epoch": "source-closure-e1-browser194",
+  "status": "REQUESTED_NOT_DISPATCHED",
+  "unique_dispatcher": {
+    "mission": 191,
+    "branch": "sf-ci-validation",
+    "pr": 106
+  },
+  "integrator": {
+    "mission": 189,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_head": "4426445c05823ed4932b8a8e35391df024bf74f3"
+  },
+  "author": {
+    "branch": "sf-ux-n22",
+    "pr": 153,
+    "commit": "f956939313132c307381714859792db366db19e8",
+    "tree": "8724b16c504c568143b4f636b7350f0695a486e1",
+    "code_blob": "01e56d1ac9cb3930f2c0486e15328e136a0a3e04"
+  },
+  "selector": {
+    "existing_runner": "Existing app-shell Playwright production/native exact-file selection; resolver 191 verifies alias/config before dispatch",
+    "file": "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+    "case_names": [
+      "CAP14 real authorized list reads Dashboard contracts and keeps filters on filtered-empty",
+      "CAP14 real edit uses source version and only dashboard save; confirms after authorized reread",
+      "CAP14 real denied second actor displays no unauthorized contract values or write control",
+      "CAP14 real version conflict cannot be shown saved",
+      "CAP14 real lost response does not automatically replay the command",
+      "CAP14 real owner-scoped 320px reflow and keyboard reachability"
+    ],
+    "expected_count": 6,
+    "do_not_use": "global suite/epic, new workflow, local Playwright, empty/skip selection or duplicate CI"
+  },
+  "prerequisites": [
+    "189 CAS-consumes only spec blob 01e56d1ac9cb3930f2c0486e15328e136a0a3e04 into same material candidate C; retain F04 fixture/journeys/fault-seams from 187 without modifying shared files",
+    "Existing GitHub Actions host and selected per-CAP14 private 0600 manifest inside 0700 root, SF_NATIVE_CANDIDATE_SHA equal candidate C",
+    "Real approved serverKey/installation/project, productive F01/F02, CAP14 Dashboard source Vendor Contracts, route and producer origin",
+    "Three distinct Microsoft requester, holder, denied BrowserContexts, with requester/denied selected as appropriate per test",
+    "For stale: second actual BrowserContext from same Playwright browser, principal holder or dashboardAdmin genuinely admitted to CAP14 save; record has one unique vendor, source ref and versions['contracts:'+id], second original POST 200 advances CAS before requester POST 409",
+    "For lost response: original Vendor Contracts POST target with page query, producer status 200 then dropped response, fresh authorized GET proves changed record/version; no retry",
+    "Five original host-provided U15 scenario URLs bound to manifest chapter/owner; no constructed URL, role switch, fake storageState or mock grant"
+  ],
+  "validation": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN: mission190 only",
+    "guards": "NOT_RUN: mission190 only",
+    "browser": "NOT_RUN",
+    "CI_run_ids": [],
+    "test_claim": "AUTHOR_SOURCE_ONLY_UNQUALIFIED",
+    "dispatch_instruction": "deduplicate by final integrated candidate SHA/tree plus selected exact spec/config/fixture and existing queue; report real run/job/selection separately"
+  },
+  "global_release": false
+}
