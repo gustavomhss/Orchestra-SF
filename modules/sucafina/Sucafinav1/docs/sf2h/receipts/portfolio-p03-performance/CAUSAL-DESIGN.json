@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.causal-design.v1",
+  "mission": 54,
+  "source_preimage": "c01520cb6a09e580897ebdb46e75e40a536b80be",
+  "target": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+  "read_complete": {
+    "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "START": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW": "043205bee6031b4517a98591b3588fca0ab12925",
+    "COMMON": "d61f32af03fe10747a50274233f953af044decf6",
+    "S4C": "c59d7593fe94808048a0377d365d0681482d7252",
+    "product_acceptance": "ded082688fce327def0b48968fa3b89a5831029c",
+    "resident_runtime": "033737b1051b23443e633df7874c550629bf55a1",
+    "criteria": 68,
+    "read_only_contract_reviewer": "mission_contract"
+  },
+  "static_two_criterion_counts": {
+    "planner_compare": 4,
+    "binding_validate": 6,
+    "binding_read": 12,
+    "binding_bind": 18,
+    "analysis_revalidate": 28,
+    "planner_persist": 38,
+    "selection_resolver": 16,
+    "first_persistent_portfolio_estimate_before": 432,
+    "after": 426
+  },
+  "count_qualification": "Static successful-path multiplicity hypothesis, not observed completed original and not exclusive CPU. Includes each original independent producer evaluation. All scopes/checks/replays unchanged.",
+  "change": "Read current canonical binding after either existing or newly persisted comparison; avoid only already-satisfied bind. Missing/non-ok binding still runs recovery. Independent final read, selectionAgain, both inspect sequences and explicit replay retained.",
+  "expected_reduction": "Fresh two-criterion comparison binding phase18->12 rule evaluations; one redundant bind eliminated. About1.4% of static full first portfolio cost, not sufficient evidence of180s completion.",
+  "original": {
+    "assertion_lines": 72,
+    "exact_line_sequence_preserved": true,
+    "test_timeout_ms": 180000,
+    "fixture_guard_ms": 180000,
+    "canonical_producers": true,
+    "Finance34_in_prior_failure": true
+  },
+  "diagnostics": {
+    "read_scope_expansion": false,
+    "additional_domain_reads": 0,
+    "boundaries": [
+      "analysis.select",
+      "analysis.persist",
+      "comparison.bind",
+      "comparison.read",
+      "comparison.verifyBinding",
+      "analysis.evaluate",
+      "analysis.revalidate",
+      "planner.compareScenarios",
+      "rules.evaluate"
+    ],
+    "storage": "Synchronous actual currentSnapshots calls timed; transaction timing inclusive. Wrappers installed outside operations and delegate arguments/results; no extra snapshot observation.",
+    "internal_closure_limits": "bind's own closed-over read and evaluate's own closed-over revalidate are included in enclosing timings; wrappers only count public boundaries."
+  },
+  "qualification": {
+    "new_tests": 8,
+    "new_test_budget_ms": 30000,
+    "actual_ui_authority": true,
+    "existing_numeric_fixture_limit": "The fast discriminant retains sensitivity-fixture's synthetic source/metric callbacks. It proves binding control flow/LocalStore/C08/authority, not original P03 numbers; original remains separate."
+  },
+  "no_local_tests": true,
+  "no_epic": true,
+  "GLOBAL_RELEASE": false
+}
