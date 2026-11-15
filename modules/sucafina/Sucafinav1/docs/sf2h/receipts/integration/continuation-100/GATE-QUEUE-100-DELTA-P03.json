@@ -1,0 +1,81 @@
+{
+  "schema": "sf2h.integrator100.p03-gate-delta.v1",
+  "kind": "APPEND_ONLY_CORRECTION_TO_CHECKPOINT",
+  "base_checkpoint": "38124138d21289a3bd20c86cd8d4e9c78c157417",
+  "material_candidate": {
+    "id": "C51",
+    "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262"
+  },
+  "supersedes_observed_state": "RUNNING",
+  "new_state": "P03_ORIGINAL_FAILED_NOT_CONSUMABLE",
+  "owner": 99,
+  "original_source": {
+    "W": "41744d183ecba54efb8da2bacf5d9f18b1d55380",
+    "tree": "7d6e71c2c925ac83b8d4e948d1188787fb188e6a",
+    "docs": "2b82e9c1b494d93909385cf6db3a3512313f4e68"
+  },
+  "historical_already_consumed": {
+    "mission": 76,
+    "component": "result-store",
+    "state": "C45_PRESENT_DO_NOT_REAPPLY"
+  },
+  "R1_controls": {
+    "status": "SUCCESS_ONLY_SOURCE",
+    "run": 43680997173,
+    "job": 132711373396,
+    "pass": 21,
+    "fail": 0,
+    "expect": 232,
+    "transfer_to_C": false,
+    "transfer_to_P03": false
+  },
+  "P03": {
+    "run": 43681302722,
+    "job": 132712328135,
+    "cleanup_job": 132713426597,
+    "attempt": 1,
+    "snapshot_sha": "c9c38cbf92844dcbdfbdc543fb6b378b241817f4",
+    "snapshot_tree": "cafaf70f8ae0a7dd07f0201abaaae5833e3f33f9",
+    "request_blob": "091831843963eca23229e3ddef89869acdbb0c29",
+    "test_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "test_expected_assertions": 72,
+    "timeout_ms": 180000,
+    "status": "completed",
+    "conclusion": "failure",
+    "job_conclusion": "failure",
+    "cleanup_conclusion": "success",
+    "pass": 0,
+    "fail": 1,
+    "error": 1,
+    "expect_executed": 24,
+    "duration_seconds": 180.26,
+    "evidence": [
+      {
+        "source": "hosted job log",
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "line": 50,
+        "col": 44,
+        "message": "Omitted-training portfolio: {\"status\":\"stale\",\"reason\":\"portfolio-selection-changed\"}"
+      },
+      {
+        "source": "hosted job log",
+        "message": "semantic union training confirmed timed out after 180000ms"
+      }
+    ]
+  },
+  "routing": {
+    "writer": "mission99 PR95",
+    "comment_id": 6889836370,
+    "dispatcher": "mission45 PR32",
+    "comment_id_dispatcher": 6889836685,
+    "reviewers": "91/92 on recomposed eventual C",
+    "instruction": "Diagnostic causal smallest path patch; no timeout/oracle/fixture mutation and no extra dispatcher; terminal explicit source release only after original P03 PASS"
+  },
+  "gate": {
+    "P03": "OPEN_FAILURE",
+    "C51_qualified": false,
+    "eight_on_same_future_C": "OPEN",
+    "GLOBAL_RELEASE": false
+  }
+}
