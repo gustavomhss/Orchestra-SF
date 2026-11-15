@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import type { SfOperationBindings, SfJson } from "@orchestra/schema/sucafina/common"
 import type { SfDesktopInvocation } from "@orchestra/client/sucafina/transport"
@@ -13,18 +12,20 @@ type OperationMetadata = Readonly<{
   responseMode: "json" | "bytes" | "empty" | "navigation"
   maxRequestBytes?: number
 }>
-const METADATA: Readonly<Record<string, OperationMetadata>> = SfOperationRegistry
+const METADATA = SfOperationRegistry as Readonly<Record<string, OperationMetadata>>
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === "object" && v !== null && !Array.isArray(v)
 const CONTROL = /[\x00-\x1f\x7f]/
 const KEY = /^[A-Za-z0-9._:-]{8,128}$/
-const allowedSurface = (v: unknown): v is "dashboard" | "planner" | "procurement" =>
-  v === "dashboard" || v === "planner" || v === "procurement"
+const SURFACES = new Set(["dashboard", "planner", "procurement"])
+const queryKey = (value: string) => /^[A-Za-z][A-Za-z0-9._\[\]-]*$/.test(value)
+const jsonContentType = (value: string | undefined) => !!value && /^application\/json(?:\s*;[^\r\n]*)?$/i.test(value)
 
 export type SfRequestPlan = Readonly<{
   url: string
   method: "GET" | "POST"
   mode: "json" | "bytes" | "empty"
   effect: OperationMetadata["effect"]
+  mutating: boolean
   body?: Uint8Array
   headers: Readonly<Record<string, string>>
   operationId: string
@@ -33,160 +34,143 @@ export type SfRequestPlan = Readonly<{
 export type SfPlanResult = Readonly<{ status: "ok"; value: SfRequestPlan }> |
   Readonly<{ status: "contract-unavailable" | "invalid-response" }>
 
-/** Transport URL is built exclusively from frozen registry metadata + decoded, validated input. */
+/** Match F02's canonical operationUrl/operationBody decisions; all data first crosses a typed codec. */
 export function planSfOperation(input: Readonly<{
   request: Extract<SfDesktopInvocation, { kind: "request" }>
   descriptor: SfInstallationDescriptor
   operations: SfOperationBindings
   principalRef?: string
 }>): SfPlanResult {
-  const meta = METADATA[input.request.operationId]
-  const codec = input.operations[input.request.operationId]
-  if (!meta || !codec || meta.responseMode === "navigation") return { status: "contract-unavailable" }
-  const decoded = codec.decodeInput(input.request.input)
+  const operationId = input.request.operationId
+  const meta = METADATA[operationId]
+  const codec = input.operations[operationId]
+  if (!meta || !codec || meta.effect === "authentication" || meta.responseMode === "navigation"
+    || operationId === "ctx.installations") return { status: "contract-unavailable" }
+  let decoded
+  try { decoded = codec.decodeInput(input.request.input) } catch { return { status: "invalid-response" } }
   if (decoded.status !== "ok") return { status: "invalid-response" }
-  const data = decoded.value
-  if (data !== undefined && !isRecord(data)) return { status: "invalid-response" }
-  const parsed = data as Record<string, unknown> | undefined
-  const query = new URLSearchParams()
-  for (const [key, value] of Object.entries(meta.fixedQuery ?? {})) {
-    if (!key || CONTROL.test(key) || CONTROL.test(value)) return { status: "contract-unavailable" }
-    query.set(key, value)
-  }
-  const template = meta.pathTemplate.replaceAll("{mount}", input.descriptor.mount)
-  const tokens = Array.from(template.matchAll(/\{([^{}]+)\}/g), (match) => match[1])
-  const resolved = tokens.reduce<string | undefined>((path, token) => {
-    if (path === undefined) return undefined
-    const value = token === "surface" ? parsed?.surface : parsed?.[token]
-    if (token === "surface" && !allowedSurface(value)) return undefined
-    if (typeof value !== "string" || !value || value.length > 2048 || CONTROL.test(value)) return undefined
-    return path.replace("{" + token + "}", encodeURIComponent(value))
-  }, template)
-  if (!resolved || /[{}?#\\]/.test(resolved) || !resolved.startsWith("/") || /(?:^|\/)\.\.(?:\/|$)/.test(resolved))
-    return { status: "contract-unavailable" }
-  const base = new URL(input.descriptor.publicOrigin)
-  if (base.pathname !== "/" || base.search || base.hash || base.username || base.password) return { status: "contract-unavailable" }
-  const target = new URL(resolved, base)
-  if (target.origin !== base.origin || target.hash || target.username || target.password) return { status: "contract-unavailable" }
+  if (decoded.value !== undefined && !isRecord(decoded.value)) return { status: "invalid-response" }
+  const source = decoded.value as Record<string, unknown> | undefined
+  if (operationId === "ctx.context" && (source === undefined
+    || Object.keys(source).length !== 3 || source.installationId !== input.descriptor.installationId
+    || source.projectId !== input.descriptor.projectId || source.hostId !== input.descriptor.hostId))
+    return { status: "invalid-response" }
 
-  // Only typed, schema-decoded query data is allowed. There is no caller-supplied URL/headers.
-  const typedQuery = parsed?.query
-  if (typedQuery !== undefined && !isRecord(typedQuery)) return { status: "invalid-response" }
-  if (input.request.operationId === "ctx.installations") {
-    if (!parsed || (parsed.select !== "ids" && parsed.select !== "location")) return { status: "invalid-response" }
-    query.set("select", parsed.select)
-    if (parsed.select === "ids") {
-      if (typeof parsed.installationId !== "string" || typeof parsed.projectId !== "string") return { status: "invalid-response" }
-      query.set("installationId", parsed.installationId)
-      query.set("projectId", parsed.projectId)
-    } else {
-      if (!isRecord(parsed.location) || typeof parsed.location.directory !== "string") return { status: "invalid-response" }
-      query.set("location[directory]", parsed.location.directory)
-      if (typeof parsed.location.workspace === "string") query.set("location[workspace]", parsed.location.workspace)
-    }
-  } else if (input.request.operationId === "ctx.context") {
-    for (const name of ["installationId", "projectId", "hostId"]) {
-      if (typeof parsed?.[name] !== "string") return { status: "invalid-response" }
-      query.set(name, parsed[name] as string)
-    }
-  } else {
-    // Read-only source DTOs are explicitly query-only; writes use typed body plus optional typed query.
-    const values = meta.method === "GET" ? (typedQuery ?? parsed) : typedQuery
-    if (values && isRecord(values)) {
-      for (const [key, value] of Object.entries(values)) {
-        if (key === "surface" || tokens.includes(key) || key === "query" || key === "body") continue
-        if (!key || CONTROL.test(key) || query.has(key) || !/^[A-Za-z0-9_.\[\]-]{1,128}$/.test(key))
-          return { status: "invalid-response" }
-        if ((typeof value !== "string" && typeof value !== "number" && typeof value !== "boolean")
-          || !String(value) || CONTROL.test(String(value))) return { status: "invalid-response" }
-        query.set(key, String(value))
-      }
+  if (!meta.pathTemplate.startsWith("/") && !meta.pathTemplate.startsWith("{mount}/"))
+    return { status: "contract-unavailable" }
+  const usesSurface = meta.pathTemplate.includes("{surface}")
+  if (usesSurface && !SURFACES.has(String(source?.surface))) return { status: "invalid-response" }
+  const path = meta.pathTemplate.replaceAll("{mount}", input.descriptor.mount)
+    .replaceAll("{surface}", String(source?.surface ?? "__unbound__"))
+  if (path.includes("{") || path.includes("}") || path.includes("__unbound__")
+    || path.includes("//") || path.includes("..") || !path.startsWith(input.descriptor.mount + "/"))
+    return { status: "contract-unavailable" }
+  let target: URL
+  try {
+    target = new URL(path, input.descriptor.publicOrigin)
+    if (target.origin !== input.descriptor.publicOrigin || target.pathname !== path || target.search || target.hash
+      || target.username || target.password) return { status: "contract-unavailable" }
+  } catch { return { status: "contract-unavailable" } }
+  for (const [key, value] of Object.entries(meta.fixedQuery ?? {})) {
+    if (!queryKey(key) || CONTROL.test(value)) return { status: "contract-unavailable" }
+    target.searchParams.set(key, value)
+  }
+  if (meta.method === "GET" && source) {
+    for (const [key, value] of Object.entries(source)) {
+      if (usesSurface && key === "surface") continue
+      if (!queryKey(key) || target.searchParams.has(key)) return { status: "invalid-response" }
+      if (typeof value === "string" || typeof value === "boolean" || typeof value === "number" && Number.isFinite(value))
+        target.searchParams.set(key, String(value))
+      else return { status: "invalid-response" }
     }
   }
-  const search = query.toString()
-  const url = target.href + (search ? "?" + search : "")
-  if (url.length > 16_384) return { status: "invalid-response" }
+  if (target.href.length > 16_384) return { status: "invalid-response" }
+
+  const mutating = meta.method === "POST" && meta.effect !== "read" && meta.effect !== "preview"
   const headers: Record<string, string> = { Accept: meta.responseMode === "bytes" ? "application/octet-stream" : "application/json" }
-  let bytes: Uint8Array | undefined
+  let body: Uint8Array | undefined
   if (meta.method === "POST") {
-    const key = input.request.idempotencyKey ?? randomUUID()
-    if (!KEY.test(key)) return { status: "invalid-response" }
-    headers["Idempotency-Key"] = key
+    // F02 owns creation and lifecycle of each key; broker never silently creates a retryable mutation.
+    if (!input.request.idempotencyKey || !KEY.test(input.request.idempotencyKey))
+      return { status: "invalid-response" }
+    headers["Idempotency-Key"] = input.request.idempotencyKey
     headers.Origin = input.descriptor.publicOrigin
-    if (meta.effect === "mutation" && /^domain\.command\./.test(input.request.operationId)) {
-      if (!input.principalRef) return { status: "contract-unavailable" }
-      const owner = {
-        installationId: input.descriptor.installationId,
-        hostId: input.descriptor.hostId,
-        projectId: input.descriptor.projectId,
-        principalRef: input.principalRef,
-      }
-      const nativeOwner = Buffer.from(JSON.stringify(owner), "utf8")
-      if (nativeOwner.byteLength > 2048) return { status: "invalid-response" }
-      headers["X-SF-Native-Owner"] = nativeOwner.toString("base64url")
+    const legacy = mutating && /\{surface\}|\/dashboard$|\/planner$|\/procurement$/.test(meta.pathTemplate)
+    if (legacy) {
+      if (!input.principalRef || CONTROL.test(input.principalRef)) return { status: "contract-unavailable" }
+      const owner = Buffer.from(JSON.stringify({
+        installationId: input.descriptor.installationId, hostId: input.descriptor.hostId,
+        projectId: input.descriptor.projectId, principalRef: input.principalRef,
+      }), "utf8")
+      if (owner.byteLength > 2048) return { status: "invalid-response" }
+      headers["X-SF-Native-Owner"] = owner.toString("base64url")
     }
-    const body = parsed?.body ?? data
-    if (input.request.upload) {
-      if (input.request.operationId !== "files.import-admit" && input.request.operationId !== "files.asset.upload")
+    const original = source && usesSurface
+      ? Object.fromEntries(Object.entries(source).filter(([key]) => key !== "surface"))
+      : source
+    const fixed = meta.fixedBodyDiscriminator ?? {}
+    if (original && Object.entries(fixed).some(([key, value]) => key in original && original[key] !== value))
+      return { status: "invalid-response" }
+    const value = { ...(original ?? {}), ...fixed }
+    const upload = input.request.upload
+    if (upload) {
+      if (operationId !== "files.import-admit" && operationId !== "files.asset.upload")
         return { status: "contract-unavailable" }
-      const upload = input.request.upload
-      if (!upload || typeof upload.fileName !== "string" || typeof upload.mediaType !== "string"
-        || /[\/\\\x00-\x1f]/.test(upload.fileName) || upload.fileName.length > 255
-        || !(upload.bytes instanceof Uint8Array) || upload.bytes.byteLength < 1
-        || upload.bytes.byteLength > (meta.maxRequestBytes ?? 16 * 1024 * 1024)) return { status: "invalid-response" }
-      if (input.request.operationId === "files.import-admit") {
-        const extension = upload.fileName.split(".").pop()?.toLowerCase()
-        if (!extension || !["xlsx", "xls", "json"].includes(extension) || upload.bytes.byteLength > 16 * 1024 * 1024)
+      if (typeof upload.fileName !== "string" || !upload.fileName || upload.fileName.length > 255
+        || /[\/\\\x00-\x1f\x7f"]/.test(upload.fileName)
+        || typeof upload.mediaType !== "string" || !/^[A-Za-z0-9!#$&^_.+-]+\/[A-Za-z0-9!#$&^_.+-]+$/.test(upload.mediaType)
+        || !(upload.bytes instanceof Uint8Array) || upload.bytes.byteLength === 0)
+        return { status: "invalid-response" }
+      const limit = meta.maxRequestBytes ?? 16 * 1024 * 1024
+      if (upload.bytes.byteLength > limit) return { status: "invalid-response" }
+      if (operationId === "files.import-admit") {
+        const ext = upload.fileName.split(".").pop()?.toLowerCase()
+        if (!ext || !["xlsx", "xls", "json"].includes(ext) || upload.bytes.byteLength > 16 * 1024 * 1024
+          || typeof value.surface !== "string" || !SURFACES.has(value.surface)
+          || typeof value.selectionRef !== "string" || !("options" in value))
           return { status: "invalid-response" }
-        const boundary = "sf-" + randomUUID().replaceAll("-", "")
-        const fields = body && isRecord(body) ? body : undefined
-        if (!fields || typeof fields.surface !== "string" || typeof fields.selectionRef !== "string") return { status: "invalid-response" }
-        if (!allowedSurface(fields.surface) || !("options" in fields)) return { status: "invalid-response" }
-        const encode = (v: string) => Buffer.from(v, "utf8")
+        const boundary = "sf-" + crypto.randomUUID().replaceAll("-", "")
         const pieces: Buffer[] = []
-        for (const [key, value] of Object.entries(fields)) {
-          if (!["surface", "selectionRef", "options"].includes(key)) return { status: "invalid-response" }
-          pieces.push(encode("--" + boundary + "\r\nContent-Disposition: form-data; name=\"" + key + "\"\r\n\r\n" + (typeof value === "string" ? value : JSON.stringify(value)) + "\r\n"))
+        for (const [name, field] of Object.entries(value)) {
+          if (!["surface", "selectionRef", "options"].includes(name)) return { status: "invalid-response" }
+          pieces.push(Buffer.from("--" + boundary + "\r\nContent-Disposition: form-data; name=\"" + name
+            + "\"\r\n\r\n" + (typeof field === "string" ? field : JSON.stringify(field)) + "\r\n"))
         }
-        pieces.push(encode("--" + boundary + "\r\nContent-Disposition: form-data; name=\"file\"; filename=\"" + upload.fileName.replaceAll('"', "_") + "\"\r\nContent-Type: " + upload.mediaType + "\r\n\r\n"))
+        pieces.push(Buffer.from("--" + boundary + "\r\nContent-Disposition: form-data; name=\"file\"; filename=\""
+          + upload.fileName + "\"\r\nContent-Type: " + upload.mediaType + "\r\n\r\n"))
         pieces.push(Buffer.from(upload.bytes))
-        pieces.push(encode("\r\n--" + boundary + "--\r\n"))
-        bytes = Buffer.concat(pieces)
+        pieces.push(Buffer.from("\r\n--" + boundary + "--\r\n"))
+        body = Buffer.concat(pieces)
         headers["Content-Type"] = "multipart/form-data; boundary=" + boundary
-        if (bytes.byteLength > 16 * 1024 * 1024 + 65536) return { status: "invalid-response" }
+        if (body.byteLength > 16 * 1024 * 1024 + 65_536) return { status: "invalid-response" }
       } else {
-        // Asset upload uses original approved binary media type, not a second untrusted URL/path.
-        if (!/^[A-Za-z0-9!#$&^_.+-]+\/[A-Za-z0-9!#$&^_.+-]+$/.test(upload.mediaType))
-          return { status: "invalid-response" }
-        bytes = upload.bytes
+        body = upload.bytes
         headers["Content-Type"] = upload.mediaType
       }
-    } else if (body !== undefined && meta.responseMode !== "empty") {
-      bytes = Buffer.from(JSON.stringify({ ...((isRecord(body) ? body : {}) as Record<string, unknown>), ...(meta.fixedBodyDiscriminator ?? {}) }), "utf8")
-      headers["Content-Type"] = "application/json"
-    } else if (meta.fixedBodyDiscriminator) {
-      bytes = Buffer.from(JSON.stringify(meta.fixedBodyDiscriminator), "utf8")
+    } else {
+      body = Buffer.from(JSON.stringify(value), "utf8")
       headers["Content-Type"] = "application/json"
     }
-    if (bytes && bytes.byteLength > (meta.maxRequestBytes ?? (input.request.upload ? 16 * 1024 * 1024 + 65536 : 2 * 1024 * 1024)))
+    if (meta.maxRequestBytes !== undefined && body.byteLength > meta.maxRequestBytes)
+      return { status: "invalid-response" }
+    if (meta.maxRequestBytes === undefined && body.byteLength > (input.request.upload ? 16 * 1024 * 1024 + 65536 : 2 * 1024 * 1024))
       return { status: "invalid-response" }
   } else if (input.request.upload || input.request.idempotencyKey) return { status: "invalid-response" }
   return { status: "ok", value: {
-    url, method: meta.method, mode: meta.responseMode, effect: meta.effect, body: bytes,
-    headers, operationId: input.request.operationId, codec,
+    url: target.href, method: meta.method, mode: meta.responseMode, effect: meta.effect, mutating,
+    body, headers, operationId, codec,
   } }
 }
 
-/** Only Schema-supplied codecs decode this body. A raw JSON parse is never product acceptance. */
-export function decodeSfWireBody(plan: SfRequestPlan, bytes: Uint8Array) {
-  if (plan.mode === "empty" && bytes.byteLength === 0) return plan.codec.decodeOutput(undefined)
-  if (plan.mode !== "json" && plan.mode !== "empty") return { status: "invalid" as const }
-  if (bytes.byteLength > 4 * 1024 * 1024) return { status: "invalid" as const }
+export function decodeSfWireBody(plan: SfRequestPlan, bytes: Uint8Array, contentType?: string) {
+  if (plan.mode === "empty")
+    return bytes.byteLength === 0 && contentType === undefined
+      ? plan.codec.decodeOutput(undefined) : { status: "invalid" as const }
+  if (plan.mode !== "json" || !jsonContentType(contentType) || bytes.byteLength === 0 || bytes.byteLength > 32 * 1024 * 1024)
+    return { status: "invalid" as const }
   let value: SfJson
   try {
     value = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)) as SfJson
-  } catch {
-    return { status: "invalid" as const }
-  }
-  return plan.codec.decodeOutput(value)
+  } catch { return { status: "invalid" as const } }
+  try { return plan.codec.decodeOutput(value) } catch { return { status: "invalid" as const } }
 }
