@@ -109,11 +109,12 @@ const CoverageBase = {
   basisId: Text, basisVersion: NonNegativeInt, alternativeId: Text, alternativeVersion: NonNegativeInt,
   currency: Text, horizon: Period, issues: Texts, evaluatedSourceRefs: Schema.Array(EvidenceRef),
 }
-const Coverage = Schema.Union([
-  Schema.Struct({ ...CoverageBase, coverageState: Schema.Literals(["complete"]), entries: Schema.Array(Schema.Union([
+const CoverageComplete = Schema.Struct({ ...CoverageBase, coverageState: Schema.Literals(["complete"]), entries: Schema.Array(Schema.Union([
     Schema.Struct({ status: Schema.Literals(["included"]), categoryId: Text, componentRefs: Texts, evidenceRefs: Schema.Array(EvidenceRef), scopeNote: Schema.String }),
     Schema.Struct({ status: Schema.Literals(["not-applicable"]), categoryId: Text, justification: Text, evidenceRefs: Schema.Array(EvidenceRef) }),
-  ])), derivedMissingCategoryIds: Schema.Array(Schema.Never) }),
+  ])), derivedMissingCategoryIds: Schema.Array(Schema.Never) })
+const Coverage = Schema.Union([
+  CoverageComplete,
   Schema.Struct({ ...CoverageBase, coverageState: Schema.Literals(["pending", "unavailable"]), entries: Schema.Array(CoverageEntry), derivedMissingCategoryIds: Texts }),
 ])
 const ScenarioBase = {
@@ -121,7 +122,7 @@ const ScenarioBase = {
   sourceRefs: Schema.Array(EvidenceRef), unresolvedConditions: Texts, restrictions: Texts,
 }
 const ScenarioResult = Schema.Union([
-  Schema.Struct({ ...ScenarioBase, comparisonStatus: Schema.Literals(["complete"]), costCoverage: Coverage, knownSubtotal: Finite, total: Finite }),
+  Schema.Struct({ ...ScenarioBase, comparisonStatus: Schema.Literals(["complete"]), costCoverage: CoverageComplete, knownSubtotal: Finite, total: Finite }),
   Schema.Struct({ ...ScenarioBase, comparisonStatus: Schema.Literals(["conditioned", "incompatible", "unavailable"]), costCoverage: Coverage, knownSubtotal: Schema.NullOr(Finite), total: Schema.Null }),
 ])
 const ComparisonBase = {
@@ -171,7 +172,7 @@ const ChoiceBase = {
   scenario: ScenarioRequest, result: ScenarioResult, comparison: Comparison,
 }
 const Choice = Schema.Union([
-  Schema.Struct({ ...ChoiceBase, comparisonStatus: Schema.Literals(["complete"]), costCoverage: Coverage }),
+  Schema.Struct({ ...ChoiceBase, comparisonStatus: Schema.Literals(["complete"]), costCoverage: CoverageComplete }),
   Schema.Struct({ ...ChoiceBase, comparisonStatus: Schema.Literals(["conditioned", "incompatible", "unavailable"]), costCoverage: Coverage }),
 ])
 const PreparedChange = Schema.Struct({
