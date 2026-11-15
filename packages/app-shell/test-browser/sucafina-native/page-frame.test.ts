@@ -162,25 +162,36 @@ if (process.env.SF_F03_DOM !== "1") {
     } finally { screen.close() }
   })
 
-  test("denied chart does not expose its previous owner's context or SVG", () => {
-    const screen = mount(() => createComponent(frame.SfChartFrame, {
-      titleKey: key("sf.common.currentSource"),
-      questionKey: key("sf.common.partial"),
-      context: [{ label: message("sf.common.source"), value: { kind: "data", text: "PRIVATE_CONTEXT" } }],
-      coverage: emptyCoverage,
-      series: [],
-      table: { caption: message("sf.common.currentSource"), columns: [], rows: [] },
-      selection: null,
-      state: "denied",
-      onSelect: () => { throw new Error("unauthorized select") },
-      onOpenSource: () => { throw new Error("unauthorized source") },
-      children: document.createTextNode("PRIVATE_CHART"),
-    }))
-    try {
-      expect(screen.host.textContent).not.toContain("PRIVATE_CONTEXT")
-      expect(screen.host.textContent).not.toContain("PRIVATE_CHART")
-      expect(screen.host.textContent).not.toContain("Partial coverage")
-    } finally { screen.close() }
+  test("denied and session-expired charts never expose previous owner context, SVG or table", () => {
+    for (const state of ["denied", "session-expired"] as const) {
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+      const svgTitle = document.createElementNS("http://www.w3.org/2000/svg", "title")
+      svgTitle.textContent = "PRIVATE_CHART"
+      svg.append(svgTitle)
+      const screen = mount(() => createComponent(frame.SfChartFrame, {
+        titleKey: key("sf.common.currentSource"),
+        questionKey: key("sf.common.partial"),
+        context: [{ label: message("sf.common.source"), value: { kind: "data", text: "PRIVATE_CONTEXT" } }],
+        coverage: emptyCoverage,
+        series: [],
+        table: { caption: message("sf.common.currentSource"), columns: [], rows: [] },
+        selection: null,
+        state,
+        onSelect: () => { throw new Error("unauthorized select") },
+        onOpenSource: () => { throw new Error("unauthorized source") },
+        children: svg,
+      }))
+      try {
+        expect(screen.host.textContent).not.toContain("PRIVATE_CONTEXT")
+        expect(screen.host.textContent).not.toContain("PRIVATE_CHART")
+        expect(screen.host.textContent).not.toContain("Partial coverage")
+        expect(screen.host.querySelector(".sf-chart-header")).toBeNull()
+        expect(screen.host.querySelector(".sf-chart-context")).toBeNull()
+        expect(screen.host.querySelector("svg")).toBeNull()
+        expect(screen.host.querySelector(".sf-chart-table")).toBeNull()
+        expect(screen.host.querySelector(`[data-sf-state="${state}"]`)).not.toBeNull()
+      } finally { screen.close() }
+    }
   })
 
   test("run unadmitted is not forged as queued/executed and offers only admitted actions", () => {

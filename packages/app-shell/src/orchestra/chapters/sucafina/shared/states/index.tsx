@@ -55,7 +55,7 @@ export function SfStatePanel(props: SfStatePanelProps): JSX.Element {
               <span /><span /><span />
             </div>
           </Show>
-          <Show when={props.coverage && !privacy() && !loading()}>
+          <Show when={privacy() || loading() ? undefined : props.coverage}>
             {(coverage) => <SfCoverageView coverage={coverage()} />}
           </Show>
           <div class="sf-state-actions">

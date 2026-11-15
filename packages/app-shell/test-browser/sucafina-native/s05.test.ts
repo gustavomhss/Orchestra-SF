@@ -158,6 +158,22 @@ test("S05 thread preserves exact content, incarnation and version; unknown outco
     expect(view.host.textContent).not.toContain("Private discussion body")
     expect(view.host.textContent).not.toContain("Keep whitespace")
     expect(view.host.querySelector("textarea")).toBeNull()
+
+    // New owner binding must not inherit the old DOM value or the old post fence.
+    view.set("messages", [])
+    view.set("threadRef", ref("thread-next"))
+    view.set("incarnation", "incarnation-next")
+    view.set("version", 9)
+    view.set("draft", "  Next owner\r\nstill exact  ")
+    view.set("state", "ready")
+    expect(view.host.textContent).not.toContain("Private discussion body")
+    expect(view.host.querySelector<HTMLTextAreaElement>("textarea")?.value).toBe("  Next owner\nstill exact  ")
+    view.button("Post comment").click()
+    expect(posts).toEqual([
+      { threadRef: ref("thread-1"), incarnation: "incarnation-canonical", expectedVersion: 7, text: "  Keep whitespace  " },
+      { threadRef: ref("thread-next"), incarnation: "incarnation-next", expectedVersion: 9,
+        text: "  Next owner\r\nstill exact  " },
+    ])
   } finally {
     view.close()
   }

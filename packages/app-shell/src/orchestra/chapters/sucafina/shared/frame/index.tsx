@@ -27,7 +27,7 @@ import "./frame.css"
 export type {
   SfAction, SfChartFrameProps, SfContextBarProps, SfCopyKey, SfCoverage,
   SfDensity, SfDisplayValue, SfLayoutMode, SfMessage, SfPageFrameProps,
-  SfPlotSeries, SfRunStateProps, SfSource, SfStatePanelProps, SfText, SfUiState,
+  SfPlotSeries, SfRunStateProps, SfSource, SfStatePanelProps, SfText, SfUiState, SfUnit,
 } from "./types"
 
 // W is the observed *usable content width* after the shell sidebar and page insets.
@@ -277,23 +277,25 @@ export function SfChartFrame(props: SfChartFrameProps): JSX.Element {
   const id = createUniqueId()
   const privateState = () => props.state === "denied" || props.state === "session-expired"
   return (
-    <section class="sf-chart-frame" data-sf-chart-state={props.state} aria-labelledby={`sf-chart-${id}`}>
-      <header class="sf-chart-header">
-        <h2 id={`sf-chart-${id}`}>{t(props.titleKey)}</h2>
-        <p>{t(props.questionKey)}</p>
-        <Show when={!privateState() && props.context.length > 0}>
-          <dl class="sf-chart-context">
-            <For each={props.context}>
-              {(entry) => (
-                <div>
-                  <dt><SfMessageText message={entry.label} /></dt>
-                  <dd><SfTextValue value={entry.value} /></dd>
-                </div>
-              )}
-            </For>
-          </dl>
-        </Show>
-      </header>
+    <section class="sf-chart-frame" data-sf-chart-state={props.state} aria-labelledby={privateState() ? undefined : `sf-chart-${id}`}>
+      <Show when={!privateState()}>
+        <header class="sf-chart-header">
+          <h2 id={`sf-chart-${id}`}>{t(props.titleKey)}</h2>
+          <p>{t(props.questionKey)}</p>
+          <Show when={!privateState() && props.context.length > 0}>
+            <dl class="sf-chart-context">
+              <For each={props.context}>
+                {(entry) => (
+                  <div>
+                    <dt><SfMessageText message={entry.label} /></dt>
+                    <dd><SfTextValue value={entry.value} /></dd>
+                  </div>
+                )}
+              </For>
+            </dl>
+          </Show>
+        </header>
+      </Show>
       <SfStatePanel
         state={props.state}
         messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[props.state])}
