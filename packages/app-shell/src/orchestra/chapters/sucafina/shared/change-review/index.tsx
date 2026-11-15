@@ -2,7 +2,7 @@ import { createUniqueId, For, Show, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
 import type { SF_COMMON_COPY } from "@/i18n/orchestra-chapters/sf-common"
 import type { SF_S03_COPY } from "@/i18n/orchestra-chapters/sf-s03"
-import type { SfIntentRef, SfOperationRef, SfRef, SfVersion } from "../../context/contracts"
+import type { SfIntentRef, SfOperationRef, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import type { SfOperationId } from "@orchestra/schema/sucafina/common"
 import { SfStatePanel } from "../states"
 import type {

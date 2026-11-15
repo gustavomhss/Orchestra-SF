@@ -7,7 +7,7 @@ import type {
   SfRef,
   SfVersion,
   SurfaceId,
-} from "../../context/contracts"
+} from "@orchestra/schema/sucafina/context"
 
 export type SfDraftPhase =
   | "clean" | "dirty" | "validating" | "validation-error" | "reviewing"

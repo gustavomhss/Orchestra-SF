@@ -3,7 +3,7 @@ import { createRoot } from "solid-js"
 import type {
   SfEditScopeKey, SfIntentRef, SfOperationRef, SfOwnerKey, SfRef,
   SfVersion, SurfaceId,
-} from "../../src/orchestra/chapters/sucafina/context/contracts"
+} from "@orchestra/schema/sucafina/context"
 import { createSfDraft } from "../../src/orchestra/chapters/sucafina/shared/draft"
 
 const owner = "owner-epoch-1" as SfOwnerKey

@@ -1,6 +1,6 @@
 import { createUniqueId, For, Show, type JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
-import type { SfOperationRef, SfRef, SfVersion } from "../../context/contracts"
+import type { SfOperationRef, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 import { SfStatePanel } from "../states"
 import type { SfCopyKey, SfMessage, SfSource, SfUiState } from "../frame"
 import { SfEffectList, sfCopy, sfMessage, type SfEffect } from "../change-review"
