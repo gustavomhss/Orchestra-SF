@@ -52,9 +52,8 @@ export type SfSensitivityUnits = Readonly<{
   parameterUnit: string
   resultUnit: string
   unit: string
-  ruleRef: string
-  ruleVersion: number
-  criterionId: string
+  engineVersion: string
+  sourceRefs: readonly string[]
 }>
 
 function record(value: unknown): value is Record<string, unknown> {
@@ -199,12 +198,18 @@ export async function sfSensitivityUnitsForSelection(
   const raw = result.value
   if (!record(raw) || !record(raw.caseRef) || raw.caseRef.id !== caseRef.id ||
       raw.caseRef.incarnation !== caseRef.incarnation || raw.caseRef.version !== caseRef.version ||
-      !string(raw.parameterUnit) || !string(raw.resultUnit) || !string(raw.unit) ||
-      !string(raw.baselineRef) || raw.baselineRef !== baselineRef || !string(raw.criterionId) ||
-      !string(raw.ruleRef) || !Number.isSafeInteger(raw.ruleVersion)) return fail("sensitivity-units-projection-mismatch")
+      !record(raw.units) || !string(raw.units.parameterUnit) || !string(raw.units.resultUnit) ||
+      !string(raw.units.engineVersion) || !string(raw.units.baselineRef) ||
+      raw.units.baselineRef !== baselineRef || raw.units.parameterRef !== parameterRef ||
+      !Array.isArray(raw.units.sourceRefs)) return fail("sensitivity-units-projection-mismatch")
+  const sources: string[] = []
+  for (const source of raw.units.sourceRefs) {
+    if (!record(source) || !string(source.refId)) return fail("sensitivity-units-source-mismatch")
+    sources.push(source.refId)
+  }
   return { status: "ok", value: { caseRef, scenarioRef, baselineRef, parameterRef,
-    parameterUnit: raw.parameterUnit, resultUnit: raw.resultUnit, unit: raw.unit,
-    criterionId: raw.criterionId, ruleRef: raw.ruleRef, ruleVersion: raw.ruleVersion as number } }
+    parameterUnit: raw.units.parameterUnit, resultUnit: raw.units.resultUnit,
+    unit: raw.units.resultUnit, engineVersion: raw.units.engineVersion, sourceRefs: sources } }
 }
 export async function sfSensitivityRecorded(
   transport: SfTransport, context: SfContext, caseRef: SfCaseVersionRef,
