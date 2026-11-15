@@ -265,7 +265,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
               <Show when={view.conditions.length} fallback={<p>{t("sf.u26.noConditions")}</p>}>
                 <ul class="sf-memory-list">
                   <For each={view.conditions}>{(condition) => (
-                    <li>
+                    <li data-sf-condition-id={condition.conditionId} data-sf-choice-id={condition.choiceId}>
                       <div><strong>{condition.label}</strong>
                         <small>{t("sf.u26.criterion")}: {condition.criterionId} · {t("sf.u26.period")}: {condition.period.start} – {condition.period.end}</small>
                       </div>
