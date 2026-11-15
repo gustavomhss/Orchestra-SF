@@ -1,0 +1,324 @@
+{
+  "schema": "sf2h.native-ui.W17.source-equivalence.v1",
+  "status": "PREFLIGHT_VERIFIED_NOT_PRODUCT_IMPLEMENTED",
+  "branch": "sf-ux-w17",
+  "ack_commit": "9dd2ff1a3cafa118693f06a403a119b62adce72d",
+  "cohort_base": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "product_C58": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "contract_blobs": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1"
+  },
+  "source_pin": {
+    "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+    "expected_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "actual_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+    "semantic_delta": "SAME_BLOB"
+  },
+  "shared_bindings": {
+    "identity": "caseRef{id,incarnation,version>0}, exact original case not derived from current selection",
+    "request": "POST JSON, sole sf query, selected surface dashboard/planner/procurement, source authority.human.admit + business.withCase + host.revalidate",
+    "failures": "PortResult failure status needs-input|stale|denied|unavailable|conflict|provider-conflict|failed with original reason; never flatten into ok/empty",
+    "redirects": "F02 no redirects; do not parse HTML; same-origin browser or approved desktop",
+    "mutation": "F02 native-owner fence and original idempotency key, no automatic retry; post-send timeout=outcome-unknown",
+    "output": "source output shapes and refs/versions/null/zero, no invented amounts/approvals/receipts; P03 original FAIL preserved"
+  },
+  "operations": [
+    {
+      "operationId": "portfolio.decision-portfolio-evaluate",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-portfolio-evaluate"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "prepare",
+      "human_action": "decisions.portfolio.evaluate",
+      "request_required": [
+        "caseRef",
+        "request"
+      ],
+      "successShape": "{portfolioResultRef,portfolio,caseRef}",
+      "producer": "product.http.evaluate",
+      "validation": "sf_portfolio_evaluate",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-portfolio-preview",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-portfolio-preview"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "read",
+      "human_action": "decisions.portfolio.read",
+      "request_required": [
+        "caseRef",
+        "request"
+      ],
+      "successShape": "{portfolio,selections,evaluationDigest}",
+      "producer": "product.http.preview",
+      "validation": "sf_portfolio_evaluate",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-portfolio-read",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-portfolio-read"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "read",
+      "human_action": "decisions.portfolio.read",
+      "request_required": [
+        "caseRef",
+        "resultRef"
+      ],
+      "successShape": "{portfolioResultRef,portfolio,caseRef}",
+      "producer": "product.http.read",
+      "validation": "caseRef/resultRef",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-portfolio-reconcile",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-portfolio-reconcile"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "read",
+      "human_action": "decisions.portfolio.read",
+      "request_required": [
+        "caseRef",
+        "portfolioResultRef",
+        "combinationId",
+        "choiceId"
+      ],
+      "successShape": "{schema,originalCaseRef,originalCombination,originalChoice,components,unmappedChanges,reconciliationDigest,...}",
+      "producer": "product.http.reconcile",
+      "validation": "validSfPortfolioReconciliationRequest",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-portfolio-results",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-portfolio-results"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "read",
+      "human_action": "decisions.portfolio.read",
+      "request_required": [
+        "caseRef"
+      ],
+      "successShape": "readonly {resultRef,createdAt}[]",
+      "producer": "product.http.list",
+      "validation": "caseRef",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-prepare-portfolio",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-prepare-portfolio"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "prepare",
+      "human_action": "decisions.prepare-portfolio",
+      "request_required": [
+        "caseRef",
+        "request",
+        "selectedCandidateRefs",
+        "combinationId",
+        "expectedEvaluationDigest",
+        "choiceId"
+      ],
+      "successShape": "{caseRef}",
+      "producer": "product.http.prepare",
+      "validation": "sf_portfolio_evaluate+selection/digest",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-promote-portfolio",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-promote-portfolio"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "mutation",
+      "human_action": "decisions.promote-portfolio",
+      "request_required": [
+        "caseRef",
+        "request",
+        "selectedCandidateRefs",
+        "combinationId",
+        "expectedEvaluationDigest",
+        "title",
+        "coverageRef"
+      ],
+      "successShape": "{caseRef,resultRef?}",
+      "producer": "product.http.promote",
+      "validation": "sf_portfolio_evaluate+selection/digest",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-sensitivity-evaluate",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-sensitivity-evaluate"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "prepare",
+      "human_action": "decisions.sensitivity.evaluate",
+      "request_required": [
+        "caseRef",
+        "request"
+      ],
+      "successShape": "{sensitivityResultRef,sensitivity,caseRef}",
+      "producer": "product.http.sensitivity",
+      "validation": "sf_sensitivity_evaluate",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-sensitivity-read",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-sensitivity-read"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "read",
+      "human_action": "decisions.portfolio.read",
+      "request_required": [
+        "caseRef",
+        "resultRef"
+      ],
+      "successShape": "{sensitivityResultRef,sensitivity,caseRef}",
+      "producer": "product.http.readSensitivity",
+      "validation": "caseRef/resultRef",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    },
+    {
+      "operationId": "portfolio.decision-sensitivity-units",
+      "method": "POST",
+      "pathTemplate": "{mount}/{surface}",
+      "fixedQuery": {
+        "sf": "decision-sensitivity-units"
+      },
+      "source": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sourceBlob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "effect": "read",
+      "human_action": "decisions.portfolio.read",
+      "request_required": [
+        "caseRef",
+        "scenarioRef",
+        "baselineRef",
+        "parameterRef"
+      ],
+      "successShape": "{caseRef,scenario,parameterOperation?,scenarioCoverageRef,baselineCoverageRef,baselineRef,criterionId,metric,parameterUnit,resultUnit,unit,unitMetadataRef,unitMetadataVersion,engineVersion,evidenceRefs,metadataDigest,ruleRef,ruleVersion,ruleDigest,sensitivityRequest}",
+      "producer": "product.http.sensitivityUnits",
+      "validation": "caseRef and nonempty source refs",
+      "headers": [
+        "Accept: application/json",
+        "Content-Type: application/json",
+        "Idempotency-Key: UUID"
+      ],
+      "transport": "SfTransport; original Request into admitted producer; no retry"
+    }
+  ],
+  "source_specific": {
+    "prepare_and_promote": "Require selectedCandidateRefs unique and nonempty, combinationId and expectedEvaluationDigest 64 lowercase hex; replay selection, source digests/case CAS and current decision; no auto elevation to approved",
+    "reconcile": "Authorized read of canonical historical choice/result and current state; component-scope materiality unavailable until real producer proves it",
+    "sensitivity": "Canonical revalidation/sample & rule bind; thresholds exact/sampled/unavailable remain distinct and null remains null",
+    "result_listing": "Historical binding authorization filters results; zero visible items is only valid for authorized canonical ok empty",
+    "result_read": "Canonical persisted C08 result and binding; no stale/read without replay"
+  },
+  "negative_cases": [
+    "Extra query key/duplicate sf or extra body property => needs-input/invalid; unknown op never routed",
+    "CaseRef/version mismatch => real stale or denied; never substitute selected owner or first case",
+    "Different principal/installation/project/accessRevision => purge/disallow prior projection; no cross-owner reuse",
+    "Revocation 403 is denied, not 401/session-expired; network/503 does not prove denial",
+    "Failed producer/no product => unavailable, not empty",
+    "Post-mutation timeout/abort after send => outcome-unknown, not failed-safe, no automatic retry",
+    "Stale result or altered evidence/rule/scenario => stale preserved; no current approval inferred",
+    "Pending P03 has no proof/approval; leave external original oracle failing",
+    "Zero amounts preserved as 0; null amount/threshold stays null; missing fields never inserted",
+    "Reconciliation with missing materiality component => unknown/unavailable, never material=false"
+  ],
+  "admission": {
+    "requested_via_pr65_comment_id": 6896782092,
+    "integrator": "S0-C-e17-browser114",
+    "requested_epoch": "ux-native-w17-e1",
+    "status": "REQUESTED_NOT_GRANTED",
+    "forbid_product_write_until": "explicit 114 per-output admission"
+  },
+  "qualification": {
+    "ci": "120 only",
+    "compiler": "119 only",
+    "local_tests": "NOT_RUN",
+    "actions": "NOT_RUN",
+    "typecheck": "NOT_RUN"
+  }
+}
