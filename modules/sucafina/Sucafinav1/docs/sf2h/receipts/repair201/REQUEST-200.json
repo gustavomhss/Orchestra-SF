@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.productci200.request.v1",
+  "mission": 201,
+  "to": {
+    "mission": 200,
+    "branch": "sf-ci-validation",
+    "pr": 106
+  },
+  "trigger": "ONLY_AFTER_189_CONSUMES_EXACT_SOURCE_BLOBS_AND_RESOLVES_PRODUCER_FIXTURES_FOR_SAME_C",
+  "state": "PENDING_INTEGRATION_NOT_DISPATCHED",
+  "source_code_commit": "31645341a3bfc5423d01b6256fc9122200ca96e2",
+  "source_code_tree": "79d1a3ae5362ea9c106ef79580da802ceae94a37",
+  "request": {
+    "target": "Surgical hosted A12 regression on actual integrated candidate via sole dispatcher 200",
+    "selector": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts"
+    ],
+    "runner": "existing test:ci (dispatcher 200 chooses exact package alias, runtime, fixture and dedup)",
+    "cases": [
+      "V1 per-view CAS null/create vs positive/update and denied version 0",
+      "nested closed structs reject extra keys (input/output, period, selections, WorkItem, redacted unavailable)",
+      "preserve title:null and sourceVersion/observedVersion:0",
+      "V2 schemaVersion=2 remains contract-unavailable before transport",
+      "projection.work-item's status:ok typed output and negatives",
+      "NAV-01 private POST search with no q in URI, no GET fallback, JSON and 4096-byte bound",
+      "all existing authored work.test cases/assertions preserved"
+    ],
+    "evidence_request": [
+      "exact W/tree",
+      "ordered selection, test count, PASS/FAIL",
+      "runtime/fixtures/producer identities",
+      "run/job/workflow/attempt",
+      "omni and artifacts",
+      "dedup/reuse rationale"
+    ],
+    "historical_evidence": {
+      "A12_previous": "15 contract tests passed in prior W; not new static typecheck",
+      "browser_run": 43773852118,
+      "browser_status": "7_PASS_1_FAIL_NOT_POSITIVE_NATIVE_PROOF"
+    },
+    "guard_policy": "No dispatch by 201; no full epic, no synthetic grant, no source/fixture/assertion weakening"
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

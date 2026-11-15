@@ -1,0 +1,52 @@
+diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts
+index 18d330c2980c..1ccd3e4b2181 100644
+--- a/modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts
++++ b/modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts
+@@ -202,7 +202,8 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
+ 
+   test("V2 requests are unavailable before transport without touching the V1 path", async () => {
+     const { client, calls } = recordingClient()
+-    const unavailable = { kind: "transport-error", reason: "contract-unavailable" }
++    const unavailable = { kind: "transport-error", reason: "contract-unavailable" } satisfies
++      Awaited<ReturnType<typeof client["views.remove"]>>
+     expect(await client["views.list"]({ surface: "dashboard", action: "list", input: {
+       schemaVersion: 2,
+     } } as never, { signal })).toEqual(unavailable)
+@@ -228,7 +229,7 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
+     const output = { status: "ok", value: {
+       item, details: [{ label: "Current validity", value: "stale" }],
+       links: [{ label: "Open decision", url: "/sf/dashboard?sf=case" }],
+-    } }
++    } } satisfies Schema.Schema.Type<typeof SfProjectionWorkItem.Output>
+     const input = { selectionRef: "selection-1", actionRef: "sf-signal:one", start: "2026-01-01", end: "2026-12-31" }
+     expect(Schema.decodeUnknownSync(SfProjectionWorkItem.Input)(input)).toEqual(input)
+     expect(Schema.decodeUnknownSync(SfProjectionWorkItem.Output)(output)).toEqual(output)
+
+diff --git a/packages/schema/src/sucafina/work.ts b/packages/schema/src/sucafina/work.ts
+index 3b3f87ed7c74..b60e2b7f9d0a 100644
+--- a/packages/schema/src/sucafina/work.ts
++++ b/packages/schema/src/sucafina/work.ts
+@@ -10,16 +10,16 @@
+ import { Effect, Schema } from "effect"
+ import { optional } from "../schema"
+ 
+-// Effect Struct normally discards excess object keys. Preserve source keys
+-// in a temporary record, reject any outside the fixed field set *before*
+-// projecting to the public shape, and apply this to every nested struct.
+-// The unknown-valued rest is internal only: it cannot pass the closed-key
+-// check or escape through the resulting typed codec.
++// Effect Struct normally discards excess object keys. Parse a temporary raw
++// record first so the closed-key check sees every key *before* projection.
++// In Effect 4 beta.83, StructWithRest cannot combine generic Struct fields
++// with Record(String, Unknown): ValidateRecords requires disjoint key sets.
++// The record is internal; the decoded public type is the original Struct.
+ const closedStruct = <const Fields extends Schema.Struct.Fields>(fields: Fields) => {
+   const shape = Schema.Struct(fields)
+   const allowed = new Set(Object.keys(fields))
+-  const withExtras = Schema.StructWithRest(shape, [Schema.Record(Schema.String, Schema.Unknown)])
+-  return withExtras.check(Schema.makeFilter<typeof withExtras.Type>(
++  const raw = Schema.Record(Schema.String, Schema.Unknown)
++  return raw.check(Schema.makeFilter<typeof raw.Type>(
+     (value) => Object.keys(value).every((key) => allowed.has(key)),
+     { expected: "an object containing only declared fields" },
+   )).pipe(Schema.decodeTo(shape))

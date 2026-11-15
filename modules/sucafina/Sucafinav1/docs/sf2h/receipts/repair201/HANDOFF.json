@@ -1,0 +1,137 @@
+{
+  "schema": "sf2h.compiler-source201.handoff.v1",
+  "mission": 201,
+  "title": "Fechar tipagem de Work/A12 sem relaxar schemas",
+  "actor": "ChatGPT",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed",
+  "new_browser_lifecycle_verified": false,
+  "epoch": "compiler-source-e1-browser201",
+  "branch": "sf-work-types",
+  "planned_head": "835f751fa8d0e37ba2c4b009db0bf6a0aec5544a",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair201/S0-FENCE.json",
+    "blob": "c7c1c2d3412cf964bbf7628c868d992ea1a57a44",
+    "previous_authority": "REVOKED_FOR_FUTURE_ASSIGNED_WRITES_OR_DISPATCH",
+    "runtime_termination_claimed": false
+  },
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair201/ACK.json",
+    "blob": "57258fd1d415eb9c45b09b85853a75455c667059",
+    "commit": "a7df1b999e7c1791589175fbceb05def0389cb8c"
+  },
+  "source": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_sha": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "product_base": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "predecessor_mission": 171,
+    "source_code_commit": "31645341a3bfc5423d01b6256fc9122200ca96e2",
+    "source_code_tree": "79d1a3ae5362ea9c106ef79580da802ceae94a37"
+  },
+  "change_set": {
+    "files": {
+      "packages/schema/src/sucafina/work.ts": {
+        "pre": "3b3f87ed7c74a3e7965fbb8d3d00776d2ebba61a",
+        "post": "b60e2b7f9d0a4137d3fd2ea5d0f0e9aa298a7c97"
+      },
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": {
+        "pre": "18d330c2980cc18bb35cd4976c8635ec94295828",
+        "post": "1ccd3e4b2181e927321d95d5ab4afe6788aa6a99"
+      }
+    },
+    "patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair201/PATCH.diff",
+      "blob": "bc998554dd404173373345ee7aaea4698dc1241b",
+      "complete": true,
+      "files": 2,
+      "scope": "Exactly two author files, no shared transport/registry/producer patch"
+    },
+    "behavior": [
+      "Effect 4 beta.83 generic StructWithRest ValidateRecords collision removed",
+      "Schema.Record(String,Unknown) captures all raw keys, checks allowed field names before Schema.decodeTo(Struct)",
+      "Original exact field schemas, recursion, null/zero, bounds, V1 CAS, negative validation and nine catalog IDs unchanged",
+      "Typecheck inputs use satisfies with public Awaited<ReturnType<client views.remove>> and Schema.Schema.Type<typeof SfProjectionWorkItem.Output>; no additional casts/any; assertions preserved",
+      "A12 source and NAV-01 private POST metadata reused, no shared changes"
+    ],
+    "inert_shared_patches": [],
+    "paths_outside_allowlist_modified": false
+  },
+  "consumer_preflight": {
+    "observed_at_head": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "exact_code_preimages_present": true,
+    "action": "189 apply exact post blobs on current sf2-stack only after fresh HEAD and per-file preimage CAS; do not merge historical branch"
+  },
+  "criteria": {
+    "A12-AC01": "CODE_PRESERVED_NOT_RUN; null/zero/versions, redacted outputs",
+    "A12-AC02": "CODE_PRESERVED_NOT_RUN; unknown actions/payload/extras rejected before projection",
+    "A12-AC03": "CODE_PRESERVED_NOT_RUN; operation IDs/typed options/version semantics stable",
+    "A12-V2": "BLOCKED_DEPENDENCY producer personal-views V2 not released; deny V2 before network; never synthesize a store",
+    "WP01.T04": "source-scope fixed; final integrated/authorized search and views proof still pending",
+    "WP08.T04": "source-scope fixed; full installed Work projection and authorization proof still pending"
+  },
+  "baseline_evidence": {
+    "compiler_run": 43772959867,
+    "compiler_job": 132992733158,
+    "artifact": 14185067705,
+    "compiler_status": "FAIL_W77e",
+    "native_browser_run": 43773852118,
+    "native_browser_status": "7_PASS_1_FAIL_NOT_NATIVE_POSITIVE",
+    "A12_prior": "15 CONTRACT TESTS PASSED ON PRIOR W, NOT NEW TYPECHECK",
+    "current_typecheck": "NOT_RUN_PROHIBITED",
+    "current_test": "NOT_RUN_PROHIBITED",
+    "current_build": "NOT_RUN_PROHIBITED",
+    "current_validator": "NOT_RUN_PROHIBITED",
+    "CI_dispatched_by_201": false
+  },
+  "requests": {
+    "compiler190": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair201/REQUEST-190.json",
+      "blob": "699f90d5f1631ea8ff78bb8d9a055fd332c50973",
+      "consumer_pr": 107,
+      "state": "PENDING_189_CONSUMPTION"
+    },
+    "ci200": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair201/REQUEST-200.json",
+      "blob": "7130edc296634175910305d6fd7b2d377cae2a43",
+      "consumer_pr": 106,
+      "state": "PENDING_189_CONSUMPTION"
+    }
+  },
+  "blockers_external": [
+    "189 must integrate exact current patch into C by CAS; source artifact is not integrated by this author",
+    "190 must establish hosted typecheck result on actual C; old W77e FAIL not reusable",
+    "200 is only permitted product CI dispatcher, with real runtime/fixtures and dedup",
+    "A12-V2 still depends on existing personal-views producer release, not in mission 201"
+  ],
+  "consumer": {
+    "owner": 189,
+    "base": "sf2-stack",
+    "pr": 65,
+    "compiler": 190,
+    "compiler_pr": 107,
+    "product_ci": 200,
+    "product_ci_pr": 106,
+    "ack_state": "PENDING_CONSUMER_ACK"
+  },
+  "release": {
+    "native_goal": "paused",
+    "GLOBAL_RELEASE": false,
+    "final_gates": "OPEN",
+    "source_state": "ARTIFACT_READY_PENDING_CONSUMPTION_AND_HOSTED_QUALIFICATION"
+  },
+  "no_actions": [
+    "local tests",
+    "local typecheck",
+    "local build",
+    "local validators",
+    "CI dispatch",
+    "shared registry/transport edit",
+    "force/reset",
+    "dev merge",
+    "deploy/Azure/engines",
+    "watchdog"
+  ]
+}

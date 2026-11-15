@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.compiler190.request.v1",
+  "mission": 201,
+  "to": {
+    "mission": 190,
+    "branch": "sf-compiler-checks",
+    "pr": 107
+  },
+  "trigger": "ONLY_AFTER_189_CONSUMES_EXACT_SOURCE_BLOBS_IN_NEW_CANDIDATE",
+  "state": "PENDING_INTEGRATION_NOT_DISPATCHED",
+  "integrated_preimages": {
+    "packages/schema/src/sucafina/work.ts": {
+      "pre": "3b3f87ed7c74a3e7965fbb8d3d00776d2ebba61a",
+      "post": "b60e2b7f9d0a4137d3fd2ea5d0f0e9aa298a7c97"
+    },
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": {
+      "pre": "18d330c2980cc18bb35cd4976c8635ec94295828",
+      "post": "1ccd3e4b2181e927321d95d5ab4afe6788aa6a99"
+    }
+  },
+  "source_code_commit": "31645341a3bfc5423d01b6256fc9122200ca96e2",
+  "source_code_tree": "79d1a3ae5362ea9c106ef79580da802ceae94a37",
+  "request": {
+    "target": "Hosted compiler with causal delta Work/A12 on integrated C (no local compiler from 201)",
+    "packages": [
+      "packages/schema",
+      "packages/client",
+      "modules/sucafina",
+      "apps/cli"
+    ],
+    "command_by_owner": "bun typecheck in each package directory only via existing authorized compiler process",
+    "focus": [
+      "packages/schema/src/sucafina/work.ts:21 prior TS2345 ValidateRecords<Struct<Fields>,Record<String,Unknown>>",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts:217 and :234 prior TS2769 literal-widening",
+      "transitive consumers of SfWork schemas after integration, with actual installed Effect 4.0.0-beta.83"
+    ],
+    "evidence_request": [
+      "actual candidate W/tree",
+      "run/job/attempt/workflow/runtime",
+      "full diagnostics and exit status",
+      "dedup key",
+      "scope-specific PASS/FAIL; do not claim unrelated gates"
+    ],
+    "guard_policy": "No new runner, workflow, SDK generation, schema relaxation or guard bypass; unrelated diagnostics route owner via 189",
+    "historical_evidence": {
+      "run": 43772959867,
+      "job": 132992733158,
+      "artifact": 14185067705,
+      "status": "FAIL_OLD_CANDIDATE_NOT_REUSABLE_AS_PASS"
+    }
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
