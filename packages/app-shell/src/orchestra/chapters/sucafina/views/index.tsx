@@ -183,7 +183,6 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
   createEffect(() => {
     const state = owner.state()
     const ready = current()
-    const generation = owner.generation()
     if (state.status !== "ready" || !ready) {
       reset(contextStatus())
       scope = undefined
@@ -202,7 +201,6 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
       else setScreen("detailState", "unavailable")
     } else loadList()
     onCleanup(() => {
-      if (generation === owner.generation()) return
       listRequest?.abort()
       detailRequest?.abort()
       mutationRequest?.abort()
@@ -471,9 +469,8 @@ export function SfSavedViewsView(props: SfSurfaceProps<"UI32">): JSX.Element {
       </section>
       <section class="mx-card min-w-0" aria-labelledby="sf-u43-native">
         <h2 id="sf-u43-native">{t(key("sf.ui32.native"))}</h2>
-        <SfStatePanel state="unavailable" messageKey={key("sf.ui32.nativeUnavailable")}>
-          <p>{t(key("sf.ui32.noPseudoView"))}</p>
-        </SfStatePanel>
+        <SfStatePanel state="unavailable" messageKey={key("sf.ui32.nativeUnavailable")} />
+        <p>{t(key("sf.ui32.noPseudoView"))}</p>
         <p>{t(key("sf.ui32.entryUnavailable"))}</p>
       </section>
     </SfPageFrame>

@@ -69,7 +69,6 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
   }
   createEffect(() => {
     const state = owner.state()
-    const generation = owner.generation()
     const ready = owner.ready()
     if (state.status !== "ready" || !ready) {
       clear(statusFromContext(), state.status === "denied" || state.status === "context-mismatch")
@@ -83,7 +82,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
       return
     }
     if (!sourceReady()) clear("unavailable", false)
-    onCleanup(() => { if (generation === owner.generation()) return; inFlight?.abort() })
+    onCleanup(() => inFlight?.abort())
   })
   const submit = () => {
     const ready = owner.ready()
@@ -224,7 +223,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
             <ol class="list-decimal ps-5" data-sf-search-results="authorized">
               <For each={selected()}>
                 {(match) => (
-                  <li class="min-w-0 py-3">
+                  <li class="min-w-0 py-3" data-sf-match-kind={match.documentRef.kind}>
                     <p class="break-words"><bdi>{match.text}</bdi></p>
                     <dl class="text-sm">
                       <dt>{t(key("sf.ui31.typeFilter"))}</dt>

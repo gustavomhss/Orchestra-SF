@@ -79,12 +79,22 @@ export function SfTodayView(_props: SfSurfaceProps<"UI29">): JSX.Element {
   })
   const refresh = () => { void owner.reload() }
   const data = () => screen.status === "ready" ? screen.data : null
-  const caseState = (): SfUiState =>
-    data()?.cases.status !== "ok" ? "unavailable"
-    : data()!.cases.status === "ok" && data()!.cases.items.length ? "ready" : "empty"
-  const routineState = (): SfUiState =>
-    data()?.routines.status !== "ok" ? "unavailable"
-    : data()!.routines.status === "ok" && data()!.routines.items.length ? "ready" : "empty"
+  const caseItems = () => {
+    const cases = data()?.cases
+    return cases?.status === "ok" ? cases.items : []
+  }
+  const routineItems = () => {
+    const routines = data()?.routines
+    return routines?.status === "ok" ? routines.items : []
+  }
+  const caseState = (): SfUiState => {
+    const cases = data()?.cases
+    return cases?.status !== "ok" ? "unavailable" : cases.items.length ? "ready" : "empty"
+  }
+  const routineState = (): SfUiState => {
+    const routines = data()?.routines
+    return routines?.status !== "ok" ? "unavailable" : routines.items.length ? "ready" : "empty"
+  }
 
   return (
     <SfPageFrame
@@ -118,12 +128,12 @@ export function SfTodayView(_props: SfSurfaceProps<"UI29">): JSX.Element {
             <h3>{t(key("sf.ui29.cases"))}</h3>
             <SfStatePanel
               state={caseState()}
-              messageKey={key(data()?.cases.status === "ok" && !data()!.cases.items.length ? "sf.common.empty" : "sf.ui29.casesUnavailable")}
+              messageKey={key(data()?.cases.status === "ok" && !caseItems().length ? "sf.common.empty" : "sf.ui29.casesUnavailable")}
               onRetryRead={refresh}
             >
-              <Show when={data()?.cases.status === "ok" && data()!.cases.items.length > 0}>
+              <Show when={caseItems().length > 0}>
                 <ul class="list-disc ps-5">
-                  <For each={data()?.cases.status === "ok" ? data()!.cases.items : []}>
+                  <For each={caseItems()}>
                     {(item) => (
                       <li>
                         <strong><bdi>{item.title}</bdi></strong>
@@ -137,12 +147,12 @@ export function SfTodayView(_props: SfSurfaceProps<"UI29">): JSX.Element {
             <h3>{t(key("sf.ui29.routines"))}</h3>
             <SfStatePanel
               state={routineState()}
-              messageKey={key(data()?.routines.status === "ok" && !data()!.routines.items.length ? "sf.common.empty" : "sf.ui29.routinesUnavailable")}
+              messageKey={key(data()?.routines.status === "ok" && !routineItems().length ? "sf.common.empty" : "sf.ui29.routinesUnavailable")}
               onRetryRead={refresh}
             >
-              <Show when={data()?.routines.status === "ok" && data()!.routines.items.length > 0}>
+              <Show when={routineItems().length > 0}>
                 <ul class="list-disc ps-5">
-                  <For each={data()?.routines.status === "ok" ? data()!.routines.items : []}>
+                  <For each={routineItems()}>
                     {(item) => (
                       <li>
                         <span>{t(key("sf.ui29.admission"))}: </span>
