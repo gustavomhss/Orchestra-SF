@@ -429,7 +429,7 @@ function publicHeaders(source: Headers | SfPublicHeaders): SfPublicHeaders {
   const accessRevision = header("x-sf-access-revision")
   const reviewBinding = header("x-sf-review-binding")
   const contractRevision = header("x-sf-contract-revision")
-  const safeDisposition = disposition && (/^attachment;\\s*filename="[^\\/\\\\\\r\\n"]{1,160}"$/i.test(disposition)) ? disposition : undefined
+  const safeDisposition = disposition && /^attachment;\s*filename="[^\/\\\r\n"]{1,160}"$/i.test(disposition) ? disposition : undefined
   return {
     ...(contentType && /^[^\r\n]{1,256}$/.test(contentType) ? { "content-type": contentType } : {}),
     ...(safeDisposition ? { "content-disposition": safeDisposition } : {}),
