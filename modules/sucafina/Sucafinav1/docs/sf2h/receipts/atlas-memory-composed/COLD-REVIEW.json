@@ -44,7 +44,8 @@
       "reviewer": "/root/atlas_review",
       "result": "NO_IDENTIFIED_STATIC_BLOCKER",
       "assertions": "All original group assertions retained across independent fixtures, exact replays/audits in each; new documentary pending event queued by real C08 producer without publication.",
-      "limits": "F1 monolithic deadline remains failed. C12 bootstrap remains blocked before Atlas. No installed C12 callback/native proof. Hosted F2 remains separately required."
+      "limits": "F1 monolithic deadline remains failed. C12 bootstrap remains blocked before Atlas. No installed C12 callback/native proof. Hosted F2 remains separately required.",
+      "runtimeReceipt": "F2-result.json"
     }
   },
   "notClaimed": [
@@ -57,9 +58,9 @@
   ],
   "globalRelease": false,
   "functionalObserved": {
-    "F1": "12PASS/14FAIL; not a green run",
+    "F1": "12PASS/14FAIL preserved; five core69/five documentary40/two35 passed, one monolithic timeout and13 C12 prerequisites failed",
     "rawResult": "F1-result.json",
     "C12": "C12-preparation-blocker.json",
-    "F2": "RUNNING"
+    "F2": "8PASS/0FAIL,403expectCalls,589.57s; all8 below180s; separate result F2-result.json"
   }
 }

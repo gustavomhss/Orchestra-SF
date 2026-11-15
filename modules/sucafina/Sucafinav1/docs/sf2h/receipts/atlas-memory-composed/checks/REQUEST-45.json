@@ -4,10 +4,10 @@
   "owner": 45,
   "PR": 32,
   "sourcePR": 79,
-  "consumer": 60,
+  "consumer": 71,
   "state": "REQUESTED_NOT_RUN_BY69",
-  "sourceW": "7a5e45c2bffb3a89cc4be8a3318ad99ae8058b83",
-  "sourceTree": "dd08615710c8a4dd0e98d19cf5c3f168c859e71d",
+  "sourceW": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+  "sourceTree": "01211640e7fa6ccc77b9ac702fde94edf9565678",
   "productW": "d962e08b81a707f3536344614c1faa3e728917b8",
   "productTree": "f7ddae5cfd84866517ce88cacf09b5b245854954",
   "productBlobs": {
@@ -20,19 +20,23 @@
       "W": "9a62c4fe2071e7d2065c46e157e8a98eeddfda46",
       "S": "fcd6b6bb4a03b1569b51626663e2b96f13df100f",
       "runId": 43667468344,
-      "result": "FAIL_BASELINE_CONTRAPROOF_WITH_ONE_TEST_ORACLE_DEFECT"
+      "result": "0PASS/5FAIL; four valid tests, five escapes; one error-class oracle defect"
     },
     {
       "phase": "F1",
       "W": "d962e08b81a707f3536344614c1faa3e728917b8",
       "S": "7823c05e28fbda36c7c0b1bd62eb5c5e64a4f537",
       "runId": 43668245381,
-      "state": "RUNNING_AT_REQUEST_CREATION"
+      "result": "12PASS/14FAIL",
+      "limits": "One own monolithic timeout;13 upstream C12 preparation failures before body assertions. Five core69, five documentary40 and two35 passed."
     },
     {
-      "phase": "G1",
-      "W": "7a5e45c2bffb3a89cc4be8a3318ad99ae8058b83",
-      "state": "PREPARED_NOT_DISPATCHED"
+      "phase": "F2",
+      "W": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+      "S": "86c84a1b86de7af819f278edbd7fce5a8f4cffe7",
+      "runId": 43670181263,
+      "result": "8PASS/0FAIL",
+      "limits": "Four independent group tests, one documentary A/B pending/current credential test, three G1 rank tests; no separate G1 run."
     }
   ],
   "checks": [
@@ -59,12 +63,27 @@
     "protocolOrHttpApiChanged": false
   },
   "constraint": "45 retains its execution/interface authority.69 has not executed local product/typechecks/guards, altered workflows or moved45 refs. No new compiler workflow or duplicate lane.",
-  "dedup": "Resolve exact source/target tree, commands, real dev base and existing runs before dispatch. Prefer60's released composed candidate for integral gates; never transfer source green.",
+  "dedup": "Resolve exact source/target tree, commands, real dev base and existing runs before dispatch. Prefer the current composed candidate explicitly released by the authorized integrator71 for integral gates; preserve all HOLDs and never transfer source green.",
   "targetObserved": {
-    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
-    "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
-    "changedDependency": "product/integration/product-authority.ts"
+    "branch": "sf2-stack",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "materialCandidate": {
+      "name": "C31",
+      "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+      "parent": "947a4add941893c8247b95a5ce6386468313838b",
+      "qualification": "SOURCE69_COMPOSITION_NOT_RUN_NATIVE_ACTIVATION_HELD"
+    },
+    "currentIntegrator": 71,
+    "predecessor60Ended": true,
+    "delta": "TARGET-C31-DELTA.json",
+    "mustReconcileActualHeadAtIntake": true
   },
-  "base": "origin/dev must be resolved and recorded at execution by45; not inferred from functional evidence.",
-  "globalRelease": false
+  "base": "origin/dev must be resolved and recorded at execution by45; no base or compiler PASS inferred from functional evidence.",
+  "globalRelease": false,
+  "originalConsumer": 60,
+  "supersedesTestW": "7a5e45c2bffb3a89cc4be8a3318ad99ae8058b83",
+  "sourceClosed": "Terminal release source W2; remaining source branch changes are receipts only.",
+  "executionLimit": "No local compiler/guards, no45 workflow/ref mutation. Current source69 has no observed result from45. Deduplicate current requests; do not duplicate any in-flight check."
 }

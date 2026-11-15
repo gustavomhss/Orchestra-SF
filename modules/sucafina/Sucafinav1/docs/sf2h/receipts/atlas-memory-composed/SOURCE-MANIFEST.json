@@ -16,9 +16,9 @@
     "tree": "dd08615710c8a4dd0e98d19cf5c3f168c859e71d"
   },
   "envelopeAtAssembly": {
-    "sha": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
-    "tree": "01211640e7fa6ccc77b9ac702fde94edf9565678",
-    "meaning": "Product bytes pinned to W1; complete current owned test bytes pinned to F2W. Later commits must contain only assigned receipts."
+    "sha": "2443a01973a5dcbdb3fdee59d868385f5ff54a85",
+    "tree": "132732f8ced3b3c399ba5efb9ba95429522488a5",
+    "meaning": "This is the preterminal receipts head. Complete source remains W2 and products remain W1; containing terminal commit/tree are delivered in PR79/PR65."
   },
   "files": [
     {
@@ -203,8 +203,19 @@
   },
   "qualificationBoundaries": {
     "F1": "12PASS/14FAIL, including one own monolithic timeout and13 C12 prerequisite failures; full original40 preservation is not established.",
-    "F2": "Separate8-test selection on unchanged product; no separate G1 run.",
+    "F2": "8PASS/0FAIL,403expectCalls,589.57s on unchanged W1 product; includes the three G1 tests without a separate G1 run.",
     "C12": "Canonical financial preparation is blocked before original capture; original assertions are untouched.",
     "timeout": "Original monolithic180s deadline remains failed. Four independent180s tests do not prove lower total cost or the old sequence deadline."
+  },
+  "currentTargetReconciliation": "TARGET-RECONCILIATION.json",
+  "currentAuthorizedConsumer": 71,
+  "currentTargetDelta": "TARGET-C31-DELTA.json",
+  "lastObservedTarget": {
+    "branch": "sf2-stack",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "materialCandidate": "C31",
+    "source69ExecutionOnTarget": "NOT_RUN",
+    "mustReconcileActualHeadAtIntake": true
   }
 }
