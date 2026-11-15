@@ -221,7 +221,7 @@ export function createSfCurrentChoiceServices(input: {
     finally { actors.release(call) }
   }
   return {
-    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run(call, async () => {
+    options: (wanted: string | undefined, call: TrustedDomainContext): Promise<PortResult<SfCurrentChoiceOptions>> => run<SfCurrentChoiceOptions>(call, async () => {
       const request = host.requestFor(call)
       if (!request) return unavailable()
       const candidates = await authority.state.read(request, "cases", (state, actor) => sameActor(actor, call)
