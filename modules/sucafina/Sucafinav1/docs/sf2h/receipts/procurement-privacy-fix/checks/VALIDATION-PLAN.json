@@ -1,0 +1,124 @@
+{
+  "schema": "sf2h.procurement73.validation-plan.v1",
+  "work_sha": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+  "work_tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+  "snapshot_sha": "2c0b92951ea5a4d15cc40a473860465cb84ca61d",
+  "snapshot_tree": "28fd369e0012bd92497dc69e21459ea867266237",
+  "request_blob": "96eaa802d822d3ba86c4c8e2ad047c096e44edfc",
+  "request": {
+    "package": "sucafina",
+    "packageSelector": "packages/sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+      "./Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+      "./Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts",
+      "./Sucafinav1/test/procurement-runtime.test.ts",
+      "-t",
+      "(M73|dual-role request transitions|complete procurement field roundtrip)",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "run": 43671737333,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43671737333",
+  "request_only_snapshot": true,
+  "matrix": [
+    {
+      "id": "M73-01",
+      "test": "commands.test.ts: ten actions",
+      "expected": "Missing/hidden, equal/stale/future versions: identical404status/body/headers; complete SQLite snapshot unchanged",
+      "criterion_ids": [
+        "M70-ISO-01",
+        "CAMP.INV.04",
+        "WP04.INV.03",
+        "WP04.T01.CHK.01"
+      ],
+      "result": "PASS_FOR_SELECTED_BEHAVIOR",
+      "whole_criterion_acceptance": false
+    },
+    {
+      "id": "M73-02",
+      "test": "commands.test.ts: visible conflicts and lifecycle",
+      "expected": "Authorized409 includes current stored/by/CAS; legitimate save/reject/approve succeed; holder/admin/self refusals have zero effects",
+      "criterion_ids": [
+        "WP04.INV.01",
+        "WP04.T02.CHK.03",
+        "WP04.T04.CHK.03",
+        "WP04.T04.CHK.04"
+      ],
+      "result": "PASS_FOR_SELECTED_BEHAVIOR",
+      "whole_criterion_acceptance": false
+    },
+    {
+      "id": "M73-03",
+      "test": "commands.test.ts: create and inherited IDs",
+      "expected": "Create ignores target ID, preserves fixed-slotCAS and foreign record; inherited names are404",
+      "criterion_ids": [
+        "M70-ISO-01",
+        "WP04.INV.02"
+      ],
+      "result": "PASS_FOR_SELECTED_BEHAVIOR",
+      "whole_criterion_acceptance": false
+    },
+    {
+      "id": "M73-04",
+      "test": "commands.test.ts: two instances/restart/cancel/delete",
+      "expected": "One success per version across real SQLite instances; state survives reopen; allocation/stage restrictions maintained",
+      "criterion_ids": [
+        "WP04.T02.CHK.04",
+        "WP04.T05.CHK.04"
+      ],
+      "result": "PASS_FOR_SELECTED_BEHAVIOR",
+      "whole_criterion_acceptance": false
+    },
+    {
+      "id": "M73-05",
+      "test": "uploads.test.ts",
+      "expected": "Missing/hidden quote/signed-po refused before scanner with equal404; empty/local principal403; raw SQLite snapshots/blobs unchanged",
+      "criterion_ids": [
+        "M70-ISO-01",
+        "CAMP.INV.04"
+      ],
+      "result": "PASS_FOR_SELECTED_BEHAVIOR",
+      "whole_criterion_acceptance": false
+    },
+    {
+      "id": "M73-06",
+      "test": "presentation.test.ts",
+      "expected": "Canonical28000*1.08 unchanged; rendered30240, current PO56000 after FX2, null/zero/fraction distinct",
+      "criterion_ids": [
+        "WP04.T03.QLT.02",
+        "WP04.T03.CHK.03"
+      ],
+      "result": "PASS_FOR_SELECTED_BEHAVIOR",
+      "whole_criterion_acceptance": false
+    },
+    {
+      "id": "M73-07",
+      "test": "Two unmodified procurement-runtime.test.ts selections",
+      "expected": "Whole field roundtrip and dual-role canonical policy preserved",
+      "criterion_ids": [
+        "WP04.INV.01",
+        "WP04.INV.02",
+        "WP04.T05.CHK.05"
+      ],
+      "result": "PASS_FOR_SELECTED_BEHAVIOR",
+      "whole_criterion_acceptance": false
+    }
+  ],
+  "scope_limits": [
+    "Synthetic principals/groups/data, real resolve/HTTP/domain/SQLite. No real Microsoft/B2B proof.",
+    "Renderer tests use explicit synthetic evidence/context and canonical projections, not installed browser proof.",
+    "Upload scanner is a refusal tripwire, never a clean substitute. Real scanner and race after scan not dynamically demonstrated here.",
+    "Full legacy file awaits71 one-line oracle patch.29 selected cases passed in R1; the remaining15legacy tests were filtered.",
+    "Compiler/guards remain45; installed Operations75 and final campaign gates remain."
+  ],
+  "source_tests_only": true,
+  "GLOBAL_RELEASE": false,
+  "state": "EXECUTED_SEE_R1",
+  "results_receipt": "R1.json",
+  "criteria_relationship": "Supporting focused regressions; CRITERIA.json is authoritative for partial coverage. References to C03/C08 never mean full contract qualification."
+}

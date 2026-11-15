@@ -1,0 +1,33 @@
+{
+  "schema": "sf2h.procurement73.check-request.v1",
+  "mission": 73,
+  "state": "REQUESTED_NOT_RUN",
+  "owner": 45,
+  "work_sha": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+  "work_tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+  "base_sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "comment": "https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6888435744",
+  "commands": [
+    {
+      "directory": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "directory": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "instructions": "Use existing request/check workflow. Dedup by W/tree, commands, actual dev/config/validator. Record actual run/job/conclusions.73 does not move45 refs.",
+  "product_paths": [
+    "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+    "modules/sucafina/Sucafinav1/runtime/application.ts"
+  ],
+  "new_test_prefix": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/",
+  "mandatory": true,
+  "waiver": false,
+  "GLOBAL_RELEASE": false,
+  "last_comment_review": {
+    "result": "No45 result tied to exact W observed in PR32 comments; request remains pending.",
+    "duplicate_request_sent": false
+  }
+}

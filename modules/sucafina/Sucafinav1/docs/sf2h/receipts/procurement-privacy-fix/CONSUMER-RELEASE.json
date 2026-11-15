@@ -1,0 +1,141 @@
+{
+  "schema": "sf2h.procurement73.consumer-release.v1",
+  "mission": 73,
+  "state": "SOURCE_RELEASED_FOR_CANDIDATE_COMPOSITION_WITH_CHECKS_PENDING",
+  "at": "2026-11-15T03:29:01.558Z",
+  "branch": "procurement-privacy-fix",
+  "source_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "work_sha": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+  "work_tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+  "ack_sha": "6db479f1f72e6ed0419a65e55cc9fd8f7f8078a5",
+  "terminal_identity": "The commit containing this receipt; exact SHA/tree announced after CAS/readback on PR86 and consumer PR65/PR78. No self-referential SHA fabricated.",
+  "lease_epoch": "procurement-privacy-browser73",
+  "lease_state": "ENDED_ON_PUBLICATION",
+  "released_unit": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "preimage_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "postimage_blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "preimage_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "postimage_blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/fixture.ts",
+      "preimage_blob": null,
+      "postimage_blob": "e49a76773ff655645b524c5f588b9a1065d5987a",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "3c735804c3956fc5df98113f8f76050da35c74b0",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "85874c506608803bb9d3fcd8c3acb87d60200b0d",
+      "mode": "100644"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts",
+      "preimage_blob": null,
+      "postimage_blob": "5ce4f670c4558e312ef1ea0eec72dd9f00e3897b",
+      "mode": "100644"
+    }
+  ],
+  "complete_patch": "source-and-tests.patch",
+  "patch_sha256": "e634e32c31acfe370ee86bf06738f39abbfb2901b310b6fc28797a6aad44c839",
+  "manifest": "SOURCE-MANIFEST.json",
+  "dependencies": "DEPENDENCIES.json",
+  "criteria": "CRITERIA.json",
+  "source_evidence": {
+    "snapshot_sha": "2c0b92951ea5a4d15cc40a473860465cb84ca61d",
+    "snapshot_tree": "28fd369e0012bd92497dc69e21459ea867266237",
+    "run_id": 43671737333,
+    "job_id": 132683058916,
+    "attempt": 1,
+    "receipt": "checks/R1.json",
+    "pass": 29,
+    "fail": 0,
+    "filtered": 15,
+    "assertions": 889
+  },
+  "independent_source_recheck": "reviews/INDEPENDENT-RECHECK.json",
+  "source_release": true,
+  "release_scope": "Availability of immutable material for71 candidate composition under existing HOLDs; selected source tests passed. Not all mandatory checks or integrated acceptance.",
+  "consumer": {
+    "owner": 71,
+    "exclusive_target_writer": true,
+    "ACK_requested": true,
+    "ACK_observed": false,
+    "target_last_observed": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "authority_ACK": "99d404ef15e12161b9043b3ac020bbb814d710dc"
+  },
+  "coordination75": "PRESENTATION-RELEASE.json",
+  "inert_proposals": [
+    "external/legacy-hidden-request-status.patch"
+  ],
+  "mandatory_gaps": [
+    {
+      "id": "CHECKS45",
+      "owner": 45,
+      "state": "REQUESTED_NOT_RUN",
+      "mandatory": true,
+      "reference": "checks/REQUEST-45.json",
+      "closure": "Package bun typecheck and repo guards via authorized existing45 lane on exact source/composed candidate as appropriate; no waiver."
+    },
+    {
+      "id": "INTEGRATION71",
+      "owner": 71,
+      "state": "ACK_REQUESTED_NOT_OBSERVED",
+      "mandatory": true,
+      "closure": "Accept exact source unit, recheck preimages/dependencies, compose minimal patch and archive receipts; do not transfer source PASS."
+    },
+    {
+      "id": "LEGACY_ORACLE",
+      "owner": 71,
+      "state": "PREPARED_NOT_APPLIED",
+      "mandatory": true,
+      "reference": "external/MANIFEST.json",
+      "closure": "Reconcile the one obsolete403 expectation to404, preserving visible dual-role403. Request full legacy rerun on composed candidate through authorized lane."
+    },
+    {
+      "id": "COLD_RECHECK_M70_ISO_01",
+      "owner": "71 routes independent review70/S0",
+      "state": "REQUESTED_ON_COMPOSED_CANDIDATE",
+      "mandatory": true,
+      "closure": "Recheck public existence/version boundary against exact candidate containing73; bounded source review does not close campaign finding globally."
+    },
+    {
+      "id": "OPERATIONS75",
+      "owner": 75,
+      "state": "AWAITING_COMPOSED_CANDIDATE_AND_QUALIFICATION",
+      "mandatory": true,
+      "reference": "PRESENTATION-RELEASE.json",
+      "closure": "Real ClamD controls and original five installed nominals; retain IDs/oracles/budgets and accessible FX correction."
+    },
+    {
+      "id": "UPLOAD_POST_SCAN_RACE",
+      "owner": "75 with71 candidate coordination",
+      "state": "NOT_DYNAMICALLY_EXERCISED_BY_73",
+      "mandatory_for_claim": true,
+      "closure": "Before asserting upload revocation-race coverage, exercise identity/visibility change across accepting scan.73 early refusal tripwire is not that proof."
+    },
+    {
+      "id": "FINAL_CAMPAIGN",
+      "owner": "S0/45/final reviewers",
+      "state": "PRESERVED_MANDATORY_NOT_RUN_BY_73",
+      "mandatory": true,
+      "closure": "Eight final selections, AM01-AM06, installed/native/live identity evidence, three FINAL reviews, C/G7 and D/G8 remain."
+    }
+  ],
+  "source_PASS_transfers_to_C": false,
+  "GLOBAL_RELEASE": false,
+  "merge_deploy_authorized_by_this_receipt": false
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "sf2h.procurement73.external-oracle.v1",
+  "state": "PREPARED_NOT_APPLIED",
+  "owner": "71 integrator; no source write by73",
+  "target_path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+  "preimage_blob": "d622fa8463ee6d05a5c03de6517381045b6f0241",
+  "reason": "One legacy assertion expects403 for an invisible request.73 now requires404 equivalence. The visible dual-role403 expectation is unchanged.",
+  "patch": "legacy-hidden-request-status.patch",
+  "preimage_ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "scope": "Exactly one assertion403→404, no fixtures/skips/timeout changes",
+  "source_selection": "Original dual-role and complete-field-roundtrip selected separately; whole legacy file NOT_RUN until this owner patch is composed.",
+  "qualification": "NOT_RUN on composed target",
+  "release": false,
+  "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+  "postimage_blob": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+  "patch_sha256": "68828d7623bf9bfb9926276f130db23d1754379754fd2fa158b029ef5a9c6f6b",
+  "status": "PREPARED_NOT_APPLIED",
+  "release_for_owner_consideration": true,
+  "prepared_by": 73,
+  "apply_by": "71 under valid stack authority; recompute target preimage, then qualify full legacy file via authorized Actions owner",
+  "prohibited_interpretation": "Not applied or test-qualified by73; not automatically included in source-and-tests.patch"
+}
