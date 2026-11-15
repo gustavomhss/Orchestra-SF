@@ -4,6 +4,8 @@
 
 ## Frozen scope and authority
 
+**PR compare caveat:** [PR #119](https://github.com/gustavomhss/Orchestra-SF/pull/119) against `sf2-stack` currently reports **164 paths** (8 W10-owned + **156 ancestry/planning paths not owned by W10**) because branches diverged. **NEVER consume the complete PR diff or merge this branch.** The authoritative author delta is `f8e442616c96651f3b26013b34b8ce697860e3e2...sf-ux-w10` with exactly 8 owned additions; take precisely the owned blobs listed in `ARTIFACT.json`.
+
 - Mission `UX20-W10`, order `S05`; original `f8e442616c96651f3b26013b34b8ce697860e3e2`; canonical plan `dbf9547211d9b0fade619790de7c19c0869b7c7d`; C58 material `422f1ed7b549021d7c62c834c9d9041279112af4`.
 - W10 ACK: `ACK.json`, committed `56a84d3e009d8e88057a279f285fd277991cf0b2`. Requested name Astra; actual runtime GPT-6, not disguised as Astra. 114's `S0-C-e17-browser114` is the sole integrator; no lease or product admission has been invented for W10.
 - Exact S05 product write paths, no shared registries: `collaboration/{index.tsx,types.ts,collaboration.css}`, `i18n/orchestra-chapters/sf-s05.ts`, `test-browser/sucafina-native/s05.test.ts`. All were previously absent on the initial W10 branch; no foreign source files edited.
