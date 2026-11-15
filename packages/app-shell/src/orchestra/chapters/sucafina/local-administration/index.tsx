@@ -90,7 +90,7 @@ export function SfLocalAdministrationView(_props: SfSurfaceProps<"UI69">): JSX.E
       })
       .catch((error: unknown) => {
         if (!active || abort.signal.aborted) return
-        console.error("N16 U28 local administration read failed", error)
+        console.error("N16 U28 local administration read failed")
         setState({ page: "unavailable", ownerKey: "", data: undefined })
       })
     onCleanup(() => { active = false; abort.abort() })
