@@ -1,0 +1,31 @@
+diff --git a/packages/app-shell/src/i18n/orchestra.ts b/packages/app-shell/src/i18n/orchestra.ts
+index 2eeaa42..9c1d5ef 100644
+--- a/packages/app-shell/src/i18n/orchestra.ts
++++ b/packages/app-shell/src/i18n/orchestra.ts
+@@ -18,7 +18,8 @@
+ import { DOCK_COPY, DOCK_COPY_BR } from "./orchestra-chapters/dock"
+ import { SETTINGS_COPY, SETTINGS_COPY_BR } from "./orchestra-chapters/settings"
+ import { CHAT_COPY, CHAT_COPY_BR } from "./orchestra-chapters/chat"
+ import { ATLAS_COPY, ATLAS_COPY_BR } from "./orchestra-chapters/atlas"
++import { SF_COMMON_COPY, SF_COMMON_COPY_BR } from "./orchestra-chapters/sf-common"
+ import { RAG_STUDIO_COPY, RAG_STUDIO_COPY_BR } from "./orchestra-chapters/rag-studio"
+ import { BOARD_COPY, BOARD_COPY_BR } from "./orchestra-chapters/board"
+ import { BOARD_MONEY_COPY, BOARD_MONEY_COPY_BR } from "./orchestra-chapters/board-money"
+@@ -381,7 +382,8 @@
+   ...DOCK_COPY,
+   ...SETTINGS_COPY,
+   ...CHAT_COPY,
+   ...ATLAS_COPY,
++  ...SF_COMMON_COPY,
+   ...RAG_STUDIO_COPY,
+   ...GUARDRAILS_COPY,
+   ...FLIGHT_ENGINEER_COPY,
+@@ -730,7 +732,8 @@
+   ...DOCK_COPY_BR,
+   ...SETTINGS_COPY_BR,
+   ...CHAT_COPY_BR,
+   ...ATLAS_COPY_BR,
++  ...SF_COMMON_COPY_BR,
+   ...RAG_STUDIO_COPY_BR,
+   ...GUARDRAILS_COPY_BR,
+   ...FLIGHT_ENGINEER_COPY_BR,
