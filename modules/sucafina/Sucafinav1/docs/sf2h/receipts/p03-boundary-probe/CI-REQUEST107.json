@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.p03-boundary-probe.ci-request109.v1",
+  "producer": 109,
+  "recipient": 107,
+  "cc": [
+    99,
+    106
+  ],
+  "status": "REQUEST_NOT_DISPATCHED",
+  "reason": "Short discriminant first; do not rerun unchanged original P03 until causal product fix",
+  "source_branch": "p03-boundary-probe",
+  "source_head_pending_this_commit": true,
+  "source_test_path": "modules/sucafina/Sucafinav1/test/product/p03-boundary-probe/selection-boundary.test.ts",
+  "expected_test_blob": "d47ee75ecaa1d43549d697cd7f64079abb3d9aee",
+  "workflow": ".github/workflows/test-ci.yml",
+  "runner": "bun",
+  "package": "sucafina",
+  "directory": "modules/sucafina",
+  "packageSelector": "packages/sucafina",
+  "args": [
+    "Sucafinav1/test/product/p03-boundary-probe/selection-boundary.test.ts",
+    "--timeout",
+    "65000"
+  ],
+  "env": {},
+  "deduplication": "Confirm coherent material candidate and no identical request for this W/tree/file selector before dispatch; use 107 existing admission path, not this branch's own action",
+  "required_evidence": [
+    "run/job/snapshot SHA",
+    "actual test pass/fail and exact failure boundary",
+    "callback order observed; no change in getter/noncloneable semantics",
+    "authenticated UI revocation and real C08 state unchanged on rule CAS",
+    "count of Planner compare and C08 historical read calls",
+    "comparison to original P03 run traces; no extrapolation to P03 PASS"
+  ],
+  "preserve": {
+    "original_test_sha": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "assertions": 72,
+    "timeout_ms": 180000
+  },
+  "global_release": false
+}

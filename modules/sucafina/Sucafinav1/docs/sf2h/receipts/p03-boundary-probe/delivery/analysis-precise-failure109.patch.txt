@@ -1,0 +1,15 @@
+diff --git a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+--- a/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
++++ b/modules/sucafina/Sucafinav1/product/portfolio/analysis.ts
+@@ -80,5 +80,10 @@
+       if (binding.status !== "ok") return binding
+       if (digestSfValue(binding.value.request) !== requestDigest || digestSfValue(binding.value.rules) !== digestSfValue(proofs.value)) return { status: "stale", reason: "portfolio-criteria-changed" }
+       const selectionAgain = await input.select(request, context)
+-      if (selectionAgain.status !== "ok" || digestSfValue(selectionAgain.value) !== digestSfValue(selected)) return { status: "stale", reason: "portfolio-selection-changed" }
++      // Propagate the exact nested authorization/source/replay failure. A denied
++      // or unavailable select is not evidence that the human changed selection.
++      if (selectionAgain.status !== "ok") return selectionAgain
++      // Only a second, independently successful authorized selection whose
++      // content differs from the first is genuine portfolio-selection drift.
++      if (digestSfValue(selectionAgain.value) !== digestSfValue(selected)) return { status: "stale", reason: "portfolio-selection-changed" }
+       const compared = stored.value.result

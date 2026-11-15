@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h.p03-boundary-probe.manifest109.v1",
+  "mission": 109,
+  "branch": "p03-boundary-probe",
+  "lease": "p03-probe-browser109",
+  "base_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "ack_commit": "190da9e2b891d4e0997c556c51be94b2f20c0b53",
+  "actor": "GPT-6 / connected GitHub MCP; no Astra external attestation",
+  "source99": {
+    "branch": "planner-p03-finish",
+    "observed_head": "54cff4caf3cbd1d94751009bcfa9564622e926b3",
+    "source_file": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+    "preimage_blob": "9da13324cf61d4bf1014bb13fe9495db0d7ed52b",
+    "proposed_postimage_blob": "09d197e0483219e8137de954b7cdc06e681b7b0f"
+  },
+  "artifacts": [
+    {
+      "kind": "own-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/p03-boundary-probe/selection-boundary.test.ts",
+      "blob_sha": "d47ee75ecaa1d43549d697cd7f64079abb3d9aee"
+    },
+    {
+      "kind": "inert-patch",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/p03-boundary-probe/delivery/analysis-precise-failure109.patch.txt",
+      "blob_sha": "71307c38bdaf8bb81c1cf70bafc0e68ffc8a7083"
+    },
+    {
+      "kind": "full-preimage",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/p03-boundary-probe/delivery/preimage-analysis.ts.txt",
+      "blob_sha": "9da13324cf61d4bf1014bb13fe9495db0d7ed52b"
+    },
+    {
+      "kind": "full-postimage",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/p03-boundary-probe/delivery/postimage-analysis.ts.txt",
+      "blob_sha": "09d197e0483219e8137de954b7cdc06e681b7b0f"
+    },
+    {
+      "kind": "causal-handoff",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/p03-boundary-probe/CAUSAL109.md",
+      "blob_sha": "e1db639cbf6e1b9a57534bf45719daf3eb312bfb"
+    }
+  ],
+  "observed_runs": {
+    "original1": {
+      "run": 43681302722,
+      "job": 132712328135,
+      "status": "FAIL_TIMEOUT",
+      "expect_observed": 24
+    },
+    "original2": {
+      "run": 43682515795,
+      "job": 132715983023,
+      "status": "FAIL_TIMEOUT",
+      "expect_observed": 24
+    },
+    "bounded_R3": {
+      "run": 43682264507,
+      "job": 132715223675,
+      "status": "PASS",
+      "pass": 22,
+      "expect": 234
+    }
+  },
+  "discriminant_status": "SOURCE_COMMITTED_AWAITING_HOSTED_RUN",
+  "original_P03_status": "FAIL_NOT_REEXECUTED",
+  "patch_status": "INERT_UNAPPLIED_CLASSIFICATION_ONLY",
+  "bounded_test_execution": "NOT_RUN",
+  "exact_original_assertions": 72,
+  "original_timeout_ms": 180000,
+  "ownership": "99 exclusive product writer;106 sole integrator;107 hosted-test dispatch",
+  "no_global_release": true
+}
