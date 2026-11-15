@@ -1,0 +1,49 @@
+{
+  "schema": "sf98.report-title-fix.ack.v1",
+  "mission": 98,
+  "state": "ACK_ACTIVE",
+  "actor": "new ChatGPT GPT-6 implementation session (requested Astra; actual product model GPT-6)",
+  "session_backend_id": null,
+  "session_id_status": "not exposed by runtime; not fabricated",
+  "github_context": "connector access to gustavomhss/Orchestra-SF; same repo owner gustavomhss",
+  "lease_epoch": "report-title-browser98",
+  "lease_state": "ACTIVE_UNTIL_TERMINAL_HANDOFF",
+  "campaign": "sf2h-integral-20261112",
+  "original_T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission98_ref": "f0d860691ea8d782a43905855d52699a39347dfe",
+  "mission98_blob_sha": "77da5b6dcc20809d37166a149c93e1a27367c915",
+  "baseline_C45": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "observed_branch_head": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "observed_sf2_stack": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "preimages": {
+    "modules/sucafina/Sucafinav1/product/reviews/render.ts": "84d1494057e99551cc8544655f0e0468b8853428",
+    "modules/sucafina/Sucafinav1/runtime/reports.ts": "80054e559574a9e13ce26cdfc7fbb3f778847b6f"
+  },
+  "visual_source": {
+    "pr": 93,
+    "head": "057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f",
+    "run_id": 43678123870,
+    "artifact_id": 14146978247,
+    "findings": "VIS88-001; composed-docx and after-drift-docx page 1/15",
+    "functional_verdict": "historical FAIL, not inherited"
+  },
+  "owned_paths": [
+    "modules/sucafina/Sucafinav1/product/reviews/render.ts (DOCX title typography only)",
+    "modules/sucafina/Sucafinav1/runtime/reports.ts (DOCX title typography only, if affected)",
+    "modules/sucafina/Sucafinav1/test/product/report-title-fix/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/report-title-fix/"
+  ],
+  "excluded": [
+    "collaboration/browser/e2eReports48",
+    "product/reviews/report-layout.ts",
+    "script/sf2h/export-visual/ reader88",
+    "source lifecycle97",
+    "runtime/application.ts egress86",
+    ".github/workflows/test-ci.yml dispatcher45"
+  ],
+  "writers": "71 owns sf2-stack; 45 owns dispatcher; 88 owns reader; 91/93 independent reviewers",
+  "authority": "no PR or previous branch write detected, branch HEAD matches expected; no other writer lease revoked",
+  "tests": "remote surgical only, request test:ci and dispatcher45, deduplicated",
+  "global_release": false
+}
