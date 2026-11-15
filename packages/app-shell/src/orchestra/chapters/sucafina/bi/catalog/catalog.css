@@ -1,0 +1,12 @@
+.sf-bi-catalog { display: grid; gap: 1.25rem; min-inline-size: 0; inline-size: 100%; }
+.sf-bi-catalog-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 12rem), 1fr)); align-items: end; gap: .75rem; }
+.sf-bi-catalog-form label, .sf-bi-catalog label { display: grid; gap: .35rem; min-inline-size: 0; }
+.sf-bi-catalog input, .sf-bi-catalog select { inline-size: 100%; min-inline-size: 0; min-block-size: 2.75rem; font: inherit; }
+.sf-bi-catalog-form button { min-block-size: 2.75rem; }
+.sf-bi-question, .sf-bi-catalog section { min-inline-size: 0; overflow-wrap: anywhere; }
+.sf-bi-question h2 { margin: 0; font-size: clamp(1.05rem, 2vw, 1.4rem); }
+.sf-bi-question p { margin: .35rem 0; }
+.sf-bi-catalog ul { padding-inline-start: 1.5rem; }
+.sf-bi-selected-source { display: flex; flex-wrap: wrap; gap: .5rem; }
+.sf-bi-catalog a { overflow-wrap: anywhere; }
+@media (max-width: 35rem) { .sf-bi-catalog-form { grid-template-columns: minmax(0, 1fr); } }

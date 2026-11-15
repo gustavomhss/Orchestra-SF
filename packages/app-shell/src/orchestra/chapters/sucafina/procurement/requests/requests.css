@@ -1,0 +1,22 @@
+.sf-u11-layout { display:grid; grid-template-columns:minmax(19rem,.95fr) minmax(0,1.05fr); gap:1rem; min-width:0; width:100%; align-items:start; }
+.sf-u11-list,.sf-u11-detail-wrap { min-width:0; }
+.sf-u11-detail { border:1px solid var(--v2-border-weak,currentColor); border-radius:.75rem; padding:clamp(.75rem,2vw,1.4rem); min-width:0; overflow-wrap:anywhere; }
+.sf-u11-detail-head { display:flex; flex-direction:column; gap:.3rem; margin-bottom:1rem; }
+.sf-u11-detail-head h2 { font-size:1.2rem; overflow-wrap:anywhere; }
+.sf-u11-filters,.sf-u11-actions,.sf-u11-tabs { display:flex; flex-wrap:wrap; gap:.65rem; margin:.7rem 0; }
+.sf-u11-filters input { flex:1 1 10rem; min-width:0; }
+.sf-u11-filters input,.sf-u11-field input,.sf-u11-field select,.sf-u11-field textarea,.sf-u11-actions textarea { background:var(--v2-surface-base,transparent); color:var(--v2-text-text-strong,inherit); border:1px solid var(--v2-border-weak,currentColor); border-radius:.45rem; padding:.55rem .65rem; min-width:0; max-width:100%; width:100%; }
+.sf-u11-tabs a { text-decoration:underline; text-underline-offset:.2em; padding:.35rem; }
+.sf-u11-stage { min-width:0; margin:1rem 0; padding-block:.5rem; border-top:1px solid var(--v2-border-weak,currentColor); }
+.sf-u11-fieldset { border:0; margin:0; padding:0; min-width:0; }
+.sf-u11-fieldset legend { font-weight:650; padding:.5rem 0; }
+.sf-u11-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:.7rem; }
+.sf-u11-field { min-width:0; display:flex; flex-direction:column; gap:.3rem; overflow-wrap:anywhere; }
+.sf-u11-field input[type="checkbox"] { width:auto; align-self:flex-start; }
+.sf-u11-line { border:1px solid var(--v2-border-weak,currentColor); border-radius:.5rem; margin:1rem 0; padding:.75rem; min-width:0; }
+.sf-u11-line legend { padding-inline:.35rem; overflow-wrap:anywhere; }
+.sf-u11-actions textarea { flex:1 1 100%; }
+.sf-u11-notice { display:flex; flex-wrap:wrap; gap:.7rem; align-items:center; margin-top:1rem; overflow-wrap:anywhere; }
+@media (max-width: 64rem) { .sf-u11-layout { grid-template-columns:minmax(0,1fr); } }
+@media (max-width: 35rem) { .sf-u11-fields { grid-template-columns:minmax(0,1fr); } .sf-u11-detail { padding:.75rem; } }
+@media (forced-colors: active) { .sf-u11-field input,.sf-u11-field textarea,.sf-u11-line { border-color:CanvasText; } }
