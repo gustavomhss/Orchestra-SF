@@ -1,0 +1,139 @@
+{
+  "schema": "sf2h.office-independent-findings.v1",
+  "mission": 131,
+  "reviewer": "NOVA131",
+  "overall": "SOURCE_W102_VISUAL_FIX_FIRST__130_DELTA_NOT_PROVEN__COMPOSED_CANDIDATE_NOT_PROVEN",
+  "items": [
+    {
+      "id": "VIS131-001",
+      "severity": "HIGH_READABILITY",
+      "status": "OPEN_SOURCE_W102",
+      "format": "XLSX_PDF",
+      "file": "planner-viewer-IT_Budget_Planner_2026.xlsx",
+      "sheet": "OPEX",
+      "pages": [
+        2,
+        3
+      ],
+      "source": "W102 run43725105940 artifact14166480115, original sha256 4748f32cd4281da39a91642e043b228af224a64e294b2ac26bed32bd786fa91a",
+      "observation": "A3 landscape 2-page horizontal split: p2 carries Line ID, Currency, Measure and Jan/Feb; p3 presents Mar-Dec/Total only, and numeric rows including 24 and 155555.58 cannot be attributed to a line/measure/unit without returning to p2. Header row repeats only for each horizontal segment; no key columns repeat.",
+      "expected": "On every printed segment numeric amounts must be traceable to their row identifier, measure and currency without another page, preserving order, all cells, and legibility.",
+      "impact": "Risk of wrong currency/measure attribution for forecast/actual amounts; no original OOXML loss observed.",
+      "owner": "102 XLSX print-layout producer; 125 integrator",
+      "action": "Qualify A3/two-page strategy with repeated stable identifiers/currency/measure on continuation pages or other readable layout. Retest populated OPEX across normal/empty/wide/long at source and composed-C SHA, both page halves; do not shrink to an illegible one-page substitute.",
+      "recheck": "Genuine original XLSX, per-page PDF/PNG and exact worksheet-to-page trace, values and units independently checked."
+    },
+    {
+      "id": "VIS131-002",
+      "severity": "MEDIUM",
+      "status": "OPEN_SOURCE_W102",
+      "format": "XLSX_PDF",
+      "file": "planner-viewer-IT_Budget_Planner_2026.xlsx",
+      "sheet": "Info",
+      "pages": [
+        1
+      ],
+      "observation": "A22-B24 labels collide with adjacent list values: visible text runs 'Valid OPEX cost elementsLicenses...', 'Valid CAPEX project cost Licenses...' and 'Valid classifications (CAPCAPEX, OPEX'. Source A/B cells remain separate in OOXML.",
+      "expected": "Each label and list starts in a distinct readable region with wrapping or adequate row/column sizes, without deleting the reference values.",
+      "owner": "102 XLSX print-layout producer; 125 integrator",
+      "action": "Adjust the Info worksheet print presentation/label widths, row height/wrap or layout; preserve every value and formula.",
+      "recheck": "Compare original A22:B28 with native XLSX and hosted PDF/PNG page1."
+    },
+    {
+      "id": "VIS131-003",
+      "severity": "MEDIUM",
+      "status": "OPEN_SOURCE_W102",
+      "format": "XLSX_PDF",
+      "file": "planner-viewer-IT_Budget_Planner_2026.xlsx",
+      "sheet": "OPEX",
+      "pages": [
+        2
+      ],
+      "observation": "Vendor / item contains literal '=HYPERLINK(\"https://example.invalid\",\"literal\")' in original cell but rendered PDF text is truncated to '=HYPERLINK(\"https://exa'. No missing source cell was observed; this is visible text truncation within the derivative.",
+      "expected": "Full literal remains recoverable/readable in printed export when long text must be preserved; it must not silently become an executed formula.",
+      "owner": "102 XLSX print-layout producer; 125 integrator",
+      "action": "Wrap/row-expand or otherwise show entire literal while retaining literal typing and financial columns.",
+      "recheck": "Inspect source cell data type and text, PDF text plus PNG p2, across adversarial long strings."
+    },
+    {
+      "id": "VIS112-001",
+      "severity": "MEDIUM",
+      "status": "OPEN_W102_BASELINE__W130_NOT_VISUALLY_PROVEN",
+      "format": "DOCX_PDF",
+      "file": "composed-docx and after-drift-docx",
+      "pages": "3-15 of 15, both variants",
+      "observation": "Genuine W102 PDFs begin every p3-p15 with a row whose first 'Captured value' data cell lacks record key while Period/Sources continue. Ex: p2 ends with license:1:currency-declared: USD; p3 starts residual 2026-01-31/source only. W102 genuine DOCX 169 XML rows, 0 w:cantSplit, 2 repeated headers in both.",
+      "expected": "Any continued row retains unambiguous originating captured-value identity, data/cell association and full contents. Previously fixed title and long note remain intact.",
+      "owner": "130 DOCX writer, 125 integrator",
+      "delta130": "e1ed069223ef76e853d690f1728033c3c7a0b947 statically changes render.ts to chunk at 12 lines, add continuation labels and cantSplit per chunk. No new Office/PDF/PNG from this SHA was observed; do not mark fixed based on code alone.",
+      "action": "129 to provide new genuine DOCX+PDF+PNG render on exact 130 source and later 125 composed candidate, with p2-p15/pair before-after and original-vs-render content association; 131 independent reviewer only judges provided evidence.",
+      "recheck": "NOT_PROVEN pending hosted rerender."
+    },
+    {
+      "id": "VIS88-005",
+      "severity": "QUALIFICATION",
+      "status": "OPEN_CROSS_PLATFORM_FONT_EQUIVALENCE",
+      "format": "OFFICE_PDF",
+      "observation": "W102 XLSX hosted PDFs embed Carlito-Regular and DOCX/PPTX use Linux substitution. Neither proves layout under native Aptos/Excel/PowerPoint installed environment.",
+      "owner": "129 hosted renderer qualification, 125 release owner",
+      "action": "Mark environment-specific result; if native Office fidelity is release criterion, secure separate genuine target-environment proof; do not silently upgrade Linux PASS."
+    }
+  ],
+  "proof_gaps": [
+    {
+      "id": "PROOF131-001",
+      "status": "NOT_PROVEN",
+      "subject": "XLSX normal/empty/wide/long",
+      "reason": "W102 delivered one standard export-reader corpus with nine worksheet maps; no individual genuine 4-scenario PDF/PNG sets with separate hashes and page maps observed.",
+      "owner": "129 dispatcher (existing only), 125 consumer",
+      "action": "Deduplicate existing requests then supply real artifacts grouped by source/snapshot/scenario/sheet; do not re-dispatch from 131."
+    },
+    {
+      "id": "PROOF131-002",
+      "status": "NOT_PROVEN",
+      "subject": "XLSX chart axes/title/series/scale",
+      "reason": "Genuine XLSX corpus contains no xl/charts/chart*.xml parts; absent chart is not a PASS for chart formatting. Two PPTX archives have only empty ppt/charts directory entries, not actual chart parts.",
+      "owner": "125 / producer of chart-capable cases",
+      "action": "Use genuine source with nonempty chart and independently review title, semantic unit, axis range, series and clipping only when corresponding charts are required."
+    },
+    {
+      "id": "PROOF131-003",
+      "status": "NOT_PROVEN",
+      "subject": "candidate composed 125",
+      "reason": "W102 run source 104bf61f and C58 source 422f1ed are not the composed sf2-stack C64 observed at a15434a. Source successes do not transfer across SHAs.",
+      "owner": "125 composer,129 test dispatcher",
+      "action": "Only accept composed candidate after traceable exact C/S/W/run/artifact evidence and independent delta recheck."
+    },
+    {
+      "id": "PROOF131-004",
+      "status": "NOT_PROVEN",
+      "subject": "nonempty CAPEX, Rate cards, multi-entity/multi-leader and print at scale",
+      "reason": "Exposed W102 source has header-only CAPEX and Rate cards, one member, one leader, one headcount record; this cannot prove wide/long nonempty cases.",
+      "owner": "102/125 producer,129 dispatcher",
+      "action": "Attach four scenarios with nonempty varied rows, currencies, per-sheet page mapping and no numeric loss."
+    }
+  ],
+  "bounded_pass": [
+    {
+      "subject": "W102 original Office preservation",
+      "status": "PASS_SOURCE_ARTIFACT_SCOPE",
+      "proof": "25/25 original files match SHA256 before/after reader, ZIP checksums match GitHub digest"
+    },
+    {
+      "subject": "W102/C58 workbook cell equivalence",
+      "status": "PASS_SAME_SYNTHETIC_CELL_CORPUS",
+      "proof": "0 decoded literal/formula/type differences in 9 worksheet pairs; only print metadata modified for selected cells, not general business correctness"
+    },
+    {
+      "subject": "W102 XLSX print page reduction",
+      "status": "PASS_QUANTITY_ONLY",
+      "proof": "Planner 21→8, Members6→2, template2→1; NOT a visual acceptance"
+    },
+    {
+      "subject": "W102 DOCX title and long note",
+      "status": "PASS_LIMITED_EXISTING_SOURCE",
+      "proof": "p1 title separated; END-EXPORT-66-NOTE and literal <scope> present, VIS112-001 remains open"
+    }
+  ],
+  "global_release": false
+}
