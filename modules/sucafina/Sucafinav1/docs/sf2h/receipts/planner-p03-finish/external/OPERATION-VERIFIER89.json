@@ -1,0 +1,38 @@
+{
+  "schema": "sf2h.planner-p03-finish.operation-verifier-external.v1",
+  "source_branch": "planner-p03-finish",
+  "mission": 89,
+  "delivery": "docs-only; never applied on owned branch",
+  "target": "modules/sucafina/Sucafinav1/product/planner/operation-verifier.ts",
+  "target_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "preimage": "086c0100a39525f5d78f5864ad589e2d72fc40cd",
+  "changes": [
+    "Add canonicalSfValue import alongside existing digestSfValue and digestSfEvidenceRef (cryptographic evidence integrity stays hashed elsewhere).",
+    "Change the final stable equality for independently read replacement entries from digestSfValue(lhs)===digestSfValue(rhs) to canonicalSfValue(lhs)===canonicalSfValue(rhs). Both forms traverse exactly the same canonical fields/getters and throw on identical unsupported values, but direct strings avoid repeated SHA256 finalization."
+  ],
+  "bounded_observation": {
+    "run": 43677538070,
+    "S": "af1d8d09855d2644622a4db062f624ab72a8a41a",
+    "job": 132700853984,
+    "original": "39.408 seconds diagnostic",
+    "site": "product/planner/operation-verifier.ts:94",
+    "digest_calls": 1272,
+    "digest_exclusive_measured_ms": 5894,
+    "clone_site": "product/host-binding/state-provider.ts:65",
+    "clones": 2104,
+    "clone_exclusive_measured_ms": 6545,
+    "interpretation": "Measured primitive cost on bounded diagnostic, not a measured speedup or P03 complete cause. Must qualify on owner composed candidate."
+  },
+  "semantic_guardrails": [
+    "keep request, principal, authorization, evidence digest/ref replay intact",
+    "do not remove calls to resolve(), resolveAgain(), compare(), sourceAgain, simulatePlannerOperations or source/case fences",
+    "keep observedAt normalization and getter evaluation order",
+    "canonical equality is at least as discriminating as SHA256 hash equality; existing tests may spy digest call count so update diagnostic expectations only with revised causal rationale",
+    "verify callbackOrder (87440 events; SHA256 979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4), output digests and negative tests before P03"
+  ],
+  "owner": "actual planner operation-verifier writer / 71",
+  "independent_review": "REQUIRED",
+  "status": "PROPOSED_UNTESTED",
+  "P03": "NOT_RUN_ON_PROPOSED",
+  "GLOBAL_RELEASE": false
+}
