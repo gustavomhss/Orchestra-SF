@@ -1,0 +1,47 @@
+{
+  "number": 94,
+  "id": "http-abort-adoption",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "http-body-limit-fix",
+  "pr": 85,
+  "base_sha": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+  "expected_head": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+  "actor": "S0-B HTTP transport continuation; not native runtime90",
+  "actor_pack": "execution/actors/S0-B.json",
+  "lease_epoch": "http-abort-browser94",
+  "consumer": "71 sole integrator;45 checks/dispatcher;52/67/BI consume actual composed transport",
+  "inputs": [
+    "terminal74@8fac547cfdbda84ff2385c22a4fce46efe9a0ad8 TERMINAL74.json,HANDOFF-71.json",
+    "terminal79@545201aa12e330360530727a96d7cb9cc678e2b9 HANDOFF-74-71.json,CAUSE.json,fix-proposal/MANIFEST.json,abort-signal-delta.patch.txt,microsoft-map-delta.patch.txt,VALIDATION-V2.json,evidence/V2-RESULTS.json",
+    "PR65 C44@eecbdacb21734695094332deb6142aa35d5c9c3c material74 with current72 Microsoft map; read current target and later candidate deltas"
+  ],
+  "write_paths": [
+    "apps/cli/src/sucafina-product/installation.ts",
+    "modules/sucafina/Sucafinav1/runtime/request-body.ts (only if needed for same transport contract)",
+    "modules/sucafina/Sucafinav1/product/interface/http.ts (only if needed for same transport contract)",
+    "modules/sucafina/Sucafinav1/test/product/http-abort-adoption/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/"
+  ],
+  "mission": "Adotar correção causal79 sobre unidade74, qualificar transporte real com signal de disconnect correto e entregar unidade atualizada para71. Continuar PR85 existente, não criar outro writer integrado.",
+  "common": [
+    "Ler AGENTS, START, WORKFLOW, COMMON e pack completo atribuído no planejamento fixado; preservar15WP74tasks17contratos1610critérios. Delta operacional não altera plano.",
+    "Antes ACK confirmar HEAD, preimages e lease74 terminal sem retomada posterior. Se existir writer posterior, preservar autoridade e entregar patch/testes disjuntos; não inferir morte por silêncio.",
+    "GitHub remoto MCP/CAS expectedhead/forcefalse;semgh/push/devmerge/deploy/Azure/segredos/enginechanges/restart/novoGoal/controller. NativeGoal segue pausada.",
+    "Testes cirúrgicos somente Actions via test:ci/request existente, dispatcher único/dedup. Reusarprovas79 declarandoescopo, semnovo180sretry oulocalbun test. Typecheck bun typecheck/guards perAGENTS interface45; nadaepic/fulltest nesta lane.",
+    "71 único integrador de sf2-stack;52UI/67Dashboard/BI62 consumers mantêm paths.90runtime nativo,89P03,88reader,87firstsave,86application/auth85,45workflowmaprefs e sidebar do usuário excluídos.",
+    "UmaPR85continua, commitremoto convencional, prepost/source-tree/patcheddependencyclosure/realtreeW-S-run-job/criteriagaps/handoffterminal. PedirACK71 não presumir integração. SemGLOBAL_RELEASE."
+  ],
+  "acceptance": [
+    "Adotar delta mínima contra74 que compõe Node.aborted com signalEffect e conserva guard para erro enfileirado atéclose/cleanup idempotente. Preservar único Request final URL/body/signal; não voltar new Request(existing,initObject) que trava Bun fixado.",
+    "Conferir instalação preimage8a62babdccaa4bcecbfc64e385b728315208a7c1 e proposta34d74d6651031c5194db1d22c823baae60e9a260 via manifest79. Em drift reconciliar hunks atuais, nunca transplantar fonteC34/microsoft map antigo.",
+    "Qualificar desconexão real comsignal finalaborted,reader rejeitado/limpo,normalEOF/end/close semabort indevido,limites antes alocação/backpressure/cancel/timeout/HEAD/Microsoft/Workbench invariantes. Overlaydiagnóstico79 não éinstrumentedproductiongreen.",
+    "Sourcepatch normativo e mapMicrosoft atual rebind completo para71; preservar três fences/pins atuais de72/49/55, não trocar fixture pelaantiga74. Não tomar shared49auth ou maprefs45.",
+    "Global25MiB e Procurement>16MiB continuam HOLD; não aplicar política finita nova semowner/contrato. Entregar patch do owner74 já existente como insumo somente, separado da adoção deabort.",
+    "Depois entrega informar71 qualinputmuda e jornada52/67/BIque pode retomar no Ccomposto; fonte11PASS79 não substitui prova instalada. Não reexecutar jornadas de outroowner."
+  ]
+}
