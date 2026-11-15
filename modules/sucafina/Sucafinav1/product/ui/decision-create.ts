@@ -122,7 +122,7 @@ export const decisionCreateScript = `document.querySelectorAll('[data-decision-c
         try {
           response = await fetch(url, {
             method: 'GET', credentials: 'same-origin', cache: 'no-store',
-            headers: { 'Idempotency-Key': key }, signal: controller.signal,
+            headers: { 'Idempotency-Key': key, 'X-SF-Creation-Scope': scope }, signal: controller.signal,
           })
           result = await response.json()
         } finally { clearTimeout(timeout) }
@@ -197,7 +197,7 @@ export const decisionCreateScript = `document.querySelectorAll('[data-decision-c
     const timeout = setTimeout(() => controller.abort(), 10000)
     try {
       const response = await fetch(url, { method: 'POST', credentials: 'same-origin',
-        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': attempt.key },
+        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': attempt.key, 'X-SF-Creation-Scope': scope },
         body: attempt.body, signal: controller.signal })
       if (denied || !form.isConnected || intention !== attempt) return
       if (response.status === 401 || response.status === 403) { accessChanged(); return }
