@@ -31,7 +31,10 @@ function requirePublishedRecords(records: readonly { envelope: BusinessMemoryEnv
     expect(record.envelope.sourceEventId).toBe(receipt.sourceEventId)
     expect(record.recordDigest).toBe(receipt.recordDigest)
     expect(digestSfValue({ owner: record.envelope.owner, kind: record.envelope.kind, entry: record.entry })).toBe(receipt.recordDigest)
-    expect(record.envelope.scannerReceipt).toEqual({ ...receipt.scanner, digest: receipt.recordDigest })
+    const expectedScannerReceipt: BusinessMemoryEnvelope["scannerReceipt"] = {
+      name: receipt.scanner.name, version: receipt.scanner.version, status: "clean", digest: receipt.recordDigest,
+    }
+    expect(record.envelope.scannerReceipt).toEqual(expectedScannerReceipt)
   }
 }
 
