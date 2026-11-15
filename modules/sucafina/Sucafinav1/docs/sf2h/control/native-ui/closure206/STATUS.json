@@ -1,0 +1,65 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "delivered": [
+    {
+      "mission": 193,
+      "head": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063",
+      "state": "SOURCE_HANDOFF_NOT_FINAL_PROOF"
+    },
+    {
+      "mission": 194,
+      "head": "72c5d2afcbdc202605614a18c5ba472aafc34574",
+      "state": "SOURCE_HANDOFF_NOT_FINAL_PROOF"
+    },
+    {
+      "mission": 195,
+      "head": "679e17ecdfec23ab53ce4b23206594874617528d",
+      "state": "SOURCE_HANDOFF_NOT_FINAL_PROOF"
+    }
+  ],
+  "new_code": [
+    {
+      "mission": 196,
+      "branch": "sf-proof-profiles",
+      "head": "8bc68206af99b5866eebfd3fc5e95104dac08844",
+      "date": "2026-11-15T23:27:23Z",
+      "message": "test(sf): exercise five resident recall profiles through live C15 execution and durable consumer"
+    },
+    {
+      "mission": 199,
+      "branch": "sf-installed-host",
+      "head": "7617fbfba203ee3d4c15cd91a18620e5ca468932",
+      "date": "2026-11-15T23:25:41Z",
+      "message": "feat(sf): consume exact seven F04 closure 187 blobs on integrated product [skip ci]"
+    }
+  ],
+  "only_ack": [
+    197
+  ],
+  "user_launched_not_yet_ack": [
+    198,
+    200,
+    201,
+    202,
+    203,
+    204,
+    205
+  ],
+  "source193_195_preimages": {
+    "product": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "match": "4_OF_4_READBACK",
+    "integrator_notice": 6903205440
+  },
+  "prepared206": {
+    "branch": "sf-ux-n13",
+    "epoch": "source-closure-e2-browser206",
+    "head": "0dd0ee1275f5b85d6658e1f094617e9b4eaefccb",
+    "state": "PREPARED_NOT_STARTED",
+    "purpose": "All six functional criteria, not repeat F04 admission"
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
