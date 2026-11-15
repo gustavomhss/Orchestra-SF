@@ -91,7 +91,7 @@ test("U32 labels currency and evidence changes without attributing an FX or nume
   await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
     "data-sf-comparison-compatibility", "compatible")
   const id = requiredRef("SF_N28_CURRENCY_VALUE_ID")
-  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: comparison.getByText(id, { exact: true }) })
+  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: page.getByText(id, { exact: true }) })
   await expect(row).toHaveCount(1)
   await expect(row).toHaveAttribute("data-change-value", "false")
   await expect(row).toHaveAttribute("data-change-numeric", "false")
@@ -112,7 +112,7 @@ test("U32 distinguishes zero, explicit null and an absent value without coercion
   await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
     "data-sf-comparison-compatibility", "compatible")
   const id = requiredRef("SF_N28_ZERO_VALUE_ID")
-  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: comparison.getByText(id, { exact: true }) })
+  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: page.getByText(id, { exact: true }) })
   await expect(row).toHaveCount(1)
   await expect(row).toHaveAttribute("data-change-value", "true")
   await expect(row).toHaveAttribute("data-change-numeric", "false")
@@ -127,7 +127,7 @@ test("U32 surfaces source-only revision, incarnation and observation without a v
   await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
     "data-sf-comparison-compatibility", "compatible")
   const id = requiredRef("SF_N28_SOURCE_VALUE_ID")
-  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: comparison.getByText(id, { exact: true }) })
+  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: page.getByText(id, { exact: true }) })
   await expect(row).toHaveCount(1)
   await expect(row).toHaveAttribute("data-change-value", "false")
   await expect(row).toHaveAttribute("data-change-numeric", "false")
@@ -144,11 +144,29 @@ test("U32 also preserves an explicit null followed by recorded zero", async ({ p
   await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
     "data-sf-comparison-compatibility", "compatible")
   const id = requiredRef("SF_N28_NULL_VALUE_ID")
-  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: comparison.getByText(id, { exact: true }) })
+  const row = comparison.locator("tr[data-sf-value-id]").filter({ has: page.getByText(id, { exact: true }) })
   await expect(row).toHaveCount(1)
   await expect(row).toHaveAttribute("data-change-value", "true")
   await expect(row).toHaveAttribute("data-change-numeric", "false")
   const cells = row.locator("td")
   await expect(cells.nth(0)).toContainText(/Explicit null value|Valor nulo explícito/)
   await expect(cells.nth(1).locator("strong")).toHaveText("0")
+})
+
+test("U32 exposes source-only section observation changes without a fabricated delta", async ({ page, nativeHarness }) => {
+  const comparison = await openAuthorizedPair(page, nativeHarness.manifest.target,
+    requiredRef("SF_N28_SECTION_SOURCE_BEFORE_REVIEW_REF"),
+    requiredRef("SF_N28_SECTION_SOURCE_AFTER_REVIEW_REF"))
+  await expect(comparison.locator("[data-sf-comparison-compatibility]")).toHaveAttribute(
+    "data-sf-comparison-compatibility", "compatible")
+  const row = comparison.locator('tr[data-change-source="true"]').filter({
+    has: page.getByRole("rowheader", { name: /Section source lineage|Linhagem das origens da seção/ }),
+  })
+  await expect(row).toHaveCount(1)
+  const cells = row.locator("td")
+  await expect(cells.nth(0)).toContainText(requiredRef("SF_N28_SECTION_SOURCE_BEFORE_OBSERVED_AT"))
+  await expect(cells.nth(1)).toContainText(requiredRef("SF_N28_SECTION_SOURCE_AFTER_OBSERVED_AT"))
+  await expect(row).toContainText(/Source incarnation|Encarnação da origem/)
+  await expect(row).toContainText(/Source revision|Revisão da origem/)
+  await expect(comparison.locator("[data-sf-comparison-diff]")).toBeVisible()
 })
