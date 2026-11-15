@@ -24,8 +24,8 @@
     "branch": "sf-am03-proof",
     "headAtStart": "690a34cdd81c12d7311f3717c19679b950276161",
     "treeAtStart": "07133fe09922121f3cca3bffd6b4463053b48ece",
-    "latestProofCodeHead": "ecc9640877f139796ef4380f947b3618427c5eee",
-    "latestProofCodeTree": "bac9b37b79868fae139beda072466504fac116ce",
+    "latestProofCodeHead": "cd22c269745e85fa554499c413282f6cdc887323",
+    "latestProofCodeTree": "5263dcab80d975785efa3c0afe1903eecb505458",
     "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
     "packetCommit": "c5947d78329f4f0cf3666fa27d38364c67009688",
     "packetBlob": "cac62d5f1e7116a21cb90e0462754ce3403055ac",
@@ -58,15 +58,19 @@
       {
         "path": "script/sf2h/proofs/am03/correlation.ts",
         "oldBlob": null,
-        "newBlob": "c40ffd7c92540f715be7df5f7480e7488556f403",
+        "newBlob": "29c6806d5da75ffa019a21b11971833f436925f7",
         "introducedBy": "7801842bf2f2ce8374e8cea24bc1bbf608801a32",
         "kind": "fail-closed-candidate-correlation",
         "firstBlob": "814b98155b8e8923118058e39b686c9fa4e79ece",
         "refinements": [
           "ddd882aa8f45096bc261a238026e2e27f5948c3d",
-          "ecc9640877f139796ef4380f947b3618427c5eee"
+          "ecc9640877f139796ef4380f947b3618427c5eee",
+          "cd22c269745e85fa554499c413282f6cdc887323"
         ],
-        "preimageFromLastRef": "814b98155b8e8923118058e39b686c9fa4e79ece"
+        "preimageFromLastRef": "814b98155b8e8923118058e39b686c9fa4e79ece",
+        "intermediateBlobs": [
+          "c40ffd7c92540f715be7df5f7480e7488556f403"
+        ]
       },
       {
         "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
@@ -78,11 +82,12 @@
         "kind": "adversarial-correlator-test"
       }
     ],
-    "currentSourceTree": "bac9b37b79868fae139beda072466504fac116ce",
+    "currentSourceTree": "5263dcab80d975785efa3c0afe1903eecb505458",
     "notes": [
       "Unconsumed valid native lease is observed live after all forged boundary negatives; false due to consumed replay is not accepted as proof.",
       "AM03 correlation requires real distinct provider object/generation and restart runtime instance identities; raw structural eligibility never marks AM03 PASS.",
-      "Original terminal receipt blob superseded at this CAS commit; no older source blobs or code replaced outside allowlist."
+      "Original terminal receipt blob superseded at this CAS commit; no older source blobs or code replaced outside allowlist.",
+      "The optional numeric count is narrowed without an unsafe cast before preflight; actual native counts still require original hosted artifact."
     ]
   },
   "canonicalCriterionAssignments": [
@@ -487,7 +492,7 @@
       "command": "bun run test:ci sucafina modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts --os linux",
       "inputs": {
         "requiresCandidateSha": "162 coherent sf2-stack integrated C with this PR",
-        "sourceHead": "ecc9640877f139796ef4380f947b3618427c5eee",
+        "sourceHead": "cd22c269745e85fa554499c413282f6cdc887323",
         "immutableOrder": true
       },
       "dedupKey": "candidateTree+orderedFiles+runtimeConfig+fixtureSha+producerSha",
