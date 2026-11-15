@@ -1,0 +1,70 @@
+{
+  "schema": "sf2h.product-ci164.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 164,
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "epoch": "product-ci-e4-browser164",
+  "kind": "product-ci",
+  "actor": {
+    "effective_model": "GPT-6",
+    "github_login": "gustavomhss",
+    "runtime_session_id": null,
+    "session_id_note": "Runtime session identifier not exposed; no synthetic Astra ID"
+  },
+  "authority": {
+    "current_dispatcher": 164,
+    "predecessor": 150,
+    "previous_epoch": "product-ci-e3-browser150",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "integrator": "162/S0-C-e20-browser162/PR65",
+    "compiler": "163/compiler-e4-browser163/PR107",
+    "source_fence_blob": "42172ab6fbcc68b19b9c7cdab5d4c53ef20a86bf",
+    "runtime_termination_verified": false
+  },
+  "input": {
+    "packet_blob": "b4df2c725dc7fc44a086ee083ade7af0467f412b",
+    "prepared_head": "3d94ac1c77be764dc90e1f39b2116d82db7e8b20",
+    "prepared_tree": "1884d375f63064d7702cf925cf81f782f2601cde",
+    "prior150_terminal_head": "1ae9ceb11402ae677b1d328a664fa71e960cc28e",
+    "predecessor_runs_blob": "651dd81cb5e34cc85aa1d21e18c6206dd9bbb88d",
+    "predecessor_requests_blob": "02f595bc84a8022bb49eb0d781452127a1cf0c22",
+    "initially_verified_product_W": "b45aa6211c433c6837622617ad02fb2c0c3fe8e4",
+    "current_product_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "current_product_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "actual_advance": "2 post-b45 commits; substantive A07/A09/A12/A13/A15 and 159-160 source/test changes; no relabeling past run W"
+  },
+  "actions_reconciliation": {
+    "in_progress": 0,
+    "queued": 0,
+    "pending": 0,
+    "latest_historical_run": 43758731378,
+    "latest_historical_conclusion": "failure",
+    "old_unchanged_selection": "A07-A15 8 files; not repeated",
+    "requested_new_selection": "six exact native-ui-contract files, no directory substring"
+  },
+  "selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "os": "ubuntu-24.04",
+    "args": [
+      "--timeout",
+      "120000",
+      "Sucafinav1/test/native-ui-contract/planner.test.ts",
+      "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+      "Sucafinav1/test/native-ui-contract/procurement.test.ts",
+      "Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts"
+    ],
+    "env": {},
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290"
+  },
+  "state": "ACK_ACTIVE_READY_FOR_CAUSAL_FIRST_DISPATCH",
+  "local_tests": "NOT_RUN",
+  "global_release": false,
+  "native_goal": "paused",
+  "authorization": "GitHub MCP only, CAS force=false; temporary ci-run-* snapshot via inherited validated .ci-run.json protocol"
+}
