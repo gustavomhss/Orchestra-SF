@@ -1,0 +1,130 @@
+{
+  "schema": "sf2h.review.integrity.addendum113.compiler108.v1",
+  "mission": 113,
+  "base_report": "PRELIMINARY113-C53.md",
+  "source_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "source_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "early_run": {
+    "run": 43708133478,
+    "job": 132793604402,
+    "workflow_sha": "fe3fbb73019667cfb2bc95e78299064cf4b63549",
+    "status": "FAIL_AT_FIRST_CHECK_ONLY",
+    "artifact": 14159716242
+  },
+  "new_run": {
+    "run": 43708496555,
+    "job": 132794704289,
+    "attempt": 1,
+    "workflow_sha": "255de6221343b98cafaece35bc6f5029cb087c45",
+    "status": "COMPLETED_FAILURE",
+    "artifact": 14158854987,
+    "checks_total": 17,
+    "passed": 11,
+    "failed": 6,
+    "results": [
+      {
+        "name": "bundle-build",
+        "exit": 1,
+        "classification": "FAIL",
+        "diagnosis": "SOURCE_DRIFT: reconcile .github/workflows/test-ci.yml before rebuilding the final bundle"
+      },
+      {
+        "name": "bundle-requests",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "e2e-inventory",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "typecheck-atlas",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "typecheck-sucafina",
+        "exit": 2,
+        "classification": "FAIL",
+        "diagnosis": "Actual TypeScript errors in Sucafina test and fixture sources, e.g. wp04/finance-sourcing-integration.test.ts:394 missing verifyScenarioOperations; wp14/recall.test.ts:226 missing readOriginalRecords"
+      },
+      {
+        "name": "typecheck-core",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "typecheck-cli",
+        "exit": 2,
+        "classification": "FAIL",
+        "diagnosis": "Actual TypeScript errors in apps/cli/src/sucafina-product/bi-services.ts:213, current-choice-services.ts:224, imported product/decisions/composite-planner.ts:26 and reviews/agenda-picker.ts:135/138"
+      },
+      {
+        "name": "typecheck-app",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "sf-e2e-showConfig",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "sf-e2e-listFiles",
+        "exit": 2,
+        "classification": "FAIL",
+        "diagnosis": "E2E listing includes files/specs but command exit=2 (not successful typecheck)"
+      },
+      {
+        "name": "sf-e2e-verify",
+        "exit": 1,
+        "classification": "FAIL",
+        "diagnosis": "Verifier JSON.parse of Bun command banner `$ tsgo -p ...` fails at verify-e2e-typecheck.mjs:118, independent of E2E error exit"
+      },
+      {
+        "name": "atlas-generated-before",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "atlas-generate",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "atlas-generated-after",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "atlas-generated-diff",
+        "exit": 0,
+        "classification": "PASS"
+      },
+      {
+        "name": "spawn-imports",
+        "exit": 0,
+        "classification": "PASS",
+        "diagnosis": "4750 files checked, 66 allow-listed sites"
+      },
+      {
+        "name": "guards",
+        "exit": 1,
+        "classification": "FAIL",
+        "diagnosis": "Guard runner reports repeated test timeout raised warnings and 'Double cast through unknown bypasses the type checker'; precise complete paths require 108 artifact diagnosis"
+      }
+    ]
+  },
+  "update": "The first-run 16 NOT_OBSERVED cells are superseded with 17 actual exit codes from run43708496555. The old run remains recorded as an independent historical failure; no global PASS and no change in final gate.",
+  "required_handoffs": {
+    "mission108": "Triage 6 failures to exact owners, distinguish inherited product/test source vs owned wrapper; ensure guard findings aren't waived, capture full artifact logs and per-file compiler errors. No duplicate dispatch for first run.",
+    "integrator_successor": "Keep C53 not FINAL until source fixes and exact compiler rerun certified; Atlas/spawn pass from one proof not product release; route source TS errors to original owners.",
+    "dispatcher107": "Product tests remain its exclusive domain; 113 doesn't dispatch."
+  },
+  "review_state": "PRELIMINARY_FIX_FIRST",
+  "final": false,
+  "GLOBAL_RELEASE": false,
+  "authored_at": "2026-11-15T11:30:51.230Z"
+}
