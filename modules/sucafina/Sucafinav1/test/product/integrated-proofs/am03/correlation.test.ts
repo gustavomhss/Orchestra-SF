@@ -1,6 +1,6 @@
 import { expect, test } from "bun:test"
-import { am03Scenarios, correlateAm03 } from "../../../../../../../../script/sf2h/proofs/am03/correlation.ts"
-import type { Am03HostedCandidate, Am03Observation } from "../../../../../../../../script/sf2h/proofs/am03/correlation.ts"
+import { am03Scenarios, correlateAm03 } from "../../../../../../../script/sf2h/proofs/am03/correlation.ts"
+import type { Am03HostedCandidate, Am03Observation } from "../../../../../../../script/sf2h/proofs/am03/correlation.ts"
 
 // These adversarial objects exercise evidence INTAKE ONLY. They are not auth
 // grants, runner artifacts or examples of a completed AM03 witness.
