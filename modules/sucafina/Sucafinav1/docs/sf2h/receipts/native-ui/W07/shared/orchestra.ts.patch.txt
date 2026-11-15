@@ -1,0 +1,25 @@
+diff --git a/packages/app-shell/src/i18n/orchestra.ts b/packages/app-shell/src/i18n/orchestra.ts
+index 2eeaa42..b2ed4f1 100644
+--- a/packages/app-shell/src/i18n/orchestra.ts
++++ b/packages/app-shell/src/i18n/orchestra.ts
+@@ -30,5 +30,6 @@
+ import { SESSION_RECOVERY_COPY, SESSION_RECOVERY_COPY_BR } from "./session-recovery"
+ import { DESKTOP_RECOVERY_COPY, DESKTOP_RECOVERY_COPY_BR } from "./desktop-recovery"
+ import { FRONTEND_RECOVERY_COPY, FRONTEND_RECOVERY_COPY_BR } from "./frontend-recovery"
++import { SF_S02_COPY, SF_S02_COPY_BR } from "./orchestra-chapters/sf-s02"
+ 
+ // Preserve approved identity copy across locales; inherited product labels retain their translations.
+@@ -394,5 +395,6 @@
+   ...SESSION_RECOVERY_COPY,
+   ...DESKTOP_RECOVERY_COPY,
+   ...FRONTEND_RECOVERY_COPY,
++  ...SF_S02_COPY,
+ }
+ 
+@@ -742,5 +744,6 @@
+   ...SESSION_RECOVERY_COPY_BR,
+   ...DESKTOP_RECOVERY_COPY_BR,
+   ...FRONTEND_RECOVERY_COPY_BR,
++  ...SF_S02_COPY_BR,
+ }
+ 
