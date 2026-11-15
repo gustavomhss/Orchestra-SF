@@ -1,0 +1,469 @@
+{
+  "schema": "sf2h.closure196.ci-request.v1",
+  "status": "REQUEST_ONLY_NOT_DISPATCHED",
+  "owner": 191,
+  "ownerPr": 106,
+  "integrator": 189,
+  "integratorPr": 65,
+  "fixtureOwner": 199,
+  "epoch": "native-closure-e1-browser196",
+  "branch": "sf-proof-profiles",
+  "snapshotHeadAtAuthoring": "9e8857a2268ad69998eaed5d8952096e8f365101",
+  "sourceManifestBlob": "48299ec512a3e1a55d4aac712c90195a7c62e4b9",
+  "mustReconcileWithAcceptedC": "Observe real candidate C commit/tree/subtree from 189 and the exact CI request snapshots; no run on unmerged/disparate branches is proof of accepted C.",
+  "invariant": {
+    "noConcurrentCI": true,
+    "runOnlyBy191": true,
+    "noLocalTests": true,
+    "noBuilds": true,
+    "noTypecheck": true,
+    "noWorkflowDispatchFromMission196": true,
+    "noFakeProvider": true,
+    "noFakeGrant": true,
+    "allSelectorsExact": true,
+    "declaredExpectedResults": "NOT_RUN",
+    "GLOBAL_RELEASE": false
+  },
+  "requests": [
+    {
+      "id": "196-AM01-C15-five-eighteen",
+      "kind": "bun",
+      "phase": "after-189-accepts-C-and-199-has-real-host",
+      "selectors": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+      ],
+      "cases": [
+        {
+          "caseId": "AM01-FINANCE",
+          "profile": "sf_finance",
+          "skill": "sf-explicar-forecast",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts"
+        },
+        {
+          "caseId": "AM01-FINANCE",
+          "profile": "sf_finance",
+          "skill": "sf-comparar-cenarios",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+        },
+        {
+          "caseId": "AM01-FINANCE",
+          "profile": "sf_finance",
+          "skill": "sf-avaliar-sensibilidade",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+        },
+        {
+          "caseId": "AM01-FINANCE",
+          "profile": "sf_finance",
+          "skill": "sf-produzir-bi-contextual",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+        },
+        {
+          "caseId": "AM01-PROCUREMENT",
+          "profile": "sf_procurement",
+          "skill": "sf-comparar-sourcing",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+        },
+        {
+          "caseId": "AM01-PROCUREMENT",
+          "profile": "sf_procurement",
+          "skill": "sf-revisar-condicoes-contratuais",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+        },
+        {
+          "caseId": "AM01-PROCUREMENT",
+          "profile": "sf_procurement",
+          "skill": "sf-preparar-compra",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+        },
+        {
+          "caseId": "AM01-PROCUREMENT",
+          "profile": "sf_procurement",
+          "skill": "sf-extrair-evidencias",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+        },
+        {
+          "caseId": "AM01-PORTFOLIO",
+          "profile": "sf_portfolio",
+          "skill": "sf-revisar-dependencias",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts"
+        },
+        {
+          "caseId": "AM01-PORTFOLIO",
+          "profile": "sf_portfolio",
+          "skill": "sf-compor-portfolio",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+        },
+        {
+          "caseId": "AM01-PORTFOLIO",
+          "profile": "sf_portfolio",
+          "skill": "sf-reavaliar-compromissos",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts"
+        },
+        {
+          "caseId": "AM01-PORTFOLIO",
+          "profile": "sf_portfolio",
+          "skill": "sf-consultar-memoria-decisoria",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts"
+        },
+        {
+          "caseId": "AM01-MAESTRO",
+          "profile": "sf_maestro",
+          "skill": "sf-enquadrar-decisao",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts"
+        },
+        {
+          "caseId": "AM01-MAESTRO",
+          "profile": "sf_maestro",
+          "skill": "sf-preparar-revisao-executiva",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+        },
+        {
+          "caseId": "AM01-MAESTRO",
+          "profile": "sf_maestro",
+          "skill": "sf-coordenar-perguntas",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts"
+        },
+        {
+          "caseId": "AM01-MAESTRO",
+          "profile": "sf_maestro",
+          "skill": "sf-produzir-material-reuniao",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+        },
+        {
+          "caseId": "AM01-REVIEWER",
+          "profile": "sf_reviewer",
+          "skill": "sf-contestar-decisao",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+        },
+        {
+          "caseId": "AM01-REVIEWER",
+          "profile": "sf_reviewer",
+          "skill": "sf-revisar-evidencias",
+          "selector": "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+        }
+      ],
+      "requiredReceipts": [
+        "WP12 native skill loads:",
+        "SF_WP12_NATIVE_MISSION_CATALOG:",
+        "SF_WP12_NATIVE_MISSION_RUN:",
+        "SF_WP12_NATIVE_MISSION:",
+        "SF_AM01_PORTFOLIO_RECALL_CONSUMED:",
+        "SF_AM01_PROFILE_RECALL_NEGATIVE:",
+        "SF_AM01_PROFILE_RECALL_CONSUMED:",
+        "SF_AM02_NATIVE_C16_TOOL:",
+        "SF_AM02_NATIVE_UI_PARITY:"
+      ],
+      "admission": "Real installed native model + actual verified C15 SkillLoadReceipt, real C16 assistant calls, durable case/contribution and reopened HTTP consumer; reviewer distinct native run; refusal variants required."
+    },
+    {
+      "id": "196-AM02-C16-eight-packs",
+      "kind": "bun",
+      "phase": "after-C-and-189-native-receipt-patch-applied",
+      "selectors": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+        "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts"
+      ],
+      "operationPacks": [
+        {
+          "id": "C16-performance",
+          "pack": "performance",
+          "operations": [
+            "sf_dashboard_read",
+            "sf_kpi_explain",
+            "sf_bi_view",
+            "sf_source_get"
+          ],
+          "caseIds": [
+            "AM02-sf_dashboard_read",
+            "AM02-sf_kpi_explain",
+            "AM02-sf_bi_view",
+            "AM02-sf_source_get"
+          ],
+          "producerSourceSelectors": [
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts"
+          ],
+          "proofSelector": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+          "realIndependentNativePositiveRequired": true,
+          "serverInstalledExternally": false,
+          "disclaimer": "A producer source selector is NOT an observed C16 call. Only actual session assistant tool receipts, same case/principal/versions, UI+agent+MCP output/consumption and negatives count."
+        },
+        {
+          "id": "C16-planning",
+          "pack": "planning",
+          "operations": [
+            "sf_forecast_compare",
+            "sf_scenario_simulate",
+            "sf_scenario_compare",
+            "sf_sensitivity_evaluate",
+            "sf_portfolio_evaluate"
+          ],
+          "caseIds": [
+            "AM02-sf_forecast_compare",
+            "AM02-sf_scenario_simulate",
+            "AM02-sf_scenario_compare",
+            "AM02-sf_sensitivity_evaluate",
+            "AM02-sf_portfolio_evaluate"
+          ],
+          "producerSourceSelectors": [
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+          ],
+          "proofSelector": null,
+          "realIndependentNativePositiveRequired": true,
+          "serverInstalledExternally": false,
+          "disclaimer": "A producer source selector is NOT an observed C16 call. Only actual session assistant tool receipts, same case/principal/versions, UI+agent+MCP output/consumption and negatives count."
+        },
+        {
+          "id": "C16-procurement",
+          "pack": "procurement",
+          "operations": [
+            "sf_request_read",
+            "sf_supplier_read",
+            "sf_contract_read",
+            "sf_sourcing_compare"
+          ],
+          "caseIds": [
+            "AM02-sf_request_read",
+            "AM02-sf_supplier_read",
+            "AM02-sf_contract_read",
+            "AM02-sf_sourcing_compare"
+          ],
+          "producerSourceSelectors": [
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+          ],
+          "proofSelector": null,
+          "realIndependentNativePositiveRequired": true,
+          "serverInstalledExternally": false,
+          "disclaimer": "A producer source selector is NOT an observed C16 call. Only actual session assistant tool receipts, same case/principal/versions, UI+agent+MCP output/consumption and negatives count."
+        },
+        {
+          "id": "C16-decisions",
+          "pack": "decisions",
+          "operations": [
+            "sf_case_read",
+            "sf_case_draft",
+            "sf_alternative_draft",
+            "sf_change_prepare",
+            "sf_receipt_get"
+          ],
+          "caseIds": [
+            "AM02-sf_case_read",
+            "AM02-sf_case_draft",
+            "AM02-sf_alternative_draft",
+            "AM02-sf_change_prepare",
+            "AM02-sf_receipt_get"
+          ],
+          "producerSourceSelectors": [
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+          ],
+          "proofSelector": null,
+          "realIndependentNativePositiveRequired": true,
+          "serverInstalledExternally": false,
+          "disclaimer": "A producer source selector is NOT an observed C16 call. Only actual session assistant tool receipts, same case/principal/versions, UI+agent+MCP output/consumption and negatives count."
+        },
+        {
+          "id": "C16-collaboration",
+          "pack": "collaboration",
+          "operations": [
+            "sf_work_list",
+            "sf_question_prepare",
+            "sf_answer_read",
+            "sf_relation_read",
+            "sf_handoff_prepare"
+          ],
+          "caseIds": [
+            "AM02-sf_work_list",
+            "AM02-sf_question_prepare",
+            "AM02-sf_answer_read",
+            "AM02-sf_relation_read",
+            "AM02-sf_handoff_prepare"
+          ],
+          "producerSourceSelectors": [
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts"
+          ],
+          "proofSelector": null,
+          "realIndependentNativePositiveRequired": true,
+          "serverInstalledExternally": false,
+          "disclaimer": "A producer source selector is NOT an observed C16 call. Only actual session assistant tool receipts, same case/principal/versions, UI+agent+MCP output/consumption and negatives count."
+        },
+        {
+          "id": "C16-documents_reports",
+          "pack": "documents_reports",
+          "operations": [
+            "sf_document_extract",
+            "sf_import_preview",
+            "sf_review_prepare",
+            "sf_report_prepare",
+            "sf_artifact_get"
+          ],
+          "caseIds": [
+            "AM02-sf_document_extract",
+            "AM02-sf_import_preview",
+            "AM02-sf_review_prepare",
+            "AM02-sf_report_prepare",
+            "AM02-sf_artifact_get"
+          ],
+          "producerSourceSelectors": [
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "proofSelector": null,
+          "realIndependentNativePositiveRequired": true,
+          "serverInstalledExternally": true,
+          "disclaimer": "A producer source selector is NOT an observed C16 call. Only actual session assistant tool receipts, same case/principal/versions, UI+agent+MCP output/consumption and negatives count."
+        },
+        {
+          "id": "C16-knowledge",
+          "pack": "knowledge",
+          "operations": [
+            "sf_context_get",
+            "sf_knowledge_search",
+            "sf_evidence_get",
+            "sf_decision_recall",
+            "sf_freshness_check"
+          ],
+          "caseIds": [
+            "AM02-sf_context_get",
+            "AM02-sf_knowledge_search",
+            "AM02-sf_evidence_get",
+            "AM02-sf_decision_recall",
+            "AM02-sf_freshness_check"
+          ],
+          "producerSourceSelectors": [
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+          ],
+          "proofSelector": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+          "realIndependentNativePositiveRequired": true,
+          "serverInstalledExternally": true,
+          "disclaimer": "A producer source selector is NOT an observed C16 call. Only actual session assistant tool receipts, same case/principal/versions, UI+agent+MCP output/consumption and negatives count."
+        },
+        {
+          "id": "C16-routines",
+          "pack": "routines",
+          "operations": [
+            "sf_routine_catalog",
+            "sf_routine_prepare",
+            "sf_routine_run",
+            "sf_routine_status",
+            "sf_routine_result",
+            "sf_watch_prepare"
+          ],
+          "caseIds": [
+            "AM02-sf_routine_catalog",
+            "AM02-sf_routine_prepare",
+            "AM02-sf_routine_run",
+            "AM02-sf_routine_status",
+            "AM02-sf_routine_result",
+            "AM02-sf_watch_prepare"
+          ],
+          "producerSourceSelectors": [
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+            "modules/sucafina/modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+          ],
+          "proofSelector": null,
+          "realIndependentNativePositiveRequired": true,
+          "serverInstalledExternally": true,
+          "disclaimer": "A producer source selector is NOT an observed C16 call. Only actual session assistant tool receipts, same case/principal/versions, UI+agent+MCP output/consumption and negatives count."
+        }
+      ],
+      "requiredReceipts": [
+        "SF_WP12_NATIVE_MISSION_RUN:",
+        "SF_WP12_NATIVE_MISSION:",
+        "SF_AM02_NATIVE_C16_TOOL:",
+        "SF_AM02_NATIVE_UI_PARITY:",
+        "SF_AM02_PERFORMANCE_C16_CONSUMED:"
+      ],
+      "admission": "Exact real C16 private bridge/SDK with same principal, case, business versions, handler, native/UI agent receipts and output digests; all 39 operations must be observed; ungranted and revoked negative required.",
+      "note": "Run exact all-eight-pack selections only on the accepted product bundle C; do not infer a 39/39 PASS from the correlator or catalog."
+    },
+    {
+      "id": "196-AM02-installed-web-consumers",
+      "kind": "playwright",
+      "phase": "only after-199 real installed F04 manifest and original-authorized sources",
+      "selectors": [
+        "packages/app-shell/e2e/sucafina/native/integrated-proofs/am02/performance-knowledge-consumers.spec.ts"
+      ],
+      "requiredExternalInputs": [
+        "SF_NATIVE_INSTALLED_MANIFEST (private absolute path to 199-issued installed manifest)",
+        "SF_NATIVE_CANDIDATE_SHA exact from 191 runner",
+        "existing authenticated browser context/actors from F04",
+        "CAP01 source series and BI01 with at least one real row",
+        "UI31 'contract' match in real authorized search producer"
+      ],
+      "admission": "Must call nativeInstalledFixture.proveWeb, original real browser/API, no auth bypass, no mock. UI consumer only, not separate C16/agent witness."
+    }
+  ],
+  "requiredObservationsFor191": [
+    "Actual Actions run id/URL/conclusion and selected file paths",
+    "CI snapshot SHA, CI request sha256 and accepted candidate product subtree SHA",
+    "Raw logs with SHA256, not guessed",
+    "Actual providerID/model and distinct nativeSessionIDs from SessionV2",
+    "C15 load source/version/digest/manifest receipts and C16 per-operation result receipts",
+    "Same input/case/incarnation/businessVersion/principal/port across UI, agent and private MCP",
+    "Positive persisted output with authorized consumer observed after host reopen",
+    "No-grant, revoked, changed project/principal/version negatives from original real host"
+  ],
+  "statusPerCase": "NOT_RUN until observed under 191 dispatcher",
+  "manualCompletion": ""
+}
