@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.compiler128.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 128,
+  "logical_actor": "S0-C compiler/tooling successor119",
+  "effective_model": "GPT-6",
+  "session_id": "not exposed by host",
+  "runtime_termination_of_119": "not claimed",
+  "branch": "sf-compiler-checks",
+  "pr": 107,
+  "lease_epoch": "compiler-e2-browser128",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/compiler128/S0-FENCE.json",
+    "blob": "d2bc968d9033e3592d61451f564dd2cbf222bc0c",
+    "previous_mission": 119,
+    "previous_epoch": "gate-tooling-browser119",
+    "previous_authority": "REVOKED_FOR_FRESH_SUCCESSOR",
+    "observed_head": "cbbda270ea193c66d649d4f39e043e56f056469d",
+    "observed_tree": "adf219c9b09f04e60148dc23c03beead554a4ade"
+  },
+  "branch_state": "HEAD_MATCHES_FENCE",
+  "predecessor": {
+    "run": 43726143757,
+    "job": 132848377567,
+    "artifact": 14166956181,
+    "source": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "checks": 17,
+    "passed": 13,
+    "failed": 4,
+    "guards": "OPEN_REVIEWER_DECISION_REQUIRED"
+  },
+  "prior_run43726371640": "completed/failure; not active; no 119 credentials or processes terminated",
+  "active_workflow_runs_at_readback": 0,
+  "integrator": {
+    "mission": 125,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "latest_material_observed": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "latest_material_tree": "3ff9cda9d0e2bf45a379cc580341031787c3c815",
+    "candidate": "C64"
+  },
+  "required_generation": "packages/client: bun run generate on exact hosted source, never manual edits of generated files",
+  "boundaries": [
+    "only own wrapper, tooling and compiler128 receipts",
+    "no local test/typecheck/generation",
+    "no product tests (129 owner)",
+    "no final epic/deploy/dev merge/restart",
+    "no source product edits",
+    "guard55 remains failure until independent owner decides"
+  ],
+  "status": "ACKED_BEFORE_AUTHORING_AND_DISPATCH",
+  "product_qualification": "NOT_RUN",
+  "global_release": false
+}
