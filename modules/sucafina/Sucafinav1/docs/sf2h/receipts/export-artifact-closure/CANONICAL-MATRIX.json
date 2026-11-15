@@ -1,0 +1,578 @@
+{
+  "schema": "sf2h.export-artifact-closure.canonical-mapping-readings.v1",
+  "state": "READ_ONLY_ANALYSIS_COMPLETE_EXECUTION_RESULTS_NOT_CLAIMED",
+  "branch": "export-artifact-proof",
+  "lease": "exports-browser66",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "missionPackageSha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "initialSourceSha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "actorPack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S3.json",
+    "blob": "7f8e42677f3cfa0b9df7c756c8af16af843d7abe"
+  },
+  "task": "66 — Exportações e artefatos",
+  "formatMappingStatus": "A matrix of canonical obligations; not evidence that files were generated/read or criteria passed.",
+  "formats": [
+    {
+      "format": "DOCX",
+      "variants": [
+        "legacy Generate Report",
+        "preserved review"
+      ],
+      "producers": [
+        "runtime/reports.ts#createReport",
+        "product/reviews/render.ts"
+      ],
+      "requirements": [
+        "R28"
+      ],
+      "evidence": [
+        "E08"
+      ],
+      "criteria": [
+        "WP07.T04.CHK.01",
+        "WP07.T04.CHK.02",
+        "WP07.T04.CHK.03",
+        "WP07.T04.CHK.04",
+        "WP07.T04.CHK.18",
+        "WP07.T04.DOD.01",
+        "WP07.T04.DOD.02",
+        "WP07.T04.DOD.18",
+        "WP07.T04.INV.01",
+        "WP07.T04.INV.02",
+        "WP07.T04.INV.18",
+        "WP07.T04.QLT.01",
+        "WP07.T04.QLT.02",
+        "WP07.T04.QLT.18",
+        "WP07.T04.CMP.01",
+        "WP07.T04.CMP.02",
+        "WP07.T04.CMP.03",
+        "WP07.T04.CMP.18",
+        "WP07.T04.SUC.01",
+        "WP07.T04.SUC.02",
+        "WP07.T04.SUC.18"
+      ],
+      "writeBoundary": "runtime/reports.ts belongs66; product/reviews/** and its tests/helpers remain48"
+    },
+    {
+      "format": "PPTX",
+      "variants": [
+        "legacy Generate Report",
+        "preserved review"
+      ],
+      "producers": [
+        "runtime/reports.ts#createReport",
+        "product/reviews/render.ts"
+      ],
+      "requirements": [
+        "R28"
+      ],
+      "evidence": [
+        "E08"
+      ],
+      "criteria": [
+        "WP07.T04.CHK.01",
+        "WP07.T04.CHK.02",
+        "WP07.T04.CHK.03",
+        "WP07.T04.CHK.04",
+        "WP07.T04.CHK.18",
+        "WP07.T04.DOD.01",
+        "WP07.T04.DOD.02",
+        "WP07.T04.DOD.18",
+        "WP07.T04.INV.01",
+        "WP07.T04.INV.02",
+        "WP07.T04.INV.18",
+        "WP07.T04.QLT.01",
+        "WP07.T04.QLT.02",
+        "WP07.T04.QLT.18",
+        "WP07.T04.CMP.01",
+        "WP07.T04.CMP.02",
+        "WP07.T04.CMP.03",
+        "WP07.T04.CMP.18",
+        "WP07.T04.SUC.01",
+        "WP07.T04.SUC.02",
+        "WP07.T04.SUC.18"
+      ],
+      "writeBoundary": "runtime/reports.ts belongs66; product/reviews/** and its tests/helpers remain48"
+    },
+    {
+      "format": "XLSX",
+      "variant": "Planner",
+      "producer": "runtime/workbooks.ts#exportPlanner",
+      "route": "planner ?download=xlsx",
+      "filename": "IT_Budget_Planner_<year>.xlsx",
+      "worksheets": [
+        "Info",
+        "OPEX",
+        "CAPEX",
+        "Headcount",
+        "Rate cards",
+        "FX rates"
+      ],
+      "requirements": [
+        "R21",
+        "R24"
+      ],
+      "evidence": [
+        "E07",
+        "E15"
+      ],
+      "criteria": [
+        "WP06.DOD.01",
+        "WP06.CMP.01",
+        "WP06.SUC.03",
+        "WP06.T01.CHK.05",
+        "WP06.T01.CMP.02",
+        "WP06.T04.CHK.01",
+        "WP06.T04.INV.01",
+        "WP06.T04.SUC.01"
+      ],
+      "writeBoundary": "outside66; tests may qualify current producer without modifying it"
+    },
+    {
+      "format": "XLSX",
+      "variant": "Roster",
+      "producer": "runtime/workbooks.ts#exportMembers",
+      "route": "dashboard ?download=members",
+      "filename": "headcount_export_<date>.xlsx",
+      "worksheets": [
+        "All Members",
+        "Summary by Leader"
+      ],
+      "requirements": [
+        "R21",
+        "R24"
+      ],
+      "evidence": [
+        "E07",
+        "E15"
+      ],
+      "criteria": [
+        "WP06.DOD.01",
+        "WP06.CMP.01",
+        "WP06.T01.CMP.01",
+        "WP06.T01.CMP.02"
+      ],
+      "writeBoundary": "outside66; tests may qualify current producer without modifying it"
+    },
+    {
+      "format": "XLSX",
+      "variant": "OPEX template",
+      "producer": "runtime/downloads.ts#download('opex-template')",
+      "route": "dashboard ?download=opex-template",
+      "filename": "opex-template.xlsx",
+      "worksheets": [
+        "OPEX"
+      ],
+      "requirements": [
+        "R21"
+      ],
+      "evidence": [
+        "E07",
+        "E15"
+      ],
+      "criteria": [
+        "WP06.DOD.01",
+        "WP06.CMP.01"
+      ],
+      "qualificationLimit": "Baseline template headers; absence of financial rows is not financial-export proof",
+      "writeBoundary": "outside66"
+    },
+    {
+      "format": "CSV",
+      "variant": "Procurement register",
+      "producer": "runtime/downloads.ts#download('register')",
+      "route": "procurement ?download=register",
+      "filename": "procurement-register.csv",
+      "criteria": [
+        "WP04.INV.03",
+        "WP04.CMP.03",
+        "WP04.T05.CHK.04",
+        "WP04.T05.CMP.01"
+      ],
+      "discriminants": [
+        "visible requests only",
+        "business identities",
+        "money/base/FX/source/submission",
+        "CSV escaping and formula injection"
+      ],
+      "writeBoundary": "outside66"
+    },
+    {
+      "format": "CSV",
+      "variant": "Suppliers",
+      "producer": "runtime/downloads.ts#download('suppliers')",
+      "route": "procurement ?download=suppliers",
+      "filename": "suppliers.csv",
+      "criteria": [
+        "WP04.INV.03",
+        "WP04.CMP.03",
+        "WP04.T05.CHK.04",
+        "WP04.T05.CMP.01"
+      ],
+      "discriminants": [
+        "supplier state/business fields",
+        "restricted bank columns",
+        "bank key unavailable",
+        "CSV escaping and formula injection"
+      ],
+      "writeBoundary": "outside66"
+    },
+    {
+      "format": "HTML",
+      "variant": "Purchase order",
+      "producer": "runtime/downloads.ts#download('po')",
+      "route": "procurement ?download=po&request=<authorized-PR>",
+      "filename": "<sanitized-PO>.html",
+      "criteria": [
+        "WP04.INV.03",
+        "WP04.CMP.03",
+        "WP04.T05.CHK.04",
+        "WP04.T05.CMP.01"
+      ],
+      "discriminants": [
+        "visible request",
+        "line values/terms/currency/base/FX",
+        "HTML escaping",
+        "stylesheet visibility"
+      ],
+      "writeBoundary": "outside66"
+    },
+    {
+      "format": "JSON",
+      "variant": "Dashboard backup",
+      "producer": "runtime/application.ts#serveDownload -> publicSfData -> runtime/downloads.ts#download('json')",
+      "route": "dashboard ?download=json",
+      "filename": "cio-dashboard.json",
+      "requirements": [
+        "R21",
+        "R24"
+      ],
+      "evidence": [
+        "E07",
+        "E15"
+      ],
+      "criteria": [
+        "WP06.INV.03",
+        "WP06.T01.CHK.04",
+        "WP06.T04.CHK.01",
+        "WP06.T04.INV.01",
+        "WP06.T04.SUC.01"
+      ],
+      "contracts": [
+        "C17"
+      ],
+      "qualificationBoundary": "Use authenticated endpoint; raw download serializes the supplied snapshot but endpoint excludes private namespace.",
+      "writeBoundary": "outside66"
+    }
+  ],
+  "excludedAsNewExportRequirements": [
+    {
+      "format": "XLS",
+      "reason": "Legacy import named in WP06; current exportPlanner/exportMembers write XLSX. No current XLS output route identified."
+    },
+    {
+      "format": "PDF",
+      "reason": "WP06.T05/C14 require digital PDF as extraction input. No product PDF export identified. Reader-generated PDF is inspection material only."
+    }
+  ],
+  "exactCriteria": {
+    "WP06": [
+      {
+        "id": "WP06.DOD.01",
+        "text": "As famílias de import/export do baseline possuem catálogo de comportamento, prévia com manifesto e recibo, ou limitação original explicitamente preservada; cada fluxo aponta a prova discriminante.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.INV.03",
+        "text": "Backup JSON comum preserva configuração confiável e referências privadas existentes e não injeta novos anexos/localizadores; um arquivo não expande acesso ou autoridade.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.CMP.01",
+        "text": "A cobertura inclui XLSX/XLS originais, abas e colunas suportadas, fórmulas com resultado zero, datas, IDs, export/import roundtrip, roster e JSON do Dashboard.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.SUC.03",
+        "text": "Exportar e reimportar o arquivo suportado sem edição não cria diferenças financeiras, novos registros por erro de identidade ou vazamento de campos privados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T01.CHK.04",
+        "text": "JSON que altera roleMap/access/índices de instalação mantém os valores confiáveis atuais; JSON que introduz referência privada de contrato ou remove contrato com arquivo é recusado conforme a regra existente.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T01.CHK.05",
+        "text": "Exportação por usuário sem salário mantém ausentes os campos privados, inclusive resultados calculados individuais e rate cards.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T01.DOD.01",
+        "text": "O catálogo cobre todas as famílias de arquivo do inventário e descreve explicitamente campos aceitos, ignorados, rejeitados e exportados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T01.DOD.02",
+        "text": "Parse/export e preparação de JSON têm fixtures de paridade com resultados esperados para zero, ausência, IDs e anexos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T01.CMP.01",
+        "text": "Planner, XLS legado, roster, operações, projetos e JSON do Dashboard têm caminho de parse e executor de domínio identificados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T01.CMP.02",
+        "text": "Exports existentes, privacidade, abas auxiliares, dados ignorados e rejeições de formato possuem casos positivos e negativos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T04.CHK.01",
+        "text": "Exportar e reimportar sem editar mantém valores financeiros e identidades sem novos registros; flags bm ausentes do formato seguem a normalização original do importador, explicitada sem exigir preservação bit a bit que o arquivo não suporta.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T04.INV.01",
+        "text": "Nenhum roundtrip cria despesa, identidade, permissão ou referência privada apenas por exportar/importar.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP06.T04.SUC.01",
+        "text": "Um arquivo exportado do produto pode voltar sem produzir alteração financeira inesperada, e uma edição intencional gera somente seu efeito declarado.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "WP04": [
+      {
+        "id": "WP04.INV.03",
+        "text": "Recortes autorizados e restrições bancárias valem para tela, exportação, resumo e C02; referência textual ou ausência nunca vira relação, autorização ou valor zero.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.CMP.03",
+        "text": "Cadastro/ativação/bloqueio/inativação/banco de fornecedor, configurações/reset, histórico, registros/exportações e referências existentes permanecem acessíveis.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T05.CHK.04",
+        "text": "Após importação representativa ou exclusão permitida, criar PR/PO/SUP não reutiliza identificador já emitido; registro/PO exportados preservam campos de negócio e omitem material restrito.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP04.T05.CMP.01",
+        "text": "Cobrir os quatro estados de fornecedor, dados comerciais/bancários/compliance, linked requests, auditoria, busca e exportação.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "WP07T04": [
+      {
+        "id": "WP07.T04.CHK.01",
+        "text": "Exportar uma revisão com 25 projetos identificáveis e notas longas nos dois formatos, extrair e renderizar os arquivos: cada registro selecionado deve existir uma vez, sem truncamento na antiga barreira de 12 linhas e sem sobreposição/clipping.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CHK.02",
+        "text": "Alterar dados correntes depois de preservar a revisão e exportá-la: os números dos arquivos coincidem com a revisão escolhida e com sua prévia, não com a origem já modificada.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CHK.03",
+        "text": "Revogar Talent Review entre prévia e exportação: a geração revalida a capacidade e não entrega o conteúdo privado num arquivo aparentemente autorizado.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CHK.04",
+        "text": "Exportar uma revisão com trajetória financeira e gráfico sem série disponível: valores/rótulos da figura e tabela coincidem com o snapshot; o estado indisponível continua explícito no arquivo, sem gerar uma série falsa.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CHK.18",
+        "text": "Executar sf_report_prepare, sf_artifact_get pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.DOD.01",
+        "text": "PPTX e DOCX contêm todo o conteúdo autorizado selecionado, com páginas/slides adicionais quando necessários.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.DOD.02",
+        "text": "A verificação inclui conteúdo extraído e inspeção de renderização dos casos extensos, não apenas a existência do arquivo.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.DOD.18",
+        "text": "Descritores C16 de sf_report_prepare, sf_artifact_get são implementados e consumidos por T06 com referências reais.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.INV.01",
+        "text": "Exportação não recalcula o domínio com fórmula própria nem usa dados atuais para substituir uma revisão preservada.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.INV.02",
+        "text": "Nenhum limite fixo elimina registros silenciosamente e a permissão é rechecada na geração.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.INV.18",
+        "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.QLT.01",
+        "text": "Títulos, períodos, contagens e quebras mantêm o documento legível, sem texto cortado ou tabelas sobrepostas.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.QLT.02",
+        "text": "Resumo executivo representa os tópicos escolhidos, distinguindo números, comentários e seções sem dados.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.QLT.18",
+        "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CMP.01",
+        "text": "Os dois formatos, listas maiores que 12 linhas, notas longas, múltiplas competências e seções vazias têm cobertura verificável.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CMP.02",
+        "text": "O caminho legado de seleção por tópicos e o caminho por revisão preservada possuem comportamento definido e não contornam ACL.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CMP.03",
+        "text": "Figuras selecionadas e sua tabela equivalente conservam unidade, período, moeda e seleção do snapshot; ausência ou parcialidade não desaparece ao exportar.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CMP.18",
+        "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.SUC.01",
+        "text": "O usuário usa o material exportado sem editar manualmente cortes, ordem básica ou números divergentes da prévia.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.SUC.02",
+        "text": "A contagem de registros selecionados, apresentados e exportados pode ser reconciliada para a mesma revisão.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.SUC.18",
+        "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+        "status": "NOT_RUN"
+      }
+    ]
+  },
+  "sourceVersionLegibility": {
+    "criteria": [
+      {
+        "id": "WP07.QLT.01",
+        "text": "Pauta, tela de reunião, comparação e arquivo deixam claros período, referência, seleção e condição de comparabilidade.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.QLT.10",
+        "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.CMP.03",
+        "text": "Reunião e exportação apresentam a decisão, suas condições e previsto versus observado com fontes/períodos; o fechamento mantém a base financeira debatida e incorpora as ações decididas.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T01.QLT.02",
+        "text": "Período e origem acompanham o tópico até a representação consumida pelos próximos passos.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T02.CHK.04",
+        "text": "Preservar revisão com comentário C06 versão3, editar a thread para versão4 e recuperar/exportar a revisão: o texto preservado continua o da versão3; a conversa corrente, se aberta e autorizada, aparece explicitamente como corrente.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CHK.02",
+        "text": "Alterar dados correntes depois de preservar a revisão e exportá-la: os números dos arquivos coincidem com a revisão escolhida e com sua prévia, não com a origem já modificada.",
+        "status": "NOT_RUN"
+      },
+      {
+        "id": "WP07.T04.CMP.03",
+        "text": "Figuras selecionadas e sua tabela equivalente conservam unidade, período, moeda e seleção do snapshot; ausência ou parcialidade não desaparece ao exportar.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "distinction": "T04.CMP.03 specifically preserves unit, period, currency, snapshot selection, absence/partiality in selected figure plus equivalent table. Legible reference/comparability and source/period obligations also come from WP07.QLT.01/CMP.03 and C05."
+  },
+  "pendingCapabilities": [
+    {
+      "id": "VISUAL",
+      "status": "PENDING",
+      "reason": "No existing66 generic Bun artifact upload or LibreOffice/Poppler render lane observed. Inert patch prepared for60/duly assigned workflow owner."
+    },
+    {
+      "id": "COMPILER45",
+      "status": "NEEDS_AUTHORIZED_INTERFACE",
+      "reason": "Current45 workflow uses foreign fixed ref; new scoped interface not observed. No takeover or producttests in compiler lane."
+    },
+    {
+      "id": "CURRENT_W_FILE_READS",
+      "status": "NOT_CLAIMED_BY_CHILD",
+      "reason": "Parent will link actual generated files/run/digests. Historical procurement files are not current66 acceptance."
+    },
+    {
+      "id": "NATIVE_PARITY",
+      "status": "NOT_CLAIMED",
+      "reason": "Export fixture cannot substitute native SkillLoadReceipt, same handler/parity or integrated AM proofs."
+    }
+  ],
+  "ciProposal": {
+    "patch": "owner-proposals/test-ci-sf66-reader-proposal.patch",
+    "target": ".github/workflows/test-ci.yml",
+    "expectedPreimageBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "owner": "60 must assign workflow owner/lease;66 and current45 write_paths do not include this file.",
+    "outputRoot": "${RUNNER_TEMP}/sf66-export-artifacts",
+    "testManifests": "*.manifest.json",
+    "status": "INERT_NOT_APPLIED_NOT_EXECUTED",
+    "currentExistingRequest": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": "actual named *.test.ts under Sucafinav1/test/product/export-artifact-closure/"
+    },
+    "compilerRequestedSeparately": [
+      "modules/sucafina: bun typecheck",
+      "repo root: bun run check:guards --base origin/dev"
+    ],
+    "noRefTakeover": [
+      "astra-check-compose",
+      "astra-check-wp07",
+      "astra-check-operations-*"
+    ]
+  },
+  "outsideLeaseObservations": [
+    {
+      "path": "runtime/application.ts",
+      "function": "serveDownload",
+      "observation": "Authenticates/authorizes before generation and publicSfData clone. After download() returns it checks only abort; no second ACL revalidation was observed.",
+      "classification": "STATIC_RISK_NOT_REPRODUCED_BY_CHILD",
+      "action": "If discriminating test reproduces revocation egress, route complete patch to owner;66 cannot edit this path."
+    }
+  ],
+  "provenance": {
+    "mode": "canonical requirements mapped from pinned plan plus actual current producer entrypoints",
+    "authorship": "Delegated read-only analysis by criteria_ci; root owns complete READINGS receipt",
+    "effectiveProviderOrSession": "not asserted",
+    "testsOrProductAcceptance": "not asserted by this map"
+  }
+}

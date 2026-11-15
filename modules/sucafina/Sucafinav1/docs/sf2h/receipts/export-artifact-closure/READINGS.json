@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.export-artifact-closure.readings.v1",
+  "mission": 66,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "scope": "Complete pinned assigned S3 pack with checkpoint+delta; no other actor packs claimed.",
+  "complete": true,
+  "method": "Full source retrieval plus explicit root/delegate section reads. Delegates do not publish; root retains sole branch writer.",
+  "source_hashes": {
+    "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "S3": "7f8e42677f3cfa0b9df7c756c8af16af843d7abe",
+    "mission": "5579c2ac2ee27dff1616af730d5a094bec86e835",
+    "START.md": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW.md": "043205bee6031b4517a98591b3588fca0ab12925",
+    "execution/COMMON.md": "d61f32af03fe10747a50274233f953af044decf6"
+  },
+  "root": [
+    "Applicable AGENTS and absence of descendant instructions in owned paths",
+    "Pinned START.md, WORKFLOW.md and execution/COMMON.md",
+    "WP00, WP07, WP12 including every task and relevant criteria",
+    "C01/C02/C03/C05/C08 and export-adjacent C04/C06/C07/C09/C10/C11/C12/C13",
+    "evidence, criterion_ids, ownership, dependencies, incoming/outgoing handoffs and coverage",
+    "product-acceptance, execution-reconciliation and applicable resident-runtime source requirements",
+    "current leased sources and consumer code, existing regression files, persistence/authority and test-ci workflow/validator"
+  ],
+  "criteria_ci": [
+    "branch_provenance, assignment/write_authority, allocation/physical_slot",
+    "all incoming/outgoing handoffs, task dependency/consumer edges, dependency_context, coverage",
+    "resident integral profiles/skills/packs/routes/aliases/proofs and resident UI",
+    "numeric_oracles, selection pointers, reference_context_rule, resident_handoff_interfaces, gates",
+    "appendices, code-source pointers and completion policy",
+    "C04/C06/C07/C09 through C17 and all 183 proof_bindings"
+  ],
+  "implementation_reviews": {
+    "storage_audit": [
+      "artifact envelope/metadata",
+      "storage and download persisted integrity",
+      "renderer seal and review inclusion",
+      "legacy egress boundary"
+    ],
+    "integration_tests": [
+      "real C08/SQLite",
+      "source lifecycle and source inventory",
+      "production product authority and UI leases",
+      "business/discovery/history review composition",
+      "actual generated Office readers"
+    ],
+    "root": [
+      "legacy XLSX/CSV/JSON/HTML producers and authenticated HTTP callers",
+      "Workbook reader and privacy/monetary regressions"
+    ]
+  },
+  "limits": [
+    "Synthetic identities enter at explicit authentication boundaries; no corporate/native/provider proof is inferred.",
+    "No test or typecheck has been executed locally.",
+    "Format inventories are routing information, not acceptance evidence.",
+    "Source bindings and rendered visual legibility require separate explicit evidence."
+  ]
+}

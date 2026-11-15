@@ -1,0 +1,76 @@
+{
+  "schema": "sf66.owner-request.proposal.v1",
+  "state": "PROPOSED_NOT_APPLIED_NOT_DISPATCHED",
+  "to": [
+    "60 sole sf2-stack integrator",
+    "test-ci workflow owner to be assigned by60",
+    "45 compiler owner, for separate compiler-only request"
+  ],
+  "sourceBranch": "export-artifact-proof",
+  "targetBranch": "sf2-stack",
+  "exactCandidateSha": null,
+  "currentDevSha": null,
+  "observedInitialCandidate": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "missionPackageSha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "proposedPatch": "test-ci-sf66-reader-proposal.patch",
+  "patchTarget": ".github/workflows/test-ci.yml",
+  "expectedPreimageBlob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "authority": "Outside mission66 lease and outside current45 write_paths;60 must assign workflow ownership before application.",
+  "generatorContract": {
+    "root": "${RUNNER_TEMP}/sf66-export-artifacts",
+    "manifests": "*.manifest.json",
+    "names": "unique per test and per output",
+    "readerOutputs": "_inspection/manifest.json + separate PDF/text/PNG files",
+    "originals": "preserve bytes and prove before/after SHA-256 equality",
+    "fixturesOnly": true
+  },
+  "surgicalBun": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "exactTestFiles": null,
+    "requiredPathPrefix": "Sucafinav1/test/product/export-artifact-closure/",
+    "allowedSuffix": ".test.ts",
+    "flagsForProposedReaderGate": [],
+    "host": "Linux",
+    "snapshotProtocol": "Parent=W; only added/updated .ci-run.json; unique ci-run-linux-*; GitHub MCP/CAS only; refresh dedup before creation.",
+    "noDispatchUntil": "real existing test names, frozen W and authorized workflow input are recorded"
+  },
+  "separateCompilerRequest": {
+    "status": "NEEDS_AUTHORIZED_INTERFACE_FROM45",
+    "requiredCommands": [
+      {
+        "directory": "modules/sucafina",
+        "command": "bun typecheck"
+      },
+      {
+        "directory": ".",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "requirements": [
+      "W pinned",
+      "actual origin/dev pinned",
+      "workflow/config hashes",
+      "nonempty real commands/results",
+      "run/job/artifact refs"
+    ],
+    "forbidden": [
+      "producttests in compiler lane",
+      "taking astra-check-compose fixed ref",
+      "taking astra-check-wp07 fixed ref"
+    ]
+  },
+  "unmetBeforeExecution": [
+    "authorization/lease for workflow patch",
+    "actual W after candidate includes CI config",
+    "real generation manifests",
+    "hosted run with upload",
+    "download and inspect exact archived outputs",
+    "visual checks of PNGs/HTML",
+    "current scope compiler/guard results"
+  ],
+  "noProductTestExecutedByThisAgent": true,
+  "noGithubMutationByThisAgent": true
+}

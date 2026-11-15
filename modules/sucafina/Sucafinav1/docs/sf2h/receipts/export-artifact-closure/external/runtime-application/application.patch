@@ -1,0 +1,52 @@
+--- a/modules/sucafina/Sucafinav1/runtime/application.ts
++++ b/modules/sucafina/Sucafinav1/runtime/application.ts
+@@ -705,7 +705,7 @@
+ ): Promise<Response> {
+   const query = new URL(request.url).searchParams
+   const kind = query.get("download") ?? ""
+-  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor }>(async (snapshot) => {
++  const prepared = await transaction<Response | { snapshot: Snapshot; actor: Actor; sourceDigest: string }>(async (snapshot) => {
+     const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+     if (!principal || !principal.id || principal.id.startsWith("local:"))
+       return { commit: false, value: reply("Authentication required", 401) }
+@@ -761,7 +761,7 @@
+         })
+     return {
+       commit: readsMembers && rows(snapshot.data.members).length > 0,
+-      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor },
++      value: { snapshot: structuredClone({ ...snapshot, data: publicSfData(snapshot.data) }), actor, sourceDigest: downloadSnapshotDigest(snapshot) },
+     }
+   })
+   if (prepared instanceof Response)
+@@ -775,6 +775,19 @@
+   request.signal.throwIfAborted()
+   const file = await download(kind, prepared.snapshot, prepared.actor, environment, query)
+   request.signal.throwIfAborted()
++  // Compression is asynchronous; the captured grant cannot authorize later egress by itself.
++  const current = await transaction(async (snapshot) => {
++    const principal = await application.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
++    if (!principal || !principal.id || principal.id.startsWith("local:")) return { commit: false, value: 403 }
++    const roles = principal.roles.filter((row) => row.surface === surface).map((row) => row.role)
++    const actor: Actor = { id: principal.id, canWrite: principal.canWrite && roles.some((role) => role !== "viewer"), roles }
++    if (JSON.stringify(actor) !== JSON.stringify(prepared.actor)) return { commit: false, value: 403 }
++    return { commit: false, value: downloadSnapshotDigest(snapshot) === prepared.sourceDigest ? 200 : 409 }
++  })
++  request.signal.throwIfAborted()
++  if (current !== 200) return new Response(request.method === "HEAD" ? null : current === 403 ? "Access denied" : "Export source changed; download again.", {
++    status: current, headers: { "Cache-Control": "no-store" },
++  })
+   if (!file.ok)
+     return request.method === "HEAD"
+       ? new Response(null, {
+@@ -791,6 +804,11 @@
+     },
+   })
+ }
++function downloadSnapshotDigest(snapshot: Snapshot) {
++  // Private product state and read audits do not change the exported source material.
++  return createHash("sha256").update(JSON.stringify({ data: publicSfData(snapshot.data), versions: snapshot.versions })).digest("hex")
++}
++
+ async function prepareUpload(
+   request: Request,
+   surface: Surface,
