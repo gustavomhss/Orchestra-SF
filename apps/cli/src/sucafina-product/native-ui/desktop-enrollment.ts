@@ -30,6 +30,7 @@ export function attachSfNativeEnrollment(options: Readonly<{
       || request.installationId !== options.descriptor.installationId
       || typeof request.requestId !== "string" || !UUID.test(request.requestId)
     ) return
+    const requestId = request.requestId
     state.pending = true
     void Promise.resolve().then(() => options.enrollNativeLocal()).then((payload) => {
       if (state.disposed) return
@@ -44,7 +45,7 @@ export function attachSfNativeEnrollment(options: Readonly<{
         || payload.expiresAt > Date.now() + 600_000
       ) return
       options.transport.postMessage({
-        kind: "sf-native-local-enrollment", launchId: options.launchId, requestId: request.requestId,
+        kind: "sf-native-local-enrollment", launchId: options.launchId, requestId,
         installationId: payload.installationId, projectId: payload.projectId,
         publicOrigin: payload.publicOrigin, mount: payload.mount, url: payload.url, expiresAt: payload.expiresAt,
       } satisfies SfNativeEnrollmentReply)
