@@ -69,7 +69,7 @@ export const SfIntelligenceAnalysisChoices = Schema.Union([
 // The producer takes a selection keyed by the installed skill input producer.
 // The key/value map has no stable public shape across 18 producer families;
 // it is validated inside the real producer after admission, not interpreted here.
-const Selection = Schema.Record({ key: Schema.String, value: Schema.Json })
+const Selection = Schema.Record(Schema.String, Schema.Json)
 export const SfIntelligenceAnalysisPrepareInput = Schema.Struct({
   input: Schema.Struct({ request: Request, selection: Selection }),
 })

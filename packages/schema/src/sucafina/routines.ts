@@ -1,5 +1,5 @@
 import { Schema } from "effect"
-import { NonNegativeInt, optional } from "../../schema"
+import { NonNegativeInt, optional } from "../schema"
 
 /**
  * A09 public wire bindings. Every output is an exact subset of the frozen

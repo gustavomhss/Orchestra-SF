@@ -76,6 +76,32 @@ describe("A07 closed schema / source equivalence", () => {
     expect(accepts(SfReviewsReviewSource.output, { links: [{ label: "source", url: "/dashboard", auth: "token" }] })).toBe(false)
   })
 
+  test("review-source JSON closes nested links and both outer envelopes", () => {
+    const link = { label: "source", url: "/dashboard?page=IT" }
+    expect(accepts(SfReviewsReviewSource.output, {
+      links: [link, { label: "secondary", url: "/dashboard?page=Finance" }],
+    })).toBe(true)
+    expect(accepts(SfReviewsReviewSource.output, {
+      links: [{ ...link, auth: "token" }],
+    })).toBe(false)
+    expect(accepts(SfReviewsReviewSource.output, {
+      links: [{ ...link, headers: { Authorization: "token" } }],
+    })).toBe(false)
+    expect(accepts(SfReviewsReviewSource.output, {
+      links: [link], principalRef: "someone-else",
+    })).toBe(false)
+    expect(accepts(SfReviewsReviewSource.output, { status: "unavailable" })).toBe(true)
+    expect(accepts(SfReviewsReviewSource.output, {
+      status: "denied", reason: "source-outside-preserved-review",
+    })).toBe(true)
+    expect(accepts(SfReviewsReviewSource.output, {
+      status: "unavailable", auth: "token",
+    })).toBe(false)
+    expect(accepts(SfReviewsReviewSource.output, {
+      status: "ok", value: { links: [link] },
+    })).toBe(false)
+  })
+
   test("Office form selection remains format-specific and never decodes HTML/bytes", () => {
     const input = { year: "2026", topic: ["Executive Summary"], title: "Quarterly" }
     expect(accepts(SfReviewsExportDocx.input, input)).toBe(true)

@@ -177,10 +177,16 @@ export const SfReviewsExportPptx = {
 export const SfReviewsReviewSource = {
   operationId: "reviews.review-source" as const,
   input: Schema.Struct({ reviewRef: Text, referenceId: Text }).annotate({ parseOptions: { onExcessProperty: "error" } }),
-  // The installed producer returns {links}, not a synthetic PortResult.ok.
-  output: Schema.Union([Schema.Struct({
-    links: Schema.Array(Schema.Struct({ label: Text, url: Text })),
-  }), Error]),
+  // The producer returns {links} or a real status envelope, never a
+  // synthetic PortResult.ok. Close each link before decoding can strip an
+  // unexpected authority field; also close the outer/status envelopes.
+  output: Schema.Union([
+    Schema.Struct({
+      links: Schema.Array(Schema.Struct({ label: Text, url: Text })
+        .annotate({ parseOptions: { onExcessProperty: "error" } })),
+    }).annotate({ parseOptions: { onExcessProperty: "error" } }),
+    Error.annotate({ parseOptions: { onExcessProperty: "error" } }),
+  ]),
 }
 export const SfReviewsReviewUpdate = {
   operationId: "reviews.review-update" as const,

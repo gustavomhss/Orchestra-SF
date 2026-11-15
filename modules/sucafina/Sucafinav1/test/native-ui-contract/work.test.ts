@@ -104,6 +104,74 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
     })).toThrow()
   })
 
+
+  test("defaults an omitted V1 route selector without injecting a producer body field", () => {
+    expect(Schema.decodeUnknownSync(SfViewsList.Input)({ action: "list", input: {} }))
+      .toEqual({ surface: "dashboard", action: "list", input: {} })
+    expect(Schema.decodeUnknownSync(SfViewsOpen.Input)({ action: "open", input: { id: view.id } }))
+      .toEqual({ surface: "dashboard", action: "open", input: { id: view.id } })
+    expect(Schema.decodeUnknownSync(SfViewsSave.Input)({
+      action: "save", input: { view, expectedVersion: null },
+    })).toEqual({
+      surface: "dashboard", action: "save", input: { view, expectedVersion: null },
+    })
+    expect(Schema.decodeUnknownSync(SfViewsRemove.Input)({
+      surface: "procurement", action: "remove", input: { id: view.id, expectedVersion: 3 },
+    })).toEqual({
+      surface: "procurement", action: "remove", input: { id: view.id, expectedVersion: 3 },
+    })
+  })
+
+  test("rejects excess V1 fields at every nesting level, not merely at the transport", () => {
+    const save = { surface: "dashboard", action: "save", input: { view, expectedVersion: 3 } }
+    for (const extra of [
+      { ...save, admin: true },
+      { ...save, input: { ...save.input, role: "owner" } },
+      { ...save, input: { view: { ...view, granted: true }, expectedVersion: 3 } },
+      { ...save, input: { view: { ...view, period: { ...view.period, authority: "admin" } }, expectedVersion: 3 } },
+      { ...save, input: { view: { ...view, filters: { ...view.filters, accessToken: "private" } }, expectedVersion: 3 } },
+      { ...save, input: { view: { ...view, filters: { selections: { ...view.filters.selections, secretRoleMap: "x" } } }, expectedVersion: 3 } },
+    ]) {
+      expect(() => Schema.decodeUnknownSync(SfViewsSave.Input)(extra)).toThrow()
+    }
+    expect(() => Schema.decodeUnknownSync(SfViewsList.Output)({
+      status: "ok", value: [{ id: view.id, version: 3, availability: "unavailable", view }],
+    })).toThrow()
+    expect(() => Schema.decodeUnknownSync(SfViewsSave.Output)({
+      status: "ok", value: { view, version: 3, extra: "leak" },
+    })).toThrow()
+  })
+
+  test("rejects nested private work and evidence fields while preserving zero/null", () => {
+    const item = {
+      kind: "signal" as const,
+      actionRef: "sf-signal:one",
+      title: null,
+      ownerRef: "original-owner",
+      state: "stale",
+      sourceVersion: 0,
+      observedVersion: 0,
+      destination: { kind: "signal" as const, ref: "sf-signal:one" },
+    }
+    expect(Schema.decodeUnknownSync(SfProjectionWork.Output)({
+      status: "ok", value: { items: [item] },
+    })).toEqual({ status: "ok", value: { items: [item] } })
+    for (const itemWithExtras of [
+      { ...item, secretRoleMap: {} },
+      { ...item, destination: { ...item.destination, accessToken: "secret" } },
+    ]) {
+      expect(() => Schema.decodeUnknownSync(SfProjectionWork.Output)({
+        status: "ok", value: { items: [itemWithExtras] },
+      })).toThrow()
+    }
+    expect(() => Schema.decodeUnknownSync(SfProjectionWork.Output)({
+      status: "ok", value: { items: [item], privileged: true },
+    })).toThrow()
+    expect(() => Schema.decodeUnknownSync(SfProjectionWork.Output)({
+      status: "ok", value: { items: [item] }, privileged: true,
+    })).toThrow()
+  })
+
   test("routes typed calls through the injected transport without changing IDs, values or options", async () => {
     const { client, calls } = recordingClient()
     const options = { signal, idempotencyKey: "intent-once-a12" }
