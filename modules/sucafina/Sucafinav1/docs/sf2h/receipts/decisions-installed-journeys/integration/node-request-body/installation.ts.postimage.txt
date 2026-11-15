@@ -3,7 +3,7 @@ import { realpath } from "node:fs/promises"
 import { pathToFileURL } from "node:url"
 import type { Host } from "@orchestra/core/host"
 import { Effect, Option } from "effect"
-import { HttpMethod, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+import { HttpMethod, HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { createSfHostRuntime } from "./host-context"
 
 export type SfInstallation = {
@@ -28,7 +28,12 @@ export async function loadSfInstallation(file: string, origin: string) {
     if (Option.isNone(url)) return HttpServerResponse.empty({ status: 503 })
     if (url.value.origin !== origin) return HttpServerResponse.empty({ status: 403 })
     // Consume the bounded body in the server request scope before crossing the Web Request boundary.
-    const body = HttpMethod.hasBody(incoming.method) ? yield* incoming.arrayBuffer : undefined
+    const body = HttpMethod.hasBody(incoming.method) ? yield* incoming.arrayBuffer.pipe(Effect.catch((error) => {
+      // Preserve the canonical body's 413 response without changing other read errors.
+      if (HttpServerError.isHttpServerError(error) && error.reason._tag === "RequestParseError" &&
+        error.reason.cause instanceof Error && error.reason.cause.message === "maxBytes exceeded") return Effect.die(error)
+      return Effect.fail(error)
+    })) : undefined
     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(url.value, { method: incoming.method, headers: incoming.headers, ...(body === undefined ? {} : { body }), signal })), catch: () => "installation-unavailable" as const })
     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
   }).pipe(Effect.catch(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))

@@ -556,6 +556,20 @@
         }
       ],
       "preservation": "All C20/CurrentChoice46 changes are retained byte-for-byte in W2; they are not owned edits52."
+    },
+    {
+      "symbol": "C21",
+      "sha": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+      "tree": "644e41cfc5e8b291b4bf61bd16c8dcae41b14d1b",
+      "change": "Agenda39: seven production paths, six new tests/helpers, no Decisions/Planner/Procurement/config/installation prerequisite change.",
+      "authority": {
+        "terminal47": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+        "ended_authority_blob": "076d2b0c277c7101b387e3d76ff80d3423d85c8a",
+        "successor_ack55": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+        "successor_ack_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+        "control": "c1df70b2fedd2183d243a523fbfef9c7c6ddff35"
+      },
+      "qualification": "NOT_RUN_ON_C21; fixed C20 retained for controlled P2 comparison."
     }
   ],
   "second_qualification": {
@@ -643,5 +657,27 @@
     "mission52_unchanged": true,
     "mission53": "Designated existing-policy compatibility owner; not a released implementation.",
     "new_authority_granted_to_52": false
+  },
+  "third_qualification": {
+    "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+    "baseTree": "b51fce068f7cee96e6f22013d729087643e3b684",
+    "W": "13203d7b6d9e0b27ad23c6b046f770c779c35687",
+    "Wtree": "cb1875110b02a16ed2bf4a501a92b921493aa897",
+    "S": "ab6caae944aad804c1bd6286270a78b74734d0a7",
+    "Stree": "9f1d388996dc73274e037bf6479cc59eb8451a23",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "unchanged_root_entries": 43,
+    "only_extra": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "size": 229,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+    },
+    "source": "1a475ee1ca6b270d7dad8368560cbd9966d7f8ab",
+    "sourceTree": "27be5e258a3369f84191745bf75815155e1ad18f",
+    "latest_stack_observed": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+    "fixed_base_reason": "Controlled P2/V2 causal qualification on C20; C21 Agenda delta and successor authority are separately reconciled."
   }
 }

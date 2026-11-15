@@ -1,19 +1,22 @@
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..d4806a864d09ad2dea87df086f12ee743d54af3d 100644
+index 0000000000000000000000000000000000000000..007c27ebfd79a28cf051864305d9692c1d6b2409
 --- /dev/null
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
-@@ -0,0 +1,24 @@
+@@ -0,0 +1,27 @@
 +import type { Locator, Page, Request, Response } from "@playwright/test"
 +
-+/** Observe the original UI request. A transport failure cannot produce a later response. */
-+export async function clickForResponse(page: Page, button: Locator, matches: (request: Request) => boolean) {
-+  const pending = Promise.withResolvers<Response>()
++/** Read the original response before a successful UI command navigates away. */
++export async function clickForResponse<T>(page: Page, button: Locator, matches: (request: Request) => boolean,
++  read: (response: Response) => Promise<T>) {
++  const pending = Promise.withResolvers<T>()
 +  const matching = (request: Request) => {
 +    try { return matches(request) } catch (error) { pending.reject(error); return false }
 +  }
 +  const responded = (response: Response) => {
-+    if (matching(response.request())) pending.resolve(response)
++    if (!matching(response.request())) return
++    page.off("response", responded)
++    try { pending.resolve(read(response)) } catch (error) { pending.reject(error) }
 +  }
 +  const failed = (request: Request) => {
 +    if (matching(request)) pending.reject(new Error(`The original UI request failed before a response: ${request.failure()?.errorText ?? "requestfailed"}`))
@@ -21,15 +24,15 @@ index 0000000000000000000000000000000000000000..d4806a864d09ad2dea87df086f12ee74
 +  page.on("response", responded)
 +  page.on("requestfailed", failed)
 +  try {
-+    const [response] = await Promise.all([pending.promise, button.click()])
-+    return response
++    const [result] = await Promise.all([pending.promise, button.click()])
++    return result
 +  } finally {
 +    page.off("response", responded)
 +    page.off("requestfailed", failed)
 +  }
 +}
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
-index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..d4e36f9a5ca4885f5432bdfef8c9c99bf059a6f6 100644
+index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..377ad1ea3c961fbf0cbb6522403074bc1fce6d78 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
 @@ -1,5 +1,6 @@
@@ -79,19 +82,20 @@ index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..d4e36f9a5ca4885f5432bdfef8c9c99b
          verdict: "The Playwright runtime report owns the terminal test result.",
          limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
        }, null, 2) })
-@@ -86,9 +108,7 @@
+@@ -86,10 +108,7 @@
  
  export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
    await expect(button).toBeEnabled()
 -  const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
 -  await button.click()
 -  const response = await pending
-+  const response = await clickForResponse(page, button, (request) => isCommand(request, mode, method))
-   return readReply(response, observations)
+-  return readReply(response, observations)
++  return clickForResponse(page, button, (request) => isCommand(request, mode, method), (response) => readReply(response, observations))
  }
  
+ export async function readReply(response: Response, observations: Record<string, unknown>[]) {
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
-index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..c8a8ea0072624e78833bd87a6819a3fcb83a1ed9 100644
+index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..13ab9556628ebc118e0afc2470833bbdbfa9dd25 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
 @@ -1,5 +1,6 @@
@@ -101,17 +105,59 @@ index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..c8a8ea0072624e78833bd87a6819a3fc
  
  export const sourceNames = { baseline: "Decisions baseline plan", candidate: "Decisions candidate plan", line: "Decision annual service" }
  
-@@ -79,9 +80,7 @@
+@@ -26,9 +27,9 @@
+   const line = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Name", { exact: true }) })
+   await expect(line).toHaveCount(1)
+   await line.getByLabel("Name", { exact: true }).fill(sourceNames.line)
+-  await line.getByLabel("Owner", { exact: true }).selectOption(actorId)
+-  await line.getByLabel("Element", { exact: true }).selectOption("licenses")
+-  await expect(line.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await line.getByRole("combobox", { name: "Owner", exact: true }).selectOption({ value: actorId })
++  await line.getByRole("combobox", { name: "Element", exact: true }).selectOption({ value: "licenses" })
++  await expect(line.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await line.getByLabel("Annual budget", { exact: true }).fill("1200")
+   await plannerCommand(page, line.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -51,7 +52,7 @@
+   const copiedLine = page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
+   await expect(copiedLine).toHaveCount(1)
+   await copiedLine.getByRole("button", { name: "Manage", exact: true }).click()
+-  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await expect(manager.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await manager.getByLabel("Annual budget", { exact: true }).fill("2400")
+   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -68,7 +69,7 @@
+   await row.getByRole("button", { name: "Manage", exact: true }).click()
+   const manager = page.getByRole("dialog", { name: "Manage record", exact: true })
+   await expect(manager.getByLabel("Annual budget", { exact: true })).toHaveValue("2400")
+-  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await expect(manager.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await manager.getByLabel("Annual budget", { exact: true }).fill(String(annualBudget))
+   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -79,13 +80,12 @@
  
  async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
    await expect(button).toBeEnabled()
 -  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
 -  await button.click()
 -  const response = await pending
-+  const response = await clickForResponse(page, button, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action)
-   expect(response.status()).toBe(200)
-   expect(response.headers()["content-type"]).toContain("application/json")
-   const result = asRecord(await response.json())
+-  expect(response.status()).toBe(200)
+-  expect(response.headers()["content-type"]).toContain("application/json")
+-  const result = asRecord(await response.json())
+-  expect(result.ok).toBe(true)
+-  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
+-  return result
++  return clickForResponse(page, button, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action, async (response) => {
++    expect(response.status()).toBe(200)
++    expect(response.headers()["content-type"]).toContain("application/json")
++    const result = asRecord(await response.json())
++    expect(result.ok).toBe(true)
++    observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
++    return result
++  })
+ }
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
 index c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e..9fe64294027cf6805ff8e7ba4b7cfac83455de85 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
@@ -162,3 +208,82 @@ index 2d9c867af87fa0a26b182365b1780232b49bcaf9..b6f63bfa1b8eacb5bf37a5c5b0d508fd
        observations.push({ stage: "creation-response-dropped", httpStatus: lost.httpStatus, contentType: lost.contentType })
        expect(lost.httpStatus).toBe(200)
        expect(lost.contentType).toContain("application/json")
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
+index 979bfeeb460e85fe1911affe0ac9ad4d21a27e3a..903b48594ff95e0d1f78539982adcf75eb3b9272 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
+@@ -24,7 +24,7 @@
+     const editor = page.locator("form[data-decision-edit]")
+     await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
+     await editor.getByRole("button", { name: "Find Planner sources", exact: true }).click()
+-    const select = editor.getByLabel("Planner source", { exact: true })
++    const select = editor.getByRole("combobox", { name: "Planner source", exact: true })
+     for (const entry of [{ name: sourceNames.baseline, id: sources.baseline, monthlyAmount: 100, count: 1 }, { name: sourceNames.candidate, id: sources.candidate, monthlyAmount: 200, count: 2 }]) {
+       await selectSource(select, entry.name, entry.id)
+       await editor.getByRole("button", { name: "Inspect selected source", exact: true }).click()
+@@ -106,7 +106,7 @@
+       expect(lost.body).toEqual({ status: "ok", value: { caseRef: { ...identity, version: 4 }, resultRef: receipt.resultRef } })
+       await expect(editor.getByLabel("Alternative title", { exact: true })).toHaveValue(titles.candidate)
+       await expect(editor.getByLabel("Alternative title", { exact: true })).toBeDisabled()
+-      await expect(editor.getByLabel("Source for alternative", { exact: true })).toBeDisabled()
++      await expect(editor.getByRole("combobox", { name: "Source for alternative", exact: true })).toBeDisabled()
+       await expect(editor.getByRole("button", { name: "Retry same request", exact: true })).toBeEnabled()
+       expect(promotions).toHaveLength(2)
+       const original = promotions[1]!
+@@ -140,8 +140,8 @@
+       expect(new Set(alternatives.map((item) => item.id)).size).toBe(2)
+       expect(alternatives.map((item) => item.title).sort()).toEqual(Object.values(titles).sort())
+       for (const alternative of alternatives) expect(alternative).toMatchObject({ version: 1, currency: "USD", horizon: draft.horizon })
+-      await choice.getByLabel("Baseline", { exact: true }).selectOption({ label: titles.baseline })
+-      await choice.getByLabel("Alternative", { exact: true }).selectOption({ label: titles.candidate })
++      await choice.getByRole("combobox", { name: "Baseline", exact: true }).selectOption({ label: titles.baseline })
++      await choice.getByRole("combobox", { name: "Alternative", exact: true }).selectOption({ label: titles.candidate })
+       const compared = await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)
+       const value = asRecord(compared.value)
+       // C10 compares cost as alternative minus baseline; savings has the opposite orientation.
+@@ -222,7 +222,7 @@
+   const editor = page.locator("form[data-decision-alternatives]")
+   await expect(editor).toHaveAttribute("data-sf-alternatives-ready", "true")
+   await editor.getByRole("button", { name: "Load attached scenarios", exact: true }).click()
+-  const source = editor.getByLabel("Source for alternative", { exact: true })
++  const source = editor.getByRole("combobox", { name: "Source for alternative", exact: true })
+   await selectSource(source, sourceName, versionId)
+   const sourceDigest = await source.inputValue()
+   const inspected = page.waitForResponse((response) => isCommand(response.request(), "decision-controls", "GET") && new URL(response.url()).searchParams.get("source") === sourceDigest)
+@@ -240,7 +240,7 @@
+   await expect(preview).toContainText("USD")
+   await expect(preview).toContainText(`Component: ${monthlyAmount} USD · 2027-01-01 – 2027-01-31`)
+   await editor.getByLabel("Alternative title", { exact: true }).fill(title)
+-  const inventory = editor.getByLabel("Cost inventory", { exact: true })
++  const inventory = editor.getByRole("combobox", { name: "Cost inventory", exact: true })
+   const offered = inventory.getByRole("option", { name: /renewal|transition/i })
+   await expect(offered).toHaveCount(1)
+   await inventory.selectOption({ label: (await offered.textContent())!.trim() })
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
+index c469187a2e04d49d157cf9d3830145ca845f4064..de8671b4482339791b8f03bd5616c13d50dc4a87 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
+@@ -23,8 +23,8 @@
+   expect(before.choices).toEqual([])
+   const alternative = (before.alternatives as unknown[]).map(asRecord).find((item) => item.title === selection.titles.candidate)
+   expect(alternative).toBeDefined()
+-  await choice.getByLabel("Baseline", { exact: true }).selectOption({ label: selection.titles.baseline })
+-  await choice.getByLabel("Alternative", { exact: true }).selectOption({ label: selection.titles.candidate })
++  await choice.getByRole("combobox", { name: "Baseline", exact: true }).selectOption({ label: selection.titles.baseline })
++  await choice.getByRole("combobox", { name: "Alternative", exact: true }).selectOption({ label: selection.titles.candidate })
+   const initial = asRecord((await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
+   expect(asRecord(initial.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
+   await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
+index 9e02b30fee0e1f37afeac28b0296bdfbbbab70aa..10b59adfce7d8fb5143f49c9df9a0d7321425018 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
+@@ -25,7 +25,7 @@
+     await expect(evidence.getByRole("option")).not.toHaveCount(0)
+     const digests = await evidence.getByRole("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value))
+     expect(new Set(digests).size).toBe(digests.length)
+-    const selectedIds = [await form.getByLabel("Baseline", { exact: true }).inputValue(), await form.getByLabel("Alternative", { exact: true }).inputValue()]
++    const selectedIds = [await form.getByRole("combobox", { name: "Baseline", exact: true }).inputValue(), await form.getByRole("combobox", { name: "Alternative", exact: true }).inputValue()]
+     const comparedAlternatives = (asRecord(selected.decision).alternatives as unknown[]).map(asRecord).filter((alternative) => selectedIds.includes(String(alternative.id)))
+     expect(comparedAlternatives).toHaveLength(2)
+     const comparedRefs = comparedAlternatives.flatMap((alternative) => asRecord(alternative.result).sourceRefs as unknown[]).map(asRecord)
