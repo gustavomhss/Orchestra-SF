@@ -1,0 +1,49 @@
+{
+  "schema": "sf2h.correction-author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 138,
+  "state": "ACK_ACTIVE",
+  "branch": "sf-ux-w11",
+  "pr": 130,
+  "lease_epoch": "ux-native-w11-e2",
+  "actor": "GPT-6, new ChatGPT conversation",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_exposure": "not exposed by current runtime",
+  "transport": "GitHub connector, remote Git data writes only",
+  "source_packet": "40d425d6727dd9672a1f2a5830da03e59252cdfd:modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/138.json",
+  "observed_pre_ack_head": "aced7bb2255ebe680cf8c4639f74851aa76446ad",
+  "observed_pre_ack_tree": "b141429f9ca0b11b59a0fe125712878b15caa267",
+  "fence_commit": "aced7bb2255ebe680cf8c4639f74851aa76446ad",
+  "fence_blob": "31c89551e42db9fea11830cfe825d736adbbc511",
+  "previous_epoch": "ux-native-w11-e1",
+  "previous_authority": "REVOKED_FOR_FUTURE_WRITES",
+  "native_goal": "paused",
+  "source_material": {
+    "C64": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1"
+  },
+  "preimages": {
+    "apps/cli/src/sucafina-product/native-ui/procurement.ts": "0751e4861ab025a7bfc0f132fb24409fd29f8198",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts": "75df2cfc7a28cb6e0f545d7ac91a63b165a6a511"
+  },
+  "write_paths": [
+    "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction138/**"
+  ],
+  "constraints": [
+    "no local tests/validators",
+    "no extra dispatcher",
+    "no generated/shared edits",
+    "no force/reset/merge/deploy",
+    "no Goal resume"
+  ],
+  "dependencies": {
+    "integrator": 132,
+    "compiler": 128,
+    "product_ci": 129
+  },
+  "verification": "S0-FENCE and HEAD matched; required source contracts reviewed; independently active successor writer"
+}
