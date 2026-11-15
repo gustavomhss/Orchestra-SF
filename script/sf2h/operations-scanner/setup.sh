@@ -38,6 +38,8 @@ freshclam="$prefix/bin/freshclam"
 test -x "$clamd" && test -x "$freshclam" || { echo OPERATIONS_SCANNER_RELOCATED_TOOLS_MISSING >&2; exit 2; }
 test -d "$prefix/etc/certs" || { echo OPERATIONS_SCANNER_RELOCATED_CERTIFICATES_MISSING >&2; exit 2; }
 library_path="$prefix/lib:$prefix/lib64"
+# Both tools parse their config before --version. Keep even that first invocation job-local.
+printf 'DatabaseDirectory %s\nCVDCertsDirectory %s\n' "$state/database" "$prefix/etc/certs" > "$state/evidence/version.conf"
 for tool in "$clamd" "$freshclam"; do
   name=$(basename "$tool")
   LD_LIBRARY_PATH="$library_path" ldd "$tool" > "$state/evidence/$name-ldd.txt"
@@ -45,7 +47,7 @@ for tool in "$clamd" "$freshclam"; do
     echo "OPERATIONS_SCANNER_DYNAMIC_DEPENDENCY_MISSING:$name" >&2
     exit 2
   fi
-  LD_LIBRARY_PATH="$library_path" "$tool" --version > "$state/evidence/$name-version.txt"
+  LD_LIBRARY_PATH="$library_path" "$tool" --config-file="$state/evidence/version.conf" --version > "$state/evidence/$name-version.txt"
 done
 node "$script_dir/service.mjs" configuration "$state"
 if ! LD_LIBRARY_PATH="$library_path" timeout --signal=TERM --kill-after=5s 300s "$freshclam" \

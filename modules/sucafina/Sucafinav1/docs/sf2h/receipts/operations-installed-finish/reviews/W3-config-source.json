@@ -1,0 +1,22 @@
+{
+  "status": "PREPARED_NOT_PUBLISHED_NOT_RUN",
+  "source_work": "7be41d01c1d64fc3a067ba9a465a3522d9d040a8",
+  "finding": {
+    "run": 43671662128,
+    "job": 132682829681,
+    "stage": "Prepare ephemeral real ClamD",
+    "observed": "ERROR: Cannot open/parse /usr/local/etc/clamd.conf before --version"
+  },
+  "path": "script/sf2h/operations-scanner/setup.sh",
+  "preimage_blob": "9cc19ef13e43c4086d981582eccc97011282797f",
+  "postimage_blob": "2285b66ca1395ea9f3041ee3a09e458c7d11096c",
+  "postimage_sha256": "df89761fb49918569129356bb69e3d1d6386bc803ad6e3b94af5a5e6e7b05b5a",
+  "patch_sha256": "607ba657b8f18a63b50c51a9d3a33098ae03bdb7ed8bb1976235c7beace3ef25",
+  "official_source": {
+    "ref": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+    "clamd_c_blob": "676798c4377556994a1765b2388c24aaa63aa659",
+    "freshclam_c_blob": "09a4bb0deaba56f88a8e25c8bef5a80ec2b863e8"
+  },
+  "change": "Both tool --version invocations use the same explicit job-local bootstrap config; final configuration and all version/package/database/readiness gates remain unchanged.",
+  "local_product_tests": "NOT_RUN"
+}

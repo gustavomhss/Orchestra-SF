@@ -1,0 +1,25 @@
+{
+  "schema": "sf2h.operations75.material-increment.v1",
+  "increment": "W3",
+  "parent": "7be41d01c1d64fc3a067ba9a465a3522d9d040a8",
+  "delta": [
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "pre": "9cc19ef13e43c4086d981582eccc97011282797f",
+      "post": "2285b66ca1395ea9f3041ee3a09e458c7d11096c"
+    }
+  ],
+  "cause": {
+    "run": 43671662128,
+    "job": 132682829681,
+    "failure": "clamd --version parsed missing default global config before displaying version",
+    "tests_executed": 0
+  },
+  "change": "Give clamd and freshclam --version explicit job-local config referring only to owned database/certificate paths. Final service configs, version gate, package pin and bounds unchanged.",
+  "review": {
+    "root": "read exact3line delta",
+    "normative_review": "approved static; confirmed config parse before version in both official sources at fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+    "runtime": "NOT_RUN; causal hosted R2 required"
+  },
+  "GLOBAL_RELEASE": false
+}
