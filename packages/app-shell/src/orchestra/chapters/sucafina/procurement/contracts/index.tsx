@@ -386,7 +386,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
             step={field === "amount" ? "any" : undefined}
             required={field === "vendor"} disabled={disabled}
             value={value == null ? "" : String(value)}
-            onInput={(event) => setField(field, event.currentTarget.value)} />
+            onInput={(event) => setField(field, field === "amount" && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
       }>
         {(items) => <select disabled={disabled} value={value == null ? "" : String(value)}
           onChange={(event) => setField(field, event.currentTarget.value)}>
