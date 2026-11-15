@@ -10,6 +10,7 @@ import { createSfUiAuthority } from "../../../product/integration/ui-authority.t
 import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
 import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { decodeSfOperationInput } from "../../../product/contracts/schema-admission.ts"
 import { openLocalStore } from "../../../runtime/local-store.ts"
 import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
 
@@ -43,17 +44,24 @@ test("96/browser: committed ACK is lost; reload + host restart use GET receipt, 
         return actor && { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion }
       },
     })
-    const ui = createSfUiAuthority({ authorize: async (request) => identity(request),
+    const ui = createSfUiAuthority({ authorize: async (request, operation) =>
+        ["sf_case_read", "sf_case_draft"].includes(operation) ? identity(request) : undefined,
       commandIdentity: async (request, operation) => {
         if (request.method === "GET" || request.method === "HEAD") return randomUUID()
         const key = request.headers.get("Idempotency-Key")
         return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
       }, createId: randomUUID, now: Date.now })
-    const cases = createDecisionCasePort({ state, host: { requestFor: ui.requestFor, revalidate: ui.revalidate },
+    const cases = createDecisionCasePort({
+      state,
+      host: {
+        requestFor: (call) => call.kind === "ui" ? ui.requestFor(call) : undefined,
+        revalidate: async (call) => call.kind === "ui" && ui.revalidate(call),
+      },
       creationTarget: { ref: "sf-workspace:install", incarnation: "install" },
-      operationIdentity: ui.operationIdentity,
-      authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await ui.revalidate(call),
-      verifyScenarioOperations: async (_value, call) => ui.revalidate(call),
+      operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined,
+      authorizeCase: async (value, call) => call.kind === "ui" &&
+        value.participants.includes(call.binding.principalRef) && await ui.revalidate(call),
+      verifyScenarioOperations: async (_value, call) => call.kind === "ui" && ui.revalidate(call),
       evidence, createId: () => "case-" + ++serverState.nextId, now: () => "2026-11-15T00:00:00Z",
     })
     return { store, state, ui, cases }
@@ -74,6 +82,8 @@ test("96/browser: committed ACK is lost; reload + host restart use GET receipt, 
     server = Bun.serve({
       hostname: "127.0.0.1", port: 0, idleTimeout: 30,
       fetch: async (request) => {
+        const current = runtime
+        if (!current) return json({ status: "unavailable" }, 503)
         const url = new URL(request.url)
         if (url.pathname !== "/sf/dashboard") return json({ status: "denied" }, 404)
         const actor = identity(request)
@@ -87,16 +97,16 @@ test("96/browser: committed ACK is lost; reload + host restart use GET receipt, 
         if (url.searchParams.get("sf") === "workbench-case" && request.method === "GET") {
           const caseRef = url.searchParams.get("caseRef") ?? ""
           const digest = digestSfValue({ caseRef })
-          const access = await runtime!.ui.admit(request, "sf_case_read", digest)
+          const access = await current.ui.admit(request, "sf_case_read", digest)
           if (access.status !== "ok") return json(access, 403)
           try {
-            if (!await runtime!.ui.validate(access.value, "sf_case_read", digest)) return json({ status: "denied" }, 403)
-            const read = await runtime!.cases.read({ caseRef }, access.value)
+            if (!await current.ui.validate(access.value, "sf_case_read", digest)) return json({ status: "denied" }, 403)
+            const read = await current.cases.read({ caseRef }, access.value)
             if (read.status !== "ok") return json(read, 403)
             return new Response('<!doctype html><html><body><h1>Saved case</h1>' +
               '<p data-case-id>' + read.value.case.id + '</p></body></html>',
               { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } })
-          } finally { runtime!.ui.finish(access.value) }
+          } finally { current.ui.finish(access.value) }
         }
         const suppliedScope = request.headers.get("X-SF-Creation-Scope")
         if (suppliedScope !== scopeFor(actor.principalRef)) return json({ status: "denied" }, 403)
@@ -104,28 +114,32 @@ test("96/browser: committed ACK is lost; reload + host restart use GET receipt, 
         if (!key || !/^[a-f0-9-]{36}$/.test(key)) return json({ status: "needs-input" }, 400)
         if (url.searchParams.get("sf") === "workbench-create-recover" && request.method === "GET") {
           const digest = digestSfValue({ purpose: "creation-recovery", key })
-          const access = await runtime!.ui.admit(request, "sf_case_read", digest)
+          const access = await current.ui.admit(request, "sf_case_read", digest)
           if (access.status !== "ok") return json(access, 403)
           try {
-            if (!await runtime!.ui.validate(access.value, "sf_case_read", digest)) return json({ status: "denied" }, 403)
-            const found = await runtime!.cases.recoverCreation(key, access.value)
+            if (!await current.ui.validate(access.value, "sf_case_read", digest)) return json({ status: "denied" }, 403)
+            const found = await current.cases.recoverCreation(key, access.value)
             if (found.status !== "ok") return json(found, found.status === "denied" ? 403 : 503)
             serverState.recoveries.push({ key, principalRef: actor.principalRef, state: found.value.state })
             return found.value.state === "committed"
               ? json({ status: "ok", state: "committed", outputRef: found.value.caseRef, receipt: found.value.receipt })
               : json({ status: "ok", state: "not-found" })
-          } finally { runtime!.ui.finish(access.value) }
+          } finally { current.ui.finish(access.value) }
         }
         if (url.searchParams.get("sf") !== "workbench-command" || request.method !== "POST") return json({ status: "denied" }, 405)
-        const body = await request.json() as { operation?: string; input?: { objective?: string } }
-        if (body.operation !== "sf_case_draft" || !body.input) return json({ status: "invalid" }, 400)
-        const digest = digestSfValue(body.input)
-        const access = await runtime!.ui.admit(request, "sf_case_draft", digest)
+        const body: unknown = await request.json().catch(() => undefined)
+        if (!body || typeof body !== "object" || !("operation" in body) ||
+          body.operation !== "sf_case_draft" || !("input" in body))
+          return json({ status: "invalid" }, 400)
+        const decoded = decodeSfOperationInput("sf_case_draft", body.input)
+        if (!decoded.ok) return json({ status: "invalid" }, 400)
+        const digest = digestSfValue(decoded.value)
+        const access = await current.ui.admit(request, "sf_case_draft", digest)
         if (access.status !== "ok") return json(access, 403)
         try {
-          if (!await runtime!.ui.validate(access.value, "sf_case_draft", digest)) return json({ status: "denied" }, 403)
-          const saved = await runtime!.cases.draft(body.input as Parameters<typeof runtime.cases.draft>[0], access.value)
-          serverState.posts.push({ key, principalRef: actor.principalRef, objective: body.input.objective ?? "", status: saved.status === "ok" ? 200 : 409 })
+          if (!await current.ui.validate(access.value, "sf_case_draft", digest)) return json({ status: "denied" }, 403)
+          const saved = await current.cases.draft(decoded.value, access.value)
+          serverState.posts.push({ key, principalRef: actor.principalRef, objective: decoded.value.objective, status: saved.status === "ok" ? 200 : 409 })
           if (saved.status !== "ok") return json(saved, saved.status === "conflict" ? 409 : 503)
           if (serverState.loseNextAck) {
             serverState.loseNextAck = false
@@ -133,7 +147,7 @@ test("96/browser: committed ACK is lost; reload + host restart use GET receipt, 
             return json({ status: "unavailable" }, 503)
           }
           return json({ status: "ok", outputRef: encodeCaseRef(saved.value) })
-        } finally { runtime!.ui.finish(access.value) }
+        } finally { current.ui.finish(access.value) }
       },
     })
     const origin = server.url.origin
