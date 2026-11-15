@@ -1,0 +1,234 @@
+{
+  "schema": "sf2h.integration114.C57.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 114,
+  "lease": "S0-C-e17-browser114",
+  "status": "C57_COMPOSED_UNTESTED_NOT_FROZEN",
+  "material": {
+    "C": "C57",
+    "commit": "9dddec6a0a1825a2080569d94605e7dccb5cd056",
+    "tree": "da2c6c21f67b2e644d9027dcad9c986a28b39f85",
+    "parent": "5b18e9bd9ac44de90879dee00e9d16f05c77a145",
+    "priorC56": "a832bd50c0efd271fc79b407f219098a5f342cd5",
+    "source": "117 typed matcher fixtures",
+    "file_count": 18
+  },
+  "source117": {
+    "branch": "matcher-type-repair",
+    "source_commit": "4a6757694987261b93df3a7359c38c411c683ba7",
+    "source_tree": "710b0df3c2a689b128a586a47da50b5cfdeb4f6b",
+    "source_handoff_blob": "8c934a49dc2ba08fdc24d2e8993c3a18334529f9",
+    "source_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/matcher-type-repair/PATCH117.diff",
+    "source_matrix": "MATRIX117.md",
+    "typecheck": "NOT_RUN",
+    "CI": "NOT_RUN"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts",
+      "preimage": "83ca43d9785787613daadd26dbb9cd1a5ddbbfb9",
+      "postimage": "6de4bc15cf24cd4bf71671680c56ccc1d3be239c",
+      "source": 117,
+      "diagnostics": "TS2769 14:113, 16:40, 18:54, 27:46",
+      "status": "modified",
+      "additions": 8,
+      "deletions": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "preimage": "31f6297303d1dd1abc204f120a9a859134705f80",
+      "postimage": "fcaa2d108e4ecd24e24c71690ab79cd22c37dca7",
+      "source": 117,
+      "diagnostics": "TS2769 20:77, 27:38, 28:115, 29:74",
+      "status": "modified",
+      "additions": 10,
+      "deletions": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "preimage": "71b947d40374176f225634cddfd4fffcd4dd7061",
+      "postimage": "c5f1305c1b7f10a79cfb11971d3c579978d34d1f",
+      "source": 117,
+      "diagnostics": "TS2769 42:49, 59:18, 65:64, 67:15",
+      "status": "modified",
+      "additions": 9,
+      "deletions": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+      "preimage": "4f5a40d55224203b613bf12cc79f9b01aa8aa104",
+      "postimage": "5d36a44aaf328e2269cfb7107714de46844e7f27",
+      "source": 117,
+      "diagnostics": "TS2769 20:53, 32:31",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+      "preimage": "7013df4178b57b6ea55c55e223749904008095a0",
+      "postimage": "31d4b7f5fccdae89088bfd52e54e8eb6f5ea4dd7",
+      "source": 117,
+      "diagnostics": "TS2769 26:28, 32:28, 36:64, 46:28, 46:38, 55:30, 56:64, 71:64, 88:64",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+      "preimage": "8f0051c478d0ade11b044d95e2928206a008308a",
+      "postimage": "72c260775a2c98289f17b7627427d0b10264a738",
+      "source": 117,
+      "diagnostics": "TS2769 42:88, 42:112",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+      "preimage": "4f268069e082f0ea463a251e7bceb27f4da74700",
+      "postimage": "795a1460353e7612cd3cf5477f0a9f52c5ba8e3b",
+      "source": 117,
+      "diagnostics": "TS2769 70:58, 72:34, 218:80",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts",
+      "preimage": "1cff4b1331ce1a2d1d095b2c54aa6279c2904809",
+      "postimage": "5321c1fa17c9ddf6299364770c28e695b60282de",
+      "source": 117,
+      "diagnostics": "TS2769 33:34",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "preimage": "e2638923ca123b918b99e2cb4e6b703147f7119b",
+      "postimage": "0dabb3896f372ed7932993dc2c5eef9bfd31050e",
+      "source": 117,
+      "diagnostics": "TS2769 40:30",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "preimage": "252b519f6dfaee461323d3b16407fc6f5849e668",
+      "postimage": "f1a257005ef80d4217f14b59a1d6c1860a9efca1",
+      "source": 117,
+      "diagnostics": "TS2769 19:30",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "preimage": "6089391e6aaedcedc2ca2df8d0684ee25d930c94",
+      "postimage": "51ea6e04a53f720b81a9781489371ff281e7839a",
+      "source": 117,
+      "diagnostics": "TS2769 46:39, 147:37",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "preimage": "9a44cca3e2e34f578e7d9d76458a83068371ff44",
+      "postimage": "488ac9b1ba9adbfd130a1f52ac23aeb7d960824d",
+      "source": 117,
+      "diagnostics": "TS2769 99:37, 127:37",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "preimage": "e6d0f3c7f8f2e6cfa19da57de109984bf3c7ada9",
+      "postimage": "0098a065c267101c92054194dd5f0a3548c001b7",
+      "source": 117,
+      "diagnostics": "TS2769 86:42",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+      "preimage": "85874c506608803bb9d3fcd8c3acb87d60200b0d",
+      "postimage": "41bdd6ddfdb0f7a6076014c4c40ccd5892a69a30",
+      "source": 117,
+      "diagnostics": "TS2769 78:42",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 0
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+      "preimage": "8c0a49d4430cce5477da853016805c0981e954b6",
+      "postimage": "7ad663d082c3aedd49e8e96c7d3cee18f79293c9",
+      "source": 117,
+      "diagnostics": "TS2769 33:14, 117:36, 120:60, 129:118",
+      "status": "modified",
+      "additions": 4,
+      "deletions": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "preimage": "2075f8941561098869a175bd460a0a96a60c478f",
+      "postimage": "22e41fcd2066f409f3d4e212a17429e59bebe331",
+      "source": 117,
+      "diagnostics": "TS2769 75:98, 97:39",
+      "status": "modified",
+      "additions": 2,
+      "deletions": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+      "preimage": "cef07dbfcdb48565a71f596a02a4ce46c90ea393",
+      "postimage": "c61e812acd6d5b968a804028caaee7323497ced3",
+      "source": 117,
+      "diagnostics": "TS2769 82:94",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "preimage": "8e1b2776a3d5294e4cf3beb786acc2ed354f41ae",
+      "postimage": "fd8830ff71d67b031b49ccf72dfc313e4693565d",
+      "source": 117,
+      "diagnostics": "TS2769 31:34",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1
+    }
+  ],
+  "patch": "C57-INCREMENTAL.patch",
+  "method": "EXACT_GIT_TREE_18_OF_18_CAS_NO_FORCE",
+  "compilation119": "PENDING",
+  "product120": "PENDING",
+  "nonoverlap": {
+    "scope": "117 only; 118 edits separately assigned test paths",
+    "keptNativeOriginalTest": true,
+    "preimagesVerifiedAgainst_C56": true,
+    "sourcePostimagesVerifiedAgainst_117_tree": true
+  },
+  "invariants": [
+    "no product source/permissions/CI/engine modified",
+    "strict digest/equality/hash/checks retained according to117 matrix, reviewer verification remains required",
+    "no fake PASS for TS2769 before compiler119",
+    "any compiler117 diagnostic must be returned to 117 author",
+    "all legacy C53 C54 C55 C56 receipts remain"
+  ],
+  "gates": {
+    "GLOBAL_RELEASE": false,
+    "C_not_frozen": true,
+    "eight_final_selections": "OPEN",
+    "epic": "OPEN",
+    "AM01_AM06": "OPEN",
+    "G7_G8": "OPEN",
+    "reviewers": "PENDING"
+  }
+}
