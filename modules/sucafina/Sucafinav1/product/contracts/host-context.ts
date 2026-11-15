@@ -11,7 +11,7 @@ import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
 import type { BusinessPorts, PortResult } from "./ports.ts"
 import type { TrustedDomainContext, TrustedExecutionBinding } from "./sf-execution.ts"
 import type { Period } from "./context.ts"
-import type { createCollaborationWorkPort } from "../collaboration/work-port.ts"
+import type { createCollaborationWorkPort, WorkPresentationItem } from "../collaboration/work-port.ts"
 import type { createSfDocumentHost } from "../documents/host.ts"
 import type { createSfRoutineProduct } from "../routines/factory.ts"
 import type { createSfPersonalViews } from "../interface/personal-views.ts"
@@ -19,7 +19,7 @@ import type { ContributionEnvelope } from "./resident-ai.ts"
 import type { SfNativeRunRecord } from "./state.ts"
 import type { TrustedUiContext } from "./sf-execution.ts"
 import type { ForecastExplainInput, SourcingComparisonInput } from "./skill-inputs.ts"
-import type { ForecastCompareRequest } from "./operations.ts"
+import type { ForecastCompareRequest, WorkListRequest } from "./operations.ts"
 import type { MonthlyDraft } from "../planner/monthly-edit.ts"
 import type { View, Result } from "../../runtime/contract.ts"
 import type { runSfAnalysis } from "../ai/analysis-port.ts"
@@ -58,6 +58,19 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
     create: (context: TrustedDomainContext, period: Period) => Promise<PortResult<{ selectionRef: string; label: string; period: Period }>>
   }
   work?: Pick<ReturnType<typeof createCollaborationWorkPort>, "listPresentation">
+  /** Exact C58 human-authorized destination reader and its terminal witness.
+   * Never expose producer authority, a grant factory or its resolver to UI. */
+  workDestinations?: Readonly<{
+    read: (selection: WorkListRequest, actionRef: string, call: TrustedDomainContext) =>
+      Promise<PortResult<{
+        view: Readonly<{
+          item: WorkPresentationItem
+          details: readonly Readonly<{ label: string; value: string }>[]
+          links: readonly Readonly<{ label: string; url: string }>[]
+        }>
+        verify: () => Promise<boolean>
+      }>>
+  }>
   documents?: Pick<ReturnType<typeof createSfDocumentHost>, "resolvePresentation">
   routineRuns?: Pick<ReturnType<typeof createSfRoutineProduct>, "discoverRuns">
   personalViews?: ReturnType<typeof createSfPersonalViews>
@@ -97,6 +110,10 @@ export type CreateSfHostRuntime = (input: {
   sourceRoot: string
   origin: string
   mount: string
+  /** Only the configured identity producer can supply this; never a URL claim. */
+  authMode?: "microsoft" | "local-operator"
+  /** Same original Request; bool only, no person or credential leaves this callback. */
+  isAuthenticated?: (request: Request) => Promise<boolean>
   persistence: Application["persistence"] & SfScopedSourcePort
   /** Installed below source lifecycle; shared by the real C08 and Planner producers. */
   currentChoiceFence?: CurrentChoiceFence

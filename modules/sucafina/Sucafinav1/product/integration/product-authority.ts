@@ -1,6 +1,7 @@
 import type { SessionSchema } from "@orchestra/core/session/schema"
 import type { Application } from "../../runtime/application.ts"
 import { roleMap } from "../../runtime/admin.ts"
+import { dashboardPages, plannerKeys, procurementKeys } from "../../src/nav.ts"
 import { object } from "../../runtime/contract.ts"
 import type { Snapshot } from "../../runtime/contract.ts"
 import type { Surface } from "../../src/identity.ts"
@@ -46,6 +47,7 @@ export function createSfProductAuthority(input: {
   persistence: Application["persistence"]
   authenticate: Application["authenticate"]
   environment: Application["environment"]
+  isAuthenticated?: (request: Request) => Promise<boolean>
   grants: readonly SfProductGrant[]
   createId: () => string
   now: () => number
@@ -261,6 +263,51 @@ export function createSfProductAuthority(input: {
     if (!current?.canWrite || current.principalRef !== actor.principalRef || current.accessRevision !== actor.accessRevision || current.policyVersion !== actor.policyVersion || request.signal.aborted) return []
     return [...actor.grant.humanActions ?? []]
   }
-  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt }
+  /**
+   * Host-private F01 context source. Uses the original Request and the same
+   * guarded principal/role-map resolver as the product state. Returns no grant,
+   * group, role, directory, cookie or source snapshot to the UI.
+   */
+  const readContextAdmission = async (request: Request) => {
+    if (!identity() || request.signal.aborted) return { status: "unavailable", reason: "identity-unavailable" } as const
+    const admitted = await resolve(request).catch(() => undefined)
+    if (!admitted) {
+      if (!input.isAuthenticated) return { status: "unavailable", reason: "host-unavailable" } as const
+      const loggedIn = await input.isAuthenticated(request).catch(() => undefined)
+      if (request.signal.aborted || !identity()) return { status: "unavailable", reason: "contract-mismatch" } as const
+      if (loggedIn === undefined) return { status: "unavailable", reason: "host-unavailable" } as const
+      return loggedIn ? { status: "denied" } as const : { status: "unauthenticated" } as const
+    }
+    const snapshots = input.persistence.currentSnapshots?.()
+    if (!snapshots) return { status: "unavailable", reason: "host-unavailable" } as const
+    const surfacePages = await Promise.all((["dashboard", "planner", "procurement"] as const).map(async (surface) => {
+      const snapshot = snapshots[surface]
+      const real = await input.authenticate(request, { surface, roleMap: roleMap(snapshot, surface) })
+      if (!real) return [] as readonly { surface: Surface; page: string }[]
+      if (real.id !== admitted.principalRef || request.signal.aborted) throw new Error("SF_F01_PRINCIPAL_CHANGED")
+      const roles = real.roles.filter((role) => role.surface === surface).map((role) => role.role)
+      const summaries = Array.isArray(snapshot.data.summaries)
+        ? snapshot.data.summaries.filter((value): value is string => typeof value === "string") : []
+      const allowed = surface === "dashboard" ? dashboardPages({ roles }, summaries) :
+        surface === "planner" ? plannerKeys({ roles }) : procurementKeys({ roles })
+      return allowed.map((page) => ({ surface, page }))
+    })).catch(() => undefined)
+    if (!surfacePages || request.signal.aborted) return { status: "unavailable", reason: "contract-mismatch" } as const
+    const current = await resolve(request).catch(() => undefined)
+    if (!current || current.principalRef !== admitted.principalRef ||
+      current.policyVersion !== admitted.policyVersion || current.accessRevision !== admitted.accessRevision ||
+      digestSfValue(current.identity) !== digestSfValue(admitted.identity) || request.signal.aborted)
+      return { status: "unavailable", reason: "contract-mismatch" } as const
+    return {
+      status: "ok" as const,
+      stamp: {
+        installationId: current.identity.installationId, projectId: current.identity.projectId,
+        hostId: current.identity.hostId, principalRef: current.principalRef,
+        policyVersion: current.policyVersion, accessRevision: current.accessRevision,
+      },
+      pages: surfacePages.flat(),
+    }
+  }
+  return { state, ui, human, humanActions, native, authority, host, creationTarget, nativeEvidenceWrites, authorizeNative, authorizeInterrupt, readContextAdmission }
 }
 

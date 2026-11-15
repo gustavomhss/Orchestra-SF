@@ -139,7 +139,9 @@ export async function createConfiguredInstallation(
   const installationId = operator?.installationId ?? digestSfValue({ origin: config.origin, mount: config.mount, directory: loaded.directory })
   const assets = { persistence: store, services: { signingKey: loaded.keys.assets, scan: (bytes: Uint8Array) => scanLocalFile(bytes, config.scanner) } }
   runtime = await context.createHostRuntime?.({ installationId, directory: microsoft?.workspaceDirectory ?? loaded.directory, sourceRoot: path.resolve(import.meta.dir, "../product/ai"), origin: config.origin,
-    mount: config.mount, persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
+    mount: config.mount, authMode: operator ? "local-operator" : "microsoft",
+    isAuthenticated: async (request: Request) => Boolean(await identity.person(request)),
+    persistence: store, currentChoiceFence, authenticate: identity.authenticate, environment: requestEnvironment, assets,
     grants: microsoft?.grants ?? (operator ? [{ principalRef: `macos:${operator.installationId}:${operator.uid}`,
       namespaces: ["preferences", "reviews", "relations", "threads", "confirmations", "cases", "contributions", "documents", "receipts", "atlas", "outbox", "bi-artifacts"],
       operations: freeze.operations.map((operation) => operation.operation), humanActions: sfHumanActions }] : []) })

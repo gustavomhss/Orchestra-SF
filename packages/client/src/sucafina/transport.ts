@@ -130,6 +130,16 @@ export function createSfTransport(options: Readonly<{
         // Auth and global discovery have their own canonical SDK/navigation.
         return failure("contract-unavailable")
       }
+      // A stale GET registry must never serialize private search text as URL q,
+      // even when a caller bypasses createSfWorkClient.
+      if (operation.operationId === "projection.search" &&
+          (metadata.method !== "POST" || metadata.effect !== "read" ||
+           metadata.responseMode !== "json" ||
+           metadata.pathTemplate !== "{mount}/api/ui/projections/search" ||
+           !("maxRequestBytes" in metadata) || metadata.maxRequestBytes !== 4096 ||
+           "fixedQuery" in metadata || "fixedBodyDiscriminator" in metadata)) {
+        return failure("contract-unavailable")
+      }
       const codec = options.operations[operation.operationId]
       if (!codec) return failure("contract-unavailable")
       const parsedInput = Schema.decodeUnknownOption(operation.input)(input)

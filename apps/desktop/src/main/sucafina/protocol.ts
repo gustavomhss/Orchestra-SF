@@ -47,6 +47,16 @@ export function planSfOperation(input: Readonly<{
   const codec = input.operations[operationId]
   if (!meta || !codec || meta.effect === "authentication" || meta.responseMode === "navigation"
     || operationId === "ctx.installations") return { status: "contract-unavailable" }
+  // IPC callers are not trusted to use the browser work-client wrapper.
+  // Do not construct a URI until the private bounded POST-read is installed.
+  if (operationId === "projection.search" &&
+      (meta.method !== "POST" || meta.effect !== "read" ||
+       meta.responseMode !== "json" ||
+       meta.pathTemplate !== "{mount}/api/ui/projections/search" ||
+       meta.maxRequestBytes !== 4096 || meta.fixedQuery !== undefined ||
+       meta.fixedBodyDiscriminator !== undefined)) {
+    return { status: "contract-unavailable" }
+  }
   let decoded
   try { decoded = codec.decodeInput(input.request.input) } catch { return { status: "invalid-response" } }
   if (decoded.status !== "ok") return { status: "invalid-response" }

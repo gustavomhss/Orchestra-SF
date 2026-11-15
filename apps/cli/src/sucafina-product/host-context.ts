@@ -84,6 +84,7 @@ import { sfHumanReadActions } from "../../../../modules/sucafina/Sucafinav1/prod
 import { createSfProductContribution, createSfProductDispatch } from "./contribution.ts"
 import { createSfTokenGate } from "./token-gate.ts"
 import { createSfNativeHostContribution } from "./native-host.ts"
+import { createSfLiveContext, sfContextDestinationsFromPages } from "./native-ui/live-context.ts"
 import { sfNativeLocationRef, sfNativeModelRef } from "./native-identity.ts"
 import { createSfNativeExecution } from "./native-execution.ts"
 import type { SfStoppedRun } from "./native-execution.ts"
@@ -883,8 +884,21 @@ export const createSfHostRuntimeWithRoutineNative = async (
       choices: (request) => readSfImportAnalysisChoices(request, services) } : undefined })
   const creationRecoveryHttp = createSfCreationRecoveryHttp({ origin: input.origin, mount: input.mount,
     runtime: () => identity() ? { ui: authority.ui, recoverCreation: business.cases.recoverCreation } : undefined })
-  const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
-    procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
+  // 162-only composition. A live source must re-admit the same original Request;
+  // missing operation probes remain explicitly unavailable (never catalog-ready).
+  const nativeUiProducts = createSfLiveContext({
+    origin: input.origin, mount: input.mount, currentBinding: identity,
+    admit: async (request) => {
+      const admitted = await authority.readContextAdmission(request)
+      if (admitted.status !== "ok") return admitted
+      if (!input.authMode) return { status: "unavailable", reason: "host-unavailable" } as const
+      const destinations = sfContextDestinationsFromPages(admitted.pages)
+      if (!destinations) return { status: "unavailable", reason: "contract-mismatch" } as const
+      return { status: "ok", stamp: admitted.stamp, authMode: input.authMode, destinations } as const
+    },
+  })
+  const services: SfHostServices & { productHtml: SfProductHtml; nativeUiProducts: typeof nativeUiProducts } = { ...authority, nativeUiProducts, productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
+    procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work, workDestinations: { read: workDestinations.read },
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
     routineRuns: { discoverRuns: async (context) =>
       context.kind !== "ui" || !nativeRoutineProducer ? routineServices.routineRuns.discoverRuns(context)

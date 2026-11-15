@@ -300,7 +300,7 @@ export const SfOperationRegistry = Object.freeze({
   "projection.residents": {"method":"GET","pathTemplate":"{mount}/api/ui/projections/residents","effect":"read","responseMode":"json"},
   "projection.review": {"method":"GET","pathTemplate":"{mount}/api/ui/projections/review","effect":"read","responseMode":"json"},
   "projection.routine": {"method":"GET","pathTemplate":"{mount}/api/ui/projections/routine","effect":"read","responseMode":"json"},
-  "projection.search": {"method":"GET","pathTemplate":"{mount}/api/ui/projections/search","effect":"read","responseMode":"json"},
+  "projection.search": {"method":"POST","pathTemplate":"{mount}/api/ui/projections/search","effect":"read","responseMode":"json","maxRequestBytes":4096},
   "projection.work": {"method":"GET","pathTemplate":"{mount}/api/ui/projections/work","effect":"read","responseMode":"json"},
   "projection.work-item": {"method":"GET","pathTemplate":"{mount}/api/ui/projections/work-item","effect":"read","responseMode":"json"},
   "projection.work-selection": {"method":"GET","pathTemplate":"{mount}/api/ui/projections/work-selection","effect":"read","responseMode":"json"},
