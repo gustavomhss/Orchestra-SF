@@ -74,7 +74,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
       </table>
     </div>
   }
-  return <SfPageFrame titleKey={key("sf.cap01.title")} context={[]} tabs={[]} activeTab={null}
+  return <SfPageFrame titleKey={key("sf.cap01.title")} context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       density="comfortable" layout="reading" onLayoutMode={() => {}}>
     <div class="sf-u02-page" data-sf-surface="CAP01">
       <SfStatePanel state={reader.state()} messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[reader.state()])}
@@ -174,7 +174,7 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
                 </tr>}</For></tbody></table></div>
           </Show>
         </section>
-        <Show when={year() !== undefined && month() !== undefined && reader.owner()}>
+        <Show when={year() !== undefined && month() !== undefined ? reader.owner() : undefined}>
           {(ready) => <section class="sf-u02-section" aria-labelledby="sf-u02-inputs">
             <h2 id="sf-u02-inputs">{t(key("sf.u02.inputs"))}</h2>
             <div class="sf-u02-edit-grid">
