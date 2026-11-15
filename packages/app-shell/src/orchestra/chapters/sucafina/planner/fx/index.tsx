@@ -272,13 +272,13 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       if (intent.kind === "delete") {
         const input = {
           page: "FX rates", action: "delete", version: intent.version,
-          id: intent.id ?? undefined, values: { versionId },
+          ...(intent.id ? { id: intent.id } : {}), values: { versionId },
         } as const
         return { input, call: () => client["domain.command.CAP22.delete"](input, options) }
       }
       const input = {
         page: "FX rates", action: "save", version: intent.version,
-        id: intent.id ?? undefined,
+        ...(intent.id ? { id: intent.id } : {}),
         values: { versionId, cur: value?.cur, rate: value?.rate },
       } as const
       return { input, call: () => client["domain.command.CAP22.save"](input, options) }
