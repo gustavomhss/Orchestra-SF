@@ -1,8 +1,8 @@
 {
   "schema": "sf2h.m79.handoff.v1",
   "mission": 79,
-  "state": "READY_FOR_OWNER_INTAKE_SCOPED_PASS",
-  "recorded_at": "2026-11-15 04:30:55 UTC",
+  "state": "TERMINAL_HANDOFF_DELIVERED_SCOPED_PASS",
+  "recorded_at": "2026-11-15 04:34:51 UTC",
   "branch": "http-post-diagnosis",
   "pr": 89,
   "base_C34": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
@@ -27,7 +27,7 @@
     "stack_integrator": 71,
     "checks": 45,
     "source79": "fixtures and receipts only",
-    "own_writer_terminal": "No further writes to production or consumer branches. Terminal diagnostics handoff; owner ACK remains pending."
+    "own_writer_terminal": "Implementation authority79 ended; complete diagnostic and proposal unit released to74/71. No further implementation writes or runs planned; ACK and adoption remain pending."
   },
   "delivery": {
     "cause": "CAUSE.json",
@@ -83,5 +83,20 @@
     "sha": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
     "installation_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
     "observation": "Immutable head from PR89 metadata; installation fetched at that exact SHA. The shared target may advance."
-  }
+  },
+  "repo_handoffs": {
+    "to74": {
+      "pr": 85,
+      "comment_id": 6889216421,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/85#issuecomment-6889216421",
+      "status": "POSTED_ACK_PENDING"
+    },
+    "to71": {
+      "pr": 65,
+      "comment_id": 6889219555,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889219555",
+      "status": "POSTED_ACK_PENDING"
+    }
+  },
+  "delivery_envelope": "DELIVERY-ENVELOPE.json"
 }

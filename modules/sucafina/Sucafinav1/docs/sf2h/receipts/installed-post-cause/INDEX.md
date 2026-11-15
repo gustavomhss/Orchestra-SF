@@ -1,16 +1,16 @@
-# Missão79 — índice da entrega
+# Missão 79 — POST instalado
 
-Estado atual: **causa demonstrada; V2 SCOPED_PASS; intake74/71 e checks45 pendentes**.
+**Causa demonstrada; proposta qualificada; handoff terminal entregue.**
 
-- [Handoff completo e resultados](HANDOFF.md)
-- [Causa e fontes fixadas](CAUSE.json)
-- [Resultado funcional11/0](evidence/V2-RESULTS.json)
-- [Manifesto do overlay11paths](VALIDATION-V2.json)
-- [Patch/pre-post completo para74](fix-proposal/MANIFEST.json)
-- [Handoff74/71](HANDOFF-74-71.json)
-- [Autoridade terminal79](TERMINAL79.json)
-- [Critérios e limites](CRITERIA-TRACE.json)
-- [Revisões](REVIEWS.json)
-- [Compiler/guards45](checks/REQUEST-45.json)
+- [Handoff legível](HANDOFF.md) — causa, fronteiras, regressão e intake.
+- [Causa e controles pareados](CAUSE.json).
+- [Proposta completa, pre/postimages e dependências](fix-proposal/MANIFEST.json).
+- [Composição V2 executada](VALIDATION-V2.json).
+- [Resultados finais e hashes dos logs](evidence/V2-RESULTS.json).
+- [Observações estruturadas](evidence/v2-observations.ndjson).
+- [Handoff 74/71](HANDOFF-74-71.json) e [autoridade terminal](TERMINAL79.json).
+- [Envelope final de entrega](DELIVERY-ENVELOPE.json).
+- [Pedido de compiler/guards à45](checks/REQUEST-45.json).
+- [Revisões](REVIEWS.json) e [critérios existentes](CRITERIA-TRACE.json).
 
-Os planos BASELINE-PLAN e VALIDATION-V1 são históricos. A atribuição inicial ao EOF do Node foi refutada; CAUSE.json é a conclusão atual. W contém somente artefatos/fixtures79. O PASS pertence ao V/S identificado, e não a um W com transporteC34 nem ao stack integrado.
+11 PASS / 0 FAIL, 333 asserções, 2,97 s no run43675862594. Adoção74, integração71, checks45 e jornadas consumidoras permanecem pendentes. **GLOBAL_RELEASE=false.**

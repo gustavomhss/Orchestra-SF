@@ -35,5 +35,13 @@
   "dedup_key": "candidate tree + full TypeScript program/config + commands + resolved base; V1 andV2 are not equivalent",
   "observed_capability": "The scoped compiler interface was absent at owner pin;79 did not create a workflow, use another lane, or run local checks.",
   "generation": "No Protocol or HttpApi change; generate gate not triggered.",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "delivery_envelope": "../DELIVERY-ENVELOPE.json",
+  "delivery_guard": {
+    "command": "bun run check:guards --base origin/dev",
+    "directory": ".",
+    "state": "REQUESTED_NOT_RUN",
+    "target": "Exact final commit containing this terminal envelope; immutable delivery SHA is sent to PR32 after CAS.",
+    "policy": "Keep compiler on exact V2/composed equivalent and separately evaluate required document-envelope guards. Deduplicate by source/tree/program/config/commands/resolved base. No extra lane created."
+  }
 }

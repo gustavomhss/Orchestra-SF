@@ -86,7 +86,7 @@
     "request_blob": "4f5cfd4317f39aa85eca511913364a4282d3bb75",
     "body_blob": "3b759f0981c34f88c6527ff16e3841e4e0248a9d",
     "steps": [
-      "Request.checkBodyStreamRef stores the readable stream in js.gc.stream and clears native Locked.readable(581-591); every constructor calls it(873).",
+      "Request.checkBodyStreamRef stores the readable stream in js.gc.stream and clears native Locked.readable(581-591); the URL/init construction path calls it(873).",
       "Request(existing, initObject) copies native #body.value using clone(691-696) without forwarding the relocated stream; Request(existing) uses cloneInto(640-660), which reads js.gc.stream and calls cloneWithReadableStream(1039-1049).",
       "Body.Value.clone delegates to cloneWithReadableStream with no supplied stream(1082-1090). A Locked body enters tee; absent the original readable/onStartStreaming producer, its fallback creates a ByteStream(998-1077), matching the observed pending zero-byte reader."
     ],

@@ -21,5 +21,25 @@
     }
   ],
   "not_final_campaign_three_reviews": true,
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "delivery_audit": {
+    "reviewer": "ingress_source_review",
+    "commit": {
+      "sha": "3c16967289520c36f3343b0159cedf47d850ce1b",
+      "tree": "96be2fd542449744c24cf36b0190e80cb9aedaa6"
+    },
+    "parent": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+    "result": "Exactly15 docs in own receipt prefix; four fixtures and proposed installation34d74d unchanged.",
+    "limits_confirmed": [
+      "V2/S2 qualification, not uninstrumentedW",
+      "No global/browser/native/provider claim",
+      "45 REQUESTED_NOT_RUN",
+      "Defective cancellation promise pending",
+      "Already-closed construction fallback statically reviewed only"
+    ],
+    "finding": "CAUSE step0 said every constructor called checkBodyStreamRef at873, although one-argument Request returns through cloneInto earlier.",
+    "correction": "Limit the statement to the URL/init construction path. Applied in this documentation-only terminal envelope; no source, test, proposal or qualification change.",
+    "local_tests": "NOT_RUN",
+    "github_writes_by_reviewer": false
+  }
 }

@@ -1,8 +1,8 @@
 {
   "schema": "sf2h.m79.terminal.v1",
   "mission": 79,
-  "state": "TERMINAL_HANDOFF_READY_SCOPED_PASS",
-  "recorded_at": "2026-11-15 04:30:55 UTC",
+  "state": "TERMINAL_HANDOFF_DELIVERED_SCOPED_PASS",
+  "recorded_at": "2026-11-15 04:34:51 UTC",
   "campaign": "sf2h-integral-20261112",
   "T0": "2026-11-13T04:01:10Z",
   "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
@@ -15,11 +15,12 @@
   "lease_epoch": "http-post-cause-browser79",
   "authority": {
     "implementation": "TERMINAL_RELEASED",
-    "permitted_final_writes": "Delivery metadata only",
+    "permitted_final_writes": "NONE_AFTER_THIS_TERMINAL_RECEIPT",
     "production_writer": 74,
     "integrator": 71,
     "compiler_guards": 45,
-    "owner_ack": "PENDING"
+    "owner_ack": "PENDING",
+    "ongoing_implementation79": false
   },
   "outcome": {
     "cause": "DEMONSTRATED_ON_PINNED_RUNTIME",
@@ -91,5 +92,20 @@
     }
   ],
   "guards_on_delivery_envelope": "REQUESTED_NOT_RUN /45; exact delivery SHA recorded in final delivery envelope",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "handoffs": {
+    "to74": {
+      "pr": 85,
+      "comment_id": 6889216421,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/85#issuecomment-6889216421",
+      "status": "POSTED_ACK_PENDING"
+    },
+    "to71": {
+      "pr": 65,
+      "comment_id": 6889219555,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6889219555",
+      "status": "POSTED_ACK_PENDING"
+    }
+  },
+  "delivery_envelope": "DELIVERY-ENVELOPE.json"
 }
