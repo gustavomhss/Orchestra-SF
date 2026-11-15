@@ -1,0 +1,59 @@
+{
+  "schema": "sf2h.integration132.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 132,
+  "logical_actor": "S0-C/C00/I00 unique successor125",
+  "effective_model": "GPT-6",
+  "actual_actor": "ChatGPT fresh session for mission132",
+  "runtime_session_id": null,
+  "runtime_session_id_reason": "Not exposed by the active connector",
+  "epoch": "S0-C-e19-browser132",
+  "state": "ACTIVE_USER_APPOINTED",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "pr_state": "OPEN_DRAFT",
+  "initial_head": "0a1bf8009bbfc6f0fb2693c29701f835419c3c4a",
+  "initial_tree": "8e6afb71701b729f4270446b0c201b370e20a2d1",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after125-132/S0-FENCE.json",
+  "fence_blob": "a9e06598c464998c1e47b2747cc1cd378d02df73",
+  "predecessor": {
+    "mission": 125,
+    "epoch": "S0-C-e18-browser125",
+    "future_writes": "REVOKED_BY_S0",
+    "runtime_termination_verified": false,
+    "old_delivered_artifacts": "HISTORICAL_INTAKE_ONLY",
+    "unexpected_writes": "STOP_AND_RECONCILE"
+  },
+  "pinned_inputs": {
+    "mission": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/132.json@40d425d6727dd9672a1f2a5830da03e59252cdfd",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "predecessor_checkpoint": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/CHECKPOINT-125-C64.json@a15434ab558a650137f2472c7d59e6ae1e98e72a",
+    "material_C64": "8f933d3249f49e1234b745036672d7c7a6aabcd4"
+  },
+  "authority": {
+    "single_integrator": true,
+    "shared": "I00 only",
+    "source_protected": "133-142 and packet protected_paths",
+    "compiler": 128,
+    "ci": 129
+  },
+  "prohibition": {
+    "force": false,
+    "reset": false,
+    "dev_merge": false,
+    "deploy": false,
+    "new_dispatcher": false,
+    "local_tests": false,
+    "goal_paused": true
+  },
+  "proof": {
+    "head_match": true,
+    "fence_read": true,
+    "predecessor_runtime_termination": "NOT_VERIFIED",
+    "product_qualification": "NOT_RUN_AT_ACK",
+    "release": false
+  },
+  "next": "Integrate released authorized source blobs and native consumers, not inventory-only; inspect source/consumer preimages before Git Data CAS writes."
+}
