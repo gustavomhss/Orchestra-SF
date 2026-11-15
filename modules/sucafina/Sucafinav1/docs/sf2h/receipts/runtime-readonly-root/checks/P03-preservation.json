@@ -26,6 +26,8 @@
     "anchor_swap": "NOT_APPLIED"
   },
   "original_semantics": "240000 baseline; omitted training 210000 and selected-minus-baseline -30000; confirmed 40000 training yields250000 and +10000. Both original rules, all ChoiceRecord/history/replay/revocation assertions and full fixture preserved byte-for-byte.",
-  "retry_state": "NOT_REQUESTED_UNTIL_R1_SAFETY_AND_STRUCTURAL_BENEFIT_PASS",
-  "GLOBAL_RELEASE": false
+  "retry_state": "QUALIFIED_AFTER_R2_130_PASS_AND_MEASURED_MATERIAL_CHANGE",
+  "GLOBAL_RELEASE": false,
+  "qualification": "../findings/MATERIAL-QUALIFICATION.json",
+  "proof": "Byte-identical original file fetched again at W2; 72 expect lines; original 180000ms declaration unchanged"
 }

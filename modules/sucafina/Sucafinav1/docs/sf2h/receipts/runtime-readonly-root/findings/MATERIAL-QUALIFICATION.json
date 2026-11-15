@@ -1,0 +1,160 @@
+{
+  "schema": "sf2h.runtime-readonly-root.material-qualification.v1",
+  "mission": 59,
+  "state": "QUALIFIED_SAFE_MATERIAL_CHANGE_FOR_ONE_ORIGINAL_P03",
+  "W": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+  "tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+  "source_tests": {
+    "run": 43665988509,
+    "pass": 130,
+    "fail": 0,
+    "expect_calls": 25064,
+    "files": 15,
+    "new_cases": 64,
+    "existing_regression_cases": 66
+  },
+  "composition": "Same real SQLite driver and real createSfSourcePersistence(createCurrentChoiceFence(driver)); legacy view omits only optional readSnapshotRoot property; no guard mocks.",
+  "equivalent_work": {
+    "callbacks": 25,
+    "nested": {
+      "dashboard": 12,
+      "planner": 6,
+      "procurement": 6
+    },
+    "observations": 6,
+    "consumedRows": {
+      "dashboard": 2880,
+      "planner": 1920,
+      "procurement": 1920
+    },
+    "digest": 8329440,
+    "order": "4251558a1da56a05ed819d58553863913c6ce219ab7952e8f88a26186f896532",
+    "metrics": {
+      "snapshots": 9,
+      "authorizations": 27,
+      "revalidations": 27,
+      "transactions": {
+        "dashboard": 13,
+        "planner": 6,
+        "procurement": 6
+      },
+      "callbacks": {
+        "dashboard": 13,
+        "planner": 6,
+        "procurement": 6
+      },
+      "events": "8e23912be41935178630d3065d987fa0c32efd9a427bcafe7ec7c904c48c6285"
+    }
+  },
+  "structural": {
+    "legacy": {
+      "descriptors": 21582,
+      "markedObjects": {
+        "dashboard": 10560,
+        "planner": 0,
+        "procurement": 0
+      },
+      "parseCalls": 120,
+      "parseCharacters": 2607840,
+      "wireParses": 0
+    },
+    "capability": {
+      "descriptors": 0,
+      "markedObjects": {
+        "dashboard": 0,
+        "planner": 0,
+        "procurement": 0
+      },
+      "parseCalls": 186,
+      "parseCharacters": 4042152,
+      "wireParses": 0
+    }
+  },
+  "timing": {
+    "legacy": {
+      "samples": [
+        61.767202,
+        65.73564599999997,
+        63.72601199999997,
+        62.395174999999995
+      ],
+      "min": 61.767202,
+      "median": 63.06059349999998,
+      "max": 65.73564599999997
+    },
+    "capability": {
+      "samples": [
+        52.94714099999999,
+        50.213212999999996,
+        51.35737000000006,
+        49.640748999999914
+      ],
+      "min": 49.640748999999914,
+      "median": 50.78529150000003,
+      "max": 52.94714099999999
+    },
+    "descriptive_median_reduction_percent": 19.465884031046986,
+    "samples": [
+      {
+        "variant": "legacy",
+        "elapsedMs": 61.767202
+      },
+      {
+        "variant": "capability",
+        "elapsedMs": 52.94714099999999
+      },
+      {
+        "variant": "capability",
+        "elapsedMs": 50.213212999999996
+      },
+      {
+        "variant": "legacy",
+        "elapsedMs": 65.73564599999997
+      },
+      {
+        "variant": "legacy",
+        "elapsedMs": 63.72601199999997
+      },
+      {
+        "variant": "capability",
+        "elapsedMs": 51.35737000000006
+      },
+      {
+        "variant": "capability",
+        "elapsedMs": 49.640748999999914
+      },
+      {
+        "variant": "legacy",
+        "elapsedMs": 62.395174999999995
+      }
+    ]
+  },
+  "finding": "The measured inner workload removes all 21,582 descriptor traversals (including 10,560 marked Dashboard objects), at the cost of 66 additional JSON parses and 1,434,312 additional parsed string characters. Identical consumed data, copy mutation checks, callback/observation/authorization/revalidation counts and event digests passed. Native uninstrumented timings favored capability in all four AB/BA pairs. This qualifies a material change; it does not prove a P03 latency improvement.",
+  "SQL_guards": {
+    "freshness": "Fresh SQL correctness across another connection, equal-length replacement, deletion and corrupt unrequested snapshots passed.",
+    "sources": "All three canonical surface guards, partial metadata, record/scope corruption, Dashboard anchor, installation/project/lease/request drift and publication fences passed.",
+    "measurement_limit": "SQL query count was not instrumented. Existing three SELECTs and order were inspected statically. No claim of measured SQL count or reduced authorization work."
+  },
+  "memory": {
+    "shared_memo": "<=3 plans and 8,388,608 UTF-16 units (16 MiB string content)",
+    "retained_root": "Only initial memo-hit factories; at most one additional initial-memo string budget through replacement; nested roots reject and poison before admission; finally clears scope references",
+    "limits": "No claim of total heap bound, peak allocation reduction, bounded caller-retained copies or changed 128-depth/200000-node/4096-undefined-path thresholds."
+  },
+  "P03": {
+    "decision": "One retry authorized by mission59 after this actual safety/material proof",
+    "file_blob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "assertions": 72,
+    "deadline_ms": 180000,
+    "fixture_change": false,
+    "analysis54_unchanged": true,
+    "runtime56_preserved": true,
+    "result": "NOT_RUN_AT_THIS_QUALIFICATION"
+  },
+  "limits": [
+    "One hosted runner, four AB/BA pairs, descriptive timing only; no elapsed-time/ratio assertion, heap estimate, P03 result or clone-only CPU claim. Structural probe excludes root admission and final publication, keeps real wrappers, and is restored before reporting.",
+    "Source conformance PASS is not compiler/guard gate45 or GLOBAL_RELEASE.",
+    "Historical C27/58 P03 failure is preserved; currentSnapshots667ms was not attributed as dominant.",
+    "No anchor swap, opaque callback projection, observation/auth/replay removal, mutable-path rewrite or second store."
+  ],
+  "GLOBAL_RELEASE": false
+}
