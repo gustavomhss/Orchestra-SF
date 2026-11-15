@@ -120,7 +120,11 @@ async function privateSearchBody(request: Request): Promise<{ q: string } | unde
     const bytes = new Uint8Array(total)
     let offset = 0
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength }
-    const parsed: unknown = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))
+    const json = new TextDecoder("utf-8", { fatal: true }).decode(bytes)
+    // Exactly one literal q property: reject duplicate JSON keys before JSON.parse
+    // can silently select the last value. The bounded UTF-8 decoder is strict.
+    if (!/^\s*\{\s*"q"\s*:\s*"(?:\\.|[^"\\])*"\s*\}\s*$/.test(json)) return undefined
+    const parsed: unknown = JSON.parse(json)
     if (!parsed || typeof parsed !== "object" || Array.isArray(parsed) ||
       Object.keys(parsed).length !== 1 || !Object.hasOwn(parsed, "q")) return undefined
     const q = (parsed as { q: unknown }).q

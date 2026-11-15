@@ -308,6 +308,7 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
       new Request(url, { method: "POST", headers: { ...headers, "Content-Type": "text/plain" }, body: JSON.stringify({ q: "private" }) }),
       new Request(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ q: "private" }) }),
       new Request(url, { method: "POST", headers, body: JSON.stringify({ q: "private", owner: "admin" }) }),
+      new Request(url, { method: "POST", headers, body: '{"q":"first","q":"second"}' }),
       new Request(url, { method: "POST", headers, body: JSON.stringify({ q: " " }) }),
       new Request(url, { method: "POST", headers, body: "{" }),
       new Request(url, { method: "POST", headers, body: JSON.stringify({ q: "a".repeat(5000) }) }),
