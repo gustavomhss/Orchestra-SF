@@ -1,0 +1,48 @@
+{
+  "schema": "sf2h.native-ui.successor-ack.v1",
+  "mission_id": "UX20-W09-R2",
+  "seat": "W09",
+  "output": "S04",
+  "authority": "explicit-user-successor-and-S0-e2-fence",
+  "actor": {
+    "model": "GPT-6",
+    "requested_label": "Astra",
+    "effective_model": "GPT-6",
+    "runtime_session_id": null,
+    "runtime_session_id_reason": "not exposed by this ChatGPT runtime",
+    "github_identity": "gustavomhss"
+  },
+  "epoch": "ux-native-w09-e2",
+  "previous_epoch": "ux-native-w09-e1",
+  "previous_epoch_acceptance": "revoked for future integration",
+  "branch": "sf-ux-w09",
+  "pr": 118,
+  "expected_input_head": "296a851f4fbe54660cad5d0c24a0bda8cba5a02c",
+  "input_tree": "db5384ffba402ee979f94da27d705545fef525c2",
+  "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/S0-FENCE-e2.json",
+  "fence_verified": true,
+  "head_verified": true,
+  "prior_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/HANDOFF-PREAUTH.md",
+  "scope": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s04.ts",
+    "packages/app-shell/test-browser/sucafina-native/s04.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W09/**"
+  ],
+  "authoring_admission": "S0_e2_exclusive_leaf_authoring_granted",
+  "integrator": "114 / S0-C-e17-browser114",
+  "compiler": "119",
+  "hosted_validation": "120",
+  "source": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "frozen_component_signature_blob": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "staged_manifest_blob": "e82659959ce903383710422ae9fa1e3fd3d0e19d"
+  },
+  "state": "ACKED_AUTHORING_E2",
+  "product_tests": "NOT_RUN",
+  "validation": "NOT_RUN",
+  "global_release": false
+}
