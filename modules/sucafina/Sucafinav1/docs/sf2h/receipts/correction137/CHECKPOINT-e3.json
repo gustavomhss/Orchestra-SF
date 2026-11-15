@@ -1,0 +1,89 @@
+{
+  "schema": "sf2h.correction-author-checkpoint.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 137,
+  "epoch": "ux-native-w03-e3",
+  "order": "F02",
+  "branch": "sf-ux-w03",
+  "pr": 122,
+  "source_head_before_checkpoint": "d599961f3a44385ce12078c7d2d80be4bc070f71",
+  "source_tree_before_checkpoint": "e9e4405b53d565556d1fd35120e772f51844645d",
+  "state": "ARTIFACT_READY_CORRECTION_ONLY",
+  "integrated": false,
+  "qualified": false,
+  "global_release": false,
+  "native_goal": "paused",
+  "authority": {
+    "actor": "fresh ChatGPT GPT-6 session 137",
+    "session_id": null,
+    "fence": "f7e11ba51a2a1d200f28cfd9e0ba3b5410d09cf5",
+    "ack": "071ffb525b4b5466229b8ed44c8a9d5d1bbdc1ed",
+    "epoch": "ux-native-w03-e3",
+    "predecessor_future_write_authority": "REVOKED",
+    "no_second_writer": true
+  },
+  "remote_commits": {
+    "ack": "071ffb525b4b5466229b8ed44c8a9d5d1bbdc1ed",
+    "fix": "ab83adc9493bd49621889b33f52cb6a2b55b7278",
+    "handoff": "d599961f3a44385ce12078c7d2d80be4bc070f71"
+  },
+  "postimages": {
+    "apps/cli/src/sucafina-product/native-ui/router.ts": "17db52d914ca49934953e1161461b03856eb29c5",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts": "0789f34911cd97d82a870dcee2f17fa37c8b4578"
+  },
+  "preimages": {
+    "apps/cli/src/sucafina-product/native-ui/router.ts": "860d44eb7c215aafe05eba0df265a721c563c148",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts": "7fe06cad2bff509039e1a093bbd6224d2fd2c262"
+  },
+  "source_artifacts": {
+    "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/PATCH-137-e3.patch",
+    "patch_blob": "86f69773856f2d548bc2fe8cc82c09ac3e377762",
+    "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/SOURCE-MANIFEST-e3.json",
+    "manifest_blob": "be9b4ea38cde34edfa2aa1083d54850de570fb81",
+    "handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction137/HANDOFF-e3.md",
+    "handoff_blob": "03eded11e062ac4e65ecb4793bad5b3923041536"
+  },
+  "pr_state": {
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/122",
+    "state": "open",
+    "draft": true,
+    "body_updated_with_e3": true,
+    "base": "sf2-stack"
+  },
+  "routed_handoff": {
+    "target_pr": 65,
+    "comment_id": 6900531838,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6900531838",
+    "communication": "COMMENT_PUBLISHED",
+    "consumer_ack": "NOT_RECEIVED",
+    "consumer_head_observed": "fc8840207377a363d4e6844aab496b4f1521f83c",
+    "consumer_preimages_match": true,
+    "no_shared_write": true
+  },
+  "checks": {
+    "local_tests": "NOT_RUN",
+    "hosted_product_CI_new_source": "NOT_RUN",
+    "hosted_compiler_new_source": "NOT_RUN",
+    "sdk_generation_new_source": "NOT_RUN",
+    "guards_new_source": "NOT_RUN",
+    "c64_historical_compiler": "FAIL_TS2339_NOT_TRANSFERABLE",
+    "uncertainty": "Must be executed by 128/129 after 132 accepts coherent C"
+  },
+  "next_actor_actions": [
+    "132 verify current sf2-stack head and both preimages, apply exact patch only by CAS, publish actual source→consumer ACK",
+    "128 run hosted apps/cli typecheck and directed compiler/SDK dependencies after coherent integration; avoid duplicate job",
+    "129 run exact transport.test.ts surgical hosted selection on same C; publish real run ID/exit/evidence"
+  ],
+  "prohibited_actions_taken": {
+    "local_test": false,
+    "dispatcher": false,
+    "generated_edit": false,
+    "shared_write": false,
+    "reset": false,
+    "force": false,
+    "merge": false,
+    "deploy": false,
+    "goal_restart": false
+  },
+  "prior_artifacts_preserved": true
+}
