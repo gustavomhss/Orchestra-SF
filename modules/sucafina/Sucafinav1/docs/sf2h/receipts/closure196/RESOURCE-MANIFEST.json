@@ -1,0 +1,1403 @@
+{
+  "schema": "sf2h.closure196.external-resource-manifest.v1",
+  "epoch": "native-closure-e1-browser196",
+  "candidateHeadAtAuthoring": "c3029825a32809ca42e7cfdab0483b05331fa633",
+  "productIntegratedBase": "6607c60d2a2be183d59c2e929b3ff06633e1cb54",
+  "canonicalManifestBlob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+  "mission": 196,
+  "GLOBAL_RELEASE": false,
+  "runState": "NOT_RUN",
+  "executionConstraints": {
+    "CI": "Owner 191 PR #106 only",
+    "integration": "Owner 189 PR #65 only",
+    "builds": "Owner 190",
+    "nativeInstallation": "Owner 199",
+    "noLocalTests": true,
+    "noLocalValidators": true,
+    "noWatchdog": true
+  },
+  "minimalSharedExternals": [
+    {
+      "id": "C15-installed-provider",
+      "input": "One real provider/model from services.models() also present in installed Catalog/SessionRunnerModel.supported",
+      "supportedAction": "use existing installed provider via analysis.start; no fake provider; if none, report NOT_RUN"
+    },
+    {
+      "id": "S0-authorized-installation",
+      "input": "Actual installationId/projectId/principalRef, current C07 grant and accessRevision/policyVersion held by product host; case version and authenticated original Request",
+      "supportedAction": "use existing native host/installed fixture, never send secrets or invent grant"
+    },
+    {
+      "id": "C16-registered-private-tool",
+      "input": "Matching ToolRegistry and MCP bridge from same Location/service graph, bound to skill receipt and native session",
+      "supportedAction": "use existing public tool registration in Host.Contribution; no shadow tool registry"
+    },
+    {
+      "id": "source-and-consumer",
+      "input": "Real current source with persistent business version and actual consumer destination",
+      "supportedAction": "prepare via public Dashboard/Planner/Procurement/C09/Collaboration/Document/Atlas/Relay port; verify after reopen"
+    }
+  ],
+  "am01": [
+    {
+      "caseId": "AM01-FINANCE",
+      "profileId": "sf_finance",
+      "skillId": "sf-explicar-forecast",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-FINANCE",
+      "profileId": "sf_finance",
+      "skillId": "sf-comparar-cenarios",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-FINANCE",
+      "profileId": "sf_finance",
+      "skillId": "sf-avaliar-sensibilidade",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-FINANCE",
+      "profileId": "sf_finance",
+      "skillId": "sf-produzir-bi-contextual",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-PROCUREMENT",
+      "profileId": "sf_procurement",
+      "skillId": "sf-comparar-sourcing",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-PROCUREMENT",
+      "profileId": "sf_procurement",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-PROCUREMENT",
+      "profileId": "sf_procurement",
+      "skillId": "sf-preparar-compra",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-PROCUREMENT",
+      "profileId": "sf_procurement",
+      "skillId": "sf-extrair-evidencias",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-PORTFOLIO",
+      "profileId": "sf_portfolio",
+      "skillId": "sf-revisar-dependencias",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-PORTFOLIO",
+      "profileId": "sf_portfolio",
+      "skillId": "sf-compor-portfolio",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-PORTFOLIO",
+      "profileId": "sf_portfolio",
+      "skillId": "sf-reavaliar-compromissos",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-PORTFOLIO",
+      "profileId": "sf_portfolio",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "selector": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-MAESTRO",
+      "profileId": "sf_maestro",
+      "skillId": "sf-enquadrar-decisao",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-MAESTRO",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-MAESTRO",
+      "profileId": "sf_maestro",
+      "skillId": "sf-coordenar-perguntas",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-MAESTRO",
+      "profileId": "sf_maestro",
+      "skillId": "sf-produzir-material-reuniao",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-REVIEWER",
+      "profileId": "sf_reviewer",
+      "skillId": "sf-contestar-decisao",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    },
+    {
+      "caseId": "AM01-REVIEWER",
+      "profileId": "sf_reviewer",
+      "skillId": "sf-revisar-evidencias",
+      "selector": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+      "prerequisite": "real installed model with current SessionV2 C15 + authorized domain fixtures; require 1 ready unique run, real SkillLoadReceipt, real tools and reopened contribution",
+      "status": "NOT_RUN",
+      "negative": "denied outside grant, stale/wrong case or source/identity; reviewer separate native session and author run if applicable"
+    }
+  ],
+  "am02": [
+    {
+      "caseId": "AM02-sf_dashboard_read",
+      "pack": "performance",
+      "operation": "sf_dashboard_read",
+      "profileId": "sf_maestro",
+      "skillId": "sf-produzir-bi-contextual",
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP02.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+      ],
+      "nonSecretInputNeeded": "selectionRef de fonte Dashboard emitida; fields autorizados; period",
+      "minimumExternalResource": "Fonte Dashboard publicada (selectionRef atual), período e campos autorizados; KPI registrado ou vista BI01 suportada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_kpi_explain",
+      "pack": "performance",
+      "operation": "sf_kpi_explain",
+      "profileId": "sf_finance",
+      "skillId": "sf-explicar-forecast",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP02.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts"
+      ],
+      "nonSecretInputNeeded": "metricRef de Dashboard KPI emitido; period",
+      "minimumExternalResource": "Fonte Dashboard publicada (selectionRef atual), período e campos autorizados; KPI registrado ou vista BI01 suportada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_bi_view",
+      "pack": "performance",
+      "operation": "sf_bi_view",
+      "profileId": "sf_finance",
+      "skillId": "sf-produzir-bi-contextual",
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP05.T04",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+      ],
+      "nonSecretInputNeeded": "viewId BI01 real; selectionRef emitido; period",
+      "minimumExternalResource": "Fonte Dashboard publicada (selectionRef atual), período e campos autorizados; KPI registrado ou vista BI01 suportada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_source_get",
+      "pack": "performance",
+      "operation": "sf_source_get",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP10.T07",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+      ],
+      "nonSecretInputNeeded": "evidenceRef canônico emitido pelo host com hash, versão e principal atuais",
+      "minimumExternalResource": "Fonte Dashboard publicada (selectionRef atual), período e campos autorizados; KPI registrado ou vista BI01 suportada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_forecast_compare",
+      "pack": "planning",
+      "operation": "sf_forecast_compare",
+      "profileId": "sf_finance",
+      "skillId": "sf-explicar-forecast",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP03.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts"
+      ],
+      "nonSecretInputNeeded": "baseRef e candidateRef de versões Planner persistidas; period; currency e FX real",
+      "minimumExternalResource": "Duas versões Planner reais com período/moeda; alternativas e resultados C09 persistidos; cobertura de custo e critério autorizados quando aplicáveis",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_scenario_simulate",
+      "pack": "planning",
+      "operation": "sf_scenario_simulate",
+      "profileId": "sf_finance",
+      "skillId": "sf-comparar-cenarios",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP03.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+      ],
+      "nonSecretInputNeeded": "baseRef de cenário válido; operations; assumptions com evidenceRefs reais",
+      "minimumExternalResource": "Duas versões Planner reais com período/moeda; alternativas e resultados C09 persistidos; cobertura de custo e critério autorizados quando aplicáveis",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_scenario_compare",
+      "pack": "planning",
+      "operation": "sf_scenario_compare",
+      "profileId": "sf_finance",
+      "skillId": "sf-comparar-cenarios",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP03.T05",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts"
+      ],
+      "nonSecretInputNeeded": "scenarioRefs de dois resultados persistidos; criteria do caso",
+      "minimumExternalResource": "Duas versões Planner reais com período/moeda; alternativas e resultados C09 persistidos; cobertura de custo e critério autorizados quando aplicáveis",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_sensitivity_evaluate",
+      "pack": "planning",
+      "operation": "sf_sensitivity_evaluate",
+      "profileId": "sf_finance",
+      "skillId": "sf-avaliar-sensibilidade",
+      "consumerTasks": [
+        "WP05.T05",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP13.T03",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+      ],
+      "nonSecretInputNeeded": "scenarioRef persistido; parameterBounds; criterion",
+      "minimumExternalResource": "Duas versões Planner reais com período/moeda; alternativas e resultados C09 persistidos; cobertura de custo e critério autorizados quando aplicáveis",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_portfolio_evaluate",
+      "pack": "planning",
+      "operation": "sf_portfolio_evaluate",
+      "profileId": "sf_portfolio",
+      "skillId": "sf-compor-portfolio",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP13.T04"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP13.T02",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+      ],
+      "nonSecretInputNeeded": "scope horizon/currency; candidateRefs; operations; constraints; priorities; explorationLimit",
+      "minimumExternalResource": "Duas versões Planner reais com período/moeda; alternativas e resultados C09 persistidos; cobertura de custo e critério autorizados quando aplicáveis",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_request_read",
+      "pack": "procurement",
+      "operation": "sf_request_read",
+      "profileId": "sf_procurement",
+      "skillId": "sf-comparar-sourcing",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP04.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+      ],
+      "nonSecretInputNeeded": "requestRef emitido pelo registry Procurement",
+      "minimumExternalResource": "Pedido RPO autenticado, fornecedores e contrato realmente presentes; propostas/score/FX e evidência da sessão corrente",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_supplier_read",
+      "pack": "procurement",
+      "operation": "sf_supplier_read",
+      "profileId": "sf_procurement",
+      "skillId": "sf-comparar-sourcing",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP04.T05",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+      ],
+      "nonSecretInputNeeded": "supplierRef emitido; fields autorizados",
+      "minimumExternalResource": "Pedido RPO autenticado, fornecedores e contrato realmente presentes; propostas/score/FX e evidência da sessão corrente",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_contract_read",
+      "pack": "procurement",
+      "operation": "sf_contract_read",
+      "profileId": "sf_procurement",
+      "skillId": "sf-comparar-sourcing",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP04.T05",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+      ],
+      "nonSecretInputNeeded": "contractRef emitido; fields autorizados",
+      "minimumExternalResource": "Pedido RPO autenticado, fornecedores e contrato realmente presentes; propostas/score/FX e evidência da sessão corrente",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_sourcing_compare",
+      "pack": "procurement",
+      "operation": "sf_sourcing_compare",
+      "profileId": "sf_procurement",
+      "skillId": "sf-comparar-sourcing",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP04.T03",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts"
+      ],
+      "nonSecretInputNeeded": "requestRef real; proposalRefs emitidas; criteria reais",
+      "minimumExternalResource": "Pedido RPO autenticado, fornecedores e contrato realmente presentes; propostas/score/FX e evidência da sessão corrente",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_case_read",
+      "pack": "decisions",
+      "operation": "sf_case_read",
+      "profileId": "sf_maestro",
+      "skillId": "sf-enquadrar-decisao",
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP11.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+      ],
+      "nonSecretInputNeeded": "caseRef codificado com id/incarnation/version vigentes",
+      "minimumExternalResource": "Caso C09 vigente/incarnation/version e seleção humana; rascunhos/alternativas/choice e recibos C08 somente após operação autorizada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_case_draft",
+      "pack": "decisions",
+      "operation": "sf_case_draft",
+      "profileId": "sf_maestro",
+      "skillId": "sf-enquadrar-decisao",
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP11.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts"
+      ],
+      "nonSecretInputNeeded": "objective; horizon; currency; criteria; sourceRefs C07 emitidos",
+      "minimumExternalResource": "Caso C09 vigente/incarnation/version e seleção humana; rascunhos/alternativas/choice e recibos C08 somente após operação autorizada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_alternative_draft",
+      "pack": "decisions",
+      "operation": "sf_alternative_draft",
+      "profileId": "sf_finance",
+      "skillId": "sf-comparar-cenarios",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T05",
+        "WP11.T02"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP11.T02",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts"
+      ],
+      "nonSecretInputNeeded": "caseRef; proposal title/description/sourceRefs; sourceRefs emitidos",
+      "minimumExternalResource": "Caso C09 vigente/incarnation/version e seleção humana; rascunhos/alternativas/choice e recibos C08 somente após operação autorizada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_change_prepare",
+      "pack": "decisions",
+      "operation": "sf_change_prepare",
+      "profileId": "sf_procurement",
+      "skillId": "sf-preparar-compra",
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP11.T03",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+      ],
+      "nonSecretInputNeeded": "caseRef; choiceRef de seleção humana; operations autorizadas",
+      "minimumExternalResource": "Caso C09 vigente/incarnation/version e seleção humana; rascunhos/alternativas/choice e recibos C08 somente após operação autorizada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_receipt_get",
+      "pack": "decisions",
+      "operation": "sf_receipt_get",
+      "profileId": "sf_procurement",
+      "skillId": "sf-preparar-compra",
+      "consumerTasks": [
+        "WP11.T03",
+        "WP09.T04",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP11.T04",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+      ],
+      "nonSecretInputNeeded": "receiptRef retornado por commit C08 real",
+      "minimumExternalResource": "Caso C09 vigente/incarnation/version e seleção humana; rascunhos/alternativas/choice e recibos C08 somente após operação autorizada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_work_list",
+      "pack": "collaboration",
+      "operation": "sf_work_list",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP08.T04",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-work-list.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+      ],
+      "nonSecretInputNeeded": "selectionRef emitido por coleções; period real",
+      "minimumExternalResource": "Work list e thread/questão/resposta persistidos na identidade corrente; destinatário ID confirmado para encaminhamento",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_question_prepare",
+      "pack": "collaboration",
+      "operation": "sf_question_prepare",
+      "profileId": "sf_maestro",
+      "skillId": "sf-enquadrar-decisao",
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP08.T06",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts"
+      ],
+      "nonSecretInputNeeded": "caseRef; question text/criterionRef; sourceRefs; recipientRef se resolvido",
+      "minimumExternalResource": "Work list e thread/questão/resposta persistidos na identidade corrente; destinatário ID confirmado para encaminhamento",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_answer_read",
+      "pack": "collaboration",
+      "operation": "sf_answer_read",
+      "profileId": "sf_maestro",
+      "skillId": "sf-coordenar-perguntas",
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP08.T02",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dashboard-answer.test.ts"
+      ],
+      "nonSecretInputNeeded": "questionRef persistido e autorizado na thread",
+      "minimumExternalResource": "Work list e thread/questão/resposta persistidos na identidade corrente; destinatário ID confirmado para encaminhamento",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_relation_read",
+      "pack": "collaboration",
+      "operation": "sf_relation_read",
+      "profileId": "sf_maestro",
+      "skillId": "sf-coordenar-perguntas",
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP08.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts"
+      ],
+      "nonSecretInputNeeded": "recordRefs reais de fontes com relação confirmada",
+      "minimumExternalResource": "Work list e thread/questão/resposta persistidos na identidade corrente; destinatário ID confirmado para encaminhamento",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_handoff_prepare",
+      "pack": "collaboration",
+      "operation": "sf_handoff_prepare",
+      "profileId": "sf_maestro",
+      "skillId": "sf-coordenar-perguntas",
+      "consumerTasks": [
+        "WP08.T02",
+        "WP08.T06",
+        "WP01.T04",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP08.T05",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-question-handoff.test.ts"
+      ],
+      "nonSecretInputNeeded": "caseRef; actionRef da questão; recipientRef confirmado; sourceRefs",
+      "minimumExternalResource": "Work list e thread/questão/resposta persistidos na identidade corrente; destinatário ID confirmado para encaminhamento",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_document_extract",
+      "pack": "documents_reports",
+      "operation": "sf_document_extract",
+      "profileId": "sf_procurement",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP06.T05",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+      ],
+      "nonSecretInputNeeded": "documentRef de upload admitido; fieldSchemaRef autorizado com versão",
+      "minimumExternalResource": "UNRESOLVED need owner producer",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_import_preview",
+      "pack": "documents_reports",
+      "operation": "sf_import_preview",
+      "profileId": "sf_finance",
+      "skillId": "sf-explicar-forecast",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP05.T01",
+        "WP09.T03",
+        "WP06.T03"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP06.T02",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts"
+      ],
+      "nonSecretInputNeeded": "admittedFileRef de arquivo permitido; format; options",
+      "minimumExternalResource": "UNRESOLVED need owner producer",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_review_prepare",
+      "pack": "documents_reports",
+      "operation": "sf_review_prepare",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP07.T02",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+      ],
+      "nonSecretInputNeeded": "selectionRef de revisão emitido; period; sectionRefs válidos",
+      "minimumExternalResource": "UNRESOLVED need owner producer",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_report_prepare",
+      "pack": "documents_reports",
+      "operation": "sf_report_prepare",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP07.T04",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+      ],
+      "nonSecretInputNeeded": "reviewRef de revisão preservada; format suportado; sectionRefs",
+      "minimumExternalResource": "UNRESOLVED need owner producer",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_artifact_get",
+      "pack": "documents_reports",
+      "operation": "sf_artifact_get",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP07.T04",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+      ],
+      "nonSecretInputNeeded": "artifactRef emitido por report/material e ainda autorizado",
+      "minimumExternalResource": "UNRESOLVED need owner producer",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_context_get",
+      "pack": "knowledge",
+      "operation": "sf_context_get",
+      "profileId": "sf_maestro",
+      "skillId": "sf-enquadrar-decisao",
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP10.T07",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-intent.test.ts"
+      ],
+      "nonSecretInputNeeded": "selectionRefs emitidas; purpose; period",
+      "minimumExternalResource": "Atlas/ledger e fontes com accessRevision vigente, scanner admission quando usado, escopo de memória explícito e grants mínimos",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_knowledge_search",
+      "pack": "knowledge",
+      "operation": "sf_knowledge_search",
+      "profileId": "sf_procurement",
+      "skillId": "sf-revisar-condicoes-contratuais",
+      "consumerTasks": [
+        "WP09.T04",
+        "WP11.T02",
+        "WP01.T05"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP06.T05",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts"
+      ],
+      "nonSecretInputNeeded": "query contextual; documentRefs no grant; limit permitido",
+      "minimumExternalResource": "Atlas/ledger e fontes com accessRevision vigente, scanner admission quando usado, escopo de memória explícito e grants mínimos",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_evidence_get",
+      "pack": "knowledge",
+      "operation": "sf_evidence_get",
+      "profileId": "sf_procurement",
+      "skillId": "sf-comparar-sourcing",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP09.T04"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP10.T07",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts"
+      ],
+      "nonSecretInputNeeded": "evidenceRef C07 assinado pela fonte atual",
+      "minimumExternalResource": "Atlas/ledger e fontes com accessRevision vigente, scanner admission quando usado, escopo de memória explícito e grants mínimos",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_decision_recall",
+      "pack": "knowledge",
+      "operation": "sf_decision_recall",
+      "profileId": "sf_maestro",
+      "skillId": "sf-consultar-memoria-decisoria",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP11.T01",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP10.T07",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts"
+      ],
+      "nonSecretInputNeeded": "selectionRefs de casos escolhidos; similarityCriteria; period; limit; scope Atlas atual",
+      "minimumExternalResource": "Atlas/ledger e fontes com accessRevision vigente, scanner admission quando usado, escopo de memória explícito e grants mínimos",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_freshness_check",
+      "pack": "knowledge",
+      "operation": "sf_freshness_check",
+      "profileId": "sf_maestro",
+      "skillId": "sf-enquadrar-decisao",
+      "consumerTasks": [
+        "WP11.T01",
+        "WP01.T05",
+        "WP06.T03"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP10.T07",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-collaboration-recall.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts"
+      ],
+      "nonSecretInputNeeded": "evidenceRefs reais, sem assumir que claims estão frescos",
+      "minimumExternalResource": "Atlas/ledger e fontes com accessRevision vigente, scanner admission quando usado, escopo de memória explícito e grants mínimos",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_routine_catalog",
+      "pack": "routines",
+      "operation": "sf_routine_catalog",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP09.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+      ],
+      "nonSecretInputNeeded": "purpose autorizado à identidade",
+      "minimumExternalResource": "Receita publicada e pinada, instalação Relay/nativa, identidade autorizada e runRef real para status/resultado; sem task fabricada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_routine_prepare",
+      "pack": "routines",
+      "operation": "sf_routine_prepare",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP09.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+      ],
+      "nonSecretInputNeeded": "publishedRecipeRef de versão publicada; inputRefs; parameters period/selectionRefs/reviewRef",
+      "minimumExternalResource": "Receita publicada e pinada, instalação Relay/nativa, identidade autorizada e runRef real para status/resultado; sem task fabricada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_routine_run",
+      "pack": "routines",
+      "operation": "sf_routine_run",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP09.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+      ],
+      "nonSecretInputNeeded": "admittedRunRef produzido pela publicação nativa; expectedAdmissionVersion",
+      "minimumExternalResource": "Receita publicada e pinada, instalação Relay/nativa, identidade autorizada e runRef real para status/resultado; sem task fabricada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_routine_status",
+      "pack": "routines",
+      "operation": "sf_routine_status",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP09.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+      ],
+      "nonSecretInputNeeded": "runRef de run Relay realmente criado e autorizado",
+      "minimumExternalResource": "Receita publicada e pinada, instalação Relay/nativa, identidade autorizada e runRef real para status/resultado; sem task fabricada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_routine_result",
+      "pack": "routines",
+      "operation": "sf_routine_result",
+      "profileId": "sf_maestro",
+      "skillId": "sf-preparar-revisao-executiva",
+      "consumerTasks": [
+        "WP07.T01",
+        "WP07.T02",
+        "WP01.T05",
+        "WP09.T01",
+        "WP09.T02",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP09.T01",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts"
+      ],
+      "nonSecretInputNeeded": "runRef com resultado persistido e consumidor real",
+      "minimumExternalResource": "Receita publicada e pinada, instalação Relay/nativa, identidade autorizada e runRef real para status/resultado; sem task fabricada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    },
+    {
+      "caseId": "AM02-sf_watch_prepare",
+      "pack": "routines",
+      "operation": "sf_watch_prepare",
+      "profileId": "sf_portfolio",
+      "skillId": "sf-reavaliar-compromissos",
+      "consumerTasks": [
+        "WP01.T05",
+        "WP08.T04",
+        "WP09.T07"
+      ],
+      "entryMode": "interactive",
+      "producerTask": "WP09.T06",
+      "producerCandidateSelectors": [
+        "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts"
+      ],
+      "nonSecretInputNeeded": "caseRef, conditionRef, recurrence recipeRef/schedule/timezone; recipientRef confirmado",
+      "minimumExternalResource": "Receita publicada e pinada, instalação Relay/nativa, identidade autorizada e runRef real para status/resultado; sem task fabricada",
+      "admissionRequired": "Current C08 and C15 SkillLoadReceipt with source/version/digest; a live user Request/identity from real host and current private C16 registry lease",
+      "assertionsRequired": [
+        "same actual principal/project/caseIncarnation/caseVersion/source-version across UI+native-agent+MCP and domain port",
+        "identical validated input and result digests + handlerExport",
+        "native receipt from real ToolRegistry/SDK and assistant tool part, not caller-created",
+        "positive authorized output is consumed via actual product reader after host reopen",
+        "no-grant, wrong source, stale version, revoked permission refuse without restricted output"
+      ],
+      "status": "NOT_RUN",
+      "sourceVerification": "Selectors refer to real existing source tests, NOT evidence of actual execution; require hosted run+original logs and consumer before qualification"
+    }
+  ],
+  "completedCodeSelectors": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/recall-five-profiles.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/performance-public-c16-reopen.test.ts"
+  ],
+  "nativeToolObserver": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/observe-native-c16.ts",
+  "noClaim": "NOT_RUN until Actions run IDs, exact candidate SHA, C15 source/version/digest receipts, provider assistant tool messages, actual domain outputs and reopened consumers independently agree. A loaded skill, denied call, source mention or schema acceptance alone never qualifies."
+}
