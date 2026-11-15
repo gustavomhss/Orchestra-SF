@@ -60,7 +60,7 @@ test("U12-AC01/02 quote comparison preserves source order, totals and filter-emp
     if (quotes[index].total !== null && quotes[index].total !== undefined)
       await expect(rows.nth(index)).toContainText(String(quotes[index].total))
   }
-  await expect(root.getByText(/No browser-side calculation|Nenhum cálculo no navegador/)).toBeVisible().catch(() => {})
+  await expect(root.getByText(/Ranking withheld|Ranking omitido/)).toBeVisible()
   const search = root.getByRole("searchbox")
   await search.fill("~~no-authorized-quotation-matches-this~~")
   await expect(table).toHaveAttribute("data-sf-table-state", "filtered-empty")
@@ -127,6 +127,27 @@ test("U12-AC01 recorded quote selection is a separate reviewed command, not an u
     values: { quoteId: persisted[0].id },
     version: source.value.versions["requests:" + ref].version,
   })
+  expect(writes).toHaveLength(1)
+})
+
+test("U12-AC02 lost producer response keeps one command and offers read-only reconciliation", async ({ page, nativeHarness }, info) => {
+  info.annotations.push({ type: "criteria-scope", description: "U12-AC02; original lost response; no blind replay" })
+  const ref = required("SF_NATIVE_U12_LOST_RESPONSE_REF")
+  const writes: Request[] = []
+  page.on("request", (request) => { if (sourcingWrite(request)) writes.push(request) })
+  await open(page, nativeHarness, "/orchestra/sf-procurement/requests/" + routeRef(ref) + "/sourcing")
+  const field = page.locator(".sf-u12-editor").getByRole("textbox", { name: /Evaluator|Avaliador/ })
+  await expect(field).toBeEditable()
+  await field.fill((await field.inputValue()) + " lost response fixture")
+  await page.locator(".sf-u12-editor").getByRole("button", { name: /Save sourcing|Salvar sourcing/ }).click()
+  const confirm = page.locator('[data-component="sf-change-review"]').getByRole("button", { name: /Confirm once|Confirmar uma vez/ })
+  await expect(confirm).toBeEnabled()
+  await confirm.click()
+  const root = page.locator(".sf-u12-root")
+  await expect(root.getByRole("alert")).toContainText(/Outcome unknown|Resultado do comando desconhecido/)
+  await expect(root.locator(".sf-u12-editor")).toHaveCount(0)
+  expect(writes).toHaveLength(1)
+  await root.getByRole("button", { name: /Refresh from source|Atualizar pela fonte/ }).click()
   expect(writes).toHaveLength(1)
 })
 

@@ -99,11 +99,43 @@ test("U14-AC01 bank section never exposes protected value and deletion is not an
   const rows = source.value.data.suppliers.filter((row: {id: string}) => row.id === ref)
   expect(rows).toHaveLength(1)
   const root = page.locator(".sf-u14-layout")
-  await expect(root.getByText(/Bank details are masked|Dados bancários ocultos/)).toBeVisible()
-  await expect(root.getByText(/Linked requests|Solicitações vinculadas/)).toBeVisible()
-  if (rows[0].status !== "pending")
-    await expect(root.getByRole("button", { name: /Delete pending supplier|Excluir fornecedor pendente/ })).toHaveCount(0)
+  const bank = root.locator('[data-sf-section="bank"]')
+  await expect(bank).toBeVisible()
+  if (source.value.allowedActionIds.includes("change-bank") &&
+      source.value.data.bankVerificationAvailable === true) {
+    await expect(bank.getByText(/Bank details are masked|Dados bancários ocultos/)).toBeVisible()
+  } else {
+    await expect(bank.locator('[data-sf-state="denied"]')).toBeVisible()
+    await expect(bank.getByRole("button", { name: /Review bank change|Revisar alteração bancária/ })).toHaveCount(0)
+  }
+  await expect(root.locator('[data-sf-section="linked"]')).toBeVisible()
+  if (rows[0].status !== "pending") {
+    const deletion = root.getByRole("button", { name: /Delete pending supplier|Excluir fornecedor pendente/ })
+    if (await deletion.count()) await expect(deletion).toBeDisabled()
+  }
   await expect(root.getByText(/CSV export requires|Exportação CSV exige/)).toBeVisible()
+})
+
+test("U14-AC02 lost supplier command cannot be replayed by refreshing the source", async ({ page, nativeHarness }, info) => {
+  info.annotations.push({ type: "criteria-scope", description: "U14-AC02; real post-commit response loss; never retry" })
+  const ref = required("SF_NATIVE_U14_LOST_RESPONSE_REF")
+  const writes: Request[] = []
+  page.on("request", (request) => { if (supplierWrite(request)) writes.push(request) })
+  await open(page, nativeHarness, "/orchestra/sf-procurement/suppliers/" + routeRef(ref) + "/edit")
+  const editor = page.locator(".sf-u14-editor")
+  const name = editor.getByRole("textbox", { name: /Legal name|Razão social/ })
+  await expect(name).toBeEditable()
+  await name.fill((await name.inputValue()) + " N23 lost response")
+  await editor.getByRole("button", { name: /Save supplier|Salvar fornecedor/ }).click()
+  const confirm = page.locator('[data-component="sf-change-review"]').getByRole("button", { name: /Confirm once|Confirmar uma vez/ })
+  await expect(confirm).toBeEnabled()
+  await confirm.click()
+  const root = page.locator(".sf-u14-layout")
+  await expect(root.getByRole("alert")).toContainText(/Command outcome is unknown|Resultado do comando desconhecido/)
+  await expect(root.locator(".sf-u14-editor")).toHaveCount(0)
+  expect(writes).toHaveLength(1)
+  await root.getByRole("button", { name: /Refresh from source|Atualizar pela fonte/ }).click()
+  expect(writes).toHaveLength(1)
 })
 
 test("U14-AC03 supplier fields and actions reflow at five widths and 200% text", async ({ page, nativeHarness }, info) => {

@@ -55,7 +55,7 @@ test("U13-AC01 approval steps bind frozen producer version, stage, holder and su
     expect(approval?.steps?.filter((step: {status: string}) => step.status === "pending")).toHaveLength(1)
     expect(Number.isFinite(approval?.amount)).toBe(true)
     const root = page.locator(".sf-u13-remaining-root")
-    await expect(root.getByText(ref, { exact: true })).toBeVisible()
+    await expect(root.locator(".sf-u13-remaining-detail").getByText(ref, { exact: true })).toBeVisible()
     await expect(root.getByText(/Submitted amount|Valor submetido/)).toBeVisible()
     await expect(root.getByText(/No financial approval|aprovação financeira|Planner M31/)).toBeVisible()
     expect(writes).toHaveLength(0)
@@ -110,6 +110,28 @@ test("U13-AC01 one admitted PO approval is producer-confirmed and never counted 
   })
   expect(writes).toHaveLength(1)
   await expect(root.getByText(/producer acknowledged|produtor confirmou/)).toBeVisible()
+})
+
+test("U13-AC02 lost approval response exposes unconfirmed outcome without replay", async ({ page, nativeHarness }, info) => {
+  info.annotations.push({ type: "criteria-scope", description: "U13-AC02; F04 lost-response injection, no synthetic receipt" })
+  const ref = required("SF_NATIVE_U13_LOST_RESPONSE_REF")
+  const writes: Request[] = []
+  page.on("request", (request) => { if (approvalWrite(request)) writes.push(request) })
+  await open(page, nativeHarness, ref)
+  const root = page.locator(".sf-u13-remaining-root")
+  const approve = root.getByRole("button", { name: /Approve current step|Aprovar etapa atual/ })
+  await expect(approve).toBeEnabled()
+  await approve.click()
+  const confirm = root.locator('[data-component="sf-change-review"]').getByRole("button", { name: /Confirm once|Confirmar uma vez/ })
+  await expect(confirm).toBeEnabled()
+  await confirm.click()
+  await expect(root.locator('[data-component="sf-receipt-view"][data-state="outcome-unknown"]')).toBeVisible()
+  await expect(root.locator('[data-receipt="producer"]')).toHaveCount(0)
+  expect(writes).toHaveLength(1)
+  const reconcile = root.locator('[data-component="sf-receipt-view"] button')
+  await expect(reconcile).toHaveCount(1)
+  await reconcile.click()
+  expect(writes).toHaveLength(1)
 })
 
 test("U13-AC03 queue controls reflow at five widths and 200% text", async ({ page, nativeHarness }, info) => {
