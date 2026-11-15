@@ -25,7 +25,9 @@ export function createSfScenarioOperationAccess(input: {
   return async (value: DecisionCase, call: TrustedDomainContext): Promise<boolean> => {
     const request = input.host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])
-    const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding])
+    const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+    const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding]) &&
+      requestDigest === digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
     if (!currentAuthority() || !await input.host.revalidate(call)) return false
     const captured = structuredClone(value)
     const original = digestSfValue(captured)
@@ -144,15 +146,20 @@ function covered(source: SourceRef, refs: readonly BusinessEvidenceRef[]) {
 /** Reauthorize every explicit external selector against C17; a condition is never an approval.
  * A retained choice owns its original evidence even when the case attaches a newer source. */
 export async function authorizeSfCompositeProcurementOperations(input: {
-  host: Pick<DomainPortHost, "revalidate">
+  host: Pick<DomainPortHost, "revalidate" | "requestFor">
   resolve: BusinessContextService["resolve"]
 }, decision: DecisionCase, item: Pick<DecisionCase["alternatives"][number], "scenario" | "result">, call: TrustedDomainContext) {
+  const request = input.host.requestFor(call)
+  const binding = digestSfValue([call.kind, call.binding])
+  const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+  const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding]) &&
+    requestDigest === digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
   const operations = item.scenario.operations.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
-  if (!operations.length || new Set(operations.map((operation) => operation.targetRef)).size !== operations.length ||
+  if (!currentAuthority() || !operations.length || new Set(operations.map((operation) => operation.targetRef)).size !== operations.length ||
     item.result.comparisonStatus !== "conditioned" || item.result.total !== null || item.result.currency !== decision.currency ||
     digestSfValue(item.result.horizon) !== digestSfValue(decision.horizon) ||
     ![...decision.alternatives, ...decision.choices].some((stored) => digestSfValue(stored.scenario) === digestSfValue(item.scenario) && digestSfValue(stored.result) === digestSfValue(item.result)) ||
-    !await input.host.revalidate(call)) return false
+    !await input.host.revalidate(call) || !currentAuthority()) return false
   const refs = operations.map((operation) => {
     const matches = item.result.sourceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record" &&
       ref.refId === operation.targetRef && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request")
@@ -166,7 +173,7 @@ export async function authorizeSfCompositeProcurementOperations(input: {
     digestSfValue(operation.period) !== digestSfValue(item.result.horizon) || !item.result.unresolvedConditions.includes(`external-operation:${digestSfValue(operation)}:procurement-replacement-cost-unresolved`))) return false
   const read = () => Promise.all(refs.map((ref) => input.resolve(ref!, call)))
   const first = await read()
-  if (first.some((resolution, index) => {
+  if (!currentAuthority() || first.some((resolution, index) => {
     const ref = refs[index]!, current = resolution.currentRef, projection = resolution.authorizedProjection
     // C17 proves physical continuity. Reissuing the current actor's scope may
     // rotate its scoped incarnation; the fresh branch still requires the exact ref.
@@ -191,5 +198,5 @@ export async function authorizeSfCompositeProcurementOperations(input: {
       components: projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) } }
   })
   const second = await read()
-  return digestSfValue(material(first)) === digestSfValue(material(second)) && await input.host.revalidate(call)
+  return currentAuthority() && digestSfValue(material(first)) === digestSfValue(material(second)) && await input.host.revalidate(call) && currentAuthority()
 }
