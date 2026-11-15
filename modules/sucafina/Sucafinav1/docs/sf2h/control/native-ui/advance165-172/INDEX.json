@@ -1,0 +1,135 @@
+{
+  "schema": "sf2h.advance165-172-index.v1",
+  "state": "PREPARED_NOT_STARTED",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "native_goal": "paused",
+  "global_release": false,
+  "source_base": "690a34cdd81c12d7311f3717c19679b950276161",
+  "missions": [
+    {
+      "mission": 165,
+      "title": "Perfil e skill reais",
+      "branch": "sf-am01-proof",
+      "epoch": "proof-am01-e1-browser165",
+      "head": "690a34cdd81c12d7311f3717c19679b950276161",
+      "actor_pack": "S4",
+      "proof": "AM01",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/**",
+        "packages/app-shell/e2e/sucafina/native/integrated-proofs/am01/**",
+        "script/sf2h/proofs/am01/**",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/**"
+      ]
+    },
+    {
+      "mission": 166,
+      "title": "Paridade UI/agente/MCP nos oito packs",
+      "branch": "sf-am02-proof",
+      "epoch": "proof-am02-e1-browser166",
+      "head": "690a34cdd81c12d7311f3717c19679b950276161",
+      "actor_pack": "S0-B",
+      "proof": "AM02",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/**",
+        "packages/app-shell/e2e/sucafina/native/integrated-proofs/am02/**",
+        "script/sf2h/proofs/am02/**",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/**"
+      ]
+    },
+    {
+      "mission": 167,
+      "title": "Isolamento, revogação e conflito de provider",
+      "branch": "sf-am03-proof",
+      "epoch": "proof-am03-e1-browser167",
+      "head": "690a34cdd81c12d7311f3717c19679b950276161",
+      "actor_pack": "S0-A",
+      "proof": "AM03",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/**",
+        "packages/app-shell/e2e/sucafina/native/integrated-proofs/am03/**",
+        "script/sf2h/proofs/am03/**",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/**"
+      ]
+    },
+    {
+      "mission": 168,
+      "title": "Escolha, aplicação e resposta perdida",
+      "branch": "sf-am04-proof",
+      "epoch": "proof-am04-e1-browser168",
+      "head": "690a34cdd81c12d7311f3717c19679b950276161",
+      "actor_pack": "S4-A",
+      "proof": "AM04",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/**",
+        "packages/app-shell/e2e/sucafina/native/integrated-proofs/am04/**",
+        "script/sf2h/proofs/am04/**",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/**"
+      ]
+    },
+    {
+      "mission": 169,
+      "title": "Evidência e Atlas persistente real",
+      "branch": "sf-am05-proof",
+      "epoch": "proof-am05-e1-browser169",
+      "head": "690a34cdd81c12d7311f3717c19679b950276161",
+      "actor_pack": "S0-A",
+      "proof": "AM05",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am05/**",
+        "packages/app-shell/e2e/sucafina/native/integrated-proofs/am05/**",
+        "script/sf2h/proofs/am05/**",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance169/**"
+      ]
+    },
+    {
+      "mission": 170,
+      "title": "Rotina real e retorno ao produto",
+      "branch": "sf-am06-proof",
+      "epoch": "proof-am06-e1-browser170",
+      "head": "690a34cdd81c12d7311f3717c19679b950276161",
+      "actor_pack": "S3-C",
+      "proof": "AM06",
+      "write_paths": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/**",
+        "packages/app-shell/e2e/sucafina/native/integrated-proofs/am06/**",
+        "script/sf2h/proofs/am06/**",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/**"
+      ]
+    },
+    {
+      "mission": 171,
+      "title": "A12 — detalhe real de trabalho e busca privada",
+      "branch": "sf-ux-a12",
+      "epoch": "ux-native-a12-e3-browser171",
+      "head": "502b8dc8131dac4f45f9a1cecdb3ae81d7c21319",
+      "actor_pack": "S0-B",
+      "write_paths": [
+        "packages/schema/src/sucafina/work.ts",
+        "packages/client/src/sucafina/work.ts",
+        "apps/cli/src/sucafina-product/native-ui/work.ts",
+        "packages/schema/src/sucafina/work/**",
+        "packages/client/src/sucafina/work/**",
+        "apps/cli/src/sucafina-product/native-ui/work/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/**"
+      ]
+    },
+    {
+      "mission": 172,
+      "title": "F01 — leitor de contexto vivo e binding real",
+      "branch": "sf-ux-w02",
+      "epoch": "ux-native-w02-e3-browser172",
+      "head": "4c72ac4f609618f749c1930b5738737d55693027",
+      "actor_pack": "S0-B",
+      "write_paths": [
+        "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+        "apps/cli/src/sucafina-product/native-ui/context.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/**"
+      ]
+    }
+  ],
+  "writer_conflict_policy": "proofs use six disjoint new namespaces;171exclusiveA12,172exclusiveCLIcontext+newfactory;162onlysharedI00andproductintegration,163compiler,164onlyproductCI; old153/136fencedfutureauthority. No tests duplicatedbydefault; source/predicateunreduced.",
+  "final_review": "ThreeFINALjudges remain independent and nottheseproofauthors."
+}

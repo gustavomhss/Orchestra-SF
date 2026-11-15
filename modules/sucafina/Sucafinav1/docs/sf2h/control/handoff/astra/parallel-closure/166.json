@@ -1,0 +1,683 @@
+{
+  "schema": "sf2h.advance165-172.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 166,
+  "proof": "AM02",
+  "title": "Paridade UI/agente/MCP nos oito packs",
+  "branch": "sf-am02-proof",
+  "kind": "qualification",
+  "actor_pack": "S0-B",
+  "epoch": "proof-am02-e1-browser166",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/",
+  "expected_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "base_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "product_base": "690a34cdd81c12d7311f3717c19679b950276161",
+  "scope_preserved": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39
+  },
+  "routing": {
+    "sole_integrator": "162/S0-C-e20-browser162/PR65",
+    "compiler": "163/compiler-e4-browser163/PR107",
+    "product_ci": "164/product-ci-e4-browser164/PR106",
+    "work_search_producer": "171/PR144",
+    "live_context_producer": "172/PR131"
+  },
+  "read_first": [
+    "All applicableAGENTS, fixed sf2h-plan START.md/WORKFLOW.md/execution/COMMON.md; manifest/sourcehashes; FULL assignedexecution/actors/S0-B.json and mandatoryattachments atdbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "Currentpack complete, actualsource/dependencies at supplied SHA, original canonicalcriterion pointers before writing. Latest162consumer material before proposing integration/proof. Preserve approvedplans immutable.",
+    "Own original proof or source workorder and predecessors; no massdump of other actors. Checkpoint+delta on continuation, fullcriteriaaccessible."
+  ],
+  "rules": [
+    "Nova sessão browser, same assignedbranch. ReconcileHEAD/epoch/allowlist and realeffective model/session only ifexposed; publishACKbeforewrites. No claim browserruntime fromactorname orGHidentity. PREPAREDnotstarted.",
+    "Oneauthor perpath. WRITEONLYallowlist.162onlyintegrator on sf2-stack; newauthors neverwriteitsbranch. Upstreamhandsoff keepallcode/history. RemoteGitHubMCP/CAS/forcefalse only; nogh/gitpush/reset/devmerge/wholehistoricalbranchmerge.",
+    "Productcode/tests/fixtures/config/guides/skills areCmaterial, mustbeintegrated andqualified. FinalreceiptsD preserveCblobs; nofakePASS orreceipt-onlyproduct. SourceARTIFACT_READYnotDONE; missingevidence staysNOT_RUN.",
+    "No localtests/typecheck/parsers/validators/build.164solehostedtestdispatcher;163compiler/SDKgeneration/guards. Surgicalchecks via existingtest:ciprotocolMCP. Deduprequests+actualrunsbyW/tree+orderedselector+runtime/config/fixtures/producers. No newCIworkflow, suitefanout orprematureEPIC.",
+    "No infrastructure/globalinstall/clientupgrade/Azure/deploy/enginechange orrestartactualdesktop/server. No copying/printing tokens/secrets, bypassinghosttrust, fakegrant/principal/humanPermission. Realprovidedauth remainswherehostownsit.",
+    "No nativeGoal/controller/secondS0. Goalpaused. Browsercontinuation supportsuserlaunchonly; noticepublication isn't chatACK/wake. Keep durableimmutableattemptreceipts, input/outputSHAs, sourceconsumerACK, exactnextaction.",
+    "ExecuteindependentworkNOWanddelivercompletePR/handoff. Do not justrewriteplan or duplicate existingtests. Ifexactcasealreadycovered,reuseit; implementmissingassertion/correlator/realentrypointscenario only. Missingcapabilityblocksonlydependentpositiveproof; finishdeterministicnegative/closurework.",
+    "Final GLOBAL_RELEASE stillallcriteria+realconsumers+8sameCfinalCI/epic/gates+AM01–06+3independentFINALnoopenmandatoryfindings+Dvalid+C/G7andD/G8guards+remoteproof+noorphanwriters. Qualificationauthorscannotjudgeownfinalrelease."
+  ],
+  "full_canonical_proof": {
+    "id": "AM02",
+    "title": "Paridade UI/agente/MCP nos oito packs",
+    "proof_packages": [
+      "E01",
+      "E16"
+    ],
+    "owner_tasks": [
+      "WP10.T06",
+      "WP10.T01"
+    ],
+    "execution_actor": "S0-B",
+    "reviewer": "S3-R3",
+    "pack_matrix": [
+      {
+        "pack": "Performance",
+        "operations": [
+          "sf_dashboard_read",
+          "sf_kpi_explain",
+          "sf_bi_view",
+          "sf_source_get"
+        ],
+        "producer_tasks": [
+          "WP02.T01",
+          "WP05.T04",
+          "WP10.T07"
+        ],
+        "latest_functional_output_minute": 55,
+        "proof_by_minute": 75,
+        "owner_task": "WP10.T06",
+        "proof_executor": "S0-B",
+        "independent_reviewer": "S3-R3",
+        "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+        "status": "NOT_RUN"
+      },
+      {
+        "pack": "Planning",
+        "operations": [
+          "sf_forecast_compare",
+          "sf_scenario_simulate",
+          "sf_scenario_compare",
+          "sf_sensitivity_evaluate",
+          "sf_portfolio_evaluate"
+        ],
+        "producer_tasks": [
+          "WP03.T01",
+          "WP03.T05",
+          "WP13.T02",
+          "WP13.T03"
+        ],
+        "latest_functional_output_minute": 72,
+        "proof_by_minute": 75,
+        "owner_task": "WP10.T06",
+        "proof_executor": "S0-B",
+        "independent_reviewer": "S3-R3",
+        "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+        "status": "NOT_RUN"
+      },
+      {
+        "pack": "Procurement",
+        "operations": [
+          "sf_request_read",
+          "sf_supplier_read",
+          "sf_contract_read",
+          "sf_sourcing_compare"
+        ],
+        "producer_tasks": [
+          "WP04.T01",
+          "WP04.T03",
+          "WP04.T05"
+        ],
+        "latest_functional_output_minute": 72,
+        "proof_by_minute": 75,
+        "owner_task": "WP10.T06",
+        "proof_executor": "S0-B",
+        "independent_reviewer": "S3-R3",
+        "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+        "status": "NOT_RUN"
+      },
+      {
+        "pack": "Decisions",
+        "operations": [
+          "sf_case_read",
+          "sf_case_draft",
+          "sf_alternative_draft",
+          "sf_change_prepare",
+          "sf_receipt_get"
+        ],
+        "producer_tasks": [
+          "WP11.T01",
+          "WP11.T02",
+          "WP11.T03",
+          "WP11.T04"
+        ],
+        "latest_functional_output_minute": 72,
+        "proof_by_minute": 75,
+        "owner_task": "WP10.T06",
+        "proof_executor": "S0-B",
+        "independent_reviewer": "S3-R3",
+        "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+        "status": "NOT_RUN"
+      },
+      {
+        "pack": "Collaboration",
+        "operations": [
+          "sf_work_list",
+          "sf_question_prepare",
+          "sf_answer_read",
+          "sf_relation_read",
+          "sf_handoff_prepare"
+        ],
+        "producer_tasks": [
+          "WP08.T01",
+          "WP08.T02",
+          "WP08.T04",
+          "WP08.T05",
+          "WP08.T06"
+        ],
+        "latest_functional_output_minute": 72,
+        "proof_by_minute": 75,
+        "owner_task": "WP10.T06",
+        "proof_executor": "S0-B",
+        "independent_reviewer": "S3-R3",
+        "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+        "status": "NOT_RUN"
+      },
+      {
+        "pack": "Documents & Reports",
+        "operations": [
+          "sf_document_extract",
+          "sf_import_preview",
+          "sf_review_prepare",
+          "sf_report_prepare",
+          "sf_artifact_get"
+        ],
+        "producer_tasks": [
+          "WP06.T02",
+          "WP06.T05",
+          "WP07.T04"
+        ],
+        "latest_functional_output_minute": 72,
+        "proof_by_minute": 75,
+        "owner_task": "WP10.T06",
+        "proof_executor": "S0-B",
+        "independent_reviewer": "S3-R3",
+        "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+        "status": "NOT_RUN"
+      },
+      {
+        "pack": "Knowledge / Atlas SF",
+        "operations": [
+          "sf_context_get",
+          "sf_knowledge_search",
+          "sf_evidence_get",
+          "sf_decision_recall",
+          "sf_freshness_check"
+        ],
+        "producer_tasks": [
+          "WP10.T07",
+          "WP14.T02",
+          "WP14.T03",
+          "WP14.T04"
+        ],
+        "latest_functional_output_minute": 68,
+        "proof_by_minute": 75,
+        "owner_task": "WP10.T06",
+        "proof_executor": "S0-B",
+        "independent_reviewer": "S3-R3",
+        "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+        "status": "NOT_RUN"
+      },
+      {
+        "pack": "Routines",
+        "operations": [
+          "sf_routine_catalog",
+          "sf_routine_prepare",
+          "sf_routine_run",
+          "sf_routine_status",
+          "sf_routine_result",
+          "sf_watch_prepare"
+        ],
+        "producer_tasks": [
+          "WP09.T01",
+          "WP09.T07",
+          "WP09.T06"
+        ],
+        "latest_functional_output_minute": 72,
+        "proof_by_minute": 75,
+        "owner_task": "WP10.T06",
+        "proof_executor": "S0-B",
+        "independent_reviewer": "S3-R3",
+        "expected": "Cada operação congelada tem chamada permitida e chamada não concedida sobre a mesma porta, versão e domínio. Pelo menos uma ação real de UI de cada pack é comparada com agente e MCP. Para toda operação que expõe ação de UI, registrar essa correspondência; nas demais, identificar seu consumidor interno. Comparar valores, referências e recibos canônicos, sem exigir narrativa idêntica do LLM.",
+        "status": "NOT_RUN"
+      }
+    ],
+    "checks": [
+      "Usar o mesmo principal, caso, versão, porta e autorização nos caminhos UI, agente e MCP. actor/role/project forjados não alteram a concessão.",
+      "Ligar o callID da bridge à chamada do domínio, à versão e ao resultado ou recibo. Stub ou engine paralelo falham.",
+      "Listar contratos e concessões dos oito packs em T+20; exercer sua funcionalidade real até T+75. Discovery não equivale a execução.",
+      "Conferir 39 rotas positivas nomeadas por perfil/skill/operação e SkillLoadReceipt. Chamada direta do harness passa pelo wrapper C16 com binding real; nunca usar ausência de skill como autorização alternativa."
+    ],
+    "status": "NOT_RUN",
+    "integration_deadline": 75,
+    "final_candidate_window": [
+      75,
+      95
+    ],
+    "recheck_window": [
+      103,
+      118
+    ],
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am02.json",
+    "operation_routes_ref": "resident_ai.operation_call_routes",
+    "streaming_policy": "Exercer cada rota pronta com insumos reais, SkillLoadReceipt e consumidor. Fechar todas as39 rotas/packs em G4 e repetir a cobertura exigida no mesmo C final; não esperar um pack completo para descobrir sua primeira falha."
+  },
+  "criterion_assignments": [
+    {
+      "entity_id": "WP00",
+      "criterion_ids": [
+        "WP00.DOD.40",
+        "WP00.INV.40",
+        "WP00.QLT.40",
+        "WP00.CMP.40",
+        "WP00.SUC.40"
+      ],
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP00.T04",
+      "criterion_ids": [
+        "WP00.T04.DOD.40",
+        "WP00.T04.INV.40",
+        "WP00.T04.QLT.40",
+        "WP00.T04.CMP.40",
+        "WP00.T04.SUC.40",
+        "WP00.T04.CHK.40",
+        "WP00.T04.CHK.41",
+        "WP00.T04.CHK.42"
+      ],
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12",
+      "criterion_ids": [
+        "WP12.DOD.40",
+        "WP12.INV.40",
+        "WP12.QLT.40",
+        "WP12.CMP.40",
+        "WP12.SUC.40"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12.T01",
+      "criterion_ids": [
+        "WP12.T01.DOD.40",
+        "WP12.T01.INV.40",
+        "WP12.T01.QLT.40",
+        "WP12.T01.CMP.40",
+        "WP12.T01.SUC.40",
+        "WP12.T01.CHK.40"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12.T02",
+      "criterion_ids": [
+        "WP12.T02.DOD.40",
+        "WP12.T02.INV.40",
+        "WP12.T02.QLT.40",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.40",
+        "WP12.T02.CHK.40",
+        "WP12.T02.CHK.41"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T06",
+      "criterion_ids": [
+        "WP10.T06.DOD.40",
+        "WP10.T06.INV.40",
+        "WP10.T06.QLT.40",
+        "WP10.T06.CMP.40",
+        "WP10.T06.SUC.40",
+        "WP10.T06.CHK.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T03",
+      "criterion_ids": [
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP00.T02",
+      "criterion_ids": [
+        "WP00.T02.DOD.60",
+        "WP00.T02.INV.60",
+        "WP00.T02.QLT.60",
+        "WP00.T02.CMP.60",
+        "WP00.T02.SUC.60",
+        "WP00.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP10.T06",
+      "criterion_ids": [
+        "WP10.T06.DOD.60",
+        "WP10.T06.INV.60",
+        "WP10.T06.QLT.60",
+        "WP10.T06.CMP.60",
+        "WP10.T06.SUC.60",
+        "WP10.T06.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP12.T02",
+      "criterion_ids": [
+        "WP12.T02.DOD.60",
+        "WP12.T02.INV.60",
+        "WP12.T02.QLT.60",
+        "WP12.T02.CMP.60",
+        "WP12.T02.SUC.60",
+        "WP12.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP06.T02",
+      "criterion_ids": [
+        "WP06.T02.DOD.60",
+        "WP06.T02.INV.60",
+        "WP06.T02.QLT.60",
+        "WP06.T02.CMP.60",
+        "WP06.T02.SUC.60",
+        "WP06.T02.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP06.T03",
+      "criterion_ids": [
+        "WP06.T03.DOD.60",
+        "WP06.T03.INV.60",
+        "WP06.T03.QLT.60",
+        "WP06.T03.CMP.60",
+        "WP06.T03.SUC.60",
+        "WP06.T03.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    },
+    {
+      "entity_id": "WP09.T01",
+      "criterion_ids": [
+        "WP09.T01.DOD.60",
+        "WP09.T01.INV.60",
+        "WP09.T01.QLT.60",
+        "WP09.T01.CMP.60",
+        "WP09.T01.SUC.60",
+        "WP09.T01.CHK.60"
+      ],
+      "proof_packages": [
+        "E01",
+        "E11",
+        "E13",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM02",
+        "AM06"
+      ],
+      "receipt_rule": "SHA e observações reais; execução de rotina requer C07 e nenhuma prévia pode gravar domínio."
+    }
+  ],
+  "evidence_required_fields": [
+    "criterion_id",
+    "entity_id",
+    "scope",
+    "status",
+    "candidate_sha",
+    "actor_or_role",
+    "fixture_id",
+    "entrypoint_or_action",
+    "expected",
+    "observed",
+    "evidence_uri",
+    "reviewer",
+    "verified_at",
+    "product_candidate_sha",
+    "ci_snapshot_sha",
+    "ci_request_hash",
+    "contract_version",
+    "producer_refs",
+    "consumer_entrypoint",
+    "execution_actor",
+    "logical_owner",
+    "writer_lease",
+    "contract_versions",
+    "profile_id",
+    "profile_version",
+    "skill_ids",
+    "skill_versions",
+    "skill_digests",
+    "source_paths",
+    "bundle_digest",
+    "effective_model",
+    "native_session_id",
+    "case_id",
+    "case_version",
+    "case_incarnation",
+    "mcp_server_generation",
+    "mcp_operation",
+    "domain_port",
+    "domain_call_id",
+    "runtime_build_sha",
+    "atlas_engine_baseline",
+    "atlas_boundary_version",
+    "business_schema_version",
+    "scanner_binary_version",
+    "access_revision",
+    "expected_selection",
+    "selected_files",
+    "measured_duration_seconds"
+  ],
+  "evidence_status_values": [
+    "NOT_RUN",
+    "PASS",
+    "FAIL",
+    "BLOCKED"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am02/**",
+    "packages/app-shell/e2e/sucafina/native/integrated-proofs/am02/**",
+    "script/sf2h/proofs/am02/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance166/**"
+  ],
+  "protected_paths": [
+    "All runtime/productsource and existingtesthelpers/specs, sharedharness/fixture, dispatcher/compilerworkflows, otherAMnamespaces, canonicaloriginalreceipts. ReadandREUSE,don'tedit."
+  ],
+  "source_reads": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/workbench-http.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    }
+  ],
+  "goal": "Fechar a qualificação integral AM02 comcenários executáveis reais, reaproveitandooexistente e provas permitidas; nãoé apenasplanejar teste e não substituiFINALindependentreview.",
+  "actions": [
+    "Todos os8packs e39operações da pack_matrix congelada: cadaoptemchamadapermitida+forçada não concedida, profile/skill/SkillLoadReceipt e bindingC16 reais. Cada packtemao menosumaUIreal comparada; operações semUI têm consumidor interno explícito.",
+    "Comparar mesmo principal/case/version/porta/autoridade emUI/agente/MCP; correlacionar bridgecallID→domaincallID/recibo. Fazer requestsforjados deactor/role/project semalterargrant. Reusar bridge/skillloading/callroutes existentes, não criar servidor/workbench paralelo.",
+    "Não transformar discovery em execução, respostaJSONmock emdomínio ou ausência deSkillLoadReceipt em autorização alternativa."
+  ],
+  "execution_steps": [
+    "Readfullcanonical proof/cases and assignedcriteriontext, inspecteachrelevantexistingtest+actualpublicproducer. Create mapping criterion→alreadycovered exactfile/action/oracle→uncoveredgap, withoutcreatinganothercampaignplan. Start gapimplementationintheallowednamespace immediately.",
+    "Useexisting actualproduct/installednativeharness, hostadmission andauthprovider/scanner/engine interfaces. Proofmodulecallsrealimplementation; no duplicatedomainlogic, mocks thatfabricatesuccess, catalogonly or arbitrarysubstitute provider. AM01/02positiveinference requiresrealmodel+skilltrace; compoundharness aloneisnotpositiveproof.",
+    "Reuseexisting scenariosby requestingtheir exact selections alongside yourneedednewfiles; don'timportoldtestfilesjusttorunthemagain or createwrappers solelymirroringoldassertions. Package actualuncoveredworkflow/correlation logic and strict receiptfieldchecks inlinewhereuseful; no newgenericplatform/orchestrator.",
+    "Publish onePR→sf2-stack withexactownpathpatch/SHAs/prepost, scenario/criterionmap, realentrypoint+owner+fixture+runtimeconfig, ordered hostedselection andoutputartifacts. Request162integratequalifiedtestmaterial then164executeoncoherentW; testsnotyetintegrated/selected arenotPASS.",
+    "Collectavailableauthenticexistingreceipts/runs asHISTORICALonly whereinputmatches; decode/validate andcorrelateeffects/consumers, never fabricate session/native/model/grant/run/signal/scanner evidence. Ifrealapprovedrunnercurrentlyexists forpositiveentrypoint, hand164exactreadyrequest. Allnewtestexecutiongoesthrough164.",
+    "Ifrealmodel/host/authorizedprincipal/nativecodec/scanner/currentadmission missing, stateactualsignature/source/SHA+minimalownerpatchorgrant needed, not vagueblocked. Continue independentnegativecasecode/receiptcorrelationandreadyselections. MarkmissingpositiveNOT_RUNandno-release; don'tweakeninto componentPASS.",
+    "Terminalhandoffmustincludewhatwasreused, actualnewbehavior/spec, fullpatch/codeSHA, criterioncoveragewithREALevidencevsNOT_RUN, consumers, exactCIrequests andnext executableaction. No endlesspolling orinventedCfinal; finalproofsbindacceptedCwhenavailable."
+  ]
+}

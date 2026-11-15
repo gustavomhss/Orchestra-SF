@@ -1,0 +1,506 @@
+{
+  "schema": "sf2h.advance165-172.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 165,
+  "proof": "AM01",
+  "title": "Perfil e skill reais",
+  "branch": "sf-am01-proof",
+  "kind": "qualification",
+  "actor_pack": "S4",
+  "epoch": "proof-am01-e1-browser165",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/",
+  "expected_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "base_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "product_base": "690a34cdd81c12d7311f3717c19679b950276161",
+  "scope_preserved": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39
+  },
+  "routing": {
+    "sole_integrator": "162/S0-C-e20-browser162/PR65",
+    "compiler": "163/compiler-e4-browser163/PR107",
+    "product_ci": "164/product-ci-e4-browser164/PR106",
+    "work_search_producer": "171/PR144",
+    "live_context_producer": "172/PR131"
+  },
+  "read_first": [
+    "All applicableAGENTS, fixed sf2h-plan START.md/WORKFLOW.md/execution/COMMON.md; manifest/sourcehashes; FULL assignedexecution/actors/S4.json and mandatoryattachments atdbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "Currentpack complete, actualsource/dependencies at supplied SHA, original canonicalcriterion pointers before writing. Latest162consumer material before proposing integration/proof. Preserve approvedplans immutable.",
+    "Own original proof or source workorder and predecessors; no massdump of other actors. Checkpoint+delta on continuation, fullcriteriaaccessible."
+  ],
+  "rules": [
+    "Nova sessão browser, same assignedbranch. ReconcileHEAD/epoch/allowlist and realeffective model/session only ifexposed; publishACKbeforewrites. No claim browserruntime fromactorname orGHidentity. PREPAREDnotstarted.",
+    "Oneauthor perpath. WRITEONLYallowlist.162onlyintegrator on sf2-stack; newauthors neverwriteitsbranch. Upstreamhandsoff keepallcode/history. RemoteGitHubMCP/CAS/forcefalse only; nogh/gitpush/reset/devmerge/wholehistoricalbranchmerge.",
+    "Productcode/tests/fixtures/config/guides/skills areCmaterial, mustbeintegrated andqualified. FinalreceiptsD preserveCblobs; nofakePASS orreceipt-onlyproduct. SourceARTIFACT_READYnotDONE; missingevidence staysNOT_RUN.",
+    "No localtests/typecheck/parsers/validators/build.164solehostedtestdispatcher;163compiler/SDKgeneration/guards. Surgicalchecks via existingtest:ciprotocolMCP. Deduprequests+actualrunsbyW/tree+orderedselector+runtime/config/fixtures/producers. No newCIworkflow, suitefanout orprematureEPIC.",
+    "No infrastructure/globalinstall/clientupgrade/Azure/deploy/enginechange orrestartactualdesktop/server. No copying/printing tokens/secrets, bypassinghosttrust, fakegrant/principal/humanPermission. Realprovidedauth remainswherehostownsit.",
+    "No nativeGoal/controller/secondS0. Goalpaused. Browsercontinuation supportsuserlaunchonly; noticepublication isn't chatACK/wake. Keep durableimmutableattemptreceipts, input/outputSHAs, sourceconsumerACK, exactnextaction.",
+    "ExecuteindependentworkNOWanddelivercompletePR/handoff. Do not justrewriteplan or duplicate existingtests. Ifexactcasealreadycovered,reuseit; implementmissingassertion/correlator/realentrypointscenario only. Missingcapabilityblocksonlydependentpositiveproof; finishdeterministicnegative/closurework.",
+    "Final GLOBAL_RELEASE stillallcriteria+realconsumers+8sameCfinalCI/epic/gates+AM01–06+3independentFINALnoopenmandatoryfindings+Dvalid+C/G7andD/G8guards+remoteproof+noorphanwriters. Qualificationauthorscannotjudgeownfinalrelease."
+  ],
+  "full_canonical_proof": {
+    "id": "AM01",
+    "title": "Perfil e skill reais",
+    "proof_packages": [
+      "E11",
+      "E16"
+    ],
+    "owner_tasks": [
+      "WP12.T01",
+      "WP12.T02",
+      "WP12.T03",
+      "WP10.T06"
+    ],
+    "execution_actor": "S4",
+    "reviewer": "S3-R3",
+    "cases": [
+      {
+        "id": "AM01-FINANCE",
+        "profile_id": "sf_finance",
+        "skills": [
+          "sf-explicar-forecast",
+          "sf-comparar-cenarios",
+          "sf-avaliar-sensibilidade",
+          "sf-produzir-bi-contextual"
+        ],
+        "expected_consumed_outputs": "FinancialAnalysis/ScenarioComparison/SensitivityResult e BI consumidos WP01/WP05/WP11; totais iguais a C02/C10.",
+        "actors": [
+          "S4"
+        ],
+        "first_integration_window": [
+          55,
+          75
+        ],
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "status": "NOT_RUN",
+        "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+        "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-finance.json"
+      },
+      {
+        "id": "AM01-PROCUREMENT",
+        "profile_id": "sf_procurement",
+        "skills": [
+          "sf-comparar-sourcing",
+          "sf-revisar-condicoes-contratuais",
+          "sf-preparar-compra",
+          "sf-extrair-evidencias"
+        ],
+        "expected_consumed_outputs": "CommercialComparison/CommercialGap/EvidenceCandidate/PreparedChange visíveis no caso e UI; extração confirmada preserva fonte.",
+        "actors": [
+          "S4"
+        ],
+        "first_integration_window": [
+          55,
+          75
+        ],
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "status": "NOT_RUN",
+        "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+        "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-procurement.json"
+      },
+      {
+        "id": "AM01-PORTFOLIO",
+        "profile_id": "sf_portfolio",
+        "skills": [
+          "sf-revisar-dependencias",
+          "sf-compor-portfolio",
+          "sf-reavaliar-compromissos",
+          "sf-consultar-memoria-decisoria"
+        ],
+        "expected_consumed_outputs": "DeliveryAssessment/DependencyConflict/PortfolioComparison/ReconsiderationProposal e precedente com diferenças atuais.",
+        "actors": [
+          "S4"
+        ],
+        "first_integration_window": [
+          55,
+          75
+        ],
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "status": "NOT_RUN",
+        "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+        "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-portfolio.json"
+      },
+      {
+        "id": "AM01-MAESTRO",
+        "profile_id": "sf_maestro",
+        "skills": [
+          "sf-enquadrar-decisao",
+          "sf-preparar-revisao-executiva",
+          "sf-coordenar-perguntas",
+          "sf-produzir-material-reuniao"
+        ],
+        "expected_consumed_outputs": "IntentFrame/AnalysisPlan/DecisionBrief/QuestionProposal e relatório real, fontes recuperáveis e perguntas à identidade conhecida.",
+        "actors": [
+          "S4"
+        ],
+        "first_integration_window": [
+          55,
+          75
+        ],
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "status": "NOT_RUN",
+        "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+        "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-maestro.json"
+      },
+      {
+        "id": "AM01-REVIEWER",
+        "profile_id": "sf_reviewer",
+        "skills": [
+          "sf-contestar-decisao",
+          "sf-revisar-evidencias"
+        ],
+        "expected_consumed_outputs": "CritiqueReport/ClaimIssue/UnresolvedCondition em execução distinta; resposta humana altera objeto/viabilidade em vez de só reescrever texto.",
+        "actors": [
+          "S4"
+        ],
+        "first_integration_window": [
+          55,
+          75
+        ],
+        "final_candidate_window": [
+          75,
+          95
+        ],
+        "status": "NOT_RUN",
+        "positive": "Registrar source_path, versão e digest carregados e o trace da execução relevante. Um output tipado deve ser persistido e consumido pela UI, pelo caso ou pela rotina. Presença no catálogo não passa.",
+        "negative": "Executar a variante com dados parciais ou ausentes e uma chamada forçada fora da concessão. Preservar a recusa ou a pendência, sem vazamento e sem fonte fabricada.",
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP12/am01/am01-reviewer.json"
+      }
+    ],
+    "required_coverage": {
+      "profiles": 5,
+      "skills": 18,
+      "every_source_loaded": true,
+      "every_skill_contributed_output": true,
+      "independent_reviewer_run": true
+    },
+    "early_gate": "GNATIVE18-20 cobre umperfil/umaskill; nunca é equivalente à cobertura completa.",
+    "status": "NOT_RUN",
+    "integration_deadline": 75,
+    "final_candidate_window": [
+      75,
+      95
+    ],
+    "recheck_window": [
+      103,
+      118
+    ],
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am01.json"
+  },
+  "criterion_assignments": [
+    {
+      "entity_id": "WP00",
+      "criterion_ids": [
+        "WP00.DOD.40",
+        "WP00.INV.40",
+        "WP00.QLT.40",
+        "WP00.CMP.40",
+        "WP00.SUC.40"
+      ],
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP00.T04",
+      "criterion_ids": [
+        "WP00.T04.DOD.40",
+        "WP00.T04.INV.40",
+        "WP00.T04.QLT.40",
+        "WP00.T04.CMP.40",
+        "WP00.T04.SUC.40",
+        "WP00.T04.CHK.40",
+        "WP00.T04.CHK.41",
+        "WP00.T04.CHK.42"
+      ],
+      "proof_packages": [
+        "E01",
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12",
+      "criterion_ids": [
+        "WP12.DOD.40",
+        "WP12.INV.40",
+        "WP12.QLT.40",
+        "WP12.CMP.40",
+        "WP12.SUC.40"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12.T01",
+      "criterion_ids": [
+        "WP12.T01.DOD.40",
+        "WP12.T01.INV.40",
+        "WP12.T01.QLT.40",
+        "WP12.T01.CMP.40",
+        "WP12.T01.SUC.40",
+        "WP12.T01.CHK.40"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP12.T02",
+      "criterion_ids": [
+        "WP12.T02.DOD.40",
+        "WP12.T02.INV.40",
+        "WP12.T02.QLT.40",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.40",
+        "WP12.T02.CHK.40",
+        "WP12.T02.CHK.41"
+      ],
+      "proof_packages": [
+        "E11",
+        "E16"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T06",
+      "criterion_ids": [
+        "WP10.T06.DOD.40",
+        "WP10.T06.INV.40",
+        "WP10.T06.QLT.40",
+        "WP10.T06.CMP.40",
+        "WP10.T06.SUC.40",
+        "WP10.T06.CHK.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T03",
+      "criterion_ids": [
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    }
+  ],
+  "evidence_required_fields": [
+    "criterion_id",
+    "entity_id",
+    "scope",
+    "status",
+    "candidate_sha",
+    "actor_or_role",
+    "fixture_id",
+    "entrypoint_or_action",
+    "expected",
+    "observed",
+    "evidence_uri",
+    "reviewer",
+    "verified_at",
+    "product_candidate_sha",
+    "ci_snapshot_sha",
+    "ci_request_hash",
+    "contract_version",
+    "producer_refs",
+    "consumer_entrypoint",
+    "execution_actor",
+    "logical_owner",
+    "writer_lease",
+    "contract_versions",
+    "profile_id",
+    "profile_version",
+    "skill_ids",
+    "skill_versions",
+    "skill_digests",
+    "source_paths",
+    "bundle_digest",
+    "effective_model",
+    "native_session_id",
+    "case_id",
+    "case_version",
+    "case_incarnation",
+    "mcp_server_generation",
+    "mcp_operation",
+    "domain_port",
+    "domain_call_id",
+    "runtime_build_sha",
+    "atlas_engine_baseline",
+    "atlas_boundary_version",
+    "business_schema_version",
+    "scanner_binary_version",
+    "access_revision",
+    "expected_selection",
+    "selected_files",
+    "measured_duration_seconds"
+  ],
+  "evidence_status_values": [
+    "NOT_RUN",
+    "PASS",
+    "FAIL",
+    "BLOCKED"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/**",
+    "packages/app-shell/e2e/sucafina/native/integrated-proofs/am01/**",
+    "script/sf2h/proofs/am01/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/**"
+  ],
+  "protected_paths": [
+    "All runtime/productsource and existingtesthelpers/specs, sharedharness/fixture, dispatcher/compilerworkflows, otherAMnamespaces, canonicaloriginalreceipts. ReadandREUSE,don'tedit."
+  ],
+  "source_reads": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-mission-harness.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-admission.test.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/resident-native.test.ts",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    }
+  ],
+  "goal": "Fechar a qualificação integral AM01 comcenários executáveis reais, reaproveitandooexistente e provas permitidas; nãoé apenasplanejar teste e não substituiFINALindependentreview.",
+  "actions": [
+    "Fechar cobertura dos5perfis e18skills do proof.cases COMPLETO, não sófinance. Cada output tipado deve persistir e ser consumido emUI/caso/rotina com fontes e totais reais. Source_path/version/digest do carregamento e traceefetivo obrigatórios.",
+    "Reusar native-mission-harness e testes native-execution-* existentes; catálogo/registro/admissão isolada ou modelo/script stub não provam inferência/skill executada. Não codificar nomes default de seats; sf_maestro é perfil, nunca identidade de Maestro.",
+    "Preparar cenários de dados parciais/ausentes e chamada forçada fora dogrant em cada perfil, negativa sem vazamento. Transcrever para receipts apenasmodel/session observados e outputconsumer real."
+  ],
+  "execution_steps": [
+    "Readfullcanonical proof/cases and assignedcriteriontext, inspecteachrelevantexistingtest+actualpublicproducer. Create mapping criterion→alreadycovered exactfile/action/oracle→uncoveredgap, withoutcreatinganothercampaignplan. Start gapimplementationintheallowednamespace immediately.",
+    "Useexisting actualproduct/installednativeharness, hostadmission andauthprovider/scanner/engine interfaces. Proofmodulecallsrealimplementation; no duplicatedomainlogic, mocks thatfabricatesuccess, catalogonly or arbitrarysubstitute provider. AM01/02positiveinference requiresrealmodel+skilltrace; compoundharness aloneisnotpositiveproof.",
+    "Reuseexisting scenariosby requestingtheir exact selections alongside yourneedednewfiles; don'timportoldtestfilesjusttorunthemagain or createwrappers solelymirroringoldassertions. Package actualuncoveredworkflow/correlation logic and strict receiptfieldchecks inlinewhereuseful; no newgenericplatform/orchestrator.",
+    "Publish onePR→sf2-stack withexactownpathpatch/SHAs/prepost, scenario/criterionmap, realentrypoint+owner+fixture+runtimeconfig, ordered hostedselection andoutputartifacts. Request162integratequalifiedtestmaterial then164executeoncoherentW; testsnotyetintegrated/selected arenotPASS.",
+    "Collectavailableauthenticexistingreceipts/runs asHISTORICALonly whereinputmatches; decode/validate andcorrelateeffects/consumers, never fabricate session/native/model/grant/run/signal/scanner evidence. Ifrealapprovedrunnercurrentlyexists forpositiveentrypoint, hand164exactreadyrequest. Allnewtestexecutiongoesthrough164.",
+    "Ifrealmodel/host/authorizedprincipal/nativecodec/scanner/currentadmission missing, stateactualsignature/source/SHA+minimalownerpatchorgrant needed, not vagueblocked. Continue independentnegativecasecode/receiptcorrelationandreadyselections. MarkmissingpositiveNOT_RUNandno-release; don'tweakeninto componentPASS.",
+    "Terminalhandoffmustincludewhatwasreused, actualnewbehavior/spec, fullpatch/codeSHA, criterioncoveragewithREALevidencevsNOT_RUN, consumers, exactCIrequests andnext executableaction. No endlesspolling orinventedCfinal; finalproofsbindacceptedCwhenavailable."
+  ]
+}

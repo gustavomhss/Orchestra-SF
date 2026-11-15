@@ -1,0 +1,241 @@
+{
+  "schema": "sf2h.advance165-172.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "canonical_campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "mission": 168,
+  "proof": "AM04",
+  "title": "Escolha, aplicação e resposta perdida",
+  "branch": "sf-am04-proof",
+  "kind": "qualification",
+  "actor_pack": "S4-A",
+  "epoch": "proof-am04-e1-browser168",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/",
+  "expected_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "base_head": "690a34cdd81c12d7311f3717c19679b950276161",
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "global_release": false,
+  "product_base": "690a34cdd81c12d7311f3717c19679b950276161",
+  "scope_preserved": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "profiles": 5,
+    "skills": 18,
+    "packs": 8,
+    "operations": 39
+  },
+  "routing": {
+    "sole_integrator": "162/S0-C-e20-browser162/PR65",
+    "compiler": "163/compiler-e4-browser163/PR107",
+    "product_ci": "164/product-ci-e4-browser164/PR106",
+    "work_search_producer": "171/PR144",
+    "live_context_producer": "172/PR131"
+  },
+  "read_first": [
+    "All applicableAGENTS, fixed sf2h-plan START.md/WORKFLOW.md/execution/COMMON.md; manifest/sourcehashes; FULL assignedexecution/actors/S4-A.json and mandatoryattachments atdbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "Currentpack complete, actualsource/dependencies at supplied SHA, original canonicalcriterion pointers before writing. Latest162consumer material before proposing integration/proof. Preserve approvedplans immutable.",
+    "Own original proof or source workorder and predecessors; no massdump of other actors. Checkpoint+delta on continuation, fullcriteriaaccessible."
+  ],
+  "rules": [
+    "Nova sessão browser, same assignedbranch. ReconcileHEAD/epoch/allowlist and realeffective model/session only ifexposed; publishACKbeforewrites. No claim browserruntime fromactorname orGHidentity. PREPAREDnotstarted.",
+    "Oneauthor perpath. WRITEONLYallowlist.162onlyintegrator on sf2-stack; newauthors neverwriteitsbranch. Upstreamhandsoff keepallcode/history. RemoteGitHubMCP/CAS/forcefalse only; nogh/gitpush/reset/devmerge/wholehistoricalbranchmerge.",
+    "Productcode/tests/fixtures/config/guides/skills areCmaterial, mustbeintegrated andqualified. FinalreceiptsD preserveCblobs; nofakePASS orreceipt-onlyproduct. SourceARTIFACT_READYnotDONE; missingevidence staysNOT_RUN.",
+    "No localtests/typecheck/parsers/validators/build.164solehostedtestdispatcher;163compiler/SDKgeneration/guards. Surgicalchecks via existingtest:ciprotocolMCP. Deduprequests+actualrunsbyW/tree+orderedselector+runtime/config/fixtures/producers. No newCIworkflow, suitefanout orprematureEPIC.",
+    "No infrastructure/globalinstall/clientupgrade/Azure/deploy/enginechange orrestartactualdesktop/server. No copying/printing tokens/secrets, bypassinghosttrust, fakegrant/principal/humanPermission. Realprovidedauth remainswherehostownsit.",
+    "No nativeGoal/controller/secondS0. Goalpaused. Browsercontinuation supportsuserlaunchonly; noticepublication isn't chatACK/wake. Keep durableimmutableattemptreceipts, input/outputSHAs, sourceconsumerACK, exactnextaction.",
+    "ExecuteindependentworkNOWanddelivercompletePR/handoff. Do not justrewriteplan or duplicate existingtests. Ifexactcasealreadycovered,reuseit; implementmissingassertion/correlator/realentrypointscenario only. Missingcapabilityblocksonlydependentpositiveproof; finishdeterministicnegative/closurework.",
+    "Final GLOBAL_RELEASE stillallcriteria+realconsumers+8sameCfinalCI/epic/gates+AM01–06+3independentFINALnoopenmandatoryfindings+Dvalid+C/G7andD/G8guards+remoteproof+noorphanwriters. Qualificationauthorscannotjudgeownfinalrelease."
+  ],
+  "full_canonical_proof": {
+    "id": "AM04",
+    "title": "Escolha, aplicação e resposta perdida",
+    "proof_packages": [
+      "E10",
+      "E16"
+    ],
+    "owner_tasks": [
+      "WP11.T03",
+      "WP11.T04",
+      "WP10.T01"
+    ],
+    "execution_actor": "S4-A/S0",
+    "reviewer": "S2-R2",
+    "checks": [
+      "O modelo prepara. Escolha, aplicação e aprovação usam as ações autorizadas e os comandos do domínio.",
+      "Interromper após o commit no domínio e antes do retorno ou da reconciliação no caso. O retry produz um efeito e recupera o recibo persistido atomicamente.",
+      "O mesmo idempotencyKey e digest retornam o resultado autorizado. Chave repetida com conteúdo diferente falha.",
+      "Revalidar base e autoridade em cada domínio e explicar o estado parcial. Não declarar transação global."
+    ],
+    "status": "NOT_RUN",
+    "integration_deadline": 75,
+    "final_candidate_window": [
+      75,
+      95
+    ],
+    "recheck_window": [
+      103,
+      118
+    ],
+    "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/WP10/integrated-proofs/am04.json"
+  },
+  "criterion_assignments": [
+    {
+      "entity_id": "WP10",
+      "criterion_ids": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40"
+      ],
+      "proof_packages": [
+        "E16",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    },
+    {
+      "entity_id": "WP10.T03",
+      "criterion_ids": [
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proof_packages": [
+        "E17",
+        "E18"
+      ],
+      "integrated_proofs": [
+        "AM01",
+        "AM02",
+        "AM03",
+        "AM04",
+        "AM05",
+        "AM06"
+      ],
+      "receipt_rule": "Resultado observado e SHA obrigatórios; plano/duração reservada não é evidência."
+    }
+  ],
+  "evidence_required_fields": [
+    "criterion_id",
+    "entity_id",
+    "scope",
+    "status",
+    "candidate_sha",
+    "actor_or_role",
+    "fixture_id",
+    "entrypoint_or_action",
+    "expected",
+    "observed",
+    "evidence_uri",
+    "reviewer",
+    "verified_at",
+    "product_candidate_sha",
+    "ci_snapshot_sha",
+    "ci_request_hash",
+    "contract_version",
+    "producer_refs",
+    "consumer_entrypoint",
+    "execution_actor",
+    "logical_owner",
+    "writer_lease",
+    "contract_versions",
+    "profile_id",
+    "profile_version",
+    "skill_ids",
+    "skill_versions",
+    "skill_digests",
+    "source_paths",
+    "bundle_digest",
+    "effective_model",
+    "native_session_id",
+    "case_id",
+    "case_version",
+    "case_incarnation",
+    "mcp_server_generation",
+    "mcp_operation",
+    "domain_port",
+    "domain_call_id",
+    "runtime_build_sha",
+    "atlas_engine_baseline",
+    "atlas_boundary_version",
+    "business_schema_version",
+    "scanner_binary_version",
+    "access_revision",
+    "expected_selection",
+    "selected_files",
+    "measured_duration_seconds"
+  ],
+  "evidence_status_values": [
+    "NOT_RUN",
+    "PASS",
+    "FAIL",
+    "BLOCKED"
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/**",
+    "packages/app-shell/e2e/sucafina/native/integrated-proofs/am04/**",
+    "script/sf2h/proofs/am04/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/**"
+  ],
+  "protected_paths": [
+    "All runtime/productsource and existingtesthelpers/specs, sharedharness/fixture, dispatcher/compilerworkflows, otherAMnamespaces, canonicaloriginalreceipts. ReadandREUSE,don'tedit."
+  ],
+  "source_reads": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-composed-qualification",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp11",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "role": "Existingproduct/tests/helpers, not newwrites"
+    }
+  ],
+  "goal": "Fechar a qualificação integral AM04 comcenários executáveis reais, reaproveitandooexistente e provas permitidas; nãoé apenasplanejar teste e não substituiFINALindependentreview.",
+  "actions": [
+    "UIhumana escolhe/aplica/aprova; modelprepara. Exercitar commitreal domínio→perda deretorno→reconciliaçãocaso e replayautorizado. Mesmo key+digestretornaumrecibopersistido/umefeito; keyrepetida comconteúdodiferentefalha.",
+    "Revalidarbase/autoridade por domínio; registrarparcialidade semtransaçãoglobal fictícia. Cobrir destino/revogação/CAS e fontes executadas, não sóassertmock decounter.",
+    "ReusarWP11,current-choice,finance/procurementprodutores e faultseams existentes. Gerar requestsobserváveis sem novos efeitos externos ou mudança dealçadas."
+  ],
+  "execution_steps": [
+    "Readfullcanonical proof/cases and assignedcriteriontext, inspecteachrelevantexistingtest+actualpublicproducer. Create mapping criterion→alreadycovered exactfile/action/oracle→uncoveredgap, withoutcreatinganothercampaignplan. Start gapimplementationintheallowednamespace immediately.",
+    "Useexisting actualproduct/installednativeharness, hostadmission andauthprovider/scanner/engine interfaces. Proofmodulecallsrealimplementation; no duplicatedomainlogic, mocks thatfabricatesuccess, catalogonly or arbitrarysubstitute provider. AM01/02positiveinference requiresrealmodel+skilltrace; compoundharness aloneisnotpositiveproof.",
+    "Reuseexisting scenariosby requestingtheir exact selections alongside yourneedednewfiles; don'timportoldtestfilesjusttorunthemagain or createwrappers solelymirroringoldassertions. Package actualuncoveredworkflow/correlation logic and strict receiptfieldchecks inlinewhereuseful; no newgenericplatform/orchestrator.",
+    "Publish onePR→sf2-stack withexactownpathpatch/SHAs/prepost, scenario/criterionmap, realentrypoint+owner+fixture+runtimeconfig, ordered hostedselection andoutputartifacts. Request162integratequalifiedtestmaterial then164executeoncoherentW; testsnotyetintegrated/selected arenotPASS.",
+    "Collectavailableauthenticexistingreceipts/runs asHISTORICALonly whereinputmatches; decode/validate andcorrelateeffects/consumers, never fabricate session/native/model/grant/run/signal/scanner evidence. Ifrealapprovedrunnercurrentlyexists forpositiveentrypoint, hand164exactreadyrequest. Allnewtestexecutiongoesthrough164.",
+    "Ifrealmodel/host/authorizedprincipal/nativecodec/scanner/currentadmission missing, stateactualsignature/source/SHA+minimalownerpatchorgrant needed, not vagueblocked. Continue independentnegativecasecode/receiptcorrelationandreadyselections. MarkmissingpositiveNOT_RUNandno-release; don'tweakeninto componentPASS.",
+    "Terminalhandoffmustincludewhatwasreused, actualnewbehavior/spec, fullpatch/codeSHA, criterioncoveragewithREALevidencevsNOT_RUN, consumers, exactCIrequests andnext executableaction. No endlesspolling orinventedCfinal; finalproofsbindacceptedCwhenavailable."
+  ]
+}
