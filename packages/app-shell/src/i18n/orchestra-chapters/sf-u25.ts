@@ -29,6 +29,7 @@ export const SF_U25_COPY = {
   "sf.u25.noMatching": "No section matches this filter.",
   "sf.u25.filter": "Filter available sections",
   "sf.u25.coverage": "Only the sections and record counts returned by the producer are displayed.",
+  "sf.u25.limit": "An agenda accepts one to thirty authorized sections.",
   "sf.u25.created": "The producer confirmed that the review was preserved.",
 } as const
 
@@ -62,5 +63,6 @@ export const SF_U25_COPY_BR: Readonly<Record<keyof typeof SF_U25_COPY, string>> 
   "sf.u25.noMatching": "Nenhuma seção corresponde ao filtro.",
   "sf.u25.filter": "Filtrar seções disponíveis",
   "sf.u25.coverage": "Somente as seções e contagens retornadas pelo produtor são exibidas.",
+  "sf.u25.limit": "Uma pauta aceita de uma a trinta seções autorizadas.",
   "sf.u25.created": "O produtor confirmou a preservação da revisão.",
 }

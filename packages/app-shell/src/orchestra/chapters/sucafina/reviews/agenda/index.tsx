@@ -60,6 +60,9 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
     if (status === "denied") setStore({ selected: [], available: [], preview: undefined, preserved: undefined, phase: "selecting" })
     setStore({ status, message })
   }
+  const displayState = (): SfUiState => store.status === "ready" && !!store.filter &&
+    !store.available.some((item) => item.topic.toLocaleLowerCase().includes(store.filter.toLocaleLowerCase()))
+    ? "filtered-empty" : store.status
   const invalidatePreview = () => {
     if (store.phase === "outcome-unknown" || store.phase === "submitting") return
     setStore({ preview: undefined, preserved: undefined, phase: "selecting" })
@@ -133,7 +136,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
 
   const add = (item: Section) => {
     if (store.phase === "outcome-unknown" || store.phase === "submitting" || !ready()) return
-    if (!store.selected.some((section) => section.id === item.id)) {
+    if (store.selected.length < 30 && !store.selected.some((section) => section.id === item.id)) {
       setStore("selected", (items) => [...items, item])
       invalidatePreview()
     }
@@ -152,7 +155,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
   }
   const preview = async () => {
     const access = ready(), state = owner.state()
-    if (!access || state.status !== "ready" || store.selected.length === 0 ||
+    if (!access || state.status !== "ready" || store.selected.length === 0 || store.selected.length > 30 ||
       store.phase === "submitting" || store.phase === "outcome-unknown") return
     const sections = store.selected.map((item) => ({
       id: item.id, title: item.topic, topic: item.topic, selectionRef: item.selectionRef,
@@ -253,8 +256,9 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
           <button class="mx-btn" type="submit">{t("sf.u25.find")}</button>
         </form>
         <SfStatePanel
-          state={store.status}
-          messageKey={key(store.message || (store.status === "empty" ? "sf.u25.noSections" : "sf.common.unavailable"))}
+          state={displayState()}
+          messageKey={key(displayState() === "filtered-empty" ? "sf.u25.noMatching"
+            : store.message || (store.status === "empty" ? "sf.u25.noSections" : "sf.common.unavailable"))}
           onRetryRead={store.phase !== "outcome-unknown" ? () => { void discover(store.sourcePage) } : undefined}
         >
           <label class="sf-n28-field" for={uid + "-filter"}>{t("sf.u25.filter")}
@@ -269,7 +273,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
                   <strong>{item.topic}</strong>
                   <span>{t("sf.u25.period")}: {item.period.start} – {item.period.end}</span>
                   <button class="mx-btn" type="button" onClick={() => add(item)}
-                    disabled={store.selected.some((selected) => selected.id === item.id) ||
+                    disabled={store.selected.length >= 30 || store.selected.some((selected) => selected.id === item.id) ||
                       store.phase === "submitting" || store.phase === "outcome-unknown"}>{t("sf.u25.add")}</button>
                 </li>}
               </For>
@@ -282,6 +286,7 @@ export function SfAgendaView(props: SfSurfaceProps<"UI47">) {
         <Show when={store.selected.length > 0 && store.status !== "denied" && store.status !== "session-expired"}>
           <section class="sf-n28-section" aria-label={t("sf.u25.selected")}>
             <h2>{t("sf.u25.selected")}</h2>
+            <p>{t("sf.u25.limit")}</p>
             <ol class="sf-n28-items" data-sf-agenda-order>
               <For each={store.selected}>{(item, index) => <li class="mx-card" data-section-id={item.id}>
                 <strong>{item.topic}</strong>
