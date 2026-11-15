@@ -1,0 +1,87 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "ux_plan": "1d9d49ec26281ffd6486d722a97298596289605d",
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "scope": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "ux_orders": 78,
+    "surfaces": 70,
+    "operations": 305
+  },
+  "native_goal": "paused; no native controller or revoked writer resumed",
+  "global_release": false,
+  "routing": {
+    "integrator": "125 / S0-C-e18-browser125 / PR65",
+    "compiler": "128 / compiler-e2-browser128 / PR107, successor119",
+    "product_ci": "129 / product-ci-e2-browser129 / PR106, successor120"
+  },
+  "rules": [
+    "NEW browser session only; publish actual model/session when exposed, branch/head/source inputs and exclusive epoch ACK before writing. Never claim runtime IDs, PASS or session liveness from names/timestamps.",
+    "Read AGENTS and complete own packet, pinned source instructions/whole assigned orders/required_reads/criteria pointers. Preserve all canonical and UX acceptance conditions.",
+    "S0 grants scoped authoring here; no added wait for stale114. 125 remains sole product integrator/shared writer. No ownership transfer by silence; honor actual fences and source authors.",
+    "Remote GitHub operations MCP only, CAS/expected-head forcefalse. Preserve all history/dirty work, no blanket branch import or blind rebase/reset.",
+    "No local product tests/validators/parser/typecheck/heavy suites. Tests hosted only via129; compiler/codegen/guards128; no tsc directly, no generated manual edits.",
+    "No new access/provider infra/global clients, auth/financial policy/engines/Azure/deploy/devmerge/secret exposure/Orchestra restart or new Goal/controller.",
+    "Deliver concrete code/evidence/PR/handoff with exact blob pre/postimages, source→consumer map, real run/job/artifact or NOT_RUN. Artifact-ready does not imply integrated/qualified/released.",
+    "Original GLOBAL_RELEASE same acceptedC8finalCI+epic+AM01–06+3independentFINAL+validD+C/G7+D/G8 preserved; no oracle/schema/fixture/grant weakening."
+  ],
+  "mission": 128,
+  "id": "compiler-after119",
+  "logical_actor": "S0-C compiler/tooling lane",
+  "branch": "sf-compiler-checks",
+  "pr": 107,
+  "expected_head": "cbbda270ea193c66d649d4f39e043e56f056469d",
+  "lease_epoch": "compiler-e2-browser128",
+  "predecessor_fence": {
+    "schema": "sf2h.validation-lane-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "authority": "S0: user requires fresh sessions only and authorizes additional useful work",
+    "mission": 128,
+    "branch": "sf-compiler-checks",
+    "pr": 107,
+    "previous_mission": 119,
+    "previous_epoch": "gate-tooling-browser119",
+    "previous_authority": "REVOKED_FOR_FRESH_SUCCESSOR",
+    "next_epoch": "compiler-e2-browser128",
+    "previous_head": "1c5113845ad54db1f9582169d183e17d50a7b9e4",
+    "readback_running_actions": 0,
+    "readback_queued_actions": 0,
+    "formerly_in_progress_run43726371640": "completed/failure",
+    "runtime_termination_claimed": false,
+    "note": "Runtime session IDs not exposed; do not infer death. Explicit S0 authority revocation + branch CAS/epoch fence; not credential revocation or process kill. If old actor resumes it must cease writes/dispatch. Successor re-reconciles runs before any effect.",
+    "integrator": 125,
+    "native_goal": "paused",
+    "global_release": false
+  },
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/compiler128/",
+  "write_paths": [
+    "script/sf2h/final-bundle/build-artifact.py",
+    "script/sf2h/final-bundle/verify-e2e-typecheck.mjs",
+    ".github/workflows/sf-compiler-c53.yml",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/compiler128/**"
+  ],
+  "inputs": [
+    "gate-tooling-repair/ACK119.json,HANDOFF119-C58.md,RESULTS119-C58.json,TOOLING-PATCH119-v2.patch,SOURCE-PREPOST119-v2.json,GUARD55-MANIFEST/DECISION at predecessor branch",
+    "119C58 run43726143757/job132848377567/artifact14166956181:17checks13PASS4FAIL,22TS,55guardgates,generatedepicdrift",
+    "C61 changed public packages/protocol groups/api + Server handlers/routes and native schema/client exports; generation required in packages/client before qualification"
+  ],
+  "mission_goal": "Act as sole fresh compiler/generation/tooling successor. Verify current composed candidate with hosted checks and produce exact SDK generation output/diff for125, preserve guard findings.",
+  "requirements": [
+    "Verify own119revocation/fence then publish ACK128; if oldwriter activity detected stop overlap and reconcile. Do not call old119active or spawn second compiler.",
+    "Resolve latest materialW/tree from125, examine C61+ public HttpApi/Protocol changes; run bun run generate from packages/client through existing hosted compiler lane, capture generated-code diff/prepost/hashes for125 to integrate. Never edit generated manually or publish source changes directly on sf2-stack.",
+    "Use existing compiler wrapper/runtime and recovered v2 builder/verifier; minimal scoped wrapper changes permitted for actual client SDK generation. No new CI platform or unrelated workflow fanout, no local generation/test/parser/typecheck. bun typecheck in package dirs only through hosted lane.",
+    "Preserve guards unfiltered with real base origin/dev and SHA receipts. Guard55historicallogs remain open unless genuine allowed authority resolves; no author self-label or ignore/rule weakening/deletion to fabricate green.",
+    "Generated epic YAML must match builder and real test-ci source; hand exact artifact/generated manifest to125. Source generation is not acceptedC until125consumes. Recheck only newly invalidated inputs.",
+    "Run scoped compiler checks of actual newC, report TS diagnostics by owner/file and real collected E2E compiler roots. Fix own tooling; product fixes return to writers/new fenced successor, not copy implementation tests.",
+    "Do not dispatch product tests, final epic or claim G7/G8 fulfilled from development guards. Preserve13/17 C58 historicalresult; no crossSHA PASS. Emit run/job/attempt/runtime/artifacts/candidate/gen diff and terminal handoff."
+  ]
+}

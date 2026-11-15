@@ -1,0 +1,86 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "ux_plan": "1d9d49ec26281ffd6486d722a97298596289605d",
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "scope": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "ux_orders": 78,
+    "surfaces": 70,
+    "operations": 305
+  },
+  "native_goal": "paused; no native controller or revoked writer resumed",
+  "global_release": false,
+  "routing": {
+    "integrator": "125 / S0-C-e18-browser125 / PR65",
+    "compiler": "128 / compiler-e2-browser128 / PR107, successor119",
+    "product_ci": "129 / product-ci-e2-browser129 / PR106, successor120"
+  },
+  "rules": [
+    "NEW browser session only; publish actual model/session when exposed, branch/head/source inputs and exclusive epoch ACK before writing. Never claim runtime IDs, PASS or session liveness from names/timestamps.",
+    "Read AGENTS and complete own packet, pinned source instructions/whole assigned orders/required_reads/criteria pointers. Preserve all canonical and UX acceptance conditions.",
+    "S0 grants scoped authoring here; no added wait for stale114. 125 remains sole product integrator/shared writer. No ownership transfer by silence; honor actual fences and source authors.",
+    "Remote GitHub operations MCP only, CAS/expected-head forcefalse. Preserve all history/dirty work, no blanket branch import or blind rebase/reset.",
+    "No local product tests/validators/parser/typecheck/heavy suites. Tests hosted only via129; compiler/codegen/guards128; no tsc directly, no generated manual edits.",
+    "No new access/provider infra/global clients, auth/financial policy/engines/Azure/deploy/devmerge/secret exposure/Orchestra restart or new Goal/controller.",
+    "Deliver concrete code/evidence/PR/handoff with exact blob pre/postimages, source→consumer map, real run/job/artifact or NOT_RUN. Artifact-ready does not imply integrated/qualified/released.",
+    "Original GLOBAL_RELEASE same acceptedC8finalCI+epic+AM01–06+3independentFINAL+validD+C/G7+D/G8 preserved; no oracle/schema/fixture/grant weakening."
+  ],
+  "mission": 129,
+  "id": "ci-after120",
+  "logical_actor": "S2 product-CI dispatcher",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "expected_head": "02d07b779e19a1cf66b8f92c1150d2e2f059392a",
+  "lease_epoch": "product-ci-e2-browser129",
+  "predecessor_fence": {
+    "schema": "sf2h.validation-lane-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "authority": "S0: user requires fresh sessions only and authorizes additional useful work",
+    "mission": 129,
+    "branch": "sf-ci-validation",
+    "pr": 106,
+    "previous_mission": 120,
+    "previous_epoch": "product-ci-browser120",
+    "previous_authority": "REVOKED_FOR_FRESH_SUCCESSOR",
+    "next_epoch": "product-ci-e2-browser129",
+    "previous_head": "bbccc6163439e5e95abfb4d7cc5fd7881a214ca2",
+    "readback_running_actions": 0,
+    "readback_queued_actions": 0,
+    "formerly_in_progress_run43726371640": "completed/failure",
+    "runtime_termination_claimed": false,
+    "note": "Runtime session IDs not exposed; do not infer death. Explicit S0 authority revocation + branch CAS/epoch fence; not credential revocation or process kill. If old actor resumes it must cease writes/dispatch. Successor re-reconciles runs before any effect.",
+    "integrator": 125,
+    "native_goal": "paused",
+    "global_release": false
+  },
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/product-ci129/",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/product-ci129/**",
+    "existing validated ci-run-* request snapshots .ci-run.json only"
+  ],
+  "inputs": [
+    "ci-after-c53-120 ACK120,CHECKPOINT120,RUNS120,FAILURE-QUEUE120,RECONCILED-QUEUE120",
+    "120last43726371640 formerlyIN_PROGRESS is now completed/failure; source snapshot allrunIDs must be reconciled; no active/queuedActions at S0 admission",
+    "125 C59 creation121 and C60 residual122+relationsfixture adopted; C61foundation recent; use actual125materialmanifest not receipt-onlyHEAD"
+  ],
+  "mission_goal": "Act as sole fresh product-CI dispatcher. Restore120queue/runs, deduplicate, validate new coherent125candidates with exact change-scoped selections, report failures to owners.",
+  "requirements": [
+    "Verify120revocation/fence and publish ACK129. Reconcile liveActions queued/inflight and all RUNS120 snapshots/runIDs; attach existing jobs, never duplicate. Formerlypending43726371640 is failure, not PASS.",
+    "Read actual request protocol/scripts/workflow and use validated MCP snapshot dispatch only, sourceW childS changes only.ci-run.json. Do not run shelltest:ci that pushes by unauthorized channel, invent aliases/flags/workflows or edit product sources.",
+    "Resolve candidate125materialW/tree (never docsHEAD) and whether producer/fixture closure is ready. Current creation121C59 and residual122C60 are causal newinputs; prior first-save/native/export greens stay historical unless impacted.",
+    "Creation browser exact order: wp01/browser-startup.test.ts first,creation-reload-fix/creation-browser.test.ts andcreation-recovery-link/recovery-browser.test.ts middle,wp01/browser-lifecycle.test.ts LAST. Preserve Omni/Chromium lifecycle, no oracleweakening.",
+    "123runtime patches not proven integrated; dispatch causal probes/failed selectors only after relevant producer adoption. WP08 stageprobe requested once and root fix before repeating unchanged timeout. Report owner-level failures promptly.",
+    "NativeUX Q01/Q02 and page tests only after actual composition/readiness, not absentbindings/harness; zero-selection/skips/artifactmissing notPASS. Surgical checks at completed coherent units, no local tests and no premature epic/full8.",
+    "Maintain one dispatcher and durable candidate/tree+orderedselection+workflow/runtime/config/fixtures dedup key. Carry W/S/run/job/attempt/Omni/artifact/results from oldqueue to new, never transfer ownership by timestamps.",
+    "New20+authors may still address119/120 in oldpackets: accept legacy logical requests under new128/129runtime routing without duplicate runners.125soleintegrator. Publish requests/runs/results/causal findings and resumablehandoff."
+  ]
+}
