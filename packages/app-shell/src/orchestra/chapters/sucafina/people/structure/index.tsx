@@ -89,6 +89,17 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
     }
   }
   const selected = () => local.selection ?? selectionFromRoute()
+  const selectedId = () => {
+    const value = selected()
+    return value && "id" in value ? value.id : undefined
+  }
+  const fieldCopy: Readonly<Record<string, SfCopyKey>> = {
+    name: key("sf.u03.name"), title: key("sf.u03.title"),
+    domain: key("sf.u03.domain"), type: key("sf.u03.type"),
+    leaderId: key("sf.u03.leader"), location: key("sf.u03.location"),
+    start: key("sf.u03.start"), end: key("sf.u03.end"),
+    status: key("sf.u03.status"),
+  }
   const leader = (id: string) => source()?.leaders.find((person) => person.id === id)
   const member = (id: string) => source()?.members.find((person) => person.id === id)
   const nameForLeader = (leaderId: string | number | undefined) =>
@@ -291,8 +302,7 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
                     </tr></thead>
                     <tbody><For each={data().leaders}>
                       {(person) => (
-                        <tr aria-selected={selected()?.kind === "leader" &&
-                            "id" in selected()! && selected()!.id === person.id}>
+                        <tr aria-selected={selected()?.kind === "leader" && selectedId() === person.id}>
                           <th scope="row"><button type="button" class="mx-btn"
                             onClick={() => setLocal("selection", { kind: "leader", id: person.id, edit: false })}>
                             {person.name ?? person.id}
@@ -333,8 +343,7 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
                     </tr></thead>
                     <tbody><For each={data().members}>
                       {(person) => (
-                        <tr aria-selected={selected()?.kind === "member" &&
-                            "id" in selected()! && selected()!.id === person.id}>
+                        <tr aria-selected={selected()?.kind === "member" && selectedId() === person.id}>
                           <th scope="row"><button type="button" class="mx-btn"
                             onClick={() => setLocal("selection", { kind: "member", id: person.id, edit: false })}>
                             {person.name ?? person.id}
@@ -370,7 +379,7 @@ export function SfPeopleStructureView(props: SfSurfaceProps<"CAP07">): JSX.Eleme
                     {(row) => <dl>
                       <For each={Object.entries(row()).filter(([field]) =>
                         !["id", "cls", "outlook", "notes"].includes(field))}>
-                        {([field, value]) => <div><dt>{field}</dt><dd>{String(value ?? "")}</dd></div>}
+                        {([field, value]) => <div><dt>{t(fieldCopy[field] ?? key("sf.u03.details"))}</dt><dd>{String(value ?? "")}</dd></div>}
                       </For>
                     </dl>}
                   </Show>
