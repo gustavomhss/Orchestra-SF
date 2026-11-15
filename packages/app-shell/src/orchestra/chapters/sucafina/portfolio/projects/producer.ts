@@ -87,7 +87,8 @@ export async function sfProjectCommand(
     const decoded = Schema.decodeUnknownEither(SfDomain.operations["domain.command.CAP10.save"].input)(command)
     if (Either.isLeft(decoded)) return failure(503, "domain.command.CAP10.save input contract unavailable")
     const response = await client["domain.command.CAP10.save"](decoded.right, { signal, idempotencyKey })
-    if (response.kind === "transport-error") return failure(503, response.reason)
+    if (response.kind === "transport-error") return response.reason === "outcome-unknown" || response.reason === "network" ?
+      { status: "failed", state: "outcome-unknown", reason: response.reason } : failure(503, response.reason)
     if (response.status >= 400) return failure(response.status, "domain.command.CAP10.save producer rejected")
     return { status: "accepted" }
   }
@@ -95,7 +96,8 @@ export async function sfProjectCommand(
     const decoded = Schema.decodeUnknownEither(SfDomain.operations["domain.command.CAP10.delete"].input)(command)
     if (Either.isLeft(decoded)) return failure(503, "domain.command.CAP10.delete input contract unavailable")
     const response = await client["domain.command.CAP10.delete"](decoded.right, { signal, idempotencyKey })
-    if (response.kind === "transport-error") return failure(503, response.reason)
+    if (response.kind === "transport-error") return response.reason === "outcome-unknown" || response.reason === "network" ?
+      { status: "failed", state: "outcome-unknown", reason: response.reason } : failure(503, response.reason)
     if (response.status >= 400) return failure(response.status, "domain.command.CAP10.delete producer rejected")
     return { status: "accepted" }
   }
@@ -103,14 +105,16 @@ export async function sfProjectCommand(
     const decoded = Schema.decodeUnknownEither(SfDomain.operations["domain.command.CAP10.save-milestone"].input)(command)
     if (Either.isLeft(decoded)) return failure(503, "domain.command.CAP10.save-milestone input contract unavailable")
     const response = await client["domain.command.CAP10.save-milestone"](decoded.right, { signal, idempotencyKey })
-    if (response.kind === "transport-error") return failure(503, response.reason)
+    if (response.kind === "transport-error") return response.reason === "outcome-unknown" || response.reason === "network" ?
+      { status: "failed", state: "outcome-unknown", reason: response.reason } : failure(503, response.reason)
     if (response.status >= 400) return failure(response.status, "domain.command.CAP10.save-milestone producer rejected")
     return { status: "accepted" }
   }
   const decoded = Schema.decodeUnknownEither(SfDomain.operations["domain.command.CAP10.delete-milestone"].input)(command)
   if (Either.isLeft(decoded)) return failure(503, "domain.command.CAP10.delete-milestone input contract unavailable")
   const response = await client["domain.command.CAP10.delete-milestone"](decoded.right, { signal, idempotencyKey })
-  if (response.kind === "transport-error") return failure(503, response.reason)
+  if (response.kind === "transport-error") return response.reason === "outcome-unknown" || response.reason === "network" ?
+      { status: "failed", state: "outcome-unknown", reason: response.reason } : failure(503, response.reason)
   if (response.status >= 400) return failure(response.status, "domain.command.CAP10.delete-milestone producer rejected")
   return { status: "accepted" }
 }
