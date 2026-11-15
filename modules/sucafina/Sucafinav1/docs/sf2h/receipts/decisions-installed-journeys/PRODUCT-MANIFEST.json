@@ -1,10 +1,10 @@
 {
   "schema": "sf2-mission52-candidate-material-v1",
-  "status": "ACTIVE_P4_NOMINAL05_DISPATCHED",
+  "status": "ACTIVE_P5_NOMINAL06_RUNNING",
   "source_product": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
   "source_tree": "a905bafed750476e6312df77c22a1d2407e987a9",
-  "base": "4b15af2d8f8a5b96cdd0a8117951939bde0b9d02",
-  "base_tree": "ad67f4c0101b341e08de075c2c8ba8e599c4b3a2",
+  "base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+  "base_tree": "31be8f81803b77f03e9089e09118f78218b26262",
   "owned": [
     {
       "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
@@ -134,6 +134,15 @@
       "postimage_sha256": "bbd8132ea6e0ab0b14e6eacc7753aa01adf4866a1b2846de4165830e9935f655",
       "preimage_sha256": "219b48f070e8d42fef2308667928c75a813807821d61f557a870af0abb4a1a0d",
       "bytes": 9460
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+      "preimage": "7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11",
+      "postimage": "feae4846feb657924d9229193eeeded58b378851",
+      "postimage_sha256": "a52cd613e8f9b6fbb572a8f6f6df04ad14da36b58d1dbbafaab2115e6716939a",
+      "patch_sha256": "fa7a31097a1e71777942a0b5c916103ee7f9b7e43d93933143c0dffc7987e491",
+      "preimage_sha256": "2d7c282c256153f6b3db1868c90eb15660d4c81fb875545cd802095a43cf18bc",
+      "bytes": 16683
     }
   ],
   "patches": {
@@ -141,35 +150,38 @@
       "bytes": 28747,
       "sha256": "01d508d26b6bf10d852c63e99714a8d53e5cde387d79ba0aff2ee45a8dbe5e8d"
     },
-    "shared-complete.patch": {
-      "bytes": 18810,
-      "sha256": "346e8184c39699391fb3e64c09a5ff9da48e57f96d990c2fe51bbd1f52c1c00b"
+    "candidate-complete.patch": {
+      "bytes": 50438,
+      "sha256": "9565b3a0267e49d9b28cf1586a8e8fd92a270400acddbefec9313ec14350c8b6"
     },
-    "route-complete.patch": {
+    "integration/complete-shared.patch": {
+      "bytes": 21691,
+      "sha256": "7583e452ebca3c68cacee71a9615f23bc56e14933ff2bb921ea5381d2bf3f9aa"
+    },
+    "integration/decision-routes/complete.patch": {
       "bytes": 13846,
       "sha256": "9f3da0de837d64a0d98ef3572ab250237928eabd07ee70c0f443f03c888b2208"
     },
-    "candidate-complete.patch": {
-      "bytes": 47557,
-      "sha256": "6af417bcc7931ed1488c58eb1cc6c760e1a5cadea707ac6c1d25b7fc6230a300"
+    "integration/comparison-batch/complete.patch": {
+      "sha256": "fa7a31097a1e71777942a0b5c916103ee7f9b7e43d93933143c0dffc7987e491"
     }
   },
   "mutations": "Only owned source paths; shared files are inert complete proposals and isolated W qualification overlays.",
   "preserved": "Five original cases, identities, assertions and180000ms budgets,0retries/skips; UI-only writes. No CurrentChoice/C12/Reports/workflow edits.",
-  "base_symbol": "C25",
+  "base_symbol": "C27",
   "qualification": {
     "mission": 52,
-    "nominal": "05",
-    "base": "4b15af2d8f8a5b96cdd0a8117951939bde0b9d02",
-    "base_tree": "ad67f4c0101b341e08de075c2c8ba8e599c4b3a2",
-    "base_symbol": "C25",
+    "nominal": "06",
+    "base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "base_tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "base_symbol": "C27",
     "owned_source": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
     "owned_source_tree": "a905bafed750476e6312df77c22a1d2407e987a9",
-    "receipt_source": "14360372153592d944aa10e42bcac1b6d86680f5",
-    "W": "19a48b5f97247e53f34e841a81841ea2ef94b09b",
-    "W_tree": "1f3fc4bdbb5fb0396055ffbcb1e71f98acff2f27",
-    "S": "0bb51dc6f12a92f4ee590482faf70e7d842e4415",
-    "S_tree": "6f63316ade344c84ecc4b3f50a5e6b53cc9d1ef4",
+    "receipt_source": "7ef092acf7fe305cdbebe0c2315beb26c32b1767",
+    "W": "78f2362bd09fcbf606505d7833860f1af07b8e6f",
+    "W_tree": "545203f96b7f5087e85c159f8ab9b7290ede8f12",
+    "S": "6dea9a6f9a96b0e5c9051472d1bd6513189376fc",
+    "S_tree": "f37e8e81d67e9ef0f211f31da849f756e6ddb0e2",
     "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
     "overlay": [
       {
@@ -261,16 +273,24 @@
         "mode": "100644",
         "type": "blob",
         "sha": "e91191ec5fa37da12db4d92e973e9105c00be4e5"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+        "mode": "100644",
+        "type": "blob",
+        "sha": "feae4846feb657924d9229193eeeded58b378851"
       }
     ],
-    "branch": "ci-run-linux-astra-wp11-19a48b5f-3619f1fd-m52-05",
+    "branch": "ci-run-linux-astra-wp11-78f2362b-3619f1fd-m52-06",
     "selected": "e2e/sucafina/decisions.spec.ts",
     "count": 5,
     "timeout_ms": 180000,
+    "ui_deadline_ms": 10000,
     "retries": 0,
     "repeatEach": 1,
     "workers": 1,
-    "shared_revision": "P4-v4-C25-query",
+    "scope": "P5 forwards the real fresh scenario batch; no cross-phase cache, no seed or direct UI mutation replacement.",
+    "causality_limit": "C27 Runtime56 is also consumed; this execution cannot isolate batching from runtime-copy performance.",
     "sentinel": {
       "root_entries_unchanged": 43,
       "only_extra": {
@@ -281,35 +301,52 @@
         "size": 229,
         "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
       },
-      "overlay_files_verified": 15
+      "overlay_files_verified": 16
     },
     "dedup": {
-      "checked_at": "2026-11-15 01:16:26 UTC",
+      "checked_at": "2026-11-15 01:29:48 UTC",
       "active_wp11": 0,
-      "existing_exact": 0,
-      "request": "3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+      "exact_existing": 0,
+      "other_active": [
+        43663209925
+      ],
+      "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf"
     },
     "status": "IN_PROGRESS_AT_PUBLICATION",
-    "run_id": 43662317407
+    "run_id": 43663347199
   },
-  "current_source": "14360372153592d944aa10e42bcac1b6d86680f5",
-  "current_source_tree": "47341d2756b567632ef450555493cefbdd4bdb68",
-  "review": {
-    "v3_packet_sha256": "d8e4ee501303cc6ebf2c036e416993acc9f4b317d0c1c840d89279d1d9c661af",
-    "v3_static": "PASS_WITH_SCOPE_LIMITS",
-    "v4_addition": {
-      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
-      "preimage": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
-      "postimage": "e91191ec5fa37da12db4d92e973e9105c00be4e5",
-      "reason": "C25 installed UI now sends procurement=attached to discovery and inspection. Admit only this exact optional query literal, retaining duplicate/unknown-key checks, origin and read authority.",
-      "review": "Root and composition_audit static confirmation; nominal05 pending"
-    },
-    "locked_edit": "Authenticated C08 incarnation/aggregateRevision capture precedes evidence checks; verify under transactionAll plus native source fences.",
-    "limits": [
-      "Static review does not establish runtime PASS",
-      "Shared CLI/global checks require owner45; not supplied by source-only check",
-      "Optional routes outside the original five cases remain unqualified"
+  "previous_nominal": {
+    "run": 43662317407,
+    "base": "C25",
+    "receipt": "nominal-05.json",
+    "passed": 3,
+    "failed": 2,
+    "independent_passed": [
+      "J3",
+      "J4",
+      "J5"
     ],
-    "v4_packet_sha256": "5e4578284004f32b65f6f3970d034c5a694addb6e0dce1684d7df355d1e82db2"
+    "remaining_independent": "J1 comparison abort before HTTP/body",
+    "financial": "J2 Requests GET503 before form"
+  },
+  "checks": {
+    "source_check": "checks/source-01.json",
+    "run": 43661892542,
+    "verdict": "FAILURE_INHERITED_130_TS_43_GATE_18_WARN_NO_NEW",
+    "scope": "Own source HTTP compiled as part of Sucafina; shared CLI/app-shell/E2E and C27 global checks not supplied by this workflow.",
+    "not_waived": true
+  },
+  "review": {
+    "state": "STATIC_PASS_WITH_RUNTIME_PENDING",
+    "batch_postimage": "feae4846feb657924d9229193eeeded58b378851",
+    "review_sha256": "bb1e4ab5681923bbdbb099c9f7f2c3a7a83259262fbf1b771623f89c8ae1e343",
+    "claims": [
+      "real underlying batch per observation phase",
+      "No cross-phase result/Promise cache",
+      "Request/binding/producer identity and lexical-scope checks before/after",
+      "Every canonical case/result/source/coverage/criterion recheck retained",
+      "Original 180000ms tests and10000ms UI deadline unchanged"
+    ],
+    "causality_limit": "C27 Runtime56 is also consumed; this execution cannot isolate batching from runtime-copy performance."
   }
 }

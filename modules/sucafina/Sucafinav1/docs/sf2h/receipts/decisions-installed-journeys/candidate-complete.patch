@@ -631,3 +631,49 @@ index 5cb8e4e45c1e68af4c59ec096b499ed0907f6c66..e91191ec5fa37da12db4d92e973e9105
        const runtime = input.runtime()
        if (!runtime) return reply({ status: "unavailable" }, 503)
        try {
+diff --git a/apps/cli/src/sucafina-product/portfolio-comparison-scope.ts b/apps/cli/src/sucafina-product/portfolio-comparison-scope.ts
+index 7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11..feae4846feb657924d9229193eeeded58b378851 100644
+--- a/apps/cli/src/sucafina-product/portfolio-comparison-scope.ts
++++ b/apps/cli/src/sucafina-product/portfolio-comparison-scope.ts
+@@ -134,6 +134,32 @@
+       return result
+     } finally { scope.reading.delete(key) }
+   }
++  const resolveMany: PlannerScenarioHost["resolveMany"] = input.scenarios?.resolveMany ? async (incoming, call) => {
++    const references = structuredClone([...incoming])
++    const referenceDigest = digestSfValue(references)
++    const producer = input.scenarios
++    const batch = producer?.resolveMany
++    const scope = active.get(call)
++    const request = host.requestFor(call)
++    const binding = digestSfValue([call.kind, call.binding])
++    const deniedBatch = () => references.map(() => denied())
++    const currentBatch = () => !!request && !request.signal.aborted && host.requestFor(call) === request &&
++      binding === digestSfValue([call.kind, call.binding]) && digestSfValue(incoming) === referenceDigest &&
++      input.scenarios === producer && producer?.resolveMany === batch &&
++      (scope ? current(call, scope) : !active.has(call))
++    if (!producer || !batch || !currentBatch()) return deniedBatch()
++    const selected = scope ? await input.business.selectedCase(call) : undefined
++    if (scope && (selected?.status !== "ok" || !currentBatch())) return deniedBatch()
++    const keys = scope && selected?.status === "ok"
++      ? [...new Set(references.map((reference) => digestSfValue({ reference, caseRef: selected.value, binding: scope.binding })))] : []
++    if (scope && keys.some((key) => scope.reading.has(key))) return deniedBatch()
++    if (scope) keys.forEach((key) => scope.reading.add(key))
++    try {
++      // Each phase invokes the actual producer anew. No observation enters either proof map.
++      const observed = structuredClone(await batch.call(producer, structuredClone(references), call))
++      return currentBatch() ? observed : deniedBatch()
++    } finally { if (scope) keys.forEach((key) => scope.reading.delete(key)) }
++  } : undefined
+   const compare: Compare = async (request, call) => {
+     const captured = structuredClone(request)
+     const requestDigest = digestSfValue(captured)
+@@ -183,7 +209,7 @@
+       } finally { if (active.get(call) === scope) active.delete(call) }
+     })
+   }
+-  return { compare, run, scenarios: input.scenarios ? { resolve: resolveScenario } : undefined }
++  return { compare, run, scenarios: input.scenarios ? { resolve: resolveScenario, ...(resolveMany ? { resolveMany } : {}) } : undefined }
+ }
+ 
+ function plannerOnlyEvidence(decision: DecisionCase): readonly Extract<BusinessEvidenceRef, { kind: "record" }>[] | undefined {

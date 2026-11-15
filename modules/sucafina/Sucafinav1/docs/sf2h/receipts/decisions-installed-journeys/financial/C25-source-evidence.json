@@ -1,0 +1,359 @@
+{
+  "source": {
+    "candidate": "C25",
+    "sha": "4b15af2d8f8a5b96cdd0a8117951939bde0b9d02",
+    "tree": "ad67f4c0101b341e08de075c2c8ba8e599c4b3a2",
+    "source53": "0ad96d0ffa97d309c90847211e943e59893040cc"
+  },
+  "intake": {
+    "ACK57": {
+      "blob": "2572ec24161d5749987ae92d15405295add10ad6",
+      "content": {
+        "schema": "sf2h.closure-intake-57.ack.v1",
+        "mission": 57,
+        "actor": "S0-C",
+        "epoch": "S0-C-e11-browser57",
+        "state": "ACK57_ACCEPTED_BOUNDED_SUCCESSION",
+        "recorded_at": "2026-11-15 01:01:48 UTC",
+        "campaign": "sf2h-integral-20261112",
+        "T0": "2026-11-13T04:01:10Z",
+        "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+        "repository": "gustavomhss/Orchestra-SF",
+        "branch": "sf2-stack",
+        "pr": 65,
+        "authority": {
+          "user": "Execute mission57 as55 successor; solewriter sf2-stack/PR65 throughGitHubMCP/CAS; no checks or CI/AM.",
+          "control": "44f01d333618712213d2189157ca6aeace4d6d2e",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/released-closure-intake.json",
+          "blob": "9e7748018bde0e65d0daa2b0732be75ebaa3d108",
+          "current_control": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+          "current_mission_blob_unchanged": true,
+          "new_control_delta": "Only mission58 source Portfolio qualification after explicit54/56terminals;57 remains sole integrator.45 checks andS0 finalacceptance unchanged."
+        },
+        "predecessor": {
+          "mission": 55,
+          "terminal": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+          "tree": "d4cb4fbd02ddc064beffa0e6bd796013ed30f6de",
+          "handoff_blob": "acfc9362552433a8374443469f5428d1bbf7a308",
+          "authority_blob": "70ea49f6f6bc1a9b0da707f8c10ce1da495050e1",
+          "explicit_lease_state": "ENDED",
+          "head_matches": true
+        },
+        "base_candidate": {
+          "symbol": "C23",
+          "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+          "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
+          "C13_C23_intakes_retained": true
+        },
+        "writer": "Root57 is the only remote writer. Three helper agents perform read-only review; they are neither new source owners nor final campaign reviewers.",
+        "write_scope": [
+          "Selectively admitted released source/shared patches in sf2-stack only",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/"
+        ],
+        "readings": {
+          "root": "AGENTS; mission57/currentcontrol delta; rollingCOMMON; pinnedSTART/WORKFLOW/executionCOMMON and assigned S0C root sections;55handoff/authority/candidates/closure/census/verification/gatequeue",
+          "distributed": "FullS0C pack+annexes assigned to3readonlyhelpers;56pendingitems/17findings read byPortfoliohelper; source reviews complete before materialpublication.",
+          "no_product_execution": true
+        },
+        "intake_queue": [
+          {
+            "mission": 53,
+            "source": "0ad96d0ffa97d309c90847211e943e59893040cc",
+            "action": "Owned7paths then explicit independent review of sharedApplication/admission andmixed9pathproposals"
+          },
+          {
+            "mission": 54,
+            "source": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+            "action": "Partial read-before-bind release only; originalP03FAIL retained"
+          },
+          {
+            "mission": 56,
+            "source": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+            "action": "New explicitterminalrelease observed; review runtime+tests and19assertion legacyoracle adaptation; not54inertproposal"
+          },
+          {
+            "mission": 48,
+            "state": "NO_COMPLETE_RELEASE_AT_INITIAL_CENSUS"
+          },
+          {
+            "mission": 52,
+            "state": "NO_COMPLETE_RELEASE_AT_INITIAL_CENSUS"
+          }
+        ],
+        "preservation": {
+          "all_C23_material_and_history": true,
+          "all56prior_pending_items_and_digests": true,
+          "all17prior_findings": true,
+          "Microsoft49_atomic_C22": true,
+          "CurrentChoice46": true,
+          "Finance34": true,
+          "original_M31_and_MI07_open": true,
+          "original_P03_72assertions_180000ms_open": true,
+          "Reports4contracts_not4journeys": true,
+          "Native_admission_and_Schedule_HOLD": true,
+          "criteria": {
+            "work_packages": 15,
+            "tasks": 74,
+            "contracts": 17,
+            "criteria": 1610,
+            "actor_criteria": 155
+          },
+          "resident": {
+            "profiles": 5,
+            "skills": 18,
+            "packs": 8,
+            "operations": 39
+          }
+        },
+        "qualification": {
+          "checks_owner": 45,
+          "P03_source_owner": 58,
+          "epic_owner": "S0",
+          "final_acceptance": "S0",
+          "GLOBAL_RELEASE": false
+        },
+        "execution": {
+          "tests": "NOT_RUN",
+          "typechecks": "NOT_RUN",
+          "guards": "NOT_RUN",
+          "builds": "NOT_RUN",
+          "preflights": "NOT_RUN",
+          "CI_dispatches": 0,
+          "AM": "NOT_RUN",
+          "source_branch_writes": 0,
+          "workflow_ref_writes": 0,
+          "dev_merge": false,
+          "deploy": false,
+          "Azure": false,
+          "third_party_messages": false
+        },
+        "publication": {
+          "method": "GitHubMCP create_tree/create_commit/update_ref expected_sha force:false",
+          "expected_parent": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+          "not_material_candidate": true
+        }
+      }
+    },
+    "increment02": {
+      "blob": "e578b7e8ec612e5215fd6ff3f73132c622ad5f59",
+      "content": {
+        "schema": "sf2h.closure-intake-57.increment.v1",
+        "mission": 57,
+        "candidate_symbol": "C25",
+        "sequence": 2,
+        "parent": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+        "parent_tree": "97500d1435255a2790b1e6833e5a9391ca70d860",
+        "source_mission": 53,
+        "source_release": "0ad96d0ffa97d309c90847211e943e59893040cc",
+        "source_product": "179a766bb1e3b6b15523ba6c2be8553207d543fd",
+        "source_proposal": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-approval-closure/shared/composite/manifest.json",
+          "blob": "828cc2c02368c2b0f8546f1bc5adb5907a250d54",
+          "patch_blob": "3c6a4785ae0a0129c71e038e47e67ecb3cba5af9",
+          "patch_sha256": "8f20c531cbaef9c8cdbc04f5578379004dd67f3d5a1da4678a3ad4984acfe942",
+          "status_at_source": "INERT_NOT_APPLIED_NOT_TESTED"
+        },
+        "material_paths": [
+          {
+            "path": "apps/cli/src/sucafina-product/business-services.ts",
+            "preimage_blob": "6bb862ce96d3ca2b6478e5f00c257e0b38c1bfee",
+            "postimage_blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+            "postimage_sha256": "b09992087f3aed42da28b527bd07682fe244b639dd6804ec954a3fc109ceda71",
+            "bytes": 71752,
+            "mode": "100644"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/decision-controls.ts",
+            "preimage_blob": "e9d3a80f3a592c224f9e3e5d936f72fdf3e81ec7",
+            "postimage_blob": "23721ab89535bcf8644a98cf3ed2de65a929a329",
+            "postimage_sha256": "daf793ea6dcc69cfcd517f78807c434bd8747d5d06a4bf7d86cf0375a59f8624",
+            "bytes": 49601,
+            "mode": "100644"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/decision-domain-services.ts",
+            "preimage_blob": "4f654783f4fa0d3ed1f4495b0c2fece0ae802d9f",
+            "postimage_blob": "9f8cd652fca2bc771e2ee6fa5c8a1e9df373a592",
+            "postimage_sha256": "7a8cb9edc6267e90eea6cf020c1a8ed01315b8416721a76bb5be41a1425aeec4",
+            "bytes": 24150,
+            "mode": "100644"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+            "preimage_blob": null,
+            "postimage_blob": "8570e0cab2686986ad81b304e8e3aeaf154cb20a",
+            "postimage_sha256": "a6f1ccb25e7418d8739f024c77f7ab5e6fa129710567aea4549318ecb4866b14",
+            "bytes": 8959,
+            "mode": "100644"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+            "preimage_blob": "38b832f73b0eaa615d5fdf2d7838b0e5635440fa",
+            "postimage_blob": "d2158a10de3473edc5f5d509f3215e84140a8382",
+            "postimage_sha256": "f5340af9a9495365d9baec6bf0a898a2555a93705e665638ab54354b4e5b5984",
+            "bytes": 12729,
+            "mode": "100644"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+            "preimage_blob": "f83b79d838deb2fcdd09300903d2469b3de6d32e",
+            "postimage_blob": "5a0592e200e14fa801b1ed24150384070ea5298b",
+            "postimage_sha256": "ad917f80c95a7e92445581ca3165828d72d02ac780c2d57fc1a6fcc04c0c6e31",
+            "bytes": 17932,
+            "mode": "100644"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/decisions/composite-planner.ts",
+            "preimage_blob": "74cd720489adde4b8a341c3d4c378194f58afa16",
+            "postimage_blob": "0ff544b39f61a26cea6d15c238a88217ef7e6130",
+            "postimage_sha256": "0a2f233c674d3aad4a3c307dda76c42f5a138d7e22a6a9f0fd5f9cbf9b4e9881",
+            "bytes": 5402,
+            "mode": "100644"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/product/ui/decision-alternatives.ts",
+            "preimage_blob": "a731b36427ffbdbc30d19b3b7785be16e5c9747d",
+            "postimage_blob": "8c89acd506b8fc7177ea07ef7a2ffaba74634853",
+            "postimage_sha256": "32cfc83cd08b4cb472b09357bd19a9025eac62e5eb95832752675f77e4080e65",
+            "bytes": 36474,
+            "mode": "100644"
+          },
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+            "preimage_blob": null,
+            "postimage_blob": "24dda67176121efe50f91148d6b2291a4f975d4b",
+            "postimage_sha256": "ba97b8efb4ab12464127aa1286a2c01175f0dbc17776a30ef41741b387fc974c",
+            "bytes": 17994,
+            "mode": "100644"
+          }
+        ],
+        "decision": "ADMIT_REVIEWED_SHARED_COMPOSITE9_AS_CANDIDATE",
+        "archive": {
+          "commit": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+          "prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-outputs/procurement53/shared/composite",
+          "rule": "Source proposal and all pre/post bytes were archived exactly in C24. Source receipt remains inert and unchanged; only the nine explicitly reviewed canonical target paths are activated here."
+        },
+        "semantics": {
+          "planner": "Existing Planner subtotal remains unchanged; external Procurement hypothesis contributes a condition with total:null. Preview does not mutate PR, approve, submit, issue source metadata or publish C08 calculation.",
+          "authority": "Current case, version, participant, attached Planner and Procurement sources, currency/period, actual request binding and source fences are verified. Promotion remains explicit.",
+          "history": "C17 physical continuity and current ACL permit scoped-incarnation rotation; fresh reference comparison remains exact. Original recorded evidence is retained; no synthetic archive or bypass of original financial capture."
+        },
+        "shared_admission": {
+          "decision": "HOLD_INERT",
+          "paths": [
+            {
+              "path": "application-command-admission.patch",
+              "bytes": 6067,
+              "sha256": "edc4fd6eba567e9af90ae6a41302f888c2011f33777159c56df9bb312afb0327"
+            },
+            {
+              "path": "procurement-approval-admission.example.ts.txt",
+              "bytes": 4605,
+              "sha256": "338dc5fe5bc5d4b6db5ff475d55345b06c439d13738b09cce65f901b83d22cce"
+            },
+            {
+              "path": "CONTRACT.md",
+              "bytes": 12701,
+              "sha256": "85d3b285e4c58a6722ac85d74496974ccdf545ff75c7f90f202cce855df92d64"
+            }
+          ],
+          "reason": "No concrete existingUiContextFor/requestFor provider is mounted by the released Application proposal. Source admission tests use a domain harness wrapper. Do not activate either proposed path."
+        },
+        "preserved": {
+          "prior_candidates": "C23 and all previous intakes remain ancestry; C24 owned7 retained.",
+          "Microsoft49": "C22 entry, CLI serve, installation/auth/origin/privacy/material map/fixtures unchanged.",
+          "original_requirements": [
+            "M31",
+            "MI07",
+            "Original52 financial approval of an unwritten replacement before Apply",
+            "Original51 capture precondition"
+          ],
+          "tests": "Original52/MI07/Memory and P03/P02 assertions and budgets are unchanged."
+        },
+        "qualification": {
+          "source_shared_tests": "NOT_RUN",
+          "composed_tests": "NOT_RUN",
+          "static_review": "Root complete nine-path review plus independent concentrated cold review; no static blocker found.",
+          "known_gap": "Four new mixed tests have synthetic Planner membership and fresh-only Procurement resolution; historical C17, recorded fallback, tombstone/recreate and mid-read revocation remain to qualify.",
+          "checks_owner": 45,
+          "acceptance_owner": "S0",
+          "M31": "OPEN",
+          "MI07": "OPEN",
+          "GLOBAL_RELEASE": false
+        },
+        "publication": "GitHub MCP CAS. The containing commit is C25; exact SHA is acknowledged by the next increment and PR65."
+      }
+    },
+    "consumerAck53": {
+      "blob": "81a26f9dd69634057ea1406626e096205ac78184",
+      "content": {
+        "schema": "sf2h.closure-intake-57.consumer-ack.v1",
+        "consumer": 57,
+        "source": 53,
+        "source_release": "0ad96d0ffa97d309c90847211e943e59893040cc",
+        "owned": {
+          "state": "CONSUMED_AS_CANDIDATE",
+          "symbol": "C24",
+          "sha": "bc51f4446f26cdc5f0f9b3da1c1e916f36221e34",
+          "tree": "97500d1435255a2790b1e6833e5a9391ca70d860",
+          "parent": "666ed28668ad3fc0bb9c89fdb57a0da33c57e2e4",
+          "material_paths": 7,
+          "archive": 63,
+          "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/increment-01.json",
+          "manifest_blob": "4ce231f498e00a598d4b185eb8c4eb8f6398a97c"
+        },
+        "composite": {
+          "state": "CONSUMED_REVIEWED_AS_CANDIDATE",
+          "candidate": "C25",
+          "sha_resolution": "Containing commit",
+          "manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/increment-02.json"
+        },
+        "admission": {
+          "state": "HOLD_INERT",
+          "reason": "No concrete existingUiContextFor/requestFor provider is mounted by the released Application proposal. Source admission tests use a domain harness wrapper. Do not activate either proposed path."
+        },
+        "requirements": {
+          "M31": "OPEN",
+          "MI07": "OPEN",
+          "reason": "edit persisted draft -> submit exact persisted amount -> approve frozen holder snapshot does not approve an unwritten replacement for later Apply."
+        },
+        "source_test_results_transferred": false
+      }
+    }
+  },
+  "readback_blobs": {
+    "c25Business": {
+      "sha": "0181267b67b74a8df338999ddb7745cfee42bb29",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4b15af2d8f8a5b96cdd0a8117951939bde0b9d02/apps/cli/src/sucafina-product/business-services.ts"
+    },
+    "c25Runtime": {
+      "sha": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4b15af2d8f8a5b96cdd0a8117951939bde0b9d02/modules/sucafina/Sucafinav1/runtime/procurement.ts"
+    },
+    "c25Queue": {
+      "sha": "91784d3ea3358565e19b62922c8867f134af9ac4",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4b15af2d8f8a5b96cdd0a8117951939bde0b9d02/modules/sucafina/Sucafinav1/product/procurement/queue-page.ts"
+    },
+    "c25Sources": {
+      "sha": "615b908d59fb95cb16ce8359c83e0c7aaa8a7a5e",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4b15af2d8f8a5b96cdd0a8117951939bde0b9d02/modules/sucafina/Sucafinav1/product/procurement/sources.ts"
+    },
+    "c25Fixture": {
+      "sha": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4b15af2d8f8a5b96cdd0a8117951939bde0b9d02/packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts"
+    },
+    "c25FixtureSetup": {
+      "sha": "58f40c0f9908ad5cc8c1eebb74f4fd7a1e05283e",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4b15af2d8f8a5b96cdd0a8117951939bde0b9d02/packages/app-shell/e2e/sucafina/wp03/installation-setup.ts"
+    },
+    "c25Handoff53": {
+      "sha": "b1d0c5012f8c6687ecb15855207119984ca8a7e3",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4b15af2d8f8a5b96cdd0a8117951939bde0b9d02/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-outputs/procurement53/HANDOFF53.md"
+    },
+    "c25Contract53": {
+      "sha": "e5b2899e409150dc7cb058b74ba8b318e7fb431b",
+      "display_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4b15af2d8f8a5b96cdd0a8117951939bde0b9d02/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/source-outputs/procurement53/CONTRACT53.md"
+    }
+  }
+}
