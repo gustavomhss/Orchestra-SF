@@ -1,0 +1,546 @@
+{
+  "schema": "sf2h.installed-bi.static-review.v1",
+  "review_id": "STATIC-REVIEW-01",
+  "mission": "62",
+  "created_at_utc": "2026-11-15 02:40:08 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "installed-bi-proof",
+  "target_branch": "sf2-stack",
+  "control": {
+    "sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/installed-bi-closure.json"
+  },
+  "fixed_source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "reviewer": {
+    "identity": "ChatGPT tool agent",
+    "collaboration_task_path": "/root/bi_static_review",
+    "real_agent_id": null,
+    "real_agent_id_status": "UNKNOWN_NOT_EXPOSED",
+    "human_review": false,
+    "authorship": "THIS_RECEIPT_ONLY",
+    "product_files_authored": [],
+    "test_files_authored": [],
+    "inert_patch_files_authored": [],
+    "remote_mutations": [],
+    "note": "Source reads, contract/call-chain analysis, proposed discriminating assertions and corrective findings were sent to the writers. This reviewer did not implement their fixes."
+  },
+  "distinct_authors": {
+    "provenance": "Writer responsibility communicated in this collaboration, not a claim about GitHub account identity.",
+    "product_and_contract_tests": "/root",
+    "browser_and_timeline_inert_proposals": "/root",
+    "installed_browser_tests": "/root/bi_ci_recon",
+    "this_receipt": "/root/bi_static_review"
+  },
+  "decision": {
+    "status": "STATIC_REVIEW_COMPLETE_WITH_RUNTIME_GATES_UNOBSERVED",
+    "additional_static_blockers_in_reviewed_current_files": [],
+    "scope": "No additional concrete static blocker was identified in the enumerated current files. This is not runtime, native, G7, release or whole-mission acceptance.",
+    "external_owner_dependencies_remain": true
+  },
+  "revisions": [
+    {
+      "label": "W1",
+      "sha": "e816e5856af8f086402a501242b786488a2c6270",
+      "parent": "46a73ac4b578afba716f266f2382739a8da7700a",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/e816e5856af8f086402a501242b786488a2c6270",
+      "scope": "Product routing/view changes and temporal contract test; independently inspected."
+    },
+    {
+      "label": "W2",
+      "sha": "cb2f347893bd01f979c6471361b9c35ab1f17b03",
+      "parent": "e816e5856af8f086402a501242b786488a2c6270",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/cb2f347893bd01f979c6471361b9c35ab1f17b03",
+      "scope": "Numerical/source tests and browser/timeline inert proposals; inspected subset is enumerated below. Legacy BI10 test proposal is not included in this review."
+    },
+    {
+      "label": "W3",
+      "sha": "2c89ceae38b215363d35ae0877e691665b02f2a5",
+      "parent": "cb2f347893bd01f979c6471361b9c35ab1f17b03",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/2c89ceae38b215363d35ae0877e691665b02f2a5",
+      "scope": "History/sensitivity tests and nominal installed browser tests; independently inspected."
+    },
+    {
+      "label": "W4",
+      "sha": "f6be2b49218498fb49852b088ba91896c3f94bb5",
+      "parent": "2c89ceae38b215363d35ae0877e691665b02f2a5",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/commit/f6be2b49218498fb49852b088ba91896c3f94bb5",
+      "scope": "Forecast replacement test; parent reported final author review. Commit patch read for boundary context only; not included in this review's independently reviewed file inventory."
+    }
+  ],
+  "reviewed_files": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "git_blob_sha1": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575",
+      "sha256": "fcab0cd94b99e6243ea7ced107eed9c3c4973e8fbe7e0b09859849cde554093a",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "e816e5856af8f086402a501242b786488a2c6270"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "git_blob_sha1": "4d165428dc731e59c2faf01a4e47b352e691dfbc",
+      "sha256": "b348d81387be8d22d0125bcfca21cad1903195e08798cc6b6c57ec9bea0efcd4",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "e816e5856af8f086402a501242b786488a2c6270"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "git_blob_sha1": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+      "sha256": "5aa0ae751fe0c5f0f6641e3d18b19c7117945ebd85c3c66e20572316c23a43dd",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "e816e5856af8f086402a501242b786488a2c6270"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+      "git_blob_sha1": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57",
+      "sha256": "1d1340172f93a3b93118ec6d0ba0f1cb61f0d5101ac906f98bd9e2c2fb6d0cf0",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "UNCHANGED_DEPENDENCY_AT_FIXED_BASE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+      "git_blob_sha1": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+      "sha256": "203f906ea799710141214a5d1aa498db24a6e3531e552328fb251116fa2e4359",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "UNCHANGED_DEPENDENCY_AT_FIXED_BASE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+      "git_blob_sha1": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab",
+      "sha256": "d4b7d6e81c69ae4570dac53010d022a2a2ffc86795a6f163b8b1620ac554ea5d",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "UNCHANGED_DEPENDENCY_AT_FIXED_BASE"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "git_blob_sha1": "ea90f631cc445b0a1a4b82594ce062ea7d93fe82",
+      "sha256": "efbc199177b4e1ba817bed25abdbfb094afd0bb185dbc794cded0d9f91dd6dd5",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "cb2f347893bd01f979c6471361b9c35ab1f17b03"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "git_blob_sha1": "0bb7805d0a510a5a9c6076d14f8f7354e7880f0e",
+      "sha256": "447bc72e118aa5e091e2ecbc396f790401ea832508670355bfcaa82df905a9dc",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "cb2f347893bd01f979c6471361b9c35ab1f17b03"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "git_blob_sha1": "86841b85c918cf50a7e16a6215d79d0d58adcd51",
+      "sha256": "480387045b77ad3802e5634185da7955190440f523b9d82720fbceb2b5929b3e",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "cb2f347893bd01f979c6471361b9c35ab1f17b03"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "git_blob_sha1": "252b519f6dfaee461323d3b16407fc6f5849e668",
+      "sha256": "047d77a4c3222ff90c0335eabbbd5d7b042ce27283a14f4a69e08ad20a7c5fc7",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "e816e5856af8f086402a501242b786488a2c6270"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "git_blob_sha1": "7968ddcc8ec4d1268cb34f6ce0222799dc89228d",
+      "sha256": "5dd186aa72af88bdb0d55e20a3591ad7859d03cb0d94ffb89f177d66675282dd",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "2c89ceae38b215363d35ae0877e691665b02f2a5"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "git_blob_sha1": "70a79f8fa451cf7dd93d58414f1d9d78dd8655a9",
+      "sha256": "400fe4c16730cf5fa10098f39aed3469709a756cef0c3df5753f5657c81a3f50",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "2c89ceae38b215363d35ae0877e691665b02f2a5"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "git_blob_sha1": "9f92a42bbac03a6421151145c751cc83d588f1fb",
+      "sha256": "ce63df7146eeb94eedc23129bbcacffa0829c629854cf58837989b15a17fbc91",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "2c89ceae38b215363d35ae0877e691665b02f2a5"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "git_blob_sha1": "a4ad8e253fb190ef3c9360768d70ffd84f673752",
+      "sha256": "77e9e5d3d1080d6299703483781a490cd79ae89652d957dbc7c5acf8d7b5c1c5",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "2c89ceae38b215363d35ae0877e691665b02f2a5"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+      "git_blob_sha1": "0d4f44d31a1444f561305cde175be58064584c6a",
+      "sha256": "843584c0ce9fe1028cc146a31d7607635d2cf78b847ad7ad7e760f7765bda190",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "CHANGED_OR_ADDED_REVIEWED_FILE",
+      "published_blob_observed_in": [
+        "2c89ceae38b215363d35ae0877e691665b02f2a5"
+      ]
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+      "git_blob_sha1": "7b4d56e8c56fc2f661e00e37c270a2fbd61b691e",
+      "sha256": "cf35a4da2afb1a0b80fe342c8a8492c94fd5f40d0d395d4fe1d494b069a50645",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "LOCAL_PROPOSED_REGRESSION_FILE_PUBLICATION_NOT_OBSERVED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/browser-selection/extended-bi-browser.postimage.txt",
+      "git_blob_sha1": "95cfac2aa0f2709fad3547dead073cded9f80977",
+      "sha256": "ecb50b47b03e7383f9f4f4c386b22e34eda31dad3a5a264af50e911f957f17f4",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "INERT_PROPOSAL_TEXT_NOT_PRODUCT_APPLICATION",
+      "published_blob_observed_in": [
+        "cb2f347893bd01f979c6471361b9c35ab1f17b03"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/browser-selection/proposal.patch.txt",
+      "git_blob_sha1": "2bbc94d44229faacee1262a123480e770bbe81e8",
+      "sha256": "81a5f02640211ed62e4947ba5637090777b3b966ef5aad355cc0897fc411eaa4",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "INERT_PROPOSAL_TEXT_NOT_PRODUCT_APPLICATION",
+      "published_blob_observed_in": [
+        "cb2f347893bd01f979c6471361b9c35ab1f17b03"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/multi-source-timeline/milestones.postimage.txt",
+      "git_blob_sha1": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+      "sha256": "ff7c985812a357e134102e61ccbdcde4b92611a543a0044c1c6b4c32673abd08",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "INERT_PROPOSAL_TEXT_NOT_PRODUCT_APPLICATION",
+      "published_blob_observed_in": [
+        "cb2f347893bd01f979c6471361b9c35ab1f17b03"
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/multi-source-timeline/proposal.patch.txt",
+      "git_blob_sha1": "c29435c02727f518a2b7564b03856befbbdf21e5",
+      "sha256": "fb9b3640aefa6ff166d5dded3c3ecf4f4659d8262557adfa57600f5c89411902",
+      "review": "STATIC_READ_ONLY",
+      "relationship": "INERT_PROPOSAL_TEXT_NOT_PRODUCT_APPLICATION",
+      "published_blob_observed_in": [
+        "cb2f347893bd01f979c6471361b9c35ab1f17b03"
+      ]
+    }
+  ],
+  "supporting_immutable_sources": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "git_blob_sha1": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "git_blob_sha1": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "git_blob_sha1": "881ce4672d9d0e641d1cc849663c0980c118774d",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/product.ts",
+      "git_blob_sha1": "d4c5d9c9aabcf70bb71739d3952776517dc55923",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/contribution.ts",
+      "git_blob_sha1": "527549734e66439a4298877f5b9e90918dd8b3f5",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+      "git_blob_sha1": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+      "git_blob_sha1": "a1765988434920f8dc9c71eaea2427b6ecac59cb",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/portfolio/verification.ts",
+      "git_blob_sha1": "254e22ea35f5b422b59c8f0549c8f12d1d4fb492",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "git_blob_sha1": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "git_blob_sha1": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+      "git_blob_sha1": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+      "git_blob_sha1": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+      "git_blob_sha1": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "review_kind": "READ_ONLY_CONTRACT_AND_CALL_CHAIN_INSPECTION"
+    }
+  ],
+  "normative_coverage": {
+    "independent_actor_pack_sections": [
+      "resident",
+      "resident_ui",
+      "dependency_context",
+      "consumer_edges",
+      "resident_gate_requirements",
+      "reference_context_rule",
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "C15",
+      "C16",
+      "C17"
+    ],
+    "shared_coverage_note": "This review is one part of the parent's full-package reading. It does not independently claim C01-C10 or the other reviewer's work-package/numeric/proof/appendix coverage.",
+    "constraints": [
+      "GitHub MCP for remote reads; parent alone owns remote writes/CAS.",
+      "No repository tests, build or product execution by this reviewer.",
+      "No native visual migration changes.",
+      "One new receipt file only."
+    ]
+  },
+  "findings": [
+    {
+      "id": "BI62-SR-01",
+      "area": "BI10 installed producer routing",
+      "status": "STATICALLY_RESOLVED_IN_PRODUCT",
+      "finding": "The installed BI10 scenario/portfolio route did not mount the existing canonical period producer.",
+      "resolution": "bi-services.ts mounts BI09 and BI10 through scenarioCosts/portfolioCosts; scenario.ts forwards request.viewId to plannerScenarioBiPresentation. Current-case candidate and historical-baseline checks remain present.",
+      "attribution": "Team finding; independently checked by this reviewer."
+    },
+    {
+      "id": "BI62-SR-02",
+      "area": "Visual period selection",
+      "status": "STATICALLY_RESOLVED_IN_PRODUCT",
+      "finding": "Timeline boundaries could survive a visual crop because the financial component period overlapped the crop even when the boundary date did not.",
+      "resolution": "view.ts filters timeline values by their observed dates, keeps absent/invalid dates explicit, and retains whole monetary values with an explicit no-proration message."
+    },
+    {
+      "id": "BI62-SR-03",
+      "area": "Source focus and visual state",
+      "status": "STATICALLY_RESOLVED_API_WITH_OWNER_INTEGRATION_PENDING",
+      "finding": "A valueId alone cannot identify which of several origins should regain focus; the display crop also needs selector-only state across repaint/reload.",
+      "resolution": "view.ts adds a bounded BiVisualState and originDigest-aware BiFocusTarget. The browser proposal stores only selectors and reapplies them after fresh options/data, while request.period stays canonical.",
+      "boundary": "The browser integration is inert proposal text in the reviewed commits."
+    },
+    {
+      "id": "BI62-SR-04",
+      "area": "Browser proposal navigation lifecycle",
+      "status": "STATICALLY_RESOLVED_IN_INERT_PROPOSAL",
+      "finding": "Previous detail/source navigation could remain after a new invalid read; a response with no safe destinations could appear successful; a removed chooser needed a meaningful focus destination.",
+      "resolution": "Postimage 95cfac2aa0f2709fad3547dead073cded9f80977 removes both containers at the start of both actions, captures position before clearing detail state, refuses zero safe anchors, focuses the first valid anchor on success and restores focus on failure.",
+      "closure_requires": "Owner application and rendered execution."
+    },
+    {
+      "id": "BI62-SR-05",
+      "area": "Timeline multiple origins",
+      "status": "STATICALLY_RESOLVED_IN_INERT_PROPOSAL",
+      "finding": "A valid multiple-source milestone must offer explicit origins instead of assuming a singular drilldown.",
+      "resolution": "The milestone proposal uses biSourceChoices/createBiSourceChooser for marks and explicit source buttons in the list. Enter/Space and Escape/cancel preserve keyboard navigation. The origins.length guard retains the row label when no source exists.",
+      "closure_requires": "Owner application and rendered execution."
+    },
+    {
+      "id": "BI62-SR-06",
+      "area": "Installed fixture forecast provenance",
+      "status": "STATICALLY_RESOLVED_IN_TEST",
+      "finding": "Saving only annual budget leaves forecast null/inherited, whose canonical evidence state is estimated.",
+      "resolution": "The fixture saves every monthly forecast through the real bulk-edit UI, including zeros, and re-enters the changed bridge forecast after copying the plan."
+    },
+    {
+      "id": "BI62-SR-07",
+      "area": "Installed source and comparison assertions",
+      "status": "STATICALLY_RESOLVED_IN_TEST",
+      "finding": "A subtotal may have several sourceRefs, and projection.comparison is an envelope rather than a top-level ScenarioComparison.",
+      "resolution": "The source assertion selects the exact recordId/refDigest. Advantage assertions read comparisonRef plus values and verify both table and mark output."
+    },
+    {
+      "id": "BI62-SR-08",
+      "area": "Current versus historical result identity",
+      "status": "STATICALLY_RESOLVED_IN_TEST",
+      "finding": "Promoting the resolved quote in the same case before rendering the prior candidate would leave that candidate historical and absent from current BI choices.",
+      "resolution": "The nominal browser fixture uses two independent cases with a current candidate in each. It does not relabel historical caseRef/version. The separate history test exercises a real revision in one case."
+    },
+    {
+      "id": "BI62-SR-09",
+      "area": "Planner UI selector",
+      "status": "STATICALLY_RESOLVED_IN_TEST",
+      "finding": "The same Planner line contains multiple data-command=save forms; an unrestricted locator is ambiguous.",
+      "resolution": "lineId selects the unique save form containing the Name field and retains the observed data-record identity."
+    },
+    {
+      "id": "BI62-SR-10",
+      "area": "Canonical inverse comparison",
+      "status": "STATIC_ROUTE_CONFIRMED_EXECUTION_UNOBSERVED",
+      "finding": "The nominal inverse comparison needs a legitimate producer path without assuming that an inverse portfolio binding can replay a historical candidate.",
+      "resolution": "The installed decision-portfolio-preview route accepts exactly {caseRef, request}, without purpose. createPortfolioProduct passes its own createPortfolioAnalysis to the preview; that analysis persists the C08 comparison and binding and revalidates historical scenario refs. The fixture previews the inverse first and persists the direct portfolio last.",
+      "boundary": "No inverse portfolio persistence is claimed, no guard is relaxed, and no replacement producer or route is introduced."
+    }
+  ],
+  "new_regression_review": {
+    "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+    "git_blob_sha1": "7b4d56e8c56fc2f661e00e37c270a2fbd61b691e",
+    "status": "NO_ADDITIONAL_STATIC_BLOCKER_IDENTIFIED",
+    "probes": [
+      "Crop to November, reload the real page, retain the visual crop while request.period and projection context retain the annual authorized horizon and persisted decision.",
+      "Find the matched renewal-to-bridge November boundary with both real source versions, enter/cancel/reopen its chooser with the keyboard, send the exact chosen refDigest and follow the real Planner destination."
+    ],
+    "discrimination": "The producer omits matched zero-difference rows, leaving the intended November start boundary as the unique matched multiple-source candidate. Added rows retain their single candidate source.",
+    "test_integrity": "No expected-failure annotation, skip, replacement HTTP handler, seeded authority or manufactured result is introduced.",
+    "execution": "NOT_OBSERVED"
+  },
+  "calculation_and_semantic_review": {
+    "status": "NO_CANONICAL_CALCULATION_CHANGE_IN_REVIEWED_PRODUCT_DIFFS",
+    "reasoning": [
+      "The product delta routes BI10 to plannerScenarioBiPresentation already used by the canonical Planner. It introduces no replacement financial equation.",
+      "The renderer changes date membership and focus/state selection only; it does not apportion values or rewrite producer periods, component values, currency, known subtotal or complete total.",
+      "The unchanged portfolio.ts, waterfall.ts and source-navigation.ts blobs are listed as dependencies; unchanged status is scoped to the inspected fixed-base copies.",
+      "Raw source fixtures distinguish omitted training, null, explicit zero and confirmed 40000; coverage is classified by existing human APIs.",
+      "Numeric assertions reference producer outputs. Literal assertions are expectations, not seed values for ScenarioComparison, coverage results, bindings or stored result refs.",
+      "History uses the real Planner copy/save commands and human coverage/alternative revisions; it checks the original ChoiceRecord and historical C08 value remain preserved.",
+      "The 55000 and 15000 thresholds come from createPlannerExactThreshold and canonical boundary previews. Those transient previews remain conditioned and are not presented as a persisted BI11 result."
+    ],
+    "asserted_not_observed_oracles": [
+      "Renewal 240000; transition 210000 with training omitted; total and completeDifference remain null; direct knownDifference -30000 and inverse +30000.",
+      "Confirmed training 40000 yields candidate total 250000; direct difference +10000 and inverse -10000.",
+      "Explicit training zero remains distinct from absent/null.",
+      "EUR 28000 at 1.08 yields USD 30240; missing FX remains unpriced.",
+      "Canonical sensitivity boundaries 55000/15000 and unchanged historical ChoiceRecord."
+    ],
+    "forecast_w4_boundary": "Parent-authored W4 records 590000→602000/596000 forecast replacements and declares the missing annual margin projection as a producer gap. This receipt does not upgrade that patch to an independently executed proof."
+  },
+  "external_proposals": [
+    {
+      "target": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "preimage_blob": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "postimage_blob": "95cfac2aa0f2709fad3547dead073cded9f80977",
+      "patch_sha256": "81a5f02640211ed62e4947ba5637090777b3b966ef5aad355cc0897fc411eaa4",
+      "application": "NOT_APPLIED_IN_REVIEWED_PRODUCT_COMMITS",
+      "owner": "60 / browser boundary owner"
+    },
+    {
+      "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "preimage_blob": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "postimage_blob": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+      "patch_sha256": "fb9b3640aefa6ff166d5dded3c3ecf4f4659d8262557adfa57600f5c89411902",
+      "application": "NOT_APPLIED_IN_REVIEWED_PRODUCT_COMMITS",
+      "owner": "60 / timeline boundary owner"
+    }
+  ],
+  "limited_observations": [
+    {
+      "subject": "Strict historical-candidate read in portfolio-services proof verifier",
+      "status": "STATIC_OBSERVATION_NOT_REPRODUCED",
+      "description": "The verifier callback uses a current-scenario read, unlike the preview's historical analysis revalidation. This review did not execute inverse portfolio persistence, did not classify the observation as a confirmed defect, and did not write a portfolio-history patch."
+    },
+    {
+      "subject": "Native visual migration and runtime qualification",
+      "status": "OUTSIDE_THIS_REVIEW",
+      "description": "No native sidebar migration, provider execution, native host proof or native zoom observation was performed."
+    }
+  ],
+  "execution_evidence": {
+    "repository_tests_by_reviewer": "NOT_EXECUTED",
+    "build_or_typecheck_by_reviewer": "NOT_EXECUTED",
+    "rendered_product_by_reviewer": "NOT_EXECUTED",
+    "native_or_AM_proofs_by_reviewer": "NOT_EXECUTED",
+    "G7": "NOT_OBSERVED",
+    "G8": "NOT_OBSERVED",
+    "runs": [
+      {
+        "label": "R1",
+        "run_id": 43667093423,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667093423",
+        "product_revision": "e816e5856af8f086402a501242b786488a2c6270",
+        "result": "NOT_OBSERVED",
+        "identity_source": "Parent report; this reviewer did not read run results."
+      },
+      {
+        "label": "R2",
+        "run_id": 43668401496,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668401496",
+        "result": "NOT_OBSERVED",
+        "identity_source": "Parent report; this reviewer did not read run results."
+      },
+      {
+        "label": "R3",
+        "snapshot_sha": "ee74a29004e0fd49ebac324f528d9d1949be46ac",
+        "product_parent": "f6be2b49218498fb49852b088ba91896c3f94bb5",
+        "run_id": null,
+        "result": "NOT_OBSERVED",
+        "identity_source": "Snapshot commit and parent resolved by GitHub MCP; running state was parent-reported and results were not read."
+      }
+    ],
+    "result_policy": "This receipt provides no runtime/native/Actions/G7/G8 success assertion. Later execution evidence must retain its own exact candidate and run identity."
+  },
+  "receipt_policy": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/reviews/STATIC-REVIEW-01.json",
+    "append_only_new_file": true,
+    "existing_file_absence_observed_before_write": true,
+    "executable": false,
+    "self_commit_or_self_hash": null,
+    "parent_owns_remote_publication": true,
+    "intended_consumer": "Mission62 parent and terminal60 handoff"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "schema": "sf2h.installed-bi.external-proposal.v1",
+  "state": "INERT_OWNER_PATCH_NOT_APPLIED",
+  "owner": "60 composition; existing bi-cost-waterfall fixture owner",
+  "canonical_issue_owners": [
+    "52",
+    "59"
+  ],
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+  "preimage": "807a51590a516d62e9586ce7475ecf4599cd2642",
+  "postimage": "4499037e904567643fad0cb92fbccf223e2e81bd",
+  "patch_sha256": "264d2e383a8382e77c9822073cadd89f912d53769617627d78c65ec7daa78125",
+  "files": {
+    "preimage": {
+      "path": "preimage.txt",
+      "bytes": 12854,
+      "sha256": "68a7e9907742347875b636b72b838b8532612f8669fc85eacd5be589f4abe83b",
+      "git_blob_sha1": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    "postimage": {
+      "path": "postimage.txt",
+      "bytes": 13109,
+      "sha256": "99f82905d0edeba091d53d7dc7acf2d5089c4011cc286521b807d05981c27f25",
+      "git_blob_sha1": "4499037e904567643fad0cb92fbccf223e2e81bd"
+    },
+    "patch": {
+      "path": "change.patch.txt",
+      "bytes": 1620,
+      "sha256": "264d2e383a8382e77c9822073cadd89f912d53769617627d78c65ec7daa78125"
+    },
+    "diagnostic": {
+      "path": "C10-DIAGNOSTIC.json",
+      "state": "OBSERVED_FAILURE_STATIC_CAUSE_NOT_FIXED"
+    }
+  },
+  "preimage_origin": {
+    "transport": "GitHub MCP github_fetch_file",
+    "repository": "gustavomhss/Orchestra-SF",
+    "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+    "verification": "UTF-8 bytes reproduced the MCP Git blob exactly; no newline appended or removed."
+  },
+  "reason": "R1 missing-cost presentation and rendering tests both fail during baseline promotion with HTTP 503 promotion-coverage-authority-unavailable. The fixture declares an unquantified component as included; C10 downgrades the entry, and reassessment changes the uncategorized-component issue set.",
+  "behavior": "Only when options.missing is true, service classification includes finite, non-absent components. The raw null row remains in both sources and scenarios. Its uncovered state is explicit from the first assessment; coverage and totals stay pending/unknown, and existing BI null assertions stay intact.",
+  "preserved": [
+    "Raw source values, including null, zero, negative credit and positive fee",
+    "All scenario operations, source references and canonical financial producers",
+    "Coverage inventory and human authority admission",
+    "All test assertions and current 105000/120000/165000/180000 budgets",
+    "Complete and ordinary fixture branches when options.missing is false"
+  ],
+  "dependencies": [
+    {
+      "kind": "exact-preimage",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "git_blob_sha1": "807a51590a516d62e9586ce7475ecf4599cd2642"
+    },
+    {
+      "kind": "existing-producer",
+      "target": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+      "git_blob_sha1": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    },
+    {
+      "kind": "existing-promotion",
+      "target": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+      "git_blob_sha1": "fd5e40da9a982d445259606629b7dbdf581b42af",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+    }
+  ],
+  "application": "Owner must verify the target Git blob at the intended HEAD and apply by GitHub MCP/CAS. If the preimage differs, rebase and review; do not overwrite or normalize line endings automatically. This directory is a proposal, not a direct target edit.",
+  "validation": {
+    "state": "NOT_RUN",
+    "local_checks": [
+      "Exact preimage Git blob",
+      "Full preimage/postimage and unified diff byte hashes",
+      "Target file was not edited"
+    ],
+    "required_actions_targets": [
+      "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts"
+    ],
+    "warning": "The proposal addresses the semantic 503 path. Existing long-dispatch deadlines remain independent and must not be reported as fixed."
+  }
+}

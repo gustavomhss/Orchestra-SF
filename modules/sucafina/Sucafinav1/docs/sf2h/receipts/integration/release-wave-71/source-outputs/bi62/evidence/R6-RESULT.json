@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h.installed-bi.run-result.v1",
+  "id": "R6",
+  "recorded_at": "2026-11-15T03:09:00Z",
+  "run": 43670652989,
+  "job": 132679720158,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670652989",
+  "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+  "W_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+  "S": "d87d0883bcc087b13cffc6a45649745616b46f34",
+  "S_tree": "09a1d1890d58c15479eddf3f9f00de0987e8f0ff",
+  "status": "FAIL_REAL_POST_BOUNDARY_RETAINED",
+  "counts": {
+    "pass": 0,
+    "fail": 1,
+    "skipped": 0,
+    "flaky": 0,
+    "workers": 1,
+    "retries": 0
+  },
+  "test_result": {
+    "status": "failed",
+    "duration_ms": 16434,
+    "error": "Planner Versions/save was not confirmed (net::ERR_ABORTED); the command was not resent."
+  },
+  "causal_delta_from_R2": {
+    "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+    "before": "9f92a42bbac03a6421151145c751cc83d588f1fb",
+    "after": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2",
+    "change": "Observe exact-form response, failed request or uncertain UI with a15000ms bound and no replay, preserving the180000ms overall budget. This run verifies that changed diagnostic behavior."
+  },
+  "actual_observations": {
+    "snapshot": "d87d0883bcc087b13cffc6a45649745616b46f34",
+    "title": "BI62 installed BI09 and BI10 preserve the literal training quote, real sources and current authority",
+    "completed": false,
+    "objective": "BI62 · renewal versus transition with separately quoted training",
+    "observations": [
+      {
+        "stage": "planner-command-request-failed",
+        "page": "Versions",
+        "action": "save",
+        "record": "",
+        "version": "0",
+        "failure": "net::ERR_ABORTED"
+      },
+      {
+        "stage": "planner-command-unconfirmed",
+        "page": "Versions",
+        "action": "save",
+        "record": "",
+        "version": "0",
+        "outcome": "request-failed",
+        "retried": false
+      }
+    ],
+    "pageErrors": [],
+    "boundary": "Real CLI, factory, HTTP, generated extended asset, persisted domain and browser. Two independent decisions preserve the omitted and resolved training quotes; this is not a same-revision ChoiceRecord journey. Inverse comparisons are persisted through canonical portfolio preview; only direct portfolios are persisted. Responsive geometry and captures are recorded without claiming native 200% zoom. Native visual migration, provider execution and financial approval are outside this proof."
+  },
+  "observation_boundary_note": "The attachment boundary text describes the intended full test. completed=false and its two observations prove only first-command transport failure and no retry. No quote, scenario or BI stage completed.",
+  "artifact": {
+    "id": 14144003095,
+    "name": "playwright-ubuntu-24.04-1",
+    "size": 341596,
+    "sha256": "29beb21989ae918e05c543dc33a76184f12962558097902404eb945f70b8fdb0",
+    "expires_at": "2026-11-22T03:07:14Z",
+    "screenshot_sha256": "00365e0a481f257a5b8b11a7809d66e7cbde85f5e9ecbe06432d00b45878f9d6",
+    "observations_sha256": "9b25ea6b0e07078c397e14a20e0cb6852c6197468a4a925221607179a43e4507",
+    "cli_log_sha256": "5e4583caef1ab4ebbf77b22ff2a70a8fb3e169a949a0eeb182d328703aea2ee9"
+  },
+  "visual_review": {
+    "reviewer": "/root",
+    "screenshot_reviewed": true,
+    "result": "Actual Versions screen remains empty with unknown-save recovery control; no BI surface reached."
+  },
+  "cleanup": "The retained actual CLI log reports shutdown disposed20ms after SIGTERM. Workflow cleanup job132680462879 succeeded.",
+  "qualification": "Harness diagnostic behavior observed; the installed product test remains FAIL. No runtime fix, full journey, source-host behavior or acceptance is claimed.",
+  "GLOBAL_RELEASE": false
+}

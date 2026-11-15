@@ -1,0 +1,18 @@
+--- a/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts
+@@ -87,11 +87,14 @@
+   for (const [index, source] of sources.entries()) {
+     const forecast = ok(forecasts[index]!, "Actual forecast")
+     const coverage: BaselineCoverageRequest = { caseRef: initialRef, source, basis, expectedVersion: 0,
+       entries: RENEWAL_TRANSITION_CATEGORIES.map((categoryId) => options.complete || categoryId === "service"
+         ? { categoryId, status: "included", componentRefs: forecast.baseline.components
+-          .filter((component) => !options.complete || component.id.startsWith(`${categoryId}:`)).map((component) => component.id),
++          .filter((component) => !options.complete || component.id.startsWith(`${categoryId}:`))
++          // Keep unquantified rows in the source, outside an included classification.
++          .filter((component) => !options.missing || component.amount !== null && Number.isFinite(component.amount) && component.evidenceState !== "absent")
++          .map((component) => component.id),
+           evidenceRefs: [source], scopeNote: options.complete ? `Human classifies the separately recorded, quantified ${categoryId} cost in the closed month`
+             : "Human identifies the recorded service costs; other categories await evidence" }
+         : { categoryId, status: "pending", reason: "Awaiting human evidence" }) }
+     const human = ok(await authority.human.admit(fixture.request(`waterfall-coverage-${index}`), "decisions.coverage", coverage), "Admit human coverage")
+     try {

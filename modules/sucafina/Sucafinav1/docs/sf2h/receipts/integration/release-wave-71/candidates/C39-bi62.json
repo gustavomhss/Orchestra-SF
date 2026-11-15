@@ -1,0 +1,303 @@
+{
+  "schema": "sf2h.integration71.candidate.v1",
+  "candidate": "C39",
+  "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+  "parent": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+  "parentTree": "9ad861864150f4690ad1ed3faa1f8c7164130212",
+  "writer": "S0-C-e13-browser71",
+  "source": {
+    "branch": "installed-bi-proof",
+    "pr": 75,
+    "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "W_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+    "terminal": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+    "terminal_tree": "1474eb7957f2527a84a8d1f0f27c6f41f846f63e",
+    "authority": {
+      "terminal_release": {
+        "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONSUMER-RELEASE.json",
+        "blob": "dcb0f9f5f28858bf74ea95b38303ae70a1d5bb90",
+        "sha256": "4577db9e98854efd675be1e5b4ed09c70b92725791490d74a05b5799a5e8447e",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONSUMER-RELEASE.json"
+      },
+      "terminal_authority": {
+        "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/AUTHORITY-FINAL.json",
+        "blob": "8fbd11fbebef2d6a607ed358b12b5c2f8e302602",
+        "sha256": "3a3e364e73d9a7772bdc5f637cd8bfb198f0047964894f29021e2a80dac93a4b",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/AUTHORITY-FINAL.json"
+      },
+      "handoff": {
+        "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/HANDOFF-FINAL.md",
+        "blob": "951c2aeb8800c91d3a28e03847618a1b475e6170",
+        "sha256": "61060ded35a1aac06d1dc1155ee76f543349691c9a073307d58f34a35c3d75f6",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/HANDOFF-FINAL.md"
+      },
+      "control_reconciliation": {
+        "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONTROL-RECONCILIATION-03.json",
+        "blob": "e4fedeb8f8a7adbb0d2261752a0ea2efa09fa695",
+        "sha256": "af71ca4293cf84f3875684bd9020d4e28b128b58b690dfcf3f4150fc39f9ab1f",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONTROL-RECONCILIATION-03.json"
+      },
+      "source_release_status": "SOURCE_DELTA_RELEASED_FOR_SELECTIVE_HELD_COMPOSITION",
+      "lease_status": "TERMINATED_SOURCE_RELEASED_INSTALLED_QUALIFICATION_HOLD",
+      "sole_stack_writer": 71,
+      "ack71": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "ended60_not_reactivated": true,
+      "checks_owner": 45,
+      "epic_and_acceptance_owner": "S0",
+      "79_and_80": "Root reports current control a1d5e9f95d5b38b85c1b53f1ebc2bec11b7759c1 adds prepared POST79 and coverage80 routes; this review grants no new lease/ACK."
+    },
+    "archiveTree": "20f80f32787f4535f150361cbc03359e3211a438",
+    "archiveBlobs": 48
+  },
+  "files": [
+    {
+      "mission": 62,
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "mode": "100644",
+      "pre": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+      "post": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575",
+      "kind": "modified",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "mode": "100644",
+      "pre": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+      "post": "4d165428dc731e59c2faf01a4e47b352e691dfbc",
+      "kind": "modified",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "mode": "100644",
+      "pre": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+      "post": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+      "kind": "modified",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "e2638923ca123b918b99e2cb4e6b703147f7119b",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "ea90f631cc445b0a1a4b82594ce062ea7d93fe82",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "4f74fd8a45d748fd3a7c3e785e2b9a77643fc776",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "7968ddcc8ec4d1268cb34f6ce0222799dc89228d",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "0bb7805d0a510a5a9c6076d14f8f7354e7880f0e",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "70a79f8fa451cf7dd93d58414f1d9d78dd8655a9",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "86841b85c918cf50a7e16a6215d79d0d58adcd51",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "252b519f6dfaee461323d3b16407fc6f5849e668",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "9fae52985c3e940845cbd746d850da8f52b8f68f",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "0d4f44d31a1444f561305cde175be58064584c6a",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "7b4d56e8c56fc2f661e00e37c270a2fbd61b691e",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "a4ad8e253fb190ef3c9360768d70ffd84f673752",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts",
+      "mode": "100644",
+      "pre": null,
+      "post": "4c47530ddb4da2df200a65cd7f5a812bb6186d08",
+      "kind": "added",
+      "review_unit": "source62-released-owned"
+    },
+    {
+      "mission": 62,
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "mode": "100644",
+      "pre": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "post": "95cfac2aa0f2709fad3547dead073cded9f80977",
+      "kind": "modified",
+      "review_unit": "owner71-accepted-external-browser-selection"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "mode": "100644",
+      "pre": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "post": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+      "kind": "modified",
+      "review_unit": "owner71-accepted-external-multi-source-timeline"
+    },
+    {
+      "mission": 62,
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+      "mode": "100644",
+      "pre": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "post": "4f9e4323f0684fc2cb95eb0f25046194062467f2",
+      "kind": "modified",
+      "review_unit": "owner71-accepted-external-legacy-bi10-test"
+    }
+  ],
+  "review": "reviews/bi62.json",
+  "sourceArchive": "source-outputs/bi62",
+  "externalDisposition": "dispositions/C39-bi62-external.json",
+  "coherentUnit": {
+    "owned": 17,
+    "acceptedExternal": 3,
+    "total": 20
+  },
+  "proof": {
+    "source": "Six historical runs retained; R5 limited4PASS only. No full source, installed or candidate PASS inferred",
+    "composed": "NOT_RUN"
+  },
+  "held": [
+    {
+      "id": "M62-HTTP-POST",
+      "state": "HELD",
+      "owner_route": "71 →79 after explicit activation; retain74 incremental body-limit obligation separately",
+      "reason": "Actual installed firstsave fails beforeBI; GET200 and explicitContentLength28 POST failure do not establish missing-length orM70body-limit causality. Preserve Host/origin/body/authority/CAS/abort/privacy policies and no replay."
+    },
+    {
+      "id": "M62-CANONICAL-COST",
+      "state": "HELD",
+      "owner_route": "71 →76 after activation;59lineage",
+      "reason": "Comparison/inverse/Portfolio/sensitivity/history read cost; inclusive phase observations are not exclusive attribution orp95. Preserve original165000/180000 and legacy105000/120000 budgets; no cached authority or removal of independent observations."
+    },
+    {
+      "id": "M62-C10-COVERAGE",
+      "state": "HELD",
+      "owner_route": "71 →80 after activation;52/59lineage",
+      "reason": "Observedpromotion503 plus code-supported included-null→pending/issue-list-stability inference. Fixture proposal cannot qualify producerstability and needs explicit own disposition."
+    },
+    {
+      "id": "M62-EXTERNAL-COMPOSITION",
+      "state": "HELD",
+      "owner_route": "71 +respective external owners",
+      "reason": "Four proposals remain inert. LegacyBI10expectation contradicts new behavior when reached; source assertion failed earlier for other reasons."
+    },
+    {
+      "id": "M62-NUMERICAL-HISTORY",
+      "state": "HELD",
+      "owner_route": "canonical producer owners/S0",
+      "reason": "Original literal training/inverses/55000/15000/ChoiceRecord samecase/N-Apositive/margins/FX02history remain unproved. Pending-nullfixture is not included-without-evidence control, and zero is notN-A."
+    },
+    {
+      "id": "M62-INSTALLED-NATIVE",
+      "state": "HELD",
+      "owner_route": "S0",
+      "reason": "No installedBI09/BI10/Portfolio journey; no native200%zoom, fullresponsive/sourcekeyboard/refresh/revocation,C17fullunion,8+3BI,AM01–06,p95,independentG7/G8 or financial acceptance."
+    },
+    {
+      "id": "M62-COMPILER-GENERATION",
+      "state": "PREPARED_ONLY",
+      "owner_route": "45",
+      "reason": "COMPILER45-REQUEST-02 supersedes01: package typechecks,e2etypecheck,spawnimports,guards,canonicalBI regeneration andcheck need exactcandidate binding. This review ran none."
+    }
+  ],
+  "sourceDependencies": "52 inherited unique paths at C36;50 exact,2 current drifts preserved. C37privacy73 and C38auth72 remain current; no62preimage overlap. All six current preimages reread atC38.",
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0
+  },
+  "GLOBAL_RELEASE": false
+}

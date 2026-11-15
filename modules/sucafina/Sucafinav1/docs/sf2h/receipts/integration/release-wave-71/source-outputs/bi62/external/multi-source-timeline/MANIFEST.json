@@ -1,0 +1,17 @@
+{
+  "schema": "sf2h.installed-bi.external-proposal.v1",
+  "state": "INERT_OWNER_PATCH_NOT_APPLIED",
+  "owner": "60 composition; existing analytics timeline path owner",
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+  "preimage": "f8311d1e9774c6320739e9a672c5822e08109f54",
+  "postimage": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+  "patch_sha256": "fb9b3640aefa6ff166d5dded3c3ecf4f4659d8262557adfa57600f5c89411902",
+  "reason": "BI10 multi-source marks and list rows lack keyboard/source selection when drilldown is null despite authorized sourceRefs.",
+  "behavior": "Reuse the existing source chooser and exact source references. No source auto-selection, domain value or timeline period changes.",
+  "dependencies": [
+    "analytics/source-navigation.ts existing exports",
+    "mission62 view.ts timeline crop"
+  ],
+  "validation": "Installed BI10 mark Enter/Space opens chooser, exact B ref only after click, cancel restores mark; source revoked between observations never opens; NOT_RUN until qualified owner composition."
+}

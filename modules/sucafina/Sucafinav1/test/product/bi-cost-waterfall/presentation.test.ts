@@ -250,20 +250,21 @@ test("installed BI09 rejects changed selections, scope, result identity, authori
   } finally { await deadline.close() }
 }, 120_000)
 
-test("installed BI09 rejects current source mutation and leaves BI10 and BI11 contracts intact", async () => {
+test("installed BI09 rejects current source mutation while BI10 uses its canonical plan and BI11 requires sensitivity", async () => {
   const deadline = compositionTestDeadline("bi09-source-and-other-views")
   try {
     const fixture = await waterfallFixture(deadline)
-    const timeline = ok(await deadline.phase("BI10.dispatch", () => fixture.dispatch("BI10")), "Existing BI10 table presentation")
-    expect(timeline.presentation).toMatchObject({ viewId: "BI10", series: [] })
+    const timeline = ok(await deadline.phase("BI10.dispatch", () => fixture.dispatch("BI10")), "Canonical BI10 period presentation")
+    expect(timeline.presentation.viewId).toBe("BI10")
+    expect(timeline.presentation.series.map((series) => series.id)).toEqual(["period-before", "period-after", "period-difference"])
     expect(timeline.presentation.waterfall).toBeUndefined()
-    expect(timeline.presentation.timeline).toBeUndefined()
+    expect(timeline.presentation.timeline?.items.length).toBeGreaterThan(0)
     expect(timeline.projection.decision?.kind).toBe("scenario")
     const sensitivity = await fixture.dispatch("BI11")
     expect(sensitivity.status).not.toBe("ok")
     expect(sensitivity).not.toHaveProperty("value")
-    // A BI11 sensitivity result is still required. This mission must not turn a
-    // plain comparison into sensitivity or claim the BI10 timeline completed.
+    // BI10 now consumes the existing canonical period producer. A BI11
+    // sensitivity result is still required for a sensitivity presentation.
     await fixture.persistence.transaction("planner", async (snapshot) => {
       const versions = snapshot.data.versions as { id: string; lines: { id: string; f: (number | null)[] }[] }[]
       const service = versions.find((version) => version.id === "waterfall-v1")?.lines.find((line) => line.id === "service")

@@ -1,0 +1,21 @@
+{
+  "schema": "sf2h.installed-bi.external-proposal.v1",
+  "state": "INERT_OWNER_PATCH_NOT_APPLIED",
+  "owner": "60 composition with browser boundary owner",
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "target": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+  "preimage": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+  "postimage": "95cfac2aa0f2709fad3547dead073cded9f80977",
+  "patch_sha256": "81a5f02640211ed62e4947ba5637090777b3b966ef5aad355cc0897fc411eaa4",
+  "reason": [
+    "Visual crop discarded on refresh/reload/source navigation.",
+    "Only valueId is retained, so origin B returns to origin A after repaint.",
+    "Repeated source selection accumulates old links; failed subsequent read leaves previous source links."
+  ],
+  "behavior": "Persist only validated selectors (dates, valueId and origin digest), never projection or evidence payload. Reapply only after fresh options/bi-data; remove state when selection or authority disappears. Keep canonical request.period unchanged. Replace source-link container per read.",
+  "dependencies": [
+    "mission62 analytics/view.ts BiVisualState and BiFocusTarget additions",
+    "current extended-assets dynamic entry; no bundle rewrite"
+  ],
+  "validation": "Installed refresh/reload, exact B focus, selection removal and access403, A→B has one nav, failed B has none; NOT_RUN until qualified owner composition."
+}

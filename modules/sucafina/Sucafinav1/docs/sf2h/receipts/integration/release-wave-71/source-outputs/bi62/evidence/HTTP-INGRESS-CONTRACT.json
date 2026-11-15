@@ -1,0 +1,159 @@
+{
+  "schema": "sf-m62-installed-http-diagnostic-v1",
+  "status": "EXTERNAL_BOUNDARY_REPRODUCED_INSTRUCTION_NOT_LOCALIZED",
+  "mutation": "NONE: this contract is inert and proposes no product patch",
+  "routing": {
+    "requested_owners": [
+      "74/proposed Node-Effect and Workbench transport corrective owner; PREPARED_NOT_STARTED at the reviewed control pin"
+    ],
+    "historical_boundary_owners": [
+      "51/installed host ingress",
+      "59/runtime and request scope"
+    ],
+    "consumer": "71 as proposed sole integration successor to 60, only after current authority reconciliation and ACK, preserving PR65",
+    "authority_note": "The completed lease of 60 is not reactivated by this receipt. Prepared dispatch files do not prove active authority. The original handoff to 60 remains the historical route and transfers to 71 only after ACK; no external paths or target refs are written here.",
+    "control_pin": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "prepared_routes": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/http-body-limit-fix.json",
+        "blob": "1176bf646537ddbff208e6c52301a12aae70b6ff",
+        "state": "PREPARED_NOT_STARTED",
+        "owner": 74
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/integration-release-wave.json",
+        "blob": "cd1d987a8021a0b4976b58d0cc5af40de1edc9e7",
+        "state": "PREPARED_NOT_STARTED",
+        "owner": 71
+      }
+    ]
+  },
+  "observed_run": {
+    "snapshot": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+    "run_id": 43669699195,
+    "job_id": 132676784075,
+    "result": "FAIL",
+    "tests": 1,
+    "skipped": 0,
+    "retries": 0,
+    "duration_ms": 25343,
+    "outer_budget_ms": 180000,
+    "first_mutation_attempts": 1,
+    "fixture": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+    "probe": "packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts",
+    "probe_blob": "4c47530ddb4da2df200a65cd7f5a812bb6186d08",
+    "probe_unchanged_by_helper_fix": true
+  },
+  "evidence": [
+    {
+      "artifact": "bi62-first-save-http.json",
+      "sha256": "58a12a242fe122c9e4ba0539ec9588c37a03ba73205f818aeb7aedea514662d6",
+      "facts": [
+        "GET /sucafina/planner?page=Versions returned 200 HTML; browser responseEnd 44.015ms.",
+        "GET /sucafina/notifications returned 200 JSON; browser responseEnd 17.116ms.",
+        "Browser POST /sucafina/planner?sf=workbench-views action=list carried 28 bytes, received no response headers, and failed net::ERR_ABORTED near the shipped 10s deadline.",
+        "Browser POST /sucafina/planner?page=Versions action=save carried 77 bytes, received no response headers, and failed net::ERR_ABORTED near the shipped 10s deadline.",
+        "The rendered form marked data-result-uncertain=true and preserved the unknown-outcome notice; commandCount was exactly 1.",
+        "A subsequent read-only GET of Versions returned 200 and contained no saved version IDs.",
+        "The ordinary read-only personal-views/list POST through APIRequest, with explicit Content-Length 28 and Origin, also reached its 10s timeout."
+      ]
+    },
+    {
+      "artifact": "wp03-real-cli.log",
+      "sha256": "edd8f8d864ee1ff2eeaebe0c09456a0481efd229a2eff6868796044fb70b32e2",
+      "facts": [
+        "The CLI listened on ::1:4110.",
+        "The captured CLI log contains no request-stage diagnostic or server error explaining the POST hang.",
+        "Owned SIGTERM cleanup reached disposed in 17ms."
+      ]
+    }
+  ],
+  "conclusion": {
+    "proved": "The real installed HTTP pipeline answers GET while tiny authenticated body-bearing POST requests fail to produce a response. Browser-only transport is insufficient to explain the APIRequest control. The nominal BI journey stops before any scenario or BI assertion.",
+    "not_proved": [
+      "The precise instruction or subsystem retaining the POST.",
+      "That HttpServerRequest.toWeb, new Request(signal), a particular body reader, authentication or a persistence lock alone causes this failure.",
+      "That omitting Content-Length causes the hang; the APIRequest control includes Content-Length.",
+      "That the uncertain mutation eventually committed after the observed read. No mutation replay is authorized by an unknown outcome."
+    ]
+  },
+  "reviewed_boundaries": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "points": "Node request admission, HttpServerRequest.toWeb, installation.handler, fromWeb response"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "points": "Installed runtime/product/application dispatch; origin and identity fences"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "points": "Product dispatch, readCommand reader, then authentication and canonical transaction"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/views-http.ts",
+      "blob": "4f246d4b1e6090d509d8bed554d3556b50e61386",
+      "points": "request.text, human.admit, personalViews.list, revalidate"
+    },
+    {
+      "path": "packages/server/src/body-limit.ts",
+      "blob": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+      "points": "Declared size check and MaxBodySize service; preserve existing policy"
+    }
+  ],
+  "minimal_next_diagnostic": {
+    "objective": "Locate the first uncompleted stage for the same one-shot Planner save and read-only views/list on the full installed listener.",
+    "required_observations": [
+      "Entry at the installation route after Host/origin fences; opaque correlation ID, method and route class only.",
+      "Before/after Node-to-Web conversion and installation.handler entry; body presence and abort state, without consuming, cloning or replacing the body for diagnostics.",
+      "Entry, first chunk count and EOF of the existing canonical body reader; cumulative byte count only, no body contents, and existing limits unchanged.",
+      "Before/after the relevant authentication/admission and transaction acquisition, only if the original body reader reaches EOF.",
+      "Final response status or canonical failure class, abort/cancellation and owned cleanup, tied to the same opaque correlation ID."
+    ],
+    "execution": [
+      "Use the existing full CLI, installation factory, WP03 enrollment and Actions recipe; no alternate Bun.serve app or toWebHandler substitute.",
+      "Publish a new material snapshot only after the owner adds discriminating observations or a justified fix; do not repeat the unchanged R4 snapshot.",
+      "Keep one first-save attempt, the 180000ms outer budget, browser action observation at 15000ms, and read-only controls at 10000ms.",
+      "Attach redacted stage observations and CLI log before losing the fixture; retain exact W/S/run/job/artifact identities."
+    ],
+    "preserved_policy": [
+      "Host, Origin, forwarded-header, identity, authority, CAS and domain guards remain intact.",
+      "No fabricated cookie, token, source, grant, result or successful response.",
+      "No mutation retry after an unknown outcome.",
+      "No larger byte limits, disabled body guards, removed abort handling or timeout increase.",
+      "No unredacted query, cookie, authorization, request body or provider credential in telemetry."
+    ]
+  },
+  "m70_cross_reference": {
+    "review_pin": "9c6946c31887ca1899a99ce120921c8bf937e721",
+    "finding": "M70-HTTP-01",
+    "findings_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/FINDINGS70.json",
+    "findings_blob": "deee804ca0933adcf313d91f6db2810f1eda512c",
+    "relationship": "Same body-bearing boundary is relevant to review, but M70 proves a missing incremental cutoff by source. R4 demonstrates a small-body response hang, including explicit Content-Length. No causal equivalence or proof of the proposed arrayBuffer remedy is claimed."
+  },
+  "owned_fixture_fix": {
+    "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+    "blob": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2",
+    "status": "STATICALLY_REVIEWED_NOT_RUN",
+    "change": "Require the canonical integer form version, match the actual form page/action/record/version against a typed JSON payload, observe response, requestfailed or data-result-uncertain, preserve the concrete outcome, then fail without replay. Remove event handlers in finally.",
+    "outer_budget_unchanged_ms": 180000,
+    "terminal_observation_bound_ms": 15000,
+    "type_review": "Playwright Request/Response type-only exports, unknown-to-Record JSON narrowing, DOM closest<HTMLFormElement>, serializable evaluateAll argument and mutable callback state reviewed by source; no runtime build or local test. Required version is checked before sending, not treated as an absent equivalent command.",
+    "sha256": "a446fa56e239cbdac349a95bc7d7c63e6e39623efa1b9679ddb82bc854f7e006",
+    "version_contract": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/ui.ts",
+        "blob": "2d59a6d4a5cb4b87590c326ada84347aa85c094e",
+        "expression": "form(page, action, id, version: number, ...) always emits data-version=\"${version}\""
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "blob": "c57e1f01044d12bf5c86bb5d7d68408950a83fc1",
+        "expression": "version: Number(form.dataset.version), id: form.dataset.record || undefined"
+      }
+    ]
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "schema": "sf2h.installed-bi.terminal-authority.v1",
+  "mission": 62,
+  "state": "TERMINATED_SOURCE_RELEASED_INSTALLED_QUALIFICATION_HOLD",
+  "terminal_identity": {
+    "commit": "CONTAINING_COMMIT",
+    "tree": "CONTAINING_TREE",
+    "parent": "a8b267ab600bfda7a8a747f34a80e2d65566565b",
+    "resolution": "Resolve through the actual containing Git commit. Exact terminal SHA/tree and CAS readback are published in PR75 and the PR65 terminal handoff; no self-referential Git hash is fabricated."
+  },
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "requested_control": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "observed_control": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+  "actor": "S2-B",
+  "branch": "installed-bi-proof",
+  "PR": 75,
+  "base": "sf2-stack",
+  "lease_epoch": "installed-bi-browser62",
+  "lease": {
+    "state": "ENDED_ON_SUCCESSFUL_TERMINAL_CAS_PUBLICATION",
+    "expected_head": "a8b267ab600bfda7a8a747f34a80e2d65566565b",
+    "force": false,
+    "automatic_resume": false,
+    "remaining_delivery_actions": "Readback and PR75/PR65 terminal notification only. Further material writes require a new explicit reconciled lease."
+  },
+  "session_id": null,
+  "model_effective": null,
+  "identity_limits": "Native session/model metadata was not exposed. No guessed values, fabricated native identity or final independent-review count.",
+  "source": {
+    "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "tree": "811cab16598c23333f4276d115fd61940eb3d486",
+    "product_and_tests_frozen": true,
+    "evidence_archive": "a8b267ab600bfda7a8a747f34a80e2d65566565b"
+  },
+  "write_paths": [
+    "apps/cli/src/sucafina-product/bi-services.ts",
+    "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+    "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+    "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+    "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+    "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/",
+    "packages/app-shell/e2e/sucafina/bi-installed/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/"
+  ],
+  "actual_material_paths": [
+    "apps/cli/src/sucafina-product/bi-services.ts",
+    "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+    "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+    "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+    "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+    "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+    "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+    "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+    "packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts"
+  ],
+  "authority_limits": {
+    "target_writer": "71 with ACK99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "predecessor60": "ENDED; route preserved in PR65, no reactivation",
+    "compiler_and_guards": 45,
+    "epic_AM_final_acceptance": "S0",
+    "native_migration": "separate owner; no62 shell/sidebar implementation",
+    "external_paths": "inert complete proposals only; no direct edits"
+  },
+  "source_consumption_release": true,
+  "release": "CONSUMER-RELEASE.json",
+  "qualification": "HOLD_NOT_ACCEPTED",
+  "mission_acceptance": "NOT_COMPLETE",
+  "execution": {
+    "remote": "GitHub MCP/CAS only; expected SHA verified and force=false",
+    "local": "Read-only/source editing/static hashes, text diffs, artifact inspection and isolated patch reconstruction only. No local product test/build/typecheck/guard/server.",
+    "hosted_actions": "Six completed surgical attempts; W→S adds only.ci-run.json. No workflow/config edit, full campaign, unchanged replay, timeout increase or skip.",
+    "running_ci": 0,
+    "product_workers_after_publication": 0
+  },
+  "reviews": {
+    "static": "reviews/STATIC-REVIEW-01.json",
+    "documentary": "reviews/EVIDENCE-REVIEW-02.json",
+    "limits": "These are bounded reviews, not three FINAL reviews. Renderer authorship and documentary scope exclusions remain explicit."
+  },
+  "GLOBAL_RELEASE": false
+}

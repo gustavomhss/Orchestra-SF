@@ -1,0 +1,112 @@
+{
+  "schema": "sf2h.integration71.owner-disposition.v1",
+  "owner": "S0-C-e13-browser71",
+  "candidate": "C39",
+  "parent": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+  "parentTree": "9ad861864150f4690ad1ed3faa1f8c7164130212",
+  "authority": {
+    "consumer_release_blob": "dcb0f9f5f28858bf74ea95b38303ae70a1d5bb90",
+    "consumer": {
+      "requested": "60 via PR65",
+      "current": 71,
+      "ack": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "role": "sole sf2-stack writer",
+      "target_at_observation": {
+        "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+        "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+        "name": "C31",
+        "authority": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+        "authority_blob": "4a8d61f0cf8ad10a7ff4414bb0558f7a18f890d2"
+      },
+      "update": "CONTROL-RECONCILIATION-03.json",
+      "final_target_observation": {
+        "sha": "f8c316a3e96447fb2b33555396060e7977d51cfa",
+        "tree": "4c9cc42ad6cd557febf721db14c802d1f2fb9ced",
+        "message": "fix(sucafina): compose released C12 recovery65 as C33 [skip ci]",
+        "parent": [
+          "3e26a3c2b18b54d891f44adaac76b228a0daf4c0"
+        ],
+        "name": "C33",
+        "authority": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+        "tested_by62": false,
+        "source62_consumed": false
+      },
+      "final_target_observed_at": "2026-11-15T03:23:31Z"
+    },
+    "composition_rule_exact": "Review all four external proposals; integrate only with explicit owner disposition and complete pre/post/dependency records. Preserve private persistence, current grants, origin and decision context.",
+    "external_decision_owner_exact": "71 as sole sf2-stack integrator, with relevant boundary owner",
+    "source_authority_limit_exact": "inert complete proposals only; no direct edits",
+    "interpretation": "Mission62 was prohibited from directly editing those shared targets and published complete inert proposals for integration. Terminal62 identifies71 as decision owner. No new-ACK, separate-consent or explicit second-signature field is present. User mission71 authorizes review and coherent selective composition. Writer71 can record ACCEPT for these exact proposals after full review/preimage reconciliation; no fresh user permission is needed. Preserve boundary ownership lineage and scope in ACK."
+  },
+  "status": "ACCEPT_EXACT_THREE_FOR_ATOMIC_COMPOSITION_WITH_17_OWNED",
+  "units": [
+    {
+      "id": "browser-selection",
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "preimage": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "postimage": "95cfac2aa0f2709fad3547dead073cded9f80977",
+      "patch_sha256": "81a5f02640211ed62e4947ba5637090777b3b966ef5aad355cc0897fc411eaa4",
+      "hunks": 10,
+      "source_manifest": {
+        "id": "browser-selection",
+        "manifest": "external/browser-selection/MANIFEST.json",
+        "target": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+        "preimage": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+        "postimage": "95cfac2aa0f2709fad3547dead073cded9f80977",
+        "patch_sha256": "81a5f02640211ed62e4947ba5637090777b3b966ef5aad355cc0897fc411eaa4",
+        "state": "INERT_NOT_APPLIED",
+        "decision_owner": "71 as sole sf2-stack integrator, with relevant boundary owner"
+      },
+      "decision": "ACCEPT_COMPOSED_VALIDATION_PENDING"
+    },
+    {
+      "id": "multi-source-timeline",
+      "path": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "preimage": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "postimage": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+      "patch_sha256": "fb9b3640aefa6ff166d5dded3c3ecf4f4659d8262557adfa57600f5c89411902",
+      "hunks": 4,
+      "source_manifest": {
+        "id": "multi-source-timeline",
+        "manifest": "external/multi-source-timeline/MANIFEST.json",
+        "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+        "preimage": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "postimage": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+        "patch_sha256": "fb9b3640aefa6ff166d5dded3c3ecf4f4659d8262557adfa57600f5c89411902",
+        "state": "INERT_NOT_APPLIED",
+        "decision_owner": "71 as sole sf2-stack integrator, with relevant boundary owner"
+      },
+      "decision": "ACCEPT_COMPOSED_VALIDATION_PENDING"
+    },
+    {
+      "id": "legacy-bi10-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+      "preimage": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "postimage": "4f9e4323f0684fc2cb95eb0f25046194062467f2",
+      "patch_sha256": "198ccfed4b7276048a60742cd03d73012d3f2a8bd230fcb2100a4b29f65648df",
+      "hunks": 1,
+      "source_manifest": {
+        "id": "legacy-bi10-test",
+        "manifest": "external/legacy-bi10-test/MANIFEST.json",
+        "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+        "preimage": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+        "postimage": "4f9e4323f0684fc2cb95eb0f25046194062467f2",
+        "patch_sha256": "198ccfed4b7276048a60742cd03d73012d3f2a8bd230fcb2100a4b29f65648df",
+        "state": "INERT_NOT_APPLIED",
+        "decision_owner": "71 as sole sf2-stack integrator, with relevant boundary owner"
+      },
+      "decision": "ACCEPT_COMPOSED_VALIDATION_PENDING"
+    }
+  ],
+  "reason": "BI10 mounting, renderer state API, browser consumer, multi-origin timeline consumer and legacy oracle must agree. Include all14 new tests/helpers. Browser/timeline/legacy proposals introduce no canonical financial formula, authority shortcut, unsafe source auto-choice or timeout change.",
+  "rootReview": "Full three patches, caller/context contracts and all current preimages reviewed; no financial formula, automatic source choice, timeout or grant weakening",
+  "excluded": {
+    "id": "missing-coverage-fixture",
+    "decision": "HELD_NOT_APPLIED",
+    "reason": "Separate canonical C10/80 stability obligation; fixture change cannot qualify producer"
+  },
+  "boundaryLineage": "Source62 explicit proposal producer; writer71 disposition under user task and current sole-stack authority; no claim of installed/source validation of these composed external paths",
+  "checksOwner": 45,
+  "finalOwner": "S0",
+  "GLOBAL_RELEASE": false
+}

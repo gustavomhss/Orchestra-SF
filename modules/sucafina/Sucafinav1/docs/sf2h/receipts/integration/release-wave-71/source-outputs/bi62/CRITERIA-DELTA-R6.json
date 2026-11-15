@@ -1,0 +1,192 @@
+{
+  "schema": "sf2h.installed-bi.criteria-delta.v1",
+  "id": "CRITERIA-DELTA-R6",
+  "state": "FINAL_RECORDED_HOLD",
+  "mission": 62,
+  "authored_at": "2026-11-15T03:10:29.750194+00:00",
+  "author": "/root/bi_criteria_review",
+  "mode": "APPEND_ONLY_RESULT_UPDATE",
+  "base_trace": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-01.json",
+    "sha256": "aa834f971f60eda92ffbfe9564260bfbad0dbadfbd2422d1331285e1c68f3e25",
+    "git_blob_sha1": "3c7aaffd922a26d2a559c7e7d2ee2bd2f069d188",
+    "state": "FINAL_RECORDED_HOLD",
+    "mutation": "NONE; reviewed base trace remains byte-identical."
+  },
+  "evidence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R6-RESULT.json",
+    "sha256": "4c67c2ba039cd652d525b179214b2e4293e2af3c8cd2b6603e77279b7ac6b87f",
+    "run_id": 43670652989,
+    "job_id": 132679720158,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670652989",
+    "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "W_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+    "S": "d87d0883bcc087b13cffc6a45649745616b46f34",
+    "S_tree": "09a1d1890d58c15479eddf3f9f00de0987e8f0ff",
+    "counts": {
+      "pass": 0,
+      "fail": 1,
+      "skipped": 0,
+      "flaky": 0,
+      "workers": 1,
+      "retries": 0
+    },
+    "test_result": {
+      "status": "failed",
+      "duration_ms": 16434,
+      "error": "Planner Versions/save was not confirmed (net::ERR_ABORTED); the command was not resent."
+    },
+    "artifact": {
+      "id": 14144003095,
+      "name": "playwright-ubuntu-24.04-1",
+      "size": 341596,
+      "sha256": "29beb21989ae918e05c543dc33a76184f12962558097902404eb945f70b8fdb0",
+      "expires_at": "2026-11-22T03:07:14Z",
+      "screenshot_sha256": "00365e0a481f257a5b8b11a7809d66e7cbde85f5e9ecbe06432d00b45878f9d6",
+      "observations_sha256": "9b25ea6b0e07078c397e14a20e0cb6852c6197468a4a925221607179a43e4507",
+      "cli_log_sha256": "5e4583caef1ab4ebbf77b22ff2a70a8fb3e169a949a0eeb182d328703aea2ee9"
+    }
+  },
+  "state_delta": {
+    "base_locations": [
+      "/evidence_state/R6",
+      "/pending_runs/0"
+    ],
+    "before": "PENDING_RESULT",
+    "after": "FAIL_REAL_POST_BOUNDARY_RETAINED",
+    "interpretation": "The pending request now has an observed failed installed-product result. No earlier run or complete criterion is promoted."
+  },
+  "coverage_witness": {
+    "id": "R6_INSTALLED_SAVE_FAILURE_NO_REPLAY",
+    "kind": "INSTALLED_CHROMIUM_ACTIONS",
+    "test_result": "FAIL",
+    "source_paths": [
+      "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts"
+    ],
+    "evidence_uri": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R6-RESULT.json",
+    "run_id": 43670652989,
+    "job_id": 132679720158,
+    "product_candidate_sha": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "ci_snapshot_sha": "d87d0883bcc087b13cffc6a45649745616b46f34",
+    "observed_scope": "The exact Versions/save request at version0 fails with net::ERR_ABORTED. The helper records request-failed and unconfirmed with retried=false; the nominal test stops after16434ms without reaching any quote, scenario or BI stage.",
+    "observations": [
+      {
+        "stage": "planner-command-request-failed",
+        "page": "Versions",
+        "action": "save",
+        "record": "",
+        "version": "0",
+        "failure": "net::ERR_ABORTED"
+      },
+      {
+        "stage": "planner-command-unconfirmed",
+        "page": "Versions",
+        "action": "save",
+        "record": "",
+        "version": "0",
+        "outcome": "request-failed",
+        "retried": false
+      }
+    ],
+    "harness_change": {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "before": "9f92a42bbac03a6421151145c751cc83d588f1fb",
+      "after": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2",
+      "change": "Observe exact-form response, failed request or uncertain UI with a15000ms bound and no replay, preserving the180000ms overall budget. This run verifies that changed diagnostic behavior."
+    },
+    "budgets": {
+      "overall_test_ms": 180000,
+      "helper_observation_bound_ms": 15000,
+      "overall_budget_changed": false
+    },
+    "cleanup": "The retained actual CLI log reports shutdown disposed20ms after SIGTERM. Workflow cleanup job132680462879 succeeded.",
+    "rendered_boundary": "Empty actual Versions screen with unknown-save recovery control. No BI surface reached.",
+    "limit": "This observes the changed failure diagnostic and cleanup, not a repaired product POST or successful installed BI journey. The exact failing server instruction remains unlocalized.",
+    "full_criterion_acceptance": false,
+    "author_review_exclusion": "The trace mapper reports the owner receipt; no independent full-gate acceptance is supplied by this delta."
+  },
+  "criteria_impact": {
+    "rule": "Append this witness to the listed installed-browser coverage paths; retain every complete-criterion status and all canonical texts/proof bindings from the base trace.",
+    "affected_criterion_ids": [
+      "WP05.CMP.01",
+      "WP05.CMP.02",
+      "WP05.CMP.03",
+      "WP05.CMP.04",
+      "WP05.CMP.20",
+      "WP05.DOD.01",
+      "WP05.DOD.03",
+      "WP05.DOD.04",
+      "WP05.DOD.20",
+      "WP05.INV.01",
+      "WP05.QLT.01",
+      "WP05.QLT.02",
+      "WP05.QLT.03",
+      "WP05.QLT.20",
+      "WP05.SUC.01",
+      "WP05.SUC.02",
+      "WP05.SUC.03",
+      "WP05.SUC.10",
+      "WP05.SUC.20",
+      "WP05.T01.CHK.02",
+      "WP05.T01.CHK.05",
+      "WP05.T01.CMP.02",
+      "WP05.T01.DOD.01",
+      "WP05.T01.QLT.01",
+      "WP05.T01.QLT.02",
+      "WP05.T01.SUC.01",
+      "WP05.T01.SUC.02",
+      "WP05.T02.CHK.05",
+      "WP05.T02.QLT.01",
+      "WP05.T02.QLT.02",
+      "WP05.T03.DOD.02",
+      "WP05.T04.CHK.04",
+      "WP05.T04.CHK.05",
+      "WP05.T04.CHK.06",
+      "WP05.T04.CMP.02",
+      "WP05.T04.DOD.02",
+      "WP05.T04.QLT.01",
+      "WP05.T04.QLT.02",
+      "WP05.T04.SUC.02",
+      "WP05.T05.CHK.03",
+      "WP05.T05.CHK.20",
+      "WP05.T05.CMP.20",
+      "WP05.T05.DOD.01",
+      "WP05.T05.DOD.20",
+      "WP05.T05.QLT.01",
+      "WP05.T05.QLT.20",
+      "WP05.T05.SUC.01",
+      "WP05.T05.SUC.20"
+    ],
+    "status_changes": [],
+    "criteria": 108,
+    "criterion_status_counts": {
+      "BLOCKED": 59,
+      "NOT_RUN": 49
+    },
+    "criterion_pass_count": 0,
+    "all_8_plus_3_closed": false
+  },
+  "oracle_impact": {
+    "numeric_oracles": 7,
+    "oracle_status_changes": [],
+    "oracle_pass_count": 0,
+    "limits": "No numeric outcome is reached in R6. Original seven normative oracle objects and their limits remain in CRITERIA-01; intended full-test attachment text is not completed evidence."
+  },
+  "preserved_limits": [
+    "R1 original two-dispatch BI09/BI10 and Portfolio failures remain recorded; R5 focal success does not replace them.",
+    "R3 currency/forecast passes remain limited; training/inverse assertions,55000/15000 certifications and historical ChoiceRecord remain unproved.",
+    "R5 renderer inputs remain synthetic and unpersisted; code-author exclusions remain effective.",
+    "Native200% zoom,p95,C17 complete,AM01-AM06 and independent G7/G8 remain NOT_RUN.",
+    "No source-host reload integration, native visual migration, product transport fix or financial approval is claimed."
+  ],
+  "local_execution": {
+    "product_tests": 0,
+    "builds": 0,
+    "servers": 0,
+    "typechecks": 0,
+    "remote_mutations": 0,
+    "activity": "Read existing R6 receipt, generate append-only JSON and verify trace/hash invariants."
+  },
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,85 @@
+{
+  "schema": "sf2h.installed-bi.dependency-boundaries.v1",
+  "mission": 62,
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "observed_target": {
+    "branch": "sf2-stack",
+    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "name": "C28 Reports48 held qualification candidate",
+    "base_delta": "One material commit after initial7e1a36; three edited BI source paths and three external proposal targets unchanged. Reports/authority dependencies differ, so source runs do not qualify C28.",
+    "authority": "60 sole target writer; mission62 did not move sf2-stack or other producer branches."
+  },
+  "predecessor": {
+    "mission": 38,
+    "original_input": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/bi-cost-waterfall/HANDOFF-38.md",
+    "observed_original": "Absent from base",
+    "reconciled_archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/released-intake-47/source-outputs/bi38/HANDOFF-38.md",
+    "blob": "7b5f8bbe7cf3b063a0e03184a050dcbb504104f1",
+    "rule": "Preserve old17PASS scope and old non-loaded tests/negative diagnostics; do not reuse old branch loading failure or claim installed closure from it."
+  },
+  "external_proposals": [
+    {
+      "directory": "external/browser-selection",
+      "target": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "preimage": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "postimage": "95cfac2aa0f2709fad3547dead073cded9f80977",
+      "state": "INERT_NOT_APPLIED",
+      "effects": [
+        "Retain only validated visual crop and source identity selectors across fresh reauthorization/reload.",
+        "Restore exact origin focus; focus safe source destination and reject empty safe destination sets.",
+        "Remove stale detail/source containers before each action, including early refusal."
+      ]
+    },
+    {
+      "directory": "external/multi-source-timeline",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "preimage": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "postimage": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+      "state": "INERT_NOT_APPLIED",
+      "effects": [
+        "Expose explicit multi-origin timeline choice, keyboard activation/cancellation and equivalent list buttons."
+      ]
+    },
+    {
+      "directory": "external/legacy-bi10-test",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+      "preimage": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "postimage": "4f9e4323f0684fc2cb95eb0f25046194062467f2",
+      "state": "INERT_NOT_APPLIED",
+      "effects": [
+        "Replace obsolete empty-BI10 expectation with canonical temporal presentation; preserve BI11 sensitivity and source-refusal checks."
+      ]
+    }
+  ],
+  "producer_limits": [
+    {
+      "id": "NA",
+      "source": "apps/cli/src/sucafina-product/decision-baseline-services.ts",
+      "observation": "Installed wrapper returns needs-input/baseline-not-applicable-proof-unavailable. New tests exercise this refusal; explicit auxiliary zero quotes are independent inputs, not replacement N/A evidence.",
+      "positive_acceptance": "OPEN"
+    },
+    {
+      "id": "ANNUAL_MARGIN",
+      "observation": "The tested Planner summary exposes budget, actualYTD and fullYear; this proof does not observe an annual budget-minus-outlook field. 602000/596000 and budget600000 are literal producer assertions; -2000/+4000 remain unproven as displayed producer fields. No parallel margin calculation introduced.",
+      "acceptance": "OPEN"
+    },
+    {
+      "id": "HISTORY",
+      "observation": "Nominal installed UI uses two current cases for omitted/resolved sources. Same-case ChoiceRecord is a distinct canonical HTTP/domain test, not proof of the same browser journey.",
+      "acceptance": "PARTIAL_UNTIL_OBSERVED_AND_COMPOSED"
+    },
+    {
+      "id": "C17",
+      "observation": "Fresh authorized source navigation and actual session revocation are selected for the installed probe. Full historical/stale/replaced/source-specific-revocation navigation matrix is not closed by these selections.",
+      "acceptance": "OPEN"
+    }
+  ],
+  "preserved": [
+    "Canonical cost/sensitivity/FX arithmetic unchanged.",
+    "Missing/null/zero/coverage/horizon/currency and C08 identity gates unchanged.",
+    "No native/sidebar migration, shell or runtime engine policy edits.",
+    "No mock app, rewritten domain result, bypassed current source authorization, added test skip or timeout increase."
+  ],
+  "required_final_gates": "All8+3 BI,200% native zoom,p95,UI/native/MCP parity,AM and C-G7/D-G8 remain separately required; no claim of campaign acceptance.",
+  "GLOBAL_RELEASE": false
+}

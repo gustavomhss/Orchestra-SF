@@ -1,0 +1,1298 @@
+{
+  "schema": "sf71.release62-selective-review.v1",
+  "reviewer": "/root/review_native64",
+  "state": "READY_TO_COMPOSE_17_OWNED_PATHS_WITH_SOURCE_AND_INSTALLED_HOLDS",
+  "recommendation": {
+    "owned_unit": "Consume exactly the complete17-path unit after target CAS/preimage recheck; all owned code/tests and whole patch read. No additional blocking static finding in this unit.",
+    "qualification": "HOLD_NOT_ACCEPTED",
+    "external_proposals": "Four complete proposals statically applicable to C36, all INERT until explicit writer71/external owner disposition; no implicit application from source release.",
+    "candidate_execution": "NOT_RUN; source PASS does not transfer; no generated snapshot or whole branch import."
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "source_pr": 75,
+  "source_branch": "installed-bi-proof",
+  "target_branch": "sf2-stack",
+  "target_pr": 65,
+  "source": {
+    "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+    "tree": "811cab16598c23333f4276d115fd61940eb3d486",
+    "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "terminal": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+    "terminal_tree": "1474eb7957f2527a84a8d1f0f27c6f41f846f63e",
+    "terminal_parent": "a8b267ab600bfda7a8a747f34a80e2d65566565b",
+    "terminal_message": "docs(sucafina): release mission62 source with installed qualification hold [skip ci]",
+    "source_to_terminal_receipts_only": {
+      "too_large": null,
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/AUTHORITY-FINAL.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/COMPILER45-REQUEST-01.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/COMPILER45-REQUEST-02.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONSUMER-RELEASE.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONTROL-RECONCILIATION-02.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONTROL-RECONCILIATION-03.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-01.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-DELTA-R6.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/DEPENDENCY-BOUNDARIES-01.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/DEPENDENCY-CLOSURE.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/HANDOFF-FINAL.md",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/INTEGRATION-BOUNDARIES.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/NEXT-VALIDATION-REQUESTS.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/PUBLICATION-MANIFEST-TERMINAL.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/SOURCE-MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/CI-REQUESTS-01.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/CI-REQUESTS-02.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/HTTP-INGRESS-CONTRACT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/PERFORMANCE-BOUNDARY.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R1-RESULT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R2-RESULT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R3-RESULT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R4-RESULT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R5-RESULT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R6-RESULT.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/C10-DIAGNOSTIC.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/MANIFEST.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/change.patch.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/postimage.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/preimage.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/owned-overlay/VERIFICATION.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/owned-overlay/complete.patch.txt",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/reviews/EVIDENCE-REVIEW-02.json",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/reviews/STATIC-REVIEW-01.json"
+      ],
+      "only_receipts": true
+    }
+  },
+  "target": {
+    "reviewed_C35": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "reviewed_C35_tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "reviewed_C36": "0ccde9be553bf2f8d105ed4da864bb2758756536",
+    "reviewed_C36_tree": "78d7c23395d92a4a0193fdd545f8aa023af0c55d",
+    "C35_to_C36": "69 changes atlas-memory/business-context and10tests; no62 owned path or direct dependency overlap. Current inherited source59/readSnapshotRoot and C28 Reports authority blobs are preserved.",
+    "preserve": [
+      "C28 Reports authority uncertainty propagation",
+      "source59 read-only root and invocation ownership",
+      "C35 installed bridge",
+      "C36 Atlas/business-context fixes",
+      "all previous C28/global acceptance HOLDs"
+    ]
+  },
+  "authority": {
+    "terminal_release": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONSUMER-RELEASE.json",
+      "blob": "dcb0f9f5f28858bf74ea95b38303ae70a1d5bb90",
+      "sha256": "4577db9e98854efd675be1e5b4ed09c70b92725791490d74a05b5799a5e8447e",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONSUMER-RELEASE.json"
+    },
+    "terminal_authority": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/AUTHORITY-FINAL.json",
+      "blob": "8fbd11fbebef2d6a607ed358b12b5c2f8e302602",
+      "sha256": "3a3e364e73d9a7772bdc5f637cd8bfb198f0047964894f29021e2a80dac93a4b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/AUTHORITY-FINAL.json"
+    },
+    "handoff": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/HANDOFF-FINAL.md",
+      "blob": "951c2aeb8800c91d3a28e03847618a1b475e6170",
+      "sha256": "61060ded35a1aac06d1dc1155ee76f543349691c9a073307d58f34a35c3d75f6",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/HANDOFF-FINAL.md"
+    },
+    "control_reconciliation": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONTROL-RECONCILIATION-03.json",
+      "blob": "e4fedeb8f8a7adbb0d2261752a0ea2efa09fa695",
+      "sha256": "af71ca4293cf84f3875684bd9020d4e28b128b58b690dfcf3f4150fc39f9ab1f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CONTROL-RECONCILIATION-03.json"
+    },
+    "source_release_status": "SOURCE_DELTA_RELEASED_FOR_SELECTIVE_HELD_COMPOSITION",
+    "lease_status": "TERMINATED_SOURCE_RELEASED_INSTALLED_QUALIFICATION_HOLD",
+    "sole_stack_writer": 71,
+    "ack71": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "ended60_not_reactivated": true,
+    "checks_owner": 45,
+    "epic_and_acceptance_owner": "S0",
+    "79_and_80": "Root reports current control a1d5e9f95d5b38b85c1b53f1ebc2bec11b7759c1 adds prepared POST79 and coverage80 routes; this review grants no new lease/ACK."
+  },
+  "material": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "change": "modified",
+      "mode": "100644",
+      "preimage_blob": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+      "postimage_blob": "4f7d24f93838fd6e19ed0403b4b3bbdf644b3575",
+      "postimage_sha256": "fcab0cd94b99e6243ea7ced107eed9c3c4973e8fbe7e0b09859849cde554093a",
+      "postimage_bytes": 23955,
+      "target_preimage": "280627cbb683c2f401a8c37f90b6c727f9de7b94",
+      "new_prefix_absent_verified": false,
+      "hunks": 4,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "change": "modified",
+      "mode": "100644",
+      "preimage_blob": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+      "postimage_blob": "4d165428dc731e59c2faf01a4e47b352e691dfbc",
+      "postimage_sha256": "b348d81387be8d22d0125bcfca21cad1903195e08798cc6b6c57ec9bea0efcd4",
+      "postimage_bytes": 11675,
+      "target_preimage": "c116831c71e2df3e30c6b058f4eff8d26ce6ce07",
+      "new_prefix_absent_verified": false,
+      "hunks": 3,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "change": "modified",
+      "mode": "100644",
+      "preimage_blob": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+      "postimage_blob": "b131fb28a385105f0e8ef5b337ffa4e5bca15f21",
+      "postimage_sha256": "5aa0ae751fe0c5f0f6641e3d18b19c7117945ebd85c3c66e20572316c23a43dd",
+      "postimage_bytes": 28694,
+      "target_preimage": "85480f85cf36f20ab7ba7ac7e142d457653ae292",
+      "new_prefix_absent_verified": false,
+      "hunks": 4,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "e2638923ca123b918b99e2cb4e6b703147f7119b",
+      "postimage_sha256": "107f3eff5938f03b8d6331acb25df071699f79c922dad108dbf72052c3610652",
+      "postimage_bytes": 5497,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/fixture.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "ea90f631cc445b0a1a4b82594ce062ea7d93fe82",
+      "postimage_sha256": "efbc199177b4e1ba817bed25abdbfb094afd0bb185dbc794cded0d9f91dd6dd5",
+      "postimage_bytes": 11738,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "4f74fd8a45d748fd3a7c3e785e2b9a77643fc776",
+      "postimage_sha256": "8368b54c835654ff3166022936352c81741e2afbd96dfff06b4f765bc00e9805",
+      "postimage_bytes": 8159,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/history-fixture.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "7968ddcc8ec4d1268cb34f6ce0222799dc89228d",
+      "postimage_sha256": "5dd186aa72af88bdb0d55e20a3591ad7859d03cb0d94ffb89f177d66675282dd",
+      "postimage_bytes": 17355,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "0bb7805d0a510a5a9c6076d14f8f7354e7880f0e",
+      "postimage_sha256": "447bc72e118aa5e091e2ecbc396f790401ea832508670355bfcaa82df905a9dc",
+      "postimage_bytes": 9585,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "70a79f8fa451cf7dd93d58414f1d9d78dd8655a9",
+      "postimage_sha256": "400fe4c16730cf5fa10098f39aed3469709a756cef0c3df5753f5657c81a3f50",
+      "postimage_bytes": 11095,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "86841b85c918cf50a7e16a6215d79d0d58adcd51",
+      "postimage_sha256": "480387045b77ad3802e5634185da7955190440f523b9d82720fbceb2b5929b3e",
+      "postimage_bytes": 4737,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "252b519f6dfaee461323d3b16407fc6f5849e668",
+      "postimage_sha256": "047d77a4c3222ff90c0335eabbbd5d7b042ce27283a14f4a69e08ad20a7c5fc7",
+      "postimage_bytes": 9366,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "9fae52985c3e940845cbd746d850da8f52b8f68f",
+      "postimage_sha256": "0f96750df7ab05c3312a3fd38dc9e535e639971eb273fbc4ad5f6da8a13ee0e9",
+      "postimage_bytes": 14124,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/browser.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "0d4f44d31a1444f561305cde175be58064584c6a",
+      "postimage_sha256": "843584c0ce9fe1028cc146a31d7607635d2cf78b847ad7ad7e760f7765bda190",
+      "postimage_bytes": 6176,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi-regressions.spec.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "7b4d56e8c56fc2f661e00e37c270a2fbd61b691e",
+      "postimage_sha256": "cf35a4da2afb1a0b80fe342c8a8492c94fd5f40d0d395d4fe1d494b069a50645",
+      "postimage_bytes": 9125,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-bi.spec.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "a4ad8e253fb190ef3c9360768d70ffd84f673752",
+      "postimage_sha256": "77e9e5d3d1080d6299703483781a490cd79ae89652d957dbc7c5acf8d7b5c1c5",
+      "postimage_bytes": 19643,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-fixture.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "05af4d2dbd4cd30f7a674ca20aefce67bb72dba2",
+      "postimage_sha256": "a446fa56e239cbdac349a95bc7d7c63e6e39623efa1b9679ddb82bc854f7e006",
+      "postimage_bytes": 30074,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts",
+      "change": "added",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "4c47530ddb4da2df200a65cd7f5a812bb6186d08",
+      "postimage_sha256": "e18a281c87bbbccd10efb467a6d2defa3f1b85351725f0921c6694a5d2fa7fce",
+      "postimage_bytes": 9694,
+      "target_preimage": null,
+      "new_prefix_absent_verified": true,
+      "hunks": 1,
+      "patch_reconstructs_exactly": true
+    }
+  ],
+  "material_counts": {
+    "product_modified": 3,
+    "new_tests_helpers": 14,
+    "total": 17
+  },
+  "full_owned_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/owned-overlay/complete.patch.txt",
+    "git_blob": "3a9d838d8e34d778e1a4c3e91fe35f195c20867e",
+    "sha256": "0fa7024cf9fcd69717f0e25bcdf70f165c04b7ab83612e3fef9e0547b435f391",
+    "bytes": 186971,
+    "files": 17,
+    "hunks": 25,
+    "fuzzy": false
+  },
+  "verification": {
+    "owned_complete_patch_reconstruction": "17 files/25 hunks, exact bytes, no fuzz, every postimage Git blob/SHA256 matches manifest.",
+    "target_preimages": "All3 modified preimages exact at C35/C36; both new prefixes absent at C35 and untouched by C36.",
+    "external_complete_patch_reconstruction": "4 patches/16 hunks with exact pre/post bytes; all target preimages match C36.",
+    "cached_file_blob_hashes_verified": 132,
+    "all_material_read_in_full": true,
+    "local_activity": "JSON parsing, text/diff review, deterministic byte/hash and in-memory patch reconstruction only; no repository product code invoked."
+  },
+  "code_review": [
+    {
+      "path": "apps/cli/src/sucafina-product/bi-services.ts",
+      "finding": "BI10 joins BI09 on existing scenarioCosts and portfolioCosts canonical producer. BI11 stays on sensitivity route. Portfolio project preserves exact persisted decision/envelope/missing external costs and sole matching combination; no financial calculation introduced."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/scenario.ts",
+      "finding": "BI09/BI10 accepted and request.viewId forwarded to existing plannerScenarioBiPresentation. Historical baseline/current candidate pairs, receipt/projection hashes, cloned input, two source and paired-result observations, and revalidation preserved. No historical identity rewrite or plan owner trust introduced."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/view.ts",
+      "finding": "Adds optional seventh BiVisualState argument and additive BiFocusTarget overload; old callers remain compatible. Valid visual crop stays inside canonical request period; dates filter by actual observation while unknown dates remain explicit; whole monetary amounts are not prorated. Exact origin focus followed by visible fallback; no source authority manufactured."
+    }
+  ],
+  "test_and_fixture_review": {
+    "all_new_files_read": 14,
+    "raw_sources": "Synthetic raw inputs/emptycase plus real C08 issuance, human coverage/promotion, current comparisons and persisted inverses; no seeded successful financial results or captured grants.",
+    "literal_oracles": "240000/210000/250000, omitted/40000/zero/null training, inverse comparisons independently persisted,55000/15000 exact-threshold targets, historical ChoiceRecord immutability,590000/602000/596000 and28000EUR×1.08→30240USD remain distinct. Most training/history outcomes were NOT_REACHED.",
+    "renderer_limit": "view-rendering.test.ts bundles actual view.ts into Chromium using explicitly synthetic unpersisted C02-shaped input. It is renderer-contract evidence, not installed source/authority/Portfolio evidence.",
+    "installed_limit": "FullCLI/factory/enrollment/HttpOnlysession and real UI commands are required. Two independent training cases do not prove same-case historical ChoiceRecord. Request observer registers first, checks exact form version0, records requestfailed/unknown state and never resends an uncertain mutation.",
+    "integrity": "No skip/expected-fail, reduced selectors, increased timeouts, replacement handlers, authority shortcut, fake successful response or material calculation cache introduced. Original temporal and legacy failures remain in queue.",
+    "external_dependency": "installed-bi-regressions.spec.ts requires accepted browser and timeline proposals and actual HTTP/producer fixes; it is not executable acceptance evidence today."
+  },
+  "dependency_closure": {
+    "source": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/DEPENDENCY-CLOSURE.json",
+      "blob": "c6c6004b00262c5737ea5b0eca1c3b029f31b0e3",
+      "sha256": "fb2fcd15fa8d99070f074a8723d37a827e0ed1abf2dbb3a107290429b8b84f69",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/DEPENDENCY-CLOSURE.json"
+    },
+    "direct_edges": 156,
+    "repository_edges": 140,
+    "builtin_or_external_edges": 16,
+    "unique_repository_targets": 59,
+    "owned_targets": 7,
+    "inherited_targets": 52,
+    "inherited_exact_blobs": 50,
+    "reviewed_target_drifts": 2,
+    "targets": [
+      {
+        "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+        "source_blob": "8f7b3ebb09bdaacfcad25d653e3ff333956d35f6",
+        "target_blob": "8f7b3ebb09bdaacfcad25d653e3ff333956d35f6",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/bi-selections.ts",
+        "source_blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40",
+        "target_blob": "3e1d2ec43831e689c19c5178a0ff370e60001e40",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "source_blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "target_blob": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+        "source_blob": "881ce4672d9d0e641d1cc849663c0980c118774d",
+        "target_blob": "881ce4672d9d0e641d1cc849663c0980c118774d",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/advantage-view.ts",
+        "source_blob": "47b271f492292956a8d8696cc32cd999e9878661",
+        "target_blob": "47b271f492292956a8d8696cc32cd999e9878661",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/capabilities.ts",
+        "source_blob": "87e36883d92f6982cc8765337f8802ffacd6e52c",
+        "target_blob": "87e36883d92f6982cc8765337f8802ffacd6e52c",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/catalog.ts",
+        "source_blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6",
+        "target_blob": "2b92394e3f1ce66e715e83a79b249b7972305ff6",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/consumer.ts",
+        "source_blob": "117c0fc6191b9d7797a4e08db19e90c3079fe129",
+        "target_blob": "117c0fc6191b9d7797a4e08db19e90c3079fe129",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/decision-view.ts",
+        "source_blob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+        "target_blob": "bb4e49ccf5eb0ea8957400322fb3a75e8e2ce5f8",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+        "source_blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+        "target_blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/filter-controls.ts",
+        "source_blob": "a14260ed5b85d1a24f12bcc30270260ed8b95499",
+        "target_blob": "a14260ed5b85d1a24f12bcc30270260ed8b95499",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/geometry.ts",
+        "source_blob": "cd80e819efc282d58aceb957c6f914187dc07752",
+        "target_blob": "cd80e819efc282d58aceb957c6f914187dc07752",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+        "source_blob": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "target_blob": "f8311d1e9774c6320739e9a672c5822e08109f54",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio-view.ts",
+        "source_blob": "35c94e7274127926cef17aa40664db075074d4d4",
+        "target_blob": "35c94e7274127926cef17aa40664db075074d4d4",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+        "source_blob": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57",
+        "target_blob": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/projection.ts",
+        "source_blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9",
+        "target_blob": "29f32617de3ce33bbf414a7439f97d64806bbaa9",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/semantics.ts",
+        "source_blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+        "target_blob": "ef1adaaf457c2ef3846fe12be8674455ca2d72c4",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/source-navigation.ts",
+        "source_blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+        "target_blob": "c6f3d5cf5772b588cb0da9f0648ce69f8775f357",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/stored-scenario.ts",
+        "source_blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+        "target_blob": "f5bb6d732ffc588626553097d53d3c0e1457a81c",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/analytics/waterfall.ts",
+        "source_blob": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab",
+        "target_blob": "cc4d834d3336ca17ca5b7bf15883c6dbd77f64ab",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/business-context.ts",
+        "source_blob": "102c849084980ae52223809d33bdeea36a58536b",
+        "target_blob": "102c849084980ae52223809d33bdeea36a58536b",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+        "source_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "target_blob": "1769271386cdda1017c38023b0988ce2d64423d2",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/context.ts",
+        "source_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "target_blob": "ae2d6b73a24970ba23d21e17694b54fd32d1a700",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/decisions.ts",
+        "source_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+        "target_blob": "f22b00f0a97ab138d1d8b86855f432c6ef709c36",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+        "source_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+        "target_blob": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+        "source_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "target_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+        "source_blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+        "target_blob": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+        "source_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+        "target_blob": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/validation.ts",
+        "source_blob": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+        "target_blob": "44e79b3009076e9fae595e79a8c72a8f3918f14b",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/bi-metadata.ts",
+        "source_blob": "da697797e33a54f8d7c3c3ecc0d7f16d516c68c3",
+        "target_blob": "da697797e33a54f8d7c3c3ecc0d7f16d516c68c3",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/bi.ts",
+        "source_blob": "8a88163e8fed6c356af8b433f81ef6f0f78098c6",
+        "target_blob": "8a88163e8fed6c356af8b433f81ef6f0f78098c6",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+        "source_blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+        "target_blob": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "source_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "target_blob": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+        "source_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "target_blob": "23a90b2e44e8bf7f50ff41f6f1622f77a5c9dd85",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "source_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "target_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+        "status": "PRESERVE_TARGET_REVIEWED_DRIFT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/bi-difference.ts",
+        "source_blob": "86ef1b9781ee46bc8cb30eeabc66870332094e7d",
+        "target_blob": "86ef1b9781ee46bc8cb30eeabc66870332094e7d",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/bi.ts",
+        "source_blob": "4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6",
+        "target_blob": "4e2aa318ec7ee98fb0cb43c4c3d604f0e746c0f6",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/exact-threshold.ts",
+        "source_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+        "target_blob": "59fcb482078a1c33a8ab4c6e0d5e691228b6ae43",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/port.ts",
+        "source_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+        "target_blob": "13800a1ac7dbe1b9bc95ca0a10480708760b4936",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/preview-comparison.ts",
+        "source_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+        "target_blob": "f47b42c0e6392c1cdc99de43c79f9e41a2a189b4",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+        "source_blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+        "target_blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "source_blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "target_blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/projection.ts",
+        "source_blob": "266c97092d1c0f91f5694879883bd7839c081626",
+        "target_blob": "266c97092d1c0f91f5694879883bd7839c081626",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "source_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "target_blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+        "status": "PRESERVE_TARGET_REVIEWED_DRIFT"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/admin.ts",
+        "source_blob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+        "target_blob": "64cfaf1fcada712548c5f28a12be12aff37f9620",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/planner.ts",
+        "source_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "target_blob": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+        "source_blob": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "target_blob": "807a51590a516d62e9586ce7475ecf4599cd2642",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp07/chromium-cleanup.ts",
+        "source_blob": "26a07dfe8d5a5c1986535aea0c857bfd9faffda5",
+        "target_blob": "26a07dfe8d5a5c1986535aea0c857bfd9faffda5",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts",
+        "source_blob": "3eb140557b597156baf52578d8981d332e52aef3",
+        "target_blob": "3eb140557b597156baf52578d8981d332e52aef3",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+        "source_blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+        "target_blob": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "source_blob": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+        "target_blob": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+        "status": "EXACT_BLOB"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/wp03/installation-fixture.ts",
+        "source_blob": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+        "target_blob": "8c015003e850561c5ee7fb430203fed4b06feaaf",
+        "status": "EXACT_BLOB"
+      }
+    ],
+    "limits": "Static direct-import closure and relevant consumers reviewed; no compiler, recursive package-resolution execution or whole-project acceptance claimed.",
+    "drift_dispositions": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "source_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "target_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+        "decision": "KEEP_TARGET",
+        "reason": "C28 Reports48 read-only operations propagate resolve uncertainty, write/native paths keep catches; BI operation is unchanged. Do not overwrite with source snapshot."
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "source_blob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "target_blob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+        "decision": "KEEP_TARGET",
+        "reason": "Source59 optional readSnapshotRoot identity wraps existing dashboard transaction; currentSnapshots/fingerprint/context/abort/final boundary checks preserved. Compatible by source, candidate runtime cost unproved."
+      }
+    ]
+  },
+  "consumer_review": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/factory.ts",
+      "blob": "9cc4cc81538a7247cd87893f958acf5665194eb5",
+      "conclusion": "ProjectedScenario already permitsBI09/BI10; producer routing/selection is fixed within consumed context, allowed view sets unchanged."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/consumer.ts",
+      "blob": "117c0fc6191b9d7797a4e08db19e90c3079fe129",
+      "conclusion": "Same authenticated dispatcher and current presentation checks retained. readBiDestination still matches exact current row/ref/projection/scope and C17 current authority after awaits; visual period cannot exceed request period."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/analytics/portfolio.ts",
+      "blob": "fda4f51c8ccc8e45c959e8531f0cd63435c24d57",
+      "conclusion": "Projector can change values/components only; persisted envelope identity and final projection reread stay required. BI10 is already admitted."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-bi.ts",
+      "blob": "68d6b2e8c1f4ee0badb169565d5041f80d6e937b",
+      "conclusion": "Existing canonical producer owns all accumulation and temporal rows, unknown dates/conditioning and no hypothetical obligation disappearance. New routing forwards existing view ID only."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/bi-call-scope.ts",
+      "blob": "8f7b3ebb09bdaacfcad25d653e3ff333956d35f6",
+      "conclusion": "Restricted private invocation proof, Request/intent/binding checks, real source fences/current actor/day snapshots and independent final fence remain. No62 bypass/cache expansion; unsupported operations/criteria keep conservative production path."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "blob": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "conclusion": "Existing five-argument render call and string focus remain valid. New crop/origin persistence is not activated until external proposal is explicitly composed; stale-source-link lifecycle correction also remains external."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/bi-entry.ts",
+      "blob": "305ee63cd74658f6665a6ebbca885fe5995ea95f",
+      "conclusion": "Existing four-argument render call and BiSelection|string focus remain compatible; source state still fetched through current authority. This entry needs canonical bundle regeneration by owner45 after source composition."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-assets.ts",
+      "blob": "d4f61546186a0f752be4c103b3a2e112deb4a582",
+      "conclusion": "Actual installed extended browser bundle builds current checked-in browser entry; no exported hand-copied source bundle allowed."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/build-bi.ts",
+      "blob": "b7a97cf867a2649bc5033fc9eb978c0e6d21182d",
+      "conclusion": "Canonical generator reads interface/bi-entry.ts and writes generated/bi-entry.txt; --check compares bytes. Current generated blob a7b15ec986701b297afd9b09d6d0a012ff23c438 is preserved until45 regenerates/checks exact candidate."
+    }
+  ],
+  "external_proposals": [
+    {
+      "id": "browser-selection",
+      "target": "apps/cli/src/sucafina-product/extended-bi-browser.ts",
+      "preimage": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "postimage": "95cfac2aa0f2709fad3547dead073cded9f80977",
+      "targetC36Blob": "e20eb780005acab2ce4797e27de2ef186a975cb6",
+      "full_patch_sha256": "81a5f02640211ed62e4947ba5637090777b3b966ef5aad355cc0897fc411eaa4",
+      "hunks": 10,
+      "exact_reconstruction": true,
+      "state": "INERT_NOT_AUTHORIZED_FOR_AUTOMATIC_APPLICATION",
+      "behavior": "Stores validated visual selectors/origin digest only, refreshes options/data through current authority, removes stale detail/source navigation before actions, refuses zero safe destinations, restores explicit origin focus. Requires owned view.ts API.",
+      "hold": "Owner disposition and installed execution missing. Do not hand-edit generated bundles or call this installed proof.",
+      "manifest": {
+        "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/browser-selection/MANIFEST.json",
+        "blob": "5f0759df982b80d04b0998aa539750baf0805349",
+        "sha256": "c3018654af6be37a75046eb5ed935287ba2b7ffb1856c24005e2d80d944a0aec",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/browser-selection/MANIFEST.json"
+      },
+      "application": "NOT_APPLIED",
+      "decision_owner": "71 with explicit external owner disposition"
+    },
+    {
+      "id": "multi-source-timeline",
+      "target": "modules/sucafina/Sucafinav1/product/analytics/milestones.ts",
+      "preimage": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "postimage": "a0f6ea59467c6e617f92ce8906063c26d977044d",
+      "targetC36Blob": "f8311d1e9774c6320739e9a672c5822e08109f54",
+      "full_patch_sha256": "fb9b3640aefa6ff166d5dded3c3ecf4f4659d8262557adfa57600f5c89411902",
+      "hunks": 4,
+      "exact_reconstruction": true,
+      "state": "INERT_NOT_AUTHORIZED_FOR_AUTOMATIC_APPLICATION",
+      "behavior": "Uses existing biSourceChoices/createBiSourceChooser and explicit buttons, with Enter/Space/Escape; no period/value/source identity rewriting.",
+      "hold": "Owner disposition and actual installed keyboard/source round-trip missing.",
+      "manifest": {
+        "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/multi-source-timeline/MANIFEST.json",
+        "blob": "6b24f65d4d12b6ba89f576313e679af1b455bb64",
+        "sha256": "987b9862ca472a5c9a2c9d33e9e4a994fab4a3ce6b9a142b9864704dba4eefa0",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/multi-source-timeline/MANIFEST.json"
+      },
+      "application": "NOT_APPLIED",
+      "decision_owner": "71 with explicit external owner disposition"
+    },
+    {
+      "id": "legacy-bi10-test",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+      "preimage": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "postimage": "4f9e4323f0684fc2cb95eb0f25046194062467f2",
+      "targetC36Blob": "75191a84a15c93c6a990c4b098ab25a6e9baea77",
+      "full_patch_sha256": "198ccfed4b7276048a60742cd03d73012d3f2a8bd230fcb2100a4b29f65648df",
+      "hunks": 1,
+      "exact_reconstruction": true,
+      "state": "INERT_NOT_AUTHORIZED_FOR_AUTOMATIC_APPLICATION",
+      "behavior": "Changes old BI10 empty-series expectation to canonical three-series/timeline expectation; keeps current-source refusal and BI11 sensitivity boundary.",
+      "hold": "Old assertion will contradict the new BI10 contract once upstream execution reaches it; proposed update is technically consistent but outside62 owned unit. It does not explain or fix R1 deadlines, because that assertion was NOT_REACHED.",
+      "manifest": {
+        "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/legacy-bi10-test/MANIFEST.json",
+        "blob": "3241357652b56f947ac1d3139df32233d343e5d3",
+        "sha256": "635f10a57130aea0fe3981844f5fc5aae5c4b8b2c530be30adc103bd9d7f32cc",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/legacy-bi10-test/MANIFEST.json"
+      },
+      "application": "NOT_APPLIED",
+      "decision_owner": "71 with explicit external owner disposition"
+    },
+    {
+      "id": "missing-coverage-fixture",
+      "target": "modules/sucafina/Sucafinav1/test/product/bi-cost-waterfall/fixture.ts",
+      "preimage": "807a51590a516d62e9586ce7475ecf4599cd2642",
+      "postimage": "4499037e904567643fad0cb92fbccf223e2e81bd",
+      "targetC36Blob": "807a51590a516d62e9586ce7475ecf4599cd2642",
+      "full_patch_sha256": "264d2e383a8382e77c9822073cadd89f912d53769617627d78c65ec7daa78125",
+      "hunks": 1,
+      "exact_reconstruction": true,
+      "state": "INERT_NOT_AUTHORIZED_FOR_AUTOMATIC_APPLICATION",
+      "behavior": "For missing=true, human included classification keeps finite non-null observed components only; raw null source/scenario remains present and total stays unknown.",
+      "hold": "Fixture correction is not a C10 producer fix. Canonical issue-list stability finding remains code-supported inference and requires owner80/52/59 lineage resolution.",
+      "manifest": {
+        "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/MANIFEST.json",
+        "blob": "6ec5d7e983ea52b2957c6bc95ee6d5cabd41570f",
+        "sha256": "dd85fb3495dfbedf7fc3ab76f5dbd9a5f233a7d061feb14b27d8adc253a1effb",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/external/missing-coverage-fixture/MANIFEST.json"
+      },
+      "application": "NOT_APPLIED",
+      "decision_owner": "71 with explicit external owner disposition"
+    }
+  ],
+  "source_proof": {
+    "runs": [
+      {
+        "id": "R1",
+        "W": "e816e5856af8f086402a501242b786488a2c6270",
+        "W_tree": "cdabe4987907730ead3cf429fa8a81d080bcc4a8",
+        "S": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+        "S_tree": "4a24a7429752128b46061aff59072bbe3ee98cd5",
+        "request_blob": "f1752350bc9c9489024256119929c4f329064184",
+        "request_payload": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/bi-cost-waterfall/waterfall-contract.test.ts",
+            "Sucafinav1/test/product/bi-cost-waterfall/portfolio-binding.test.ts",
+            "Sucafinav1/test/product/bi-cost-waterfall/presentation.test.ts",
+            "Sucafinav1/test/product/bi-cost-waterfall/rendering.test.ts",
+            "Sucafinav1/test/product/wp10/integration/bi-decision-navigation.test.ts",
+            "Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts"
+          ],
+          "env": {}
+        },
+        "run": 43667093423,
+        "job": 132668780585,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667093423",
+        "attempt": 1,
+        "observed_remote_status": "completed",
+        "observed_remote_conclusion": "failure",
+        "parent_and_snapshot_delta_verified": true,
+        "receipt_status": "FAIL",
+        "counts": {
+          "pass": 41,
+          "fail": 10,
+          "expect_calls": 182,
+          "files": 6,
+          "duration_seconds": 1164.56
+        },
+        "receipt": {
+          "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R1-RESULT.json",
+          "blob": "4b13c7bc222d41ba2e4837e047c2b30eb2a603bd",
+          "sha256": "934617241a9a8b0e744b73d41d18803046c798fd407ac8fb7f8f0f49328a4181",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R1-RESULT.json"
+        }
+      },
+      {
+        "id": "R2",
+        "W": "2c89ceae38b215363d35ae0877e691665b02f2a5",
+        "W_tree": "85c32d46b511e4725d30c1908b451d59411fbfed",
+        "S": "ca62a60f0a0fcf63017782c232d1972c3ad50789",
+        "S_tree": "1392b23781943d6dce8f14e1132704cd2c6d7fa9",
+        "request_blob": "19d315cd742c4df33ef3f5b2895daa901395de61",
+        "request_payload": {
+          "package": "app",
+          "directory": "packages/app-shell",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/bi-installed/installed-bi.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_CHANNEL": "prod"
+          }
+        },
+        "run": 43668401496,
+        "job": 132672804084,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668401496",
+        "attempt": 1,
+        "observed_remote_status": "completed",
+        "observed_remote_conclusion": "failure",
+        "parent_and_snapshot_delta_verified": true,
+        "receipt_status": "FAIL",
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "skipped": 0,
+          "flaky": 0,
+          "workers": 1,
+          "retries": 0
+        },
+        "receipt": {
+          "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R2-RESULT.json",
+          "blob": "2dd0a64d82aa361c6370aa5c04fbf8c978bbc072",
+          "sha256": "628d7c7b077f01aafe9f2578cd3f53eca3fea7bce1da762959834078ec610592",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R2-RESULT.json"
+        }
+      },
+      {
+        "id": "R3",
+        "W": "f6be2b49218498fb49852b088ba91896c3f94bb5",
+        "W_tree": "9cec50c94a490515ec9e7854e6cc753c1191c864",
+        "S": "ee74a29004e0fd49ebac324f528d9d1949be46ac",
+        "S_tree": "8108634a31bf11eb3eb5c1bbf7ffd0f34c0e3f07",
+        "request_blob": "237ff2e158d48f0ebd649b3a970c3adf977c96a0",
+        "request_payload": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/installed-bi-closure/numerical-coverage.test.ts",
+            "Sucafinav1/test/product/installed-bi-closure/source-currency.test.ts",
+            "Sucafinav1/test/product/installed-bi-closure/sensitivity-history.test.ts",
+            "Sucafinav1/test/product/installed-bi-closure/forecast-replacement.test.ts"
+          ],
+          "env": {}
+        },
+        "run": 43668513417,
+        "job": 132673142397,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668513417",
+        "attempt": 1,
+        "observed_remote_status": "completed",
+        "observed_remote_conclusion": "failure",
+        "parent_and_snapshot_delta_verified": true,
+        "receipt_status": "FAIL",
+        "counts": {
+          "pass": 2,
+          "fail": 7,
+          "expect_calls": 70,
+          "files": 4,
+          "duration_seconds": 1158.05
+        },
+        "receipt": {
+          "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R3-RESULT.json",
+          "blob": "97534871f9246ed07ebb4ad082c79239e3f3f707",
+          "sha256": "eb9c2be83151e3b389ca535df5c9e557a1a22a5384564c964846645aa91c937c",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R3-RESULT.json"
+        }
+      },
+      {
+        "id": "R4",
+        "W": "2b18f271a95d37716ed1a1a9f7bd0a15056c643c",
+        "W_tree": "afcfe4031cc78e69bc15a2956bd62f632f7dc722",
+        "S": "060fef5d36ae6db0a3eeb405aa7bca40968f9cd3",
+        "S_tree": "0e159594aebdd34b9f31fd163858ec374e96adb5",
+        "request_blob": "d69c7bbb38ec247c62e467aa551441df92e0c5c8",
+        "request_payload": {
+          "package": "app",
+          "directory": "packages/app-shell",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/bi-installed/installed-planner-ingress.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_CHANNEL": "prod"
+          }
+        },
+        "run": 43669699195,
+        "job": 132676784075,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669699195",
+        "attempt": 1,
+        "observed_remote_status": "completed",
+        "observed_remote_conclusion": "failure",
+        "parent_and_snapshot_delta_verified": true,
+        "receipt_status": "FAIL_REAL_POST_BOUNDARY",
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "skipped": 0,
+          "flaky": 0,
+          "workers": 1,
+          "retries": 0
+        },
+        "receipt": {
+          "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R4-RESULT.json",
+          "blob": "168bab4fccfa859c9433f7b63c904d31e7591726",
+          "sha256": "4546f64286b14d02a211bc5f7c7b171a5e4cd4e751c7f06c5d35208bd39a2322",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R4-RESULT.json"
+        }
+      },
+      {
+        "id": "R5",
+        "W": "015254f8c377bb38cbfceb68db5ac0cb67ce8760",
+        "W_tree": "6f219795e02b7d6f5bab24ceb9df809d1db7f95e",
+        "S": "a69deefc1664c509f5f9d6cc8249800c1fe18ec8",
+        "S_tree": "a285d2f138b7fa0673bcc471cf1653b8ff157e3a",
+        "request_blob": "4104a1b00bfaac6ac1da0a288e5c1e9e9d14a9ec",
+        "request_payload": {
+          "package": "sucafina",
+          "directory": "modules/sucafina",
+          "runner": "bun",
+          "args": [
+            "Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+            "Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts"
+          ],
+          "env": {}
+        },
+        "run": 43669861192,
+        "job": 132677292514,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669861192",
+        "attempt": 1,
+        "observed_remote_status": "completed",
+        "observed_remote_conclusion": "success",
+        "parent_and_snapshot_delta_verified": true,
+        "receipt_status": "PASS_LIMITED_SCOPE",
+        "counts": {
+          "pass": 4,
+          "fail": 0,
+          "expect_calls": 39,
+          "files": 2,
+          "duration_seconds": 144.26
+        },
+        "receipt": {
+          "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R5-RESULT.json",
+          "blob": "ad9a024cbd10cf7a50d1faa1c01f2252cd4b4f37",
+          "sha256": "13a4c27cdb5ec1d4a7f14d76567579526a3f4b9afaaf93cb382d9a9d70c46aa6",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R5-RESULT.json"
+        }
+      },
+      {
+        "id": "R6",
+        "W": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+        "W_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+        "S": "d87d0883bcc087b13cffc6a45649745616b46f34",
+        "S_tree": "09a1d1890d58c15479eddf3f9f00de0987e8f0ff",
+        "request_blob": "19d315cd742c4df33ef3f5b2895daa901395de61",
+        "request_payload": {
+          "package": "app",
+          "directory": "packages/app-shell",
+          "runner": "playwright",
+          "config": "e2e/playwright.production.config.ts",
+          "args": [
+            "e2e/sucafina/bi-installed/installed-bi.spec.ts"
+          ],
+          "env": {
+            "ORCHESTRA_CHANNEL": "prod"
+          }
+        },
+        "run": 43670652989,
+        "job": 132679720158,
+        "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670652989",
+        "attempt": 1,
+        "observed_remote_status": "completed",
+        "observed_remote_conclusion": "failure",
+        "parent_and_snapshot_delta_verified": true,
+        "receipt_status": "FAIL_REAL_POST_BOUNDARY_RETAINED",
+        "counts": {
+          "pass": 0,
+          "fail": 1,
+          "skipped": 0,
+          "flaky": 0,
+          "workers": 1,
+          "retries": 0
+        },
+        "receipt": {
+          "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R6-RESULT.json",
+          "blob": "eb1c43d3947bb94be65d53bc1a35c876c0620e80",
+          "sha256": "4c67c2ba039cd652d525b179214b2e4293e2af3c8cd2b6603e77279b7ac6b87f",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/R6-RESULT.json"
+        }
+      }
+    ],
+    "R5_log_independent_read": {
+      "job": 132677292514,
+      "raw_log_bytes": 77060,
+      "inspection": "Relevant actual execution tail and all four test results/phase records read;4PASS0FAIL39expect144.26s, actual BI10 dispatch80644ms, canonical pair3430ms; Omni explicitly not applicable.",
+      "full_raw_log_claim": false
+    },
+    "other_results": "Full normalized result receipts and GitHub run/snapshot identities read; artifact screenshots not independently re-rendered here. Source reviewer provenance retained.",
+    "transfer_to_target": false,
+    "R1": "41PASS10FAIL:8cooperative deadlines and2promotion503; original cross-view and Portfolio/legacy renderer unproved; obsolete BI10empty assertion NOT_REACHED.",
+    "R2": "0PASS1FAIL:180s at first actual Planner UI save; no BI stage.",
+    "R3": "2PASS7FAIL:real currency/forecast bounded successes; training/inverse/threshold/history abort before their asserted outcomes.",
+    "R4": "0PASS1FAIL:GET200; tiny authenticatedPOST gets no headers and aborts, read-only explicitContentLength28 control also times out. No exact retaining instruction located.",
+    "R5": "4PASS0FAIL bounded canonicalBI10 +3synthetic renderer contracts. Does not replace originalR1 cross-view nor installed journey.",
+    "R6": "0PASS1FAIL:16434ms exactVersions/saveversion0 net::ERR_ABORTED; updated observer records no replay, product transport still unfixed."
+  },
+  "criteria_and_authorship": {
+    "summary": {
+      "criteria": 108,
+      "criterion_status_counts": {
+        "BLOCKED": 59,
+        "NOT_RUN": 49
+      },
+      "criterion_pass_count": 0,
+      "numeric_oracles": 7,
+      "oracle_pass_count": 0,
+      "all_8_plus_3_closed": false
+    },
+    "trace": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-01.json",
+      "blob": "3c7aaffd922a26d2a559c7e7d2ee2bd2f069d188",
+      "sha256": "aa834f971f60eda92ffbfe9564260bfbad0dbadfbd2422d1331285e1c68f3e25",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-01.json"
+    },
+    "append_only_R6_delta": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-DELTA-R6.json",
+      "blob": "6184487c32cb868ec714095fde0d0b0f7db9662e",
+      "sha256": "f942cb870f425593a2e2d37838291f31a102ef888aed0dc1df83e6bc9ba54fac",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/CRITERIA-DELTA-R6.json"
+    },
+    "reviewer62_authorship_limits": {
+      "mapper": {
+        "agent": "/root/bi_criteria_review",
+        "excluded_from_independent_acceptance": [
+          "installed-bi-closure numerical/history/forecast test code authored by this mapper"
+        ]
+      },
+      "R5_canonical": {
+        "author": "/root",
+        "code_review": "author review only; no independent full-gate result"
+      },
+      "R5_renderer": {
+        "author": "/root/bi_static_review",
+        "author_source_blob": "9fae52985c3e940845cbd746d850da8f52b8f68f",
+        "reviewer": "/root",
+        "exclusion": "bi_static_review may verify documentary correspondence of the R5 result but cannot independently accept its own renderer test code.",
+        "prior_receipt_limit": "STATIC-REVIEW-01 predates the R5 tests and does not certify their execution or independent acceptance."
+      },
+      "independent_full_gates": "NOT_RUN"
+    },
+    "read_scope": "All108 coverage/limit mappings and7oracle limits, run metadata, explicit nonacceptance gates andR6 append-only update inspected; no independent re-certification of canonical planning text equality or complete campaign gate.",
+    "preserve": "59BLOCKED49NOT_RUN, zero fullcriteriaPASS, zero fulloraclePASS; R6 changes pending status only and promotes nothing."
+  },
+  "holds": [
+    {
+      "id": "M62-HTTP-POST",
+      "state": "HELD",
+      "owner_route": "71 →79 after explicit activation; retain74 incremental body-limit obligation separately",
+      "reason": "Actual installed firstsave fails beforeBI; GET200 and explicitContentLength28 POST failure do not establish missing-length orM70body-limit causality. Preserve Host/origin/body/authority/CAS/abort/privacy policies and no replay."
+    },
+    {
+      "id": "M62-CANONICAL-COST",
+      "state": "HELD",
+      "owner_route": "71 →76 after activation;59lineage",
+      "reason": "Comparison/inverse/Portfolio/sensitivity/history read cost; inclusive phase observations are not exclusive attribution orp95. Preserve original165000/180000 and legacy105000/120000 budgets; no cached authority or removal of independent observations."
+    },
+    {
+      "id": "M62-C10-COVERAGE",
+      "state": "HELD",
+      "owner_route": "71 →80 after activation;52/59lineage",
+      "reason": "Observedpromotion503 plus code-supported included-null→pending/issue-list-stability inference. Fixture proposal cannot qualify producerstability and needs explicit own disposition."
+    },
+    {
+      "id": "M62-EXTERNAL-COMPOSITION",
+      "state": "HELD",
+      "owner_route": "71 +respective external owners",
+      "reason": "Four proposals remain inert. LegacyBI10expectation contradicts new behavior when reached; source assertion failed earlier for other reasons."
+    },
+    {
+      "id": "M62-NUMERICAL-HISTORY",
+      "state": "HELD",
+      "owner_route": "canonical producer owners/S0",
+      "reason": "Original literal training/inverses/55000/15000/ChoiceRecord samecase/N-Apositive/margins/FX02history remain unproved. Pending-nullfixture is not included-without-evidence control, and zero is notN-A."
+    },
+    {
+      "id": "M62-INSTALLED-NATIVE",
+      "state": "HELD",
+      "owner_route": "S0",
+      "reason": "No installedBI09/BI10/Portfolio journey; no native200%zoom, fullresponsive/sourcekeyboard/refresh/revocation,C17fullunion,8+3BI,AM01–06,p95,independentG7/G8 or financial acceptance."
+    },
+    {
+      "id": "M62-COMPILER-GENERATION",
+      "state": "PREPARED_ONLY",
+      "owner_route": "45",
+      "reason": "COMPILER45-REQUEST-02 supersedes01: package typechecks,e2etypecheck,spawnimports,guards,canonicalBI regeneration andcheck need exactcandidate binding. This review ran none."
+    }
+  ],
+  "validation_requests": {
+    "executed_source_requests": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/CI-REQUESTS-02.json",
+      "blob": "e4965ed5bdf9e53c7a8ff82a3ae9a354fe834a81",
+      "sha256": "8b12519a013d770d25fd1ece8f363f8e6112ab9db12380d535a98415b76d73ad",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/evidence/CI-REQUESTS-02.json"
+    },
+    "pending_recipes": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/NEXT-VALIDATION-REQUESTS.json",
+      "blob": "1a6814a73a4388cb76b2afcc959fd026a9eb0308",
+      "sha256": "2082a6cb9642a427db86f2ef28beea7d7af28c4467c8c08658c83e6b8a36ccaf",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/NEXT-VALIDATION-REQUESTS.json"
+    },
+    "checks45": {
+      "pin": "9423a6f8d02444c66476b3fe2e35c909a6eb545a",
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/COMPILER45-REQUEST-02.json",
+      "blob": "1ee4e97247a62c2b3ce7ec3df790acefe00b4ae6",
+      "sha256": "c366b0868677dc1e9195cda050330e167fc511178572422d6b14755c1d581d64",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/9423a6f8d02444c66476b3fe2e35c909a6eb545a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-bi-closure/COMPILER45-REQUEST-02.json"
+    },
+    "eligible_for_bounded_rebind": [
+      "R5"
+    ],
+    "blocked_preserve_complete_selections": [
+      "R1",
+      "R3",
+      "R4",
+      "R6",
+      "next-installed-product-after-transport-release",
+      "next-canonical-regression-after-cost-release"
+    ],
+    "historical_superseded": [
+      "R2 preobserver helper request; identical payload toR6 with distinctW/S retained"
+    ],
+    "candidate_binding": null,
+    "dispatches_by_this_review": 0
+  },
+  "no_execution_or_mutation": {
+    "remote_writes": 0,
+    "CI_dispatch": 0,
+    "tests": 0,
+    "builds": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "servers": 0,
+    "native_execution": 0
+  },
+  "artifacts": {
+    "identity": "review62/terminal-readback.json",
+    "source_documents": "review62/source-cache.json",
+    "full_source_and_patches": "review62/material-cache.json",
+    "target_consumers": "review62/target-C36-cache.json",
+    "drift_preimages": "review62/drift-source-cache.json",
+    "patch_verification": "review62/hash-verification.json",
+    "source_proof_metadata": "review62/proof-readback.json",
+    "snapshot_diffs_and_R5log": "review62/proof-diffs-and-log.json",
+    "bi_entry_consumer": "review62/bi-entry-consumer.json",
+    "C35_C36_diff": "review62/C35-C36-diff.json"
+  },
+  "GLOBAL_RELEASE": false
+}

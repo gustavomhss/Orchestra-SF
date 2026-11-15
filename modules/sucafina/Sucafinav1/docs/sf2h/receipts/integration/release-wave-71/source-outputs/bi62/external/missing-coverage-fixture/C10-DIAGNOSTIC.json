@@ -1,0 +1,111 @@
+{
+  "schema": "sf2h.installed-bi.external-diagnostic.v1",
+  "state": "OBSERVED_FAILURE_STATIC_CAUSE_NOT_FIXED",
+  "owner": [
+    "52",
+    "59"
+  ],
+  "subject": "C10 coverage reassessment changes issue set after an included-null entry is downgraded",
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "origin": "Mission62 installed BI R1; read-only analysis",
+  "observed": {
+    "run_id": 43667093423,
+    "job_id": 132668780585,
+    "work_commit": "e816e5856af8f086402a501242b786488a2c6270",
+    "ci_commit": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667093423",
+    "suite": {
+      "passed": 41,
+      "failed": 10,
+      "files": 6
+    },
+    "failures": [
+      {
+        "test": "installed BI09 preserves missing costs as null without manufacturing a closing residual",
+        "test_ms": 2617.46,
+        "fixture": "bi09-missing-cost",
+        "phase": "promotion.0",
+        "phase_ms": 1826,
+        "elapsed_ms": 2615,
+        "aborted": false
+      },
+      {
+        "test": "installed BI09 renderer keeps unavailable endpoints and table rows without drawing null as zero",
+        "test_ms": 2532.49,
+        "fixture": "bi09-missing-browser",
+        "phase": "promotion.0",
+        "phase_ms": 1750,
+        "elapsed_ms": 2530,
+        "aborted": false
+      }
+    ],
+    "http_status": 503,
+    "body": {
+      "status": "unavailable",
+      "reason": "promotion-coverage-authority-unavailable"
+    },
+    "boundary": "Both fail in waterfallFixture baseline promotion before BI dispatch or rendering."
+  },
+  "static_analysis": {
+    "confidence": "Code-supported inference; failing internal branch was not instrumented or rerun.",
+    "chain": [
+      "waterfallFixture({missing:true}) declares service included with all component refs, including the raw missing:1 amount=null.",
+      "assessCostCoverage downgrades that service entry to pending/component-unresolved when any included component is absent.",
+      "The same assessment computes uncategorized-component from input.entries before downgrade, so the initial issue list remains empty.",
+      "Baseline coverage persists the downgraded assessment.entries and its classification.",
+      "No-op promotion captureEntries passes those pending entries to reassessScenarioCoverage.",
+      "Reassessment now finds no included refs and adds uncategorized-component.",
+      "prepareNoop compares the reassessed proof.expected with attributed, preserving exact original result bytes; the issue-list difference leads to promotion-coverage-authority-unavailable."
+    ],
+    "references": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/cost-coverage.ts",
+        "git_blob_sha1": "e913189a675bbcfa81a657f58d2255eac3b6dce2",
+        "symbols": [
+          "assessCostCoverage: downgrade at line38; issue accounting at lines41-43",
+          "reassessScenarioCoverage: lines89-93"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/baseline-coverage.ts",
+        "git_blob_sha1": "b7db14e10babd2a8b53715f5dce9f3034e9aa796",
+        "symbols": [
+          "register: classification built from assessment.entries"
+        ]
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/coverage-classification.ts",
+        "git_blob_sha1": "4280c9a249627893eb798eb421711d9e58e50a8f",
+        "symbols": [
+          "classifyCoverage"
+        ]
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/portfolio-coverage.ts",
+        "git_blob_sha1": "fd5e40da9a982d445259606629b7dbdf581b42af",
+        "symbols": [
+          "captureEntries: lines116-127",
+          "prepareNoop: exact proof.expected equality at line178"
+        ]
+      }
+    ]
+  },
+  "classification": {
+    "fixture_issue": "An unresolved monetary component is declared included with known service costs. The inert fixture proposal limits only the human inclusion mapping; it retains the unresolved source component.",
+    "producer_issue": "A persisted accepted assessment is not stable under no-op reassessment after downgrade. Canonical owners must decide how issue derivation and exact promotion identity should remain consistent.",
+    "unrelated": "Deadline failures, BI10 mounting and visual rendering do not explain these two fast 503 responses."
+  },
+  "owner_followup": [
+    "Reproduce the accepted included-null assessment followed by no-op promotion under real C10/C08 admission in Actions.",
+    "Review assessment stability without granting completeness to unresolved components or bypassing current evidence/authority checks.",
+    "Keep numerical, null/zero and history contracts intact; any canonical change needs owner review and its own focused regression."
+  ],
+  "proposal_boundary": {
+    "fixture_patch": "change.patch.txt",
+    "canonical_producer_changed": false,
+    "coverage_assessment_seeded": false,
+    "test_assertions_changed": false,
+    "deadlines_changed": false
+  },
+  "validation": "NOT_RUN by mission62 diagnostic author. R1 is observed existing Actions evidence; all causal internal-branch statements are static analysis."
+}

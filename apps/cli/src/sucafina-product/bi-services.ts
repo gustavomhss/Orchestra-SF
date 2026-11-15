@@ -129,15 +129,15 @@ export function createSfBiServices(input: {
       },
     } },
     procurement: { views: ["BI05", "BI06"], host: { list: business.procurement.list, revalidate } },
-    scenario: { views: scenarioCosts ? ["BI10", "BI11"] : ["BI09", "BI10", "BI11"], host: scenarioHost },
-    ...(scenarioCosts ? { projectedScenario: { views: ["BI09"] as const, host: scenarioCosts } } : {}),
+    scenario: { views: scenarioCosts ? ["BI11"] : ["BI09", "BI10", "BI11"], host: scenarioHost },
+    ...(scenarioCosts ? { projectedScenario: { views: ["BI09", "BI10"] as const, host: scenarioCosts } } : {}),
     ...(portfolioProjection ? { portfolio: { views: ["BI09", "BI10"] as const, host: { readProjection: portfolioProjection,
       revalidate: (request: BiViewRequest, call: TrustedDomainContext, _bundle?: unknown, projection?: DomainProjection) => revalidate(request, call, projection),
       resolve: async (request: BiViewRequest) => {
         const selected = readSfDecisionBiSelection(request.selectionRef)
         return selected && "portfolioResultRef" in selected ? { status: "ok" as const, value: { portfolioResultRef: selected.portfolioResultRef,
           present: () => decisionPresentation(request),
-          ...(request.viewId === "BI09" && portfolioCosts ? { project: (projection: DomainProjection, call: TrustedDomainContext) => portfolioCosts(request, projection, call) } : {}),
+          ...((request.viewId === "BI09" || request.viewId === "BI10") && portfolioCosts ? { project: (projection: DomainProjection, call: TrustedDomainContext) => portfolioCosts(request, projection, call) } : {}),
         } }
           : { status: "needs-input" as const, reason: "portfolio-bi-selection-unavailable" }
       },
@@ -185,7 +185,7 @@ export function createSfBiServices(input: {
   }
   return { ...factory, dispatchPresentation, caseFor, readForReview, unavailable: [
     ...(!scenarioCosts || (portfolioProjection && !portfolioCosts) ? ["decision-bi-waterfall-plan-unavailable"] : []),
-    "decision-bi-timeline-plan-unavailable",
+    ...(!scenarioCosts || (portfolioProjection && !portfolioCosts) ? ["decision-bi-timeline-plan-unavailable"] : []),
   ] }
 }
 
@@ -200,7 +200,7 @@ function createPortfolioCostProjection(input: {
   return async (incoming: BiViewRequest, original: DomainProjection, context: TrustedDomainContext): Promise<PortResult<PortfolioBiBundle>> => {
     const request = structuredClone(incoming), selected = readSfDecisionBiSelection(request.selectionRef)
     const expected = structuredClone(original)
-    if (request.viewId !== "BI09" || !selected || !("portfolioResultRef" in selected) || expected.decision?.kind !== "portfolio" ||
+    if ((request.viewId !== "BI09" && request.viewId !== "BI10") || !selected || !("portfolioResultRef" in selected) || expected.decision?.kind !== "portfolio" ||
       expected.decision.portfolioResultRef !== selected.portfolioResultRef) return { status: "denied", reason: "portfolio-waterfall-selection-mismatch" }
     const portfolioResult = expected.decision.portfolio
     const matches = portfolioResult.combinations.filter((entry) => entry.analysis?.scenarioResultRef === selected.sourceScenarioRef)
@@ -225,7 +225,7 @@ function createPortfolioCostProjection(input: {
         return { status: "ok", value: {
           projection: { ...source, decision: { kind: "scenario", scenarioResultRef: selected.sourceScenarioRef, scenario: analysis.scenario,
             comparisonRef: analysis.comparisonRef, comparison: analysis.comparison } },
-          presentation: { viewId: "BI09", series: [], limitations: [] },
+          presentation: { viewId: request.viewId, series: [], limitations: [] },
         } }
       },
     } })

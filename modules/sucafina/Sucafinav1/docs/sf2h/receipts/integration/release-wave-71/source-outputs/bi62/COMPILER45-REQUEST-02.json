@@ -1,0 +1,65 @@
+{
+  "schema": "sf2h.installed-bi.compiler-request.v1",
+  "mission": 62,
+  "state": "READY_REQUEST_NOT_DISPATCHED_BY62",
+  "source_head": "8258b1a0a426b9f4bff59dd015038cca63d1f576",
+  "source_tree": "811cab16598c23333f4276d115fd61940eb3d486",
+  "route": {
+    "requested_handoff": "60/PR65",
+    "integrator_successor": "71 only after current authority reconciliation and ACK",
+    "compiler": 45
+  },
+  "reason": "Three presentation/composition source edits and installed test additions require canonical package compilation, generation and guards. Mission62 does not own the compiler workflow or fixed refs.",
+  "material_candidate_requirement": "The authorized integrator must name the actual candidate containing the complete17-path owned unit and accepted external patches/runtime corrections. Owner45 checks that candidate. No source or alternate workflow SHA substitutes for it.",
+  "scripts_verified": [
+    {
+      "path": "apps/cli/package.json",
+      "blob": "b1385b685c2af5ae8f88d5962be87d3363f5085c"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "blob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "blob": "fed0414375fe5ad9553d1b6562f54972f2ed89f7"
+    }
+  ],
+  "requests": [
+    {
+      "cwd": "apps/cli",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "packages/app-shell",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "packages/app-shell",
+      "command": "bun run typecheck:sf-e2e",
+      "include": "e2e/sucafina/bi-installed/**/*.ts and the existing transitive installation/decision helpers; no exclusion or empty program"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:spawn-imports"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "generation": {
+    "entry": "modules/sucafina/Sucafinav1/product/integration/build-bi.ts",
+    "output": "modules/sucafina/Sucafinav1/product/integration/generated/bi-entry.txt",
+    "action": "Canonical owner regeneration, review exact generated diff, then --check on the composed candidate. Never hand-edit the generated bundle.",
+    "installed_entry": "apps/cli/src/sucafina-product/extended-assets.ts dynamically builds extended-bi-browser.ts; the real installed probe exercises that entry."
+  },
+  "outcomes": "NOT_RUN by mission62; preserve actual failures and owner diagnostics, no waivers/ignores/guard-approved label",
+  "GLOBAL_RELEASE": false,
+  "supersedes_request": "COMPILER45-REQUEST-01.json",
+  "source_validation": "R1–R6 completed on their distinct W/S identities; source product3blobs unchanged sinceW1. See evidence/CI-REQUESTS-02.json. No compiler/guard result inferred from test success."
+}
