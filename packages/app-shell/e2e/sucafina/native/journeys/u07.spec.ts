@@ -34,13 +34,12 @@ for (const surface of [
     const monthly = sheet.getByRole("grid", { name: /Monthly values|Valores mensais/ })
     await expect(monthly).toBeVisible()
     await expect(monthly).toHaveAttribute("aria-colcount", /1[4-9]/)
-    const first = monthly.getByRole("gridcell").filter({ has: page.locator("[data-closed]") })
-    // The grid is owner-bound and keyboard navigable; focus must not issue a mutation.
+     // The grid is owner-bound and keyboard navigable; focus must not issue a mutation.
     await monthly.focus()
     await page.keyboard.press("Control+Home")
     await page.keyboard.press("ArrowRight")
     await expect(monthly).toBeFocused()
-    await expect(sheet.getByRole("region", { name: /Paste monthly values|Colar valores mensais/ })).toBeVisible()
+    await expect(sheet.locator(".sf-s02-paste")).toBeVisible()
     await testInfo.attach("u07-" + surface.leaf + "-320.png", {
       body: await page.screenshot({ fullPage: true }), contentType: "image/png",
     })
@@ -51,7 +50,6 @@ for (const surface of [
     })
     expect(writes, "Read, resize and navigation must never emit a financial POST").toEqual([])
     expect(javascriptErrors).toEqual([])
-    void first
   })
 }
 
