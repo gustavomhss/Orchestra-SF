@@ -1,0 +1,87 @@
+{
+  "schema": "sf2h.native-ui.ux20.author-ack.v1",
+  "seat": "W02",
+  "order": "F01",
+  "output": "foundation-context-transport/F01",
+  "requested_model": "Astra",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed by host",
+  "actor": "gustavomhss (GitHub connector; ChatGPT GPT-6)",
+  "branch": "sf-ux-w02",
+  "base_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "base_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "product_tree": "647b024075265fc76d6253c99bec00a82618f816",
+  "lease": "ux-native-w02-e1",
+  "lease_status": "ACK_PUBLISHED_USER_AUTHORIZED_INDEPENDENT_AUTHORING; 114 PER_OUTPUT_INTEGRATION_ADMISSION_NOT_OBSERVED",
+  "integrator": {
+    "actor": "S0-C-e17-browser114",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "status": "ACTIVE per ACK-114 and QUEUE-114-C58"
+  },
+  "authoring": {
+    "source": "direct W02 user instruction",
+    "collisions": "none observed in frozen cohort claims",
+    "writes_exclusive": true,
+    "integrator_confirmation": "pending; no invented approval"
+  },
+  "allowlist": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/context/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/navigation-state/**",
+    "packages/schema/src/sucafina/context.ts",
+    "packages/client/src/sucafina/context.ts",
+    "packages/app-shell/test-browser/sucafina-native/context.test.ts",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-context.ts",
+    "packages/protocol/src/groups/sucafina.ts",
+    "packages/server/src/sucafina-installations.ts",
+    "packages/server/src/handlers/sucafina.ts",
+    "apps/cli/src/sucafina-product/native-ui/context.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W02/"
+  ],
+  "contracts": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+    "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+  },
+  "protocol_drift": {
+    "expected": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "present": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "kind": "documentary-two-lines-stale coordinator 105/101/45",
+    "resolution": "COMMON.md overlay explicitly replaces with 114/120/119; no product contract change"
+  },
+  "source_bindings": {
+    "entry": {
+      "product_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "historical_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "delta": "authMaintenance start/dispose; identity/bootstrap order must remain"
+    },
+    "identity": {
+      "product_blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b",
+      "historical_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+      "delta": "durable auth lifecycle issuance/revocation; no fallback/grants"
+    },
+    "server_routes": {
+      "product_blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+      "delta": "unchanged"
+    }
+  },
+  "semantic_rule": "CONTRACTS §2.1 select=ids|location overrides generic F01 work order wording; explicit URL A never inherits B",
+  "gates": {
+    "CI": "120 only via GitHub Actions",
+    "typecheck_guards": "119 only",
+    "local_tests": false,
+    "merge": false,
+    "deploy": false,
+    "azure": false
+  },
+  "acceptance": "ACK ONLY; NOT INTEGRATED/QUALIFIED; ready state to be assessed per-output",
+  "handoff": "F01 independent artifacts proposed on this branch; I00 owns shared registrations and composition"
+}
