@@ -1,0 +1,23 @@
+{
+  "schema": "sf2h.integration132.routes.v1",
+  "epoch": "S0-C-e19-browser132",
+  "preimage_head": "eedb7f463d35192a9c31076f50a25b4e5deb24f1",
+  "source_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/surface-manifest.json@cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "source_manifest_sha": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+  "authoring": {
+    "path": "packages/app-shell/src/orchestra/chapters/sucafina/route-registry.ts",
+    "preimage": null,
+    "postimage": "READ_BACK_AFTER_CAS"
+  },
+  "regression": {
+    "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/integration-route-registry.test.ts",
+    "preimage": null,
+    "run": "NOT_RUN_129"
+  },
+  "surfaces": 70,
+  "chapters": 15,
+  "route_patterns": 165,
+  "security": "candidate path parser only; F01 authorized route and owner selection still required; unmatched/invalid links refused; no new dispatcher/listener",
+  "status": "NOT_QUALIFIED",
+  "release": false
+}
