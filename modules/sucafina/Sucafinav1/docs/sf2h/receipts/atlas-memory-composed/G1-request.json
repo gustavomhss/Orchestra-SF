@@ -2,7 +2,7 @@
   "schema": "sf2h.atlas-memory-composed.selection.v1",
   "mission": 69,
   "phase": "G1_RANK_COMPLETION",
-  "state": "PREPARED_NOT_RUN",
+  "state": "PREPARED_SUPERSEDED_NOT_DISPATCHED",
   "productW": "d962e08b81a707f3536344614c1faa3e728917b8",
   "productTree": "f7ddae5cfd84866517ce88cacf09b5b245854954",
   "productBlobs": {
@@ -46,5 +46,8 @@
     "No automatic B0 differential claim for G1; it verifies new rank completion risks identified by cold review.",
     "F1's nine selected files and product bytes remain unchanged by this supplement."
   ],
-  "results": null
+  "results": null,
+  "supersededBy": "F2-request.json",
+  "separateRunId": null,
+  "dispatchDisposition": "The same three G1 tests will execute as part of F2 with the unchanged W1 product. No separate G1 snapshot or run was created; do not count them twice."
 }
