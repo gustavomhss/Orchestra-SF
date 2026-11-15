@@ -5,6 +5,7 @@ import { createSfProcurementClient } from "@orchestra/client/sucafina/procuremen
 import { useLanguage } from "@/context/language"
 import { useSfContext } from "../../../context"
 import type { SfRef, SfSurfaceProps } from "../../../context/contracts"
+import type { SfIntentRef, SfOperationRef } from "@orchestra/schema/sucafina/context"
 import { SfPageFrame } from "../../../shared/frame"
 import { SfStatePanel } from "../../../shared/states"
 import { SfDataTable } from "../../../shared/table"
@@ -12,6 +13,7 @@ import { SfListDetail, SfRecordDetail } from "../../../shared/detail"
 import { SfChangeReview } from "../../../shared/change-review"
 import { SfReceiptView } from "../../../shared/receipt"
 import type { SfU13CopyKey } from "./copy"
+import { acquirePrDecisionDraft, receivePrSourceVersion, PR_EDIT_SCOPE } from "./draft"
 import {
   findSubmittedPr, samePrReview, sourceChangedAfterIntent,
   type Cap26PageOk, type Cap26Request, type PrDecision, type PrGroup, type PrProjection,
@@ -54,7 +56,7 @@ function snapshot(review: PrProjection): Snapshot {
       { path: "pr.title", label: label("sf.u13.title"), value: textField(review.request.pr?.title) },
       { path: "status", label: label("sf.u13.status"), value: textField(review.request.status) },
       { path: "prApproval.steps", label: label("sf.u13.holder"), value: textField(review.holderId === null ? null : review.holderName ?? review.holderId, "sf.u13.unassigned") },
-      { path: "prApproval.amount", label: label("sf.u13.amount"), value: { kind: "number", value: review.amount, unit: { kind: "currency", code: review.baseCurrency ?? "" }, fractionDigits: 2 } },
+      { path: "prApproval.amount", label: label("sf.u13.amount"), value: { kind: "number", value: review.amount, unit: review.baseCurrency ? { kind: "currency", code: review.baseCurrency } : { kind: "unspecified", label: label("sf.u13.baseCurrency") }, fractionDigits: 2 } },
       { path: "prApprovalBaseCurrency", label: label("sf.u13.baseCurrency"), value: textField(review.baseCurrency) },
     ],
   }
@@ -73,15 +75,14 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     selected: string | null
     group: PrGroup | "all"
     search: string
-    note: string
-    reason: string
-    review: Readonly<{ source: PrProjection; decision: PrDecision }> | null
+    layoutMode: "single" | "split" | "split-context"
+    review: Readonly<{ source: PrProjection; decision: PrDecision; intentRef: SfIntentRef }> | null
     phase: Phase
     pending: Pending | null
     failure: "denied" | "not-found" | "stale" | "unavailable" | "invalid" | null
   }>({
     authority: null, page: null, state: "loading", selected: null,
-    group: "all", search: "", note: "", reason: "",
+    group: "all", search: "", layoutMode: "single",
     review: null, phase: "idle", pending: null, failure: null,
   })
   let readController: AbortController | undefined
@@ -172,7 +173,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     setUi({
       authority: token, page: null, state: token ? "loading" : "session-expired",
       selected: directRef ?? null, group: "all", search: "",
-      note: "", reason: "", review: null, pending: null, phase: "idle", failure: null,
+      review: null, pending: null, phase: "idle", failure: null,
     })
     if (token) {
       void refresh(token, directRef).then((page) => {
@@ -188,6 +189,23 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       readController?.abort()
       actionController?.abort()
     })
+  })
+
+  const decisionDraft = createMemo(() => {
+    const active = host.ready()
+    const source = selectedPr()
+    if (!active || !source || !authority()) return null
+    try { return acquirePrDecisionDraft(active.drafts, source) }
+    catch { return null } // Missing/revoked draft admission must fail closed.
+  })
+  const decisionValue = () => {
+    const snapshot = decisionDraft()?.snapshot()
+    return snapshot?.availability === "active" ? snapshot.value : null
+  }
+  createEffect(() => {
+    const source = selectedPr()
+    const draft = decisionDraft()
+    if (source && draft) receivePrSourceVersion(draft, source.version)
   })
 
   const allRows = () => authorizedPage()?.value.data.requests.filter(
@@ -251,8 +269,13 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
   const beginReview = (decision: PrDecision) => {
     if (ui.pending || actionBusy || ui.phase === "outcome-unknown" || ui.phase === "source-changed") return
     const candidate = selectedPr()
-    if (!candidate || !candidate.actions.includes(decision)) return
-    setUi("review", { source: candidate, decision })
+    const edit = decisionDraft()
+    const editState = edit?.snapshot()
+    if (!candidate || !candidate.actions.includes(decision) ||
+        !edit || editState?.availability !== "active" ||
+        editState.pendingOperation || editState.conflict || editState.value.commandStarted) return
+    edit.setPhase("reviewing")
+    setUi("review", { source: candidate, decision, intentRef: crypto.randomUUID() as SfIntentRef })
     setUi("phase", "reviewing")
     setUi("failure", null)
   }
@@ -267,7 +290,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         admitted.binding.operationId !== operation ||
         admitted.binding.version.kind !== "record" ||
         admitted.binding.version.expectedVersion !== intent.source.version) return
-    if (intent.decision === "reject" && !ui.reason.trim()) {
+    if (intent.decision === "reject" && !decisionValue()?.reason.trim()) {
       setUi("failure", "invalid")
       return
     }
@@ -280,8 +303,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     const before = ready && await sourceRead(token, intent.source.requestRef, controller.signal)
     if (!ready || controller.signal.aborted || authority() !== token) { actionBusy = false; return }
     if (!before || before.kind !== "ok" ||
-        !samePrReview(intent.source, findSubmittedPr(before.page, intent.source.requestRef)) ||
-        !findSubmittedPr(before.page, intent.source.requestRef).kind) {
+        !samePrReview(intent.source, findSubmittedPr(before.page, intent.source.requestRef))) {
       setUi("review", null)
       setUi("phase", "conflict")
       actionBusy = false
@@ -299,7 +321,36 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
     // lost, the command is NEVER dispatched again, even with the same key.
     const idempotencyKey = crypto.randomUUID()
     const operationRef = crypto.randomUUID()
-    const note = intent.decision === "reject" ? ui.reason.trim() : ui.note
+    const note = intent.decision === "reject" ? (decisionValue()?.reason.trim() ?? "") :
+      (decisionValue()?.comment ?? "")
+    const draftBefore = decisionDraft()
+    const snapshotBefore = draftBefore?.snapshot()
+    if (!draftBefore || snapshotBefore?.availability !== "active" ||
+        snapshotBefore.pendingOperation || snapshotBefore.conflict ||
+        snapshotBefore.value.commandStarted ||
+        snapshotBefore.baseVersion !== intent.source.version) {
+      setUi("review", null)
+      setUi("phase", "conflict")
+      actionBusy = false
+      return
+    }
+    const payload = { page: "My approvals", action: intent.decision,
+      id: intent.source.requestRef, version: intent.source.version,
+      values: intent.decision === "reject" ? { reason: note } : note ? { comment: note } : {} }
+    let payloadDigest: string
+    try {
+      const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(JSON.stringify(payload))))
+      payloadDigest = Array.from(hash, (byte) => byte.toString(16).padStart(2, "0")).join("")
+    } catch {
+      setUi("phase", "failed")
+      setUi("failure", "unavailable")
+      actionBusy = false
+      return
+    }
+    if (controller.signal.aborted || authority() !== token) { actionBusy = false; return }
+    // Mark local dirty before network dispatch so the owner-level LeaveGuard
+    // cannot discard an in-flight command. No replay is ever initiated.
+    draftBefore.edit({ ...snapshotBefore.value, commandStarted: true })
     setUi("pending", { source: intent.source, decision: intent.decision,
       key: idempotencyKey, note, operationRef, producerAcknowledged: false })
     setUi("phase", "submitting")
@@ -317,11 +368,21 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
           }, options)
       if (controller.signal.aborted || authority() !== token) return
       if (result.kind === "transport-error") {
+        const draft = decisionDraft()
+        draft?.setPending({ operationRef: operationRef as SfOperationRef,
+          idempotencyKey, payloadDigest, expectedVersion: intent.source.version })
+        draft?.setPhase("outcome-unknown")
         setUi("phase", "outcome-unknown")
         return
       }
       if (result.status !== 200 || !result.body.ok) {
         const status = result.body.ok ? result.status : result.body.status
+        const draft = decisionDraft()
+        const state = draft?.snapshot()
+        if (draft && state?.availability === "active" && !state.pendingOperation) {
+          draft.edit({ ...state.value, commandStarted: false })
+          draft.setPhase("failed")
+        }
         setUi("pending", null)
         setUi("review", null)
         setUi("phase", status === 409 ? "conflict" : "failed")
@@ -331,6 +392,8 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
         if (status === 401 || status === 403 || status === 404) setUi("page", null)
         return
       }
+      const draft = decisionDraft()
+      if (draft?.snapshot().availability === "active") draft.discard()
       setUi("pending", (pending) => pending ? { ...pending, producerAcknowledged: true } : pending)
       setUi("phase", "verifying")
       const refreshed = await sourceRead(token, intent.source.requestRef, controller.signal)
@@ -344,11 +407,18 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       setUi("page", refreshed.page)
       setUi("state", "ready")
       setUi("review", null)
+      if (sourceChangedAfterIntent(intent.source, refreshed.page)) setUi("pending", null)
       setUi("phase", "producer-confirmed")
       // No C12 receipt: source reflects what is currently persisted, not an
       // invented financial approval receipt or claim about downstream M31/MI07.
     } catch {
-      if (!controller.signal.aborted && authority() === token) setUi("phase", "outcome-unknown")
+      if (!controller.signal.aborted && authority() === token) {
+        const draft = decisionDraft()
+        draft?.setPending({ operationRef: operationRef as SfOperationRef,
+          idempotencyKey, payloadDigest, expectedVersion: intent.source.version })
+        draft?.setPhase("outcome-unknown")
+        setUi("phase", "outcome-unknown")
+      }
     } finally {
       actionBusy = false
     }
@@ -405,7 +475,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
           { id: "version", label: label("sf.u13.version"), value: { kind: "number", value: review.version, unit: { kind: "unspecified", label: label("sf.u13.version") }, fractionDigits: 0 } },
           { id: "holder", label: label("sf.u13.holder"), value: textField(holder) },
           { id: "step", label: label("sf.u13.stage"), value: textField(review.levelName) },
-          { id: "amount", label: label("sf.u13.amount"), value: textField(review.baseCurrency === null ? null : String(review.amount) + " " + review.baseCurrency) },
+          { id: "amount", label: label("sf.u13.amount"), value: { kind: "number", value: review.amount, unit: review.baseCurrency ? { kind: "currency", code: review.baseCurrency } : { kind: "unspecified", label: label("sf.u13.baseCurrency") }, fractionDigits: 2 } },
           { id: "reason", label: label("sf.u13.justification"), value: textField(review.request.pr?.justification) },
           { id: "created", label: label("sf.u13.createdBy"), value: textField(review.request.createdBy) },
         ]}
@@ -445,8 +515,8 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
       activeTab={null}
       secondaryActions={[]}
       density="comfortable"
-      layout="work"
-      onLayoutMode={() => undefined}
+      layout="split"
+      onLayoutMode={(mode) => setUi("layoutMode", mode)}
     >
       <SfStatePanel
         state={viewState()}
@@ -479,7 +549,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
             </div>
             <SfListDetail
               selectedRef={selectedPr()?.requestRef as SfRef | undefined}
-              layoutMode="split"
+              layoutMode={ui.layoutMode}
               onBack={onBack}
               onOpenPage={() => undefined}
               list={<SfDataTable
@@ -513,7 +583,7 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
               {() => {
                 const review = ui.review!
                 const approved = review.decision === "approve"
-                const canConfirm = review.source.actions.includes(review.decision) && (approved || ui.reason.trim().length > 0)
+                const canConfirm = review.source.actions.includes(review.decision) && (approved || (decisionValue()?.reason.trim().length ?? 0) > 0)
                 const persisted = snapshot(review.source)
                 const admitted: AdmittedReview = {
                   kind: "admitted",
@@ -531,8 +601,13 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                     <label class="flex flex-col gap-1 text-sm">
                       <span>{t(approved ? "sf.u13.comment" : "sf.u13.reason")}</span>
                       <textarea class="min-h-20 rounded-md border border-border bg-background p-2 text-foreground"
-                        value={approved ? ui.note : ui.reason}
-                        onInput={(event) => setUi(approved ? "note" : "reason", event.currentTarget.value)}
+                        value={approved ? decisionValue()?.comment ?? "" : decisionValue()?.reason ?? ""}
+                        onInput={(event) => {
+                          const draft = decisionDraft()
+                          const state = draft?.snapshot()
+                          if (draft && state?.availability === "active" && !state.pendingOperation)
+                            draft.edit({ ...state.value, [approved ? "comment" : "reason"]: event.currentTarget.value })
+                        }}
                         disabled={ui.phase === "submitting" || ui.phase === "checking"} />
                     </label>
                     <SfChangeReview
@@ -541,7 +616,19 @@ export function SfPrApprovalView(props: SfSurfaceProps<"CAP26">): JSX.Element {
                         scope: data(review.source.requestRef) }}
                       base={persisted}
                       current={persisted}
-                      proposed={persisted}
+                      proposed={{
+                        kind: "draft", intentRef: review.intentRef,
+                        sourceRef: persisted.kind === "persisted" ? persisted.ref : null,
+                        sourceVersion: review.source.version,
+                        fields: [
+                          ...(persisted.kind === "persisted" ? persisted.fields : []),
+                          { path: "decision", label: label("sf.u13.decision"),
+                            value: textField(t(approved ? "sf.u13.approve" : "sf.u13.reject")) },
+                          { path: approved ? "comment" : "reason",
+                            label: label(approved ? "sf.u13.comment" : "sf.u13.reason"),
+                            value: textField(approved ? decisionValue()?.comment : decisionValue()?.reason) },
+                        ],
+                      }}
                       effects={[{
                         id: review.decision, domain: "procurement",
                         title: { kind: "message", message: label(approved ? "sf.u13.approve" : "sf.u13.reject") },

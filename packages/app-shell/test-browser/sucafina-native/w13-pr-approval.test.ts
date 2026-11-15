@@ -26,7 +26,7 @@ function currentRequest(): Cap26Request {
 }
 function page(
   request: Cap26Request = currentRequest(),
-  version: number | undefined = 7,
+  version: number | null = 7,
   queue: "you" | "others" | "unassigned" = "you",
 ): Cap26PageOk {
   return {
@@ -46,7 +46,7 @@ function page(
         directory: [{ id: "actor-15", name: "Actual holder" }],
         formSettings: { blockSelfApproval: true },
       },
-      versions: version === undefined ? {} : { ["requests:" + request.number]: { version, by: "requester-7" } },
+      versions: version === null ? {} : { ["requests:" + request.number]: { version, by: "requester-7" } },
       allowedActionIds: ["approve", "reject"],
     },
   }
@@ -92,7 +92,7 @@ describe("W13 P1 submitted PR projection, no authorization mocking", () => {
     }
   })
   it("blocks missing or ambiguous persisted versions and steps", () => {
-    expect(findSubmittedPr(page(currentRequest(), undefined), "PR-2026-42")).toEqual({
+    expect(findSubmittedPr(page(currentRequest(), null), "PR-2026-42")).toEqual({
       kind: "source-unavailable", reason: "version",
     })
     const request = currentRequest()
