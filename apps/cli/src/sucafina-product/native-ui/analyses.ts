@@ -48,6 +48,7 @@ export function createSfAnalysesProjectionHandlers(deps: SfNativeHostDependencie
         for (const operation of candidates) {
           if (request.signal.aborted) return reply({ status: "unavailable" }, 503)
           const probe = await runtime.ui.admit(request, operation, readDigest)
+          if (probe.status === "unavailable") return reply({ status: "unavailable" }, 503)
           if (probe.status !== "ok") continue
           try {
             if (sameContext(probe.value.binding, stamp) &&
@@ -83,7 +84,8 @@ export function createSfAnalysesProjectionHandlers(deps: SfNativeHostDependencie
           deps.runtime() !== runtime || runtime.selected !== installed ||
           !sameContext(read.value.binding, stamp)) return reply({ status: "denied" }, 403)
         const after = await deps.readContext(request)
-        if (after.status !== "ok" || !sameStamp(after.value.stamp, stamp) ||
+        if (after.status !== "ok") return contextError(after.status)
+        if (!sameStamp(after.value.stamp, stamp) ||
           !await runtime.ui.revalidate(read.value) || request.signal.aborted) return reply({ status: "denied" }, 403)
         return reply({ status: "ok", context: stamp, value: { profiles } }, 200, stamp.accessRevision)
       } finally {
