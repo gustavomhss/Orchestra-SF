@@ -1,0 +1,96 @@
+// S04 presentation carriers mirror the frozen component-signatures contract.
+// Public opaque identity comes from F01 Schema/context; no local brand or producer schema.
+import type { SfOpaque, SfRef, SfVersion, SfFileSelectionRef } from "@orchestra/schema/sucafina/context"
+
+export type SfCopyKey = SfOpaque<"key-from-frozen-typed-dictionaries">
+export type SfMessage = Readonly<{
+  key: SfCopyKey
+  params?: Readonly<Record<string, string | number>>
+}>
+export type SfText =
+  | Readonly<{ kind: "message"; message: SfMessage }>
+  | Readonly<{ kind: "data"; text: string }>
+export type SfUiState =
+  | "loading" | "ready" | "empty" | "filtered-empty" | "partial"
+  | "invalid" | "not-found" | "stale" | "conflict" | "unavailable"
+  | "denied" | "session-expired" | "outcome-unknown"
+export type SfCoverage = Readonly<{
+  state: "complete" | "partial" | "unavailable"
+  summary: SfMessage
+  reasons: readonly SfMessage[]
+  knownCount: number | null
+  expectedCount: number | null
+}>
+export type SfSource = Readonly<{
+  ref: SfRef
+  version: SfVersion
+  label: SfText
+  scope: SfText
+  coverage: SfCoverage
+}>
+export type SfUnit =
+  | Readonly<{ kind: "currency"; code: string }>
+  | Readonly<{ kind: "percent" }>
+  | Readonly<{ kind: "quantity"; label: SfMessage }>
+  | Readonly<{ kind: "unspecified"; label: SfMessage }>
+export type SfDisplayValue =
+  | Readonly<{ kind: "text"; text: SfText }>
+  | Readonly<{ kind: "number"; value: number; unit: SfUnit; fractionDigits: number }>
+  | Readonly<{ kind: "boolean"; value: boolean; trueLabel: SfMessage; falseLabel: SfMessage }>
+  | Readonly<{ kind: "date"; isoDate: string }>
+  | Readonly<{ kind: "timestamp"; isoTimestamp: string; timezone: string }>
+  | Readonly<{ kind: "missing"; reason: SfMessage }>
+  | Readonly<{ kind: "unavailable"; reason: SfMessage }>
+  | Readonly<{ kind: "list"; items: readonly SfDisplayValue[] }>
+export type SfReviewField = Readonly<{
+  path: string
+  label: SfMessage
+  value: SfDisplayValue
+  source?: SfSource
+}>
+export type SfEvidence = Readonly<{
+  ref: SfRef
+  source: SfSource
+  state: "candidate" | "confirmed" | "stale" | "unavailable" | "revoked"
+  title: SfText
+  excerpt: string | null
+  fields: readonly SfReviewField[]
+  reason?: SfMessage
+}>
+export type SfEvidencePanelProps = Readonly<{
+  items: readonly SfEvidence[]
+  selectedRef?: SfRef
+  state: SfUiState
+  onSelect: (evidenceRef: SfRef) => void
+  onOpenAuthorizedSource: (sourceRef: SfRef) => void
+  onClose: () => void
+}>
+export type SfAttachment = Readonly<{
+  ref: SfRef
+  version: SfVersion
+  fileName: string
+  mediaType: string
+  bytes: number
+  status: "admitted" | "blocked" | "scanner-unavailable" | "replaced" | "revoked"
+  reason?: SfMessage
+  canDownload: boolean
+  canRemoveReference: boolean
+}>
+export type SfFileAdmission =
+  | Readonly<{ kind: "idle" }>
+  | Readonly<{ kind: "selected"; selectionRef: SfFileSelectionRef; fileName: string; bytes: number; mediaType: string }>
+  | Readonly<{ kind: "admitting"; selectionRef: SfFileSelectionRef }>
+  | Readonly<{ kind: "admitted"; attachmentRef: SfRef }>
+  | Readonly<{ kind: "blocked" | "scanner-unavailable" | "failed"; reason: SfMessage }>
+export type SfAttachmentFieldProps = Readonly<{
+  attachments: readonly SfAttachment[]
+  acceptedFormats: readonly Readonly<{ mediaType: string; extensions: readonly string[]; label: SfMessage }>[]
+  limit: Readonly<{ maxBytes: number; maxFiles: number }>
+  admissionState: SfFileAdmission
+  recordRef: SfRef
+  recordVersion: SfVersion
+  onSelectFile: () => void
+  onAdmit: (request: Readonly<{ selectionRef: SfFileSelectionRef; recordRef: SfRef; recordVersion: SfVersion }>) => void
+  onRemoveReference: (request: Readonly<{ attachmentRef: SfRef; recordRef: SfRef; recordVersion: SfVersion }>) => void
+  onDownload: (request: Readonly<{ attachmentRef: SfRef; recordRef: SfRef; recordVersion: SfVersion }>) => void
+}>
