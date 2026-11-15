@@ -58,7 +58,7 @@ const RESOURCES = [{"family":"ctx","resource":"context","operations":["ctx.conte
 const PAGES = [{"id":"CAP01","surface":"dashboard","page":"Executive Dashboard","actions":["save-users","save-benchmark"]},{"id":"CAP02","surface":"dashboard","page":"Hot Topics & Actions","actions":["save","delete"]},{"id":"CAP03","surface":"dashboard","page":"Budget Overview","actions":["save-month","save-revenue"]},{"id":"CAP04","surface":"dashboard","page":"OPEX Detail","actions":["save","delete","save-entry","save-deviation","annual-entry","year-amount","import"]},{"id":"CAP05","surface":"dashboard","page":"CAPEX Projects","actions":["save","delete","save-entry","save-deviation","annual-entry","year-amount"]},{"id":"CAP06","surface":"dashboard","page":"Headcount Overview","actions":[]},{"id":"CAP07","surface":"dashboard","page":"Team Structure","actions":["saveCio","saveLeader","deleteLeader","saveMember","deleteMember"]},{"id":"CAP08","surface":"dashboard","page":"Talent Review","actions":["save","delete","import","exportAllMembers"]},{"id":"CAP09","surface":"dashboard","page":"Portfolio Dashboard","actions":[]},{"id":"CAP10","surface":"dashboard","page":"All Projects","actions":["save","delete","import","save-milestone","delete-milestone"]},{"id":"CAP11","surface":"dashboard","page":"IT Operations","actions":["save-categories","save-items","save-tickets","save-sla","save-heatmap","import-month"]},{"id":"CAP12","surface":"dashboard","page":"IT Security KPIs","actions":["save-kpi","delete-kpi","save-action","delete-action","save-incident","delete-incident","save-campaign","delete-campaign"]},{"id":"CAP13","surface":"dashboard","page":"IT Risks","actions":["save","delete"]},{"id":"CAP14","surface":"dashboard","page":"Vendor Contracts","actions":["save","delete"]},{"id":"CAP15","surface":"dashboard","page":"Stakeholder Management","actions":["save","delete"]},{"id":"CAP16","surface":"dashboard","page":"IT Performance Contract","actions":["save","save-item","delete-item","save-sub","delete-sub"]},{"id":"CAP17","surface":"planner","page":"Overview","actions":["import-workbook"]},{"id":"CAP18","surface":"planner","page":"OPEX","actions":["save","delete","spread","reset","import-workbook"]},{"id":"CAP19","surface":"planner","page":"CAPEX","actions":["save","delete","spread","reset","import-workbook"]},{"id":"CAP20","surface":"planner","page":"Headcount","actions":["save","delete","sync","import-workbook"]},{"id":"CAP21","surface":"planner","page":"Entities & allocations","actions":["save","delete","common","import-workbook"]},{"id":"CAP22","surface":"planner","page":"FX rates","actions":["save","delete","import-workbook"]},{"id":"CAP23","surface":"planner","page":"Versions","actions":["save","copy","official","lock","unlock","delete","import-workbook"]},{"id":"CAP24","surface":"procurement","page":"Dashboard","actions":[]},{"id":"CAP25","surface":"procurement","page":"Requests","actions":["create","save","submit_pr","submit_sourcing","select_quote","submit_po","approve","reject","issue","cancel","delete"]},{"id":"CAP26","surface":"procurement","page":"My approvals","actions":["approve","reject"]},{"id":"CAP27","surface":"procurement","page":"Suppliers","actions":["create","save","activate","block","inactivate","delete","change-bank"]},{"id":"CAP28","surface":"procurement","page":"Settings","actions":["save","reset"]}] as const
 
 const OPERATIONS: ReadonlySet<string> = new Set(RESOURCES.flatMap((item) => item.operations))
-const page = new Map<string, (typeof PAGES)[number]>(PAGES.map((entry) => [entry.id, entry]))
+const page = new Map<string, (typeof PAGES)[number]>(PAGES.map((entry) => [entry.id, entry] as const))
 
 const mismatch = (): SfContextResult => ({ status: "unavailable", reason: "contract-mismatch" })
 const notReady = (operationId: SfOperationId): SfOperationAvailability => ({
@@ -230,6 +230,15 @@ export function createSfLiveContext(source: SfLiveContextSources): Readonly<{
     if (!againDestinations || !equalDestinations(destinations, againDestinations)) return mismatch()
     const after = await readOperations().catch(() => undefined)
     if (!stillCurrent() || !after || !equalObservations(before, after)) return mismatch()
+
+    // Final fence covers revocation while the second operational observation
+    // was in flight. No await occurs after this last authenticated comparison.
+    const final = await source.admit(request).catch((): SfLiveContextAdmission =>
+      ({ status: "unavailable", reason: "host-unavailable" }))
+    if (!stillCurrent() || final.status !== "ok" ||
+      !sameStamp(admittedStamp, final.stamp) || admittedMode !== final.authMode) return mismatch()
+    const finalDestinations = approvedDestinations(final.destinations)
+    if (!finalDestinations || !equalDestinations(destinations, finalDestinations)) return mismatch()
 
     const value = {
       stamp: admittedStamp,

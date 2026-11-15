@@ -207,3 +207,17 @@ test("F01 negative: context 200 cannot be fabricated by a denied ctx.context pro
   }))
   expect(await live.readContext(request(), binding)).toEqual(mismatch)
 })
+
+test("F01 negative: revocation during the last operational read fails the final admission fence", async () => {
+  let attempts = 0
+  const live = createSfLiveContext(sources({
+    admit: async () => ({
+      status: "ok",
+      stamp: { ...stamp, policyVersion: ++attempts === 3 ? "policy-revoked" : stamp.policyVersion },
+      authMode: "local-operator", destinations: [],
+    }),
+    operational: async () => [{ operationId: "ctx.installations", state: "unavailable", reason: "not-probed", operational: false }],
+  }))
+  expect(await live.readContext(request(), binding)).toEqual(mismatch)
+  expect(attempts).toBe(3)
+})

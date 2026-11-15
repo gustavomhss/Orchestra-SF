@@ -8,7 +8,7 @@
   "observed_integrator_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
   "preimage_policy": "Each target must still exactly match its current SHA when applied by 162, else re-evaluate deltas; never reset/rebase/force.",
   "sources": {
-    "live_context": "b5f599b6554c12225f82296e4f68e21e930f1360",
+    "live_context": "03a47cf080fc5b9751dbadad272c14d17f5cfc34",
     "context_handler": "940f8fc612f7dee3a3c412075a8e16d3d6e21410",
     "authority": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
     "runtime_host": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
@@ -53,7 +53,7 @@
     "source_of_stamp": "original product authority digest principalRef/policyVersion/accessRevision from resolve()",
     "source_of_pages": "original dashboardPages/plannerKeys/procurementKeys, source page manifest mapping, no artificial action enablement",
     "source_availability": "ctx.context direct success only; rest unavailable until separately attested live operational callbacks, to be installed by 162 with real producers",
-    "strictness": "factory rejects original request drift, runtime instance/host mismatch, revoked principal/policy/accessRevision, late operation readiness and forged pages/ops",
+    "strictness": "factory rejects original request drift, runtime instance/host mismatch, revoked principal/policy/accessRevision, late operation readiness and forged pages/ops; third re-admission fence after final operational probe",
     "host_mount": "existing native context handler already wired in the original local entry, no new HTTP listener",
     "needs_after_patch": [
       "readOperations genuine per-operation operational probes (none provided by current host source)",
