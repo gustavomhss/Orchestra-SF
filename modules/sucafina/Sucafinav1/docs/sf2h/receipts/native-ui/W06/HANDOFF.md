@@ -7,7 +7,7 @@
 - Branch: sf-ux-w06; reserved lease: ux-native-w06-e1; actual model: GPT-6; execution via authorized GitHub connector actor gustavomhss.
 - Cohort base: f8e442616c96651f3b26013b34b8ce697860e3e2; ACK: a49ea45db5957ac5c1c4f12a24afd7ce1ab57721.
 - Code commit: 37bb114d52978146816329380fe5e531291ff74e; fence correction: caa812eff298ac5666b62aa2e8b2a01534405e3d.
-- Code tree: fa818b3721f372a304866999fa578ec6beccdf2d. Publication by GitHub MCP CAS expected-head, force=false.
+- Latest code tree: 1f620be57823eab7d280b1d49da1f497a82f8ec5 (after accessibility and value hardening commit 940a29a51215ab9914392952c57e6b60c07f6e4f). Publication by GitHub MCP CAS expected-head, force=false.
 - All eight code paths are NEW (preimage absent); exact postimage Git blobs in ARTIFACT_READY.json. ACK and all receipts only in W06 receipt prefix.
 
 ## Component contracts and slots
@@ -45,3 +45,9 @@ Apply by 114 only after reconciling current HEAD and F03's sf.common registratio
 
 ACK publication was real. This handoff offers output S01 as ARTIFACT_READY and releases the authoring slot only after 114 accepts the source/lease terminal. Per-output admission by 114 was not observed; do not infer consent from silence. No shared writer or second dispatcher was created.
 Owner 114: consume exact code blobs/commit, apply or reconcile inert i18n patch, compose F01/F03 and dispatch one candidate. Owner 120: deduplicated surgical Actions. Owner 119: compiler, guards. No merge/deploy/Azure.
+
+## Draft PR #125 / ancestry warning
+
+The GitHub files API compared sf-ux-w06 against sf2-stack@2105c17b51fd9cb5131418c116433a05f9479cb7. It showed 170 files: 14 newly-authored W06 paths and 156 pre-existing native-UI cohort/planning files inherited from the prepared branch. The later census receipt adds one more own W06 file (expected total 171); verify the PR head before integration. See PR_DIFF_CENSUS.json for exact inherited paths.
+
+**Do not merge the entire draft PR.** Integrator 114 must consume only the W06 code/receipt file additions with exact blob preimages/postimages, reconstruct on the current sf2-stack tree under its own lease, and reconcile the common cohort separately. No W06 rebase, force push or merge was attempted.

@@ -44,19 +44,19 @@
       {
         "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
         "preimage": null,
-        "postimage": "90ebaba1b8813b5ff3d6eabab46e27b98a33e748",
+        "postimage": "eec796343345a7ce7b3d30f4b86055000b6847c2",
         "change": "ADD"
       },
       {
         "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/table.css",
         "preimage": null,
-        "postimage": "35cbdc5cbe4dbf54d126cec75917d40ebed80a3f",
+        "postimage": "df4531f104d3ad0d0ea4ca58b276d4fc242d0d84",
         "change": "ADD"
       },
       {
         "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
         "preimage": null,
-        "postimage": "73a4a1e307a054f7ed5c2258ac9f55ad24140acf",
+        "postimage": "bdaeafeeac3e828a22ccbd45c1c5c8239f292a7c",
         "change": "ADD"
       },
       {
@@ -74,10 +74,13 @@
       {
         "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
         "preimage": null,
-        "postimage": "fb1bff8fafd2ce8d2991e7b8314cb68bb69f6a31",
+        "postimage": "f0323b6b0711f7b034686214b1371747351a492d",
         "change": "ADD"
       }
-    ]
+    ],
+    "final_code_head": "940a29a51215ab9914392952c57e6b60c07f6e4f",
+    "final_code_tree": "1f620be57823eab7d280b1d49da1f497a82f8ec5",
+    "a11y_commit": "940a29a51215ab9914392952c57e6b60c07f6e4f"
   },
   "contracts": {
     "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
@@ -182,12 +185,21 @@
     "No shared registry mutations",
     "No backend/Schema/Protocol/generated edits",
     "No merge/deploy/Azure",
-    "No installed/green claims"
+    "No installed/green claims",
+    "PR diff inherited 156 unrelated cohort-preparation files at source snapshot; only W06 8 code+6 receipts are authored by this seat."
   ],
   "consumers": {
     "integrator": "114",
     "product_ci": "120",
     "compiler": "119",
     "instructions": "Apply only source output to candidate; reconcile ownership/lease and typed i18n via inert patch; qualify on same C."
+  },
+  "pr": {
+    "number": 125,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/125",
+    "draft": true,
+    "base": "sf2-stack",
+    "baseline_census": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W06/PR_DIFF_CENSUS.json",
+    "diff_warning": "156 inherited prepared-cohort paths on the pre-created branch; 114 must consume only W06 additions; no full-PR merge"
   }
 }
