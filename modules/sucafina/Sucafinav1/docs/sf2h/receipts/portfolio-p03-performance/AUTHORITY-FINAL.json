@@ -1,0 +1,91 @@
+{
+  "schema": "sf2h.portfolio-p03-performance.authority-final.v1",
+  "mission": 54,
+  "actor": "S4-C",
+  "epoch": "portfolio-performance-browser54",
+  "state": "TERMINATED_WITH_P03_FAIL_AND_GATES_PENDING",
+  "recorded_at": "2026-11-15 00:36:41 UTC",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "control_pin": "8721341a83944419cf33be921fbb332e059d4128",
+  "control_blob": "270a24642403bdad0a938897906d0b8f20ca0f54",
+  "predecessor": {
+    "mission": 50,
+    "terminal": "c01520cb6a09e580897ebdb46e75e40a536b80be",
+    "authority_blob": "3d81323e2b091beac6247696a798a0b7799fe541",
+    "explicitly_ended": true
+  },
+  "ACK54": "4006059dba40ef9909d2ab41de3ec04380872390",
+  "source_branch": "astra-wp13",
+  "PR": 37,
+  "source_product": "06df1210f0f2049c972dfb2852396de34f31c683",
+  "source_tree": "7150512610093d91f252fd300d4d4ceb5e06588d",
+  "expected_terminal_parent": "3ddef304796987b97a66bc27f7e47c5ddd1334fa",
+  "terminal_identity": "Git commit containing this file and HANDOFF-FINAL.md; lease ends on successfulCAS of that commit",
+  "write_lease_ended_explicitly": true,
+  "further_source_writes_authorized": false,
+  "further_CI_dispatches_authorized": false,
+  "consumer": 47,
+  "consumer_ACK": "REQUESTED_NOT_RECEIVED",
+  "no_silence_takeover": true,
+  "actual_scope": {
+    "material_source_paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+        "sha": "03576f1ec52d3d3c1f022c91d6c85257fa0491b8"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/read-before-bind.test.ts",
+        "sha": "31dc3ce17b22188d60f9524ea01ce60cf3a2d8a1"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/portfolio-p03-performance/trace.ts",
+        "sha": "84d8b45cf88a9ac852eb09e4762932aced3c7433"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts",
+        "sha": "6effa6053a00758e987e52f0c6fcf9baf9a7906a"
+      }
+    ],
+    "receipts_only_after_product": true,
+    "production_unchanged": true,
+    "P02_unchanged_by54": true,
+    "stack_writes": 0,
+    "foreign_source_writes": 0,
+    "workflow_writes": 0,
+    "local_tests": 0,
+    "epics": 0,
+    "CI_runs": 2,
+    "active_runs": 0,
+    "force_push": false,
+    "dev_merge": false,
+    "deploy": false,
+    "external_messages": false
+  },
+  "helper_authority": "Read-only reviews; no remote sourcewrites or dispatches",
+  "target_reconciliation": {
+    "target": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+    "target_tree": "644e41cfc5e8b291b4bf61bd16c8dcae41b14d1b",
+    "symbol": "C21",
+    "delta_from_C20": "Agenda39 plus integration receipts. No changes to6patchpaths,28preservedpaths or runtime preimage in complete GitHub compare.",
+    "executed_on_C21": false,
+    "preimages_compatible": true
+  },
+  "observed_integrator_documents": {
+    "terminal47": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+    "authority47_blob": "076d2b0c277c7101b387e3d76ff80d3423d85c8a",
+    "ACK55": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+    "ACK55_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "meaning": "Observed repository documents declare47ended/55successor. This is not new authorization from this mission's user and grants54no stack write."
+  },
+  "outcome": {
+    "R1": "8PASS87expect",
+    "R2": "FAIL180000ms",
+    "P02": "22PASS_HISTORICAL50_PRESERVED",
+    "typecheck45": "NOT_RUN",
+    "guards45": "NOT_RUN",
+    "runtime_proposal": "INERT_NOT_APPLIED_NOT_RUN"
+  },
+  "GLOBAL_RELEASE": false
+}
