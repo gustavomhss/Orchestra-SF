@@ -18,7 +18,7 @@ type Model = Choices["models"][number]
 type Run = Extract<typeof SfAnalyses.operations["intelligence.analysis.read"]["output"]["Type"], { status: "ok" }>["value"]
 type Output = Extract<typeof SfAnalyses.operations["intelligence.analysis.output"]["output"]["Type"], { status: "ok" }>["value"]
 type Request = typeof SfAnalyses.operations["intelligence.analysis.prepare"]["input"]["Type"]["input"]["request"]
-type Prepared = typeof SfAnalyses.operations["intelligence.analysis.prepare"]["output"]["Type"] extends infer T ? Extract<T, {status:"ok"}>["value"] : never
+type Prepared = Extract<typeof SfAnalyses.operations["intelligence.analysis.prepare"]["output"]["Type"], { status: "ok" }>["value"]
 
 type Phase = "idle" | "preparing" | "reviewing" | "starting" | "cancelling" | "confirm-cancel" | "outcome-unknown" | "failed"
 type AnalysisState = {
