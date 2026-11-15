@@ -1,0 +1,154 @@
+{
+  "schema": "sf2h.m79.validation-overlay.v1",
+  "id": "V2-causal-pair-and-node-abort",
+  "state": "PREPARED_NOT_RUN",
+  "base": "60613a133ee7ffc1026c875c3939b1d92cc97502",
+  "production_writer": 74,
+  "integrator": 71,
+  "checks_owner": 45,
+  "source74": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/installed-post-cause/probe.test.ts",
+      "./Sucafinav1/test/product/installed-post-cause/bridge-regression.test.ts",
+      "./Sucafinav1/test/product/installed-post-cause/request-reconstruction.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "--timeout",
+      "18000"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "expected_tests": 11,
+  "overlays": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "mode": "100644",
+      "preimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "postimage_blob": "40edd1ece604ef2b7c4120b9b93455c1b34223b2",
+      "artifact": "instrumentation-v2/installation.postimage.txt",
+      "owner_proposed_blob": "34d74d6651031c5194db1d22c823baae60e9a260"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+      "artifact": "fix-proposal/request-body.ts.unchanged.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "mode": "100644",
+      "preimage_blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+      "postimage_blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+      "artifact": "fix-proposal/http.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "57e4d7309848d34e132d44ae21c1bc0d90a3c3ac",
+      "artifact": "instrumentation-v2/map.postimage.txt",
+      "owner_proposed_blob": "6586b2f2ec475e6fe0e39648e5ac84ee60e83aaf"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "mode": "100644",
+      "preimage_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "postimage_blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+      "artifact": "fix-proposal/integration-fixture.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "preimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "postimage_blob": "ccdd1e2833a8f2c6a3dc605f43c550bdb3671ac6",
+      "artifact": "instrumentation/entry.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "mode": "100644",
+      "preimage_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "postimage_blob": "69bf5b0e64c2d7fca27c9192c035467169ebcd5a",
+      "artifact": "instrumentation/application.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "878b41f8b050c1d37d55df44028845f1093ac5df",
+      "source_commit": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+      "qualification_only": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "49ad5f84d98804f7ff5836c2b24044b6b1a0b294",
+      "source_commit": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+      "qualification_only": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "b4f4360d23ee709c36582f060d4ca4382d1e11d5",
+      "source_commit": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+      "qualification_only": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "c8865ac73ae4932ba79c8e90c38ce5ee78b3486c",
+      "source_commit": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+      "qualification_only": true
+    }
+  ],
+  "material_delta": "Bind Node aborted to final Request signal with queued-error guard and bounded listener cleanup; same original transport/bodylimit and same Request. Replace exploratory mixed text/arrayBuffer controls by five identical explicit reader consumers with bounded cancellation; disable diagnostic error observer on disconnect; retain all positive regression assertions.",
+  "paired_cases": [
+    "first Request direct =>28/EOF1",
+    "new Request(first) =>28/EOF1",
+    "new Request(first,{signal}) =>deadline/bytes0/EOF0",
+    "new Request(first,{}) =>deadline/bytes0/EOF0",
+    "new Request(first.url,{body:first.body,...}) =>28/EOF1"
+  ],
+  "deadline_ms": {
+    "server_reconstruction": 800,
+    "client_reconstruction": 1800,
+    "cleanup_reconstruction": 80,
+    "positive_requests": 1800
+  },
+  "cleanup_qualification": "All reachable body readers cancelled/released, timers cleared, own sockets closed and observers restored; known broken Bun reconstruction may retain an inaccessible tee cancellation promise, recorded pending without relabeling success. Positive controls require resolved selected cancellation. Disconnect asserts signal=true and zero error listeners with the diagnostic error observer disabled.",
+  "unchanged_factors": "Every paired constructor cell uses freshPOST28, exactCL28, same HttpServerRequest.toWeb, initialsignal, capturedcontext, defaultHWM, NodeStream closeOnDone and getReader/read loop. Only Request reconstruction varies.",
+  "reused_owner_tests": [
+    {
+      "name": "listener.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "blob": "878b41f8b050c1d37d55df44028845f1093ac5df"
+    },
+    {
+      "name": "microsoft-bridge.test.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "blob": "49ad5f84d98804f7ff5836c2b24044b6b1a0b294"
+    },
+    {
+      "name": "workbench-fixture.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench-fixture.ts",
+      "blob": "b4f4360d23ee709c36582f060d4ca4382d1e11d5"
+    },
+    {
+      "name": "binary-fixture.ts",
+      "path": "modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts",
+      "blob": "c8865ac73ae4932ba79c8e90c38ce5ee78b3486c"
+    }
+  ],
+  "dedup": "Fresh V2 differs materially from V1 by one production proposal delta and stronger causal fixture; existing74 source-green run43673697145 reused as provenance, not as V2 proof. Only existing test-ci interface and one79run in flight.",
+  "limitations": "Component qualification only. No realbrowser/CLI/native journey, no hostedproviderqualification, no finalintegratedC proof; compiler/guards requested via45 separately.",
+  "GLOBAL_RELEASE": false
+}

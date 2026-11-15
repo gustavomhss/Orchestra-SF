@@ -164,6 +164,7 @@ test("M79 bridge preserves split UTF-8 bytes and real EOF after a paused consume
           expect(trace?.bodyReadDone).toBe(1)
           expect(trace?.bodyReadBytes).toBe(expected.byteLength)
           expect(trace?.node.readableEnded).toBe(true)
+          expect(trace?.signalAborted).toBe(false)
           if (!state.source) throw new Error("M79_SOURCE_REQUIRED")
           noBodyObservers79(state.source)
         } finally {
@@ -236,6 +237,7 @@ test("M79 bridge rejects a disconnected partial upload with no late post-read st
     request: undefined as Request | undefined, source: undefined as IncomingMessage | undefined,
   }
   await withListener79({
+    observeRequestErrors: false,
     compose: composeSfInstallation,
     create: async () => ({ mount: "/probe", dispose() {}, async handler(request) {
       state.request = request
@@ -277,6 +279,7 @@ test("M79 bridge rejects a disconnected partial upload with no late post-read st
         if (!state.source) throw new Error("M79_SOURCE_REQUIRED")
         expect(state.source.destroyed).toBe(true)
         noBodyObservers79(state.source)
+        expect(state.source.listenerCount("error")).toBe(0)
       } finally {
         console.log("M79_BRIDGE_REGRESSION " + JSON.stringify({ case: "disconnect-partial", sentBytes: upload.state.sentBytes, endRequested: upload.state.endRequested,
           postRead: state.postRead, rejected: state.rejected, eof: state.eof, unlocked: state.unlocked,

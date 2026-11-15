@@ -83,13 +83,14 @@ export async function withListener79<T>(options: {
   }) => Promise<T>
   port?: number
   hostname?: string
+  observeRequestErrors?: boolean
 }) {
   // Resolve the existing adapter from its owning package, as microsoft-node.test.ts does.
   // This helper is published at test/product/installed-post-cause/listener79.ts.
   const cli = createRequire(path.resolve(import.meta.dir, "../../../../../../apps/cli/package.json"))
   const platform = await import(pathToFileURL(cli.resolve("@effect/platform-node")).href) as { NodeHttpServer: NodeServer79 }
   const server = createServer()
-  const capture = capture79(server)
+  const capture = capture79(server, options.observeRequestErrors ?? true)
   const hostname = options.hostname ?? "127.0.0.1"
   try {
     return await Effect.runPromise(Effect.scoped(Effect.gen(function* () {
@@ -130,7 +131,7 @@ export async function withListener79<T>(options: {
   }
 }
 
-function capture79(server: ReturnType<typeof createServer>) {
+function capture79(server: ReturnType<typeof createServer>, observeRequestErrors: boolean) {
   const restore: Array<() => void> = []
   const sockets = new Set<IncomingMessage["socket"]>()
   const socketStates = new WeakMap<IncomingMessage["socket"], { pushCalls: number; pushNull: number; pushedBytes: number }>()
@@ -227,7 +228,7 @@ function capture79(server: ReturnType<typeof createServer>) {
       return Reflect.apply(original, this, args)
     })
     // No data/readable observer: those change the mode of the stream under diagnosis.
-    for (const event of ["end", "aborted", "error", "close"]) {
+    for (const event of ["end", "aborted", ...(observeRequestErrors ? ["error"] : []), "close"]) {
       const listener = () => record.mark(`node.${event}`)
       request.on(event, listener)
       restore.push(() => request.off(event, listener))
@@ -323,7 +324,7 @@ function capture79(server: ReturnType<typeof createServer>) {
     },
     dispose() { restore.splice(0).reverse().forEach((close) => close()) },
     cleanupState() {
-      return { listening: server.listening, trackedSockets: sockets.size,
+      return { listening: server.listening, diagnosticErrorObserver: observeRequestErrors, trackedSockets: sockets.size,
         openOwnedSockets: [...sockets].filter((socket) => !socket.destroyed).length, remainingObservers: restore.length }
     },
   }

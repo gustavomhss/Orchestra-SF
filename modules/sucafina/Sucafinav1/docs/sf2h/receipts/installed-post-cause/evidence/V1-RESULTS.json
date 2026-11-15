@@ -1,0 +1,2841 @@
+{
+  "schema": "sf2h.m79.owner74-control-results.v1",
+  "W": {
+    "sha": "60613a133ee7ffc1026c875c3939b1d92cc97502",
+    "tree": "086b515128832061947bdf5939afb4ce2501cfbd"
+  },
+  "V": {
+    "sha": "28c25718075dd5724e38579907621116df3369fc",
+    "tree": "8f41bb1a3d00355b9b795613efffc1837aea104a"
+  },
+  "S": {
+    "sha": "03edea269fed4483a24555da28670df1b978b355",
+    "tree": "20263c26f89ba3a8fddb12352ea538f62024dab6"
+  },
+  "run": 43674790650,
+  "job": 132692476767,
+  "cleanup_job": 132692900943,
+  "pass": 4,
+  "fail": 1,
+  "duration_seconds": 3.22,
+  "overall": "RED; signal assertion retained",
+  "observations": [
+    {
+      "case": "minimal",
+      "get": 200,
+      "post": {
+        "status": 200,
+        "elapsedMs": 3,
+        "timedOut": false
+      },
+      "controls": {
+        "effect-collect": {
+          "status": 200,
+          "timedOut": false,
+          "body": "{\"bytes\":28}",
+          "elapsedMs": 1
+        },
+        "web-stream": {
+          "status": 200,
+          "timedOut": false,
+          "body": "{\"bytes\":28}",
+          "elapsedMs": 1
+        },
+        "web-direct": {
+          "status": 200,
+          "timedOut": false,
+          "body": "{\"bytes\":28}",
+          "elapsedMs": 3
+        },
+        "clone-zero": {
+          "status": 0,
+          "timedOut": true,
+          "body": "",
+          "elapsedMs": 908
+        }
+      },
+      "negative": {
+        "status": 0,
+        "timedOut": true
+      },
+      "postTraces": [
+        {
+          "id": "flow-control",
+          "method": "POST",
+          "declaredLength": 28,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.003,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.44,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.463,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.497,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.501,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.531,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.591,
+              "event": "flow.data"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.664,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.671,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.673,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.678,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.681,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.687,
+              "event": "node.end"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.704,
+              "event": "flow.end"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 0.781,
+              "event": "node.close"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 1.055,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 1.064,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 4,
+          "readNull": 4,
+          "readBytes": 0,
+          "readValueCallers": [],
+          "pushCalls": 2,
+          "pushNull": 1,
+          "pushedBytes": 28,
+          "bodyReaderCalls": 0,
+          "bodyReadCalls": 0,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 0,
+          "handlerEntered": false,
+          "handlerCompleted": false,
+          "responseFinished": true,
+          "signalAborted": null
+        },
+        {
+          "id": "minimal-post",
+          "method": "POST",
+          "declaredLength": 28,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.003,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.229,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.595,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.614,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.648,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.685,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.702,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.736,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.762,
+              "event": "web.text.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 1.213,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 1.223,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 1.467,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 1.472,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 1.644,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 1.726,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 1.889,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 1.892,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 1.896,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 1.986,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 1.989,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 1.999,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 2.006,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 2.028,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 24,
+              "elapsedMs": 2.035,
+              "event": "node.end"
+            },
+            {
+              "sequence": 25,
+              "elapsedMs": 2.066,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 26,
+              "elapsedMs": 2.068,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 27,
+              "elapsedMs": 2.19,
+              "event": "node.close"
+            },
+            {
+              "sequence": 28,
+              "elapsedMs": 2.377,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 29,
+              "elapsedMs": 2.5,
+              "event": "web.reader.read.done"
+            },
+            {
+              "sequence": 30,
+              "elapsedMs": 2.6,
+              "event": "web.reader.releaseLock"
+            },
+            {
+              "sequence": 31,
+              "elapsedMs": 2.629,
+              "event": "web.text.complete"
+            },
+            {
+              "sequence": 32,
+              "elapsedMs": 2.636,
+              "event": "handler.complete"
+            },
+            {
+              "sequence": 33,
+              "elapsedMs": 3.167,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 34,
+              "elapsedMs": 3.175,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 7,
+          "readNull": 6,
+          "readBytes": 28,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 2,
+          "pushNull": 1,
+          "pushedBytes": 28,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 1,
+          "bodyReadDone": 1,
+          "bodyReadBytes": 0,
+          "handlerEntered": true,
+          "handlerCompleted": true,
+          "responseFinished": true,
+          "signalAborted": false
+        },
+        {
+          "id": "effect-collect",
+          "method": "POST",
+          "declaredLength": 28,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.002,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.289,
+              "event": "control.effect.collect.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.467,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.489,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.506,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.508,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.522,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.535,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.57,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.571,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.573,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.603,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.605,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.611,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 0.615,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 0.617,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 0.627,
+              "event": "node.end"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 0.639,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 0.643,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 0.698,
+              "event": "control.effect.collect.complete"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 0.842,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 0.845,
+              "event": "node.close"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 0.849,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 7,
+          "readNull": 6,
+          "readBytes": 28,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 2,
+          "pushNull": 1,
+          "pushedBytes": 28,
+          "bodyReaderCalls": 0,
+          "bodyReadCalls": 0,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 0,
+          "handlerEntered": false,
+          "handlerCompleted": false,
+          "responseFinished": true,
+          "signalAborted": null
+        },
+        {
+          "id": "web-stream",
+          "method": "POST",
+          "declaredLength": 28,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.001,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.423,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.441,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.579,
+              "event": "control.rawWeb.read.start"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.598,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.601,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.623,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.635,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.701,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.706,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.714,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.734,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.744,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.777,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 0.782,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 0.791,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 0.796,
+              "event": "node.end"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 0.809,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 0.813,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 0.86,
+              "event": "node.close"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 0.863,
+              "event": "control.rawWeb.read.value"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 0.865,
+              "event": "control.rawWeb.read.start"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 0.872,
+              "event": "control.rawWeb.read.done"
+            },
+            {
+              "sequence": 24,
+              "elapsedMs": 1.021,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 25,
+              "elapsedMs": 1.026,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 7,
+          "readNull": 6,
+          "readBytes": 28,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 2,
+          "pushNull": 1,
+          "pushedBytes": 28,
+          "bodyReaderCalls": 0,
+          "bodyReadCalls": 0,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 0,
+          "handlerEntered": false,
+          "handlerCompleted": false,
+          "responseFinished": true,
+          "signalAborted": null
+        },
+        {
+          "id": "web-direct",
+          "method": "POST",
+          "declaredLength": 28,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.002,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.514,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.537,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.592,
+              "event": "control.directWeb.read.start"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.788,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.805,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.838,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.854,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.896,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.898,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.899,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.919,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.919,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.933,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 0.94,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 0.942,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 0.952,
+              "event": "node.end"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 0.98,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 0.982,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 1.039,
+              "event": "node.close"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 1.261,
+              "event": "control.directWeb.read.complete"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 1.386,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 1.391,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 7,
+          "readNull": 6,
+          "readBytes": 28,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 2,
+          "pushNull": 1,
+          "pushedBytes": 28,
+          "bodyReaderCalls": 0,
+          "bodyReadCalls": 0,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 0,
+          "handlerEntered": false,
+          "handlerCompleted": false,
+          "responseFinished": true,
+          "signalAborted": null
+        },
+        {
+          "id": "paused-negative",
+          "method": "POST",
+          "declaredLength": 28,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.002,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.5,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.524,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.863,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.873,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 1.017,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 1.036,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 1.08,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 1.082,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 1.083,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 1.105,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 1.106,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 1.112,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 1.122,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 1.123,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 1.128,
+              "event": "node.end"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 1.142,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 1.143,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 1.189,
+              "event": "node.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 7,
+          "readNull": 6,
+          "readBytes": 28,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 2,
+          "pushNull": 1,
+          "pushedBytes": 28,
+          "bodyReaderCalls": 0,
+          "bodyReadCalls": 0,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 0,
+          "handlerEntered": false,
+          "handlerCompleted": false,
+          "responseFinished": false,
+          "signalAborted": null
+        },
+        {
+          "id": "clone-zero",
+          "method": "POST",
+          "declaredLength": 28,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.004,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.904,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.95,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 1.271,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 1.28,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 1.466,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 1.512,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 1.624,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 1.628,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 1.65,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 1.686,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 907.01,
+              "event": "node.aborted"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 907.04,
+              "event": "node.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": false,
+            "destroyed": true,
+            "aborted": true,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": true,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 4,
+          "readNull": 3,
+          "readBytes": 28,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 2,
+          "pushNull": 1,
+          "pushedBytes": 28,
+          "bodyReaderCalls": 0,
+          "bodyReadCalls": 0,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 0,
+          "handlerEntered": false,
+          "handlerCompleted": false,
+          "responseFinished": false,
+          "signalAborted": null
+        }
+      ]
+    },
+    {
+      "case": "versions",
+      "get": 200,
+      "post": {
+        "status": 200,
+        "elapsedMs": 7,
+        "timedOut": false
+      },
+      "state": {
+        "versions": 1,
+        "auditCount": 2
+      },
+      "postTraces": [
+        {
+          "id": "versions-save",
+          "method": "POST",
+          "declaredLength": 77,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.002,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.198,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.328,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.353,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.365,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.409,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.429,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.453,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.465,
+              "event": "identity.handle.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.49,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.498,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.543,
+              "event": "identity.handle.complete"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.543,
+              "event": "identity.prepare.start"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.545,
+              "event": "identity.prepare.complete"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 1.35,
+              "event": "business.handler.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 1.393,
+              "event": "command.body.start"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 1.589,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 1.612,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 1.629,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 1.698,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 1.731,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 1.792,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 1.794,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 24,
+              "elapsedMs": 1.796,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 25,
+              "elapsedMs": 1.834,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 26,
+              "elapsedMs": 1.836,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 27,
+              "elapsedMs": 1.848,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 28,
+              "elapsedMs": 1.853,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 29,
+              "elapsedMs": 1.856,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 30,
+              "elapsedMs": 1.862,
+              "event": "node.end"
+            },
+            {
+              "sequence": 31,
+              "elapsedMs": 1.886,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 32,
+              "elapsedMs": 1.887,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 33,
+              "elapsedMs": 1.944,
+              "event": "node.close"
+            },
+            {
+              "sequence": 34,
+              "elapsedMs": 1.956,
+              "event": "web.reader.read.value"
+            },
+            {
+              "sequence": 35,
+              "elapsedMs": 1.959,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 36,
+              "elapsedMs": 2.005,
+              "event": "web.reader.read.done"
+            },
+            {
+              "sequence": 37,
+              "elapsedMs": 2.172,
+              "event": "command.body.complete"
+            },
+            {
+              "sequence": 38,
+              "elapsedMs": 2.892,
+              "event": "persistence.transaction.start"
+            },
+            {
+              "sequence": 39,
+              "elapsedMs": 3.091,
+              "event": "persistence.transaction.enter"
+            },
+            {
+              "sequence": 40,
+              "elapsedMs": 3.095,
+              "event": "domain.authenticate.start"
+            },
+            {
+              "sequence": 41,
+              "elapsedMs": 3.245,
+              "event": "domain.authenticate.complete"
+            },
+            {
+              "sequence": 42,
+              "elapsedMs": 3.307,
+              "event": "domain.dispatch.start"
+            },
+            {
+              "sequence": 43,
+              "elapsedMs": 4.716,
+              "event": "domain.dispatch.complete"
+            },
+            {
+              "sequence": 44,
+              "elapsedMs": 6.106,
+              "event": "persistence.transaction.complete"
+            },
+            {
+              "sequence": 45,
+              "elapsedMs": 6.11,
+              "event": "business.handler.complete"
+            },
+            {
+              "sequence": 46,
+              "elapsedMs": 6.12,
+              "event": "handler.complete"
+            },
+            {
+              "sequence": 47,
+              "elapsedMs": 6.641,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 48,
+              "elapsedMs": 6.646,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 7,
+          "readNull": 6,
+          "readBytes": 77,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 2,
+          "pushNull": 1,
+          "pushedBytes": 77,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 2,
+          "bodyReadDone": 1,
+          "bodyReadBytes": 77,
+          "handlerEntered": true,
+          "handlerCompleted": true,
+          "responseFinished": true,
+          "signalAborted": false
+        }
+      ]
+    }
+  ],
+  "bridge": [
+    {
+      "case": "slow-chunked",
+      "expectedBytes": 30025,
+      "status": 200,
+      "timedOut": false,
+      "reads": 2,
+      "eof": 1,
+      "postRead": 1,
+      "unlocked": true,
+      "paused": [
+        {
+          "id": "slow-chunked",
+          "method": "POST",
+          "declaredLength": null,
+          "chunked": true,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.003,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.156,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.239,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.262,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.277,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.294,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.331,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.355,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.536,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.548,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.559,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.622,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.627,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 3.155,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 3.219,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 3.285,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 3.287,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 3.289,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 3.357,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 3.359,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 3.384,
+              "event": "web.reader.read.value"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": false,
+            "readableEnded": false,
+            "destroyed": false,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": false
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 5,
+          "readNull": 4,
+          "readBytes": 10,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 1,
+          "pushNull": 0,
+          "pushedBytes": 10,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 1,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 10,
+          "handlerEntered": true,
+          "handlerCompleted": false,
+          "responseFinished": false,
+          "signalAborted": false
+        }
+      ],
+      "traces": [
+        {
+          "id": "slow-chunked",
+          "method": "POST",
+          "declaredLength": null,
+          "chunked": true,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.003,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.156,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.239,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.262,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.277,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.294,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.331,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.355,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.536,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.548,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.559,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.622,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.627,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 3.155,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 3.219,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 3.285,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 3.287,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 3.289,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 3.357,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 3.359,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 3.384,
+              "event": "web.reader.read.value"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 4.181,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 4.203,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 24,
+              "elapsedMs": 4.245,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 25,
+              "elapsedMs": 4.249,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 26,
+              "elapsedMs": 4.25,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 27,
+              "elapsedMs": 4.34,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 28,
+              "elapsedMs": 4.367,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 29,
+              "elapsedMs": 4.368,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 30,
+              "elapsedMs": 4.386,
+              "event": "web.reader.read.value"
+            },
+            {
+              "sequence": 31,
+              "elapsedMs": 4.401,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 32,
+              "elapsedMs": 4.406,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 33,
+              "elapsedMs": 4.408,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 34,
+              "elapsedMs": 4.419,
+              "event": "node.end"
+            },
+            {
+              "sequence": 35,
+              "elapsedMs": 4.442,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 36,
+              "elapsedMs": 4.442,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 37,
+              "elapsedMs": 4.536,
+              "event": "node.close"
+            },
+            {
+              "sequence": 38,
+              "elapsedMs": 4.541,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 39,
+              "elapsedMs": 4.58,
+              "event": "web.reader.read.done"
+            },
+            {
+              "sequence": 40,
+              "elapsedMs": 4.681,
+              "event": "web.reader.releaseLock"
+            },
+            {
+              "sequence": 41,
+              "elapsedMs": 4.737,
+              "event": "handler.complete"
+            },
+            {
+              "sequence": 42,
+              "elapsedMs": 5.507,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 43,
+              "elapsedMs": 5.516,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 10,
+          "readNull": 8,
+          "readBytes": 30025,
+          "readValueCallers": [
+            "effect-node-adapter",
+            "effect-node-adapter"
+          ],
+          "pushCalls": 3,
+          "pushNull": 1,
+          "pushedBytes": 30025,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 3,
+          "bodyReadDone": 1,
+          "bodyReadBytes": 30025,
+          "handlerEntered": true,
+          "handlerCompleted": true,
+          "responseFinished": true,
+          "signalAborted": false
+        }
+      ]
+    },
+    {
+      "case": "slow-declared",
+      "expectedBytes": 30025,
+      "status": 200,
+      "timedOut": false,
+      "reads": 2,
+      "eof": 1,
+      "postRead": 1,
+      "unlocked": true,
+      "paused": [
+        {
+          "id": "slow-declared",
+          "method": "POST",
+          "declaredLength": 30025,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.003,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.156,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.225,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.252,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.266,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.282,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.301,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.324,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.329,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.336,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.359,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.386,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.389,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.553,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 0.57,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 0.615,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 0.616,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 0.618,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 0.653,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 0.655,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 0.673,
+              "event": "web.reader.read.value"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": false,
+            "readableEnded": false,
+            "destroyed": false,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": false
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 5,
+          "readNull": 4,
+          "readBytes": 10,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 1,
+          "pushNull": 0,
+          "pushedBytes": 10,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 1,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 10,
+          "handlerEntered": true,
+          "handlerCompleted": false,
+          "responseFinished": false,
+          "signalAborted": false
+        }
+      ],
+      "traces": [
+        {
+          "id": "slow-declared",
+          "method": "POST",
+          "declaredLength": 30025,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.003,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.156,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.225,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.252,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.266,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.282,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.301,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.324,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.329,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.336,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.359,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.386,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.389,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.553,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 0.57,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 0.615,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 0.616,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 0.618,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 0.653,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 0.655,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 0.673,
+              "event": "web.reader.read.value"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 0.851,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 0.863,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 24,
+              "elapsedMs": 0.901,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 25,
+              "elapsedMs": 0.902,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 26,
+              "elapsedMs": 0.903,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 27,
+              "elapsedMs": 0.913,
+              "event": "node.push.null"
+            },
+            {
+              "sequence": 28,
+              "elapsedMs": 0.936,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 29,
+              "elapsedMs": 0.98,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 30,
+              "elapsedMs": 0.982,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 31,
+              "elapsedMs": 0.997,
+              "event": "web.reader.read.value"
+            },
+            {
+              "sequence": 32,
+              "elapsedMs": 1.003,
+              "event": "node.end"
+            },
+            {
+              "sequence": 33,
+              "elapsedMs": 1.018,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 34,
+              "elapsedMs": 1.019,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 35,
+              "elapsedMs": 1.078,
+              "event": "node.close"
+            },
+            {
+              "sequence": 36,
+              "elapsedMs": 1.082,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 37,
+              "elapsedMs": 1.106,
+              "event": "web.reader.read.done"
+            },
+            {
+              "sequence": 38,
+              "elapsedMs": 1.157,
+              "event": "web.reader.releaseLock"
+            },
+            {
+              "sequence": 39,
+              "elapsedMs": 1.165,
+              "event": "handler.complete"
+            },
+            {
+              "sequence": 40,
+              "elapsedMs": 1.639,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 41,
+              "elapsedMs": 1.648,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 9,
+          "readNull": 7,
+          "readBytes": 30025,
+          "readValueCallers": [
+            "effect-node-adapter",
+            "effect-node-adapter"
+          ],
+          "pushCalls": 3,
+          "pushNull": 1,
+          "pushedBytes": 30025,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 3,
+          "bodyReadDone": 1,
+          "bodyReadBytes": 30025,
+          "handlerEntered": true,
+          "handlerCompleted": true,
+          "responseFinished": true,
+          "signalAborted": false
+        }
+      ]
+    },
+    {
+      "case": "limit-open-upload",
+      "sentBytes": 65537,
+      "endRequested": false,
+      "status": 413,
+      "timedOut": false,
+      "postRead": 0,
+      "rejected": true,
+      "unlocked": true,
+      "traces": [
+        {
+          "id": "limit-open-upload",
+          "method": "POST",
+          "declaredLength": null,
+          "chunked": true,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.004,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.227,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.346,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.373,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.383,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.402,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.421,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.441,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.606,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.615,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.623,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.667,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.688,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 1.023,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 1.046,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 1.123,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 1.125,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 1.127,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 1.151,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 1.152,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 1.168,
+              "event": "web.reader.read.value"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 1.17,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 1.224,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 24,
+              "elapsedMs": 1.235,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 25,
+              "elapsedMs": 1.276,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 26,
+              "elapsedMs": 1.277,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 27,
+              "elapsedMs": 1.278,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 28,
+              "elapsedMs": 1.288,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 29,
+              "elapsedMs": 1.289,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 30,
+              "elapsedMs": 1.833,
+              "event": "web.reader.read.rejected"
+            },
+            {
+              "sequence": 31,
+              "elapsedMs": 1.885,
+              "event": "web.reader.releaseLock"
+            },
+            {
+              "sequence": 32,
+              "elapsedMs": 1.912,
+              "event": "handler.complete"
+            },
+            {
+              "sequence": 33,
+              "elapsedMs": 2.537,
+              "event": "node.response.finish"
+            },
+            {
+              "sequence": 34,
+              "elapsedMs": 2.55,
+              "event": "node.response.close"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": false,
+            "readableEnded": false,
+            "destroyed": false,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": false
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 8,
+          "readNull": 6,
+          "readBytes": 65537,
+          "readValueCallers": [
+            "effect-node-adapter",
+            "effect-node-adapter"
+          ],
+          "pushCalls": 2,
+          "pushNull": 0,
+          "pushedBytes": 65537,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 2,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 32761,
+          "handlerEntered": true,
+          "handlerCompleted": true,
+          "responseFinished": true,
+          "signalAborted": false
+        }
+      ]
+    },
+    {
+      "case": "disconnect-partial",
+      "sentBytes": 10,
+      "endRequested": false,
+      "postRead": 0,
+      "rejected": true,
+      "eof": 0,
+      "unlocked": true,
+      "beforeAbort": [
+        {
+          "id": "disconnect-partial",
+          "method": "POST",
+          "declaredLength": 4096,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.003,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.259,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.361,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.426,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.448,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.475,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.495,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.516,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.698,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.708,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.72,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.791,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.796,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.958,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 0.998,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 1.052,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 1.053,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 1.055,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 1.072,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 1.073,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 1.093,
+              "event": "web.reader.read.value"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 1.096,
+              "event": "web.reader.read.start"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": false,
+            "readableEnded": false,
+            "destroyed": false,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": false
+          },
+          "socket": {
+            "destroyed": false,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 5,
+          "readNull": 4,
+          "readBytes": 10,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 1,
+          "pushNull": 0,
+          "pushedBytes": 10,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 2,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 10,
+          "handlerEntered": true,
+          "handlerCompleted": false,
+          "responseFinished": false,
+          "signalAborted": false
+        }
+      ],
+      "traces": [
+        {
+          "id": "disconnect-partial",
+          "method": "POST",
+          "declaredLength": 4096,
+          "chunked": false,
+          "events": [
+            {
+              "sequence": 1,
+              "elapsedMs": 0.003,
+              "event": "node.request"
+            },
+            {
+              "sequence": 2,
+              "elapsedMs": 0.259,
+              "event": "node.webBridge.create.start"
+            },
+            {
+              "sequence": 3,
+              "elapsedMs": 0.361,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 4,
+              "elapsedMs": 0.426,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 5,
+              "elapsedMs": 0.448,
+              "event": "node.webBridge.create.complete"
+            },
+            {
+              "sequence": 6,
+              "elapsedMs": 0.475,
+              "event": "web.request.create.start"
+            },
+            {
+              "sequence": 7,
+              "elapsedMs": 0.495,
+              "event": "web.request.create.complete"
+            },
+            {
+              "sequence": 8,
+              "elapsedMs": 0.516,
+              "event": "handler.enter"
+            },
+            {
+              "sequence": 9,
+              "elapsedMs": 0.698,
+              "event": "web.getReader.start"
+            },
+            {
+              "sequence": 10,
+              "elapsedMs": 0.708,
+              "event": "web.getReader.complete"
+            },
+            {
+              "sequence": 11,
+              "elapsedMs": 0.72,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 12,
+              "elapsedMs": 0.791,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 13,
+              "elapsedMs": 0.796,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 14,
+              "elapsedMs": 0.958,
+              "event": "node.push.value"
+            },
+            {
+              "sequence": 15,
+              "elapsedMs": 0.998,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 16,
+              "elapsedMs": 1.052,
+              "event": "node.read.value"
+            },
+            {
+              "sequence": 17,
+              "elapsedMs": 1.053,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 18,
+              "elapsedMs": 1.055,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 19,
+              "elapsedMs": 1.072,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 20,
+              "elapsedMs": 1.073,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 21,
+              "elapsedMs": 1.093,
+              "event": "web.reader.read.value"
+            },
+            {
+              "sequence": 22,
+              "elapsedMs": 1.096,
+              "event": "web.reader.read.start"
+            },
+            {
+              "sequence": 23,
+              "elapsedMs": 1.433,
+              "event": "node.aborted"
+            },
+            {
+              "sequence": 24,
+              "elapsedMs": 1.578,
+              "event": "node.error"
+            },
+            {
+              "sequence": 25,
+              "elapsedMs": 1.632,
+              "event": "node.read.start"
+            },
+            {
+              "sequence": 26,
+              "elapsedMs": 1.652,
+              "event": "node.read.null"
+            },
+            {
+              "sequence": 27,
+              "elapsedMs": 1.715,
+              "event": "node.close"
+            },
+            {
+              "sequence": 28,
+              "elapsedMs": 1.781,
+              "event": "web.reader.read.rejected"
+            },
+            {
+              "sequence": 29,
+              "elapsedMs": 1.812,
+              "event": "web.reader.releaseLock"
+            },
+            {
+              "sequence": 30,
+              "elapsedMs": 1.825,
+              "event": "handler.complete"
+            }
+          ],
+          "droppedEvents": 0,
+          "node": {
+            "complete": false,
+            "readableEnded": false,
+            "destroyed": true,
+            "aborted": true,
+            "readableLength": 0,
+            "eofInProgress": false
+          },
+          "socket": {
+            "destroyed": true,
+            "readableEnded": false,
+            "eofInProgress": null,
+            "pushCalls": 0,
+            "pushNull": 0,
+            "pushedBytes": 0
+          },
+          "readCalls": 6,
+          "readNull": 5,
+          "readBytes": 10,
+          "readValueCallers": [
+            "effect-node-adapter"
+          ],
+          "pushCalls": 1,
+          "pushNull": 0,
+          "pushedBytes": 10,
+          "bodyReaderCalls": 1,
+          "bodyReadCalls": 2,
+          "bodyReadDone": 0,
+          "bodyReadBytes": 10,
+          "handlerEntered": true,
+          "handlerCompleted": true,
+          "responseFinished": false,
+          "signalAborted": false
+        }
+      ]
+    }
+  ],
+  "failure": "Partial10/4096 reader rejected and unlocked, no late postRead, Nodeaborted/error/close; final Request.signal.aborted=false. This is not waived.",
+  "causal_limit": "Direct Request used arrayBuffer, reconstructed Request used text. Source evidence and success/failure locate reconstruction, but V2 uses identical readers to remove that confound.",
+  "cleanup_limit": "S1 proves owned sockets/diagnostic observers removed. Exploratory negative native-body cancellation was not fully observed; V2 adds explicit bounded cancellation of every reachable body and records any pending phantom-tee promise.",
+  "proposal": "fix-proposal/MANIFEST.json",
+  "GLOBAL_RELEASE": false
+}
