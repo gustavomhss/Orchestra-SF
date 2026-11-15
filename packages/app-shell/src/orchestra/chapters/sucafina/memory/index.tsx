@@ -104,7 +104,7 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
     setView("catalogState", "loading")
     void createSfMemoryClient(ready.transport)["intelligence.memory-catalog"](undefined, { signal })
       .then((result) => {
-        if (!current(epoch, generation, signal)) return
+        if (signal.aborted || generation !== owner.generation() || !owner.ready()) return
         if (result.kind === "response" && result.body.status === "ok") {
           setView("catalog", result.body.value)
           setView("catalogState", "ready")
@@ -113,10 +113,19 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
         setView("catalogState", stateFrom(result))
       })
       .catch(() => {
-        if (current(epoch, generation, signal)) setView("catalogState", "unavailable")
+        if (!signal.aborted && generation === owner.generation() && owner.ready()) setView("catalogState", "unavailable")
       })
   })
   onCleanup(() => { requestEpoch += 1; listAbort?.abort(); detailAbort?.abort(); catalogAbort?.abort() })
+
+  const changeCase = (field: "caseId" | "incarnation" | "versionText", value: string) => {
+    requestEpoch += 1
+    listAbort?.abort()
+    detailAbort?.abort()
+    setView({ active: null, conditions: [], signals: [], material: null, outcome: null,
+      selectedCondition: "", selectedChoice: "", listState: "idle", detailState: "idle", message: null })
+    setView(field, value)
+  }
 
   const parsedCase = (): CaseQuery | null => {
     const version = Number(view.versionText)
@@ -242,11 +251,11 @@ export function SfMemoryView(props: SfSurfaceProps): import("solid-js").JSX.Elem
           <form class="sf-memory-form" onSubmit={(event) => { event.preventDefault(); void loadCase() }}>
             <p class="sf-memory-help">{t("sf.u26.caseHelp")}</p>
             <label>{t("sf.u26.caseId")}<input autocomplete="off" required value={view.caseId}
-              onInput={(event) => setView("caseId", event.currentTarget.value)} /></label>
+              onInput={(event) => changeCase("caseId", event.currentTarget.value)} /></label>
             <label>{t("sf.u26.incarnation")}<input autocomplete="off" required value={view.incarnation}
-              onInput={(event) => setView("incarnation", event.currentTarget.value)} /></label>
+              onInput={(event) => changeCase("incarnation", event.currentTarget.value)} /></label>
             <label>{t("sf.u26.version")}<input type="number" min="1" step="1" required value={view.versionText}
-              onInput={(event) => setView("versionText", event.currentTarget.value)} /></label>
+              onInput={(event) => changeCase("versionText", event.currentTarget.value)} /></label>
             <button class="mx-btn primary" type="submit" disabled={!parsedCase() || view.listState === "loading"}>
               {t("sf.u26.openCase")}
             </button>
