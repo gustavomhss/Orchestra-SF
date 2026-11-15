@@ -1,0 +1,309 @@
+{
+  "schema": "sf2h.advance172.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 172,
+  "output_id": "UX20-W02/F01.live-context",
+  "title": "F01 live original-request authority and operational binding",
+  "actor_pack": "S0-B",
+  "model_effective": "GPT-6",
+  "model_requested": "Astra",
+  "model_requested_verified": false,
+  "session_id": null,
+  "branch": "sf-ux-w02",
+  "pr": 131,
+  "epoch": "ux-native-w02-e3-browser172",
+  "authoring_base": {
+    "head": "4c72ac4f609618f749c1930b5738737d55693027",
+    "tree": "950cea310351eaf9671466342b78d9aaddbcaa03"
+  },
+  "authoring_output": {
+    "head": "7537aa3f3d9db88b630c6107d5af0e17d7d83f69",
+    "tree": "45649df4875edbad5f1a250f99d3812480b52ad2"
+  },
+  "bridge_target_at_preparation": {
+    "branch": "sf2-stack",
+    "head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "integrator": "162/S0-C-e20-browser162/PR65",
+    "do_not_apply_if_preimage_changed": true
+  },
+  "authorization": {
+    "predecessor_mission": 136,
+    "predecessor_fenced": true,
+    "scope": "native-ui/live-context.ts, context.ts, own test, receipts/advance172/**",
+    "other_writers_protected": true
+  },
+  "outputs": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+      "pre_blob": null,
+      "post_blob": "03a47cf080fc5b9751dbadad272c14d17f5cfc34",
+      "owned": true,
+      "kind": "new producer",
+      "status": "AUTHORED_NOT_INTEGRATED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts",
+      "pre_blob": null,
+      "post_blob": "9fc888c5ceba20ca321e90ff8bc8e64e0c3acdad",
+      "owned": true,
+      "kind": "new synthetic negative boundary tests",
+      "status": "NOT_RUN"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/context.ts",
+      "pre_blob": "940f8fc612f7dee3a3c412075a8e16d3d6e21410",
+      "post_blob": "940f8fc612f7dee3a3c412075a8e16d3d6e21410",
+      "owned": true,
+      "kind": "existing compatible HTTP handler",
+      "status": "UNCHANGED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/ACK-172.json",
+      "pre_blob": null,
+      "post_blob": "afd10f3c2db80153f0741674f8cfdca121b59341",
+      "owned": true,
+      "kind": "prewrite fence/inputs ACK",
+      "status": "PUBLISHED"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance172/PATCHES-162-F01.json",
+      "pre_blob": null,
+      "post_blob": "2d09607af836a81dcfa1dfede97b0a47d74cc271",
+      "owned": true,
+      "kind": "complete protected preimages/postimages inert proposal",
+      "status": "UNAPPLIED"
+    }
+  ],
+  "protected_bridge_patches": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "pre": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+      "proposed": "a49df52511bea46594701a9576420af652d9b9f4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "pre": "14e0c24ecc13ead7d7f6c818689d8901f3b8568a",
+      "proposed": "8dcafe957590c47f342786e6fb79cd231fe69714"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "pre": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+      "proposed": "a4204ff29aa060031a47709b665cd69915904526"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "pre": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+      "proposed": "a394d0f70cdd0905a149ec8a8f941f3b9d53c828"
+    }
+  ],
+  "pinned_inputs": {
+    "mission172": "64d7593264a18a4baa6a98d1f061f608dd9614de",
+    "F01_work_order": "c8707ac3b5248395044edce851bfb8487817c9bb",
+    "S0B_actor": "7597a7e508228ac2878a9061887ac77fc70ad009",
+    "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "context_schema": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+    "context_handler": "940f8fc612f7dee3a3c412075a8e16d3d6e21410",
+    "authority": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+    "host_context": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "legacy_page_acl": "412d55047a1b6dda686ce1054c15b20307217577",
+    "legacy_identity": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+    "SDK136_query_fix": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+    "SDK136_test": "d0d54dca9245feb151f9f6cf6015f344cfe741e2"
+  },
+  "source_semantics": {
+    "original_request": "identical Request instance for admit/reauth/operational (no reconstructed/serialized request)",
+    "expected": "strict only exact installationId/projectId/hostId, no duplicates/unknown, same origin and mount",
+    "authority": "private real product-authority resolve with current session/role map/grants/accessRevision",
+    "grant_projection": "only CAP01–CAP28 exact pages authorized by original navigation, no arbitrary action grants",
+    "identity": "runtime identity() stable hostId tuple, instance reference and reread",
+    "acl_fence": "three original-Request authority reads plus two operational observations, no await after final fence",
+    "availability": "all frozen resource/operation IDs present; other operations unavailable without live admitted probe; only ctx.context direct current operation proof",
+    "warnings": [
+      "catalog exists does not imply real operational readiness",
+      "full integration requires private producer bridge by 162",
+      "per-operation runtime readiness probes not exposed in current protected host API"
+    ],
+    "private_fields_exposed": false
+  },
+  "workorder_acceptance": [
+    {
+      "id": "F01-77-CTX",
+      "status": "PARTIAL_SOURCE_READY_NOT_QUALIFIED",
+      "criteria": "exact live context stamp+availability; no optimistic grant; mismatch denied",
+      "evidence": "source and 16 test cases authored, never run; 162 four-file private bridge required"
+    },
+    {
+      "id": "F01-AC01",
+      "status": "NOT_RUN",
+      "criteria": "owner change clears/quarantines existing drafts",
+      "owner": "F01 existing provider/I00 composition; outside this correction's tests"
+    },
+    {
+      "id": "F01-AC02",
+      "status": "NOT_RUN",
+      "criteria": "draft state preserved only same authority",
+      "owner": "F01 existing provider/I00"
+    },
+    {
+      "id": "F01-AC03",
+      "status": "NOT_RUN",
+      "criteria": "deep-link/reload/back retention and permission gating",
+      "owner": "F01 existing provider/I00"
+    }
+  ],
+  "scenarios": [
+    [
+      "N01",
+      "ausência de runtime/binding",
+      "identity-unavailable",
+      "NOT_RUN"
+    ],
+    [
+      "N02",
+      "hostId esperado divergente antes do admit",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N03",
+      "HEAD/POST, query duplicada/extra, origem diferente",
+      "contract-mismatch; no authority consumption",
+      "NOT_RUN"
+    ],
+    [
+      "N04",
+      "sessão ausente ou grant revogado",
+      "unauthenticated/denied; no operation probe",
+      "NOT_RUN"
+    ],
+    [
+      "N05",
+      "Request original preservado",
+      "same-object identity; no recreation",
+      "NOT_RUN"
+    ],
+    [
+      "N06",
+      "mesma tripla mas outra instância de runtime",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N07",
+      "abort após início de admissão",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N08",
+      "accessRevision/policy drift durante a leitura",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N09",
+      "principal distinto após await",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N10",
+      "CAP page/surface forjada",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N11",
+      "ação inexistente em CAP01",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N12",
+      "catálogo sem probe operacional",
+      "ctx.context ready only; all other operations unavailable (synthetic fixture)",
+      "NOT_RUN"
+    ],
+    [
+      "N13",
+      "ID de operação fora do catálogo",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N14",
+      "operação duplicada na fonte",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N15",
+      "estado de operação altera entre probes",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N16",
+      "ctx.context negado pela fonte contraditória",
+      "contract-mismatch",
+      "NOT_RUN"
+    ],
+    [
+      "N17",
+      "revogação na terceira reautorização após probe",
+      "contract-mismatch",
+      "NOT_RUN"
+    ]
+  ],
+  "execution": {
+    "local_tests": "NOT_RUN",
+    "local_parsers": "NOT_RUN",
+    "local_typecheck": "NOT_RUN",
+    "local_build": "NOT_RUN",
+    "hosted_CI": "NOT_RUN_THIS_MISSION",
+    "real_model": "NOT_RUN",
+    "real_scanner": "NOT_RUN",
+    "real_resident_admission": "NOT_RUN",
+    "real_operation_probe": "NOT_RUN",
+    "real_grant_access": "NOT_RUN",
+    "runtime_restart": "NOT_RUN",
+    "AM01_to_AM06": "NOT_RUN",
+    "third_party_finals": "NOT_RUN",
+    "C8_and_epic": "NOT_RUN",
+    "global_release": false
+  },
+  "consumer_requests": [
+    {
+      "consumer": "162",
+      "pr": 65,
+      "action": "Read only the two authored blobs plus complete inert PATCHES-162-F01.json; validate all four protected preimages against current sf2-stack, apply exact compatible semantic patches (not entire PR); install original-Request private source in existing host, origin/host identity and authMode real; do not invent live operation readiness; ACK final coherent C commit/tree/blob map."
+    },
+    {
+      "consumer": "163",
+      "pr": 107,
+      "trigger": "162 publishes coherent candidate C and consumer ACK",
+      "action": "Compiler/SDK/guards only against that same C/tree and source blobs; preserve SDK136 strict selector, query, protocol; no repeated unchanged source runs. Source check exact paths in protected bridge, schema/context and native-ui context/live-context."
+    },
+    {
+      "consumer": "164",
+      "pr": 106,
+      "trigger": "after 162 integrated source and 163 compiler/SDK ready",
+      "action": "Existing hosted GitHub Actions surgical selection, preserve source oracle; file selectors exact below. Report run/job/attempt/artifact/blob/observed fail/pass and real evidence only; do not infer pass from authored tests.",
+      "selectors": [
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts",
+        "packages/app-shell/test-browser/sucafina-native/context.test.ts"
+      ]
+    }
+  ],
+  "protected": [
+    "sharedhost/registry/local entry are only proposed in inert patch, not written",
+    "goal paused; no dispatcher/CI invoked",
+    "no secret, impersonation, Azure/deploy/engine/restart"
+  ],
+  "next": "162 adopts or reconciles exact source and protected patches; only then 163/164 qualify; final C/8CI/epic/AM01–06/3FINAL/D/guards still required",
+  "claim": "READY_FOR_INTEGRATION_NOT_RUNTIME_VERIFIED"
+}
