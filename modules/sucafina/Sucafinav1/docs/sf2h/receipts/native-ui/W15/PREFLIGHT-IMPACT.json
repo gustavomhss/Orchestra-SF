@@ -1,0 +1,663 @@
+{
+  "schema": "sf2h.native-ui.w15-preflight.v1",
+  "order": "A02",
+  "author": "GPT-6; user-invoked W15",
+  "branch": "sf-ux-w15",
+  "base": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "ack": "73c7824492ffae5af956db9e4ced753a64075f2d",
+  "admission": {
+    "state": "REQUESTED_NOT_OBSERVED",
+    "integrator": "114/S0-C-e17-browser114",
+    "request": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6896712811",
+    "effect": "BLOCKED_OWNER_FOR_PRODUCT_WRITES",
+    "reserved_epoch": "ux-native-w15-e1",
+    "not_claimed": [
+      "READY_FOR_AUTHORING",
+      "ARTIFACT_READY",
+      "INTEGRATED",
+      "QUALIFIED"
+    ]
+  },
+  "sources": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "ux_normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "application": {
+      "current_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "delta": "Procurement quote/signed-po asset ACL and export-egress reauthorization; no planner monthly action or field changed in C58",
+      "restore_historical": false
+    },
+    "renderer": "17c65e08c833dfd1fcad582ef4eaac78a1c5ea4b",
+    "monthly_http": "2befb1d4c7964b30830311abe1c93c7c575b8f70",
+    "forecast_http": "b814872f18556d1137820cfb33c46048066a1c6e",
+    "monthly_edit": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+    "monthly_host": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5"
+  },
+  "exact_operations": {
+    "total": 39,
+    "html_only_pages": 7,
+    "existing_commands": 29,
+    "existing_host_special": 3,
+    "keys": [
+      {
+        "id": "domain.page.CAP17",
+        "schemaExport": "SfDomainPageCap17",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "pathTemplate": "{mount}/api/ui/pages/CAP17",
+        "fixedQuery": null,
+        "fixedBodyDiscriminator": null
+      },
+      {
+        "id": "domain.command.CAP17.import-workbook",
+        "schemaExport": "SfDomainCommandCap17ImportWorkbook",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Overview"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Overview",
+          "action": "import-workbook"
+        }
+      },
+      {
+        "id": "domain.page.CAP18",
+        "schemaExport": "SfDomainPageCap18",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "pathTemplate": "{mount}/api/ui/pages/CAP18",
+        "fixedQuery": null,
+        "fixedBodyDiscriminator": null
+      },
+      {
+        "id": "domain.command.CAP18.save",
+        "schemaExport": "SfDomainCommandCap18Save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "OPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "OPEX",
+          "action": "save"
+        }
+      },
+      {
+        "id": "domain.command.CAP18.delete",
+        "schemaExport": "SfDomainCommandCap18Delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "OPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "OPEX",
+          "action": "delete"
+        }
+      },
+      {
+        "id": "domain.command.CAP18.spread",
+        "schemaExport": "SfDomainCommandCap18Spread",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "OPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "OPEX",
+          "action": "spread"
+        }
+      },
+      {
+        "id": "domain.command.CAP18.reset",
+        "schemaExport": "SfDomainCommandCap18Reset",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "OPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "OPEX",
+          "action": "reset"
+        }
+      },
+      {
+        "id": "domain.command.CAP18.import-workbook",
+        "schemaExport": "SfDomainCommandCap18ImportWorkbook",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "OPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "OPEX",
+          "action": "import-workbook"
+        }
+      },
+      {
+        "id": "domain.page.CAP19",
+        "schemaExport": "SfDomainPageCap19",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "pathTemplate": "{mount}/api/ui/pages/CAP19",
+        "fixedQuery": null,
+        "fixedBodyDiscriminator": null
+      },
+      {
+        "id": "domain.command.CAP19.save",
+        "schemaExport": "SfDomainCommandCap19Save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "CAPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "CAPEX",
+          "action": "save"
+        }
+      },
+      {
+        "id": "domain.command.CAP19.delete",
+        "schemaExport": "SfDomainCommandCap19Delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "CAPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "CAPEX",
+          "action": "delete"
+        }
+      },
+      {
+        "id": "domain.command.CAP19.spread",
+        "schemaExport": "SfDomainCommandCap19Spread",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "CAPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "CAPEX",
+          "action": "spread"
+        }
+      },
+      {
+        "id": "domain.command.CAP19.reset",
+        "schemaExport": "SfDomainCommandCap19Reset",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "CAPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "CAPEX",
+          "action": "reset"
+        }
+      },
+      {
+        "id": "domain.command.CAP19.import-workbook",
+        "schemaExport": "SfDomainCommandCap19ImportWorkbook",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "CAPEX"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "CAPEX",
+          "action": "import-workbook"
+        }
+      },
+      {
+        "id": "domain.page.CAP20",
+        "schemaExport": "SfDomainPageCap20",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "pathTemplate": "{mount}/api/ui/pages/CAP20",
+        "fixedQuery": null,
+        "fixedBodyDiscriminator": null
+      },
+      {
+        "id": "domain.command.CAP20.save",
+        "schemaExport": "SfDomainCommandCap20Save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Headcount"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Headcount",
+          "action": "save"
+        }
+      },
+      {
+        "id": "domain.command.CAP20.delete",
+        "schemaExport": "SfDomainCommandCap20Delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Headcount"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Headcount",
+          "action": "delete"
+        }
+      },
+      {
+        "id": "domain.command.CAP20.sync",
+        "schemaExport": "SfDomainCommandCap20Sync",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Headcount"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Headcount",
+          "action": "sync"
+        }
+      },
+      {
+        "id": "domain.command.CAP20.import-workbook",
+        "schemaExport": "SfDomainCommandCap20ImportWorkbook",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Headcount"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Headcount",
+          "action": "import-workbook"
+        }
+      },
+      {
+        "id": "domain.page.CAP21",
+        "schemaExport": "SfDomainPageCap21",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "pathTemplate": "{mount}/api/ui/pages/CAP21",
+        "fixedQuery": null,
+        "fixedBodyDiscriminator": null
+      },
+      {
+        "id": "domain.command.CAP21.save",
+        "schemaExport": "SfDomainCommandCap21Save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Entities & allocations"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Entities & allocations",
+          "action": "save"
+        }
+      },
+      {
+        "id": "domain.command.CAP21.delete",
+        "schemaExport": "SfDomainCommandCap21Delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Entities & allocations"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Entities & allocations",
+          "action": "delete"
+        }
+      },
+      {
+        "id": "domain.command.CAP21.common",
+        "schemaExport": "SfDomainCommandCap21Common",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Entities & allocations"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Entities & allocations",
+          "action": "common"
+        }
+      },
+      {
+        "id": "domain.command.CAP21.import-workbook",
+        "schemaExport": "SfDomainCommandCap21ImportWorkbook",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Entities & allocations"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Entities & allocations",
+          "action": "import-workbook"
+        }
+      },
+      {
+        "id": "domain.page.CAP22",
+        "schemaExport": "SfDomainPageCap22",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "pathTemplate": "{mount}/api/ui/pages/CAP22",
+        "fixedQuery": null,
+        "fixedBodyDiscriminator": null
+      },
+      {
+        "id": "domain.command.CAP22.save",
+        "schemaExport": "SfDomainCommandCap22Save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "FX rates"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "FX rates",
+          "action": "save"
+        }
+      },
+      {
+        "id": "domain.command.CAP22.delete",
+        "schemaExport": "SfDomainCommandCap22Delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "FX rates"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "FX rates",
+          "action": "delete"
+        }
+      },
+      {
+        "id": "domain.command.CAP22.import-workbook",
+        "schemaExport": "SfDomainCommandCap22ImportWorkbook",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "FX rates"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "FX rates",
+          "action": "import-workbook"
+        }
+      },
+      {
+        "id": "domain.page.CAP23",
+        "schemaExport": "SfDomainPageCap23",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "pathTemplate": "{mount}/api/ui/pages/CAP23",
+        "fixedQuery": null,
+        "fixedBodyDiscriminator": null
+      },
+      {
+        "id": "domain.command.CAP23.save",
+        "schemaExport": "SfDomainCommandCap23Save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Versions"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Versions",
+          "action": "save"
+        }
+      },
+      {
+        "id": "domain.command.CAP23.copy",
+        "schemaExport": "SfDomainCommandCap23Copy",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Versions"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Versions",
+          "action": "copy"
+        }
+      },
+      {
+        "id": "domain.command.CAP23.official",
+        "schemaExport": "SfDomainCommandCap23Official",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Versions"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Versions",
+          "action": "official"
+        }
+      },
+      {
+        "id": "domain.command.CAP23.lock",
+        "schemaExport": "SfDomainCommandCap23Lock",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Versions"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Versions",
+          "action": "lock"
+        }
+      },
+      {
+        "id": "domain.command.CAP23.unlock",
+        "schemaExport": "SfDomainCommandCap23Unlock",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Versions"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Versions",
+          "action": "unlock"
+        }
+      },
+      {
+        "id": "domain.command.CAP23.delete",
+        "schemaExport": "SfDomainCommandCap23Delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Versions"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Versions",
+          "action": "delete"
+        }
+      },
+      {
+        "id": "domain.command.CAP23.import-workbook",
+        "schemaExport": "SfDomainCommandCap23ImportWorkbook",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "page": "Versions"
+        },
+        "fixedBodyDiscriminator": {
+          "page": "Versions",
+          "action": "import-workbook"
+        }
+      },
+      {
+        "id": "planner.monthly.preview",
+        "schemaExport": "SfPlannerMonthlyPreview",
+        "kind": "existing-http",
+        "effect": "preview",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "sf": "workbench-planner"
+        },
+        "fixedBodyDiscriminator": {
+          "action": "preview"
+        }
+      },
+      {
+        "id": "planner.monthly.apply",
+        "schemaExport": "SfPlannerMonthlyApply",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "pathTemplate": "{mount}/planner",
+        "fixedQuery": {
+          "sf": "workbench-planner"
+        },
+        "fixedBodyDiscriminator": {
+          "action": "apply"
+        }
+      },
+      {
+        "id": "planner.forecast.prepare",
+        "schemaExport": "SfPlannerForecastPrepare",
+        "kind": "existing-http",
+        "effect": "prepare",
+        "method": "POST",
+        "pathTemplate": "{mount}/{surface}",
+        "fixedQuery": {
+          "sf": "workbench-forecast"
+        },
+        "fixedBodyDiscriminator": null
+      }
+    ]
+  },
+  "page_bindings": [
+    {
+      "capabilityId": "CAP17",
+      "page": "Overview",
+      "source": "runtime/planner.ts::domain.view + authorized exact public fieldsets"
+    },
+    {
+      "capabilityId": "CAP18",
+      "page": "OPEX",
+      "source": "runtime/planner.ts::domain.view + authorized exact public fieldsets"
+    },
+    {
+      "capabilityId": "CAP19",
+      "page": "CAPEX",
+      "source": "runtime/planner.ts::domain.view + authorized exact public fieldsets"
+    },
+    {
+      "capabilityId": "CAP20",
+      "page": "Headcount",
+      "source": "runtime/planner.ts::domain.view + authorized exact public fieldsets"
+    },
+    {
+      "capabilityId": "CAP21",
+      "page": "Entities & allocations",
+      "source": "runtime/planner.ts::domain.view + authorized exact public fieldsets"
+    },
+    {
+      "capabilityId": "CAP22",
+      "page": "FX rates",
+      "source": "runtime/planner.ts::domain.view + authorized exact public fieldsets"
+    },
+    {
+      "capabilityId": "CAP23",
+      "page": "Versions",
+      "source": "runtime/planner.ts::domain.view + authorized exact public fieldsets"
+    }
+  ],
+  "implementation_rules": {
+    "no_snapshot_dump": true,
+    "no_generic_dispatch": true,
+    "no_financial_formula_duplication": true,
+    "monthly": {
+      "source": "product/interface/planner-http.ts -> runtime.plannerMonthly -> monthly-edit.ts/monthly-host.ts",
+      "input": "{action:preview|apply,input:{page:OPEX|CAPEX,versionId,drafts:[{rowId,revision,cells:[{measure,month,text}]}]}}",
+      "rowCAS": true,
+      "client_month_index": "0..11 maps to host 1..12 once",
+      "text": "preserve verbatim; blank is not zero",
+      "results": "partial rows/errors and per-row result; apply may commit subset",
+      "retry": "explicit failed rows only after authorized refetch; never automatic on network loss",
+      "forbidden_http_branches": [
+        "operation",
+        "entity"
+      ]
+    },
+    "reads": "GET projections reuse authenticated Domain.view(publicSfData(snapshot.data)) / original Request in current transaction; send only typed authorized page fields and necessary CAS",
+    "mutations": "Fixed page/action from operation registry; original POST {mount}/planner? page=...; no synthetic preview or optimistic value",
+    "forecast": "Existing POST with origin,idempotency-key, caseRef; `sf_forecast_compare` input validator and runtime.forecastInputs",
+    "errors": "Preserve 4xx/5xx and statuses invalid,denied,needs-input,stale,conflict,unavailable; do not manufacture success"
+  },
+  "write_fence": {
+    "product_paths_written": [],
+    "own_receipts_only": true,
+    "shared_paths_written": [],
+    "generated_written": [],
+    "local_tests": "NOT_RUN_BY_POLICY",
+    "actions": "NOT_REQUESTED_UNTIL_INTEGRATED",
+    "merge": false,
+    "deploy": false,
+    "azure": false,
+    "unique_owner": "A02/W15",
+    "blocking_action": "114 must explicitly admit the A02 output/lease after semantic source and lock check"
+  }
+}
