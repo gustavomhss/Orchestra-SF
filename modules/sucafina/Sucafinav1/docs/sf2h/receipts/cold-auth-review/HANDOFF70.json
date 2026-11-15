@@ -1,0 +1,243 @@
+{
+  "schema": "sf2h.cold-auth-review.handoff-terminal.v1",
+  "mission": 70,
+  "state": "DOCUMENTARY_REVIEW_DELIVERED_FIX_FIRST_LEASE_ENDED_ON_PUBLICATION",
+  "recorded_at": "2026-11-15 02:38:31 UTC",
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "review": {
+    "sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "tree": "12594fd5a48f934847db717dd872d51776484296",
+    "opinion": "FIX-FIRST",
+    "confirmed_source_findings": [
+      "M70-AUTH-01",
+      "M70-ISO-01",
+      "M70-HTTP-01"
+    ],
+    "severity": "All P2 / MEDIUM; mandatory",
+    "reproductions_executed": false,
+    "open_gates": [
+      "M70-G01",
+      "M70-G02",
+      "M70-G03"
+    ],
+    "opinion_for_C28": "NOT_REVIEWED_BY70"
+  },
+  "documentation_release": {
+    "content_commit": "70dc375ee9817a6bcf99ca952cd3a923a957e71e",
+    "content_tree": "31602c67761a8338e4ca2038c1554c1a696b1270",
+    "content_parent": "f4a9991171357b582c1a72245d8282e3ca059673",
+    "ack_commit": "f4a9991171357b582c1a72245d8282e3ca059673",
+    "ack_tree": "521dacb6fda25c05f6a717f70f2b470348cbee66",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/REVIEW70.md",
+        "mode": "100644",
+        "preimage_blob": null,
+        "postimage_blob": "0c322e1501893d444a5490529bb99089c802755e",
+        "characters": 39268,
+        "content_equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/FINDINGS70.json",
+        "mode": "100644",
+        "preimage_blob": null,
+        "postimage_blob": "deee804ca0933adcf313d91f6db2810f1eda512c",
+        "characters": 41188,
+        "content_equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/EVIDENCE70.json",
+        "mode": "100644",
+        "preimage_blob": null,
+        "postimage_blob": "ba27115dcfda8cb65120cb0f842c44cfc6dbae34",
+        "characters": 65015,
+        "content_equal": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/REMEDIATION70.md",
+        "mode": "100644",
+        "preimage_blob": null,
+        "postimage_blob": "17cc909a41ffb0455e6d9c7cbd0b30e5caa9ad33",
+        "characters": 7821,
+        "content_equal": true
+      }
+    ],
+    "ack_preserved": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/ACK70.json",
+      "blob": "17fe47407e25199a164db230a95acd7981efdb7b"
+    },
+    "complete_patch": "https://github.com/gustavomhss/Orchestra-SF/compare/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85...70dc375ee9817a6bcf99ca952cd3a923a957e71e",
+    "patch_scope": "Five added documents relative to reviewed pin: ACK plus four content files; terminal adds only this handoff. No product delta.",
+    "readback": "All four content files read back by GitHub MCP and equal to intended text. Compare against review pin shows only allowed documentary additions."
+  },
+  "terminal_identity": {
+    "commit": "CONTAINING_COMMIT",
+    "tree": "CONTAINING_COMMIT_TREE",
+    "parent": "70dc375ee9817a6bcf99ca952cd3a923a957e71e",
+    "reason": "Own Git SHA/tree are content-addressed and cannot be embedded in their own content; exact terminal identities, readback and full final compare are published in the draft PR and PR65 handoff comment."
+  },
+  "authority": {
+    "branch": "cold-auth-review",
+    "lease_epoch": "cold-auth-review-browser70",
+    "write_paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/"
+    ],
+    "expected_sha_for_terminal_CAS": "f4a9991171357b582c1a72245d8282e3ca059673",
+    "remote_protocol": "GitHub MCP create_tree/create_commit/update_ref expected_sha; force:false",
+    "activation": "Effective when this receipt is published to cold-auth-review by successful CAS. Ends documentation writer lease; only publication/readback/PR bookkeeping for this same delivery remains. No automatic product authorship, source branch write, stack integration or future continuation.",
+    "target_observation": {
+      "observed_at": "2026-11-15 02:32:51 UTC",
+      "review_branch_head": "f4a9991171357b582c1a72245d8282e3ca059673",
+      "control_head": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "target_stack_head": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "target_stack_tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+      "latest_material_candidate": {
+        "name": "C28",
+        "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+        "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d"
+      },
+      "terminal60": {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+        "blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+        "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+        "handoff_blob": "85b12d52c641a113c4e9b653fdb6b9f1dea8b9b7",
+        "no_successor_named": true,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json"
+      },
+      "static_delta_summary": {
+        "ahead": 2,
+        "behind": 0,
+        "files_returned": 282,
+        "intersecting_review_source_paths": [
+          {
+            "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+            "review_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+            "current_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+            "status": "modified"
+          }
+        ],
+        "source": "GitHub compare pinned_review...target_stack; no execution or new-code approval"
+      },
+      "disposition": "Review remains solely7e1a36e/tree12594fd5. No rebase, stack write or automatic transfer of conclusions to C28. Draft PR to current sf2-stack is documentary.60/S0 receive findings; future correction/integration needs explicit resumed/successor authority.",
+      "opinion_for_C28": "NOT_REVIEWED_BY70"
+    },
+    "successor": "Not named. Future correction/integration requires explicit valid authority reconciled with HEAD/control and terminal60."
+  },
+  "independence": {
+    "reviewer": "/root",
+    "helpers": [
+      "/root/identity_review",
+      "/root/http_review",
+      "/root/isolation_review"
+    ],
+    "model_effective": "GPT-6 Astra Pro (session developer identification)",
+    "provider_model_id": null,
+    "session_id": null,
+    "product_authorship_in_this_session": false,
+    "author_transcripts_used_as_review_proof": false,
+    "scope": "One bounded review70; helpers are not three FINAL reviewers. Historical source-author model/session overlap is not certified as a final acceptance gate.",
+    "document_review_corrections": [
+      {
+        "file": "REVIEW70.md and FINDINGS70.json",
+        "reviewer": "/root/identity_review",
+        "change": "Clarify marker validity versus actual Map retention; expired Map entries remain until a later retire sweep.",
+        "product_change": false
+      },
+      {
+        "file": "REVIEW70.md",
+        "reviewer": "/root/http_review",
+        "change": "Replace malformed reviewer sentence with explicit independent reviewer without authorship.",
+        "product_change": false
+      },
+      {
+        "file": "REVIEW70.md",
+        "reviewer": "/root/isolation_review",
+        "change": "Final writer designation explicitly depends on authorized resumption/succession after60 terminal; request documentary ACK without automatic reactivation.",
+        "product_change": false
+      }
+    ]
+  },
+  "consumers": {
+    "documentary_handoff": [
+      "60",
+      "S0"
+    ],
+    "integration_PR": 65,
+    "draft_PR_target": "sf2-stack",
+    "draft_PR_head": "cold-auth-review",
+    "consumer_ACK": "NOT_RECEIVED_NOT_ASSUMED",
+    "ACK_request": "Acknowledge exact documentary release/terminal identity, retain three mandatory findings and G01–G03, and route to writers only after explicit authorized resumption/succession.",
+    "checks_owner": 45,
+    "final_acceptance_owner": "S0",
+    "no_automatic_reactivation_of60": true
+  },
+  "correction_routing": [
+    {
+      "finding": "M70-AUTH-01",
+      "paths": [
+        "runtime/local-identity.ts",
+        "runtime/local-store.ts",
+        "local/entry.ts"
+      ],
+      "owner": "Active authentication49/successor plus runtime/local-store59, designated under current authority; integrator successor coordinates",
+      "proposal": "REMEDIATION70.md#auth-01"
+    },
+    {
+      "finding": "M70-ISO-01",
+      "paths": [
+        "runtime/procurement.ts",
+        "runtime/application.ts"
+      ],
+      "owner": "Canonical Procurement writer designated under current authority; Application change only if necessary",
+      "proposal": "REMEDIATION70.md#iso-01"
+    },
+    {
+      "finding": "M70-HTTP-01",
+      "paths": [
+        "apps/cli/src/sucafina-product/installation.ts",
+        "packages/server/src/body-limit.ts",
+        "product/interface/http.ts"
+      ],
+      "owner": "Authorized Microsoft/transport49/52 and host writer; no engine-policy authority granted by70",
+      "proposal": "REMEDIATION70.md#http-01"
+    }
+  ],
+  "proof_disposition": {
+    "existing_CI49_01": "Observed source failure159pass/2fail; preserved",
+    "existing_CI49_02": "Observed source success162pass/0fail/1216expect; not transferred to7e1a/C27/C28",
+    "artifacts_available_per_run": 0,
+    "live_Microsoft_B2B": "NOT_PROVEN",
+    "real_Node_POST_chunked_binary_abort_on_reviewed_composition": "NOT_PROVEN",
+    "admission53": "HOLD_INERT_NOT_INSTALLED",
+    "proposal52": "NOT_INTEGRATED_NOT_APPROVED",
+    "M31_MI07": "OPEN_ORIGINAL_CONTRACT_NOT_REPLACED",
+    "inherited_mixed_C17_gaps": "NOT_CLOSED_BY70",
+    "final_reviews": "Three FINAL reviews remain required; this bounded review is not automatically one of them",
+    "future_material_delta": "Requires independently reviewed new SHA/tree and affected real evidence"
+  },
+  "execution": {
+    "product_edits": 0,
+    "tests": 0,
+    "test_dispatches": 0,
+    "CI_dispatches": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "deploy": 0,
+    "Azure": 0,
+    "new_logins": 0,
+    "credentials_read": 0,
+    "product_HTTP_requests": 0,
+    "stack_or_producer_ref_writes": 0
+  },
+  "delivery_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/ACK70.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/REVIEW70.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/FINDINGS70.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/EVIDENCE70.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/REMEDIATION70.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/HANDOFF70.json"
+  ],
+  "GLOBAL_RELEASE": false
+}
