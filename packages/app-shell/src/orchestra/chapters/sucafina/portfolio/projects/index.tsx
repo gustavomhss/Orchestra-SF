@@ -19,7 +19,6 @@ import "./projects.css"
 
 const k = (key: keyof typeof SF_U05_COPY) => key as SfCopyKey
 const kt = (key: keyof typeof SF_U05_COPY) => key as unknown as SfTableCopyKey
-const missing = (text: string) => text ? text : "—"
 type ReviewCommand =
   | Readonly<{ kind: "delete-project"; id: string }>
   | Readonly<{ kind: "save-milestone"; projectId: string; draft: SfMilestoneDraft }>
@@ -62,7 +61,8 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
   const canSaveMilestone = () => permitted("domain.command.CAP10.save-milestone", "save-milestone")
   const canDeleteMilestone = () => permitted("domain.command.CAP10.delete-milestone", "delete-milestone")
   const canImport = () => permitted("domain.command.CAP10.import", "import")
-  const selection = () => props.route.kind === "detail" || props.route.kind === "edit" || props.route.kind === "milestones"
+  const selection = () => props.route.kind === "new" ? null :
+    props.route.kind === "detail" || props.route.kind === "edit" || props.route.kind === "milestones"
     ? props.route.params.projectRef : view.selectedId
   const selected = createMemo(() => view.page?.records.find((row) => row.id === selection()) ?? null)
   const sourceVersion = () => selected() && view.page ? sfProjectVersion(view.page, selected()!.id) : null
@@ -70,7 +70,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
     const current = draft()?.snapshot()
     return !!current && current.availability === "active" && current.dirty
   }
-  const go = (kind: "overview" | "projects" | "new" | "detail" | "edit" | "milestones", ref?: string) => {
+  const go = (kind: "overview" | "projects" | "imports" | "new" | "detail" | "edit" | "milestones", ref?: string) => {
     if (!canRead() && kind !== "overview") return
     const href = sfProjectHref(props.route, kind, ref)
     if (!href) return
@@ -225,6 +225,7 @@ export function SfProjectsView(props: SfSurfaceProps<"CAP10">): JSX.Element {
             "sf.u05.projects.stale" : "sf.u05.projects.operationUnavailable" })
         return
       }
+      if (action === "save") draft()?.discard()
       setView({ review: null, reviewSave: false, notice: "sf.u05.projects.saveSuccess" })
       setRefresh((value) => value + 1)
     } catch {
