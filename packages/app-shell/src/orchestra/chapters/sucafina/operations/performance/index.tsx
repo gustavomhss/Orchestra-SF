@@ -113,13 +113,13 @@ const editItem = (item?: Item): FormData => ({
 })
 const editSub = (itemId: string, sub?: Sub): FormData => ({
   kind: "sub", itemId, subId: reference(sub?.id) || undefined,
-  label: text(sub?.label), objective: text(sub?.objective), target: text(sub?.target),
+  label: text(sub?.label), objective: text(sub?.objective), target: stringOr(sub?.target),
   totalWeight: stringOr(sub?.totalWeight), owner: text(sub?.owner),
   ownerWeight: stringOr(sub?.ownerWeight), co1: text(sub?.co1),
   co1Weight: stringOr(sub?.co1Weight), co2: text(sub?.co2),
   co2Weight: stringOr(sub?.co2Weight), score: stringOr(sub?.score),
-  status: text(sub?.status), q1: text(sub?.q1), q2: text(sub?.q2),
-  q3: text(sub?.q3), q4: text(sub?.q4), notes: text(sub?.notes),
+  status: text(sub?.status), q1: stringOr(sub?.q1), q2: stringOr(sub?.q2),
+  q3: stringOr(sub?.q3), q4: stringOr(sub?.q4), notes: text(sub?.notes),
 })
 const contractValues = (v: FormData): ContractValues => ({
   name: v.name, year: finite(v.year),
@@ -204,14 +204,6 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
     store.state !== "denied" && store.state !== "session-expired"
   const data = () => current() ? store.data : undefined
   const items = () => data()?.items || []
-  const currentItem = (id: string) => {
-    const matches = items().filter((item) => reference(item.id) === id)
-    return matches.length === 1 ? matches[0] : undefined
-  }
-  const currentSub = (item: Item, subId: string) => {
-    const matches = (item.subs || []).filter((sub) => reference(sub.id) === subId)
-    return matches.length === 1 ? matches[0] : undefined
-  }
   const allowed = (kind: CommandKind) => {
     const r = ready()
     const destination = r?.context.context.destinations.find(
@@ -293,9 +285,9 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
         const editing = active()!
         const item = editing.itemId ? (value.items || []).find((entry) =>
           reference(entry.id) === editing.itemId) : undefined
-        const sub = item && editing.command === "save-sub" && editing.controller.snapshot().availability === "active"
-          ? (item.subs || []).find((entry) =>
-              reference(entry.id) === editing.controller.snapshot().value.subId) : undefined
+        const editSnapshot = editing.controller.snapshot()
+        const sub = item && editing.command === "save-sub" && editSnapshot.availability === "active"
+          ? (item.subs || []).find((entry) => reference(entry.id) === editSnapshot.value.subId)
           : undefined
         const fresh = editing.command === "save" ? editContract(value)
           : editing.command === "save-item" && item ? editItem(item)
@@ -379,7 +371,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
     if (!editing || state?.availability !== "active" || store.uncertain || !allowed(editing.command)) return
     if (!finiteEdit(state.value) ||
         EDIT_FIELDS[state.value.kind].some((field) => field.required && !text(state.value[field.name]).trim())) {
-      setStore("error", t("sf.u31.invalidNumber"))
+      setStore("error", t("sf.common.fieldErrorSummary"))
       return
     }
     editing.controller.setPhase("reviewing")
@@ -611,6 +603,10 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                                 <dt>{t("sf.u31.co1")}</dt><dd><bdi>{text(sub.co1)}</bdi></dd>
                                 <dt>{t("sf.u31.co2")}</dt><dd><bdi>{text(sub.co2)}</bdi></dd>
                                 <dt>{t("sf.u31.notes")}</dt><dd><bdi>{text(sub.notes)}</bdi></dd>
+                                <dt>{t("sf.u31.q1") + " " + t("sf.u31.status")}</dt><dd><bdi>{text(sub.statusQ1)}</bdi></dd>
+                                <dt>{t("sf.u31.q2") + " " + t("sf.u31.status")}</dt><dd><bdi>{text(sub.statusQ2)}</bdi></dd>
+                                <dt>{t("sf.u31.q3") + " " + t("sf.u31.status")}</dt><dd><bdi>{text(sub.statusQ3)}</bdi></dd>
+                                <dt>{t("sf.u31.q4") + " " + t("sf.u31.status")}</dt><dd><bdi>{text(sub.statusQ4)}</bdi></dd>
                               </dl>}
                             </For>
                           </Show>
@@ -622,7 +618,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
               </section>
               <section class="sf-u31-panel" id="owner-dashboard" aria-labelledby="sf-u31-owners">
                 <h2 id="sf-u31-owners">{t("sf.u31.ownerDashboard")}</h2>
-                <p>{t("sf.u31.sourceFields")}</p>
+                <p>{t("sf.common.currentSource")}</p>
                 <Show when={ownerAssignments().length} fallback={<p>{t("sf.common.empty")}</p>}>
                   <div class="sf-u31-rows" role="region" aria-label={t("sf.u31.ownerDashboard")} tabindex="0">
                     <table><thead><tr><th scope="col">{t("sf.u31.owner")}</th>
@@ -659,6 +655,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                           <Show when={field.kind === "select"} fallback={
                             <input type={field.kind === "number" ? "number" : "text"}
                               step={field.kind === "number" ? "any" : undefined}
+                              min={field.name === "score" ? 1 : undefined}
                               required={field.required} value={draft() ? text(draft()![field.name]) : ""}
                               onInput={(event) => modify(field.name,event.currentTarget.value)} />
                           }>
