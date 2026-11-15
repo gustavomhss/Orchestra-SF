@@ -157,7 +157,10 @@ export function projectSfPeopleData(
     members,
   }
   if (cap === "CAP08") {
-    return { members: members.filter((row) => row.status === (selection.memberStatus || "Active")) }
+    // Return all currently authorized members and their CAS versions. The
+    // selection is an explicit UI filter, not permission to hide versions
+    // required by the canonical replace/import conflict transaction.
+    return { members }
   }
 
   // CAP06: the same server-side derivations and values rendered by
