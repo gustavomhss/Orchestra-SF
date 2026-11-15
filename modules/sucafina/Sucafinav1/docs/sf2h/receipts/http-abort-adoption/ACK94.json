@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.m94.ack.v1",
+  "mission": 94,
+  "state": "ACTIVE_SOURCE_ADOPTION",
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "http-body-limit-fix",
+  "pr": 85,
+  "lease_epoch": "http-abort-browser94",
+  "owner": "S0-B HTTP transport continuation, successor to terminal74",
+  "github_connection_actor": "gustavomhss",
+  "model_observed": "GPT-6",
+  "session_id_observed": null,
+  "astra_runtime_identity_observed": false,
+  "identity_note": "ChatGPT model identity is observed; no native Astra runtime session ID or executor receipt is exposed to this chat.",
+  "expected_head": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+  "head_reconciled": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+  "base_tree": "2b2ded363317be34caed9e7d86324e6dc186afe7",
+  "terminal74": "9ea8ff78e383c863abe4fc8e2f537d58ac310a34",
+  "terminal79": "545201aa12e330360530727a96d7cb9cc678e2b9",
+  "inputs": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "preimage_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+      "proposed_blob": "34d74d6651031c5194db1d22c823baae60e9a260"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "unchanged_blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "unchanged_blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/installed-post-cause/fix-proposal/MANIFEST.json",
+      "ref": "545201aa12e330360530727a96d7cb9cc678e2b9",
+      "blob": "d502c564180da69e94b4f876938379643daa8796"
+    }
+  ],
+  "allowed_write_paths": [
+    "apps/cli/src/sucafina-product/installation.ts",
+    "modules/sucafina/Sucafinav1/test/product/http-abort-adoption/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-abort-adoption/"
+  ],
+  "excluded": "auth/application,UI,native-runtime90,P03/89,reader88,dispatcher45 workflows,shared Microsoft map direct edits,engines,deploy",
+  "current_microsoft_map_authority": "71 integrated C44 with map blob 764b7223c3842855764c6832826708ba9eccc2b0; preserve 72/49/55 pins and rebind only after current-map read",
+  "validation": "NOT_RUN_FOR94",
+  "policy_holds": [
+    "25MiB",
+    "Procurement>16MiB"
+  ],
+  "GLOBAL_RELEASE": false
+}
