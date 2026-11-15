@@ -63,7 +63,7 @@ export const SfBiBiSourceInput = Schema.Struct({
   valueId: Schema.String,
   referenceDigest: optional(Digest),
 })
-export type SfBiBiSourceInput = typeof SfBiBiSourceInput.Type
+export interface SfBiBiSourceInput extends Schema.Schema.Type<typeof SfBiBiSourceInput> {}
 
 // bi-source returns the producer-authorized destination links WITHOUT a
 // PortResult success wrapper. Stale/denied/needs-input remain tagged failures.
@@ -80,7 +80,7 @@ export const SfBiBiDecisionInput = Schema.Struct({
   snapshot: Digest,
   target: Digest,
 })
-export type SfBiBiDecisionInput = typeof SfBiBiDecisionInput.Type
+export interface SfBiBiDecisionInput extends Schema.Schema.Type<typeof SfBiBiDecisionInput> {}
 
 export const SfBiBiDecisionOutput = Schema.Union([
   Schema.Struct({ status: Schema.Literal("ok"), value: NavigationDetail }),
@@ -93,7 +93,7 @@ export const SfBiBiOptionsInput = Schema.Struct({
   page: optional(Schema.String),
   viewId: optional(ViewId),
 })
-export type SfBiBiOptionsInput = typeof SfBiBiOptionsInput.Type
+export interface SfBiBiOptionsInput extends Schema.Schema.Type<typeof SfBiBiOptionsInput> {}
 
 export const SfBiBiOptionsOutput = Schema.Union([
   Schema.Struct({ status: Schema.Literal("ok"), value: Options }),
