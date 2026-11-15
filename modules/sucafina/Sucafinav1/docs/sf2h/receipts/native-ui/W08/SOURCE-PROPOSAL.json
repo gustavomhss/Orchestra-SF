@@ -1,0 +1,132 @@
+{
+  "schema": "sf2h.native-ui.W08.inert-source-proposal.v1",
+  "mission": "UX20-W08",
+  "work_order": "S03",
+  "branch": "sf-ux-w08",
+  "state": "PREAUTH_CODE_PREPARED_BLOCKED_OWNER_AND_TYPE_BINDINGS",
+  "author_runtime": {
+    "effective_model": "GPT-6",
+    "requested_model": "Astra",
+    "session_id": null,
+    "github_actor": "gustavomhss"
+  },
+  "ack_commit": "9484a49d8a47976f3bbfffe92797574a90deaadd",
+  "ack_tree": "0b72e9db0d2eaa7eed0ce6fac040b2d2176caf59",
+  "cohort_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "output_admission": "NOT_OBSERVED",
+  "lease": "ux-native-w08-e1 RESERVED_NOT_ACTIVE",
+  "files": [
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/index.ts",
+      "proposal": "proposed/draft-index.ts",
+      "sha": "d91f4e75cd0ab6fd4df61422eae452dba7566faf",
+      "state": "AUTHOR_DRAFT_PROPOSAL_NOT_INSTALLED",
+      "source_preimage": null,
+      "source_installed": false,
+      "proposed_blob_sha": "d91f4e75cd0ab6fd4df61422eae452dba7566faf",
+      "proposal_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/proposed/draft-index.ts"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+      "proposal": "proposed/change-review-index.tsx",
+      "sha": "08d69a11cf5ba19ce2777f3815143a993ab7dff2",
+      "state": "AUTHOR_DRAFT_PROPOSAL_NOT_INSTALLED",
+      "source_preimage": null,
+      "source_installed": false,
+      "proposed_blob_sha": "08d69a11cf5ba19ce2777f3815143a993ab7dff2",
+      "proposal_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/proposed/change-review-index.tsx"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/s03.css",
+      "proposal": "proposed/s03.css",
+      "sha": "c824658aefddab52631c09209bc48183c6e8c3f0",
+      "state": "AUTHOR_DRAFT_PROPOSAL_NOT_INSTALLED",
+      "source_preimage": null,
+      "source_installed": false,
+      "proposed_blob_sha": "c824658aefddab52631c09209bc48183c6e8c3f0",
+      "proposal_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/proposed/s03.css"
+    },
+    {
+      "target": "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/index.tsx",
+      "proposal": "proposed/receipt-index.tsx",
+      "sha": "598ee9b6404f37021a23e74fe4f9d48487b2ac78",
+      "state": "AUTHOR_DRAFT_PROPOSAL_NOT_INSTALLED",
+      "source_preimage": null,
+      "source_installed": false,
+      "proposed_blob_sha": "598ee9b6404f37021a23e74fe4f9d48487b2ac78",
+      "proposal_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/proposed/receipt-index.tsx"
+    },
+    {
+      "target": "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+      "proposal": "proposed/sf-s03.ts",
+      "sha": "b4ae99ceac85c9ebc6e694029fd70c7f71951a9d",
+      "state": "EDITORIAL_PROPOSAL_NOT_FROZEN",
+      "source_preimage": null,
+      "source_installed": false,
+      "proposed_blob_sha": "b4ae99ceac85c9ebc6e694029fd70c7f71951a9d",
+      "proposal_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/proposed/sf-s03.ts"
+    },
+    {
+      "target": "packages/app-shell/test-browser/sucafina-native/s03.test.ts",
+      "proposal": "proposed/s03.test.ts",
+      "sha": "5dcbb19a9173b6b18ec71008c6ab439426c6004d",
+      "state": "TEST_PROPOSAL_NOT_RUN",
+      "source_preimage": null,
+      "source_installed": false,
+      "proposed_blob_sha": "5dcbb19a9173b6b18ec71008c6ab439426c6004d",
+      "proposal_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/proposed/s03.test.ts"
+    }
+  ],
+  "observed_target_preimages": "All six targets absent on sf-ux-w08 at ACK head; remotely checked as NOT_FOUND",
+  "types_integration": [
+    "F01-owned ../../context/contracts must provide frozen SfOwnerKey, SfEditScopeKey, SurfaceId, SfRef, SfIntentRef, SfOperationRef, SfVersion",
+    "F02-owned @orchestra/schema/sucafina/common must provide frozen SfOperationId",
+    "F03-owned ../frame must expose frozen SfCopyKey, SfCoverage, SfDisplayValue, SfMessage, SfSource, SfText, SfUiState as public types or I00 must provide approved type-only adapter",
+    "F03-owned ../states must export SfStatePanel with exact component-signatures props",
+    "I00 must register SF_S03_COPY/SF_S03_COPY_BR only after copy-lock review; this proposal introduces not-yet-frozen sf.s03.* keys and cannot install without approval"
+  ],
+  "behavior": {
+    "draft": "local Solid signal only; exact pending identity/key/digest/version; remote dirty conflict; quarantine private nonrenderable; revalidation delegated F01; revoke scrubs retained; no automatic commands or persistence",
+    "review": "read-only base/current/proposed/effects, producer-admitted confirmation binding, onConfirm explicit, stale/conflict/denied/unknown disabled; no cross-source financial calculation",
+    "receipt": "producer receipts only; authorized refetch separately labeled; unknown outcome requires user reconcile read; no mutation retry; no synthesized success"
+  },
+  "gate_requests": [
+    {
+      "owner": 120,
+      "selection": [
+        "packages/app-shell/test-browser/sucafina-native/s03.test.ts"
+      ],
+      "phase": "AFTER_114_SAME_C_COMPOSITION_AND_F01_F02_F03_I00_READY",
+      "status": "NOT_DISPATCHED"
+    },
+    {
+      "owner": 119,
+      "packages": [
+        "packages/app-shell",
+        "packages/schema",
+        "packages/client"
+      ],
+      "phase": "AFTER_COMPOSITION",
+      "status": "NOT_DISPATCHED"
+    }
+  ],
+  "quality_limits": [
+    "These blobs are inert code proposals in receipt namespace; product files have not been edited",
+    "Unknown exact F01/F03 type exports and editorial S03 keys require owner reconciliation",
+    "No local parser, typecheck or tests; no hosted Actions requested by this seat",
+    "No source/producers stubbed; no private data copied into URLs/storage/analytics",
+    "No PR merge, no Azure, no deploy, no generated/generated-effect edits",
+    "GLOBAL_RELEASE=false"
+  ],
+  "handoff_to": "sole integrator114/C00",
+  "next_actions": [
+    "114 acknowledge S03 output, author lease, no conflicting writers",
+    "F01/F02/F03 publish exact type/visual exports; I00 register allowed copy keys",
+    "Only after GO apply exact proposal blobs to their target paths with expected-preimage absent, then W08 revises against actual composed contracts",
+    "120 select exact Actions for installed S03 source; 119 compiler/guard verification",
+    "114 consume source release after remote verified checks; never cherry-pick coorte-wide tree as product"
+  ]
+}
