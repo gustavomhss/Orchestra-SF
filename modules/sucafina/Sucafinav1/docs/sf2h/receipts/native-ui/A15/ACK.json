@@ -1,0 +1,41 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "order": "A15",
+  "mission": "UX-A15",
+  "state": "ACK_AUTHORING",
+  "branch": "sf-ux-a15",
+  "expectedHead": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "leaseEpoch": "ux-native-a15-e1",
+  "actor": "ChatGPT via GitHub connector",
+  "effectiveModel": "GPT-6",
+  "sessionId": null,
+  "scope": [
+    "packages/schema/src/sucafina/analyses.ts",
+    "packages/client/src/sucafina/analyses.ts",
+    "apps/cli/src/sucafina-product/native-ui/analyses.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts"
+  ],
+  "sourcePins": {
+    "analysis-base": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+    "analysis-host": "06522fa4a2eaa0841af8aabead799d9d56a8ada7",
+    "host-types": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+    "resident-types": "38e3d664f4dedb56f3e614bde41d51548e44f805"
+  },
+  "historicalDelta": "host-types differs from historical bd7df025e12aa457898f48fcf9634273ec5be381; additional case creation recovery import/property is outside A15 consumer surface; analysis and residents bindings unchanged",
+  "contractPins": {
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255"
+  },
+  "validation": "NOT_RUN (owner120 CI, owner119 compiler)",
+  "restrictions": [
+    "no local tests",
+    "no engine changes",
+    "no shared registry writes",
+    "no merge",
+    "no deploy",
+    "Goal paused"
+  ],
+  "note": "Receipt path is the explicitly assigned A15 receipt prefix; ACK is an actual commit, not an inferred launch."
+}
