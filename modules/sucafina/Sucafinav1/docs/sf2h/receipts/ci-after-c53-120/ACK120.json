@@ -1,0 +1,93 @@
+{
+  "schema": "sf2h.product-ci120.ack.v1",
+  "mission": 120,
+  "id": "ci-after-c53",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": {
+    "effective_model": "GPT-6",
+    "user_label": "Astra",
+    "github_actor": "gustavomhss",
+    "runtime_session_id": null,
+    "reason": "Not exposed by ChatGPT/GitHub connector; not invented"
+  },
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "lease_epoch": "product-ci-browser120",
+  "parent_head": "ef1b8f3ec86e2c0cddf2fcf4cf8e442a3a64737f",
+  "parent_tree": "13b243d990cbe7df0960c6ee7d092735eaa86119",
+  "source_mission": {
+    "ref": "111c29106bf02ddf38cc425826b764f8c5452ae6",
+    "blob": "90d6e26e0c6384192e108f38fbca7b952f9842a9"
+  },
+  "scope": {
+    "write_paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/ci-after-c53-120/",
+      "existing ci-run-* snapshots .ci-run.json only"
+    ],
+    "source_edits": false,
+    "workflow_edits": false,
+    "local_tests": false
+  },
+  "authority": {
+    "basis": "Explicit user assignment of new mission120 continuing 107 / PR106, not inferred from silence",
+    "predecessor": 107,
+    "observed_predecessor": "CHECKPOINT-107/RUNS-107/queues at ef1b8f3ec86e2c0cddf2fcf4cf8e442a3a64737f; two C53 runs terminal",
+    "prior_runtime_session_status": "not observable; do not infer a terminated browser session from no GitHub commit",
+    "policy": "Never create second dispatcher. Recheck 107/101/52/99 outstanding equivalent requests before any dispatch; if evidence of active 107 authority appears seek explicit handoff or attach read-only.",
+    "current": "ACK_PUBLISHED; NO_DISPATCH_BEFORE_QUALIFIED_NEW_MATERIAL_W_AND_DEDUP"
+  },
+  "baseline": {
+    "material_C": "C53",
+    "W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "first_save": {
+      "run": 43707908864,
+      "job": 132792901856,
+      "status": "SUCCESS",
+      "pass": 15,
+      "fail": 0,
+      "retest_without_material_impact": false
+    },
+    "native": {
+      "run": 43707901079,
+      "job": 132792877003,
+      "status": "FAILURE",
+      "pass": 178,
+      "fail": 1,
+      "assertion": "native-runtime-finish/historical-read.test.ts:54 expected ok observed undefined"
+    },
+    "P03": {
+      "run": 43682515795,
+      "status": "FAILURE",
+      "retest_without_causal_patch99": false
+    },
+    "integrator114": {
+      "observed_head": "4c8b083051ab0669dccc3ff1d91b338d3a4174af",
+      "classification": "ACK_ONLY; no newer material C at preflight",
+      "pr": 65
+    }
+  },
+  "readiness": {
+    "native115": "WAIT_SOURCE_RELEASE_AND_COMPOSED_W",
+    "typefix116": "WAIT_SOURCE_RELEASE_AND_COMPOSED_W",
+    "typefix117": "WAIT_SOURCE_RELEASE_AND_COMPOSED_W",
+    "typefix118": "WAIT_SOURCE_RELEASE_AND_COMPOSED_W",
+    "XLSX102": "WAIT_114_COMPOSED_W_AND_READER/RENDER_PROOF",
+    "native110": "WAIT_95_ROOT_SOURCE_AND_110_INTEGRATION_AUTHORITY",
+    "creation111": "WAIT_96/111_PLUS_SHARED52_HOST_INTEGRATION",
+    "compiler119": "DIFFERENT_OWNER",
+    "final8_epic_AM01_AM06": "NOT_ADMITTED_PREMATURE"
+  },
+  "dedup": {
+    "key": "material W/tree + ordered request args + package/runner/OS + effective workflow/validator/runtime/config/env + fixture/test identity",
+    "prior_107_snapshots": [
+      "e826732db28589f117f5e3c7fb0cd8d18f16496c",
+      "3735f357c91a6e8308647bcb17b716fdca00fa51"
+    ],
+    "no_reuse_of_C51_or_C53_on_new_tree": true
+  },
+  "evidence_status": "PRE_DISPATCH_RECONCILIATION; no new test result claimed",
+  "GLOBAL_RELEASE": false
+}
