@@ -10,14 +10,19 @@
 import { Effect, Schema } from "effect"
 import { optional } from "../schema"
 
-// Effect Struct's default decoder discards extra keys. Close each object at
-// the schema boundary (including nested arrays/unions) *before* decoding to
-// the public shape, so an unrecognized permission/source field is an error,
-// never a silently laundered success.
+// Effect Struct normally discards excess object keys. Preserve source keys
+// in a temporary record, reject any outside the fixed field set *before*
+// projecting to the public shape, and apply this to every nested struct.
+// The unknown-valued rest is internal only: it cannot pass the closed-key
+// check or escape through the resulting typed codec.
 const closedStruct = <const Fields extends Schema.Struct.Fields>(fields: Fields) => {
   const shape = Schema.Struct(fields)
-  return Schema.StructWithRest(shape, [Schema.Record(Schema.String, Schema.Never)])
-    .pipe(Schema.decodeTo(shape))
+  const allowed = new Set(Object.keys(fields))
+  const withExtras = Schema.StructWithRest(shape, [Schema.Record(Schema.String, Schema.Unknown)])
+  return withExtras.check(Schema.makeFilter<typeof withExtras.Type>(
+    (value) => Object.keys(value).every((key) => allowed.has(key)),
+    { expected: "an object containing only declared fields" },
+  )).pipe(Schema.decodeTo(shape))
 }
 
 const NonEmpty = Schema.String.check(Schema.isMinLength(1))
