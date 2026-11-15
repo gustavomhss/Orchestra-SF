@@ -92,6 +92,8 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
       abort.abort()
     }
     acquiring.set(source.authoritySessionID, { request: source.request, close })
+    // Expiry must cancel pending C15/authority readers, not only an already admitted binding.
+    timer = setTimeout(close, Math.max(0, Math.min(until - now(), monotonicUntil - performance.now())))
     const sync = () => active && ready() && input.resources() === resources && resources.current() &&
       input.requestFor(source.context) === source.request && source.context.kind === "ui" &&
       source.request.method === "POST" && !signal.aborted && now() < until && performance.now() < monotonicUntil &&
@@ -130,7 +132,6 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
       registered = entry
       entries.set(source.authoritySessionID, entry)
       acquiring.delete(source.authoritySessionID)
-      timer = setTimeout(close, Math.max(0, until - now()))
       source.request.signal.addEventListener("abort", close, { once: true })
       source.signal.addEventListener("abort", close, { once: true })
       source.nativePolicy.signal.addEventListener("abort", close, { once: true })
@@ -193,9 +194,15 @@ function matches(invocation: ToolSafety.Invocation, intent: SfRoutineNativeAdmis
     args.authorizationID === intent.authorizationId
 }
 
-/** A misbehaving native/C15 reader cannot hold a provider settlement indefinitely. */
-async function bounded<T>(read: () => Promise<T>, signal: AbortSignal): Promise<T | undefined> {
-  if (signal.aborted) return undefined
+/** Every untrusted native/C15 reader shares this bounded, fail-closed observation API.
+ * 30s is the existing historical-consumer budget; the original Request/lease may abort sooner.
+ * A late reply never becomes authority, and abort before the microtask prevents a new read.
+ */
+export async function observeSfRoutineNative<T>(
+  read: () => Promise<T>, signal: AbortSignal, timeoutMs = 30_000,
+): Promise<T | undefined> {
+  if (signal.aborted || !Number.isSafeInteger(timeoutMs) || timeoutMs <= 0 || timeoutMs > 30_000)
+    return undefined
   let timer: ReturnType<typeof setTimeout> | undefined
   let onAbort: () => void = () => {}
   const cancelled = new Promise<undefined>((resolve) => {
@@ -204,8 +211,12 @@ async function bounded<T>(read: () => Promise<T>, signal: AbortSignal): Promise<
     timer = setTimeout(() => resolve(undefined), timeoutMs)
     if (signal.aborted) onAbort()
   })
-  try { return await Promise.race([Promise.resolve().then(read).catch(() => undefined), cancelled]) }
-  finally {
+  try {
+    return await Promise.race([
+      Promise.resolve().then(() => signal.aborted ? undefined : read()).catch(() => undefined),
+      cancelled,
+    ])
+  } finally {
     if (timer !== undefined) clearTimeout(timer)
     signal.removeEventListener("abort", onAbort)
   }
