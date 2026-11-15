@@ -1,0 +1,173 @@
+{
+  "schema": "sf2h.fix180.terminal.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 180,
+  "order": "A14",
+  "epoch": "native-fix-e1-browser180",
+  "predecessor_epoch": "ux-native-a14-e1",
+  "status": "ARTIFACT_READY",
+  "effective_model": "GPT-6",
+  "actual_actor": "ChatGPT through GitHub MCP",
+  "session_id": null,
+  "note": "No Astra model/session identity was exposed or asserted.",
+  "branch": "sf-ux-a14",
+  "pr": 136,
+  "fence_blob": "fc35b381a612eaf3d8c751a1a451ea8c63f1e4df",
+  "source": {
+    "path": "packages/schema/src/sucafina/memory.ts",
+    "pre": {
+      "head": "a359cb6d9016cc18cedb863cb7ec20fe7242d804",
+      "tree": "78e8631baab1310a97431b44fad28e9bb84f859d",
+      "blob": "d501d30c2e0f0693f8533c8fe4d217f0068cde86"
+    },
+    "ack": {
+      "head": "11df97cec650c17c4c239e3356b2a2972a600a6b",
+      "tree": "eb3bf389f1f27be86b019761c9c7304aba956057",
+      "receipt_blob": "a9b17a8055aaf2470823078ebc2f3c5a063f65ff"
+    },
+    "post_patch": {
+      "head": "9ded9ce8ef6077dfbc63171e3c9785204898231b",
+      "tree": "d55836e4a85dacada3af10f44a666eefa5ae5afe",
+      "blob": "554c07bbf881b89ab9df852cdbf61322547f6382"
+    },
+    "exact_patch": "diff --git a/packages/schema/src/sucafina/memory.ts b/packages/schema/src/sucafina/memory.ts\n--- a/packages/schema/src/sucafina/memory.ts\n+++ b/packages/schema/src/sucafina/memory.ts\n@@ -1,5 +1,5 @@\n import { Schema } from \"effect\"\n-import { optional } from \"../schema.ts\"\n+import { optional } from \"../schema\"\n \n // This leaf is a closed projection of memory-http.ts, not an Atlas store or a\n // second materiality engine. All permissions and source-digest checks remain in\n",
+    "github_compare": {
+      "base": "11df97cec650c17c4c239e3356b2a2972a600a6b",
+      "head": "9ded9ce8ef6077dfbc63171e3c9785204898231b",
+      "changed_files": [
+        "packages/schema/src/sucafina/memory.ts"
+      ],
+      "additions": 1,
+      "deletions": 1
+    },
+    "readback": {
+      "via": "GitHub MCP fetch_file; branch HEAD/commit readback",
+      "blob": "554c07bbf881b89ab9df852cdbf61322547f6382",
+      "first_two_lines": [
+        "import { Schema } from \"effect\"",
+        "import { optional } from \"../schema\""
+      ]
+    },
+    "semantic_equivalence": "Imports the unchanged public optional helper from the same packages/schema/src/schema.ts module using the existing extensionless Schema import pattern. All 7 memory contracts and implementation bodies unchanged."
+  },
+  "consumer": {
+    "owner": 162,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "observed_pre": {
+      "head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+      "tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+      "blob": "d501d30c2e0f0693f8533c8fe4d217f0068cde86",
+      "path": "packages/schema/src/sucafina/memory.ts"
+    },
+    "post_consumed": null,
+    "post_pending": {
+      "head": null,
+      "tree": null,
+      "blob": null,
+      "expected_source_blob": "554c07bbf881b89ab9df852cdbf61322547f6382"
+    },
+    "required_action": "162 must CAS-readback current consumer source blob, cherry-pick this one-file typed patch or adopt exact blob, preserve all other product changes, commit on existing sf2-stack, record consumer post SHA/tree/blob; no source-side merge"
+  },
+  "evidence": {
+    "observed_error": {
+      "code": "TS5097",
+      "line": 2,
+      "file": "packages/schema/src/sucafina/memory.ts",
+      "source": "163 run 43766055614 / job 132971280139 / attempt 1",
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "Wtree": "07133fe09922121f3cca3bffd6b4463053b48ece"
+    },
+    "read_pins": {
+      "root_AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "schema_AGENTS": "2dc577ff394a02b4c6812d78e23ef43da869f850",
+      "A14_workorder": "fa129ade1b3d7343568a334400dcd5dd5024e7bb",
+      "EXECUTION_PROTOCOL": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "CONTRACTS": "94553a3119826ef1c44271966233dd58042ddd70",
+      "contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "memory_producer": "f727d5250024df7338491321c36e7055d7c18f74",
+      "client_memory": "cddd7ceccc66bc5faf38d169bede03efa31440db"
+    },
+    "original_163_result": "FAILURE; 16 selected/10 zero/6 nonzero; SDK generated hosted, Client typecheck had TS5097 alongside unrelated failures; NOT proof of this patch",
+    "original_164_result": "run 43766970018/job132974180913 FAILURE on a different W/S; browser S01/F03/S05 failures, none is proof of memory import fix"
+  },
+  "criteria": [
+    {
+      "id": "TS5097-memory-public-import",
+      "source_status": "SOURCE_PATCHED_GITHUB_READBACK",
+      "qualification_status": "NOT_RUN_AFTER_PATCH",
+      "proof": "one-line extensionless import + preserved optional helper + GitHub compare"
+    },
+    {
+      "id": "A14-AC01",
+      "status": "NOT_RUN_AFTER_PATCH",
+      "scope": "input/output fields, null/zero/versions untouched"
+    },
+    {
+      "id": "A14-AC02",
+      "status": "NOT_RUN_AFTER_PATCH",
+      "scope": "unknown commands and dispatch unchanged"
+    },
+    {
+      "id": "A14-AC03",
+      "status": "NOT_RUN_AFTER_PATCH",
+      "scope": "operation keys/source version checks untouched"
+    }
+  ],
+  "validation": {
+    "local_tests": "NOT_RUN_BY_USER_INSTRUCTION",
+    "local_typecheck": "NOT_RUN_BY_USER_INSTRUCTION",
+    "local_parser": "NOT_RUN_BY_USER_INSTRUCTION",
+    "local_build": "NOT_RUN_BY_USER_INSTRUCTION",
+    "hosted_after_patch": "NOT_RUN",
+    "source_diff": "VERIFIED_GITHUB_REMOTE_COMPARE",
+    "consumer_qualification": "NOT_RUN_AFTER_PATCH"
+  },
+  "requests": {
+    "integrator162": {
+      "epoch": "S0-C-e20-browser162",
+      "pr": 65,
+      "action": "adopt exact source code blob 554c07bbf881b89ab9df852cdbf61322547f6382 at packages/schema/src/sucafina/memory.ts into current coherent sf2-stack by CAS; record new W/tree and source/consumer pre-post hashes; no dispatcher"
+    },
+    "compiler163": {
+      "epoch": "compiler-e4-browser163",
+      "pr": 107,
+      "after": "162 records new materialized W/tree with imported blob",
+      "commands": [
+        {
+          "cwd": "packages/schema",
+          "command": "bun typecheck"
+        },
+        {
+          "cwd": "packages/client",
+          "command": "bun typecheck"
+        }
+      ],
+      "scope": "same new W; deduplicate input hashes; no rerun old W690a34; SDK/guards remain owned by 163 and are not qualified by this fix"
+    },
+    "productCI164": {
+      "epoch": "product-ci-e4-browser164",
+      "pr": 106,
+      "after": "162 integrates fix and publishes candidate W/tree",
+      "existing_test": "modules/sucafina/Sucafinav1/test/native-ui-contract/memory.test.ts",
+      "existing_test_blob": "b658352fdbdb336ef1eb57815ce2b457e6654dcb",
+      "request": "Evaluate invalidation matrix, then run the existing change-scoped memory contract test once through existing hosted CI164 dispatcher only if required; no import-mirror test, no global suite, no identical failed input rerun",
+      "example_existing_hosted_selection": "bun run test:ci sucafina Sucafinav1/test/native-ui-contract/memory.test.ts --os linux",
+      "status": "NOT_RUN"
+    }
+  },
+  "protections": {
+    "unchanged": [
+      "all other source files",
+      "Atlas/ACL/decoder",
+      "package exports",
+      "tsconfigs",
+      "generated SDK",
+      "tests/assertions/fixtures",
+      "all other branches"
+    ],
+    "native_goal": "paused",
+    "global_release": false,
+    "release_not_claimed": true
+  }
+}
