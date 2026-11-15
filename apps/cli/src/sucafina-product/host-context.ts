@@ -239,7 +239,9 @@ export const createSfHostRuntimeWithRoutineNative = async (
     authorize: (admission, binding) => Effect.tryPromise(() => authority.authorizeNative(admission, binding)),
     authorizeInterrupt: (admission, binding, request) => Effect.tryPromise(() => authority.authorizeInterrupt(admission, binding, request)),
     budget: { gate, reserveSession: (reservation) => Effect.tryPromise(() => evidence.reserveSession(reservation)),
-      persistReceipt: (binding, receipt) => Effect.tryPromise(() => evidence.persistTokenReceipt(binding, receipt)) },
+      persistReceipt: (binding, receipt) => Effect.tryPromise(() => evidence.persistTokenReceipt(binding, receipt)),
+      // Root-private, deny-only terminal transition. Never accepts a caller-supplied Request.
+      settlePreparation: (reservation, outcome) => Effect.tryPromise(() => evidence.settlePreparation(reservation, outcome)) },
   })
   const roster = createSfRosterSources({ host: authority.host, scopedSources: input.persistence, plannerSources: createSfPlannerSourceHost({ host: authority.host, scopedSources: input.persistence, coverageFor: async () => ({ status: "unavailable", reason: "roster-coverage-unavailable" }) }) })
   const imports = createSfImportServices({ runtime: input, authority, roster })
