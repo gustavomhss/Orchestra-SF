@@ -1,5 +1,5 @@
 import { A } from "@solidjs/router"
-import { createEffect, createMemo, createSignal, For, onCleanup, Show } from "solid-js"
+import { createEffect, createSignal, For, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import type { Schema } from "effect"
@@ -11,7 +11,6 @@ import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { useSfContext } from "../../context"
 import type {
   SfEditScopeKey, SfIntentRef, SfRef, SfSurfaceProps, SfPublicDraftController,
-  SfVersion,
 } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
 import type { SfCopyKey, SfUiState } from "../../shared/frame"
@@ -111,7 +110,10 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       ...(requestedVersion === null ? {} : { version: requestedVersion }),
     }
     const client = createSfPlannerClient(owner.transport)
-    const result = await client["domain.page.CAP22"](query, { signal })
+    const result = await client["domain.page.CAP22"](query, { signal }).catch(() => {
+      console.error("N20 CAP22: authorized source read failed")
+      return { kind: "transport-error", reason: "network" } as const
+    })
     if (signal.aborted || generation !== host.generation() || !host.ready()) return
     if (result.kind !== "response") {
       setScreen({ state: "unavailable", problem: result.reason })
@@ -157,8 +159,8 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     const versionId = screen.versionId
     const year = props.route.query.year
     const controller = new AbortController()
-    if (status !== "ready" || !host.ready()) {
-      setScreen({ state: status === "denied" ? "denied" : "loading", page: null, intent: null })
+    if (status !== "ready" || !host.ready() || !canRead()) {
+      setScreen({ state: status === "denied" || status === "ready" ? "denied" : "loading", page: null, intent: null })
       setDraft(null)
     } else {
       void read(controller.signal, generation, versionId)
@@ -267,7 +269,10 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
           values: {
             versionId, cur: value?.cur, rate: value?.rate,
           },
-        }, options)
+        }, options).catch(() => {
+          console.error("N20 CAP22: command delivery failed; outcome unconfirmed")
+          return { kind: "transport-error", reason: "outcome-unknown" } as const
+        })
     if (generation !== host.generation() || !host.ready()) return
     setScreen("busy", false)
     if (result.kind !== "response") {
@@ -318,11 +323,12 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
   const proposed = (): SfReviewSnapshot => {
     const intent = screen.intent!
     const value = currentValue()
+    const original = oldSnapshot()
     return {
       kind: "draft", intentRef: (localIntent() ?? intent.ref) as SfIntentRef,
       sourceRef: intent.id ? ref(intent.id) : null, sourceVersion: intent.version,
       fields: intent.kind === "delete"
-        ? (oldSnapshot()?.kind === "persisted" ? oldSnapshot()!.fields : [])
+        ? (original && original.kind === "persisted" ? original.fields : [])
         : value ? [
           reviewField("sf.cap22.field.code.label", value.cur),
           reviewField("sf.cap22.field.rate.label", rateText(value.rate)),
@@ -479,8 +485,8 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
                   base={oldSnapshot()} current={oldSnapshot()} proposed={proposed()}
                   effects={[]}
                   coverage={{
-                    state: "complete", summary: { key: key("sf.cap22.description") },
-                    reasons: [], knownCount: 1, expectedCount: 1,
+                    state: "partial", summary: { key: key("sf.common.partial") },
+                    reasons: [], knownCount: null, expectedCount: null,
                   }}
                   blockingReasons={[]}
                   confirmation={{
