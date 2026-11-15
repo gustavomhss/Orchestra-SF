@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h.compiler190.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 190,
+  "epoch": "compiler-e5-browser190",
+  "state": "ACK_ACTIVE_SCOPED",
+  "actual_actor": "ChatGPT GPT-6 via authenticated GitHub MCP",
+  "authenticated_github_login": "gustavomhss",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_note": "Session runtime ID not exposed; not invented",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-compiler-checks",
+  "pr": 107,
+  "observed_head": "3e3c8f616637292e5bf0be409d86f9ae6cdc6010",
+  "observed_tree": "76cd9418c991011c9ffca9c105be70afe6408c36",
+  "transfer": {
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation190/S0-FENCE.json",
+    "fence_blob": "8efe09bd2b093bad1383d8b27d48008434a0a2e8",
+    "predecessor": 163,
+    "predecessor_future_writes": "REVOKED_ADMINISTRATIVELY",
+    "runtime_death_inferred": false,
+    "late_writes": "reconcile_by_CAS_no_reset_force"
+  },
+  "source": {
+    "integrator": 189,
+    "branch": "sf2-stack",
+    "pr": 65,
+    "epoch": "S0-C-e21-browser189",
+    "initial_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "latest_observed_batch_head": "4de88999e329283540369bbbfc2180a99b9202e6",
+    "latest_observed_batch_tree": "d950e96d6f3b6e488e6e5587a0bdc93b471339cf",
+    "confirmed_changed_source": [
+      "packages/schema/src/sucafina/decisions.ts",
+      "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "packages/schema/src/sucafina/memory.ts",
+      "packages/schema/src/sucafina/operations.ts",
+      "packages/schema/src/sucafina/planner.ts",
+      "packages/schema/src/sucafina/portfolio.ts"
+    ],
+    "status": "FIRST_COHERENT_SOURCE_BATCH_COMMITTED_NEEDS_MATERIAL_RECEIPT_AND_PINNED_SELECTION"
+  },
+  "historical": {
+    "run": 43766055614,
+    "job": 132971280139,
+    "artifact": 14182790522,
+    "source_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "selection": 16,
+    "exit0": 10,
+    "failed": 6,
+    "generatedSDK": "3/56",
+    "gates_pending": 66,
+    "warnings": 141,
+    "not_current_C_pass": true
+  },
+  "constraints": {
+    "native_goal": "paused",
+    "global_release": false,
+    "source_writer_paths": "untouched",
+    "generated_manual_edits": false,
+    "guard_approvals": false,
+    "new_dispatcher": false,
+    "local_checks": false,
+    "no_force": true,
+    "product_ci_owner": 191
+  }
+}

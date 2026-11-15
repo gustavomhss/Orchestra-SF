@@ -1,0 +1,112 @@
+{
+  "schema": "sf2h.compiler190.sdk-handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 190,
+  "state": "EXACT_HOSTED_PATCH_AVAILABLE_UNCONSUMED",
+  "target_integrator": "189/S0-C-e21-browser189/PR65",
+  "provenance": {
+    "source_sha": "690a34cdd81c12d7311f3717c19679b950276161",
+    "source_tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "wrapper_sha": "5491c9300126da663a4097a678b587a5d74dc125",
+    "workflow_blob": "c417627108fcd183ee8d7ab91243ec6795bdc926",
+    "run": 43766055614,
+    "job": 132971280139,
+    "attempt": 1,
+    "artifact_id": 14182790522,
+    "artifact_name": "sf-compiler-163",
+    "artifact_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43766055614/artifacts/14182790522",
+    "archive_bytes": 401536,
+    "archive_sha256": "1ab7ff0768b359e8c91d3f6e66d1f444681e221473a86013ea61d0d7373245ab",
+    "expires_at": "2026-11-29T21:57:14Z",
+    "runner": "ubuntu-24.04.5",
+    "bun": "1.3.14",
+    "node": "v24.22.2"
+  },
+  "generated": {
+    "cmd": "cd packages/client && bun run generate",
+    "exit_code": 0,
+    "capture_exit_code": 0,
+    "manual_edit": false,
+    "patch_member": "sdk-generated.patch",
+    "patch_bytes": 92878,
+    "patch_sha256": "1e17bfa2e631a6c59a3662a33161549001689c95ae7e88ad009bf3eca9b31e0d",
+    "manifest_member": "sdk-generated-manifest.json",
+    "manifest_bytes": 21469,
+    "manifest_sha256": "0a7c036a05cf1a08e9554984013dbc6dbfdd22d90df885712ee017fdab7c94ad",
+    "all_leaf_count": 56,
+    "unchanged_leaf_count": 53,
+    "changed_leaf_count": 3,
+    "changed": [
+      {
+        "path": "packages/client/src/generated-effect/client.ts",
+        "preimage_blob": "5a0375bc54a838bd4677b856cdbe76d5b4bb860b",
+        "postimage_blob": "5874204ef97d36f5c2fd14aac5e13ee21ca74d53",
+        "post_sha256": "7ee002cbba8174ed1817bc19cf4dac91d30e01b191ca4e7d8e237d84f7d7ad66"
+      },
+      {
+        "path": "packages/client/src/generated/client.ts",
+        "preimage_blob": "b9f507fdde3425c80f5da17b029c790c92d4de34",
+        "postimage_blob": "b59815718bd6755c12761d1102a3149fbc390844",
+        "post_sha256": "ee86605cccacff9244f6ad7c1d47b43e664794e1aa7c09ca2cc5053310c5ad18"
+      },
+      {
+        "path": "packages/client/src/generated/types.ts",
+        "preimage_blob": "85c5075ae725bc227cd3dfdc754af8475533df8a",
+        "postimage_blob": "2f5ca3d1d2b24a0b33a9e41c9cf4aaf8c6c6f1c8",
+        "post_sha256": "e96616c125337a3e0850cbb00809ceb03ba23ef23375a7ab3cc766d91d5cac6e"
+      }
+    ]
+  },
+  "live_consumer_preimage_readback": {
+    "head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "tree": "5cee64807f55d0ec169801795712844051c47e16",
+    "sdk_three_match": true,
+    "epic_path": ".github/workflows/sf2-epic.yml",
+    "epic_blob": "b332d777e4465469e9e4869e29f4339a95853d21",
+    "input_parity": [
+      [
+        "packages/schema/src/sucafina/context.ts",
+        "cd4a8605ac733d3fe156365ed84daefa4ec5385e"
+      ],
+      [
+        "packages/protocol/src/groups/sucafina.ts",
+        "1fe0f77985758d0f5cee037db6a308934c85de0f"
+      ],
+      [
+        "packages/client/src/contract.ts",
+        "94f1ddd42964636fbc4b1908c47c51f24dcce226"
+      ],
+      [
+        "packages/client/script/build.ts",
+        "99ae2184b9c13f6175d7ba8e3025068bee07ee4f"
+      ],
+      [
+        "tooling/httpapi-codegen/src/index.ts",
+        "78a9b9e0521c8128d0896af8bba15ad318e30edf"
+      ],
+      [
+        ".github/workflows/test-ci.yml",
+        "3185885e123f9bb13c16c670e4df2fcffab38290"
+      ],
+      [
+        "script/sf2h/final-bundle/build-artifact.py",
+        "4f7d7a12a5eeba3bfb82f9ebe03f563bd1b441a2"
+      ],
+      [
+        "script/sf2h/final-bundle/requests.json",
+        "3ff28507d6ae6b874f021fb8acf5088d61442c80"
+      ]
+    ],
+    "note": "Point-in-time HEAD only; 189 MUST re-read fresh HEAD/all preimages at own CAS integration. New 4de schema batch may change non-API source; do not claim qualified SDK"
+  },
+  "epic": {
+    "artifact_id": 14171118214,
+    "yaml_member": "sf2-epic.generated.yml",
+    "yaml_bytes": 57314,
+    "yaml_sha256": "c6c0e2583a5be2bb393d3db832232c6625ceb28370bf1f7f815eb3a661b77394",
+    "patch_bytes": 4370,
+    "patch_sha256": "559b5b34a69ace7ee69b641909a4fa7da28d033a4a13980dc4ed950574d2dd03",
+    "status": "HISTORIC_REAL_GENERATION_NOT_CONSUMED_OR_ACCEPTED"
+  },
+  "instructions": "Fetch ZIP from exact GitHub Actions artifact, take sdk-generated.patch and full manifest as raw hosted outputs; recheck 3 consumer preimages and public producer hashes on latest sf2-stack, reconcile if changed, apply as sole integrator through expected-head CAS/force=false. Never hand-edit generated. If public API generator input changed, request a newly pinned hosted generation instead."
+}

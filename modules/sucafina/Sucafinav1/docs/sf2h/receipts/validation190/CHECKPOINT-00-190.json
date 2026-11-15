@@ -1,0 +1,48 @@
+{
+  "schema": "sf2h.compiler190.checkpoint.v1",
+  "mission": 190,
+  "epoch": "compiler-e5-browser190",
+  "stage": "PRECHECK_RESTORE_AND_SDK_HANDOFF",
+  "compiler_head_before": "3e3c8f616637292e5bf0be409d86f9ae6cdc6010",
+  "historical": {
+    "run": 43766055614,
+    "job": 132971280139,
+    "status": "completed",
+    "conclusion": "failure",
+    "sdk_generation": "PASS_SCOPED",
+    "typechecks": "5_FAILED",
+    "guard_gate": 66,
+    "guard_warn": 141,
+    "gate_rules": {
+      "agent-scratch": 56,
+      "js-test-skipped": 10
+    },
+    "old_W": "690a34cdd81c12d7311f3717c19679b950276161"
+  },
+  "observed_new_integrated_batch": {
+    "sha": "4de88999e329283540369bbbfc2180a99b9202e6",
+    "tree": "d950e96d6f3b6e488e6e5587a0bdc93b471339cf",
+    "batch": [
+      173,
+      174,
+      175,
+      176,
+      180
+    ],
+    "source_files": 6,
+    "hosted_check": "NOT_DISPATCHED_PENDING_NEW_W_SELECTION_AND_MATERIAL_RECEIPT",
+    "skip_unchanged_old_W": true
+  },
+  "guard_state": {
+    "approval": false,
+    "waiver": false,
+    "ignores_added": false,
+    "gate66_persist_historically": true,
+    "guard_authority188": "review_only",
+    "test_suites_185_186": "not_assumed_consumed",
+    "harness187": "not_assumed_qualified"
+  },
+  "product_tests_191": "not_run_here",
+  "native_goal": "paused",
+  "global_release": false
+}
