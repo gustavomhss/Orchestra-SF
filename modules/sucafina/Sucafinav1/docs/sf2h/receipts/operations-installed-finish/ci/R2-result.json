@@ -1,0 +1,144 @@
+{
+  "schema": "sf2h.operations75.hosted-result.v1",
+  "selection": "controls",
+  "run": 43672005574,
+  "job": 132683887580,
+  "run_attempt": 1,
+  "work": "3e3a23ad86e7895a4f5405ade0ce084a813b9f24",
+  "work_tree": "e4d79d4231a7626ab30e3e95a5e465d4f4e13f26",
+  "snapshot": "1f06698c42a932a612b90fd9c93301214b0ddf11",
+  "snapshot_tree": "7a720ae40c9d9590e72a84c145a6578e05be0acb",
+  "request_sha256": "e339ac1cb8e4741ccf7fe623015ec3bfa5a2050c431c7aa7423b0104ce08edcb",
+  "branch": "sf-ops75-3e3a23ad86e7ce339ac1cb8e41",
+  "workflow": ".github/workflows/sf-operations-scanner.yml",
+  "outcome": "FAIL_SETUP",
+  "tests": {
+    "executed": 0,
+    "expected": 7,
+    "status": "NOT_RUN_BLOCKED_SETUP"
+  },
+  "observed": {
+    "request_guard": "PASS",
+    "ci_dependencies": "PASS setup-bun/ripgrep/omni",
+    "package": "PASS pinned size/hash/extract",
+    "relocated_clamd_version": "ClamAV 1.5.4",
+    "relocated_freshclam_version": "ClamAV 1.5.4",
+    "both_ldd": "PASS",
+    "database_download": "FreshClam downloaded official daily; remote version28183",
+    "database_verification": "FAILED: fc_test_database new engine used compiled /usr/local/etc/certs; directory absent",
+    "daemons": "NOT_STARTED",
+    "readiness": "NOT_RUN",
+    "cleanup": {
+      "step": "PASS",
+      "receipt": "STOPPED",
+      "main": "ABSENT",
+      "error": "ABSENT",
+      "evidencePreserved": true
+    }
+  },
+  "artifact": {
+    "id": 14145310023,
+    "sha256": "1f03c8046ae1b90cc2547b2506c091e9b327b5917c96db328b0354b121138848",
+    "bytes": 10485,
+    "downloaded_and_hash_verified": true,
+    "files": [
+      {
+        "path": "request.json",
+        "bytes": 3084,
+        "sha256": "0b9e450c1c8c326f62f4a133191bd0dd4aeeff44f87f0110aadb4ddfa2b31b3a"
+      },
+      {
+        "path": "scanner/clamd-error.conf.txt",
+        "bytes": 775,
+        "sha256": "4be648f00d2f8726608db93823f5ecc93e550a598e76ba0b3fac6dbd8e4d4407"
+      },
+      {
+        "path": "scanner/clamd-ldd.txt",
+        "bytes": 725,
+        "sha256": "c49d683627f0840e3ce82e5525c10193eaac1bade675739d9ea9dfb4df862a91"
+      },
+      {
+        "path": "scanner/clamd-main.conf.txt",
+        "bytes": 777,
+        "sha256": "8d36decbbc29561d37512422502f6c0319f71c2df837ab715e109a575dc50737"
+      },
+      {
+        "path": "scanner/clamd-version.txt",
+        "bytes": 13,
+        "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+      },
+      {
+        "path": "scanner/cleanup.json",
+        "bytes": 230,
+        "sha256": "05ab15c31a2dddee143608b9c6bdcbe801af233be5743cea7d05ed5735f1cedf"
+      },
+      {
+        "path": "scanner/configuration.json",
+        "bytes": 781,
+        "sha256": "b2c959aada45df0ca60ee42f6a80a32ae5b6f169280a135a5498d370f0d746a5"
+      },
+      {
+        "path": "scanner/freshclam-ldd.txt",
+        "bytes": 943,
+        "sha256": "28ea3f5216cc138e2f57924a3ad5fdf9e9da2d67cf85f7103a563ccbb4d16119"
+      },
+      {
+        "path": "scanner/freshclam-output.log",
+        "bytes": 970,
+        "sha256": "c167ac86513d0e0e87176eddf76112dc888d7b363c4c6673e2c42e755c5bd614"
+      },
+      {
+        "path": "scanner/freshclam-version.txt",
+        "bytes": 13,
+        "sha256": "d0689a47d40d2f0aea68f71fd4e318469c71b4c623b4e6a33b30a720815b4a08"
+      },
+      {
+        "path": "scanner/freshclam.conf.txt",
+        "bytes": 480,
+        "sha256": "824a547a21602a03dcf3a2e8c22ea9d180143c2067198dd1f5f40900c24aa9ba"
+      },
+      {
+        "path": "scanner/freshclam.log",
+        "bytes": 1037,
+        "sha256": "f3e5ab1a1edb292d753cd3a33515b768794b01f4fd7f7c96a760b16a8d8fe225"
+      },
+      {
+        "path": "scanner/package-info.txt",
+        "bytes": 399,
+        "sha256": "2a491cadb125eb384cfec5c47e830192e0dbbdcb6aceb1c2069e488f4aebb498"
+      },
+      {
+        "path": "scanner/package-sha256.txt",
+        "bytes": 76,
+        "sha256": "0b38c495452c7b5de12301e6d2d7e6d322a88778438629442fdb82884431b289"
+      },
+      {
+        "path": "scanner/package.json",
+        "bytes": 776,
+        "sha256": "6987fa754a95ac93200c05552f39910b4318973bfc91ce96f13f9c9c99190ba8"
+      },
+      {
+        "path": "scanner/setup.json",
+        "bytes": 487,
+        "sha256": "9d06ba0b2873aa42b2f01c03f84dc577fbabeb35e27de3492e953c4682327b40"
+      },
+      {
+        "path": "scanner/tools.lock.json",
+        "bytes": 2276,
+        "sha256": "899f43dfd6dffb4e713c1e2eba2c306086eddc53de6b20aa3bfc73d2b057c929"
+      },
+      {
+        "path": "scanner/version.conf",
+        "bytes": 192,
+        "sha256": "854e10b003abf1e20521180fd1aabd54e377f75aaf608331df828ab3f48d8a60"
+      }
+    ]
+  },
+  "log": {
+    "path": "logs/R2.log.txt",
+    "sha256": "399c6e4f6e5db1ea4ae3327c68d5fe5ae43bade057c042cd7c32ec5399717071",
+    "bytes": 57457
+  },
+  "corrective_action": "Use official CVD_CERTS_DIR process environment for the FreshClam child/test-engine only; preserve TestDatabases yes and all verification",
+  "GLOBAL_RELEASE": false
+}

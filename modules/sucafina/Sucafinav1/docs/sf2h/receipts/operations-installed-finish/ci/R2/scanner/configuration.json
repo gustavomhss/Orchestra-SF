@@ -1,0 +1,34 @@
+{
+  "services": {
+    "main": {
+      "host": "127.0.0.1",
+      "port": 3310,
+      "stream_max_length": 16777216
+    },
+    "error": {
+      "host": "127.0.0.1",
+      "port": 3311,
+      "stream_max_length": 1024
+    }
+  },
+  "files": [
+    {
+      "path": "freshclam.conf",
+      "sha256": "824a547a21602a03dcf3a2e8c22ea9d180143c2067198dd1f5f40900c24aa9ba"
+    },
+    {
+      "path": "clamd-main.conf",
+      "sha256": "8d36decbbc29561d37512422502f6c0319f71c2df837ab715e109a575dc50737"
+    },
+    {
+      "path": "clamd-error.conf",
+      "sha256": "4be648f00d2f8726608db93823f5ecc93e550a598e76ba0b3fac6dbd8e4d4407"
+    }
+  ],
+  "processScopedLibraryPath": [
+    "root/usr/local/lib",
+    "root/usr/local/lib64"
+  ],
+  "credentialsUsed": false,
+  "globalInstallation": false
+}

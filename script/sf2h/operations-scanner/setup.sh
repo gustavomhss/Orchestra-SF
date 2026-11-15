@@ -50,7 +50,7 @@ for tool in "$clamd" "$freshclam"; do
   LD_LIBRARY_PATH="$library_path" "$tool" --config-file="$state/evidence/version.conf" --version > "$state/evidence/$name-version.txt"
 done
 node "$script_dir/service.mjs" configuration "$state"
-if ! LD_LIBRARY_PATH="$library_path" timeout --signal=TERM --kill-after=5s 300s "$freshclam" \
+if ! CVD_CERTS_DIR="$prefix/etc/certs" LD_LIBRARY_PATH="$library_path" timeout --signal=TERM --kill-after=5s 300s "$freshclam" \
   --config-file="$state/freshclam.conf" --stdout > "$state/evidence/freshclam-output.log" 2>&1; then
   echo OPERATIONS_SCANNER_OFFICIAL_DATABASE_UNAVAILABLE >&2
   exit 2
