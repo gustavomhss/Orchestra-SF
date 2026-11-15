@@ -11,18 +11,18 @@
   "global_release": false,
   "schema": "sf2h.product-ci164.queue.v1",
   "in_flight": [
-    43765725305
+    43766970018
   ],
   "no_duplicate_dispatch": true,
-  "next_after_six": "Use actual terminal job log/artifacts, route causal failures to owners133-138 and PR65; do not retry identical W/tree and request",
+  "next_after_six": "Await exact terminal browser selection 43766970018. Route real browser failures by owners / PR65 without repeat; keep decisions fix pending from PR135. No broad fullEPIC/final8",
   "hold": [
     {
       "id": "S01-browser",
-      "reason": "platform-fixture.ts absent at W; fixture140/141 and grid not integrated"
+      "reason": "140 fixture and141 grid now integrated at W6d42; third corrected targeted browser run43766970018 active; previous 43766719584 0-selection NOT PASS"
     },
     {
       "id": "A07/A09/A12/A13/A15",
-      "reason": "new source in 690a34 but explicit integrator consumer ACK/appropriate readiness pending; do not duplicate historical eight"
+      "reason": "DONE on W6d42 run43766390097 49/49 source-contract pass; still not final installed/release proof"
     },
     {
       "id": "WP01",
@@ -35,6 +35,35 @@
     {
       "id": "fullEPIC/final8",
       "reason": "final coherent integrated bundle and AM/independent reviews still required"
+    }
+  ],
+  "completed": [
+    {
+      "run": 43765725305,
+      "conclusion": "failure",
+      "status": "OWNER_FIX",
+      "owner_pr": 135
+    },
+    {
+      "run": 43766390097,
+      "conclusion": "success",
+      "status": "HISTORICAL_W6d42_SOURCE_PROOF"
+    },
+    {
+      "run": 43766719584,
+      "conclusion": "failure",
+      "status": "ZERO_SELECTION_NOT_PASS"
+    }
+  ],
+  "owner_repair": [
+    {
+      "id": "A04 decisions",
+      "pr": 135,
+      "blob": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "cause": "Schema.minLength undefined at :44, 62 uses; 0 assertions",
+      "owner_comment_id": 6901960914,
+      "integrator_comment_id": 6901961312,
+      "need": "Owner revise all incompatible usages preserve strict parsing and negative oracles; 162 integrate actual new blob; then decisions-only recheck once"
     }
   ]
 }

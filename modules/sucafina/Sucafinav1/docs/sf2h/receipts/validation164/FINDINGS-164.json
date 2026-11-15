@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h.product-ci164.findings.v1",
+  "mission": 164,
+  "epoch": "product-ci-e4-browser164",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "global_release": false,
+  "native_goal": "paused",
+  "observations": [
+    {
+      "id": "A04-SCHEMA-MINLENGTH",
+      "severity": "BLOCKER",
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "S": "84a4a4e0ba96abc0ba091fedffcc2a71d7fb4584",
+      "run": 43765725305,
+      "job": 132970248049,
+      "attempt": 1,
+      "owner_mission": 134,
+      "owner_pr": 135,
+      "owner_comment_id": 6901960914,
+      "integrator_pr": 65,
+      "integrator_comment_id": 6901961312,
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "line": 44,
+      "blob": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "cause": "TypeError: Schema.minLength is not a function; 62 sites, prevents decisions module import",
+      "status": "OWNER_FIX_PENDING_NEW_W_RECHECK",
+      "no_assertion_coverage": true
+    },
+    {
+      "id": "APP-BROWSER-SELECTOR",
+      "severity": "REQUEST_CONFIG_ONLY",
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "S": "ce21295a321dd6737c53ad2829ee325f63b1ad83",
+      "run": 43766719584,
+      "job": 132973415841,
+      "attempt": 1,
+      "owner": "CI164 only",
+      "cause": "zero selected; request paths lacked leading ./ per hosted Bun diagnostic",
+      "status": "CORRECTED_REQUEST_DIFFERENT_SELECTORS_RUN43766970018",
+      "not_pass": true
+    }
+  ],
+  "successful_scope": [
+    {
+      "run": 43765725305,
+      "source": "five green specs only, W690 not release",
+      "pass": 40
+    },
+    {
+      "run": 43766390097,
+      "source": "A07/A09/A12/A13/A15 new consumer acknowledged source W6d42",
+      "pass": 49,
+      "expects": 309
+    }
+  ],
+  "browser_pending_run": 43766970018
+}

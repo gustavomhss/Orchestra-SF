@@ -114,5 +114,116 @@
       "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts": "d0d54dca9245feb151f9f6cf6015f344cfe741e2"
     }
   },
-  "status": "DISPATCHED"
+  "status": "DISPATCHED",
+  "additional_snapshots": [
+    {
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "Wtree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "S": "8d5a17658eb3eda50d4fc4582a888ea11a441a1e",
+      "Stree": "0fb21d95561e6d0d8923a3e2e736c35d1d5b3a0f",
+      "branch": "ci-run-linux-sf164-schema5-1",
+      "request_blob": "4765cdddc6076c4f804f0d262a12b47810a01ecc",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "Sucafinav1/test/native-ui-contract/reviews.test.ts",
+        "Sucafinav1/test/native-ui-contract/routines.test.ts",
+        "Sucafinav1/test/native-ui-contract/work.test.ts",
+        "Sucafinav1/test/native-ui-contract/collaboration.test.ts",
+        "Sucafinav1/test/native-ui-contract/analyses.test.ts"
+      ],
+      "env": {},
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "source_change": "151-155 actual BATCH-02-CONSUMPTION ACK blob 03bdc844af20ee54ea89a521211123cdd5356477 and corrected source+test blobs",
+      "run": 43766390097,
+      "attempt": 1,
+      "job": 132972329236,
+      "conclusion": "success",
+      "file_cases": {
+        "reviews.test.ts": 11,
+        "routines.test.ts": 10,
+        "work.test.ts": 10,
+        "collaboration.test.ts": 12,
+        "analyses.test.ts": 6
+      },
+      "cases": 49,
+      "pass": 49,
+      "expects": 309,
+      "artifact_count": 0,
+      "omni": "NOT_APPLICABLE_FOCUSED",
+      "dedup": "new 151-155 producer/test ACK; earlier 150 uncorrected eight distinct"
+    },
+    {
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "Wtree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "S": "ce21295a321dd6737c53ad2829ee325f63b1ad83",
+      "Stree": "1dabe2a97226c66216dc8b9fe16147138509ece7",
+      "branch": "ci-run-linux-sf164-browser140141-1",
+      "request_blob": "927daa5bcc8a896ff2052eaa8d67489c702c9f3b",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "test-browser/sucafina-native/page-frame.test.ts",
+        "test-browser/sucafina-native/s01.test.ts",
+        "test-browser/sucafina-native/s02.test.ts",
+        "test-browser/sucafina-native/s05.test.ts"
+      ],
+      "env": {},
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "source_change": "140 platform fixture and 141 grid composed in actual 6d42 W",
+      "run": 43766719584,
+      "attempt": 1,
+      "job": 132973415841,
+      "conclusion": "failure",
+      "selected_test_count": 0,
+      "pass": 0,
+      "cause": "Bun test filters without ./ prefix treated as non-path filters under app bunfig test.root='./src'; error suggests ./test-browser/...; not a product test failure; NOT PASS"
+    },
+    {
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "Wtree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "S": "f5de1a1f5465ba0166553ea0153d2a338f41efa2",
+      "Stree": "ba98c5bd77fc7eafe7442837cf32ca03b35cf8b1",
+      "branch": "ci-run-linux-sf164-browser140141-pathfix-2",
+      "request_blob": "5458c45b1c44dd9ef43ce5aa9c2fd06f8c77658e",
+      "package": "app",
+      "directory": "packages/app-shell",
+      "runner": "bun",
+      "args": [
+        "--timeout",
+        "120000",
+        "./test-browser/sucafina-native/page-frame.test.ts",
+        "./test-browser/sucafina-native/s01.test.ts",
+        "./test-browser/sucafina-native/s02.test.ts",
+        "./test-browser/sucafina-native/s05.test.ts"
+      ],
+      "env": {},
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "source_change": "selection repair from hosted Bun error: named test-browser paths require explicit ./ prefix; W and all producer/fixture files unchanged; not identical request",
+      "run": 43766970018,
+      "attempt": 1,
+      "job": 132974180913,
+      "status": "in_progress",
+      "conclusion": null,
+      "selected_test_count": "PENDING",
+      "control": "PENDING",
+      "omni": "PENDING",
+      "artifact_count": "PENDING"
+    }
+  ],
+  "latest_material_observed": {
+    "W": "0a627968dc73dd9585d77ba239b76292254c4c41",
+    "tree": "f306a2e1ebea7a10e8b93c40b11e98572ec308f3",
+    "unqualified_by_these_runs": true,
+    "changes": "N15/N18/N23 new product/i18n leaves; do not relabel W"
+  }
 }
