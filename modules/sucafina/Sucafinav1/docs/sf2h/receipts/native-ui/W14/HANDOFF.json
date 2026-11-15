@@ -1,0 +1,534 @@
+{
+  "schema": "sf2h.native-ui.work-handoff.v1",
+  "seat": "W14",
+  "output": "A01",
+  "branch": "sf-ux-w14",
+  "status": "ARTIFACT_READY_PARTIAL_NOT_INTEGRATED_NOT_QUALIFIED",
+  "actor": {
+    "runtime": "GPT-6",
+    "requested": "Astra",
+    "sessionIdentifier": "not-exposed"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "base": "sf2-stack",
+  "integrator": "114 / S0-C-e17-browser114 / PR65",
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W14/ACK.json",
+    "commit": "d400a79822330b68a8c5d13a026f7e164ba7ab06"
+  },
+  "authoring": {
+    "commit": "94b0bedcb174a98cad84d30c828b0d45b70f1001",
+    "tree": "0f15be761e7966d1751f7a2715b62081e29e83ef",
+    "numberOfChangedFiles": 9
+  },
+  "contractCatalog": {
+    "sha": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "operations": [
+      {
+        "id": "domain.page.CAP01",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap01"
+      },
+      {
+        "id": "domain.command.CAP01.save-users",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap01SaveUsers"
+      },
+      {
+        "id": "domain.command.CAP01.save-benchmark",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap01SaveBenchmark"
+      },
+      {
+        "id": "domain.page.CAP03",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap03"
+      },
+      {
+        "id": "domain.command.CAP03.save-month",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap03SaveMonth"
+      },
+      {
+        "id": "domain.command.CAP03.save-revenue",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap03SaveRevenue"
+      },
+      {
+        "id": "domain.page.CAP04",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap04"
+      },
+      {
+        "id": "domain.command.CAP04.save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap04Save"
+      },
+      {
+        "id": "domain.command.CAP04.delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap04Delete"
+      },
+      {
+        "id": "domain.command.CAP04.save-entry",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap04SaveEntry"
+      },
+      {
+        "id": "domain.command.CAP04.save-deviation",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap04SaveDeviation"
+      },
+      {
+        "id": "domain.command.CAP04.annual-entry",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap04AnnualEntry"
+      },
+      {
+        "id": "domain.command.CAP04.year-amount",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap04YearAmount"
+      },
+      {
+        "id": "domain.command.CAP04.import",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap04Import"
+      },
+      {
+        "id": "domain.page.CAP05",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap05"
+      },
+      {
+        "id": "domain.command.CAP05.save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap05Save"
+      },
+      {
+        "id": "domain.command.CAP05.delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap05Delete"
+      },
+      {
+        "id": "domain.command.CAP05.save-entry",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap05SaveEntry"
+      },
+      {
+        "id": "domain.command.CAP05.save-deviation",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap05SaveDeviation"
+      },
+      {
+        "id": "domain.command.CAP05.annual-entry",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap05AnnualEntry"
+      },
+      {
+        "id": "domain.command.CAP05.year-amount",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap05YearAmount"
+      },
+      {
+        "id": "domain.page.CAP09",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap09"
+      },
+      {
+        "id": "domain.command.CAP09.save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap09Save"
+      },
+      {
+        "id": "domain.command.CAP09.delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap09Delete"
+      },
+      {
+        "id": "domain.command.CAP09.import",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap09Import"
+      },
+      {
+        "id": "domain.command.CAP09.save-milestone",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap09SaveMilestone"
+      },
+      {
+        "id": "domain.command.CAP09.delete-milestone",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap09DeleteMilestone"
+      },
+      {
+        "id": "domain.page.CAP10",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap10"
+      },
+      {
+        "id": "domain.command.CAP10.save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap10Save"
+      },
+      {
+        "id": "domain.command.CAP10.delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap10Delete"
+      },
+      {
+        "id": "domain.command.CAP10.import",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap10Import"
+      },
+      {
+        "id": "domain.command.CAP10.save-milestone",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap10SaveMilestone"
+      },
+      {
+        "id": "domain.command.CAP10.delete-milestone",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap10DeleteMilestone"
+      },
+      {
+        "id": "domain.page.CAP13",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap13"
+      },
+      {
+        "id": "domain.command.CAP13.save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap13Save"
+      },
+      {
+        "id": "domain.command.CAP13.delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap13Delete"
+      },
+      {
+        "id": "domain.page.CAP14",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap14"
+      },
+      {
+        "id": "domain.command.CAP14.save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap14Save"
+      },
+      {
+        "id": "domain.command.CAP14.delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap14Delete"
+      },
+      {
+        "id": "domain.page.CAP15",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap15"
+      },
+      {
+        "id": "domain.command.CAP15.save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap15Save"
+      },
+      {
+        "id": "domain.command.CAP15.delete",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap15Delete"
+      },
+      {
+        "id": "domain.page.CAP16",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDomainPageCap16"
+      },
+      {
+        "id": "domain.command.CAP16.save",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap16Save"
+      },
+      {
+        "id": "domain.command.CAP16.save-item",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap16SaveItem"
+      },
+      {
+        "id": "domain.command.CAP16.delete-item",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap16DeleteItem"
+      },
+      {
+        "id": "domain.command.CAP16.save-sub",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap16SaveSub"
+      },
+      {
+        "id": "domain.command.CAP16.delete-sub",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDomainCommandCap16DeleteSub"
+      },
+      {
+        "id": "projection.local-admin",
+        "kind": "new-projection",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfProjectionLocalAdmin"
+      },
+      {
+        "id": "dashboard.dashboard-workbench",
+        "kind": "existing-http",
+        "effect": "read",
+        "method": "POST",
+        "schemaExport": "SfDashboardDashboardWorkbench"
+      },
+      {
+        "id": "dashboard.dashboard-hot-topic-source",
+        "kind": "existing-http",
+        "effect": "read",
+        "method": "POST",
+        "schemaExport": "SfDashboardDashboardHotTopicSource"
+      },
+      {
+        "id": "dashboard.dashboard-hot-topic-draft",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDashboardDashboardHotTopicDraft"
+      },
+      {
+        "id": "dashboard.dashboard-hot-topic-drafts",
+        "kind": "existing-http",
+        "effect": "read",
+        "method": "GET",
+        "schemaExport": "SfDashboardDashboardHotTopicDrafts"
+      },
+      {
+        "id": "dashboard.dashboard-hot-topic-operation",
+        "kind": "existing-http",
+        "effect": "prepare",
+        "method": "POST",
+        "schemaExport": "SfDashboardDashboardHotTopicOperation"
+      },
+      {
+        "id": "dashboard.dashboard-hot-topic-prepare",
+        "kind": "existing-http",
+        "effect": "prepare",
+        "method": "POST",
+        "schemaExport": "SfDashboardDashboardHotTopicPrepare"
+      },
+      {
+        "id": "dashboard.dashboard-hot-topic-review",
+        "kind": "existing-http",
+        "effect": "read",
+        "method": "POST",
+        "schemaExport": "SfDashboardDashboardHotTopicReview"
+      },
+      {
+        "id": "dashboard.dashboard-hot-topic-apply",
+        "kind": "existing-http",
+        "effect": "mutation",
+        "method": "POST",
+        "schemaExport": "SfDashboardDashboardHotTopicApply"
+      }
+    ],
+    "counts": {
+      "total": 57,
+      "projectionRead": 11,
+      "legacyDomainCommands": 38,
+      "dashboardModes": 8
+    }
+  },
+  "sources": {
+    "modules/sucafina/Sucafinav1/runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "apps/cli/src/sucafina-product/dashboard-http.ts": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+    "modules/sucafina/Sucafinav1/local/entry.ts": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+    "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+    "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts": "20a6cec3713f95e4dfac262ce7e741f72c857231"
+  },
+  "frozen": {
+    "contracts": "94553a3119826ef1c44271966233dd58042ddd70",
+    "signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surfaces": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+  },
+  "files": {
+    "packages/schema/src/sucafina/domain.ts": "public SfDomain and 57 exported operation schemas",
+    "packages/schema/src/sucafina/domain/fields.ts": "typed public fieldsets and privilege-safe DTOs, zero/null/missing",
+    "packages/schema/src/sucafina/domain/commands.ts": "typed source command payloads",
+    "packages/schema/src/sucafina/domain/product.ts": "closed dashboard-http request contracts",
+    "packages/schema/src/sucafina/domain/operations.ts": "57 catalog-keyed typed operations",
+    "packages/client/src/sucafina/domain.ts": "57 methods delegating to canonical F02 execute",
+    "apps/cli/src/sucafina-product/native-ui/domain/projection.ts": "server-only source-bound whitelisting and canonical financial computation",
+    "apps/cli/src/sucafina-product/native-ui/domain.ts": "11 projection handlers; 10 authorized views, one blocked local-admin reader",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts": "seven source/field/permission-boundary component tests; no installed-flow proof"
+  },
+  "invariants": [
+    "producer retains Domain.view and exact current actor roles inside transaction",
+    "cannot bootstrap/authorize local-user from dashboard pages",
+    "all source versions delivered as numeric CAS only, never actor/by or private snapshot",
+    "financial values are computed by original dashboard-accounts helper ONLY server-side, never in browser",
+    "source filters, missing records, and null/zero preserve distinction; no synthetic empty list on missing",
+    "no stale, revoked, network or 503 response is represented as ok",
+    "all writes remain existing /dashboard command endpoints and original admission; no duplicate dispatcher",
+    "no HTML scraping, iframe, financial computations in browser, private fields, new grants or generated edits"
+  ],
+  "integration": {
+    "owner": "114",
+    "state": "BLOCKED_ON_REAL_F01_F02_AND_ADMISSION",
+    "required": [
+      "F01 schema context, owner identity/current authenticated readContext and correct admission",
+      "F02 transport, CLI native-ui/router.ts types, source codecs and strict per-id wire mapping",
+      "I00 package exports, admitted native operation bindings and private host composition",
+      "bind all 10 domain page projections once to native router only after real F01/F02",
+      "local-admin port from original local/entry.ts operator-only jobs.inbox/backups (currently unbound)"
+    ],
+    "sharedPatchPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W14/SHARED-PATCHES-114.md",
+    "noEditsOutsideAllowlist": true
+  },
+  "knownBlocks": [
+    {
+      "item": "projection.local-admin",
+      "status": "BLOCKED_PRODUCER_PORT",
+      "behavior": "authenticated local-operator 503 unavailable, not an empty notification/backup list",
+      "owner": "114 / source local entry"
+    },
+    {
+      "item": "F01/F02 consumption",
+      "status": "NOT_PRESENT_AT_INITIAL_W14_SOURCE_HEAD",
+      "behavior": "A01 references canonical frozen types only; no stubs and no installed-flow claim",
+      "owner": "114 F01/F02"
+    },
+    {
+      "item": "per-output admission",
+      "status": "AWAITING_114",
+      "behavior": "ACK published; no acceptance response assumed",
+      "owner": "114"
+    }
+  ],
+  "qualification": {
+    "actionsOwner": "120",
+    "typecheckAndGuardsOwner": "119",
+    "selection": "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts",
+    "localTests": "NOT_RUN_BY_POLICY",
+    "actionRuns": [],
+    "compilerRuns": [],
+    "componentCoverage": [
+      "capability mapping",
+      "whitelist privacy",
+      "nullable/zero/missing",
+      "nested IDs",
+      "server-derived budget totals",
+      "OPEX/CAPEX boundaries",
+      "numeric CAS filtered by source"
+    ],
+    "installedFlowCoverage": "NOT_RUN_BLOCKED_COMPOSITION",
+    "requestedAction": "120 must dedupe by tree/selection/runtime/config and dispatch surgical Actions only when composed candidate exists",
+    "requestedCompiler": "119 must check I00 export/registry, Effect Schema compilation and guards only via delegated interface"
+  },
+  "release": {
+    "integrated": false,
+    "qualified": false,
+    "merged": false,
+    "deployed": false,
+    "azure": false,
+    "globalRelease": false
+  },
+  "terminalLease": {
+    "value": "ux-native-w14-e1",
+    "authoring": "HANDOFF_READY",
+    "integration": "114_ONLY"
+  }
+}

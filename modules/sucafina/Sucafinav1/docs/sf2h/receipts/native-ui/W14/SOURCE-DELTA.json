@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.native-ui.source-delta.v1",
+  "seat": "W14",
+  "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+  "comparedFromCommit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "consumedAtCommit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "checks": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "previousBlob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "currentBlob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "relevantChanges": [
+        "Procurement quote/signed PO reads verify visibleRequests before download",
+        "exports now pin sourceDigest, reauthorize after generation, reject private/local identities",
+        "downloadSnapshotDigest uses publicSfData plus versions"
+      ],
+      "A01Impact": "preserve fresh role and version current fences; no path/bytes forwarded via A01"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+      "previousBlob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+      "currentBlob": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+      "relevantChanges": [
+        "new dashboard-draft-read and dashboard-hot-topic-draft-outcome modes not added to A01 closed catalog",
+        "idempotency-key validation for first-save outcome",
+        "dashboard read authority probe distinguishes denied from unavailable",
+        "revalidate/read error mapping changes; previous returned success cannot be assumed"
+      ],
+      "A01Impact": "eight frozen A01 modes use existing endpoint unchanged; guard no invented receipt, preserve body+status"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "previousBlob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "currentBlob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "relevantChanges": [
+        "Auth maintenance started in unconfigured and normal profiles",
+        "dispose awaits auth maintenance stop"
+      ],
+      "A01Impact": "local operator jobs and backups remain private closure; local-admin cannot be wired without authorised producer reader from 114"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-budget.ts",
+      "currentBlob": "b64f2f49b42aea2f2d74d6c1da18a3bce4873365",
+      "changed": false,
+      "A01Impact": "reuse current Domain.view + original computeBudgetTotals server-side, separate month conventions"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+      "currentBlob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "changed": false,
+      "A01Impact": "projection via publicRecord/publicPerformance output; preserve nested IDs and doc metadata without blob keys"
+    }
+  ]
+}
