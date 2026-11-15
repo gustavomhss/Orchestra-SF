@@ -1,0 +1,64 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "state": "PREPARED_NOT_STARTED",
+  "actor": null,
+  "model_effective": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "routing": {
+    "integrator": 125,
+    "compiler": 128,
+    "product_ci": 129
+  },
+  "global_release": false,
+  "mission": 131,
+  "id": "office-independent",
+  "branch": "office-visual-proof",
+  "expected_head": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+  "lease_epoch": "office-review-e1-browser131",
+  "role": "New independent source Office visual/data reviewer; no product authorship, not final whole-product R01/R02/R03 approval",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/office-review131/**"
+  ],
+  "source_inputs": [
+    {
+      "pr": 108,
+      "branch": "export-visual-recheck",
+      "head": "ae6fdd332ae8484f71caa5d9315883305729ce8d",
+      "finding": "VIS112-001 open; VIS88-001 title PASS page1 only"
+    },
+    {
+      "pr": 105,
+      "branch": "xlsx-print-layout",
+      "head": "e6c524ad6a6196bde1bf69e3f7cdbf049ab086c4",
+      "artifact": 14166480115,
+      "run": 43725105940,
+      "role": "W102 source expanded12reader proof,9testsPASS,source-only not composed candidate"
+    },
+    {
+      "artifact": 14166341968,
+      "run": 43726378502,
+      "role": "C58 original export set,12readeroutputs,9PASS1713expects"
+    },
+    {
+      "artifact": 14148499941,
+      "run": 43682455278,
+      "zip_sha256": "ac15e48914aef2e5d496f48c6136901432cda499caa82f8954851d1c748461e1",
+      "manifest_sha256": "e562aeb561e48e5dd205227b44b29e3e35fbba52f8e14bdb001d9bc4cbf46fb6",
+      "role": "C51 baseline25originals12PDF139PNG"
+    }
+  ],
+  "goal": "Independently inspect real Office artifacts and rendered pages, complete outstanding W102 worksheet/scenario visual mapping and DOCX findings; recheck130delta when genuine rerender is available. Deliver exact source/candidate-bound findings/evidence, not source authorship.",
+  "instructions": [
+    "New context, no prior authorship of Office renderer/layout scope; publish actual ACK/model/session and independence statement before review. Read AGENTS,pinnedreviewcriteria/pack,112/88/91/93 findings andW102handoff, not unrelated UI packs.",
+    "Download genuine existing artifacts via authorized GitHub tools, preserve original file bytes/hash/source/candidate/provenance. Never print signed URLs/tokens, fabricate images, mutateoriginals or substitute fixtures. Verify actual file/read capability; absent viewer/artifact is unproven, notPASS.",
+    "Inspect actual DOCX/XLSX/PPTX with rendered PDF/perpage images from existing reader88; compare each affected page, not page1only. Map original sheets/sections to rendered output and source values, chart units/title/labels, typography/overlap, clipping/continuation, print pages, scale and hidden/extra content. No data loss or numerically misleading display.",
+    "Close remaining W102 independent worksheet mapping and four-scenario PDF review only where actual corresponding originals/artifacts exist. Distinguish sourceW102 success from productC accepted; do not transfergreen acrossSHA.",
+    "VIS112-001 before/after must identify changedDOCXpages and fullcontent association; new130writesfix,129providesgenuine rerender. Recheck availabledelta independently; ifnotavailable finish baseline/otherindependent review and handoff exact unresolvedproof, no polling loop or approvalwithreservations.",
+    "No product/test/workflow edits, testdispatch/localtests/parser/typecheck/renderer, no recreatedOffice outputs. Rendering ifrequired requested to129with dedup andrealcandidate; no secondCI.",
+    "No product/test/workflow edits or test dispatch, no local product tests/validators/typecheck or Office rerender. Read-only inspection/extraction of already-produced artifacts with exposed tools is permitted; do not execute product code. Rendering ifrequired goes to129 with dedup and realcandidate; no secondCI.",
+    "No globalrelease/wholeproductFINAL claim or selfapprovalguardlabels. No devmerge/deploy/Azure/engines/secrets/runtime restart/nativeGoalresume."
+  ]
+}

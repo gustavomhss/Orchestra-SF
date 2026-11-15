@@ -1,0 +1,111 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "state": "PREPARED_NOT_STARTED",
+  "actor": null,
+  "model_effective": null,
+  "session_id": null,
+  "native_goal": "paused",
+  "routing": {
+    "integrator": 125,
+    "compiler": 128,
+    "product_ci": 129
+  },
+  "global_release": false,
+  "mission": 130,
+  "id": "docx-after124",
+  "branch": "docx-continuation-fix",
+  "expected_head": "a6153b63fd31ca20178db46ea72b0175ec589018",
+  "lease_epoch": "docx-e2-browser130",
+  "fence": {
+    "schema": "sf2h.docx-writer-succession.v1",
+    "campaign": "sf2h-integral-20261112",
+    "previous_mission": 124,
+    "previous_epoch": "docx-continuation-fix-e1-browser124",
+    "previous_reservation": "REVOKED_BY_S0",
+    "new_mission": 130,
+    "new_epoch": "docx-e2-browser130",
+    "branch": "docx-continuation-fix",
+    "previous_head": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "old_ack_or_product_commit_observed": false,
+    "runtime_termination_claimed": false,
+    "authority": "S0 user-authorized fresh additional sessions; no recycled chat. Explicit reservation revocation plus CAS/epoch fence, no inference that unknown process is dead.",
+    "source_render_blob": "7010c9e5ec1f5300388408573b5ace1273662070",
+    "same_render_blob_C58_C64": true,
+    "integration_owner": 125,
+    "compiler": 128,
+    "product_ci": 129,
+    "native_goal": "paused",
+    "global_release": false
+  },
+  "predecessor_packet": {
+    "number": 124,
+    "id": "docx-continuation-fix",
+    "branch": "docx-continuation-fix",
+    "actor_pack": "execution/actors/S2.json",
+    "write_paths": [
+      "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+      "modules/sucafina/Sucafinav1/test/product/docx-continuation-fix/**",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/docx-continuation-fix/**"
+    ],
+    "mission": "Corrigir VIS112-001: linhas continuadas de tabelas DOCX sem rótulo/valor na primeira coluna, preservando conteúdo integral e legibilidade por página.",
+    "inputs": [
+      "PR108 reviewer112@ae6fdd332ae8484f71caa5d9315883305729ce8d:VIS88-001PASS somentepage1;VIS112-001MEDIUMOPEN",
+      "composed-docx eafter-drift-docx pages3–15:continuaçõesCapturedvalue vazias;ex license:1:currency-declared:USD p2→p3;169w:tr,0w:cantSplit;render.ts143",
+      "Artifact14148499941/run43682455278:C51baseline25originais12PDF139PNG;ZIPsha256ac15e48914aef2e5d496f48c6136901432cda499caa82f8954851d1c748461e1;manifestsha256e562aeb561e48e5dd205227b44b29e3e35fbba52f8e14bdb001d9bc4cbf46fb6",
+      "C58export run43726378502/artifact14166341968:9PASS1713expects12reader. Reader88mantido;XLSX102eoutrosfindingsforadesteescopo."
+    ],
+    "acceptance": [
+      "Ler DOCX real e algoritmo producer anteseditar;resolver continuidade sem perdertexto,metadados,charts,seals/digests. Não aplicar cantSplit cegamente emlinhasmaioresqueapágina paraocultar conteúdo.",
+      "render.ts write lease restrita ao trecho DOCX tableflow;preservar PDF/XLSX/formula/approvedpolicy e atualassinatura;qualquer writer atual mesmoarquivo exige handoff/fencingou patch à114.",
+      "Gerar artefatos genuínos via120e reader88existente,sem novo reader/workflow/testruntime;before/after e perpage imagens de todaspáginasafetadas,contagem/conteúdointegral,hashes/proveniência.",
+      "Review visual independente112 (ou91/93sem autoria) deve recheckVIS112-001,alémdenãoregredirVIS88-001. Próprioautor nãofecha finding visual.",
+      "EntregarPR comdiff,teste estrutural significativo/request120,manifesto/artifacts econtinuidade clara,sem alegar GLOBAL_RELEASE."
+    ],
+    "lease_epoch": "docx-continuation-fix-e1-browser124",
+    "base_sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "expected_head": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "state": "PREPARED_NOT_STARTED",
+    "session_id": null,
+    "model_effective": null,
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "execution_status": "CONTINUING_LATE",
+    "consumer": "114 integration;120 productCI;119 compiler;112/113 independent review",
+    "common": [
+      "Campanha sf2h-integral-20261112;T0 2026-11-13T04:01:10Z;CONTINUING_LATE. Plano fixo dbf9547211d9b0fade619790de7c19c0869b7c7d:15WP74tasks17contratos1610critérios. Ler AGENTS,START,WORKFLOW,execution/COMMON,pack completo e anexos/critérios pertinentes. Não substituir plano por outroescopo.",
+      "Nova sessão browser. Publicar ACK com modelo/session efetivamente observados,inputsSHA,HEAD,paths,lease antesedits/dispatch. Reconcile authorities/terminais posteriores;silêncio nãoérevogação. PREPARED não significa started. Respeitaroriginais95/99/52/81e suaspaths semsobreposição.",
+      "114 é a única integradora (S0-C-e17-browser114, PR65);120 único dispatcher produto (PR106);119 compiler/tooling (PR107). UX19 já autorizado em branches sf-ux-w01..19: preservar os outputs e paths native-ui. Não relançar105/101/45 nem assumir controle sf2-stack. Esses quatro pacotes não reativam a Goal pausada ou writers nativos revogados.",
+      "GitHub remoto sóMCP/CAS expectedhead/forcefalse;semgh/push/devmerge/deploy/Azure/segredos/engines/restart/novoGoal/controller. Goalnativa pausada;pacotesdecontinuidadebrowsermanuais. Umwriterporpath;intakeporSHA/epoch/manifestoreal.",
+      "Testesproduto sócirúrgicosGitHubActions pela interfaceexistente test:ci/request e120dedup;sem bun test/heavytestslocais/fullEPICprecoce/novaplataforma. Bun typecheck nospacotes (não tscdireto),geração/spawn/guardspelaslanesautorizadas. SourcegreennãoéCaceito.",
+      "Não usar any,ts-ignore,casts/exclusionsparaenganarcompiler,não reduzirassertions/fixture/timeouts/seleções,grants ouoráculos. Mocks/catalog/Tasknãoexecutante não sãoAM/nativereal. Falta deprova continuaOPEN.",
+      "Entrega commitsremotos/PR,prepost/patchintegral/dependencyclosure/source-tree,W/S/run/job/runtime/results,critériosevidência/ownerconsumidorACK echeckpoint. Preserveoriginais/receiptsappend-only. SemGLOBAL_RELEASE;final8seleções+epic+AM01–06+3FINAL+G7C/G8D/Dintacto mandatory.",
+      "Reconcilie HEAD/source/PR/leases e ACK real antes da escrita. Os paths abaixo são reservas de missão, não revogação de autores anteriores. Se houver escritor ativo no mesmo path, produza patch integral na própria área de receipts e entregue ao proprietário/114; continue implementando paths disjuntos. Falta de ACK não autoriza takeover. Não altere testes/oráculos para obter green."
+    ],
+    "authority": "RESERVED: ACK and reconcile existing owner before source edits; never takeover by silence",
+    "global_release": false
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+    "modules/sucafina/Sucafinav1/test/product/docx-continuation130/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/docx-continuation130/**"
+  ],
+  "source_render": {
+    "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+    "blob": "7010c9e5ec1f5300388408573b5ace1273662070",
+    "ref": "8f933d3249f49e1234b745036672d7c7a6aabcd4"
+  },
+  "goal": "Fix VIS112-001 DOCX table continuation rows without losing labels/content or reintroducing VIS88-001 title overlap; complete real product PR by precise render patch and structural regression specs.",
+  "instructions": [
+    "New author only. Read AGENTS, pinned S0-C/S2 relevant original criteria/pack/COMMON and predecessor124 full packet, independent112finding PR108@ae6fdd332ae8484f71caa5d9315883305729ce8d. Reconcile real branch/fence and publish ACK130 before edits; late124activity pauses overlap.",
+    "render.ts is same exact blob in C58 and C64; do not reset branch or copy newer unrelated sources. Exclusive change is DOCX table flow near line143; XLSX/PPTX/PDF/provenance/financial data stay original.",
+    "Current row maps value/period/sources to cells; 169w:tr and0w:cantSplit in earlier artifact, continuation on pages3–15 can leave first column blank (license:1:currency-declared USD p2→p3). Read actual DOCX producer/dependencies and genuine rendered before outputs; no superficial screenshot-only fix.",
+    "Do not simply cantSplit every oversized row and clip data. Preserve full text, metadata, chart/source refs, seals/digests, page flow and readable association across continuation. Meaningful actual-implementation structural specs, no mirrored algorithm or fake success.",
+    "Deliver code in actual owned source paths, commit and PR to sf2-stack, full pre/postimages.125 applies selectively, not whole branch; no shared/other-author writes.",
+    "Request hosted surgical source validation + existing reader88 before/after rendering via129 after125composition. No local tests/typecheck/parser/renderer, newreader/workflow or duplicateCI.",
+    "Independent Office reviewer131 owns visual judgment; provide candidate/sourceSHA and artifact/manifest plus changed pages. Do not self-close visual finding or inferPASS. Until actual proof, markNOT_RUN.",
+    "Native Goal paused; no devmerge/deploy/Azure/engines/policy/secrets/runtime restart; allfinalgates preserved. Do not stop after preflight/proposed patch when own code is writable."
+  ]
+}
