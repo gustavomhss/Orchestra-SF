@@ -1,0 +1,1509 @@
+diff --git a/apps/cli/src/sucafina-product/creation-recovery-http.ts b/apps/cli/src/sucafina-product/creation-recovery-http.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..96a83583afef331274ce1ea9f5c2877175434433 100644
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/creation-recovery-http.ts
+@@ -0,0 +1,124 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { parseCaseRef } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
++import type { PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
++import type { TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { createSfUiAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
++
++/**
++ * The authorized outcome from the original C08 case-creation transaction.
++ * The case-port producer (mission96) owns the SQLite correlation, case reader,
++ * incarnation checks and two durable observations. HTTP does not reimplement it.
++ */
++export type SfCreationRecovery = 
++  | { state: "missing" }
++  | { state: "committed"; caseRef: string; receipt: {
++      commandDigest: string
++      storageVersion: number
++      aggregateRevision: number
++      incarnation: string
++    } }
++
++export type SfCreationRecoveryRuntime = {
++  ui: Pick<ReturnType<typeof createSfUiAuthority>, "admit" | "validate" | "revalidate" | "finish">
++  recoverCreation: (key: string, context: TrustedUiContext) => Promise<PortResult<SfCreationRecovery>>
++}
++
++const creationKey = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
++const scopeDigest = /^[a-f0-9]{64}$/
++const surfaces = ["dashboard", "planner", "procurement"] as const
++
++/**
++ * Private same-origin GET, mounted before the generic Workbench router.
++ * The opaque key is supplied only in a header; neither query nor persistence
++ * ever contains a command body, caseRef or session credential.
++ */
++export function createSfCreationRecoveryHttp(input: {
++  origin: string
++  mount: string
++  runtime: () => SfCreationRecoveryRuntime | undefined
++}) {
++  return async (request: Request, surface: string): Promise<Response | undefined> => {
++    const url = new URL(request.url)
++    if (url.searchParams.get("sf") !== "workbench-create-recover") return undefined
++    const reply = (body: unknown, status: number) => Response.json(body, { status, headers: {
++      "Cache-Control": "private, no-store, max-age=0",
++      "Pragma": "no-cache",
++      "X-Content-Type-Options": "nosniff",
++      "Cross-Origin-Resource-Policy": "same-origin",
++      "Referrer-Policy": "no-referrer",
++    } })
++
++    if (url.origin !== input.origin || !surfaces.some((value) => value === surface) ||
++      url.pathname !== input.mount.replace(/\/$/, "") + "/" + surface ||
++      (request.headers.has("origin") && request.headers.get("origin") !== input.origin) ||
++      (request.headers.has("sec-fetch-site") &&
++        !["same-origin", "none"].includes(request.headers.get("sec-fetch-site") ?? "")))
++      return reply({ status: "denied", reason: "creation-recovery-access-unavailable" }, 403)
++    if (request.method !== "GET")
++      return reply({ status: "denied", reason: "creation-recovery-method-unavailable" }, 405)
++    if (url.searchParams.getAll("sf").length !== 1 ||
++      [...url.searchParams.keys()].some((name) => name !== "sf"))
++      return reply({ status: "needs-input", reason: "invalid-creation-recovery-query" }, 400)
++
++    const key = request.headers.get("Idempotency-Key") ?? ""
++    const suppliedScope = request.headers.get("X-SF-Creation-Scope") ?? ""
++    if (!creationKey.test(key) || !scopeDigest.test(suppliedScope))
++      return reply({ status: "needs-input", reason: "invalid-creation-recovery-correlation" }, 400)
++    if (request.signal.aborted)
++      return reply({ status: "denied", reason: "creation-recovery-access-unavailable" }, 403)
++    const runtime = input.runtime()
++    if (!runtime)
++      return reply({ status: "unavailable", reason: "creation-recovery-not-mounted" }, 503)
++
++    const digest = digestSfValue({ purpose: "case-creation-recovery", key })
++    try {
++      const admitted = await runtime.ui.admit(request, "sf_case_read", digest)
++      if (admitted.status !== "ok")
++        return reply({ status: admitted.status === "denied" ? "denied" : "unavailable",
++          reason: "creation-recovery-access-unavailable" }, admitted.status === "denied" ? 403 : 503)
++      try {
++        if (!await runtime.ui.validate(admitted.value, "sf_case_read", digest))
++          return reply({ status: "denied", reason: "creation-recovery-access-unavailable" }, 403)
++
++        // Scope is a non-authorizing browser partition, recomputed solely from
++        // the admitted host binding. The client cannot choose an actor/tenant.
++        const binding = admitted.value.binding
++        const expectedScope = digestSfValue({
++          installationId: binding.installationId,
++          projectId: binding.projectId,
++          principalRef: binding.principalRef,
++          policyVersion: binding.policyVersion,
++        })
++        if (suppliedScope !== expectedScope || request.signal.aborted)
++          return reply({ status: "denied", reason: "creation-recovery-access-unavailable" }, 403)
++
++        const recovered = await runtime.recoverCreation(key, admitted.value)
++        if (!await runtime.ui.revalidate(admitted.value) || request.signal.aborted)
++          return reply({ status: "denied", reason: "creation-recovery-access-unavailable" }, 403)
++        if (recovered.status !== "ok")
++          return reply({ status: recovered.status, reason: "creation-recovery-unavailable" },
++            recovered.status === "denied" ? 403 :
++            recovered.status === "stale" || recovered.status === "conflict" ? 409 :
++            recovered.status === "needs-input" ? 400 : 503)
++        if (recovered.value.state === "missing") {
++          // Inconclusive: the original POST may still commit. The 96 browser
++          // contract consumes 200/not-found and must never auto-redispatch.
++          return reply({ status: "ok", state: "not-found" }, 200)
++        }
++        if (recovered.value.state !== "committed" ||
++          !parseCaseRef(recovered.value.caseRef) ||
++          !scopeDigest.test(recovered.value.receipt.commandDigest) ||
++          !Number.isSafeInteger(recovered.value.receipt.storageVersion) ||
++          !Number.isSafeInteger(recovered.value.receipt.aggregateRevision) ||
++          !recovered.value.receipt.incarnation)
++          return reply({ status: "unavailable", reason: "creation-recovery-invalid-receipt" }, 503)
++        return reply({ status: "ok", state: "committed",
++          outputRef: recovered.value.caseRef, receipt: recovered.value.receipt }, 200)
++      } finally {
++        runtime.ui.finish(admitted.value)
++      }
++    } catch {
++      return reply({ status: "unavailable", reason: "creation-recovery-unavailable" }, 503)
++    }
++  }
++}
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+index f03ab621e96cfda23456be73bba2d24f24754d36..8e9f96a13efa112b94e2578f9c0b8a663cd04aed 100644
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -41,6 +41,7 @@ import { createSfExtendedBusinessServices } from "./extended-business-services.t
+ import { createSfDecisionDomainServices } from "./decision-domain-services.ts"
+ import { createSfCurrentChoiceServices } from "./current-choice-services.ts"
+ import { createSfCurrentChoiceHttp } from "./current-choice-http.ts"
++import { createSfCreationRecoveryHttp } from "./creation-recovery-http.ts"
+ import { createSfDecisionDomainHttp } from "./decision-domain-http.ts"
+ import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
+ import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
+@@ -880,14 +881,16 @@ export const createSfHostRuntimeWithRoutineNative = async (
+   const analysisHttp = createSfAnalysisHttp({ origin: input.origin, mount: input.mount,
+     runtime: () => identity() ? { human: authority.human, selected, models: async () => state.models ? state.models() : [], inputs: analysisInputs, start: analyses.start,
+       choices: (request) => readSfImportAnalysisChoices(request, services) } : undefined })
+-  const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
++  const creationRecoveryHttp = createSfCreationRecoveryHttp({ origin: input.origin, mount: input.mount,
++    runtime: () => identity() ? { ui: authority.ui, recoverCreation: business.cases.recoverCreation } : undefined })
++  const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
+     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
+     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
+     routineRuns: { discoverRuns: async (context) =>
+       context.kind !== "ui" || !nativeRoutineProducer ? routineServices.routineRuns.discoverRuns(context)
+         : (await reauthenticatedRoutineHistory(context, () => routineServices.routineRuns.discoverRuns(context))
+           ?? { status: "denied" as const, reason: "native-routine-historical-origin-unavailable" }) },
+-    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
++    productHttp: async (request, surface) => await creationRecoveryHttp(request, surface) ?? await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+     prepare: async (request) => {
+       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
+diff --git a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+index bd7df025e12aa457898f48fcf9634273ec5be381..6c85ddc7544ea8318cfc14b6c6142b1e8faca593 100644
+--- a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+@@ -5,6 +5,7 @@ import type { SessionMessage } from "@orchestra/core/session/message"
+ import type { Application } from "../../runtime/application.ts"
+ import type { SfScopedSourcePort } from "../integration/source-lifecycle.ts"
+ import type { CurrentChoiceFence } from "../decisions/current-choice-preview.ts"
++import type { CaseCreationRecovery } from "../decisions/case-port.ts"
+ import type { createSfProductAuthority, SfProductGrant } from "../integration/product-authority.ts"
+ import type { SfNativeAdmission, SfSelectedRuntime } from "./runtime.ts"
+ import type { BusinessPorts, PortResult } from "./ports.ts"
+@@ -46,6 +47,8 @@ export type SfHostSessionPort = {
+ }
+ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
+   dispatch: BusinessPorts["dispatch"]
++  /** Private, human-admitted key-only C08 recovery; never model-visible. */
++  caseCreationRecovery?: (key: string, context: TrustedUiContext) => Promise<PortResult<CaseCreationRecovery>>
+   /** Private HTTP adapters mounted in the existing local application. */
+   productHttp?: NonNullable<Application["product"]>
+   /** Private page projection prepared before the page lock and fenced inside it. */
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/case-port.ts b/modules/sucafina/Sucafinav1/product/decisions/case-port.ts
+index 2bbcf63bb0fa56dd3a93190f7711f99aef2efb74..122281c82d15e5732fee287cc4bcead4b6f97eb4 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/case-port.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/case-port.ts
+@@ -12,6 +12,17 @@ export function encodeCaseRef(value: Pick<DecisionCase, "id" | "incarnation">) {
+   return `case:${encodeURIComponent(value.id)}:${encodeURIComponent(value.incarnation)}`
+ }
+ 
++
++/**
++ * An authenticated view of the original C08 transaction, not a new create.
++ * 'missing' is deliberately inconclusive while an earlier POST may be in flight.
++ */
++export type CaseCreationRecovery =
++  | { state: "missing" }
++  | { state: "committed"; caseRef: string; receipt: {
++      commandDigest: string; storageVersion: number; aggregateRevision: number; incarnation: string
++    } }
++
+ export function createDecisionCasePort(input: {
+   state: SfProductStatePort
+   host: Pick<DomainPortHost, "requestFor" | "revalidate">
+@@ -125,7 +136,72 @@ export function createDecisionCasePort(input: {
+     if (again.value.case.version !== ref.version || digestSfValue(again.value.case) !== caseDigest || digestSfValue(current.value.case) !== caseDigest || digestSfValue(parsed.value) !== intentDigest || source.signal.aborted || input.host.requestFor(context) !== source) return { status: "stale", reason: "case-changed" }
+     return { status: "ok", value: { objective: parsed.value.objective, horizon: parsed.value.horizon, currency: parsed.value.currency, criteria: parsed.value.criteria.map((description, index) => again.value.case.criteria.find((criterion) => criterion.description === description) ?? { id: `intent:${digestSfValue({ caseRef, index, description })}`, description, required: true }), sourceRefs: parsed.value.sourceRefs, gaps: [], domainApplied: false, analysisBasis: "domain" } }
+   }
+-  return { ...port, prepareIntentForCase }
++
++  const recoverCreation = async (key: string, context: TrustedDomainContext): Promise<PortResult<CaseCreationRecovery>> => {
++    // The sole durable correlation is the host's original operation identity,
++    // derived from the same Idempotency-Key admitted by ui-authority/host-context.
++    if (context.kind !== "ui") return { status: "denied", reason: "human-case-recovery-required" }
++    if (typeof key !== "string" || !/^[A-Za-z0-9._:-]{8,128}$/.test(key)) return { status: "needs-input", reason: "invalid-creation-key" }
++    const source = input.host.requestFor(context)
++    if (!source || source.signal.aborted || !await input.host.revalidate(context)) return { status: "denied", reason: "invalid-authority" }
++    const operation = digestSfValue({ operation: "sf_case_draft", key })
++    const ledgerKey = JSON.stringify([context.binding.principalRef, "cases", input.creationTarget.ref, operation])
++    type Observed = { kind: "missing" } | { kind: "changed" } | { kind: "committed"; caseRef: string; caseDigest: string;
++      receipt: Extract<CaseCreationRecovery, { state: "committed" }>["receipt"] }
++    const observe = () => input.state.read<Observed>(source, "cases", (state, authority): Observed => {
++      if (authority.principalRef !== context.binding.principalRef || authority.policyVersion !== context.binding.policyVersion ||
++        authority.accessRevision !== context.binding.accessRevision) return { kind: "changed" }
++      const transaction = state.transactions[ledgerKey]
++      if (!transaction) return { kind: "missing" }
++      if (transaction.namespace !== "cases" || transaction.principalRef !== authority.principalRef ||
++        transaction.targetRef !== input.creationTarget.ref || transaction.targetIncarnation !== input.creationTarget.incarnation ||
++        !/^[a-f0-9]{64}$/.test(transaction.commandDigest) || transaction.incarnation !== state.incarnation ||
++        !Number.isSafeInteger(transaction.storageVersion) || !Number.isSafeInteger(transaction.aggregateRevision))
++        return { kind: "changed" }
++      const created = transaction.value
++      if (!created || typeof created !== "object" || Array.isArray(created)) return { kind: "changed" }
++      const original = created as Partial<DecisionCase>
++      if (typeof original.id !== "string" || !original.id || typeof original.incarnation !== "string" || !original.incarnation ||
++        !Array.isArray(original.participants) || !original.participants.includes(authority.principalRef)) return { kind: "changed" }
++      const current = state.cases[original.id]
++      if (!current || current.incarnation !== original.incarnation || !current.participants.includes(authority.principalRef))
++        return { kind: "changed" }
++      return {
++        kind: "committed", caseRef: encodeCaseRef(current), caseDigest: digestSfValue(current),
++        receipt: { commandDigest: transaction.commandDigest, storageVersion: transaction.storageVersion,
++          aggregateRevision: transaction.aggregateRevision, incarnation: transaction.incarnation },
++      }
++    })
++    try {
++      const initial = await observe()
++      if (initial.status === "unavailable" && initial.reason === "product-state-uninitialized")
++        return await input.host.revalidate(context) && !source.signal.aborted && input.host.requestFor(context) === source
++          ? { status: "ok", value: { state: "missing" } }
++          : { status: "denied", reason: "case-recovery-authority-changed" }
++      if (initial.status === "preview") return { status: "unavailable", reason: "unexpected-state-preview" }
++      if (initial.status !== "ok") return failure(initial)
++      if (initial.value.kind === "changed") return { status: "denied", reason: "creation-correlation-unavailable" }
++      if (initial.value.kind === "missing") {
++        return await input.host.revalidate(context) && !source.signal.aborted && input.host.requestFor(context) === source
++          ? { status: "ok", value: { state: "missing" } }
++          : { status: "denied", reason: "case-recovery-authority-changed" }
++      }
++      // Never return the serialized transaction without fully reopening the
++      // live case, all its evidence and scenario-operation fences.
++      const opened = await port.read({ caseRef: initial.value.caseRef }, context)
++      if (opened.status !== "ok") return { status: opened.status, reason: "case-recovery-unavailable" }
++      const final = await observe()
++      if (final.status !== "ok" || final.value.kind !== "committed" ||
++        final.value.caseRef !== initial.value.caseRef || final.value.caseDigest !== initial.value.caseDigest ||
++        digestSfValue(final.value.receipt) !== digestSfValue(initial.value.receipt) ||
++        source.signal.aborted || input.host.requestFor(context) !== source || !await input.host.revalidate(context))
++        return { status: "stale", reason: "case-recovery-changed" }
++      return { status: "ok", value: { state: "committed", caseRef: final.value.caseRef, receipt: final.value.receipt } }
++    } catch {
++      return { status: "unavailable", reason: "case-recovery-unavailable" }
++    }
++  }
++  return { ...port, prepareIntentForCase, recoverCreation }
+ }
+ 
+ export function parseCaseRef(ref: string): { id: string; incarnation: string } | undefined {
+diff --git a/modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts b/modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts
+index 5245f469fab7f23474c4c406ddd1d2f1f43d65a2..c00afe5f9bec072c6236441e1b650327d26853ea 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts
+@@ -7,7 +7,7 @@ import { isSfPeriod } from "../contracts/validation.ts"
+ import { createDashboardRecordSourceIssuer } from "../integration/dashboard-sources.ts"
+ import { createDashboardRecordEvidenceHost } from "../dashboard/sources.ts"
+ import { sfViewSelectionKeys } from "./personal-views.ts"
+-import { decisionCreateFromContext, decisionCreateScript } from "../ui/decision-create.ts"
++import { decisionCreateFromContext, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../ui/decision-create.ts"
+ import { documentHtml, esc, pageMain } from "../../src/screen-shell.ts"
+ import { htmlPolicy } from "../../runtime/application.ts"
+ 
+@@ -72,6 +72,6 @@ export async function handleContextualDecision(request: Request, input: { origin
+     if (!projection || projection.status !== "ok") return render(`<h2>Source unavailable</h2><p>The contract changed while its evidence was read. Return to the contract and try again.</p>${back}`, 409)
+     const vendor = projection.value.values.find((value) => value.id === `contracts:${encodeURIComponent(recordId)}:vendor`)?.value
+     const label = typeof vendor === "string" && vendor.trim() ? vendor : "Selected contract"
+-    return render(`<section data-decision-context><h2>Create a decision from ${esc(label)}</h2><p>Contract evidence for ${esc(period.start)} – ${esc(period.end)} will be revalidated when you create the decision. Enter the decision currency explicitly.</p>${back}${decisionCreateFromContext({ sourceRefs: [issued.value], period, returnTo })}</section>`, 200, admitted.value.binding.accessRevision)
++    return render(`<section data-decision-context><h2>Create a decision from ${esc(label)}</h2><p>Contract evidence for ${esc(period.start)} – ${esc(period.end)} will be revalidated when you create the decision. Enter the decision currency explicitly.</p>${back}${scopeDecisionCreateForm(decisionCreateFromContext({ sourceRefs: [issued.value], period, returnTo }), decisionCreationScope(admitted.value.binding))}</section>`, 200, admitted.value.binding.accessRevision)
+   } finally { runtime.ui.finish(admitted.value) }
+ }
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+index eb7322e915c61594a6cf1a05d562dc39ad7b6c38..78574180369c9495cbe5e5d3e569bb500fbff277 100644
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -9,7 +9,7 @@ import { decisionDesk, routineStatus } from "../ui/components.ts"
+ import { encodeCaseRef } from "../decisions/case-port.ts"
+ import { handleSfAnalysis } from "./analysis-http.ts"
+ import { isSfPeriod } from "../contracts/validation.ts"
+-import { decisionCreateForm, decisionCreateScript } from "../ui/decision-create.ts"
++import { decisionCreateForm, decisionCreateScript, decisionCreationScope, scopeDecisionCreateForm } from "../ui/decision-create.ts"
+ import { handleSfPlannerMonthly } from "./planner-http.ts"
+ import { handleSfForecastInput } from "./forecast-http.ts"
+ import { forecastAnalysisForm, forecastAnalysisScript, scenarioAnalysisForm, intentAnalysisForm } from "../ui/forecast-analysis.ts"
+@@ -103,9 +103,12 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
+       const admitted = await runtime.ui.admit(request, operation, digestSfValue(decoded.value))
+       if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
+       try {
++        if (operation === "sf_case_draft" && request.headers.has("X-SF-Creation-Scope") &&
++          request.headers.get("X-SF-Creation-Scope") !== decisionCreationScope(admitted.value.binding))
++          return reply({ status: "denied", reason: "creation-scope-changed" }, 403)
+         const result = await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined)
+         if (!result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+-        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
++        if (result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" || result.status === "conflict" ? 409 : result.status === "needs-input" ? 400 : 503)
+         const output = decodeSfOperationOutput(operation, result.result)
+         if (!output.ok || !await runtime.ui.revalidate(admitted.value)) return reply({ status: "unavailable" }, 503)
+         return reply({ status: "ok", value: output.value, outputRef: result.outputRef }, 200)
+@@ -171,7 +174,7 @@ export function createSfWorkbenchHttp(input: { origin: string; mount: string; ru
+         } finally { runtime.ui.finish(access.value) }
+       })() : undefined
+       const routines = runs ? `<h2>Routines</h2>${runs.length ? `<ul>${runs.map((run, index) => `<li>${run.runRef ? `<a href="?${esc(new URLSearchParams({ sf: "workbench-routine", runRef: run.runRef }).toString())}">Routine ${index + 1}</a>` : `Routine ${index + 1}`} · ${esc(run.admission)}</li>`).join("")}</ul>` : "<p>No accessible routine runs.</p>"}` : "<p>Routine list is currently unavailable.</p>"
+-      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${decisionCreateForm}${portfolioWidget}${recordSearchWidget(surface)}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
++      const forms = `<h2>Decisions</h2>${listUnavailable ? "<p>Decision list unavailable.</p>" : visible.length ? `<ul>${visible.map((item) => `<li><a href="?${esc(new URLSearchParams({ sf: "workbench-case", caseRef: item.caseRef }).toString())}">${esc(item.title)}</a> · version ${item.version}</li>`).join("")}</ul>` : "<p>No accessible decisions.</p>"}${scopeDecisionCreateForm(decisionCreateForm, decisionCreationScope(admitted.value.binding))}${portfolioWidget}${recordSearchWidget(surface)}${search}${work}${runtime.personalViews ? personalViewsWidget() : ""}${routines}`
+       const result = decoded?.ok ? await runtime.dispatch(operation, decoded.value, admitted.value).catch(() => undefined) : undefined
+       if (decoded?.ok && !result) return reply({ status: "unavailable", reason: "workbench-unavailable" }, 503)
+       if (result && result.status !== "ok") return reply({ status: result.status }, result.status === "denied" ? 403 : result.status === "stale" ? 409 : 503)
+diff --git a/modules/sucafina/Sucafinav1/product/ui/decision-create.ts b/modules/sucafina/Sucafinav1/product/ui/decision-create.ts
+index 1c3bf805fed4d0cf186964b4631def5b0161d9ef..d1d12abb1a4c460bdcd9ccf26353f7d0b4a74afb 100644
+--- a/modules/sucafina/Sucafinav1/product/ui/decision-create.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/decision-create.ts
+@@ -1,32 +1,92 @@
+ import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
+ import type { Period } from "../contracts/context.ts"
+ import { esc } from "../../src/screen-shell.ts"
++import { digestSfValue } from "../contracts/canonical.ts"
++
++/** This is an opaque routing partition, never a session token or authentication proof. */
++export function decisionCreationScope(binding: { installationId: string; projectId: string; principalRef: string; policyVersion: string }): string {
++  return digestSfValue({ installationId: binding.installationId, projectId: binding.projectId,
++    principalRef: binding.principalRef, policyVersion: binding.policyVersion })
++}
++
++/** Bind only a non-secret scope digest issued after host authorization. */
++export function scopeDecisionCreateForm(html: string, scope: string): string {
++  if (!/^[a-f0-9]{64}$/.test(scope)) throw new Error("invalid-creation-scope")
++  return html.replace(" data-decision-create", ' data-decision-create data-creation-scope="' + scope + '"')
++}
+ 
+ /** Human input is submitted to the authorized domain command, never saved by the view. */
+ function createForm(context?: { sourceRefs: readonly BusinessEvidenceRef[]; period: Period; returnTo: string }) {
+-  return `<details${context ? " open" : ""}><summary>Create a decision</summary><form data-decision-create${context ? ` data-source-refs="${esc(JSON.stringify(context.sourceRefs))}" data-return-to="${esc(context.returnTo)}"` : ""}><label>Decision objective<input name="objective" required></label><label>Start<input name="start" type="date" required${context ? ` value="${esc(context.period.start)}" readonly` : ""}></label><label>End<input name="end" type="date" required${context ? ` value="${esc(context.period.end)}" readonly` : ""}></label><label>Currency<input name="currency" required maxlength="12"></label><label>Criteria, one per line<textarea name="criteria" required></textarea></label><button type="submit">Create decision</button><p role="status" aria-live="polite"></p></form></details>`
++  return `<details${context ? " open" : ""}><summary>Create a decision</summary><form data-decision-create${context ? ` data-source-refs="${esc(JSON.stringify(context.sourceRefs))}" data-return-to="${esc(context.returnTo)}"` : ""}><label>Decision objective<input name="objective" required></label><label>Start<input name="start" type="date" required${context ? ` value="${esc(context.period.start)}" readonly` : ""}></label><label>End<input name="end" type="date" required${context ? ` value="${esc(context.period.end)}" readonly` : ""}></label><label>Currency<input name="currency" required maxlength="12"></label><label>Criteria, one per line<textarea name="criteria" required></textarea></label><button type="submit">Create decision</button><button type="button" data-sf-create-new hidden>Start a separate decision</button><p role="status" aria-live="polite"></p></form></details>`
+ }
+ export const decisionCreateForm = createForm()
+ export const decisionCreateFromContext = (context: { sourceRefs: readonly BusinessEvidenceRef[]; period: Period; returnTo: string }) => createForm(context)
+ 
+ // A lost response retains the exact command and identity until its outcome is reconciled.
+-export const decisionCreateScript = `
+-document.querySelectorAll('[data-decision-create]').forEach((form) => {
++export const decisionCreateScript = `document.querySelectorAll('[data-decision-create]').forEach((form) => {
+   if (form.dataset.sfCreateReady) return; form.dataset.sfCreateReady = 'true'
+-  let intention
+-  let completed
+-  let denied = false
+-  let submitting = false
+   const status = form.querySelector('[role=status]')
+   const button = form.querySelector('button[type=submit]')
++  const newButton = form.querySelector('[data-sf-create-new]')
+   const inputs = [...form.querySelectorAll('input, textarea')]
+   const disabled = new Map(inputs.map((input) => [input, input.disabled]))
+   const contextual = form.hasAttribute('data-source-refs')
+   let sourceRefs
+   try { sourceRefs = contextual ? JSON.parse(form.dataset.sourceRefs) : [] } catch { sourceRefs = undefined }
+   let returnTo = form.dataset.returnTo
+-  const destination = (created) => { const url = new URL(location.href); url.hash = ''; url.search = new URLSearchParams({ sf: 'workbench-case', caseRef: created.ref, ...(created.returnTo ? { returnTo: created.returnTo } : {}) }).toString(); location.assign(url) }
++  let intention, completed, pendingKey
++  let denied = false, submitting = false
++
++  // The host renders this digest only after authenticating the installation,
++  // project, principal and policy. No principal, business field or token is stored.
++  const scope = form.dataset.creationScope
++  const prefix = /^[a-f0-9]{64}$/.test(scope || '') ? 'sf:case-create:pending:v1:' + scope + ':' : undefined
++  const validKey = (key) => /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(key)
++  const validCaseRef = (ref) => typeof ref === 'string' && /^case:[^:]+:[^:]+$/.test(ref)
++  const storedKeys = () => {
++    if (!prefix) return undefined
++    try {
++      const keys = []
++      for (let index = 0; index < localStorage.length; index++) {
++        const name = localStorage.key(index)
++        if (name && name.startsWith(prefix) && localStorage.getItem(name) === 'pending') {
++          const key = name.slice(prefix.length)
++          if (!validKey(key)) return undefined
++          keys.push(key)
++        }
++      }
++      return keys.length <= 64 ? keys.sort() : undefined
++    } catch { return undefined }
++  }
++  const persist = (key) => {
++    if (!prefix || !validKey(key)) return false
++    try {
++      localStorage.setItem(prefix + key, 'pending')
++      return localStorage.getItem(prefix + key) === 'pending'
++    } catch { return false }
++  }
++  const discard = (key) => {
++    if (!prefix || !validKey(key)) return
++    try { localStorage.removeItem(prefix + key) } catch {}
++  }
++  const destination = (created) => {
++    const url = new URL(location.href); url.hash = ''
++    url.search = new URLSearchParams({ sf: 'workbench-case', caseRef: created.ref, ...(created.returnTo ? { returnTo: created.returnTo } : {}) }).toString()
++    location.assign(url)
++  }
++  const lockFields = () => { inputs.forEach((input) => { input.disabled = true }) }
++  const restoreFields = () => { inputs.forEach((input) => { input.disabled = disabled.get(input) }) }
++  const present = () => {
++    if (denied || !form.isConnected) return
++    button.disabled = submitting
++    button.textContent = pendingKey ? 'Check original creation' : intention?.uncertain ? 'Retry same creation' : completed ? 'Open created decision' : 'Create decision'
++    if (pendingKey || intention?.uncertain || submitting) lockFields()
++    else restoreFields()
++    if (newButton) newButton.hidden = !(pendingKey || intention?.uncertain)
++  }
+   const accessChanged = () => {
++    // Keep only the opaque correlation identifier, for the original principal
++    // to reconcile after reauthorization. It never grants access on its own.
+     if (intention) { intention.body = ''; intention.returnTo = undefined }
+     denied = true; intention = undefined; completed = undefined
+     sourceRefs = undefined; returnTo = undefined
+@@ -35,64 +95,147 @@ document.querySelectorAll('[data-decision-create]').forEach((form) => {
+     delete form.dataset.sourceRefs; delete form.dataset.returnTo
+     const panel = form.closest('[data-decision-context]') || form
+     panel.replaceChildren()
+-    const message = document.createElement('p'); message.setAttribute('role', 'status'); message.textContent = 'Your access changed. Reload before creating a decision.'; panel.append(message)
+-    delete form.dataset.dirty
++    const message = document.createElement('p'); message.setAttribute('role', 'status')
++    message.textContent = 'Your access changed. Reopen an authorized page to reconcile this creation.'
++    panel.append(message); delete form.dataset.dirty
+   }
+   addEventListener('sf-access-revoked', () => { if (form.isConnected) accessChanged() })
+-  form.addEventListener('input', () => { if (!submitting && !intention?.uncertain && !denied) { intention = undefined; completed = undefined; button.textContent = 'Create decision'; form.dataset.dirty = 'true' } })
++  if (!prefix || storedKeys() === undefined) {
++    button.disabled = true; lockFields()
++    status.textContent = 'Private creation recovery is unavailable. No request was submitted.'
++    if (newButton) newButton.hidden = true
++    return
++  }
++
++  const reconcile = async () => {
++    const keys = storedKeys()
++    if (!keys || denied || !form.isConnected || submitting) return
++    if (!keys.length) {
++      pendingKey = undefined
++      status.textContent = 'No pending creation is recorded for this authorized workspace.'
++      present(); return
++    }
++    pendingKey = keys[0]
++    submitting = true; form.dataset.dirty = 'true'
++    lockFields(); button.disabled = true
++    if (newButton) newButton.hidden = true
++    status.textContent = 'Checking the original creation in authorized storage…'
++    try {
++      for (const key of keys) {
++        if (denied || !form.isConnected) return
++        const url = new URL(location.href); url.search = '?sf=workbench-create-recover'
++        const controller = new AbortController()
++        const timeout = setTimeout(() => controller.abort(), 10000)
++        let response, result
++        try {
++          response = await fetch(url, {
++            method: 'GET', credentials: 'same-origin', cache: 'no-store',
++            headers: { 'Idempotency-Key': key, 'X-SF-Creation-Scope': scope }, signal: controller.signal,
++          })
++          result = await response.json()
++        } finally { clearTimeout(timeout) }
++        if (denied || !form.isConnected) return
++        if (response.status === 401 || response.status === 403) { accessChanged(); return }
++        if (response.ok && result?.status === 'ok' && result.state === 'committed' &&
++          validCaseRef(result.outputRef)) {
++          discard(key)
++          completed = { ref: result.outputRef }
++          pendingKey = undefined
++          delete form.dataset.dirty
++          status.textContent = 'Original decision confirmed. Opening its saved case…'
++          destination(completed); return
++        }
++        if (!response.ok || result?.status !== 'ok' || result.state !== 'not-found') throw new Error('recovery-unavailable')
++        // Not-found is not proof that an in-flight POST cannot still commit.
++        // Never replay the request with a new key or reconstruct its payload.
++      }
++      pendingKey = keys[0]
++      status.textContent = 'The original creation has no confirmed receipt yet. Check again; a new submission is never automatic.'
++    } catch {
++      if (!denied && form.isConnected) status.textContent = 'Creation could not be reconciled. Check the original attempt again; it has not been resubmitted.'
++    } finally {
++      submitting = false
++      present()
++    }
++  }
++  form.addEventListener('input', () => {
++    if (submitting || pendingKey || intention?.uncertain || denied) return
++    intention = undefined; completed = undefined
++    button.textContent = 'Create decision'; form.dataset.dirty = 'true'
++  })
++  if (newButton) newButton.addEventListener('click', () => {
++    if ((!pendingKey && !intention?.uncertain) || submitting || denied) return
++    if (!confirm('An earlier creation remains unconfirmed. Start a separate creation with a new identity? The original receipt remains recoverable.')) return
++    pendingKey = undefined; intention = undefined; completed = undefined
++    status.textContent = 'Separate creation selected. The previous attempt is still pending and will be checked after reload.'
++    present()
++  })
+   form.addEventListener('submit', async (event) => {
+     event.preventDefault()
+     if (submitting || denied || !form.isConnected) return
++    if (pendingKey) { void reconcile(); return }
+     if (completed) { destination(completed); return }
+     if (!intention) {
+       if (!form.reportValidity()) return
+       const fields = new FormData(form)
+       const criteria = String(fields.get('criteria') || '').split('\\n').map((line) => line.trim()).filter(Boolean)
+       if (!criteria.length) { status.textContent = 'Enter at least one criterion.'; return }
+-      if (!Array.isArray(sourceRefs) || contextual && (!sourceRefs.length || !returnTo)) { status.textContent = 'Source context is unavailable. Return to the contract and open Create decision again.'; return }
+-      intention = { key: crypto.randomUUID(), uncertain: false, returnTo, body: JSON.stringify({ operation: 'sf_case_draft', input: { objective: String(fields.get('objective') || '').trim(), horizon: { start: String(fields.get('start') || ''), end: String(fields.get('end') || '') }, currency: String(fields.get('currency') || '').trim(), criteria, sourceRefs } }) }
++      if (!Array.isArray(sourceRefs) || contextual && (!sourceRefs.length || !returnTo)) {
++        status.textContent = 'Source context is unavailable. Return to the contract and open Create decision again.'; return
++      }
++      const key = crypto.randomUUID()
++      const body = JSON.stringify({ operation: 'sf_case_draft', input: {
++        objective: String(fields.get('objective') || '').trim(),
++        horizon: { start: String(fields.get('start') || ''), end: String(fields.get('end') || '') },
++        currency: String(fields.get('currency') || '').trim(), criteria, sourceRefs,
++      } })
++      // Crash-safety: persist the non-authorizing identifier before any bytes
++      // are submitted. No private payload is ever written to browser storage.
++      if (!persist(key)) {
++        status.textContent = 'Could not preserve the private recovery reference. Creation was not sent.'
++        return
++      }
++      intention = { key, uncertain: false, returnTo, body }
+     }
+     const attempt = intention
+-    const url = new URL(location.href)
+-    url.search = '?sf=workbench-command'
+-    submitting = true
+-    form.dataset.dirty = 'true'
+-    button.disabled = true
+-    inputs.forEach((input) => { input.disabled = true })
++    const url = new URL(location.href); url.search = '?sf=workbench-command'
++    submitting = true; form.dataset.dirty = 'true'; button.disabled = true; lockFields()
+     status.textContent = 'Creating decision…'
+     const controller = new AbortController()
+     const timeout = setTimeout(() => controller.abort(), 10000)
+     try {
+-      const response = await fetch(url, { method: 'POST', credentials: 'same-origin', headers: { 'Content-Type': 'application/json', 'Idempotency-Key': attempt.key }, body: attempt.body, signal: controller.signal })
++      const response = await fetch(url, { method: 'POST', credentials: 'same-origin',
++        headers: { 'Content-Type': 'application/json', 'Idempotency-Key': attempt.key, 'X-SF-Creation-Scope': scope },
++        body: attempt.body, signal: controller.signal })
+       if (denied || !form.isConnected || intention !== attempt) return
+       if (response.status === 401 || response.status === 403) { accessChanged(); return }
+       const result = await response.json()
+       if (denied || !form.isConnected || intention !== attempt) return
+-      if (!response.ok && response.status < 500 && response.status !== 408 && ['invalid', 'needs-input', 'conflict'].includes(result?.status) && !attempt.uncertain) {
+-        intention = undefined
+-        status.textContent = response.status === 409 ? 'Creation was rejected because the context changed. Review your entries and try again.' : 'Creation was rejected. Review the required fields and try again.'
++      if (!response.ok && response.status < 500 && response.status !== 408 &&
++        ['invalid', 'needs-input', 'conflict'].includes(result?.status)) {
++        // Even a 409 can race a prior commit. Retain correlation until the
++        // original C08 transaction is authoritatively reconciled.
++        attempt.uncertain = true
++        status.textContent = 'Creation was rejected or is uncertain. Check the original key after reload, or explicitly start a separate intention.'
+         return
+       }
+-      if (!response.ok || result.status !== 'ok' || typeof result.outputRef !== 'string' || !result.outputRef) throw new Error('unconfirmed')
++      if (!response.ok || result.status !== 'ok' || !validCaseRef(result.outputRef)) throw new Error('unconfirmed')
+       completed = { ref: result.outputRef, returnTo: attempt.returnTo }
+-      intention = undefined
+-      delete form.dataset.dirty
++      discard(attempt.key)
++      intention = undefined; delete form.dataset.dirty
+       status.textContent = 'Decision created. Opening the saved decision…'
+       destination(completed)
+     } catch {
+       if (denied || !form.isConnected || intention !== attempt) return
+       attempt.uncertain = true
+-      status.textContent = 'Creation is unconfirmed. Your entries are locked to the original request; retry the same request to reconcile it.'
++      status.textContent = 'Creation is unconfirmed. Retry the same request here, or reload to check its durable receipt.'
+     } finally {
+-      clearTimeout(timeout)
+-      submitting = false
+-      if (!denied && form.isConnected) {
+-        button.disabled = false
+-        button.textContent = intention?.uncertain ? 'Retry same creation' : completed ? 'Open created decision' : 'Create decision'
+-        inputs.forEach((input) => { input.disabled = intention?.uncertain ? true : disabled.get(input) })
+-      }
++      clearTimeout(timeout); submitting = false
++      present()
+     }
+   })
++  const keys = storedKeys()
++  if (keys?.length) { pendingKey = keys[0]; lockFields(); button.disabled = true; void reconcile() }
++  else present()
+ })
+ `
+-
+diff --git a/modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts b/modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8cf4f844307206880abd163e4f836a582670e617 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts
+@@ -0,0 +1,255 @@
++import { expect, test } from "bun:test"
++import type { Browser, BrowserContext } from "@playwright/test"
++import { randomUUID } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { launchWp01Browser, closeWp01Browser } from "../wp01/browser-fixture.ts"
++import { createSfCreationRecoveryHttp, type SfCreationRecoveryRuntime } from "../../../../../../apps/cli/src/sucafina-product/creation-recovery-http.ts"
++import { decisionCreateForm, decisionCreateFromContext, decisionCreateScript, scopeDecisionCreateForm } from "../../../product/ui/decision-create.ts"
++import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { decodeSfOperationInput } from "../../../product/contracts/schema-admission.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
++
++/** Named WP01 Linux browser selection; this test must run between startup and lifecycle. */
++test("111/browser: same opaque pending key survives lost ACK, restart and normal/contextual view switching", async () => {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-creation-link-browser-"))
++  await chmod(directory, 0o700)
++  const actors = { alice: { allowed: true, revision: "a1" }, bob: { allowed: true, revision: "b1" } }
++  const identity = (request: Request) => {
++    const actor = request.headers.get("actor")
++    if (actor !== "alice" && actor !== "bob" || !actors[actor].allowed) return undefined
++    return { installationId: "install", projectId: "project", principalRef: actor,
++      policyVersion: "policy", accessRevision: actors[actor].revision }
++  }
++  const scopeFor = (actor: string) => digestSfValue({
++    installationId: "install", projectId: "project", principalRef: actor, policyVersion: "policy",
++  })
++  const evidence: BusinessContextService = {
++    context: async () => [],
++    resolve: async () => { throw new Error("unexpected source resolve") },
++    recall: async () => [],
++    emitFromLedger: async () => { throw new Error("unexpected ledger emission") },
++  }
++  const state = { nextId: 0, loseNextAck: true,
++    posts: [] as { key: string; actor: string; objective: string }[],
++    recovered: [] as { key: string; actor: string; state: string }[] }
++  const makeRuntime = async () => {
++    const store = await openLocalStore(directory)
++    const ui = createSfUiAuthority({
++      authorize: async (request, operation) => ["sf_case_read", "sf_case_draft"].includes(operation) ? identity(request) : undefined,
++      commandIdentity: async (request, operation) => {
++        if (request.method === "GET" || request.method === "HEAD") return randomUUID()
++        const key = request.headers.get("Idempotency-Key")
++        return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
++      },
++      createId: randomUUID, now: Date.now,
++    })
++    const productState = createSfProductState({
++      persistence: store, createId: () => "root-incarnation",
++      resolveTarget: async () => ({ incarnation: "install" }),
++      authorize: async (request) => {
++        const actor = identity(request)
++        return actor && { principalRef: actor.principalRef, policyVersion: actor.policyVersion,
++          accessRevision: actor.accessRevision }
++      },
++    })
++    const cases = createDecisionCasePort({
++      state: productState, host: { requestFor: ui.requestFor, revalidate: ui.revalidate },
++      creationTarget: { ref: "sf-workspace:install", incarnation: "install" },
++      operationIdentity: ui.operationIdentity,
++      authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await ui.revalidate(context),
++      verifyScenarioOperations: async (_value, context) => ui.revalidate(context),
++      evidence, createId: () => "case-id-" + ++state.nextId, now: () => "2026-11-15T00:00:00Z",
++    })
++    const recoverCreation = (cases as typeof cases & {
++      recoverCreation?: SfCreationRecoveryRuntime["recoverCreation"]
++    }).recoverCreation
++    if (!recoverCreation) throw new Error("mission96 case-port must be included in the CI snapshot")
++    return { store, ui, cases, productState, recoverCreation }
++  }
++  let runtime: Awaited<ReturnType<typeof makeRuntime>> | undefined
++  let server: ReturnType<typeof Bun.serve> | undefined
++  let browser: Browser | undefined, context: BrowserContext | undefined
++  const json = (value: unknown, code: number) => Response.json(value, { status: code,
++    headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
++  const inspect = async () => {
++    const request = new Request("https://sf.test/", { headers: { actor: "alice" } })
++    const read = await runtime!.productState.read(request, "cases", (storage) => ({
++      cases: Object.keys(storage.cases), transactions: Object.keys(storage.transactions),
++      version: storage.versions.cases,
++    }))
++    if (read.status !== "ok") throw new Error("real SQLite C08 snapshot unavailable")
++    return read.value
++  }
++  try {
++    runtime = await makeRuntime()
++    server = Bun.serve({ hostname: "127.0.0.1", port: 0, idleTimeout: 30,
++      fetch: async (request) => {
++        const url = new URL(request.url)
++        if (url.pathname !== "/sf/dashboard") return json({ status: "denied" }, 404)
++        const actor = identity(request)
++        if (!actor) return json({ status: "denied" }, 403)
++        const mode = url.searchParams.get("sf")
++        if (mode === "workbench-create-recover") {
++          const adapter = createSfCreationRecoveryHttp({ origin: url.origin, mount: "/sf",
++            runtime: () => ({ ui: runtime!.ui,
++              recoverCreation: async (key, context) => {
++                const result = await runtime!.recoverCreation(key, context)
++                state.recovered.push({ key, actor: context.binding.principalRef,
++                  state: result.status === "ok" ? result.value.state : result.status })
++                return result
++              } }),
++          })
++          return await adapter(request, "dashboard") ?? json({ status: "denied" }, 404)
++        }
++        if (request.method === "GET" && (mode === "workbench" || mode === "workbench-context")) {
++          const contextual = mode === "workbench-context"
++          // The contextual route here tests read-only pending reconciliation
++          // after view switching; context evidence issuance and POST are owned
++          // by the installed 52 route and are NOT claimed as proven here.
++          const form = contextual
++            ? decisionCreateFromContext({ sourceRefs: [],
++              period: { start: "2027-01-01", end: "2027-12-31" },
++              returnTo: "/sf/dashboard?page=Vendor+Contracts&year=2027#record-example" })
++            : decisionCreateForm
++          const scoped = scopeDecisionCreateForm(form, scopeFor(actor.principalRef))
++          return new Response("<!doctype html><html><head><meta charset=\"utf-8\"></head><body>" +
++            scoped + "<script>" + decisionCreateScript + "</script></body></html>",
++            { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } })
++        }
++        if (mode === "workbench-case" && request.method === "GET") {
++          const value = { caseRef: url.searchParams.get("caseRef") ?? "" }
++          const digest = digestSfValue(value)
++          const admitted = await runtime!.ui.admit(request, "sf_case_read", digest)
++          if (admitted.status !== "ok") return json({ status: "denied" }, 403)
++          try {
++            if (!await runtime!.ui.validate(admitted.value, "sf_case_read", digest))
++              return json({ status: "denied" }, 403)
++            const read = await runtime!.cases.read(value, admitted.value)
++            if (read.status !== "ok" || !await runtime!.ui.revalidate(admitted.value))
++              return json({ status: "denied" }, 403)
++            return new Response("<!doctype html><html><body><h1>Saved case</h1>" +
++              "<p data-case-id>" + read.value.case.id + "</p></body></html>", {
++              headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" },
++            })
++          } finally { runtime!.ui.finish(admitted.value) }
++        }
++        if (mode !== "workbench-command" || request.method !== "POST") return json({ status: "denied" }, 405)
++        if (request.headers.get("origin") !== url.origin ||
++          request.headers.get("X-SF-Creation-Scope") !== scopeFor(actor.principalRef))
++          return json({ status: "denied" }, 403)
++        const key = request.headers.get("Idempotency-Key")
++        if (!key || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(key))
++          return json({ status: "needs-input" }, 400)
++        const parsed: unknown = await request.json().catch(() => undefined)
++        if (!parsed || typeof parsed !== "object" || !("operation" in parsed) || !("input" in parsed) ||
++          parsed.operation !== "sf_case_draft")
++          return json({ status: "needs-input" }, 400)
++        const decoded = decodeSfOperationInput("sf_case_draft", parsed.input)
++        if (!decoded.ok) return json({ status: "needs-input" }, 400)
++        const digest = digestSfValue(decoded.value)
++        const admitted = await runtime!.ui.admit(request, "sf_case_draft", digest)
++        if (admitted.status !== "ok") return json({ status: "denied" }, 403)
++        try {
++          if (!await runtime!.ui.validate(admitted.value, "sf_case_draft", digest))
++            return json({ status: "denied" }, 403)
++          const saved = await runtime!.cases.draft(decoded.value, admitted.value)
++          if (saved.status !== "ok")
++            return json({ status: saved.status }, saved.status === "conflict" ? 409 : 503)
++          state.posts.push({ key, actor: actor.principalRef, objective: decoded.value.objective })
++          if (state.loseNextAck) {
++            state.loseNextAck = false
++            return json({ status: "unavailable" }, 503) // durable C08 commit, lost HTTP ACK
++          }
++          return json({ status: "ok", outputRef: encodeCaseRef(saved.value) }, 200)
++        } finally { runtime!.ui.finish(admitted.value) }
++      },
++    })
++    browser = await launchWp01Browser()
++    context = await browser.newContext({ extraHTTPHeaders: { actor: "alice" } })
++    const page = await context.newPage()
++    const errors: string[] = []
++    page.on("pageerror", (error) => errors.push(error.message))
++    const base = server.url.origin + "/sf/dashboard"
++    const fill = async () => {
++      // The normal form lives in a closed details element until a person opens it.
++      await page.locator("details:has(form[data-decision-create]) > summary").click()
++      await page.getByLabel("Decision objective").fill("Deliberately identical")
++      await page.getByLabel("Start", { exact: true }).fill("2027-01-01")
++      await page.getByLabel("End", { exact: true }).fill("2027-12-31")
++      await page.getByLabel("Currency").fill("USD")
++      await page.getByLabel("Criteria, one per line").fill("cost\nrisk")
++    }
++    await page.goto(base + "?sf=workbench")
++    await fill()
++    await page.getByRole("button", { name: "Create decision" }).click()
++    await page.waitForFunction(() => document.querySelector("[data-decision-create] [role=status]")?.textContent?.includes("unconfirmed"))
++    const persisted = await page.evaluate(() => Array.from({ length: localStorage.length }, (_, i) =>
++      ({ key: localStorage.key(i), value: localStorage.getItem(localStorage.key(i)!) })))
++    expect(persisted).toHaveLength(1)
++    expect(persisted[0]?.key).toContain("sf:case-create:pending:v1:" + scopeFor("alice") + ":")
++    expect(persisted[0]?.value).toBe("pending")
++    expect(JSON.stringify(persisted)).not.toContain("Deliberately identical")
++    expect(JSON.stringify(persisted)).not.toContain("Bearer")
++    const originalKey = persisted[0]!.key!.split(":").at(-1)!
++    expect(state.posts).toHaveLength(1)
++    expect(state.posts[0]!.key).toBe(originalKey)
++    expect(await inspect()).toMatchObject({ version: 1 })
++
++    await runtime.store.dispose()
++    runtime = await makeRuntime()
++    // A normal pending intention is recovered by the context form after host
++    // restart. The browser supplies only the original UUID, no original body.
++    await page.goto(base + "?sf=workbench-context")
++    await page.waitForURL((url) => url.searchParams.get("sf") === "workbench-case")
++    expect(await page.locator("[data-case-id]").textContent()).toMatch(/^case-id-/)
++    expect(state.posts).toHaveLength(1)
++    expect(state.recovered).toEqual([{ key: originalKey, actor: "alice", state: "committed" }])
++    expect(await page.evaluate(() => localStorage.length)).toBe(0)
++    expect(await inspect()).toMatchObject({ version: 1 })
++
++    // A distinct user intention can use identical words but MUST use a new
++    // identity and produce exactly one distinct C08 case.
++    await page.goto(base + "?sf=workbench")
++    await fill()
++    await page.getByRole("button", { name: "Create decision" }).click()
++    await page.waitForURL((url) => url.searchParams.get("sf") === "workbench-case")
++    expect(state.posts).toHaveLength(2)
++    expect(state.posts[1]!.key).not.toBe(originalKey)
++    expect(state.posts[1]!.objective).toBe("Deliberately identical")
++    expect((await inspect()).cases).toHaveLength(2)
++    expect((await inspect()).transactions).toHaveLength(2)
++
++    // Leave another committed creation uncertain, then reuse the browser
++    // profile with a different actor. Its own scope cannot read Alice's key.
++    state.loseNextAck = true
++    await page.goto(base + "?sf=workbench")
++    await fill()
++    await page.getByRole("button", { name: "Create decision" }).click()
++    await page.waitForFunction(() => document.querySelector("[data-decision-create] [role=status]")?.textContent?.includes("unconfirmed"))
++    const before = { posts: state.posts.length, lookups: state.recovered.length }
++    await context.setExtraHTTPHeaders({ actor: "bob" })
++    await page.reload({ waitUntil: "domcontentloaded" })
++    expect(await page.locator("[data-decision-create] [role=status]").textContent()).not.toContain("original creation")
++    expect(state.posts).toHaveLength(before.posts)
++    expect(state.recovered).toHaveLength(before.lookups)
++    await context.setExtraHTTPHeaders({ actor: "alice" })
++    await page.reload({ waitUntil: "domcontentloaded" })
++    await page.waitForURL((url) => url.searchParams.get("sf") === "workbench-case")
++    expect(state.recovered.at(-1)?.actor).toBe("alice")
++    expect(state.posts).toHaveLength(before.posts)
++    expect((await inspect()).cases).toHaveLength(3)
++    expect(errors).toEqual([])
++  } finally {
++    await context?.close()
++    if (browser) await closeWp01Browser(browser)
++    if (server) await server.stop(true)
++    await runtime?.store.dispose()
++    await rm(directory, { recursive: true, force: true })
++  }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts b/modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..46ab9222309a5856e931d033261f3438b1ce939b 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts
+@@ -0,0 +1,200 @@
++import { expect, test } from "bun:test"
++import { randomUUID } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { createSfCreationRecoveryHttp, type SfCreationRecoveryRuntime } from "../../../../../../apps/cli/src/sucafina-product/creation-recovery-http.ts"
++import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
++
++test("111/HTTP+C08+SQLite: original key recovers once after restart; actor, revocation and incarnation remain fenced", async () => {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-creation-link-"))
++  await chmod(directory, 0o700)
++  const actors = {
++    alice: { allowed: true, revision: "alice-1" },
++    bob: { allowed: true, revision: "bob-1" },
++  }
++  const scope = (actor: "alice" | "bob") => digestSfValue({
++    installationId: "install", projectId: "project", principalRef: actor, policyVersion: "policy",
++  })
++  const authenticated = (request: Request) => {
++    const id = request.headers.get("actor")
++    if (id !== "alice" && id !== "bob" || !actors[id].allowed) return undefined
++    return { installationId: "install", projectId: "project", principalRef: id,
++      policyVersion: "policy", accessRevision: actors[id].revision }
++  }
++  const evidence: BusinessContextService = {
++    context: async () => [],
++    resolve: async () => { throw new Error("no sources supplied to the case") },
++    recall: async () => [],
++    emitFromLedger: async () => { throw new Error("no case ledger source requested") },
++  }
++  let nextId = 0
++  const createRuntime = async (targetIncarnation = "install") => {
++    const store = await openLocalStore(directory)
++    const ui = createSfUiAuthority({
++      authorize: async (request, operation) =>
++        ["sf_case_read", "sf_case_draft"].includes(operation) ? authenticated(request) : undefined,
++      commandIdentity: async (request, operation) => {
++        if (request.method === "GET" || request.method === "HEAD") return randomUUID()
++        const key = request.headers.get("Idempotency-Key")
++        return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key)
++          ? digestSfValue({ operation, key }) : undefined
++      },
++      createId: randomUUID, now: Date.now,
++    })
++    const state = createSfProductState({
++      persistence: store, createId: () => "root-incarnation",
++      resolveTarget: async () => ({ incarnation: targetIncarnation }),
++      authorize: async (request) => {
++        const who = authenticated(request)
++        return who && { principalRef: who.principalRef, accessRevision: who.accessRevision,
++          policyVersion: who.policyVersion }
++      },
++    })
++    const cases = createDecisionCasePort({
++      state, host: { requestFor: ui.requestFor, revalidate: ui.revalidate },
++      creationTarget: { ref: "sf-workspace:install", incarnation: targetIncarnation },
++      operationIdentity: ui.operationIdentity,
++      authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await ui.revalidate(context),
++      verifyScenarioOperations: async (_value, context) => ui.revalidate(context),
++      evidence, createId: () => "case-id-" + ++nextId, now: () => "2026-11-15T00:00:00Z",
++    })
++    // No replacement lookup is installed here: this is the real case-port
++    // function from mission96. An uncomposed C53 MUST fail, not get a fixture PASS.
++    const recoverCreation = (cases as typeof cases & {
++      recoverCreation?: SfCreationRecoveryRuntime["recoverCreation"]
++    }).recoverCreation
++    if (!recoverCreation) throw new Error("mission96 case-port recovery not composed")
++    const http = createSfCreationRecoveryHttp({
++      origin: "https://sf.test", mount: "/sf",
++      runtime: () => ({ ui, recoverCreation }),
++    })
++    return { store, state, ui, cases, http, recoverCreation }
++  }
++  const payload = { objective: "Deliberately identical decision", horizon: { start: "2027-01-01", end: "2027-12-31" },
++    currency: "USD", criteria: ["cost", "risk"], sourceRefs: [] }
++  const get = (key: string, actor: "alice" | "bob" = "alice", options: {
++    scope?: string; url?: string; method?: "GET" | "POST"; extra?: Record<string, string>
++  } = {}) => new Request(options.url ?? "https://sf.test/sf/dashboard?sf=workbench-create-recover", {
++    method: options.method ?? "GET", headers: {
++      actor, "Idempotency-Key": key, "X-SF-Creation-Scope": options.scope ?? scope(actor),
++      ...options.extra,
++    },
++  })
++  const inspect = async (runtime: Awaited<ReturnType<typeof createRuntime>>) => {
++    const observed = await runtime.state.read(new Request("https://sf.test/", { headers: { actor: "alice" } }),
++      "cases", (state) => ({ cases: Object.keys(state.cases), transactions: Object.keys(state.transactions),
++        version: state.versions.cases }))
++    if (observed.status !== "ok") throw new Error("durable C08 observation unavailable")
++    return observed.value
++  }
++  const save = async (runtime: Awaited<ReturnType<typeof createRuntime>>, key: string, value = payload) => {
++    const request = new Request("https://sf.test/sf/dashboard?sf=workbench-command", {
++      method: "POST", headers: {
++        actor: "alice", "Idempotency-Key": key, "Content-Type": "application/json",
++        origin: "https://sf.test",
++      }, body: JSON.stringify({ operation: "sf_case_draft", input: value }),
++    })
++    const digest = digestSfValue(value)
++    const admission = await runtime.ui.admit(request, "sf_case_draft", digest)
++    if (admission.status !== "ok") throw new Error("real UI admission failed")
++    try {
++      if (!await runtime.ui.validate(admission.value, "sf_case_draft", digest))
++        throw new Error("original C08 admission was not consumed")
++      return await runtime.cases.draft(value, admission.value)
++    } finally { runtime.ui.finish(admission.value) }
++  }
++  let runtime: Awaited<ReturnType<typeof createRuntime>> | undefined
++  const keyA = randomUUID(), keyB = randomUUID()
++  try {
++    runtime = await createRuntime()
++    const empty = await runtime.http(get(keyA), "dashboard")
++    expect(empty?.status).toBe(200)
++    expect(await empty?.json()).toEqual({ status: "ok", state: "not-found" })
++
++    const savedA = await save(runtime, keyA)
++    expect(savedA.status).toBe("ok")
++    if (savedA.status !== "ok") throw new Error("C08 failed to create the first case")
++    const firstRef = encodeCaseRef(savedA.value)
++    const committed = await inspect(runtime)
++    expect(committed).toMatchObject({ version: 1 })
++    expect(committed.cases).toHaveLength(1)
++    expect(committed.transactions).toHaveLength(1)
++
++    const verified = await runtime.http(get(keyA), "dashboard")
++    expect(verified?.status).toBe(200)
++    expect(await verified?.json()).toMatchObject({
++      status: "ok", state: "committed", outputRef: firstRef,
++      receipt: { commandDigest: expect.stringMatching(/^[a-f0-9]{64}$/) },
++    })
++    expect(await inspect(runtime)).toEqual(committed) // GET never persists or dispatches.
++
++    const otherWithOriginalScope = await runtime.http(get(keyA, "bob", { scope: scope("alice") }), "dashboard")
++    expect(otherWithOriginalScope?.status).toBe(403)
++    const otherWithOwnScope = await runtime.http(get(keyA, "bob"), "dashboard")
++    expect(otherWithOwnScope?.status).toBe(200)
++    expect(await otherWithOwnScope?.json()).toEqual({ status: "ok", state: "not-found" })
++    expect(await inspect(runtime)).toEqual(committed)
++
++    expect((await runtime.http(get(keyA.toUpperCase()), "dashboard"))?.status).toBe(400)
++    expect((await runtime.http(get(keyA, "alice", { method: "POST" }), "dashboard"))?.status).toBe(405)
++    expect((await runtime.http(get(keyA, "alice", { url: "https://sf.test/sf/dashboard?sf=workbench-create-recover&caseRef=x" }), "dashboard"))?.status).toBe(400)
++    expect((await runtime.http(get(keyA, "alice", { extra: { "sec-fetch-site": "cross-site" } }), "dashboard"))?.status).toBe(403)
++    expect((await runtime.http(get(keyA, "alice", { extra: { origin: "https://evil.test" } }), "dashboard"))?.status).toBe(403)
++    expect((await runtime.http(get(keyA), "unknown"))?.status).toBe(403)
++    expect(await inspect(runtime)).toEqual(committed)
++
++    // Reload the application, dropping all previous UI leases but reopening
++    // the same on-disk SQLite store. No body or caseRef travels to the GET.
++    await runtime.store.dispose()
++    runtime = await createRuntime()
++    const restarted = await runtime.http(get(keyA), "dashboard")
++    expect(restarted?.status).toBe(200)
++    expect(await restarted?.json()).toMatchObject({ status: "ok", state: "committed", outputRef: firstRef })
++    expect(await inspect(runtime)).toEqual(committed)
++
++    const savedB = await save(runtime, keyB)
++    expect(savedB.status).toBe("ok")
++    if (savedB.status !== "ok") throw new Error("C08 failed to create a deliberate second case")
++    expect(encodeCaseRef(savedB.value)).not.toBe(firstRef)
++    expect(await inspect(runtime)).toMatchObject({ version: 2 })
++    expect((await inspect(runtime)).transactions).toHaveLength(2)
++    expect((await inspect(runtime)).cases).toHaveLength(2)
++    const altered = await save(runtime, keyA, { ...payload, objective: "Changed command body" })
++    expect(altered.status).toBe("conflict")
++    expect((await inspect(runtime)).cases).toHaveLength(2)
++
++    actors.alice.allowed = false
++    expect((await runtime.http(get(keyA), "dashboard"))?.status).toBe(403)
++    actors.alice.allowed = true
++    const lateRevocation = createSfCreationRecoveryHttp({
++      origin: "https://sf.test", mount: "/sf",
++      runtime: () => ({
++        ui: runtime!.ui,
++        recoverCreation: async (key, context) => {
++          const result = await runtime!.recoverCreation(key, context)
++          actors.alice.allowed = false
++          return result
++        },
++      }),
++    })
++    const deniedAtEgress = await lateRevocation(get(keyA), "dashboard")
++    expect(deniedAtEgress?.status).toBe(403)
++    expect(JSON.stringify(await deniedAtEgress?.json())).not.toContain(firstRef)
++    actors.alice.allowed = true
++
++    await runtime.store.dispose()
++    runtime = await createRuntime("different-installation-incarnation")
++    const replaced = await runtime.http(get(keyA), "dashboard")
++    expect((await replaced?.json())?.outputRef).not.toBe(firstRef)
++    expect(await runtime.http(get(keyB), "dashboard")).toBeDefined()
++  } finally {
++    await runtime?.store.dispose()
++    await rm(directory, { recursive: true, force: true })
++  }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts b/modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..eda13fa8d39b6dd378849ca57ce9b710bbe40e87 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts
+@@ -0,0 +1,234 @@
++import { expect, test } from "bun:test"
++import type { Browser, BrowserContext } from "@playwright/test"
++import { randomUUID } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { launchWp01Browser, closeWp01Browser } from "../wp01/browser-fixture.ts"
++import { decisionCreateForm, decisionCreateScript, scopeDecisionCreateForm } from "../../../product/ui/decision-create.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
++
++test("96/browser: committed ACK is lost; reload + host restart use GET receipt, not a second POST or CDP outputRef", async () => {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-creation-browser-"))
++  await chmod(directory, 0o700)
++  let browser: Browser | undefined, context: BrowserContext | undefined
++  const actors = { alice: { allowed: true, revision: "a1" }, bob: { allowed: true, revision: "b1" } }
++  const identity = (request: Request) => {
++    const name = request.headers.get("actor")
++    if (name !== "alice" && name !== "bob" || !actors[name].allowed) return undefined
++    return { installationId: "install", projectId: "project", principalRef: name,
++      policyVersion: "policy", accessRevision: actors[name].revision }
++  }
++  const scopeFor = (principalRef: string) => digestSfValue({
++    installationId: "install", projectId: "project", principalRef, policyVersion: "policy",
++  })
++  const evidence: BusinessContextService = {
++    context: async () => [], resolve: async () => { throw new Error("unexpected record resolve") },
++    recall: async () => [], emitFromLedger: async () => { throw new Error("unexpected ledger emission") },
++  }
++  const serverState = { nextId: 0, loseNextAck: true, posts: [] as { key: string; principalRef: string; objective: string; status: number }[],
++    recoveries: [] as { key: string; principalRef: string; state: string }[] }
++  const createRuntime = async () => {
++    const store = await openLocalStore(directory)
++    const state = createSfProductState({
++      persistence: store, createId: () => "root-incarnation",
++      resolveTarget: async () => ({ incarnation: "install" }),
++      authorize: async (request) => {
++        const actor = identity(request)
++        return actor && { principalRef: actor.principalRef, accessRevision: actor.accessRevision, policyVersion: actor.policyVersion }
++      },
++    })
++    const ui = createSfUiAuthority({ authorize: async (request) => identity(request),
++      commandIdentity: async (request, operation) => {
++        if (request.method === "GET" || request.method === "HEAD") return randomUUID()
++        const key = request.headers.get("Idempotency-Key")
++        return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
++      }, createId: randomUUID, now: Date.now })
++    const cases = createDecisionCasePort({ state, host: { requestFor: ui.requestFor, revalidate: ui.revalidate },
++      creationTarget: { ref: "sf-workspace:install", incarnation: "install" },
++      operationIdentity: ui.operationIdentity,
++      authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await ui.revalidate(call),
++      verifyScenarioOperations: async (_value, call) => ui.revalidate(call),
++      evidence, createId: () => "case-" + ++serverState.nextId, now: () => "2026-11-15T00:00:00Z",
++    })
++    return { store, state, ui, cases }
++  }
++  let runtime: Awaited<ReturnType<typeof createRuntime>> | undefined
++  let server: ReturnType<typeof Bun.serve> | undefined
++  const json = (value: unknown, status = 200) => Response.json(value, { status, headers: { "Cache-Control": "no-store" } })
++  const inspect = async () => {
++    const request = new Request("http://localhost/", { headers: { actor: "alice" } })
++    const value = await runtime!.state.read(request, "cases", (state) => ({
++      cases: Object.keys(state.cases), transactions: Object.keys(state.transactions), version: state.versions.cases,
++    }))
++    if (value.status !== "ok") throw new Error("SQLite case observation unavailable")
++    return value.value
++  }
++  try {
++    runtime = await createRuntime()
++    server = Bun.serve({
++      hostname: "127.0.0.1", port: 0, idleTimeout: 30,
++      fetch: async (request) => {
++        const url = new URL(request.url)
++        if (url.pathname !== "/sf/dashboard") return json({ status: "denied" }, 404)
++        const actor = identity(request)
++        if (!actor) return json({ status: "denied" }, 403)
++        if (url.searchParams.get("sf") === "workbench" && request.method === "GET") {
++          const form = scopeDecisionCreateForm(decisionCreateForm, scopeFor(actor.principalRef))
++          return new Response('<!doctype html><html><head><meta charset="utf-8"></head><body>' +
++            form + '<script>' + decisionCreateScript + '</script></body></html>',
++            { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } })
++        }
++        if (url.searchParams.get("sf") === "workbench-case" && request.method === "GET") {
++          const caseRef = url.searchParams.get("caseRef") ?? ""
++          const digest = digestSfValue({ caseRef })
++          const access = await runtime!.ui.admit(request, "sf_case_read", digest)
++          if (access.status !== "ok") return json(access, 403)
++          try {
++            if (!await runtime!.ui.validate(access.value, "sf_case_read", digest)) return json({ status: "denied" }, 403)
++            const read = await runtime!.cases.read({ caseRef }, access.value)
++            if (read.status !== "ok") return json(read, 403)
++            return new Response('<!doctype html><html><body><h1>Saved case</h1>' +
++              '<p data-case-id>' + read.value.case.id + '</p></body></html>',
++              { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } })
++          } finally { runtime!.ui.finish(access.value) }
++        }
++        const suppliedScope = request.headers.get("X-SF-Creation-Scope")
++        if (suppliedScope !== scopeFor(actor.principalRef)) return json({ status: "denied" }, 403)
++        const key = request.headers.get("Idempotency-Key")
++        if (!key || !/^[a-f0-9-]{36}$/.test(key)) return json({ status: "needs-input" }, 400)
++        if (url.searchParams.get("sf") === "workbench-create-recover" && request.method === "GET") {
++          const digest = digestSfValue({ purpose: "creation-recovery", key })
++          const access = await runtime!.ui.admit(request, "sf_case_read", digest)
++          if (access.status !== "ok") return json(access, 403)
++          try {
++            if (!await runtime!.ui.validate(access.value, "sf_case_read", digest)) return json({ status: "denied" }, 403)
++            const found = await runtime!.cases.recoverCreation(key, access.value)
++            if (found.status !== "ok") return json(found, found.status === "denied" ? 403 : 503)
++            serverState.recoveries.push({ key, principalRef: actor.principalRef, state: found.value.state })
++            return found.value.state === "committed"
++              ? json({ status: "ok", state: "committed", outputRef: found.value.caseRef, receipt: found.value.receipt })
++              : json({ status: "ok", state: "not-found" })
++          } finally { runtime!.ui.finish(access.value) }
++        }
++        if (url.searchParams.get("sf") !== "workbench-command" || request.method !== "POST") return json({ status: "denied" }, 405)
++        const body = await request.json() as { operation?: string; input?: { objective?: string } }
++        if (body.operation !== "sf_case_draft" || !body.input) return json({ status: "invalid" }, 400)
++        const digest = digestSfValue(body.input)
++        const access = await runtime!.ui.admit(request, "sf_case_draft", digest)
++        if (access.status !== "ok") return json(access, 403)
++        try {
++          if (!await runtime!.ui.validate(access.value, "sf_case_draft", digest)) return json({ status: "denied" }, 403)
++          const saved = await runtime!.cases.draft(body.input as Parameters<typeof runtime.cases.draft>[0], access.value)
++          serverState.posts.push({ key, principalRef: actor.principalRef, objective: body.input.objective ?? "", status: saved.status === "ok" ? 200 : 409 })
++          if (saved.status !== "ok") return json(saved, saved.status === "conflict" ? 409 : 503)
++          if (serverState.loseNextAck) {
++            serverState.loseNextAck = false
++            // A real C08 commit took place above, but the browser never gets its ref.
++            return json({ status: "unavailable" }, 503)
++          }
++          return json({ status: "ok", outputRef: encodeCaseRef(saved.value) })
++        } finally { runtime!.ui.finish(access.value) }
++      },
++    })
++    const origin = server.url.origin
++    browser = await launchWp01Browser()
++    context = await browser.newContext({ extraHTTPHeaders: { actor: "alice" } })
++    const page = await context.newPage()
++    const pageErrors: string[] = []
++    page.on("pageerror", (error) => pageErrors.push(error.message))
++    const main = origin + "/sf/dashboard?sf=workbench"
++    const fill = async () => {
++      await page.getByLabel("Decision objective").fill("Same deliberate wording")
++      await page.getByLabel("Start", { exact: true }).fill("2027-01-01")
++      await page.getByLabel("End", { exact: true }).fill("2027-12-31")
++      await page.getByLabel("Currency").fill("USD")
++      await page.getByLabel("Criteria, one per line").fill("cost\nrisk")
++    }
++    await page.goto(main)
++    await fill()
++    await page.getByRole("button", { name: "Create decision" }).click()
++    await page.waitForFunction(() => document.querySelector('[data-decision-create] [role=status]')?.textContent?.includes("unconfirmed"))
++    expect(await inspect()).toMatchObject({ cases: [expect.any(String)], transactions: [expect.any(String)], version: 1 })
++    const savedLocal = await page.evaluate(() => Array.from({ length: localStorage.length }, (_, i) => ({
++      key: localStorage.key(i), value: localStorage.getItem(localStorage.key(i)!),
++    })))
++    expect(savedLocal).toHaveLength(1)
++    expect(savedLocal[0]!.key).toContain("sf:case-create:pending:v1:" + scopeFor("alice") + ":")
++    expect(savedLocal[0]!.value).toBe("pending")
++    expect(JSON.stringify(savedLocal)).not.toContain("Same deliberate wording")
++    expect(JSON.stringify(savedLocal)).not.toContain("authorization")
++    expect(JSON.stringify(savedLocal)).not.toContain("Bearer ")
++    const originalKey = savedLocal[0]!.key!.split(":").at(-1)!
++    expect(serverState.posts).toHaveLength(1)
++    expect(serverState.posts[0]!.key).toBe(originalKey)
++
++    // Recreate all host leases/state port objects against the same SQLite files.
++    await runtime.store.dispose()
++    runtime = await createRuntime()
++    await page.reload({ waitUntil: "domcontentloaded" })
++    await page.waitForURL((url) => url.searchParams.get("sf") === "workbench-case")
++    expect(await page.locator("[data-case-id]").textContent()).toMatch(/^case-/)
++    expect(serverState.posts).toHaveLength(1)
++    expect(serverState.recoveries).toEqual([{ key: originalKey, principalRef: "alice", state: "committed" }])
++    expect(await inspect()).toMatchObject({ cases: [expect.any(String)], transactions: [expect.any(String)], version: 1 })
++    expect(await page.evaluate(() => localStorage.length)).toBe(0)
++
++    // Intentional equal-text creation must use a different opaque key.
++    await page.goto(main)
++    await fill()
++    await page.getByRole("button", { name: "Create decision" }).click()
++    await page.waitForURL((url) => url.searchParams.get("sf") === "workbench-case")
++    expect(serverState.posts).toHaveLength(2)
++    expect(serverState.posts[1]!.key).not.toBe(originalKey)
++    expect(serverState.posts[1]!.objective).toBe("Same deliberate wording")
++    expect(await inspect()).toMatchObject({
++      cases: [expect.any(String), expect.any(String)],
++      transactions: [expect.any(String), expect.any(String)], version: 2,
++    })
++
++    // Changed content on an earlier key cannot be silently replayed.
++    const altered = { operation: "sf_case_draft", input: { objective: "Different body",
++      horizon: { start: "2027-01-01", end: "2027-12-31" }, currency: "USD", criteria: ["cost", "risk"], sourceRefs: [] } }
++    const changedResponse = await fetch(origin + "/sf/dashboard?sf=workbench-command", {
++      method: "POST", headers: { actor: "alice", origin, "Content-Type": "application/json",
++        "X-SF-Creation-Scope": scopeFor("alice"), "Idempotency-Key": originalKey }, body: JSON.stringify(altered),
++    })
++    expect(changedResponse.status).toBe(409)
++    expect(await inspect()).toMatchObject({ cases: [expect.any(String), expect.any(String)], version: 2 })
++
++    // Browser profile is reused by another principal; its own scope must not
++    // disclose the previous principal's saved key or auto-replay a POST.
++    serverState.loseNextAck = true
++    await page.goto(main)
++    await fill()
++    await page.getByRole("button", { name: "Create decision" }).click()
++    await page.waitForFunction(() => document.querySelector('[data-decision-create] [role=status]')?.textContent?.includes("unconfirmed"))
++    expect(await page.evaluate(() => localStorage.length)).toBe(1)
++    const recoveriesBeforeOther = serverState.recoveries.length
++    const postsBeforeOther = serverState.posts.length
++    await context.setExtraHTTPHeaders({ actor: "bob" })
++    await page.reload({ waitUntil: "domcontentloaded" })
++    expect(await page.locator("[data-decision-create] [role=status]").textContent()).not.toContain("original creation")
++    expect(serverState.posts).toHaveLength(postsBeforeOther)
++    expect(serverState.recoveries).toHaveLength(recoveriesBeforeOther)
++    await context.setExtraHTTPHeaders({ actor: "alice" })
++    await page.reload({ waitUntil: "domcontentloaded" })
++    await page.waitForURL((url) => url.searchParams.get("sf") === "workbench-case")
++    expect(serverState.recoveries.at(-1)).toMatchObject({ principalRef: "alice", state: "committed" })
++    expect(serverState.posts).toHaveLength(postsBeforeOther)
++    expect(await inspect()).toMatchObject({ cases: [expect.any(String), expect.any(String), expect.any(String)], version: 3 })
++    expect(pageErrors).toEqual([])
++  } finally {
++    await context?.close()
++    if (browser) await closeWp01Browser(browser)
++    if (server) await server.stop(true)
++    await runtime?.store.dispose()
++    await rm(directory, { recursive: true, force: true })
++  }
++}, 180_000)
+diff --git a/modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts b/modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..a03f70c0a4adc2fe388e3d62f4436bdcf17b7be2 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts
+@@ -0,0 +1,181 @@
++import { expect, test } from "bun:test"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { randomUUID } from "node:crypto"
++import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createSfProductState } from "../../../product/host-binding/state-provider.ts"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import type { BusinessContextService } from "../../../product/contracts/business-context.ts"
++import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++
++test("96: lost ACK, browser reload and SQLite restart recover one original case and receipt; equal new intention stays distinct", async () => {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-creation-reload-"))
++  await chmod(directory, 0o700)
++  const actors = { alice: { allowed: true, revision: "access-alice" }, bob: { allowed: true, revision: "access-bob" } }
++  const environment = { time: Date.parse("2026-11-15T00:00:00Z"), id: 0, request: new Request("https://sf.test/") }
++  const makeRequest = (principal: "alice" | "bob", key: string, method: "GET" | "POST") =>
++    new Request("https://sf.test/sf/dashboard?sf=workbench-command", {
++      method, headers: { "actor": principal, ...(method === "POST" || method === "GET" ? { "Idempotency-Key": key } : {}) },
++      ...(method === "POST" ? { body: "{}", headers: { actor: principal, "Idempotency-Key": key, "Content-Type": "application/json" } } : {}),
++    })
++  const binding = (principal: "alice" | "bob" = "alice", expiresAt = "2100-01-01T00:00:00Z") => ({
++    kind: "ui", binding: { installationId: "install", projectId: "project", principalRef: principal,
++      requestId: "read-" + randomUUID(), policyVersion: "policy", accessRevision: actors[principal].revision, expiresAt }, lease: {},
++  }) as unknown as TrustedUiContext
++  const evidence: BusinessContextService = {
++    context: async () => [], resolve: async () => { throw new Error("unexpected evidence resolve") },
++    recall: async () => [], emitFromLedger: async () => { throw new Error("unexpected ledger emission") },
++  }
++  const permitted = (context: TrustedDomainContext) => {
++    if (context.kind !== "ui") return false
++    const principal = context.binding.principalRef as "alice" | "bob"
++    return (principal === "alice" || principal === "bob") && actors[principal].allowed &&
++      actors[principal].revision === context.binding.accessRevision &&
++      environment.request.headers.get("actor") === principal &&
++      Date.parse(context.binding.expiresAt) > environment.time && !environment.request.signal.aborted
++  }
++  const target = { ref: "sf-workspace:install", incarnation: "install" }
++  const open = async () => {
++    const store = await openLocalStore(directory)
++    const state = createSfProductState({ persistence: store, createId: () => "sf-state-incarnation",
++      resolveTarget: async () => ({ incarnation: target.incarnation }),
++      authorize: async (request) => {
++        const principal = request.headers.get("actor")
++        if (principal !== "alice" && principal !== "bob" || !actors[principal].allowed) return undefined
++        return { principalRef: principal, policyVersion: "policy", accessRevision: actors[principal].revision }
++      },
++    })
++    const cases = createDecisionCasePort({
++      state, host: { requestFor: (context) => permitted(context) ? environment.request : undefined,
++        revalidate: async (context) => permitted(context) },
++      creationTarget: target,
++      operationIdentity: (context) => {
++        if (!permitted(context)) return undefined
++        const key = environment.request.headers.get("Idempotency-Key")
++        return key ? digestSfValue({ operation: "sf_case_draft", key }) : undefined
++      },
++      authorizeCase: async (value, context) => permitted(context) && value.participants.includes(context.binding.principalRef),
++      verifyScenarioOperations: async (_value, context) => permitted(context),
++      evidence, createId: () => "case-id-" + ++environment.id,
++      now: () => "2026-11-15T00:00:00Z",
++    })
++    return { store, state, cases }
++  }
++  const payload = { objective: "Same deliberate wording", horizon: { start: "2027-01-01", end: "2027-12-31" },
++    currency: "USD", criteria: ["cost", "risk"], sourceRefs: [] }
++  const keyA = randomUUID(), keyB = randomUUID()
++  let opened: Awaited<ReturnType<typeof open>> | undefined
++  try {
++    opened = await open()
++    environment.request = makeRequest("alice", keyA, "GET")
++    const alice = binding()
++    // A GET lookup before an uncertain POST completes must never create a case.
++    expect(await opened.cases.recoverCreation(keyA, alice)).toEqual({ status: "ok", value: { state: "missing" } })
++    environment.request = makeRequest("alice", keyA, "POST")
++    const created = await opened.cases.draft(payload, alice)
++    expect(created.status).toBe("ok")
++    if (created.status !== "ok") throw new Error("initial C08 write failed")
++    const originalRef = encodeCaseRef(created.value)
++    const before = await opened.state.read(environment.request, "cases", (state) => ({
++      cases: Object.keys(state.cases), transactions: Object.keys(state.transactions), version: state.versions.cases,
++    }))
++    expect(before.status).toBe("ok")
++    if (before.status !== "ok") throw new Error("initial state observation failed")
++    expect(before.value.cases).toHaveLength(1)
++    expect(before.value.transactions).toHaveLength(1)
++
++    // Simulate a committed reply lost by transport, then reload as a new request.
++    // Only the original opaque key survives, not the original request body/ref.
++    environment.request = makeRequest("alice", keyA, "GET")
++    const reloaded = await opened.cases.recoverCreation(keyA, binding())
++    expect(reloaded).toMatchObject({ status: "ok", value: { state: "committed", caseRef: originalRef } })
++    if (reloaded.status !== "ok" || reloaded.value.state !== "committed") throw new Error("receipt not recovered")
++    const receipt = reloaded.value.receipt
++    expect(receipt.commandDigest).toBe(digestSfValue(payload))
++    expect(receipt.storageVersion).toBe(before.storageVersion)
++    const after = await opened.state.read(environment.request, "cases", (state) => ({
++      cases: Object.keys(state.cases), transactions: Object.keys(state.transactions), version: state.versions.cases,
++    }))
++    expect(after.status).toBe("ok")
++    if (after.status === "ok") expect(after.value).toEqual(before.value)
++
++    // Exact POST retry is authorized but C08 returns the original result with no second effect.
++    environment.request = makeRequest("alice", keyA, "POST")
++    const retry = await opened.cases.draft(payload, binding())
++    expect(retry).toEqual(created)
++    environment.request = makeRequest("alice", keyA, "GET")
++    const reread = await opened.cases.recoverCreation(keyA, binding())
++    expect(reread).toEqual(reloaded)
++
++    // An altered body with the same command identity conflicts, never overwrites.
++    environment.request = makeRequest("alice", keyA, "POST")
++    const changed = await opened.cases.draft({ ...payload, objective: "Changed without new intention" }, binding())
++    expect(changed).toEqual({ status: "conflict", reason: "idempotency-content-changed" })
++
++    // The same text, deliberately created with a second UUID, is a distinct case.
++    environment.request = makeRequest("alice", keyB, "POST")
++    const second = await opened.cases.draft(payload, binding())
++    expect(second.status).toBe("ok")
++    if (second.status !== "ok") throw new Error("second deliberate case failed")
++    expect(encodeCaseRef(second.value)).not.toBe(originalRef)
++    expect(second.value.id).not.toBe(created.value.id)
++    const two = await opened.state.read(environment.request, "cases", (state) => ({
++      cases: Object.keys(state.cases), transactions: Object.keys(state.transactions), version: state.versions.cases,
++    }))
++    expect(two.status).toBe("ok")
++    if (two.status === "ok") {
++      expect(two.value.cases).toHaveLength(2)
++      expect(two.value.transactions).toHaveLength(2)
++    }
++
++    // The C08 ledger and case identities, not browser outputRef, survive restart.
++    await opened.store.dispose()
++    opened = await open()
++    environment.request = makeRequest("alice", keyA, "GET")
++    expect(await opened.cases.recoverCreation(keyA, binding())).toEqual(reloaded)
++    environment.request = makeRequest("alice", keyB, "GET")
++    expect((await opened.cases.recoverCreation(keyB, binding())).status).toBe("ok")
++
++    // A different principal cannot correlate the original key with the case.
++    environment.request = makeRequest("bob", keyA, "GET")
++    const other = await opened.cases.recoverCreation(keyA, binding("bob"))
++    expect(other).toEqual({ status: "ok", value: { state: "missing" } })
++    expect(JSON.stringify(other)).not.toContain(originalRef)
++
++    // Revoked grants, changed revision and expired UI leases never egress a ref.
++    actors.alice.allowed = false
++    environment.request = makeRequest("alice", keyA, "GET")
++    expect((await opened.cases.recoverCreation(keyA, binding())).status).toBe("denied")
++    actors.alice.allowed = true
++    const stale = binding()
++    actors.alice.revision = "access-revoked-replaced"
++    expect((await opened.cases.recoverCreation(keyA, stale)).status).toBe("denied")
++    environment.request = makeRequest("alice", keyA, "GET")
++    expect((await opened.cases.recoverCreation(keyA, binding("alice", "2020-01-01T00:00:00Z"))).status).toBe("denied")
++    actors.alice.revision = "access-alice"
++
++    // A case with a reused ID but a new physical incarnation must not be emitted.
++    await opened.store.transaction("dashboard", async (snapshot) => {
++      const product = snapshot.data.__sfProductV1 as { cases: Record<string, { incarnation: string }> }
++      product.cases[created.value.id]!.incarnation = "replaced-incarnation"
++      return { commit: true, value: undefined }
++    })
++    environment.request = makeRequest("alice", keyA, "GET")
++    const replaced = await opened.cases.recoverCreation(keyA, binding())
++    expect(replaced.status).toBe("denied")
++    expect(JSON.stringify(replaced)).not.toContain(originalRef)
++    const final = await opened.state.read(environment.request, "cases", (state) => ({
++      cases: Object.keys(state.cases), transactions: Object.keys(state.transactions),
++    }))
++    expect(final.status).toBe("ok")
++    if (final.status === "ok") {
++      expect(final.value.cases).toHaveLength(2)
++      expect(final.value.transactions).toHaveLength(2)
++    }
++  } finally {
++    await opened?.store.dispose()
++    await rm(directory, { recursive: true, force: true })
++  }
++}, 180_000)

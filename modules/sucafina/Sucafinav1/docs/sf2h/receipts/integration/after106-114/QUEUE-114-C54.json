@@ -1,0 +1,101 @@
+{
+  "schema": "sf2h.integration114.queue.after-C54.v1",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "lease": "S0-C-e17-browser114",
+  "candidate": "3f4643d993c71b0edd197e8c3a1090bfd5ba533a",
+  "last_material": "C54",
+  "status": "CONTINUING_LATE",
+  "items": [
+    {
+      "id": "96+111",
+      "state": "INTEGRATED_C54_VALIDATION_PENDING",
+      "commit": "3f4643d993c71b0edd197e8c3a1090bfd5ba533a",
+      "action": "120 Actions,119 compiler/guards, 91 independent R1 recheck"
+    },
+    {
+      "id": "115",
+      "state": "SOURCE_NOT_YET_PUBLISHED",
+      "branch": "native-runtime-finish",
+      "head": "4159c2e02e8a56900331a8ec646253ce6a6e5ce9",
+      "action": "native historical fix run 43707901079 recheck"
+    },
+    {
+      "id": "116",
+      "state": "SOURCE_NOT_YET_PUBLISHED",
+      "branch": "product-type-repair",
+      "head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "action": "4 TS product files"
+    },
+    {
+      "id": "117",
+      "state": "SOURCE_NOT_YET_PUBLISHED",
+      "branch": "matcher-type-repair",
+      "head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "action": "18 disjoint TS matcher fixtures"
+    },
+    {
+      "id": "118",
+      "state": "SOURCE_NOT_YET_PUBLISHED",
+      "branch": "fixture-type-repair",
+      "head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "action": "33 disjoint TS fixtures"
+    },
+    {
+      "id": "119",
+      "state": "SOURCE_NOT_YET_PUBLISHED",
+      "branch": "sf-compiler-checks",
+      "head": "59490441e732c025933484a0c4907c353c1e2874",
+      "action": "compiler script/generator/parsing, guard55 authentic policy"
+    },
+    {
+      "id": "120",
+      "state": "DISPATCHER_EXPECTED_AFTER107",
+      "branch": "sf-ci-validation",
+      "head": "ef1b8f3ec86e2c0cddf2fcf4cf8e442a3a64737f",
+      "action": "dedup C54 surgical product Actions, avoid C53 duplicates"
+    },
+    {
+      "id": "95+110",
+      "state": "BLOCKED_OWNER95_CHILD_ADMISSION_AND_HOST_COMPOSITION",
+      "ref110": "c449aff9c819e0cbbc88386b2f0f079f4c58d56c",
+      "ref95": "9757b5e7ee974684cff32a5a452f7dc5aefc0555",
+      "action": "owner95 token gate C09 proof; 114 staged host patch; native OFF"
+    },
+    {
+      "id": "102",
+      "state": "SOURCE_READY_VALIDATION_BLOCK",
+      "ref102": "104bf61f67da9740024f38427c1580ba29f36e99",
+      "action": "hosted W102 CI + PDF/PNG 9 sheet visual independent91/93 prior acceptance"
+    },
+    {
+      "id": "99+109",
+      "state": "P03_FAIL_CAUSAL_NOT_CLOSED",
+      "action": "fix root 99, real original test 72 asserts/180s and independent check"
+    },
+    {
+      "id": "review",
+      "state": "PRELIMINARY_NOT_FINAL",
+      "action": "R1,R2,R3 FINAL; VIS112-001; R2-113 findings"
+    },
+    {
+      "id": "release",
+      "state": "G7_OPEN_G8_OPEN_GLOBAL_RELEASE_FALSE",
+      "action": "eight finals epic AM01-06 and all criteria"
+    }
+  ],
+  "prior_candidates": [
+    {
+      "id": "C53",
+      "sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "status": "NOT_FROZEN"
+    },
+    {
+      "id": "C54",
+      "sha": "3f4643d993c71b0edd197e8c3a1090bfd5ba533a",
+      "status": "UNTESTED"
+    }
+  ],
+  "source_green_not_product_green": true,
+  "GLOBAL_RELEASE": false
+}

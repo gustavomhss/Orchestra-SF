@@ -1,0 +1,237 @@
+{
+  "schema": "sf2h.integration114.material-candidate.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "status": "C54_COMPOSED_UNTESTED_NOT_FROZEN_NOT_ACCEPTED",
+  "integrator": {
+    "mission": 114,
+    "actor": "S0-C-e17-browser114",
+    "ack_commit": "4c8b083051ab0669dccc3ff1d91b338d3a4174af"
+  },
+  "candidate": {
+    "name": "C54",
+    "commit": "3f4643d993c71b0edd197e8c3a1090bfd5ba533a",
+    "tree": "b67e4b5e018b79eec98ac38515989c05f59931ab",
+    "parent": "4c8b083051ab0669dccc3ff1d91b338d3a4174af",
+    "material_parent": "C53@180212940105e7b9ad15171b067c1c1b7841df5f",
+    "product_diff_files": 11,
+    "source_counts": {
+      "96": 4,
+      "111": 3,
+      "111-owner": 4
+    },
+    "after_C53_documentary_ancestry": true
+  },
+  "identity": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "draft": true,
+    "model": "GPT-6",
+    "session_id": null
+  },
+  "sources": [
+    {
+      "mission": 96,
+      "pr": 103,
+      "ref": "3ef1bbf2188275f5bc6ebaeed162a069ad3ae351",
+      "owned": [
+        "product/decisions/case-port.ts",
+        "product/ui/decision-create.ts",
+        "test/product/creation-reload-fix/*"
+      ],
+      "author_retained": true,
+      "source_execution": "NOT_RUN"
+    },
+    {
+      "mission": 111,
+      "pr": 109,
+      "ref": "bd65179c3ce1da921974c686439d3877f735f852",
+      "owned": [
+        "apps/cli/src/sucafina-product/creation-recovery-http.ts",
+        "test/product/creation-recovery-link/*"
+      ],
+      "owner_shared_patch_blob": "205f48bc7ea6b8bac08d339a574f8c4609f94d15",
+      "owner_shared_patch_manifest_blob": "7063741dbfe2243637eb95048c1dc945a0e70d03",
+      "replay_static": "4/4 from original mission111",
+      "source_execution": "NOT_RUN",
+      "author_retained": true
+    }
+  ],
+  "integration": {
+    "method": "EXACT_GIT_BLOBS_BY_CAS_PREIMAGE_CHECK",
+    "force": false,
+    "source_branches_not_modified": true,
+    "no_whole_branch_copy": true,
+    "zero_existing_receipts_modified": true,
+    "patch": "C54-FULL.patch",
+    "per_file": [
+      {
+        "path": "apps/cli/src/sucafina-product/creation-recovery-http.ts",
+        "preimage": null,
+        "postimage": "96a83583afef331274ce1ea9f5c2877175434433",
+        "status": "added",
+        "additions": 124,
+        "deletions": 0,
+        "source": "111",
+        "readbackVerified": true
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "preimage": "f03ab621e96cfda23456be73bba2d24f24754d36",
+        "postimage": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+        "status": "modified",
+        "additions": 5,
+        "deletions": 2,
+        "source": "111-owner",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "preimage": "bd7df025e12aa457898f48fcf9634273ec5be381",
+        "postimage": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+        "status": "modified",
+        "additions": 3,
+        "deletions": 0,
+        "source": "111-owner",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+        "preimage": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+        "postimage": "122281c82d15e5732fee287cc4bcead4b6f97eb4",
+        "status": "modified",
+        "additions": 77,
+        "deletions": 1,
+        "source": "96",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+        "preimage": "5245f469fab7f23474c4c406ddd1d2f1f43d65a2",
+        "postimage": "c00afe5f9bec072c6236441e1b650327d26853ea",
+        "status": "modified",
+        "additions": 2,
+        "deletions": 2,
+        "source": "111-owner",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "preimage": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+        "postimage": "78574180369c9495cbe5e5d3e569bb500fbff277",
+        "status": "modified",
+        "additions": 6,
+        "deletions": 3,
+        "source": "111-owner",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+        "preimage": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+        "postimage": "d1d12abb1a4c460bdcd9ccf26353f7d0b4a74afb",
+        "status": "modified",
+        "additions": 178,
+        "deletions": 35,
+        "source": "96",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-browser.test.ts",
+        "preimage": null,
+        "postimage": "8cf4f844307206880abd163e4f836a582670e617",
+        "status": "added",
+        "additions": 255,
+        "deletions": 0,
+        "source": "111",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts",
+        "preimage": null,
+        "postimage": "46ab9222309a5856e931d033261f3438b1ce939b",
+        "status": "added",
+        "additions": 200,
+        "deletions": 0,
+        "source": "111",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+        "preimage": null,
+        "postimage": "eda13fa8d39b6dd378849ca57ce9b710bbe40e87",
+        "status": "added",
+        "additions": 234,
+        "deletions": 0,
+        "source": "96",
+        "readbackVerified": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+        "preimage": null,
+        "postimage": "a03f70c0a4adc2fe388e3d62f4436bdcf17b7be2",
+        "status": "added",
+        "additions": 181,
+        "deletions": 0,
+        "source": "96",
+        "readbackVerified": true
+      }
+    ],
+    "preservation": [
+      "C49/C52/C53 native consumers and first-save104 unaffected",
+      "real 96 recoverCreation C08 producer and original browser UUID",
+      "111 private authenticated GET and shared normal/contextual HTTP+host wiring composed together",
+      "all prior receipts preserved"
+    ]
+  },
+  "limitations": {
+    "Actions": "NOT_RUN_ON_C54",
+    "compiler": "NOT_RUN_ON_C54",
+    "guards": "NOT_RUN_ON_C54",
+    "browser": "NOT_RUN_ON_C54",
+    "review_R1_91_001": "OPEN",
+    "external_owner_recheck": "PENDING",
+    "release": false,
+    "native_readiness": false
+  },
+  "needed": {
+    "dispatcher": 120,
+    "tooling": 119,
+    "independent_review": 91,
+    "tests": [
+      "creation-correlation plus recovery-http",
+      "WP01 browser startup, creation-browser96, recovery-browser111, lifecycle last",
+      "normal/contextual POST and access/revocation/SQLite reload/regression"
+    ],
+    "request_ref": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-recovery-link/CI-REQUEST-107.json@bd65179c3ce1da921974c686439d3877f735f852"
+  },
+  "remains_open": [
+    "115 native historical read",
+    "116 four product files TS",
+    "117/118 test type fixes",
+    "119 compiler/guards",
+    "120 Actions",
+    "95/110 native installed C15",
+    "102 XLSX real W102 CI/visual",
+    "99/109 P03 original",
+    "R1/R2/R3 FINAL",
+    "eight final selections",
+    "epic",
+    "AM01-AM06",
+    "G7-C",
+    "G8-D",
+    "M31/MI07"
+  ],
+  "constraints": {
+    "GLOBAL_RELEASE": false,
+    "dev_merge": false,
+    "control_merge": false,
+    "deploy": false,
+    "Azure": false,
+    "engines": false,
+    "secrets": false,
+    "restart": false,
+    "local_tests": false,
+    "second_dispatcher": false
+  }
+}
