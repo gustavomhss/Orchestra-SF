@@ -4,6 +4,9 @@ import { SF_CONTEXT_COPY, SF_CONTEXT_COPY_BR } from "./orchestra-chapters/sf-con
 import { SF_COMMON_COPY, SF_COMMON_COPY_BR } from "./orchestra-chapters/sf-common"
 import { SF_S02_COPY, SF_S02_COPY_BR } from "./orchestra-chapters/sf-s02"
 import { SF_S03_COPY, SF_S03_COPY_BR } from "./orchestra-chapters/sf-s03"
+import { SF_S01_COPY, SF_S01_COPY_BR } from "./orchestra-chapters/sf-s01"
+import { SF_S04_COPY, SF_S04_COPY_BR } from "./orchestra-chapters/sf-s04"
+import { SF_S05_COPY, SF_S05_COPY_BR } from "./orchestra-chapters/sf-s05"
 import { MCP_COPY, MCP_COPY_BR } from "./orchestra-chapters/mcp"
 import { SKILLS_COPY, SKILLS_COPY_BR } from "./orchestra-chapters/skills"
 import { PLUGINS_COPY, PLUGINS_COPY_BR } from "./orchestra-chapters/plugins"
@@ -371,6 +374,9 @@ export const ORCHESTRA_COPY = {
   ...SF_COMMON_COPY,
   ...SF_S02_COPY,
   ...SF_S03_COPY,
+  ...SF_S01_COPY,
+  ...SF_S04_COPY,
+  ...SF_S05_COPY,
   ...MCP_COPY,
   ...SKILLS_COPY,
   ...PLUGINS_COPY,
@@ -724,6 +730,9 @@ export const ORCHESTRA_COPY_BR: Partial<Record<keyof typeof ORCHESTRA_COPY, stri
   ...SF_COMMON_COPY_BR,
   ...SF_S02_COPY_BR,
   ...SF_S03_COPY_BR,
+  ...SF_S01_COPY_BR,
+  ...SF_S04_COPY_BR,
+  ...SF_S05_COPY_BR,
   ...MCP_COPY_BR,
   ...SKILLS_COPY_BR,
   ...PLUGINS_COPY_BR,
