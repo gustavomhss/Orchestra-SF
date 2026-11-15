@@ -1,0 +1,18 @@
+diff --git a/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts b/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts
+index 02d75207b2978cc5c05368cc7e3517efeb3ce3ce..0000000 100644
+--- a/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/planner-sources.ts
+@@ -42,8 +42,11 @@
+         return decoded && encodeURIComponent(decoded) === part ? decoded : undefined
+       })
+       if (!decoded[0] || !decoded[1] || !Number.isSafeInteger(Number(parts[3]))) return { status: "needs-input", reason: "invalid-planner-source-selector" }
+-      const request = input.host.requestFor(context)
+-      if (!request || !await input.host.revalidate(context)) return { status: "denied", reason: "source-authority-unavailable" }
++      // Revalidate the actual lease even when it has already been finished.
++      // This is an observation-only denial: no authentication or source read.
++      const valid = await input.host.revalidate(context)
++      const request = input.host.requestFor(context)
++      if (!valid || !request) return { status: "denied", reason: "source-authority-unavailable" }
+       const read = async () => {
+         const describe = async (snapshot: Snapshot) => {
+           const principal = await input.host.authenticate(request, { surface: "planner", roleMap: roleMap(snapshot, "planner") })
