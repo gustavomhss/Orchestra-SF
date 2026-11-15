@@ -71,7 +71,7 @@ export const SF_U13_PR_COPY = {
   "sf.u13.readOnly": "Read-only; original producer authorization applies.",
 } as const
 
-export const SF_U13_PR_COPY_BR: typeof SF_U13_PR_COPY = {
+export const SF_U13_PR_COPY_BR: { [Key in keyof typeof SF_U13_PR_COPY]: string } = {
   "sf.cap26.title": "Minhas aprovações",
   "sf.cap26.primary": "Revisar decisão",
   "sf.u13.loading": "Carregando aprovações atuais…",
