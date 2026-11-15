@@ -1,0 +1,289 @@
+{
+  "schema": "sf2h.mission60.runtime59.final-source-supplement.v1",
+  "current_source": {
+    "branch": "runtime-read-scope",
+    "pin": "daed696ffb9024c2d73619074fb38f07f024abd6",
+    "tree": "339f91ad2d0d1bff98e348a273866ffd16556012",
+    "PR": 72
+  },
+  "previous_source": {
+    "pin": "c0d2094357a8566d3a1329f0ec2dab70378d1892",
+    "tree": "e56bc9695893a07ced2d3e2bebd1818a72801aa7",
+    "status": "ACK_CONTRACT_ONLY; retained as historical observation"
+  },
+  "current_state": "MATERIAL_SOURCE_PUBLISHED_QUALIFICATION_PENDING_NO_RELEASE",
+  "decision": "RETAIN_MATERIAL_CONSUMPTION_PENDING_EXPLICIT_COMPLETE_QUALIFIED_RELEASE",
+  "qualifying_terminal_release": false,
+  "GLOBAL_RELEASE": false,
+  "authority": {
+    "ACK_blob": "7e3dbb6f3175dfef4271772598c3357bf1809f61",
+    "contract_blob": "58cd64234660108427251251925a261750639930",
+    "disposal_addendum_blob": "58506ec0e19d8424df06b6a5cd2f5e7d28b5879b",
+    "rule": "These three authority/contract documents are unchanged. No final authority or consumer release added. Root60 separately reconciles latest control20cf2cf12f28c3b77bd9ff5c3dfc9f3d820d8352; reviewer claims no delegated control recensus."
+  },
+  "material_W": {
+    "sha": "ba393316f7c7350cdd519068808baafb7edb2393",
+    "tree": "9da06e22fae4445e174771d678934a0bebe4838a",
+    "source_base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "parent": "c0d2094357a8566d3a1329f0ec2dab70378d1892",
+    "material_files": 9,
+    "product_files": 4,
+    "test_and_helper_files": 5
+  },
+  "delta_from_previous": {
+    "ahead_by": 2,
+    "behind_by": 0,
+    "commits": [
+      {
+        "sha": "ba393316f7c7350cdd519068808baafb7edb2393",
+        "tree": "9da06e22fae4445e174771d678934a0bebe4838a",
+        "message": "feat(sucafina): add explicit readonly snapshot roots with canonical admission"
+      },
+      {
+        "sha": "daed696ffb9024c2d73619074fb38f07f024abd6",
+        "tree": "339f91ad2d0d1bff98e348a273866ffd16556012",
+        "message": "docs(sucafina): record mission59 validation request and static review [skip ci]"
+      }
+    ],
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/checks/REQUEST-45.json",
+        "status": "added",
+        "preimage": null,
+        "postimage": "af5f86e52ad66f8d353dd42d27012fdce588787b",
+        "additions": 95,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/ci/R1-dispatch.json",
+        "status": "added",
+        "preimage": null,
+        "postimage": "f03fa9b8ae1d8c7cb1c994f68a6f037842da2601",
+        "additions": 71,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/ci/R1-request.json",
+        "status": "added",
+        "preimage": null,
+        "postimage": "567f065937a6b1227479ec8e86a0acbc1073f93d",
+        "additions": 26,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/reviews/STATIC.json",
+        "status": "added",
+        "preimage": null,
+        "postimage": "07c2d1064a984df9f1b52cadd264fc6d39955eac",
+        "additions": 58,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "status": "modified",
+        "preimage": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+        "postimage": "0e812842ad0d534998c182100a8466548d70e915",
+        "additions": 7,
+        "deletions": 3
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+        "status": "modified",
+        "preimage": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+        "postimage": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+        "additions": 8,
+        "deletions": 2
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "status": "modified",
+        "preimage": "9e9bac976b503409de65868a366f352ca1e65071",
+        "postimage": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+        "additions": 7,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "status": "modified",
+        "preimage": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "postimage": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "additions": 53,
+        "deletions": 3
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+        "status": "added",
+        "preimage": null,
+        "postimage": "35741770154ccea55944674239e5b29cadc3abb6",
+        "additions": 154,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+        "status": "added",
+        "preimage": null,
+        "postimage": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
+        "additions": 171,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "status": "added",
+        "preimage": null,
+        "postimage": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
+        "additions": 133,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "status": "added",
+        "preimage": null,
+        "postimage": "93d0c84699c09bd35a2d73890112630bf20c5832",
+        "additions": 355,
+        "deletions": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "status": "added",
+        "preimage": null,
+        "postimage": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
+        "additions": 236,
+        "deletions": 0
+      }
+    ],
+    "reading": "Entire 13-file delta read: four receipt documents fetched in full, four product patches and all five added test/helper patches fully read. No project code executed."
+  },
+  "publication_inventory": {
+    "namespace": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-readonly-root/",
+    "new_receipts": [
+      {
+        "path": "checks/REQUEST-45.json",
+        "blob": "af5f86e52ad66f8d353dd42d27012fdce588787b",
+        "state": "REQUESTED_NOT_RUN_BY59"
+      },
+      {
+        "path": "ci/R1-dispatch.json",
+        "blob": "f03fa9b8ae1d8c7cb1c994f68a6f037842da2601",
+        "state": "IN_PROGRESS"
+      },
+      {
+        "path": "ci/R1-request.json",
+        "blob": "567f065937a6b1227479ec8e86a0acbc1073f93d"
+      },
+      {
+        "path": "reviews/STATIC.json",
+        "blob": "07c2d1064a984df9f1b52cadd264fc6d39955eac",
+        "state": "STATIC_REVIEW_NO_REMAINING_BLOCKER_NOT_EXECUTION"
+      }
+    ],
+    "absent": "No final/consumer release, terminal handoff/authority, complete integration manifest with modes/preimages/postimages/closure, result receipt, cost measurement result or P03 result added at this pin. REQUEST-45 input hashes are not a consumer release manifest."
+  },
+  "R1": {
+    "status": "IN_PROGRESS_AS_RECORDED_IN_PINNED_LEDGER; live workflow not polled",
+    "W": "ba393316f7c7350cdd519068808baafb7edb2393",
+    "W_tree": "9da06e22fae4445e174771d678934a0bebe4838a",
+    "S": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+    "S_tree": "fc8fedc05cdc5e6ad6cb299754ea0fc32ab4829e",
+    "S_parent": "ba393316f7c7350cdd519068808baafb7edb2393",
+    "S_only_delta": ".ci-run.json",
+    "branch": "ci-run-linux-m59r1",
+    "run_id": 43665180272,
+    "job_id": 132662845733,
+    "attempt": 1,
+    "workflow_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "request_blob": "567f065937a6b1227479ec8e86a0acbc1073f93d",
+    "request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "packageSelector": "packages/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+        "Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+        "Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+        "Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+        "Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+        "Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+        "--timeout",
+        "120000"
+      ],
+      "env": {}
+    },
+    "file_count": 15,
+    "filter": "NONE",
+    "source_pass": false,
+    "P03": 0,
+    "epic": 0,
+    "local_product_tests": 0,
+    "count_semantics": "Four new readonly tests plus existing unfiltered eleven-file runtime56/Finance regression selection. No result/executed/pass counts published. Existing C27 request remains distinct; source R1 cannot be relabeled as C27/composed proof.",
+    "actor": "Already dispatched by59 under its source mission according to the ledger. Reviewer and60 perform no execution or dispatch."
+  },
+  "checks45": {
+    "state": "REQUESTED_NOT_RUN_BY59",
+    "W": "ba393316f7c7350cdd519068808baafb7edb2393",
+    "tree": "9da06e22fae4445e174771d678934a0bebe4838a",
+    "commands": [
+      {
+        "cwd": "modules/sucafina",
+        "argv": [
+          "bun",
+          "typecheck"
+        ],
+        "purpose": "Additive Persistence capability, Source wrapper types, Portfolio generic return and new tests"
+      },
+      {
+        "cwd": ".",
+        "argv": [
+          "bun",
+          "run",
+          "check:guards",
+          "--base",
+          "origin/dev"
+        ],
+        "base_sha": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+      }
+    ],
+    "input_count": 9,
+    "rule": "45 ownership retained; full epic remains S0. Source request does not establish availability or success of45's interface."
+  },
+  "static_analysis": {
+    "contract": "Optional generic readSnapshotRoot is added to Persistence; docs make it scope-only and retain old fallback.",
+    "runtime": "New operation(true)-admitted root uses existing connection/queue/BEGIN semantics, observes dashboard/planner/procurement in original order, private getters/copy factories, readOnly flag, poison/readers/signal final fences and clears root snapshot/copy references at close. No mutable-root path alteration except conditionally new readOnly poisoning.",
+    "consumer": "Canonical Dashboard transaction still invoked inside optional root; old fallback intact. Pins readSnapshotRoot identity alongside existing host/request/context/transaction/currentSnapshots fences; final egress follows root resolution.",
+    "wrapper": "Source wrapper forwards optional scope only. Canonical transaction remains the sole source admission path, preserving underlying CurrentChoice behavior.",
+    "disposal": "Published code now sets poison for direct operation(true) attempts after dispose when inherited root.readOnly, and for newly invoked canonical transaction after dispose. Tests contain deterministic disposal-drain plus five caught post-dispose transaction/transactionAll/secret variants. These are authored assertions, not executed evidence.",
+    "new_dependency": "product/portfolio/read-snapshot.ts adds a type-only import of runtime/contract.ts. New tests import existing runtime-fresh-copy-cost/fixture.ts and new canonical-fixture.ts plus real runtime/UI/Source/CurrentChoice modules. Eventual release requires their exact transitive closure; this review did not run a resolver.",
+    "authored_coverage": "Cold/warm independent copies, caught commits/transactionAll/nested roots/blobs/secrets, abort and captured/unjoined lifetimes, post-dispose refusal, fresh cross-connection/deleted/corrupt SQL, codec fallback, both Source/Fence canonical wrappers, partial/corrupt metadata and anchor, request/installation/project/lease/method drift, final revalidation and scoped joins.",
+    "cost_design": "Real SQLite/UI/Source/CurrentChoice, same driver,160 rows/surface,6 workload observations,25 callbacks with nested Dashboard12/Planner6/Procurement6, four AB/BA timing pairs plus separate pass-through descriptor/parse probes. Equality assertions retain metrics/callback/observation/authorization order. Structural probe excludes root admission/final publication; timing descriptive, no ratio gate or heap/full-P03/CPU dominance claim.",
+    "limits": "No cost output or source test result present. Authored assertions/static producer review do not establish conformance, material measured benefit or any journey. Existing original P03 remains untouched and unexecuted according to R1 ledger."
+  },
+  "release_gaps": [
+    "Explicit complete qualified consumer release and terminal/current authority are absent.",
+    "R1 actual result/evidence and cost output are absent; no claim of source PASS or qualified benefit is supported.",
+    "Complete path/mode/preimage/postimage and dependency/consumer closure release manifest is absent.",
+    "Any original P03 attempt remains gated by safe material discriminant and own authority; mission60 must not dispatch or invent one.",
+    "A45 source check request is published but no A45 execution result is established."
+  ],
+  "required_draft_updates": [
+    "gate-queue-final.json Q60-R59/blocker: replace ACK/contract-only/no material with material W published, R1 recorded IN_PROGRESS and release/qualification pending; latest pin daed696.",
+    "future-source-inputs.json Runtime59: replace source_request:null with exact R1 payload plus W/S/trees/run/job/attempt/request/workflow/validator identities; retain FUTURE_AFTER_QUALIFIED_RELEASE, current future_candidate:null and no dispatch.",
+    "dependency-closure-final.json prospective_only.Runtime59: acknowledge nine source material paths; current C27 graph still unchanged because intake held. Do not claim no source code change.",
+    "candidates-final.json held59: latest pin daed696 and NO_QUALIFIED_RELEASE despite material source; preserve c0d209 chronology separately.",
+    "Current pending-owner/finding/handoff entries saying59 is only ACK or has no source request must be superseded additively. Static disposal finding now has source implementation/authored tests, pending qualification.",
+    "Keep all inherited C27 identities, noC28/noD-G8, no repeated56 intake, source58 evidence-only and P03 HOLD."
+  ],
+  "no_tests_executed": true,
+  "no_tests_dispatched": true,
+  "no_remote_writes": true,
+  "no_product_changes": true
+}

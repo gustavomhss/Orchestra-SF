@@ -1,0 +1,438 @@
+{
+  "schema": "sf2h.after-c27-60.source-census-final.v1",
+  "mission": 60,
+  "recorded_at": "2026-11-15 02:14:53 UTC",
+  "method": "Bounded pinned GitHub MCP reads; no idle polling or running-worker inference",
+  "stack_candidate": {
+    "name": "C28",
+    "symbol": "C28",
+    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+    "parent": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "material_paths": 45,
+    "qualification": "HOLD_NOT_RUN"
+  },
+  "containing_terminal_commit": "Read actual containing commit/tree; subsequent publication is own receipt delta only",
+  "reviewed_heads": [
+    {
+      "branch": "sf2-stack",
+      "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1"
+    },
+    {
+      "branch": "sf2-control",
+      "sha": "173c3507e40579f1a1a2dfb068bda40084a678bc"
+    },
+    {
+      "branch": "astra-wp07",
+      "sha": "c4f6676325f2549b29719fd5ce86132ad34212bc"
+    },
+    {
+      "branch": "astra-wp11",
+      "sha": "c688f16d8d2d45f22fe72bf4ddc8df3dc4370381"
+    },
+    {
+      "branch": "runtime-read-scope",
+      "sha": "1b861df306260deed5e6af8a8e49e5da45c11b67"
+    },
+    {
+      "branch": "astra-compose",
+      "sha": "d317873c18bf224c4c1f4d3425179d12ad53e81b"
+    }
+  ],
+  "decisions": {
+    "Reports48": "Completeexplicitreleaseconsumedas45pathC28candidate; runtime/functionalacceptanceHOLD,ended48",
+    "Decisions52": "No explicit release;16proposedpathsunchanged;Microsoftmapalternativeinert",
+    "Runtime59": "R2 source130PASS andqualifiedmaterialdiscriminant/9pathmanifest; consumerauthorization/terminalhandoff/finalclosuremissingat1b861df,notconsumed",
+    "Diagnostic58": "Explicit38blob evidenceonlyreleaseaccepted; originalP03FAILretained",
+    "Runtime56": "Alreadyintegratedby57,notrepeated"
+  },
+  "control": {
+    "pin": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "mission60_blob": "e819f3c3414d18f5895064903b5148d0495ca6ff",
+    "mission60_unchanged": true,
+    "source": "reconciliation/control-posterior.json",
+    "sole_stack_writer60_until_terminal": true
+  },
+  "previous_bounded_observations": {
+    "recorded_at": "2026-11-15 01:58:57 UTC",
+    "heads": [
+      {
+        "branch": "sf2-stack",
+        "sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85"
+      },
+      {
+        "branch": "sf2-control",
+        "sha": "20cf2cf12f28c3b77bd9ff5c3dfc9f3d820d8352"
+      },
+      {
+        "branch": "astra-wp07",
+        "sha": "c4f6676325f2549b29719fd5ce86132ad34212bc"
+      },
+      {
+        "branch": "astra-wp11",
+        "sha": "c688f16d8d2d45f22fe72bf4ddc8df3dc4370381"
+      },
+      {
+        "branch": "runtime-read-scope",
+        "sha": "daed696ffb9024c2d73619074fb38f07f024abd6"
+      },
+      {
+        "branch": "astra-compose",
+        "sha": "d317873c18bf224c4c1f4d3425179d12ad53e81b"
+      },
+      {
+        "branch": "sf-sidebar-plan",
+        "sha": "87d6e496a6a1e08e64ffb6d3c06890647a401459"
+      }
+    ],
+    "branches61_to64": [
+      {
+        "mission": 61,
+        "branch": "mixed-source-proof",
+        "blob": "e729d03c31b9e594417465de57d064f2635dd1d3",
+        "control": "20cf2cf12f28c3b77bd9ff5c3dfc9f3d820d8352",
+        "observed_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+        "state": "PREPARED_SOURCE_AT_BASE_NO_DELIVERY_OBSERVED",
+        "rule": "No liveness or release inferred; no new supervisor started by60.",
+        "observation_scope": "Previous bounded control20cf2cf/branch observation; not a live state atterminal60."
+      },
+      {
+        "mission": 62,
+        "branch": "installed-bi-proof",
+        "blob": "62a3c54a06d45371019f19d7cf8894d75b804ce7",
+        "control": "20cf2cf12f28c3b77bd9ff5c3dfc9f3d820d8352",
+        "observed_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+        "state": "PREPARED_SOURCE_AT_BASE_NO_DELIVERY_OBSERVED",
+        "rule": "No liveness or release inferred; no new supervisor started by60.",
+        "observation_scope": "Previous bounded control20cf2cf/branch observation; not a live state atterminal60."
+      },
+      {
+        "mission": 63,
+        "branch": "operations-scanner-proof",
+        "blob": "a5e3055c977ec60bb1eabf6e4c7d3870f95deff1",
+        "control": "20cf2cf12f28c3b77bd9ff5c3dfc9f3d820d8352",
+        "observed_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+        "state": "PREPARED_SOURCE_AT_BASE_NO_DELIVERY_OBSERVED",
+        "rule": "No liveness or release inferred; no new supervisor started by60.",
+        "observation_scope": "Previous bounded control20cf2cf/branch observation; not a live state atterminal60."
+      },
+      {
+        "mission": 64,
+        "branch": "native-admission-proof",
+        "blob": "b8baa2bca5588283fb3982edc98ab14971f3769f",
+        "control": "20cf2cf12f28c3b77bd9ff5c3dfc9f3d820d8352",
+        "observed_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+        "state": "PREPARED_SOURCE_AT_BASE_NO_DELIVERY_OBSERVED",
+        "rule": "No liveness or release inferred; no new supervisor started by60.",
+        "observation_scope": "Previous bounded control20cf2cf/branch observation; not a live state atterminal60."
+      }
+    ],
+    "rule": "Historical observations, not refreshed-liveness assertions"
+  },
+  "sources65_to70": {
+    "observed_at": "2026-11-15 02:18:18 UTC",
+    "review": "reconciliation/control65-70-final.json",
+    "sources": [
+      {
+        "mission": 65,
+        "branch": "c12-recovery-proof",
+        "source_pin": "59fc1645b4a1b9e4b56dddac9db1686b2cf8b377",
+        "source_tree": "31d21ee153512b21b5d65e29ff55a8fea9a41642",
+        "state": "ACK_ONLY_NO_RELEASE_AT_PIN",
+        "ACK": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/ACK65.json",
+          "blob": "d95482ea0183e2157542798afc760b7cf4566b5d",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/59fc1645b4a1b9e4b56dddac9db1686b2cf8b377/modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/ACK65.json",
+          "state": "ACK65_ACCEPTED_BOUNDED_IMPLEMENTATION",
+          "read": "FULL_DOCUMENT_INCLUDING_ARRAYS",
+          "declared_authority": {
+            "branch": "sf2-stack",
+            "pr": 65,
+            "integrator": 60,
+            "initial_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "latest_observed": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+            "delta": "Reports48 C28 material/receipts; no changes to three owned C12 paths. Source remains assigned base; target authority stays60."
+          }
+        },
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/product/decisions/apply.ts",
+          "modules/sucafina/Sucafinav1/product/decisions/prepared-apply.ts",
+          "modules/sucafina/Sucafinav1/product/decisions/receipt-review-binding.ts",
+          "modules/sucafina/Sucafinav1/test/product/c12-recovery-closure/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/c12-recovery-closure/"
+        ],
+        "owner": "Mission65 root / C12 recovery",
+        "next_action": "Await explicit complete qualified release of scoped apply/prepared-apply/receipt binding with exact W/S/results and dependencies; preserve real financial approval prerequisite and no blind redispatch.",
+        "liveness": "Not inferred from ACTIVE wording or silence; bounded immutable observation only.",
+        "release": {
+          "explicit_complete_release": false,
+          "qualifying_delivery": false,
+          "consumable_now": false,
+          "basis": "Only mission ACK was added over assigned base; ACK declares initial/active state, no source patch/manifest/results/terminal release exists in this delta.",
+          "receipt_statement": "No source release before complete patch, dependency manifest and actual results. No source PASS transfer to sf2-stack or global C/D."
+        },
+        "overlap_C28": {
+          "actual_changed_path_intersection": [],
+          "declared_write_scope_intersection": [],
+          "material_conflict_observed": false,
+          "scope": "Path overlap only; no deep review of unproduced/unreleased code.",
+          "reconciliation_note": "ACK already observes d088708 and confirms no changes to three owned C12 paths."
+        }
+      },
+      {
+        "mission": 66,
+        "branch": "export-artifact-proof",
+        "source_pin": "698f10b0063d3cf86733fdade74884ca15384870",
+        "source_tree": "8b8bd4b8a005316947b8f8a4c8b6c26090e8425e",
+        "state": "ACK_ONLY_NO_RELEASE_AT_PIN",
+        "ACK": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/ACK66.json",
+          "blob": "e724b594380f4feb49d1d02c536196c43c4e7265",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/698f10b0063d3cf86733fdade74884ca15384870/modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/ACK66.json",
+          "state": "ACK66_ACTIVE_BOUNDED_LEASE",
+          "read": "FULL_DOCUMENT_INCLUDING_ARRAYS",
+          "declared_authority": {
+            "reports48": "product/reviews/**, existing tests/helpers; observed terminal head c4f6676325f2549b29719fd5ce86132ad34212bc",
+            "runtime59": "local-store/contract/source-lifecycle/read-snapshot",
+            "checks45": "compiler/generation/typecheck/guards workflow",
+            "stack60": "sole integration writer",
+            "native_ui": "planning only"
+          }
+        },
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/runtime/artifact.ts",
+          "modules/sucafina/Sucafinav1/runtime/reports.ts",
+          "modules/sucafina/Sucafinav1/product/reports/download.ts",
+          "modules/sucafina/Sucafinav1/product/reports/storage.ts",
+          "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/export-artifact-closure/"
+        ],
+        "owner": "Mission66 root / export artifacts",
+        "next_action": "Keep six ACK-reported initial findings pending for producer evidence; receive complete future release only. Real generated-artifact and visual evidence remain distinct from browser/acceptance.",
+        "liveness": "Not inferred from ACTIVE wording or silence; bounded immutable observation only.",
+        "release": {
+          "explicit_complete_release": false,
+          "qualifying_delivery": false,
+          "consumable_now": false,
+          "basis": "Only mission ACK was added over assigned base; ACK declares initial/active state, no source patch/manifest/results/terminal release exists in this delta.",
+          "receipt_statement": false
+        },
+        "overlap_C28": {
+          "actual_changed_path_intersection": [],
+          "declared_write_scope_intersection": [],
+          "material_conflict_observed": false,
+          "scope": "Path overlap only; no deep review of unproduced/unreleased code.",
+          "reconciliation_note": "ACK target observation remains7e1a; future complete release must reconcile published C28 and Reports dependencies without resetting source."
+        }
+      },
+      {
+        "mission": 67,
+        "branch": "dashboard-installed-proof",
+        "source_pin": "bce4d89e252159d8574301834a72ec91f2acd791",
+        "source_tree": "cc4a35c41ae528f05184026386ee8d97996f9bf4",
+        "state": "ACK_ONLY_NO_RELEASE_AT_PIN",
+        "ACK": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/ACK67.json",
+          "blob": "94eb9905abbc519a36b2311fbedc27accde4300e",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/bce4d89e252159d8574301834a72ec91f2acd791/modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/ACK67.json",
+          "state": "ACTIVE",
+          "read": "FULL_DOCUMENT_INCLUDING_ARRAYS",
+          "declared_authority": {
+            "source": {
+              "sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+              "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/dashboard-installed-closure.json",
+              "blob": "da7bf719c7dcfde318fc4ab715ee3b4d4f013bc4"
+            },
+            "target_writer": 60,
+            "compiler_owner": 45
+          }
+        },
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/product/dashboard/commands.ts",
+          "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+          "modules/sucafina/Sucafinav1/product/dashboard/confirmation-issuer.ts",
+          "modules/sucafina/Sucafinav1/product/dashboard/mutation-scope.ts",
+          "modules/sucafina/Sucafinav1/product/dashboard/records.ts",
+          "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+          "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/",
+          "packages/app-shell/e2e/sucafina/dashboard-installed/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/dashboard-installed-closure/"
+        ],
+        "owner": "Mission67 root / S1 Dashboard closure",
+        "next_action": "Receive scoped released producer changes plus complete consumer patch only when explicitly released; preserve original full installed Dashboard journeys and historical WP02-F04 failure.",
+        "liveness": "Not inferred from ACTIVE wording or silence; bounded immutable observation only.",
+        "release": {
+          "explicit_complete_release": false,
+          "qualifying_delivery": false,
+          "consumable_now": false,
+          "basis": "Only mission ACK was added over assigned base; ACK declares initial/active state, no source patch/manifest/results/terminal release exists in this delta.",
+          "receipt_statement": false
+        },
+        "overlap_C28": {
+          "actual_changed_path_intersection": [],
+          "declared_write_scope_intersection": [],
+          "material_conflict_observed": false,
+          "scope": "Path overlap only; no deep review of unproduced/unreleased code.",
+          "reconciliation_note": "ACK explicitly reconciles C28d088708/tree8b07ebf and identifies no overlap with owned Dashboard paths."
+        }
+      },
+      {
+        "mission": 68,
+        "branch": "workbench-mcp-proof",
+        "source_pin": "6b2bbb59976378081f7e8032537d9ff71eba30f5",
+        "source_tree": "dc22b478453d62fde0d729510aaae3d75597032d",
+        "state": "ACK_ONLY_NO_RELEASE_AT_PIN",
+        "ACK": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/ACK68.json",
+          "blob": "9954066f19415f23e51f8f099384e3c57c347182",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/6b2bbb59976378081f7e8032537d9ff71eba30f5/modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/ACK68.json",
+          "state": "ACK68_ACTIVE",
+          "read": "FULL_DOCUMENT_INCLUDING_ARRAYS",
+          "declared_authority": {
+            "A60": "sole sf2-stack integration writer; no target writes",
+            "A64": "Task/provider/Relay/Schedule admission and native run proof",
+            "A45": "compiler/typecheck/generation/guards interface",
+            "native_proof": "Synthetic components and registry-shaped native receipts remain component evidence only; actual SessionV2 skill load receipts will be recorded separately.",
+            "tests": "only surgical existing hosted test-ci request interface; no local product tests, heavy checks or full epic",
+            "publication": "one conventional draft PR to sf2-stack; terminal release will name source W/S/runs, dependencies and remaining mandatory gaps"
+          }
+        },
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/"
+        ],
+        "owner": "Mission68 root / workbench private MCP and skill loader",
+        "next_action": "Receive explicit terminal release with W/S/runs, dependencies and mandatory gaps. Preserve separation from64 Task/provider/native proof and reject registry-shaped receipts as native success.",
+        "liveness": "Not inferred from ACTIVE wording or silence; bounded immutable observation only.",
+        "release": {
+          "explicit_complete_release": false,
+          "qualifying_delivery": false,
+          "consumable_now": false,
+          "basis": "Only mission ACK was added over assigned base; ACK declares initial/active state, no source patch/manifest/results/terminal release exists in this delta.",
+          "receipt_statement": "one conventional draft PR to sf2-stack; terminal release will name source W/S/runs, dependencies and remaining mandatory gaps"
+        },
+        "overlap_C28": {
+          "actual_changed_path_intersection": [],
+          "declared_write_scope_intersection": [],
+          "material_conflict_observed": false,
+          "scope": "Path overlap only; no deep review of unproduced/unreleased code.",
+          "reconciliation_note": "ACK is based on7e1a; future consumer dependencies must be reconciled against C28 or later actual target."
+        }
+      },
+      {
+        "mission": 69,
+        "branch": "atlas-memory-proof",
+        "source_pin": "c8f7855989da65f6ec5af3b70bfb444b361db3e0",
+        "source_tree": "67da9601c896fe7fdbfa1f06faa0be7251a6f293",
+        "state": "ACK_ONLY_NO_RELEASE_AT_PIN",
+        "ACK": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-memory-composed/ACK69.json",
+          "blob": "2e99b0c3d86998e2a0d88d8c25461a49247136dd",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/c8f7855989da65f6ec5af3b70bfb444b361db3e0/modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-memory-composed/ACK69.json",
+          "state": "ACKNOWLEDGED_IN_PROGRESS",
+          "read": "FULL_DOCUMENT_INCLUDING_ARRAYS",
+          "declared_authority": {
+            "integrator": "60 sole sf2-stack writer; ACK60 at base SHA",
+            "runtime": "59 read-only dependency; no runtime/source-lifecycle edits",
+            "compiler": "45 owns check interface",
+            "native": "64 owns authenticated native admission; no synthetic native success",
+            "mixed_source": "61 owns original four discriminators",
+            "MI07": "HELD M51-MI07-PROCUREMENT-CAPTURE-BLOCKED / M31-FINANCIAL-APPROVAL; unchanged retry forbidden"
+          }
+        },
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/",
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/atlas-memory-composed/"
+        ],
+        "owner": "Mission69 root / S0-A Atlas-Memory composed qualification",
+        "next_action": "Receive explicit release of bounded Atlas-Memory work with genuine capture/publication/restart/recall/consumer evidence. Preserve40/35 contracts and original61 discriminators.",
+        "liveness": "Not inferred from ACTIVE wording or silence; bounded immutable observation only.",
+        "release": {
+          "explicit_complete_release": false,
+          "qualifying_delivery": false,
+          "consumable_now": false,
+          "basis": "Only mission ACK was added over assigned base; ACK declares initial/active state, no source patch/manifest/results/terminal release exists in this delta.",
+          "receipt_statement": null
+        },
+        "overlap_C28": {
+          "actual_changed_path_intersection": [],
+          "declared_write_scope_intersection": [],
+          "material_conflict_observed": false,
+          "scope": "Path overlap only; no deep review of unproduced/unreleased code.",
+          "reconciliation_note": "ACK uses C27 material/base7e1a and acknowledges sole stack writer60; future composition must pin current target."
+        }
+      },
+      {
+        "mission": 70,
+        "branch": "cold-auth-review",
+        "source_pin": "f4a9991171357b582c1a72245d8282e3ca059673",
+        "source_tree": "521dacb6fda25c05f6a717f70f2b470348cbee66",
+        "state": "ACK_ONLY_NO_RELEASE_AT_PIN",
+        "ACK": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/ACK70.json",
+          "blob": "17fe47407e25199a164db230a95acd7981efdb7b",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/f4a9991171357b582c1a72245d8282e3ca059673/modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/ACK70.json",
+          "state": "REVIEW_IN_PROGRESS_DOCUMENTATION_ONLY",
+          "read": "FULL_DOCUMENT_INCLUDING_ARRAYS",
+          "declared_authority": {
+            "control_head": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+            "stack_observed_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+            "integrator": "60 sole sf2-stack writer; PR65",
+            "predecessor57_authority_blob": "5f2009672caed4b729924e88033b639fae8df7ee",
+            "successor60_ack_blob": "95a0a793cce1c5c0e03942306189cd518afbe1ce",
+            "no_write_authority_transfer": true
+          }
+        },
+        "write_paths": [
+          "modules/sucafina/Sucafinav1/docs/sf2h/receipts/cold-auth-review/"
+        ],
+        "owner": "Mission70 root / S2-R2 independent cold auth/security review",
+        "next_action": "Receive bounded final review/findings when published; append factual routes, preserving independent-review scope. This ACK is neither a final review nor three FINAL approvals.",
+        "liveness": "Not inferred from ACTIVE wording or silence; bounded immutable observation only.",
+        "release": {
+          "explicit_complete_release": false,
+          "qualifying_delivery": false,
+          "consumable_now": false,
+          "basis": "Only mission ACK was added over assigned base; ACK declares initial/active state, no source patch/manifest/results/terminal release exists in this delta.",
+          "receipt_statement": null
+        },
+        "overlap_C28": {
+          "actual_changed_path_intersection": [],
+          "declared_write_scope_intersection": [],
+          "material_conflict_observed": false,
+          "scope": "Path overlap only; no deep review of unproduced/unreleased code.",
+          "reconciliation_note": "Review SHA is7e1a and excludes later C28 material. Any final claim must state exact review target or add an explicit C28 delta review."
+        }
+      }
+    ],
+    "consumable": 0
+  },
+  "sidebar": {
+    "pin": "87d6e496a6a1e08e64ffb6d3c06890647a401459",
+    "brief_blob": "4417f036ca47a3f5d9c3dfe79157e776b087cc20",
+    "state": "PLANNING_ONLY_NO_IMPLEMENTATION_AUTHORIZATION",
+    "observation_scope": "Prior boundedread at01:58:57, not currentlivepoll"
+  },
+  "Azure": "Separatefrontnotmergedmodifiedordeployed",
+  "feedback": "communication-final.json",
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "preflights": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "workflow_ref_moves": 0,
+    "producer_branch_writes": 0,
+    "dev_merge": 0,
+    "deploy": 0,
+    "Azure": 0,
+    "product_execution": 0
+  },
+  "GLOBAL_RELEASE": false
+}

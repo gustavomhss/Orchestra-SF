@@ -1,0 +1,268 @@
+{
+  "schema": "sf2h.after-c27-60.decisions52-final-source-supplement.v1",
+  "reviewer": "decisions52_review",
+  "previous_source": "fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1",
+  "observed_source": "c688f16d8d2d45f22fe72bf4ddc8df3dc4370381",
+  "source_tree": "b8b8e2ce14a8ce4cd29487f02be72f79c3362c04",
+  "decision": "HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE",
+  "comparison": {
+    "status": "ahead",
+    "ahead_by": 1,
+    "behind_by": 0,
+    "all14paths_in_receipts_namespace": true,
+    "changed_files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/INPUTS.json",
+        "blob": "860e534a1f6505edd114805862bc30b4b2d79af3",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/PRODUCT-MANIFEST.json",
+        "blob": "d18aae0da5078cc3e46dc37e938d2c2de0a8fdd8",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ci/diagnostic08-request.json",
+        "blob": "bf2063f34180f20b6507633df128753a506b94b0",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/current-target-terminal57-after-diagnostic07.json",
+        "blob": "d706a3334aabbee4ae3f7a7066bc5ad004f110d4",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostic-07.json",
+        "blob": "ba7d6e194351ab00a43fee2314978722880164da",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/07/profile-summary.json",
+        "blob": "96e9fe22856787707c8e4016f7deece9d947978f",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/08/complete.patch",
+        "blob": "8fcbdfa91f4d56cc1388fc55af003055e39eb3c5",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/08/independent-review.md",
+        "blob": "854c883d2127f74edfebebb93f6e06283cc7e91f",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/08/manifest.json",
+        "blob": "114a82f140b0438b28b0d082a1fed15d504dc5b2",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/08/post/scenario-comparison-port.ts.txt",
+        "blob": "ed1d91fdfd248ec38d3a2aa11e3765ec05b18514",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/08/post/stored-scenarios.ts.txt",
+        "blob": "571e48546c92396ff9d1e3058936b7367f5e0844",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/08/pre/scenario-comparison-port.ts.txt",
+        "blob": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/08/pre/stored-scenarios.ts.txt",
+        "blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/diagnostics/source58-performance-crosswalk.json",
+        "blob": "2766506626f73b0241398de7090675aafa06ada3",
+        "status": "added"
+      }
+    ],
+    "material_source_paths_changed": 0
+  },
+  "authority": {
+    "ack_blob": "ee4f18cc45421f300b453b7c385d677b77001ea5",
+    "ack_state": "ACK52_ACTIVE_BOUNDED_SUCCESSION",
+    "manifest_blob": "d18aae0da5078cc3e46dc37e938d2c2de0a8fdd8",
+    "manifest_state": "ACTIVE_P5_NOMINAL06_FAILED_DIAGNOSTIC08_RUNNING",
+    "explicit_release_found": false,
+    "terminal_release_found": false,
+    "pr40_comments_read_through": 6887592437,
+    "note": "Latest observed PR comment is integration60 feedback, not producer release. Namespace listing has no terminal handoff or release52. Existing ACK does not authorize consuming unfinished diagnostics."
+  },
+  "material": {
+    "source_product": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
+    "source_tree": "a905bafed750476e6312df77c22a1d2407e987a9",
+    "base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+    "base_tree": "31be8f81803b77f03e9089e09118f78218b26262",
+    "owned_paths": 9,
+    "shared_paths": 7,
+    "candidate_complete_patch_blob": "3bd8566a025fe71e58be37d482c6306bf9b8f98f",
+    "owned_complete_patch_blob": "7f37bcc0aefe55fe26a13ba10a2fa5874b895bfd",
+    "shared_complete_patch_blob": "322aa703425a1690be2b09ad8e00207b46ff3759",
+    "delta_from_reviewed_candidate": "NONE",
+    "composition_decision": "Previous16-path C27 pre/postimage reconciliation remains applicable; historical55 map overwrite conflict remains. The alternative newmap+fixture lookup is still inert and only eligible for future atomic composition with released installation52.",
+    "cross_reports48": "No new production path is introduced; prior zero exact path intersection remains. Diagnostic Planner files are not release material."
+  },
+  "nominal06": {
+    "unchanged": true,
+    "receipt_blob": "e6c8a17a200b70ad9d89033a1f3b81d616f583fd",
+    "W": "78f2362bd09fcbf606505d7833860f1af07b8e6f",
+    "S": "6dea9a6f9a96b0e5c9051472d1bd6513189376fc",
+    "run": 43663347199,
+    "passed": 3,
+    "failed": 2,
+    "limit": "Original source W6 evidence only; not execution or qualification of exact C27."
+  },
+  "diagnostic07": {
+    "receipt_blob": "ba7d6e194351ab00a43fee2314978722880164da",
+    "profile_blob": "96e9fe22856787707c8e4016f7deece9d947978f",
+    "W": "2a330245173d0530bc83ab70568b39f5e1633c01",
+    "W_tree": "cb4638e8c05c7687677bfdfba760925e62d4068c",
+    "S": "e43c6ef8265abad48eaff7c36782d65efd7c7281",
+    "S_tree": "7f87439ea8dbadd5a325e441bb3f5692b9d356f4",
+    "run": 43664202278,
+    "job": 132659867524,
+    "attempt": 1,
+    "purpose": "DIAGNOSTIC_ONLY_NOT_FINAL_ACCEPTANCE",
+    "acceptance_eligible": false,
+    "independently_observed_run": {
+      "id": 43664202278,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "e43c6ef8265abad48eaff7c36782d65efd7c7281",
+      "created_at": "2026-11-15T01:40:37Z",
+      "updated_at": "2026-11-15T01:45:05Z",
+      "run_attempt": 1
+    },
+    "selected": 5,
+    "executed": 5,
+    "passed": 3,
+    "failed": 2,
+    "skipped": 0,
+    "retries": 0,
+    "artifact": {
+      "id": 14142145441,
+      "sha256": "a5c40acad669033cd24b0180ecb5cdaed0e94ebe50f35f07227ecafd51de0f5e",
+      "bytes": 3106372,
+      "provenance": "Published source receipt; artifact not downloaded by this reviewer."
+    },
+    "observed": {
+      "planner_compare_ms": 12551.298028000005,
+      "before_withCase_to_after_withCase_ms": 17674.486763999994,
+      "producer_start_to_producer_end_ms": 17405.143624000004,
+      "before_withCase_to_producer_start_ms": 266.93758899999375,
+      "call_counts": {
+        "case.read": 10,
+        "result.readHistoricalScenario": 8,
+        "planner.compareScenarios": 1
+      },
+      "ui_deadline_ms": 10000,
+      "late_server_status": "ok",
+      "browser": "J1 ERR_ABORTED with no HTTP status/comparison body; J2 Requests GET503 before form.",
+      "outcome": "J1 original numeric/comparison/choice/history/source-refresh assertions remain unreached. J2 financial proposal/approval/Apply/recovery remain unreached. J3/J4/J5 diagnostic passes are not additional clean production qualification."
+    },
+    "limits": [
+      "Temporary instrumentation adds overhead; it is not timing-transparent or a causal performance fix.",
+      "Planner measured interval exceeds preserved10000ms UI deadline in this diagnostic composition. It does not identify an exclusive internal stage, isolate Runtime56 versus batch effects or prove P03 causality.",
+      "Admission before the first HTTP marker is unmeasured.",
+      "Parallel/inclusive read intervals overlap and cannot be summed as exclusive wall time.",
+      "Late server statusok does not prove response-body contents or browser assertions."
+    ]
+  },
+  "diagnostic08": {
+    "manifest_blob": "114a82f140b0438b28b0d082a1fed15d504dc5b2",
+    "patch_blob": "8fcbdfa91f4d56cc1388fc55af003055e39eb3c5",
+    "review_blob": "854c883d2127f74edfebebb93f6e06283cc7e91f",
+    "source_manifest_state": "RUNNING_NOT_ACCEPTANCE",
+    "W": "a6e4102a92742bda6bfede2c66ce1130b3d6df07",
+    "W_tree": "4381a0c21c481f7dd998f2e7bb60f007a96e6fd1",
+    "S": "8392e09ae87a6df68790a69d223585e830ec82ca",
+    "S_tree": "c801889a4e723859ed02b2f41105b36587a95267",
+    "run": 43665193618,
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "independently_observed_run": {
+      "id": 43665193618,
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "8392e09ae87a6df68790a69d223585e830ec82ca",
+      "created_at": "2026-11-15T01:53:38Z",
+      "updated_at": "2026-11-15T01:58:20Z",
+      "run_attempt": 1
+    },
+    "source_receipt_in_observed_pin": null,
+    "selected_executed_pass_fail_counts": null,
+    "no_inference": "Run API completed/failure supersedes the manifest's running observation only for run lifecycle. No exact D8 outcome counts, new bottleneck attribution or artifact digest are inferred.",
+    "diagnostic_only_material": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+        "preimage": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+        "postimage": "ed1d91fdfd248ec38d3a2aa11e3765ec05b18514",
+        "postimage_sha256": "6ea1ec9b7efc5f0d22f1d1d2b5378438d322a513013477a0c31c2f1a95d34f96"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+        "preimage": "529e29806b3faf15f88eec009c198e783f4248a3",
+        "postimage": "571e48546c92396ff9d1e3058936b7367f5e0844",
+        "postimage_sha256": "76dfdcace8027fc979f57c157221e2ee0b67430c3a7cad2f597ecf82287836af"
+      }
+    ],
+    "static_delta_review": "Adds timing wrappers around existing real Planner scenario batch, case/history, Forecast, source/coverage and criterion callbacks. Original calls, receiver/arguments, clone boundaries, identity checks and fail-closed results remain; fixed stage/sequence/time logs only. Logging/async continuation overhead means no timing transparency claim.",
+    "qualification": "DIAGNOSTIC_ONLY; remove all D7+D8 temporary changes before clean acceptance."
+  },
+  "excluded_all_four_temporary_paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "diagnostic_postimage": "75bdb3b47ceb43d5a9c79eb10c1ab073aa6fb9f7",
+      "clean_preimage": "138238ca9273e84f39f8e1db484378a3e62d41d4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "diagnostic_postimage": "0cf0f52fcf04adc4b1096e30a8dd19f2e101e222",
+      "clean_preimage": "a77da76589ece60a6925bdd20731efbc8f19b597"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "diagnostic_postimage": "ed1d91fdfd248ec38d3a2aa11e3765ec05b18514",
+      "clean_preimage": "1782c2094239c3712d3a895a6a25f4160fb429c7"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "diagnostic_postimage": "571e48546c92396ff9d1e3058936b7367f5e0844",
+      "clean_preimage": "529e29806b3faf15f88eec009c198e783f4248a3"
+    }
+  ],
+  "source_authority_observation_limit": {
+    "path": "current-target-terminal57-after-diagnostic07.json",
+    "blob": "d706a3334aabbee4ae3f7a7066bc5ad004f110d4",
+    "observed_at": "2026-11-15T01:48:53Z",
+    "historical_claim": "No ACK60 observed; mission60 PREPARED_NOT_STARTED at targetd6d981...",
+    "current_treatment": "Historical source observation only. It does not revoke or supersede later reconciled ACK60/publications. Root60 retains actual current authority.",
+    "source58_crosswalk_blob": "2766506626f73b0241398de7090675aafa06ada3",
+    "crosswalk_limit": "Different actual workloads; source58 inclusive totals and P03 failure do not attribute the single installed Planner interval52. A58 released no new product fix. No unchanged P03 repeat."
+  },
+  "required_owner_actions": [
+    "Publish complete explicit terminal source release with immutable owned/shared manifests, dependencies, authority and clean production qualification; ACK/diagnostic publication is insufficient.",
+    "Remove all four D7/D8 instrumentation edits from final production candidate.",
+    "Resolve comparison latency under original10000ms UI deadline without removing final observations, authority/freshness/identity fences or changing budget.",
+    "Resolve real Procurement Requests503 cause/configuration through canonical owners without seeding policy; preserve separate M31/MI07 financial contract hold.",
+    "After release, compose installation52 plus new current Microsoft map plus fixture lookup atomically, keeping historical55 map and source49 archive immutable.",
+    "Update terminal60 current-source census/manifest status additively to c688f16... and record D7 diagnostic evidence plus D8 API failure separately. Do not overwrite previous review or nominal06."
+  ],
+  "read_scope": "Immutable compare, namespace listing, current manifest, new D7 receipt identities/case findings/profile, complete D8 patch/manifest/review, source58 crosswalk and historical target authority audit; PR40 comments and exact D7/D8 run metadata. No raw runtime artifact download or product execution.",
+  "execution": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "AM": 0,
+    "product_execution": 0,
+    "remote_writes": 0
+  },
+  "GLOBAL_RELEASE": false
+}

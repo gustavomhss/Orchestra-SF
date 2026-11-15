@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.after-c27-60.errata.v1",
+  "mission": 60,
+  "inherited57": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/errata-final.json",
+    "blob": "dfbc2e606d4451ac93af5d76037e4031861622fb",
+    "unchanged": true
+  },
+  "kept": [
+    {
+      "id": "M57-INTEGRITY-01",
+      "correct_path": "shared/composite/MANIFEST.json",
+      "blob": "828cc2c02368c2b0f8546f1bc5adb5907a250d54",
+      "rule": "Old lowercase reference retained as history; use uppercase actual filename."
+    }
+  ],
+  "chronology": [
+    {
+      "subject": "58",
+      "old_state": "Historical active58/no release/no C27 equivalence in57",
+      "current_state": "Explicit terminal58 evidence-only release accepted;140/142source+19/19config comparison documented, P03FAIL unchanged."
+    },
+    {
+      "subject": "59",
+      "old_state": "Initial mission60 observation at C27 with no ACK namespace",
+      "current_state": "Later pin c0d2094357a8566d3a1329f0ec2dab70378d1892 has ACK/contract/adendum only; initial observation retained as history."
+    },
+    {
+      "subject": "48 explicit release",
+      "old_state": "Initial60 census ac72112c NOT_RELEASED",
+      "current_state": "Terminalc4f6676explicit complete release; full45unit preparedC28 per sourcepermitted_now/userinstruction; qualificationruntimeHOLD preserved."
+    },
+    {
+      "subject": "59 material",
+      "old_state": "c0d209 ACK+contract only",
+      "current_state": "daed696 publishes9materialpaths+R1request/sourceledger; no complete terminal release at pin."
+    },
+    {
+      "subject": "59 source qualification",
+      "old_state": "daed696material9/R1ledger withoutresults",
+      "current_state": "1b861df publishes R2source130PASS/0FAIL/15files and safe materialqualification for futureoriginalP03 plus complete9pathmanifest; consumer release/terminalhandoff/finalclosure still absent. R1 history retained; P03 NOT_RUN atpin."
+    }
+  ],
+  "provenance": "Microsoft proposal preserves historical map metadata while actual future C27 pre/post is declared in proposals/MANIFEST.json; historical fields never used as CAS inputs.",
+  "material_changed": true,
+  "GLOBAL_RELEASE": false,
+  "new60": [
+    {
+      "id": "M60-EVIDENCE-01",
+      "affected": "reconciliation/decisions52.json#/nominal/cases proof_limits",
+      "old_wording": "Current C27 runtime independently reconfirms the queue503 blocker",
+      "correct": "The sourceW6 composition, including C27 runtime material, observed503; this is not an execution/qualification ofC27 orC28.",
+      "rule": "Initialstaticreview preserved as historical record; future-source-inputs/currenthandoff use precise W/S attribution."
+    },
+    {
+      "id": "M60-CENSUS-FIELDS-01",
+      "affected": "Currentqueue source_head/census_at and closureconsumer58",
+      "correct": "57sourcehead/date moved to historical_ fields; currentcensus uses reviewedpins;58is historical ended source,59current causal dependency."
+    },
+    {
+      "id": "M60-FINDING-COUNT-01",
+      "correct": "M31-FINANCIAL-APPROVAL is inherited and updated, not counted as a new60finding."
+    },
+    {
+      "id": "M60-C28-CURRENT-LABELS-01",
+      "affected": "gate-queue-final functional_requests and validation-inputs minimal_active_requests metadata",
+      "correct": "Nine current state labels in each list are bound toC28, notC27. Originalrequestpayloads/controlbudgets are unchanged; historical source snapshots remainliteral."
+    },
+    {
+      "id": "M60-REPORTS-ENDED-OWNER-01",
+      "affected": "Two new60findingowner routes and Agenda39currentlimit",
+      "correct": "Ended48isnotassignednewwork. S0mustdesignateauthorizedsuccessor; full48releasealreadyreceived/C28prepared whilequalificationHOLD remains."
+    }
+  ],
+  "material_change_scope": "C28explicit45Reports release only; errata themselves documental"
+}
