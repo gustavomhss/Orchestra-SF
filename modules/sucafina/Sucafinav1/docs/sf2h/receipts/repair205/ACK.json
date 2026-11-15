@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.causal-repair205.actor-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 205,
+  "order": "S05",
+  "branch": "sf-thread-newlines",
+  "epoch": "compiler-source-e1-browser205",
+  "actor": {
+    "requested_mode": "Astra (user label)",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_exposure": "not exposed; no session identifier claimed",
+    "github_user_not_runtime_identity": true
+  },
+  "authority": {
+    "source_head_verified": "988d770ed29fa947ef20eb19ca94cd3379158c28",
+    "source_tree": "71f289f6b202ce16a5a4e95602ed46472285fdbf",
+    "source_reserved_head": "988d770ed29fa947ef20eb19ca94cd3379158c28",
+    "product_base": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "s0_fence_blob": "298e9e894fda018c895ed4be0f968563355e03e3",
+    "s0_fence_state": "PREPARED_NOT_STARTED",
+    "previous": 184,
+    "previous_authority": "REVOKED_FOR_FUTURE_ASSIGNED_WRITES_OR_DISPATCH",
+    "runtime_termination_claimed": false,
+    "independent_session_requested": true
+  },
+  "read_evidence": {
+    "packet205_blob": "86d7042ebf822fd6612274355ead85d397faad50",
+    "packet184_blob": "bb88d2053b0332dbbd7375ec524198ad0ee438f4",
+    "handoff184_blob": "53d74372c7bc9108ee7e034671f0274ade634a82",
+    "f04_handoff187": "sf-ux-w05/closure187/HANDOFF-162.md",
+    "app_agents_blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+    "failing_run": 43773852118,
+    "failing_job": 132995508966
+  },
+  "constraints": {
+    "write_paths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair205/**"
+    ],
+    "integrator": 189,
+    "compiler": 190,
+    "product_ci": 200,
+    "tests_locally": "FORBIDDEN",
+    "dispatch_ci": "FORBIDDEN",
+    "force": false,
+    "native_goal": "paused",
+    "GLOBAL_RELEASE": false
+  },
+  "state": "ACK_ONLY_NOT_A_PRODUCT_PATCH",
+  "validation": "NOT_RUN"
+}
