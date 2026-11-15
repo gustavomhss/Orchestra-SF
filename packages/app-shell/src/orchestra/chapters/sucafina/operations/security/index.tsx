@@ -164,7 +164,7 @@ function formFields(editor: SecurityEditor, value: FormValues): SfReviewField[] 
   }))
 }
 
-export function SfSecurityPage(props: SfSurfaceProps<"CAP12">) {
+export function SfSecurityView(props: SfSurfaceProps<"CAP12">) {
   const language = useLanguage()
   const t = (copy: SfCopyKey) => language.t(copy as Parameters<typeof language.t>[0])
   const owner = useSfContext()
