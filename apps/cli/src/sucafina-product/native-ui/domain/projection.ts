@@ -43,10 +43,12 @@ const requiredRecord = (value: unknown): Record<string, unknown> => {
 const pick = (source: Record<string, unknown>, keys: readonly string[]) =>
   Object.fromEntries(keys.filter((key) => has(source, key)).map((key) => [key, source[key]]))
 
-const projectRows = (value: unknown, keys: readonly string[]) => {
+const requiredRows = (value: unknown): Record<string, unknown>[] => {
   if (!isRecordList(value)) throw new Error("Malformed authorized source collection")
-  return rows(value).map((row) => pick(row, keys))
+  return value
 }
+const projectRows = (value: unknown, keys: readonly string[]) =>
+  requiredRows(value).map((row) => pick(row, keys))
 
 function sanitizedFinance(source: Record<string, unknown>): BudgetData | undefined {
   if (!["opexOwners", "opexEntries", "capexProjects", "capexEntries"].every((key) => isRecordList(source[key]))) return undefined
@@ -139,7 +141,7 @@ function publicBudget(source: Record<string, unknown>, cap: "CAP01" | "CAP03" | 
 function publicPortfolio(source: Record<string, unknown>, cap: SfDomainCapability) {
   if (cap === "CAP09" || cap === "CAP10") {
     if (!has(source, "projects")) return undefined
-    return { projects: rows(source.projects).map((row) => ({
+    return { projects: requiredRows(source.projects).map((row) => ({
       ...pick(row, projectFields),
       ...(has(row, "milestones") ? { milestones: projectRows(row.milestones, ["id", "name", "date", "status", "notes"]) } : {}),
     })) }
@@ -150,7 +152,7 @@ function publicPortfolio(source: Record<string, unknown>, cap: SfDomainCapabilit
   }
   if (cap === "CAP14") {
     if (!has(source, "contracts")) return undefined
-    return { contracts: rows(source.contracts).map((row) => ({
+    return { contracts: requiredRows(source.contracts).map((row) => ({
       ...pick(row, contractFields),
       ...(has(row, "docs") ? { docs: projectRows(row.docs, ["id", "name", "size", "type", "added", "status"]) } : {}),
     })) }
@@ -164,7 +166,7 @@ function publicPortfolio(source: Record<string, unknown>, cap: SfDomainCapabilit
     const performance = requiredRecord(source.itperf)
     return { itperf: {
       ...pick(performance, ["name", "year"]),
-      ...(has(performance, "items") ? { items: rows(performance.items).map((item) => ({
+      ...(has(performance, "items") ? { items: requiredRows(performance.items).map((item) => ({
         ...pick(item, itemFields),
         ...(has(item, "subs") ? { subs: projectRows(item.subs, subFields) } : {}),
       })) } : {}),
