@@ -338,8 +338,6 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
       const nextVersion = next.kind === "ready" && review.ref ? vendorVersion(next, review.ref) : undefined
       const verified = review.action === "save" && review.ref && observed &&
         nextVersion !== undefined && nextVersion > review.version
-      const deleted = review.action === "delete" && review.ref && next.kind === "ready" &&
-        !next.records.some((row) => vendorRef(row) === review.ref)
       if (next.kind === "ready") setView({ read: next, state: "ready" })
       if (verified) {
         draft()?.confirmSave({
@@ -347,11 +345,10 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
           baseVersion: nextVersion!, value: vendorEditFromRecord(observed),
         })
         setView({ selected: review.ref, creating: false, notice: "sf.u15.saved" })
-      } else if (deleted) {
-        setView({ selected: undefined, creating: false, notice: "sf.u15.deleted" })
       } else {
-        // No synthetic identity for a newly created contract, or false claim
-        // of record deletion from an incomplete/failed authorized refetch.
+        // The page projection alone does not prove a delete (redaction/filter
+        // may hide the record); retain an accepted-only state pending receipt.
+        // Likewise, do not guess the ID of a new contract.
         if (review.action === "save") draft()?.confirmSave({
           kind: "confirmed-without-projection", operationRef: review.operationRef, resultVersion: null,
         })
