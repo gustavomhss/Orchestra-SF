@@ -79,7 +79,7 @@ def text_view(title, contents):
             html.escape(title) + '</h1>' + contents + '</body></html>')
 
 
-def source_view(source, format_, target):
+def source_view(source, format_, target, case):
     raw = source.read_bytes()
     details = {}
     if format_ == "xlsx":
@@ -95,8 +95,13 @@ def source_view(source, format_, target):
     else:
         visible = raw.decode("utf-8-sig", "strict")
     details["privateMarkersFound"] = [marker for marker in PRIVATE_MARKERS if marker in visible]
-    if details["privateMarkersFound"]:
-        raise ValueError("Restricted marker present: " + ", ".join(details["privateMarkersFound"]))
+    # A full admin JSON backup includes member salary by design in the tested real producer.
+    # This is not permission to leak it in a member roster or unauthenticated export.
+    allowed = {"SALARY_SENTINEL_66"} if case == "dashboard-backup" and format_ == "json" else set()
+    details["needsPrivacyContractReview"] = bool(set(details["privateMarkersFound"]) & allowed)
+    disallowed = sorted(set(details["privateMarkersFound"]) - allowed)
+    if disallowed:
+        raise ValueError("Restricted marker outside documented admin backup: " + ", ".join(disallowed))
     if format_ == "csv":
         rows = list(csv.reader(io.StringIO(visible, newline=""), strict=True))
         if not rows or len(rows) > 10000 or max(map(len, rows)) > 200:
@@ -266,7 +271,7 @@ def main():
                  "bytes": source.stat().st_size, "sha256": digest(source),
                  "folder": folder, "status": "FAILED"}
         try:
-            render_input, details = source_view(source, format_, target)
+            render_input, details = source_view(source, format_, target, case)
             entry["details"] = details
             if render_input != source:
                 entry["derivedView"] = str(render_input.relative_to(ROOT))
@@ -290,7 +295,7 @@ def main():
     result = {
         "schema": "sf88-export-visual-reader-v1",
         "snapshotSha": os.environ.get("GITHUB_SHA"),
-        "productSourceParentSha": version("git", "rev-parse", "HEAD^"),
+        "productSourceParentSha": next((line.split(" ", 1)[1] for line in command("git", "cat-file", "-p", "HEAD").split("\n\n", 1)[0].splitlines() if line.startswith("parent ")), "UNKNOWN"),
         "runId": os.environ.get("GITHUB_RUN_ID"),
         "runAttempt": os.environ.get("GITHUB_RUN_ATTEMPT"),
         "workflowBlobSha": version("git", "hash-object", ".github/workflows/test-ci.yml"),
@@ -317,6 +322,7 @@ def main():
             "PDF and PNG are inspection derivatives, never additional original export formats.",
             "Excel workbook PDF page-to-sheet correspondence has not been asserted.",
             "HTML original has an optional sandboxed browser frame in the gallery; conversion preview is LibreOffice, not Chromium.",
+            "Admin JSON backup contains a synthetic salary sentinel, absent from the separate members XLSX. Review access contract independently; source reader does not suppress the expected admin field.",
         ],
     }
     put(inspection / "manifest.json", json.dumps(result, ensure_ascii=False, indent=2) + "\n")
