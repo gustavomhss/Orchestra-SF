@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.native-ui.author-handoff.v2",
+  "missionId": "UX20-W13-R2",
+  "seat": "W13",
+  "outputId": "U13.pr-approval",
+  "epoch": "ux-native-w13-e2",
+  "priorEpochRevoked": true,
+  "branch": "sf-ux-w13",
+  "pr": 115,
+  "authorHeadBeforeReceipt": "4ee90eb59abb7b5220e953b7e47285d4130a1e21",
+  "authorTreeBeforeReceipt": "d8fac753917b9394e3d0a2e86fe40f0b3912d87e",
+  "initialFencedHead": "04722e76566b706c9b79159ce84087b9e7087a86",
+  "ackCommit": "38b8400e6eb629f3b30372a3c1f83d2a168d9457",
+  "files": {
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/model.ts": "21c9aa4edccb8eb29892913a1908e8ddb0620f3d",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/index.tsx": "847521e06a2cef99daae72bac5dbe42aaab02801",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/draft.ts": "c8e68bd1ead021f51b5f328f4d93d9710652e8b4",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/approvals/pr/copy.ts": "f7ca941433cf5d0447a9039db75ababd9a7eabd8",
+    "packages/app-shell/test-browser/sucafina-native/w13-pr-approval.test.ts": "88698bb72c399433f7f85d0c69b0e55ce39a8634"
+  },
+  "ownedFilesPreimages": "ABSENT at e2 fence",
+  "sharedPathWrites": false,
+  "generatedWrites": false,
+  "noLocalTests": true,
+  "testsAuthored": 9,
+  "evidence": "HANDOFF-114-e2.md",
+  "status": "AUTHOR_ARTIFACT_READY_PENDING_INTEGRATION",
+  "integration": "NOT_INTEGRATED",
+  "compiler": "NOT_RUN_BY_119",
+  "ci": "NOT_RUN_BY_120",
+  "desktopProof": "NOT_PROVEN",
+  "permissionsProof": "NOT_PROVEN",
+  "M31": "UNPROVEN",
+  "MI07": "UNPROVEN",
+  "C12Receipt": "NOT_RETURNED_NOT_INVENTED",
+  "externalWrites": "NONE",
+  "deployment": "NONE",
+  "merge": "NONE",
+  "globalRelease": false,
+  "remaining": [
+    "114 compose shared dictionaries, F01/F02/F03/A03/S01/S03, I00 canonical NAV-01 route builders",
+    "120 surgical Actions real auth + 9 authored model cases",
+    "119 typecheck/guards after composition"
+  ],
+  "limits": [
+    "P1 persisted and submitted pr_pending only",
+    "no U13.complete, U11.title-save, policy change or financial calculation"
+  ],
+  "completedBy": "GPT-6 new successor e2"
+}
