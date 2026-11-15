@@ -1,0 +1,111 @@
+{
+  "schema": "sf2h-first-save-http-repair-v1",
+  "mission": 104,
+  "state": "SOURCE_REPAIR_COMMITTED_AWAITING_C51_INTEGRATION_AND_RECHECK",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "actor": {
+    "effective_model": "GPT-6",
+    "requested_alias": "Astra",
+    "session_id": "not_exposed",
+    "github_login": "gustavomhss",
+    "lease_epoch": "first-save-http-browser104"
+  },
+  "mission_ref": "104.json@8819df6169abd94aaa89d50a21f113e5596d2aae",
+  "mission_blob": "f66559311102b2676afffa743bb0965fa6e88b44",
+  "ack_comment_id": 6890070754,
+  "source": {
+    "repo": "gustavomhss/Orchestra-SF",
+    "branch": "minimal-first-save",
+    "pr": 92,
+    "starting_head": "995e29f5b0028f713cfe76026e192a91d6fb7582",
+    "commit": "2356b2a453087784d3e2dbb191252e4c04e1c151",
+    "tree": "2ecec1a1135f6e43cc8ee800ed08af58f99c54d5",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "preimage": "934c4807916b23c7ecd80ecb1a3aa76d3bcd7201",
+        "postimage": "fe43b6356924886a1913b8a3d182144276c7d350"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts",
+        "preimage": null,
+        "postimage": "e5e3783efa011f80ca4e9ac9467776bc9bca2b19"
+      }
+    ]
+  },
+  "C51": {
+    "material_head": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "material_tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+    "current_integrator_head_at_analysis": "d083b422b6a587f47873abde4d866e35017ff8b8",
+    "preimage_http": "9369722db40a922887c63481753776e3b01e97d8",
+    "expected_postimage_http": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+    "preimage_decisions_unchanged": "c432524a112c873117309377d941845bf9923096",
+    "domain_blob_unchanged": "d880fe5a5f7fd3c9c4fa249dbc374620a39a43a7",
+    "original_test_blob_unchanged": "566e765f201d1a45677c0c52c75eb92ecb16d482"
+  },
+  "CI101_previous": {
+    "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "Wtree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+    "S": "32c186de11afc265a47aa06355ba560b5e89650b",
+    "Stree": "fff10cd2cc07e25a0767268be7cc56f18403d816",
+    "request_blob": "9e17fe415e16abcfc46c2aad23f224760f3a5b38",
+    "run": 43682448571,
+    "job": 132715780313,
+    "attempt": 1,
+    "pass": 12,
+    "fail": 1,
+    "expect": 213,
+    "files": 3,
+    "expected": [
+      503,
+      403,
+      403,
+      403,
+      403,
+      403,
+      400
+    ],
+    "observed": [
+      503,
+      403,
+      403,
+      403,
+      403,
+      503,
+      400
+    ]
+  },
+  "CI101_recheck_request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "env": {},
+    "os": "linux",
+    "args": [
+      "Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+      "Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+      "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+      "Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "W": null,
+    "S": null,
+    "run": null,
+    "job": null,
+    "result": "NOT_RUN"
+  },
+  "gates": {
+    "product_composition": "NOT_RUN",
+    "new_negative_test": "NOT_RUN",
+    "check_compiler_guards": "NOT_RUN",
+    "independent_review91": "PENDING",
+    "independent_review92": "PENDING",
+    "global_release": false
+  },
+  "consumer": 105,
+  "ci_dispatcher": 101,
+  "compiler": 45
+}
