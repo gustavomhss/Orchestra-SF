@@ -302,6 +302,10 @@ export function createSfNativeAuthorityProducer(input: {
         }),
         revalidate: () => Effect.tryPromise(async () => {
           const ids = [...pending.keys()]
+          // Before the durable reservation the initial human admission is the only
+          // authority; once an ID exists it MUST carry the C09 origin marker.
+          if (ids.length === 0) return admission(context!, request, "routines.admit", value) &&
+            await input.generation().catch(() => undefined) === generation
           return ids.length === 1 && await tokensCurrent(context!, request, ids[0]!, value.caseRef,
             "routines.admit", value, generation)
         }),
