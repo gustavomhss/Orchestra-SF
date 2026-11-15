@@ -804,3 +804,200 @@ export const SfSourceQuestionPrepare = Output_QuestionProposal_55
 export const SfSourceScenarioResult = Output_ScenarioResult_28
 
 export const SfSourceScenarioComparison = Output_ScenarioComparison_62
+
+/** Additional original projection schema shared with decision controls. */
+const Output_DomainProjection_58 = Schema.Struct({
+  "context": Schema.suspend(() => Output_ProductContext_59),
+  "version": Schema.Number,
+  "engineVersion": Schema.String,
+  "decision": Schema.optional(Schema.suspend(() => Output_Shape_60)),
+  "comparison": Schema.optional(Schema.suspend(() => Output___type_84)),
+  "components": Schema.Array(Schema.suspend(() => Output_ProjectionComponent_30)),
+  "values": Schema.Array(Schema.suspend(() => Output_ProjectionValue_85)),
+  "missing": Schema.Array(Schema.suspend(() => Output___type_88)),
+})
+
+const Output_PortfolioCombination_78 = Schema.Union(Schema.suspend(() => Output_Shape_79), Schema.suspend(() => Output_Shape_81), Schema.suspend(() => Output_Shape_82), Schema.suspend(() => Output_Shape_83))
+
+const Output_PortfolioResult_77 = Schema.Struct({
+  "combinations": Schema.Array(Schema.suspend(() => Output_PortfolioCombination_78)),
+  "limitations": Schema.Array(Schema.String),
+  "evidenceRefs": Schema.Array(Schema.suspend(() => Output_BusinessEvidenceRef_9)),
+})
+
+const Output_ProductContext_59 = Schema.Struct({
+  "installationId": Schema.String,
+  "projectId": Schema.String,
+  "principalRef": Schema.String,
+  "accessRevision": Schema.String,
+  "policyVersion": Schema.String,
+  "surface": Schema.suspend(() => Output_Surface_13),
+  "period": Schema.suspend(() => Output_Period_6),
+  "currency": Schema.String,
+  "sourceRefs": Schema.Array(Schema.suspend(() => Output_SourceRef_32)),
+  "capabilities": Schema.Array(Schema.String),
+})
+
+const Output_ProjectionValue_85 = Schema.Struct({
+  "id": Schema.String,
+  "value": Schema.suspend(() => Output_Shape_8),
+  "unit": Schema.optional(Schema.String),
+  "currency": Schema.optional(Schema.String),
+  "period": Schema.suspend(() => Output_Period_6),
+  "granularity": Schema.suspend(() => Output_Shape_86),
+  "sourceRefs": Schema.Array(Schema.suspend(() => Output_BusinessEvidenceRef_9)),
+  "drilldown": Schema.suspend(() => Output_Shape_87),
+  "evidenceState": Schema.suspend(() => Output_EvidenceState_33),
+})
+
+const Output_SensitivityResult_67 = Schema.Struct({
+  "scenarioRef": Schema.String,
+  "parameterRef": Schema.String,
+  "bounds": Schema.suspend(() => Output___type_68),
+  "evaluated": Schema.Array(Schema.suspend(() => Output___type_69)),
+  "threshold": Schema.suspend(() => Output_Shape_31),
+  "thresholdEvidence": Schema.suspend(() => Output_Shape_70),
+  "unit": Schema.String,
+  "parameterUnit": Schema.optional(Schema.String),
+  "resultUnit": Schema.optional(Schema.String),
+  "engineVersion": Schema.String,
+  "costCoverageRefs": Schema.Array(Schema.String),
+  "comparisonStatus": Schema.suspend(() => Output_Shape_75),
+  "unresolvedConditions": Schema.Array(Schema.suspend(() => Output_UnresolvedCondition_50)),
+  "evidenceRefs": Schema.Array(Schema.suspend(() => Output_BusinessEvidenceRef_9)),
+})
+
+const Output_Shape_60 = Schema.Union(Schema.suspend(() => Output___type_61), Schema.suspend(() => Output___type_76))
+
+const Output_Shape_70 = Schema.Union(Schema.suspend(() => Output___type_71), Schema.suspend(() => Output___type_72), Schema.suspend(() => Output___type_74))
+
+const Output_Shape_75 = Schema.Union(Schema.Literal("complete"), Schema.Literal("unavailable"), Schema.Literal("conditioned"), Schema.Literal("incompatible"))
+
+const Output_Shape_79 = Schema.Struct({
+  "analysis": Schema.optional(Schema.suspend(() => Output___type_80)),
+  "id": Schema.String,
+  "caseRefs": Schema.Array(Schema.String),
+  "components": Schema.Array(Schema.suspend(() => Output_ProjectionComponent_30)),
+  "costCoverageRefs": Schema.Array(Schema.String),
+  "conflicts": Schema.Array(Schema.String),
+  "restrictions": Schema.Array(Schema.String),
+  "eligibility": Schema.Literal("eligible-complete"),
+  "comparisonStatus": Schema.Literal("complete"),
+})
+
+const Output_Shape_81 = Schema.Struct({
+  "analysis": Schema.optional(Schema.suspend(() => Output___type_80)),
+  "id": Schema.String,
+  "caseRefs": Schema.Array(Schema.String),
+  "components": Schema.Array(Schema.suspend(() => Output_ProjectionComponent_30)),
+  "costCoverageRefs": Schema.Array(Schema.String),
+  "conflicts": Schema.Array(Schema.String),
+  "restrictions": Schema.Array(Schema.String),
+  "eligibility": Schema.Literal("conditioned"),
+  "comparisonStatus": Schema.suspend(() => Output_Shape_75),
+})
+
+const Output_Shape_82 = Schema.Struct({
+  "analysis": Schema.optional(Schema.suspend(() => Output___type_80)),
+  "id": Schema.String,
+  "caseRefs": Schema.Array(Schema.String),
+  "components": Schema.Array(Schema.suspend(() => Output_ProjectionComponent_30)),
+  "costCoverageRefs": Schema.Array(Schema.String),
+  "conflicts": Schema.Array(Schema.String),
+  "restrictions": Schema.Array(Schema.String),
+  "eligibility": Schema.Literal("unavailable"),
+  "comparisonStatus": Schema.suspend(() => Output_Shape_39),
+})
+
+const Output_Shape_83 = Schema.Struct({
+  "analysis": Schema.optional(Schema.suspend(() => Output___type_80)),
+  "id": Schema.String,
+  "caseRefs": Schema.Array(Schema.String),
+  "components": Schema.Array(Schema.suspend(() => Output_ProjectionComponent_30)),
+  "costCoverageRefs": Schema.Array(Schema.String),
+  "conflicts": Schema.Array(Schema.String),
+  "restrictions": Schema.Array(Schema.String),
+  "eligibility": Schema.Literal("ineligible"),
+  "comparisonStatus": Schema.suspend(() => Output_Shape_75),
+})
+
+const Output_Shape_86 = Schema.Union(Schema.Literal("record"), Schema.Literal("month"), Schema.Literal("year"), Schema.Literal("aggregate"))
+
+const Output_Shape_87 = Schema.Union(Schema.Null, Schema.suspend(() => Output_Shape_10), Schema.suspend(() => Output_Shape_14), Schema.suspend(() => Output_Shape_19), Schema.suspend(() => Output_Shape_21), Schema.suspend(() => Output_Shape_23), Schema.suspend(() => Output_Shape_25))
+
+const Output_Shape_89 = Schema.Union(Schema.Literal("unavailable"), Schema.Literal("not-applicable"), Schema.Literal("missing"), Schema.Literal("restricted"), Schema.Literal("incompatible-currency"), Schema.Literal("missing-fx"), Schema.Literal("missing-rate"), Schema.Literal("unconfirmed"))
+
+const Output___type_61 = Schema.Struct({
+  "kind": Schema.Literal("scenario"),
+  "scenarioResultRef": Schema.String,
+  "scenario": Schema.suspend(() => Output_ScenarioResult_28),
+  "comparisonRef": Schema.String,
+  "comparison": Schema.suspend(() => Output_ScenarioComparison_62),
+  "sensitivity": Schema.optional(Schema.suspend(() => Output_SensitivityResult_67)),
+  "sensitivityResultRef": Schema.optional(Schema.String),
+})
+
+const Output___type_68 = Schema.Struct({
+  "minimum": Schema.Number,
+  "maximum": Schema.Number,
+  "steps": Schema.Number,
+})
+
+const Output___type_69 = Schema.Struct({
+  "parameterValue": Schema.Number,
+  "resultRef": Schema.String,
+  "value": Schema.suspend(() => Output_Shape_31),
+})
+
+const Output___type_71 = Schema.Struct({
+  "state": Schema.Literal("exact"),
+  "value": Schema.Number,
+  "evidenceRefs": Schema.Array(Schema.suspend(() => Output_BusinessEvidenceRef_9)),
+})
+
+const Output___type_72 = Schema.Struct({
+  "state": Schema.Literal("sampled"),
+  "interval": Schema.suspend(() => Output___type_73),
+  "evidenceRefs": Schema.Array(Schema.suspend(() => Output_BusinessEvidenceRef_9)),
+})
+
+const Output___type_73 = Schema.Struct({
+  "minimum": Schema.Number,
+  "maximum": Schema.Number,
+})
+
+const Output___type_74 = Schema.Struct({
+  "state": Schema.Literal("unavailable"),
+  "reason": Schema.String,
+})
+
+const Output___type_76 = Schema.Struct({
+  "kind": Schema.Literal("portfolio"),
+  "portfolioResultRef": Schema.String,
+  "portfolio": Schema.suspend(() => Output_PortfolioResult_77),
+})
+
+const Output___type_80 = Schema.Struct({
+  "scenarioResultRef": Schema.String,
+  "scenario": Schema.suspend(() => Output_ScenarioResult_28),
+  "comparisonRef": Schema.String,
+  "comparison": Schema.suspend(() => Output_ScenarioComparison_62),
+})
+
+const Output___type_84 = Schema.Struct({
+  "metricRef": Schema.String,
+  "comparisonRef": Schema.String,
+  "context": Schema.suspend(() => Output_ProductContext_59),
+  "version": Schema.Number,
+  "engineVersion": Schema.String,
+  "values": Schema.Array(Schema.suspend(() => Output_ProjectionValue_85)),
+})
+
+const Output___type_88 = Schema.Struct({
+  "field": Schema.String,
+  "reason": Schema.suspend(() => Output_Shape_89),
+})
+
+export const SfSourceDomainProjection = Output_DomainProjection_58
+export const SfSourceRecordSource = Output_SourceRef_32
+export const SfSourceCostCoverageBasis = Output_CostCoverageBasis_45
