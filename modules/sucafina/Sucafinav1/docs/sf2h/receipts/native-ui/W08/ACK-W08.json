@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "mission": "UX20-W08",
+  "order": "S03",
+  "output": "S03",
+  "state": "ACK_PUBLISHED_AWAITING_EXPLICIT_114_OUTPUT_ADMISSION",
+  "actual_actor": "ChatGPT GPT-6 through GitHub connector (authenticated writer gustavomhss)",
+  "requested_model": "Astra",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "branch": "sf-ux-w08",
+  "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "initial_tree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+  "product_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "lease_epoch": "ux-native-w08-e1",
+  "lease_state": "RESERVED_NOT_ACTIVE",
+  "coordinator": "same S0-C-e17-browser114; no second C00",
+  "sources": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "cohort": "f8e442616c96651f3b26013b34b8ce697860e3e2"
+  },
+  "contracts": {
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+    "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+    "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+    "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+  },
+  "drift": {
+    "branch_protocol_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1",
+    "frozen_protocol_blob": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "classification": "DOCUMENTARY_ROUTING_ONLY",
+    "note": "Two sentences cite superseded 105/101/45; current COMMON and S0 intake explicitly route 114/120/119. No S03 contract change."
+  },
+  "source_bindings": [],
+  "source_read_scope": "No source-bound producers; consume frozen ctx, transport, ui-change-review, ui-frame only.",
+  "write_allowlist": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s03.ts",
+    "packages/app-shell/test-browser/sucafina-native/s03.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W08/**"
+  ],
+  "dependency_integration": [
+    "F03",
+    "I00 composition of S03+F01+F02"
+  ],
+  "test_owner": "120 only, GitHub Actions",
+  "compiler_owner": "119 only",
+  "forbidden": [
+    "Local tests, parser, typecheck",
+    "Shared registry writes",
+    "Manual generated code edits",
+    "Merge/deploy/Azure",
+    "Automatic mutation retry",
+    "Invented receipt"
+  ],
+  "admission": "PENDING_EXPLICIT_SAME_114_OUTPUT_APPROVAL"
+}
