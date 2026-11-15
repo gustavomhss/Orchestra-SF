@@ -60,7 +60,7 @@ export function securityCampaigns(page: SfSecurityPage) {
 }
 export function securityRow(page: SfSecurityPage, kind: SecurityEntity, id: string) {
   if (kind === "kpi")
-    return securityKpi(page)?.id === id ? securityKpi(page) : undefined
+    return securityKpi(page)?.id != null && String(securityKpi(page)!.id) === id ? securityKpi(page) : undefined
   if (kind === "action")
     return securityActions(page).find((row) => String(row.id) === id)
   if (kind === "incident")
