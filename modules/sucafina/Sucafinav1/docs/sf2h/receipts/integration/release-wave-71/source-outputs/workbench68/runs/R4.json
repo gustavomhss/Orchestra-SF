@@ -1,0 +1,80 @@
+{
+  "schema": "sf68.hosted-run.v1",
+  "id": "R4",
+  "status": "PASS",
+  "scope": "explicit missing-receipt, expiry and routine-result component fences",
+  "W": {
+    "sha": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+    "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047"
+  },
+  "S": {
+    "sha": "4b601473b4b716199a643517645dd4820667180d",
+    "tree": "b666bedfe55500634380e91615f243af94ea0bbd",
+    "parent": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "branch": "ci-run-linux-m68r4"
+  },
+  "request": {
+    "path": "runs/R4.request.json",
+    "selectedFiles": [
+      "./Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts"
+    ],
+    "selectedFileCount": 1,
+    "sha256": "70ef34c464d2c3a347b4fb9e43184f21e69bc1399e8bacafe5876d835608d20e",
+    "gitBlobSha": "8ef6b1cc64d3895870f0c604bcd3f623f0584472"
+  },
+  "run": {
+    "id": 43669037981,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669037981",
+    "headSha": "4b601473b4b716199a643517645dd4820667180d",
+    "attempt": 1,
+    "event": "push",
+    "workflow": ".github/workflows/test-ci.yml",
+    "startedAt": "2026-11-15T02:42:35Z",
+    "completedAt": "2026-11-15T02:44:22Z",
+    "conclusion": "success"
+  },
+  "job": {
+    "id": 132674744357,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669037981/job/132674744357",
+    "name": "test (ubuntu-24.04)",
+    "conclusion": "success"
+  },
+  "cleanup": "success",
+  "observed": {
+    "pass": 3,
+    "fail": 0,
+    "expectCalls": 56,
+    "files": 1,
+    "tests": 3,
+    "skippedTests": 0,
+    "testDurationSeconds": 4.7,
+    "omni": "not applicable (focused: no declaring test ran); no omni spawn or delegation",
+    "testLog": "runs/R4.tests.log",
+    "selectedHeadersVerified": true,
+    "testLogSha256": "d4ed9a94e711e0ac4f684fbdd8db232bce14c3cab348fa365b1d0062b18052bd",
+    "testLogBytes": 10285
+  },
+  "limits": [
+    "No routine handler, Task/C07 admission, provider turn or native readiness was exercised.",
+    "Three real skill loads support exact registry component fences under declared test authority.",
+    "No previous failed external test was changed, skipped or retried without a causal code change."
+  ],
+  "deduplication": {
+    "branchMatchCount": 0,
+    "decision": "Single new file covers explicit expiry and routine-result gaps identified after inspecting previous coverage."
+  },
+  "snapshotVerification": {
+    "status": "VERIFIED",
+    "method": "GitHub compare W3...S4",
+    "aheadBy": 1,
+    "changedPaths": [
+      ".ci-run.json"
+    ],
+    "requestGitBlob": "8ef6b1cc64d3895870f0c604bcd3f623f0584472"
+  },
+  "productionDeltaFromW2": [],
+  "testDeltaFromW2": [
+    "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts"
+  ]
+}

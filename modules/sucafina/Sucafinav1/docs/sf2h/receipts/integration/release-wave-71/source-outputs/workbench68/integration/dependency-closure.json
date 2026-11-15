@@ -1,0 +1,3884 @@
+{
+  "schema": "sf68.static-dependency-closure.v1",
+  "mission": 68,
+  "state": "STATIC_DIRECT_IMPORTS_PINNED_CHECKER45_REQUESTED_NOT_RUN",
+  "observedAt": "2026-11-15T03:01:25Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "scope": {
+    "source": {
+      "sha": "d5a297ca260b929335da4517f9c4432eaa92f856",
+      "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+      "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047"
+    },
+    "sourceBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "target": {
+      "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d"
+    },
+    "materialFiles": 11,
+    "productionFiles": 2,
+    "testAndHelperFiles": 9,
+    "importDeclarations": 137,
+    "importDeclarationCounts": {
+      "external-package": 17,
+      "workspace-package-export": 36,
+      "repository-relative": 67,
+      "runtime-builtin": 17
+    },
+    "uniqueRepositoryImportTargets": 48,
+    "materialImportTargets": 4,
+    "inheritedRepositoryImportTargets": 44,
+    "packageConfigLockPatchAndHarnessReferences": 19,
+    "definition": "Every explicit static import declaration in the eleven material files is recorded verbatim and its direct repository target or declared external/runtime provider is identified. This is a direct-import closure and a pinned integration frontier, not a recursively enumerated TypeScript or runtime dependency graph.",
+    "evidenceClass": "Static repository inspection plus separately identified, previously observed hosted selections.",
+    "noExecutionInThisReview": true,
+    "localProductTests": 0,
+    "localTypechecks": 0,
+    "localGuards": 0,
+    "newHostedDispatches": 0,
+    "remoteMutations": 0,
+    "compilerPassClaimed": false,
+    "wholeW3Retested": false,
+    "integratedTargetQualified": false,
+    "nativeTaskProviderReceiptClaimed": false,
+    "GLOBAL_RELEASE": false
+  },
+  "method": {
+    "sourceInputs": {
+      "localPath": "/workspace/scratch/da10955b6e64/inspection/final-material-inputs.json",
+      "sha256": "2d14bab11fbd8f96c20fcb8f29ef910e8999edb338bc168ea0e96d055e88b07e",
+      "description": "Parent-produced W/S/material/target identities; each of eleven local material preimages was read and matched against SHA-256, Git blob SHA and byte length."
+    },
+    "remoteReads": "Read-only GitHub MCP pinned file, commit and compare retrievals. No network fetch through shell, Git mutation, local test or compiler.",
+    "relativeImports": "Normalized the literal relative file path against the importing file; exact .ts and .json suffixes retained. Full Git blob metadata was read at W3 and target for all 44 inherited direct targets.",
+    "workspaceImports": "Resolved @orchestra/core subpaths through exact keys in packages/core/package.json exports; no wildcard, extension, condition or package-directory guessing.",
+    "externalImports": "Recorded literal SDK subpaths and Effect package declarations/catalog/patch references. No installed-package resolution or package-manager execution is claimed.",
+    "typeImports": "importKind records a whole declaration beginning with import type as type; exact declaration text remains authoritative for mixed named imports.",
+    "staticScan": "All material imports in this snapshot are explicit single-line import declarations. No dynamic import expression was found in these eleven files.",
+    "baseInheritance": "The complete GitHub base-to-W3 comparison contains twelve paths: ACK68 and eleven material files. All other repository dependencies and configuration are inherited from base7e1.",
+    "boundaries": [
+      "Transitive imports, barrel re-exports, conditional exports inside third-party packages, generated files, platform libraries and final compiler module resolution are not exhaustively resolved by this review.",
+      "The compiler must inspect a real nonempty program; the existence of files or matching hashes is not evidence of successful loading, type compatibility, tool execution or native host admission.",
+      "Source runtime evidence stays attached to its original W/S and selected tests. Nothing in this document reruns or upgrades a failed selection.",
+      "No inert owner proposal, preimage, postimage, patch or proposed URL becomes executable intake through this document."
+    ]
+  },
+  "sourceDelta": {
+    "compareUrl": "https://github.com/gustavomhss/Orchestra-SF/compare/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85...d5a297ca260b929335da4517f9c4432eaa92f856",
+    "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "mergeBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "totalCommits": 4,
+    "changedPaths": 12,
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/ACK68.json",
+        "status": "added",
+        "gitBlobSha": "9954066f19415f23e51f8f099384e3c57c347182",
+        "role": "authority-evidence-only"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "status": "modified",
+        "gitBlobSha": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "status": "modified",
+        "gitBlobSha": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts",
+        "status": "added",
+        "gitBlobSha": "894a03d8449d65efb6ad324858b270b60f34ebe5",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+        "status": "added",
+        "gitBlobSha": "d51f56f2cd664c23e338bc271603178b069a1000",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+        "status": "added",
+        "gitBlobSha": "8c0a49d4430cce5477da853016805c0981e954b6",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+        "status": "added",
+        "gitBlobSha": "2075f8941561098869a175bd460a0a96a60c478f",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+        "status": "added",
+        "gitBlobSha": "cef07dbfcdb48565a71f596a02a4ce46c90ea393",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+        "status": "added",
+        "gitBlobSha": "5af45b2d010e691935524082a85cba47c8bf5cec",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+        "status": "added",
+        "gitBlobSha": "8e1b2776a3d5294e4cf3beb786acc2ed354f41ae",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+        "status": "added",
+        "gitBlobSha": "8edf5ecb086b8c8c7e07a1ca5375dc203d9e6d61",
+        "role": "material"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts",
+        "status": "added",
+        "gitBlobSha": "d821f1fff1d88c99d4cfb0dbaac3fc88c69a6765",
+        "role": "material"
+      }
+    ],
+    "assertion": "Exactly two production replacements and nine new test/helper files, plus ACK68. No production dependency outside the two owned files was changed by68."
+  },
+  "materialFiles": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "kind": "production",
+      "bytes": 10487,
+      "gitBlobSha": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+      "sha256": "da48c801adf6806c291e77601f8f83caf96cc4ef059dbda5d773cf1fa600b8c0",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 10,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { Client } from \"@modelcontextprotocol/sdk/client/index.js\"",
+          "specifier": "@modelcontextprotocol/sdk/client/index.js",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "@modelcontextprotocol/sdk"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { InMemoryTransport } from \"@modelcontextprotocol/sdk/inMemory.js\"",
+          "specifier": "@modelcontextprotocol/sdk/inMemory.js",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "@modelcontextprotocol/sdk"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import { Server } from \"@modelcontextprotocol/sdk/server/index.js\"",
+          "specifier": "@modelcontextprotocol/sdk/server/index.js",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "@modelcontextprotocol/sdk"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import { CallToolRequestSchema, ListToolsRequestSchema } from \"@modelcontextprotocol/sdk/types.js\"",
+          "specifier": "@modelcontextprotocol/sdk/types.js",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "@modelcontextprotocol/sdk"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import type { Mcp } from \"@orchestra/core/mcp\"",
+          "specifier": "@orchestra/core/mcp",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./mcp",
+            "exportTarget": "./src/mcp.ts",
+            "path": "packages/core/src/mcp.ts"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import { digestSfValue } from \"../contracts/canonical.ts\"",
+          "specifier": "../contracts/canonical.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          }
+        },
+        {
+          "line": 8,
+          "declaration": "import type { CreateSfBusinessMcpBridge } from \"../contracts/runtime.ts\"",
+          "specifier": "../contracts/runtime.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+          }
+        },
+        {
+          "line": 9,
+          "declaration": "import type { CapabilityDescriptor, CapabilityResult, TrustedCallContext } from \"../contracts/sf-execution.ts\"",
+          "specifier": "../contracts/sf-execution.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+          }
+        },
+        {
+          "line": 10,
+          "declaration": "import type { SfVerifiedCallObserver } from \"./verified-call.ts\"",
+          "specifier": "./verified-call.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "kind": "production",
+      "bytes": 6845,
+      "gitBlobSha": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+      "sha256": "ec3207bd6fb4cc5ff2eab6ddd3ef5d3af427e8107c938b14320bea260d764237",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 6,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import path from \"node:path\"",
+          "specifier": "node:path",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { realpath } from \"node:fs/promises\"",
+          "specifier": "node:fs/promises",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import { Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import { digestSfValue } from \"../contracts/canonical.ts\"",
+          "specifier": "../contracts/canonical.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { sfSourceFor, validSfSelection } from \"./resident-agents.ts\"",
+          "specifier": "./resident-agents.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import type { LoadSfSkill } from \"../contracts/runtime.ts\"",
+          "specifier": "../contracts/runtime.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts",
+      "kind": "test-or-helper",
+      "bytes": 8721,
+      "gitBlobSha": "894a03d8449d65efb6ad324858b270b60f34ebe5",
+      "sha256": "69dcdf22034caa36bc47d3f5adb925aaea6b08a2515ae322dcb65804fa6a4ce7",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 19,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { Client } from \"@modelcontextprotocol/sdk/client/index.js\"",
+          "specifier": "@modelcontextprotocol/sdk/client/index.js",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "@modelcontextprotocol/sdk"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { Server } from \"@modelcontextprotocol/sdk/server/index.js\"",
+          "specifier": "@modelcontextprotocol/sdk/server/index.js",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "@modelcontextprotocol/sdk"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import { AgentV2 } from \"@orchestra/core/agent\"",
+          "specifier": "@orchestra/core/agent",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./agent",
+            "exportTarget": "./src/agent.ts",
+            "path": "packages/core/src/agent.ts"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import type { Mcp } from \"@orchestra/core/mcp\"",
+          "specifier": "@orchestra/core/mcp",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./mcp",
+            "exportTarget": "./src/mcp.ts",
+            "path": "packages/core/src/mcp.ts"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { SessionMessage } from \"@orchestra/core/session/message\"",
+          "specifier": "@orchestra/core/session/message",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session/message",
+            "exportTarget": "./src/session/message.ts",
+            "path": "packages/core/src/session/message.ts"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import { SessionSchema } from \"@orchestra/core/session/schema\"",
+          "specifier": "@orchestra/core/session/schema",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session/schema",
+            "exportTarget": "./src/session/schema.ts",
+            "path": "packages/core/src/session/schema.ts"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import { Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 8,
+          "declaration": "import { digestSfValue } from \"../../../product/contracts/canonical.ts\"",
+          "specifier": "../../../product/contracts/canonical.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          }
+        },
+        {
+          "line": 9,
+          "declaration": "import { sfOperationInputSchemas } from \"../../../product/contracts/operations.ts\"",
+          "specifier": "../../../product/contracts/operations.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+          }
+        },
+        {
+          "line": 10,
+          "declaration": "import { sfOperationOutputSchemas } from \"../../../product/contracts/output-schemas.ts\"",
+          "specifier": "../../../product/contracts/output-schemas.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts"
+          }
+        },
+        {
+          "line": 11,
+          "declaration": "import type { ResidentProfile, SkillLoadReceipt } from \"../../../product/contracts/resident-ai.ts\"",
+          "specifier": "../../../product/contracts/resident-ai.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts"
+          }
+        },
+        {
+          "line": 12,
+          "declaration": "import { decodeSfOperationInput, decodeSfOperationOutput } from \"../../../product/contracts/schema-admission.ts\"",
+          "specifier": "../../../product/contracts/schema-admission.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+          }
+        },
+        {
+          "line": 13,
+          "declaration": "import type { CapabilityDescriptor, CapabilityResult, TrustedCallContext } from \"../../../product/contracts/sf-execution.ts\"",
+          "specifier": "../../../product/contracts/sf-execution.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+          }
+        },
+        {
+          "line": 14,
+          "declaration": "import { dispatchSfCapability } from \"../../../product/host-binding/capability-dispatch.ts\"",
+          "specifier": "../../../product/host-binding/capability-dispatch.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts"
+          }
+        },
+        {
+          "line": 15,
+          "declaration": "import { createSfExecutionBindingRegistry } from \"../../../product/host-binding/execution-context.ts\"",
+          "specifier": "../../../product/host-binding/execution-context.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts"
+          }
+        },
+        {
+          "line": 16,
+          "declaration": "import { createSfBusinessMcpBridge } from \"../../../product/host-binding/sf-mcp-bridge.ts\"",
+          "specifier": "../../../product/host-binding/sf-mcp-bridge.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts"
+          }
+        },
+        {
+          "line": 17,
+          "declaration": "import type { SfVerifiedCallObserver } from \"../../../product/host-binding/verified-call.ts\"",
+          "specifier": "../../../product/host-binding/verified-call.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts"
+          }
+        },
+        {
+          "line": 18,
+          "declaration": "import { createSfDomainAuthority, createSfUiAuthority } from \"../../../product/integration/ui-authority.ts\"",
+          "specifier": "../../../product/integration/ui-authority.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts"
+          }
+        },
+        {
+          "line": 19,
+          "declaration": "import { selection } from \"../wp10/resident-runtime/fixture.ts\"",
+          "specifier": "../wp10/resident-runtime/fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/fixture.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+      "kind": "test-or-helper",
+      "bytes": 6082,
+      "gitBlobSha": "d51f56f2cd664c23e338bc271603178b069a1000",
+      "sha256": "86cd9f7bd23700c7240cbd5af8041cddd5cf2d37a2cf8aaa53e2f9563f7dcfed",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 3,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { expect, test } from \"bun:test\"",
+          "specifier": "bun:test",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Bun runtime/type API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { digestSfValue } from \"../../../product/contracts/canonical.ts\"",
+          "specifier": "../../../product/contracts/canonical.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import { bridgeFixture, holdSdkClose, beforeSettlement } from \"./bridge-fixture.ts\"",
+          "specifier": "./bridge-fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+      "kind": "test-or-helper",
+      "bytes": 9741,
+      "gitBlobSha": "8c0a49d4430cce5477da853016805c0981e954b6",
+      "sha256": "dd65c6c0df490f5bb63aa82ff29a940f4719f484d232f331e63bc075e666bbcb",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 13,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { expect, test } from \"bun:test\"",
+          "specifier": "bun:test",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Bun runtime/type API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { randomBytes } from \"node:crypto\"",
+          "specifier": "node:crypto",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import path from \"node:path\"",
+          "specifier": "node:path",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import { createResidentAiBundle } from \"../../../product/ai/resident.ts\"",
+          "specifier": "../../../product/ai/resident.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import resident from \"../../../product/ai/manifests/resident.json\" with { type: \"json\" }",
+          "specifier": "../../../product/ai/manifests/resident.json",
+          "importKind": "value",
+          "jsonAttribute": true,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import freeze from \"../../../product/contracts/freeze-v1.json\" with { type: \"json\" }",
+          "specifier": "../../../product/contracts/freeze-v1.json",
+          "importKind": "value",
+          "jsonAttribute": true,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import { sfOperationInputSchemas } from \"../../../product/contracts/operations.ts\"",
+          "specifier": "../../../product/contracts/operations.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+          }
+        },
+        {
+          "line": 8,
+          "declaration": "import { sfOperationOutputSchemas } from \"../../../product/contracts/output-schemas.ts\"",
+          "specifier": "../../../product/contracts/output-schemas.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts"
+          }
+        },
+        {
+          "line": 9,
+          "declaration": "import { financialCompositionFixture } from \"../wp10/integration/financial-composition-fixture.ts\"",
+          "specifier": "../wp10/integration/financial-composition-fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts"
+          }
+        },
+        {
+          "line": 10,
+          "declaration": "import { createSfExtendedBusinessServices } from \"../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts\"",
+          "specifier": "../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "apps/cli/src/sucafina-product/extended-business-services.ts"
+          }
+        },
+        {
+          "line": 11,
+          "declaration": "import { createSfDocumentServices } from \"../../../../../../apps/cli/src/sucafina-product/document-services.ts\"",
+          "specifier": "../../../../../../apps/cli/src/sucafina-product/document-services.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "apps/cli/src/sucafina-product/document-services.ts"
+          }
+        },
+        {
+          "line": 12,
+          "declaration": "import { createSfImportServices } from \"../../../../../../apps/cli/src/sucafina-product/import-services.ts\"",
+          "specifier": "../../../../../../apps/cli/src/sucafina-product/import-services.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "apps/cli/src/sucafina-product/import-services.ts"
+          }
+        },
+        {
+          "line": 13,
+          "declaration": "import { createSfRoutineServices } from \"../../../../../../apps/cli/src/sucafina-product/routine-services.ts\"",
+          "specifier": "../../../../../../apps/cli/src/sucafina-product/routine-services.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "apps/cli/src/sucafina-product/routine-services.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "kind": "test-or-helper",
+      "bytes": 13400,
+      "gitBlobSha": "2075f8941561098869a175bd460a0a96a60c478f",
+      "sha256": "9c94dc30c94a687495cad20b7fa42ff2874223767d4e48ea28149cafbdf1eef1",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 13,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { expect, test } from \"bun:test\"",
+          "specifier": "bun:test",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Bun runtime/type API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { AgentV2 } from \"@orchestra/core/agent\"",
+          "specifier": "@orchestra/core/agent",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./agent",
+            "exportTarget": "./src/agent.ts",
+            "path": "packages/core/src/agent.ts"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import { SessionMessage } from \"@orchestra/core/session/message\"",
+          "specifier": "@orchestra/core/session/message",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session/message",
+            "exportTarget": "./src/session/message.ts",
+            "path": "packages/core/src/session/message.ts"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import type { ToolRegistry } from \"@orchestra/core/tool/registry\"",
+          "specifier": "@orchestra/core/tool/registry",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./tool/registry",
+            "exportTarget": "./src/tool/registry.ts",
+            "path": "packages/core/src/tool/registry.ts"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import { createSfProductDispatch } from \"../../../../../../apps/cli/src/sucafina-product/contribution.ts\"",
+          "specifier": "../../../../../../apps/cli/src/sucafina-product/contribution.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "apps/cli/src/sucafina-product/contribution.ts"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import { digestSfValue } from \"../../../product/contracts/canonical.ts\"",
+          "specifier": "../../../product/contracts/canonical.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          }
+        },
+        {
+          "line": 8,
+          "declaration": "import { decodeSfOperationOutput } from \"../../../product/contracts/schema-admission.ts\"",
+          "specifier": "../../../product/contracts/schema-admission.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
+          }
+        },
+        {
+          "line": 9,
+          "declaration": "import { loadSfSkill } from \"../../../product/host-binding/skill-loader.ts\"",
+          "specifier": "../../../product/host-binding/skill-loader.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts"
+          }
+        },
+        {
+          "line": 10,
+          "declaration": "import type { SfVerifiedCallObserver } from \"../../../product/host-binding/verified-call.ts\"",
+          "specifier": "../../../product/host-binding/verified-call.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts"
+          }
+        },
+        {
+          "line": 11,
+          "declaration": "import { createPlannerCapabilities } from \"../../../product/planner/capabilities.ts\"",
+          "specifier": "../../../product/planner/capabilities.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts"
+          }
+        },
+        {
+          "line": 12,
+          "declaration": "import { plannerFixture, plannerPeriod } from \"../wp03/planner-fixture.ts\"",
+          "specifier": "../wp03/planner-fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts"
+          }
+        },
+        {
+          "line": 13,
+          "declaration": "import { withSkillHost } from \"./skill-host-fixture.ts\"",
+          "specifier": "./skill-host-fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+      "kind": "test-or-helper",
+      "bytes": 6084,
+      "gitBlobSha": "5af45b2d010e691935524082a85cba47c8bf5cec",
+      "sha256": "d6cacfc8cf6813529efec3fda9f831781e97c9a5a12ab244d51b0dc7668c1ad2",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 27,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { cp, mkdir, mkdtemp, rm } from \"node:fs/promises\"",
+          "specifier": "node:fs/promises",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { tmpdir } from \"node:os\"",
+          "specifier": "node:os",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import path from \"node:path\"",
+          "specifier": "node:path",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import { AgentV2 } from \"@orchestra/core/agent\"",
+          "specifier": "@orchestra/core/agent",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./agent",
+            "exportTarget": "./src/agent.ts",
+            "path": "packages/core/src/agent.ts"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { Database } from \"@orchestra/core/database/database\"",
+          "specifier": "@orchestra/core/database/database",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./database/database",
+            "exportTarget": "./src/database/database.ts",
+            "path": "packages/core/src/database/database.ts"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import { AppNodeBuilder } from \"@orchestra/core/effect/app-node-builder\"",
+          "specifier": "@orchestra/core/effect/app-node-builder",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./effect/app-node-builder",
+            "exportTarget": "./src/effect/app-node-builder.ts",
+            "path": "packages/core/src/effect/app-node-builder.ts"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import { LayerNode } from \"@orchestra/core/effect/layer-node\"",
+          "specifier": "@orchestra/core/effect/layer-node",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./effect/layer-node",
+            "exportTarget": "./src/effect/layer-node.ts",
+            "path": "packages/core/src/effect/layer-node.ts"
+          }
+        },
+        {
+          "line": 8,
+          "declaration": "import { EventV2 } from \"@orchestra/core/event\"",
+          "specifier": "@orchestra/core/event",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./event",
+            "exportTarget": "./src/event.ts",
+            "path": "packages/core/src/event.ts"
+          }
+        },
+        {
+          "line": 9,
+          "declaration": "import { Global } from \"@orchestra/core/global\"",
+          "specifier": "@orchestra/core/global",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./global",
+            "exportTarget": "./src/global.ts",
+            "path": "packages/core/src/global.ts"
+          }
+        },
+        {
+          "line": 10,
+          "declaration": "import { Host } from \"@orchestra/core/host\"",
+          "specifier": "@orchestra/core/host",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./host",
+            "exportTarget": "./src/host.ts",
+            "path": "packages/core/src/host.ts"
+          }
+        },
+        {
+          "line": 11,
+          "declaration": "import { Location } from \"@orchestra/core/location\"",
+          "specifier": "@orchestra/core/location",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./location",
+            "exportTarget": "./src/location.ts",
+            "path": "packages/core/src/location.ts"
+          }
+        },
+        {
+          "line": 12,
+          "declaration": "import { LocationServiceMap } from \"@orchestra/core/location-service-map\"",
+          "specifier": "@orchestra/core/location-service-map",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./location-service-map",
+            "exportTarget": "./src/location-service-map.ts",
+            "path": "packages/core/src/location-service-map.ts"
+          }
+        },
+        {
+          "line": 13,
+          "declaration": "import { AbsolutePath } from \"@orchestra/core/schema\"",
+          "specifier": "@orchestra/core/schema",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./schema",
+            "exportTarget": "./src/schema.ts",
+            "path": "packages/core/src/schema.ts"
+          }
+        },
+        {
+          "line": 14,
+          "declaration": "import { SessionV2 } from \"@orchestra/core/session\"",
+          "specifier": "@orchestra/core/session",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session",
+            "exportTarget": "./src/session.ts",
+            "path": "packages/core/src/session.ts"
+          }
+        },
+        {
+          "line": 15,
+          "declaration": "import { SessionExecution } from \"@orchestra/core/session/execution\"",
+          "specifier": "@orchestra/core/session/execution",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session/execution",
+            "exportTarget": "./src/session/execution.ts",
+            "path": "packages/core/src/session/execution.ts"
+          }
+        },
+        {
+          "line": 16,
+          "declaration": "import { SessionExecutionLocal } from \"@orchestra/core/session/execution/local\"",
+          "specifier": "@orchestra/core/session/execution/local",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session/execution/local",
+            "exportTarget": "./src/session/execution/local.ts",
+            "path": "packages/core/src/session/execution/local.ts"
+          }
+        },
+        {
+          "line": 17,
+          "declaration": "import { SkillV2 } from \"@orchestra/core/skill\"",
+          "specifier": "@orchestra/core/skill",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./skill",
+            "exportTarget": "./src/skill.ts",
+            "path": "packages/core/src/skill.ts"
+          }
+        },
+        {
+          "line": 18,
+          "declaration": "import { ApplicationTools } from \"@orchestra/core/tool/application-tools\"",
+          "specifier": "@orchestra/core/tool/application-tools",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./tool/application-tools",
+            "exportTarget": "./src/tool/application-tools.ts",
+            "path": "packages/core/src/tool/application-tools.ts"
+          }
+        },
+        {
+          "line": 19,
+          "declaration": "import { ToolRegistry } from \"@orchestra/core/tool/registry\"",
+          "specifier": "@orchestra/core/tool/registry",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./tool/registry",
+            "exportTarget": "./src/tool/registry.ts",
+            "path": "packages/core/src/tool/registry.ts"
+          }
+        },
+        {
+          "line": 20,
+          "declaration": "import { Context, Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 21,
+          "declaration": "import type { Scope } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 22,
+          "declaration": "import { createSfProductContribution } from \"../../../../../../apps/cli/src/sucafina-product/contribution.ts\"",
+          "specifier": "../../../../../../apps/cli/src/sucafina-product/contribution.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "apps/cli/src/sucafina-product/contribution.ts"
+          }
+        },
+        {
+          "line": 23,
+          "declaration": "import { createResidentAiBundle } from \"../../../product/ai/resident.ts\"",
+          "specifier": "../../../product/ai/resident.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts"
+          }
+        },
+        {
+          "line": 24,
+          "declaration": "import type { SfBindingRegistry, SfDomainValidation, SfSourceCapability } from \"../../../product/contracts/runtime.ts\"",
+          "specifier": "../../../product/contracts/runtime.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+          }
+        },
+        {
+          "line": 25,
+          "declaration": "import type { CapabilityDescriptor } from \"../../../product/contracts/sf-execution.ts\"",
+          "specifier": "../../../product/contracts/sf-execution.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+          }
+        },
+        {
+          "line": 26,
+          "declaration": "import { createSfExecutionBindingRegistry } from \"../../../product/host-binding/execution-context.ts\"",
+          "specifier": "../../../product/host-binding/execution-context.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts"
+          }
+        },
+        {
+          "line": 27,
+          "declaration": "import type { SfVerifiedCallObserver } from \"../../../product/host-binding/verified-call.ts\"",
+          "specifier": "../../../product/host-binding/verified-call.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "kind": "test-or-helper",
+      "bytes": 9511,
+      "gitBlobSha": "8e1b2776a3d5294e4cf3beb786acc2ed354f41ae",
+      "sha256": "2ca37b619769265ba30788abf27e8f4fd2dcf79cae88a34300cecf658219e17f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 11,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { expect, test } from \"bun:test\"",
+          "specifier": "bun:test",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Bun runtime/type API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { mkdir, unlink, writeFile } from \"node:fs/promises\"",
+          "specifier": "node:fs/promises",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import path from \"node:path\"",
+          "specifier": "node:path",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Node-compatible runtime API"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import { AgentV2 } from \"@orchestra/core/agent\"",
+          "specifier": "@orchestra/core/agent",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./agent",
+            "exportTarget": "./src/agent.ts",
+            "path": "packages/core/src/agent.ts"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { PermissionV2 } from \"@orchestra/core/permission\"",
+          "specifier": "@orchestra/core/permission",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./permission",
+            "exportTarget": "./src/permission.ts",
+            "path": "packages/core/src/permission.ts"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import { SessionV2 } from \"@orchestra/core/session\"",
+          "specifier": "@orchestra/core/session",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session",
+            "exportTarget": "./src/session.ts",
+            "path": "packages/core/src/session.ts"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import { Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 8,
+          "declaration": "import type { SkillLoadReceipt } from \"../../../product/contracts/resident-ai.ts\"",
+          "specifier": "../../../product/contracts/resident-ai.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts"
+          }
+        },
+        {
+          "line": 9,
+          "declaration": "import type { SfSourceCapability } from \"../../../product/contracts/runtime.ts\"",
+          "specifier": "../../../product/contracts/runtime.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+          }
+        },
+        {
+          "line": 10,
+          "declaration": "import { loadSfSkill } from \"../../../product/host-binding/skill-loader.ts\"",
+          "specifier": "../../../product/host-binding/skill-loader.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts"
+          }
+        },
+        {
+          "line": 11,
+          "declaration": "import { withSkillHost } from \"./skill-host-fixture.ts\"",
+          "specifier": "./skill-host-fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+      "kind": "test-or-helper",
+      "bytes": 10702,
+      "gitBlobSha": "8edf5ecb086b8c8c7e07a1ca5375dc203d9e6d61",
+      "sha256": "6ec1064d3314cbcef4a4c16f7b11645b885c8a257095c8265de6a4c99692b3f8",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 14,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { expect, test } from \"bun:test\"",
+          "specifier": "bun:test",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Bun runtime/type API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { AgentV2 } from \"@orchestra/core/agent\"",
+          "specifier": "@orchestra/core/agent",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./agent",
+            "exportTarget": "./src/agent.ts",
+            "path": "packages/core/src/agent.ts"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import { PermissionV2 } from \"@orchestra/core/permission\"",
+          "specifier": "@orchestra/core/permission",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./permission",
+            "exportTarget": "./src/permission.ts",
+            "path": "packages/core/src/permission.ts"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import type { SessionV2 } from \"@orchestra/core/session\"",
+          "specifier": "@orchestra/core/session",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session",
+            "exportTarget": "./src/session.ts",
+            "path": "packages/core/src/session.ts"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { SessionMessage } from \"@orchestra/core/session/message\"",
+          "specifier": "@orchestra/core/session/message",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session/message",
+            "exportTarget": "./src/session/message.ts",
+            "path": "packages/core/src/session/message.ts"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import type { SessionSchema } from \"@orchestra/core/session/schema\"",
+          "specifier": "@orchestra/core/session/schema",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session/schema",
+            "exportTarget": "./src/session/schema.ts",
+            "path": "packages/core/src/session/schema.ts"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import { Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 8,
+          "declaration": "import resident from \"../../../product/ai/manifests/resident.json\" with { type: \"json\" }",
+          "specifier": "../../../product/ai/manifests/resident.json",
+          "importKind": "value",
+          "jsonAttribute": true,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+          }
+        },
+        {
+          "line": 9,
+          "declaration": "import { digestSfValue } from \"../../../product/contracts/canonical.ts\"",
+          "specifier": "../../../product/contracts/canonical.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          }
+        },
+        {
+          "line": 10,
+          "declaration": "import type { SfNativeAdmission, SfSelectedRuntime } from \"../../../product/contracts/runtime.ts\"",
+          "specifier": "../../../product/contracts/runtime.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+          }
+        },
+        {
+          "line": 11,
+          "declaration": "import type { TrustedCallContext } from \"../../../product/contracts/sf-execution.ts\"",
+          "specifier": "../../../product/contracts/sf-execution.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+          }
+        },
+        {
+          "line": 12,
+          "declaration": "import { createSfExecutionBindingRegistry } from \"../../../product/host-binding/execution-context.ts\"",
+          "specifier": "../../../product/host-binding/execution-context.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts"
+          }
+        },
+        {
+          "line": 13,
+          "declaration": "import { loadSfSkill } from \"../../../product/host-binding/skill-loader.ts\"",
+          "specifier": "../../../product/host-binding/skill-loader.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts"
+          }
+        },
+        {
+          "line": 14,
+          "declaration": "import { withSkillHost } from \"./skill-host-fixture.ts\"",
+          "specifier": "./skill-host-fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts",
+      "kind": "test-or-helper",
+      "bytes": 4369,
+      "gitBlobSha": "d821f1fff1d88c99d4cfb0dbaac3fc88c69a6765",
+      "sha256": "c36f6f3d8f3b84c1b94388fc325afeb7a377461596f6fa3905cf0e68f58ea311",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 7,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { expect, test } from \"bun:test\"",
+          "specifier": "bun:test",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Bun runtime/type API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import type { BunFile } from \"bun\"",
+          "specifier": "bun",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Bun runtime/type API"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import { AgentV2 } from \"@orchestra/core/agent\"",
+          "specifier": "@orchestra/core/agent",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./agent",
+            "exportTarget": "./src/agent.ts",
+            "path": "packages/core/src/agent.ts"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import { Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { sfSourceFor } from \"../../../product/host-binding/resident-agents.ts\"",
+          "specifier": "../../../product/host-binding/resident-agents.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import { loadSfSkill } from \"../../../product/host-binding/skill-loader.ts\"",
+          "specifier": "../../../product/host-binding/skill-loader.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import { withSkillHost } from \"./skill-host-fixture.ts\"",
+          "specifier": "./skill-host-fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts"
+          }
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+      "kind": "test-or-helper",
+      "bytes": 9927,
+      "gitBlobSha": "cef07dbfcdb48565a71f596a02a4ce46c90ea393",
+      "sha256": "841f22038af4cbea2a0d0462537e3a26711121ef7f0f467148ec6a902a279768",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+      "localBytesMatchedPinnedInput": true,
+      "importCount": 14,
+      "directImports": [
+        {
+          "line": 1,
+          "declaration": "import { expect, test } from \"bun:test\"",
+          "specifier": "bun:test",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "runtime-builtin",
+            "runtime": "Bun runtime/type API"
+          }
+        },
+        {
+          "line": 2,
+          "declaration": "import { AgentV2 } from \"@orchestra/core/agent\"",
+          "specifier": "@orchestra/core/agent",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./agent",
+            "exportTarget": "./src/agent.ts",
+            "path": "packages/core/src/agent.ts"
+          }
+        },
+        {
+          "line": 3,
+          "declaration": "import { PermissionV2 } from \"@orchestra/core/permission\"",
+          "specifier": "@orchestra/core/permission",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./permission",
+            "exportTarget": "./src/permission.ts",
+            "path": "packages/core/src/permission.ts"
+          }
+        },
+        {
+          "line": 4,
+          "declaration": "import { SessionMessage } from \"@orchestra/core/session/message\"",
+          "specifier": "@orchestra/core/session/message",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "workspace-package-export",
+            "package": "@orchestra/core",
+            "exportKey": "./session/message",
+            "exportTarget": "./src/session/message.ts",
+            "path": "packages/core/src/session/message.ts"
+          }
+        },
+        {
+          "line": 5,
+          "declaration": "import { Effect } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 6,
+          "declaration": "import type { Scope } from \"effect\"",
+          "specifier": "effect",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "external-package",
+            "package": "effect"
+          }
+        },
+        {
+          "line": 7,
+          "declaration": "import resident from \"../../../product/ai/manifests/resident.json\" with { type: \"json\" }",
+          "specifier": "../../../product/ai/manifests/resident.json",
+          "importKind": "value",
+          "jsonAttribute": true,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json"
+          }
+        },
+        {
+          "line": 8,
+          "declaration": "import { digestSfValue } from \"../../../product/contracts/canonical.ts\"",
+          "specifier": "../../../product/contracts/canonical.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+          }
+        },
+        {
+          "line": 9,
+          "declaration": "import type { SkillLoadReceipt } from \"../../../product/contracts/resident-ai.ts\"",
+          "specifier": "../../../product/contracts/resident-ai.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts"
+          }
+        },
+        {
+          "line": 10,
+          "declaration": "import type { SfBindingRegistry, SfNativeAdmission, SfSelectedRuntime } from \"../../../product/contracts/runtime.ts\"",
+          "specifier": "../../../product/contracts/runtime.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+          }
+        },
+        {
+          "line": 11,
+          "declaration": "import { createSfExecutionBindingRegistry } from \"../../../product/host-binding/execution-context.ts\"",
+          "specifier": "../../../product/host-binding/execution-context.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts"
+          }
+        },
+        {
+          "line": 12,
+          "declaration": "import { loadSfSkill } from \"../../../product/host-binding/skill-loader.ts\"",
+          "specifier": "../../../product/host-binding/skill-loader.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts"
+          }
+        },
+        {
+          "line": 13,
+          "declaration": "import { withSkillHost } from \"./skill-host-fixture.ts\"",
+          "specifier": "./skill-host-fixture.ts",
+          "importKind": "value",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts"
+          }
+        },
+        {
+          "line": 14,
+          "declaration": "import type { SkillHost } from \"./skill-host-fixture.ts\"",
+          "specifier": "./skill-host-fixture.ts",
+          "importKind": "type",
+          "jsonAttribute": false,
+          "resolution": {
+            "kind": "repository-relative",
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts"
+          }
+        }
+      ]
+    }
+  ],
+  "repositoryImportTargets": [
+    {
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "targetGitBlobSha": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/src/sucafina-product/contribution.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/src/sucafina-product/contribution.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/document-services.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+      "targetGitBlobSha": "9e63a31a088d1e17e69a4721aec0fdcd4a7146e4",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/src/sucafina-product/document-services.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/src/sucafina-product/document-services.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "ff43e324d280498e629f867d0ac93714bdf608cc",
+      "targetGitBlobSha": "ff43e324d280498e629f867d0ac93714bdf608cc",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/src/sucafina-product/extended-business-services.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/src/sucafina-product/extended-business-services.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/import-services.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "53a1f34779598545cde83295c8ff98b861fabb72",
+      "targetGitBlobSha": "53a1f34779598545cde83295c8ff98b861fabb72",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/src/sucafina-product/import-services.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/src/sucafina-product/import-services.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "targetGitBlobSha": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/src/sucafina-product/routine-services.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/src/sucafina-product/routine-services.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "targetGitBlobSha": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "targetGitBlobSha": "7e3d3849272bb5755d793a9e2b00ad34c523c188",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "targetGitBlobSha": "1769271386cdda1017c38023b0988ce2d64423d2",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 7
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "targetGitBlobSha": "b20cf5cecf22885dd8858f3659056a50ab88f485",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/freeze-v1.json",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "targetGitBlobSha": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/operations.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+      "targetGitBlobSha": "0d9fc51d26a0ca726d32e74605b555f871d99af6",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/output-schemas.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "38e3d664f4dedb56f3e614bde41d51548e44f805",
+      "targetGitBlobSha": "38e3d664f4dedb56f3e614bde41d51548e44f805",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "beba733084e87da8664b0f4067b52d4b29795c5c",
+      "targetGitBlobSha": "beba733084e87da8664b0f4067b52d4b29795c5c",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "targetGitBlobSha": "c0c615b006d4b638015217e9d5b4d353b4ea41e6",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "targetGitBlobSha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "6ba1b02eee73d44133c78599284f9772b26007b1",
+      "targetGitBlobSha": "6ba1b02eee73d44133c78599284f9772b26007b1",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/host-binding/capability-dispatch.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "targetGitBlobSha": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "a1413fd5224f373d704bbdfca7a489a904875d00",
+      "targetGitBlobSha": "a1413fd5224f373d704bbdfca7a489a904875d00",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/host-binding/resident-agents.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "classification": "material-intake",
+      "sourceGitBlobSha": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+      "sourceSha256": "da48c801adf6806c291e77601f8f83caf96cc4ef059dbda5d773cf1fa600b8c0",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+      "targetGitBlobSha": "bc00a2fe70bb37d6132369c3767388e544e18510",
+      "targetStatus": "unchanged-base-preimage; source replacement remains unapplied",
+      "targetStatusEvidence": "independent base and target GitHub MCP blob reads",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "classification": "material-intake",
+      "sourceGitBlobSha": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+      "sourceSha256": "ec3207bd6fb4cc5ff2eab6ddd3ef5d3af427e8107c938b14320bea260d764237",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+      "targetGitBlobSha": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+      "targetStatus": "unchanged-base-preimage; source replacement remains unapplied",
+      "targetStatusEvidence": "independent base and target GitHub MCP blob reads",
+      "sourceImportCount": 5
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "d4d8f62ae7418535d382fa47b464eb778b008831",
+      "targetGitBlobSha": "d4d8f62ae7418535d382fa47b464eb778b008831",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/host-binding/verified-call.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 4
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "targetGitBlobSha": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/integration/ui-authority.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+      "targetGitBlobSha": "0947902acfba1b45d7f2950e8aaa64e1c7305f6d",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/planner/capabilities.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts",
+      "classification": "material-intake",
+      "sourceGitBlobSha": "894a03d8449d65efb6ad324858b270b60f34ebe5",
+      "sourceSha256": "69dcdf22034caa36bc47d3f5adb925aaea6b08a2515ae322dcb65804fa6a4ce7",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts",
+      "targetGitBlobSha": null,
+      "targetStatus": "absent by complete base/source/target commit comparison; new helper remains unapplied",
+      "targetStatusEvidence": "Source comparison adds this path; C28 complete file list and its documentation-only child do not introduce it.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+      "classification": "material-intake",
+      "sourceGitBlobSha": "5af45b2d010e691935524082a85cba47c8bf5cec",
+      "sourceSha256": "d6cacfc8cf6813529efec3fda9f831781e97c9a5a12ab244d51b0dc7668c1ad2",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+      "targetGitBlobSha": null,
+      "targetStatus": "absent by complete base/source/target commit comparison; new helper remains unapplied",
+      "targetStatusEvidence": "Source comparison adds this path; C28 complete file list and its documentation-only child do not introduce it.",
+      "sourceImportCount": 6
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "targetGitBlobSha": "19cb4262ca02a680b06cdd4db54d5bb9d33a1219",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/test/product/wp03/planner-fixture.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+      "targetGitBlobSha": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/fixture.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "a18e07aab852a0d4dbfb996d158a69c742c08c2f",
+      "targetGitBlobSha": "a18e07aab852a0d4dbfb996d158a69c742c08c2f",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/fixture.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/fixture.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/agent.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "53870dcf9d34423ab49a1241e88ec5c5db0985cf",
+      "targetGitBlobSha": "53870dcf9d34423ab49a1241e88ec5c5db0985cf",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/agent.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/agent.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 7
+    },
+    {
+      "path": "packages/core/src/database/database.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "aa519134efff085e960affd9be376b0dc92456e1",
+      "targetGitBlobSha": "aa519134efff085e960affd9be376b0dc92456e1",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/database/database.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/database/database.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/effect/app-node-builder.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "f81f07cd9f4876742c1e8039f4453bf31fd55f58",
+      "targetGitBlobSha": "f81f07cd9f4876742c1e8039f4453bf31fd55f58",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/effect/app-node-builder.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/effect/app-node-builder.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/effect/layer-node.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "4d1491948140e05894193050f07b664163a69912",
+      "targetGitBlobSha": "4d1491948140e05894193050f07b664163a69912",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/effect/layer-node.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/effect/layer-node.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/event.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "c525362f4e9120501a5f9428d82914a7061eeeeb",
+      "targetGitBlobSha": "c525362f4e9120501a5f9428d82914a7061eeeeb",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/event.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/event.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/global.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "ba7790536b60c6075ff37854c4db14909b779183",
+      "targetGitBlobSha": "ba7790536b60c6075ff37854c4db14909b779183",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/global.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/global.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/host.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "a0fc5bc9a36e50315b0ddddf4de3566555711250",
+      "targetGitBlobSha": "a0fc5bc9a36e50315b0ddddf4de3566555711250",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/host.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/host.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/location-service-map.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "2f9f70c7edf21ab9e8d57eb6966aacab13c47c33",
+      "targetGitBlobSha": "2f9f70c7edf21ab9e8d57eb6966aacab13c47c33",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/location-service-map.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/location-service-map.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/location.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "af889448fe9340187266ab622cb7249751e52328",
+      "targetGitBlobSha": "af889448fe9340187266ab622cb7249751e52328",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/location.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/location.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/mcp.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "42389dd13f1507320852be092edc4ad396bc930e",
+      "targetGitBlobSha": "42389dd13f1507320852be092edc4ad396bc930e",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/mcp.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/mcp.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    },
+    {
+      "path": "packages/core/src/permission.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "2e3d29d3f1ec1fe805d21af091029721c9fa738e",
+      "targetGitBlobSha": "2e3d29d3f1ec1fe805d21af091029721c9fa738e",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/permission.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/permission.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 3
+    },
+    {
+      "path": "packages/core/src/schema.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "c2dbf663b11e95b54e2ea5fd61c580d7b273bd91",
+      "targetGitBlobSha": "c2dbf663b11e95b54e2ea5fd61c580d7b273bd91",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/schema.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/schema.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/session.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "00b276d8f2c9e634ae55a37e800fae388eb595e6",
+      "targetGitBlobSha": "00b276d8f2c9e634ae55a37e800fae388eb595e6",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/session.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/session.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 3
+    },
+    {
+      "path": "packages/core/src/session/execution.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "770dd6e0a169f10560c771dd1b912d8456632a12",
+      "targetGitBlobSha": "770dd6e0a169f10560c771dd1b912d8456632a12",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/session/execution.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/session/execution.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/session/execution/local.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "ea5759db2a1a7465e03752f655a84bd74bd897bb",
+      "targetGitBlobSha": "ea5759db2a1a7465e03752f655a84bd74bd897bb",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/session/execution/local.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/session/execution/local.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/session/message.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "2ebbdd92ca92b56c81c57669e5edb4a38ceda36c",
+      "targetGitBlobSha": "2ebbdd92ca92b56c81c57669e5edb4a38ceda36c",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/session/message.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/session/message.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 4
+    },
+    {
+      "path": "packages/core/src/session/schema.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "7f9d46d97a61d7e661f319ec2eb5c47e663d64cd",
+      "targetGitBlobSha": "7f9d46d97a61d7e661f319ec2eb5c47e663d64cd",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/session/schema.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/session/schema.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    },
+    {
+      "path": "packages/core/src/skill.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "6f20f34688a51ac9a1ae6f7c661cc6249ce53258",
+      "targetGitBlobSha": "6f20f34688a51ac9a1ae6f7c661cc6249ce53258",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/skill.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/skill.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/tool/application-tools.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "1633897cd6c71cc3abdd22901829b95af2dd96aa",
+      "targetGitBlobSha": "1633897cd6c71cc3abdd22901829b95af2dd96aa",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/tool/application-tools.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/tool/application-tools.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 1
+    },
+    {
+      "path": "packages/core/src/tool/registry.ts",
+      "classification": "inherited-direct-dependency",
+      "sourceGitBlobSha": "27c06bb2060a792ca1a2237673f2627b8d04f3fc",
+      "targetGitBlobSha": "27c06bb2060a792ca1a2237673f2627b8d04f3fc",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/src/tool/registry.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/src/tool/registry.ts",
+      "targetBytesEqual": true,
+      "inheritedFrom": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "inheritanceEvidence": "Complete base-to-W3 comparison contains only ACK68 and the eleven listed material files.",
+      "verification": "Repository file existence and full Git blob SHA from pinned GitHub MCP fetches; only first line required for metadata, not a semantic review of the whole file.",
+      "sourceImportCount": 2
+    }
+  ],
+  "packageAndRuntimeDeclarations": {
+    "rootManifest": "package.json",
+    "rootManifestGitBlobSha": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+    "packageManager": "bun@1.3.14",
+    "workspaceRootsRelevant": [
+      "packages/*",
+      "apps/cli",
+      "modules/sucafina"
+    ],
+    "core": {
+      "package": "@orchestra/core",
+      "version": "1.18.27",
+      "manifest": "packages/core/package.json",
+      "manifestGitBlobSha": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "usedExports": [
+        {
+          "specifier": "@orchestra/core/mcp",
+          "key": "./mcp",
+          "target": "./src/mcp.ts",
+          "repositoryPath": "packages/core/src/mcp.ts"
+        },
+        {
+          "specifier": "@orchestra/core/agent",
+          "key": "./agent",
+          "target": "./src/agent.ts",
+          "repositoryPath": "packages/core/src/agent.ts"
+        },
+        {
+          "specifier": "@orchestra/core/session/message",
+          "key": "./session/message",
+          "target": "./src/session/message.ts",
+          "repositoryPath": "packages/core/src/session/message.ts"
+        },
+        {
+          "specifier": "@orchestra/core/session/schema",
+          "key": "./session/schema",
+          "target": "./src/session/schema.ts",
+          "repositoryPath": "packages/core/src/session/schema.ts"
+        },
+        {
+          "specifier": "@orchestra/core/tool/registry",
+          "key": "./tool/registry",
+          "target": "./src/tool/registry.ts",
+          "repositoryPath": "packages/core/src/tool/registry.ts"
+        },
+        {
+          "specifier": "@orchestra/core/database/database",
+          "key": "./database/database",
+          "target": "./src/database/database.ts",
+          "repositoryPath": "packages/core/src/database/database.ts"
+        },
+        {
+          "specifier": "@orchestra/core/effect/app-node-builder",
+          "key": "./effect/app-node-builder",
+          "target": "./src/effect/app-node-builder.ts",
+          "repositoryPath": "packages/core/src/effect/app-node-builder.ts"
+        },
+        {
+          "specifier": "@orchestra/core/effect/layer-node",
+          "key": "./effect/layer-node",
+          "target": "./src/effect/layer-node.ts",
+          "repositoryPath": "packages/core/src/effect/layer-node.ts"
+        },
+        {
+          "specifier": "@orchestra/core/event",
+          "key": "./event",
+          "target": "./src/event.ts",
+          "repositoryPath": "packages/core/src/event.ts"
+        },
+        {
+          "specifier": "@orchestra/core/global",
+          "key": "./global",
+          "target": "./src/global.ts",
+          "repositoryPath": "packages/core/src/global.ts"
+        },
+        {
+          "specifier": "@orchestra/core/host",
+          "key": "./host",
+          "target": "./src/host.ts",
+          "repositoryPath": "packages/core/src/host.ts"
+        },
+        {
+          "specifier": "@orchestra/core/location",
+          "key": "./location",
+          "target": "./src/location.ts",
+          "repositoryPath": "packages/core/src/location.ts"
+        },
+        {
+          "specifier": "@orchestra/core/location-service-map",
+          "key": "./location-service-map",
+          "target": "./src/location-service-map.ts",
+          "repositoryPath": "packages/core/src/location-service-map.ts"
+        },
+        {
+          "specifier": "@orchestra/core/schema",
+          "key": "./schema",
+          "target": "./src/schema.ts",
+          "repositoryPath": "packages/core/src/schema.ts"
+        },
+        {
+          "specifier": "@orchestra/core/session",
+          "key": "./session",
+          "target": "./src/session.ts",
+          "repositoryPath": "packages/core/src/session.ts"
+        },
+        {
+          "specifier": "@orchestra/core/session/execution",
+          "key": "./session/execution",
+          "target": "./src/session/execution.ts",
+          "repositoryPath": "packages/core/src/session/execution.ts"
+        },
+        {
+          "specifier": "@orchestra/core/session/execution/local",
+          "key": "./session/execution/local",
+          "target": "./src/session/execution/local.ts",
+          "repositoryPath": "packages/core/src/session/execution/local.ts"
+        },
+        {
+          "specifier": "@orchestra/core/skill",
+          "key": "./skill",
+          "target": "./src/skill.ts",
+          "repositoryPath": "packages/core/src/skill.ts"
+        },
+        {
+          "specifier": "@orchestra/core/tool/application-tools",
+          "key": "./tool/application-tools",
+          "target": "./src/tool/application-tools.ts",
+          "repositoryPath": "packages/core/src/tool/application-tools.ts"
+        },
+        {
+          "specifier": "@orchestra/core/permission",
+          "key": "./permission",
+          "target": "./src/permission.ts",
+          "repositoryPath": "packages/core/src/permission.ts"
+        }
+      ]
+    },
+    "external": [
+      {
+        "package": "@modelcontextprotocol/sdk",
+        "declaredVersion": "1.32.0",
+        "declaredBy": [
+          "packages/core/package.json",
+          "modules/sucafina/package.json"
+        ],
+        "literalSubpaths": [
+          "@modelcontextprotocol/sdk/client/index.js",
+          "@modelcontextprotocol/sdk/inMemory.js",
+          "@modelcontextprotocol/sdk/server/index.js",
+          "@modelcontextprotocol/sdk/types.js"
+        ],
+        "patch": "patches/@modelcontextprotocol%2Fsdk@1.32.0.patch",
+        "resolutionStatus": "Declared/pinned; installed subpath resolution not executed."
+      },
+      {
+        "package": "effect",
+        "declaredVersion": "catalog:",
+        "catalogVersion": "4.0.0-beta.83",
+        "declaredBy": [
+          "packages/core/package.json",
+          "modules/sucafina/package.json",
+          "apps/cli/package.json"
+        ],
+        "patch": "patches/effect@4.0.0-beta.83.patch",
+        "resolutionStatus": "Declared/pinned; installation not executed."
+      }
+    ],
+    "runtimeBuiltins": [
+      "node:path",
+      "node:fs/promises",
+      "bun:test",
+      "node:crypto",
+      "node:os",
+      "bun"
+    ],
+    "runtimeBoundary": "bun:test and type-only bun use Bun. node:* imports use the runtime's Node-compatible APIs. No new independent npm dependency was inferred from those specifiers.",
+    "compilerDeclarations": {
+      "requiredChecker": "tsgo",
+      "nativePreviewVersion": "7.0.0-dev.20251207.1",
+      "rootTypeScriptCatalogVersion": "5.8.2",
+      "tsconfigBunCatalogVersion": "1.0.9",
+      "bunTypes": {
+        "rootCatalog": "1.3.13",
+        "rootOverride": "catalog:",
+        "nestedManifestDeclaration": "1.3.14",
+        "effectiveInstalledResolution": "NOT_RESOLVED_IN_THIS_STATIC_REVIEW"
+      },
+      "nodeTypesCatalog": "24.12.2",
+      "note": "tsc is not substituted for the requested hosted tsgo check. The different nested @types/bun declaration and root catalog override are recorded without asserting an installer result."
+    },
+    "lockfile": {
+      "path": "bun.lock",
+      "gitBlobSha": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "scope": "Identity pinned only; complete lock graph, platform installation and patch application not replayed."
+    }
+  },
+  "configurationReferences": [
+    {
+      "path": "package.json",
+      "sourceGitBlobSha": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "targetGitBlobSha": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/package.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/package.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "packages/core/package.json",
+      "sourceGitBlobSha": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "targetGitBlobSha": "f38171409c219dafd27f8eddedbd417e0f6657b5",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/package.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/package.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "sourceGitBlobSha": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "targetGitBlobSha": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/package.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/package.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/package.json",
+      "sourceGitBlobSha": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "targetGitBlobSha": "18911fee9313f8fb57c1a972bc70eec2f7864c55",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/package.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/package.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "sourceGitBlobSha": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "targetGitBlobSha": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/tsconfig.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/tsconfig.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "apps/cli/package.json",
+      "sourceGitBlobSha": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "targetGitBlobSha": "b1385b685c2af5ae8f88d5962be87d3363f5085c",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/package.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/package.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "apps/cli/tsconfig.json",
+      "sourceGitBlobSha": "ac9f4c63f786ccf7e925e3c637bb5c76aac77495",
+      "targetGitBlobSha": "ac9f4c63f786ccf7e925e3c637bb5c76aac77495",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/tsconfig.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/tsconfig.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "tsconfig.json",
+      "sourceGitBlobSha": "65fa6c7f31c11e2a1ff643ea263f97815c6bac5d",
+      "targetGitBlobSha": "65fa6c7f31c11e2a1ff643ea263f97815c6bac5d",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/tsconfig.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/tsconfig.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "bunfig.toml",
+      "sourceGitBlobSha": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+      "targetGitBlobSha": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/bunfig.toml",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/bunfig.toml",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "bun.lock",
+      "sourceGitBlobSha": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "targetGitBlobSha": "e3f0c6443c12dd16cb66030f75e2f71f16508098",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/bun.lock",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/bun.lock",
+      "targetBytesEqual": true,
+      "sourceRead": "blob-identity-and-first-line",
+      "reviewUse": "Lockfile identity only; installed dependency graph and integrity were not reconstructed."
+    },
+    {
+      "path": "packages/core/tsconfig.json",
+      "sourceGitBlobSha": "636b03034ffbcd5ea02d8f1f7d450a7bb359a236",
+      "targetGitBlobSha": "636b03034ffbcd5ea02d8f1f7d450a7bb359a236",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/packages/core/tsconfig.json",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/packages/core/tsconfig.json",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "sourceGitBlobSha": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "targetGitBlobSha": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/bunfig.toml",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/bunfig.toml",
+      "targetBytesEqual": true,
+      "sourceRead": "complete-text",
+      "reviewUse": "Declared package, exports or compiler/runtime configuration."
+    },
+    {
+      "path": "patches/@modelcontextprotocol%2Fsdk@1.32.0.patch",
+      "sourceGitBlobSha": "cced46f315c677fbdd27987e3e649437ea2f764e",
+      "targetGitBlobSha": "cced46f315c677fbdd27987e3e649437ea2f764e",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/patches/@modelcontextprotocol%252Fsdk@1.32.0.patch",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/patches/@modelcontextprotocol%252Fsdk@1.32.0.patch",
+      "targetBytesEqual": true,
+      "sourceRead": "blob-identity-and-first-line",
+      "reviewUse": "Required patchedDependency identity; patch application was not executed."
+    },
+    {
+      "path": "patches/effect@4.0.0-beta.83.patch",
+      "sourceGitBlobSha": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+      "targetGitBlobSha": "aa7a9314ea0058a2dadb4ffac329f6387c89799d",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/patches/effect@4.0.0-beta.83.patch",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/patches/effect@4.0.0-beta.83.patch",
+      "targetBytesEqual": true,
+      "sourceRead": "blob-identity-and-first-line",
+      "reviewUse": "Required patchedDependency identity; patch application was not executed."
+    },
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "sourceGitBlobSha": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "targetGitBlobSha": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/.github/workflows/test-ci.yml",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/.github/workflows/test-ci.yml",
+      "targetBytesEqual": true,
+      "sourceRead": "blob-identity-and-first-line",
+      "reviewUse": "Inherited hosted harness/guard identity; not an authorization to dispatch or execute."
+    },
+    {
+      "path": "script/test-ci.ts",
+      "sourceGitBlobSha": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "targetGitBlobSha": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/script/test-ci.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/script/test-ci.ts",
+      "targetBytesEqual": true,
+      "sourceRead": "blob-identity-and-first-line",
+      "reviewUse": "Inherited hosted harness/guard identity; not an authorization to dispatch or execute."
+    },
+    {
+      "path": "script/guards/run.ts",
+      "sourceGitBlobSha": "24c89b6fdbce07d778d2d1520ff4680d51c8c0f3",
+      "targetGitBlobSha": "24c89b6fdbce07d778d2d1520ff4680d51c8c0f3",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/script/guards/run.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/script/guards/run.ts",
+      "targetBytesEqual": true,
+      "sourceRead": "blob-identity-and-first-line",
+      "reviewUse": "Inherited hosted harness/guard identity; not an authorization to dispatch or execute."
+    },
+    {
+      "path": "script/test-guard.ts",
+      "sourceGitBlobSha": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "targetGitBlobSha": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/script/test-guard.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/script/test-guard.ts",
+      "targetBytesEqual": true,
+      "sourceRead": "blob-identity-and-first-line",
+      "reviewUse": "Inherited hosted harness/guard identity; not an authorization to dispatch or execute."
+    },
+    {
+      "path": "script/test-omni-control.ts",
+      "sourceGitBlobSha": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+      "targetGitBlobSha": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/script/test-omni-control.ts",
+      "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/script/test-omni-control.ts",
+      "targetBytesEqual": true,
+      "sourceRead": "blob-identity-and-first-line",
+      "reviewUse": "Inherited hosted harness/guard identity; not an authorization to dispatch or execute."
+    }
+  ],
+  "compilerAndHarnessContext": {
+    "sucafina": {
+      "manifest": "modules/sucafina/package.json",
+      "script": "bun --cwd Sucafinav1 typecheck",
+      "nestedManifest": "modules/sucafina/Sucafinav1/package.json",
+      "innerScript": "tsgo --noEmit",
+      "tsconfig": "modules/sucafina/Sucafinav1/tsconfig.json",
+      "declaredConfig": {
+        "compilerOptions": {
+          "target": "ESNext",
+          "module": "Preserve",
+          "moduleResolution": "Bundler",
+          "allowImportingTsExtensions": true,
+          "strict": true,
+          "noEmit": true,
+          "skipLibCheck": true,
+          "types": [
+            "bun"
+          ]
+        },
+        "include": [
+          "installation.ts",
+          "src/**/*.ts",
+          "test/**/*.ts",
+          "../porta/act.ts",
+          "runtime/**/*.ts",
+          "index.ts",
+          "local/**/*.ts"
+        ]
+      },
+      "programNote": "test/**/*.ts includes all nine new tests/helpers. The bridge and loader are actual imports of those files; compiler verification remains required."
+    },
+    "cli": {
+      "manifest": "apps/cli/package.json",
+      "script": "tsgo --noEmit",
+      "tsconfig": "apps/cli/tsconfig.json",
+      "extends": "@tsconfig/bun/tsconfig.json"
+    },
+    "inheritedCoreConfig": {
+      "path": "packages/core/tsconfig.json",
+      "extends": "@tsconfig/bun/tsconfig.json"
+    },
+    "moduleTestPreloads": {
+      "path": "modules/sucafina/bunfig.toml",
+      "literal": [
+        "../../script/test-guard.ts",
+        "../../script/test-omni-control.ts"
+      ]
+    },
+    "rootTestGuard": {
+      "packageScript": "echo 'do not run tests from root' && exit 1",
+      "bunfigTestRoot": "./do-not-run-tests-from-root"
+    },
+    "hostedHarness": [
+      ".github/workflows/test-ci.yml",
+      "script/test-ci.ts"
+    ],
+    "guardScript": "script/guards/run.ts",
+    "authority": "This inventory records existing configuration and does not create a new checker lane, workflow, local execution permission or guard waiver."
+  },
+  "runtimeDataDependencies": {
+    "manifest": {
+      "path": "modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "gitBlobSha": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+      "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/ai/manifests/resident.json",
+      "schemaVersion": 1,
+      "version": "1.0.0"
+    },
+    "reader": {
+      "path": "modules/sucafina/Sucafinav1/product/ai/resident.ts",
+      "gitBlobSha": "7e3d3849272bb5755d793a9e2b00ad34c523c188"
+    },
+    "counts": {
+      "profiles": 5,
+      "skills": 18,
+      "packs": 8,
+      "profileSkillBindings": 25,
+      "uniqueOperations": 39
+    },
+    "profiles": [
+      {
+        "id": "sf_maestro",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_maestro.json",
+        "declaredSourceDigest": "90ff882d8c4ff48234efd5cd2c0de01cd8e917c22256b12dd9321610c4490bcb",
+        "allowedSkills": [
+          "sf-enquadrar-decisao",
+          "sf-preparar-revisao-executiva",
+          "sf-coordenar-perguntas",
+          "sf-extrair-evidencias",
+          "sf-produzir-bi-contextual",
+          "sf-produzir-material-reuniao",
+          "sf-consultar-memoria-decisoria"
+        ]
+      },
+      {
+        "id": "sf_finance",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_finance.json",
+        "declaredSourceDigest": "89631395da62d761eadbb8801d1ebeb634dbe8a297b91ba73e0734d663100793",
+        "allowedSkills": [
+          "sf-explicar-forecast",
+          "sf-comparar-cenarios",
+          "sf-avaliar-sensibilidade",
+          "sf-produzir-bi-contextual",
+          "sf-consultar-memoria-decisoria"
+        ]
+      },
+      {
+        "id": "sf_procurement",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_procurement.json",
+        "declaredSourceDigest": "65f339bb5c3394c9cba7b5da5a702b3d94f61a378aee3d1067a3635ad5ceef3a",
+        "allowedSkills": [
+          "sf-comparar-sourcing",
+          "sf-revisar-condicoes-contratuais",
+          "sf-preparar-compra",
+          "sf-extrair-evidencias",
+          "sf-consultar-memoria-decisoria"
+        ]
+      },
+      {
+        "id": "sf_portfolio",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_portfolio.json",
+        "declaredSourceDigest": "249ec91f7d1a76fef83c4408795b66953589d3b3f45e91c64ca691c60c8c2b83",
+        "allowedSkills": [
+          "sf-revisar-dependencias",
+          "sf-compor-portfolio",
+          "sf-reavaliar-compromissos",
+          "sf-produzir-bi-contextual",
+          "sf-consultar-memoria-decisoria"
+        ]
+      },
+      {
+        "id": "sf_reviewer",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/profiles/sf_reviewer.json",
+        "declaredSourceDigest": "cd0f89c9a1342101bf00a74c8ab794098889775773a7fe4cef120d28cf6f6391",
+        "allowedSkills": [
+          "sf-contestar-decisao",
+          "sf-revisar-evidencias",
+          "sf-consultar-memoria-decisoria"
+        ]
+      }
+    ],
+    "skills": [
+      {
+        "id": "sf-enquadrar-decisao",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+        "declaredSourceDigest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4",
+        "declaredInstructionsDigest": "cc342bb2b520a8ae37220bf600508d085553308ead08eb6e1b0843e52cb8f464"
+      },
+      {
+        "id": "sf-preparar-revisao-executiva",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+        "declaredSourceDigest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6",
+        "declaredInstructionsDigest": "acaae8c302cfe934e9a9b1d6e31784090ac96fa48e66dc5859d4f81cbbb4e801"
+      },
+      {
+        "id": "sf-coordenar-perguntas",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+        "declaredSourceDigest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33",
+        "declaredInstructionsDigest": "9dd6da0563e59248ba5dca0ffd2c26437a0a6bafb5abeae5a0f77aacef82fafa"
+      },
+      {
+        "id": "sf-explicar-forecast",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+        "declaredSourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+        "declaredInstructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227"
+      },
+      {
+        "id": "sf-comparar-cenarios",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+        "declaredSourceDigest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2",
+        "declaredInstructionsDigest": "4a5ee94713eb474032dcc089f5cac3a073ea089479dba7ea0f90aebeb67c8ef9"
+      },
+      {
+        "id": "sf-avaliar-sensibilidade",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+        "declaredSourceDigest": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5",
+        "declaredInstructionsDigest": "fc415d2d3c3e7ca205e9ba92b34537f69a1a3f036ddfc0274785349d56d0e9f0"
+      },
+      {
+        "id": "sf-comparar-sourcing",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+        "declaredSourceDigest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553",
+        "declaredInstructionsDigest": "bd851ccc61d93d5978b7f5068f51b7f774458e70b3a6a8caee9b9076667fb050"
+      },
+      {
+        "id": "sf-revisar-condicoes-contratuais",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+        "declaredSourceDigest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb",
+        "declaredInstructionsDigest": "f170a1a4cf8fadd83716d70428425446b33b0849c9eac7af476df44c1b863fd1"
+      },
+      {
+        "id": "sf-preparar-compra",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+        "declaredSourceDigest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0",
+        "declaredInstructionsDigest": "6b5a139ed88269b55c86f711c922cb7ec16ddaef7d9285e0891514319e125213"
+      },
+      {
+        "id": "sf-revisar-dependencias",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+        "declaredSourceDigest": "6adbeb96f182706d6125cfad31f679801a24becd9589231121ff54d62d476005",
+        "declaredInstructionsDigest": "bc18710e773e2ef7902e2899886ffd4081e6553be7bc2b076204f826b74bbdf0"
+      },
+      {
+        "id": "sf-compor-portfolio",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+        "declaredSourceDigest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+        "declaredInstructionsDigest": "0f6f8d575fd60b062fe2b700cde10fadd9e93bcb47409a0b8b362f028629cd07"
+      },
+      {
+        "id": "sf-reavaliar-compromissos",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+        "declaredSourceDigest": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6",
+        "declaredInstructionsDigest": "a8f4ee47edb3c6d51ae9494ffee887af9c9d2072679f663583dbcc8ed30f6ea1"
+      },
+      {
+        "id": "sf-contestar-decisao",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+        "declaredSourceDigest": "9d0a00c76ce8064f87eeb325eb0bc5c252bc9119d25e2047b78a55803b735696",
+        "declaredInstructionsDigest": "ea13087b54f1c8e8d94974cba313f407c6fbb21bc825e4452aa57c7789e81def"
+      },
+      {
+        "id": "sf-revisar-evidencias",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+        "declaredSourceDigest": "eda2166e5a588ba51888b1b7968544f05debb7179be8959c24cf681c4d1f0be8",
+        "declaredInstructionsDigest": "8f407777a68965d86469eb1ce1554a231ac1b546af0e4d8e080734984f7f9a1d"
+      },
+      {
+        "id": "sf-extrair-evidencias",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+        "declaredSourceDigest": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f",
+        "declaredInstructionsDigest": "e5097d33f0505ab51088100b25bae02dc830bdcdd55eb4bf4c54acd976bf558b"
+      },
+      {
+        "id": "sf-produzir-bi-contextual",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+        "declaredSourceDigest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+        "declaredInstructionsDigest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0"
+      },
+      {
+        "id": "sf-produzir-material-reuniao",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-material-reuniao/SKILL.md",
+        "declaredSourceDigest": "d5389ae1fa4cebab61ddf53cc75a1d25c5a293182fff7b5d03bce5f90ac1a7bb",
+        "declaredInstructionsDigest": "a18bc877c2b0abc80836667342f53833446c1328a6464edc2dcac05ed8a56879"
+      },
+      {
+        "id": "sf-consultar-memoria-decisoria",
+        "version": "1.0.0",
+        "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+        "declaredSourceDigest": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2",
+        "declaredInstructionsDigest": "67d4166705d222b9d654f4e32d0b804ae0fdf7a157755545fde5ed7da92629a6"
+      }
+    ],
+    "packs": [
+      {
+        "id": "performance",
+        "version": "1.0.0",
+        "operations": [
+          "sf_dashboard_read",
+          "sf_kpi_explain",
+          "sf_bi_view",
+          "sf_source_get"
+        ]
+      },
+      {
+        "id": "planning",
+        "version": "1.0.0",
+        "operations": [
+          "sf_forecast_compare",
+          "sf_scenario_simulate",
+          "sf_scenario_compare",
+          "sf_sensitivity_evaluate",
+          "sf_portfolio_evaluate"
+        ]
+      },
+      {
+        "id": "procurement",
+        "version": "1.0.0",
+        "operations": [
+          "sf_request_read",
+          "sf_supplier_read",
+          "sf_contract_read",
+          "sf_sourcing_compare"
+        ]
+      },
+      {
+        "id": "decisions",
+        "version": "1.0.0",
+        "operations": [
+          "sf_case_read",
+          "sf_case_draft",
+          "sf_alternative_draft",
+          "sf_change_prepare",
+          "sf_receipt_get"
+        ]
+      },
+      {
+        "id": "collaboration",
+        "version": "1.0.0",
+        "operations": [
+          "sf_work_list",
+          "sf_question_prepare",
+          "sf_answer_read",
+          "sf_relation_read",
+          "sf_handoff_prepare"
+        ]
+      },
+      {
+        "id": "documents_reports",
+        "version": "1.0.0",
+        "operations": [
+          "sf_document_extract",
+          "sf_import_preview",
+          "sf_review_prepare",
+          "sf_report_prepare",
+          "sf_artifact_get"
+        ]
+      },
+      {
+        "id": "knowledge",
+        "version": "1.0.0",
+        "operations": [
+          "sf_context_get",
+          "sf_knowledge_search",
+          "sf_evidence_get",
+          "sf_decision_recall",
+          "sf_freshness_check"
+        ]
+      },
+      {
+        "id": "routines",
+        "version": "1.0.0",
+        "operations": [
+          "sf_routine_catalog",
+          "sf_routine_prepare",
+          "sf_routine_run",
+          "sf_routine_status",
+          "sf_routine_result",
+          "sf_watch_prepare"
+        ]
+      }
+    ],
+    "qualification": "The 23 profile/skill paths and digests here are manifest declarations, not independent byte verifications by this static review. Their real loading proof is the separate R2 selected public-host run and its loaded-skills receipt. Neither manifest presence nor this table alone proves a skill was loaded or an operation executed.",
+    "observedLoadingEvidence": {
+      "run": "R2",
+      "W": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+      "S": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+      "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441/job/132672642109",
+      "artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/proofs/loaded-skills.json"
+    },
+    "observedOperationBindingEvidence": {
+      "run": "R2",
+      "artifact": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/proofs/operation-bindings.json",
+      "limit": "39 operation bindings do not mean 39 successful domain executions."
+    }
+  },
+  "selectionScopedEvidenceReuse": {
+    "runs": {
+      "R1": {
+        "status": "FAIL",
+        "W": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+        "WTree": "ace3b1ea4897c6320c24b6ef175d71299dc61272",
+        "S": "a372b69017b275e5f4929d92346e02c21f1936d5",
+        "STree": "b5409615f90dadd938d37d393300e7b2872fb895",
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667815725",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667815725/job/132671021400",
+        "tests": 49,
+        "pass": 41,
+        "fail": 8,
+        "assertions": 2220,
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runs/R1.json",
+        "testLog": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runs/R1.tests.log",
+        "testLogSha256": "fda5f3252d359859ce49e338944308e858b68587a77629135f77b6e0fcdb0096"
+      },
+      "R2": {
+        "status": "PASS",
+        "W": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+        "WTree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+        "S": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+        "STree": "49baf5c9136fe426593c626a3317a06d33bd62d3",
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441/job/132672642109",
+        "tests": 7,
+        "pass": 7,
+        "fail": 0,
+        "assertions": 925,
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runs/R2.json",
+        "testLog": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runs/R2.tests.log",
+        "testLogSha256": "17421b15a5d8523310d6686acfa09e2e7033d4acb04774f580dfb45a0db6c36a"
+      },
+      "R3": {
+        "status": "FAIL",
+        "W": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+        "WTree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+        "S": "3328845bbb6186f82cf29d89185aff3f3a313924",
+        "STree": "6eefd788fca83e9b7ca6389065a98f710d9829ae",
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172/job/132673437742",
+        "tests": 24,
+        "pass": 11,
+        "fail": 13,
+        "assertions": 155,
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runs/R3.json",
+        "testLog": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runs/R3.tests.log",
+        "testLogSha256": "ed477ecc5f215c03b32ddbaf88340e853fc07d2fd1cdfe2f93cfcee3fe350b9e"
+      },
+      "R4": {
+        "status": "PASS",
+        "W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+        "WTree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+        "S": "4b601473b4b716199a643517645dd4820667180d",
+        "STree": "b666bedfe55500634380e91615f243af94ea0bbd",
+        "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669037981",
+        "jobUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669037981/job/132674744357",
+        "tests": 3,
+        "pass": 3,
+        "fail": 0,
+        "assertions": 56,
+        "receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runs/R4.json",
+        "testLog": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/runs/R4.tests.log",
+        "testLogSha256": "d4ed9a94e711e0ac4f684fbdd8db232bce14c3cab348fa365b1d0062b18052bd"
+      }
+    },
+    "commitTransitions": [
+      {
+        "from": {
+          "sha": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+          "tree": "ace3b1ea4897c6320c24b6ef175d71299dc61272",
+          "parent": "6b2bbb59976378081f7e8032537d9ff71eba30f5"
+        },
+        "to": {
+          "sha": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+          "tree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+          "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8"
+        },
+        "commitUrl": "https://github.com/gustavomhss/Orchestra-SF/commit/a9a48b930c7b3a8c003dc6791bbec99f20300047",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+            "status": "modified",
+            "gitBlobSha": "5af45b2d010e691935524082a85cba47c8bf5cec"
+          }
+        ],
+        "meaning": "Only the new skill-host-fixture changed to expose the real LocationServiceMap through the root Effect layer. The seven helper-dependent tests that failed at R1 were selected again and passed in R2. Neither owned production file changed."
+      },
+      {
+        "from": {
+          "sha": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+          "tree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+          "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8"
+        },
+        "to": {
+          "sha": "d5a297ca260b929335da4517f9c4432eaa92f856",
+          "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+          "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047"
+        },
+        "commitUrl": "https://github.com/gustavomhss/Orchestra-SF/commit/d5a297ca260b929335da4517f9c4432eaa92f856",
+        "files": [
+          {
+            "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+            "status": "added",
+            "gitBlobSha": "cef07dbfcdb48565a71f596a02a4ce46c90ea393"
+          }
+        ],
+        "meaning": "Only skill-admission-fences.test.ts was added. R4 selected that file; it did not rerun all W3 tests."
+      }
+    ],
+    "groups": [
+      {
+        "originalRun": "R1",
+        "files": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts"
+        ],
+        "observedTests": 8,
+        "bridgeTests": 6,
+        "catalogTests": 2,
+        "reuse": "The files and their source dependencies remain byte-identical W1→W3. Neither imports skill-host-fixture. Preserve the original W1/S1 result; this is selection-scoped reuse, not a fresh W3 or target execution.",
+        "originalRunStill": "FAIL: 41 pass / 8 fail; these eight selected test cases individually passed."
+      },
+      {
+        "originalRun": "R2",
+        "files": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts"
+        ],
+        "helper": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+        "observedTests": 7,
+        "reuse": "Seven selected tests passed after the single helper correction at W2/S2. Their material and dependency bytes did not change at W3, whose only addition is a different test file.",
+        "originalRunStill": "PASS: 7 pass / 0 fail; 925 assertions."
+      },
+      {
+        "originalRun": "R4",
+        "files": [
+          "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts"
+        ],
+        "observedTests": 3,
+        "reuse": "Three selected admission-fence cases ran at W3/S4. The routine-result case checks actual registry leases; it does not execute a native scheduled routine.",
+        "originalRunStill": "PASS: 3 pass / 0 fail; 56 assertions."
+      },
+      {
+        "originalRun": "R3",
+        "observedTests": 24,
+        "reuse": "Supplementary inherited UI selections ran at W2/S3. Eleven passed and thirteen failed. No failure is erased, fixed, or rerun by this dependency document.",
+        "originalRunStill": "FAIL: 11 pass / 13 fail; 155 assertions."
+      }
+    ],
+    "permanentLimits": [
+      "R1's seven helper failures remain recorded even though a later changed-helper selection passed. R1's separate WP06 missing-rendered-preview-link failure remains open.",
+      "R3's six sourcing and seven collaboration failures remain open. Owner proposals are inert and NOT_RUN.",
+      "A new integrated target includes Reports48 material changes beyond W3; source selection reuse alone cannot qualify that candidate.",
+      "No full W3 suite, typecheck, guard or AM/native Task/provider acceptance is represented as PASS."
+    ],
+    "runtimeClassification": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/inspection/runtime-scope-review.json"
+  },
+  "targetReconciliation": {
+    "target": {
+      "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+      "commitUrl": "https://github.com/gustavomhss/Orchestra-SF/commit/faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "parent": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "documentationOnlyPaths": 30,
+      "allPathsUnder": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/",
+      "effect": "No executable change in the terminal evidence-only child."
+    },
+    "materialAncestor": {
+      "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+      "parent": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "commitUrl": "https://github.com/gustavomhss/Orchestra-SF/commit/d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "nonDocumentationChangedPaths": 45,
+      "qualification": "HOLD_NOT_RUN",
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+          "gitBlobSha": "c4199da735c14b4c08ad6c1848c1b36ca9de8c26",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "gitBlobSha": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-review-cycle.ts",
+          "gitBlobSha": "6960533cbb8cb128ec4e6d90583903107b5eeb0c",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-calculation-history.ts",
+          "gitBlobSha": "d3b87293664682a380188239baf0f82e14a21db9",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-history.ts",
+          "gitBlobSha": "d879d52e12945465a965986280bef3a242962a50",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-read-integrity.ts",
+          "gitBlobSha": "0db2a444c14986cb6d0fec6eb60b279a8e26729d",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/authority.ts",
+          "gitBlobSha": "bde64fb8cb1a25e8f10eb979ed5ff111cdb2042e",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "gitBlobSha": "88afbbfff7c2eba966cbfb2b4abdbe7f130417d4",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/http.ts",
+          "gitBlobSha": "ccae839a2bc35634554a2ac2721d345671c16f77",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/recipient-thread.ts",
+          "gitBlobSha": "438cbf76c6b230ed5a9b3328ef67cbecc73106c6",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-history.ts",
+          "gitBlobSha": "59a923fbf7f04b212b24cd4c32f09d67620bccda",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/thread-reads.ts",
+          "gitBlobSha": "134b3bb6dd682c23eceb2c525ba35aa0c0584c39",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/threads.ts",
+          "gitBlobSha": "b7f69a1b71e40af5204280054cb83d0c2e2970c6",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "gitBlobSha": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-client.ts",
+          "gitBlobSha": "d9c4f9472fee1865a349bdffa8190abdece1a873",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/collaboration-view.ts",
+          "gitBlobSha": "ce0f54a96d5d3a02671b20c52e1c0b3832504f42",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/http.ts",
+          "gitBlobSha": "000e1aaedcc929f94e0dcb45d1e63267f1401531",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/port.ts",
+          "gitBlobSha": "1290845a260606bd6e2b30594ba4247724ed7290",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/services.ts",
+          "gitBlobSha": "b4e16a0c948d1232cc73f2785a6ee1d2bc0e3dd7",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/thread-context.ts",
+          "gitBlobSha": "5123063a55dbb7ab8935ff95e432b8bf1a77fd0d",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/discussion-client.test.ts",
+          "gitBlobSha": "f316969255bea603f9187800a0af111c716bdc65",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-and-journey/reports-selection.test.ts",
+          "gitBlobSha": "540d5dbfee126a0e2f03f83bbed14ef5107eb8ee",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/authority-boundary.test.ts",
+          "gitBlobSha": "6c05d1de35d2176530cc70ecfa1f849afe95ff0d",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+          "gitBlobSha": "291e72cf1c356d76f1671ec971eac5b44a70edd0",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+          "gitBlobSha": "65dd8c157ad31d288ee0f9142e1b41e08221de7c",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+          "gitBlobSha": "59743deea7211c8cda0dc09c5feb9b160f7c0ca8",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/lost-response.test.ts",
+          "gitBlobSha": "ae37b110099b63ddde6188b9d89be4947408b087",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary-fixture.ts",
+          "gitBlobSha": "5e24513ec7f015e52d0b944011ae25d1529ac6e2",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/read-boundary.test.ts",
+          "gitBlobSha": "332b91ee3bac6303073f397e72d7f09afcd134da",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary-fixture.ts",
+          "gitBlobSha": "6d03d60364ea5cac477fa0623e749c7f9ba947bc",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/review-read-boundary.test.ts",
+          "gitBlobSha": "c874e2070e7d92b118eaa8fffe0caf6baf9b0144",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+          "gitBlobSha": "aae326accb08bc5645a408271688052a725a30a5",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts",
+          "gitBlobSha": "7f99dee8c6995dd685272a150b939d74a75fd653",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/threads-lifecycle.test.ts",
+          "gitBlobSha": "11162741f8021b7d79a23c1022c06f636a393f26",
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+          "gitBlobSha": "c2948d5b96ba06172227c446e1c6e15fc174b2d6",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/failed-edit-request.ts",
+          "gitBlobSha": "604bd5d8bd9cd66370d3f15e6477fe4186951e49",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/human-answer-flow.ts",
+          "gitBlobSha": "9db3ae6a537a45d86089f5637d150a5ea1a713fc",
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/lost-created-thread-read.ts",
+          "gitBlobSha": "dc1d4849a24a0b42756978daaa76930ab99d52e6",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/lost-edit-response.ts",
+          "gitBlobSha": "ebbf5b9365e6f5268f00004c1bdf766ecfca4dad",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/lost-reply-response.ts",
+          "gitBlobSha": "a15b1f6e52e4a5418a13bb850255711b1ca70186",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+          "gitBlobSha": "494fe03f46beea037cff45e70259ac875758e3b6",
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/read-reconciliation.ts",
+          "gitBlobSha": "b145caac8a47e029aded4418253488d250d680e1",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+          "gitBlobSha": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5",
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports-support/revocation.ts",
+          "gitBlobSha": "7a7a31e9a139fc41dfecdf6944edc18c41ad78b4",
+          "status": "modified"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/reports.spec.ts",
+          "gitBlobSha": "857f339fe477839986e6e70cf4781c9f4f16e009",
+          "status": "modified"
+        }
+      ]
+    },
+    "productionPreimages": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "baseGitBlobSha": "bc00a2fe70bb37d6132369c3767388e544e18510",
+        "targetGitBlobSha": "bc00a2fe70bb37d6132369c3767388e544e18510",
+        "sourcePostimageGitBlobSha": "472b44cc594db8cafd7669e8424d0f494d38cc9a",
+        "preimageMatchesBase": true
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "baseGitBlobSha": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+        "targetGitBlobSha": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+        "sourcePostimageGitBlobSha": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7",
+        "preimageMatchesBase": true
+      }
+    ],
+    "newTestsAndHelpers": "All nine are additions relative to common base7e1. Complete C28 and terminal child file lists contain none of those paths; no same-path target addition was found by this comparison.",
+    "directDependencyComparison": {
+      "inheritedTargetsCompared": 44,
+      "identical": 44,
+      "configReferencesCompared": 19,
+      "identicalConfigReferences": 19,
+      "basis": "Pinned GitHub MCP full blob SHA identities at W3 and latest target."
+    },
+    "transitiveCompatibility": {
+      "state": "DIFFERENT_TARGET_GRAPH_NOT_QUALIFIED",
+      "examples": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "chain": [
+            {
+              "from": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+              "line": 9,
+              "declaration": "import { financialCompositionFixture } from \"../wp10/integration/financial-composition-fixture.ts\"",
+              "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+              "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts#L9"
+            },
+            {
+              "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+              "sourceGitBlobSha": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+              "line": 8,
+              "declaration": "import { createSfProductAuthority } from \"../../../../product/integration/product-authority.ts\"",
+              "target": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+              "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts#L8"
+            }
+          ],
+          "sourceGitBlobSha": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+          "targetGitBlobSha": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+          "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+          "targetBytesEqual": false,
+          "significance": "C28 Reports48 changes an actual transitive dependency. Direct-dependency equality does not establish integrated runtime or type compatibility."
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "chain": [
+            {
+              "from": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+              "line": 10,
+              "declaration": "import { createSfExtendedBusinessServices } from \"../../../../../../apps/cli/src/sucafina-product/extended-business-services.ts\"",
+              "target": "apps/cli/src/sucafina-product/extended-business-services.ts",
+              "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts#L10"
+            },
+            {
+              "from": "apps/cli/src/sucafina-product/extended-business-services.ts",
+              "sourceGitBlobSha": "ff43e324d280498e629f867d0ac93714bdf608cc",
+              "line": 19,
+              "declaration": "import { createSfExtendedHttp } from \"./extended-http.ts\"",
+              "target": "apps/cli/src/sucafina-product/extended-http.ts",
+              "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/src/sucafina-product/extended-business-services.ts#L19"
+            }
+          ],
+          "sourceGitBlobSha": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09",
+          "targetGitBlobSha": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+          "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/src/sucafina-product/extended-http.ts",
+          "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/apps/cli/src/sucafina-product/extended-http.ts",
+          "targetBytesEqual": false,
+          "significance": "C28 Reports48 changes an actual transitive dependency. Direct-dependency equality does not establish integrated runtime or type compatibility."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "chain": [
+            {
+              "from": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+              "line": 9,
+              "declaration": "import { financialCompositionFixture } from \"../wp10/integration/financial-composition-fixture.ts\"",
+              "target": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+              "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts#L9"
+            },
+            {
+              "from": "modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts",
+              "sourceGitBlobSha": "febb795303b8c4ada5fb6f39d6373667ee71dac1",
+              "line": 14,
+              "declaration": "import { createSfBusinessServices } from \"../../../../../../../apps/cli/src/sucafina-product/business-services.ts\"",
+              "target": "apps/cli/src/sucafina-product/business-services.ts",
+              "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/test/product/wp10/integration/financial-composition-fixture.ts#L14"
+            },
+            {
+              "from": "apps/cli/src/sucafina-product/business-services.ts",
+              "sourceGitBlobSha": "0181267b67b74a8df338999ddb7745cfee42bb29",
+              "line": 62,
+              "declaration": "import { createCollaborationHost } from \"../../../../modules/sucafina/Sucafinav1/product/collaboration/host.ts\"",
+              "target": "modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+              "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/apps/cli/src/sucafina-product/business-services.ts#L62"
+            }
+          ],
+          "sourceGitBlobSha": "1678fc9d46c36a7da962aeca3b782b395e129c51",
+          "targetGitBlobSha": "88afbbfff7c2eba966cbfb2b4abdbe7f130417d4",
+          "sourceUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/d5a297ca260b929335da4517f9c4432eaa92f856/modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "targetUrl": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/product/collaboration/host.ts",
+          "targetBytesEqual": false,
+          "significance": "C28 Reports48 changes an actual transitive dependency. Direct-dependency equality does not establish integrated runtime or type compatibility."
+        }
+      ],
+      "conclusion": "The matching direct imports and preimages are sufficient to describe a reviewable eleven-file intake, not to infer transitive target equivalence. Preserve Reports48 and validate the actual integrated candidate through the authorized checker/integrator.",
+      "exhaustiveTransitiveComparison": false
+    },
+    "preserve": {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+      "targetGitBlobSha": "aae326accb08bc5645a408271688052a725a30a5",
+      "reason": "C28 already contains the Reports48 empty-case verifyScenarioOperations fixture correction. This file is not one of the eleven material intake paths and must not be replaced with an older W3/base image."
+    },
+    "activeWriterAssumed": false,
+    "authority": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+      "gitBlobSha": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/faa30fddb7e7b61696b66fd069f51cf18c51125f/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+      "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+      "mission": 60,
+      "branch": "sf2-stack",
+      "leaseEpoch": "S0-C-e12-browser60",
+      "GLOBAL_RELEASE": false,
+      "intakeCondition": "Only60 under an expressly renewed authority, or an expressly authorized successor, may reconcile actual HEAD, this terminal, current control/source authorities and releases before ACK/CAS. No ACK, active writer, automatic resumption, acceptance or release is presumed.",
+      "checksOwner": 45,
+      "epicAMAcceptanceOwner": "S0"
+    }
+  },
+  "requiredNextGate": {
+    "request": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/REQUEST45.json",
+    "requestSha256": "1d6b9f91af95f9d73899bf439fc8c0049b20d9633f67e4ab61607d389af4416a",
+    "state": "REQUESTED_NOT_RUN",
+    "sourceW": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "sourceTree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+    "guardBase": {
+      "ref": "origin/dev",
+      "observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    },
+    "requestedCommands": [
+      {
+        "cwd": "modules/sucafina",
+        "command": "bun typecheck",
+        "declaredScript": "bun --cwd Sucafinav1 typecheck",
+        "innerScript": "tsgo --noEmit",
+        "manifestBlob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+        "tsconfigBlob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+        "requiredProgram": "test/product/workbench-mcp-closure/*.ts and imported product/host-binding files; existing tsconfig includes test/**/*.ts"
+      },
+      {
+        "cwd": "apps/cli",
+        "command": "bun typecheck",
+        "declaredScript": "tsgo --noEmit",
+        "manifestBlob": "b1385b685c2af5ae8f88d5962be87d3363f5085c"
+      },
+      {
+        "cwd": ".",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "authority": "45 retains hosted compiler/guard interface. 68 does not use tsc directly, run local checks, add a wrapper workflow, seize fixed refs or claim a waiver.",
+    "requiredEvidence": [
+      "Exact W/S/commands/package inputs and real nonempty TS program",
+      "Exit codes and source-owned versus inherited diagnostics",
+      "Guards on the actual W tree against observed origin/dev",
+      "Reuse equivalent in-flight source/selection request; no duplicate"
+    ],
+    "additionalIntegrationRequirement": "The authorized60 resumption or successor must reconcile the then-current target, preserve Reports48, and supply the actual integrated candidate identities and required affected-selection evidence to45. This static source closure is not integrated C acceptance.",
+    "localCompilerNotRun": true,
+    "hostedCompilerNotRunBy68": true,
+    "guardsNotRunBy68": true
+  },
+  "exclusions": {
+    "executableIntake": "Only the eleven material paths above. Evidence documents, ACK68 and other receipts are not code dependencies.",
+    "inertOwnerProposals": {
+      "prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/workbench-mcp-closure/owner-proposals/",
+      "state": "NOT_RUN_NO_RELEASE",
+      "excludedFromExecutableClosure": true,
+      "rule": "Patch/preimage/postimage proposals remain inert owner handoff artifacts. They were neither applied to source nor injected into a test harness, target or dependency resolution."
+    },
+    "nativeAdmission": "A64 owns Task/Relay/Schedule admission. Synthetic component authorities and SDK/Session component proofs remain explicitly classified in the runtime-scope review; no native receipt is fabricated or credited here.",
+    "deniedInferences": [
+      "Catalog/manifest presence => loading",
+      "Skill binding => all 39 operations executed",
+      "Hosted Bun test pass => tsgo or guard pass",
+      "44 direct dependency hashes equal => entire target graph equal",
+      "Source W/S selection evidence => integrated target qualification",
+      "Ended60 lease => automatic successor ACK"
+    ]
+  }
+}

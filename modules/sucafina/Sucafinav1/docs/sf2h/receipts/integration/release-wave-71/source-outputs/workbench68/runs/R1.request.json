@@ -1,0 +1,26 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+    "./Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+    "./Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+    "./Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+    "./Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+    "./Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts",
+    "./Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+    "./Sucafinav1/test/product/wp10/resident-runtime/capability-dispatch.test.ts",
+    "./Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+    "./Sucafinav1/test/product/wp10/resident-runtime/resident-agents.test.ts",
+    "./Sucafinav1/test/product/wp02/native-capabilities.test.ts",
+    "./Sucafinav1/test/product/wp03/capability-parity.test.ts",
+    "./Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+    "./Sucafinav1/test/product/wp06/native/documents.test.ts",
+    "./Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}

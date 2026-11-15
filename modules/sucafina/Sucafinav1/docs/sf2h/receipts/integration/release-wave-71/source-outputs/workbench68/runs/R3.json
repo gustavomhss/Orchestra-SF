@@ -1,0 +1,126 @@
+{
+  "schema": "sf68.hosted-run.v1",
+  "id": "R3",
+  "status": "FAIL",
+  "scope": "operation-specific domain consumer qualification; no new product changes",
+  "W": {
+    "sha": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+    "tree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+    "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8"
+  },
+  "S": {
+    "sha": "3328845bbb6186f82cf29d89185aff3f3a313924",
+    "tree": "6eefd788fca83e9b7ca6389065a98f710d9829ae",
+    "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+    "branch": "ci-run-linux-m68r3"
+  },
+  "request": {
+    "path": "runs/R3.request.json",
+    "selectedFiles": [
+      "./Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "./Sucafinav1/test/product/wp04/contracts.test.ts",
+      "./Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+      "./Sucafinav1/test/product/wp07/application.test.ts",
+      "./Sucafinav1/test/product/wp08/host-work.test.ts",
+      "./Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+      "./Sucafinav1/test/product/wp08/question-consumer.test.ts",
+      "./Sucafinav1/test/product/wp08/handoff-shared-dispatch.test.ts"
+    ],
+    "selectedFileCount": 8,
+    "sha256": "88cae2ffd4308efce864be8d6069df96ee196c19a94e3235127de7d090276aa9",
+    "gitBlobSha": "2a3f501f7958201f86210792a8f143b22f3468aa"
+  },
+  "run": {
+    "id": 43668610172,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172",
+    "headSha": "3328845bbb6186f82cf29d89185aff3f3a313924",
+    "attempt": 1,
+    "event": "push",
+    "workflow": ".github/workflows/test-ci.yml",
+    "startedAt": "2026-11-15T02:36:51Z",
+    "completedAt": "2026-11-15T02:38:42Z",
+    "conclusion": "failure"
+  },
+  "job": {
+    "id": 132673437742,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172/job/132673437742",
+    "name": "test (ubuntu-24.04)",
+    "conclusion": "failure"
+  },
+  "cleanup": "success",
+  "observed": {
+    "pass": 11,
+    "fail": 13,
+    "expectCalls": 155,
+    "files": 8,
+    "tests": 24,
+    "skippedTests": 0,
+    "testDurationSeconds": 2.52,
+    "omni": "not applicable (focused: no declaring test ran); no omni spawn or delegation",
+    "testLog": "runs/R3.tests.log",
+    "selectedHeadersVerified": true,
+    "testLogSha256": "ed477ecc5f215c03b32ddbaf88340e853fc07d2fd1cdfe2f93cfcee3fe350b9e",
+    "testLogBytes": 28708,
+    "rawJobLogSha256": "f8ef9ba376ccb3a3158852d0ca4ca538cc5892d0665fd7298c74255f1148b1be",
+    "rawJobLogBytes": 98539
+  },
+  "positiveOperations": {
+    "realDomainUiDispatch": [
+      "sf_request_read",
+      "sf_supplier_read",
+      "sf_contract_read",
+      "sf_work_list"
+    ],
+    "realDispatcherRendererStoreWithSyntheticBusinessProjections": [
+      "sf_review_prepare",
+      "sf_report_prepare",
+      "sf_artifact_get"
+    ],
+    "note": "All use test identity/environment. These are not public native wrapper or Task/model witnesses."
+  },
+  "failures": [
+    {
+      "tests": 6,
+      "file": "wp04/finance-sourcing-integration.test.ts",
+      "stage": "sourcingFixture before target comparison at line398",
+      "reason": "case draft unavailable: case-evidence-unavailable",
+      "targetOperationUnqualified": "sf_sourcing_compare",
+      "ownerProposal": "owner-proposals/sourcing-case-evidence/"
+    },
+    {
+      "tests": 7,
+      "files": [
+        "wp08/host-answer-reuse.test.ts",
+        "wp08/question-consumer.test.ts",
+        "wp08/handoff-shared-dispatch.test.ts"
+      ],
+      "stage": "Initial case read before successful targeted operation",
+      "reason": "case-state-unavailable",
+      "targetOperationsUnqualified": [
+        "sf_answer_read",
+        "sf_question_prepare",
+        "sf_handoff_prepare"
+      ],
+      "ownerProposal": "owner-proposals/collaboration-case-verifier/"
+    }
+  ],
+  "limits": [
+    "No failed prerequisite is counted as a successful operation.",
+    "Bridge/loader paths were not reached in these failed UI preconditions; foreign code and old oracles were not changed.",
+    "Failed run remains FAIL. No rerun without causal material change.",
+    "Source proof does not transfer to the current integration candidate or cure native64 prerequisites."
+  ],
+  "deduplication": {
+    "branchMatchCount": 0,
+    "decision": "Disjoint exact eight-file request over W2; previous R2 completed before this supplementary dispatch."
+  },
+  "snapshotVerification": {
+    "status": "VERIFIED",
+    "method": "GitHub compare W2...S3",
+    "aheadBy": 1,
+    "changedPaths": [
+      ".ci-run.json"
+    ],
+    "requestGitBlob": "2a3f501f7958201f86210792a8f143b22f3468aa"
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "schema": "sf68.hosted-run.v1",
+  "id": "R2",
+  "status": "PASS",
+  "scope": "source qualification of the repaired public fixture",
+  "W": {
+    "sha": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+    "tree": "e3d364c59cd81d413d33bb783f1b519e7c5ff575",
+    "parent": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8"
+  },
+  "S": {
+    "sha": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+    "tree": "49baf5c9136fe426593c626a3317a06d33bd62d3",
+    "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+    "branch": "ci-run-linux-m68r2"
+  },
+  "request": {
+    "path": "runs/R2.request.json",
+    "selectedFiles": [
+      "./Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "./Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+      "./Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+      "./Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts"
+    ],
+    "selectedFileCount": 4,
+    "timeoutPolicy": "120000 inherited request default; explicit new per-test 30000 retained",
+    "sha256": "17ab0635a16eb5d9d7abba08d33c8effe011b26b04ff6c5e2f1de5391f1dfaec",
+    "gitBlobSha": "52c749c5a4077afe53436376d9b8d546a054b8fe"
+  },
+  "run": {
+    "id": 43668348441,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441",
+    "headSha": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+    "attempt": 1,
+    "event": "push",
+    "workflow": ".github/workflows/test-ci.yml",
+    "startedAt": "2026-11-15T02:33:29Z",
+    "completedAt": "2026-11-15T02:35:18Z",
+    "conclusion": "success"
+  },
+  "job": {
+    "id": 132672642109,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441/job/132672642109",
+    "name": "test (ubuntu-24.04)",
+    "conclusion": "success"
+  },
+  "cleanup": "success",
+  "observed": {
+    "pass": 7,
+    "fail": 0,
+    "expectCalls": 925,
+    "files": 4,
+    "tests": 7,
+    "skippedTests": 0,
+    "testDurationSeconds": 9.87,
+    "omni": "not applicable (focused: no declaring test ran); no omni spawn or delegation",
+    "testLog": "runs/R2.tests.log",
+    "selectedHeadersVerified": true,
+    "testLogSha256": "17421b15a5d8523310d6686acfa09e2e7033d4acb04774f580dfb45a0db6c36a",
+    "testLogBytes": 53310
+  },
+  "actualProofs": [
+    "25 SessionV2.skill receipts across18 skills/5profiles with persisted message IDs and byte digests",
+    "39 operation leases from14 real skill-load sessions and their revocation",
+    "Two concurrent public ToolRegistry settlements through private SDK to real Planner, UI parity and isolated principals from fixture authority",
+    "Real source capability disposal during last read returns invalid-skill/skill-source-changed with no receipt"
+  ],
+  "syntheticComponents": [
+    "Authenticated Request identity in registry/Planner fixtures",
+    "Run/case/assistant message/tool-call labels in component probes"
+  ],
+  "notProven": [
+    "39 positive business operation executions",
+    "Task/Relay/Schedule or external model execution",
+    "All18 durable outputs consumed/reopened by canonical UI",
+    "Integrated candidate C or AM01/AM02/AM03 completion"
+  ],
+  "deduplication": {
+    "branchMatchCount": 0,
+    "directProductShaRunCount": 0,
+    "previousRun": 43667815725,
+    "reason": "Only the four files whose7 tests failed for the repaired fixture were repeated; no unchanged shared failure retry."
+  },
+  "snapshotVerification": {
+    "status": "VERIFIED",
+    "method": "GitHub compare W2...S2",
+    "aheadBy": 1,
+    "changedPaths": [
+      ".ci-run.json"
+    ],
+    "requestGitBlob": "52c749c5a4077afe53436376d9b8d546a054b8fe"
+  },
+  "productionDeltaFromW1": [],
+  "testFixtureDeltaFromW1": [
+    "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts"
+  ]
+}

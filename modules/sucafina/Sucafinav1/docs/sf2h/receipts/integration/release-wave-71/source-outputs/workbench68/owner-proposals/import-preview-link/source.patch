@@ -1,0 +1,70 @@
+diff --git a/modules/sucafina/Sucafinav1/product/ui/components.ts b/modules/sucafina/Sucafinav1/product/ui/components.ts
+--- a/modules/sucafina/Sucafinav1/product/ui/components.ts
++++ b/modules/sucafina/Sucafinav1/product/ui/components.ts
+@@ -58,11 +58,31 @@
+ }
+ 
+ /** The caller must revalidate access and supply a persisted, authorized contribution. */
+-export function contribution(output: ContributionEnvelope): string {
++export function contribution(output: ContributionEnvelope, options?: { mount: string }): string {
+   const provenance = output.runProvenance
+   const status = output.state === "ready" ? "Ready for review" : output.state
+   const labels: Record<ContributionEnvelope["kind"], string> = { IntentFrame: "Decision framing", AnalysisPlan: "Analysis plan", DecisionBrief: "Decision brief", QuestionProposal: "Question", FinancialAnalysis: "Financial analysis", AlternativeDraft: "Alternative proposal", ScenarioComparison: "Scenario comparison", SensitivityResult: "Sensitivity", CommercialComparison: "Commercial comparison", CommercialGap: "Commercial gap", EvidenceCandidate: "Evidence candidate", PreparedChangeSet: "Prepared changes", DossierDraft: "Purchase preparation", DeliveryAssessment: "Delivery assessment", DependencyConflict: "Dependency conflict", PortfolioComparison: "Portfolio comparison", ReconsiderationProposal: "Reconsideration", CritiqueReport: "Decision review", UnresolvedCondition: "Open condition", ClaimIssue: "Evidence review", DocumentEvidence: "Document evidence", ContextualBIProposal: "Contextual view", MeetingMaterialProposal: "Meeting material", CaseRecall: "Related decisions", MatchExplanation: "Relevance and differences" }
+-  return `<section class="product-contribution"><h3>${labels[output.kind]}</h3><p role="status">${esc(status)}${output.state === "ready" ? "" : ` · ${esc(output.reason)}`}</p>${contributionBody(output)}<details><summary>Sources (${output.evidenceRefs.length})</summary><ul>${output.evidenceRefs.map((ref) => `<li>${esc(ref.refId)} · ${esc(ref.evidenceLevel)}</li>`).join("")}</ul></details><details><summary>Contribution details</summary><dl><dt>Profile</dt><dd>${esc(provenance.profileId)} ${esc(provenance.profileVersion)}</dd><dt>Skill</dt><dd>${esc(provenance.skillId)} ${esc(provenance.skillVersion)}</dd><dt>Digest</dt><dd>${esc(provenance.sourceDigest)}</dd><dt>Model</dt><dd>${esc(provenance.actualModel)}</dd><dt>Run</dt><dd>${esc(provenance.runId)}</dd></dl></details></section>`
++  return `<section class="product-contribution"><h3>${labels[output.kind]}</h3><p role="status">${esc(status)}${output.state === "ready" ? "" : ` · ${esc(output.reason)}`}</p>${contributionBody(output)}${importPreviewLink(output, options?.mount)}<details><summary>Sources (${output.evidenceRefs.length})</summary><ul>${output.evidenceRefs.map((ref) => `<li>${esc(ref.refId)} · ${esc(ref.evidenceLevel)}</li>`).join("")}</ul></details><details><summary>Contribution details</summary><dl><dt>Profile</dt><dd>${esc(provenance.profileId)} ${esc(provenance.profileVersion)}</dd><dt>Skill</dt><dd>${esc(provenance.skillId)} ${esc(provenance.skillVersion)}</dd><dt>Digest</dt><dd>${esc(provenance.sourceDigest)}</dd><dt>Model</dt><dd>${esc(provenance.actualModel)}</dd><dt>Run</dt><dd>${esc(provenance.runId)}</dd></dl></details></section>`
++}
++
++/** Navigation uses the existing human import route; the destination reauthorizes the reference. */
++function importPreviewLink(output: ContributionEnvelope, mount?: string): string {
++  if (mount === undefined || output.state !== "ready" || (output.kind !== "FinancialAnalysis" && output.kind !== "IntentFrame")) return ""
++  const payload = output.payload
++  if (payload.analysisBasis !== "import-preview" || payload.domainApplied !== false || !payload.importPreviewRef.trim() || payload.importPreviewRef.length > 512) return ""
++  // Import verifiers keep these source refs equal to the selected C04 target sources.
++  // Do not guess a destination for absent, mixed or non-record source selections.
++  if (!payload.sourceRefs.length || payload.sourceRefs.some((ref) => ref.kind !== "record")) return ""
++  const surfaces = [...new Set(payload.sourceRefs.flatMap((ref) => ref.kind === "record" ? [ref.target.surface] : []))]
++  const surface = surfaces.length === 1 ? surfaces[0] : undefined
++  if (surface !== "planner" && surface !== "dashboard") return ""
++  // Validate before trimming: "//" must never become a network-path link,
++  // and URL parsing discards ASCII tabs/newlines before resolving a URL.
++  if (mount && (!mount.startsWith("/") || mount.startsWith("//") || /[\u0000-\u0020\u007f\\?#]/.test(mount))) return ""
++  const prefix = mount.replace(/\/$/, "")
++  const query = new URLSearchParams({ sf: "imports", importPreviewRef: payload.importPreviewRef })
++  const href = `${prefix}/${surface}?${query}`
++  return `<p><a href="${esc(href)}" data-import-preview-link>Review the import preview used by this analysis</a></p>`
+ }
+ 
+ /** Read-only composition of an authorized case. Actions remain in the domain host. */
+diff --git a/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts b/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts
+--- a/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/analysis-http.ts
+@@ -10,7 +10,7 @@
+ type AnalysisHttpServices = Pick<SfHostServices, "ui" | "human" | "analyses" | "dispatch" | "selected" | "models">
+ 
+ /** The host owns authorization and execution; this boundary exposes no native binding. */
+-export async function handleSfAnalysis(request: Request, origin: string, runtime: AnalysisHttpServices) {
++export async function handleSfAnalysis(request: Request, origin: string, runtime: AnalysisHttpServices, options?: { mount: string }) {
+   const reply = (value: unknown, status: number) => Response.json(value, { status, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+   if (request.method !== "POST") return reply({ status: "denied" }, 405)
+   if (request.headers.get("origin") !== origin || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+@@ -58,7 +58,7 @@
+     if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+     if (action === "output" && "kind" in result.value) {
+       const output = result.value
+-      const html = await Promise.resolve().then(() => contribution(output)).catch(() => undefined)
++      const html = await Promise.resolve().then(() => contribution(output, options)).catch(() => undefined)
+       const reviewable = output.state === "ready" && (output.kind === "ScenarioComparison" || output.kind === "FinancialAnalysis")
+       const review = reviewable && "runRef" in input ? await reviewAnalysisOffer(request, runtime, input.runRef, output).catch(() => undefined) : undefined
+       if (!await runtime.ui.revalidate(admitted.value)) return reply({ status: "denied" }, 403)
+diff --git a/modules/sucafina/Sucafinav1/product/interface/http.ts b/modules/sucafina/Sucafinav1/product/interface/http.ts
+--- a/modules/sucafina/Sucafinav1/product/interface/http.ts
++++ b/modules/sucafina/Sucafinav1/product/interface/http.ts
+@@ -49,7 +49,7 @@
+     if (mode === "workbench-context") return handleContextualDecision(request, { ...input, surface, runtime })
+     if (mode === "workbench-analysis") {
+       if ([...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)
+-      return handleSfAnalysis(request, input.origin, runtime)
++      return handleSfAnalysis(request, input.origin, runtime, { mount: input.mount })
+     }
+     if (mode === "workbench-planner") {
+       if (surface !== "planner" || [...url.searchParams.keys()].some((key) => key !== "sf") || url.searchParams.getAll("sf").length !== 1) return reply({ status: "invalid" }, 400)

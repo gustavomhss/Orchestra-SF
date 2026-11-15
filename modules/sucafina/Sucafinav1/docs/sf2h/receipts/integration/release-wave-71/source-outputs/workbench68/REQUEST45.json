@@ -1,0 +1,55 @@
+{
+  "schema": "sf68.compiler-request.v1",
+  "mission": 68,
+  "consumer": 45,
+  "state": "REQUESTED_NOT_RUN",
+  "W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+  "W_tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+  "branch": "workbench-mcp-proof",
+  "PR": 81,
+  "sourceBase": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "guardBase": {
+    "ref": "origin/dev",
+    "observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+  },
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck",
+      "declaredScript": "bun --cwd Sucafinav1 typecheck",
+      "innerScript": "tsgo --noEmit",
+      "manifestBlob": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "tsconfigBlob": "51895f3c254e6020d116ca73d4a1c690f7562169",
+      "requiredProgram": "test/product/workbench-mcp-closure/*.ts and imported product/host-binding files; existing tsconfig includes test/**/*.ts"
+    },
+    {
+      "cwd": "apps/cli",
+      "command": "bun typecheck",
+      "declaredScript": "tsgo --noEmit",
+      "manifestBlob": "b1385b685c2af5ae8f88d5962be87d3363f5085c"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "scope": "Two owned bridge/loader product fixes; nine own new test/helper files. Public host contribution and contracts are unchanged dependencies. No Atlas generation/schema/protocol/engine changes.",
+  "authority": "45 retains hosted compiler/guard interface. 68 does not use tsc directly, run local checks, add a wrapper workflow, seize fixed refs or claim a waiver.",
+  "observedInterface": {
+    "branch": "astra-compose",
+    "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "PR": 32,
+    "scopedWorkflowAtSource": "sf2-scoped-check.yml not present in assigned base; no authorized dedicated source-check lane was published by45 in this session."
+  },
+  "requiredEvidence": [
+    "Exact W/S/commands/package inputs and real nonempty TS program",
+    "Exit codes and source-owned versus inherited diagnostics",
+    "Guards on the actual W tree against observed origin/dev",
+    "Reuse equivalent in-flight source/selection request; no duplicate"
+  ],
+  "proofLimits": [
+    "Hosted Bun tests do not replace compilation or guards",
+    "Source qualification is not integrated C acceptance",
+    "No guards approval label, ignore or broad test waiver added"
+  ]
+}

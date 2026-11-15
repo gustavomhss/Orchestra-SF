@@ -1,0 +1,53 @@
+{
+  "schema": "sf68.consumer-release.v1",
+  "mission": 68,
+  "consumer": "60 via PR65",
+  "state": "EXPLICIT_BOUNDED_SOURCE_RELEASE_FOR_HELD_CANDIDATE_PREPARATION",
+  "source": {
+    "sha": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+    "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047"
+  },
+  "branch": "workbench-mcp-proof",
+  "PR": 81,
+  "materialManifest": "integration/source-manifest.json",
+  "materialPatch": "integration/source.patch",
+  "dependencyClosure": "integration/dependency-closure.json",
+  "permitted": [
+    "Review and archive the immutable source evidence.",
+    "Under a valid integration writer lease, compose the complete 11-file material unit into a held candidate after exact preimage and dependency reconciliation.",
+    "Route REQUEST45 and canonical producer prerequisites for qualification of the actual integrated tree."
+  ],
+  "qualificationHolds": [
+    "14 existing source-test failures retained",
+    "Compiler and guards not run by45",
+    "30 of39 lack positive MCP SDK execution in selected runs;35 lack positive public wrapper settlement",
+    "Native admission/provider64 and memory69 qualifications remain separate",
+    "All18 outputs/consumers,39 parity,AM01-AM06,final selections and independent reviews remain unqualified"
+  ],
+  "inertProposals": {
+    "releasedForReviewOnly": true,
+    "autoApply": false,
+    "functionalQualification": "NOT_RUN",
+    "manifests": [
+      "owner-proposals/import-preview-link/proposal.json",
+      "owner-proposals/collaboration-case-verifier/proposal.json",
+      "owner-proposals/sourcing-case-evidence/proposal.json"
+    ]
+  },
+  "targetObserved": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "targetAuthority": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "consumerAck": {
+    "requested": true,
+    "observed": false,
+    "requiredFields": [
+      "source W/tree and evidence container",
+      "exact accepted material files/preimages/postimages",
+      "current authorized integrator and target C/tree",
+      "retained source failures and candidate qualification holds"
+    ]
+  },
+  "integrationAppliedBy68": false,
+  "mergeAuthorizedByThisReceipt": false,
+  "GLOBAL_RELEASE": false
+}

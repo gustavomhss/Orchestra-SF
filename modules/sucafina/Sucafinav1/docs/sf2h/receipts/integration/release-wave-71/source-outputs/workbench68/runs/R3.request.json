@@ -1,0 +1,19 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/wp04/capabilities.test.ts",
+    "./Sucafinav1/test/product/wp04/contracts.test.ts",
+    "./Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+    "./Sucafinav1/test/product/wp07/application.test.ts",
+    "./Sucafinav1/test/product/wp08/host-work.test.ts",
+    "./Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+    "./Sucafinav1/test/product/wp08/question-consumer.test.ts",
+    "./Sucafinav1/test/product/wp08/handoff-shared-dispatch.test.ts",
+    "--timeout",
+    "120000"
+  ],
+  "env": {}
+}

@@ -1,0 +1,157 @@
+{
+  "schema": "sf68.target-reconciliation.v1",
+  "observedAt": "2026-11-15T03:02:10.968887Z",
+  "source": {
+    "sha": "d5a297ca260b929335da4517f9c4432eaa92f856",
+    "tree": "4eaf0ddec206022c29ad2da1203615ee22c3b6c3",
+    "parent": "a9a48b930c7b3a8c003dc6791bbec99f20300047"
+  },
+  "target": {
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "blob": "bc00a2fe70bb37d6132369c3767388e544e18510",
+        "bytes": 10010
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "blob": "0a26a1ed086b9ce0a4a1907a233b705e6061e659",
+        "bytes": 6713
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "blob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+        "bytes": 32809
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+        "blob": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+        "bytes": 17986
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+        "blob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+        "bytes": 19652
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+        "blob": "aae326accb08bc5645a408271688052a725a30a5",
+        "bytes": 16118
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+        "blob": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+        "bytes": 11175
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+        "blob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+        "bytes": 10134
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+        "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+        "bytes": 25541
+      }
+    ]
+  },
+  "targetAuthority": "integration/target-authority-observed.json",
+  "authorityState": "HANDOFF_TERMINAL_LEASE_ENDED",
+  "materialTarget": {
+    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+    "name": "C28",
+    "qualification": "HOLD_NOT_RUN"
+  },
+  "ownedProductionPreimagesStillMatch": true,
+  "proposals": [
+    {
+      "id": "import-preview-link",
+      "manifest": "owner-proposals/import-preview-link/proposal.json",
+      "status": "NOT_RUN",
+      "release": "NO_RELEASE",
+      "applied": false,
+      "targetFiles": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/ui/components.ts",
+          "proposalPreimage": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+          "proposalPostimage": "52cf1ebe88e6d1effe3a1ba65fc37bcbdd5b9bfc",
+          "observedTargetBlob": "8de96e7fef8b1db5f174baaff47864b68f8d2fca",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/analysis-http.ts",
+          "proposalPreimage": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "proposalPostimage": "59fff3898a492fba96b91395c0eaf106604579ca",
+          "observedTargetBlob": "87b4c36950db61cdf6d7b9b0feb8ba9ebb1e8329",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+          "proposalPreimage": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "proposalPostimage": "4c1d22c52b076aa3063827dcbd7a2d80927c9b9d",
+          "observedTargetBlob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        }
+      ],
+      "targetPatch": "owner-proposals/import-preview-link/source.patch"
+    },
+    {
+      "id": "collaboration-case-verifier",
+      "manifest": "owner-proposals/collaboration-case-verifier/proposal.json",
+      "status": "NOT_RUN",
+      "release": "NO_RELEASE",
+      "applied": false,
+      "targetFiles": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+          "proposalPreimage": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+          "proposalPostimage": "2fe6b10aaaec68c7b1ceb3b50e51b233dd167aff",
+          "observedTargetBlob": "f68bb2735774adf670ab30d38dafbfbfb4d3544a",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts",
+          "proposalPreimage": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+          "proposalPostimage": "b54ba8e8d1b32435a057aae610620c0cb2a12973",
+          "observedTargetBlob": "878e27f5abab286fd2c8e0720ba192b1b253af08",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp08/thread-actors-fixture.ts",
+          "proposalPreimage": "2c9012ae49084c9c89d3d6be7779b5a88b8314e1",
+          "proposalPostimage": "aae326accb08bc5645a408271688052a725a30a5",
+          "observedTargetBlob": "aae326accb08bc5645a408271688052a725a30a5",
+          "disposition": "PRESERVE_ALREADY_PRESENT_POSTIMAGE"
+        }
+      ],
+      "targetPatch": "owner-proposals/collaboration-case-verifier/patches/target-d088708.patch"
+    },
+    {
+      "id": "sourcing-case-evidence",
+      "manifest": "owner-proposals/sourcing-case-evidence/proposal.json",
+      "status": "NOT_RUN",
+      "release": "NO_RELEASE",
+      "applied": false,
+      "targetFiles": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+          "proposalPreimage": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+          "proposalPostimage": "c2396db672aa633fdd376d79334c3f09381935ad",
+          "observedTargetBlob": "c9fa74a4e59e9204e6873619b9c580257d7d793d",
+          "disposition": "PREIMAGE_MATCHES_INERT_NOT_APPLIED"
+        }
+      ],
+      "targetPatch": "owner-proposals/sourcing-case-evidence/source.patch"
+    }
+  ],
+  "consumer": {
+    "requested": "60 via PR65",
+    "ackObserved": false,
+    "newTargetWriter": null,
+    "rule": "60 or an explicitly authorized successor/resumption must reconcile this terminal, current control, real head, current source releases and checks before intake. No authority is inferred from availability or silence."
+  },
+  "noTargetWrites": true
+}

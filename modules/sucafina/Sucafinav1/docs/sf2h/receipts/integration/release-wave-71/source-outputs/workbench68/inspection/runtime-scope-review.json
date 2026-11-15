@@ -1,0 +1,1294 @@
+{
+  "schema": "sf68.runtime-scope-review.v1",
+  "mission": "68",
+  "reviewer": "bridge_audit",
+  "status": "READ_ONLY_CLASSIFICATION_COMPLETE",
+  "review_date_utc": "2026-11-15",
+  "inspected_runs": [
+    "R1",
+    "R2",
+    "R3"
+  ],
+  "supplementary_no_positive_operation_run": "R4",
+  "method": "Read hosted pass/fail logs, match assertions and constructors to source pins retrieved through GitHub MCP, and classify each unique canonical operation by the narrowest demonstrated entry path and business backend. No product code, tests, typecheck or workflow was executed for this review.",
+  "primary_finding": "Nine unique operations have positive MCP/SDK calls with actual domain handlers in this campaign. Only four of those have demonstrated public Tools/ToolRegistry settlement. The other five are direct SDK bridge calls; real loading receipts exist for WP06, while the two scenario operations retain literal synthetic skill admission.",
+  "counts": {
+    "canonical_operations": 39,
+    "packs": 8,
+    "unique_mcp_sdk_positive_real_domain": 9,
+    "mcp_operations": [
+      "sf_dashboard_read",
+      "sf_kpi_explain",
+      "sf_bi_view",
+      "sf_forecast_compare",
+      "sf_scenario_simulate",
+      "sf_scenario_compare",
+      "sf_document_extract",
+      "sf_knowledge_search",
+      "sf_import_preview"
+    ],
+    "public_tool_settlement_positive_real_domain": 4,
+    "public_tool_operations": [
+      "sf_dashboard_read",
+      "sf_kpi_explain",
+      "sf_bi_view",
+      "sf_forecast_compare"
+    ],
+    "mcp_positive_without_public_tool_settlement": 5,
+    "mcp_direct_only_operations": [
+      "sf_scenario_simulate",
+      "sf_scenario_compare",
+      "sf_document_extract",
+      "sf_knowledge_search",
+      "sf_import_preview"
+    ],
+    "mcp_positive_with_actual_SessionV2_skill_receipt": 7,
+    "mcp_positive_with_only_literal_skill_receipt": 2,
+    "literal_skill_only_operations": [
+      "sf_scenario_simulate",
+      "sf_scenario_compare"
+    ],
+    "additional_real_domain_ui_operations_R3": 4,
+    "additional_ui_operations": [
+      "sf_request_read",
+      "sf_supplier_read",
+      "sf_contract_read",
+      "sf_work_list"
+    ],
+    "total_unique_real_domain_component_operations_at_either_entry": 13,
+    "ui_operations_with_synthetic_business_projection": 3,
+    "synthetic_business_operations": [
+      "sf_review_prepare",
+      "sf_report_prepare",
+      "sf_artifact_get"
+    ],
+    "unique_operations_credited_across_different_scopes": 16,
+    "operations_without_credited_positive_selected_call": 23,
+    "all_39_loaded_skill_operation_leases_are_business_execution": false,
+    "integrated_native_or_AM_completions_claimed": 0,
+    "note": "Counts are unique operation identifiers, not test counts or total invocation counts. Public four is a subset of MCP nine. Repeated txt/docx/pdf and R2 forecast calls do not add unique operations. Seeded data and fixture identities remain declared components even when domain handlers are real."
+  },
+  "runs": {
+    "R1": {
+      "status": "FAIL",
+      "W": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+      "S": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667815725",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667815725/job/132671021400",
+      "run_id": 43667815725,
+      "job_id": 132671021400,
+      "test_log": "runs/R1.tests.log",
+      "test_log_sha256": "fda5f3252d359859ce49e338944308e858b68587a77629135f77b6e0fcdb0096",
+      "tests": 49,
+      "pass": 41,
+      "fail": 8,
+      "assertions": 2220
+    },
+    "R2": {
+      "status": "PASS",
+      "W": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+      "S": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668348441/job/132672642109",
+      "run_id": 43668348441,
+      "job_id": 132672642109,
+      "test_log": "runs/R2.tests.log",
+      "test_log_sha256": "17421b15a5d8523310d6686acfa09e2e7033d4acb04774f580dfb45a0db6c36a",
+      "tests": 7,
+      "pass": 7,
+      "fail": 0,
+      "assertions": 925
+    },
+    "R3": {
+      "status": "FAIL",
+      "W": "a9a48b930c7b3a8c003dc6791bbec99f20300047",
+      "S": "3328845bbb6186f82cf29d89185aff3f3a313924",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668610172/job/132673437742",
+      "run_id": 43668610172,
+      "job_id": 132673437742,
+      "test_log": "runs/R3.tests.log",
+      "test_log_sha256": "ed477ecc5f215c03b32ddbaf88340e853fc07d2fd1cdfe2f93cfcee3fe350b9e",
+      "tests": 24,
+      "pass": 11,
+      "fail": 13,
+      "assertions": 155
+    },
+    "R4": {
+      "status": "PASS",
+      "W": "d5a297ca260b929335da4517f9c4432eaa92f856",
+      "S": "4b601473b4b716199a643517645dd4820667180d",
+      "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669037981",
+      "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43669037981/job/132674744357",
+      "run_id": 43669037981,
+      "job_id": 132674744357,
+      "test_log": "runs/R4.tests.log",
+      "test_log_sha256": "d4ed9a94e711e0ac4f684fbdd8db232bce14c3cab348fa365b1d0062b18052bd",
+      "tests": 3,
+      "pass": 3,
+      "fail": 0,
+      "assertions": 56
+    }
+  },
+  "stages": [
+    {
+      "id": "R1-WP02-PUBLIC",
+      "run": "R1",
+      "operations": [
+        "sf_dashboard_read",
+        "sf_kpi_explain",
+        "sf_bi_view"
+      ],
+      "classification": "public-tool-component-runtime-real-domain",
+      "path": [
+        "createSfProductContribution",
+        "public Host/Tools registration",
+        "SessionV2.skill via loadSfSkill",
+        "ToolRegistry.materialize/settle",
+        "private MCP SDK bridge",
+        "shared capability dispatch",
+        "Dashboard/KPI/BI domain adapters"
+      ],
+      "real": [
+        "Actual SessionV2/SkillV2 registration and persisted loading messages checked against source bytes",
+        "Product native registry and UI authority",
+        "SQLite-backed scoped Dashboard sources and real Dashboard/KPI/BI calculations",
+        "UI/direct/wrapper result and receipt-digest parity; zero remains zero and absent measurements remain absent",
+        "BI presentation consumer and generation/revocation/source-change guards"
+      ],
+      "synthetic": [
+        "x-test-principal authentication and seeded test Dashboard records",
+        "Fixture policy/grants/environment, generation control and run/case orchestration",
+        "Host harness assistant/tool routing identifiers; selecting a model ref does not invoke that model"
+      ],
+      "source_points": [
+        {
+          "source": "wp02-fixture",
+          "lines": [
+            144,
+            180,
+            194,
+            215,
+            260,
+            265
+          ]
+        },
+        {
+          "source": "wp02-test",
+          "lines": [
+            58,
+            77,
+            97,
+            126,
+            130,
+            144,
+            241,
+            246
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "run": "R1",
+          "log": "runs/R1.tests.log",
+          "line": 254,
+          "text": "2026-11-15T02:28:50.5311941Z (pass) AM02: real SessionV2 skill admission reaches Dashboard, KPI and WP05 through native C16 with current authority [8431.73ms]"
+        }
+      ],
+      "excluded": [
+        "Task/Relay/Schedule admission",
+        "External provider turn",
+        "AM02 acceptance despite the legacy test name",
+        "End-to-end publication of every skill output"
+      ]
+    },
+    {
+      "id": "R1-WP03-FORECAST-DIRECT",
+      "run": "R1",
+      "operations": [
+        "sf_forecast_compare"
+      ],
+      "classification": "direct-sdk-component-runtime-synthetic-skill-admission",
+      "path": [
+        "Literal fixture profile and SkillLoadReceipt",
+        "registry.bind",
+        "createSfBusinessMcpBridge.call",
+        "real SDK/private lease",
+        "shared dispatch",
+        "Planner"
+      ],
+      "real": [
+        "SDK client/server and registry lease",
+        "Canonical operation schemas and UI receipt parity",
+        "Planner source issuance, domain comparison and SQLite",
+        "knownDifference 12000 with conditioned completeness; input/result digests; replay and revocation"
+      ],
+      "synthetic": [
+        "SkillLoadReceipt literal with repeated a/b/c/d digests and msg_wp03_loaded; no SessionV2.skill call in this test",
+        "Profile/manifest/session/run/case/assistant identifiers",
+        "Planner Request authentication and Mcp.config returning an empty object"
+      ],
+      "source_points": [
+        {
+          "source": "forecast-parity",
+          "lines": [
+            17,
+            18,
+            33,
+            44,
+            45,
+            50,
+            56,
+            77,
+            82
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "run": "R1",
+          "log": "runs/R1.tests.log",
+          "line": 257,
+          "text": "2026-11-15T02:28:50.7617171Z (pass) C16 forecast UI and private MCP reach the same real Planner and return bound, schema-valid output [225.00ms]"
+        }
+      ],
+      "excluded": [
+        "Public Tools.Service registration/materialization/settlement",
+        "Actual resident skill load",
+        "Provider/Task/native admission completion"
+      ]
+    },
+    {
+      "id": "R1-WP03-SCENARIO-DIRECT",
+      "run": "R1",
+      "operations": [
+        "sf_scenario_simulate",
+        "sf_scenario_compare"
+      ],
+      "classification": "direct-sdk-component-runtime-synthetic-skill-admission",
+      "path": [
+        "Real Planner previews",
+        "Fixture case assembly in actual C08 state",
+        "Literal profile/manifest/SkillLoadReceipt",
+        "registry.bind",
+        "createSfBusinessMcpBridge.call",
+        "shared handlers",
+        "Planner/C10/C08 result persistence and reopen"
+      ],
+      "real": [
+        "Actual Planner operation verifier and stored-scenario replay",
+        "SDK bridge and private registry",
+        "Real UI dispatch parity with MCP simulation/comparison",
+        "C08 decision-result references read back with request/result digests",
+        "590000 and 602000 known subtotals; 12000 known difference; complete total remains unknown",
+        "Replay denial and authority revision denial"
+      ],
+      "synthetic": [
+        "Admission is explicitly described as deterministic, not a loaded resident skill",
+        "Literal SkillLoadReceipt at line150 and manufactured session/assistant/run/profile/manifest identifiers",
+        "Case assembly and pending cost-coverage classification are test setup; no human cost-classification claim",
+        "Planner Request authority"
+      ],
+      "source_points": [
+        {
+          "source": "scenario-parity",
+          "lines": [
+            31,
+            35,
+            90,
+            112,
+            129,
+            150,
+            151,
+            154,
+            155,
+            166,
+            168,
+            183
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "run": "R1",
+          "log": "runs/R1.tests.log",
+          "line": 294,
+          "text": "2026-11-15T02:29:05.4517331Z (pass) C16 scenario simulation and comparison share UI/MCP handlers and persist their real results in C08 [14681.95ms]"
+        }
+      ],
+      "excluded": [
+        "Tools public wrapper",
+        "SessionV2.skill runtime loading",
+        "Provider/Task execution",
+        "A complete monetary total or applied domain command"
+      ]
+    },
+    {
+      "id": "R1-WP06-RECORDED-DIRECT",
+      "run": "R1",
+      "operations": [
+        "sf_document_extract",
+        "sf_knowledge_search",
+        "sf_import_preview"
+      ],
+      "classification": "direct-sdk-runtime-real-skill-recorded-ingress",
+      "path": [
+        "Actual local credential cookie and product authority",
+        "Resident registration",
+        "Real SessionV2 and loadSfSkill",
+        "Durable run attachment and createSfNativeSkillProof",
+        "Recorded LLMEvent toolCall through production event publisher",
+        "bridge.call directly",
+        "shared handler",
+        "recorded toolResult event"
+      ],
+      "real": [
+        "SQLite, persisted local credentials/cookies and logout revocation",
+        "Actual registered source capability and loading receipt backed by a Session message",
+        "Native skill-proof verifier, run store and product registry",
+        "Document parsing/extraction and search over txt/docx/pdf fixtures",
+        "Import admission/preview C04 semantics and source fences",
+        "UI/direct/native/MCP parity and receipt-digest checks"
+      ],
+      "synthetic": [
+        "Model ingress is prerecorded under wp06-recorded-ingress/deterministic-public-events; no provider completes a turn",
+        "Scanner is replaced by scan: async () => true in runtime-fixture.ts:32",
+        "Fixture documents/workbook, grants and deterministic test environment"
+      ],
+      "source_points": [
+        {
+          "source": "wp06-native-fixture",
+          "lines": [
+            53,
+            55,
+            133,
+            163,
+            239,
+            240,
+            251,
+            271,
+            274,
+            295
+          ]
+        },
+        {
+          "source": "wp06-runtime-fixture",
+          "lines": [
+            20,
+            47
+          ]
+        },
+        {
+          "source": "documents-test",
+          "lines": [
+            67,
+            94,
+            135,
+            148
+          ]
+        },
+        {
+          "source": "imports-test",
+          "lines": [
+            20,
+            55
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "run": "R1",
+          "log": "runs/R1.tests.log",
+          "line": 320,
+          "text": "2026-11-15T02:29:11.3550432Z (pass) txt real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces [5827.44ms]"
+        },
+        {
+          "run": "R1",
+          "log": "runs/R1.tests.log",
+          "line": 343,
+          "text": "2026-11-15T02:29:18.4799714Z (pass) docx real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces [7124.85ms]"
+        },
+        {
+          "run": "R1",
+          "log": "runs/R1.tests.log",
+          "line": 366,
+          "text": "2026-11-15T02:29:27.2107460Z (pass) pdf real Session skill and MCP share document handlers; durable logout revokes extraction and search on all surfaces [8730.77ms]"
+        },
+        {
+          "run": "R1",
+          "log": "runs/R1.tests.log",
+          "line": 457,
+          "text": "2026-11-15T02:29:52.4272655Z (pass) real Session and MCP import previews preserve C04 parity across four admissions and reject unadmitted files [25023.50ms]"
+        }
+      ],
+      "excluded": [
+        "Tools.Service public registration or ToolRegistry.materialize/settle for these three operations",
+        "Installed scanner qualification",
+        "External provider execution",
+        "A64 Task/Relay/Schedule admission",
+        "Complete WP06 second-test consumer workflow"
+      ]
+    },
+    {
+      "id": "R2-FORECAST-PUBLIC",
+      "run": "R2",
+      "operations": [
+        "sf_forecast_compare"
+      ],
+      "classification": "public-tool-component-runtime-real-domain",
+      "path": [
+        "Actual distributed bundle",
+        "Public createSfProductContribution/Tools registration",
+        "SessionV2.skill via loadSfSkill",
+        "ToolRegistry.materialize(agent.permissions)",
+        "ToolRegistry.settle",
+        "private MCP SDK bridge",
+        "real Planner shared dispatch",
+        "UI parity"
+      ],
+      "real": [
+        "Two distinct actual sessions and loading-message receipts for sf_finance/sf-explicar-forecast",
+        "Real source references for v0/v1 and v0/v2",
+        "Two initial settlements scheduled by Effect.all concurrency 2",
+        "knownDifference 12000 and 6000; exact UI result/digest/source equality",
+        "Revoking first session leaves second usable; subsequent authority revocation denies it",
+        "Replay/schema/raw-authority/unbound-session negatives and observer lease cleanup"
+      ],
+      "synthetic": [
+        "Request principals finance/admin from the existing Planner fixture",
+        "Run/case labels and assistant/tool-call context; these do not come from a model",
+        "Seeded Planner test records and component authority"
+      ],
+      "source_points": [
+        {
+          "source": "public-tools",
+          "lines": [
+            15,
+            20,
+            53,
+            86,
+            88,
+            105,
+            135,
+            163
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "run": "R2",
+          "log": "runs/R2.tests.log",
+          "line": 44,
+          "text": "2026-11-15T02:35:02.0225278Z (pass) public SF tool registration executes the real loaded forecast skill route with UI parity and session isolation [2651.19ms]"
+        }
+      ],
+      "proof_file": "proofs/public-forecast.json",
+      "counts": {
+        "initial_positive_settlements": 2,
+        "surviving_session_positive_settlements": 1,
+        "unique_operations": 1,
+        "new_unique_mcp_operations_vs_R1": 0
+      },
+      "excluded": [
+        "Synchronized overlap at a specific awaited checkpoint",
+        "Task/Relay/Schedule or provider execution",
+        "Integrated AM01/AM02 completion"
+      ]
+    },
+    {
+      "id": "R3-UI-REAL-DOMAIN",
+      "run": "R3",
+      "operations": [
+        "sf_request_read",
+        "sf_supplier_read",
+        "sf_contract_read",
+        "sf_work_list"
+      ],
+      "classification": "ui-shared-dispatch-real-domain",
+      "path": [
+        "Fixture Request identity",
+        "Real UI admission/consumption",
+        "Issued scoped source/collection",
+        "Shared capability dispatch",
+        "Actual Procurement/Dashboard/Collaboration adapter",
+        "SQLite-backed seeded records"
+      ],
+      "real": [
+        "Request and supplier source issuance and current-source checks",
+        "Dashboard contract-source projection with field filtering and ABA rejection",
+        "Procurement pending-work selection and Collaboration work adapter",
+        "UI receipts, reuse denial, source mutation and revocation checks"
+      ],
+      "synthetic": [
+        "Request authentication callbacks, grants, principal labels and fixed environment",
+        "Seeded business records; unrelated domain ports explicitly unavailable",
+        "No native Session or skill load for these selected UI calls"
+      ],
+      "source_points": [
+        {
+          "source": "request-supplier-test",
+          "lines": [
+            93,
+            111,
+            174,
+            205
+          ]
+        },
+        {
+          "source": "contract-test",
+          "lines": [
+            41,
+            79
+          ]
+        },
+        {
+          "source": "work-test",
+          "lines": [
+            36,
+            64
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "run": "R3",
+          "log": "runs/R3.tests.log",
+          "line": 5,
+          "text": "2026-11-15T02:38:27.4216555Z (pass) authorized capability reads through an issued scoped source and consumes once [240.96ms]"
+        },
+        {
+          "run": "R3",
+          "log": "runs/R3.tests.log",
+          "line": 6,
+          "text": "2026-11-15T02:38:27.4561125Z (pass) supplier export requires a consumed UI grant and preserves current scoped source failures [34.49ms]"
+        },
+        {
+          "run": "R3",
+          "log": "runs/R3.tests.log",
+          "line": 9,
+          "text": "2026-11-15T02:38:27.5383524Z (pass) contract capability reads only the issued Dashboard scope and rejects revocation and ABA [69.33ms]"
+        },
+        {
+          "run": "R3",
+          "log": "runs/R3.tests.log",
+          "line": 88,
+          "text": "2026-11-15T02:38:29.0459711Z (pass) product authority and shared dispatch read a current Procurement work item through SQLite [101.75ms]"
+        }
+      ],
+      "excluded": [
+        "MCP SDK",
+        "Public tool wrapper",
+        "Native skill receipts",
+        "Provider or Task admission"
+      ]
+    },
+    {
+      "id": "R3-REPORTS-SYNTHETIC-BUSINESS",
+      "run": "R3",
+      "operations": [
+        "sf_review_prepare",
+        "sf_report_prepare",
+        "sf_artifact_get"
+      ],
+      "classification": "ui-component-runtime-synthetic-business-projections",
+      "path": [
+        "Real UI authority and shared dispatcher",
+        "Review application",
+        "Synthetic business ports/projections",
+        "Actual product state store",
+        "Report renderer",
+        "Artifact read/download/reopen"
+      ],
+      "real": [
+        "Review/report/artifact capability handlers and UI receipt plumbing",
+        "SQLite product state, factual preservation and current-access checks",
+        "DOCX/PPTX byte generation, text extraction and repeat download byte equality"
+      ],
+      "synthetic": [
+        "application.test.ts explicitly says synthetic domain inputs",
+        "Projection engineVersion synthetic-procurement-v1; source/evidence identifiers and values are fixture-owned",
+        "Procurement read port returns the fixture projection",
+        "C07 routine fixture fabricates admitted run, completed execution and artifact backend; it is not native execution"
+      ],
+      "source_points": [
+        {
+          "source": "reports-test",
+          "lines": [
+            28,
+            31,
+            55,
+            90,
+            94,
+            101,
+            114,
+            144,
+            149,
+            221
+          ]
+        },
+        {
+          "source": "reports-routine-fixture",
+          "lines": [
+            16,
+            34,
+            38,
+            45
+          ]
+        }
+      ],
+      "evidence": [
+        {
+          "run": "R3",
+          "log": "runs/R3.tests.log",
+          "line": 80,
+          "text": "2026-11-15T02:38:28.6454663Z (pass) application consumes agenda, shared review/report/artifact capabilities and a preserved byte download [202.68ms]"
+        },
+        {
+          "run": "R3",
+          "log": "runs/R3.tests.log",
+          "line": 81,
+          "text": "2026-11-15T02:38:28.8838436Z (pass) HTTP opens a pinned C07 factual result and preserves its original values through the same human and report ports [238.27ms]"
+        }
+      ],
+      "excluded": [
+        "Real Procurement engine proving 1320",
+        "Public MCP wrapper",
+        "Routine Task/C07 native execution",
+        "Native readiness or AM acceptance"
+      ]
+    }
+  ],
+  "operation_matrix": [
+    {
+      "operation": "sf_dashboard_read",
+      "pack": "performance",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP02-PUBLIC"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": true,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_kpi_explain",
+      "pack": "performance",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP02-PUBLIC"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": true,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_bi_view",
+      "pack": "performance",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP02-PUBLIC"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": true,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_source_get",
+      "pack": "performance",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_forecast_compare",
+      "pack": "planning",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP03-FORECAST-DIRECT",
+        "R2-FORECAST-PUBLIC"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": true,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_scenario_simulate",
+      "pack": "planning",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP03-SCENARIO-DIRECT"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_scenario_compare",
+      "pack": "planning",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP03-SCENARIO-DIRECT"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_sensitivity_evaluate",
+      "pack": "planning",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_portfolio_evaluate",
+      "pack": "planning",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_request_read",
+      "pack": "procurement",
+      "status": "UI_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R3-UI-REAL-DOMAIN"
+      ],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_supplier_read",
+      "pack": "procurement",
+      "status": "UI_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R3-UI-REAL-DOMAIN"
+      ],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_contract_read",
+      "pack": "procurement",
+      "status": "UI_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R3-UI-REAL-DOMAIN"
+      ],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_sourcing_compare",
+      "pack": "procurement",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_case_read",
+      "pack": "decisions",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_case_draft",
+      "pack": "decisions",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_alternative_draft",
+      "pack": "decisions",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_change_prepare",
+      "pack": "decisions",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_receipt_get",
+      "pack": "decisions",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_work_list",
+      "pack": "collaboration",
+      "status": "UI_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R3-UI-REAL-DOMAIN"
+      ],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_question_prepare",
+      "pack": "collaboration",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_answer_read",
+      "pack": "collaboration",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_relation_read",
+      "pack": "collaboration",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_handoff_prepare",
+      "pack": "collaboration",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_document_extract",
+      "pack": "documents_reports",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP06-RECORDED-DIRECT"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_import_preview",
+      "pack": "documents_reports",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP06-RECORDED-DIRECT"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_review_prepare",
+      "pack": "documents_reports",
+      "status": "UI_SYNTHETIC_BUSINESS_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R3-REPORTS-SYNTHETIC-BUSINESS"
+      ],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": true,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_report_prepare",
+      "pack": "documents_reports",
+      "status": "UI_SYNTHETIC_BUSINESS_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R3-REPORTS-SYNTHETIC-BUSINESS"
+      ],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": true,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_artifact_get",
+      "pack": "documents_reports",
+      "status": "UI_SYNTHETIC_BUSINESS_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R3-REPORTS-SYNTHETIC-BUSINESS"
+      ],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": true,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_context_get",
+      "pack": "knowledge",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_knowledge_search",
+      "pack": "knowledge",
+      "status": "MCP_REAL_DOMAIN_COMPONENT_POSITIVE",
+      "credited_stage_ids": [
+        "R1-WP06-RECORDED-DIRECT"
+      ],
+      "mcp_sdk_positive": true,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": true,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_evidence_get",
+      "pack": "knowledge",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_decision_recall",
+      "pack": "knowledge",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_freshness_check",
+      "pack": "knowledge",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_routine_catalog",
+      "pack": "routines",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_routine_prepare",
+      "pack": "routines",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_routine_run",
+      "pack": "routines",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_routine_status",
+      "pack": "routines",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_routine_result",
+      "pack": "routines",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    },
+    {
+      "operation": "sf_watch_prepare",
+      "pack": "routines",
+      "status": "NO_CREDITED_POSITIVE_CANONICAL_CALL_IN_SELECTED_RUNS",
+      "credited_stage_ids": [],
+      "mcp_sdk_positive": false,
+      "public_tool_settlement_positive": false,
+      "ui_real_domain_positive": false,
+      "synthetic_business_projection_only": false,
+      "am_completion": false
+    }
+  ],
+  "sources": [
+    {
+      "id": "wp02-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities.test.ts",
+      "ref": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "git_blob_sha": "b6337cfced2635f9181b0df8099b9a9a978acd86",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a372b69017b275e5f4929d92346e02c21f1936d5/modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities.test.ts"
+    },
+    {
+      "id": "wp02-fixture",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts",
+      "ref": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "git_blob_sha": "57f9d00320d08e8890712f9a8525e7a2c56f22fc",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a372b69017b275e5f4929d92346e02c21f1936d5/modules/sucafina/Sucafinav1/test/product/wp02/native-capabilities-fixture.ts"
+    },
+    {
+      "id": "forecast-parity",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/capability-parity.test.ts",
+      "ref": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "git_blob_sha": "b0fe198ea168702d390168000d27ce6bb3219833",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a372b69017b275e5f4929d92346e02c21f1936d5/modules/sucafina/Sucafinav1/test/product/wp03/capability-parity.test.ts"
+    },
+    {
+      "id": "scenario-parity",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts",
+      "ref": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "git_blob_sha": "379c46b2c1f25d0bf8b1200bba6a9d9f276d075b",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a372b69017b275e5f4929d92346e02c21f1936d5/modules/sucafina/Sucafinav1/test/product/wp03/scenario-capability-parity.test.ts"
+    },
+    {
+      "id": "documents-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/documents.test.ts",
+      "ref": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "git_blob_sha": "0eb5f70c6cd79ed63b7ca854afced52d1e5c7d20",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a372b69017b275e5f4929d92346e02c21f1936d5/modules/sucafina/Sucafinav1/test/product/wp06/native/documents.test.ts"
+    },
+    {
+      "id": "imports-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "ref": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+      "git_blob_sha": "4087659570356188c546b59ba112dfd33a2a189c",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts"
+    },
+    {
+      "id": "wp06-native-fixture",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts",
+      "ref": "dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8",
+      "git_blob_sha": "8cdbe78f64fe61757ec7cd2b82a09917fae90659",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/dd76b2f7486413bfc25d0a1e4e9bbbba44f504b8/modules/sucafina/Sucafinav1/test/product/wp06/native/fixture.ts"
+    },
+    {
+      "id": "wp06-runtime-fixture",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts",
+      "ref": "a372b69017b275e5f4929d92346e02c21f1936d5",
+      "git_blob_sha": "5f45ba3357aa724af2746687761fc32fd4ca48ef",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/a372b69017b275e5f4929d92346e02c21f1936d5/modules/sucafina/Sucafinav1/test/product/wp06/runtime-fixture.ts"
+    },
+    {
+      "id": "public-tools",
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "ref": "315c95ef7a466162a5e4a27fb68c9607b48a4851",
+      "git_blob_sha": "2075f8941561098869a175bd460a0a96a60c478f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/315c95ef7a466162a5e4a27fb68c9607b48a4851/modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts"
+    },
+    {
+      "id": "request-supplier-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts",
+      "ref": "3328845bbb6186f82cf29d89185aff3f3a313924",
+      "git_blob_sha": "fa981232c9c8defdf1b5c7ecacd70f4c67a0a454",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3328845bbb6186f82cf29d89185aff3f3a313924/modules/sucafina/Sucafinav1/test/product/wp04/capabilities.test.ts"
+    },
+    {
+      "id": "contract-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts",
+      "ref": "3328845bbb6186f82cf29d89185aff3f3a313924",
+      "git_blob_sha": "b124021c502932239759b2b73bf7df336148b134",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3328845bbb6186f82cf29d89185aff3f3a313924/modules/sucafina/Sucafinav1/test/product/wp04/contracts.test.ts"
+    },
+    {
+      "id": "work-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+      "ref": "3328845bbb6186f82cf29d89185aff3f3a313924",
+      "git_blob_sha": "73e30001d18b68aa1eee3e052123ef4d81c5dc3f",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3328845bbb6186f82cf29d89185aff3f3a313924/modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts"
+    },
+    {
+      "id": "reports-test",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts",
+      "ref": "3328845bbb6186f82cf29d89185aff3f3a313924",
+      "git_blob_sha": "0d9a00095fa0e34ba5bb3f8de067f8b540807902",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3328845bbb6186f82cf29d89185aff3f3a313924/modules/sucafina/Sucafinav1/test/product/wp07/application.test.ts"
+    },
+    {
+      "id": "reports-routine-fixture",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp07/routine-result-fixture.ts",
+      "ref": "3328845bbb6186f82cf29d89185aff3f3a313924",
+      "git_blob_sha": "8816880e158c0b389216fd8d8b08f7628be2d082",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/3328845bbb6186f82cf29d89185aff3f3a313924/modules/sucafina/Sucafinav1/test/product/wp07/routine-result-fixture.ts"
+    }
+  ],
+  "exclusions": [
+    {
+      "id": "WP06-SECOND-CASE-FAIL",
+      "run": "R1",
+      "operation_not_counted": "sf_case_draft",
+      "source": "imports-test",
+      "failure_line": 156,
+      "target_call_line": 214,
+      "reason": "The second import-analysis case fails at renderedPreviewUrl before intent preparation and its MCP sf_case_draft call. A prepared/persisted recorded forecast contribution before failure does not prove the missing consumer or intent operation. The entire case remains FAIL; first import-preview case provides the counted import positive."
+    },
+    {
+      "id": "R3-SOURCING-PREREQUISITE",
+      "run": "R3",
+      "operations_not_counted": [
+        "sf_sourcing_compare"
+      ],
+      "reason": "All six sourcing cases fail in sourcingFixture at case-evidence-unavailable before the selected comparison assertions. No success can be inferred from descriptor availability."
+    },
+    {
+      "id": "R3-COLLABORATION-PREREQUISITE",
+      "run": "R3",
+      "operations_not_counted": [
+        "sf_answer_read",
+        "sf_question_prepare",
+        "sf_handoff_prepare"
+      ],
+      "reason": "Seven cases fail at the prerequisite case read; the shared dispatcher returns unavailable. Successful direct case draft setup is not a successful canonical sf_case_draft tool operation."
+    },
+    {
+      "id": "LOADS-AND-LEASES",
+      "runs": [
+        "R2",
+        "R4"
+      ],
+      "reason": "R2 proves 25 real profile/skill loading bindings across18 skills/5profiles and39 operation leases across14 loading contexts. R4 tests expiry, missing receipt and routine-result grant ceilings. None of these lease-only successes executes39 handlers or proves routine native readiness.",
+      "proofs": [
+        "proofs/loaded-skills.json",
+        "proofs/operation-bindings.json",
+        "proofs/admission-fences.json"
+      ]
+    },
+    {
+      "id": "BRIDGE-CONTROLS",
+      "run": "R1",
+      "reason": "Bridge snapshot/private-MCP/registry controls use declared component descriptors, handlers or admissions. They prove transport and authority defenses, not additional unique real-domain operations."
+    },
+    {
+      "id": "C07-REVIEW-CONSUMER",
+      "run": "R3",
+      "source": "reports-routine-fixture",
+      "reason": "A real routine result reader/factory is used over fabricated admitted-run/completed-execution/artifact records for the report consumer. This auxiliary path is synthetic and is not credited as a native sf_routine_result operation or A64 admission proof."
+    }
+  ],
+  "invariants": [
+    "Legacy test names containing AM02 do not grant campaign AM acceptance.",
+    "A receipt whose kind is native is classified with its actual admission source; literal SkillLoadReceipt is not re-labeled as observed loading.",
+    "A recorded LLMEvent projected into a real Session is not an external model turn.",
+    "R1 and R3 remain FAIL notwithstanding passing selected cases and later R2/R4 successes.",
+    "Read-only source qualification at W/S does not establish integrated target C behavior.",
+    "No Task/Relay/Schedule engine work, fabricated new native receipts, live target edits or user/provider execution were performed by this review."
+  ],
+  "output_scope": {
+    "written_file": "inspection/runtime-scope-review.json",
+    "other_files_modified": false,
+    "local_product_tests": false,
+    "local_typecheck": false,
+    "new_hosted_run": false,
+    "formal_campaign_review_count": 0
+  }
+}
