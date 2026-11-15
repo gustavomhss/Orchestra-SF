@@ -5,7 +5,8 @@ Usage:
   python execution/parallel-20/validate_dispatch.py --root execution
   python execution/parallel-20/validate_dispatch.py --root execution --launch /path/to/observed-launch.json
 
-This does NOT authorize an actor, validate product code, run CI, or sign a source release.
+Invoke ONLY through the existing GitHub Actions test-ci runner (`preflight-actions.node-smoke.mjs`), never locally.
+This does NOT authorize an actor, validate product code, run CI by itself, or sign a source release.
 """
 from __future__ import annotations
 

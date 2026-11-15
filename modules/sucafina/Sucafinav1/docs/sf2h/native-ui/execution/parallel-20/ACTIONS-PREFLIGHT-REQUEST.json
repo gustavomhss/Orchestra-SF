@@ -1,0 +1,40 @@
+{
+  "schema": "sf2h.native-ui.preflight.github-actions.v1",
+  "source": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "ux-20-dispatch",
+    "source_head": "805d7f798dddd138009d9ddf05544cd88360a0a4",
+    "immutable_canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d"
+  },
+  "workflow": "test-ci.yml",
+  "method": "ci-run-linux-<request-id> temporary snapshot pushed to existing workflow, cleanup by existing job; do not create a new workflow/controller",
+  "normalized_request": {
+    "package": "sucafina",
+    "packageSelector": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "node",
+    "args": [
+      "Sucafinav1/docs/sf2h/native-ui/execution/parallel-20/preflight-actions.node-smoke.mjs"
+    ],
+    "env": {}
+  },
+  "authorized_scope": "documentation-only preflight; product CI 101 and compiler/guards 45 retain their separate authority",
+  "assertions": [
+    "validate_dispatch.py --root execution",
+    "validate_plan.py --strict with immutable canonical campaign",
+    "test_validator_inputs.py 12 regressions"
+  ],
+  "run_constraints": [
+    "ONLY GitHub Actions",
+    "No local tests/checks or Python execution",
+    "No new workflow, no product tests, no second scheduler",
+    "No product/CI package mutations",
+    "One causal request, source SHA+tree+normalized request evidence",
+    "Do not claim GO on green preflight; N0 independent review and leases still required"
+  ],
+  "status": "READY_TO_DISPATCH_NOT_EXECUTED",
+  "actions_run": null,
+  "actions_job": null,
+  "actions_attempt": null,
+  "verdict": "NOT_RUN"
+}

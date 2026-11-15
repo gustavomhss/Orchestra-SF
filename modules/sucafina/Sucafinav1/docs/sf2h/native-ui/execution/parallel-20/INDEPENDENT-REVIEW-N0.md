@@ -16,7 +16,7 @@
 
 ## Revisão e testes documentais exigidos
 
-- Executar em checkout autorizado o `validate_dispatch.py`, `validate_plan.py --strict` com campaign e os **doze testes** do `test_validator_inputs.py`; anexar comando, exit, stdout/artefato. Sem execução observada, marcar NOT_RUN, não PASS.
+- Conferir execução EXCLUSIVAMENTE via GitHub Actions no `test-ci` existente de `preflight-actions.node-smoke.mjs`, que roda `validate_dispatch.py`, `validate_plan.py --strict` e **doze regressões** de `test_validator_inputs.py`; anexar comando, exit, stdout/artefato. Sem execução observada, marcar NOT_RUN, não PASS.
 - Conferir os 1.610 canonicalPointer/IDs/digest; 78 ordens/20 cartas/19 autores/58 remanescentes; 305 ops, 70 superfícies/165 rotas; ownership exato/prefix e demais leases ativas, grafos autoria vs integração vs qualificação, source/copy/schema digests; nenhum registry duplicado.
 - Conferir PR99 como proveniência real de `source.commit`, separada de PR76; C00 preflight read-only não exige seu próprio launch-record prévio; ACK e lease encerrados da 71 e 100 não dão GO.
 - **Unicidade C00**: se C00 editar shared paths, exigir MESMO ator e MESMA lease do único integrador material designado por S0. Caso diferente, C00 apenas leitor/coordenador com patches inertes; nunca dois writers da stack.
@@ -36,3 +36,7 @@ Control `8819df6169abd94aaa89d50a21f113e5596d2aae`: missão105 PREPARED_NOT_STAR
 ## Evidência posterior — não é aprovação N0
 
 ACK105 publicado no produto em `d083b422b6a587f47873abde4d866e35017ff8b8` (lease S0-C-e15-browser105); material até C53 `180212940105e7b9ad15171b067c1c1b7841df5f`. A designação inicial PREPARED é histórica. Isso NÃO torna o reviewer N0 independente nem concede GO à UX, e os doze testes Python seguem sem execução observada.
+
+## Regra de testes do usuário
+
+NÃO executar Python, unittest, Node, Bun, typecheck ou qualquer teste localmente. Inspecionar W/S/run/job/attempt do workflow GitHub Actions gerado pelo `ACTIONS-PREFLIGHT-REQUEST.json`, logs, conteúdo da request e vínculo com PR99/HEAD. Se faltar execução real, resultado `NOT_RUN`, nunca PASS. A revisão do código/documentos sem execução local é permitida, sem confundir com prova.

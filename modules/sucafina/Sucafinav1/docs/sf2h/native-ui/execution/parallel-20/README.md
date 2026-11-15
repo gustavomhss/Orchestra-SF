@@ -24,6 +24,7 @@
 | [LIVE-STRUCTURAL-AUDIT-20261115.json](LIVE-STRUCTURAL-AUDIT-20261115.json) | Evidência estrutural desta rodada: 78 ordens, 23 checks, delta I00 e limites NOT_RUN, sem GO |
 | [ADVERSARIAL-AUDIT.md](ADVERSARIAL-AUDIT.md) | R77-F01..F08 e contraexemplos adicionais, decisão, evidência, risco residual e provas exigidas |
 | [launch-record.template.json](launch-record.template.json) | Schema para registrar somente fatos observados: C/tree, autoridade, sources, owner ACK, lease, slots e runner |
+| [preflight-actions.node-smoke.mjs](preflight-actions.node-smoke.mjs) e [ACTIONS-PREFLIGHT-REQUEST.json](ACTIONS-PREFLIGHT-REQUEST.json) | Runner Node integrado ao test-ci existente para executar os dois validadores e 12 regressões exclusivamente no GitHub Actions |
 | [validate_dispatch.py](validate_dispatch.py) | Verificador documental fail-closed das 20 cartas versus 78 ordens/70 superfícies/305 operações; nunca concede GO |
 | [../manifest.json](../manifest.json) e [../EXECUTION-PROTOCOL.md](../EXECUTION-PROTOCOL.md) | Fila única, ciclo de vida e deduplicação já existentes. Não criar segundo scheduler, segundo dispatcher ou outro integrador |
 
@@ -58,4 +59,6 @@ C00 valida documento/digest/branch e reconcilia owners reais uma vez; entrega a 
 
 As revisões finais R01/R02/R03 seguem no candidato completo corrigido, com original `GLOBAL_RELEASE=false` até autorização S0 e gates C/G7–D/G8. Não substituir banco, autenticador, parser, scanner ou contrato por stub para ficar verde. A velocidade não suspende rigor; fator 10× é **meta não medida**.
 
-**Comandos documentais para operador autorizado**, após preparar working tree com dependências: `python execution/parallel-20/validate_dispatch.py --root execution`, depois `python execution/validate_plan.py --root execution --strict --canonical <caminho-da-campaign.json>` usando os argumentos reais da CLI desse validador. Verificar `--help` antes de invocar e manter gates de produto no CI 45. **Nenhum desses comandos foi executado nesta publicação.**
+**Comandos documentais executados EXCLUSIVAMENTE pelo GitHub Actions, nunca localmente: `python execution/parallel-20/validate_dispatch.py --root execution`, depois `python execution/validate_plan.py --root execution --strict --canonical <caminho-da-campaign.json>` usando os argumentos reais da CLI desse validador. Verificar `--help` antes de invocar e manter gates de produto no CI 45. **Nenhum desses comandos foi executado nesta publicação.**
+
+**Regra superior de teste (2026-11-15):** absolutamente nenhuma execução local de testes, unittest, pytest, node:test, parser ou typecheck. O preflight documental é um único job Actions no `test-ci` existente, com `runner=node`, pacote `sucafina`, caminho exato em `ACTIONS-PREFLIGHT-REQUEST.json`; os comandos Python são subprocessos apenas do runner remoto. Sem alterar workflow/dispatcher. Reviewer N0 usa evidence W/S/run/job/attempt real, e green documental não libera autores sem S0/leases.

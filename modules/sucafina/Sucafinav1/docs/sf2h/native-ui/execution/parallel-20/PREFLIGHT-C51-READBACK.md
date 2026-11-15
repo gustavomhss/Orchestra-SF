@@ -36,3 +36,7 @@ O HEAD S0-control `8819df6169abd94aaa89d50a21f113e5596d2aae` designou missão105
 ## Snapshot posterior C53 (re-pin obrigatório)
 
 ACK105 `d083b422b6a587f47873abde4d866e35017ff8b8` iniciou a custódia material S0-C-e15-browser105; stack observada C53 `180212940105e7b9ad15171b067c1c1b7841df5f`, tree `c423dd1e0828242534fd45d4183104ecc1d20edd`. O snapshot C51 acima é histórico, não candidato atual. Consulte `LIVE-STRUCTURAL-AUDIT-20261115.json` para resultado documental e pendências; nenhuma lease UX20 derivada automaticamente.
+
+## Regra de execução dos validadores — GitHub Actions somente
+
+Substituir qualquer comando de shell local descrito acima por **um único job remoto** no workflow `test-ci.yml`, dirigido por `preflight-actions.node-smoke.mjs` e a seleção exata de `ACTIONS-PREFLIGHT-REQUEST.json`. Nenhum `pytest`, `unittest`, `node --test`, typecheck ou script de validação pode rodar no Mac, container, Desktop Commander ou terminal local. Até Actions gerar W/S/run/job/attempt os 3 testes documentais estão `NOT_RUN`; CI produto101 e compiler45 não perdem suas autoridades.

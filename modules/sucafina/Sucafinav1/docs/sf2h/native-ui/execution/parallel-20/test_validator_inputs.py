@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Adversarial launch-input regressions. No network, product tests, CI or authority grant.
 
-Run from repository checkout:
-  python -m unittest discover -s modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/parallel-20 -p 'test_*.py' -v
+Invoke ONLY through GitHub Actions test-ci via preflight-actions.node-smoke.mjs.
+Never run locally; the Node Actions driver invokes this suite with unittest discover.
 All positive fixtures are synthetic and MUST NOT be used as authorization.
 """
 import json
