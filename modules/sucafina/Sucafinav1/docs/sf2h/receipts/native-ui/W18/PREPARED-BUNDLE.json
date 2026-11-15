@@ -1,0 +1,89 @@
+{
+  "schema": "sf2h.native-ui.prepared-file-patches.v1",
+  "campaign": "sf2h-integral-20261112",
+  "work_order": "A06",
+  "seat": "W18",
+  "lease_epoch": "ux-native-w18-e1",
+  "branch": "sf-ux-w18",
+  "parent_before_bundle": "db9a83f40a7d2fa0da8362a0a72ad66d10eec597",
+  "base": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "integrator": "S0-C-e17-browser114",
+  "integrator_pr": 65,
+  "admission": "REQUESTED_NOT_GRANTED",
+  "mode": "RECEIPT_ONLY_NO_PRODUCT_TREE_MUTATION",
+  "product_commit": false,
+  "tests": "NOT_RUN",
+  "actions_owner": 120,
+  "compiler_owner": 119,
+  "generated_edited": false,
+  "source_pins": {
+    "runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370",
+    "product/interface/import-http.ts": "72196e5d8ac256e161be0c4bde2fbf1090cc6786",
+    "product/interface/document-http.ts": "8f679deec37dc99ae335c4bacae2162c9a7a076a",
+    "product/interface/document-scenario-http.ts": "d6926db6f770692e4d2ccbe9f425bf389a9f5c95"
+  },
+  "operations": 25,
+  "code_staging_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/prepared/",
+  "changes": [
+    {
+      "path": "packages/schema/src/sucafina/files/structures.ts",
+      "blob": "72859baa8ae358038274edd14bb20d9a3334a031",
+      "kind": "author-prepared",
+      "targetPreimage": "absent",
+      "preparedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/prepared/packages/schema/src/sucafina/files/structures.ts"
+    },
+    {
+      "path": "packages/schema/src/sucafina/files.ts",
+      "blob": "e211b2f6ff6cfa4131ace51d3fa1f6e803b7e35c",
+      "kind": "author-prepared",
+      "targetPreimage": "absent",
+      "preparedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/prepared/packages/schema/src/sucafina/files.ts"
+    },
+    {
+      "path": "packages/client/src/sucafina/files.ts",
+      "blob": "18d0e2f143fffc965d3b0a632c87f2aa59f7b302",
+      "kind": "author-prepared",
+      "targetPreimage": "absent",
+      "preparedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/prepared/packages/client/src/sucafina/files.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/files.ts",
+      "blob": "a2e1041871a553498b92f159ef9b28c874a3cfb6",
+      "kind": "author-prepared",
+      "targetPreimage": "absent",
+      "preparedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/prepared/apps/cli/src/sucafina-product/native-ui/files.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts",
+      "blob": "1c4d58aaf184a277ca2dd04b263ce0ad500a66d6",
+      "kind": "component-spec-prepared",
+      "targetPreimage": "absent",
+      "preparedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/prepared/modules/sucafina/Sucafinav1/test/native-ui-contract/files.test.ts"
+    },
+    {
+      "path": "packages/schema/package.json",
+      "blob": "3831ae4dc0dc1a059f19b96846039f6761252611",
+      "kind": "shared-postimage-only",
+      "targetPreimage": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a",
+      "preparedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/prepared/packages/schema/package.json"
+    },
+    {
+      "path": "packages/client/package.json",
+      "blob": "f000a7aa621e725e90ed6cd5e6bd128e68a91475",
+      "kind": "shared-postimage-only",
+      "targetPreimage": "4cd0244e98ff18b5e65d3c2808196705095b6691",
+      "preparedPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W18/prepared/packages/client/package.json"
+    }
+  ],
+  "missing_until_owner_release": [
+    "A06 output admission from 114",
+    "F02 exact wire mapping/binary transfer and 25 codecs",
+    "I00 export maps/operation bindings/host wiring",
+    "119 compiler/guards + 120 GitHub Actions surgical test",
+    "installed-scanner/ACL/re-auth and streaming evidence"
+  ],
+  "release": false,
+  "integrated": false,
+  "qualified": false,
+  "artifact_ready": false
+}
