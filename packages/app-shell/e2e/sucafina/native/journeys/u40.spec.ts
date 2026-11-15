@@ -221,3 +221,432 @@ nativeInstalledFixture.describe("N13 CAP05 · installed native Dashboard", () =>
     expect(viewport.scroll).toBeLessThanOrEqual(viewport.client + 1)
   })
 })
+
+
+/**
+ * 206 functional closure of the original CAP04/CAP05 producer.
+ *
+ * These tests never synthesize an Actor, write through page.request, override
+ * producer results, or reuse a Playwright storageState. Every mutation starts
+ * in the installed, producer-admitted browser UI and is verified with an
+ * independent authenticated GET against the original A01 projection. Missing
+ * source/case/grant/fixture is an explicit failure, not a skip or coverage.
+ */
+type SourceRow = Record<string, unknown>
+type SourcePage = Readonly<{
+  owners: readonly SourceRow[]
+  entries: readonly SourceRow[]
+  deviations: Readonly<Record<string, unknown>>
+  ytd: Readonly<Record<string, unknown>>
+  versions: Readonly<Record<string, unknown>>
+  allowedActionIds: readonly string[]
+  principalRef: string
+  accessRevision: string
+}>
+const sourceCollection = surfaceId === "CAP04" ? "opexOwners" : "capexProjects"
+const sourceEntries = surfaceId === "CAP04" ? "opexEntries" : "capexEntries"
+const sourceKind = surfaceId === "CAP04" ? "opex" : "capex"
+const newButtonName = surfaceId === "CAP04" ? "New line" : "New CAPEX project"
+
+function sourceRows(value: unknown, label: string): SourceRow[] {
+  if (!Array.isArray(value) || !value.every((row) => asRecord(row) !== undefined)) {
+    throw new Error("F04_" + surfaceId + "_ORIGINAL_" + label + "_REQUIRED_NOT_EMPTY_DEFAULT")
+  }
+  return value as SourceRow[]
+}
+
+async function originalPage(page: Page, nativeHarness: InstalledNativeHarness): Promise<SourcePage> {
+  const target = nativeHarness.manifest.target
+  const live = await observeNativeBinding(page, target)
+  const url = new URL(target.mount + "/api/ui/pages/" + surfaceId, target.publicOrigin)
+  url.searchParams.set("year", "2026")
+  const reply = await page.request.get(url.toString(), { maxRedirects: 0, maxRetries: 0 })
+  if (reply.status() !== 200) {
+    throw new Error("F04_" + surfaceId + "_ORIGINAL_PAGE_HTTP_" + reply.status())
+  }
+  const envelope = asRecord(await reply.json())
+  const stamp = asRecord(envelope?.context)
+  const value = asRecord(envelope?.value)
+  const data = asRecord(value?.data)
+  const versions = asRecord(value?.versions)
+  if (envelope?.status !== "ok" || value?.capabilityId !== surfaceId ||
+      !stamp || !data || !versions || !Array.isArray(value.allowedActionIds) ||
+      stamp.installationId !== target.installationId ||
+      stamp.projectId !== target.projectId || stamp.hostId !== target.hostId ||
+      stamp.principalRef !== live.stamp.principalRef ||
+      stamp.policyVersion !== live.stamp.policyVersion ||
+      stamp.accessRevision !== live.stamp.accessRevision) {
+    throw new Error("F04_" + surfaceId + "_ORIGINAL_PROJECTION_OWNER_OR_SCHEMA_MISMATCH")
+  }
+  const ytd = asRecord(data.budgetYtd)
+  const group = asRecord(ytd?.[sourceKind])
+  return {
+    owners: sourceRows(data[sourceCollection], sourceCollection),
+    entries: sourceRows(data[sourceEntries], sourceEntries),
+    deviations: asRecord(data.deviations) ?? {},
+    ytd: group ?? {},
+    versions,
+    allowedActionIds: value.allowedActionIds as string[],
+    principalRef: live.stamp.principalRef,
+    accessRevision: live.stamp.accessRevision,
+  }
+}
+
+function exactOwner(source: SourcePage, id: string): SourceRow {
+  const matching = source.owners.filter((owner) => String(owner.id) === id)
+  if (matching.length !== 1) throw new Error("F04_" + surfaceId + "_SOURCE_OWNER_NOT_UNIQUE_" + id)
+  return matching[0]!
+}
+
+function ownerVersion(source: SourcePage, id: string): number {
+  const version = source.versions[sourceCollection + ":" + id]
+  if (typeof version !== "number" || !Number.isSafeInteger(version) || version < 0) {
+    throw new Error("F04_" + surfaceId + "_SOURCE_OWNER_CAS_MISSING_" + id)
+  }
+  return version
+}
+
+function exactEntry(source: SourcePage, id: string, month: number): SourceRow {
+  const matching = source.entries.filter((entry) =>
+    String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === id &&
+    entry.year === 2026 && entry.month === month)
+  if (matching.length !== 1) {
+    throw new Error("F04_" + surfaceId + "_ORIGINAL_MONTH_" + month + "_NOT_UNIQUE")
+  }
+  return matching[0]!
+}
+
+function originalCommandMatches(request: import("@playwright/test").Request, nativeHarness: InstalledNativeHarness): boolean {
+  const producer = nativeDashboardCommandTarget(nativeHarness.manifest, surfaceId)
+  const url = new URL(request.url())
+  return request.method() === producer.method && url.origin === producer.origin &&
+    url.pathname === producer.pathname &&
+    Object.entries(producer.query ?? {}).every(([key, value]) =>
+      url.searchParams.getAll(key).length === 1 && url.searchParams.get(key) === value)
+}
+
+async function commitReviewed(
+  page: Page,
+  nativeHarness: InstalledNativeHarness,
+  action: "save" | "delete" | "save-entry" | "save-deviation" | "annual-entry" | "year-amount",
+): Promise<SourceRow> {
+  const review = page.locator('[data-sf-budget="' + surfaceId + '"] [data-component="sf-change-review"]')
+  await expect(review).toBeVisible()
+  const requests: import("@playwright/test").Request[] = []
+  const monitor = (request: import("@playwright/test").Request) => {
+    if (originalCommandMatches(request, nativeHarness)) requests.push(request)
+  }
+  page.on("request", monitor)
+  try {
+    const pending = page.waitForRequest((request) => {
+      if (!originalCommandMatches(request, nativeHarness)) return false
+      const input = asRecord(request.postDataJSON())
+      return input?.action === action && input.page === title
+    })
+    await review.getByRole("button", { name: action === "delete" ? "Delete" : "Save", exact: true }).click()
+    const request = await pending
+    const command = asRecord(request.postDataJSON())
+    const values = asRecord(command?.values)
+    if (command?.page !== title || command?.action !== action ||
+        !values || !asRecord(values.versions) ||
+        typeof command.version !== "number" || command.version < 0 ||
+        !/^[A-Za-z0-9._:-]{8,128}$/.test(request.headers()["idempotency-key"] ?? "")) {
+      throw new Error("F04_" + surfaceId + "_NON_CANONICAL_SOURCE_COMMAND_" + action)
+    }
+    const response = await request.response()
+    if (!response || response.status() !== 200) {
+      throw new Error("F04_" + surfaceId + "_ORIGINAL_WRITE_REFUSED_" + (response?.status() ?? "NO_RESPONSE"))
+    }
+    const result = asRecord(await response.json())
+    if (result?.ok !== true) {
+      throw new Error("F04_" + surfaceId + "_ORIGINAL_PRODUCER_DID_NOT_COMMIT_" + action)
+    }
+    await expect(review).toHaveCount(0)
+    expect(requests, "one reviewed user intent must have one original producer POST").toHaveLength(1)
+    return command as SourceRow
+  } finally {
+    page.off("request", monitor)
+  }
+}
+
+function ownerRow(surface: import("@playwright/test").Locator, name: string) {
+  return surface.locator(".sf-budget-owners tbody tr[data-sf-row]").filter({ hasText: name })
+}
+
+async function openOwner(
+  surface: import("@playwright/test").Locator, name: string, id: string,
+) {
+  const row = ownerRow(surface, name)
+  await expect(row).toHaveCount(1)
+  await expect(row).toHaveAttribute("data-sf-row", id)
+  await row.locator('button[data-sf-action="select"]').click()
+  const detail = surface.locator(".sf-budget-detail [data-sf-record-detail]")
+  await expect(detail).toBeVisible()
+  await expect(detail.locator("[data-sf-detail-heading]")).toContainText(name)
+  return detail
+}
+
+async function reviewForm(surface: import("@playwright/test").Locator) {
+  const form = surface.locator(".sf-budget-editor .sf-budget-form")
+  await expect(form).toBeVisible()
+  await form.getByRole("button", { name: "Review changes", exact: true }).click()
+  const review = surface.locator('[data-component="sf-change-review"]')
+  await expect(review).toBeVisible()
+  return review
+}
+
+async function createRealOwner(
+  page: Page, nativeHarness: InstalledNativeHarness,
+  surface: import("@playwright/test").Locator,
+  name: string, budget: string,
+): Promise<string> {
+  const before = await originalPage(page, nativeHarness)
+  if (before.owners.some((owner) => owner.name === name)) {
+    throw new Error("F04_" + surfaceId + "_RECORD_ALREADY_EXISTS_NO_REPLAY")
+  }
+  await surface.getByRole("button", { name: newButtonName, exact: true }).click()
+  const form = surface.locator(".sf-budget-editor .sf-budget-form")
+  await expect(form).toBeVisible()
+  await form.getByRole("textbox", { name: recordName, exact: true }).fill(name)
+  await form.getByRole("spinbutton", { name: "Annual budget", exact: true }).fill(budget)
+  await reviewForm(surface)
+  const write = await commitReviewed(page, nativeHarness, "save")
+  expect(write.id).toBeUndefined()
+  expect(asRecord(write.values)?.budget).toBe(Number(budget))
+  await expect.poll(async () =>
+    (await originalPage(page, nativeHarness)).owners.filter((owner) => owner.name === name).length,
+  ).toBe(1)
+  const next = await originalPage(page, nativeHarness)
+  const owner = next.owners.find((entry) => entry.name === name)!
+  expect(owner.budget).toBe(Number(budget))
+  const id = String(owner.id)
+  ownerVersion(next, id)
+  await expect(ownerRow(surface, name)).toHaveCount(1)
+  return id
+}
+
+async function deleteRealOwner(
+  page: Page, nativeHarness: InstalledNativeHarness,
+  surface: import("@playwright/test").Locator,
+  name: string, id: string,
+): Promise<void> {
+  const before = await originalPage(page, nativeHarness)
+  const version = ownerVersion(before, id)
+  const detail = await openOwner(surface, name, id)
+  await detail.getByRole("button", { name: "Delete", exact: true }).click()
+  const write = await commitReviewed(page, nativeHarness, "delete")
+  expect(write.id).toBe(id)
+  expect(write.version).toBe(version)
+  await expect.poll(async () =>
+    (await originalPage(page, nativeHarness)).owners.filter((row) => String(row.id) === id).length,
+  ).toBe(0)
+  await expect(ownerRow(surface, name)).toHaveCount(0)
+}
+
+const budgetScenario = (label: string) => "N206 " + surfaceId + " " + label + " " + crypto.randomUUID().slice(0, 12)
+
+nativeInstalledFixture.describe("206 " + surfaceId + " · COMPLETE original-producer functional contracts", () => {
+  nativeInstalledFixture("206-AC01 create/edit/delete producer owner CAS and removed detail do not become an empty collection", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("CRUD")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "0")
+    const created = await originalPage(page, nativeHarness)
+    expect(exactOwner(created, id).budget, "Observed zero is a source number, not absence").toBe(0)
+    const initialVersion = ownerVersion(created, id)
+    const detail = await openOwner(surface, name, id)
+    const removedHref = page.url()
+    await detail.getByRole("button", { name: "Edit", exact: true }).click()
+    const form = surface.locator(".sf-budget-editor .sf-budget-form")
+    await expect(form.getByRole("textbox", { name: recordName, exact: true })).toHaveValue(name)
+    await form.getByRole("spinbutton", { name: "Annual budget", exact: true }).fill("345.67")
+    await reviewForm(surface)
+    const changed = await commitReviewed(page, nativeHarness, "save")
+    expect(changed.id).toBe(id)
+    expect(changed.version).toBe(initialVersion)
+    await expect.poll(async () => exactOwner(await originalPage(page, nativeHarness), id).budget).toBe(345.67)
+    const updated = await originalPage(page, nativeHarness)
+    expect(ownerVersion(updated, id)).toBeGreaterThan(initialVersion)
+    // Delete goes through the original record menu, never a request made by the test.
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+    await page.goto(removedHref)
+    await expect(surface.locator('[data-sf-state="not-found"]')).toBeVisible()
+    const remaining = await originalPage(page, nativeHarness)
+    if (remaining.owners.length > 0) {
+      await expect(surface.locator('[data-sf-state="empty"]')).toHaveCount(0)
+    }
+    await expect(surface.locator(".sf-budget-detail [data-sf-record-detail]")).toHaveCount(0)
+  })
+
+  nativeInstalledFixture("206-AC01 monthly entry create/edit preserves exact budget, actual, forecast, month and CAS", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("monthly")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "123")
+    const detail = await openOwner(surface, name, id)
+    const month = detail.locator(".sf-budget-months tr[data-sf-month='3']")
+    await expect(month).toBeVisible()
+    await month.getByRole("button", { name: "Save month", exact: true }).click()
+    let form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("spinbutton", { name: "Month" })).toHaveValue("3")
+    await form.getByRole("spinbutton", { name: "budget", exact: true }).fill("0")
+    await form.getByRole("spinbutton", { name: "actual", exact: true }).fill("12.5")
+    await form.getByRole("spinbutton", { name: "forecast", exact: true }).fill("22")
+    await reviewForm(surface)
+    const firstCommand = await commitReviewed(page, nativeHarness, "save-entry")
+    expect(firstCommand.id).toBeUndefined()
+    expect(asRecord(firstCommand.values)?.month).toBe(3)
+    await expect.poll(async () => exactEntry(await originalPage(page, nativeHarness), id, 3).actual).toBe(12.5)
+    let source = await originalPage(page, nativeHarness)
+    const created = exactEntry(source, id, 3)
+    expect(created.budget).toBe(0)
+    expect(created.forecast).toBe(22)
+    const entryKey = sourceEntries + ":" + String(created.id)
+    const entryVersion = source.versions[entryKey]
+    expect(typeof entryVersion).toBe("number")
+    await expect(month).toContainText("12.5")
+    await expect(month).toContainText("22")
+    await month.getByRole("button", { name: "Save month", exact: true }).click()
+    form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("spinbutton", { name: "actual", exact: true })).toHaveValue("12.5")
+    await form.getByRole("spinbutton", { name: "actual", exact: true }).fill("0")
+    await form.getByRole("spinbutton", { name: "budget", exact: true }).fill("7")
+    await reviewForm(surface)
+    const secondCommand = await commitReviewed(page, nativeHarness, "save-entry")
+    expect(secondCommand.id).toBe(String(created.id))
+    expect(secondCommand.version).toBe(entryVersion)
+    await expect.poll(async () => exactEntry(await originalPage(page, nativeHarness), id, 3).actual).toBe(0)
+    source = await originalPage(page, nativeHarness)
+    expect(exactEntry(source, id, 3).budget).toBe(7)
+    expect(exactEntry(source, id, 3).forecast).toBe(22)
+    expect(source.versions[entryKey]).toEqual(expect.any(Number))
+    expect(source.versions[entryKey]).toBeGreaterThan(entryVersion as number)
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+    const afterDelete = await originalPage(page, nativeHarness)
+    expect(afterDelete.entries.filter((entry) =>
+      String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === id)).toHaveLength(0)
+  })
+
+  nativeInstalledFixture("206-AC01 annual distribution fields use producer's twelve rows and original versions", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("annual")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "2400")
+    const detail = await openOwner(surface, name, id)
+    const before = await originalPage(page, nativeHarness)
+    const version = ownerVersion(before, id)
+    await detail.getByRole("button", { name: "Apply annual entry", exact: true }).click()
+    const form = surface.locator(".sf-budget-form")
+    await form.getByRole("spinbutton", { name: "Annual Entry ÷12" }).fill("1200")
+    await form.getByRole("combobox", { name: "Field" }).selectOption("budget")
+    await reviewForm(surface)
+    const command = await commitReviewed(page, nativeHarness, "annual-entry")
+    expect(command.id).toBe(id)
+    expect(command.version).toBe(version)
+    expect(asRecord(command.values)?.annual).toBe(1200)
+    await expect.poll(async () => {
+      const current = await originalPage(page, nativeHarness)
+      return current.entries.filter((entry) =>
+        String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === id &&
+        entry.year === 2026).length
+    }).toBe(12)
+    const source = await originalPage(page, nativeHarness)
+    for (let monthIndex = 1; monthIndex <= 12; monthIndex++) {
+      const record = exactEntry(source, id, monthIndex)
+      await expect(detail.locator(".sf-budget-months tr[data-sf-month='" + monthIndex + "']"))
+        .toContainText(String(record.budget))
+    }
+    expect(exactOwner(source, id).budget).toBe(1200)
+    expect(ownerVersion(source, id)).toBeGreaterThan(version)
+    // A separate actual annual command must not overwrite forecast or create a Planner state.
+    await detail.getByRole("button", { name: "Apply annual entry", exact: true }).click()
+    await surface.locator(".sf-budget-form").getByRole("spinbutton", { name: "Annual Entry ÷12" }).fill("240")
+    await surface.locator(".sf-budget-form").getByRole("combobox", { name: "Field" }).selectOption("actual")
+    await reviewForm(surface)
+    const actualCommand = await commitReviewed(page, nativeHarness, "annual-entry")
+    expect(asRecord(actualCommand.values)?.field).toBe("actual")
+    const after = await originalPage(page, nativeHarness)
+    expect(exactOwner(after, id).budget).toBe(1200)
+    for (let n = 1; n <= 12; n++) {
+      expect(exactEntry(after, id, n).budget).toBe(exactEntry(source, id, n).budget)
+    }
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+  })
+
+  nativeInstalledFixture("206-AC01 year amount records hint, actual/forecast, clearing and immutable monthly source", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("YTD")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "900")
+    const detail = await openOwner(surface, name, id)
+    const before = await originalPage(page, nativeHarness)
+    await detail.getByRole("button", { name: "Apply year amount", exact: true }).click()
+    let form = surface.locator(".sf-budget-form")
+    await form.getByRole("spinbutton", { name: "Year amount", exact: true }).fill("0")
+    await reviewForm(surface)
+    const command = await commitReviewed(page, nativeHarness, "year-amount")
+    expect(asRecord(command.values)?.amount).toBe(0)
+    await expect.poll(async () =>
+      asRecord((await originalPage(page, nativeHarness)).ytd["2026:" + id])?.amount,
+    ).toBe(0)
+    let source = await originalPage(page, nativeHarness)
+    expect(asRecord(source.ytd["2026:" + id])?.amount).toBe(0)
+    const beforeClear = source.entries.filter((entry) =>
+      String(entry.ownerId ?? entry.projId ?? entry.projectId ?? "") === id &&
+      entry.year === 2026)
+    expect(beforeClear).toHaveLength(12)
+    await detail.getByRole("button", { name: "Apply year amount", exact: true }).click()
+    form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("spinbutton", { name: "Year amount", exact: true })).toHaveValue("0")
+    await form.getByRole("spinbutton", { name: "Year amount", exact: true }).fill("")
+    await reviewForm(surface)
+    const clear = await commitReviewed(page, nativeHarness, "year-amount")
+    expect(asRecord(clear.values)?.amount).toBeNull()
+    await expect.poll(async () =>
+      Object.hasOwn((await originalPage(page, nativeHarness)).ytd, "2026:" + id),
+    ).toBe(false)
+    source = await originalPage(page, nativeHarness)
+    for (const old of beforeClear) {
+      const next = exactEntry(source, id, Number(old.month))
+      expect(next.actual, "clearing a year hint must not rewrite monthly actual").toBe(old.actual)
+      expect(next.forecast, "clearing a year hint must not rewrite monthly forecast").toBe(old.forecast)
+    }
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+  })
+
+  nativeInstalledFixture("206-AC01 deviation severity and text use one original versioned record", async ({ page, nativeHarness }) => {
+    const surface = await requireAdmittedSurface(page, nativeHarness, "edit")
+    const name = budgetScenario("deviation")
+    const id = await createRealOwner(page, nativeHarness, surface, name, "750")
+    const detail = await openOwner(surface, name, id)
+    const month = detail.locator(".sf-budget-months tr[data-sf-month='7']")
+    const deviationKey = "deviations:" + sourceKind + "-" + id + "-2026-7"
+    await month.getByRole("button", { name: "Save deviation", exact: true }).click()
+    let form = surface.locator(".sf-budget-form")
+    await form.getByRole("combobox", { name: "Flag" }).selectOption("dev-amber")
+    await form.getByRole("textbox", { name: "Deviation notes" }).fill("N206 observed original source evidence")
+    await reviewForm(surface)
+    const command = await commitReviewed(page, nativeHarness, "save-deviation")
+    expect(command.id).toBe(id)
+    expect(asRecord(command.values)?.month).toBe(7)
+    await expect.poll(async () =>
+      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7])?.flag,
+    ).toBe("dev-amber")
+    const before = await originalPage(page, nativeHarness)
+    const priorVersion = before.versions[deviationKey]
+    expect(typeof priorVersion).toBe("number")
+    await expect(month).toContainText("N206 observed original source evidence")
+    await month.getByRole("button", { name: "Save deviation", exact: true }).click()
+    form = surface.locator(".sf-budget-form")
+    await expect(form.getByRole("textbox", { name: "Deviation notes" }))
+      .toHaveValue("N206 observed original source evidence")
+    await form.getByRole("combobox", { name: "Flag" }).selectOption("dev-red")
+    await form.getByRole("textbox", { name: "Deviation notes" }).fill("N206 updated producer deviation")
+    await reviewForm(surface)
+    const updated = await commitReviewed(page, nativeHarness, "save-deviation")
+    expect(updated.version).toBe(priorVersion)
+    await expect.poll(async () =>
+      asRecord((await originalPage(page, nativeHarness)).deviations[sourceKind + "-" + id + "-2026-7])?.text,
+    ).toBe("N206 updated producer deviation")
+    const after = await originalPage(page, nativeHarness)
+    expect(asRecord(after.deviations[sourceKind + "-" + id + "-2026-7])?.flag).toBe("dev-red")
+    expect(after.versions[deviationKey]).toBeGreaterThan(priorVersion as number)
+    await deleteRealOwner(page, nativeHarness, surface, name, id)
+  })
+})
