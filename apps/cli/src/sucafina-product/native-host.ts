@@ -195,7 +195,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
           const scope = yield* store.scope(sessionID)
           if (!parent || parent.id !== sessionID || parent.parentID ||
             parent.agent !== AgentV2.defaultID || parent.time.archived || !parent.model ||
-            digestSfValue(parent.model) !== digestSfValue(value.model) ||
+            digestSfValue(sfNativeModelRef(parent.model)) !== digestSfValue(sfNativeModelRef(value.model)) ||
             digestSfValue(parent.location) !== digestSfValue(value.location) ||
             !scope || digestSfValue(scope.scope) !== digestSfValue(value.scope) ||
             !(yield* maestroAuthorize(value))) return false

@@ -199,8 +199,10 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
         const record = models.get(request.model)
         if (record) return { kind: "sf" as const, record }
         const native = maestroModels.get(request.model)
-        if (native) return { kind: "maestro" as const, record: native }
         const header = Object.entries(request.http?.headers ?? {}).find(([name]) => name.toLowerCase() === "x-session-id")?.[1]
+        // A shared Catalog Model object is not a session owner. Only the core-issued
+        // Session header may route into this private C15 capability.
+        if (native && header === native.sessionID) return { kind: "maestro" as const, record: native }
         if (!header?.startsWith("ses_")) return { kind: "other" as const }
         if (yield* sfLineage(store, SessionSchema.ID.make(header))) return { kind: "denied" as const }
         return { kind: "other" as const }
