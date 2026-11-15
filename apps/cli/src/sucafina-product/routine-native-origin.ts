@@ -50,7 +50,7 @@ type Entry = {
  */
 export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
   const entries = new Map<SessionSchema.ID, Entry>()
-  const pending = new Set<SessionSchema.ID>()
+  const acquiring = new Map<SessionSchema.ID, { request: Request; close: () => void }>()
   const now = input.now ?? Date.now
   let disposed = false
   const ready = () => !disposed && input.ready() && !!input.resources()?.current()
@@ -59,13 +59,12 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
     if (!ready() || source.context?.kind !== "ui" || source.request?.method !== "POST" ||
       !Schema.is(SessionSchema.ID)(source.authoritySessionID) || source.request.signal.aborted ||
       source.signal.aborted || source.nativePolicy.signal.aborted || input.requestFor(source.context) !== source.request ||
-      !validIntent(source.intent) || entries.has(source.authoritySessionID) || pending.has(source.authoritySessionID))
+      !validIntent(source.intent) || entries.has(source.authoritySessionID) || acquiring.has(source.authoritySessionID))
       return undefined
     const started = now()
     const expires = Date.parse(source.context.binding.expiresAt)
     const resources = input.resources()
     if (!resources?.current() || !Number.isFinite(expires) || expires <= started) return undefined
-    pending.add(source.authoritySessionID)
     const abort = new AbortController()
     const signal = AbortSignal.any([source.request.signal, source.signal, source.nativePolicy.signal, abort.signal])
     const until = Math.min(expires, started + 300_000)
@@ -83,7 +82,7 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
     const close = () => {
       if (!active) return
       active = false
-      pending.delete(source.authoritySessionID)
+      acquiring.delete(source.authoritySessionID)
       if (registered && entries.get(source.authoritySessionID) === registered) entries.delete(source.authoritySessionID)
       if (timer !== undefined) clearTimeout(timer)
       source.request.signal.removeEventListener("abort", close)
@@ -91,6 +90,7 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
       source.nativePolicy.signal.removeEventListener("abort", close)
       abort.abort()
     }
+    acquiring.set(source.authoritySessionID, { request: source.request, close })
     const sync = () => active && ready() && input.resources() === resources && resources.current() &&
       input.requestFor(source.context) === source.request && source.context.kind === "ui" &&
       source.request.method === "POST" && !signal.aborted && now() < until && performance.now() < monotonicUntil &&
@@ -125,10 +125,10 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
       const binding = Object.freeze({ request: source.request, context: source.context,
         authoritySessionID: source.authoritySessionID, intent, signal, current } satisfies SfRoutineNativeAdmissionBinding)
       const entry: Entry = { request: source.request, generation, binding, current, close }
-      if (!sync() || pending.size > 100 || entries.has(source.authoritySessionID)) return undefined
+      if (!sync() || acquiring.size > 100 || entries.has(source.authoritySessionID)) return undefined
       registered = entry
       entries.set(source.authoritySessionID, entry)
-      pending.delete(source.authoritySessionID)
+      acquiring.delete(source.authoritySessionID)
       timer = setTimeout(close, Math.max(0, until - now()))
       source.request.signal.addEventListener("abort", close, { once: true })
       source.signal.addEventListener("abort", close, { once: true })
@@ -157,13 +157,19 @@ export function createSfRoutineNativeOrigin(input: SfRoutineNativeOriginInput) {
   })
   return {
     origin, admit,
-    revoke: (request: Request) => { for (const entry of [...entries.values()]) if (entry.request === request) entry.close() },
+    revoke: (request: Request) => {
+      for (const pending of [...acquiring.values()]) if (pending.request === request) pending.close()
+      for (const entry of [...entries.values()]) if (entry.request === request) entry.close()
+    },
     invalidateGeneration: (generation: number) => {
+      // Pending admission has not yet observed a generation: invalidate every pending candidate.
+      for (const pending of [...acquiring.values()]) pending.close()
       for (const entry of [...entries.values()]) if (entry.generation === generation) entry.close()
     },
     dispose: () => {
       if (disposed) return
       disposed = true
+      for (const pending of [...acquiring.values()]) pending.close()
       for (const entry of [...entries.values()]) entry.close()
     },
   }

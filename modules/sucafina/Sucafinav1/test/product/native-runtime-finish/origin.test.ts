@@ -140,3 +140,25 @@ test("component: a different Request, a non-native target and a denied native po
     expect(yield* Effect.promise(() => x.bridge.admit(x.source))).toBeUndefined()
     expect(yield* Effect.promise(() => x.bridge.origin.resolve(f.invocation))).toBeUndefined()
   })))
+
+test("component: explicit revoke and disposal cancel an origin admission still acquiring C15 authority", () =>
+  withAdmissionFixture((f) => Effect.gen(function* () {
+    for (const cancel of ["revoke", "dispose"] as const) {
+      const x = make(f)
+      let entered = () => {}
+      let release = () => {}
+      const enteredPromise = new Promise<void>((resolve) => { entered = resolve })
+      const held = new Promise<boolean>((resolve) => { release = () => resolve(true) })
+      const source: SfRoutineNativeOriginalAdmission = { ...x.source,
+        nativePolicy: { ...x.source.nativePolicy, current: async () => { entered(); return held } } }
+      const attempting = x.bridge.admit(source)
+      yield* Effect.promise(() => enteredPromise)
+      if (cancel === "revoke") x.bridge.revoke(f.state.request)
+      if (cancel === "dispose") x.bridge.dispose()
+      expect(yield* Effect.promise(() => attempting)).toBeUndefined()
+      release()
+      expect(yield* Effect.promise(() => x.bridge.origin.resolve(f.invocation))).toBeUndefined()
+      expect(f.registry.owners.available()).toBe(false)
+      x.bridge.dispose()
+    }
+  })))
