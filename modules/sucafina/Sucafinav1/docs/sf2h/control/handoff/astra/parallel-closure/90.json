@@ -1,0 +1,50 @@
+{
+  "number": 90,
+  "id": "native-runtime-finish",
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "native-runtime-finish",
+  "base_sha": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+  "expected_head": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+  "actor": "S0-B/S3 native runtime producer continuation",
+  "actor_pack": "execution/actors/S0-B.json",
+  "lease_epoch": "native-runtime-browser90",
+  "consumer": "71 sole stack integrator;45 central dispatcher/checks;S0 release",
+  "inputs": [
+    "PR80 terminal64@4d0421669054a131de0df0c95994b45229ab354e HANDOFF-FINAL.md,AUTHORITY-FINAL.json,SOURCE-MANIFEST.json,contracts/capability-contract.json,contracts/API-NOTES.md,contracts/source-pins.json,AM-COVERAGE.json,CRITERIA.json",
+    "64 assembly/host-context.patch and manifest; selectively integrated C31 must reconcile current C41, never overwrite host",
+    "41 original owner-binding@61af072c7385feba8c89ba6044ca09a90941213d",
+    "existing public Maestro/Task/Permission/SessionV2/Relay/Schedule contracts read-only"
+  ],
+  "write_paths": [
+    "apps/cli/src/sucafina-product/routine-native-owner.ts",
+    "apps/cli/src/sucafina-product/routine-native-registry.ts",
+    "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+    "apps/cli/src/sucafina-product/routine-native-governance.ts",
+    "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+    "apps/cli/src/sucafina-product/routine-native-admission.ts",
+    "apps/cli/src/sucafina-product/routine-native-origin.ts (new bounded SF adapter if needed)",
+    "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-runtime-finish/"
+  ],
+  "mission": "Implementar ligação SF de origem privada autenticada/admissão legítima ao runtime nativo e qualificar caminhos reais onde suportados. Continuar64 encerrada; não repetir seus158componentPASS como prova instalada. Não assumir a revisão/sidebar do usuário.",
+  "common": [
+    "Ler AGENTS, START, WORKFLOW, COMMON e pack completo atribuído no SHA fixado; critérios completos98 e AM64. Preservar15WP74tasks17contratos1610critérios.",
+    "Reconciliar HEAD/blobs e ACKs/autoridades antes de escrever; publicar ACK90 real.64 terminou explicitamente. Não assumir morte por silêncio.71 único integrador;45 dispatcher;52 UI,85auth,86application,74/79 transporte,88reader,89P03 e sidebar do usuário ficam fora.",
+    "Remoto GitHub MCP/CAS expected-head/forcefalse somente. Sem gh/push/devmerge/deploy/Azure/novas credenciais/mensagens/restart/novoGoal/controller. Goal nativa permanece pausada.",
+    "Testes cirúrgicos somente GitHub Actions via interface existente test:ci/request e dispatcher/dedup. Nada de bun test local ou testes pesados locais/full epic. bun typecheck/guards perAGENTS por interface autorizada; declarar NOT_RUN se não executado.",
+    "Uma PR da branch para sf2-stack; commits remotos/prepost/manifesto/patch/criteria/W-S-run-job e terminal à71. Fonte verde não é C aceito/AM/GLOBAL_RELEASE."
+  ],
+  "acceptance": [
+    "Implementar SfRoutineNativeAdmissionOrigin.resolve(actualInvocation) a partir da Request/context UI originais e admissão legítima viva; nunca construir autoridade por IDs/plan.owner, nem confundir sf_maestro com maestro.",
+    "Usar apenas APIs públicas existentes: C15/policy/budget, filhos, continuação humana real/Permission, registro escopado antes do provider, revogação/dispose/abort/expiry/idempotência. Não responder Permission pelo humano, criar segundo registry/ledger/engine ou envolver runner inteiro em withRequest.",
+    "Prova real deve observar provider/Task executada, Relay/artefato/digest e consumidor reautenticado após reload com autoridade nova; registrar IDs/modelo observados sem tokens. Fixtures sintéticas e Task não executante continuam apenas componente.",
+    "Watch só com admissão Schedule real. Manter readiness e anúncio desabilitados enquanto requisitos faltarem.",
+    "Sem mudanças em engines Maestro/Relay/Schedule/Session nem políticas/grants. Shared host e registration points: entregar patch completo com pre/post/closure à71; não editar paths exclusivos compartilhados.",
+    "Quando API/capability externa realmente faltar, verificar contrato/código e implementar toda parte SF independente; entregar implementação, testes, patch mínimo e assinatura faltante demonstrada. Não fabricar integração nem repetir inventário genérico. Nenhum efeito financeiro/mensagem real sem autorização específica."
+  ]
+}
