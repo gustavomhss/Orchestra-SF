@@ -1,0 +1,216 @@
+{
+  "schema": "sf2h.correction153.handoff.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 153,
+  "order": "A12",
+  "branch": "sf-ux-a12",
+  "pr": {
+    "number": 144,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/144",
+    "draft": true
+  },
+  "epoch": "ux-native-a12-e2-browser153",
+  "actor": "ChatGPT",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed",
+  "fence": {
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/S0-FENCE.json",
+    "blob": "d2991f7329ffc13156f662e46262a992514b0c65",
+    "runtime_termination_claimed": false
+  },
+  "ack": {
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/ACK.json",
+    "blob": "d01067e7cd2b91f4158845b673024f1e3c897594",
+    "commit": "df2b4d1f9c6114572b023de9dace9c86414599f2"
+  },
+  "code": {
+    "base_commit": "df2b4d1f9c6114572b023de9dace9c86414599f2",
+    "commit": "ea027b56491cd99c140ccfb2549b2a05ade6785f",
+    "tree": "8e6885207efeefcacafd14e88c3732c4f07741d5",
+    "patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/PATCH.diff",
+      "blob": "a035bf01254ce54f89514023a94de3431466741e",
+      "format": "git unified diff; git apply --check/apply by authorized integrator only",
+      "complete": true
+    },
+    "changed_files": {
+      "packages/schema/src/sucafina/work.ts": {
+        "preimage": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+        "postimage": "91f9253b8abdfa37ffdbd9b7e06358a606323ecd"
+      },
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": {
+        "preimage": "cc5a3e075d16aeb67eb604bb5e5b7139a48bb4f0",
+        "postimage": "70fbd980e1a8bb18b27095c88488386f62227253"
+      }
+    },
+    "untouched_preimages": {
+      "packages/client/src/sucafina/work.ts": "f790637deb85ae93d85840dea625d953b73e619c",
+      "apps/cli/src/sucafina-product/native-ui/work.ts": "402b8a4599807d403065e561a427e230ae5981cb"
+    }
+  },
+  "preflight": {
+    "initial_head": "71af849aee29863334ea115844d454512786ac27",
+    "initial_tree": "d78bc7c58d4c60f20a2d7479659a4f7c9c871269",
+    "source_versions": {
+      "views_http": "4f246d4b1e6090d509d8bed554d3556b50e61386",
+      "work_http": "b2dc424d96a67ddd581abbc460cfb938b35e0447",
+      "personal_views": "e424c7454a1aa4b7bd8290408001e65ae029d156",
+      "workbench_C58_on_author_branch": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "workbench_C60_on_consumer": "9c666e7463b49a7c0cdeadb705b3266089d10bfb"
+    },
+    "source_delta_review": "C60 changes only the source's result.status branch provider-conflict versus conflict at http.ts:111; A12 work/search/views codec unaffected. Keep C60, do not revert or transplant producer.",
+    "original_work_order": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A12.json",
+    "canonical_task_refs": [
+      "WP01.T04",
+      "WP08.T04"
+    ],
+    "criteria_trace": {
+      "file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/criteria-trace.json",
+      "blob": "1dba83d77882073af587c031d63299ed472905e8",
+      "task_criteria_counts": {
+        "WP01.T04": 9,
+        "WP08.T04": 22
+      },
+      "inherited_all_work_package_campaign_axioms": true
+    },
+    "contract_catalog_blob": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "contracts_blob": "94553a3119826ef1c44271966233dd58042ddd70"
+  },
+  "causal_finding": {
+    "run_id": 43758731378,
+    "job_id": 132948475697,
+    "source_snapshot": "b9e68821206cdd9510b1faa5d07f98140b1df581",
+    "pr_comment_id": 6901000780,
+    "reported_assertions": [
+      {
+        "file": "work.test.ts",
+        "line": 61,
+        "pre": "Missing key at [surface]",
+        "change": "RouteSurfaceSelector now defaults only absent browser route to dashboard while V1 POST body stays {action,input}"
+      },
+      {
+        "file": "work.test.ts",
+        "line": 78,
+        "pre": "invalid/unknown V1/V2 accepted after schema silently strips fields",
+        "change": "closedStruct strict unknown field handling at every nested schema level, keeping invalid CAS and V2 refusals"
+      },
+      {
+        "file": "work.test.ts",
+        "line": 104,
+        "pre": "extra output secretRoleMap accepted",
+        "change": "WorkItem and projection envelopes reject extras recursively without destroying title:null,sourceVersion:0,observedVersion:0"
+      }
+    ],
+    "status": "SOURCE_PATCH_PUBLISHED_PENDING_CI_RECHECK",
+    "independent_other_failures": "Out-of-scope A07/A13/import findings not attributed to A12"
+  },
+  "semantics": {
+    "original_wire": "POST {action,input} to {mount}/{surface}?sf=workbench-views, route surface only in F02; no body surface",
+    "view_save": "{view,expectedVersion:number>0|null}; null means create; positive number means per-view CAS update",
+    "view_remove": "{id,expectedVersion:number>0}; per-view CAS",
+    "read": "list/open preserve current reauthorization and principal; redacted unavailable entry exactly {id,version,availability} without private title",
+    "response": "source status envelopes unchanged; schema uses strict structs for nested records, refs, destinations, period, filters and outputs",
+    "zero_null": "title:null preserved; sourceVersion:0 and observedVersion:0 preserved; expectedVersion:0 rejected",
+    "v2": "schemaVersion:2 is not supported by producer and is rejected by schema or client contract-unavailable before network",
+    "no_surface_requirement": "surface route selector supplies dashboard default only when absent; explicit dashboard/planner/procurement remain preserved",
+    "no_new_ops": "9 immutable SfWork operation IDs preserved; projection.work-item still not mounted pending real destinations.read/verify"
+  },
+  "regressions": {
+    "file": "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+    "post_blob": "70fbd980e1a8bb18b27095c88488386f62227253",
+    "existing_tests_preserved": true,
+    "new_tests": [
+      "omitted surface defaults dashboard on list/open/save, explicit procurement preserved",
+      "recursive V1 input/output excess keys, filters, selections, periods, private leakage and redaction denied",
+      "nested work item/excess destination, root output/projection value extras, 0/null retained"
+    ]
+  },
+  "consumer": {
+    "integrator": 132,
+    "target": "sf2-stack",
+    "observed_head": "8094e599e3d18609e269548d24619a3246fbc735",
+    "observed_blobs": {
+      "packages/schema/src/sucafina/work.ts": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": "cc5a3e075d16aeb67eb604bb5e5b7139a48bb4f0",
+      "packages/client/src/sucafina/work.ts": "f790637deb85ae93d85840dea625d953b73e619c",
+      "apps/cli/src/sucafina-product/native-ui/work.ts": "402b8a4599807d403065e561a427e230ae5981cb",
+      "modules/sucafina/Sucafinav1/product/interface/http.ts": "9c666e7463b49a7c0cdeadb705b3266089d10bfb",
+      "modules/sucafina/Sucafinav1/product/interface/views-http.ts": "4f246d4b1e6090d509d8bed554d3556b50e61386",
+      "modules/sucafina/Sucafinav1/product/interface/personal-views.ts": "e424c7454a1aa4b7bd8290408001e65ae029d156"
+    },
+    "author_post_blobs": {
+      "packages/schema/src/sucafina/work.ts": "91f9253b8abdfa37ffdbd9b7e06358a606323ecd",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": "70fbd980e1a8bb18b27095c88488386f62227253"
+    },
+    "instructions": "Use the provided complete PATCH.diff against these exact consumer preimage blobs, re-check current CAS and reconcile any newer deltas. Only selectively integrate two source paths, do NOT merge the author branch/inherited UX cohort. Keep original shared registry, generated, producer and private source ownership."
+  },
+  "qualification": {
+    "local_tests": "NOT_RUN_PROHIBITED",
+    "local_typecheck": "NOT_RUN_PROHIBITED",
+    "local_parser": "NOT_RUN_PROHIBITED",
+    "hosted_ci": "NOT_RUN_ON_NEW_CODE",
+    "compiler_sdk_guards": "NOT_RUN_ON_NEW_CODE",
+    "prior_hosted_evidence": "FAIL_SOURCE_PREIMAGE_JOB_132948475697; not evidence for new patch",
+    "request_149": {
+      "owner": "149",
+      "pr": 107,
+      "when": "After A132 composes exact source and new candidate CI snapshot",
+      "action": "Hosted compiler packages/schema + packages/client + apps/cli, SDK generation/guards only on causally new integrated inputs; preserve prior C64 unrelated failures"
+    },
+    "request_150": {
+      "owner": "150",
+      "pr": 106,
+      "when": "After A132 composes exact patch and approved .ci-run.json candidate",
+      "action": "Surgical hosted work.test.ts:61,78,104 and added regressions; no full epic rerun, no stale C64 repeat; report run/job SHA/status"
+    },
+    "readiness": "SOURCE_ARTIFACT_ONLY_PENDING_INTEGRATION_QUALIFICATION",
+    "global_release": false
+  },
+  "criteria": {
+    "A12_AC01": "SOURCE_PATCH_AUTHORED_NOT_RUN: no flattening/null/zero and redacted entries preserved",
+    "A12_AC02": "SOURCE_PATCH_AUTHORED_NOT_RUN: recursively closed schemas no unknown action/payload/extra output",
+    "A12_AC03": "SOURCE_PATCH_AUTHORED_NOT_RUN: CAS positive/null preserved; same operation IDs + source",
+    "A12_V2": "BLOCKED_DEPENDENCY: no V2 producer release; no premature codec/landing implementation",
+    "work_item": "BLOCKED_CONTRACT: no installed destinations.read+verify port, no fake work-item handler"
+  },
+  "pending": [
+    {
+      "owner": 132,
+      "item": "Apply narrow PATCH.diff against current sf2-stack same source blob or reconcile drift; integrate without historical merge",
+      "state": "PENDING"
+    },
+    {
+      "owner": 149,
+      "item": "Hosted typecheck, compiler, SDK generation and guards after 132",
+      "state": "NOT_RUN"
+    },
+    {
+      "owner": 150,
+      "item": "Run surgical hosted A12 assertions after 132 under existing CI protocol",
+      "state": "NOT_RUN"
+    },
+    {
+      "owner": "producer/I00",
+      "item": "Release V2 producer with scoped preferred-view CAS if future authorized; A12 V1 stays independent",
+      "state": "BLOCKED_DEPENDENCY"
+    },
+    {
+      "owner": "producer/I00",
+      "item": "Expose real work destination read/verify port if future authorized",
+      "state": "BLOCKED_CONTRACT"
+    }
+  ],
+  "scope_compliance": {
+    "only_owned_code_and_receipts": true,
+    "no_producer_or_generated_changes": true,
+    "no_local_tests": true,
+    "no_new_dispatcher": true,
+    "no_reset_force": true,
+    "no_deploy": true,
+    "no_goals_reactivation": true,
+    "native_goal": "paused"
+  },
+  "status": "CORRECTION_ARTIFACT_PUBLISHED_READY_FOR_132_NOT_QUALIFIED",
+  "lease_terminal": "SOURCE_READY_HANDED_OFF_TO_132_PENDING_RECEIPT_AND_HOSTED_CHECKS"
+}
