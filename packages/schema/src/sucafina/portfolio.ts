@@ -1,4 +1,4 @@
-import { Schema } from "effect"
+import { Option, Schema, SchemaGetter } from "effect"
 import { NonNegativeInt, PositiveInt, optional } from "../schema"
 
 /**
@@ -239,9 +239,31 @@ const Failure = Schema.Struct({
 const envelope = <S extends Schema.Top>(value: S) => Schema.Union([
   Schema.Struct({ status: Schema.Literals(["ok"]), value }), Failure,
 ])
+
+/**
+ * Effect v4 Struct decoding ignores unknown keys by default, including keys
+ * injected inside CaseRef, requests, evidence or refusal envelopes. This
+ * family must refuse them, regardless of the caller's parser options.
+ *
+ * Check the ORIGINAL unknown value with recursive, strict parser options
+ * before the ordinary schema projection can remove any surplus property.
+ * The transformed codec retains each operation's Type and domain validation;
+ * no additional field, role, approval, authority or result is introduced.
+ */
+const closed = <S extends Schema.Top>(schema: S) =>
+  Schema.Unknown
+    .check(Schema.makeFilter((value) =>
+      Option.isSome(Schema.decodeUnknownOption(schema, { onExcessProperty: "error" })(value))
+    ))
+    .pipe(Schema.decodeTo(schema, {
+      decode: SchemaGetter.transform((value) =>
+        Schema.decodeUnknownSync(schema, { onExcessProperty: "error" })(value)),
+      encode: SchemaGetter.passthrough(),
+    }))
+
 const operation = <const Id extends string, In extends Schema.Top, Out extends Schema.Top>(
   operationId: Id, input: In, output: Out,
-) => Object.freeze({ operationId, input, output: envelope(output) })
+) => Object.freeze({ operationId, input: closed(input), output: closed(envelope(output)) })
 
 const ByCase = Schema.Struct({ caseRef: CaseRef })
 const WithResult = Schema.Struct({ caseRef: CaseRef, resultRef: Text })

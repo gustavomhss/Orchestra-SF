@@ -4,6 +4,7 @@ import {
   SfProcurement, SfProcurementRequest, SfProcurementTitleSave,
 } from "../../../../../packages/schema/src/sucafina/procurement.ts"
 import { createSfProcurementClient } from "../../../../../packages/client/src/sucafina/procurement.ts"
+import { createSfProcurementProjectionHandlers } from "../../../../../apps/cli/src/sucafina-product/native-ui/procurement.ts"
 import type { SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
 import { domain } from "../../runtime/procurement.ts"
 import { object } from "../../runtime/contract.ts"
@@ -149,4 +150,140 @@ describe("W11 Procurement A03 public contract", () => {
       SfProcurement.operations["procurement.procurement-scenario-controls"].output,
     )(input)).toThrow()
   })
+  test("projection transaction preserves every authority outcome, no-commit and post-read admission", async () => {
+    // In-process adapter boundary fixture only, not an installed identity or
+    // durable persistence qualification. The actual Procurement domain runs.
+    const state = snapshot()
+    expect(domain.execute(state, admin, {
+      page: "Settings", action: "reset", version: 0, values: {},
+    }, environment).ok).toBe(true)
+    let role: "admin" | "viewer" | null = "admin"
+    let sourceCurrent = true
+    let afterRead: "ok" | "denied" | "changed" = "ok"
+    let reads = 0
+    let finishes = 0
+    const commits: boolean[] = []
+    const producer = { pages: ["Settings"], domain, render: () => undefined }
+    const contributions = [producer]
+    const deps: Parameters<typeof createSfProcurementProjectionHandlers>[0] = {
+      origin: "https://sf.example",
+      mount: "/sucafina",
+      runtime: () => undefined,
+      application: {
+        authenticate: async () => role === null ? null : {
+          id: "admin", canWrite: role !== "viewer",
+          roles: [{ surface: "procurement", role }],
+        },
+        persistence: {
+          async transaction(surface, work) {
+            expect(surface).toBe("procurement")
+            const outcome = await work(state)
+            commits.push(outcome.commit)
+            return outcome.value
+          },
+        },
+        environment: async () => environment,
+        domains: {
+          dashboard: [], planner: [],
+          procurement: contributions,
+        },
+        maxJsonBytes: 1024,
+        productView: async () => ({
+          data: {},
+          current: () => sourceCurrent,
+          finish: () => { finishes++ },
+        }),
+      },
+      readContext: async () => {
+        reads++
+        if (reads > 1 && afterRead === "denied") return { status: "denied" }
+        return {
+          status: "ok",
+          value: {
+            stamp: {
+              installationId: "installation", projectId: "project", hostId: "host",
+              principalRef: "admin", policyVersion: "policy",
+              accessRevision: reads > 1 && afterRead === "changed" ? "revoked" : "current",
+            },
+            contractRevision: "sf-native-ui/1",
+            authMode: "local-operator",
+            destinations: [{
+              capabilityId: "CAP28", surface: "procurement", page: "Settings",
+              canRead: true, allowedActionIds: ["save", "reset"],
+            }],
+            availability: [],
+          },
+        }
+      },
+    }
+    const handler = createSfProcurementProjectionHandlers(deps)
+      .find((item) => item.operationId === "domain.page.CAP28")
+    if (!handler) throw new Error("CAP28 handler not registered")
+    const read = () => handler.handle(new Request("https://sf.example/sucafina/api/ui/pages/CAP28"))
+
+    const successful = await read()
+    expect(successful.status).toBe(200)
+    expect(successful.headers.get("Cache-Control")).toBe("no-store")
+    expect(await successful.json()).toMatchObject({
+      status: "ok", value: { capabilityId: "CAP28", allowedActionIds: ["save", "reset"] },
+    })
+    expect(reads).toBe(2)
+    expect(commits).toEqual([false])
+
+    reads = 0
+    role = null
+    const unauthenticated = await read()
+    expect(unauthenticated.status).toBe(401)
+    expect(await unauthenticated.json()).toEqual({ status: "unauthenticated" })
+    expect(reads).toBe(1)
+
+    reads = 0
+    role = "viewer"
+    const denied = await read()
+    expect(denied.status).toBe(403)
+    expect(await denied.json()).toEqual({ status: "denied" })
+    expect(reads).toBe(1)
+
+    reads = 0
+    role = "admin"
+    sourceCurrent = false
+    const staleSource = await read()
+    expect(staleSource.status).toBe(409)
+    expect(await staleSource.json()).toEqual({
+      status: "stale", reason: "procurement-source-changed",
+    })
+    expect(reads).toBe(1)
+
+    reads = 0
+    sourceCurrent = true
+    contributions.pop()
+    const unavailable = await read()
+    expect(unavailable.status).toBe(503)
+    expect(await unavailable.json()).toEqual({
+      status: "unavailable", reason: "procurement-domain-unavailable",
+    })
+    expect(reads).toBe(1)
+    contributions.push(producer)
+
+    reads = 0
+    afterRead = "denied"
+    const revoked = await read()
+    expect(revoked.status).toBe(403)
+    expect(await revoked.json()).toEqual({
+      status: "denied", reason: "procurement-context-changed",
+    })
+    expect(reads).toBe(2)
+
+    reads = 0
+    afterRead = "changed"
+    const newRevision = await read()
+    expect(newRevision.status).toBe(409)
+    expect(await newRevision.json()).toEqual({
+      status: "stale", reason: "procurement-context-changed",
+    })
+    expect(reads).toBe(2)
+    expect(finishes).toBe(7)
+    expect(commits).toEqual([false, false, false, false, false, false, false])
+  })
+
 })

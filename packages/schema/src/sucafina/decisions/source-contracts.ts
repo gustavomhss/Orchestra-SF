@@ -13,7 +13,26 @@ export type SfEvidenceRef = Readonly<{
   evidenceLevel:"observed"|"claim"|"assumption"|"proposal"|"decision";
 }> & (
  | Readonly<{kind:"record";target:Readonly<{surface:"dashboard"|"planner"|"procurement";recordType:string;recordId:string;incarnation:string;version:number;fields:readonly string[];period?:Readonly<{start:string;end:string}>;projectionDigest:string}>}>
- | Readonly<{kind:"document";target:Readonly<{documentId:string;incarnation:string;revision:number;blobDigest:Readonly<{algorithm:"sha256";value:string}>;segment:Readonly<{start:number;end:number;unit:"utf16";textDigest:Readonly<{algorithm:"sha256";value:string>}>;ragSourceId?:string;ragRevisionId?:string;ragSourceHash?:Readonly<{algorithm:"blake3";value:string}>;fieldCandidateId?:string;confirmationVersion?:number}>}>
+ | Readonly<{
+     kind: "document"
+     target: Readonly<{
+       documentId: string
+       incarnation: string
+       revision: number
+       blobDigest: Readonly<{ algorithm: "sha256"; value: string }>
+       segment: Readonly<{
+         start: number
+         end: number
+         unit: "utf16"
+         textDigest: Readonly<{ algorithm: "sha256"; value: string }>
+       }>
+       ragSourceId?: string
+       ragRevisionId?: string
+       ragSourceHash?: Readonly<{ algorithm: "blake3"; value: string }>
+       fieldCandidateId?: string
+       confirmationVersion?: number
+     }>
+   }>
  | Readonly<{kind:"calculation";target:Readonly<{calculationId:string;runId:string;engineVersion:string;inputDigest:string;resultDigest:string;sourceRefs:readonly SfEvidenceRef[];period:Readonly<{start:string;end:string}>;currency:string}>}>
  | Readonly<{kind:"receipt";target:Readonly<{surface:"dashboard"|"planner"|"procurement";receiptId:string;idempotencyKey:string;targetIncarnation:string;commandDigest:string;version:number}>}>
  | Readonly<{kind:"case-event";target:Readonly<{caseId:string;caseIncarnation:string;caseVersion:number;eventId:string;outputDigest:string;evidenceRefs:readonly SfEvidenceRef[]}>}>

@@ -12,8 +12,8 @@ const Year = Schema.Int.check(Schema.isGreaterThanOrEqualTo(2024)).check(Schema.
 const Optional = Schema.optionalKey
 const NullableAmount = Schema.Union([Schema.Finite, Schema.Null])
 const EditableAmount = Schema.Union([Schema.String, NullableAmount])
-const Amounts = Schema.Array(Schema.Finite).check(Schema.isBetweenLength(12, 12))
-const NullableAmounts = Schema.Array(NullableAmount).check(Schema.isBetweenLength(12, 12))
+const Amounts = Schema.Array(Schema.Finite).check(Schema.isMinLength(12)).check(Schema.isMaxLength(12))
+const NullableAmounts = Schema.Array(NullableAmount).check(Schema.isMinLength(12)).check(Schema.isMaxLength(12))
 const RecordVersion = Schema.Struct({ version: NonNegativeInt })
 const ContextStamp = Schema.Struct({
   installationId: NonEmpty, projectId: NonEmpty, hostId: NonEmpty,
@@ -252,8 +252,8 @@ function legacyInput<P extends keyof typeof CommandValues, A extends keyof (type
   })
 }
 const DraftCell = Schema.Struct({ measure: Schema.Literals(["budget","actual","forecast"]), month: Month, text: Schema.String })
-const Draft = Schema.Struct({ rowId: NonEmpty, revision: NonNegativeInt, cells: Schema.Array(DraftCell).check(Schema.isBetweenLength(1, 36)) })
-const MonthlyRequest = Schema.Struct({ page: Schema.Literals(["OPEX","CAPEX"]), versionId: NonEmpty, drafts: Schema.Array(Draft).check(Schema.isBetweenLength(1, 500)) })
+const Draft = Schema.Struct({ rowId: NonEmpty, revision: NonNegativeInt, cells: Schema.Array(DraftCell).check(Schema.isMinLength(1)).check(Schema.isMaxLength(36)) })
+const MonthlyRequest = Schema.Struct({ page: Schema.Literals(["OPEX","CAPEX"]), versionId: NonEmpty, drafts: Schema.Array(Draft).check(Schema.isMinLength(1)).check(Schema.isMaxLength(500)) })
 const MonthlyRow = Schema.Struct({
   draft: Draft, errors: Schema.Array(Schema.Struct({ cell: Optional(DraftCell), reason: Schema.String })),
   result: Optional(LegacyResult),

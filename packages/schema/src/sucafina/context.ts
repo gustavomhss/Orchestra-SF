@@ -348,6 +348,23 @@ export const SfInstallationSelector = Schema.Union([
   Schema.Struct({ select: Schema.Literal("location"), location: Schema.Struct({ directory: NonEmpty, workspace: Schema.optional(NonEmpty) }) }),
 ]).annotate({ identifier: "Sucafina.InstallationSelector" })
 export type SfInstallationSelector = Schema.Schema.Type<typeof SfInstallationSelector>
+/**
+ * The HttpApi SDK generator requires a top-level Struct for query fields.
+ * This is a transport projection, not the semantic selector. The server must
+ * parse the ORIGINAL raw URL with parseSfInstallationSelector before discovery:
+ * that closed discriminated union rejects missing, mixed, unknown and duplicate
+ * fields, including cross-owner or stale Location fallback attempts.
+ * Do not infer authority from an SDK-decoded query.
+ */
+export const SfInstallationQuery = Schema.Struct({
+  select: Schema.Literals(["ids", "location"]),
+  installationId: Schema.optional(NonEmpty),
+  projectId: Schema.optional(NonEmpty),
+  location: Schema.optional(Schema.Struct({
+    directory: NonEmpty,
+    workspace: Schema.optional(NonEmpty),
+  })),
+}).annotate({ identifier: "Sucafina.InstallationQuery" })
 export const SfExpectedContextBinding = Schema.Struct({
   installationId: NonEmpty, projectId: NonEmpty, hostId: NonEmpty,
 }).annotate({ identifier: "Sucafina.ExpectedContextBinding" })

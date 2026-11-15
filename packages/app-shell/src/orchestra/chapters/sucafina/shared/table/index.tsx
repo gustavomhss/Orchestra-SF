@@ -223,23 +223,25 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
                         <div class="sf-s01-row-actions" role="group" aria-label={copy.t(sfS01Key("sf.s01.rowActions"))}>
                           <For each={actions(row)}>
                             {(action) => (
-                              <button
-                                type="button"
-                                class={"mx-btn" + (action.tone === "danger" ? " danger" : "")}
-                                data-sf-action={action.id}
-                                disabled={action.disabled || action.busy || (props.state !== "ready" && props.state !== "partial")}
-                                aria-busy={action.busy}
-                                title={action.reason ? copy.message(action.reason) : undefined}
-                                onClick={() => {
-                                  if (!action.disabled && !action.busy && (props.state === "ready" || props.state === "partial"))
-                                    props.onRowAction({ recordRef: recordRef(), actionId: action.id })
-                                }}
-                              >
-                                {copy.t(action.labelKey)}
-                              </button>
-                              <Show when={action.reason}>
-                                {(reason) => <span class="sf-s01-action-reason">{copy.message(reason())}</span>}
-                              </Show>
+                              <>
+                                <button
+                                  type="button"
+                                  class={"mx-btn" + (action.tone === "danger" ? " danger" : "")}
+                                  data-sf-action={action.id}
+                                  disabled={action.disabled || action.busy || (props.state !== "ready" && props.state !== "partial")}
+                                  aria-busy={action.busy}
+                                  title={action.reason ? copy.message(action.reason) : undefined}
+                                  onClick={() => {
+                                    if (!action.disabled && !action.busy && (props.state === "ready" || props.state === "partial"))
+                                      props.onRowAction({ recordRef: recordRef(), actionId: action.id })
+                                  }}
+                                >
+                                  {copy.t(action.labelKey)}
+                                </button>
+                                <Show when={action.reason}>
+                                  {(reason) => <span class="sf-s01-action-reason">{copy.message(reason())}</span>}
+                                </Show>
+                              </>
                             )}
                           </For>
                         </div>

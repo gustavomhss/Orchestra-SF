@@ -68,6 +68,37 @@ describe("A05 portfolio/sensitivity source-locked contracts", () => {
     ]) expect(() => Schema.decodeUnknownSync(result)(invalid)).toThrow()
   })
 
+  test("all ten operation boundaries reject injected unknown input fields by default", () => {
+    const evaluate = SfPortfolio["portfolio.decision-portfolio-evaluate"].input
+    const valid = { caseRef, request }
+    expect(Schema.decodeUnknownSync(evaluate)(valid)).toEqual(valid)
+    for (const bad of [
+      { ...valid, principalRef: "forged-actor" },
+      { ...valid, caseRef: { ...caseRef, authorization: "forged" } },
+      { ...valid, request: { ...request, scope: { ...request.scope, grant: "admin" } } },
+      { ...valid, request: { ...request, operations: [{ kind: "include", targetRef: "source-1", privileged: true }] } },
+    ]) expect(() => Schema.decodeUnknownSync(evaluate)(bad)).toThrow()
+
+    const units = SfPortfolio["portfolio.decision-sensitivity-units"].input
+    const correct = { caseRef, scenarioRef: "scenario-1", baselineRef: "baseline-1", parameterRef: "parameter-1" }
+    expect(Schema.decodeUnknownSync(units)(correct)).toEqual(correct)
+    expect(() => Schema.decodeUnknownSync(units)({ ...correct, expectedPrincipal: "forged" })).toThrow()
+  })
+
+  test("result envelopes remain closed without conflating source refusals or dropping fields", () => {
+    const results = SfPortfolio["portfolio.decision-portfolio-results"].output
+    const ok = { status: "ok", value: [{ resultRef: "result-1", createdAt: "2026-11-15" }] }
+    expect(Schema.decodeUnknownSync(results)(ok)).toEqual(ok)
+    expect(() => Schema.decodeUnknownSync(results)({
+      status: "ok", value: [{ ...ok.value[0], privateAuthority: "forged" }],
+    })).toThrow()
+    for (const status of ["needs-input", "stale", "denied", "unavailable", "conflict", "provider-conflict", "failed"]) {
+      const refusal = { status, reason: "original reason with source evidence" }
+      expect(Schema.decodeUnknownSync(results)(refusal)).toEqual(refusal)
+      expect(() => Schema.decodeUnknownSync(results)({ ...refusal, approval: "injected" })).toThrow()
+    }
+  })
+
   test("zero and null component amounts remain different in portfolio previews", () => {
     const preview = SfPortfolio["portfolio.decision-portfolio-preview"].output
     const output = (amount: number | null) => ({

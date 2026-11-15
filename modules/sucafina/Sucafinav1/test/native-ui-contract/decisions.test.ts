@@ -1,6 +1,8 @@
 import { describe, expect, test } from "bun:test"
 import { Schema } from "effect"
 import { SfDecisions } from "../../../../../packages/schema/src/sucafina/decisions.ts"
+import { SfSourceEvidenceInput } from "../../../../../packages/schema/src/sucafina/decisions/source-contracts.ts"
+import type { SfEvidenceRef } from "../../../../../packages/schema/src/sucafina/decisions/source-contracts.ts"
 import { createSfDecisionsClient } from "../../../../../packages/client/src/sucafina/decisions.ts"
 import type { SfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
 
@@ -50,6 +52,96 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
     expect(accepts(op.input, { operation: "sf_case_draft", input, defaultApproved: true })).toBe(false)
     expect(op.fixedBodyDiscriminator).toEqual({ operation: "sf_case_draft" })
     expect(op.maxRequestBytes).toBe(65536)
+  })
+
+  test("document digest nesting and recursive evidence retain exact source contracts", () => {
+    const document = {
+      schema: "sf-evidence-v1",
+      refId: "evidence:doc-1",
+      installationId: "installation-1",
+      projectId: "project-1",
+      refDigest: digest,
+      evidenceLevel: "observed",
+      kind: "document",
+      target: {
+        documentId: "document-1",
+        incarnation: "document-incarnation-1",
+        revision: 0,
+        blobDigest: { algorithm: "sha256", value: digest },
+        segment: {
+          start: 0,
+          end: 12,
+          unit: "utf16",
+          textDigest: { algorithm: "sha256", value: digest },
+        },
+        confirmationVersion: 0,
+      },
+    } satisfies SfEvidenceRef
+    const calculation = {
+      schema: "sf-evidence-v1",
+      refId: "evidence:calculation-1",
+      installationId: "installation-1",
+      projectId: "project-1",
+      refDigest: digest,
+      evidenceLevel: "observed",
+      kind: "calculation",
+      target: {
+        calculationId: "calculation-1",
+        runId: "run-1",
+        engineVersion: "v1",
+        inputDigest: digest,
+        resultDigest: digest,
+        sourceRefs: [document],
+        period: { start: "2026-01-01", end: "2026-12-31" },
+        currency: "BRL",
+      },
+    } satisfies SfEvidenceRef
+    const draft = SfDecisions.operations["decisions.command.sf_case_draft"].input
+    const input = {
+      operation: "sf_case_draft",
+      input: {
+        objective: "Compare documented alternatives",
+        horizon: { start: "2026-01-01", end: "2026-12-31" },
+        currency: "BRL",
+        criteria: [],
+        sourceRefs: [calculation],
+      },
+    }
+
+    expect(accepts(SfSourceEvidenceInput, document)).toBe(true)
+    expect(accepts(SfSourceEvidenceInput, calculation)).toBe(true)
+    expect(accepts(draft, input)).toBe(true)
+    expect(accepts(SfSourceEvidenceInput, {
+      ...document,
+      target: {
+        ...document.target,
+        segment: { ...document.target.segment, textDigest: { algorithm: "sha256", value: "short" } },
+      },
+    })).toBe(false)
+    expect(accepts(SfSourceEvidenceInput, {
+      ...document,
+      target: {
+        ...document.target,
+        segment: { ...document.target.segment, textDigest: { algorithm: "blake3", value: digest } },
+      },
+    })).toBe(false)
+    expect(accepts(SfSourceEvidenceInput, {
+      ...document,
+      target: { ...document.target, authority: "admin" },
+    })).toBe(false)
+    expect(accepts(draft, {
+      ...input,
+      input: {
+        ...input.input,
+        sourceRefs: [{
+          ...calculation,
+          target: {
+            ...calculation.target,
+            sourceRefs: [{ ...document, installationId: "" }],
+          },
+        }],
+      },
+    })).toBe(false)
   })
 
   test("choice mutation retains reviewed source digests and does not accept fake receipts", () => {

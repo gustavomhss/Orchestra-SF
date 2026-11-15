@@ -55,6 +55,8 @@ if (process.env.SF_S01_DOM !== "1") {
       page: { kind: "offset", index: 0, size: 2, total: null } as SfPage,
       layoutMode: "single" as SfLayoutMode,
       disabledAction: true,
+      actionReason: false,
+      busyAction: false,
     })
     const columns: readonly SfColumn<RecordRow>[] = [
       { id: "label", labelKey: key("sf.s01.listLabel"), align: "start", widthPolicy: { kind: "flex", minPx: 120, weight: 1 },
@@ -73,7 +75,8 @@ if (process.env.SF_S01_DOM !== "1") {
       columns,
       captionKey: key("sf.s01.listLabel"),
       rowActions: () => [{ id: "approve", labelKey: key("sf.common.approve"), tone: "secondary",
-        disabled: state.disabledAction, busy: false }],
+        disabled: state.disabledAction, busy: state.busyAction,
+        reason: state.actionReason ? { key: key("sf.common.noAccess") } : undefined }],
       onSort(sort) { events.push("sort:" + (sort.kind === "field" ? sort.direction : "none")); update("sort", sort) },
       onPage(page) {
         events.push("page:" + (page.kind === "offset" ? page.index : page.direction))
@@ -152,6 +155,53 @@ if (process.env.SF_S01_DOM !== "1") {
       expect(view.events).toContain("action:ref-a:approve")
       view.update("rows", [...original.map((row) => ({ ...row }))])
       expect(view.host.querySelector('tr[data-sf-row="ref-b"]')?.getAttribute("aria-selected")).toBe("true")
+    } finally { view.done() }
+  })
+
+  test("row action reason and button remain sibling elements with intact authority and keyboard gates", () => {
+    const view = fixture()
+    try {
+      const group = (ref: string) => view.host.querySelector<HTMLElement>(
+        'tr[data-sf-row="' + ref + '"] .sf-s01-row-actions',
+      )!
+      const action = (ref: string) => group(ref).querySelector<HTMLButtonElement>(
+        'button[data-sf-action="approve"]',
+      )!
+      expect(group("ref-a").querySelector(".sf-s01-action-reason")).toBeNull()
+      view.update("actionReason", true)
+
+      const deniedReason = group("ref-a").querySelector<HTMLElement>(".sf-s01-action-reason")!
+      expect(group("ref-a").getAttribute("role")).toBe("group")
+      expect(group("ref-a").children).toHaveLength(2)
+      expect(group("ref-a").children[0]).toBe(action("ref-a"))
+      expect(group("ref-a").children[1]).toBe(deniedReason)
+      expect(deniedReason.textContent).toContain("You do not have access")
+      expect(action("ref-a").title).toContain("You do not have access")
+      expect(action("ref-a").disabled).toBe(true)
+      action("ref-a").click()
+      expect(view.events).toEqual([])
+
+      view.update("actionReason", false)
+      expect(group("ref-a").querySelector(".sf-s01-action-reason")).toBeNull()
+      expect(action("ref-a").title).toBe("")
+      view.update("disabledAction", false)
+      action("ref-b").focus()
+      expect(document.activeElement).toBe(action("ref-b"))
+      action("ref-b").click()
+      expect(view.events).toEqual(["action:ref-b:approve"])
+
+      view.update("busyAction", true)
+      expect(action("ref-b").disabled).toBe(true)
+      expect(action("ref-b").getAttribute("aria-busy")).toBe("true")
+      action("ref-b").click()
+      expect(view.events).toEqual(["action:ref-b:approve"])
+      view.update("busyAction", false)
+      view.update("ui", "outcome-unknown")
+      expect(action("ref-b").disabled).toBe(true)
+      action("ref-b").click()
+      expect(view.events).toEqual(["action:ref-b:approve"])
+      view.update("ui", "denied")
+      expect(view.host.querySelector(".sf-s01-row-actions")).toBeNull()
     } finally { view.done() }
   })
 

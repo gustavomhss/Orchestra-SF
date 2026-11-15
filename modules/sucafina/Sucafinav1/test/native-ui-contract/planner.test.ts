@@ -158,3 +158,102 @@ test("an explicit HTTP conflict is known; a transport readback loss is never ret
     kind: "transport-error", reason: "invalid-response",
   })).toEqual({ status: "outcome-unknown", rows: request.drafts })
 })
+
+test("A02 C64: Effect beta.83 enforces exactly 12 periods and retains zero versus null", () => {
+  const input = SfPlanner.operations["domain.command.CAP18.save"].input
+  const values = {
+    versionId: "plan",
+    b: Array(12).fill(0),
+    a: [0, ...Array(11).fill(null)],
+    f: Array(12).fill(null),
+  }
+  const command = { page: "OPEX", action: "save", id: "line", version: 7, values }
+  const decode = Schema.decodeUnknownSync(input, { onExcessProperty: "error" })
+  expect(decode(command)).toEqual(command)
+  for (const field of ["b", "a", "f"] as const) {
+    for (const count of [0, 11, 13]) {
+      expect(() => decode({
+        ...command, values: { ...values, [field]: Array(count).fill(field === "b" ? 0 : null) },
+      })).toThrow()
+    }
+  }
+  expect(() => decode({
+    ...command, values: { ...values, b: Array(12).fill(null) },
+  })).toThrow()
+})
+
+test("A02 C64: monthly preview/apply retain closed 1..36 cells, 1..500 rows and 1..12 host months", () => {
+  const cell = (month: number) => ({ measure: "budget" as const, month, text: "0" })
+  const draft = (row: number, cells: ReturnType<typeof cell>[]) => ({
+    rowId: `row-${row}`, revision: 0, cells,
+  })
+  for (const operation of ["planner.monthly.preview", "planner.monthly.apply"] as const) {
+    const decode = Schema.decodeUnknownSync(SfPlanner.operations[operation].input, { onExcessProperty: "error" })
+    const action = operation === "planner.monthly.preview" ? "preview" : "apply"
+    const request = (drafts: ReturnType<typeof draft>[]) => ({
+      action, input: { page: "OPEX", versionId: "plan", drafts },
+    })
+    const valid = request([draft(1, [cell(1), cell(12)])])
+    expect(decode(valid)).toEqual(valid)
+    expect(() => decode(request([]))).toThrow()
+    expect(() => decode(request([draft(1, [])]))).toThrow()
+    expect(() => decode(request([draft(1, Array(37).fill(cell(1)))]))).toThrow()
+    expect(() => decode(request([draft(1, [cell(0)])]))).toThrow()
+    expect(() => decode(request([draft(1, [cell(13)])]))).toThrow()
+    const maximum = request(Array.from({ length: 500 }, (_, i) => draft(i, [cell(1)])))
+    expect(() => decode(maximum)).not.toThrow()
+    expect(() => decode(request([...maximum.input.drafts, draft(501, [cell(1)])]))).toThrow()
+  }
+})
+
+test("A02 C64: authorized page projections preserve 12 slots and nullable financial output", () => {
+  const context = {
+    installationId: "installation", projectId: "project", hostId: "host",
+    principalRef: "principal", policyVersion: "policy", accessRevision: "access",
+  }
+  const summary = {
+    total: 0, actualYTD: null, fullYear: 0, hrTotal: null, fte: 0,
+    budget: [0, ...Array(11).fill(null)],
+    actual: Array(12).fill(null),
+    outlook: Array(12).fill(0),
+    warnings: [],
+  }
+  const overview = {
+    status: "ok", context,
+    value: {
+      capabilityId: "CAP17", selection: { year: 2026 },
+      data: { versions: [], comparisons: [], summary },
+      versions: {}, allowedActionIds: [],
+    },
+  }
+  const overviewDecode = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP17"].output)
+  expect(overviewDecode(overview)).toEqual(overview)
+  for (const count of [0, 11, 13]) {
+    expect(() => overviewDecode({
+      ...overview,
+      value: { ...overview.value, data: { ...overview.value.data,
+        summary: { ...summary, budget: Array(count).fill(null) } } },
+    })).toThrow()
+  }
+
+  const positions = [{
+    id: "position", name: "Engineer", revision: 0,
+    months: [0, ...Array(11).fill(null)],
+  }]
+  const headcount = {
+    status: "ok", context,
+    value: {
+      capabilityId: "CAP20", selection: { year: 2026 },
+      data: { versions: [], positions }, versions: {}, allowedActionIds: [],
+    },
+  }
+  const headcountDecode = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP20"].output)
+  expect(headcountDecode(headcount)).toEqual(headcount)
+  expect(() => headcountDecode({
+    ...headcount,
+    value: { ...headcount.value, data: {
+      ...headcount.value.data,
+      positions: [{ ...positions[0], months: Array(13).fill(null) }],
+    } },
+  })).toThrow()
+})
