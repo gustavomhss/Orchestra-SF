@@ -1,0 +1,29 @@
+{
+  "schema": "mission75.final-R4-documentary-validation.v1",
+  "status": "PASS_DOCUMENTARY_RECONCILIATION",
+  "local_product_execution": false,
+  "criteria": 251,
+  "criterion_ids_texts_and_baseline_history_unchanged": true,
+  "original_five_identity_spec_annotations_and_baseline_history_unchanged": true,
+  "source_R3_control_objects_unchanged": true,
+  "ten_gap_baseline_objects_unchanged": true,
+  "mission75_criterion_status_counts": {
+    "NOT_RUN": 223,
+    "PARTIAL_WITNESS_ONLY": 28
+  },
+  "full_criteria_closed": 0,
+  "exact_case_durations_ms": {
+    "OP-PROC-01": 1990,
+    "OP-PROC-02": 10968,
+    "OP-PROC-03": 10367,
+    "OP-IMPORT-01": 7751,
+    "OP-DOC-01": 23384
+  },
+  "artifact_document_checks": 299,
+  "artifact_document_failed_checks": 0,
+  "R4_zip_sha256": "11fd4542d0a29a1841a0a640b7100cf04a340b0948db60a13139c262898a8d21",
+  "R4_request_sha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+  "C40_intake_and_snapshot_parent_and_request_only_delta_verified": true,
+  "later_C41_receives_no_PASS": true,
+  "narrow_claim": "The five unchanged Operations journeys pass on C40 with real ephemeral ClamD; seven live/private controls passed separately on source W4. Full WP/global/native/compiler and post-accepting-scan race coverage remain open."
+}

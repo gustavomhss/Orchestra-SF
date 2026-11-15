@@ -1,0 +1,150 @@
+{
+  "schema": "mission75-auth72-delta-reachability-v1",
+  "mission": 75,
+  "created_at_utc": "2026-11-15T04:09:09Z",
+  "status": "STATIC_INTERPRETATION_ONLY",
+  "scope": "Surgical read of C38-auth72 and the five production-source changes, restricted to openLocalStore → operator-identity → installed Operations. Full source72/Microsoft review remains with71.",
+  "provenance": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "remote_access": "GitHub MCP read-only",
+    "local_work": "Inert source snapshots, text comparisons and hashing only"
+  },
+  "candidate_delta": {
+    "before": {
+      "name": "C37",
+      "commit": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+      "tree": "94be5190a25b973af4ca647db5149e2ecec6df37"
+    },
+    "after": {
+      "name": "C38",
+      "commit": "943b3fc6919eecb55556b05c48f07c9dbba1c530",
+      "tree": "9ad861864150f4690ad1ed3faa1f8c7164130212"
+    },
+    "direct_parent_verified": true,
+    "candidate_receipt": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C38-auth72.json",
+      "blob": "6994fe514bd320bc0fdfa1534206c829f22a36eb",
+      "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN"
+    },
+    "files": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "before_blob": null,
+        "after_blob": "af6e6749f7b61e07c419c90a264fdc48f3b32e21"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "before_blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+        "after_blob": "d82b40928a235f2d249e45e59732f281dfded97f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+        "before_blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+        "after_blob": "473b9dbfe56092af26f0de2927767b8d64b79e1b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "before_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "after_blob": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+        "before_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+        "after_blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877"
+      }
+    ]
+  },
+  "readonly59": {
+    "preimage": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+    "composed_postimage": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+    "source72_owned_snapshot_not_applied_as_whole": "7cca20a0fc9741c0b57bda9684e5e69fedcc027b",
+    "preservation": "The auth overlay retains the prior readonly59 implementation. Three complete textual segments compare exactly across the actual C37 and C38 local-store blobs.",
+    "segment_checks": [
+      {
+        "name": "readonly59 memo, scope, admission and poison logic",
+        "exact_equal": true,
+        "before_start_line": 81,
+        "after_start_line": 86,
+        "before_chars": 4964,
+        "after_chars": 4964
+      },
+      {
+        "name": "all persistence methods through the secrets property",
+        "exact_equal": true,
+        "before_start_line": 191,
+        "after_start_line": 218,
+        "before_chars": 12853,
+        "after_chars": 12853
+      },
+      {
+        "name": "disposal and remaining materialization helpers",
+        "exact_equal": true,
+        "before_start_line": 440,
+        "after_start_line": 444,
+        "before_chars": 12118,
+        "after_chars": 12118
+      }
+    ],
+    "auth_read_interaction": "The new secrets.get and authentication.inspect read current committed authentication state through a fresh connection using SELECT, independently of the older business snapshot. The adapter checks live scope before and after reading; it does not call BEGIN IMMEDIATE or a write in this read callback.",
+    "auth_write_interaction": "Auth writes still call the same operation(true) admission. Inside an inherited scope, operation marks the root poisoned and rejects nested writes; it also preserves readonly-root poisoning when a write is attempted after disposal.",
+    "qualification": "Textual preservation and static interaction analysis only. Source59 P03 FAIL_HELD and the source72 readonly composition cases remain unqualified by this receipt."
+  },
+  "reachability": {
+    "operations_host": {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "blob": "8230eb28f322dde255382b74280192f39844724d",
+      "lines": "17-25;35-43;52-72;124-143",
+      "observation": "Creates a fresh private temporary installation directory, opens the Bun SQLite store, passes store.secrets to createOperatorIdentity, and serves the installed Operations application with Bun.serve at loopback port 4174."
+    },
+    "operator_identity": {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19",
+      "lines": "18-21;48-58;63-68;75-110",
+      "observation": "Unchanged identity uses operator-enroll, operator-session and operator-revoked keys plus generic put/get/take/remove. It does not call authentication.issue/inspect/revoke, createLocalIdentity or createMicrosoftIdentity."
+    },
+    "installation": {
+      "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+      "blob": "d60be2f87aa210c9700fba276932a6f443264e4f",
+      "observation": "Unchanged at C38, before the mission 75 diagnostic overlay. Receives the store and authenticated operator; no invocation of local/entry or auth maintenance is added."
+    },
+    "new_store_behavior": {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "lines": "12;64-84;196-216;443-453",
+      "observation": "The new auth module is loaded and executed during openLocalStore. Within its existing initialization transaction it adds issuance metadata, indexes and one durable limits policy. It supplies the combined generic secrets and managed authentication capability. This is an actual runtime intersection with Operations."
+    },
+    "managed_key_boundary": {
+      "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+      "lines": "103-169;171-245;286-288",
+      "managed_pattern": "^([a-f0-9]{64}):(login|session):([a-f0-9]{64})$",
+      "observation": "operator-* keys do not match the managed Microsoft/local-client namespace. Their put remains generic insert/update, take selects/deletes, remove deletes, and get reads unexpired payload. New managed issuance limits do not become a global operator quota; generic payload bytes still count if managed issuance is used elsewhere."
+    },
+    "contract_and_microsoft_identity": {
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+        "modules/sucafina/Sucafinav1/runtime/local-identity.ts"
+      ],
+      "observation": "LocalSecrets adds an optional authentication capability and optional put clock argument. createMicrosoftIdentity requires that capability; managed Microsoft/local-client issue/revoke/refresh branches use it. Operations selects createOperatorIdentity, so this new Microsoft requirement does not add a configuration gate to the Bun fixture."
+    },
+    "maintenance_lifecycle": {
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+        "modules/sucafina/Sucafinav1/local/entry.ts"
+      ],
+      "lines": "auth-maintenance251-283; local/entry102-107,163-165,252",
+      "observation": "startAuthMaintenance starts an immediate bounded collection, a 60-second unref timer and awaited disposal when local/entry composes an installation. The Operations host directly opens its store and does not call that entry or startAuthMaintenance. Importing the auth module does not itself start the timer.",
+      "active_in_inspected_operations_host": false
+    }
+  },
+  "conclusion": {
+    "concrete_new_blocker_identified": false,
+    "action": "Preserve the C38 combined auth72/readonly59 postimage during mission 75 intake.",
+    "observed_effect": "Operations gains the auth schema and secrets adapter; its existing operator identity and generic key namespace remain selected. The static diff supplies no concrete reason to block the five originals.",
+    "remaining_validation": "Qualify the five unchanged originals on the actual mission 71 candidate that includes 73+75, with the approved real ClamD setup and exact commit/tree. Do not relabel source72, source59, source73 or source75 R3 results as this candidate's results.",
+    "held_from_candidate": "C38 declares MATERIAL_COMPOSED_VALIDATION_NOT_RUN. M70-AUTH-01 recheck, source59 P03 FAIL_HELD, source72 readonly/lifecycle cases and Microsoft live acceptance remain open; this receipt changes none of them.",
+    "node_74_79": "No new CLI Node/ServerHttpApi dependency arises in the inspected Bun Operations startup path.",
+    "source_or_remote_mutation_performed": false,
+    "product_or_test_execution_performed": false,
+    "matrix_changed": false,
+    "acceptance_changed": false
+  }
+}

@@ -1,0 +1,1348 @@
+{
+  "schema": "sf2h.operations75.post-qualification-head.v1",
+  "qualified": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+  "observed_head": "1074cf338619a70ddef1ad1f62e32618fc355fed",
+  "tree": "3f98ab38aa223eefba708e566a42450d8f1c2a93",
+  "label": "C41 dashboard67",
+  "parent": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+  "source_ref_head": "c1cb7e6d9d16bcbb92fb25f5f42de342b5a554ba",
+  "claim": "R4 PASS binds only to C40; C41 is later material and was not tested by R4. Preserve all later target material and leave its qualification to71/S0.",
+  "comparison": {
+    "retrieval": "GitHub MCP GET /compare/eb58cd9e9f8125d879bff260d6d794264b9dc53a...1074cf338619a70ddef1ad1f62e32618fc355fed",
+    "status": "ahead",
+    "total_commits": 1,
+    "ahead_by": 1,
+    "behind_by": 0,
+    "file_count": 155,
+    "file_metadata": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "sha": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+        "status": "modified",
+        "additions": 98,
+        "deletions": 0,
+        "changes": 98
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "sha": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+        "status": "modified",
+        "additions": 25,
+        "deletions": 5,
+        "changes": 30
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C41-dashboard67.json",
+        "sha": "50318dfa6da6682cd6b347b3d71cdce40a6f7820",
+        "status": "added",
+        "additions": 242,
+        "deletions": 0,
+        "changes": 242
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/dependencies/dashboard67-current.json",
+        "sha": "c0a54d1dc061f0132952c808af90c880ee1c33d8",
+        "status": "added",
+        "additions": 1166,
+        "deletions": 0,
+        "changes": 1166
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/reviews/dashboard67-tests-proof.json",
+        "sha": "2590bc04b761453d15043bdc5545fd22367f35ce",
+        "status": "added",
+        "additions": 951,
+        "deletions": 0,
+        "changes": 951
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/reviews/dashboard67.json",
+        "sha": "e029ce0ccb9cca77eca56edeeccea1c549a2cb42",
+        "status": "added",
+        "additions": 335,
+        "deletions": 0,
+        "changes": 335
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/ACK67.json",
+        "sha": "94eb9905abbc519a36b2311fbedc27accde4300e",
+        "status": "added",
+        "additions": 254,
+        "deletions": 0,
+        "changes": 254
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/AUTHORITY.json",
+        "sha": "97e57f3b88e2ac3caa0ff9740b430d061a44d43a",
+        "status": "added",
+        "additions": 70,
+        "deletions": 0,
+        "changes": 70
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/CONSUMER-ACK-REQUEST.json",
+        "sha": "ab97c866d53a650b0b2d7444aa835c8871409266",
+        "status": "added",
+        "additions": 26,
+        "deletions": 0,
+        "changes": 26
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/CONSUMER-RELEASE.json",
+        "sha": "3943d0bc4250f8ae489b109af48a2c955949e511",
+        "status": "added",
+        "additions": 97,
+        "deletions": 0,
+        "changes": 97
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/EXECUTOR-RECEIPT.json",
+        "sha": "cae005a439f112ed7c10f005870ed1c9875aff88",
+        "status": "added",
+        "additions": 90,
+        "deletions": 0,
+        "changes": 90
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/HANDOFF.md",
+        "sha": "80b904af5071d5e153ce72230738cd5b82858b84",
+        "status": "added",
+        "additions": 69,
+        "deletions": 0,
+        "changes": 69
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/PUBLICATION-MANIFEST.json",
+        "sha": "b635d900cd6f5f18ed145d44971e98828fd44488",
+        "status": "added",
+        "additions": 977,
+        "deletions": 0,
+        "changes": 977
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/complete.patch",
+        "sha": "e47c72a094decbf07a6442cb3d6df772d22654f6",
+        "status": "added",
+        "additions": 2123,
+        "deletions": 0,
+        "changes": 2123
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt",
+        "sha": "bee2e339ed4ba337b6619f3de1f3f8a468fc372b",
+        "status": "added",
+        "additions": 725,
+        "deletions": 0,
+        "changes": 725
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt",
+        "sha": "9aa0b7eb894a0d709b4873cebd1b120ff6a209aa",
+        "status": "added",
+        "additions": 725,
+        "deletions": 0,
+        "changes": 725
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt",
+        "sha": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8",
+        "status": "added",
+        "additions": 489,
+        "deletions": 0,
+        "changes": 489
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt",
+        "sha": "311814305139a0be1d3f52f59835b8810e51de8e",
+        "status": "added",
+        "additions": 391,
+        "deletions": 0,
+        "changes": 391
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt",
+        "sha": "13f808e8b5041e062451e15bd3f77432630c5a06",
+        "status": "added",
+        "additions": 154,
+        "deletions": 0,
+        "changes": 154
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt",
+        "sha": "840e5607bda4251e6e62d5ada8573b1bac584859",
+        "status": "added",
+        "additions": 134,
+        "deletions": 0,
+        "changes": 134
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt",
+        "sha": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "added",
+        "additions": 473,
+        "deletions": 0,
+        "changes": 473
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt",
+        "sha": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+        "status": "added",
+        "additions": 443,
+        "deletions": 0,
+        "changes": 443
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt",
+        "sha": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "added",
+        "additions": 64,
+        "deletions": 0,
+        "changes": 64
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt",
+        "sha": "2bb15622053039562aab716f9afce410071afaf3",
+        "status": "added",
+        "additions": 63,
+        "deletions": 0,
+        "changes": 63
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/manifest.json",
+        "sha": "0168dea1d54dccc7ab41d62905a984e4424e3224",
+        "status": "added",
+        "additions": 257,
+        "deletions": 0,
+        "changes": 257
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt",
+        "sha": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "added",
+        "additions": 305,
+        "deletions": 0,
+        "changes": 305
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt",
+        "sha": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+        "status": "added",
+        "additions": 212,
+        "deletions": 0,
+        "changes": 212
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt",
+        "sha": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "added",
+        "additions": 47,
+        "deletions": 0,
+        "changes": 47
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt",
+        "sha": "c729de5019c0756b4191a6674a38a523f1768683",
+        "status": "added",
+        "additions": 44,
+        "deletions": 0,
+        "changes": 44
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt",
+        "sha": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+        "status": "added",
+        "additions": 216,
+        "deletions": 0,
+        "changes": 216
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts.postimage.txt",
+        "sha": "cd63e19210c01d7251e562ef135b554982a24be2",
+        "status": "added",
+        "additions": 303,
+        "deletions": 0,
+        "changes": 303
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt",
+        "sha": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added",
+        "additions": 108,
+        "deletions": 0,
+        "changes": 108
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts.postimage.txt",
+        "sha": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+        "status": "added",
+        "additions": 109,
+        "deletions": 0,
+        "changes": 109
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt",
+        "sha": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added",
+        "additions": 142,
+        "deletions": 0,
+        "changes": 142
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt",
+        "sha": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added",
+        "additions": 181,
+        "deletions": 0,
+        "changes": 181
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt",
+        "sha": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+        "status": "added",
+        "additions": 161,
+        "deletions": 0,
+        "changes": 161
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt",
+        "sha": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+        "status": "added",
+        "additions": 177,
+        "deletions": 0,
+        "changes": 177
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-02/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt",
+        "sha": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+        "status": "added",
+        "additions": 173,
+        "deletions": 0,
+        "changes": 173
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/complete.patch",
+        "sha": "bf64898d90e03e232344b820a22b0285f5c99bac",
+        "status": "added",
+        "additions": 2287,
+        "deletions": 0,
+        "changes": 2287
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt",
+        "sha": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+        "status": "added",
+        "additions": 724,
+        "deletions": 0,
+        "changes": 724
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt",
+        "sha": "0181267b67b74a8df338999ddb7745cfee42bb29",
+        "status": "added",
+        "additions": 724,
+        "deletions": 0,
+        "changes": 724
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt",
+        "sha": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+        "status": "added",
+        "additions": 488,
+        "deletions": 0,
+        "changes": 488
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt",
+        "sha": "3061f529e1417ba29f9976c3f132c1a08ead0742",
+        "status": "added",
+        "additions": 390,
+        "deletions": 0,
+        "changes": 390
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt",
+        "sha": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+        "status": "added",
+        "additions": 153,
+        "deletions": 0,
+        "changes": 153
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt",
+        "sha": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+        "status": "added",
+        "additions": 133,
+        "deletions": 0,
+        "changes": 133
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt",
+        "sha": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt",
+        "sha": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt",
+        "sha": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt",
+        "sha": "2bb15622053039562aab716f9afce410071afaf3",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/manifest.json",
+        "sha": "260d35a2388edb58aaf8cbfb2983a798fe1adcbe",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt",
+        "sha": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt",
+        "sha": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt",
+        "sha": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt",
+        "sha": "c729de5019c0756b4191a6674a38a523f1768683",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt",
+        "sha": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts.postimage.txt",
+        "sha": "cd63e19210c01d7251e562ef135b554982a24be2",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt",
+        "sha": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts.postimage.txt",
+        "sha": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt",
+        "sha": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt",
+        "sha": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt",
+        "sha": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt",
+        "sha": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt",
+        "sha": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/attempt-03/source/packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts.postimage.txt",
+        "sha": "07a62a71e797278803b8bd3a9308f8f751a69196",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/complete.patch",
+        "sha": "6970df1e09e2822395295943fcd9b369b50e255b",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/apps/cli/src/sucafina-product/business-services.ts.postimage.txt",
+        "sha": "bee2e339ed4ba337b6619f3de1f3f8a468fc372b",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/apps/cli/src/sucafina-product/business-services.ts.preimage.txt",
+        "sha": "9aa0b7eb894a0d709b4873cebd1b120ff6a209aa",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.postimage.txt",
+        "sha": "df27b1b8cfe195e2bc31cebd7292d627db85d0f8",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/apps/cli/src/sucafina-product/dashboard-decisions.ts.preimage.txt",
+        "sha": "311814305139a0be1d3f52f59835b8810e51de8e",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.postimage.txt",
+        "sha": "13f808e8b5041e062451e15bd3f77432630c5a06",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/apps/cli/src/sucafina-product/dashboard-http.ts.preimage.txt",
+        "sha": "840e5607bda4251e6e62d5ada8573b1bac584859",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.postimage.txt",
+        "sha": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts.preimage.txt",
+        "sha": "06a4f77b691aa921fde3eee2c70f892fa1d99f41",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/packages/app-shell/e2e/tsconfig.json.postimage.txt",
+        "sha": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/external-for60/packages/app-shell/e2e/tsconfig.json.preimage.txt",
+        "sha": "2bb15622053039562aab716f9afce410071afaf3",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/manifest.json",
+        "sha": "10e8159ee4e2c9f9f4a5b52c360e8d9df8d0c5e3",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/preimage-erratum-W4.json",
+        "sha": "1d509a2d3dd8e4a69dd0e95d64bdcf3ae8292283",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.postimage.txt",
+        "sha": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts.preimage.txt",
+        "sha": "562cdca31a843ad893bc5f31eab039c55e7c9baa",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.postimage.txt",
+        "sha": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/modules/sucafina/Sucafinav1/product/dashboard/signals.ts.preimage.txt",
+        "sha": "c729de5019c0756b4191a6674a38a523f1768683",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts.postimage.txt",
+        "sha": "8d1a3e412156295578d7f277d2e3d95c4f8bbd3b",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts.postimage.txt",
+        "sha": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts.postimage.txt",
+        "sha": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts.postimage.txt",
+        "sha": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts.postimage.txt",
+        "sha": "99c62eecfa40450fe795251913a3062814a0faf4",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts.postimage.txt",
+        "sha": "7b78c999c1f96b758c2b2cc71b4c3f45b6df6842",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/delivery/source/packages/app-shell/e2e/sucafina/dashboard-installed/support.ts.postimage.txt",
+        "sha": "1187e2b63475c763f37c75885e43366d7e835305",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/diagnostics/transport-probe-W3.ts.postimage.txt",
+        "sha": "07a62a71e797278803b8bd3a9308f8f751a69196",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/findings/F05-installed-post-no-response-W2.json",
+        "sha": "19f42d4ee3cf2ca7ecc4ea165c05dbad4ca75f1d",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/findings/F05-transport-diagnostic-W3.json",
+        "sha": "03efac0a366681fd83d0590b668b9ce426571231",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/proposals/installation52/bun-eof-hypothesis.json",
+        "sha": "8de60cbf8e29d5edfcda9d1cf383bf36318a6605",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/proposals/installation52/installation-node-stream.patch",
+        "sha": "f0a26a051b29a482e46d763f841b098d080c4211",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/proposals/installation52/installation.ts.postimage.txt",
+        "sha": "dea81619aa870b238a6ad004397cf47b1c92457d",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/proposals/installation52/installation.ts.preimage.txt",
+        "sha": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/proposals/installation52/manifest.json",
+        "sha": "eb417b7a9a52cf9b541db42da52a8a7ce332b5fa",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/proposals/installation52/rationale.json",
+        "sha": "ddbe8f553cdc48d16d3ee722239b790a407486ca",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/criteria-review.json",
+        "sha": "82da472c93ee0e561bd5504cd0c1a6755fadd64b",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/final-dependency-closure-W4.json",
+        "sha": "a92e4c714392ca9a357da51b7994b8825308ad92",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/mission67-criteria-map.json",
+        "sha": "c35fc9125a1a934608324068ff8320a34fff6f0a",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/mission67-criteria-results-W2.json",
+        "sha": "9c798b1a239051a01c86d105ac5e7faf427f8a62",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/mission67-criteria-results-W4.json",
+        "sha": "156e4f7d803eeddaa043d6051314b2e1a6a4aa70",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/observer-consumer-cold-review.json",
+        "sha": "6c283ff793868527881377564e533a913617dc52",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/producer-cold-review.json",
+        "sha": "63905cbaf253486ea0f203256eabfeeeb96f4586",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/target-reconciliation-terminal.json",
+        "sha": "2aab844b0baf5ee8a40fbadbe3779dfba47bf246",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/terminal-ack-mirror-readback.json",
+        "sha": "bb78ab70e27c0775c75d4a8c98cba286ff29638f",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/review/transport-owner-proposal-review.json",
+        "sha": "5b0fd06cbc26f6fe03d2f81f07878deec41452e5",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/W1-W2-product-blob-equality.json",
+        "sha": "3abbb288344a76e2de2937b759172d9114170223",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/bun-request.json",
+        "sha": "ca5060602d84e8f84a4e03df416a3ca1b4356315",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/compiler45-request-W2.json",
+        "sha": "f79364a9a3252a15e79ed1d1f7651f61c9a5c532",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/compiler45-request-W4.json",
+        "sha": "b180c3c86fb542aab82afe54469c611a65a60f08",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/composition-W1.json",
+        "sha": "f09b799ed826504dfe60ce0403707645b6feaf59",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/composition-W2.json",
+        "sha": "731b90162000aa043ad4148eefd5678f98c4efb6",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/composition-W3.json",
+        "sha": "d3c8a1c7e9620ceb1c40c7d545e67741f9719045",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/composition-W4.json",
+        "sha": "6ecc2d03a74b1a31b7c50b058361d1b65095cb2c",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/plan-W2.json",
+        "sha": "696a4b0c4bc4addffdb43417bb8bb028e6996d57",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/plan-W3.json",
+        "sha": "b3efe09c654bfc84c38a6459322b7e63bedb86a4",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/plan.json",
+        "sha": "732ef0d240c6204be7a79a3081fed6546998bdd8",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/playwright-request.json",
+        "sha": "70377d727e7b8a0c84d42b1e23e623a9a610a437",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-01-excerpt.txt",
+        "sha": "90d89c99ce634ade2b762532fca0addc8d1d682b",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-01-request.json",
+        "sha": "ca5060602d84e8f84a4e03df416a3ca1b4356315",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-01.json",
+        "sha": "e89834d2338ffd2767ba32e59027bf33828dd494",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-02-observed-tests.json",
+        "sha": "d07a8170803d902141f5d3a6f0b9687ecb01021c",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-02-request.json",
+        "sha": "70377d727e7b8a0c84d42b1e23e623a9a610a437",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-02.json",
+        "sha": "582173222d8a3aa303749067efe09eb27f8cdbd8",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-03-excerpt.txt",
+        "sha": "ed2034e459ce7489ac10c71af3295d81db4eb4de",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-03-request.json",
+        "sha": "b813f69318c75702ba939e7b74c94326f56913b3",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-03.json",
+        "sha": "72b487eb8ff1c7ac17699e50924d7827d9912408",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-04-request.json",
+        "sha": "70377d727e7b8a0c84d42b1e23e623a9a610a437",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-04.json",
+        "sha": "6515cbbdb20dd9c30cf20794fbd899083df1d623",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-05-request.json",
+        "sha": "16f026e4f9ca9b28511c9a20dca7e4b1cdacecdf",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-05.json",
+        "sha": "3c25ed24f60d60ecc9236da47923723b10533707",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-06-excerpt.txt",
+        "sha": "322933be5009243d3ddc116cfc6030bc2a38c0c1",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-06-request.json",
+        "sha": "b813f69318c75702ba939e7b74c94326f56913b3",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/run-06.json",
+        "sha": "57ec0f4c9f27f3f258b2e4865b9b48b7f8e26adc",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/terminal-ledger.json",
+        "sha": "6dc3c7af3f954d2aed42f21afbb4b1437d716c2b",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/dashboard67/validation/w2-delta.json",
+        "sha": "541f3308edb22db18b5cfd776f95f4e76cca524c",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/verification/C40-readback.json",
+        "sha": "817707c276e8ce6b22d8c4f2ee82d41279615cda",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/verification/C41-dashboard67-hashes.json",
+        "sha": "a88e687e142e87febb98c0a6646ec687171226f9",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/verification/C41-dashboard67-modes.json",
+        "sha": "21494b41f4f07914d9aa48ecdc84ecc2ae70c099",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "sha": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+        "sha": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "sha": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+        "sha": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+        "sha": "cd63e19210c01d7251e562ef135b554982a24be2",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+        "sha": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+        "sha": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+        "sha": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+        "sha": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+        "sha": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+        "sha": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+        "sha": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts",
+        "sha": "07a62a71e797278803b8bd3a9308f8f751a69196",
+        "status": "added",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "sha": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "modified",
+        "additions": 0,
+        "deletions": 0,
+        "changes": 0
+      }
+    ],
+    "material_files": [
+      {
+        "path": "apps/cli/src/sucafina-product/business-services.ts",
+        "sha": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+        "status": "modified"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+        "sha": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+        "status": "modified"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "sha": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/confirmation.ts",
+        "sha": "f90bf0c0d177a04d3fec2a6840b11de079b9def0",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/dashboard/signals.ts",
+        "sha": "a90aa78a30feadc5ac57e2def9aba69617884b9f",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/interface/dashboard-workbench.ts",
+        "sha": "f5551f84a43dd5b29d99d2c34fcb3d1f8da9c778",
+        "status": "modified"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/confirmation.test.ts",
+        "sha": "192bb0d5979ef4424c45b80ab9ad9efddf7e4360",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/consumer-read.test.ts",
+        "sha": "cd63e19210c01d7251e562ef135b554982a24be2",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/fixture.ts",
+        "sha": "d37f9ff2166bc339aa62c4e4da53755edc0db11a",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/ownhost-fixture.ts",
+        "sha": "d5ffdc24f23b20557613383d38cc03155e5e68c4",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/signals.test.ts",
+        "sha": "7f1d3185262aa229cc8c7dd61e458d5823d289ab",
+        "status": "added"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/dashboard-installed-closure/source-continuity.test.ts",
+        "sha": "70146e814c63ccad0bdb780240c3d3f8f3a18c6e",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/confirmation-access.spec.ts",
+        "sha": "27b475d2c1f2864a90d6f38ffcff8c2cc9e85a3d",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/records-signals-history.spec.ts",
+        "sha": "5b2371c4048b38cefdaa252b17cd60191b00fddd",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/support.ts",
+        "sha": "c152f7ecb92cd814da8fbe221d7d87ae448f622f",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/dashboard-installed/transport-probe.spec.ts",
+        "sha": "07a62a71e797278803b8bd3a9308f8f751a69196",
+        "status": "added"
+      },
+      {
+        "path": "packages/app-shell/e2e/tsconfig.json",
+        "sha": "dbf85b5fd1b9ae2eae751c2cacd1f040717e8d7b",
+        "status": "modified"
+      }
+    ],
+    "scope": "Reconciliation metadata only. Unrelated Dashboard67 source/receipt patches are not copied into75. Full immutable comparison remains available at GitHub."
+  }
+}

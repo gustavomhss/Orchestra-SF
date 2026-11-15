@@ -1,0 +1,133 @@
+{
+  "schema": "sf2h.operations75.terminal-authority.v1",
+  "mission": 75,
+  "state": "ENDED",
+  "epoch": "operations-finish-browser75",
+  "campaign": "sf2h-integral-20261112",
+  "recorded_at_utc": "2026-11-15 04:28:02 UTC",
+  "effective_on": "Atomic expected-head CAS publication of the commit containing this receipt",
+  "source": {
+    "branch": "operations-scanner-proof",
+    "pr": 78,
+    "ack": "55c309e3b39f11a09c1796afc755535d4eb70295",
+    "material_work": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "material_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+    "pre_terminal_head": "c1cb7e6d9d16bcbb92fb25f5f42de342b5a554ba",
+    "pre_terminal_tree": "74908b108978b39bfc296ba18997db4f434910b0",
+    "terminal_delta": "Receipt namespace only; no product, test, workflow or script change",
+    "terminal_commit_resolution": "Immutable commit/tree carrying this receipt; exact GitHub MCP CAS/readback IDs are published in final PR78/PR65 handoff comments"
+  },
+  "writer": {
+    "root": "75 root",
+    "instance": "operations75-68b6bb3034b2",
+    "configured_model": "GPT-6 Astra Pro",
+    "effective_runtime_model_id": null,
+    "platform_session_id": null,
+    "not_exposed": "Effective runtime model/session identifiers are not exposed by this environment"
+  },
+  "material": {
+    "paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/src/screen-shell.ts",
+        "postimage_blob": "f1573e02df562db7569f53931d7a4524a108ad4b"
+      },
+      {
+        "path": ".github/workflows/sf-operations-scanner.yml",
+        "postimage_blob": "6ebcdcb66802627f5af8f13d2c35989bb7719337"
+      },
+      {
+        "path": "script/sf2h/operations-scanner/README.md",
+        "postimage_blob": "83f0cb7243387ca045e5a7db6367f5a579f01d2f"
+      },
+      {
+        "path": "script/sf2h/operations-scanner/request.mjs",
+        "postimage_blob": "f9c4284774bec233a4ea92e70f1646709a234e16"
+      },
+      {
+        "path": "script/sf2h/operations-scanner/setup.sh",
+        "postimage_blob": "ab355db12fb384949f433f6d2d15445f3dcd2dfa"
+      },
+      {
+        "path": "script/sf2h/operations-scanner/service.mjs",
+        "postimage_blob": "f7618e0097b78679f8c34749e93474c8dc93641b"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/real-malformed.check.ts",
+        "postimage_blob": "d44a80b24c4c098c0dbbc2c466e7d3e091961980"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/operations-installed-finish/private-admission.check.ts",
+        "postimage_blob": "b241896293521d42c1b86d82d193328d48f0bcd7"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/operations-support/installation.ts",
+        "postimage_blob": "5cac657f5f9de9b6de9a9c63dc45c67886724b84"
+      }
+    ],
+    "complete_patch": "integration/complete75.patch",
+    "complete_patch_sha256": "672747464f84b869363dbc0a869f31cc051ef438e931b2d48e3c72ad0330a6e0",
+    "already_consumed_by71": true,
+    "consumed_at": "eb58cd9e9f8125d879bff260d6d794264b9dc53a"
+  },
+  "results": {
+    "source_controls": {
+      "work": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "run": 43672349552,
+      "job": 132684956460,
+      "result": "7PASS_0FAIL_0SKIP_150expects"
+    },
+    "original_journeys": {
+      "work": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+      "snapshot": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "run": 43675784039,
+      "job": 132695512980,
+      "result": "5PASS_0FAIL_0SKIP_0FLAKY",
+      "closed_failures": [
+        "OP-PROC-02",
+        "OP-PROC-03",
+        "OP-IMPORT-01",
+        "OP-DOC-01"
+      ],
+      "preserved": "OP-PROC-01"
+    },
+    "later_HEAD_result_transfer": false
+  },
+  "resource_handoff": {
+    "from": 75,
+    "to": 71,
+    "scope": "Custody/maintenance of the existing campaign-only ClamD Actions resource after75 terminal",
+    "basis": "C40 intake recorded75 as actual CI owner until final terminal handoff; D3 authority already names71 as terminal maintenance recipient",
+    "integration_owner": 71,
+    "generic_compiler_owner": 45,
+    "final_acceptance_owner": "S0",
+    "execution_authority": "71 remains integration-only; future tests require the authorized executor and existing S0 queue, not automatic test permission",
+    "inflight_owned_runs": [],
+    "live_owned_daemons": 0,
+    "proof": "ci/FINAL-QUEUE.json and R1/R2/R3/R4 cleanup records",
+    "new_run_requested_by_terminal": false
+  },
+  "foreign_writes": {
+    "sf2_stack": 0,
+    "runtime_procurement_ts": 0,
+    "generic45_lane": 0,
+    "Azure": 0,
+    "global_service_installation": 0
+  },
+  "child_agents": {
+    "/root/clamd_ci": "COMPLETED_DOCUMENTARY_REVIEW_NO_REMOTE_WRITES",
+    "/root/normative_review": "COMPLETED_INDEPENDENT_REVIEW_NO_REMOTE_WRITES",
+    "/root/operations_diagnosis": "COMPLETED_FINAL_CRITERIA_CHECKPOINT_NO_REMOTE_WRITES"
+  },
+  "future_material_writes": "Ended. New explicit authority required; no implicit successor/revival.",
+  "handoff": "HANDOFF-FINAL.md",
+  "remaining": {
+    "compiler45": "REQUESTED_NOT_RUN",
+    "full_251_criteria": "NOT_CLOSED",
+    "C06_broad": "NOT_CLOSED",
+    "document_formats_OCR": "NOT_EXERCISED",
+    "post_accepting_scan_revocation73": "NOT_EXERCISED",
+    "native_provider_Omni": "NOT_ESTABLISHED",
+    "global_campaign": "HELD_FOR_S0"
+  },
+  "GLOBAL_RELEASE": false
+}

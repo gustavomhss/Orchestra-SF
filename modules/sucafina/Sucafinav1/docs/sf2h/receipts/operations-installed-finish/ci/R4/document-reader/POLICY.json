@@ -1,0 +1,183 @@
+{
+  "schema": "operations75.documentary-policy.v1",
+  "request_sha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/operations.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "ids": [
+    "OP-PROC-01",
+    "OP-PROC-02",
+    "OP-PROC-03",
+    "OP-IMPORT-01",
+    "OP-DOC-01"
+  ],
+  "budgets": {
+    "job_minutes": 45,
+    "test_ms": 60000,
+    "expect_ms": 10000,
+    "webserver_ms": 120000,
+    "fixture_webserver_ms": 60000,
+    "workers": 1,
+    "retries": 0,
+    "repeat_each": 1
+  },
+  "playwright_version": "1.59.1",
+  "source_files": [
+    {
+      "path": "packages/app-shell/playwright.config.ts",
+      "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "git_blob": "d935c68f5b996c0e53195ec832b969c217fcf858",
+      "sha256": "8f324ab055ef943afc2e1deb1f7a3c9bb809e9530583e5641f3586bfc9d4d4b5"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "git_blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "sha256": "492f3145a61e5469f43618270701d2ba1972bb82e271633dc5f952557de3dc66"
+    },
+    {
+      "path": "packages/app-shell/e2e/utils/flaky-reporter.ts",
+      "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "git_blob": "be58ae28f50a56ced43bfa934472a7303437ca13",
+      "sha256": "57ae50a10e5a26c8859558f5318360c410e5acfb592db6cfa7775bdbd8ea3d05"
+    },
+    {
+      "path": "packages/app-shell/package.json",
+      "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "git_blob": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+      "sha256": "98130221e3c0d9fab48c134cfd347894a19fc4b5c075c92d7c080362904bd3f4"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "git_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "sha256": "4097286f73438bf767cf47561fc03e29338eef8ffd48149b2dcba0b3323fa4cc"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "git_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "sha256": "2a441c5a25e569ba78797493b410cefd19fa5484f1dfca666a4809d2b4381512"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+      "ref": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "git_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "sha256": "29c9dcd28d0de5726770feac79be3f11652c349de2cbac09e8517307663f76fb"
+    },
+    {
+      "path": "package.json",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "git_blob": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "sha256": "6e5c01f798f19ec5d6f3103f611cc9e57d4430f8da15c2fa49701a4c1d1509c8"
+    },
+    {
+      "path": ".github/workflows/sf-operations-scanner.yml",
+      "ref": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "git_blob": "6ebcdcb66802627f5af8f13d2c35989bb7719337",
+      "sha256": "91adf931b72c3a88a0252b9010c835fceeec1abcb609cfce26c9a414da9c1189"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/request.mjs",
+      "ref": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "git_blob": "f9c4284774bec233a4ea92e70f1646709a234e16",
+      "sha256": "d6cea591f1045391d9b15bc514d6c3b60e69294f9a8d8bc8ea2a4d94f5ed870e"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/setup.sh",
+      "ref": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "git_blob": "ab355db12fb384949f433f6d2d15445f3dcd2dfa",
+      "sha256": "43f675022aa15555bbf234417b0a25431a925825197fb19354211f52006c8231"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/service.mjs",
+      "ref": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "git_blob": "f7618e0097b78679f8c34749e93474c8dc93641b",
+      "sha256": "3f907fd08f4afdb059b125a451f6b6ca473a326bb41cbbbbba53a7de1c855eaa"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/tools.lock.json",
+      "ref": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "git_blob": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+      "sha256": "e3651a4fdc1348f7653660a62c8a8963bd34ae6044b3a81be8a89beb6715d9b6"
+    },
+    {
+      "path": "script/sf2h/operations-scanner/cleanup.sh",
+      "ref": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "git_blob": "034be3399187c8b8683c166987795f210a7421c2",
+      "sha256": "089bf65246458a859eedecb4a57aaf4ef902ba7bbbf5cf86dd37a927d8854d12"
+    }
+  ],
+  "scanner_lock": {
+    "schema": "sf2h.operations63.scanner-tools.v1",
+    "version": "1.5.4",
+    "platform": "linux-x86_64",
+    "asset": {
+      "name": "clamav-1.5.4.linux.x86_64.deb",
+      "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+      "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+      "size": 105819396,
+      "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+      "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
+    },
+    "source_commit": "fa59fca15872bb8a914ba4c68188bcc8a502cbdf",
+    "source_tag_object": "2cbd122d3a401b9bded52ef6bf201bff605af474",
+    "source_files": {
+      "CMakeLists.txt": "7ebb1c3834057707042ab5564689f3807a47f0e6",
+      "INSTALL.md": "5fc4bf7116c7a4183714a05eb88a57d8c37c20b8",
+      "clamd/CMakeLists.txt": "0ad10506520625052b6f219daad5064145c6de8c",
+      "freshclam/CMakeLists.txt": "1aad53091e712a24052e937945bc8e5306b4b3ac",
+      "etc/clamd.conf.sample": "73be60eae8a266743e75b668dd606eb20436f067",
+      "etc/freshclam.conf.sample": "cc437ebf4a97884cfb7d3395ec213181a14e0de3"
+    },
+    "relocation": {
+      "prefix": "usr/local",
+      "clamd": "sbin/clamd",
+      "freshclam": "bin/freshclam",
+      "certificates": "etc/certs",
+      "library_paths": [
+        "lib",
+        "lib64"
+      ],
+      "note": "Upstream defaults to /usr/local and build-time RPATH. Setup uses process-scoped LD_LIBRARY_PATH, explicit database/certificate/config paths, and rejects missing dynamic dependencies or relocated tools that cannot report the pinned version. No claim that the unexecuted package has already relocated successfully."
+    },
+    "database": {
+      "mirror": "database.clamav.net",
+      "required": [
+        "main",
+        "daily",
+        "bytecode"
+      ],
+      "official_only": true,
+      "synthetic_database_allowed": false
+    },
+    "services": {
+      "main": {
+        "host": "127.0.0.1",
+        "port": 3310,
+        "stream_max_length": 16777216
+      },
+      "error": {
+        "host": "127.0.0.1",
+        "port": 3311,
+        "stream_max_length": 1024
+      }
+    },
+    "bounds_seconds": {
+      "download": 180,
+      "freshclam": 300,
+      "readiness": 180,
+      "cleanup": 10
+    }
+  }
+}

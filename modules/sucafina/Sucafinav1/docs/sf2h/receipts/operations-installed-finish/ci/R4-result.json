@@ -1,0 +1,567 @@
+{
+  "schema": "sf2h.operations75.journeys-result.v1",
+  "mission": 75,
+  "status": "FIVE_ORIGINAL_JOURNEYS_PASS_AT_C40",
+  "historical_failures_closed": [
+    "OP-PROC-02",
+    "OP-PROC-03",
+    "OP-IMPORT-01",
+    "OP-DOC-01"
+  ],
+  "original_pass_preserved": "OP-PROC-01",
+  "work": {
+    "label": "C40",
+    "sha": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "tree": "b325894e636ae31db80886bb9ca2add1ce4ec126",
+    "integrator": 71
+  },
+  "snapshot": {
+    "sha": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+    "tree": "97cfe87165038481ffb1d5b3ad98fa673a2fafcc",
+    "parent": "eb58cd9e9f8125d879bff260d6d794264b9dc53a",
+    "exclusive_delta": ".ci-run.json",
+    "request_blob": "6b6293029dbeb40406b192565fb344830ed6df5f",
+    "request_body_sha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717"
+  },
+  "source75": {
+    "material": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+    "frozen_authority": "c1cb7e6d9d16bcbb92fb25f5f42de342b5a554ba",
+    "consumed_material_paths": 9
+  },
+  "source73": {
+    "material": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "terminal": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+    "consumed_by71_at": "bc5eb1e0cead17254a95770e437f6fda826a66fc",
+    "complete_unit_paths": 6,
+    "procurement_writer": 73,
+    "procurement_writes_by75": 0
+  },
+  "actions": {
+    "run": 43675784039,
+    "job": 132695512980,
+    "attempt": 1,
+    "branch": "sf-ops75-eb58cd9e9f81je4201f174def1",
+    "workflow": ".github/workflows/sf-operations-scanner.yml",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "started_at": "2026-11-15T04:13:09Z",
+    "updated_at": "2026-11-15T04:17:04Z",
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675784039",
+    "job_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675784039/job/132695512980",
+    "steps": [
+      {
+        "name": "Set up job",
+        "conclusion": "success"
+      },
+      {
+        "name": "Checkout exact request snapshot",
+        "conclusion": "success"
+      },
+      {
+        "name": "Setup request validator Node",
+        "conclusion": "success"
+      },
+      {
+        "name": "Validate campaign, source and exact selection",
+        "conclusion": "success"
+      },
+      {
+        "name": "Setup Bun using the existing action",
+        "conclusion": "success"
+      },
+      {
+        "name": "ripgrep",
+        "conclusion": "success"
+      },
+      {
+        "name": "omni binaries",
+        "conclusion": "success"
+      },
+      {
+        "name": "Setup Playwright Node",
+        "conclusion": "success"
+      },
+      {
+        "name": "Install Chromium",
+        "conclusion": "success"
+      },
+      {
+        "name": "Prepare ephemeral real ClamD",
+        "conclusion": "success"
+      },
+      {
+        "name": "Run tests",
+        "conclusion": "success"
+      },
+      {
+        "name": "Verify the existing Omni verdict for controls",
+        "conclusion": "skipped"
+      },
+      {
+        "name": "Stop only this job's ClamD processes",
+        "conclusion": "success"
+      },
+      {
+        "name": "Upload exact selection and scanner evidence",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Setup Playwright Node",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Setup Bun using the existing action",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Setup request validator Node",
+        "conclusion": "success"
+      },
+      {
+        "name": "Post Checkout exact request snapshot",
+        "conclusion": "success"
+      },
+      {
+        "name": "Complete job",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "selection": {
+    "file": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+    "original_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+    "ids_actions_assertions_unchanged": true,
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "test_timeout_ms": 60000,
+    "expect_timeout_ms": 10000,
+    "project": "chromium",
+    "playwright": "1.59.1",
+    "timeouts_basis": "runtime/list JSON for60000ms; unchanged base configuration blobd935c68f5b996c0e53195ec832b969c217fcf858 for10000ms, because Playwright JSON omits expect/use"
+  },
+  "stats": {
+    "startTime": "2026-11-15T04:15:18.016Z",
+    "duration": 97656.48999999999,
+    "expected": 5,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "cases": [
+    {
+      "title": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "ok": true,
+      "file": "sucafina/operations.spec.ts",
+      "line": 13,
+      "timeout": 60000,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "annotations": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.01; WP04.T01.INV.01; WP04.T01.CMP.02"
+        }
+      ],
+      "projectName": "chromium",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 1990,
+          "retry": 0,
+          "workerIndex": 0,
+          "parallelIndex": 0,
+          "startTime": "2026-11-15T04:16:00.767Z",
+          "errors": [],
+          "attachments": [
+            {
+              "name": "operations-j04-comparison.json",
+              "contentType": "application/json",
+              "decodedBytes": 571,
+              "sha256": "6f809138e48fdd168d9a19b34e2096d044ca461215a1e44d2004b0ef1bec27bb",
+              "originalEncoding": "base64 body in playwright-runtime.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "ok": true,
+      "file": "sucafina/operations.spec.ts",
+      "line": 18,
+      "timeout": 60000,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "annotations": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.02; WP04.T03.CHK.03; WP04.T03.INV.02"
+        }
+      ],
+      "projectName": "chromium",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 10968,
+          "retry": 0,
+          "workerIndex": 0,
+          "parallelIndex": 0,
+          "startTime": "2026-11-15T04:16:03.030Z",
+          "errors": [],
+          "attachments": [
+            {
+              "name": "operations-sourcing-frozen-fx.json",
+              "contentType": "application/json",
+              "decodedBytes": 1002,
+              "sha256": "59f51e475f3783e1b4224236719c1a4431c84696d64d4b97dd9cf4140420ace0",
+              "originalEncoding": "base64 body in playwright-runtime.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "ok": true,
+      "file": "sucafina/operations.spec.ts",
+      "line": 23,
+      "timeout": 60000,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "annotations": [
+        {
+          "type": "criteria-scope",
+          "description": "WP04.T03.CHK.03; WP04.T03.CMP.01; WP04.CMP.02"
+        }
+      ],
+      "projectName": "chromium",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 10367,
+          "retry": 0,
+          "workerIndex": 0,
+          "parallelIndex": 0,
+          "startTime": "2026-11-15T04:16:14.010Z",
+          "errors": [],
+          "attachments": [
+            {
+              "name": "operations-missing-fx-refusal.json",
+              "contentType": "application/json",
+              "decodedBytes": 1393,
+              "sha256": "2f54c1ebdd8037c8e491615218f2415bc23c6a9baa674fef3c69df8cd583dab9",
+              "originalEncoding": "base64 body in playwright-runtime.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "ok": true,
+      "file": "sucafina/operations.spec.ts",
+      "line": 28,
+      "timeout": 60000,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "annotations": [
+        {
+          "type": "criteria-scope",
+          "description": "WP06.T01.INV.01; WP06.T01.QLT.01; WP06.T02.INV.01; WP06.T02.INV.02; WP06.T02.QLT.18; WP06.T03.CHK.04; WP06.T03.INV.01; WP06.T03.INV.03; WP06.T03.QLT.02; WP06.T03.SUC.02; WP06.T04.CHK.02; WP06.T04.INV.01; WP06.T04.QLT.01"
+        }
+      ],
+      "projectName": "chromium",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 7751,
+          "retry": 0,
+          "workerIndex": 0,
+          "parallelIndex": 0,
+          "startTime": "2026-11-15T04:16:24.388Z",
+          "errors": [],
+          "attachments": [
+            {
+              "name": "operations-import-real-receipt.json",
+              "contentType": "application/json",
+              "decodedBytes": 1023320,
+              "sha256": "fc77d1f173064d4364d95fe87fd12f654d5683f485591575a58741b50b0104cc",
+              "originalEncoding": "base64 body in playwright-runtime.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "ok": true,
+      "file": "sucafina/operations.spec.ts",
+      "line": 33,
+      "timeout": 60000,
+      "expectedStatus": "passed",
+      "status": "expected",
+      "annotations": [
+        {
+          "type": "criteria-scope",
+          "description": "WP06.T05.CHK.02; WP06.T05.CHK.19; WP06.T05.INV.01; WP06.T05.QLT.18; WP06.T05.QLT.19; WP06.T05.CMP.19; WP06.T05.SUC.19"
+        }
+      ],
+      "projectName": "chromium",
+      "results": [
+        {
+          "status": "passed",
+          "duration": 23384,
+          "retry": 0,
+          "workerIndex": 0,
+          "parallelIndex": 0,
+          "startTime": "2026-11-15T04:16:32.151Z",
+          "errors": [],
+          "attachments": [
+            {
+              "name": "operations-document-real-reference.json",
+              "contentType": "application/json",
+              "decodedBytes": 3194,
+              "sha256": "e1ba4fb8dea0844a2bf3333024dd6fad7919d27bbea9ab7b72b211a1afd35191",
+              "originalEncoding": "base64 body in playwright-runtime.json"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "scanner": {
+    "setup.json": {
+      "schema": "sf2h.operations63.scanner-setup.v1",
+      "status": "READY",
+      "root": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr",
+      "productSnapshot": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "runId": "43675784039",
+      "runAttempt": "1",
+      "branch": "sf-ops75-eb58cd9e9f81je4201f174def1",
+      "startedAt": "2026-11-15T04:14:54.509Z",
+      "syntheticDatabase": false,
+      "productQualification": "NOT_RUN",
+      "completedAt": "2026-11-15T04:15:15.515Z",
+      "services": {
+        "main": {
+          "port": 3310,
+          "ping": "PONG",
+          "version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+          "listen_inode": "25612"
+        },
+        "error": {
+          "port": 3311,
+          "ping": "PONG",
+          "version": "ClamAV 1.5.4/28183/Sat Nov 14 06:24:17 2026",
+          "listen_inode": "23949"
+        }
+      },
+      "controls": "PASS_DAEMON_ONLY"
+    },
+    "package.json": {
+      "source": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+      "expected": {
+        "name": "clamav-1.5.4.linux.x86_64.deb",
+        "url": "https://github.com/Cisco-Talos/clamav/releases/download/clamav-1.5.4/clamav-1.5.4.linux.x86_64.deb",
+        "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886",
+        "size": 105819396,
+        "metadata_source": "https://api.github.com/repos/Cisco-Talos/clamav/releases/tags/clamav-1.5.4",
+        "verification": "Official release metadata observed via GitHub MCP. Downloaded bytes and actual relocation remain mandatory hosted setup checks."
+      },
+      "actual": {
+        "bytes": 105819396,
+        "sha256": "28d6efc5b4423e7830c3559339552eb53870a9eac51ac4efb37d60530d329886"
+      }
+    },
+    "service.json": {
+      "run_id": "43675784039",
+      "run_attempt": "1",
+      "github_sha": "901dc9e2a70f2e89d5a4f0d2a768205a7252413e",
+      "work_directory": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr",
+      "main": {
+        "pid": 5148,
+        "port": 3310,
+        "host": "127.0.0.1",
+        "executable": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+        "config": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-main.conf",
+        "start_time": "13712",
+        "listen_inode": "25612"
+      },
+      "error": {
+        "pid": 5156,
+        "port": 3311,
+        "host": "127.0.0.1",
+        "executable": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+        "config": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-error.conf",
+        "start_time": "13725",
+        "listen_inode": "23949"
+      }
+    },
+    "databases.json": {
+      "origin": "database.clamav.net",
+      "freshclamCompleted": true,
+      "testDatabasesEnabled": true,
+      "officialDatabaseOnly": true,
+      "syntheticDatabase": false,
+      "files": [
+        {
+          "name": "bytecode.cvd",
+          "bytes": 281702,
+          "sha256": "6d4aa01f219e988060fc419f495d07f27e0cdf1a2cccc065971da922c76f7ffb"
+        },
+        {
+          "name": "daily.cvd",
+          "bytes": 23450445,
+          "sha256": "a99edfb87ac6246137214caa2b3f238297e02f376954f64096392d4b1e773731"
+        },
+        {
+          "name": "main.cvd",
+          "bytes": 89072577,
+          "sha256": "0b2182d229f46981ec8f535382222f7c9dfdd656b250ad47988b910a8d302365"
+        }
+      ]
+    },
+    "process-main.json": {
+      "pid": 5148,
+      "executable": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+      "startTime": "13712",
+      "arguments": [
+        "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+        "--foreground",
+        "--config-file=/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-main.conf"
+      ]
+    },
+    "process-error.json": {
+      "pid": 5156,
+      "executable": "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+      "startTime": "13725",
+      "arguments": [
+        "/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/root/usr/local/sbin/clamd",
+        "--foreground",
+        "--config-file=/home/runner/work/_temp/sf-operations75-43675784039-1.jmqZdr/clamd-error.conf"
+      ]
+    },
+    "daemon-controls.json": {
+      "scope": "Direct ClamD provisioning controls, not the product adapter or browser journeys",
+      "controls": [
+        {
+          "kind": "main",
+          "clean": "stream: OK",
+          "eicar": "stream: Eicar-Test-Signature FOUND",
+          "cleanAfter": "stream: OK"
+        },
+        {
+          "kind": "error",
+          "clean": "stream: OK",
+          "eicar": "stream: Eicar-Test-Signature FOUND",
+          "cleanAfter": "stream: OK"
+        }
+      ],
+      "sizeError": "INSTREAM size limit exceeded. ERROR"
+    },
+    "cleanup.json": {
+      "at": "2026-11-15T04:16:56.841Z",
+      "results": [
+        {
+          "kind": "main",
+          "pid": 5148,
+          "startTime": "13712",
+          "status": "STOPPED"
+        },
+        {
+          "kind": "error",
+          "pid": 5156,
+          "startTime": "13725",
+          "status": "STOPPED"
+        }
+      ],
+      "state": "STOPPED",
+      "evidencePreserved": true
+    },
+    "configuration.json": {
+      "services": {
+        "main": {
+          "host": "127.0.0.1",
+          "port": 3310,
+          "stream_max_length": 16777216
+        },
+        "error": {
+          "host": "127.0.0.1",
+          "port": 3311,
+          "stream_max_length": 1024
+        }
+      },
+      "files": [
+        {
+          "path": "freshclam.conf",
+          "sha256": "94f30a856b938d9c66a480ccbb5af9bd70a495b3e67fc637f01543bed34e386d"
+        },
+        {
+          "path": "clamd-main.conf",
+          "sha256": "3094d0905c8ebc9c61f37030e81bbd02b170731a66c939afc079448c4e372bc8"
+        },
+        {
+          "path": "clamd-error.conf",
+          "sha256": "aaa9fd1e7f76d5d094dfcdc9a634785a90c69c8fdec0a95ba4b969659210f96f"
+        }
+      ],
+      "processScopedLibraryPath": [
+        "root/usr/local/lib",
+        "root/usr/local/lib64"
+      ],
+      "credentialsUsed": false,
+      "globalInstallation": false
+    }
+  },
+  "signatures": {
+    "loaded_per_daemon": 3628275,
+    "daily": 28183,
+    "main": 63,
+    "bytecode": 339,
+    "source": "official database.clamav.net via FreshClam; TestDatabases enabled, official-only, both daemon logs verified"
+  },
+  "evidence": {
+    "artifact": {
+      "id": 14146162056,
+      "bytes": 319886,
+      "sha256": "11fd4542d0a29a1841a0a640b7100cf04a340b0948db60a13139c262898a8d21",
+      "git_blob": "569d25b96becba442c8ae185a1d04c7d315ffd7b",
+      "archive": "ci/R4/artifact.zip",
+      "index": "ci/R4/artifact-index.json"
+    },
+    "log": {
+      "path": "logs/R4.log.txt",
+      "bytes": 95152,
+      "sha256": "4f753a43f18835ac0a68e5b2962d29b394e4d1823039ce250e280490db6b5985",
+      "git_blob": "e8bad7ee7ab3e514ad56de6139313f03bef7b76b"
+    },
+    "document_read": {
+      "status": "ARTIFACT_DOCUMENTS_PASS",
+      "checks": 299,
+      "failures": 0,
+      "path": "ci/R4/document-read.json"
+    },
+    "intake": "integration/C40-readback39.json"
+  },
+  "distinctions": [
+    "The --list preflight serializes five unexecuted tests as skipped; actual runtime has zero skipped. This is not a skipped journey.",
+    "The workflow Omni verdict step is conditionally skipped for journeys. R4 does not establish native/Omni parity.",
+    "Scanner setup.json deliberately says productQualification NOT_RUN: setup is daemon provisioning evidence. Browser product qualification is the separate runtime JSON.",
+    "R3 seven real ClamD/product-private controls passed on source W4; they were not rerun by R4 and are not relabeled as C40 control-suite evidence.",
+    "R4 exercised actual private import Apply/recovery and UTF-8 document confirmation/source revocation. It does not establish OCR/PDF/image formats or the separate post-accepting-scan revocation race73.",
+    "The historical63 import403 first gate remains unproven retrospectively. R3 identified real EICAR/DOWN file-admit denial with earlier gates passing; R4 proves the nominal flow now succeeds.",
+    "Subsequent C41 and later target material are not qualified by this run. No source PASS transfer to a later candidate."
+  ],
+  "remaining_gates": [
+    "checks45 package/E2E typechecks/spawn-imports/guards",
+    "complete251 criteria and fullWP04/WP06",
+    "C06 broader consumers/material confirmation",
+    "document formats/OCR and73 post-accepting-scan race",
+    "native/provider parity",
+    "final eight selections, AM/reviews, C-G7/D-G8 and S0 acceptance"
+  ],
+  "GLOBAL_RELEASE": false
+}
