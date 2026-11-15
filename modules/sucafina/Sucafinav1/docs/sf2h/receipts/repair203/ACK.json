@@ -1,0 +1,31 @@
+{
+  "schema": "sf2h.causal-repair-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 203,
+  "branch": "sf-transport-types",
+  "epoch": "compiler-source-e1-browser203",
+  "state": "ACK_ACTIVE",
+  "model_effective": "GPT-6",
+  "session_id": null,
+  "session_exposed": false,
+  "observed_head": "50acf465f573ff27255c97634d9b98f04985a281",
+  "verified_fence_blob": "f2f443b8c7924f5f06b5f514ea7df4bede61fd63",
+  "fenced_previous_authority": "REVOKED_FOR_FUTURE_ASSIGNED_WRITES_OR_DISPATCH",
+  "predecessor_termination_claimed": false,
+  "allowed_paths": [
+    "packages/client/src/sucafina/transport.ts",
+    "packages/client/src/sucafina/bindings.ts",
+    "packages/client/src/sucafina/people.ts",
+    "packages/client/src/sucafina/context.ts",
+    "packages/client/test/sucafina/transport-type-repair/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/**"
+  ],
+  "canonical_plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative_ux": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "read_evidence": {
+    "predecessor": "137.json@43aac5e5a20326a0e438a0e519c27290513dc10e",
+    "workorder": "F02.json@2a269b9a6e6fc3298248c63a564dddf1d1de11af",
+    "findings": "FINDINGS-190-W77e.md@aa53f55aa18725ebc11fc176a01f6f9949c68980",
+    "effect_version": "effect@4.0.0-beta.83"
+  }
+}
