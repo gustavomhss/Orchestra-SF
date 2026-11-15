@@ -1,0 +1,165 @@
+{
+  "schema": "sf2h.product-ci200.checkpoint.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 200,
+  "epoch": "product-ci-e6-browser200",
+  "role": "sole product test-ci dispatcher",
+  "github_actor": "gustavomhss",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_exposed": false,
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "head_before": "b5b434e78221fb322a179f0d8eb67af13e306ea8",
+  "predecessor_191": {
+    "history": "PRESERVED_UNMODIFIED",
+    "terminal_ref": "39da658c14f172f8424f50ee49defb47ce605fe2",
+    "runs": [
+      43772149086,
+      43772487366,
+      43772869717,
+      43773234546,
+      43773852118
+    ],
+    "B3": "31/31 W77e historical",
+    "B4": "20/20 W25038 historical",
+    "B5": "7PASS1FAIL S05 Wca31; NOT lifecycle"
+  },
+  "W": {
+    "sha": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+    "tree": "6bef2964c3904aef5b92017c6e0e1aaa2d236a25",
+    "accepted_final_C": false
+  },
+  "selected": [
+    {
+      "id": "B6-C08-LIFECYCLE",
+      "input": "new 161 lifecycle test",
+      "W": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "S": "12a1a84593c5b060a1168faf607e8b7abe2bfab8",
+      "snapshot_tree": "583778ee69e08fd6d1c2bf3717098a80750df5f4",
+      "request_blob": "836f52f2a43e092489ac4e0d69ca5e04a5f7e4c2",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/native-host-provider/lifecycle.test.ts"
+        ],
+        "env": {}
+      },
+      "run": 43775214053,
+      "job": 132999863918,
+      "cleanup_job": 133000309338,
+      "attempt": 1,
+      "conclusion": "SUCCESS",
+      "selected_tests": 6,
+      "passed": 6,
+      "failed": 0,
+      "expects": 20,
+      "artifacts": [],
+      "omni": "NOT_APPLICABLE",
+      "proof": "NATIVE_SESSION_CLEANUP_FAULT_INJECTION_COMPONENT_ONLY_NOT_INSTALL"
+    },
+    {
+      "id": "B7-F04-ROUTES",
+      "input": "new 187 journey route fixture unit tests",
+      "W": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "S": "30fdda6d68a0f8d917ba75136b0124f8aac80966",
+      "snapshot_tree": "2efc490ac4719ec021baa72d36bbde59bf09096d",
+      "request_blob": "4b38fac0c3237c86f482cfa18c7bd129c622419c",
+      "request": {
+        "package": "app",
+        "directory": "packages/app-shell",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "./test-browser/sucafina-native/fixture/journeys.test.ts"
+        ],
+        "env": {}
+      },
+      "run": 43775606150,
+      "job": 133001082279,
+      "attempt": 1,
+      "conclusion": "SUCCESS",
+      "selected_tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "expects": 9,
+      "artifacts": [],
+      "omni": "NOT_APPLICABLE",
+      "proof": "PURE_ROUTE_METADATA_NO_AUTH_OR_INSTALLED_ACTORS"
+    },
+    {
+      "id": "B8-AM165-169",
+      "input": "four new test files not selected in B4",
+      "W": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+      "S": "63dd323ae114238d817a915d3b97d6ae5f5f66e5",
+      "snapshot_tree": "3fcce4aed7922ee5411dc90ebcc575f560fd2169",
+      "request_blob": "c499275053d909cf33622f8245346c6622fa8027",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "240000",
+          "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am02/forecast-domain-correlation.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+          "Sucafinav1/test/product/integrated-proofs/am05/scanner-write-gates.test.ts"
+        ],
+        "env": {}
+      },
+      "run": 43775802204,
+      "job": 133001695266,
+      "attempt": 1,
+      "conclusion": "IN_PROGRESS_AT_CHECKPOINT",
+      "assertions": "PENDING",
+      "artifacts": "PENDING",
+      "proof": "DO_NOT_DECLARE_POSITIVE_AM_FROM_FIXTURE_OR_NEGATIVES"
+    }
+  ],
+  "input_verification": {
+    "snapshots_each_only_add": ".ci-run.json",
+    "actions_190_compiler_not_duplicated": true,
+    "unique_dispatch_branch_per_request": true,
+    "source_postimages_to_189": {
+      "decisions": "d5d4d12874d7afa9cd32f0724d9967e9f3a2d481",
+      "domain_projection": "eae532dae73f282d9cefd66228da15fc26b63040",
+      "operations_projection": "02b5f163387aaee657336f5544003ab123af5dd4"
+    }
+  },
+  "waiting": [
+    {
+      "selector": "Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "reason": "W still has preblob 6183175; wait 189 CAS consume 193"
+    },
+    {
+      "selector": "Sucafinav1/test/native-ui-contract/domain.test.ts; operations.test.ts",
+      "reason": "W lacks both actual 177/176 projections; wait 189"
+    },
+    {
+      "selector": "./test-browser/sucafina-native/s05.test.ts",
+      "reason": "S05 owner CRLF fix 205 not consumed; prior failed old test/source blobs unchanged"
+    },
+    {
+      "selector": "Playwright U15 U39 U40",
+      "reason": "194/195 new specs not CAS consumed; F04 private manifest/actor not installed/authenticated"
+    },
+    {
+      "selector": "AM01-AM06 native positive; D01 desktop",
+      "reason": "real provider execution, 5 profiles/18 skills/39 ops, scanner/restart/Relay/Microsoft actors/Electron not witnessed"
+    }
+  ],
+  "other_compiler": {
+    "owner": 190,
+    "run43772959867": "W77e failure not final C",
+    "latest_run43774116387": "failure independent"
+  },
+  "readiness": "B8 in progress; after terminal reconcile, continue next released W; do not dispatch duplicate tests",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
