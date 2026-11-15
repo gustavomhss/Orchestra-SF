@@ -1,0 +1,564 @@
+{
+  "schema": "sf2h.advance167.am03.terminal.v1",
+  "mission": 167,
+  "proof": "AM03",
+  "epoch": "proof-am03-e1-browser167",
+  "state": "PATCH_READY_FOR_INTEGRATOR",
+  "acceptance": "QUALIFICATION_ONLY",
+  "am03": "NOT_RUN",
+  "actor": {
+    "actualAssistantModel": "GPT-6",
+    "nativeSessionId": null,
+    "effectiveNativeModel": null,
+    "toolSession": "GitHub MCP only",
+    "claimedAstraRuntime": false
+  },
+  "authority": {
+    "soleIntegrator": "162/PR65/S0-C-e20-browser162",
+    "compiler": "163/PR107/compiler-e4-browser163",
+    "hostedCiDispatcher": "164/PR106/product-ci-e4-browser164",
+    "reviewer": "S3-R3",
+    "goal": "PAUSED"
+  },
+  "sourceAnchor": {
+    "branch": "sf-am03-proof",
+    "headAtStart": "690a34cdd81c12d7311f3717c19679b950276161",
+    "treeAtStart": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "latestProofCodeHead": "c49ca077d32e22980ebfbfedb02435daa9a77634",
+    "latestProofCodeTree": "057c5415dce5551a6d0176e5ec82be146d2c1ead",
+    "planningCommit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "packetCommit": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "packetBlob": "cac62d5f1e7116a21cb90e0462754ce3403055ac",
+    "contractDigest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4"
+  },
+  "patch": {
+    "allPathsWithinAllowlist": true,
+    "originalProductSourceModified": false,
+    "originalTestsModified": false,
+    "ciInfrastructureModified": false,
+    "items": [
+      {
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance167/ACK.json",
+        "oldBlob": null,
+        "newBlob": "7fe2bd5f8424e8ba32698fd69ddb9d85cf99b304",
+        "introducedBy": "705ea454fb747262d0f8136187da820aaa338090"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+        "oldBlob": null,
+        "newBlob": "f70f31368cb36f65d28e33102685a019d71dc00c",
+        "introducedBy": "7801842bf2f2ce8374e8cea24bc1bbf608801a32",
+        "kind": "executable-component-negative"
+      },
+      {
+        "path": "script/sf2h/proofs/am03/correlation.ts",
+        "oldBlob": null,
+        "newBlob": "814b98155b8e8923118058e39b686c9fa4e79ece",
+        "introducedBy": "7801842bf2f2ce8374e8cea24bc1bbf608801a32",
+        "kind": "fail-closed-candidate-correlation"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
+        "oldBlob": null,
+        "firstBlob": "66975c802074b80d4869b3d208a3369472c17f32",
+        "newBlob": "2d6e1156b90fb4379b624368064e10e95df6495b",
+        "introducedBy": "7801842bf2f2ce8374e8cea24bc1bbf608801a32",
+        "correctedBy": "c49ca077d32e22980ebfbfedb02435daa9a77634",
+        "kind": "adversarial-correlator-test"
+      }
+    ]
+  },
+  "canonicalCriterionAssignments": [
+    {
+      "entityId": "WP06",
+      "criterionIds": [
+        "WP06.DOD.40",
+        "WP06.INV.40",
+        "WP06.QLT.40",
+        "WP06.CMP.40",
+        "WP06.SUC.40"
+      ],
+      "proofPackages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "status": "NOT_RUN",
+      "reason": "No matching hosted original artifact, real provider/Model/identity/scanner native run, or independent verification yet"
+    },
+    {
+      "entityId": "WP06.T05",
+      "criterionIds": [
+        "WP06.T05.DOD.40",
+        "WP06.T05.INV.40",
+        "WP06.T05.QLT.40",
+        "WP06.T05.CMP.40",
+        "WP06.T05.SUC.40",
+        "WP06.T05.CHK.40"
+      ],
+      "proofPackages": [
+        "E07",
+        "E15",
+        "E16"
+      ],
+      "status": "NOT_RUN",
+      "reason": "No matching hosted original artifact, real provider/Model/identity/scanner native run, or independent verification yet"
+    },
+    {
+      "entityId": "WP12",
+      "criterionIds": [
+        "WP12.DOD.40",
+        "WP12.INV.40",
+        "WP12.QLT.40",
+        "WP12.CMP.40",
+        "WP12.SUC.40"
+      ],
+      "proofPackages": [
+        "E11",
+        "E16"
+      ],
+      "status": "NOT_RUN",
+      "reason": "No matching hosted original artifact, real provider/Model/identity/scanner native run, or independent verification yet"
+    },
+    {
+      "entityId": "WP12.T01",
+      "criterionIds": [
+        "WP12.T01.DOD.40",
+        "WP12.T01.INV.40",
+        "WP12.T01.QLT.40",
+        "WP12.T01.CMP.40",
+        "WP12.T01.SUC.40",
+        "WP12.T01.CHK.40"
+      ],
+      "proofPackages": [
+        "E11",
+        "E16"
+      ],
+      "status": "NOT_RUN",
+      "reason": "No matching hosted original artifact, real provider/Model/identity/scanner native run, or independent verification yet"
+    },
+    {
+      "entityId": "WP12.T02",
+      "criterionIds": [
+        "WP12.T02.DOD.40",
+        "WP12.T02.INV.40",
+        "WP12.T02.QLT.40",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.40",
+        "WP12.T02.CHK.40",
+        "WP12.T02.CHK.41"
+      ],
+      "proofPackages": [
+        "E11",
+        "E16"
+      ],
+      "status": "NOT_RUN",
+      "reason": "No matching hosted original artifact, real provider/Model/identity/scanner native run, or independent verification yet"
+    },
+    {
+      "entityId": "WP10",
+      "criterionIds": [
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40"
+      ],
+      "proofPackages": [
+        "E16",
+        "E18"
+      ],
+      "status": "NOT_RUN",
+      "reason": "No matching hosted original artifact, real provider/Model/identity/scanner native run, or independent verification yet"
+    },
+    {
+      "entityId": "WP10.T06",
+      "criterionIds": [
+        "WP10.T06.DOD.40",
+        "WP10.T06.INV.40",
+        "WP10.T06.QLT.40",
+        "WP10.T06.CMP.40",
+        "WP10.T06.SUC.40",
+        "WP10.T06.CHK.40"
+      ],
+      "proofPackages": [
+        "E16",
+        "E18"
+      ],
+      "status": "NOT_RUN",
+      "reason": "No matching hosted original artifact, real provider/Model/identity/scanner native run, or independent verification yet"
+    },
+    {
+      "entityId": "WP10.T03",
+      "criterionIds": [
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "proofPackages": [
+        "E17",
+        "E18"
+      ],
+      "status": "NOT_RUN",
+      "reason": "No matching hosted original artifact, real provider/Model/identity/scanner native run, or independent verification yet"
+    }
+  ],
+  "criterionToScenario": [
+    {
+      "criteria": [
+        "WP10.T06.CHK.40",
+        "WP10.T06.DOD.40",
+        "WP12.T01.CHK.40"
+      ],
+      "scenario": "two distinct actors/sessions, same profile, direct case/session scope",
+      "reused": [
+        "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts"
+      ],
+      "new": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts"
+      ],
+      "evidence": "COMPONENT_SOURCE_ONLY",
+      "fullAM03": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP10.T06.CHK.40",
+        "WP12.T02.CHK.41"
+      ],
+      "scenario": "direct without discovery: non-granted operation, forged actor/role/installation/project/location and opaque lease",
+      "reused": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts"
+      ],
+      "new": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts"
+      ],
+      "evidence": "TEST_NOT_EXECUTED; SOURCE_ONLY",
+      "fullAM03": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP10.T07.CHK.40",
+        "WP06.T05.CHK.40"
+      ],
+      "scenario": "revocation after authorized source/recall and before egress; memory/BI/reports/links; no counts/cache leak",
+      "reused": [
+        "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts"
+      ],
+      "evidence": "INDEPENDENT_COMPONENT_SOURCES; cross-surface native linkage NOT_RUN",
+      "fullAM03": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP10.T06.CHK.40",
+        "WP10.T03.CHK.40"
+      ],
+      "scenario": "configured provider homonym, object/generation replacement, restart and fresh authenticated native binding",
+      "reused": [
+        "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts"
+      ],
+      "new": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts"
+      ],
+      "evidence": "NO_INSTALLED_PROVIDER_RESTART; NOT_RUN",
+      "fullAM03": "NOT_RUN"
+    },
+    {
+      "criteria": [
+        "WP06.DOD.40",
+        "WP06.INV.40",
+        "WP06.QLT.40",
+        "WP06.CMP.40",
+        "WP06.SUC.40",
+        "WP06.T05.DOD.40",
+        "WP06.T05.INV.40",
+        "WP06.T05.QLT.40",
+        "WP06.T05.CMP.40",
+        "WP06.T05.SUC.40",
+        "WP06.T05.CHK.40",
+        "WP12.DOD.40",
+        "WP12.INV.40",
+        "WP12.QLT.40",
+        "WP12.CMP.40",
+        "WP12.SUC.40",
+        "WP12.T01.DOD.40",
+        "WP12.T01.INV.40",
+        "WP12.T01.QLT.40",
+        "WP12.T01.CMP.40",
+        "WP12.T01.SUC.40",
+        "WP12.T01.CHK.40",
+        "WP12.T02.DOD.40",
+        "WP12.T02.INV.40",
+        "WP12.T02.QLT.40",
+        "WP12.T02.CMP.40",
+        "WP12.T02.SUC.40",
+        "WP12.T02.CHK.40",
+        "WP12.T02.CHK.41",
+        "WP10.DOD.40",
+        "WP10.INV.40",
+        "WP10.QLT.40",
+        "WP10.CMP.40",
+        "WP10.SUC.40",
+        "WP10.T06.DOD.40",
+        "WP10.T06.INV.40",
+        "WP10.T06.QLT.40",
+        "WP10.T06.CMP.40",
+        "WP10.T06.SUC.40",
+        "WP10.T06.CHK.40",
+        "WP10.T03.DOD.40",
+        "WP10.T03.INV.40",
+        "WP10.T03.QLT.40",
+        "WP10.T03.CMP.40",
+        "WP10.T03.SUC.40",
+        "WP10.T03.CHK.40"
+      ],
+      "scenario": "run-source-C correlation, native model/scanner/grants, two-session cache/memory/BI/report/links/no exploit inferred from causal read",
+      "new": [
+        "script/sf2h/proofs/am03/correlation.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts"
+      ],
+      "evidence": "CORRELATOR_SOURCE_ONLY; UNVERIFIED",
+      "fullAM03": "NOT_RUN"
+    }
+  ],
+  "reusedSourceBlobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "blob": "0098a065c267101c92054194dd5f0a3548c001b7",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "admission/selection/revocation component; synthetic Task and no model"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/native-host-disposal.test.ts",
+      "blob": "cf90ba55860b36ce085fa500c0c51f987ad06743",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real Core Session ownership and disposal; synthetic budget"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/native-host/execution-host-guard.test.ts",
+      "blob": "725826538de09c224a203d0e94a83ef79ed70392",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real token gate/host ownership negatives"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+      "blob": "97dc67147f47049053fb5ccb4df376e2ebe8ec8d",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "same-profile two sessions, forged lease, direct no-grant, generation; synthetic auth"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+      "blob": "5dc267e9ff70762bcd315352b81f6ce20fb7a494",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real MCP SDK close, namesake conflict, revocation egress; synthetic payload"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+      "blob": "22e41fcd2066f409f3d4e212a17429e59bebe331",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "actual resident skill loading, public ToolRegistry, 2-session Planner/SQLite; synthetic Request authority"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+      "blob": "3bc4442bd2fdd52867ed25d4f321689c1cffe274",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real C08/Atlas original, source and principal revocation; fixture"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+      "blob": "d135761aae1ab1323859e0f92f441555fa61b634",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real scanner/C08/Atlas and two identities, not model"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "blob": "7ce0f91a655bf40f90030b489bfff75dec33ab7f",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real context/Atlas egress, capture and selection fences"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+      "blob": "95ab95bbcf4eac9004791f6501131cd97a8d3bd5",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real BI/HTTP/Chromium case revocation and late read"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "blob": "93bf104ddcb5810efef3edb6648fdf26627fa979",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real report integrity, C08 and revocation"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+      "blob": "59743deea7211c8cda0dc09c5feb9b160f7c0ca8",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real report focus/HTTP denial"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-review/whole-review-revocation.test.ts",
+      "blob": "e703a514983586ba9e392966a97383c7c51b7656",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "actual browser UI purge/denied body"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-context.test.ts",
+      "blob": "2250ef8a6ed3bdee2cb26d38ab5b7a2daa3301e9",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real analysis lifecycle and C08 revocation; no model"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-recovery-link/recovery-http.test.ts",
+      "blob": "b55071dcdc67e28d139d8ecc25a433371e03c8ba",
+      "ref": "690a34cdd81c12d7311f3717c19679b950276161",
+      "scope": "real case recovery after reopen; synthetic actor"
+    }
+  ],
+  "additionalProducerNotIntegrated": {
+    "path": "modules/sucafina/Sucafinav1/test/product/native-host-provider/lifecycle.test.ts",
+    "ref": "native-host-provider",
+    "blob": "89f6bbe2fa429be861eab0bb27777ae947f533c2",
+    "observedBranchHead": "1ba45ae10641aab50e8ddd8377dd8e2714b74aa4",
+    "owner": "161/PR104",
+    "gap": "Component-only cleanup case. The 690 prepared branch lacks this producer; 162 must consume approved code; not a real restarted provider or model."
+  },
+  "proofPredicate": {
+    "positiveRequires": [
+      "real native SessionV2 creation with host-owned authenticated Request for two independent principals",
+      "same loaded profile and actual skill bytes with consumed receipts",
+      "real provider model turn; scanner pinned real binary/version when memory",
+      "bridgeCallID -> domainCallID and actual C08/Atlas/BI/report/link consumer correlation",
+      "real case/installation/project/location/accessRevision/generation/cached count isolation",
+      "actual revocation and egress denial at every relevant boundary",
+      "provider collision and replacement/restart with fresh authenticated binding",
+      "hosted test run and snapshot matching fully integrated candidate SHA and tree",
+      "S3-R3 independent final verification"
+    ],
+    "componentCannotProve": [
+      "host Task admission",
+      "provider/model execution",
+      "actual scanner for AM03 source memory",
+      "corporate principal grant",
+      "installed host restart",
+      "real cross-surface leak absence",
+      "real malicious exploit from causal read"
+    ]
+  },
+  "ciRequests": [
+    {
+      "recipient": "164/PR106",
+      "status": "READY_AFTER_162_INTEGRATION_NOT_DISPATCHED",
+      "requestKind": "AM03_NEW_AND_NEAREST_REGRESSIONS",
+      "package": "sucafina",
+      "os": "linux",
+      "runner": "bun",
+      "orderedFiles": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts"
+      ],
+      "command": "bun run test:ci sucafina modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/correlation.test.ts modules/sucafina/Sucafinav1/test/product/integrated-proofs/am03/provider-generation.test.ts modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/execution-context.test.ts modules/sucafina/Sucafinav1/test/product/wp10/resident-runtime/private-mcp.test.ts modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts --os linux",
+      "inputs": {
+        "requiresCandidateSha": "162 coherent sf2-stack integrated C with this PR",
+        "sourceHead": "c49ca077d32e22980ebfbfedb02435daa9a77634",
+        "immutableOrder": true
+      },
+      "dedupKey": "candidateTree+orderedFiles+runtimeConfig+fixtureSha+producerSha",
+      "expectedArtifacts": [
+        "exact commit/tree of hosted ci-run snapshot",
+        "run/check URL",
+        "per-selector test result",
+        "negative source logs",
+        "model/scanner/auth status explicitly NOT_RUN when missing"
+      ]
+    },
+    {
+      "recipient": "164/PR106",
+      "status": "CONDITIONAL_AFTER_162_CONSUMPTION_NOT_DISPATCHED",
+      "requestKind": "AM03_REUSE_EXISTING_SURFACE_BOUNDARIES",
+      "package": "sucafina",
+      "os": "linux",
+      "runner": "bun",
+      "orderedFiles": [
+        "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+        "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts"
+      ],
+      "command": "bun run test:ci sucafina modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/installed-original.test.ts modules/sucafina/Sucafinav1/test/product/memory-original-reauthorization/document-replay.test.ts modules/sucafina/Sucafinav1/test/product/wp10/integration/bi-case-access.test.ts modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts --os linux",
+      "inputs": {
+        "requiresReadyInputs": [
+          "accepted native-host-provider/lifecycle producer 161 if selected",
+          "current approved test fixture and actual source blobs"
+        ],
+        "noPrematureEpic": true
+      },
+      "dedupKey": "candidateTree+orderedFiles+runtimeConfig+fixtureSha+producerSha"
+    }
+  ],
+  "compilerRequest": {
+    "recipient": "163/PR107",
+    "status": "REQUEST_READY_NOT_EXECUTED",
+    "pathPolicy": "Only compile/guard/typecheck owned new TS proof sources after 162 integrated coherent tree",
+    "commands": [
+      "bun --cwd modules/sucafina typecheck",
+      "bun run check:guards --base origin/dev"
+    ],
+    "result": "NOT_RUN"
+  },
+  "consumers": [
+    {
+      "receiver": "162/PR65",
+      "expected": "Cherry-pick only the original AM03 proof commits and preserve previous C. New proof paths only. Need integration ACK with source blob/tree and coherent candidate C."
+    },
+    {
+      "receiver": "164/PR106",
+      "expected": "Surgical exact ordered selection after 162 accepted integration. No model/scan grant simulated, no broad CI fanout."
+    },
+    {
+      "receiver": "163/PR107",
+      "expected": "Compiler/guards/typecheck on integrated coherent tree, no product runtime/SDK edits by 167."
+    },
+    {
+      "receiver": "S3-R3",
+      "expected": "Independent AM03 review after hosted originals and real access identities/scanner/model are verified."
+    }
+  ],
+  "execution": {
+    "localTests": "NOT_RUN",
+    "hostedTests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "parserOrValidatorLocal": "NOT_RUN",
+    "build": "NOT_RUN",
+    "runtimeProvider": "NOT_RUN",
+    "model": "NOT_RUN",
+    "scanner": "NOT_RUN",
+    "authenticatedInstalledTwinSessions": "NOT_RUN",
+    "integratedC": "NOT_RUN",
+    "finalReview": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "outcome": "PARTIAL_PRODUCT_BOUNDARY_PATCH; NOT_AN_AM03_PASS"
+  },
+  "globalRelease": {
+    "C_final": false,
+    "eightSameCFinalCI": false,
+    "epic": false,
+    "AM01to06": false,
+    "threeIndependentFinalReviews": false,
+    "D": false,
+    "guards": false,
+    "goalPaused": true
+  }
+}
