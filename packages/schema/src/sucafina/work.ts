@@ -207,26 +207,29 @@ export const SfUnavailablePersonalView = Schema.Struct({
 const ViewError = Schema.Struct({
   status: Schema.Literals(["denied", "unavailable", "invalid", "stale", "conflict", "needs-input"]),
 })
+const RouteSurface = Schema.Literals(["dashboard", "planner", "procurement"])
+// F02 removes this trusted route selector from the POST body; the legacy
+// workbench-views payload remains exactly { action, input }.
 export const SfViewsList = {
-  Input: Schema.Struct({ action: Schema.Literal("list"), input: Schema.Struct({}) }),
+  Input: Schema.Struct({ surface: RouteSurface, action: Schema.Literal("list"), input: Schema.Struct({}) }),
   Output: Schema.Union([
     Schema.Struct({ status: Schema.Literal("ok"), value: Schema.Array(Schema.Union([SfPersonalViewRecord, SfUnavailablePersonalView])) }),
     ViewError,
   ]),
 } as const
 export const SfViewsOpen = {
-  Input: Schema.Struct({ action: Schema.Literal("open"), input: Schema.Struct({ id: ViewId }) }),
+  Input: Schema.Struct({ surface: RouteSurface, action: Schema.Literal("open"), input: Schema.Struct({ id: ViewId }) }),
   Output: Schema.Union([Schema.Struct({ status: Schema.Literal("ok"), value: SfPersonalViewRecord }), ViewError]),
 } as const
 export const SfViewsSave = {
-  Input: Schema.Struct({ action: Schema.Literal("save"), input: Schema.Struct({
+  Input: Schema.Struct({ surface: RouteSurface, action: Schema.Literal("save"), input: Schema.Struct({
     view: SfPersonalViewLegacy,
     expectedVersion: Schema.Union([PositiveVersion, Schema.Null]),
   }) }),
   Output: Schema.Union([Schema.Struct({ status: Schema.Literal("ok"), value: SfPersonalViewRecord }), ViewError]),
 } as const
 export const SfViewsRemove = {
-  Input: Schema.Struct({ action: Schema.Literal("remove"), input: Schema.Struct({
+  Input: Schema.Struct({ surface: RouteSurface, action: Schema.Literal("remove"), input: Schema.Struct({
     id: ViewId, expectedVersion: PositiveVersion,
   }) }),
   Output: Schema.Union([Schema.Struct({ status: Schema.Literal("ok"), value: Schema.Struct({ removed: Schema.Literal(true) }) }), ViewError]),

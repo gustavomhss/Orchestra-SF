@@ -45,8 +45,8 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
   })
 
   test("preserves the V1 wire, per-view CAS, null creation and redacted unavailable entries", () => {
-    const saveCreate = { action: "save", input: { view, expectedVersion: null } }
-    const saveChange = { action: "save", input: { view, expectedVersion: 3 } }
+    const saveCreate = { surface: "dashboard", action: "save", input: { view, expectedVersion: null } }
+    const saveChange = { surface: "dashboard", action: "save", input: { view, expectedVersion: 3 } }
     expect(Schema.decodeUnknownSync(SfViewsSave.Input)(saveCreate)).toEqual(saveCreate)
     expect(Schema.decodeUnknownSync(SfViewsSave.Input)(saveChange)).toEqual(saveChange)
     expect(Schema.decodeUnknownSync(SfViewsSave.Output)({ status: "ok", value: versioned }))
@@ -56,24 +56,24 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
     })).toEqual({
       status: "ok", value: [{ id: view.id, version: 3, availability: "unavailable" }],
     })
-    expect(Schema.decodeUnknownSync(SfViewsOpen.Input)({ action: "open", input: { id: view.id } }))
-      .toEqual({ action: "open", input: { id: view.id } })
+    expect(Schema.decodeUnknownSync(SfViewsOpen.Input)({ surface: "dashboard", action: "open", input: { id: view.id } }))
+      .toEqual({ surface: "dashboard", action: "open", input: { id: view.id } })
     expect(Schema.decodeUnknownSync(SfViewsRemove.Input)({
       action: "remove", input: { id: view.id, expectedVersion: 3 },
-    })).toEqual({ action: "remove", input: { id: view.id, expectedVersion: 3 } })
+    })).toEqual({ surface: "dashboard", action: "remove", input: { id: view.id, expectedVersion: 3 } })
   })
 
   test("rejects unknown actions/fields, invalid CAS and V2 envelopes in the legacy schema", () => {
     for (const invalid of [
-      { action: "approve", input: { view, expectedVersion: 3 } },
-      { action: "save", input: { view, expectedVersion: 0 } },
-      { action: "save", input: { view, expectedVersion: -1 } },
-      { action: "save", input: { view, expectedVersion: 3, accessToken: "secret" } },
-      { action: "save", input: { view: { ...view, externalUrl: "https://example.org" }, expectedVersion: 3 } },
-      { action: "save", input: { ...view, schemaVersion: 2, expectedVersion: 3 } },
-      { action: "save", input: { view: { ...view, schemaVersion: 2 }, expectedVersion: 3 } },
-      { action: "save", input: { view: { ...view, filters: { selections: { bogus: "x" } } }, expectedVersion: 3 } },
-      { action: "save", input: { view: { ...view, filters: { selections: { year: "2030" } } }, expectedVersion: 3 } },
+      { surface: "dashboard", action: "approve", input: { view, expectedVersion: 3 } },
+      { surface: "dashboard", action: "save", input: { view, expectedVersion: 0 } },
+      { surface: "dashboard", action: "save", input: { view, expectedVersion: -1 } },
+      { surface: "dashboard", action: "save", input: { view, expectedVersion: 3, accessToken: "secret" } },
+      { surface: "dashboard", action: "save", input: { view: { ...view, externalUrl: "https://example.org" }, expectedVersion: 3 } },
+      { surface: "dashboard", action: "save", input: { ...view, schemaVersion: 2, expectedVersion: 3 } },
+      { surface: "dashboard", action: "save", input: { view: { ...view, schemaVersion: 2 }, expectedVersion: 3 } },
+      { surface: "dashboard", action: "save", input: { view: { ...view, filters: { selections: { bogus: "x" } } }, expectedVersion: 3 } },
+      { surface: "dashboard", action: "save", input: { view: { ...view, filters: { selections: { year: "2030" } } }, expectedVersion: 3 } },
     ]) {
       expect(() => Schema.decodeUnknownSync(SfViewsSave.Input)(invalid)).toThrow()
     }
@@ -111,7 +111,7 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
     await client["projection.work"]({
       selectionRef: "selection-1", start: "2026-01-01", end: "2026-12-31",
     }, options)
-    await client["views.save"]({ action: "save", input: {
+    await client["views.save"]({ surface: "dashboard", action: "save", input: {
       view, expectedVersion: 3,
     } }, options)
     expect(calls).toEqual([
@@ -119,7 +119,7 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
       { operationId: "projection.work", input: {
         selectionRef: "selection-1", start: "2026-01-01", end: "2026-12-31",
       }, options },
-      { operationId: "views.save", input: { action: "save", input: {
+      { operationId: "views.save", input: { surface: "dashboard", action: "save", input: {
         view, expectedVersion: 3,
       } }, options },
     ])
@@ -128,16 +128,16 @@ describe("A12 — frozen work/search/personal-view bindings", () => {
   test("V2 requests are unavailable before transport without touching the V1 path", async () => {
     const { client, calls } = recordingClient()
     const unavailable = { kind: "transport-error", reason: "contract-unavailable" }
-    expect(await client["views.list"]({ action: "list", input: {
+    expect(await client["views.list"]({ surface: "dashboard", action: "list", input: {
       schemaVersion: 2,
     } } as never, { signal })).toEqual(unavailable)
-    expect(await client["views.open"]({ action: "open", input: {
+    expect(await client["views.open"]({ surface: "dashboard", action: "open", input: {
       id: view.id, schemaVersion: 2,
     } } as never, { signal })).toEqual(unavailable)
-    expect(await client["views.save"]({ action: "save", input: {
+    expect(await client["views.save"]({ surface: "dashboard", action: "save", input: {
       view: { ...view, schemaVersion: 2 }, expectedVersion: 3,
     } } as never, { signal })).toEqual(unavailable)
-    expect(await client["views.remove"]({ action: "remove", input: {
+    expect(await client["views.remove"]({ surface: "dashboard", action: "remove", input: {
       id: view.id, expectedVersion: 3, schemaVersion: 2,
     } } as never, { signal })).toEqual(unavailable)
     expect(calls).toHaveLength(0)
