@@ -112,7 +112,8 @@ export function sfReadControls(payload: unknown, wanted?: string): SfCaseControl
     !row(selected.decision) || !str(selected.decision.objective) ||
     !row(selected.decision.horizon) || !str(selected.decision.horizon.start) ||
     !str(selected.decision.horizon.end) || !str(selected.decision.currency) ||
-    !Array.isArray(selected.scenarios) || !Array.isArray(selected.rules)) return null
+    !Array.isArray(selected.scenarios) || !Array.isArray(selected.rules) ||
+    !Array.isArray(selected.decision.alternatives)) return null
   const scenarios: NonNullable<SfCaseControls["selected"]>["scenarios"][number][] = []
   for (const scenario of selected.scenarios) {
     if (!row(scenario) || !str(scenario.ref) || !str(scenario.title) ||
@@ -123,6 +124,13 @@ export function sfReadControls(payload: unknown, wanted?: string): SfCaseControl
       parameters.push({ ref: parameter.ref, label: parameter.label })
     }
     scenarios.push({ ref: scenario.ref, title: scenario.title, alternativeId: scenario.alternativeId, parameters })
+  }
+  const alternatives: { id: string; version: number; title: string }[] = []
+  for (const alternative of selected.decision.alternatives) {
+    if (!row(alternative) || !str(alternative.id) || !alternative.id ||
+      !Number.isSafeInteger(alternative.version) || (alternative.version as number) <= 0 ||
+      !str(alternative.title)) return null
+    alternatives.push({ id: alternative.id, version: alternative.version as number, title: alternative.title })
   }
   const rules: { id: string; expectedVersion?: number }[] = []
   for (const rule of selected.rules) {
@@ -146,7 +154,7 @@ export function sfReadControls(payload: unknown, wanted?: string): SfCaseControl
     selected: { ref: selected.ref, caseRef: sfCaseRef(selected.caseRef)!,
       objective: selected.decision.objective,
       horizon: { start: selected.decision.horizon.start, end: selected.decision.horizon.end },
-      currency: selected.decision.currency, scenarios, rules, priorities, unitSelection } }
+      currency: selected.decision.currency, scenarios, alternatives, rules, priorities, unitSelection } }
 }
 function readCombination(value: unknown): SfPortfolioCombination | null {
   if (!row(value) || !str(value.id) || !strArray(value.caseRefs) ||
