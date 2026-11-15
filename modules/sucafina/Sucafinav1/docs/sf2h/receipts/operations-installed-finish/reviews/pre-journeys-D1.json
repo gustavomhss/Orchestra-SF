@@ -1,0 +1,264 @@
+{
+  "schema": "sf2h.operations75.pre-journeys-independent-review.v1",
+  "status": "STATIC_REVIEW_COMPLETE_AWAITING_COMPOSED_C",
+  "saved_at_utc": "2026-11-15T03:41:53Z",
+  "reviewer": "/root/normative_review",
+  "review_scope": "Independent documentary and static review. No product, test, build, typecheck, guard, preflight or workflow execution. No remote write. This requested scratch receipt is the only write for this task.",
+  "observation_rule": "Pins below identify the reviewed cut. The target may advance; they do not assert a fresh current HEAD at any later publication or execution.",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 75,
+  "pins": {
+    "canonical_authority_commit": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "canonical_authority_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/operations-installed-finish.json",
+    "canonical_authority_blob": "a886e2f2d8d6cc3529c1b1f5613313665876b02d",
+    "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "source75": {
+      "branch": "operations-scanner-proof",
+      "pr": 78,
+      "pr_observed_state": "open",
+      "pr_observed_draft": true,
+      "pr_observed_head": "a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa",
+      "pr_base": "sf2-stack",
+      "material_work": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "material_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+      "documentary_envelope": "a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa",
+      "envelope_parent": "d50287e998b2f42f548bce3b72b75e16eff40043",
+      "envelope_added_receipts": 44,
+      "envelope_material_changes": 0,
+      "release_blob": "2fda256cb01fc49cac71a18a564ba3b2583e27e0",
+      "manifest_blob": "5f4cc3d72b94bc81b24f464de04270eecda45633",
+      "dependency_closure_blob": "2a29c02638488cfe5224d5ff8305f20f104d7bac",
+      "checks45_request_blob": "f4133fbd04a97d965c625b4770ca14381ca6a780",
+      "complete_patch_sha256": "672747464f84b869363dbc0a869f31cc051ef438e931b2d48e3c72ad0330a6e0",
+      "lease_epoch": "operations-finish-browser75",
+      "lease_state_in_release": "ACTIVE_FOR_REMAINING_JOURNEY_QUALIFICATION"
+    },
+    "target_observation": {
+      "branch": "sf2-stack",
+      "candidate": "C35",
+      "commit": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+      "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+      "sole_writer": 71,
+      "authority_ack": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "authority_epoch": "S0-C-e13-browser71",
+      "composition73_75_observed": false
+    },
+    "source73": {
+      "branch": "procurement-privacy-fix",
+      "pr": 86,
+      "terminal": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+      "terminal_tree": "e4565e316afbfec64bd576fb2ca08a5f5cf2fa6c",
+      "material_work": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+      "material_tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+      "presentation_release_blob": "3d4f9c0a682ea181fdd7173379e2b19129a267d5",
+      "consumer_release_blob": "cf6df28afb9d22340e525c906342faea12d407dc",
+      "source_manifest_blob": "b3bbc1823b915de6f5683ea93cb6f2ad2acb120e",
+      "authority_final_blob": "12122c0a74191f0766ad464d7b11b4679922b63d",
+      "procurement_postimage": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "application_postimage": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+      "lease_state": "ENDED",
+      "receipt75_ack_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6888609434"
+    },
+    "source63": {
+      "terminal": "f0682b3ca9a792dcef2166a867aa06974e242874",
+      "consumer_release_blob": "150bdcb7589ad921d0305bf37087cdd951ccc92a",
+      "dependency_closure_blob": "eeaffde7c08e1abd26bc5fea84ecaa55d410f2ac",
+      "material_work": "83aabd95ab423816002a623d1a998eb51bb89173"
+    },
+    "scanner_source_run": {
+      "run": 43672349552,
+      "job": 132684956460,
+      "snapshot": "209c613895a2555ba7de8befc33f1bd41b263f62",
+      "result": "7 PASS / 0 FAIL / 150 expect calls",
+      "artifact": 14145385503,
+      "artifact_sha256": "3c850b7e0a7ce11cdfae73be98e2d1c4ca2c0378549cd7fa991f76dfb45d7edd",
+      "proof_transfer_to_C": false
+    }
+  },
+  "conclusion": {
+    "launch_authorized_by_existing_mission": true,
+    "additional_user_authorization_required": false,
+    "release74_or_diagnosis79_required_for_original_operations_host": false,
+    "concrete_current_gate": "71 must publish the composed C/tree and explicit ACK accepting released73 plus released75; then75 must reconcile/read back that exact C and reserve/deduplicate the request.",
+    "source_PASS_transfers_to_C": false,
+    "GLOBAL_RELEASE": false
+  },
+  "complete_review": [
+    {
+      "heading": "Conclusão",
+      "paragraphs": [
+        "O lançamento das cinco jornadas está autorizado pela missão75 assim que71 publicar o C composto, com tree e ACK explícitos. Não foi encontrada dependência que obrigue aguardar74/79 para executar o host original de Operations.",
+        "O bloqueio concreto no corte observado C35 e87e22d163924635bf0b41785c9bc80bf780ac0a é a ausência da composição consumida de73+75 e de seu recibo para qualificação. Isso é coordenação já prevista, sem necessidade de nova autorização do usuário."
+      ]
+    },
+    {
+      "heading": "Envelope75 e autoridade",
+      "paragraphs": [
+        "D1 a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa tem parent único W4 d50287e998b2f42f548bce3b72b75e16eff40043 e acrescenta44 receipts, sem alteração material. PR78 permanece open/draft, head D1, base sf2-stack.",
+        "RELEASE-W4.json autoriza a composição seletiva dos nove paths pela71 e conserva a lease75 ACTIVE_FOR_REMAINING_JOURNEY_QUALIFICATION. MANIFEST.json e DEPENDENCY-CLOSURE.json delimitam os nove postimages, onze herdados63 e avanços do target a preservar.",
+        "O patch completo está fixado em SHA-256 672747464f84b869363dbc0a869f31cc051ef438e931b2d48e3c72ad0330a6e0. A fonte75 não transfere seus sete PASS ao C.71 permanece única writer do stack;75 mantém a execução da seleção nominal.",
+        "O rótulo complete W3 tree em closure_definition é o único descompasso documental encontrado. Os campos estruturados de fonte, source basis, postimages, patch e R3 apontam corretamente W4. O esclarecimento no próximo recibo de intake resolve a ambiguidade sem reabrir material."
+      ]
+    },
+    {
+      "heading": "Release73 satisfaz a dependência numérica",
+      "paragraphs": [
+        "Foram lidos integralmente os receipts73 fixados no terminal4a93f6aa8b8af138774fd1e25a7183e7a84706ba, cujo parent é o material4bf5d040649d807d5ef6c8cbabf1409d8aee849a.",
+        "PRESENTATION-RELEASE.json está em SOURCE_NUMERIC_PRESENTATION_RELEASED. O consumo correto é a unidade73 completa: runtime/procurement.ts post a4ab021f646c0fc819b3afdde18796630fb9603f, runtime/application.ts post81f469822a2756b3e1ca87effbf5fd865a56010d e os quatro arquivos de testes do manifesto73.",
+        "O postimage monetário isolado63 0a0dd9eb2299df05e8c6bc14cd4dc67313b64c25 continua inadequado para substituir o runtime combinado.75 não recebe autoridade para editar esse runtime.",
+        "O ACK de recebimento75 na PR65, comentário6888609434, já registra os pins corretos e solicita o C composto. A condição EXPLICIT_RELEASE_REQUIRED do D1 está satisfeita pela release73 posterior; o próximo recibo deve registrar essa resolução."
+      ]
+    },
+    {
+      "heading": "Cookie, router e Node: gate material identificado",
+      "paragraphs": [
+        "A cláusula final da missão75 não exige transformar as pendências74/79 em bloqueio genérico de Operations. O caminho efetivamente selecionado possui material liberado e distinto do listener sob diagnóstico.",
+        "Os pins de host, identidade, seletor e configurações constam expressamente na closure63 liberada e permanecem iguais no C35. A instalação75 chama as factories de negócio, import e documentos; ela não inicia o listener ServerHttpApi/Node-Effect de74/79.",
+        "Isso sustenta a execução das cinco jornadas originais nesse host autorizado. Não sustenta um claim de que o POST do CLI instalado, Microsoft vivo ou o caminho nativo esteja corrigido. Se71 modificar esses prerequisites ao compor C, a comparação deverá ser refeita nesse C."
+      ],
+      "prerequisites": [
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+          "blob_at_C35": "8230eb28f322dde255382b74280192f39844724d",
+          "behavior": "Inicia Bun.serve em loopback:4174; encaminha identity.handle e depois application."
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+          "blob_at_C35": "4845de24285df2459991da7d9895aad95eb93b19",
+          "behavior": "Enrollment local, cookie próprio por mount/principal e autenticação real do operador; não usa a identidade Microsoft72."
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/wp04/selection.ts",
+          "blob_at_C35": "1bfa058531fc84f012dcb8b601d471abd8fa0aad",
+          "behavior": "Reconhece o arquivo original Operations, inclusive o regex ancorado do runner."
+        },
+        {
+          "path": "packages/app-shell/e2e/playwright.production.config.ts",
+          "blob_at_C35": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+          "behavior": "Inicia o preview existente e, somente para a seleção adequada, o host Bun."
+        },
+        {
+          "path": "packages/app-shell/playwright.config.ts",
+          "blob_at_C35": "d935c68f5b996c0e53195ec832b969c217fcf858",
+          "behavior": "Conserva os budgets originais."
+        },
+        {
+          "path": "packages/app-shell/package.json",
+          "blob_at_C35": "fed0414375fe5ad9553d1b6562f54972f2ed89f7",
+          "behavior": "test:e2e:local continua playwright test."
+        },
+        {
+          "path": ".github/workflows/sf-operations-scanner.yml",
+          "blob_at_W4": "6ebcdcb66802627f5af8f13d2c35989bb7719337",
+          "behavior": "Node24.15 explícito antes de Playwright, dentro da unidade75 liberada; a presença no futuro C requer readback."
+        }
+      ]
+    },
+    {
+      "heading": "Gates concretos antes de criar S",
+      "gates": [
+        {
+          "number": 1,
+          "name": "C/tree/ACK da71",
+          "requirement": "Consumo explícito das nove mudanças75 e da unidade73 completa, após conferir preimages atuais. Preservar Runtime59, Reports e demais avanços do target. C35 sozinho ainda não satisfaz essa composição."
+        },
+        {
+          "number": 2,
+          "name": "Readback do C a executar",
+          "requirement": "Confirmar os postimages relevantes e o original operations.spec.ts em bab6a804e5f082cc60eb6f27209070b552981035. Não aproveitar incidentalmente um HEAD mais novo sem reconciliação."
+        },
+        {
+          "number": 3,
+          "name": "Fila e deduplicação S0",
+          "requirement": "Registrar C, request normalizado e seleção antes do disparo; verificar ausência de execução equivalente ativa ou concluída que deva ser reutilizada. A concurrency75 não substitui a coordenação central."
+        },
+        {
+          "number": 4,
+          "name": "Snapshot S request-only",
+          "requirement": "Parent único igual a C, delta somente .ci-run.json, branch sf-ops75-<C12>j<requestSHA12><tentativa>, sem mover sf2-stack."
+        },
+        {
+          "number": 5,
+          "name": "Seleção exata",
+          "requirement": "Runner playwright, pacote app/packageSelector packages/app/diretório packages/app-shell, único argumento e2e/sucafina/operations.spec.ts, config e2e/playwright.production.config.ts, ORCHESTRA_CHANNEL=prod, envelope sourceBranch sf2-stack e productSha C. Os endpoints ClamD continuam produzidos pelo setup, sem novas chaves no request."
+        },
+        {
+          "number": 6,
+          "name": "Gates no job",
+          "requirement": "Integridade, listagem exata dos cinco IDs, ClamD READY com signatures oficiais e controles discriminantes, execução com60s por teste/10s por expect/workers1/repeat1/retries0, reports e cleanup."
+        }
+      ],
+      "original_ids": [
+        "OP-PROC-01",
+        "OP-PROC-02",
+        "OP-PROC-03",
+        "OP-IMPORT-01",
+        "OP-DOC-01"
+      ],
+      "original_spec_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+      "no_change_authorization": "Não há autorização implícita para trocar oráculos ou ampliar budgets se algum deles falhar."
+    },
+    {
+      "heading": "HOLDs que não impedem esse lançamento",
+      "paragraphs": [
+        "Os checks45 estão explicitamente REQUESTED_NOT_RUN, com cinco comandos descritos em checks/REQUEST-45.json. Não foi encontrada cláusula que os torne pré-condição do próximo run cirúrgico75; seguem obrigatórios para a qualificação correspondente.",
+        "Após C/tree/ACK e a reconciliação/dedup descritos,75 pode lançar S autonomamente dentro da autorização existente. Nenhum bloqueio adicional de74/79 ou aprovação do usuário foi identificado."
+      ],
+      "checks45_commands": [
+        {
+          "cwd": "modules/sucafina",
+          "command": "bun typecheck"
+        },
+        {
+          "cwd": "packages/app-shell",
+          "command": "bun typecheck"
+        },
+        {
+          "cwd": "packages/app-shell",
+          "command": "bun run typecheck:sf-e2e"
+        },
+        {
+          "cwd": ".",
+          "command": "bun run check:spawn-imports"
+        },
+        {
+          "cwd": ".",
+          "command": "bun run check:guards --base origin/dev"
+        }
+      ],
+      "inherited_gaps": [
+        "Ajuste do oracle legado modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts: uma expectativa403→404, e sua qualificação pela autoridade correta. Não altera os cinco originais75.",
+        "Rechecagem fria M70-ISO-01 no C composto.",
+        "Race de revogação/visibilidade após scan aceito: não foi exercida pelos controles73/75 e não deve ser alegada.",
+        "Native/Omni, critérios restantes, C06/formats, AM, oito seleções finais, três reviews FINAL e C/G7–D/G8."
+      ]
+    }
+  ],
+  "source_links": [
+    "https://github.com/gustavomhss/Orchestra-SF/blob/1f01a01f51521ae39b7a4e730acefde3b9999891/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/operations-installed-finish.json",
+    "https://github.com/gustavomhss/Orchestra-SF/pull/78",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-installed-finish/integration/RELEASE-W4.json",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-installed-finish/integration/MANIFEST.json",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-installed-finish/integration/DEPENDENCY-CLOSURE.json",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-installed-finish/checks/REQUEST-45.json",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/4a93f6aa8b8af138774fd1e25a7183e7a84706ba/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/PRESENTATION-RELEASE.json",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/4a93f6aa8b8af138774fd1e25a7183e7a84706ba/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/CONSUMER-RELEASE.json",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/4a93f6aa8b8af138774fd1e25a7183e7a84706ba/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/SOURCE-MANIFEST.json",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/4a93f6aa8b8af138774fd1e25a7183e7a84706ba/modules/sucafina/Sucafinav1/docs/sf2h/receipts/procurement-privacy-fix/AUTHORITY-FINAL.json",
+    "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6888609434",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/f0682b3ca9a792dcef2166a867aa06974e242874/modules/sucafina/Sucafinav1/docs/sf2h/receipts/operations-scanner-closure/DEPENDENCY-CLOSURE.json",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/e87e22d163924635bf0b41785c9bc80bf780ac0a/packages/app-shell/e2e/sucafina/wp04/host.ts",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/d50287e998b2f42f548bce3b72b75e16eff40043/script/sf2h/operations-scanner/request.mjs",
+    "https://github.com/gustavomhss/Orchestra-SF/blob/d50287e998b2f42f548bce3b72b75e16eff40043/.github/workflows/sf-operations-scanner.yml"
+  ],
+  "future_work": "Available for a new read-only assignment reviewing71 composed C/readback and the real five-journey report. No background polling, extra tests or remote publication initiated.",
+  "limits": {
+    "no_remote_publication": true,
+    "no_local_product_execution": true,
+    "no_additional_test": true,
+    "no_claim_of_integrated_or_global_acceptance": true,
+    "no_claim_of_native_or_microsoft_or_Omni_PASS": true,
+    "closure_typo_disposition": "Clarify W3→W4 in the next intake receipt; exact material pins already W4.",
+    "current_authority_recheck_required_at_launch": true
+  }
+}

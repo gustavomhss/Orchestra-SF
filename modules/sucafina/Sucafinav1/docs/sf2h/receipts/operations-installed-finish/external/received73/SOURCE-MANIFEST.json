@@ -1,0 +1,107 @@
+{
+  "schema": "sf2h.procurement73.source-manifest.v1",
+  "source_branch": "procurement-privacy-fix",
+  "source_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "work_sha": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+  "work_tree": "bc36d52d75f59faa27bc604e399c3d096cf62df6",
+  "ack_sha": "6db479f1f72e6ed0419a65e55cc9fd8f7f8078a5",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "mode": "100644",
+      "preimage_blob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "postimage_blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "sha256": "fa5c6cb1e9ff67bc409b6eeb5cf8df7fd2f4fb8e550c5662b7b32d1398126b8c",
+      "bytes": 93921,
+      "kind": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "mode": "100644",
+      "preimage_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "postimage_blob": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+      "sha256": "698c57d99e29f38fc2ddf324c3edfd995e49ececb2dfd52aa30b64ab7ec0899a",
+      "bytes": 40218,
+      "kind": "modified"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/fixture.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "e49a76773ff655645b524c5f588b9a1065d5987a",
+      "sha256": "30c9318ee6eaedeeea305a3796de62ec6d12a79773305828b717fbef2346df21",
+      "bytes": 5535,
+      "kind": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "3c735804c3956fc5df98113f8f76050da35c74b0",
+      "sha256": "48301e64e8a67508066d11ddeaf650c697e133ca9094a793a3460b53ad118507",
+      "bytes": 13178,
+      "kind": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "85874c506608803bb9d3fcd8c3acb87d60200b0d",
+      "sha256": "8f176d77ef5d45a4fd1d82f3043c2cad262569357db6f25efb57b478158fe2a5",
+      "bytes": 8857,
+      "kind": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/uploads.test.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "5ce4f670c4558e312ef1ea0eec72dd9f00e3897b",
+      "sha256": "539bec6b5e17af4bcd50f0844bc9cc1981819680897ab3641bf19dfdfb2de86f",
+      "bytes": 4285,
+      "kind": "added"
+    }
+  ],
+  "complete_patch": {
+    "path": "source-and-tests.patch",
+    "sha256": "e634e32c31acfe370ee86bf06738f39abbfb2901b310b6fc28797a6aad44c839",
+    "verification": "git apply --check passed against exact MCP preimages; no product tests run locally"
+  },
+  "dependencies": "DEPENDENCIES.json",
+  "external_oracle": {
+    "schema": "sf2h.procurement73.external-oracle.v1",
+    "state": "PREPARED_NOT_APPLIED",
+    "owner": "71 integrator; no source write by73",
+    "target_path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+    "preimage_blob": "d622fa8463ee6d05a5c03de6517381045b6f0241",
+    "reason": "One legacy assertion expects403 for an invisible request.73 now requires404 equivalence. The visible dual-role403 expectation is unchanged.",
+    "patch": "external/legacy-hidden-request-status.patch",
+    "preimage_ref": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "scope": "Exactly one assertion403→404, no fixtures/skips/timeout changes",
+    "source_selection": "Original dual-role and complete-field-roundtrip selected separately; whole legacy file NOT_RUN until this owner patch is composed.",
+    "qualification": "NOT_RUN on composed target",
+    "release": false,
+    "path": "modules/sucafina/Sucafinav1/test/procurement-runtime.test.ts",
+    "postimage_blob": "5c25f109c4df835761e8aba8351686174ac6d7aa",
+    "patch_sha256": "68828d7623bf9bfb9926276f130db23d1754379754fd2fa158b029ef5a9c6f6b",
+    "status": "PREPARED_NOT_APPLIED"
+  },
+  "preservation": {
+    "financial_engine": "No change",
+    "role_visibility_producer": "src/requests.ts unchanged",
+    "CAS": "contract.ts unchanged",
+    "store": "local-store.ts unchanged",
+    "other_owners": "61/65/67/52 and all engines untouched",
+    "presentation": "Only Number(...toPrecision(15)) in seven render interpolations; arithmetic and persisted amounts unchanged"
+  },
+  "composition": {
+    "target_observed_sha": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "target_observed_tree": "a4881429b5d4e835b81c5619264cb8b0238d19f8",
+    "observed_at": "2026-11-15T03:24:44.273Z",
+    "product_preimages_equal": true,
+    "target_files_last_observed": "Both owned production preimages still equal. Target contract.ts and local-store.ts changed after source base; revalidate on exact composed candidate.",
+    "source_pass_transfer": false,
+    "consumer": "71 sole stack writer",
+    "dependency_comparison": "DEPENDENCIES.json#target_comparison"
+  },
+  "external_oracle_manifest": "external/MANIFEST.json"
+}

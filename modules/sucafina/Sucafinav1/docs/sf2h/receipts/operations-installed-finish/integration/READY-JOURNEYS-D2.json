@@ -1,0 +1,98 @@
+{
+  "schema": "sf2h.operations75.journeys-ready.v1",
+  "mission": 75,
+  "at": "2026-11-15T03:47:16Z",
+  "state": "WAITING_FOR_71_COMPOSED_C_PIN",
+  "source": {
+    "branch": "operations-scanner-proof",
+    "material_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "material_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+    "receipt_head": "a65cc2bc3b73ae421cbbe6bef8fdd8112a1475fa",
+    "receipt_tree": "7d2ead93e01e987de9ac4b12782365b620385aae"
+  },
+  "release73": {
+    "terminal": "4a93f6aa8b8af138774fd1e25a7183e7a84706ba",
+    "tree": "e4565e316afbfec64bd576fb2ca08a5f5cf2fa6c",
+    "material_W": "4bf5d040649d807d5ef6c8cbabf1409d8aee849a",
+    "procurement_post": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+    "application_post": "81f469822a2756b3e1ca87effbf5fd865a56010d",
+    "presentation_release_blob": "3d4f9c0a682ea181fdd7173379e2b19129a267d5",
+    "received": true,
+    "authority": "73 ENDED;71 consumes explicit combined release;75 has no runtime write"
+  },
+  "target_observed": {
+    "commit": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "candidate": "C35",
+    "sole_writer": 71,
+    "contains73and75": false
+  },
+  "original_inputs": {
+    "spec": "bab6a804e5f082cc60eb6f27209070b552981035",
+    "host": "8230eb28f322dde255382b74280192f39844724d",
+    "production_config": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+    "host_kind": "Released63 Bun.serve4174 with createOperatorIdentity and real application; no Node/ServerHttpApi installed listener qualification",
+    "expected_ids": [
+      "OP-PROC-01",
+      "OP-PROC-02",
+      "OP-PROC-03",
+      "OP-IMPORT-01",
+      "OP-DOC-01"
+    ],
+    "budgets_unchanged": true
+  },
+  "selection": {
+    "request": {
+      "package": "app",
+      "packageSelector": "packages/app",
+      "directory": "packages/app-shell",
+      "runner": "playwright",
+      "args": [
+        "e2e/sucafina/operations.spec.ts"
+      ],
+      "env": {
+        "ORCHESTRA_CHANNEL": "prod"
+      },
+      "config": "e2e/playwright.production.config.ts"
+    },
+    "request_sha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+    "sourceBranch": "sf2-stack",
+    "snapshot_rule": "One parent exact releasedC; .ci-run.json exclusive delta; new dedicated ref guarded by C prefix/hash/attempt; no duplicate run"
+  },
+  "authority": {
+    "epoch": "operations-finish-browser75",
+    "state": "ACTIVE_FOR_REMAINING_JOURNEY_QUALIFICATION",
+    "source_remote_writer": "75 root",
+    "stack_writer": 71,
+    "compiler_owner": 45,
+    "final_acceptance_owner": "S0",
+    "run_inflight": false
+  },
+  "documentation_erratum": {
+    "path": "integration/DEPENDENCY-CLOSURE.json",
+    "field": "closure_definition",
+    "old_label": "complete W3 tree",
+    "correct_label": "complete W4 tree",
+    "effect": "Text label only; source_basis/source pin/source_tree/nine postimages/patch/R3 are W4. No material delta."
+  },
+  "remaining": [
+    "71 explicit C/tree/ACK and exact postimage reconciliation",
+    "Five original journeys on C using real ephemeral ClamD",
+    "Checks45 and complete campaign gates"
+  ],
+  "GLOBAL_RELEASE": false,
+  "readback_checklist": "integration/EXPECTED-JOURNEYS-INPUTS.json",
+  "criteria_checkpoint": {
+    "path": "criteria/criterion-matrix75.checkpoint-R3.json",
+    "sha256": "51731a60e4288370ab1ea7e85f13641d7c6055c837a5c7f56f825fea6017b0fd",
+    "criteria": 251,
+    "full_criteria_closed": 0,
+    "browser_NOT_RUN": 5
+  },
+  "independent_review": {
+    "path": "reviews/pre-journeys-D1.json",
+    "sha256": "e31e3ef89c7e7ce0b57efd3d7785d77ff803691a75e5f189578baa2e296daf3b"
+  },
+  "checks45_update_comment": 6888678813,
+  "consumer71_host_reconciliation_comment": 6888686934
+}

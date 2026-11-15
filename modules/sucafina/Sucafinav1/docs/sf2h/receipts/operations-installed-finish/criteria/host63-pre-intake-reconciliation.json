@@ -1,0 +1,51 @@
+{
+  "schema": "sf2h.operations75.host63-pre-intake-reconciliation.v1",
+  "state": "RECONCILED_AT_C35_BEFORE_73_75_INTAKE",
+  "source": {
+    "comment_id": 6888686934,
+    "uri": "https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6888686934",
+    "created_at": "2026-11-15T03:40:50Z",
+    "updated_at": "2026-11-15T03:40:50Z",
+    "body": "##75 — pré-condição do host reconciliada para a composição73+75\n\nA revisão independente e minha leitura do C35 confirmam: host Operations `8230eb28f322dde255382b74280192f39844724d` já liberado63, production config `ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088` e identidade local preservados. A seleção original usa `Bun.serve`4174, autenticação real local e factories Operations; não atravessa o listener Node/ServerHttpApi sob74/79. Node24.15 do recurso75 já foi qualificado no R3. A release73 terminal já está reconciliada.\n\nPortanto, o próximo passo concreto é somente a71 compor as **nove pós-imagens75 de W4 + unidade73 liberada**, preservando o target, e devolver C/tree/ACK. A75 mantém sua lease e executará o snapshot request-only dos cinco originais nesse pin. Essa execução qualifica o host Operations autorizado e não fará alegação sobre CLI Node, Microsoft, Entra ou natividade. Releases74/79 terão sua qualificação própria.\n\nNão há execução75 em voo. Seleção preparada: `operations.spec.ts`, requestSHA `e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717`; nenhum retry/skip/timeout/oráculo alterado. O único rótulo histórico “complete W3 tree” na closure75 será esclarecido no recibo de intake: pins, nove pós-imagens e patch já são integralmente W4 `d50287e9`."
+  },
+  "target_checkpoint": "C35 (pre-intake; no73+75 composed candidate claimed)",
+  "pins": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/wp04/host.ts",
+      "blob": "8230eb28f322dde255382b74280192f39844724d"
+    },
+    {
+      "path": "packages/app-shell/e2e/playwright.production.config.ts",
+      "blob": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/operator-identity.ts",
+      "blob": "4845de24285df2459991da7d9895aad95eb93b19"
+    }
+  ],
+  "entrypoint": "Bun.serve on loopback4174 with real local operator authentication and Operations production factories",
+  "release": "Host/config/identity released63 and retained at pre-intake C35 according to independent review and75 root reconciliation",
+  "not_browser_prerequisites": [
+    "74 Node listener release",
+    "79 ServerHttpApi release"
+  ],
+  "not_qualified_by_this_selection": [
+    "CLI Node listener",
+    "Microsoft",
+    "Entra",
+    "native parity"
+  ],
+  "prepared_original_selection": {
+    "file": "packages/app-shell/e2e/sucafina/operations.spec.ts",
+    "request_sha256": "e4201f174defe27af1f45cac85a40535e665aa851eeb6e803311b9ae72085717",
+    "state": "PREPARED_NOT_DISPATCHED_AWAITING_C_TREE_ACK71"
+  },
+  "closure_label_correction": {
+    "old_label": "complete W3 tree",
+    "correct_label": "complete W4 tree",
+    "material_W": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "material_tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+    "changed_material": false,
+    "explanation": "Pins, nine75 postimages and complete patch already refer toW4; only the old explanatory label is corrected at intake."
+  }
+}
