@@ -76,6 +76,90 @@ test.describe("N27/U23 — real native import and export leaves", () => {
     expect((await downloaded).suggestedFilename()).toMatch(/\.xlsx$/)
   })
 
+  test("UI55 January→February invalidates the real target and requires a new authorized discovery", async ({ page, nativeHarness }, info) => {
+    info.annotations.push({
+      type: "criteria-scope",
+      description: "PRE147-R02-04; U23-AC01; U23-AC02; R02-AC02; real producer discovery, no simulated authorization",
+    })
+    const year = required("SF_NATIVE_IMPORT_PERIOD_TEST_YEAR")
+    if (!/^\d{4}$/.test(year)) throw new Error("U23_REAL_PERIOD_YEAR_REQUIRED")
+    const sourceFile = required("SF_NATIVE_IMPORT_FILE_PATH")
+    const january = { start: year + "-01-01", end: year + "-01-31" }
+    const february = { start: year + "-02-01", end: year + "-02-28" }
+    const issuedMutations: string[] = []
+    page.on("request", (request) => {
+      const operation = new URL(request.url()).searchParams.get("sf")
+      if (operation === "import-admit" || operation === "import-preview" || operation === "import-apply")
+        issuedMutations.push(operation)
+    })
+
+    await visit(page, nativeHarness.manifest.target.shellOrigin, "/orchestra/sf-imports/new")
+    const leaf = page.locator('[data-sf-leaf="u23"][data-sf-surface="UI55"]')
+    await expect(leaf).toBeVisible()
+    const start = leaf.getByLabel("Period start")
+    const end = leaf.getByLabel("Period end")
+    const destination = leaf.getByLabel("Destination", { exact: true })
+    const generate = leaf.getByRole("button", { name: "Generate preview" })
+    const find = leaf.getByRole("button", { name: "Find destinations" })
+
+    await start.fill(january.start)
+    await end.fill(january.end)
+    const januaryRequest = page.waitForRequest((request) => {
+      const url = new URL(request.url())
+      return url.searchParams.get("sf") === "import-targets" &&
+        url.searchParams.get("start") === january.start && url.searchParams.get("end") === january.end
+    })
+    await find.click()
+    await januaryRequest
+    await expect(destination).toBeEnabled()
+    await expect(destination.locator('option[value]:not([value=""])')).not.toHaveCount(0)
+    await destination.selectOption({ index: 1 })
+    await leaf.locator('input[type="file"]').setInputFiles(sourceFile)
+    await expect(generate).toBeEnabled()
+
+    // Changing just the start already revokes January selection, even before end is updated.
+    await start.fill(february.start)
+    await expect(destination).toBeDisabled()
+    await expect(destination).toHaveValue("")
+    await expect(destination.locator("option")).toHaveCount(1)
+    await expect(generate).toBeDisabled()
+    await expect(leaf.locator('[data-sf-discovery="required"]')).toBeVisible()
+    await expect(leaf).toHaveAttribute("data-sf-phase", "selecting")
+    await expect(leaf.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
+
+    await end.fill(february.end)
+    await expect(destination).toBeDisabled()
+    await expect(generate).toBeDisabled()
+    const februaryRequest = page.waitForRequest((request) => {
+      const url = new URL(request.url())
+      return url.searchParams.get("sf") === "import-targets" &&
+        url.searchParams.get("start") === february.start && url.searchParams.get("end") === february.end
+    })
+    await find.click()
+    await februaryRequest
+    await expect(destination).toBeEnabled()
+    // Even an identical selectionRef must be chosen again in the new period.
+    await expect(destination).toHaveValue("")
+    await expect(generate).toBeDisabled()
+    await expect(leaf.locator('[data-sf-discovery="required"]')).toHaveCount(0)
+
+    await destination.selectOption({ index: 1 })
+    await expect(generate).toBeEnabled()
+    await leaf.getByLabel("source").selectOption("dashboard")
+    await expect(destination).toBeDisabled()
+    await expect(destination).toHaveValue("")
+    await expect(generate).toBeDisabled()
+    await expect(leaf.locator('[data-sf-discovery="required"]')).toBeVisible()
+    // Returning to the import leaf must never resurrect the old selection or review.
+    await visit(page, nativeHarness.manifest.target.shellOrigin, "/orchestra/sf-imports/exports")
+    await visit(page, nativeHarness.manifest.target.shellOrigin, "/orchestra/sf-imports/new")
+    await expect(leaf).toBeVisible()
+    await expect(destination).toBeDisabled()
+    await expect(generate).toBeDisabled()
+    await expect(leaf.locator('[data-sf-receipt="producer"]')).toHaveCount(0)
+    expect(issuedMutations, "Changing period/surface/route must not admit, preview or apply an old target").toEqual([])
+  })
+
   test("UI55 responsive source fields and actions remain reachable at all frozen widths", async ({ page, nativeHarness }, info) => {
     info.annotations.push({ type: "criteria-scope", description: "U23-AC03; 320/768/1024/1280/1440" })
     await visit(page, nativeHarness.manifest.target.shellOrigin, "/orchestra/sf-imports/new")

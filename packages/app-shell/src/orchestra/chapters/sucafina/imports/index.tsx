@@ -14,6 +14,7 @@ import { SfStatePanel } from "../shared/states"
 import "./imports.css"
 
 type ImportSurface = "planner" | "dashboard"
+type TargetDiscovery = Readonly<{ surface: ImportSurface; start: string; end: string; owner: string }>
 type Target = Extract<SfFilesOperationOutput<"files.import-targets">, { status: "ok" }>["value"][number]
 type Manifest = Extract<SfFilesOperationOutput<"files.import-preview">, { status: "ok" }>["value"]
 type Detail = Extract<SfFilesOperationOutput<"files.import-detail">, { status: "ok" }>["value"]
@@ -46,7 +47,10 @@ type LeafState = {
   start: string
   end: string
   targets: readonly Target[]
+  discovery: TargetDiscovery | undefined
   selectionRef: string
+  reviewedSelectionRef: string
+  needsDiscovery: boolean
   file: File | undefined
   newVersion: boolean
   removeMissing: boolean
@@ -70,7 +74,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const t = (value: string) => language.t(value as Parameters<typeof language.t>[0])
   const [state, setState] = createStore<LeafState>({
     status: "loading", phase: "selecting", surface: "planner",
-    start: "", end: "", targets: [], selectionRef: "",
+    start: "", end: "", targets: [], discovery: undefined, selectionRef: "",
+    reviewedSelectionRef: "", needsDiscovery: false,
     file: undefined, newVersion: false, removeMissing: false, replace: false,
     headerRow: "", manifest: undefined, reference: undefined, detail: undefined,
     busy: false, error: undefined, exportKind: "xlsx", download: undefined,
@@ -102,12 +107,12 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const clearReview = () => {
     applyIntent = undefined
     setState({ manifest: undefined, reference: undefined, detail: undefined,
-      phase: "selecting", error: undefined })
+      reviewedSelectionRef: "", phase: "selecting", error: undefined })
   }
   const failure = (result: Readonly<{ state: SfUiState }>, isMutation = false) => {
     if (result.state === "denied" || result.state === "session-expired") {
       clearReview()
-      setState({ targets: [], selectionRef: "", file: undefined })
+      setState({ targets: [], discovery: undefined, selectionRef: "", needsDiscovery: true, file: undefined })
     }
     if (result.state === "stale" || result.state === "conflict") applyIntent = undefined
     setState({
@@ -132,11 +137,14 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       entry.family === "files" && entry.operations.some((op) => op.operationId === operationId))
     return resource?.operations.some((op) => op.operationId === operationId && op.state === "ready") ?? false
   }
+  const editLocked = () => state.busy || state.phase === "unknown" || state.phase === "submitting"
   const newSource = (surface: ImportSurface) => {
+    if (editLocked()) return
     fence()
     revokeExport()
     clearReview()
-    setState({ surface, targets: [], selectionRef: "", status: "ready" })
+    setState({ surface, targets: [], discovery: undefined, selectionRef: "",
+      needsDiscovery: true, status: "ready" })
   }
   const change = () => {
     // A file/target/option change invalidates any reviewed source version.
@@ -144,25 +152,46 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     clearReview()
     setState({ status: "ready", phase: "selecting" })
   }
+  const changePeriod = (field: "start" | "end", value: string) => {
+    if (state[field] === value || editLocked()) return
+    // Targets are period-bound; a reply from the prior period cannot restore selection.
+    fence()
+    clearReview()
+    setState({ targets: [], discovery: undefined, selectionRef: "", needsDiscovery: true,
+      status: "ready", phase: "selecting", busy: false })
+    setState(field, value)
+  }
   const discover = async () => {
+    if (editLocked()) return
     const api = client()
-    if (!api || !permitted("files.import-targets")) { setState("status", "unavailable"); return }
+    const owner = ownerStamp()
+    if (!api || !owner || !permitted("files.import-targets")) { setState("status", "unavailable"); return }
     if (!!state.start !== !!state.end || (state.start && state.start > state.end)) {
       setState("status", "invalid")
       return
     }
+    const requested: TargetDiscovery = {
+      surface: state.surface, start: state.start, end: state.end, owner,
+    }
     const token = fence()
-    setState({ status: "loading", busy: true, targets: [], selectionRef: "" })
+    setState({ status: "loading", busy: true, targets: [], discovery: undefined, selectionRef: "" })
     const reply = await api["files.import-targets"]({
-      surface: state.surface,
-      ...(state.start && state.end ? { start: state.start, end: state.end } : {}),
+      surface: requested.surface,
+      ...(requested.start && requested.end ? { start: requested.start, end: requested.end } : {}),
     }, { signal: token.signal })
     const targets = accept(token, unpack(reply))
-    if (!targets || !current(token)) return
-    setState({ targets, status: targets.length ? "ready" : "empty", busy: false })
+    if (!targets || !current(token) || requested.owner !== ownerStamp() ||
+      requested.surface !== state.surface || requested.start !== state.start || requested.end !== state.end) return
+    setState({ targets, discovery: requested, needsDiscovery: false,
+      status: targets.length ? "ready" : "empty", busy: false })
   }
   const sourceFormat = () => state.file?.name.toLowerCase().split(".").pop() ?? ""
-  const selectedTarget = () => state.targets.find((item) => item.selectionRef === state.selectionRef)
+  const selectedTarget = () => {
+    const scope = state.discovery
+    if (!scope || scope.owner !== ownerStamp() || scope.surface !== state.surface ||
+      scope.start !== state.start || scope.end !== state.end) return undefined
+    return state.targets.find((item) => item.selectionRef === state.selectionRef && item.surface === scope.surface)
+  }
   const options = () => ({
     newVersion: state.newVersion && state.surface === "planner",
     removeMissing: state.removeMissing && state.surface === "planner",
@@ -202,7 +231,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const api = client()
     const file = state.file
     const target = selectedTarget()
-    if (!api || !file || !target || state.busy || !permitted("files.import-admit") ||
+    if (!api || !file || !target || !state.discovery || editLocked() || !permitted("files.import-admit") ||
       !permitted("files.import-preview") || !permitted("files.import-detail") ||
       !permitted("files.import-reference")) { setState("status", "unavailable"); return }
     if (file.size < 1 || file.size > 16 * 1024 * 1024 ||
@@ -239,7 +268,7 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
       failure({ state: "stale" })
       return
     }
-    setState({ phase: "reviewing", busy: false, status: "ready" })
+    setState({ reviewedSelectionRef: target.selectionRef, phase: "reviewing", busy: false, status: "ready" })
   }
   const cancelPreview = () => {
     fence()
@@ -252,6 +281,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     const reference = state.reference
     if (!api || !manifest || !reference || state.busy || state.phase !== "reviewing" ||
       reference.receipt || manifest.domainApplied || manifest.state !== "preview" ||
+      (props.surfaceId === "UI55" && (!state.reviewedSelectionRef ||
+        selectedTarget()?.selectionRef !== state.reviewedSelectionRef)) ||
       !permitted("files.import-apply")) return
     const token = fence()
     setState({ phase: "submitting", busy: true, status: "ready" })
@@ -347,7 +378,8 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
     setState({ status: ready ? "ready" : auth.state().status === "resolving" ? "loading" :
       auth.state().status === "unauthenticated" ? "session-expired" :
       auth.state().status === "denied" ? "denied" : "unavailable",
-      phase: "selecting", targets: [], selectionRef: "", manifest: undefined,
+      phase: "selecting", targets: [], discovery: undefined, selectionRef: "",
+      reviewedSelectionRef: "", needsDiscovery: true, manifest: undefined,
       reference: undefined, detail: undefined, file: undefined, busy: false })
     if (!ready || !selectedOwner) return
     if (chapter === "UI57" && routeKind === "history") setState("status", "unavailable")
@@ -372,7 +404,9 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
   const isExport = () => props.surfaceId === "UI68"
   const canApply = () => !state.busy && state.phase === "reviewing" &&
     !!state.manifest && !state.manifest.domainApplied && state.manifest.state === "preview" &&
-    !!state.reference && !state.reference.receipt
+    !!state.reference && !state.reference.receipt &&
+    (!isImport() || (!!state.reviewedSelectionRef &&
+      selectedTarget()?.selectionRef === state.reviewedSelectionRef))
   const changeSummary = (kind: Detail["detail"]["changes"][number]["kind"]) =>
     state.detail?.detail.changes.filter((item) => item.kind === kind) ?? []
   const displayValue = (value: Detail["detail"]["changes"][number]["before"]) =>
@@ -394,22 +428,27 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
           <Show when={isImport()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
-                <select value={state.surface} disabled={state.busy} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
+                <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
                 </select>
               </label>
               <label>{t("sf.u23.periodStart")}
-                <input type="date" value={state.start} disabled={state.busy}
-                  onChange={(e) => { change(); setState("start", e.currentTarget.value) }} />
+                <input type="date" value={state.start} disabled={editLocked()}
+                  onChange={(e) => changePeriod("start", e.currentTarget.value)} />
               </label>
               <label>{t("sf.u23.periodEnd")}
-                <input type="date" value={state.end} disabled={state.busy}
-                  onChange={(e) => { change(); setState("end", e.currentTarget.value) }} />
+                <input type="date" value={state.end} disabled={editLocked()}
+                  onChange={(e) => changePeriod("end", e.currentTarget.value)} />
               </label>
-              <button type="button" class="mx-btn" disabled={state.busy}
+              <button type="button" class="mx-btn" disabled={editLocked()}
                 onClick={() => { void discover() }}>{t("sf.u23.find")}</button>
+              <Show when={state.needsDiscovery}>
+                <p role="status" class="sf-files-note" data-sf-discovery="required">
+                  {t("sf.u23.periodRediscover")}
+                </p>
+              </Show>
               <label>{t("sf.u23.destination")}
-                <select value={state.selectionRef} disabled={state.busy || !state.targets.length}
+                <select value={state.selectionRef} disabled={editLocked() || !state.targets.length}
                   onChange={(e) => { change(); setState("selectionRef", e.currentTarget.value) }}>
                   <option value="">{t("sf.u23.destinationEmpty")}</option>
                   <For each={state.targets}>{(target) =>
@@ -417,34 +456,34 @@ export function SfImportsView(props: SfSurfaceProps<"UI55" | "UI56" | "UI57" | "
                 </select>
               </label>
               <label>{t("sf.u23.file")}
-                <input type="file" accept=".xls,.xlsx,.json" disabled={state.busy}
+                <input type="file" accept=".xls,.xlsx,.json" disabled={editLocked()}
                   onChange={(e) => { change(); setState("file", e.currentTarget.files?.[0]) }} />
               </label>
               <Show when={state.surface === "planner"}>
-                <label><input type="checkbox" checked={state.newVersion} disabled={state.busy}
+                <label><input type="checkbox" checked={state.newVersion} disabled={editLocked()}
                   onChange={(e) => { change(); setState("newVersion", e.currentTarget.checked) }} />
                   {t("sf.u23.newVersion")}</label>
-                <label><input type="checkbox" checked={state.removeMissing} disabled={state.busy}
+                <label><input type="checkbox" checked={state.removeMissing} disabled={editLocked()}
                   onChange={(e) => { change(); setState("removeMissing", e.currentTarget.checked) }} />
                   {t("sf.u23.removeMissing")}</label>
               </Show>
               <Show when={selectedTarget()?.sheet && ["All Members", "Projects Import", "All Projects"].includes(selectedTarget()!.sheet!)}>
-                <label><input type="checkbox" checked={state.replace} disabled={state.busy}
+                <label><input type="checkbox" checked={state.replace} disabled={editLocked()}
                   onChange={(e) => { change(); setState("replace", e.currentTarget.checked) }} />
                   {t("sf.u23.replace")}</label>
               </Show>
               <label>{t("sf.u23.headerRow")}
-                <input type="number" min="1" step="1" value={state.headerRow} disabled={state.busy}
+                <input type="number" min="1" step="1" value={state.headerRow} disabled={editLocked()}
                   onChange={(e) => { change(); setState("headerRow", e.currentTarget.value) }} />
               </label>
-              <button type="button" class="mx-btn primary" disabled={state.busy || !selectedTarget() || !state.file}
+              <button type="button" class="mx-btn primary" disabled={editLocked() || !selectedTarget() || !state.file}
                 onClick={() => { void prepare() }}>{t("sf.ui55.primary")}</button>
             </div>
           </Show>
           <Show when={isReference()}>
             <div class="sf-files-fields">
               <label>{t("sf.u23.source")}
-                <select value={state.surface} disabled={state.busy} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
+                <select value={state.surface} disabled={editLocked()} onChange={(e) => newSource(e.currentTarget.value as ImportSurface)}>
                   <option value="planner">Planner</option><option value="dashboard">Dashboard</option>
                 </select>
               </label>
