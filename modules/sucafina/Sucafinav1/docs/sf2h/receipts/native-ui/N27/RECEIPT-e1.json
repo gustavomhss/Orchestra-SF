@@ -1,0 +1,174 @@
+{
+  "schema": "sf2h.native-ui.author-receipt.v1",
+  "slot": "N27",
+  "lease_epoch": "ux-native-n27-e1",
+  "actor": "GPT-6",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "host does not expose session id",
+  "state": "ARTIFACT_READY_BLOCKED_INTEGRATION_QUALIFICATION",
+  "branch": "sf-ux-n27",
+  "branch_head_before_receipt": "3ecd9a6f81ae8398bb0b70bc2b7ff98d2da19617",
+  "expected_initial_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "material_sha": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "global_release": false,
+  "work_orders": [
+    "U23",
+    "U24"
+  ],
+  "surfaces": [
+    "UI55",
+    "UI56",
+    "UI57",
+    "UI68",
+    "UI58",
+    "UI59",
+    "UI60"
+  ],
+  "source_pins": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "blob": "a0deff8a3b272019f472aa2f93499d1940a78370"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/import-http.ts",
+      "blob": "72196e5d8ac256e161be0c4bde2fbf1090cc6786"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-scenario-http.ts",
+      "blob": "d6926db6f770692e4d2ccbe9f425bf389a9f5c95"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/document-http.ts",
+      "blob": "8f679deec37dc99ae335c4bacae2162c9a7a076a"
+    }
+  ],
+  "frozen_contracts": {
+    "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface_manifest": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "component_locks": "818728d0a47c3f4c826943a7ab7262b4faac6a24"
+  },
+  "artifacts": [
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/index.tsx",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "3f3ff8a2d307bf57fe95f3f212c230758f01297b"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/index.tsx",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "304d5887db0b0db22eac81c1309274ea7f5155dd"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/imports/imports.css",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "79b80cbdccf2a3d343efeba0350380c2d65657ec"
+    },
+    {
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/documents/documents.css",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "1215beb3936f740309f3d1771bcf06d5d1722a1c"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u23.ts",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "a5e70551947081c7ee63f51fde8ed499d1e3c53a"
+    },
+    {
+      "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u24.ts",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "9d87e1da57f2bd1e224134577e21ab2dff294279"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "adeb55aa710ccf64209f96c196c6fe13c9a29d59"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u24.spec.ts",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "aca343068e5ae26087c5def249e819010d6c3b47"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N27/ACK-e1.json",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "268d68e532f924e468c847efc9fd0d5dd8372276"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N27/HANDOFF-e1.md",
+      "preimage": "ABSENT@526e7204b310756e552196bbf3d64037dbbf047c",
+      "postimage_blob": "b650bb57573fa921461a5262f8a9260d0da789a0"
+    }
+  ],
+  "shared_patch": {
+    "path": "packages/app-shell/src/i18n/orchestra.ts",
+    "preimage_blob": "91e526cd53e2c020f36efacb60ecad250a4da11b",
+    "state": "INERT_PROPOSED_TO_125_NOT_WRITTEN",
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N27/HANDOFF-e1.md"
+  },
+  "protected_paths_untouched": true,
+  "remote_commits": true,
+  "tests": {
+    "local": "NOT_RUN_PER_PACKET",
+    "surgical": "NOT_RUN_REQUEST_120_AFTER_INTEGRATION",
+    "compiler": "NOT_RUN_REQUEST_119",
+    "real_installed": "NOT_PROVEN",
+    "suites": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u23.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u24.spec.ts"
+    ]
+  },
+  "acceptance": {
+    "U23-AC01": {
+      "authored": "PARTIAL_MAPPED_IN_LEAVES_AND_SPECS",
+      "qualified": "NOT_RUN",
+      "caveat": "Original canonical checks and installed same-C gate still mandatory"
+    },
+    "U23-AC02": {
+      "authored": "PARTIAL_MAPPED_IN_LEAVES_AND_SPECS",
+      "qualified": "NOT_RUN",
+      "caveat": "Original canonical checks and installed same-C gate still mandatory"
+    },
+    "U23-AC03": {
+      "authored": "PARTIAL_MAPPED_IN_LEAVES_AND_SPECS",
+      "qualified": "NOT_RUN",
+      "caveat": "Original canonical checks and installed same-C gate still mandatory"
+    },
+    "U24-AC01": {
+      "authored": "PARTIAL_MAPPED_IN_LEAVES_AND_SPECS",
+      "qualified": "NOT_RUN",
+      "caveat": "Original canonical checks and installed same-C gate still mandatory"
+    },
+    "U24-AC02": {
+      "authored": "PARTIAL_MAPPED_IN_LEAVES_AND_SPECS",
+      "qualified": "NOT_RUN",
+      "caveat": "Original canonical checks and installed same-C gate still mandatory"
+    },
+    "U24-AC03": {
+      "authored": "PARTIAL_MAPPED_IN_LEAVES_AND_SPECS",
+      "qualified": "NOT_RUN",
+      "caveat": "Original canonical checks and installed same-C gate still mandatory"
+    }
+  },
+  "blockers": [
+    "A06/F01/F02/F03/S01/S03/S04 integration",
+    "UI57 lacks files.import-history operation",
+    "UI55 scanner-status absent from file-admit public DTO",
+    "U24 document asset sources lack safe asset/record binding",
+    "Route source surface requires explicit owner resolution",
+    "Native installed host test seed/CI/119 compiler not run"
+  ],
+  "handoff": {
+    "integrator": 125,
+    "ci": 120,
+    "compiler": 119,
+    "detail": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N27/HANDOFF-e1.md"
+  },
+  "prohibited_actions": {
+    "local_tests": false,
+    "merge": false,
+    "deploy": false,
+    "new_dispatcher": false,
+    "reactivate_goal": false
+  }
+}
