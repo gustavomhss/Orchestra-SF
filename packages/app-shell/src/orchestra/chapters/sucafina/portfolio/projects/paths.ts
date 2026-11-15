@@ -8,7 +8,7 @@ import { encodeSfRouteRef } from "../../navigation-state"
  */
 export function sfProjectHref(
   from: SfResolvedRoute<"CAP09" | "CAP10">,
-  kind: "overview" | "projects" | "new" | "detail" | "edit" | "milestones",
+  kind: "overview" | "projects" | "imports" | "new" | "detail" | "edit" | "milestones",
   originalProjectRef?: string,
 ): string | null {
   const owner = new URL(String(from.href), "http://orchestra.invalid")
@@ -30,6 +30,7 @@ export function sfProjectHref(
   let path = "/orchestra/sf-portfolio/"
   if (kind === "overview") path += "overview"
   else if (kind === "projects") path += "projects"
+  else if (kind === "imports") path = "/orchestra/sf-imports/new"
   else if (kind === "new") path += "projects/new"
   else {
     if (!originalProjectRef) return null
