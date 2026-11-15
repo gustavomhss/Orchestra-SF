@@ -1,0 +1,34 @@
+{
+  "schema": "sf2h.ux.cohort19.n0-recheck.v1",
+  "reviewer_task": "/root/ux_n0_review",
+  "independent": true,
+  "requested_model": "gpt-6.1-terra",
+  "provider_attestation": null,
+  "cohort": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "decision": "GO_SESSION_PREFLIGHT_ONLY;AUTHORING_REQUIRES_REAL_ACK_LEASE_SOURCE_CHECK_AND_114_ADMISSION",
+  "examined": [
+    "COMMON",
+    "COHORT",
+    "SOURCE-PINS",
+    "W02",
+    "W11",
+    "W12",
+    "W13",
+    "W16"
+  ],
+  "verified": {
+    "branches": 19,
+    "preserved_original_native_ui_blobs": 134,
+    "product_delta_observed": false,
+    "F01_errata_explicit": true,
+    "U10_queue_scope_limited": true,
+    "U13_pr_scope_limited": true,
+    "C00_same114_required": true
+  },
+  "limits": [
+    "Not full N0 all-families approval",
+    "No producttests/typecheck/installedproof",
+    "No fake authoringGO/sessioncapacity"
+  ],
+  "user_may_start_sessions": true
+}
