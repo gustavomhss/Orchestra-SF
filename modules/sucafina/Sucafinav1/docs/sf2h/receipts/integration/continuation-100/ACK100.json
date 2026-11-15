@@ -1,0 +1,119 @@
+{
+  "schema": "sf2h.integration100.ack.v1",
+  "mission": 100,
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S0-C-e14-browser100",
+  "lease_epoch": "S0-C-e14-browser100",
+  "lease_state": "ACTIVE_FOR_SF2_STACK_ONLY",
+  "github_authenticated_actor": "gustavomhss",
+  "model_effective": "GPT-6",
+  "model_label_from_user": "Astra",
+  "provider_session_id": null,
+  "identity_note": "Actual model family GPT-6 is available; no provider-issued runtime session ID or separate Astra variant attestation exposed. Neither is fabricated.",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "expected_head": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+  "expected_tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
+  "prior_lease": "S0-C-e13-browser71",
+  "prior_lease_state": "EXPLICITLY_ENDED",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "control_observed": "e917f95c2db396abb39f3338e4fe56b3a9246d08",
+  "immutable_material_candidate": {
+    "symbol": "C45",
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116",
+    "qualification": "NOT_RUN"
+  },
+  "terminal71": {
+    "sha": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+    "tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
+    "parent": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "scope": "DOCUMENTARY_ONLY"
+  },
+  "owner_authorities": {
+    "integrator": "S0-C-e14-browser100",
+    "CI_dispatcher": 45,
+    "epic_AM_acceptance": "S0",
+    "WP14": 81,
+    "UI_Decisions": 52,
+    "Reports": 48,
+    "UX20": "USER/SEPARATE_PLAN"
+  },
+  "input_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/100.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/HANDOFF.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/AUTHORITY.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-census-final.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/consumer-acks-final.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/gate-authority-readback.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/gate-queue-final.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/validation-inputs-final.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json",
+    "AGENTS.md"
+  ],
+  "observed_release_heads": {
+    "87": {
+      "sha": "995e29f5b0028f713cfe76026e192a91d6fb7582",
+      "state": "SOURCE_RELEASED_PROOF_SOURCE_SCOPE"
+    },
+    "88": {
+      "sha": "057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f",
+      "state": "READER_COMPLETE_FUNCTIONAL_VISUAL_FINDINGS"
+    },
+    "89": {
+      "sha": "7f520aa617b837b5f56ae5c2ed08ba9bb0f69f45",
+      "state": "RESULT_STORE_ALREADY_INTEGRATED_DO_NOT_REAPPLY"
+    },
+    "90": {
+      "sha": "f6abbcc1677be93122f19ae3c2846fececeadbf4",
+      "state": "SOURCE_PARTIAL_NATIVE_INSTALLED_HOLD"
+    },
+    "94": {
+      "sha": "67bbd67e72fd1ab9703fd38dc9d8cc6ccc782e54",
+      "state": "SOURCE_DELIVERED_HOSTED_QUALIFICATION_HOLD"
+    },
+    "95": {
+      "sha": "9d16d046c3be3e94fa9434dae86bd833f0c0e8e5",
+      "state": "IN_PROGRESS_NOT_CONSUMED"
+    },
+    "96": {
+      "sha": "b47af7b8f02b241133ec202de61977a359848945",
+      "state": "ACK_ONLY_NOT_CONSUMED"
+    },
+    "97": {
+      "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+      "state": "NOT_RELEASED"
+    },
+    "98": {
+      "sha": "eb06b5b03f5d6b52297d43a80a461affb0b8635d",
+      "state": "PATCH_IN_PROGRESS_NOT_CONSUMED"
+    },
+    "99": {
+      "sha": "e19ec6ca2875e60bb6c03a7a3e98289e8dc651d6",
+      "state": "ACK_ONLY_PENDING_CAUSAL_RELEASE"
+    }
+  },
+  "preserved": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "final_selections": 8,
+    "AM": "AM01-AM06",
+    "reviews": 3,
+    "GLOBAL_RELEASE": false
+  },
+  "initial_action": "Read/verify source manifests and preimages; integrate released units sequentially with exact CAS and readback; send findings to owners.",
+  "execution": {
+    "product_tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "CI_dispatches": 0,
+    "workflow_ref_moves": 0,
+    "dev_merge": 0,
+    "deploy": 0
+  }
+}
