@@ -44,6 +44,7 @@ export const SF_U47_COPY = {
   "sf.u47.versions": "Each matched member version is required.",
   "sf.u47.importRoute": "Import",
   "sf.u47.exportRoute": "Export",
+  "sf.u47.installation": "Installation",
 } as const
 
 export const SF_U47_COPY_BR: Readonly<Record<keyof typeof SF_U47_COPY, string>> = {
