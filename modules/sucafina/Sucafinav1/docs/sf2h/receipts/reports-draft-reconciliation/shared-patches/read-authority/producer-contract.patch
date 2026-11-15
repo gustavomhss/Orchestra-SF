@@ -407,19 +407,23 @@
    return async (request: Request, surface: string): Promise<Response | undefined> => {
      const url = new URL(request.url)
      const mode = url.searchParams.get("sf")
-@@ -79,17 +80,28 @@
+@@ -79,17 +80,31 @@
          const authorize = producer.authorize
          const current = () => input.threadContext === producer && producer.prepare === prepare && producer.authorize === authorize
          const digest = digestSfValue(selected)
 -        const admitted = await input.ui.admit(request, "sf_review_prepare", digest)
 -        if (admitted.status !== "ok") return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
 -        try {
+-          if (!current() || !await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
 +        const admitted = await input.ui.admit(request, "sf_review_prepare", digest).catch(() => ({ status: "unavailable" as const, reason: "review-authority-unavailable" }))
 +        if (admitted.status !== "ok") return json(admitted, readStatus(admitted.status))
++        let validated = false
 +        try {
 +          const expectedBinding = request.headers.get("X-SF-Review-Binding")
 +          if (expectedBinding !== null && (!/^[a-f0-9]{64}$/.test(expectedBinding) || expectedBinding !== admitted.value.binding.accessRevision)) return json({ status: "denied", reason: "review-discussion-binding-changed" }, 403)
-           if (!current() || !await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
++          if (!current() || !await input.ui.validate(admitted.value, "sf_review_prepare", digest)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
++          validated = true
++          if (input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
            const result = await prepare.call(producer, { reviewRef: selected.reviewRef, sectionId: selected.sectionId }, structuredClone(selected.basis), admitted.value).catch(() => undefined)
 -          if (!current() || !result) return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
 -          if (result.status !== "ok") return json({ status: result.status === "needs-input" ? "needs-input" : result.status === "denied" ? "denied" : "unavailable", reason: "review-thread-context-unavailable" }, result.status === "needs-input" ? 400 : result.status === "denied" ? 403 : 503)
@@ -438,12 +442,12 @@
 +          return response
 +        } catch {
 +          const authorized = await input.ui.revalidate(admitted.value).catch(() => undefined)
-+          if (authorized === false || !current() || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
++          if (authorized === false || !current() || (validated && input.ui.requestFor(admitted.value) !== request)) return json({ status: "denied", reason: "review-thread-context-unavailable" }, 403)
 +          return json({ status: "unavailable", reason: "review-thread-context-unavailable" }, 503)
          } finally { input.ui.finish(admitted.value) }
        }
        if (mode === "review-contribution") {
-@@ -158,13 +170,17 @@
+@@ -158,13 +173,20 @@
        const closureRef = url.searchParams.get("closureRef") ?? ""
        if (!/^review-closure:[a-f0-9]{64}$/.test(closureRef)) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
        const digest = digestSfValue({ closureRef })
@@ -451,8 +455,12 @@
 -      if (admitted.status !== "ok") return json({ status: "denied", reason: "closure-unavailable" }, 403)
 +      const admitted = await input.ui.admit(request, "sf_review_prepare", digest).catch(() => ({ status: "unavailable" as const, reason: "review-authority-unavailable" }))
 +      if (admitted.status !== "ok") return json(admitted, readStatus(admitted.status))
++      let validated = false
        try {
-         if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "closure-unavailable" }, 403)
+-        if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "closure-unavailable" }, 403)
++        if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest)) return json({ status: "denied", reason: "closure-unavailable" }, 403)
++        validated = true
++        if (input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "closure-unavailable" }, 403)
          const result = await input.closure.read(closureRef, admitted.value)
 -        if (result.status !== "ok" || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "closure-unavailable" }, 403)
 -        return json(result, 200)
@@ -460,12 +468,12 @@
 +        return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
 +      } catch {
 +        const authorized = await input.ui.revalidate(admitted.value).catch(() => undefined)
-+        if (authorized === false || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "closure-unavailable" }, 403)
++        if (authorized === false || (validated && input.ui.requestFor(admitted.value) !== request)) return json({ status: "denied", reason: "closure-unavailable" }, 403)
 +        return json({ status: "unavailable", reason: "closure-unavailable" }, 503)
        } finally { input.ui.finish(admitted.value) }
      }
      if (request.method !== "GET") return json({ status: "denied", reason: "method-unavailable" }, 405)
-@@ -175,8 +191,8 @@
+@@ -175,10 +197,13 @@
      const commentId = currentConversation ? url.searchParams.get("commentId") ?? "" : undefined
      if (currentConversation && (!commentId?.trim() || commentId.length > 8192)) return json({ status: "needs-input", reason: "invalid-reference" }, 400)
      const digest = digestSfValue(currentConversation ? { reviewRef, commentId } : { reviewRef })
@@ -473,10 +481,16 @@
 -    if (admitted.status !== "ok") return json({ status: "denied", reason: "review-unavailable" }, 403)
 +    const admitted = await input.ui.admit(request, "sf_review_prepare", digest).catch(() => ({ status: "unavailable" as const, reason: "review-authority-unavailable" }))
 +    if (admitted.status !== "ok") return json(admitted, readStatus(admitted.status))
++    let validated = false
      try {
-       if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-unavailable" }, 403)
+-      if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest) || input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-unavailable" }, 403)
++      if (!await input.ui.validate(admitted.value, "sf_review_prepare", digest)) return json({ status: "denied", reason: "review-unavailable" }, 403)
++      validated = true
++      if (input.ui.requestFor(admitted.value) !== request || !await input.ui.revalidate(admitted.value)) return json({ status: "denied", reason: "review-unavailable" }, 403)
        if (currentConversation) {
-@@ -192,8 +208,12 @@
+         if (!input.currentThread) return json({ status: "unavailable", reason: "current-thread-producer-unavailable" }, 503)
+         const result = await input.currentThread(reviewRef, commentId!, admitted.value)
+@@ -192,8 +217,12 @@
          return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "conflict" || result.status === "stale" ? 409 : 503)
        }
        const result = await input.reviews.read(reviewRef, admitted.value)
@@ -486,7 +500,7 @@
 +      return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : result.status === "needs-input" ? 400 : result.status === "stale" || result.status === "conflict" ? 409 : 503)
 +    } catch {
 +      const authorized = await input.ui.revalidate(admitted.value).catch(() => undefined)
-+      if (authorized === false || input.ui.requestFor(admitted.value) !== request) return json({ status: "denied", reason: "review-unavailable" }, 403)
++      if (authorized === false || (validated && input.ui.requestFor(admitted.value) !== request)) return json({ status: "denied", reason: "review-unavailable" }, 403)
 +      return json({ status: "unavailable", reason: "review-unavailable" }, 503)
      } finally {
        input.ui.finish(admitted.value)
@@ -1054,7 +1068,6 @@
    const compose = () => createCollaborationHost({ reviewContexts: options.reviewContexts, prepareReviewThreadFence: options.prepareReviewThreadFence, authorizeReviewThreadContext: options.authorizeReviewThreadContext, reviewRecipientAuthority: options.reviewRecipientAuthority, reviewAnswerSource: options.reviewAnswerSource, host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
      workSignals: async (_selection, period, context) => {
        const issued = await createDashboardSourceIssuer({ host, scopedSources: base.persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, context)
-diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts b/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts
 --- a/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts
 +++ b/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixture.ts
 @@ -1,4 +1,5 @@
@@ -1083,3 +1096,171 @@ diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/thread-history-fixtur
    const refresh = createWorkSourceRefresh({ host: fixture.host, issueForActor, authorize: (ref, context) => fixture.authority.sources([ref], context) })
    const currentForHistory = (ref: Extract<BusinessEvidenceRef, { kind: "record" }>, context: TrustedDomainContext) => options.currentTarget ? issueForActor(options.currentTarget(structuredClone(ref), fixture.clock.at), context) : refresh(ref, context)
    const source = createDashboardConfirmationObserver({ host: fixture.host, scopedSources: fixture.persistence, readProjection: (selection, context) => fixture.records.read(selection.reference, context) })
+--- a/apps/cli/src/sucafina-product/extended-http.ts
++++ b/apps/cli/src/sucafina-product/extended-http.ts
+@@ -31,6 +31,7 @@
+   assets: Pick<ReturnType<typeof createSfExtendedAssets>, "bi" | "reviews">
+ }) {
+   const { authority, business } = input
++  const readStatus = (status: string) => status === "ok" ? 200 : status === "denied" ? 403 : status === "needs-input" ? 400 : status === "stale" || status === "conflict" ? 409 : 503
+   const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
+   const options = createSfExtendedBiOptions(input)
+   const reviewCycle = createSfExtendedReviewCycle(input)
+@@ -39,8 +40,12 @@
+     const reviewed = await input.reviews?.http(request, surface)
+     if (reviewed) return reviewed
+     const url = new URL(request.url)
+-    const reportsEntry = !url.searchParams.has("sf") && url.searchParams.get("page") === "Generate Report" && url.searchParams.has("download")
++    // The installed Reports form keeps its originating dashboard page in the
++    // hidden page field. Office exports enter the preserved review flow here.
++    const reportsEntry = !url.searchParams.has("sf") && url.searchParams.has("download") &&
++      (url.searchParams.get("page") === "Generate Report" || ["docx", "pptx"].includes(url.searchParams.get("download") ?? ""))
+     const mode = reportsEntry ? "review" : url.searchParams.get("sf")
++    const reviewRead = mode === "review" || mode === "review-update" || mode === "review-source"
+     if (!["bi", "bi-data", "bi-source", "bi-decision", "bi-options", "review", "review-update", "review-source"].includes(mode ?? "")) return undefined
+     const json = (value: unknown, status = 200) => new Response(request.method === "HEAD" ? null : JSON.stringify(value), { status,
+       headers: { "Content-Type": "application/json", "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } })
+@@ -66,16 +71,21 @@
+     const bootstrap = { mode, page: url.searchParams.get("page"), period, viewId, selectionRef: url.searchParams.get("selectionRef"), reviewRef: url.searchParams.get("reviewRef"), baseRef: url.searchParams.get("baseRef"), candidateRef: url.searchParams.get("candidateRef"), currency: url.searchParams.get("currency"), previousReviewRef: url.searchParams.get("previousReviewRef"), sectionId: url.searchParams.get("sectionId"), referenceId: url.searchParams.get("referenceId"), valueId: url.searchParams.get("valueId"), referenceDigest: url.searchParams.get("referenceDigest") }
+     const digest = digestSfValue(reportsEntry ? { ...bootstrap, reportTopics, reportYear, requestedTitle: url.searchParams.get("title"), requestedFormat: url.searchParams.get("download") } : mode === "bi-decision" ? { ...bootstrap, snapshot: url.searchParams.get("snapshot"), target: url.searchParams.get("target") } : bootstrap)
+     const action = mode?.startsWith("review") ? "sf_review_prepare" : "sf_dashboard_read"
+-    const admitted = await authority.ui.admit(request, action, digest)
+-    if (admitted.status !== "ok") return json(admitted, 403)
++    const admitted = await authority.ui.admit(request, action, digest).catch((error: unknown) => {
++      if (!reviewRead) throw error
++      return { status: "unavailable" as const, reason: "review-authority-unavailable" }
++    })
++    if (admitted.status !== "ok") return json(admitted, reviewRead ? readStatus(admitted.status) : 403)
+     const call = admitted.value
++    let validated = false
+     try {
+       if (!await authority.ui.validate(call, action, digest)) return json({ status: "denied", reason: "authority-unavailable" }, 403)
++      validated = true
+       if (mode === "review-update") {
+         const reference = url.searchParams.get("reviewRef")
+         if (!reference || reference.length > 2048) return json({ status: "needs-input", reason: "invalid-review-reference" }, 400)
+         const result = await reviewCycle.update(reference, call)
+-        return json(result, result.status === "ok" ? 200 : result.status === "denied" ? 403 : 409)
++        return json(result, readStatus(result.status))
+       }
+       if (mode === "review-source") {
+         const reference = url.searchParams.get("reviewRef"), referenceId = url.searchParams.get("referenceId")
+@@ -203,12 +213,12 @@
+           data = { reviewRef, ...(selectedSection ? { selectedSection: { ...selectedSection, content: selectedSection.content as DomainProjection } } : {}) }
+         } else if (url.searchParams.has("previousReviewRef")) {
+           const updated = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
+-          if (updated.status !== "ok") return json(updated, updated.status === "denied" ? 403 : 409)
++          if (updated.status !== "ok") return json(updated, readStatus(updated.status))
+           data = updated.value
+           const captured = digestSfValue(updated.value)
+           verifyReviewBootstrap = async () => {
+             const again = await reviewCycle.update(url.searchParams.get("previousReviewRef")!, call)
+-            if (again.status !== "ok") return json(again, again.status === "denied" ? 403 : 409)
++            if (again.status !== "ok") return json(again, readStatus(again.status))
+             if (digestSfValue(again.value) !== captured) return json({ status: "stale", reason: "review-update-changed-before-display" }, 409)
+             return undefined
+           }
+@@ -251,6 +261,14 @@
+         // or bootstrap as substitutions of the surrounding document.
+         .replace("</body>", () => `${bootstrapHtml}<script>${inline}</script></body>`)
+       return new Response(request.method === "HEAD" ? null : html, { headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store", "Content-Security-Policy": htmlPolicy(html), "X-Content-Type-Options": "nosniff", ...(accessRevision ? { "X-SF-Access-Revision": accessRevision } : {}) } })
++    } catch (error) {
++      if (!reviewRead) throw error
++      // Before validate consumes the lease, requestFor is intentionally empty.
++      // An interrupted authorization check must not masquerade as lost access.
++      const authorized = await authority.ui.revalidate(call).catch(() => undefined)
++      if (request.signal.aborted || authorized === false || validated && authority.ui.requestFor(call) !== request)
++        return json({ status: "denied", reason: "authority-unavailable" }, 403)
++      return json({ status: "unavailable", reason: "review-read-unavailable" }, 503)
+     } finally { authority.ui.finish(call) }
+   }
+   return (request: Request, surface: string) => input.reviews?.readScope
+--- a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+@@ -179,7 +179,13 @@
+     privateCommands: [...sfHumanActions.map((action) => `sf-human:${action}`), ...Object.keys(collaborationReads).map((action) => `sf-read:${action}`)],
+     createId: input.createId, now: input.now, commandIdentity: input.commandIdentity,
+     authorize: async (request, operation) => {
+-      const actor = await resolve(request).catch(() => undefined)
++      // Read uncertainty must reach its HTTP/producer boundary. Undefined is
++      // still an explicit negative; write and native admission keep their gates.
++      const readAction = operation.startsWith("sf-read:") ? operation.slice("sf-read:".length) :
++        operation.startsWith("sf-human:") ? operation.slice("sf-human:".length) : undefined
++      const readOperation = operation === "sf_review_prepare" ||
++        readAction !== undefined && Object.hasOwn(collaborationReads, readAction)
++      const actor = readOperation ? await resolve(request) : await resolve(request).catch(() => undefined)
+       if (operation.startsWith("sf-read:")) {
+         const read = collaborationReads[operation.slice("sf-read:".length)]
+         if (!actor || !read || !actor.grant.operations.includes(read.operation) || read.namespaces.some((namespace) => !actor.grant.namespaces.includes(namespace))) return undefined
+--- a/apps/cli/src/sucafina-product/extended-review-cycle.ts
++++ b/apps/cli/src/sucafina-product/extended-review-cycle.ts
+@@ -29,34 +29,43 @@
+   const issue = createDashboardSourceIssuer({ host: authority.host, scopedSources: input.persistence })
+   const update = async (reviewRef: string, call: TrustedDomainContext): Promise<PortResult<SfReviewUpdate>> => {
+     if (!input.reviews) return { status: "unavailable", reason: "review-producers-unavailable" }
+-    const prior = await input.reviews.reviews.read(reviewRef, call)
+-    if (prior.status !== "ok") return prior
+-    const value: SfReviewUpdate = { available: false, previousReviewRef: prior.value.id, items: [], confirmations: [], unavailableSections: [] }
+-    for (const section of prior.value.sections) {
+-      const projection = section.content as DomainProjection & { reviewAgendaNote?: string; reviewChart?: unknown; reviewOutcome?: unknown }
+-      const refs = section.sourceRefs.filter((ref) => ref.surface === "dashboard" && ref.type === "dashboard-page")
+-      if (refs.length !== 1 || section.sourceRefs.length !== 1 || projection.reviewChart || projection.reviewOutcome || prior.value.comments.some((comment) => comment.sourceRefs.some((ref) => section.sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))))) {
+-        value.unavailableSections.push({ sectionId: section.id, title: section.title, reason: "A seleção de gráfico, outcome, thread ou produtor deste tópico não foi preservada como agenda editável. Escolha novamente essa fonte no produto antes de incluí-la na sucessora." })
+-        continue
++    try {
++      const prior = await input.reviews.reviews.read(reviewRef, call)
++      if (prior.status !== "ok") return prior
++      const value: SfReviewUpdate = { available: false, previousReviewRef: prior.value.id, items: [], confirmations: [], unavailableSections: [] }
++      for (const section of prior.value.sections) {
++        const projection = section.content as DomainProjection & { reviewAgendaNote?: string; reviewChart?: unknown; reviewOutcome?: unknown }
++        const refs = section.sourceRefs.filter((ref) => ref.surface === "dashboard" && ref.type === "dashboard-page")
++        if (refs.length !== 1 || section.sourceRefs.length !== 1 || projection.reviewChart || projection.reviewOutcome || prior.value.comments.some((comment) => comment.sourceRefs.some((ref) => section.sourceRefs.some((source) => digestSfValue(source) === digestSfValue(ref))))) {
++          value.unavailableSections.push({ sectionId: section.id, title: section.title, reason: "A seleção de gráfico, outcome, thread ou produtor deste tópico não foi preservada como agenda editável. Escolha novamente essa fonte no produto antes de incluí-la na sucessora." })
++          continue
++        }
++        const source = refs[0]!
++        const current = await issue({ page: source.id, fields: source.fields, period: section.period }, call)
++        if (current.status !== "ok") return current
++        const resolved = await business.dashboardSources.resolveDashboardSource(current.value.selectionRef, call)
++        if (resolved.status !== "ok") return resolved
++        const discovered = await business.dashboardServices.discover({ page: source.id, period: section.period }, call)
++        if (discovered.status !== "ok") return discovered
++        if (!discovered.value.agenda) { value.unavailableSections.push({ sectionId: section.id, title: section.title, reason: "Este tópico requer uma seleção de origem antes de preparar a nova revisão." }); continue }
++        value.available ||= resolved.value.evidence.target.incarnation !== source.incarnation || resolved.value.evidence.target.version !== source.version
++        const item: ReviewAgendaItem = { ...sfDashboardReviewAgendaItem(discovered.value.agenda.section), id: section.id,
++          ...(projection.reviewAgendaNote !== undefined ? { agendaNote: projection.reviewAgendaNote } : {}) }
++        // C04 keeps the exact projection but does not persist its original C17 recordRefs. Do not infer "all" from a count.
++        value.confirmations.push({ sectionId: section.id, label: `Selecionar explicitamente os registros atuais autorizados de ${source.id}, ${section.period.start} – ${section.period.end}; revisar a lista e remover registros antes de preservar.` })
++        value.items.push(item)
+       }
+-      const source = refs[0]!
+-      const current = await issue({ page: source.id, fields: source.fields, period: section.period }, call)
+-      if (current.status !== "ok") return current
+-      const resolved = await business.dashboardSources.resolveDashboardSource(current.value.selectionRef, call)
+-      if (resolved.status !== "ok") return resolved
+-      const discovered = await business.dashboardServices.discover({ page: source.id, period: section.period }, call)
+-      if (discovered.status !== "ok") return discovered
+-      if (!discovered.value.agenda) { value.unavailableSections.push({ sectionId: section.id, title: section.title, reason: "Este tópico requer uma seleção de origem antes de preparar a nova revisão." }); continue }
+-      value.available ||= resolved.value.evidence.target.incarnation !== source.incarnation || resolved.value.evidence.target.version !== source.version
+-      const item: ReviewAgendaItem = { ...sfDashboardReviewAgendaItem(discovered.value.agenda.section), id: section.id,
+-        ...(projection.reviewAgendaNote !== undefined ? { agendaNote: projection.reviewAgendaNote } : {}) }
+-      // C04 keeps the exact projection but does not persist its original C17 recordRefs. Do not infer "all" from a count.
+-      value.confirmations.push({ sectionId: section.id, label: `Selecionar explicitamente os registros atuais autorizados de ${source.id}, ${section.period.start} – ${section.period.end}; revisar a lista e remover registros antes de preservar.` })
+-      value.items.push(item)
++      const again = await input.reviews.reviews.read(reviewRef, call)
++      if (again.status === "denied") return again
++      if (!await authority.host.revalidate(call)) return { status: "denied", reason: "review-access-changed" }
++      if (again.status !== "ok") return again
++      return digestSfValue(again.value) === digestSfValue(prior.value)
++        ? { status: "ok", value } : { status: "stale", reason: "review-update-changed" }
++    } catch {
++      const authorized = await authority.host.revalidate(call).catch(() => undefined)
++      return authorized === false ? { status: "denied", reason: "review-access-changed" } :
++        { status: "unavailable", reason: "review-update-unavailable" }
+     }
+-    const again = await input.reviews.reviews.read(reviewRef, call)
+-    return again.status === "ok" && digestSfValue(again.value) === digestSfValue(prior.value) && await authority.host.revalidate(call)
+-      ? { status: "ok", value } : { status: "denied", reason: "review-access-changed" }
+   }
+   const evidence = (review: PreservedReview, referenceId: string) => review.sections.flatMap((section) => {
+     const projection = section.content as DomainProjection & { reviewOutcome?: ObservedResultProjection; reviewOutcomeComparison?: ReviewOutcomeComparison }

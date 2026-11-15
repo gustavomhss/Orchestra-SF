@@ -154,7 +154,7 @@
       ]
     }
   },
-  "total_cases": 37,
+  "total_cases": 41,
   "c05_addendum": {
     "cases": 10,
     "budget_ms": 120000,
@@ -210,5 +210,28 @@
     ],
     "budget_ms": 120000,
     "budget_source": "Existing C05 real fixture journeys use120000; existing budgets unchanged."
+  },
+  "installed_review_entry_addendum": {
+    "schema": "sf-mission48-installed-review-entry-test-v1",
+    "file": "installed-review-entry.test.ts",
+    "target": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-review-entry.test.ts",
+    "cases": 4,
+    "bytes": 12562,
+    "sha256": "8d63e518d7a02ef11921acd27dd3f2073345b39fa682273f9a8db245ae73974a",
+    "blob": "59743deea7211c8cda0dc09c5feb9b160f7c0ca8",
+    "base_commit": "c44a3b80da2549c6a3bc4cbdb186a275d93370ab",
+    "status": "PROPOSED_NOT_EXECUTED",
+    "local_tests": "NOT_RUN",
+    "remote_mutations": "NONE",
+    "composition": "Existing financialCompositionFixture with unchanged grants, real installed authority, SQLite, Business/Review/Extended factories and real browser assets. C05 is preserved through actual agenda and human preserve HTTP routes.",
+    "budget_ms": 60000,
+    "budget_source": "All three existing proposed tests retain 60000; one independent cycle case has the same separate limit. No existing assertion or budget was weakened.",
+    "limits": [
+      "The registered sf-human alias has no human-action grant in this fixture: resolver interruption is followed by real missing-grant denial; no authorized-positive alias claim.",
+      "Authorized-positive coverage exists for Reports and sf-read using existing grants.",
+      "The update test interrupts authority I/O at the second actual canonical C05 read and tests both review-update and previousReviewRef focus routes.",
+      "No C05 body drift is manufactured; stale-on-authorized-digest-change is a statically reviewed branch.",
+      "The four browser nominal journeys remain required on explicit composition."
+    ]
   }
 }

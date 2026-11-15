@@ -1,0 +1,163 @@
+{
+  "config": {
+    "configFile": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/playwright.production.config.ts",
+    "rootDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+    "forbidOnly": true,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": {},
+    "maxFailures": 0,
+    "metadata": {
+      "bundle": "production"
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "bundle": "production"
+        },
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e",
+        "testIgnore": [
+          "performance/**"
+        ],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 60000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json"
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.59.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "sucafina/reports.spec.ts",
+      "file": "sucafina/reports.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "CI-UI-REPORTS · real preserved dossier",
+          "file": "sucafina/reports.spec.ts",
+          "line": 19,
+          "column": 13,
+          "specs": [
+            {
+              "title": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6056592b37faa030393e-fd019dc4c55e77b430c2",
+              "file": "sucafina/reports.spec.ts",
+              "line": 22,
+              "column": 3
+            },
+            {
+              "title": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6056592b37faa030393e-ee07c0ba4c7252737c4b",
+              "file": "sucafina/reports.spec.ts",
+              "line": 36,
+              "column": 3
+            },
+            {
+              "title": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6056592b37faa030393e-effa19c87d0feea601e1",
+              "file": "sucafina/reports.spec.ts",
+              "line": 101,
+              "column": 3
+            },
+            {
+              "title": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 180000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [],
+                  "status": "skipped"
+                }
+              ],
+              "id": "6056592b37faa030393e-bf67b9f1725920a5f8ec",
+              "file": "sucafina/reports.spec.ts",
+              "line": 116,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-11-15T00:21:43.399Z",
+    "duration": 277.79499999999996,
+    "expected": 0,
+    "skipped": 4,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
