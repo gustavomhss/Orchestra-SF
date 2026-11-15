@@ -40,7 +40,7 @@ export async function documentJourney(page: Page, info: TestInfo) {
     ["Payment terms", "Net 45"],
     ["Currency", "USD"],
   ]) await create.getByLabel(label!, { exact: true }).fill(value!)
-  await create.getByLabel("Risk rating", { exact: true }).selectOption("Low")
+  await create.getByRole("combobox", { name: "Risk rating", exact: true }).selectOption("Low")
   const creation = commandResponse(page, "create")
   await create.getByRole("button", { name: "Create supplier", exact: true }).click()
   const created = await creation

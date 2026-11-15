@@ -59,7 +59,13 @@ export async function importJourney(page: Page, info: TestInfo) {
     const candidate = new URL(url)
     return candidate.origin === account.origin && candidate.pathname === new URL(account.baseURL).pathname + "/planner" && candidate.searchParams.get("sf") === mode
   }
-  const waiting = (mode: string, method = "GET") => page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
+  const waiting = (mode: string, method = "GET") => {
+    const response = page.waitForResponse((response) => isMode(response.url(), mode) && response.request().method() === method)
+    // Admission can fail before the later preview/detail responses exist. Observe teardown
+    // rejection eagerly; returning the original promise preserves every awaited failure.
+    void response.catch(() => undefined)
+    return response
+  }
   expect((await page.goto(account.baseURL + "/planner?page=Versions"))?.status()).toBe(200)
   const first = page.locator('form[data-page="Versions"][data-command="save"][data-record=""]')
   await expect(first).toHaveCount(1)
