@@ -5,19 +5,20 @@ import { SF_U41_COPY } from "@/i18n/orchestra-chapters/sf-u41"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
 import { createSfCollaborationClient } from "@orchestra/client/sucafina/collaboration"
 import { SfCollaboration } from "@orchestra/schema/sucafina/collaboration"
+import { SfWork } from "@orchestra/schema/sucafina/work"
 import type { SfRef } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../context"
 import type { SfSurfaceProps } from "../context/contracts"
 import { encodeSfRouteRef } from "../navigation-state"
 import { SfPageFrame } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
-import { SfDataTable, type SfColumn, type SfSort, type SfUiState } from "../shared/table"
+import { SfDataTable, type SfColumn, type SfSort, type SfUiState, type SfCopyKey as SfTableCopyKey } from "../shared/table"
 import "./work.css"
 
 type Listed = Extract<typeof SfCollaboration.operations["collaboration.work-list"]["output"]["Type"], { status: "ok" }>["value"]
 type WorkItem = Listed["items"][number]
 type Selection = Readonly<{ selectionRef: string; period: Readonly<{ start: string; end: string }> }>
-type Details = Readonly<{ item: WorkItem; details: readonly Readonly<{ label: string; value: string }>[]; links: readonly Readonly<{ label: string; url: string }>[] }>
+type Details = Extract<typeof SfWork.operations["projection.work-item"]["output"]["Type"], { status: "ok" }>["value"]
 type Snapshot = Readonly<{ generation: number; ownerKey: string; accessRevision: string; transport: NonNullable<ReturnType<ReturnType<typeof useSfContext>["ready"]>>["transport"]; publicOrigin: string; mount: string }>
 
 /** U41 only reads the two real product projections. It never creates a task or infers an owner. */
@@ -45,7 +46,7 @@ function safeSourceHref(raw: string, publicOrigin: string, mount: string): strin
     return url.pathname + url.search
   } catch { return undefined }
 }
-function nextNativeRoute(item: WorkItem): string | undefined {
+function nextNativeRoute(item: Details["item"]): string | undefined {
   const destination = item.destination
   if (destination?.kind !== "thread") return undefined
   return "/orchestra/sf-work/threads/" + encodeSfRouteRef(destination.threadId)
@@ -60,6 +61,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
     "sf.common.conflict" | "sf.common.operationUnknown" | "sf.common.partial"
   type Key = Parameters<typeof SfPageFrame>[0]["titleKey"]
   const key = (copy: Copy): Key => copy as Key
+  const tableKey = (copy: Copy): SfTableCopyKey => copy as unknown as SfTableCopyKey
   const t = (copy: Copy) => language.t(copy as Parameters<typeof language.t>[0])
   const [start, setStart] = createSignal("")
   const [end, setEnd] = createSignal("")
@@ -223,19 +225,19 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
   const tableState = createMemo<SfUiState>(() =>
     state() === "ready" && items() && visible().length === 0 ? "filtered-empty" : state())
   const columns: readonly SfColumn<WorkItem>[] = [
-    { id: "title", labelKey: key("sf.u41.action"), align: "start",
+    { id: "title", labelKey: tableKey("sf.u41.action"), align: "start",
       widthPolicy: { kind: "flex", minPx: 210, weight: 3 }, sortKey: "title",
       render: (row) => <span class="sf-work-action">{row.title ?? t("sf.common.unavailable")}</span> },
-    { id: "kind", labelKey: key("sf.u41.kind"), align: "start",
+    { id: "kind", labelKey: tableKey("sf.u41.kind"), align: "start",
       widthPolicy: { kind: "content", minPx: 100, maxPx: 170 },
       render: (row) => <span>{row.kind}</span> },
-    { id: "state", labelKey: key("sf.u41.state"), align: "start",
+    { id: "state", labelKey: tableKey("sf.u41.state"), align: "start",
       widthPolicy: { kind: "content", minPx: 90, maxPx: 165 }, sortKey: "state",
       render: (row) => <span>{row.state}</span> },
-    { id: "owner", labelKey: key("sf.u41.owner"), align: "start",
+    { id: "owner", labelKey: tableKey("sf.u41.owner"), align: "start",
       widthPolicy: { kind: "flex", minPx: 130, weight: 2 },
       render: (row) => <span>{row.ownerLabel ?? row.ownerRef}</span> },
-    { id: "due", labelKey: key("sf.u41.due"), align: "start",
+    { id: "due", labelKey: tableKey("sf.u41.due"), align: "start",
       widthPolicy: { kind: "content", minPx: 100, maxPx: 145 }, sortKey: "due",
       render: (row) => <span>{row.due ?? "—"}</span> },
   ]
@@ -293,9 +295,9 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                     onSort={setSort}
                     onPage={() => undefined}
                     onSelect={(ref) => void selectWork(ref)}
-                    rowActions={() => [{ id: "details", labelKey: key("sf.u41.details"), tone: "secondary", disabled: false, busy: false }]}
+                    rowActions={() => [{ id: "details", labelKey: tableKey("sf.u41.details"), tone: "secondary", disabled: false, busy: false }]}
                     onRowAction={(request) => void selectWork(request.recordRef)}
-                    captionKey={key("sf.u41.table")}
+                    captionKey={tableKey("sf.u41.table")}
                     density="comfortable"
                     state={tableState()}
                   />
@@ -326,13 +328,13 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                                 </Show>
                                 <For each={view().links}>
                                   {(link) => <Show when={safeSourceHref(link.url, snapshot()?.publicOrigin ?? "", snapshot()?.mount ?? "")}>
-                                    {(href) => <A href={href()}>{link.label}</A>}
+                                    {(href) => <a href={href()}>{link.label}</a>}
                                   </Show>}
                                 </For>
                                 <button class="mx-btn" type="button" onClick={() => void readDestination()}>
                                   {t("sf.u41.checkDestination")}
                                 </button>
-                                <Show when={destination()}>{(href) => <A href={href()}>{t("sf.u41.openSource")}</A>}</Show>
+                                <Show when={destination()}>{(href) => <a href={href()}>{t("sf.u41.openSource")}</a>}</Show>
                               </div>
                             </>
                           )}
