@@ -47,7 +47,8 @@
     "qualification": "QUALIFICATION.json",
     "review": "REVIEW80.json",
     "checks45": "checks/REQUEST-45.json",
-    "rule": "Integrate the complete declared unit, preserve unchanged contracts/formulas and apply only against matching preimages."
+    "rule": "Integrate the complete declared unit, preserve unchanged contracts/formulas and apply only against matching preimages.",
+    "causality": "CAUSALITY-ADDENDUM.json"
   },
   "behavior": {
     "canonical_null_reassessment_stable": true,
@@ -66,7 +67,7 @@
       "conclusion": "failure",
       "pass": 2,
       "fail": 6,
-      "role": "causal red on preimage"
+      "role": "Exploratory preimage: five product failures; null failure confounded by matcher, reconciled in addendum"
     },
     "R2": {
       "run": 43674446763,
@@ -87,7 +88,14 @@
       "unresolved_fail": 0
     },
     "no_local_product_tests": true,
-    "no_POST_or_P03_rerun": true
+    "no_POST_or_P03_rerun": true,
+    "R4": {
+      "run": 43676126745,
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 2,
+      "role": "Clean negative null control paired with R3; counterfactual never released or applied to source/target"
+    }
   },
   "consumer_compatibility": {
     "52": "Canonical exports/schema unchanged; case/ChoiceRecord history preserved by original legacy test",
@@ -125,5 +133,7 @@
   "ack71": "REQUESTED_IN_HANDOFF_NOT_YET_OBSERVED",
   "integrated_candidate_qualified": false,
   "full_campaign_qualification": false,
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "evidence_receipt_revision": 2,
+  "material_unchanged_since_first_terminal": "ce9ef9a9835e56488584e2db97b4f3060d251361"
 }

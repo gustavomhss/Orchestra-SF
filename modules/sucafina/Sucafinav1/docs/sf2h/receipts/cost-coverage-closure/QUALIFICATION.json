@@ -16,7 +16,7 @@
       "conclusion": "failure",
       "pass": 2,
       "fail": 6,
-      "role": "causal preimage reproduction; never acceptance PASS"
+      "role": "Exploratory preimage: five product-attributable failures and one matcher-confounded null failure; see CAUSALITY-ADDENDUM.json."
     },
     {
       "attempt": "R2",
@@ -35,6 +35,16 @@
       "pass": 9,
       "fail": 0,
       "role": "All nine tests in the two corrected assertion-isolation files pass"
+    },
+    {
+      "attempt": "R4",
+      "run": 43676126745,
+      "job": 132696560814,
+      "conclusion": "failure",
+      "pass": 0,
+      "fail": 2,
+      "filtered_out": 7,
+      "role": "Clean null counterfactual: same final tests fail by uncategorized-component with only original C10 product blob restored; not a released candidate or acceptance run."
     }
   ],
   "deduplication": {
@@ -197,5 +207,11 @@
     "Owner45 compiler/guards have no result yet",
     "Integrator71 must intake/qualify actual composed target"
   ],
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "causal_null_proof": {
+    "addendum": "CAUSALITY-ADDENDUM.json",
+    "negative_run": 43676126745,
+    "positive_run": 43675129605,
+    "unit_and_C08_persisted": true
+  }
 }

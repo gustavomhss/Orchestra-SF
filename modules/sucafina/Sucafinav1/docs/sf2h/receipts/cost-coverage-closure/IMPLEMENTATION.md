@@ -2,7 +2,7 @@
 
 ## Defect and correction
 
-The source62 diagnosis identified a mismatch between original assessment and reassessment of normalized coverage. The causal Actions run R1 now reproduces it on the unchanged product blob `e913189a675bbcfa81a657f58d2255eac3b6dce2`: an included component whose amount is null becomes a pending row, which has no componentRefs in the canonical contract. The old assessment collected included references from the pre-normalized input; a later reassessment collected none for that pending row and added `uncategorized-component`. Identical financial inputs therefore produced different assessments.
+The source62 diagnosis identified a mismatch between original assessment and reassessment of normalized coverage. The isolated counterfactual Actions run R4 reproduces it with the final assertion-safe tests on the unchanged product blob `e913189a675bbcfa81a657f58d2255eac3b6dce2`: an included component whose amount is null becomes a pending row, which has no componentRefs in the canonical contract. The old assessment collected included references from the pre-normalized input; a later reassessment collected none for that pending row and added `uncategorized-component`. Identical financial inputs therefore produced different assessments.
 
 The correction collects included references from the normalized entries and only establishes an orphan once the inventory has no pending row. Pending inventory still prevents completeness. A genuinely unassigned component in an otherwise resolved inventory remains rejected, and validateScenarioCoverage independently verifies every component before a complete seal. Existing null expectations (`issues: []`) remain intact.
 
@@ -24,7 +24,7 @@ The immutable legacy tests remain selected for implementation70000 ->235000/adva
 
 ## Evidence and integration
 
-R1 contains6 observed failures and2 passing controls on the preimage. The exact stability.test.ts blob `32dd80e500aabb7d7bc746925a7591acad5a1508` is reused in R2. No assertion or timeout was weakened. R2 selects23 tests in7 named files through the existing Actions request lane, with no local product test, compiler, guard, browser POST replay or P03 rerun.
+R1 contains6 observed failures and2 passing controls on the preimage. Five failures are attributable to the product; its null failure is confounded by the Bun matcher and is not used as the clean orphan-issue witness. The exact stability.test.ts blob `32dd80e500aabb7d7bc746925a7591acad5a1508` is reused in R2. No assertion or timeout was weakened. R2 selects23 tests in7 named files through the existing Actions request lane, with no local product test, compiler, guard, browser POST replay or P03 rerun.
 
 The complete code/test patch, full product preimage/postimage and per-file hashes are in [PATCH-MANIFEST.json](PATCH-MANIFEST.json). The exact W tree and unchanged dependencies are in [DEPENDENCIES.json](DEPENDENCIES.json). Execution outcomes and unclosed criteria are recorded separately in the final criteria matrix and run receipts. Owner45 has the concrete package-check request. Owner71 alone integrates the target. Source evidence is not a global release, an installed BI acceptance or an integrated candidate proof.
 
@@ -39,3 +39,7 @@ The implementation is supported by the exact Bun1.3.14 source: [toMatchObject](h
 The unchanged legacy choice-history test actually reached both55000 and15000 assertions, revised the same durable case, retained the original ChoiceRecord digest, reopened SQLite, restarted the store and read the history with an authorized second participant. The new C08 registration test also passes its full no-op reassessment equality. These are source fixture proofs; installed human N/A and UI/native/BI qualification remain separate.
 
 Final material W:`11859ee19d231738b7dce8a88e00866892d61ac9`; tree:`83331236901857301f3e6747ebb4291cb98ecb34`. Compiler/guards45 are requested but have no observed result. The release is bounded to this source payload and does not grant integrated or global acceptance.
+
+## Causal attribution addendum
+
+[R4](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43676126745) executes only the two null cases with the exact final tests and fixtures, restoring only the C10 preimage in a diagnostic snapshot. Both fail specifically because reassessment adds `uncategorized-component`; there is no DataCloneError or undefined reassessment. Both same tests pass in R3. Source and target branches were never reverted, and this counterfactual must not be integrated. The [addendum](CAUSALITY-ADDENDUM.json) preserves the original R1/R2 logs while correcting attribution. All23 qualified candidate tests, the code/test patch and the owner45 material request remain unchanged.

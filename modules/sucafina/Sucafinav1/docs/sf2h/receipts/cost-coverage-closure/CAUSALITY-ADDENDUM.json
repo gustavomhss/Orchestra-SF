@@ -1,0 +1,43 @@
+{
+  "schema": "sf2h.cost-coverage-closure.causality-addendum.v1",
+  "mission": 80,
+  "state": "CAUSAL_NULL_ATTRIBUTION_CORRECTED_AND_VERIFIED",
+  "supersedes_only": "R1's first included-null failure must not be presented as a clean orphan-issue witness.",
+  "material_release_unchanged": {
+    "W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+    "tree": "83331236901857301f3e6747ebb4291cb98ecb34",
+    "product_blob": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+    "unique_qualified_tests": 23,
+    "patch_sha256": "2610414176ea887c8a765109a05baf409506f4cda8783dc445c384ecc30736ce"
+  },
+  "R1": {
+    "run": 43673699755,
+    "pass": 2,
+    "fail": 6,
+    "classification": "Exploratory baseline: five product-attributable failures and one matcher-confounded null failure.",
+    "valid_product_failures": [
+      "assessment horizon is caller's original object; test stops at that identity assertion",
+      "reassessment horizon is caller's original object; test stops at that identity assertion",
+      "getter changes scenario/currency/version across awaited resolver",
+      "resolver can rewrite expected references via its input",
+      "classifier can mutate an entry after checking it and still produce complete"
+    ],
+    "confounded_failure": "included-null normalized assessment is undefined after Bun replaced input.entries with its asymmetric matcher; do not infer uncategorized-component from this failure"
+  },
+  "R4_and_R3": {
+    "R4": 43676126745,
+    "R4_outcome": "0pass/2fail;bothfailbyadditionaluncategorized-component",
+    "R3": 43675129605,
+    "R3_outcome": "bothsamefinaltestspasswithin9/0",
+    "counterfactual_W": "a67dbbb5f310f8f3388967230f0fbc8932116891",
+    "corrected_W": "11859ee19d231738b7dce8a88e00866892d61ac9",
+    "only_tree_difference": "product/decisions/cost-coverage.ts restored to exact original preimage",
+    "same_test_blobs": true,
+    "same_fixture_and_config_blobs": true,
+    "source_or_target_branch_reverted": false,
+    "causal_scope": "Null assessment/reassessment consistency and real C08 persisted no-op equality"
+  },
+  "remaining_checks45_and_integrated_gates_unchanged": true,
+  "authority": "80 product/test material remains frozen and released. This addendum changes only attribution/evidence receipts, not the material unit or the45 request.",
+  "GLOBAL_RELEASE": false
+}

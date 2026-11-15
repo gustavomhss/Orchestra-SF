@@ -1,0 +1,74 @@
+2026-11-15T04:19:13.4578219Z bun test v1.3.14 (0d9b296a)
+2026-11-15T04:19:13.4929856Z 
+2026-11-15T04:19:13.4930392Z Sucafinav1/test/product/cost-coverage-closure/stability.test.ts:
+2026-11-15T04:19:13.5065047Z [mission80 matcher-isolation] {"assertionEntriesArray":false,"borrowedEntriesArray":true}
+2026-11-15T04:19:13.5161248Z 21 |   const original = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
+2026-11-15T04:19:13.5162575Z 22 |     baseline: fixture.assessment, entries: fixture.entries, resolveEvidence: fixture.resolveEvidence, supports: fixture.input.supports })
+2026-11-15T04:19:13.5163501Z 23 |   const normalized = await reassessScenarioCoverage({ scenario: fixture.scenario, basis: fixture.input.basis,
+2026-11-15T04:19:13.5164338Z 24 |     baseline: fixture.assessment, entries: fixture.assessment.entries, resolveEvidence: fixture.resolveEvidence, supports: fixture.input.supports })
+2026-11-15T04:19:13.5164917Z 25 |   expect(original).toBeDefined()
+2026-11-15T04:19:13.5165219Z 26 |   expect(normalized).toEqual(original)
+2026-11-15T04:19:13.5165476Z                           ^
+2026-11-15T04:19:13.5165737Z error: expect(received).toEqual(expected)
+2026-11-15T04:19:13.5165908Z 
+2026-11-15T04:19:13.5166037Z @@ -407,11 +407,13 @@
+2026-11-15T04:19:13.5166225Z       ],
+2026-11-15T04:19:13.5166398Z       "horizon": {
+2026-11-15T04:19:13.5166591Z         "end": "2027-12-31",
+2026-11-15T04:19:13.5166849Z         "start": "2027-01-01",
+2026-11-15T04:19:13.5167145Z       },
+2026-11-15T04:19:13.5167513Z -     "issues": [],
+2026-11-15T04:19:13.5167824Z +     "issues": [
+2026-11-15T04:19:13.5168140Z +       "uncategorized-component",
+2026-11-15T04:19:13.5168460Z +     ],
+2026-11-15T04:19:13.5168668Z     },
+2026-11-15T04:19:13.5168907Z     "currency": "USD",
+2026-11-15T04:19:13.5169172Z     "horizon": {
+2026-11-15T04:19:13.5169434Z       "end": "2027-12-31",
+2026-11-15T04:19:13.5169717Z       "start": "2027-01-01",
+2026-11-15T04:19:13.5170064Z 
+2026-11-15T04:19:13.5170192Z - Expected  - 1
+2026-11-15T04:19:13.5170498Z + Received  + 3
+2026-11-15T04:19:13.5170608Z 
+2026-11-15T04:19:13.5171069Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/stability.test.ts:26:22)
+2026-11-15T04:19:13.5244111Z (fail) C10 stability: included null and its normalized pending row reassess identically without zero filling [24.59ms]
+2026-11-15T04:19:13.5244666Z 
+2026-11-15T04:19:13.5245057Z Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts:
+2026-11-15T04:19:24.3572792Z 78 |       baseline: persisted.value.assessment, entries, resolveEvidence,
+2026-11-15T04:19:24.3573462Z 79 |       supports: (entry, evidence) => {
+2026-11-15T04:19:24.3573857Z 80 |         const current = classifications.get(entry)
+2026-11-15T04:19:24.3574421Z 81 |         return !!current && supportsCoverageClassification(current, entry, evidence)
+2026-11-15T04:19:24.3574873Z 82 |       } })
+2026-11-15T04:19:24.3575224Z 83 |     expect(reassessed).toEqual(observed.value)
+2026-11-15T04:19:24.3575555Z                             ^
+2026-11-15T04:19:24.3575883Z error: expect(received).toEqual(expected)
+2026-11-15T04:19:24.3576109Z 
+2026-11-15T04:19:24.3576233Z @@ -2539,11 +2539,13 @@
+2026-11-15T04:19:24.3576485Z       ],
+2026-11-15T04:19:24.3576701Z       "horizon": {
+2026-11-15T04:19:24.3576948Z         "end": "2027-12-31",
+2026-11-15T04:19:24.3577245Z         "start": "2027-01-01",
+2026-11-15T04:19:24.3577683Z       },
+2026-11-15T04:19:24.3577917Z -     "issues": [],
+2026-11-15T04:19:24.3578166Z +     "issues": [
+2026-11-15T04:19:24.3578471Z +       "uncategorized-component",
+2026-11-15T04:19:24.3578740Z +     ],
+2026-11-15T04:19:24.3578926Z     },
+2026-11-15T04:19:24.3579133Z     "currency": "USD",
+2026-11-15T04:19:24.3579370Z     "horizon": {
+2026-11-15T04:19:24.3579694Z       "end": "2027-12-31",
+2026-11-15T04:19:24.3579899Z       "start": "2027-01-01",
+2026-11-15T04:19:24.3580024Z 
+2026-11-15T04:19:24.3580114Z - Expected  - 1
+2026-11-15T04:19:24.3580307Z + Received  + 3
+2026-11-15T04:19:24.3580417Z 
+2026-11-15T04:19:24.3580910Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/cost-coverage-closure/persisted-stability.test.ts:83:24)
+2026-11-15T04:19:24.3582066Z (fail) C10 persisted null registration survives canonical no-op reassessment without changing its case or classification [10806.36ms]
+2026-11-15T04:19:24.4770213Z 
+2026-11-15T04:19:24.4771294Z omni positive control [45aded1ac51f084ddf98201f9ac50bfa]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.
+2026-11-15T04:19:24.4772169Z  0 pass
+2026-11-15T04:19:24.4788578Z  7 filtered out
+2026-11-15T04:19:24.4788883Z  2 fail
+2026-11-15T04:19:24.4789147Z  13 expect() calls
+2026-11-15T04:19:24.4789500Z Ran 2 tests across 2 files. [11.02s]
+2026-11-15T04:19:24.4924833Z ##[error]Process completed with exit code 1.

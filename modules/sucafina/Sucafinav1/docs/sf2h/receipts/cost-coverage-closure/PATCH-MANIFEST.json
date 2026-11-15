@@ -140,7 +140,13 @@
     "R1_and_R2_blob": "32dd80e500aabb7d7bc746925a7591acad5a1508",
     "R3_blob": "5cff1646d7ab3d2816dc5047dd6274b5db012737",
     "change": "Three actual subjects isolated from Bun asymmetric matcher mutation across two files; expected values unchanged and original-input equality added.",
-    "product_blob_same_R2_R3": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9"
+    "product_blob_same_R2_R3": "bfcb6e419cbd0b29fbf4fc14bfa33fde400948a9",
+    "clean_null_counterfactual": {
+      "W": "a67dbbb5f310f8f3388967230f0fbc8932116891",
+      "run": 43676126745,
+      "only_product_preimage_restored": true,
+      "final_test_blobs_unchanged": true
+    }
   },
   "packaging_verification": {
     "operation": "Apply review patch to isolated preimage and compare output bytes only; no product code executed",
