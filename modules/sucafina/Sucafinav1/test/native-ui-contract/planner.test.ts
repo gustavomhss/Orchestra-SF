@@ -205,3 +205,55 @@ test("A02 C64: monthly preview/apply retain closed 1..36 cells, 1..500 rows and 
     expect(() => decode(request([...maximum.input.drafts, draft(501, [cell(1)])]))).toThrow()
   }
 })
+
+test("A02 C64: authorized page projections preserve 12 slots and nullable financial output", () => {
+  const context = {
+    installationId: "installation", projectId: "project", hostId: "host",
+    principalRef: "principal", policyVersion: "policy", accessRevision: "access",
+  }
+  const summary = {
+    total: 0, actualYTD: null, fullYear: 0, hrTotal: null, fte: 0,
+    budget: [0, ...Array(11).fill(null)],
+    actual: Array(12).fill(null),
+    outlook: Array(12).fill(0),
+    warnings: [],
+  }
+  const overview = {
+    status: "ok", context,
+    value: {
+      capabilityId: "CAP17", selection: { year: 2026 },
+      data: { versions: [], comparisons: [], summary },
+      versions: {}, allowedActionIds: [],
+    },
+  }
+  const overviewDecode = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP17"].output)
+  expect(overviewDecode(overview)).toEqual(overview)
+  for (const count of [0, 11, 13]) {
+    expect(() => overviewDecode({
+      ...overview,
+      value: { ...overview.value, data: { ...overview.value.data,
+        summary: { ...summary, budget: Array(count).fill(null) } } },
+    })).toThrow()
+  }
+
+  const positions = [{
+    id: "position", name: "Engineer", revision: 0,
+    months: [0, ...Array(11).fill(null)],
+  }]
+  const headcount = {
+    status: "ok", context,
+    value: {
+      capabilityId: "CAP20", selection: { year: 2026 },
+      data: { versions: [], positions }, versions: {}, allowedActionIds: [],
+    },
+  }
+  const headcountDecode = Schema.decodeUnknownSync(SfPlanner.operations["domain.page.CAP20"].output)
+  expect(headcountDecode(headcount)).toEqual(headcount)
+  expect(() => headcountDecode({
+    ...headcount,
+    value: { ...headcount.value, data: {
+      ...headcount.value.data,
+      positions: [{ ...positions[0], months: Array(13).fill(null) }],
+    } },
+  })).toThrow()
+})
