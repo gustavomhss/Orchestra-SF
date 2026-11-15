@@ -24,7 +24,7 @@
 
 ## Primeira onda — teto de 20 sessões, 19 autores disjuntos
 
-C00 é único coordenador/I00. W01–W19 são capacidade **potencial** de autoria, somente depois de ACK, lease e contratos FROZEN por output. Sequência de cartas (nomes exatos no JSON):
+C00 é único coordenador/I00 e só pode escrever na stack se sua identidade e lease forem as mesmas do integrador material atualmente nomeado por S0; caso contrário C00 é SOMENTE leitura e encaminha patches inertes ao owner único. W01–W19 são capacidade **potencial** de autoria, somente depois de ACK, lease e contratos FROZEN por output. Sequência de cartas (nomes exatos no JSON):
 
 - **Fundação/host:** W01 D01 (broker desktop), W02 F01 (owner/URL/contexto), W03 F02 (transporte/portas), W04 F03 (frame/estados), W05 F04 (harness), W06 S01 (lista/detalhe), W07 S02 (MonthlyGrid), W08 S03 (draft/review/receipt), W09 S04 (evidências), W10 S05 (colaboração).
 - **Domain e piloto:** W11 A03 (Procurement), W12 U10.queue, W13 U13.pr-approval, W19 U11.title-save. **P0** = título `pr.title` de PR draft/rejected, CAS `versions['requests:'+id]` e fence de owner na transação original; sem receipt C12, sem aprovação. **P1** = PR submetida sob holder/versão reais e aprovação U13 com M31/MI07 retidos. Ambos web+desktop, papéis/owner negativo e perda de resposta sem retry.

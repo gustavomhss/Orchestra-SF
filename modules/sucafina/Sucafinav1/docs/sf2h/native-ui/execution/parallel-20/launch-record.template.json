@@ -29,7 +29,7 @@
   "known_external_blockers": [],
   "source_delta_receipts": [],
   "authoritative_approval_links": [],
-  "worker_start_rule": "No write before observed GO by S0 AND explicitly appointed successor integrator with live ACK/lease; 71 and 100 terminal receipts are historical only. Each output must have registered actor/branch/lease/allowlist, exact frozen family contract hash, current source blob/preimages, real owner releases, and nonoverlap. GO does not waive 45 gates.",
+  "worker_start_rule": "No write before observed GO by S0 AND explicitly appointed successor integrator with live ACK/lease; 71 and 100 terminal receipts are historical only. Each output must have registered actor/branch/lease/allowlist, exact frozen family contract hash, current source blob/preimages, real owner releases, and nonoverlap. GO does not waive 45 gates. C00 is the SAME actor/lease as S0-appointed material stack integrator when writing shared paths; otherwise read-only coordination, never a second writer.",
   "lease_shape": {
     "lease_id": null,
     "order_id": null,
