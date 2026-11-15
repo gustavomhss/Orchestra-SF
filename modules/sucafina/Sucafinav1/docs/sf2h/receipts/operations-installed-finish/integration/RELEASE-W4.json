@@ -1,0 +1,113 @@
+{
+  "schema": "sf2h.operations75.consumer-release.v1",
+  "status": "RELEASED_FOR_SELECTIVE_COMPOSITION_WITH_HOLDS",
+  "mission": 75,
+  "consumer": 71,
+  "material": {
+    "work": "d50287e998b2f42f548bce3b72b75e16eff40043",
+    "tree": "07e01afadab8499b1ada9ffa939c26e9070a1a63",
+    "path_count": 9,
+    "manifest": "integration/MANIFEST.json",
+    "patch": "integration/complete75.patch",
+    "patch_sha256": "672747464f84b869363dbc0a869f31cc051ef438e931b2d48e3c72ad0330a6e0",
+    "dependency_closure": "integration/DEPENDENCY-CLOSURE.json",
+    "postimages": "Exact repository paths at material work; no whole-branch transplant"
+  },
+  "release_scope": "71 may compose these nine owned paths into a qualification candidate after fresh preimage/current-authority checks; not acceptance of five journeys or global C",
+  "source_evidence": {
+    "run": 43672349552,
+    "job": 132684956460,
+    "snapshot": "209c613895a2555ba7de8befc33f1bd41b263f62",
+    "result": "7PASS/0FAIL/150expects",
+    "receipt": "ci/R3-result.json",
+    "review": "reviews/R3-evidence.json"
+  },
+  "inherited63": "All11 exact already integrated C30; do not reapply or import inert shared63 patches",
+  "numeric73": {
+    "owner": 73,
+    "state": "EXPLICIT_RELEASE_REQUIRED",
+    "pr": 86,
+    "request": "external/REQUEST73.json",
+    "root75_writes": 0
+  },
+  "required_composition": [
+    "Keep59/C28/64/61/65/66/68 and later authorized target material",
+    "Consume numeric/application73 only after its explicit release",
+    "Preserve all five original IDs/actions/assertions and budgets; spec blob bab6a804e5f082cc60eb6f27209070b552981035",
+    "Provide exact composed C/tree/consumed hashes/ACK to75;75 runs journeys snapshot via same qualified campaign resource"
+  ],
+  "source_authority": {
+    "epoch": "operations-finish-browser75",
+    "state": "ACTIVE_FOR_REMAINING_JOURNEY_QUALIFICATION",
+    "remote_writer": "75 root",
+    "stack_writer": 71
+  },
+  "ci_ownership": {
+    "campaign_resource": 75,
+    "stack_consumption": 71,
+    "generic_compiler_lane": 45,
+    "terminal_handoff": "75 will hand campaign resource maintenance to71 at terminal; no parallel writers"
+  },
+  "holds": [
+    "Five original journeys NOT_RUN on composed73+75 candidate",
+    "Compiler/package/E2E typechecks/spawn/guards45 NOT_RUN",
+    "Native/Omni parity not established",
+    "251 complete criteria, C06 broader consumers/formats/AM/final eight/reviews/C-G7/D-G8 remain"
+  ],
+  "latest_target_observation": {
+    "from": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
+    "to": "e87e22d163924635bf0b41785c9bc80bf780ac0a",
+    "tree": "be4dec9ee1960b572b6bfc4dee9e0a7d21b2c60c",
+    "commits": 1,
+    "files": 77,
+    "overlaps": [],
+    "material": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/sf-mcp-bridge.ts",
+        "sha": "472b44cc594db8cafd7669e8424d0f494d38cc9a"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/host-binding/skill-loader.ts",
+        "sha": "d98b7fbb550d34ef5a2b9c35b25cf5ce5a7aeae7"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-fixture.ts",
+        "sha": "894a03d8449d65efb6ad324858b270b60f34ebe5"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/bridge-snapshot.test.ts",
+        "sha": "d51f56f2cd664c23e338bc271603178b069a1000"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+        "sha": "8c0a49d4430cce5477da853016805c0981e954b6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+        "sha": "2075f8941561098869a175bd460a0a96a60c478f"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+        "sha": "cef07dbfcdb48565a71f596a02a4ce46c90ea393"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-host-fixture.ts",
+        "sha": "5af45b2d010e691935524082a85cba47c8bf5cec"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts",
+        "sha": "8e1b2776a3d5294e4cf3beb786acc2ed354f41ae"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-operation-bindings.test.ts",
+        "sha": "8edf5ecb086b8c8c7e07a1ca5375dc203d9e6d61"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/workbench-mcp-closure/skill-source-boundary.test.ts",
+        "sha": "d821f1fff1d88c99d4cfb0dbaac3fc88c69a6765"
+      }
+    ],
+    "limit": "All new target material retained; no source test transfer"
+  },
+  "GLOBAL_RELEASE": false
+}
