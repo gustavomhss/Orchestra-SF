@@ -179,6 +179,7 @@ export function SfSecurityPage(props: SfSurfaceProps<"CAP12">) {
     operationRef: SfOperationRef; command: SecurityCommand; entity: SecurityEntity;
     id: string | null; owner: SfOwnerKey; year: number; month: number
   }> | undefined
+  let routeEntryConsumed: string | undefined
   const pendingRequests = new Set<AbortController>()
   onCleanup(() => {
     for (const request of pendingRequests) request.abort()
@@ -268,6 +269,8 @@ export function SfSecurityPage(props: SfSurfaceProps<"CAP12">) {
       setState("state", ownerState.status === "denied" ? "denied" :
         ownerState.status === "unauthenticated" ? "session-expired" :
         ownerState.status === "resolving" ? "loading" : "unavailable")
+      setState("errorText", null)
+      setState("operationState", "idle")
       draft = undefined
       draftOwner = undefined
       submitted = undefined
@@ -355,7 +358,8 @@ export function SfSecurityPage(props: SfSurfaceProps<"CAP12">) {
           setState("state", "stale")
         }
       }
-      if (state.editor === null) {
+      if (state.editor === null && routeEntryConsumed !== String(props.route.href)) {
+        routeEntryConsumed = String(props.route.href)
         if (props.route.kind === "edit-kpi" && value.allowedActionIds.includes("save-kpi"))
           untrack(() => openEditor("kpi", rowId(securityKpi(value))))
         if (props.route.kind === "campaign" || props.route.kind === "incident" ||
@@ -400,7 +404,7 @@ export function SfSecurityPage(props: SfSurfaceProps<"CAP12">) {
     const snapshot = activeDraft()
     if (!editor || !page || !active || !ownerKey || !snapshot ||
       !editor.review || !can(editor.command) || state.submitting ||
-      !validForm(editor, snapshot.value, page)) return
+      snapshot.pendingOperation !== null || !validForm(editor, snapshot.value, page)) return
     if (securityVersion(page, editor.entity, editor.id ?? undefined) !== editor.version) {
       draft?.setPhase("conflict")
       setState("state", "conflict")
@@ -414,8 +418,18 @@ export function SfSecurityPage(props: SfSurfaceProps<"CAP12">) {
     const options = { signal: request.signal, idempotencyKey: crypto.randomUUID() }
     const base = { version: editor.version, ...(editor.id === null ? {} : { id: editor.id }) }
     setState("submitting", true)
-    draft?.setPhase("submitting")
     try {
+      const intentBytes = new TextEncoder().encode(JSON.stringify([
+        SECURITY_OPERATION_IDS[editor.command], editor.id, editor.version, snapshot.value,
+      ]))
+      const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", intentBytes))
+      if (request.signal.aborted || owner.generation() !== generation || currentOwner() !== ownerKey) return
+      const payloadDigest = Array.from(digest, (byte) => byte.toString(16).padStart(2, "0")).join("")
+      draft?.setPending({
+        operationRef: editor.operationRef, idempotencyKey: options.idempotencyKey,
+        payloadDigest, expectedVersion: editor.version,
+      })
+      draft?.setPhase("submitting")
       let result: Awaited<ReturnType<typeof client["domain.command.CAP12.save-kpi"]>>
       switch (editor.command) {
         case "save-kpi":
