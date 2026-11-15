@@ -1,0 +1,288 @@
+{
+  "schema": "sf2h.native-ui.A12.artifact-handoff.v1",
+  "mission_id": "UX-A12",
+  "order": "A12",
+  "branch": "sf-ux-a12",
+  "target": "sf2-stack",
+  "pr": {
+    "number": 144,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/144",
+    "draft": true,
+    "partial": true
+  },
+  "actor": "ChatGPT",
+  "model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed",
+  "lease": "ux-native-a12-e1",
+  "initial_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "source_material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "authored_head_before_handoff": "90822ea1fb7c05d055f0d81166df37911ff87b79",
+  "source_pins": {
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "views-http.ts": "4f246d4b1e6090d509d8bed554d3556b50e61386",
+    "work-http.ts": "b2dc424d96a67ddd581abbc460cfb938b35e0447",
+    "http.ts": "78574180369c9495cbe5e5d3e569bb500fbff277",
+    "personal-views.ts": "e424c7454a1aa4b7bd8290408001e65ae029d156"
+  },
+  "relevant_source_delta": {
+    "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+    "historical_blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+    "current_blob": "78574180369c9495cbe5e5d3e569bb500fbff277",
+    "reviewed_impact": "Current C58 command admission/body-reader/creation-scope differs from historic blob; A12 reuses only current work/search/landing branches, does not revert or modify producer.",
+    "frozen_unchanged_sources": [
+      "views-http.ts",
+      "work-http.ts",
+      "personal-views.ts"
+    ]
+  },
+  "exclusive_file_blobs": {
+    "apps/cli/src/sucafina-product/native-ui/work.ts": {
+      "preimage": null,
+      "postimage": "402b8a4599807d403065e561a427e230ae5981cb"
+    },
+    "packages/schema/src/sucafina/work.ts": {
+      "preimage": null,
+      "postimage": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b"
+    },
+    "packages/client/src/sucafina/work.ts": {
+      "preimage": null,
+      "postimage": "f790637deb85ae93d85840dea625d953b73e619c"
+    },
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": {
+      "preimage": null,
+      "postimage": "cc5a3e075d16aeb67eb604bb5e5b7139a48bb4f0"
+    },
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A12/ACK.json": {
+      "preimage": null,
+      "postimage": "7a7709a2e5f363284219b062caf092da10e3e08d"
+    }
+  },
+  "exports": [
+    "SfWork",
+    "createSfWorkClient",
+    "createSfWorkProjectionHandlers"
+  ],
+  "catalog_registry_fragment": {
+    "projection.home": {
+      "method": "GET",
+      "effect": "read",
+      "pathTemplate": "{mount}/api/ui/projections/home",
+      "responseMode": "json",
+      "schemaExport": "SfProjectionHome",
+      "clientMethod": "projection.home",
+      "sourceRef": "workbench",
+      "admitted": true
+    },
+    "projection.search": {
+      "method": "GET",
+      "effect": "read",
+      "pathTemplate": "{mount}/api/ui/projections/search",
+      "responseMode": "json",
+      "schemaExport": "SfProjectionSearch",
+      "clientMethod": "projection.search",
+      "sourceRef": "workbench",
+      "admitted": true
+    },
+    "projection.work": {
+      "method": "GET",
+      "effect": "read",
+      "pathTemplate": "{mount}/api/ui/projections/work",
+      "responseMode": "json",
+      "schemaExport": "SfProjectionWork",
+      "clientMethod": "projection.work",
+      "sourceRef": "workbench",
+      "admitted": true
+    },
+    "projection.work-item": {
+      "method": "GET",
+      "effect": "read",
+      "pathTemplate": "{mount}/api/ui/projections/work-item",
+      "responseMode": "json",
+      "schemaExport": "SfProjectionWorkItem",
+      "clientMethod": "projection.work-item",
+      "sourceRef": "work-item",
+      "admitted": false
+    },
+    "projection.work-selection": {
+      "method": "GET",
+      "effect": "read",
+      "pathTemplate": "{mount}/api/ui/projections/work-selection",
+      "responseMode": "json",
+      "schemaExport": "SfProjectionWorkSelection",
+      "clientMethod": "projection.work-selection",
+      "sourceRef": "workbench",
+      "admitted": true
+    },
+    "views.list": {
+      "method": "POST",
+      "effect": "read",
+      "pathTemplate": "{mount}/{surface}",
+      "responseMode": "json",
+      "fixedQuery": {
+        "sf": "workbench-views"
+      },
+      "fixedBodyDiscriminator": {
+        "action": "list"
+      },
+      "maxRequestBytes": 65536,
+      "schemaExport": "SfViewsList",
+      "clientMethod": "views.list",
+      "sourceRef": "views",
+      "admitted": true
+    },
+    "views.open": {
+      "method": "POST",
+      "effect": "read",
+      "pathTemplate": "{mount}/{surface}",
+      "responseMode": "json",
+      "fixedQuery": {
+        "sf": "workbench-views"
+      },
+      "fixedBodyDiscriminator": {
+        "action": "open"
+      },
+      "maxRequestBytes": 65536,
+      "schemaExport": "SfViewsOpen",
+      "clientMethod": "views.open",
+      "sourceRef": "views",
+      "admitted": true
+    },
+    "views.remove": {
+      "method": "POST",
+      "effect": "mutation",
+      "pathTemplate": "{mount}/{surface}",
+      "responseMode": "json",
+      "fixedQuery": {
+        "sf": "workbench-views"
+      },
+      "fixedBodyDiscriminator": {
+        "action": "remove"
+      },
+      "maxRequestBytes": 65536,
+      "schemaExport": "SfViewsRemove",
+      "clientMethod": "views.remove",
+      "sourceRef": "views",
+      "admitted": true
+    },
+    "views.save": {
+      "method": "POST",
+      "effect": "mutation",
+      "pathTemplate": "{mount}/{surface}",
+      "responseMode": "json",
+      "fixedQuery": {
+        "sf": "workbench-views"
+      },
+      "fixedBodyDiscriminator": {
+        "action": "save"
+      },
+      "maxRequestBytes": 65536,
+      "schemaExport": "SfViewsSave",
+      "clientMethod": "views.save",
+      "sourceRef": "views",
+      "admitted": true
+    }
+  },
+  "status_by_operation": {
+    "projection.home": "AUTHORED_HANDLER_SOURCE_BACKED_NOT_INTEGRATED",
+    "projection.search": "AUTHORED_HANDLER_SOURCE_BACKED_NOT_INTEGRATED",
+    "projection.work": "AUTHORED_HANDLER_SOURCE_BACKED_NOT_INTEGRATED",
+    "projection.work-item": "SCHEMA_AND_TYPED_CLIENT_ONLY_BLOCKED_CONTRACT_PRIVATE_PORT",
+    "projection.work-selection": "AUTHORED_HANDLER_SOURCE_BACKED_NOT_INTEGRATED",
+    "views.list": "SCHEMA_CLIENT_EXISTING_V1_PRODUCER_NOT_INTEGRATED",
+    "views.open": "SCHEMA_CLIENT_EXISTING_V1_PRODUCER_NOT_INTEGRATED",
+    "views.remove": "SCHEMA_CLIENT_EXISTING_V1_PRODUCER_NOT_INTEGRATED",
+    "views.save": "SCHEMA_CLIENT_EXISTING_V1_PRODUCER_NOT_INTEGRATED"
+  },
+  "installed_producer_semantics": {
+    "projection.home": "ui.admit candidate [sf_case_read,sf_work_list,sf_knowledge_search,sf_routine_catalog]; cases participants filter + sf_case_read re-open; routineRuns discoverRuns under separate ui admission; no snapshots or cross-owner fallback",
+    "projection.search": "sf_knowledge_search source input query:q + limit:20; dispatch once; decodeSfOperationOutput; revalidate; no HTML parsing",
+    "projection.work": "work.listPresentation with original selectionRef/Period and consumed validated UI context; field-level allowlist preserving title:null,sourceVersion:0,observedVersion:0",
+    "projection.work-selection": "procurementSelections.create with real period, consumed ui sf_work_list admission and post revalidation",
+    "projection.work-item": "destinations.read(selection,actionRef,call) followed by found.value.verify(); not mounted because frozen private deps omit real source instance",
+    "views": "Existing POST on {mount}/{surface}?sf=workbench-views and strict {action,input} envelope; surface is routing-only and is removed by F02 operationBody. Versioned state/ACL/authorization and post revalidate remain in existing producer; NO NEW STORAGE."
+  },
+  "negative_cases_authored": [
+    "unknown operation/action/fields",
+    "duplicate/extra query",
+    "invalid calendar period",
+    "cross-origin",
+    "missing/zero invalid CAS",
+    "legacy V2 refusal before network",
+    "redacted denied view entry",
+    "null/zero/version retained",
+    "fixed operation routing"
+  ],
+  "test_state": {
+    "authored": "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+    "locally": "NOT_RUN_PER_A12",
+    "product_ci_120": "NOT_RUN_PENDING_INTEGRATION",
+    "compiler_119": "NOT_RUN_PENDING_INTEGRATION",
+    "real_qualified": false
+  },
+  "handoff_to_114": {
+    "status": "PENDING_INTEGRATION",
+    "expected_consumers": [
+      "F01",
+      "F02",
+      "D01",
+      "I00/native-ui",
+      "SfWork native views UI"
+    ],
+    "registrations": "Publish exact catalog_registry_fragment metadata in shared operation-registry.ts without duplicating source-of-truth. Register only source-backed four projections + existing V1 views four; withhold projection.work-item until real installed port is available. No generic dispatch.",
+    "export_paths": [
+      "@orchestra/schema/sucafina/work",
+      "@orchestra/client/sucafina/work"
+    ],
+    "mount": "mountSfNativeProjections takes the four createSfWorkProjectionHandlers(deps) leaves. Do not create a views forwarder; use existing original POST on selected surface.",
+    "router_note": "F02 strips surface selector from views POST before sending original {action,input}, preserving fixedQuery sf=workbench-views.",
+    "work_item_private_seam": "Request producer-owned expansion of SfNativeHostDependencies to expose the existing installed work destinations read/verify with original Request + ui admission. Do not call HTML work-http route or instantiate a business-less clone. No shared patch authorized from A12 until owner source seam released.",
+    "v2": "V2 producer release required first in product/interface/personal-views.ts; maintain V1 bytes and principal/installation/project preferences; no new V2 codec/landing store until approved."
+  },
+  "inherited_pr_diff": {
+    "observed": "PR #144 compares sf-ux-a12 (f8e442... cohort parent) to diverged sf2-stack (merge-base C58 422f1ed...), GitHub shows ~161 changed files and ~70k inherited additions.",
+    "author_delta": "Compare f8e442...sf-ux-a12 only: own A12 file_blobs and this receipt; inherited native-UX docs are not A12 modifications.",
+    "instruction": "DO NOT MERGE WHOLE PR OR INHERITED UX COHORT. I00/114 consumes only A12 own leaf blobs/commits selectively. No reset, force, or foreign-file edit."
+  },
+  "blockers": [
+    {
+      "id": "work-item",
+      "status": "BLOCKED_CONTRACT",
+      "reason": "No real destination service on frozen SfNativeHostDependencies; cannot perform required destinations.read + verify."
+    },
+    {
+      "id": "views-v2",
+      "status": "BLOCKED_DEPENDENCY",
+      "reason": "personal-views producer V2/unified landing CAS migration not released; V1 independent."
+    },
+    {
+      "id": "composition",
+      "status": "BLOCKED_INTEGRATION",
+      "reason": "F01/F02/common/shared registries/exports are owned by 114 and absent on A12 branch."
+    },
+    {
+      "id": "qualification",
+      "status": "BLOCKED_QUALIFICATION",
+      "reason": "120 Actions and 119 compiler own post-integration validation; author ran none."
+    }
+  ],
+  "acceptance": {
+    "A12-AC01": "STATIC_MAPPING_AUTHORED_NOT_QUALIFIED",
+    "A12-AC02": "CLOSED_SCHEMA_AND_NEGATIVE_SPECS_AUTHORED_NOT_QUALIFIED",
+    "A12-AC03": "SOURCE_PINS_CAS_AND_NO_AUTO_RETRY_CODED_NOT_QUALIFIED",
+    "A12-V2": "BLOCKED_DEPENDENCY"
+  },
+  "scope_compliance": {
+    "no_shared_writes": true,
+    "no_producer_mutation": true,
+    "no_tests_local": true,
+    "no_merge": true,
+    "no_deploy": true,
+    "no_goal_reactivation": true,
+    "no_force_reset": true,
+    "no_alternative_backend_or_storage": true
+  },
+  "lease_terminal": "ARTIFACT_READY_PARTIAL_HANDOFF_TO_114; NO GLOBAL_RELEASE"
+}
