@@ -1,4 +1,4 @@
-name: sf-compiler-c53
+name: sf-compiler-composed-119
 
 # Mission 119: immutable SF product checkout with independently pinned compiler tooling W.
 # This is not an epic or product-test workflow; A45's paths and dispatcher are untouched.
@@ -14,12 +14,12 @@ concurrency:
   cancel-in-progress: false
 
 env:
-  SF_SOURCE_SHA: 180212940105e7b9ad15171b067c1c1b7841df5f
-  SF_SOURCE_TREE: c423dd1e0828242534fd45d4183104ecc1d20edd
+  SF_SOURCE_SHA: 422f1ed7b549021d7c62c834c9d9041279112af4
+  SF_SOURCE_TREE: 647b024075265fc76d6253c99bec00a82618f816
   SF_PLANNING_SHA: dbf9547211d9b0fade619790de7c19c0869b7c7d
 
 jobs:
-  compiler-c53:
+  compiler-composed-119:
     if: github.repository == 'gustavomhss/Orchestra-SF' && github.ref == 'refs/heads/sf-compiler-checks' && github.event_name == 'push'
     runs-on: ubuntu-24.04
     timeout-minutes: 45
@@ -27,10 +27,10 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: Checkout exact C53 source, without stored credentials
+      - name: Checkout exact composed C58 source, without stored credentials
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
-          ref: 180212940105e7b9ad15171b067c1c1b7841df5f
+          ref: 422f1ed7b549021d7c62c834c9d9041279112af4
           fetch-depth: 0
           persist-credentials: false
 
