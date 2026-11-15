@@ -1,0 +1,183 @@
+{
+  "schema": "sf2h.complete-closure-intake.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "state": "COMPLETE_CONSUMER_PACKET_PREPARED_NO_NEW_WRITER_LAUNCHED",
+  "current_integrator": 189,
+  "current_compiler": 190,
+  "current_dispatcher": 200,
+  "integrated_baseline": "6130f682014662964a2f2fcd2c0c487a904ecd3e",
+  "ready_inputs": [
+    {
+      "mission": 193,
+      "sha": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063",
+      "branch": "sf-ux-w16",
+      "handoff": "receipts/closure193/ARTIFACT-193.json",
+      "files": 1,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/4dd1cb90d9aef580a84d7ec6a25c0fd10d721063/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure193/ARTIFACT-193.json",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 194,
+      "sha": "72c5d2afcbdc202605614a18c5ba472aafc34574",
+      "branch": "sf-ux-n22",
+      "handoff": "receipts/closure194/ARTIFACT.json",
+      "files": 1,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/72c5d2afcbdc202605614a18c5ba472aafc34574/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure194/ARTIFACT.json",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 195,
+      "sha": "679e17ecdfec23ab53ce4b23206594874617528d",
+      "branch": "sf-ux-n13",
+      "handoff": "receipts/closure195/ARTIFACT.json",
+      "files": 2,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/679e17ecdfec23ab53ce4b23206594874617528d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure195/ARTIFACT.json",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 197,
+      "sha": "3ec7a4ca7db735c08f1f63e164734a0bda245ac7",
+      "branch": "sf-proof-authority",
+      "handoff": "receipts/closure197/HANDOFF.md",
+      "files": 3,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/3ec7a4ca7db735c08f1f63e164734a0bda245ac7/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure197/HANDOFF.md",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 198,
+      "sha": "34a00f196de20de359b53f51fbe9007442f8cea4",
+      "branch": "sf-proof-persistence",
+      "handoff": "receipts/closure198/HANDOFF.md",
+      "files": 4,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/34a00f196de20de359b53f51fbe9007442f8cea4/modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure198/HANDOFF.md",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    },
+    {
+      "mission": 201,
+      "sha": "cb7a19356da4e9ba33c902264a1b4aa25639d976",
+      "branch": "sf-work-types",
+      "handoff": "receipts/repair201/HANDOFF.json",
+      "files": 2,
+      "handoff_url": "https://github.com/gustavomhss/Orchestra-SF/blob/cb7a19356da4e9ba33c902264a1b4aa25639d976/modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair201/HANDOFF.json",
+      "state": "SOURCE_READY_CONSUMER_NOT_ACKED_BY_S0"
+    }
+  ],
+  "contracted_producers": [
+    {
+      "mission": 193,
+      "branch": "sf-ux-w16",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": "4dd1cb90d9aef580a84d7ec6a25c0fd10d721063"
+    },
+    {
+      "mission": 194,
+      "branch": "sf-ux-n22",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": "72c5d2afcbdc202605614a18c5ba472aafc34574"
+    },
+    {
+      "mission": 195,
+      "branch": "sf-ux-n13",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": "679e17ecdfec23ab53ce4b23206594874617528d"
+    },
+    {
+      "mission": 196,
+      "branch": "sf-proof-profiles",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 197,
+      "branch": "sf-proof-authority",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": "3ec7a4ca7db735c08f1f63e164734a0bda245ac7"
+    },
+    {
+      "mission": 198,
+      "branch": "sf-proof-persistence",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": "34a00f196de20de359b53f51fbe9007442f8cea4"
+    },
+    {
+      "mission": 199,
+      "branch": "sf-installed-host",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 201,
+      "branch": "sf-work-types",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": "cb7a19356da4e9ba33c902264a1b4aa25639d976"
+    },
+    {
+      "mission": 202,
+      "branch": "sf-context-types",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 203,
+      "branch": "sf-transport-types",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 204,
+      "branch": "sf-fixture-types",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 205,
+      "branch": "sf-thread-newlines",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 206,
+      "branch": "sf-ux-n13",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 207,
+      "branch": "sf-review-functional",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 208,
+      "branch": "sf-review-integrity",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 209,
+      "branch": "sf-review-runtime",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    },
+    {
+      "mission": 210,
+      "branch": "sf-guard-archive",
+      "contract": "Assigned complete criteria, paths and lease from own immutable packet; consumer reads terminal output by SHA, never unleased whole branch.",
+      "ready_sha": null
+    }
+  ],
+  "closure_duties": [
+    "Read pinnedSTART,S0,COMMON,completeS0pack,WORKFLOW,executionworkflowandformalreview; restore15WPs74tasks1610criteria17contractsandUXscope, allacceptedsource/outputconsumers.",
+    "Verify livewriter/dispatcherauthority and current product before effects; do not start competing211 or refence189 from silence. This document alone does not transfer authority.",
+    "Consume every already-released exact delta and all future terminal outputs of the listed contracted producers within their pinned criteria/paths. Reconcile commits/blobs/epochs/dependencies; no wholecontrolmerge, no reimport of previously accepted outputs.",
+    "Complete actual host/Atlas/nativeconsumercomposition, minimal real installed prerequisites and positiveAM01–06, correcting causal findings through owned source lanes/freshcompletehandoff after original sessions end.",
+    "Compose acceptedC containingallnormativeproductinputs and hand its exact tree to the singleactiveCIauthority. Full8selectorsplusmandatoryepic/e2e/typechecks/gates, independentfinalreviewsandcausalrechecks are original closure duties, not optional later tasks.",
+    "Prepare evidence-onlyD retainingeveryproductblobC andprovenance; separateactualC/G7,D/G8guards, finalreceipts, remotecommitsandresourceclosure; onlythenGLOBAL_RELEASE."
+  ],
+  "blocking_rule": "Only genuine precedence/resource/authority constraints can defer a dependent action; complete all independent contracted work. No synthetic receipts, no clocks/PRcounts as success.",
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}
