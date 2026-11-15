@@ -14,6 +14,7 @@ import {
 } from "./model"
 import type {
   SfProcurementQueueFilters,
+  SfProcurementQueueGroup,
   SfProcurementQueueReadPhase,
   SfProcurementQueueRow,
 } from "./model"
@@ -47,6 +48,12 @@ const STATUS_KEYS = {
   po_issued: "sf.u10.queue.status.po_issued",
   cancelled: "sf.u10.queue.status.cancelled",
 } as const satisfies Record<string, SfU10QueueCopyKey>
+
+const GROUP_LABELS: Record<SfProcurementQueueGroup, SfU10QueueCopyKey> = {
+  waitingForYou: "sf.u10.queue.group.waitingForYou",
+  waitingForOthers: "sf.u10.queue.group.waitingForOthers",
+  unassigned: "sf.u10.queue.group.unassigned",
+}
 
 const STATE_COPY: Record<SfProcurementQueueReadPhase | "empty" | "filtered-empty", SharedKey> = {
   loading: "sf.common.loading",
@@ -261,6 +268,21 @@ export function SfProcurementQueuePanel(props: SfProcurementQueuePanelProps): JS
       <Show when={authorized()}>
         <fieldset class="sf-procurement-queue-filters" aria-label={props.translate("sf.u10.queue.filters")}>
           <legend>{props.translate("sf.u10.queue.filters")}</legend>
+          <label>
+            {props.translate("sf.u10.queue.group")}
+            <select
+              value={props.filters.group ?? ""}
+              onChange={(event) => props.onFilters({
+                ...props.filters,
+                group: options().groups.find((value) => value === event.currentTarget.value) ?? null,
+              })}
+            >
+              <option value="">{props.translate("sf.u10.queue.all")}</option>
+              <For each={options().groups}>{(group) =>
+                <option value={group}>{props.translate(GROUP_LABELS[group])}</option>
+              }</For>
+            </select>
+          </label>
           <label>
             {props.translate("sf.u10.queue.status")}
             <select
