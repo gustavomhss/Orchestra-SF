@@ -487,7 +487,7 @@ export function SfDocumentsView(props: SfSurfaceProps<"UI58" | "UI59" | "UI60">)
               <Show when={!state.candidates.length}><p>{t("sf.u24.noCandidates")}</p></Show>
               <ul class="sf-files-candidates">
                 <For each={state.candidates}>{(candidate) =>
-                  <li class="mx-card" data-sf-evidence-state={candidate.status}>
+                  <li class="mx-card" data-sf-evidence-state={candidate.status} data-sf-evidence-id={candidate.id}>
                     <button type="button" class="mx-btn"
                       aria-pressed={state.selectedCandidateId === candidate.id}
                       disabled={!canSelect(candidate)}
