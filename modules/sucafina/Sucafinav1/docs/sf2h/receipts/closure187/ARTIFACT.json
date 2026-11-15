@@ -1,0 +1,165 @@
+{
+  "schema": "sf2h.closure187.f04-artifact.v1",
+  "mission": 187,
+  "order": "F04",
+  "epoch": "closure-e1-browser187",
+  "status": "ARTIFACT_READY_BLOCKED_INTEGRATION_AND_VALIDATION",
+  "github_connection_actor": "gustavomhss",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_exposure": "NOT_EXPOSED",
+  "branch": "sf-ux-w05",
+  "pr": 120,
+  "initial": {
+    "sha": "d300e495d309c1083a35e34755b04cf3c6f06ae5",
+    "tree": "34d011a67586ec42802066f68d6d71fe4c27054e"
+  },
+  "ack": {
+    "commit": "1720fadc93ba64f3a2058eee3802f285c26ed5ca",
+    "tree": "f91c81f48d4743284fb03375795ea9eb95a02a7c",
+    "blob": "135b82d1a1f2876d459f24395114fa38e2f8a286"
+  },
+  "code": {
+    "first_commit": "35803fccbbebffab0f76ce8ab3926072d7402735",
+    "first_tree": "61fda53a0598013b4dc2d09bfbb1db51b67cdad9",
+    "final_commit": "2fb480328fc316259b7a22d58513f9a241058d8a",
+    "final_tree": "c17cfd05f01b6971ad650c1864d67099a49199ea"
+  },
+  "sources": {
+    "packet_commit": "8100bdc01566bf88532f2b497690cec3c84b551c",
+    "packet_blob": "38e97b695af1db7d5bb31fa68dcdeeced297cc73",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "F04_order_blob": "1b25898e583e1eb247a3eec889d0da4e6bb61ab3",
+    "host_signatures_blob": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "surface_manifest_blob": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "existing_producers": {
+      "local-configuration.ts": "9fd36deee7a2ef4b3584faa7f49b682d0304741f",
+      "local-store.ts": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+      "local-entry.ts": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "microsoft-installation.ts": "6e3b56e13795b60949bc14548921c37af16b615f",
+      "runtime/application.ts": "a0deff8a3b272019f472aa2f93499d1940a78370"
+    }
+  },
+  "paths": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture.ts",
+      "pre": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "post": "cc7818e623e61e4217dfb2ada18ca3e1fa5f7e12"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/readiness.ts",
+      "pre": "bcea1fd620ba76dc24cc8bab159a91662c9b876e",
+      "post": "3cbd63012f43c43bbbe3d2c66c03fd2ded6343f9"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/scratch.ts",
+      "pre": "75181ca2d425dd71b9fb032773be16e48883c775",
+      "post": "0f2463a8e6dcc201f5a8a630172e3d88c7bb3d91"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/response-faults.ts",
+      "pre": "abfa55b1e87622ecee4fdbb1ca962b35039dd326",
+      "post": "71adbaaf679331a5a201aae663123ba87bc4a0b5"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/installed-manifest.ts",
+      "pre": null,
+      "post": "bc84476891d97e7baad4f6462933c60688c11847"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/journeys.ts",
+      "pre": null,
+      "post": "66e269a78af8262764228557e2eeccd29bca1a36"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts",
+      "pre": null,
+      "post": "238d8329bc5677cdc98b9fa238426783bf4add65"
+    }
+  ],
+  "preserved_paths": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/corpus.ts",
+      "unchanged_blob": "44826d9003eb1f1c1f5cfa12c8d4da73f74d4c07"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/fixture/selection.ts",
+      "unchanged_blob": "048f1dd16063a79cf59481e20d9000b09f7b2208"
+    },
+    {
+      "path": "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+      "unchanged_blob": "c4c4db3c8542f1cda9e83afad026266335e4e141"
+    }
+  ],
+  "consumer_source_preimages": {
+    "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts": {
+      "branch": "sf-ux-n22",
+      "blob": "1d59507133649d2ca57c0c30e2507193f35181fd",
+      "status": "AUTHOR_BRANCH_NOT_COMPOSED_OR_TESTED"
+    },
+    "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts": {
+      "branch": "sf-ux-n13",
+      "blob": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+      "status": "AUTHOR_BRANCH_NOT_COMPOSED_OR_TESTED"
+    },
+    "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts": {
+      "branch": "sf-ux-n13",
+      "blob": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+      "status": "AUTHOR_BRANCH_NOT_COMPOSED_OR_TESTED"
+    },
+    "packages/app-shell/e2e/playwright.production.config.ts": {
+      "owner": 162,
+      "preimage": "ae56b7fc9da248ee8e34d73d0eb13c8fe8e0c088",
+      "status": "UNMODIFIED_SHARED_OWNER"
+    }
+  },
+  "integration": {
+    "owner": 162,
+    "observed_branch": "sf2-stack",
+    "observed_head": "4de88999e329283540369bbbfc2180a99b9202e6",
+    "consumer_ack": "PENDING",
+    "acceptance": "REQUIRES_SAME_C_PRODUCTION_SHELL_AND_REAL_CONNECTION",
+    "exact_blobs_only": true
+  },
+  "criteria": {
+    "F04-AC01": "CODE_READY_NOT_RUN_REQUIRES_162_SELECTION_AND_REAL_MOUNT",
+    "F04-AC02": "ISOLATED_PRODUCER_AND_LIVE_IDENTITY_SEAMS_CODE_READY_NOT_RUN",
+    "F04-AC03": "DESKTOP_NOT_RUN_D01_REAL_ELECTRON_REQUIRED",
+    "U15-AC01/02/03": "CONSUMER_185_REQUIRES_REAL_HOST_PRECONDITIONS",
+    "U39-AC01/02/03": "CONSUMER_186_REQUIRES_REAL_HOST_PRECONDITIONS",
+    "U40-AC01/02/03": "CONSUMER_186_REQUIRES_REAL_HOST_PRECONDITIONS"
+  },
+  "semantics": {
+    "manifest": "Private 0600 same-dir-in-0700-root; candidate SHA matches authorized Actions runner; approved serverKey resolver and distinct actual Microsoft BrowserContexts; current principalRef from real discovery+context; optional fourth Dashboard editor only on actual producer save admission",
+    "scratch": "Original local configuration/enrollment/openLocalStore, original isolated child environment; local-operator single UID not multi-principal; never spawns host",
+    "journeys": "Frozen CAP14->Dashboard Vendor Contracts, CAP04 OPEX, CAP05 CAPEX; current context stamp and capabilities; no env admission flags; original producer command target",
+    "faults": "Original route.fetch only; exact page query may be specified; response loss means unknown, no automatic retry, revocation requires original context re-read",
+    "tests": "Pure routes test authored without authentication; DOES_NOT_QUALIFY_UI"
+  },
+  "evidence": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "parsers": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "build": "NOT_RUN",
+    "playwright": "NOT_RUN",
+    "installed_sessions": "NOT_OBSERVED_IN_THIS_SESSION",
+    "desktop": "NOT_RUN_ELECTRON_UNAVAILABLE",
+    "run_ids": [],
+    "job_ids": [],
+    "no_local_validation": true
+  },
+  "blockers": [
+    "162 must compose approved real production config/host F01/F02 and manifest per exact chapter",
+    "Three distinct Microsoft principals (requester/holder/denied) and separately admitted Dashboard editor for U39/U40",
+    "U15 real CAP14 list/edit/denied/stale/lost URLs and original CAS/source update, no fabricated URL or grant",
+    "185 U15 denied currently calls proveWeb on forbidden surface: must use context-only negative and assert no content",
+    "185 loss route matcher should use nativeDashboardCommandTarget(CAP14) for exact query; owner change required",
+    "D01 packaged Electron and main/preload/session proof independently",
+    "163/164 terminal sessions: 162 must explicitly designate successor and issue hosted validation; GitHub comment alone cannot wake them",
+    "guard163 agent-scratch finding needs causal independent review; no ignore-to-green"
+  ],
+  "next_action": "162 CAS-consume exact F04 leaves into same material C, approve existing connection/installation and per-selection private manifest with true sign-ins; notify 185/186 of exact prerequisite deltas; hand targeted requests to explicit 163/164 successors after integration; publish consumer ACK and real same-C hosted evidence.",
+  "global_release": false
+}

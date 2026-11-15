@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h.closure187.hosted-validation-request.v1",
+  "mission": 187,
+  "epoch": "closure-e1-browser187",
+  "state": "REQUESTED_NOT_DISPATCHED",
+  "source_code_commit": "2fb480328fc316259b7a22d58513f9a241058d8a",
+  "source_code_tree": "c17cfd05f01b6971ad650c1864d67099a49199ea",
+  "consumer": 162,
+  "routing": {
+    "current_authority": "162 or successor explicitly fenced and ACKed by 162",
+    "terminal_predecessors": [
+      {
+        "mission": 163,
+        "branch": "sf-compiler-checks",
+        "observed_head": "3e3c8f616637292e5bf0be409d86f9ae6cdc6010",
+        "role": "compiler-hosted"
+      },
+      {
+        "mission": 164,
+        "branch": "sf-ci-validation",
+        "observed_head": "17c3304e055c8117e185e5c5cea8ef673cb7ae61",
+        "role": "product-ci-hosted"
+      }
+    ],
+    "comment_does_not_wake_chat": true,
+    "no_new_dispatcher": true
+  },
+  "preconditions": [
+    "162 consumes exact output blobs into a coherent same material C",
+    "F01/F02 and approved serverKey discovery + existing production shell/composition present",
+    "Actions runner installed private manifest from real Microsoft auth sessions, 3+ principals and 4th Dashboard writer if needed",
+    "Owned 185/186 specs reconciled against current F04 exported functions, without skip/mock/grant flags",
+    "Selection normalized to exact test files, no empty collection"
+  ],
+  "compiler": {
+    "owner": "163 successor only",
+    "package": "packages/app-shell",
+    "command": "bun typecheck",
+    "guards": "existing authorized guard runner on same C",
+    "requests": "typecheck F04 imports and export consumers; guard163 agent-scratch line/path finding requires causal disposition; do not mark FAIL as PASS"
+  },
+  "product": {
+    "owner": "164 successor only",
+    "component_select": [
+      "packages/app-shell/test-browser/sucafina-native/fixture/selection.test.ts",
+      "packages/app-shell/test-browser/sucafina-native/fixture/journeys.test.ts"
+    ],
+    "installed_select": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u15.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts"
+    ],
+    "condition": "only after 162 collects F04 and consumer specs in same C and supplies real installed manifest per chapter/actor; missing is an explicit failure, not PASS/skip",
+    "no_full_suite_previously": true
+  },
+  "dedupe": "same C/tree + exact ordered selection + workflow/config/runtime + host manifest/identities + in-flight run; no rerun unchanged failure",
+  "evidence": {
+    "component": "NOT_RUN",
+    "installed": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "desktop": "NOT_RUN_D01",
+    "run_ids": [],
+    "job_ids": []
+  },
+  "global_release": false
+}
