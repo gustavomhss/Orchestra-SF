@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test"
+import { observeNativeC16 } from "../am02/observe-native-c16.ts"
 import { expectSpawn } from "../../../../../../../packages/core/test/fixture/omni-expect.ts"
 import { digestSfValue } from "../../../../product/contracts/canonical.ts"
 import { decodeSfSkillInput } from "../../../../product/contracts/schema-admission.ts"
@@ -112,6 +113,8 @@ test("AM01 shared recall runs under all five real profiles and reopens five sepa
           throw new Error(`Provider returned a different or non-ready ${profileId} contribution`)
         expect(actual.output.payload.matches).toEqual([])
         expect(actual.output.evidenceRefs).toEqual([])
+        const observedTools = await observeNativeC16(context, actual, requiredTools)
+        expect(observedTools.length).toBeGreaterThanOrEqual(requiredTools.length)
         completed.push(actual)
       }
       if (!context.models.length) expect(unavailable).toEqual([...profiles])
