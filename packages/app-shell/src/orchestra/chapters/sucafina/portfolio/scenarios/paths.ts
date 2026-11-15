@@ -22,7 +22,7 @@ export function sfDecisionHref(
   if (route.query.year !== undefined) query.set("year", String(route.query.year))
   let path: string
   if (destination === "list") path = "/orchestra/sf-portfolio/scenarios"
-  else if (destination === "sensitivity-selection") path = "/orchestra/sf-sensitivity"
+  else if (destination === "sensitivity-selection") path = "/orchestra/sf-portfolio/sensitivity"
   else {
     if (!source?.caseRef) return null
     const encodedCase = encodeSfRouteRef(source.caseRef)
@@ -31,8 +31,8 @@ export function sfDecisionHref(
       if (!source?.resultRef) return null
       const encodedResult = encodeSfRouteRef(source.resultRef)
       path = destination === "portfolio-result"
-        ? "/orchestra/sf-portfolio/results/" + encodedCase + "/" + encodedResult
-        : "/orchestra/sf-sensitivity/" + encodedCase + "/" + encodedResult
+        ? "/orchestra/sf-portfolio/scenarios/" + encodedCase + "/results/" + encodedResult
+        : "/orchestra/sf-portfolio/sensitivity/" + encodedCase + "/" + encodedResult
     }
   }
   const suffix = query.toString()
