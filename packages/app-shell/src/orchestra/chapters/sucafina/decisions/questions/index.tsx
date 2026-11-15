@@ -13,6 +13,7 @@ import { useSfCase, sfFailureUiState, sfOperationReady } from "../cases/model"
 import { sfDecisionHref } from "../cases/route"
 import { SfQuestionAnswer } from "./answer"
 import { SfQuestionCycles } from "./cycles"
+import { SfQuestionConsume } from "./consume"
 import "../cases/n24.css"
 
 type RecipientsEnvelope = Schema.Schema.Type<(typeof SfCollaboration.operations)["collaboration.recipients"]["output"]>
@@ -36,7 +37,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
     recipientState: SfUiState
     phase: QuestionPhase
     message: string
-    proposal?: Readonly<{ caseRef: string; question: string; expectedCaseVersion: number; recipientRef?: string; criterionRef?: string }>
+    proposal?: Readonly<{ caseRef: string; question: string; expectedCaseVersion: number; recipientRef?: string; criterionRef?: string; outputRef?: string }>
   }>({
     text: "", criterion: "", recipient: "", questionId: "",
     recipients: [], recipientState: "loading", phase: "editing", message: "",
@@ -137,6 +138,7 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
           expectedCaseVersion: result.body.value.expectedCaseVersion,
           recipientRef: result.body.value.recipientRef,
           criterionRef: result.body.value.criterionRef,
+          outputRef: result.body.outputRef,
         } })
       }
     } catch (error) {
@@ -250,7 +252,9 @@ export function SfQuestionsView(props: SfSurfaceProps): JSX.Element {
                   {(proposal) => <div class="sf-n24-review" aria-live="polite">
                     <p>{t("sf.ui37.preparationOnly")}</p>
                     <p><bdi>{proposal().question}</bdi> · {proposal().expectedCaseVersion}</p>
-                    <p>{t("sf.ui37.proposalScope")}</p>
+                    <Show when={proposal().outputRef} fallback={<p>{t("sf.ui37.proposalScope")}</p>}>
+                      {(outputRef) => <SfQuestionConsume owner={caseData.owner} caseRecord={current()} outputRef={outputRef()} onConsumed={() => caseData.reload()} />}
+                    </Show>
                   </div>}
                 </Show>
                 <button type="submit" class="mx-btn primary" disabled={!canPrepare()}>
