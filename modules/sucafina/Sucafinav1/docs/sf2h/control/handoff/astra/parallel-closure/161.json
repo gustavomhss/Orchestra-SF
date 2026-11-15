@@ -1,0 +1,217 @@
+{
+  "schema": "sf2h.preliminary-review-correction.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "n": 161,
+  "pr": 104,
+  "branch": "native-host-provider",
+  "title": "Host nativo — recuperação e liberação de recursos",
+  "findings": [
+    "R148-NATIVE-01"
+  ],
+  "previous_epoch": "native-producer-browser95",
+  "epoch": "native-producer-e2-browser161",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/",
+  "expected_head": "f1d68585ee081b8cf7a9c9a692c7784dee6591b0",
+  "fence": {
+    "schema": "sf2h.review-correction-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "mission": 161,
+    "branch": "native-host-provider",
+    "previous_epoch": "native-producer-browser95",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "next_epoch": "native-producer-e2-browser161",
+    "previous_head": "9757b5e7ee974684cff32a5a452f7dc5aefc0555",
+    "authority": "S0 under explicit user go/new-session authorization",
+    "reason": "New successor for concrete preliminary review findings; same source branch/PR, prior code/history preserved.",
+    "runtime_termination_claimed": false,
+    "limitation": "Administrative write authority fence only. Browser session lifecycle/token revocation not exposed; silence never treated as process death. Reconcile any late commits before writing or accepting output, no reset/force.",
+    "integrator": 132,
+    "compiler": 149,
+    "product_ci": 150,
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED"
+  },
+  "mission": 161,
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "scope_preserved": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "native_goal": "paused",
+  "global_release": false,
+  "material_observed": "8094e599e3d18609e269548d24619a3246fbc735",
+  "write_paths": [
+    "apps/cli/src/sucafina-product/native-host.ts",
+    "apps/cli/src/sucafina-product/token-gate.ts",
+    "apps/cli/src/sucafina-product/native-authority-provider.ts",
+    "modules/sucafina/Sucafinav1/test/product/native-host-provider/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction161/**"
+  ],
+  "protected_paths": [
+    "All other writers, product/test paths outside own allowlist, registry/globali18n/exports/generated/engines/Azure",
+    "Predecessor broad write_paths are HISTORICAL ONLY; current narrowed allowlist prevails"
+  ],
+  "routing": {
+    "integrator": "132/PR65/S0-C-e19-browser132",
+    "compiler": "149/PR107/compiler-e3-browser149",
+    "product_ci": "150/PR106/product-ci-e3-browser150",
+    "A07_producer": "151/PR141",
+    "A12_producer": "153/PR144"
+  },
+  "goal": "Cobrir preparação nativa desde primeira reserva por lifecycle/cleanup seguro e recuperação explícita, preservando tombstone C08/C15.",
+  "actions": [
+    "Ler packS0-B COMPLETO e anexos canônicos, predecessor95 e branchreal antes de editar. Consumer8094 contém reserva durable/gate antes de acquireUseRelease e quatro retornos antecipados, achado ainda presente pela leitura S0; não há exploit ou teste executado como prova.",
+    "Delimitar ownership/lifecycle a partir da primeira reserva durável, abrangendo Session.create, identity mismatch, loadSfSkill, store.narrow e abort. Tratar cancelamento/falha com finalizer real nos APIs públicas suportadas. Preservar retorno bem-sucedido/retained e binding/receipt corretos.",
+    "NUNCA remover owned/tombstone ou liberar reingresso arbitrário para parecer recuperação. Negativa permanente de ownership e budgets C08/C15 continuam fail-closed após reload/revocation; recuperação deve ser explícita e idempotente conforme contrato real.",
+    "native-evidence.ts/host-context.ts NÃO são liberados a161. Se a API atual não comporta estado terminal/resolução durável, entregar patch integral inerte com tipos/assinaturas/pre/post e critérios de tombstone ao writer/132; continuar preparação/cleanup independente sem alegar aceitação do hunk não aplicado. Não criar infra/bypass/novo controlador nem alterar engines.",
+    "Specs de fault injection via harness legítimo: create failure, session mismatch, skill failure/digest change, narrow failure, abort durantejanela, same-run retry/human recovery e reload/revoked sem ressuscitar sessão/grant. Apenas150 executa hosted e149 compila. Não reimplementar todo predecessor95 ou apagar patches/model rebind/C09child110 já existentes."
+  ],
+  "complete_findings": [
+    {
+      "id": "R148-NATIVE-01",
+      "kind": "SOURCE_CODE_DEFECT",
+      "severity": "HIGH_RECOVERABILITY_STATIC",
+      "state": "OPEN_NOT_EXECUTED",
+      "status": "PENDING_OWNER_FIX_AND_150_PROOF",
+      "owner": "Mission95 PR104 — original native-host producer; integration/reconciliation only 132 PR65",
+      "observed_commit": "d8f14f81855858120f914af4f3934406bfdb74f1",
+      "loci": [
+        {
+          "path": "apps/cli/src/sucafina-product/native-host.ts",
+          "blob": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+          "lines": "143-170, 208-216"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/native-evidence.ts",
+          "blob": "0502f30e054e40049df1283c00d4f5af1545f7c2",
+          "lines": "53-75"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/token-gate.ts",
+          "blob": "4d7b395aa29a03a8311d8dec87cb1e69e0a4ab30",
+          "lines": "214,249-254"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "blob": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+          "lines": "226-236,240-241"
+        }
+      ],
+      "causal_chain": [
+        "native-host.ts:145–147 reserves sf:native-session persistently via C08 and native-evidence.ts:53–75",
+        "native-host.ts:148 separately records ownership in the C15 gate",
+        "native-host.ts:149–165 may return on SessionV2.create failure, session identity mismatch, loadSfSkill failure or store.narrow failure before entering acquireUseRelease at :170",
+        "No scoped cleanup of newly created SessionV2 or explicit durable resolution of reservation is visible on these early returns",
+        "host-context.ts:226–236 will reject re-admitting this runId if reservation remains, so recovery must be explicitly managed without undermining fail-closed ownership"
+      ],
+      "impact_certain": "Failure paths occur outside the resource finalizer after durable side effects have begun.",
+      "impact_requires_execution": "Persistence/orphan lifetime and retry UX; no proof of unauthorized execution, privilege escalation or leak.",
+      "proposed_action": "Extend ownership/lifecycle bracketing from first durable reservation. Keep durable ownership negative classification; add scoped session cleanup and terminal reservation state/recovery semantics without silent replays.",
+      "required_oracles": [
+        "Session.create denied after reserve",
+        "session identity mismatch",
+        "loadSfSkill rejected/source digest changed",
+        "store.narrow failed",
+        "abort during the window",
+        "same runRef retry must be explicitly denied or human-recovered without bypassing C08/C15",
+        "reload/revocation keeps rejected session fail-closed"
+      ],
+      "routed_comment": "https://github.com/gustavomhss/Orchestra-SF/pull/104#issuecomment-6900997417",
+      "validation": "NOT_RUN"
+    }
+  ],
+  "review_sources": [
+    {
+      "mission": 146,
+      "pr": 170,
+      "sha": "2f58f98547fd1943e70969ab19f7d38011e9735c"
+    },
+    {
+      "mission": 147,
+      "pr": 171,
+      "sha": "4c2af1f645fa2eafe66cf1dd20835dbe33da7c5d"
+    },
+    {
+      "mission": 148,
+      "pr": 169,
+      "sha": "16dd10295f15a49c00c053e0e19bc06d49f08f4e"
+    }
+  ],
+  "required_reads": [
+    "Applicable AGENTS",
+    "sf2h-plan START.md,WORKFLOW.md,execution/COMMON.md and FULL execution/actors/S0-B.json + mandatory annexes at dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "Full original95 mission inputs, PR104 existing code, child110 patch/handoff, current native-host/token-gate/host-context/native-evidence APIs and original source contracts",
+    "Full runtime148finding+matrix/HANDOFF at16dd10295f15a49c00c053e0e19bc06d49f08f4e; current132material and producer source HEAD preimages"
+  ],
+  "predecessor_context": {
+    "number": 95,
+    "id": "native-host-provider",
+    "branch": "native-host-provider",
+    "actor": "S0-B native authority producer (disjoint from consumer90)",
+    "actor_pack": "execution/actors/S0-B.json",
+    "lease_epoch": "native-producer-browser95",
+    "inputs": [
+      "PR96consumer90@e7ff72e996969b86e590e67734b84fb57e11a549; contrato resolve e readonlyhistorical",
+      "PR80terminal64@4d0421669054a131de0df0c95994b45229ab354e:contracts/API-NOTES.md,capability-contract.json,source-pins.json,HANDOFF-FINAL",
+      "reviewsR3mission93@28e770f600b835a5f59d9e301a40f5441a76e56b"
+    ],
+    "write_paths": [
+      "apps/cli/src/sucafina-product/native-host.ts (only native origin/C15 legitimate producer integration)",
+      "apps/cli/src/sucafina-product/token-gate.ts (only native C15 admission integration; no relaxedauth)",
+      "apps/cli/src/sucafina-product/native-authority-provider.ts (new bounded SF producer)",
+      "modules/sucafina/Sucafinav1/test/product/native-host-provider/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-host-provider/"
+    ],
+    "mission": "Implementar produtor de origem/C15/admissão nativa que64 e90 apenas consomem. Não criar outro consumidor que exige a mesma capability injetada. Unir APIs públicas existentes à autoridade SF em pontos de composição autorizados.",
+    "acceptance": [
+      "Usar Request/context/principal reais e SessionMaestro legítima; possuir ligação desdeadmissão, nunca gerar porIDs/plan.owner nem chamar sf_maestro de maestro.",
+      "Conectar admissão C15/policy/budget/filhos e continuação Permission humana pelos mecanismos públicos. Provider/Taskrunning e scopeLocation/model reais; preservar revisão/approval. Não responderPermission pelohumano nem alterarengine/policyfinanceira.",
+      "Conectar produtor ao contrato90 e emitir patch completo de host-context/registration para71 semeditarhost-context. Não editar routine-native-* de90 ou auth85/HTTP94/application86. Atalho de caller com fixture não é integração.",
+      "Provar origem/cancel/revoke/readiness e lifecycle legítimos, devolver novo atestado autenticado de leitura apósreload semressuscitar Task/grant. Schedule/watch continuamoff semadmissãoreal. Faltando APIpública: implementar todoindependente e demonstrarsignature+sourcefaltante. Nãofabricar execuções."
+    ],
+    "state": "PREPARED_NOT_STARTED",
+    "session_id": null,
+    "model_effective": null,
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "base_sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "expected_head": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "consumer": "71 sole integrator;45 dispatcher/checks;91–93 independent reviewers",
+    "common": [
+      "Plano fixo dbf9547211d9b0fade619790de7c19c0869b7c7d; campanha sf2h-integral-20261112; T0 2026-11-13T04:01:10Z; preservar15WP74tasks17contratos1610critérios. Ler AGENTS, START, WORKFLOW, execution/COMMON, pack COMPLETO atribuído e anexos/critérios pertinentes. Não refazer planejamento.",
+      "Nova sessão browser; publicar ACK com modelo/session realmente observados, inputsSHA, paths e lease antes de editar. Reconciliar HEAD, manifests e comentários/liveauthority; nenhum silêncio revoga writer. Se conflito posterior real, preservar writer e avançar em testes/patches disjuntos com handoff ao owner.",
+      "71 única integradora de sf2-stack,45 único dispatcher/checks;52UIdecisões/87hotdraft/89P03/90routineconsumidor/94HTTP/81WP14/88reader e reviewers91–93 mantêm seus escopos. Sidebar review/planejamento e Azure são do usuário.",
+      "GitHub remoto somente MCP/CAS expectedhead/forcefalse; semgh/push/devmerge/deploy/Azure/segredos/enginechange/restartdesktopserver/novoGoal/controller. Goal nativa continua pausada; este pacote só autoriza sessão manual atual.",
+      "Testes de produto só cirúrgicos GitHub Actions pela interface test:ci/request existente e dispatcher/dedup por árvore/seleção/config. Nada de bun test/testes pesados locais/fullEPIC/nova plataformaCI. bun typecheck/guards perAGENTS pela interface autorizada45, registrar NOT_RUN se ausente. Não repetir run sem mudança causal.",
+      "Entregar código real, commits remotos e uma PR para sf2-stack, patch completo/prepost/dependencyclosure, source/tree,W/S/run/job/evidências, critérios e lacunas, handoff terminal para71 e reviewer específico. PedirACK sem presumir consumo. Reviewers corrigem apenas pareceres; você implementa. Não marcarGLOBAL_RELEASE nem herdarPASS de outroSHA.",
+      "Correções preservam contratos/oráculos/fixtures/seleções/timeouts, origem/principal/grants/políticas e dados; mocks/syntheticadmission não provam runtime. Sem permissões fabricadas ou novos efeitos financeiros/mensagens externas. Completar todo trabalho independente; bloqueio real recebe assinatura/capability faltante e patch mínimo, não inventário genérico."
+    ]
+  },
+  "precedence": "Current mission/epoch/routing/narrow allowlist overrides historical IDs/wait admission text only. Original frozen contract+criteria preserved. Review findings are static hypotheses/causal readings, not executed exploit or release approval.",
+  "rules": [
+    "Nova sessão, sem reciclar chat. Ler AGENTS aplicáveis e o pacote inteiro. Confirmar HEAD/fence, source blobs e ACK real com actor/modelo efetivo/session ID apenas se exposto, epoch e SHA antes de escrever. PREPARED não significa iniciado.",
+    "Remote somente GitHub MCP, CAS expected_head e force=false. Preservar commits e branches anteriores. Se HEAD mudou, reconciliar deltas e autoridade antes de qualquer efeito. Não inferir morte por silêncio; fence revoga autoridade futura, não afirma encerramento de processo.",
+    "132/S0-C-e19-browser132 é único integrador de sf2-stack. Compiler149/PR107 e CI150/PR106 são únicos validadores em seus escopos após ACK. Não criar outro integrador/dispatcher. Preservar todas as missões133–142 e demais autores ativos.",
+    "Nenhum teste, parser, validador ou typecheck local. Autores/revisores solicitam verificações cirúrgicas ao responsável. CI GitHub Actions via protocolo existente aprovado; nunca gh/git push. Epic/full8 somente no bundle final coerente.",
+    "Não editar planos aprovados, generated, fontes alheias, engines Maestro/Relay/Schedule, Azure ou recursos externos. Sem devmerge/deploy/segredos/restart. Nenhum novo controlador/worker nativo; Goal permanece pausada.",
+    "Comportamento real e todos critérios originais preservados. Sem mocks/stubs/fixtures permissivas como entrega, sem waivers ou aprovações próprias. ARTIFACT_READY não equivale GLOBAL_RELEASE.",
+    "Após trabalho independente útil, publicar PR/handoff terminal com SHA/tree/blobs/preimages, critérios, achados reais, evidências ou NOT_RUN e próxima ação exata. Não gastar turnos em polling vazio, resumos repetidos nem repetir run equivalente falho."
+  ],
+  "delivery": [
+    "Same existing PR→sf2-stack, no alternative branch/wholesale merge/reset/force. Preserve history and existing source code.",
+    "Before edits verify current HEAD/fence and input blobs; ACK actual model/session when exposed+epoch+inputs. Late predecessor activity needs reconciliation not rollback.",
+    "Meaningful causal regression specs within owned paths, no assertions weakened. No local tests/parsers/validators/typechecks or own CI. Request150/149 on new coherent input only.",
+    "Publish complete exact patch and source/consumer pre/post SHA/tree/path manifests, finding/criterion mapping, evidence or NOT_RUN, remaining seams/owners and terminal checkpoint.132 alone integrates and publishes consumerACK; reviewer rechecks actual delta independently."
+  ]
+}

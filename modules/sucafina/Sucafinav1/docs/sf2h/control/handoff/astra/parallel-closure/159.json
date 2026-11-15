@@ -1,0 +1,854 @@
+{
+  "schema": "sf2h.preliminary-review-correction.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "n": 159,
+  "slot": "N28",
+  "pr": 152,
+  "branch": "sf-ux-n28",
+  "title": "Revisões — comparação financeira e proveniência",
+  "findings": [
+    "PRE147-R02-01",
+    "PRE147-R02-02",
+    "PRE147-R02-03"
+  ],
+  "previous_epoch": "ux-native-n28-e1",
+  "epoch": "ux-native-n28-e2-browser159",
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction159/",
+  "expected_head": "12e4f098ac9e7ed3035de7a7c66d4a26d8f47dcd",
+  "fence": {
+    "schema": "sf2h.review-correction-fence.v1",
+    "campaign": "sf2h-integral-20261112",
+    "mission": 159,
+    "branch": "sf-ux-n28",
+    "previous_epoch": "ux-native-n28-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "next_epoch": "ux-native-n28-e2-browser159",
+    "previous_head": "969d1757d307429a6b27d35fe1091cd1024e1cfc",
+    "authority": "S0 under explicit user go/new-session authorization",
+    "reason": "New successor for concrete preliminary review findings; same source branch/PR, prior code/history preserved.",
+    "runtime_termination_claimed": false,
+    "limitation": "Administrative write authority fence only. Browser session lifecycle/token revocation not exposed; silence never treated as process death. Reconcile any late commits before writing or accepting output, no reset/force.",
+    "integrator": 132,
+    "compiler": 149,
+    "product_ci": 150,
+    "native_goal": "paused",
+    "global_release": false,
+    "state": "PREPARED_NOT_STARTED"
+  },
+  "mission": 159,
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "scope_preserved": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "native_goal": "paused",
+  "global_release": false,
+  "material_observed": "8094e599e3d18609e269548d24619a3246fbc735",
+  "write_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction159/**"
+  ],
+  "protected_paths": [
+    "All other writers, product/test paths outside own allowlist, registry/globali18n/exports/generated/engines/Azure",
+    "Predecessor broad write_paths are HISTORICAL ONLY; current narrowed allowlist prevails"
+  ],
+  "routing": {
+    "integrator": "132/PR65/S0-C-e19-browser132",
+    "compiler": "149/PR107/compiler-e3-browser149",
+    "product_ci": "150/PR106/product-ci-e3-browser150",
+    "A07_producer": "151/PR141",
+    "A12_producer": "153/PR144"
+  },
+  "goal": "Corrigir comparação preservada U32 nos três achados financeiros/proveniência, preservando demais N28.",
+  "actions": [
+    "Comparabilidade exige mesmo installationId e projectId além de contexto/section/período/moeda/engine; não unir cortes de scopes diferentes. Não atribuir vazamento de leitura não demonstrado.",
+    "Exibir antes/depois de valor, moeda, unidade, evidenceState e completude nas linhas de alteração, inclusive100USD→100EUR e0↔null; nenhuma conversão FX inferida.",
+    "Separar mudança numérica de mudança de proveniência: comparar sourceRefs/version/incarnation/observedAt aplicáveis a valores/seções/projeções; não rotular corte inteiro unchanged quando fonte mudou. Não inventar variação financeira quando só fonte mudou.",
+    "Agenda projection.review é seam151/A07+132, não corrigir por edição de backend ou shared. Preserve agenda/reports fora do allowlist e forneça exatamente os blobs/patches U32 para132."
+  ],
+  "complete_findings": [
+    {
+      "id": "PRE147-R02-01",
+      "severity": "HIGH",
+      "status": "OPEN_STATIC_RECHECK",
+      "category": "tenant-installation/project identity; financial comparability",
+      "owner": {
+        "mission": 152,
+        "pr": 152,
+        "work_order": "U32",
+        "integrator": 132,
+        "integrator_pr": 65
+      },
+      "root_cause": "comparableReviewSections checks section IDs/period and projection context currency, surface, engineVersion, period but omits installationId and projectId, although the public SfReviewDomainProjection context carries both.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "24-35",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts#L24-L35"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "49-54",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/schema/src/sucafina/reviews.ts#L49-L54"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "143-160",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L143-L160"
+        }
+      ],
+      "causal_reproduction_static": "Give UI49 two independently authorized preserved review values with the same section id/period, projection surface, currency, engineVersion and context period but different projection.context.installationId or projectId. comparableReviewSections returns true; UI49 labels them compatible and enables scalar diff. This does NOT prove the producer permits cross-tenant read; that requires a negative hosted recheck.",
+      "expected": "Fail closed on distinct installation/project or require explicit authorized, prominently scoped cross-project semantics approved by contract; never silently treat unrelated tenant/project amounts as one comparable cut.",
+      "impact": "False financial comparison across installation/project boundaries; risk of misleading decision even where each record is separately readable, with potential authority confusion.",
+      "recheck": "After owner152 patch and 132 composition, have 150 execute U32/UI49 host-backed scenario with two source scopes, including same period/currency and denied second read. Assert incompatible and no joined diff, while same-scope reviews compare; obtain actual run, SHA, fixture identity and output.",
+      "dedup": "NEW_DELTA_NOT_IN_PR97_100_98",
+      "material_recheck": {
+        "head": "8094e599e3d18609e269548d24619a3246fbc735",
+        "blob_unchanged": true,
+        "tests": "NOT_RUN"
+      },
+      "criteria": [
+        "U32-AC01",
+        "U32-AC02",
+        "R02-AC01"
+      ]
+    },
+    {
+      "id": "PRE147-R02-02",
+      "severity": "MEDIUM",
+      "status": "OPEN_STATIC_RECHECK",
+      "category": "financial value, currency, unit and evidence-state preservation",
+      "owner": {
+        "mission": 152,
+        "pr": 152,
+        "work_order": "U32",
+        "integrator": 132,
+        "integrator_pr": 65
+      },
+      "root_cause": "preservedValueRows includes differences in unit/currency/evidenceState, but the compare table renders only String(value), without those changed dimensions.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "39-50",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts#L39-L50"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "168-185",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L168-L185"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "55-61",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/schema/src/sucafina/reviews.ts#L55-L61"
+        }
+      ],
+      "causal_reproduction_static": "Same review context/scope/period with one value id and number 100 in both cuts, but value.currency changes USD to EUR (or unit or evidenceState confirmed to estimated). Detection includes the row; UI49 displays '100' -> '100' without the cause, making a material financial/provenance change look like no numerical change.",
+      "expected": "Show before/after currency, unit, evidenceState, and source completeness beside amounts, and preserve zero distinct from null; never infer FX.",
+      "impact": "Finance reviewers cannot tell that identical numbers have incompatible units/currencies or differing confidence.",
+      "recheck": "Hosted table/a11y oracle in 150: 100 USD→100 EUR, confirmed→estimated, 0→null and null→0; ensure labels and evidence state are visible in source-authorized table and comparison; inspect 132 integrated blob before closing.",
+      "dedup": "NEW_DELTA_NOT_IN_PR97_100_98",
+      "material_recheck": {
+        "head": "8094e599e3d18609e269548d24619a3246fbc735",
+        "blob_unchanged": true,
+        "tests": "NOT_RUN"
+      },
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC01"
+      ]
+    },
+    {
+      "id": "PRE147-R02-03",
+      "severity": "HIGH",
+      "status": "OPEN_STATIC_RECHECK",
+      "category": "provenance, source versions and authenticity of 'unchanged'",
+      "owner": {
+        "mission": 152,
+        "pr": 152,
+        "work_order": "U32",
+        "integrator": 132,
+        "integrator_pr": 65
+      },
+      "root_cause": "preservedValueRows compares value/evidenceState/unit/currency only, not per-value sourceRefs and source version; changed() looks only at value rows, count and title, then displays 'unchanged', ignoring section and projection sourceRefs and their incarnation/version/observedAt.",
+      "source": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts",
+          "blob": "0e3c9a84fb2b534e563bde3cbf915ecf121b6cfe",
+          "lines": "39-50",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/model.ts#L39-L50"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "110-116",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L110-L116"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+          "blob": "ca8ac3c301df09a4932bd5b1a09994090287fb50",
+          "lines": "158-165",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx#L158-L165"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "25-29",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/schema/src/sucafina/reviews.ts#L25-L29"
+        },
+        {
+          "path": "packages/schema/src/sucafina/reviews.ts",
+          "blob": "d1918f40360e8ec86289e6fcb90f7901c4b280ee",
+          "lines": "83-92",
+          "url": "https://github.com/gustavomhss/Orchestra-SF/blob/d8f14f81855858120f914af4f3934406bfdb74f1/packages/schema/src/sucafina/reviews.ts#L83-L92"
+        }
+      ],
+      "causal_reproduction_static": "Two preserved snapshots with same section id/title/count, same scalar value/evidenceState/unit/currency and period, but sourceRefs.version v7→v8 (or incarnation/observedAt changed) have zero preservedValueRows; changed() is false; UI49 shows 'unchanged' despite changed source ancestry.",
+      "expected": "Independently classify source/provenance revision versus numerical change; expose before/after source version/incarnation and actual cut without inventing value changes. Keep unchanged scalar label only when scoped explicitly to scalar equality.",
+      "impact": "Masks source freshness/revocation dependencies and misleads financial evidence review; historical confirmation must not be implied current.",
+      "recheck": "Owner152 updates comparator and 150 validates same numbers+different sourceRefs/version/incarnation, identical sources, and denied/revoked historical case; 132 rechecks integrated exact blob, no final acceptance inferred.",
+      "dedup": "NEW_DELTA_NOT_IN_PR97_100_98",
+      "material_recheck": {
+        "head": "8094e599e3d18609e269548d24619a3246fbc735",
+        "blob_unchanged": true,
+        "tests": "NOT_RUN"
+      },
+      "criteria": [
+        "U32-AC01",
+        "A07-AC01",
+        "R02-AC02"
+      ]
+    }
+  ],
+  "review_sources": [
+    {
+      "mission": 146,
+      "pr": 170,
+      "sha": "2f58f98547fd1943e70969ab19f7d38011e9735c"
+    },
+    {
+      "mission": 147,
+      "pr": 171,
+      "sha": "4c2af1f645fa2eafe66cf1dd20835dbe33da7c5d"
+    },
+    {
+      "mission": 148,
+      "pr": 169,
+      "sha": "16dd10295f15a49c00c053e0e19bc06d49f08f4e"
+    }
+  ],
+  "required_reads": [
+    "All applicable AGENTS",
+    "This entire launch packet including original_packet and whole assigned work-orders",
+    "NEXT30 COMMON, required_reads for each assigned scope, frozen CONTRACTS/COMPONENT-CONTRACTS/host+route+component signatures+surface specs/microcopy",
+    "Relevant canonical criterion pointers at dbf9547211d9b0fade619790de7c19c0869b7c7d and normative cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Relevant actual producer code/source delta before edits; source baseline is current cohort C60, not historical catalog"
+  ],
+  "predecessor_context": {
+    "original_work_package": {
+      "schema": "sf2h.next30.packet.v1",
+      "slot": "N28",
+      "role": "new-implementer",
+      "lane": "native-ui",
+      "title": "Reuniões, revisões preservadas e relatórios",
+      "execution_state": "PREPARED_NOT_STARTED",
+      "authorization": false,
+      "actor": null,
+      "lease": null,
+      "branch_hint": "sf-ux-n28",
+      "source": {
+        "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+        "work_order_blobs": {
+          "U25": "fe04508396ffc14763910c649a0b785b46175cb2",
+          "U32": "1c9d45535cd13709c4af6e322565bf630c5afad6",
+          "U33": "a79277e181103f14e82302b1ae662af77767b40b"
+        },
+        "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+        "live_material": "REPIN_BY_114_AT_LAUNCH"
+      },
+      "scope": [
+        {
+          "order": "U25",
+          "output": "complete",
+          "title": "Seleção e ordenação de pauta",
+          "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U25.json",
+          "surfaces": [
+            "UI47"
+          ],
+          "operation_refs": [
+            "contract-catalog.json#/operations/dashboard.dashboard-agenda",
+            "contract-catalog.json#/operations/dashboard.dashboard-capture",
+            "contract-catalog.json#/operations/dashboard.dashboard-history",
+            "contract-catalog.json#/operations/dashboard.dashboard-review",
+            "contract-catalog.json#/operations/dashboard.dashboard-review-preserve",
+            "contract-catalog.json#/operations/projection.review"
+          ],
+          "entrypoints": [
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/index.tsx",
+              "symbol": "SfAgendaView",
+              "signature": "(props: SfSurfaceProps) => JSX.Element",
+              "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+              "route_source": "surface-manifest.json: assigned surfaces only"
+            }
+          ],
+          "i18n_exports": [
+            {
+              "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+              "en_symbol": "SF_U25_COPY",
+              "pt_br_symbol": "SF_U25_COPY_BR",
+              "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+            }
+          ],
+          "acceptance_cases": [
+            {
+              "id": "U25-AC01",
+              "expected": "Agenda section selection/order, authorized counts and period per section persist without treating read-unavailable as revocation.",
+              "status": "PLANNED_NOT_RUN"
+            },
+            {
+              "id": "U25-AC02",
+              "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+              "status": "PLANNED_NOT_RUN"
+            },
+            {
+              "id": "U25-AC03",
+              "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+              "status": "PLANNED_NOT_RUN"
+            }
+          ],
+          "required_reads": {
+            "instructions": [
+              "AGENTS.md",
+              "packages/app-shell/AGENTS.md",
+              "packages/app-shell/e2e/AGENTS.md"
+            ],
+            "common": [
+              "EXECUTION-PROTOCOL.md",
+              "manifest.json",
+              "component-signatures.ts",
+              "host-signatures.ts",
+              "route-signatures.ts"
+            ],
+            "local": [
+              "work-orders/U25.json"
+            ],
+            "contracts": [
+              "bi",
+              "ctx",
+              "files",
+              "reviews",
+              "surface-specs",
+              "ui-change-review",
+              "ui-frame",
+              "ui-table"
+            ],
+            "surfaces": [
+              "UI47"
+            ],
+            "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+            "source_bindings": [
+              "contract-catalog.json#/sources/dashboard",
+              "contract-catalog.json#/sources/extended"
+            ]
+          },
+          "depends_authoring": [
+            {
+              "lock": "bi",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ctx",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "files",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "reviews",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "surface-specs",
+              "source": "surface-manifest.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-change-review",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-frame",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-table",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            }
+          ],
+          "depends_integration": [
+            "F01",
+            "F02",
+            "F03",
+            "A07",
+            "S01",
+            "S03"
+          ],
+          "depends_qualification": {
+            "work_orders": [
+              "F01",
+              "F02",
+              "F03",
+              "A07",
+              "S01",
+              "S03"
+            ],
+            "external": [
+              "Canonical producer releases and original blockers remain mandatory for qualification."
+            ],
+            "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+          }
+        },
+        {
+          "order": "U32",
+          "output": "complete",
+          "title": "Revisão preservada e comparação",
+          "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U32.json",
+          "surfaces": [
+            "UI48",
+            "UI49"
+          ],
+          "operation_refs": [
+            "contract-catalog.json#/operations/dashboard.dashboard-agenda",
+            "contract-catalog.json#/operations/dashboard.dashboard-capture",
+            "contract-catalog.json#/operations/dashboard.dashboard-history",
+            "contract-catalog.json#/operations/dashboard.dashboard-review",
+            "contract-catalog.json#/operations/dashboard.dashboard-review-preserve",
+            "contract-catalog.json#/operations/projection.review",
+            "contract-catalog.json#/operations/reviews.review-source",
+            "contract-catalog.json#/operations/reviews.review-update"
+          ],
+          "entrypoints": [
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/index.tsx",
+              "symbol": "SfPreservedReviewView",
+              "signature": "(props: SfSurfaceProps) => JSX.Element",
+              "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+              "route_source": "surface-manifest.json: assigned surfaces only"
+            },
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/index.tsx",
+              "symbol": "SfReviewCompareView",
+              "signature": "(props: SfSurfaceProps) => JSX.Element",
+              "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+              "route_source": "surface-manifest.json: assigned surfaces only"
+            }
+          ],
+          "i18n_exports": [
+            {
+              "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+              "en_symbol": "SF_U32_COPY",
+              "pt_br_symbol": "SF_U32_COPY_BR",
+              "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+            }
+          ],
+          "acceptance_cases": [
+            {
+              "id": "U32-AC01",
+              "expected": "Preserved review/meeting content retains exact reviewRef/version/cutoff; compare checks compatibility and preserves private drafts across recoverable failure.",
+              "status": "PLANNED_NOT_RUN"
+            },
+            {
+              "id": "U32-AC02",
+              "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+              "status": "PLANNED_NOT_RUN"
+            },
+            {
+              "id": "U32-AC03",
+              "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+              "status": "PLANNED_NOT_RUN"
+            }
+          ],
+          "required_reads": {
+            "instructions": [
+              "AGENTS.md",
+              "packages/app-shell/AGENTS.md",
+              "packages/app-shell/e2e/AGENTS.md"
+            ],
+            "common": [
+              "EXECUTION-PROTOCOL.md",
+              "manifest.json",
+              "component-signatures.ts",
+              "host-signatures.ts",
+              "route-signatures.ts"
+            ],
+            "local": [
+              "work-orders/U32.json"
+            ],
+            "contracts": [
+              "bi",
+              "ctx",
+              "files",
+              "reviews",
+              "surface-specs",
+              "ui-bi",
+              "ui-change-review",
+              "ui-collaboration",
+              "ui-evidence",
+              "ui-frame",
+              "ui-table"
+            ],
+            "surfaces": [
+              "UI48",
+              "UI49"
+            ],
+            "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+            "source_bindings": [
+              "contract-catalog.json#/sources/dashboard",
+              "contract-catalog.json#/sources/extended"
+            ]
+          },
+          "depends_authoring": [
+            {
+              "lock": "bi",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ctx",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "files",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "reviews",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "surface-specs",
+              "source": "surface-manifest.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-bi",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-change-review",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-collaboration",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-evidence",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-frame",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-table",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            }
+          ],
+          "depends_integration": [
+            "F01",
+            "F02",
+            "F03",
+            "A07",
+            "S01",
+            "S03",
+            "S04",
+            "S05",
+            "U20",
+            "U21",
+            "U22"
+          ],
+          "depends_qualification": {
+            "work_orders": [
+              "F01",
+              "F02",
+              "F03",
+              "A07",
+              "S01",
+              "S03",
+              "S04",
+              "S05",
+              "U20",
+              "U21",
+              "U22"
+            ],
+            "external": [
+              "Canonical producer releases and original blockers remain mandatory for qualification."
+            ],
+            "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+          }
+        },
+        {
+          "order": "U33",
+          "output": "complete",
+          "title": "Relatórios e download autorizado",
+          "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U33.json",
+          "surfaces": [
+            "UI50"
+          ],
+          "operation_refs": [
+            "contract-catalog.json#/operations/reviews.export.docx",
+            "contract-catalog.json#/operations/reviews.export.pptx"
+          ],
+          "entrypoints": [
+            {
+              "path": "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/index.tsx",
+              "symbol": "SfReportsView",
+              "signature": "(props: SfSurfaceProps) => JSX.Element",
+              "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+              "route_source": "surface-manifest.json: assigned surfaces only"
+            }
+          ],
+          "i18n_exports": [
+            {
+              "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+              "en_symbol": "SF_U33_COPY",
+              "pt_br_symbol": "SF_U33_COPY_BR",
+              "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+            }
+          ],
+          "acceptance_cases": [
+            {
+              "id": "U33-AC01",
+              "expected": "25 records and long notes are exported fully to PPTX/DOCX, paginated and reauthorized on download; request/result uncertainty is reconciled.",
+              "status": "PLANNED_NOT_RUN"
+            },
+            {
+              "id": "U33-AC02",
+              "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+              "status": "PLANNED_NOT_RUN"
+            },
+            {
+              "id": "U33-AC03",
+              "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+              "status": "PLANNED_NOT_RUN"
+            }
+          ],
+          "required_reads": {
+            "instructions": [
+              "AGENTS.md",
+              "packages/app-shell/AGENTS.md",
+              "packages/app-shell/e2e/AGENTS.md"
+            ],
+            "common": [
+              "EXECUTION-PROTOCOL.md",
+              "manifest.json",
+              "component-signatures.ts",
+              "host-signatures.ts",
+              "route-signatures.ts"
+            ],
+            "local": [
+              "work-orders/U33.json"
+            ],
+            "contracts": [
+              "bi",
+              "ctx",
+              "files",
+              "reviews",
+              "surface-specs",
+              "ui-change-review",
+              "ui-frame",
+              "ui-table"
+            ],
+            "surfaces": [
+              "UI50"
+            ],
+            "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+            "source_bindings": [
+              "contract-catalog.json#/sources/extended"
+            ]
+          },
+          "depends_authoring": [
+            {
+              "lock": "bi",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ctx",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "files",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "reviews",
+              "source": "contract-catalog.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "surface-specs",
+              "source": "surface-manifest.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-change-review",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-frame",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            },
+            {
+              "lock": "ui-table",
+              "source": "component-locks.json",
+              "requires": "FROZEN with digest in launch record"
+            }
+          ],
+          "depends_integration": [
+            "F01",
+            "F02",
+            "F03",
+            "A07",
+            "S01",
+            "S03"
+          ],
+          "depends_qualification": {
+            "work_orders": [
+              "F01",
+              "F02",
+              "F03",
+              "A07",
+              "S01",
+              "S03"
+            ],
+            "external": [
+              "Canonical producer releases and original blockers remain mandatory for qualification."
+            ],
+            "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+          }
+        }
+      ],
+      "write_paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/agenda/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u25.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u25.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/preserved/**",
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/compare/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u32.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts",
+        "packages/app-shell/src/orchestra/chapters/sucafina/reviews/reports/**",
+        "packages/app-shell/src/i18n/orchestra-chapters/sf-u33.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u33.spec.ts"
+      ],
+      "protected_paths": [
+        "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+        "any active writer's paths W01–W19 or outside this packet"
+      ],
+      "test_files": [
+        "packages/app-shell/e2e/sucafina/native/journeys/u25.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u32.spec.ts",
+        "packages/app-shell/e2e/sucafina/native/journeys/u33.spec.ts"
+      ],
+      "critical_invariants": "Agenda estável/review preservado/export DOCX/PPTX autorizados; fontes, comparação compatível e downloaded artifacts reais; não renderizar como aprovação.",
+      "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N28/",
+      "handoff_to": "114 only",
+      "compiler": "119 only",
+      "tests": "120 via GitHub Actions only",
+      "notes": "Implement actual Solid native Orchestra UI using current components/providers and existing mock reference. Each source order's full acceptance remains mandatory. Read next30/COMMON.md and full individual work orders."
+    },
+    "source_binding_pins": {
+      "dashboard": {
+        "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+        "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+        "blob": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "c6c24f4a66315c75dd8b0903ddd70c89b9b9e19c",
+        "changed": true,
+        "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source",
+        "C58_blob": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08",
+        "changed_since_C58": false,
+        "source_delta": "same blob as pinned C58"
+      },
+      "extended": {
+        "path": "apps/cli/src/sucafina-product/extended-http.ts",
+        "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+        "blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB",
+        "C58_blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+        "changed_since_C58": false,
+        "source_delta": "same blob as pinned C58"
+      }
+    },
+    "common": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/campaign-launch/COMMON.md@526e7204b310756e552196bbf3d64037dbbf047c",
+    "required_reads": [
+      "All applicable AGENTS",
+      "This entire launch packet including original_packet and whole assigned work-orders",
+      "NEXT30 COMMON, required_reads for each assigned scope, frozen CONTRACTS/COMPONENT-CONTRACTS/host+route+component signatures+surface specs/microcopy",
+      "Relevant canonical criterion pointers at dbf9547211d9b0fade619790de7c19c0869b7c7d and normative cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "Relevant actual producer code/source delta before edits; source baseline is current cohort C60, not historical catalog"
+    ]
+  },
+  "precedence": "Current mission/epoch/routing/narrow allowlist overrides historical IDs/wait admission text only. Original frozen contract+criteria preserved. Review findings are static hypotheses/causal readings, not executed exploit or release approval.",
+  "rules": [
+    "Nova sessão, sem reciclar chat. Ler AGENTS aplicáveis e o pacote inteiro. Confirmar HEAD/fence, source blobs e ACK real com actor/modelo efetivo/session ID apenas se exposto, epoch e SHA antes de escrever. PREPARED não significa iniciado.",
+    "Remote somente GitHub MCP, CAS expected_head e force=false. Preservar commits e branches anteriores. Se HEAD mudou, reconciliar deltas e autoridade antes de qualquer efeito. Não inferir morte por silêncio; fence revoga autoridade futura, não afirma encerramento de processo.",
+    "132/S0-C-e19-browser132 é único integrador de sf2-stack. Compiler149/PR107 e CI150/PR106 são únicos validadores em seus escopos após ACK. Não criar outro integrador/dispatcher. Preservar todas as missões133–142 e demais autores ativos.",
+    "Nenhum teste, parser, validador ou typecheck local. Autores/revisores solicitam verificações cirúrgicas ao responsável. CI GitHub Actions via protocolo existente aprovado; nunca gh/git push. Epic/full8 somente no bundle final coerente.",
+    "Não editar planos aprovados, generated, fontes alheias, engines Maestro/Relay/Schedule, Azure ou recursos externos. Sem devmerge/deploy/segredos/restart. Nenhum novo controlador/worker nativo; Goal permanece pausada.",
+    "Comportamento real e todos critérios originais preservados. Sem mocks/stubs/fixtures permissivas como entrega, sem waivers ou aprovações próprias. ARTIFACT_READY não equivale GLOBAL_RELEASE.",
+    "Após trabalho independente útil, publicar PR/handoff terminal com SHA/tree/blobs/preimages, critérios, achados reais, evidências ou NOT_RUN e próxima ação exata. Não gastar turnos em polling vazio, resumos repetidos nem repetir run equivalente falho."
+  ],
+  "delivery": [
+    "Same existing PR→sf2-stack, no alternative branch/wholesale merge/reset/force. Preserve history and existing source code.",
+    "Before edits verify current HEAD/fence and input blobs; ACK actual model/session when exposed+epoch+inputs. Late predecessor activity needs reconciliation not rollback.",
+    "Meaningful causal regression specs within owned paths, no assertions weakened. No local tests/parsers/validators/typechecks or own CI. Request150/149 on new coherent input only.",
+    "Publish complete exact patch and source/consumer pre/post SHA/tree/path manifests, finding/criterion mapping, evidence or NOT_RUN, remaining seams/owners and terminal checkpoint.132 alone integrates and publishes consumerACK; reviewer rechecks actual delta independently."
+  ]
+}
