@@ -707,3 +707,10 @@ export function SfRequestsPage(props: SfSurfaceProps<"CAP25">) {
     </SfPageFrame>
   </section>
 }
+
+/** I00 public U11 entrypoint. The protected requests/index.tsx re-export is 125-owned. */
+export function SfRequestView(props: SfSurfaceProps) {
+  if (props.surfaceId !== "CAP25")
+    return <SfStatePanel state="invalid" messageKey={copyKey("sf.u11.remaining.noSource")} />
+  return <SfRequestsPage {...props} />
+}
