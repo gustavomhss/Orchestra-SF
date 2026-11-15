@@ -1,0 +1,58 @@
+{
+  "schema": "sf2h.causal-fix-executor-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 183,
+  "order": "S01",
+  "status": "ACK_PUBLISHED_CAUSAL_SOURCE_AUTHORING",
+  "branch": "sf-ux-w06",
+  "pr": 125,
+  "epoch": "native-fix-e1-browser183",
+  "predecessor_epoch": "ux-native-w06-e2",
+  "actor": "ChatGPT via authorized GitHub MCP",
+  "requested_model": "Astra",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "NOT_EXPOSED",
+  "branch_head_before_ack": "b81044b9c573f0a887788cd21d4eb3a255582d0a",
+  "branch_tree_before_ack": "6de0ccbf79237289dbf8c92f2e63b64b75b27ad5",
+  "source_test_path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+  "source_test_preimage_blob": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+  "consumer_before": "sf2-stack@913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "consumer_test_preimage_blob": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+  "consumed_shared_fixture": {
+    "path": "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+    "source_branch": "sf2-stack",
+    "blob": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15",
+    "source_branch_missing": true,
+    "ownership": "READ_ONLY_162_COMPOSED"
+  },
+  "verified_instructions": {
+    "AGENTS.md": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "packages/app-shell/AGENTS.md": "a9ed3dc797d2756089a032e75bc0ab77256b3a03"
+  },
+  "verified_packet": "735896a99aab7f2e839e47513d8c8c301c32a1fa",
+  "fence": "89c27344e9152f767dd6d1e1464b09dc848e8ac7",
+  "write_allowlist": [
+    "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix183/**"
+  ],
+  "read_only": [
+    "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/**"
+  ],
+  "evidence": {
+    "browser_run": 43766970018,
+    "browser_job": 132974180913,
+    "s01_nested": "0_PASS_4_FAIL",
+    "actual_error": "Platform context must be used within a context provider",
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139
+  },
+  "no_local_tests": true,
+  "global_release": false,
+  "native_goal": "paused",
+  "integrator": 162,
+  "compiler": 163,
+  "browser_ci": 164
+}
