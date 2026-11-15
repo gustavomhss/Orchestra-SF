@@ -4,6 +4,7 @@ import {
   SfAnalyses,
   SfIntelligenceAnalysisCancel,
   SfIntelligenceAnalysisList,
+  SfIntelligenceAnalysisPrepareInput,
   SfIntelligenceAnalysisStartInput,
   SfProjectionResidents,
 } from "../../../../../packages/schema/src/sucafina/analyses"
@@ -14,6 +15,34 @@ const stamp = {
 }
 
 describe("A15 / native analysis wire contracts", () => {
+  test("prepare selection accepts an installed-skill JSON map with Effect 4 positional Record", () => {
+    const request = {
+      caseRef: { id: "case-1", incarnation: "inc-1", version: 1 },
+      objective: "Explain the current forecast",
+      profileId: "sf_finance", profileVersion: "v1",
+      skillId: "sf-explicar-forecast", skillVersion: "v1",
+      manifestDigest: "digest", outputSchemaVersion: "sf-contribution-v1",
+      requestedOperationScope: ["sf_dashboard_read"],
+    }
+    const selection = {
+      forecast: { amount: 0, confirmed: false, note: null, periods: [0, null, "current"] },
+      context: { filters: { years: [2025, 2026] } },
+    }
+    const input = { input: { request, selection } }
+    expect(Schema.decodeUnknownSync(SfIntelligenceAnalysisPrepareInput)(
+      input, { onExcessProperty: "error" },
+    )).toEqual(input)
+
+    // Skill-specific keys are intentionally dynamic JSON, not an opaque grant
+    // and not a reason to accept extra fields on the enclosing request.
+    expect(() => Schema.decodeUnknownSync(SfIntelligenceAnalysisPrepareInput)({
+      input: { request, selection: { forecast: undefined } },
+    }, { onExcessProperty: "error" })).toThrow()
+    expect(() => Schema.decodeUnknownSync(SfIntelligenceAnalysisPrepareInput)({
+      input: { request: { ...request, forgedOwner: "admin" }, selection },
+    }, { onExcessProperty: "error" })).toThrow()
+  })
+
   test("binds exactly seven producer analysis actions and the residents projection", () => {
     expect(Object.keys(SfAnalyses.operations).sort()).toEqual([
       "intelligence.analysis.cancel",
