@@ -1,0 +1,193 @@
+{
+  "schema": "sf2h.fix179.handoff.v1",
+  "mission": 179,
+  "order": "A09",
+  "campaign": "sf2h-integral-20261112",
+  "epoch": "native-fix-e1-browser179",
+  "state": "ARTIFACT_READY_SOURCE",
+  "qualification": "NOT_RUN_POST_FIX",
+  "native_goal": "paused",
+  "global_release": false,
+  "actor": "ChatGPT via connected GitHub MCP",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-a09",
+  "pr": 140,
+  "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/140",
+  "packet": {
+    "ref": "dd4e12b7b396307bb548bbd6e62a670281d342a7",
+    "blob": "07f55ffadb2c979ef584cd9e07f7fa904b67b111",
+    "frozen_contract_catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "frozen_contracts_md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host_signatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "schema_AGENTS": "2dc577ff394a02b4c6812d78e23ef43da869f850"
+  },
+  "head": {
+    "expected": "30e68e97d6a9ea66141c32ff493de27413d11b94",
+    "initial_tree": "a82a4660258e5ef0b98fc66e6c2108290aa587b7",
+    "ack_commit": "e8b76958a3cd278516d6d2c2b081c9f48b8984f7",
+    "ack_tree": "44ec0150c9b71ab87bb6b6b4f3d738c32d6b2601",
+    "ack_blob": "c0c1ccaa148b676c8280a1c3d2f0e41e5678cc10",
+    "code_commit": "266692313ff21a76f0815312c25b77a29008848c",
+    "code_tree": "2502c9763c552ee121d824d53a997ad375c20328",
+    "code_parent": "e8b76958a3cd278516d6d2c2b081c9f48b8984f7"
+  },
+  "fence": {
+    "file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/S0-FENCE.json",
+    "blob": "e57c7484966625f766c75f560daf7039d959e233",
+    "previous_epoch": "ux-native-a09-e2-browser152",
+    "previous_writes": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "previous_termination_claimed": false,
+    "cas_force": false
+  },
+  "source_changes": [
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+      "before_blob": "f7fd5dece84a8374e0fd89c8c357e94b843ba1b6",
+      "after_blob": "6948316a7dc0b07296180fed7f5b32f613bcc106",
+      "action": "MODIFIED",
+      "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/PATCH.diff",
+      "patch_blob": "ab8402c33a0ac8eba933700f4f137539ab9a6c2c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts",
+      "before_blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee",
+      "after_blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee",
+      "action": "UNCHANGED_REUSE_EXISTING_TESTS"
+    }
+  ],
+  "source_pins_unchanged": {
+    "ports": "88b6efb4840b8731f707862a8baf14683526c7a9",
+    "routine_services": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+    "host_types": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+    "schema_fix152": "9b6429dd66be4419e4f9d2b4f397a5485986170c",
+    "test_fix152": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee",
+    "client": "c9ab1eca7c04994175c560e99985dc1b7c05a952"
+  },
+  "diagnosis": {
+    "code": "TS2774",
+    "observed": "apps/cli/src/sucafina-product/native-ui/routines.ts:178:31",
+    "cause": "HostProducts.withCase is required whenever the optional nativeUiProducts object exists; checking the function truthiness created a statically always-true arm",
+    "resolution": "Check only the optional nativeUiProducts object as the actual installed host binding. routineCall still uses real routines and withCase; C07 native/Relay producer authorizes, never simulated.",
+    "side_effects": "No change in branch choices for valid typed hosts; missing binding still returns 503 native-routine-port-unavailable, exceptions caught, UI/human admission + current revalidate + finish preserved"
+  },
+  "source_consumers": [
+    {
+      "name": "162",
+      "pr": 65,
+      "state": "PENDING_CONSUMER_ACK"
+    },
+    {
+      "name": "163",
+      "pr": 107,
+      "state": "AFTER_INTEGRATION"
+    },
+    {
+      "name": "164",
+      "pr": 106,
+      "state": "CONDITIONAL_HOSTED_RECHECK"
+    }
+  ],
+  "consumer": {
+    "branch": "sf2-stack",
+    "observation_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "observation_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "preimage_files": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+        "blob": "f7fd5dece84a8374e0fd89c8c357e94b843ba1b6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts",
+        "blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee"
+      }
+    ],
+    "target_code_blob": "6948316a7dc0b07296180fed7f5b32f613bcc106",
+    "target_test_blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee",
+    "code_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/PATCH.diff",
+    "post_commit": "UNKNOWN_NOT_APPLIED",
+    "post_tree": "UNKNOWN_NOT_APPLIED",
+    "consumer_ack": "PENDING",
+    "actual_integration": "NOT_DONE_BY_179"
+  },
+  "private_host_seam": {
+    "state": "INERT_FULL_PROPOSAL_ONLY_NOT_APPLIED",
+    "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/INERT-162.diff",
+    "metadata": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/INERT-162.json",
+    "proposal_blob": "68337230f23cd2737850e06fa5521e69062f2230",
+    "shared_pre_post": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "pre": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+        "post_proposed": "b021113419a7fae960f150fd3fe4ec2eeec6450d"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "pre": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+        "post_proposed": "980845c0e26b7fadc285ba26e9ff87d62e8f6c56"
+      }
+    ],
+    "ownership": "162 sole authorized writer for shared code and product injection; do not claim Schedule/native readiness"
+  },
+  "evidence": {
+    "compiler": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "attempt": 1,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+      "conclusion": "FAIL_TS2774_OLD_BLOB",
+      "receipt": "validation163/RESULTS-163.json",
+      "new_fix": "NOT_RUN"
+    },
+    "product_baseline": {
+      "run": 43766390097,
+      "job": 132972329236,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "tree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "a09_cases": "10_PASS",
+      "meaning": "Old candidate source-only tests; cannot prove new code or native qualification"
+    },
+    "browser_other": {
+      "run": 43766970018,
+      "job": 132974180913,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "conclusion": "FAIL_OTHER_F03_S01_S05; S02_PASS; no A09 selected",
+      "meaning": "Not A09 validation"
+    },
+    "post_source": {
+      "typecheck": "NOT_RUN",
+      "sdk": "NOT_RUN",
+      "guards": "NOT_RUN",
+      "routines_test": "NOT_RUN",
+      "native_producer": "NOT_RUN",
+      "browser": "NOT_RUN",
+      "epic": "NOT_RUN"
+    }
+  },
+  "criteria": {
+    "A09_AC01": "NO_WIRE_SHAPE_CHANGE; preserve absent/null/zero/version, tests unchanged; post-fix NOT_RUN",
+    "A09_AC02": "CLOSED_OPERATION/REQUEST_ADMISSION/PAYLOAD_REJECTION_UNCHANGED; post-fix NOT_RUN",
+    "A09_AC03": "withCase/current authority/source versions/expected run version unchanged; post-fix NOT_RUN",
+    "TS2774": "SOURCE_FIXED_REQUIRES_163_HOSTED_VERIFY",
+    "operational_C07_Relay_Schedule": "HOLD_UNTIL_REAL_INSTALLED_BINDING_AND_PROOFS"
+  },
+  "blockers": [
+    "162 has not applied new A09 source postblob to sf2-stack or issued consumer ACK",
+    "Current 162 consumer host lacks nativeUiProducts binding; proposal provided as 162-only inert patch, no direct shared writes",
+    "Actual current installed native C07/Relay/Schedule and explicit grants cannot be claimed ready",
+    "Compiler163 old W failed in multiple unrelated schema/client/app/guards; 179 fixes only one CLI diagnostic",
+    "No hosted checks executed on 179 postimage"
+  ],
+  "requests": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/REQUESTS-163-164.json",
+  "shared_owner": "162",
+  "compiler_owner": "163",
+  "ci_owner": "164",
+  "tests_added": [],
+  "tests_changed": [],
+  "other_files_changed": false,
+  "local_validation": "NOT_RUN_AS_PROHIBITED",
+  "lease": "HANDOFF_SOURCE_READY_RELEASE_TO_162; NO_AUTOMATED_ACCEPTANCE"
+}

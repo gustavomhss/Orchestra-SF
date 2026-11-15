@@ -1,0 +1,114 @@
+{
+  "schema": "sf2h.fix179.requests.v1",
+  "mission": 179,
+  "epoch": "native-fix-e1-browser179",
+  "source": {
+    "branch": "sf-ux-a09",
+    "pr": 140,
+    "code_commit": "266692313ff21a76f0815312c25b77a29008848c",
+    "code_tree": "2502c9763c552ee121d824d53a997ad375c20328",
+    "code_blob": "6948316a7dc0b07296180fed7f5b32f613bcc106",
+    "test_blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee"
+  },
+  "goal": "paused",
+  "global_release": false,
+  "integrator_162": {
+    "owner": "162 / sf2-stack / PR65",
+    "state": "REQUEST_ONLY_NOT_APPLIED",
+    "ack_required": true,
+    "observed_consumer": {
+      "head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+      "tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+      "routines_pre_blob": "f7fd5dece84a8374e0fd89c8c357e94b843ba1b6",
+      "routines_test_blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee"
+    },
+    "must_consume": [
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/routines.ts",
+        "exact_pre_blob": "f7fd5dece84a8374e0fd89c8c357e94b843ba1b6",
+        "source_post_blob": "6948316a7dc0b07296180fed7f5b32f613bcc106",
+        "source_code_commit": "266692313ff21a76f0815312c25b77a29008848c",
+        "patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/PATCH.diff"
+      }
+    ],
+    "optional_shared_seam": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/INERT-162.diff",
+      "metadata": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/INERT-162.json",
+      "state": "INERT_PROPOSAL_162_ONLY",
+      "preimages": [
+        "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+        "8e9f96a13efa112b94e2578f9c0b8a663cd04aed"
+      ],
+      "proposed_post_blobs": [
+        "b021113419a7fae960f150fd3fe4ec2eeec6450d",
+        "980845c0e26b7fadc285ba26e9ff87d62e8f6c56"
+      ],
+      "rules": "162 verifies exact current consumer preimages/owner, binds only real existing routineServices.routines and business.withCase; never supplies fake Schedule/Relay/C07/ready/grant"
+    },
+    "output_required": "New consumer source W SHA+tree, exact path/blob postimage readback, consumer ACK referencing source commit/tree and whether inert seam was accepted/reconciled, then submit only causally new work to 163/164; no whole PR/branch merge, no devmerge"
+  },
+  "compiler_163": {
+    "owner": "163 / sf-compiler-checks / PR107",
+    "state": "NOT_RUN_FOR_POSTIMAGE",
+    "trigger": "AFTER_162_CONSUMER_ACK_WITH_NEW_W_AND_RELEVANT_POSTBLOBS",
+    "prior_failure": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "attempt": 1,
+      "W": "690a34cdd81c12d7311f3717c19679b950276161",
+      "tree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+      "diagnostic": "apps/cli/src/sucafina-product/native-ui/routines.ts(178,31): TS2774"
+    },
+    "priority_order": [
+      {
+        "cwd": "apps/cli",
+        "command": "bun typecheck",
+        "expected": "TS2774 for routines.ts absent on newly integrated code blob 6948316a7dc0b07296180fed7f5b32f613bcc106"
+      },
+      {
+        "cwd": "modules/sucafina",
+        "command": "bun typecheck",
+        "when": "162 accepts shared SfHostServices nativeUiProducts type alias and/or dependency closure invalidation"
+      }
+    ],
+    "guard": "Owned by 163; run existing check:guards --base origin/dev only as demanded by canonical invalidation policy on coherent C; historical guards remain open, no waived findings",
+    "sdk": "No public Schema/Client/Protocol or generator change in 179; reuse previous SDK result by exact invalidation key where valid, do not hand-edit generated, coordinate with other current compiler fixes",
+    "request_identity": "dedup by new product W SHA/tree+workflow/runtime/lock+ordered selectors/fixture+source postblobs; do not repeat failed W690a34 with unchanged input",
+    "record": "Complete run/job/attempt/workflow/input W+tree, selected exit codes/type diagnostics, SDK/guard status real or NOT_RUN"
+  },
+  "product_ci_164": {
+    "owner": "164 / sf-ci-validation / PR106",
+    "state": "NOT_RUN_FOR_POSTIMAGE",
+    "trigger": "AFTER_162_REAL_CONSUMPTION_AND_NEW_C",
+    "reuse_existing": {
+      "run": 43766390097,
+      "job": 132972329236,
+      "W": "6d42d6752497fc37be59c64a72b272a3d0860961",
+      "tree": "e797d2dd07085a10f1cf001c04aeff6c842cdcbd",
+      "routines_cases_pass": 10,
+      "interpretation": "REAL_PREVIOUS_SCOPED_BASELINE_ONLY; not proof for fix179/new consumer"
+    },
+    "conditional_selector": {
+      "when": "162 accepts nativeUiProducts real producer wiring or canonical invalidation requires a fresh regression",
+      "package": "sucafina",
+      "os": "linux",
+      "runtime": "Bun",
+      "ordered_files": [
+        "Sucafinav1/test/native-ui-contract/routines.test.ts"
+      ],
+      "existing_dispatcher": "bun run test:ci sucafina Sucafinav1/test/native-ui-contract/routines.test.ts --os linux",
+      "reason": "Reuse meaningful existing routines tests; no mirrored new test for type-only change"
+    },
+    "if_type_only": "NO_NEW_MIRRORED_SPEC; 164 decide dedup using canonical current-C/test/selector key, no duplicate or invented success",
+    "fail_closed": "Real live C07/Relay/Schedule qualification stays HOLD absent genuine installed producer/Request/permission; no mock/fake grants/fixtures; failed unchanged W not rerun",
+    "record": "Actual test selection, W+tree, S+tree, job/run/attempt, expected/observed/Omni status, or NOT_RUN"
+  },
+  "prohibited": [
+    "local tests/typecheck/parser/validator/build",
+    "second dispatcher/workflow",
+    "invention of grant/source/engine",
+    "reset/force/merge/deploy",
+    "improper previous-run pass transfer"
+  ],
+  "native_goal": "paused"
+}

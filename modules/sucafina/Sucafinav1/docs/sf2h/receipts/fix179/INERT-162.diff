@@ -1,0 +1,52 @@
+diff --git a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+index 6c85ddc7544ea8318cfc14b6c6142b1e8faca593..b021113419a7fae960f150fd3fe4ec2eeec6450d 100644
+--- a/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/host-context.ts
+@@ -45,6 +45,19 @@
+   collect: (binding: TrustedExecutionBinding) => Promise<PortResult<readonly { seq: number; message: SessionMessage.Message }[]>>
+   interrupt: (binding: TrustedExecutionBinding) => Promise<PortResult<true>>
+ }
++// Private A09 Schedule detail reader. I00 binds only an actual authorized producer.
++export type SfScheduleDetail = Readonly<{
++  scheduleRef: string; version: number; state: string
++  conditionRef: string; recipeRef: string; recurrence: string; timezone: string
++}>
++export type SfScheduleDetailResult =
++  | Readonly<{ status: "ok"; value: SfScheduleDetail }>
++  | Readonly<{ status: "not-found"; reason: "schedule-not-found" }>
++  | Readonly<{ status: "needs-input" | "stale" | "denied" | "unavailable" | "conflict" | "provider-conflict" | "failed"; reason: string }>
++export type SfScheduleDetailsPort<Context> = Readonly<{
++  read(request: Readonly<{ scheduleRef: string }>, binding: Context): Promise<SfScheduleDetailResult>
++}>
++
+ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
+   dispatch: BusinessPorts["dispatch"]
+   /** Private, human-admitted key-only C08 recovery; never model-visible. */
+@@ -60,6 +73,15 @@
+   work?: Pick<ReturnType<typeof createCollaborationWorkPort>, "listPresentation">
+   documents?: Pick<ReturnType<typeof createSfDocumentHost>, "resolvePresentation">
+   routineRuns?: Pick<ReturnType<typeof createSfRoutineProduct>, "discoverRuns">
++  /** Installed native source only: never infer Schedule/C07 admission or a grant here. */
++  nativeUiProducts?: Readonly<{
++    routines: BusinessPorts["routines"]
++    schedules?: BusinessPorts["schedules"]
++    scheduleDetails?: SfScheduleDetailsPort<TrustedDomainContext>
++    withCase<T>(context: TrustedDomainContext, caseRef: Readonly<{ id: string; incarnation: string; version: number }>,
++      options: Readonly<{ allowHistoricalRetry?: boolean }>,
++      work: () => Promise<PortResult<T>>): Promise<PortResult<T>>
++  }>
+   personalViews?: ReturnType<typeof createSfPersonalViews>
+   forecastInputs?: {
+     prepare: (context: TrustedUiContext, input: ForecastCompareRequest & { caseRef: { id: string; incarnation: string; version: number } }) => Promise<PortResult<ForecastExplainInput>>
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+index 8e9f96a13efa112b94e2578f9c0b8a663cd04aed..980845c0e26b7fadc285ba26e9ff87d62e8f6c56 100644
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -886,6 +886,7 @@
+   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
+     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
+     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
++    nativeUiProducts: { routines: routineServices.routines, withCase: business.withCase },
+     routineRuns: { discoverRuns: async (context) =>
+       context.kind !== "ui" || !nativeRoutineProducer ? routineServices.routineRuns.discoverRuns(context)
+         : (await reauthenticatedRoutineHistory(context, () => routineServices.routineRuns.discoverRuns(context))

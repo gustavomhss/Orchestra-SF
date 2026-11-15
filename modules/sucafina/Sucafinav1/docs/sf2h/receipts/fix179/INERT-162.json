@@ -1,0 +1,29 @@
+{
+  "schema": "sf2h.fix179.inert-162.v1",
+  "state": "PROPOSED_NOT_APPLIED",
+  "owner": "162/PR65",
+  "source_author": "179/PR140",
+  "source_code_commit": "266692313ff21a76f0815312c25b77a29008848c",
+  "consumer_observed": {
+    "head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "paths": [
+      {
+        "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+        "preimage_blob": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+        "proposed_postimage_blob": "b021113419a7fae960f150fd3fe4ec2eeec6450d"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/host-context.ts",
+        "preimage_blob": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+        "proposed_postimage_blob": "980845c0e26b7fadc285ba26e9ff87d62e8f6c56"
+      }
+    ]
+  },
+  "instructions": "NOT APPLIED. 162 sole shared writer: re-read current consumer head and blobs, verify frozen CONTRACTS.md §5.4 and authorized actual producer, apply with own CAS only after reconciliation; optional Schedule ports remain absent until genuine native C07 producer, no readiness flag and no new grants. Type-only aliases derived from host-signatures.ts; nativeUiProducts binds the existing routineServices.routines plus business.withCase; no direct producer/engine changes.",
+  "source_contracts": {
+    "schedule_detail": "host-signatures.ts canonical ScheduleDetails typed reader",
+    "routines": "BusinessPorts.routines from actual createSfRoutineServices(...).routines",
+    "case": "business.withCase with actual request/case authority and owner revalidation"
+  },
+  "tests": "NOT_RUN"
+}
