@@ -1,0 +1,175 @@
+{
+  "schema": "sf2h.integration100.checkpoint.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "actor": "S0-C-e14-browser100",
+  "model_observed": "GPT-6",
+  "session_id": null,
+  "github_actor": "gustavomhss",
+  "previous_owner": "S0-C-e13-browser71",
+  "C45": {
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "ACK100": "01efff55ee289cd897f912b9ae96c893b966e658",
+  "last_material": {
+    "symbol": "C51",
+    "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262"
+  },
+  "scope_counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "packs": 8,
+    "operations": 39,
+    "AM": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ]
+  },
+  "safety": {
+    "global_release": false,
+    "no_dev_merge": true,
+    "no_deploy": true,
+    "no_new_CI_dispatcher": true,
+    "no_local_tests": true
+  },
+  "previous_71_pointer": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/pending-owners-final.json",
+  "additive_updates_only": true,
+  "states": [
+    {
+      "owner": 45,
+      "role": "dispatcher exclusive",
+      "status": "REQUESTS_RECONCILED_NEEDS_C_COMPOSED_CHECKS",
+      "pr": 32,
+      "comment_id": 6889780293
+    },
+    {
+      "owner": 52,
+      "role": "Decisions/UI and shared first-save/creation",
+      "status": "UI87_ADAPTER_NOT_APPLIED; M96_HTTP_OWNER_PATCH_NOT_COMPOSED",
+      "pr": 40,
+      "comment_ids": [
+        6889779908,
+        6889795866
+      ]
+    },
+    {
+      "owner": 95,
+      "role": "native C15 producer",
+      "status": "ACTIVE_UNRELEASED",
+      "branch": "native-host-provider",
+      "head_at_census": "1c7ee3f4a096aae02f316683a84c4bde44d5bde3"
+    },
+    {
+      "owner": 96,
+      "role": "creation-after-reload",
+      "status": "SOURCE_AND_OWNER_PATCH_PROPOSED_NOT_INSTALLED_NEEDS_52_RECONCILIATION",
+      "branch": "creation-reload-fix",
+      "head_at_census": "d195d019d3dc2c4f5f470c4d17c5b1c9af8186c4",
+      "pr": 103,
+      "comment_id": 6889795518,
+      "conflict": "host-context.ts prior 297a4050 but C49 post f03ab621; never overwrite"
+    },
+    {
+      "owner": 99,
+      "role": "P03 causal",
+      "status": "ACTIVE_SOURCE_CURRENT_CI_IN_PROGRESS_NOT_RELEASED",
+      "branch": "planner-p03-finish",
+      "observed_run": 43681302722
+    },
+    {
+      "owner": 81,
+      "role": "WP14",
+      "status": "PRESERVED_OWNER"
+    },
+    {
+      "owner": 48,
+      "role": "Reports exporter UI",
+      "status": "PRESERVED_OWNER_XLSX_LAYOUT_VISUAL_FINDINGS"
+    },
+    {
+      "owner": "user",
+      "role": "UX20/sidebar",
+      "status": "OUT_OF_SCOPE"
+    },
+    {
+      "owner": "S0",
+      "role": "epic, AM and final acceptance",
+      "status": "HOLD"
+    },
+    {
+      "owner": 91,
+      "role": "R1 functional independent",
+      "status": "RECHECK_REQUESTED",
+      "pr": 100,
+      "comment": 6889780823
+    },
+    {
+      "owner": 92,
+      "role": "R2 security independent",
+      "status": "RECHECK_REQUESTED",
+      "pr": 97,
+      "comment": 6889781234
+    },
+    {
+      "owner": 93,
+      "role": "R3 runtime independent",
+      "status": "RECHECK_REQUESTED",
+      "pr": 98,
+      "comment": 6889781587
+    }
+  ],
+  "findings": [
+    {
+      "id": "VIS88-001",
+      "owner": 98,
+      "now": "PATCH_COMPOSED_NO_REAL_VISUAL_PROOF"
+    },
+    {
+      "id": "VIS88-010",
+      "owner": 97,
+      "now": "PATCH_COMPOSED_ORIGINAL_TEST_NOT_RUN"
+    },
+    {
+      "id": "EA66-LEGACY-EGRESS",
+      "owner": 86,
+      "now": "C45_SOURCE_FIX_PRESERVED_C_PROOF_OPEN"
+    },
+    {
+      "id": "XLSX_PRINT",
+      "owner": 48,
+      "now": "21/6 SPARSE_PAGES_VISUAL_OPEN"
+    },
+    {
+      "id": "AUTH_BACKUP_PRIVACY",
+      "owner": "R2/S0",
+      "now": "INDEPENDENT_POLICY_REVIEW_OPEN"
+    },
+    {
+      "id": "R1-91-001",
+      "owner": "96 + 52 + 71",
+      "now": "M96_OWNER_PATCH_NOT_INSTALLED"
+    },
+    {
+      "id": "P03_180S",
+      "owner": 99,
+      "now": "CAUSAL_TEST_IN_FLIGHT_NO_C_FIX"
+    },
+    {
+      "id": "NATIVE_PRODUCER",
+      "owner": 95,
+      "now": "NO_GENUINE_INSTALLED_CAPABILITY"
+    }
+  ],
+  "required_next_action": "First integrate explicit terminal producer95 only after exact validated source + real C15; owner52 returns HTTP/UI96 reconciled patch and UI87 ACK; await 99 causal qualified release; A45 run/dedup C-scoped checks, then S0 final freeze/8 selections epic AM reviews. Do not alter their branches."
+}

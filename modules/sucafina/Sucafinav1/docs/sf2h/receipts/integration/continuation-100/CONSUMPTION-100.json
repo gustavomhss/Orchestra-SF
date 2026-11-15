@@ -1,0 +1,277 @@
+{
+  "schema": "sf2h.integration100.checkpoint.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "actor": "S0-C-e14-browser100",
+  "model_observed": "GPT-6",
+  "session_id": null,
+  "github_actor": "gustavomhss",
+  "previous_owner": "S0-C-e13-browser71",
+  "C45": {
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "ACK100": "01efff55ee289cd897f912b9ae96c893b966e658",
+  "last_material": {
+    "symbol": "C51",
+    "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262"
+  },
+  "scope_counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "packs": 8,
+    "operations": 39,
+    "AM": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ]
+  },
+  "safety": {
+    "global_release": false,
+    "no_dev_merge": true,
+    "no_deploy": true,
+    "no_new_CI_dispatcher": true,
+    "no_local_tests": true
+  },
+  "consumptions": [
+    {
+      "id": "C46",
+      "sha": "738c5cc9ddae72916bf3d3a9cce9fca4a8b111e3",
+      "tree": "f0baf3c0b7d6da3668d0d0ea82a0b5a0a122a4eb",
+      "parent": "01efff55ee289cd897f912b9ae96c893b966e658",
+      "mission": 94,
+      "source": "a4e11b554e8c953da60040ec37f370e6e11ebe49",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "preimage": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+          "postimage": "34d74d6651031c5194db1d22c823baae60e9a260"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+          "preimage": null,
+          "postimage": "b41718d11a98fb57b0d7c0ff82b63d2f6b6cfa1d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+          "preimage": "764b7223c3842855764c6832826708ba9eccc2b0",
+          "postimage": "75a96c0c2f8df772727ff1c71d2cc7a2b7085cf2"
+        }
+      ],
+      "status": "EXACT_COMPOSED_NOT_C_QUALIFIED",
+      "note": "Preserve entry72/lookup fixture; map old79 not applied"
+    },
+    {
+      "id": "C47",
+      "sha": "b02ac1251c754620c5d8ab98cfd0c1d51315da27",
+      "tree": "e2f08253a79bf688658d809fc66cdf29696c2cd0",
+      "parent": "738c5cc9ddae72916bf3d3a9cce9fca4a8b111e3",
+      "mission": 87,
+      "source": "f42988d08ff29548bfb2af54c0a6d856315c7487",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+          "preimage": "a0c1d07be1ddd63492e7bcc3ff5980c0666b432a",
+          "postimage": "d880fe5a5f7fd3c9c4fa249dbc374620a39a43a7"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-decisions.ts",
+          "preimage": "697eb30c6d5a8ae29d6920efc5e7435dad7c55d8",
+          "postimage": "c432524a112c873117309377d941845bf9923096"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "preimage": "12e9cb870edcbc8c67e641915f033b6af4f8890c",
+          "postimage": "9369722db40a922887c63481753776e3b01e97d8"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+          "preimage": null,
+          "postimage": "566e765f201d1a45677c0c52c75eb92ecb16d482"
+        }
+      ],
+      "status": "EXACT_COMPOSED_NOT_C_QUALIFIED",
+      "note": "Exact source hunks; dashboard components selectively reconciled preserving later read and admission"
+    },
+    {
+      "id": "C48",
+      "sha": "10ac98d3f7d426a32ae6087137f9ae1d80e46ee0",
+      "tree": "c77af3de52052d4363e2e22a6467cbca8bccf2c8",
+      "parent": "b02ac1251c754620c5d8ab98cfd0c1d51315da27",
+      "mission": 88,
+      "source": "a1be5ae4e7e934ca1c47674ee0b166cc560e2b31",
+      "files": [
+        {
+          "path": ".github/workflows/test-ci.yml",
+          "preimage": "9f078f4e37b758691bcd073e5590f05d5444392a",
+          "postimage": "3185885e123f9bb13c16c670e4df2fcffab38290"
+        },
+        {
+          "path": "script/sf2h/export-visual/reader.py",
+          "preimage": null,
+          "postimage": "23189c4187c5f4b4b13df554a4f05185b23b1b46"
+        },
+        {
+          "path": "script/sf2h/export-visual/sheet_views.py",
+          "preimage": null,
+          "postimage": "9a4ec4a45166f8dd3a01526f673f1156e528953c"
+        }
+      ],
+      "status": "EXACT_COMPOSED_NOT_C_QUALIFIED",
+      "note": "Bounded workflow request selection+reader render artifact; source R3 technical pass, functional/visual open"
+    },
+    {
+      "id": "C49",
+      "sha": "1c0004563b157f0dbc3fb72c40a2f2a63facba66",
+      "tree": "28916458dae9e90da3123dfccc7e23d52076847f",
+      "parent": "10ac98d3f7d426a32ae6087137f9ae1d80e46ee0",
+      "mission": 90,
+      "source": "5c9d8f50b4397c5d831105394e40c2490c2aa3cc",
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "preimage": "297a4050323d80648684725f9c7e9a8680aa318f",
+          "postimage": "f03ab621e96cfda23456be73bba2d24f24754d36"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+          "preimage": null,
+          "postimage": "da69328f9e8aa4d68a08faf7c858ccae9d5c0e5b"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+          "preimage": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+          "postimage": "a6e4f6580cf5380d637ae5add2e7317606ccbf38"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+          "preimage": null,
+          "postimage": "f34da6d5d4338627773f7c5cf3785df1958e475b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+          "preimage": null,
+          "postimage": "79ada67b416fbe453fdf99da2e2582f76501338f"
+        }
+      ],
+      "status": "EXACT_COMPOSED_NOT_C_QUALIFIED",
+      "note": "Seven-hunk host patch exact; producer95 missing; native readiness OFF"
+    },
+    {
+      "id": "C50",
+      "sha": "acd33532db53e77e96fa1c06a827940b593d5ae9",
+      "tree": "a9a74bca8f19389296437ec3d21fc417b407a7a2",
+      "parent": "1c0004563b157f0dbc3fb72c40a2f2a63facba66",
+      "mission": 97,
+      "source": "d369e23f495e41a861f0ebc47b6334d166ddf1d1",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+          "preimage": "2e7b312561f3f027ab070c61e15ecb6886fa169c",
+          "postimage": "12d6b27c52e29ac0cb8ccc65fba63ad20ddbc4ef"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/denied-read.ts",
+          "preimage": null,
+          "postimage": "5314a3cea74752c194cd56a890ec0908d3b9272f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+          "preimage": null,
+          "postimage": "50dd7e88b4611302b8d97d6c383087508a62351e"
+        }
+      ],
+      "status": "EXACT_COMPOSED_NOT_C_QUALIFIED",
+      "note": "Two-hunk shared business-context patch exact; original readonly oracle untouched"
+    },
+    {
+      "id": "C51",
+      "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+      "parent": "acd33532db53e77e96fa1c06a827940b593d5ae9",
+      "mission": 98,
+      "source": "0d7a42051b4b182702e9d1f3bc2be9e8d0038786",
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+          "preimage": "84d1494057e99551cc8544655f0e0468b8853428",
+          "postimage": "7010c9e5ec1f5300388408573b5ace1273662070"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/reports.ts",
+          "preimage": "80054e559574a9e13ce26cdfc7fbb3f778847b6f",
+          "postimage": "729a6eeadd72f3ed122cd2ebc94ad8e4b52956c5"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/report-title-fix/title-typography.test.ts",
+          "preimage": null,
+          "postimage": "59cec696c182d152576a5d7625518c405c54ebc2"
+        }
+      ],
+      "status": "EXACT_COMPOSED_NOT_C_QUALIFIED",
+      "note": "DOCX-only title correction exact; real render still OPEN"
+    }
+  ],
+  "material_commits": 6,
+  "material_path_occurrences": 21,
+  "unique_material_paths": 21,
+  "readback": {
+    "method": "GitHub API exact commit/tree/compare/parent and file pre/post",
+    "consecutive_all_exact": true,
+    "source_w_assigned": true,
+    "latest_branch_head_verified": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "qualification": "NOT_RUN_IN_COMPOSED_C",
+    "consumer_ack_scope": "SOURCE_BLOBS_ONLY"
+  },
+  "source_delivery_refs": {
+    "87": {
+      "terminal": "995e29f5b0028f713cfe76026e192a91d6fb7582",
+      "pr": 92,
+      "ack_comment": 6889770680
+    },
+    "88": {
+      "terminal": "057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f",
+      "pr": 93,
+      "ack_comment": 6889771034
+    },
+    "90": {
+      "terminal": "f6abbcc1677be93122f19ae3c2846fececeadbf4",
+      "pr": 96,
+      "ack_comment": 6889771368
+    },
+    "94": {
+      "terminal": "67bbd67e72fd1ab9703fd38dc9d8cc6ccc782e54",
+      "pr": 85,
+      "ack_comment": 6889770343
+    },
+    "97": {
+      "terminal": "0a2f8ccd0eca92f5b32994d288b471149fb00668",
+      "pr": 102,
+      "ack_comment": 6889771743
+    },
+    "98": {
+      "terminal": "28bbd0a215631253311aa76f28ea96c0e7c63640",
+      "pr": 101,
+      "ack_comment": 6889772085
+    }
+  },
+  "already_in_C45_no_reapply": {
+    "mission": 89,
+    "source": 76,
+    "paths": [
+      "modules/sucafina/Sucafinav1/product/decisions/result-store.ts",
+      "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts"
+    ],
+    "state": "ALREADY_COMPOSED"
+  }
+}

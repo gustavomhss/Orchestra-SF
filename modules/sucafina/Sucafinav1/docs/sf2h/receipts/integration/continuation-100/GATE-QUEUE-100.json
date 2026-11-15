@@ -1,0 +1,170 @@
+{
+  "schema": "sf2h.integration100.checkpoint.v1",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "T0": "2026-11-13T04:01:10Z",
+  "actor": "S0-C-e14-browser100",
+  "model_observed": "GPT-6",
+  "session_id": null,
+  "github_actor": "gustavomhss",
+  "previous_owner": "S0-C-e13-browser71",
+  "C45": {
+    "sha": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "ACK100": "01efff55ee289cd897f912b9ae96c893b966e658",
+  "last_material": {
+    "symbol": "C51",
+    "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262"
+  },
+  "scope_counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "packs": 8,
+    "operations": 39,
+    "AM": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ]
+  },
+  "safety": {
+    "global_release": false,
+    "no_dev_merge": true,
+    "no_deploy": true,
+    "no_new_CI_dispatcher": true,
+    "no_local_tests": true
+  },
+  "gate_authorities": {
+    "dispatch": 45,
+    "CI_branch": "astra-compose",
+    "reviewers": [
+      91,
+      92,
+      93
+    ],
+    "acceptance": "S0",
+    "integrator": 100
+  },
+  "inherited71": {
+    "commit": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+    "queue_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/gate-queue-final.json",
+    "validation_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/validation-inputs-final.json",
+    "material_checks": "NOT_RUN"
+  },
+  "current_candidate": {
+    "sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+    "tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+    "status": "MATERIAL_COMPOSED_NOT_FROZEN_FOR_FINAL"
+  },
+  "existing_eight_selections": [
+    "CI-SF sucafina/bun/full",
+    "CI-CLI cli/bun/full",
+    "CI-APP-SRC app/bun/full",
+    "CI-APP-BROWSER app/bun/test-browser",
+    "CI-ATLAS-BUSINESS atlas-boundary/bun/--timeout 30000",
+    "CI-UI-OPERATIONS app/playwright/e2e/sucafina/operations.spec.ts",
+    "CI-UI-DECISIONS app/playwright/e2e/sucafina/decisions.spec.ts",
+    "CI-UI-REPORTS app/playwright/e2e/sucafina/reports.spec.ts"
+  ],
+  "scoped_checks_priority": [
+    {
+      "mission": 94,
+      "files": [
+        "Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+        "Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+        "Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts"
+      ]
+    },
+    {
+      "mission": 87,
+      "files": [
+        "Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+        "Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+        "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts"
+      ]
+    },
+    {
+      "mission": 88,
+      "files": [
+        "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts"
+      ],
+      "note": "functional FAIL prior; export-visual reader separate 13 originals and original hashes; real DOCX PNG pending"
+    },
+    {
+      "mission": 90,
+      "files": [
+        "Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+        "Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+        "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts"
+      ]
+    },
+    {
+      "mission": 97,
+      "files": [
+        "Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts"
+      ]
+    },
+    {
+      "mission": 98,
+      "files": [
+        "Sucafinav1/test/product/report-title-fix/title-typography.test.ts"
+      ],
+      "plus": "reader88 original composed-docx and after-drift-docx genuine PDF/PNG"
+    }
+  ],
+  "compiler_and_guard": [
+    "apps/cli: bun typecheck",
+    "modules/sucafina: bun typecheck",
+    "packages/app-shell: bun typecheck",
+    "packages/app-shell: bun run typecheck:sf-e2e",
+    "root: bun run check:spawn-imports",
+    "root: bun run check:guards --base origin/dev",
+    "generated Atlas/contract guards and program list"
+  ],
+  "dedup_key": "candidate product sha/tree, request canonical JSON hash, workflow/config/validator, OS/runtime/env, original fixtures and origin/dev merge-base",
+  "observed_runs": {
+    "C47_C51_direct_runs": 0,
+    "M99_in_flight": {
+      "run_id": 43681302722,
+      "head": "c9c38cbf92844dcbdfbdc543fb6b378b241817f4",
+      "branch": "ci-run-linux-m99-41744d-p03-original1",
+      "observed_status": "in_progress",
+      "not_our_candidate": true
+    }
+  },
+  "inflight_reconcile_first": true,
+  "execution_by_100": {
+    "tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "CI_dispatches": 0,
+    "workflow_ref_moves": 0
+  },
+  "gates": {
+    "G7": "OPEN",
+    "G8": "OPEN",
+    "epic": "OPEN",
+    "AM01_AM06": "NOT_PROVEN",
+    "reviews91_93": "PRELIMINARY_FIX_FIRST",
+    "eight_on_one_future_C": "NOT_RUN",
+    "P03": "OPEN",
+    "M31": "OPEN",
+    "MI07": "OPEN",
+    "runtime_native": "READY_OFF",
+    "VIS88_001": "PATCH_COMPOSED_VISUAL_OPEN",
+    "VIS88_010": "PATCH_COMPOSED_ORACLE_NOT_RERUN",
+    "GLOBAL_RELEASE": false
+  }
+}
