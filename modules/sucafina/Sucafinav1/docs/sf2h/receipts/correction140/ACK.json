@@ -1,0 +1,55 @@
+{
+  "schema": "sf2h.correction-author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 140,
+  "title": "Fixtures F03/S05 — provider real de Platform",
+  "state": "ACK_REAL_AUTHORING",
+  "actor": {
+    "github_login": "gustavomhss",
+    "model_actual": "GPT-6",
+    "requested_label": "Astra",
+    "session_id": null,
+    "session_id_reason": "Not exposed to this session by the GitHub connector"
+  },
+  "branch": "sf-ux-w04",
+  "pr": 129,
+  "lease": {
+    "epoch": "native-platform-fixture-e1-browser140",
+    "predecessor_epoch": "ux-native-w04-e2",
+    "predecessor_future_writes": "REVOKED_BY_S0",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/S0-FENCE.json",
+    "fence_blob": "6b83f7022802bf2950824993a6750c0b1bb0a425",
+    "fence_commit": "326a6162a6b6b555b64bbeee0d4d79057cff37ec",
+    "expected_head": "326a6162a6b6b555b64bbeee0d4d79057cff37ec",
+    "observed_head": "326a6162a6b6b555b64bbeee0d4d79057cff37ec",
+    "observed_tree": "dd140ce7e4327b6cafdfdf00704e46fc34efd513"
+  },
+  "source": {
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "material_C64": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "source_F03_test_blob": "0d0cd166eda9c2f81d2a77e034c89c0206c78c0f",
+    "source_S05_test": "ABSENT",
+    "consumer_S05_test_blob": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+    "real_Platform_API_blob": "6dd22aad08f5f82bf6dcf5ce5d32d2c7c2db8c47",
+    "real_browser_application_entry_blob": "3b12a89db1e5b83c5692bfcf1482882fab94f7f6",
+    "runtime_solidDom_blob": "37797c440693d9f2660679962714108e2eb18397",
+    "protocol_blob": "4a50abfee84335d2ca4db7e3351af144248c9fd1"
+  },
+  "authoring_paths": [
+    "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+    "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+    "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction140/**"
+  ],
+  "finding": "C64 app-shell job132887516559 (run43738907064): nested frame 1 PASS / 7 FAIL and S05 5 fail from Platform context missing provider",
+  "intended_fix": "Mount actual PlatformProvider (real createSimpleContext implementation) around LanguageProvider using a narrowly typed browser test fixture; preserve exact F03/S05 assertions and callbacks; fail loudly if external platform effects are invoked; no auth grants.",
+  "executor_routing": {
+    "integrator": 132,
+    "compiler": 128,
+    "product_ci": 129
+  },
+  "local_tests": "NOT_RUN_BY_POLICY",
+  "goal": "PAUSED",
+  "global_release": false
+}
