@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h-compiler-ack-v1",
+  "mission": 108,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "execution_status": "CONTINUING_LATE",
+  "actor": "S0-C compiler/guards, disjoint product CI107",
+  "requested_preset": "Astra",
+  "effective_model": "GPT-6",
+  "session": "independent ChatGPT conversation; opaque session id not exposed",
+  "identity_source": "current authenticated GitHub login gustavomhss; model identity from serving ChatGPT",
+  "branch": "sf-compiler-checks",
+  "lease_epoch": "compiler-browser108",
+  "lease_scope": "only own compiler-c53-108 receipt and dedicated sf-compiler-c53 tooling; no control of 45 paths or CI product dispatcher",
+  "source_sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "source_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "expected_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_source": {
+    "ref": "7e56fa8bd9f3ea288ad9625be7b4b2ab8dd56314",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/108.json",
+    "blob_sha": "159ca40c0f6273f9cdf36fb723a5af1c7499d7c6"
+  },
+  "inputs": [
+    "AGENTS.md@180212940105e7b9ad15171b067c1c1b7841df5f",
+    "sf2h-plan/START.md,WORKFLOW.md,execution/COMMON.md,execution/actors/S0-C.json,ci-recipes.json@dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "PR32 (97 issue comments): A45 owns historical compiler/guards; ACK45=not observed; no C53 compiler receipt",
+    "astra-compose@d317873c18bf224c4c1f4d3425179d12ad53e81b owns prior .github/workflows/astra-compose-check.yml (unchanged)",
+    "sf2-stack C53 source180212940105e7b9ad15171b067c1c1b7841df5f, tree c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "107 mission: product tests exclusively sf-ci-validation/test-ci; 106 sole integrator"
+  ],
+  "reconciliation": {
+    "branch_head_matches_expected": true,
+    "own_branch_pr": null,
+    "own_branch_actions_runs_observed": 0,
+    "compiler_C53_result": "NOT_RUN",
+    "prior_45_active_session": "UNKNOWN; no transfer or override",
+    "write_overlap_with_45": false
+  },
+  "reserved_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/compiler-c53-108/ACK108.json",
+    ".github/workflows/sf-compiler-c53.yml",
+    "script/sf2h/compiler-c53/ (only if indispensable)"
+  ],
+  "commands": [
+    "bun typecheck ×5 at modules/atlas/boundary,modules/sucafina,packages/core,apps/cli,packages/app-shell",
+    "bun run typecheck:sf-e2e --showConfig and --listFiles --pretty false (packages/app-shell)",
+    "Atlas generate/check:generated/diff",
+    "final-bundle preflights",
+    "bun run check:spawn-imports",
+    "bun run check:guards --base origin/dev (real ref)"
+  ],
+  "restrictions": [
+    "No product tests, no epic, no tsc direct, no runner local, no merge/deploy/Azure/restart",
+    "No edits to product/fixture/guard rules, no approvals/suppression/any",
+    "Any check result remains NOT_RUN until actual run/job/log observed"
+  ],
+  "state": "ACKED_READY_FOR_BOUNDED_HOSTED_CHECKS",
+  "consumer": "106 integration, 107 product CI independent"
+}
