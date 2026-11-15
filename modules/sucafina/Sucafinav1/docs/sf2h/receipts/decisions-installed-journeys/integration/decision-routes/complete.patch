@@ -1,0 +1,152 @@
+diff --git a/apps/cli/src/sucafina-product/decision-case-http.ts b/apps/cli/src/sucafina-product/decision-case-http.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..13188a92ace68e6730bd22f8ee87872af2c1dea1
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/decision-case-http.ts
+@@ -0,0 +1,81 @@
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import { createDecisionCaseManagement } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-management.ts"
++import { createDecisionEvidenceChecks } from "../../../../modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts"
++import { createDecisionCaseHttp } from "../../../../modules/sucafina/Sucafinav1/product/decisions/http.ts"
++import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
++import type { createSfBusinessServices } from "./business-services.ts"
++import type { createSfPortfolioServices } from "./portfolio-services.ts"
++
++type ProductRevision = { incarnation: string; aggregateRevision: number }
++
++/** Bind the installed case UI to its existing authority, C08 state and Portfolio registries. */
++export function createSfDecisionCaseHttp(input: {
++  origin: string
++  mount: string
++  available: () => boolean
++  lockedProductRevision: () => ProductRevision | undefined
++  authority: ReturnType<typeof createSfProductAuthority>
++  business: ReturnType<typeof createSfBusinessServices>
++  portfolio: ReturnType<typeof createSfPortfolioServices>
++}) {
++  const { authority, business, portfolio } = input
++  const evidence = createDecisionEvidenceChecks({ host: authority.host, evidence: business.context, recomputeMetric: portfolio.readMetric })
++  const editFences = new WeakMap<object, ProductRevision & { source: Request; bindingDigest: string; payloadDigest: string }>()
++  const management = createDecisionCaseManagement({
++    state: authority.state, host: authority.host, authorizeCase: portfolio.authorizeCase, operationIdentity: business.operationIdentity,
++    authorizeEdit: async (request, call) => {
++      editFences.delete(call)
++      const source = authority.host.requestFor(call)
++      const bindingDigest = digestSfValue([call.kind, call.binding])
++      const payloadDigest = digestSfValue(request)
++      const current = () => !!source && authority.host.requestFor(call) === source && !source.signal.aborted && digestSfValue([call.kind, call.binding]) === bindingDigest
++      if (!source || !current() || !await portfolio.intent.authorize(call, "decisions.edit", request) || !current()) return false
++      const read = await authority.state.read(source, "cases", (_state, actor) =>
++        actor.principalRef === call.binding.principalRef && actor.policyVersion === call.binding.policyVersion && actor.accessRevision === call.binding.accessRevision)
++      if (read.status !== "ok" || !read.value || !await authority.host.revalidate(call) || !current()) return false
++      editFences.set(call, { source, bindingDigest, payloadDigest, incarnation: read.incarnation, aggregateRevision: read.aggregateRevision })
++      return true
++    },
++    verifyEvidence: evidence.refs, verifyReadEvidence: evidence.readRefs,
++    verifyEdit: (_snapshot, _before, _after, call) => {
++      const payload = portfolio.intent.payload(call, "decisions.edit")
++      const captured = editFences.get(call)
++      const locked = input.lockedProductRevision()
++      return payload !== undefined && !!captured && !!locked && authority.host.requestFor(call) === captured.source && !captured.source.signal.aborted &&
++        digestSfValue([call.kind, call.binding]) === captured.bindingDigest && digestSfValue(payload) === captured.payloadDigest &&
++        locked.incarnation === captured.incarnation && locked.aggregateRevision === captured.aggregateRevision &&
++        portfolio.intent.verify(call, "decisions.edit", payload)
++    },
++  })
++  const handlers = new Map(["dashboard", "planner", "procurement"].map((surface): [string, ReturnType<typeof createDecisionCaseHttp>] => [surface, createDecisionCaseHttp({
++    origin: input.origin, mount: `${input.mount}/${surface}`, human: authority.human,
++    withCase: business.withCase, management, compare: portfolio.compare,
++    admitList: async (request) => {
++      const operation = "sf_case_read"
++      const digest = digestSfValue({ purpose: "decision-list", surface })
++      const admitted = await authority.ui.admit(request, operation, digest)
++      if (admitted.status !== "ok") return admitted
++      if (!await authority.ui.validate(admitted.value, operation, digest)) {
++        authority.ui.finish(admitted.value)
++        return { status: "denied", reason: "decision-list-authority-unavailable" }
++      }
++      return admitted
++    },
++    finishList: authority.ui.finish,
++    admitComparison: (request, payload) => authority.human.admit(request, "decisions.portfolio.read", payload),
++    catalog: (caseRefs, call) => portfolio.product
++      ? portfolio.product.http.catalog(caseRefs, call)
++      : Promise.resolve({ status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }),
++  })]))
++  return async (request: Request, surface: string): Promise<Response | undefined> => {
++    const url = new URL(request.url)
++    const action = url.searchParams.get("sf")
++    if (!action || !["decision-list", "decision-edit", "decision-compare", "decision-portfolio-catalog"].includes(action)) return undefined
++    const handler = handlers.get(surface)
++    if (!handler || url.origin !== input.origin || url.pathname !== `${input.mount}/${surface}`)
++      return Response.json({ status: "denied", reason: "decision-origin-unavailable" }, { status: 403, headers: { "cache-control": "no-store" } })
++    if (!input.available())
++      return Response.json({ status: "unavailable", reason: "native-host-unavailable" }, { status: 503, headers: { "cache-control": "no-store" } })
++    return handler(request)
++  }
++}
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+index b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b..36ad71ccbeacc42382dcc2d0f35ee7f707981790 100644
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -42,6 +42,7 @@
+ import { createSfCurrentChoiceServices } from "./current-choice-services.ts"
+ import { createSfCurrentChoiceHttp } from "./current-choice-http.ts"
+ import { createSfDecisionDomainHttp } from "./decision-domain-http.ts"
++import { createSfDecisionCaseHttp } from "./decision-case-http.ts"
+ import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
+ import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
+ import { createSfAlternativeCaptures } from "./alternative-captures.ts"
+@@ -276,6 +277,15 @@
+     runtime: () => identity() && currentChoice ? { authority, currentChoice } : undefined })
+   const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
+   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
++  const decisionCaseHttp = createSfDecisionCaseHttp({ origin: input.origin, mount: input.mount, available: () => !!identity(), authority, business, portfolio: extended.portfolioServices,
++    lockedProductRevision: () => {
++      const snapshots = input.persistence.currentSnapshots?.()
++      if (!snapshots) return undefined
++      const stored = object(snapshots.dashboard.data.__sfProductV1)
++      return stored.schemaVersion === 1 && typeof stored.incarnation === "string" && !!stored.incarnation.trim() && Number.isSafeInteger(stored.revision) && Number(stored.revision) >= 0
++        ? { incarnation: stored.incarnation, aggregateRevision: Number(stored.revision) } : undefined
++    },
++  })
+   residentReviewReaders.bindOutcome(memory.reviewOutcome)
+   const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
+   for (const replacement of extended.replacements) {
+@@ -836,7 +846,7 @@
+   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
+     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
+     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
+-    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
++    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await decisionCaseHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+     prepare: async (request) => {
+       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
+diff --git a/apps/cli/src/sucafina-product/portfolio-http.ts b/apps/cli/src/sucafina-product/portfolio-http.ts
+index 6cbfc373ea72a90351e4f9997f65663e0f5fc775..8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90 100644
+--- a/apps/cli/src/sucafina-product/portfolio-http.ts
++++ b/apps/cli/src/sucafina-product/portfolio-http.ts
+@@ -97,7 +97,7 @@
+       digest(value.combinationId) && digest(value.expectedEvaluationDigest) && fields.every((field) => text(value[field]))
+   }
+   if (mode === "decision-review") return closed(value, ["caseRef", "choiceId", "changeId"]) && text(value.choiceId) && text(value.changeId)
+-  if (mode === "decision-portfolio-results") return closed(value, ["caseRef"])
++  if (mode === "decision-portfolio-results") return closed(value, ["caseRef"], ["purpose"]) && (value.purpose === undefined || value.purpose === "results")
+   if (mode === "decision-portfolio-read" || mode === "decision-sensitivity-read") return closed(value, ["caseRef", "resultRef"]) && text(value.resultRef)
+   if (mode === "decision-sensitivity-units") return closed(value, ["caseRef", "scenarioRef", "baselineRef", "parameterRef"]) && text(value.scenarioRef) && text(value.baselineRef) && text(value.parameterRef)
+   return closed(value, ["caseRef", "request"]) && decodeSfOperationInput(mode === "decision-sensitivity-evaluate" ? "sf_sensitivity_evaluate" : "sf_portfolio_evaluate", value.request).ok
+diff --git a/apps/cli/src/sucafina-product/decision-domain-http.ts b/apps/cli/src/sucafina-product/decision-domain-http.ts
+index 5cb8e4e45c1e68af4c59ec096b499ed0907f6c66..e91191ec5fa37da12db4d92e973e9105c00be4e5 100644
+--- a/apps/cli/src/sucafina-product/decision-domain-http.ts
++++ b/apps/cli/src/sucafina-product/decision-domain-http.ts
+@@ -19,8 +19,8 @@
+     if (surface !== "dashboard" && surface !== "planner" && surface !== "procurement" || url.origin !== input.origin || url.pathname !== `${input.mount}/${surface}` || request.headers.get("sec-fetch-site") === "cross-site") return reply({ status: "denied" }, 403)
+     if (mode === "decision-controls") {
+       if (request.method !== "GET" && request.method !== "HEAD") return reply({ status: "needs-input", reason: "method-not-allowed" }, 405)
+-      const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "format"]
+-      if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1) || url.searchParams.has("format") && url.searchParams.get("format") !== "json") return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
++      const allowed = ["sf", "case", "source", "scenario", "baseline", "parameter", "format", "procurement"]
++      if ([...url.searchParams.keys()].some((key) => !allowed.includes(key) || url.searchParams.getAll(key).length !== 1) || url.searchParams.has("format") && url.searchParams.get("format") !== "json" || url.searchParams.has("procurement") && url.searchParams.get("procurement") !== "attached") return reply({ status: "needs-input", reason: "invalid-decision-request" }, 400)
+       const runtime = input.runtime()
+       if (!runtime) return reply({ status: "unavailable" }, 503)
+       try {
