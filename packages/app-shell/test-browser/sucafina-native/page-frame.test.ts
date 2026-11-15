@@ -9,7 +9,7 @@ if (process.env.SF_F03_DOM !== "1") {
     const proc = Bun.spawn(
       [Bun.which("bun")!, "--conditions=browser", "test", "--preload", "./happydom.ts", import.meta.path],
       {
-        cwd: path.resolve(import.meta.dir, ".."),
+        cwd: path.resolve(import.meta.dir, "../.."),
         env: { ...process.env, SF_F03_DOM: "1" },
         stdout: "pipe",
         stderr: "pipe",
@@ -183,6 +183,45 @@ if (process.env.SF_F03_DOM !== "1") {
       expect(screen.host.querySelector('[data-sf-run-identity="unadmitted"]')).not.toBeNull()
       expect(screen.host.querySelector("progress")).toBeNull()
       expect(screen.host.querySelector("button")).toBeNull()
+    } finally { screen.close() }
+  })
+
+  test("chart preserves known zero, labels unknown as unavailable, and keeps a real table", () => {
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
+    svg.setAttribute("viewBox", "0 0 300 100")
+    const screen = mount(() => createComponent(frame.SfChartFrame, {
+      titleKey: key("sf.common.currentSource"),
+      questionKey: key("sf.common.currentSource"),
+      context: [],
+      coverage: {
+        state: "complete",
+        summary: message("sf.common.currentSource"),
+        reasons: [],
+        knownCount: 1,
+        expectedCount: null,
+      },
+      series: [],
+      table: {
+        caption: message("sf.common.currentSource"),
+        columns: [{ id: "value", label: message("sf.common.currentSource") }],
+        rows: [
+          { id: "zero", cells: { value: { kind: "number", value: 0, unit: { kind: "percent" }, fractionDigits: 0 } } },
+          { id: "unknown", cells: { value: { kind: "unavailable", reason: message("sf.common.unavailable") } } },
+        ],
+      },
+      selection: null,
+      state: "ready",
+      onSelect: () => {},
+      onOpenSource: () => {},
+      children: svg,
+    }))
+    try {
+      expect(screen.host.querySelector(".sf-chart-visual svg")).not.toBeNull()
+      expect(screen.host.querySelectorAll(".sf-chart-table tbody tr")).toHaveLength(2)
+      expect(screen.host.querySelector('[data-sf-row="zero"] .sf-numeric')?.textContent).toContain("0")
+      expect(screen.host.querySelector('[data-sf-row="unknown"] .sf-missing')?.textContent)
+        .toContain("Currently unavailable")
+      expect(screen.host.querySelector('[data-sf-row="unknown"] .sf-numeric')).toBeNull()
     } finally { screen.close() }
   })
 

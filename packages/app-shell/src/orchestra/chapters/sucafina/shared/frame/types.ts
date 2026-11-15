@@ -1,8 +1,8 @@
 import type { JSX } from "solid-js"
-import type { SfHref, SfRef, SfVersion } from "../../context/contracts"
+import type { SfHref, SfRef, SfVersion } from "@orchestra/schema/sucafina/context"
 
 // F03 public presentation contracts: COMPONENT-CONTRACTS.md and component-signatures.ts
-// are frozen. The only external identities are F01's opaque route/ref types.
+// are frozen. The only external identities are F01 Schema's opaque route/ref types.
 // I00 composes the full leaf dictionary; its keys must never be arbitrary data text.
 declare const sfCopyKey: unique symbol
 export type SfCopyKey = string & { readonly [sfCopyKey]: "key-from-frozen-typed-dictionaries" }
