@@ -1,6 +1,7 @@
 import { digestSfValue } from "../contracts/canonical.ts"
 import type { PortResult, PlannerPort } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+import { readHistoricalScenarios } from "../decisions/result-store.ts"
 import type { createSfDecisionResultStore } from "../decisions/result-store.ts"
 import type { createCriterionComparisonBindings } from "../decisions/criterion-comparison.ts"
 import type { createPlannerResultPersistence } from "../planner/persistence.ts"
@@ -24,7 +25,9 @@ export function createPortfolioAnalysis(input: {
       if (stored.status !== "ok" || stored.value.kind !== "comparison" || stored.value.resultRef !== expected.comparisonRef || stored.value.resultDigest !== digestSfValue(expected.comparison) || digestSfValue(stored.value.result) !== stored.value.resultDigest || expected.comparison.alternativeResultRef !== expected.scenarioResultRef || expected.comparison.baselineResultRef === expected.scenarioResultRef) return undefined
       const binding = structuredClone(await input.bindings.read({ caseRef: stored.value.caseRef, resultRef: expected.comparisonRef }, context))
       if (binding.status !== "ok" || binding.value.resultRef !== stored.value.resultRef || binding.value.resultDigest !== stored.value.resultDigest || binding.value.requestDigest !== stored.value.requestDigest || binding.value.requestDigest !== digestSfValue(binding.value.request) || digestSfValue(binding.value.caseRef) !== digestSfValue(stored.value.caseRef) || digestSfValue(binding.value.request.scenarioRefs) !== digestSfValue([expected.comparison.baselineResultRef, expected.scenarioResultRef])) return undefined
-      const scenarios = structuredClone(await Promise.all(binding.value.request.scenarioRefs.map((resultRef) => input.results.readHistoricalScenario({ resultRef }, context))))
+      const store = input.results
+      const scenarios = structuredClone(await readHistoricalScenarios(store, binding.value.request.scenarioRefs, context, "parallel"))
+      if (input.results !== store) return undefined
       if (scenarios.some((item, index) => item.status !== "ok" || item.value.kind !== "scenario" || item.value.resultRef !== binding.value.request.scenarioRefs[index] || item.value.resultDigest !== digestSfValue(item.value.result) || item.value.caseRef.id !== stored.value.caseRef.id || item.value.caseRef.incarnation !== stored.value.caseRef.incarnation || item.value.caseRef.version > stored.value.caseRef.version)) return undefined
       const alternative = scenarios[1]
       if (!alternative || alternative.status !== "ok" || digestSfValue(alternative.value.result) !== digestSfValue(expected.scenario)) return undefined

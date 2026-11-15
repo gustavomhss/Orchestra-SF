@@ -1,4 +1,4 @@
-import { digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
+import { canonicalSfValue, digestSfEvidenceRef, digestSfValue } from "../contracts/canonical.ts"
 import type { ScenarioRequest } from "../contracts/operations.ts"
 import type { DomainPortHost, PlannerPort, PlannerSourceHost } from "../contracts/ports.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
@@ -90,7 +90,7 @@ export function createPlannerOperationVerifier(input: { host: DomainPortHost; pl
     const again = await compare()
     const sourceAgain = await input.sources.resolveForecastSource(scenario.baseRef, context)
     const resolvedAgain = await resolve()
-    const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? digestSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : digestSfValue(entry)
+    const stable = (entry: typeof resolved[number]) => entry.status === "ok" ? canonicalSfValue({ ...entry.value, source: { ...entry.value.source, observedAt: "" } }) : canonicalSfValue(entry)
     return again.status === "ok" && projectionDigest(again.value.baseline) === projectionDigest(values) && sourceAgain.status === "ok" && sourceAgain.value.evidence.refDigest === source.value.evidence.refDigest && resolvedAgain.length === resolved.length && resolvedAgain.every((entry, index) => stable(entry) === stable(resolved[index]!)) && !request.signal.aborted && await input.host.revalidate(context)
   }
 }
