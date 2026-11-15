@@ -155,20 +155,70 @@
       "artifacts": [],
       "omni": "NO_POSITIVE_SPAWN_QUALIFICATION",
       "interpretation": "NEGATIVE_CORRELATOR_ONLY: checks reject mocked/missing/forged evidence; positive AM01-AM06 remain NOT_RUN"
+    },
+    {
+      "id": "B5-F03-S01-S02-S05-182-184",
+      "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "tree": "7b4dc2d6f2d2dc28bf4f2cd9b54ffd2d5440bc8a",
+      "S": "8f131b06a94f1f2a265ba5e519e3166b114d1689",
+      "snapshot_tree": "73c0c15519ca6f870c626a3869942569fe65d514",
+      "request_blob": "5458c45b1c44dd9ef43ce5aa9c2fd06f8c77658e",
+      "run": 43773852118,
+      "job": 132995508966,
+      "cleanup_job": 132996048779,
+      "attempt": 1,
+      "package": "app",
+      "directory": "packages/app-shell",
+      "ordered_args": [
+        "--timeout",
+        "120000",
+        "./test-browser/sucafina-native/page-frame.test.ts",
+        "./test-browser/sucafina-native/s01.test.ts",
+        "./test-browser/sucafina-native/s02.test.ts",
+        "./test-browser/sucafina-native/s05.test.ts"
+      ],
+      "status": "FAILURE",
+      "selected_file_count": 4,
+      "selected_test_count": 8,
+      "passed": 7,
+      "failed": 1,
+      "expect_calls": 44,
+      "artifacts": [],
+      "omni": "NO_POSITIVE_SPAWN_QUALIFICATION",
+      "proven_passed": {
+        "F03": 1,
+        "S01": 1,
+        "S02": 1,
+        "S05": 4
+      },
+      "proven_failed": {
+        "S05": 1
+      },
+      "interpretation": "real browser selection after 182/183/184 source+test consumer postimages; F03 S01 S02 green on this W, S05 one owner-swap textarea newline mismatch; no installed/native positive proof",
+      "source_post_blobs": {
+        "shared/frame/index.tsx": "26656f573f877496925993e2c702df7aa926251a",
+        "shared/states/index.tsx": "15433e5b73a4234e7dfb6df3bdb327c88fb83e7d",
+        "collaboration/index.tsx": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+        "page-frame.test.ts": "92024c7caa2f5e10d243c6feff71abb4b2a1b7f0",
+        "s01.test.ts": "f07bb3371702d5b00c481bcfed89d682eecd1699",
+        "s02.test.ts": "ea1a18fe9c5b39d6ed7c719fe8cf3f2916ab1d5e",
+        "s05.test.ts": "5d02157e04299a299cd3c4fada3dd19913a59598",
+        "platform-fixture.ts": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15"
+      }
     }
   ],
   "totals": {
-    "runs": 4,
-    "selected_files": 14,
-    "selected_tests": 112,
-    "passed": 102,
-    "failed": 10,
-    "expect_calls": 744,
-    "qualified_scope": "DIFFERENT W; MUST NOT ADD AS ONE SAME-C PRODUCT PASS",
+    "runs": 5,
+    "selected_files": 18,
+    "selected_tests": 120,
+    "passed": 109,
+    "failed": 11,
+    "expect_calls": 788,
+    "qualified_scope": "ALL FIVE DIFFERENT W/TREES; NOT ONE SAME-C PRODUCT PASS",
     "artifacts_all_empty": true
   },
   "last_observed_actions": {
-    "in_progress": 0,
-    "queued": 0
+    "in_progress": [],
+    "queued": []
   }
 }

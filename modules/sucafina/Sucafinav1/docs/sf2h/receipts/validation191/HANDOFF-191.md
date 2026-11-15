@@ -35,3 +35,14 @@ Runner: ubuntu-24.04, Bun 1.3.14, 120000ms, env {}; each S has **only** `.ci-run
 189 `sf2-stack` head **`4032255351f71bf4e7cd81a38e64160c4a540e13`**, tree `65482c1cb7d2826cb0410e5799c1aaa70b33cad9`; still missing both projection files, F03 states author postimage, S01 and S05 corrected test postimages. At terminal reconciliation: **0 in_progress / 0 queued** Actions runs. Current PR106 head before publication: `ab6bb00e8017affd676f660039db8eb440e9a5c0`.
 
 No source/engine/workflow changes, no merge, reset, force, secrets, Azure/deploy/restart, no Goal/controller. This is a durable handoff and receipts, not a real runtime ACK from a terminal predecessor.
+
+
+## POST-TERMINAL SUPPLEMENT (authoritative newer evidence)
+
+The four-run table and earlier browser queue above describe the historical checkpoint **before 189 consumed 182/183/184**. They are **superseded in those respects** by this section and `CHECKPOINT-191-03.json` / updated `RUNS-191.json` and `QUEUE-191.json`.
+
+**B5 real browser:** Product W `ca31aa7e506c3d8a4e6812b36d2161852b52e612` tree `7b4dc2d6f2d2dc28bf4f2cd9b54ffd2d5440bc8a`; isolated S `8f131b06a94f1f2a265ba5e519e3166b114d1689` tree `73c0c15519ca6f870c626a3869942569fe65d514`; `.ci-run.json` blob `5458c45b1c44dd9ef43ce5aa9c2fd06f8c77658e` (single diff, exact `./` filters). [Run 43773852118](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43773852118), job 132995508966, attempt1, cleanup success, artifacts none: **7 PASS / 1 FAIL in 8 selected / 4 files, 44 expects**. **F03, S01, S02 passed; S05 4 pass / 1 fail.** Actual S05 failure `s05.test.ts:170:77` after owner change: source draft contains original `\\r\\n`, DOM assertion requires normalized `\\n`, while posted payload must retain original raw content. Source `collaboration/index.tsx:259-265` writes raw draft into textarea; raw hidden-char mismatch likely, byte discrepancy not proven from pretty diff. **No relaxed test** and no native installed proof.
+
+Owner184/PR119 informed [6903059035](https://github.com/gustavomhss/Orchestra-SF/pull/119#issuecomment-6903059035); integrator189/PR65 [6903059523](https://github.com/gustavomhss/Orchestra-SF/pull/65#issuecomment-6903059523). Next browser request after released, CAS-consumed fix: **only `./test-browser/sucafina-native/s05.test.ts`** on *new* W/tree. Do not duplicate 4-selector old W. F03/S01/S02 PASS is Wca31-specific, not a final-C transfer.
+
+Total **five scoped runs** across *different* product Ws: 120 selected cases, 109 PASS, 11 FAIL, 788 expects, no artifacts; **not** a combined same-C success. Latest observed 189 product `4426445c05823ed4932b8a8e35391df024bf74f3` tree `61b5cfc0df910105a67a344706795b4c3b7d30b7`; F04 and U15/U39/U40 test code integrated, **real installed authenticated manifest and actors not established** => native/UI E2E **NOT_RUN**. At reconciliation, active Actions: [] (190 compiler/guard separately), queued: 0. Goal paused, GLOBAL_RELEASE=false.

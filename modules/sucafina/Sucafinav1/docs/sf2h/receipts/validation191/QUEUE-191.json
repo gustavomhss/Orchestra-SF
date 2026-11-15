@@ -15,9 +15,9 @@
   "native_goal": "PAUSED",
   "global_release": false,
   "product_current": {
-    "head": "4032255351f71bf4e7cd81a38e64160c4a540e13",
-    "tree": "65482c1cb7d2826cb0410e5799c1aaa70b33cad9",
-    "message": "test(sf2h): consume 183 real browser PlatformProvider fixture [skip ci]",
+    "head": "4426445c05823ed4932b8a8e35391df024bf74f3",
+    "tree": "61b5cfc0df910105a67a344706795b4c3b7d30b7",
+    "message": "test(sf2h): consume released U15/U39/U40 installed journeys 185-186 [skip ci]",
     "complete_final_candidate": false
   },
   "pending": [
@@ -43,17 +43,37 @@
     },
     {
       "priority": 3,
-      "area": "F03 S01 S02 S05",
-      "state": "WAIT_189_CONSUME_182_183_184",
+      "area": "S05 owner newline only",
+      "state": "WAIT_184_FIX_AND_189_CONSUMPTION",
       "exact": [
-        "./test-browser/sucafina-native/page-frame.test.ts",
-        "./test-browser/sucafina-native/s01.test.ts",
-        "./test-browser/sucafina-native/s02.test.ts",
         "./test-browser/sucafina-native/s05.test.ts"
       ],
       "package": "app",
       "directory": "packages/app-shell",
-      "condition": "real 182/183/184 source/tests consumption and withBrowserPlatform, app-shared fixtures and exact corrected ./ paths; 164 wrong path zero-selected INVALID"
+      "condition": "184 after 189 consumer fixed test owner-binding DOM LF normalization with raw input CRLF preserved onPost; new source/test postblobs, new W/tree; prior F03/S01/S02 PASS on Wca31 and must not duplicate unchanged",
+      "already_green_on_previous_W": [
+        "page-frame",
+        "s01",
+        "s02"
+      ],
+      "historical_wrongpath": "INVALID"
+    },
+    {
+      "priority": 3.5,
+      "area": "post182-184 browser provenance",
+      "state": "EXECUTED_PARTIAL_FAIL",
+      "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "tree": "7b4dc2d6f2d2dc28bf4f2cd9b54ffd2d5440bc8a",
+      "run": 43773852118,
+      "S": "8f131b06a94f1f2a265ba5e519e3166b114d1689",
+      "selected_files": 4,
+      "pass": 7,
+      "fail": 1,
+      "expects": 44,
+      "comments": {
+        "author184": 6903059035,
+        "integrator189": 6903059523
+      }
     },
     {
       "priority": 4,
@@ -84,8 +104,8 @@
       "condition": "one coherent accepted C with all WPs/74 tasks/1610 criteria real consumers, 190 compiler/SDK, AM01–06, 3 independent FINAL reviews, C/G7 guards, valid D+separate D/G8, proven remote SHA no orphan writers"
     }
   ],
-  "current_inflight": 0,
-  "current_queued": 0,
+  "current_inflight": [],
+  "current_queued": [],
   "if_late_predecessor": "reconcile epoch/fence/actions; no silence-based death claim, no force",
   "scope": "Only existing test:ci snapshots, exact selectors, no new CI/controller or parallel dispatcher"
 }

@@ -61,6 +61,26 @@
       "owner_comment": 6902873747,
       "integrator_comment": 6902872825,
       "assertions": "NOT_RUN_IMPORT_FAILURE"
+    },
+    {
+      "key": "F191-S05-OWNER-NEWLINE",
+      "state": "OPEN_AUTHOR_FIX_REQUIRED",
+      "run": 43773852118,
+      "job": 132995508966,
+      "W": "ca31aa7e506c3d8a4e6812b36d2161852b52e612",
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "test_blob": "5d02157e04299a299cd3c4fada3dd19913a59598",
+      "line": 170,
+      "source": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+      "source_blob": "b528b13c89ee5f66c398e0c7fc2b6cf1aa996639",
+      "source_line": "259-265",
+      "cause": "new owner: raw supplied draft contains CRLF; DOM textarea expected normalized LF; assertion fails, Bun diff visually identical; exact hidden character not independently byte-confirmed",
+      "impact": "One S05 fail; 4 S05 pass, F03/S01/S02 pass on Wca31; test actually selected, not skip",
+      "owner_pr": 119,
+      "integrator_pr": 65,
+      "owner_comment": 6903059035,
+      "integrator_comment": 6903059523,
+      "required": "184 source owner fixes DOM value normalization after owner switch while preserving byte-exact raw onPost payload, CAS and privacy; 189 CAS consumes, then 191 reruns only changed S05 exact ./ selector"
     }
   ],
   "passed_scoped": {
@@ -79,7 +99,13 @@
       "AM03_negative": 2,
       "AM04_negative": 13,
       "AM06_negative": 5
+    },
+    "B5": {
+      "F03": 1,
+      "S01": 1,
+      "S02": 1,
+      "S05": 4
     }
   },
-  "caveat": "No positive native install/profile/skill/provider/Relay/scanner/Atlas/restart/authorization proof from green source or correlator tests"
+  "caveat": "No positive native install/profile/skill/provider/Relay/scanner/Atlas/restart/authorization proof from green source or correlator tests Browser positive here is component DOM only; no installed F04 actor proof."
 }
