@@ -1,0 +1,158 @@
+{
+  "schema": "sf2h.closure186.terminal.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 186,
+  "epoch": "closure-e1-browser186",
+  "order": [
+    "U39",
+    "U40"
+  ],
+  "surfaces": [
+    "CAP04",
+    "CAP05"
+  ],
+  "branch": "sf-ux-n13",
+  "pr": 150,
+  "actor": {
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "session_id_status": "NOT_EXPOSED",
+    "native_astra_identity_claimed": false
+  },
+  "fence": {
+    "previous_epoch": "ux-native-n13-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "current_epoch": "closure-e1-browser186",
+    "written_allowlist": "EXACT_TWO_SPECS_AND_CLOSURE186_RECEIPTS",
+    "integrator": 162,
+    "fixture_owner": 187,
+    "guard_reviewer": 188
+  },
+  "sources": {
+    "prepared": {
+      "head": "9d0e41d003800a8da2f7d60f67433fdf71d88916",
+      "tree": "ada65562adf6999f5bc2dc4ab5b62c411a110353"
+    },
+    "ack": {
+      "commit": "ef5c240e40e30a6a5580642bb35172381f46561a",
+      "tree": "53a9afb74beb0745d9243e3137c099e95fbff024"
+    },
+    "code": {
+      "commit": "a4f4ca6f14a45ad6105a6e6df2935894d5f15d68",
+      "tree": "dc665e24aa8006dcee38bb41d7eb2a61dcc32ebe"
+    },
+    "package": {
+      "commit": "8100bdc01566bf88532f2b497690cec3c84b551c",
+      "blob": "0065a34651b8772b344a40579481ee64f6a05093",
+      "fence_blob": "30a1a9a8d575751271a712f1ea8e4f00a001d5a9"
+    },
+    "contracts": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "catalog": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "hostSignatures": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "routeSignatures": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "componentSignatures": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "U39": "7c4fa620fbded6226a0bfc5e5aa16553d6d47ee6",
+      "U40": "8f9e0e021b1871054be0d371f0f717a5bbd42d36",
+      "F04": "1b25898e583e1eb247a3eec889d0da4e6bb61ab3"
+    },
+    "product": {
+      "budgetModel": "a21b1fc6b3cdceec6e666d8d7d8fa760911f2668",
+      "budgetSurface": "ed94efe4d919eb80e4592057170d03c4b2348eb6"
+    },
+    "f04": {
+      "branch": "sf-ux-w05",
+      "pr": 120,
+      "head": "1720fadc93ba64f3a2058eee3802f285c26ed5ca",
+      "tree": "f91c81f48d4743284fb03375795ea9eb95a02a7c",
+      "fixtureBlob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "readinessBlob": "bcea1fd620ba76dc24cc8bab159a91662c9b876e",
+      "ackBlob": "135b82d1a1f2876d459f24395114fa38e2f8a286"
+    },
+    "consumer": {
+      "branch": "sf2-stack",
+      "pr": 65,
+      "head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+      "tree": "5cee64807f55d0ec169801795712844051c47e16",
+      "U39preblob": "b70dbe0afe080421bfc1a3b78abdefa3b8abe85c",
+      "U40preblob": "4ec12656bff8ba284a53810a73b9e863a7a62cb4",
+      "F04fixtureBlob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "ack": "PENDING"
+    }
+  },
+  "changed_paths": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "before": "b70dbe0afe080421bfc1a3b78abdefa3b8abe85c",
+      "after": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+      "order": "U39",
+      "cap": "CAP04"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "before": "4ec12656bff8ba284a53810a73b9e863a7a62cb4",
+      "after": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+      "order": "U40",
+      "cap": "CAP05"
+    }
+  ],
+  "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure186/PATCH186.diff",
+  "requests_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure186/REQUESTS186.json",
+  "authored": [
+    "Removed four test.skip conditions; real nativeInstalledFixture from F04/187 replaces SF_N13_INSTALLED_ORIGIN / SF_N13_AUTH_READY / SF_N13_ADMIN_MUTATION flags",
+    "Require private installed candidate SHA, exact OPEX/CAPEX chapterHref, native chapter and producer discovery via F04.proveWeb; require positive real principal in same owner context",
+    "Re-read original authenticated context; compare installation/project/host/principal and access/policy revisions, CAP04/05 destination canRead and domain.page ready",
+    "For draft review require authorized save allowedActionIds and domain.command.CAPxx.save operational; none inferred from button/env",
+    "Preserve source identity/filtered-empty/unique IDs; explicitly refuse empty annual budget as zero; enter 0 and verify review without submit",
+    "Observe no POST to financial producer before human confirmation; preserve five responsive widths and 200%/400% text. No client calculations."
+  ],
+  "criteria": {
+    "U39-AC01": "ASSERTIONS_AUTHORED_NOT_QUALIFIED — real source/identity read and zero-vs-absent; full CRUD/fieldsets pending installed product proof",
+    "U39-AC02": "ASSERTIONS_AUTHORED_NOT_QUALIFIED — filter-empty, read grant, draft review and no premature POST; cross-owner/late-response proof pending",
+    "U39-AC03": "PRESERVED_NOT_RUN — 320,768,1024,1280,1440; 200%,400%; manual keyboard and screenshots pending",
+    "U40-AC01": "ASSERTIONS_AUTHORED_NOT_QUALIFIED — real project identifiers/source read; full CRUD/fieldsets pending",
+    "U40-AC02": "ASSERTIONS_AUTHORED_NOT_QUALIFIED — real read/save grant, draft/zero/filter-empty; negative role separate proof pending",
+    "U40-AC03": "PRESERVED_NOT_RUN — five viewports and text resize; no visual qualification"
+  },
+  "evidence": {
+    "source_readback": "GITHUB_MCP_VERIFIED_U39_U40_BLOBS",
+    "prior_guard": {
+      "run": 43766055614,
+      "job": 132971280139,
+      "artifact": 14182790522,
+      "status": "FAILURE",
+      "findings": "js-test-skipped (original u39/u40 lines22/49); 66 GATE/141 WARN"
+    },
+    "playwright": "NOT_RUN",
+    "test_selection": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards_new_candidate": "NOT_RUN",
+    "CI": "NOT_RUN",
+    "parser": "NOT_RUN",
+    "validator": "NOT_RUN",
+    "build": "NOT_RUN",
+    "visual": "NOT_RUN",
+    "F04_web_installed": "NOT_RUN",
+    "F04_auth": "NOT_RUN",
+    "D01_desktop": "NOT_RUN",
+    "positive_proof": false
+  },
+  "blockers": [
+    "187 F04 private real installed manifest per CAP04/CAP05 chapter and genuine authorized/denied actors not yet verified",
+    "162 sf2-stack still contains old skipped test blobs; exact selective integration and production runner config pending",
+    "F01/F02 host real authenticated producer same-C readiness and domain CAP04/CAP05 availability pending",
+    "163/164 terminal; S0/162 must appoint supported successors; no assumed chat wake or extra dispatcher",
+    "Independent guard review188, full source CRUD/owner/keyboard/a11y/desktop, canonical gates and three FINAL pending"
+  ],
+  "state": {
+    "artifact": "ARTIFACT_READY",
+    "integrated": false,
+    "qualified": false,
+    "author_handoff": "SOURCE_AUTHORING_TERMINAL",
+    "consumer_ack": "PENDING_162",
+    "native_goal": "PAUSED",
+    "global_release": false
+  },
+  "exact_next_action": "162/S0 re-check sf2-stack HEAD/preblobs, ingest exactly two postblobs by CAS, coordinate F04/187 real per-route manifest/actor grants and runner registration; publish integrated C/tree and consumer ACK, then appoint supported 163/164 successors for same-C deduplicated hosted checks."
+}

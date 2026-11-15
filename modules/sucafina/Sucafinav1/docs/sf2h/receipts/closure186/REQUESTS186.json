@@ -1,0 +1,66 @@
+{
+  "schema": "sf2h.closure186.durable-checks.v1",
+  "mission": 186,
+  "epoch": "closure-e1-browser186",
+  "state": "REQUESTED_NOT_ADOPTED",
+  "not_asynchronous_execution": true,
+  "code": "a4f4ca6f14a45ad6105a6e6df2935894d5f15d68",
+  "code_tree": "dc665e24aa8006dcee38bb41d7eb2a61dcc32ebe",
+  "paths": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u39.spec.ts",
+      "before": "b70dbe0afe080421bfc1a3b78abdefa3b8abe85c",
+      "after": "11612644c0ab7f46dbe1ff1943ab37cda354161e",
+      "order": "U39",
+      "cap": "CAP04"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/native/journeys/u40.spec.ts",
+      "before": "4ec12656bff8ba284a53810a73b9e863a7a62cb4",
+      "after": "3f0dffb03cf848f9d3007e4c0c9b8d0bc3715926",
+      "order": "U40",
+      "cap": "CAP05"
+    }
+  ],
+  "to_integrator_162": {
+    "pr": 65,
+    "role": "ONLY_PRODUCT_INTEGRATOR",
+    "consumer_observed": {
+      "branch": "sf2-stack",
+      "pr": 65,
+      "head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+      "tree": "5cee64807f55d0ec169801795712844051c47e16",
+      "U39preblob": "b70dbe0afe080421bfc1a3b78abdefa3b8abe85c",
+      "U40preblob": "4ec12656bff8ba284a53810a73b9e863a7a62cb4",
+      "F04fixtureBlob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+      "ack": "PENDING"
+    },
+    "request": "Re-read current sf2-stack HEAD/tree/preblobs; selectively ingest only U39/U40 postblobs with CAS, never whole branch PR150. Retain real F04 source and compose hosted production Playwright configuration, F01/F02 binding. Publish actual consumer ACK, C and tree; coordinate 187 and any hosted successors.",
+    "status": "REQUESTED_NOT_ADOPTED"
+  },
+  "to_f04_187": {
+    "pr": 120,
+    "branch": "sf-ux-w05",
+    "fixture_blob": "d699d74f092a8211fde2611c827ed4ebd83a9274",
+    "request": "Real PRIVATE manifest per exact chapterHref /orchestra/sf-dashboard/opex?year=2026 and /orchestra/sf-dashboard/capex?year=2026; candidateSHA/target identity real; three independently authenticated requester/holder/denied principals; real same-context CAP04/05 read and save admission. Missing positive principal, operation or installation fails; no FAKE auth flags or ACL mocks.",
+    "status": "REQUESTED_NOT_ADOPTED"
+  },
+  "to_compiler_163": {
+    "pr": 107,
+    "authority": "Terminal handoff; 162/S0 must explicitly appoint supported successor",
+    "request": "Only after 162 candidate/fixture integration, hosted app-shell typecheck, E2E program collection, check:guards for js-test-skipped and relevant closure. Keep existing 43766055614 failures and other guard findings; no local runs or new workflow.",
+    "status": "WAIT_EXPLICIT_SUPPORTED_SUCCESSOR"
+  },
+  "to_product_ci_164": {
+    "pr": 106,
+    "authority": "Terminal handoff; 162/S0 must explicitly appoint supported successor",
+    "request": "Once a same-C installed host/real auth/F04 is ready and integrated, use existing single CI dispatcher and dedup key to select exact u39.spec.ts/u40.spec.ts. Capture collection/pass/fail and actor evidence, save admitted/denied, filter-empty, zero vs absence, no premature producer POST, viewports and text resizing. A missing fixture or no selected tests must fail; no fake PASS.",
+    "status": "WAIT_EXPLICIT_SUPPORTED_SUCCESSOR"
+  },
+  "to_reviewer_188": {
+    "role": "independent guard reviewer",
+    "request": "Causal review of old js-test-skipped and other 66 gates after integration; no generic waiver",
+    "status": "PENDING"
+  },
+  "disclaimer": "No comment wakes terminal chats. New runner appointment/integration requires explicit owner adoption."
+}
