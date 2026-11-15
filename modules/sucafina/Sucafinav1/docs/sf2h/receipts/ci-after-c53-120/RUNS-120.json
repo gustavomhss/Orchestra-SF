@@ -8,7 +8,7 @@
   "plan": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
   "ack": "f29dd5a9765437bf23fbc21e10d62eacc3680ed0",
   "transport": "GitHub MCP GitData test:ci/request only",
-  "scope": "Composed-C54+Composed-C56 and W102 source qualification only",
+  "scope": "Composed-C54, Composed-C56, Composed-C58, and W102 source qualification only",
   "dedup": "source commit and tree + exact ordered args + package/runner/OS + workflow/validator/registry/config/fixture identity",
   "runs": [
     {
@@ -371,6 +371,330 @@
       "logs": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43725299343/job/132845809441",
       "artifacts": [],
       "omni": "N_A_FOCUSED"
+    },
+    {
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "Wtree": "647b024075265fc76d6253c99bec00a82618f816",
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "registry_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "location_validator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "host": "ubuntu-24.04",
+      "runner": "bun",
+      "attempt": 1,
+      "env": {},
+      "id": "120-C58-MATCHERS117",
+      "S": "00a4fd99a2b8db196bf5011ceac5822d31526491",
+      "Stree": "bde3bdbf4665de92a1e9cfdf7dc07d7161293d98",
+      "request_blob": "cdf4c0c8f8d2c0454aa5e75cb29daf3fc974bd92",
+      "branch": "ci-run-linux-sf120-c58-matchers117-1",
+      "run": 43726371640,
+      "job": 132849072764,
+      "conclusion": "IN_PROGRESS",
+      "args": [
+        "Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+        "Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+        "Sucafinav1/test/product/c12-recovery-closure/first-save-register.test.ts",
+        "Sucafinav1/test/product/canonical-read-cost/calculation-sources.test.ts",
+        "Sucafinav1/test/product/canonical-read-cost/diagnostic-cost.test.ts",
+        "Sucafinav1/test/product/installed-bi-closure/canonical-presentation.test.ts",
+        "Sucafinav1/test/product/installed-bi-closure/temporal-contract.test.ts",
+        "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+        "Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+        "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "Sucafinav1/test/product/procurement-privacy-fix/presentation.test.ts",
+        "Sucafinav1/test/product/workbench-mcp-closure/catalog-contract.test.ts",
+        "Sucafinav1/test/product/workbench-mcp-closure/public-tools.test.ts",
+        "Sucafinav1/test/product/workbench-mcp-closure/skill-admission-fences.test.ts",
+        "Sucafinav1/test/product/workbench-mcp-closure/skill-loading.test.ts"
+      ],
+      "functional": null,
+      "next": "Attach to existing run until terminal, no duplicate dispatch",
+      "logs": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43726371640/job/132849072764",
+      "diff": [
+        ".ci-run.json"
+      ],
+      "parent": "422f1ed7b549021d7c62c834c9d9041279112af4"
+    },
+    {
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "Wtree": "647b024075265fc76d6253c99bec00a82618f816",
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "registry_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "location_validator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "host": "ubuntu-24.04",
+      "runner": "bun",
+      "attempt": 1,
+      "env": {},
+      "id": "120-C58-FIXTURES118A-INVALID-PATHS",
+      "S": "4eb086147a02c4bd7a259ad546d681fcc90a683d",
+      "Stree": "5e3e28437242f85732bc4ab5b8486f4e82753768",
+      "request_blob": "0460da40d8159f495620adbbe696ace7c52831df",
+      "branch": "ci-run-linux-sf120-c58-fixtures118a-1",
+      "run": 43726373599,
+      "job": 132849078581,
+      "conclusion": "FAILURE",
+      "args": [
+        "Sucafinav1/test/product/microsoft-composition.test.ts",
+        "Sucafinav1/test/product/microsoft-entra-client.test.ts"
+      ],
+      "functional": {
+        "pass": 57,
+        "fail": 1,
+        "expect": 1101,
+        "filesActuallyRun": 11,
+        "missingPaths": [
+          "Sucafinav1/test/microsoft-composition.test.ts",
+          "Sucafinav1/test/microsoft-entra-client.test.ts"
+        ],
+        "root_failure": "Source observation revalidate expected1 received0, same as corrected A2"
+      },
+      "next": "SUPERSEDED_BY_43726458847; do not dispatch again",
+      "note": "Incorrect request path did not block execution of the other 11 valid files. Do not characterize as validator-only failure.",
+      "logs": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43726373599/job/132849078581",
+      "diff": [
+        ".ci-run.json"
+      ],
+      "parent": "422f1ed7b549021d7c62c834c9d9041279112af4"
+    },
+    {
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "Wtree": "647b024075265fc76d6253c99bec00a82618f816",
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "registry_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "location_validator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "host": "ubuntu-24.04",
+      "runner": "bun",
+      "attempt": 1,
+      "env": {},
+      "id": "120-C58-FIXTURES118A-CORRECTED",
+      "S": "61fbb9d2cd3695542ca19b524c780bcbcef35d67",
+      "Stree": "584c01ad8ca562c7fc031e5719633d804fb1b94c",
+      "request_blob": "17973b003630784bdcb5bac87d4a26041a23e23a",
+      "branch": "ci-run-linux-sf120-c58-fixtures118a-2",
+      "run": 43726458847,
+      "job": 132849340798,
+      "conclusion": "FAILURE",
+      "args": [
+        "Sucafinav1/test/microsoft-composition.test.ts",
+        "Sucafinav1/test/microsoft-entra-client.test.ts",
+        "Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts",
+        "Sucafinav1/test/product/diagnostics/memory/persistence-observer.test.ts",
+        "Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts",
+        "Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts",
+        "Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts",
+        "Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+        "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+        "Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+        "Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+        "Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+        "Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts"
+      ],
+      "functional": {
+        "pass": 83,
+        "fail": 1,
+        "expect": 1228,
+        "files": 13,
+        "assertion": "diagnostics/calculation/source-observation.test.ts:86 expected counts.revalidate=1 observed0 after denied, no value leaked",
+        "omni": "PASS 4 spawns"
+      },
+      "routed_to": [
+        {
+          "pr": 114,
+          "comment": 6896409903
+        },
+        {
+          "pr": 65,
+          "comment": 6896410410
+        }
+      ],
+      "logs": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43726458847/job/132849340798",
+      "diff": [
+        ".ci-run.json"
+      ],
+      "parent": "422f1ed7b549021d7c62c834c9d9041279112af4"
+    },
+    {
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "Wtree": "647b024075265fc76d6253c99bec00a82618f816",
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "registry_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "location_validator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "host": "ubuntu-24.04",
+      "runner": "bun",
+      "attempt": 1,
+      "env": {},
+      "id": "120-C58-FIXTURES118B",
+      "S": "d7b081b1bec37b7d80e080ef85030aaed59e0703",
+      "Stree": "861a4e4b64ffed6da2b0f6e79391e7bcd619f7c1",
+      "request_blob": "703393b11d1e569b9bac6a6ba0bad9588a9698a1",
+      "branch": "ci-run-linux-sf120-c58-fixtures118b-1",
+      "run": 43726376680,
+      "job": 132849088063,
+      "conclusion": "FAILURE",
+      "args": [
+        "Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+        "Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+        "Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts",
+        "Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+        "Sucafinav1/test/product/wp08/collaboration-journey.test.ts",
+        "Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts",
+        "Sucafinav1/test/product/wp08/host-answer-reuse.test.ts",
+        "Sucafinav1/test/product/wp08/question-consumer.test.ts",
+        "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+        "Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts",
+        "Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts",
+        "Sucafinav1/test/product/wp14/recall.test.ts",
+        "Sucafinav1/test/product/wp14/source-access-atlas.test.ts",
+        "Sucafinav1/test/product/wp14/source-access-procurement.test.ts"
+      ],
+      "functional": {
+        "pass": 42,
+        "fail": 8,
+        "expect": 1061,
+        "files": 14,
+        "omni": "PASS 5 spawns",
+        "failureFiles": {
+          "wp00/baseline-corpus-coverage.test.ts": 1,
+          "wp01/decision-conflict-recovery.test.ts": 1,
+          "wp06/native/import-analysis.test.ts": 1,
+          "wp08/collaboration-journey.test.ts": 1,
+          "wp08/host-answer-reuse.test.ts": 1,
+          "wp10/integration/analysis-lifecycle-admission.test.ts": 3
+        }
+      },
+      "routed_to": [
+        {
+          "pr": 114,
+          "comment": 6896437618
+        },
+        {
+          "pr": 65,
+          "comment": 6896438090
+        }
+      ],
+      "logs": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43726376680/job/132849088063",
+      "diff": [
+        ".ci-run.json"
+      ],
+      "parent": "422f1ed7b549021d7c62c834c9d9041279112af4"
+    },
+    {
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "Wtree": "647b024075265fc76d6253c99bec00a82618f816",
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "registry_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "location_validator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "host": "ubuntu-24.04",
+      "runner": "bun",
+      "attempt": 1,
+      "env": {},
+      "id": "120-C58-EXPORT117_118",
+      "S": "110a5aacb241326abc105534981169a331a3f161",
+      "Stree": "0712daa5b16f2e43dbf4ae032fd2acd7c1e4541b",
+      "request_blob": "bf52544c9140ce10007a178ee6675c4af48e5110",
+      "branch": "ci-run-linux-sf120-c58-exports-1",
+      "run": 43726378502,
+      "job": 132849093415,
+      "cleanup_job": 132850178518,
+      "conclusion": "SUCCESS",
+      "args": [
+        "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts",
+        "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts"
+      ],
+      "functional": {
+        "pass": 9,
+        "fail": 0,
+        "expect": 1713,
+        "files": 4,
+        "reader": {
+          "verdict": "COMPLETED",
+          "cases": 12,
+          "missing": []
+        }
+      },
+      "artifacts": [
+        {
+          "id": 14166341968,
+          "size": 16078213,
+          "sha256": "44bf585bbd508c21c2a8bbe962f72e03b4ff90b2d3b5f63ad478de3d04023a77"
+        }
+      ],
+      "routed_to": [
+        {
+          "pr": 113,
+          "comment": 6896465267
+        },
+        {
+          "pr": 65,
+          "comment": 6896465782
+        }
+      ],
+      "logs": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43726378502/job/132849093415",
+      "diff": [
+        ".ci-run.json"
+      ],
+      "parent": "422f1ed7b549021d7c62c834c9d9041279112af4"
+    },
+    {
+      "W": "422f1ed7b549021d7c62c834c9d9041279112af4",
+      "Wtree": "647b024075265fc76d6253c99bec00a82618f816",
+      "workflow": ".github/workflows/test-ci.yml",
+      "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "registry_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "location_validator_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "host": "ubuntu-24.04",
+      "runner": "bun",
+      "attempt": 1,
+      "env": {},
+      "id": "120-C58-CONSUMERS116",
+      "S": "f21ade1e41c5d900a93936a2db5bff79e9134997",
+      "Stree": "d3f001a09cbac3041ea37e2ec699e46ad670f9a5",
+      "request_blob": "0ddb9f00f97a13a712b992b893697ca43684140a",
+      "branch": "ci-run-linux-sf120-c58-consumers116-1",
+      "run": 43726381302,
+      "job": 132849102144,
+      "cleanup_job": 132850461496,
+      "conclusion": "SUCCESS",
+      "args": [
+        "Sucafinav1/test/product/wp10/integration/bi-source-choice.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-authority-read.test.ts",
+        "Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts"
+      ],
+      "functional": {
+        "pass": 18,
+        "fail": 0,
+        "expect": 296,
+        "files": 3,
+        "omni": "N/A focused"
+      },
+      "routed_to": [
+        {
+          "pr": 112,
+          "comment": 6896464778
+        },
+        {
+          "pr": 65,
+          "comment": 6896465782
+        }
+      ],
+      "logs": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43726381302/job/132849102144",
+      "diff": [
+        ".ci-run.json"
+      ],
+      "parent": "422f1ed7b549021d7c62c834c9d9041279112af4"
     }
   ],
   "non_runs": [
@@ -428,5 +752,6 @@
     }
   },
   "scope_assertion": "Every successful request was exactly one Git child of W and one file diff: .ci-run.json. No source or workflow mutation.",
-  "global_release": false
+  "global_release": false,
+  "last_material_observed": "C58@422f1ed7b549021d7c62c834c9d9041279112af4"
 }
