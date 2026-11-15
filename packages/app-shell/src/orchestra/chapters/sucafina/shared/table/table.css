@@ -1,0 +1,187 @@
+/* S01 uses Orchestra's existing Mx palette, font, focus and spacing tokens.
+   No new app shell, sidebar or independently themed surface is introduced. */
+.sf-s01-table {
+  min-width: 0;
+  color: var(--mx-strong, var(--orchestra-text));
+  font-family: var(--mx-sans, var(--orchestra-font-family-sans));
+}
+
+.sf-s01-table-scroll {
+  max-width: 100%;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--mx-line, var(--orchestra-border));
+  border-radius: var(--orchestra-radius-md);
+  background: var(--mx-raised, transparent);
+  scrollbar-gutter: stable;
+}
+
+.sf-s01-table table {
+  width: 100%;
+  min-width: min-content;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: start;
+  font-size: var(--orchestra-font-size-sm);
+}
+
+.sf-s01-table caption {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.sf-s01-table thead {
+  color: var(--mx-dim, var(--orchestra-muted));
+  background: var(--mx-soft, transparent);
+}
+
+.sf-s01-table th,
+.sf-s01-table td {
+  min-width: 0;
+  padding-inline: 12px;
+  border-block-end: 1px solid var(--mx-line, var(--orchestra-border));
+  text-align: start;
+  vertical-align: middle;
+  overflow-wrap: anywhere;
+}
+
+.sf-s01-table th {
+  height: 36px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sf-s01-table[data-sf-density="comfortable"] td {
+  min-height: 44px;
+  height: 44px;
+  padding-block: 7px;
+}
+
+.sf-s01-table[data-sf-density="compact"] td {
+  min-height: 36px;
+  height: 36px;
+  padding-block: 4px;
+}
+
+.sf-s01-table td.sf-s01-align-center,
+.sf-s01-table th.sf-s01-align-center { text-align: center; }
+.sf-s01-table td.sf-s01-align-end,
+.sf-s01-table th.sf-s01-align-end { text-align: end; }
+
+.sf-s01-primary-cell {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+
+.sf-s01-sort,
+.sf-s01-row-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: auto;
+  max-width: 100%;
+  color: inherit;
+  border: 0;
+  border-radius: var(--orchestra-radius-sm);
+  background: transparent;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+
+.sf-s01-sort {
+  padding: 6px 4px;
+  color: var(--mx-dim, var(--orchestra-muted));
+  font-weight: 600;
+}
+
+.sf-s01-sort:hover,
+.sf-s01-row-open:hover { color: var(--mx-blue, var(--orchestra-accent)); }
+
+.sf-s01-row-open {
+  min-height: 28px;
+  padding: 4px 0;
+  color: var(--mx-blue, var(--orchestra-accent));
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.sf-s01-table .sf-s01-selected {
+  background: var(--mx-enabled, rgba(84, 135, 178, 0.16));
+}
+
+.sf-s01-action-reason {
+  display: inline-block;
+  max-width: 16rem;
+  color: var(--mx-dim, var(--orchestra-muted));
+  font-size: var(--orchestra-font-size-xs);
+  white-space: normal;
+}
+
+.sf-s01-actions-cell { width: 1%; }
+.sf-s01-actions-head { white-space: nowrap; }
+.sf-s01-row-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: max-content;
+}
+
+.sf-s01-table button:focus-visible,
+.sf-s01-table caption:focus-visible {
+  outline: 2px solid var(--mx-blue, var(--orchestra-accent));
+  outline-offset: 2px;
+}
+
+.sf-s01-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-block: 12px;
+}
+
+.sf-s01-range {
+  color: var(--mx-dim, var(--orchestra-muted));
+  font-size: var(--orchestra-font-size-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.sf-s01-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .sf-s01-table th,
+  .sf-s01-table td { padding-inline: 8px; }
+  .sf-s01-row-actions { min-width: 0; }
+  .sf-s01-pagination { justify-content: space-between; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-s01-table *,
+  .sf-s01-table *::before,
+  .sf-s01-table *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0ms !important;
+    animation-duration: 0ms !important;
+  }
+}
