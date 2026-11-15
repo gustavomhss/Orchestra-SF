@@ -204,7 +204,7 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
                           <td class={"sf-s01-align-" + column.align}>
                             <Show when={index() === 0} fallback={column.render(row)}>
                               <div class="sf-s01-primary-cell">
-                                <span>{column.render(row)}</span>
+                                <div class="sf-s01-cell-value">{column.render(row)}</div>
                                 <button
                                   type="button"
                                   class="sf-s01-row-open"
@@ -220,7 +220,7 @@ export function SfDataTable<Row>(props: SfDataTableProps<Row>): JSX.Element {
                         )}
                       </For>
                       <td class="sf-s01-actions-cell">
-                        <div class="sf-s01-row-actions" aria-label={copy.t(sfS01Key("sf.s01.rowActions"))}>
+                        <div class="sf-s01-row-actions" role="group" aria-label={copy.t(sfS01Key("sf.s01.rowActions"))}>
                           <For each={actions(row)}>
                             {(action) => (
                               <button

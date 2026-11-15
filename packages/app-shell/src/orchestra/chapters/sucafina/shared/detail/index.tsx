@@ -25,7 +25,8 @@ function SfDisplay(props: { value: SfDisplayValue }): JSX.Element {
         return <time dateTime={value.isoTimestamp}>{value.isoTimestamp} ({value.timezone})</time>
       case "number": {
         // The source value is already computed; only its display precision and unit are rendered.
-        const digits = Math.min(Math.max(0, value.fractionDigits), 20)
+        const digits = Number.isFinite(value.fractionDigits)
+          ? Math.min(Math.max(0, Math.trunc(value.fractionDigits)), 20) : 0
         const formatted = new Intl.NumberFormat(copy.intl(), {
           minimumFractionDigits: digits,
           maximumFractionDigits: digits,
@@ -122,8 +123,8 @@ export function SfRecordDetail(props: SfRecordDetailProps): JSX.Element {
       <div class="sf-s01-detail-sections">
         <For each={props.sections}>
           {(section) => (
-            <section class="sf-s01-detail-section" data-sf-section={section.id} aria-labelledby={titleID + "-" + section.id}>
-              <h3 id={titleID + "-" + section.id}>{copy.t(section.titleKey)}</h3>
+            <section class="sf-s01-detail-section" data-sf-section={section.id} aria-labelledby={titleID + "-" + encodeURIComponent(section.id)}>
+              <h3 id={titleID + "-" + encodeURIComponent(section.id)}>{copy.t(section.titleKey)}</h3>
               <SfStatePanel state={section.state} messageKey={sfS01StateKey(section.state)}>
                 {section.content}
               </SfStatePanel>
@@ -209,6 +210,7 @@ export function SfListDetail(props: SfListDetailProps): JSX.Element {
         ref={detailHost}
         class="sf-s01-detail-pane"
         id={id + "-detail"}
+        role="region"
         aria-label={copy.t(sfS01Key("sf.s01.detailLabel"))}
         hidden={single() && !hasDetail()}
       >

@@ -144,6 +144,12 @@ if (process.env.SF_S01_DOM !== "1") {
       view.host.querySelectorAll<HTMLButtonElement>('button[data-sf-action="select"]')[1].click()
       expect(view.events).toContain("select:ref-b")
       expect(view.events.some((event) => event.startsWith("action:"))).toBe(false)
+      view.update("disabledAction", false)
+      view.update("ui", "conflict")
+      expect(view.host.querySelector<HTMLButtonElement>('button[data-sf-action="approve"]')?.disabled).toBe(true)
+      view.update("ui", "ready")
+      view.host.querySelector<HTMLButtonElement>('button[data-sf-action="approve"]')!.click()
+      expect(view.events).toContain("action:ref-a:approve")
       view.update("rows", [...original.map((row) => ({ ...row }))])
       expect(view.host.querySelector('tr[data-sf-row="ref-b"]')?.getAttribute("aria-selected")).toBe("true")
     } finally { view.done() }
