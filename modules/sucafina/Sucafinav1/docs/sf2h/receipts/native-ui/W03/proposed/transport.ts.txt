@@ -10,7 +10,7 @@ import type {
 } from "@orchestra/schema/sucafina/common"
 import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
 import type {
-  SfContextStamp, SfInstallationDescriptor, SfResolvedRoute,
+  SfContext, SfContextStamp, SfInstallationDescriptor, SfResolvedRoute,
 } from "@orchestra/schema/sucafina/context"
 
 export type SfCallOptions = Readonly<{ signal: AbortSignal; idempotencyKey?: string }>
@@ -66,7 +66,7 @@ export type SfDesktopInvocationResult =
   | Readonly<{ kind: "empty-response"; status: number; headers: SfPublicHeaders }>
   | SfTransportFailure
 export type SfDesktopLoginResult =
-  | Readonly<{ status: "authenticated"; context: Readonly<{ stamp: SfContextStamp }> }>
+  | Readonly<{ status: "authenticated"; context: SfContext }>
   | Readonly<{ status: "cancelled" }>
   | Readonly<{ status: "denied" }>
   | Readonly<{ status: "unavailable"; reason: "auth-unavailable" | "identity-unavailable" | "enrollment-unavailable" | "network" | "contract-mismatch" }>
@@ -134,7 +134,10 @@ export function createSfTransport(options: Readonly<{
       if (!codec) return failure("contract-unavailable")
       const parsedInput = Schema.decodeUnknownOption(operation.input)(input)
       if (Option.isNone(parsedInput)) return failure("contract-mismatch")
-      const decoded = codec.decodeInput(parsedInput.value)
+      const decoded = (() => {
+        try { return codec.decodeInput(parsedInput.value) }
+        catch { return { status: "invalid" } as const }
+      })()
       if (decoded.status !== "ok") return failure("contract-mismatch")
       if (metadata.responseMode !== "json" && metadata.responseMode !== "empty") {
         // Bytes require the installed download-handle/chunk consumer, not buffering
@@ -161,6 +164,8 @@ export function createSfTransport(options: Readonly<{
       if (mutating && pending.size >= MUTATION_LIMIT && !pending.has(key!)) return failure("contract-unavailable")
       const digest = mutating ? await digestPayload(operation.operationId, body ?? "") : undefined
       if (mutating && digest === undefined) return failure("contract-unavailable")
+      const ownerHeader = legacyMutation ? nativeOwnerHeader(stamp!) : undefined
+      if (legacyMutation && !ownerHeader) return failure("contract-mismatch")
       if (mutating) {
         const previous = pending.get(key!)
         if (previous && previous !== digest) return failure("contract-mismatch")
@@ -174,7 +179,7 @@ export function createSfTransport(options: Readonly<{
       const headers: Record<string, string> = { Accept: "application/json" }
       if (body !== undefined) headers["Content-Type"] = "application/json"
       if (key) headers["Idempotency-Key"] = key
-      if (legacyMutation) headers["X-SF-Native-Owner"] = nativeOwnerHeader(stamp!)
+      if (ownerHeader) headers["X-SF-Native-Owner"] = ownerHeader
       let dispatched = false
       let response: Readonly<{ status: number; headers: SfPublicHeaders; body: unknown }> | SfTransportFailure
       if (options.desktop && options.desktopBinding) {
@@ -208,6 +213,7 @@ export function createSfTransport(options: Readonly<{
             ...(body !== undefined ? { body } : {}),
           })
           const extracted = publicHeaders(result.headers)
+          if (result.status === 401 || result.status === 403) stamp = undefined
           if (metadata.responseMode === "empty") {
             response = result.status === 204 && !result.headers.get("content-type")
               ? { status: result.status, headers: extracted, body: undefined }
@@ -224,22 +230,25 @@ export function createSfTransport(options: Readonly<{
         if (mutating && dispatched) return failure("outcome-unknown")
         return failure("aborted")
       }
-      if (response.kind === "transport-error") {
+      if ("kind" in response && response.kind === "transport-error") {
         if (mutating && dispatched && response.reason !== "contract-mismatch" && response.reason !== "contract-unavailable") return failure("outcome-unknown")
         if (mutating) pending.delete(key!)
         return response
       }
       if (!Number.isInteger(response.status) || response.status < 200 || response.status >= 600) return failure("invalid-response")
       if (response.status === 401 || response.status === 403) stamp = undefined
-      const wireDecoded = codec.decodeOutput(response.body)
-      if (wireDecoded.status !== "ok") return failure("invalid-response")
+      const wireDecoded = (() => {
+        try { return codec.decodeOutput(response.body) }
+        catch { return { status: "invalid" } as const }
+      })()
+      if (wireDecoded.status !== "ok") return failure(mutating ? "outcome-unknown" : "invalid-response")
       const parsedOutput = Schema.decodeUnknownOption(operation.output)(wireDecoded.value)
-      if (Option.isNone(parsedOutput)) return failure("invalid-response")
+      if (Option.isNone(parsedOutput)) return failure(mutating ? "outcome-unknown" : "invalid-response")
       if (operation.operationId === "ctx.context") {
         if (!validContextOutcome(parsedOutput.value, options.binding)) return failure("invalid-response")
         const result = parsedOutput.value
-        if (typeof result === "object" && result !== null && "status" in result && result.status === "ok" && "value" in result && typeof result.value === "object" && result.value !== null && "stamp" in result.value) {
-          stamp = result.value.stamp as SfContextStamp
+        if (typeof result === "object" && result !== null && "status" in result && result.status === "ok" && "value" in result && typeof result.value === "object" && result.value !== null && "stamp" in result.value && validContextStamp(result.value.stamp)) {
+          stamp = result.value.stamp
         } else stamp = undefined
       }
       if (mutating) pending.delete(key!)
@@ -385,23 +394,29 @@ function validContextOutcome(value: unknown, binding: SfInstallationDescriptor):
   if (value.status !== "ok" || !("value" in value) || !value.value || typeof value.value !== "object") return false
   const context = value.value
   return "stamp" in context && context.stamp !== null && typeof context.stamp === "object" &&
-    sameStampInstallation(context.stamp as SfContextStamp, binding) &&
+    validContextStamp(context.stamp) && sameStampInstallation(context.stamp, binding) &&
     "contractRevision" in context && context.contractRevision === "sf-native-ui/1" &&
     "authMode" in context && context.authMode === binding.authMode
 }
 
-function nativeOwnerHeader(stamp: SfContextStamp): string {
+function validContextStamp(value: unknown): value is SfContextStamp {
+  if (!value || typeof value !== "object") return false
+  const fields = ["installationId", "projectId", "hostId", "principalRef", "policyVersion", "accessRevision"] as const
+  return fields.every((field) => field in value && typeof value[field] === "string" && value[field].trim().length > 0)
+}
+
+function nativeOwnerHeader(stamp: SfContextStamp): string | undefined {
   const bytes = new TextEncoder().encode(JSON.stringify({
     installationId: stamp.installationId, hostId: stamp.hostId,
     projectId: stamp.projectId, principalRef: stamp.principalRef,
   }))
-  if (bytes.byteLength > 2048) throw new Error("SF_NATIVE_OWNER_INVALID")
+  if (bytes.byteLength > 2048) return undefined
   const binary = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("")
   return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "")
 }
 
 async function digestPayload(operationId: SfOperationId, body: string): Promise<string | undefined> {
-  if (!crypto.subtle) return undefined
+  if (typeof crypto === "undefined" || !crypto.subtle) return undefined
   const bytes = new TextEncoder().encode(operationId + "\u0000" + body)
   const digest = await crypto.subtle.digest("SHA-256", bytes).catch(() => undefined)
   return digest ? Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("") : undefined
