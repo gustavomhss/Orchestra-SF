@@ -77,6 +77,7 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
   })
   // Real drafts live above the chapter boundary in F01 and are keyed by owner/year/version/ref.
   const drafts = new Map<string, SfPublicDraftController<PositionForm>>()
+  let lastIdentity = ""
   const resultState = () => {
     const s = owner.state().status
     return s === "denied" ? "denied" as const : s === "unauthenticated" ? "session-expired" as const
@@ -126,7 +127,13 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
     const generation = owner.generation()
     const ready = owner.ready()
     const year = props.route.query.year
-    const version = props.route.query.version
+    const version = state.pageVersion || props.route.query.version
+    const identity = ready ? JSON.stringify([generation,ready.context.stamp,props.route.href]) : ""
+    if (identity !== lastIdentity) {
+      lastIdentity = identity
+      drafts.clear()
+      setState({ pageVersion: props.route.query.version, recordId: "", formKind: null, review: null, uncertainty: false })
+    }
     state.refresh
     if (!ready || !destination()?.canRead) {
       drafts.clear()
@@ -326,7 +333,11 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
           error: "errors" in response.body ? (response.body.errors ?? []).join("; ") || t("sf.common.failed") : t("sf.common.failed") })
         return
       }
-      // Acknowledgement is not a current projection. The next GET is the truth.
+      // Acknowledgement is not a current projection. Read the producer again.
+      if (review.kind === "position-save") {
+        const source = state.page?.data.positions.find((p) => p.id === review.id)
+        if (source) positionDraft(source)?.discard()
+      }
       setState({ formKind: null, recordId: "", rateForm: null, error: t("sf.u08.saved"), phase: "loading" })
       reload()
     } catch (error) {
@@ -374,20 +385,9 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
                     onChange={(event) => {
                       const id = event.currentTarget.value
                       if (!id || state.busy) return
-                      // F01 retains drafts by the version's editScopeKey.
-                      setState({ pageVersion: id, page: null, phase: "loading" })
-                      const ready = owner.ready()
-                      if (!ready) return
-                      const generation = owner.generation()
-                      const abort = new AbortController()
-                      void createSfPlannerClient(ready.transport)["domain.page.CAP20"](
-                        { ...(currentYear() === undefined ? {} : { year: currentYear() }), version: id },
-                        { signal: abort.signal },
-                      ).then((reply) => {
-                        if (reply.kind === "response" && reply.body.status === "ok" && owner.generation() === generation && owner.ready()?.context.stamp.accessRevision === ready.context.stamp.accessRevision)
-                          setState({ page: reply.body.value, phase: "ready" })
-                        else setState("phase", "unavailable")
-                      }).catch(() => setState("phase", "unavailable"))
+                      // F01 keeps version-scoped drafts; the effect aborts any superseded GET.
+                      setState({ pageVersion: id, page: null, phase: "loading", review: null,
+                        recordId: "", formKind: null })
                     }}>
                     <For each={page().data.versions}>{(version) =>
                       <option value={version.id}>{version.name}</option>}
@@ -607,7 +607,9 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
               sourceRef: ("id" in current() ? (current() as {id: string}).id : currentVersion()) as SfRef,
               sourceVersion: current().version, fields: proposedFields() }}
             effects={[]}
-            coverage={{ state: "complete", summary: msg("sf.u08.scope"), reasons: [], knownCount: 1, expectedCount: 1 }}
+            coverage={current().kind === "sync"
+              ? { state: "partial", summary: msg("sf.u08.scope"), reasons: [msg("sf.u08.noRoster")], knownCount: 1, expectedCount: null }
+              : { state: "complete", summary: msg("sf.u08.scope"), reasons: [], knownCount: 1, expectedCount: 1 }}
             blockingReasons={canReview() ? [] : [msg("sf.u08.unavailableAction")]}
             confirmation={canReview()
               ? { kind: "admitted", labelKey: key("sf.cap20.primary"), purpose: reviewPurpose(),
