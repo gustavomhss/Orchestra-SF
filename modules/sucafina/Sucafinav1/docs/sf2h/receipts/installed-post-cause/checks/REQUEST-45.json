@@ -1,0 +1,39 @@
+{
+  "schema": "sf2h.m79.check-request.v1",
+  "state": "REQUESTED_NOT_RUN",
+  "owner": 45,
+  "pr": 32,
+  "owner_branch": "astra-compose",
+  "owner_head_observed": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+  "source_W": {
+    "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+    "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+  },
+  "candidate": {
+    "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+    "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+  },
+  "request_comments": [
+    6888879352,
+    6889033103
+  ],
+  "commands": [
+    {
+      "directory": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "directory": "apps/cli",
+      "command": "bun typecheck"
+    },
+    {
+      "directory": ".",
+      "command": "bun run check:guards --base origin/dev"
+    }
+  ],
+  "base_resolution": "Record real origin/dev and merge-base on authorized runner; not fabricated here.",
+  "dedup_key": "candidate tree + full TypeScript program/config + commands + resolved base; V1 andV2 are not equivalent",
+  "observed_capability": "The scoped compiler interface was absent at owner pin;79 did not create a workflow, use another lane, or run local checks.",
+  "generation": "No Protocol or HttpApi change; generate gate not triggered.",
+  "GLOBAL_RELEASE": false
+}

@@ -1,6 +1,6 @@
 {
   "schema": "sf2h.m79.node-abort-signal-proposal.v1",
-  "state": "INERT_PROPOSAL_QUALIFICATION_PENDING",
+  "state": "SCOPED_PASS_FOR_OWNER74_INTAKE",
   "producer": "79 diagnostic artifact only",
   "production_writer": "74",
   "integrator": "71",
@@ -8,7 +8,7 @@
   "source_installation_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
   "target_C34": "4bcafba5d73497f9afbc9ac7965eeab8070b3900",
   "defect_evidence": {
-    "source": "Parent report of hosted S1; this child did not execute tests.",
+    "source": "Hosted Actions job132692476767, fetched and verified by root; initial patch author used root's run report.",
     "run": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43674790650",
     "job_id": "132692476767",
     "reported_result": "4 pass / 1 fail,3.22s",
@@ -191,11 +191,40 @@
   ],
   "verification": {
     "source_access": "GitHub MCP",
-    "artifact_operations": "Text generation, copying exact preimages, JSON field updates, unified diffs and hashes only.",
-    "production_files_written": false,
-    "github_mutations": false,
+    "artifact_operations": "Exact preimages, text patches, JSON metadata and hashes; product and compiler execution only through hosted Actions.",
+    "own_branch_scope": "Only79 fixture/receipt namespaces; production paths materialized exclusively in isolated validation overlays.",
     "local_tests_or_compiler": "NOT_RUN",
-    "hosted_tests_by_child": "NOT_RUN",
+    "hosted_functional_result": "SCOPED_PASS; see functional_qualification",
+    "production_adoption": "NOT_APPLIED_BY79; owner74 retains sole authority",
+    "compiler_guards": "REQUESTED_NOT_RUN /45",
     "release_claim": false
-  }
+  },
+  "source_delivery": "8fac547cfdbda84ff2385c22a4fce46efe9a0ad8",
+  "source_blob_rechecked": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+  "functional_qualification": {
+    "W": {
+      "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+      "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+    },
+    "V": {
+      "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+      "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+    },
+    "S": {
+      "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+      "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+    },
+    "run": 43675862594,
+    "job": 132695751973,
+    "cleanup_job": 132696240217,
+    "pass": 11,
+    "fail": 0,
+    "assertions": 333,
+    "duration_seconds": 2.97,
+    "scope": "instrumented isolated validation overlay; proposed production bytes reduce exactly after removing only passive marks",
+    "compiler_guards": "REQUESTED_NOT_RUN / owner45",
+    "integration": "NOT_APPLIED / owner74 and71"
+  },
+  "GLOBAL_RELEASE": false,
+  "qualification_scope_note": "Disconnect regression observes actual aborted/error/close ordering, signal propagation and zero guard listeners without diagnostic error observation. The already-closed construction fallback was reviewed statically; no separate forced already-closed construction test is claimed."
 }

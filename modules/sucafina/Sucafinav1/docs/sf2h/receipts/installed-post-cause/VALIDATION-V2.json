@@ -1,8 +1,8 @@
 {
   "schema": "sf2h.m79.validation-overlay.v1",
   "id": "V2-causal-pair-and-node-abort",
-  "state": "PREPARED_NOT_RUN",
-  "base": "60613a133ee7ffc1026c875c3939b1d92cc97502",
+  "state": "SCOPED_PASS",
+  "base": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
   "production_writer": 74,
   "integrator": 71,
   "checks_owner": 45,
@@ -150,5 +150,27 @@
   ],
   "dedup": "Fresh V2 differs materially from V1 by one production proposal delta and stronger causal fixture; existing74 source-green run43673697145 reused as provenance, not as V2 proof. Only existing test-ci interface and one79run in flight.",
   "limitations": "Component qualification only. No realbrowser/CLI/native journey, no hostedproviderqualification, no finalintegratedC proof; compiler/guards requested via45 separately.",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "preparation_parent_W": "60613a133ee7ffc1026c875c3939b1d92cc97502",
+  "W": {
+    "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+    "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+  },
+  "V": {
+    "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+    "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+  },
+  "S": {
+    "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+    "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+  },
+  "actual_result": {
+    "run": 43675862594,
+    "job": 132695751973,
+    "cleanup_job": 132696240217,
+    "pass": 11,
+    "fail": 0,
+    "assertions": 333,
+    "duration_seconds": 2.97
+  }
 }

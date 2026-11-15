@@ -1,0 +1,1232 @@
+{
+  "schema": "sf2h.m79.final-functional-results.v1",
+  "state": "SCOPED_PASS",
+  "mission": 79,
+  "run": 43675862594,
+  "job": 132695751973,
+  "cleanup_job": 132696240217,
+  "attempt": 1,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43675862594",
+  "W": {
+    "sha": "ee7248989ab02050ad9eb66952de2ae8bfd1484b",
+    "tree": "0637d4372ee3821b32bbc41a7f8d5e9ab15effcf"
+  },
+  "V": {
+    "sha": "fae62b70b5417f7fb31e11ea4011274f6c5148d5",
+    "tree": "938e9220fde506dabcf6a29a5e78a78b954d5a12"
+  },
+  "S": {
+    "sha": "a429fff697f4030249f9e0bd34a46113d3a0156d",
+    "tree": "8ed205766e045443079cebb555c182ba4fa69ae0"
+  },
+  "selection": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/installed-post-cause/probe.test.ts",
+      "./Sucafinav1/test/product/installed-post-cause/bridge-regression.test.ts",
+      "./Sucafinav1/test/product/installed-post-cause/request-reconstruction.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/listener.test.ts",
+      "./Sucafinav1/test/product/http-body-limit-fix/microsoft-bridge.test.ts",
+      "--timeout",
+      "18000"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "actual": {
+    "tests": 11,
+    "files": 5,
+    "pass": 11,
+    "fail": 0,
+    "assertions": 333,
+    "duration_seconds": 2.97,
+    "runtime": "Bun1.3.14+0d9b296af",
+    "runner": "ubuntu-24.04",
+    "platform": "linux-x64",
+    "workflow_conclusion": "success",
+    "cleanup_conclusion": "success",
+    "omni": "not applicable; no spawn or delegation claim"
+  },
+  "installed": [
+    {
+      "case": "minimal",
+      "get_status": 200,
+      "post_status": 200,
+      "post_elapsed_ms": 4,
+      "body_bytes": 28,
+      "mutation_count": 0,
+      "persistence": null,
+      "after": null,
+      "signals": [
+        {
+          "id": "minimal-post",
+          "aborted": false
+        }
+      ]
+    },
+    {
+      "case": "versions",
+      "get_status": 200,
+      "post_status": 200,
+      "post_elapsed_ms": 7,
+      "body_bytes": 77,
+      "mutation_count": 1,
+      "persistence": {
+        "versions": 1,
+        "auditCount": 2
+      },
+      "after": {
+        "status": 200,
+        "firstVersionForm": false
+      },
+      "signals": [
+        {
+          "id": "versions-save",
+          "aborted": false
+        }
+      ]
+    }
+  ],
+  "reconstruction": [
+    {
+      "fixture_response": 200,
+      "client_timed_out": false,
+      "variant": "direct",
+      "outcome": "eof",
+      "elapsedMs": 1,
+      "reads": 2,
+      "bytes": 28,
+      "eof": 1,
+      "exactBytes": true,
+      "sameRequest": true,
+      "sameBody": true,
+      "signalAborted": false,
+      "beforeCancel": {
+        "id": "reconstruct-direct",
+        "method": "POST",
+        "declaredLength": 28,
+        "chunked": false,
+        "events": [
+          {
+            "sequence": 1,
+            "elapsedMs": 0.003,
+            "event": "node.request"
+          },
+          {
+            "sequence": 2,
+            "elapsedMs": 0.602,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 3,
+            "elapsedMs": 0.642,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 4,
+            "elapsedMs": 0.742,
+            "event": "reconstruction.construct.start"
+          },
+          {
+            "sequence": 5,
+            "elapsedMs": 0.753,
+            "event": "reconstruction.construct.complete"
+          },
+          {
+            "sequence": 6,
+            "elapsedMs": 1.046,
+            "event": "reconstruction.reader.read.start"
+          },
+          {
+            "sequence": 7,
+            "elapsedMs": 1.281,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 8,
+            "elapsedMs": 1.288,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 9,
+            "elapsedMs": 1.339,
+            "event": "node.push.value"
+          },
+          {
+            "sequence": 10,
+            "elapsedMs": 1.363,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 11,
+            "elapsedMs": 1.419,
+            "event": "node.read.value"
+          },
+          {
+            "sequence": 12,
+            "elapsedMs": 1.421,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 13,
+            "elapsedMs": 1.427,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 14,
+            "elapsedMs": 1.455,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 15,
+            "elapsedMs": 1.455,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 16,
+            "elapsedMs": 1.465,
+            "event": "node.push.null"
+          },
+          {
+            "sequence": 17,
+            "elapsedMs": 1.474,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 18,
+            "elapsedMs": 1.477,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 19,
+            "elapsedMs": 1.485,
+            "event": "node.end"
+          },
+          {
+            "sequence": 20,
+            "elapsedMs": 1.502,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 21,
+            "elapsedMs": 1.503,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 22,
+            "elapsedMs": 1.556,
+            "event": "node.close"
+          },
+          {
+            "sequence": 23,
+            "elapsedMs": 1.559,
+            "event": "reconstruction.reader.read.value"
+          },
+          {
+            "sequence": 24,
+            "elapsedMs": 1.561,
+            "event": "reconstruction.reader.read.start"
+          },
+          {
+            "sequence": 25,
+            "elapsedMs": 1.565,
+            "event": "reconstruction.reader.read.done"
+          }
+        ],
+        "droppedEvents": 0,
+        "node": {
+          "complete": true,
+          "readableEnded": true,
+          "destroyed": true,
+          "aborted": false,
+          "readableLength": 0,
+          "eofInProgress": true
+        },
+        "socket": {
+          "destroyed": false,
+          "readableEnded": false,
+          "eofInProgress": null,
+          "pushCalls": 0,
+          "pushNull": 0,
+          "pushedBytes": 0
+        },
+        "readCalls": 7,
+        "readNull": 6,
+        "readBytes": 28,
+        "readValueCallers": [
+          "effect-node-adapter"
+        ],
+        "pushCalls": 2,
+        "pushNull": 1,
+        "pushedBytes": 28,
+        "bodyReaderCalls": 0,
+        "bodyReadCalls": 0,
+        "bodyReadDone": 0,
+        "bodyReadBytes": 0,
+        "handlerEntered": false,
+        "handlerCompleted": false,
+        "responseFinished": false,
+        "signalAborted": null
+      },
+      "cleanup": {
+        "readerReleased": true,
+        "selectedBodyLocked": false,
+        "readLoopSettled": true,
+        "selectedCancel": "resolved",
+        "originalCancel": "same-body",
+        "companionCancel": "not-distinct",
+        "serverTimerCleared": true,
+        "sourceDataListeners": 0,
+        "sourceReadableListeners": 0
+      }
+    },
+    {
+      "fixture_response": 200,
+      "client_timed_out": false,
+      "variant": "one-argument",
+      "outcome": "eof",
+      "elapsedMs": 1,
+      "reads": 2,
+      "bytes": 28,
+      "eof": 1,
+      "exactBytes": true,
+      "sameRequest": false,
+      "sameBody": false,
+      "signalAborted": false,
+      "beforeCancel": {
+        "id": "reconstruct-one-argument",
+        "method": "POST",
+        "declaredLength": 28,
+        "chunked": false,
+        "events": [
+          {
+            "sequence": 1,
+            "elapsedMs": 0.001,
+            "event": "node.request"
+          },
+          {
+            "sequence": 2,
+            "elapsedMs": 0.214,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 3,
+            "elapsedMs": 0.238,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 4,
+            "elapsedMs": 0.292,
+            "event": "reconstruction.construct.start"
+          },
+          {
+            "sequence": 5,
+            "elapsedMs": 0.54,
+            "event": "reconstruction.construct.complete"
+          },
+          {
+            "sequence": 6,
+            "elapsedMs": 0.594,
+            "event": "reconstruction.reader.read.start"
+          },
+          {
+            "sequence": 7,
+            "elapsedMs": 0.633,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 8,
+            "elapsedMs": 0.64,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 9,
+            "elapsedMs": 0.728,
+            "event": "node.push.value"
+          },
+          {
+            "sequence": 10,
+            "elapsedMs": 0.746,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 11,
+            "elapsedMs": 0.806,
+            "event": "node.read.value"
+          },
+          {
+            "sequence": 12,
+            "elapsedMs": 0.809,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 13,
+            "elapsedMs": 0.81,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 14,
+            "elapsedMs": 0.836,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 15,
+            "elapsedMs": 0.837,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 16,
+            "elapsedMs": 0.851,
+            "event": "node.push.null"
+          },
+          {
+            "sequence": 17,
+            "elapsedMs": 0.855,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 18,
+            "elapsedMs": 0.858,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 19,
+            "elapsedMs": 0.864,
+            "event": "node.end"
+          },
+          {
+            "sequence": 20,
+            "elapsedMs": 0.878,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 21,
+            "elapsedMs": 0.879,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 22,
+            "elapsedMs": 0.958,
+            "event": "node.close"
+          },
+          {
+            "sequence": 23,
+            "elapsedMs": 1.071,
+            "event": "reconstruction.reader.read.value"
+          },
+          {
+            "sequence": 24,
+            "elapsedMs": 1.074,
+            "event": "reconstruction.reader.read.start"
+          },
+          {
+            "sequence": 25,
+            "elapsedMs": 1.102,
+            "event": "reconstruction.reader.read.done"
+          }
+        ],
+        "droppedEvents": 0,
+        "node": {
+          "complete": true,
+          "readableEnded": true,
+          "destroyed": true,
+          "aborted": false,
+          "readableLength": 0,
+          "eofInProgress": true
+        },
+        "socket": {
+          "destroyed": false,
+          "readableEnded": false,
+          "eofInProgress": null,
+          "pushCalls": 0,
+          "pushNull": 0,
+          "pushedBytes": 0
+        },
+        "readCalls": 7,
+        "readNull": 6,
+        "readBytes": 28,
+        "readValueCallers": [
+          "effect-node-adapter"
+        ],
+        "pushCalls": 2,
+        "pushNull": 1,
+        "pushedBytes": 28,
+        "bodyReaderCalls": 0,
+        "bodyReadCalls": 0,
+        "bodyReadDone": 0,
+        "bodyReadBytes": 0,
+        "handlerEntered": false,
+        "handlerCompleted": false,
+        "responseFinished": false,
+        "signalAborted": null
+      },
+      "cleanup": {
+        "readerReleased": true,
+        "selectedBodyLocked": false,
+        "readLoopSettled": true,
+        "selectedCancel": "resolved",
+        "originalCancel": "locked",
+        "companionCancel": "not-distinct",
+        "serverTimerCleared": true,
+        "sourceDataListeners": 0,
+        "sourceReadableListeners": 0
+      }
+    },
+    {
+      "fixture_response": 408,
+      "client_timed_out": false,
+      "variant": "signal-init",
+      "outcome": "deadline",
+      "elapsedMs": 801,
+      "reads": 1,
+      "bytes": 0,
+      "eof": 0,
+      "exactBytes": false,
+      "sameRequest": false,
+      "sameBody": false,
+      "signalAborted": false,
+      "beforeCancel": {
+        "id": "reconstruct-signal-init",
+        "method": "POST",
+        "declaredLength": 28,
+        "chunked": false,
+        "events": [
+          {
+            "sequence": 1,
+            "elapsedMs": 0.002,
+            "event": "node.request"
+          },
+          {
+            "sequence": 2,
+            "elapsedMs": 0.201,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 3,
+            "elapsedMs": 0.219,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 4,
+            "elapsedMs": 0.243,
+            "event": "reconstruction.construct.start"
+          },
+          {
+            "sequence": 5,
+            "elapsedMs": 0.362,
+            "event": "reconstruction.construct.complete"
+          },
+          {
+            "sequence": 6,
+            "elapsedMs": 0.4,
+            "event": "reconstruction.reader.read.start"
+          },
+          {
+            "sequence": 7,
+            "elapsedMs": 0.439,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 8,
+            "elapsedMs": 0.443,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 9,
+            "elapsedMs": 0.505,
+            "event": "node.push.value"
+          },
+          {
+            "sequence": 10,
+            "elapsedMs": 0.519,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 11,
+            "elapsedMs": 0.576,
+            "event": "node.read.value"
+          },
+          {
+            "sequence": 12,
+            "elapsedMs": 0.582,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 13,
+            "elapsedMs": 0.585,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 14,
+            "elapsedMs": 0.599,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 15,
+            "elapsedMs": 0.6,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 16,
+            "elapsedMs": 0.606,
+            "event": "node.push.null"
+          },
+          {
+            "sequence": 17,
+            "elapsedMs": 0.61,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 18,
+            "elapsedMs": 0.611,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 19,
+            "elapsedMs": 0.615,
+            "event": "node.end"
+          },
+          {
+            "sequence": 20,
+            "elapsedMs": 0.627,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 21,
+            "elapsedMs": 0.627,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 22,
+            "elapsedMs": 0.681,
+            "event": "node.close"
+          }
+        ],
+        "droppedEvents": 0,
+        "node": {
+          "complete": true,
+          "readableEnded": true,
+          "destroyed": true,
+          "aborted": false,
+          "readableLength": 0,
+          "eofInProgress": true
+        },
+        "socket": {
+          "destroyed": false,
+          "readableEnded": false,
+          "eofInProgress": null,
+          "pushCalls": 0,
+          "pushNull": 0,
+          "pushedBytes": 0
+        },
+        "readCalls": 7,
+        "readNull": 6,
+        "readBytes": 28,
+        "readValueCallers": [
+          "effect-node-adapter"
+        ],
+        "pushCalls": 2,
+        "pushNull": 1,
+        "pushedBytes": 28,
+        "bodyReaderCalls": 0,
+        "bodyReadCalls": 0,
+        "bodyReadDone": 0,
+        "bodyReadBytes": 0,
+        "handlerEntered": false,
+        "handlerCompleted": false,
+        "responseFinished": false,
+        "signalAborted": null
+      },
+      "cleanup": {
+        "readerReleased": true,
+        "selectedBodyLocked": false,
+        "readLoopSettled": true,
+        "selectedCancel": "pending",
+        "originalCancel": "resolved",
+        "companionCancel": "not-distinct",
+        "serverTimerCleared": true,
+        "sourceDataListeners": 0,
+        "sourceReadableListeners": 0
+      }
+    },
+    {
+      "fixture_response": 408,
+      "client_timed_out": false,
+      "variant": "empty-init",
+      "outcome": "deadline",
+      "elapsedMs": 801,
+      "reads": 1,
+      "bytes": 0,
+      "eof": 0,
+      "exactBytes": false,
+      "sameRequest": false,
+      "sameBody": false,
+      "signalAborted": false,
+      "beforeCancel": {
+        "id": "reconstruct-empty-init",
+        "method": "POST",
+        "declaredLength": 28,
+        "chunked": false,
+        "events": [
+          {
+            "sequence": 1,
+            "elapsedMs": 0.003,
+            "event": "node.request"
+          },
+          {
+            "sequence": 2,
+            "elapsedMs": 0.494,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 3,
+            "elapsedMs": 0.567,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 4,
+            "elapsedMs": 0.625,
+            "event": "reconstruction.construct.start"
+          },
+          {
+            "sequence": 5,
+            "elapsedMs": 0.796,
+            "event": "reconstruction.construct.complete"
+          },
+          {
+            "sequence": 6,
+            "elapsedMs": 0.839,
+            "event": "reconstruction.reader.read.start"
+          },
+          {
+            "sequence": 7,
+            "elapsedMs": 0.912,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 8,
+            "elapsedMs": 0.92,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 9,
+            "elapsedMs": 1.149,
+            "event": "node.push.value"
+          },
+          {
+            "sequence": 10,
+            "elapsedMs": 1.182,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 11,
+            "elapsedMs": 1.297,
+            "event": "node.read.value"
+          },
+          {
+            "sequence": 12,
+            "elapsedMs": 1.3,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 13,
+            "elapsedMs": 1.302,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 14,
+            "elapsedMs": 1.35,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 15,
+            "elapsedMs": 1.352,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 16,
+            "elapsedMs": 1.364,
+            "event": "node.push.null"
+          },
+          {
+            "sequence": 17,
+            "elapsedMs": 1.372,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 18,
+            "elapsedMs": 1.374,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 19,
+            "elapsedMs": 1.38,
+            "event": "node.end"
+          },
+          {
+            "sequence": 20,
+            "elapsedMs": 1.403,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 21,
+            "elapsedMs": 1.404,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 22,
+            "elapsedMs": 1.49,
+            "event": "node.close"
+          }
+        ],
+        "droppedEvents": 0,
+        "node": {
+          "complete": true,
+          "readableEnded": true,
+          "destroyed": true,
+          "aborted": false,
+          "readableLength": 0,
+          "eofInProgress": true
+        },
+        "socket": {
+          "destroyed": false,
+          "readableEnded": false,
+          "eofInProgress": null,
+          "pushCalls": 0,
+          "pushNull": 0,
+          "pushedBytes": 0
+        },
+        "readCalls": 7,
+        "readNull": 6,
+        "readBytes": 28,
+        "readValueCallers": [
+          "effect-node-adapter"
+        ],
+        "pushCalls": 2,
+        "pushNull": 1,
+        "pushedBytes": 28,
+        "bodyReaderCalls": 0,
+        "bodyReadCalls": 0,
+        "bodyReadDone": 0,
+        "bodyReadBytes": 0,
+        "handlerEntered": false,
+        "handlerCompleted": false,
+        "responseFinished": false,
+        "signalAborted": null
+      },
+      "cleanup": {
+        "readerReleased": true,
+        "selectedBodyLocked": false,
+        "readLoopSettled": true,
+        "selectedCancel": "pending",
+        "originalCancel": "resolved",
+        "companionCancel": "not-distinct",
+        "serverTimerCleared": true,
+        "sourceDataListeners": 0,
+        "sourceReadableListeners": 0
+      }
+    },
+    {
+      "fixture_response": 200,
+      "client_timed_out": false,
+      "variant": "explicit-body",
+      "outcome": "eof",
+      "elapsedMs": 1,
+      "reads": 2,
+      "bytes": 28,
+      "eof": 1,
+      "exactBytes": true,
+      "sameRequest": false,
+      "sameBody": true,
+      "signalAborted": false,
+      "beforeCancel": {
+        "id": "reconstruct-explicit-body",
+        "method": "POST",
+        "declaredLength": 28,
+        "chunked": false,
+        "events": [
+          {
+            "sequence": 1,
+            "elapsedMs": 0.002,
+            "event": "node.request"
+          },
+          {
+            "sequence": 2,
+            "elapsedMs": 0.451,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 3,
+            "elapsedMs": 0.499,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 4,
+            "elapsedMs": 0.579,
+            "event": "reconstruction.construct.start"
+          },
+          {
+            "sequence": 5,
+            "elapsedMs": 0.587,
+            "event": "reconstruction.construct.complete"
+          },
+          {
+            "sequence": 6,
+            "elapsedMs": 0.629,
+            "event": "reconstruction.reader.read.start"
+          },
+          {
+            "sequence": 7,
+            "elapsedMs": 0.671,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 8,
+            "elapsedMs": 0.674,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 9,
+            "elapsedMs": 0.711,
+            "event": "node.push.value"
+          },
+          {
+            "sequence": 10,
+            "elapsedMs": 0.747,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 11,
+            "elapsedMs": 0.833,
+            "event": "node.read.value"
+          },
+          {
+            "sequence": 12,
+            "elapsedMs": 0.835,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 13,
+            "elapsedMs": 0.836,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 14,
+            "elapsedMs": 0.886,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 15,
+            "elapsedMs": 0.887,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 16,
+            "elapsedMs": 0.897,
+            "event": "node.push.null"
+          },
+          {
+            "sequence": 17,
+            "elapsedMs": 0.936,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 18,
+            "elapsedMs": 0.939,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 19,
+            "elapsedMs": 0.946,
+            "event": "node.end"
+          },
+          {
+            "sequence": 20,
+            "elapsedMs": 0.974,
+            "event": "node.read.start"
+          },
+          {
+            "sequence": 21,
+            "elapsedMs": 0.997,
+            "event": "node.read.null"
+          },
+          {
+            "sequence": 22,
+            "elapsedMs": 1.076,
+            "event": "node.close"
+          },
+          {
+            "sequence": 23,
+            "elapsedMs": 1.078,
+            "event": "reconstruction.reader.read.value"
+          },
+          {
+            "sequence": 24,
+            "elapsedMs": 1.083,
+            "event": "reconstruction.reader.read.start"
+          },
+          {
+            "sequence": 25,
+            "elapsedMs": 1.087,
+            "event": "reconstruction.reader.read.done"
+          }
+        ],
+        "droppedEvents": 0,
+        "node": {
+          "complete": true,
+          "readableEnded": true,
+          "destroyed": true,
+          "aborted": false,
+          "readableLength": 0,
+          "eofInProgress": true
+        },
+        "socket": {
+          "destroyed": false,
+          "readableEnded": false,
+          "eofInProgress": null,
+          "pushCalls": 0,
+          "pushNull": 0,
+          "pushedBytes": 0
+        },
+        "readCalls": 7,
+        "readNull": 6,
+        "readBytes": 28,
+        "readValueCallers": [
+          "effect-node-adapter"
+        ],
+        "pushCalls": 2,
+        "pushNull": 1,
+        "pushedBytes": 28,
+        "bodyReaderCalls": 0,
+        "bodyReadCalls": 0,
+        "bodyReadDone": 0,
+        "bodyReadBytes": 0,
+        "handlerEntered": false,
+        "handlerCompleted": false,
+        "responseFinished": false,
+        "signalAborted": null
+      },
+      "cleanup": {
+        "readerReleased": true,
+        "selectedBodyLocked": false,
+        "readLoopSettled": true,
+        "selectedCancel": "resolved",
+        "originalCancel": "same-body",
+        "companionCancel": "not-distinct",
+        "serverTimerCleared": true,
+        "sourceDataListeners": 0,
+        "sourceReadableListeners": 0
+      }
+    }
+  ],
+  "counterfactual_note": "408 is emitted by the diagnostic route after its800ms deadline; the production defect is a pending body read, not a natural408 response.",
+  "bridge": [
+    {
+      "case": "slow-chunked",
+      "expectedBytes": 30025,
+      "status": 200,
+      "timedOut": false,
+      "reads": 2,
+      "eof": 1,
+      "postRead": 1,
+      "unlocked": true,
+      "signals": [
+        {
+          "id": "slow-chunked",
+          "aborted": false
+        }
+      ],
+      "input_state": [
+        {
+          "id": "slow-chunked",
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "bodyReadBytes": 30025,
+          "bodyReadDone": 1
+        }
+      ]
+    },
+    {
+      "case": "slow-declared",
+      "expectedBytes": 30025,
+      "status": 200,
+      "timedOut": false,
+      "reads": 2,
+      "eof": 1,
+      "postRead": 1,
+      "unlocked": true,
+      "signals": [
+        {
+          "id": "slow-declared",
+          "aborted": false
+        }
+      ],
+      "input_state": [
+        {
+          "id": "slow-declared",
+          "node": {
+            "complete": true,
+            "readableEnded": true,
+            "destroyed": true,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": true
+          },
+          "bodyReadBytes": 30025,
+          "bodyReadDone": 1
+        }
+      ]
+    },
+    {
+      "case": "limit-open-upload",
+      "sentBytes": 65537,
+      "endRequested": false,
+      "status": 413,
+      "timedOut": false,
+      "postRead": 0,
+      "rejected": true,
+      "unlocked": true,
+      "signals": [
+        {
+          "id": "limit-open-upload",
+          "aborted": false
+        }
+      ],
+      "input_state": [
+        {
+          "id": "limit-open-upload",
+          "node": {
+            "complete": false,
+            "readableEnded": false,
+            "destroyed": false,
+            "aborted": false,
+            "readableLength": 0,
+            "eofInProgress": false
+          },
+          "bodyReadBytes": 32761,
+          "bodyReadDone": 0
+        }
+      ]
+    },
+    {
+      "case": "disconnect-partial",
+      "sentBytes": 10,
+      "endRequested": false,
+      "postRead": 0,
+      "rejected": true,
+      "eof": 0,
+      "unlocked": true,
+      "signals": [
+        {
+          "id": "disconnect-partial",
+          "aborted": true
+        }
+      ],
+      "input_state": [
+        {
+          "id": "disconnect-partial",
+          "node": {
+            "complete": false,
+            "readableEnded": false,
+            "destroyed": true,
+            "aborted": true,
+            "readableLength": 0,
+            "eofInProgress": false
+          },
+          "bodyReadBytes": 10,
+          "bodyReadDone": 0
+        }
+      ]
+    }
+  ],
+  "cleanup": [
+    {
+      "listening": false,
+      "diagnosticErrorObserver": true,
+      "trackedSockets": 3,
+      "openOwnedSockets": 0,
+      "remainingObservers": 0
+    },
+    {
+      "listening": false,
+      "diagnosticErrorObserver": true,
+      "trackedSockets": 4,
+      "openOwnedSockets": 0,
+      "remainingObservers": 0
+    },
+    {
+      "listening": false,
+      "diagnosticErrorObserver": true,
+      "trackedSockets": 1,
+      "openOwnedSockets": 0,
+      "remainingObservers": 0
+    },
+    {
+      "listening": false,
+      "diagnosticErrorObserver": true,
+      "trackedSockets": 1,
+      "openOwnedSockets": 0,
+      "remainingObservers": 0
+    },
+    {
+      "listening": false,
+      "diagnosticErrorObserver": true,
+      "trackedSockets": 1,
+      "openOwnedSockets": 0,
+      "remainingObservers": 0
+    },
+    {
+      "listening": false,
+      "diagnosticErrorObserver": false,
+      "trackedSockets": 1,
+      "openOwnedSockets": 0,
+      "remainingObservers": 0
+    },
+    {
+      "listening": false,
+      "diagnosticErrorObserver": true,
+      "trackedSockets": 5,
+      "openOwnedSockets": 0,
+      "remainingObservers": 0
+    }
+  ],
+  "log_integrity": [
+    {
+      "file": "evidence/baseline-job-full.txt",
+      "bytes": 99350,
+      "sha256": "60f7c061538bd69c18ccde8b4989dace6a37bc4099f349fe27d2a34d3d34629b",
+      "git_blob": "e09a758ebb9a2fa01b562cefd77496fc4685c438",
+      "encoding": "UTF-8 decoded GitHub MCP log, exact archived text"
+    },
+    {
+      "file": "evidence/v1-job-full.txt",
+      "bytes": 145790,
+      "sha256": "439eae20c0d8fdbc1a91df487535c951ccf58b449c5bb7ff3edfa4ee587f4167",
+      "git_blob": "0a77fcbc4257e15f1021b1527645b14d34e90e9b",
+      "encoding": "UTF-8 decoded GitHub MCP log, exact archived text"
+    },
+    {
+      "file": "evidence/v2-job-full.txt",
+      "bytes": 121182,
+      "sha256": "14b5c855b8d2bee2df948aaf595d1e13ae1c1558a7d88fc4973c29f402adfa65",
+      "git_blob": "8f618e4f6f948c09e3348fdfdbeb87ed47da0328",
+      "encoding": "UTF-8 decoded GitHub MCP log, exact archived text"
+    }
+  ],
+  "limits": [
+    "No claim that the known defective constructor's inaccessible native tee cancel promise resolved; the two negative controls record pending honestly while releasing reachable readers/timers/listeners and own sockets.",
+    "One-argument positive clone reports cached original stream locked by tee; selected reader completed EOF and its cancel resolved. No extra consumer was attached.",
+    "Source and composition qualification only; browser/native/CLI/provider and final integrated C acceptance remain outside this selection.",
+    "Compiler and guards are REQUESTED_NOT_RUN via45; no local product tests or local heavy checks ran."
+  ],
+  "GLOBAL_RELEASE": false
+}
