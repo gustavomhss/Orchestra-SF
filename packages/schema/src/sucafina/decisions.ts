@@ -16,7 +16,7 @@ import {
   SfSourceInput_sf_scenario_compare,
   SfSourceCaseRead, SfSourceCaseDraft, SfSourceChangePrepare,
   SfSourceQuestionPrepare, SfSourceScenarioResult, SfSourceDomainProjection,
-  SfSourceRecordSource, SfSourceCostCoverageBasis,
+  SfSourceRecordSource, SfSourceCostCoverageBasis, SfSourceEvidenceInput,
 } from "./decisions/source-contracts.ts"
 
 const text = Schema.String.pipe(Schema.minLength(1), Schema.maxLength(16384))
@@ -36,15 +36,15 @@ const recordEvidence = Schema.Struct({
  target:Schema.Struct({surface,recordType:text,recordId:text,incarnation:text,version:nonnegative,fields:Schema.Array(text),period:Schema.optional(period),projectionDigest:text}),
 })
 const coverageEntry = Schema.Union(
- Schema.Struct({status:Schema.Literal("included"),categoryId:text,componentRefs:Schema.Array(text),evidenceRefs:Schema.Array(recordEvidence),scopeNote:Schema.String}),
- Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(recordEvidence)}),
+ Schema.Struct({status:Schema.Literal("included"),categoryId:text,componentRefs:Schema.Array(text),evidenceRefs:Schema.Array(SfSourceEvidenceInput),scopeNote:Schema.String}),
+ Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(SfSourceEvidenceInput)}),
  Schema.Struct({status:Schema.Literal("pending"),categoryId:text,reason:text,questionRef:Schema.optional(text)}),
 )
-const coverageAssessmentBase = {basisId:text,basisVersion:nonnegative,alternativeId:text,alternativeVersion:nonnegative,currency:text,horizon:period,issues:Schema.Array(text),evaluatedSourceRefs:Schema.Array(recordEvidence)}
+const coverageAssessmentBase = {basisId:text,basisVersion:nonnegative,alternativeId:text,alternativeVersion:nonnegative,currency:text,horizon:period,issues:Schema.Array(text),evaluatedSourceRefs:Schema.Array(SfSourceEvidenceInput)}
 const coverageAssessment = Schema.Union(
  Schema.Struct({...coverageAssessmentBase,coverageState:Schema.Literal("complete"),entries:Schema.Array(Schema.Union(
-  Schema.Struct({status:Schema.Literal("included"),categoryId:text,componentRefs:Schema.Array(text),evidenceRefs:Schema.Array(recordEvidence),scopeNote:Schema.String}),
-  Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(recordEvidence)})
+  Schema.Struct({status:Schema.Literal("included"),categoryId:text,componentRefs:Schema.Array(text),evidenceRefs:Schema.Array(SfSourceEvidenceInput),scopeNote:Schema.String}),
+  Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(SfSourceEvidenceInput)})
  )),derivedMissingCategoryIds:Schema.Tuple()}),
  Schema.Struct({...coverageAssessmentBase,coverageState:Schema.Literal("pending","unavailable"),entries:Schema.Array(coverageEntry),derivedMissingCategoryIds:Schema.Array(text)})
 )
@@ -56,15 +56,15 @@ const coverageValue = Schema.Struct({
 const classification = Schema.Struct({
  schema:Schema.Literal("sf-coverage-classification-v1"),caseRef:SfDecisionCaseRef,basis:SfSourceCostCoverageBasis,source:recordEvidence,
  version:nonnegative,mappings:Schema.Array(Schema.Struct({
-   entry:Schema.Struct({status:Schema.Literal("included"),categoryId:text,componentRefs:Schema.Array(text),evidenceRefs:Schema.Array(recordEvidence),scopeNote:Schema.String}),
+   entry:Schema.Struct({status:Schema.Literal("included"),categoryId:text,componentRefs:Schema.Array(text),evidenceRefs:Schema.Array(SfSourceEvidenceInput),scopeNote:Schema.String}),
    components:Schema.Array(Schema.Struct({id:text,currency:text,period,sourceRefs:Schema.Array(SfSourceRecordSource)}))
- })),notApplicableEntries:Schema.optional(Schema.Array(Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(recordEvidence)}))),classificationDigest:digest,
+ })),notApplicableEntries:Schema.optional(Schema.Array(Schema.Struct({status:Schema.Literal("not-applicable"),categoryId:text,justification:text,evidenceRefs:Schema.Array(SfSourceEvidenceInput)}))),classificationDigest:digest,
 })
-const sensitivity = Schema.Struct({baselineRef:text,parameterRef:text,parameterUnit:text,resultUnit:text,engineVersion:text,sourceRefs:Schema.Array(recordEvidence)})
-const criterionRequest = Schema.Struct({caseRef:SfDecisionCaseRef,criterionId:text,metricRef:text,operator:Schema.Literal("lte","gte","eq"),value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(recordEvidence),expectedRuleVersion:nonnegative,sensitivity:Schema.optional(sensitivity)})
+const sensitivity = Schema.Struct({baselineRef:text,parameterRef:text,parameterUnit:text,resultUnit:text,engineVersion:text,sourceRefs:Schema.Array(SfSourceEvidenceInput)})
+const criterionRequest = Schema.Struct({caseRef:SfDecisionCaseRef,criterionId:text,metricRef:text,operator:Schema.Literal("lte","gte","eq"),value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(SfSourceEvidenceInput),expectedRuleVersion:nonnegative,sensitivity:Schema.optional(sensitivity)})
 const criterionValue = Schema.Struct({
  schema:Schema.Literal("sf-criterion-rule-v1"),caseRef:SfDecisionCaseRef,criterionId:text,metricRef:text,operator:Schema.Literal("lte","gte","eq"),
- value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(recordEvidence),sensitivity:Schema.optional(sensitivity),
+ value:Schema.Number,unit:text,period,evidenceRefs:Schema.Array(SfSourceEvidenceInput),sensitivity:Schema.optional(sensitivity),
  ruleRef:text,version,criterionDigest:digest,principalRef:text,accessRevision:text,policyVersion:text,installationId:text,projectId:text,createdAt:text,recordDigest:digest,
 })
 const selectionInput = Schema.Struct({caseRef:SfDecisionCaseRef,baselineAlternativeId:text,alternativeId:text,criteria:Schema.Array(text),expectedVersion:nonnegative})
@@ -82,7 +82,7 @@ const receiptView = Schema.Struct({
 })
 const reviewValue = Schema.Struct({reviewDigest:digest,changeId:text,choiceId:text,surface,
  target:Schema.Struct({type:text,id:text,label:Schema.optional(text)}),
- expectedVersion:nonnegative,state:Schema.Literal("planned","applied","cancelled"),fields:Schema.Array(reviewField),receipt:Schema.optional(receiptView)})
+ expectedVersion:nonnegative,state:Schema.Literal("planned","applied","awaiting-approval","conflict","failed","cancelled"),fields:Schema.Array(reviewField),receipt:Schema.optional(receiptView)})
 const resultFailure = Schema.Struct({
  status:Schema.Literal("needs-input","stale","denied","unavailable","conflict","provider-conflict","failed","invalid"),
  reason:Schema.optional(Schema.String),

@@ -1001,3 +1001,5 @@ const Output___type_88 = Schema.Struct({
 export const SfSourceDomainProjection = Output_DomainProjection_58
 export const SfSourceRecordSource = Output_SourceRef_32
 export const SfSourceCostCoverageBasis = Output_CostCoverageBasis_45
+
+export const SfSourceEvidenceInput = Input_BusinessEvidenceRef
