@@ -1,0 +1,110 @@
+{
+  "mission": 87,
+  "campaign": "sf2h-integral-20261112",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_input": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/87.json@b9935108fccc20776c60e5536a9eeddcbbaa3c83",
+  "mission82_handoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/minimal-first-save/handoff.md@2f824b2126096fbd2ed77891cee269342cf971c4",
+  "actor": {
+    "mission": "S4-A",
+    "model": "GPT-6",
+    "github_authenticated_login": "gustavomhss",
+    "conversation_session_id": "not_exposed",
+    "lease": "first-save-browser87"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "minimal-first-save",
+  "pull_request": 92,
+  "base": "sf2-stack",
+  "starting_head": "dfa65de05a104bd50b4cad7a341eeb811420fdc2",
+  "source": {
+    "head": "f42988d08ff29548bfb2af54c0a6d856315c7487",
+    "tree": "46415d45859bfe682138fcd47705f4bedee2949a",
+    "commits": [
+      "07b11c410c6d1ba42b854fafbeacd66f71e4808b",
+      "f42988d08ff29548bfb2af54c0a6d856315c7487"
+    ],
+    "test_file": "modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+    "test_blob": "566e765f201d1a45677c0c52c75eb92ecb16d482",
+    "producer_changed_by_87": false
+  },
+  "proof": {
+    "failed_first_selection": {
+      "run_id": 43677229458,
+      "job_id": 132699926676,
+      "snapshot": "f2757ad6b55d8d19245b1d9d347233f30230d604",
+      "pass": 5,
+      "fail": 1,
+      "reason": "test expected 503 for missing Idempotency-Key; HTTP admission correctly returned 403; fixed assertion"
+    },
+    "focused": {
+      "run_id": 43677408316,
+      "job_id": 132700463020,
+      "snapshot": "3407ce622dbec4f4a241ecbce8a3688cc4b1ca3c",
+      "run_conclusion": "success",
+      "pass": 6,
+      "fail": 0,
+      "expects": 70,
+      "files": 1,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+          "--timeout",
+          "120000"
+        ]
+      }
+    },
+    "regression": {
+      "run_id": 43677629469,
+      "job_id": 132701135606,
+      "snapshot": "31dea43e98e15be73c9b2487c4ea5c278a36f795",
+      "run_conclusion": "success",
+      "pass": 13,
+      "fail": 0,
+      "expects": 226,
+      "files": 3,
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "./Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+          "./Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+          "./Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "--timeout",
+          "120000"
+        ]
+      }
+    },
+    "method": "existing GitHub Actions test-ci .ci-run.json scoped snapshot; GitHub MCP Git object/branch only",
+    "omni": "not-applicable-focused-no-spawn"
+  },
+  "coverage": {
+    "loss_ack_restart_original_intent": "PASS focused+regression",
+    "equal_text_distinct_keys": "PASS focused+regression",
+    "case_version_advance": "PASS focused+regression",
+    "active_history_parity_and_supersession": "PASS focused+regression",
+    "wrong_actor_key_case_incarnation_or_missing_key": "PASS focused+regression",
+    "recreation": "PASS focused+regression",
+    "revocation_and_case_participant_removal": "PASS focused+regression",
+    "current_dashboard_source_change": "PASS focused+regression",
+    "final_read_reauthorization": "PASS focused+regression",
+    "no_writes_no_redispatch_no_apply_grant_during_lookup": "PASS focused+regression"
+  },
+  "gaps": {
+    "typecheck": "NOT_RUN; no authorized pre-existing surgical GitHub Actions typecheck request; user prohibited local/repo shell and heavyweight epic",
+    "check_guards": "NOT_RUN; same constraint; do not label PASS",
+    "browser_consumer52": "NOT_RUN/NOT_APPLIED; patch supplied only as receipt for owner52",
+    "integrator71_sf2_stack": "NOT_RUN; separate authority and consumption ACK required",
+    "final_release": "NOT_RUN; no GLOBAL_RELEASE"
+  },
+  "next": {
+    "consumer_52": "apply consumer52-adapter.md under UI ownership and prove browser reload",
+    "integrator_71": "consume PR92 two producer-origin commits and this test suite, run composed candidate checks; publish ACK",
+    "dispatcher_45": "include typecheck/check:guards and composed-gates receipts where authorized"
+  },
+  "status": "SOURCE_QUALIFIED_AWAITING_52_AND_71_ACK",
+  "global_release": false
+}
