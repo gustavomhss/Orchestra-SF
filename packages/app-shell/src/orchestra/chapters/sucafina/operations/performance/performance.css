@@ -1,0 +1,26 @@
+/* U31 native contract workspace. No business aggregation on the client. */
+.sf-u31-shell { display:grid;gap:1.25rem;min-width:0; }
+.sf-u31-grid { display:grid;grid-template-columns:minmax(17rem,2fr) minmax(22rem,3fr);gap:1rem;min-width:0; }
+.sf-u31-panel { min-width:0;overflow-wrap:anywhere; }
+.sf-u31-cards { display:grid;gap:.8rem; }
+.sf-u31-item { border:1px solid var(--border, currentColor);border-radius:.6rem;padding:1rem;min-width:0; }
+.sf-u31-item h3 { margin-block-start:0; }
+.sf-u31-item ul { margin-inline-start:1rem;padding-inline-start:1rem; }
+.sf-u31-fieldset { display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:.8rem; }
+.sf-u31-fieldset label { display:grid;gap:.35rem;min-width:0; }
+.sf-u31-fieldset input,.sf-u31-fieldset select,.sf-u31-fieldset textarea {
+  font:inherit;min-height:2.75rem;padding:.5rem;min-width:0;width:100%;
+  max-width:100%;border:1px solid var(--border, currentColor);border-radius:.4rem;
+  background:var(--panel, transparent);color:inherit;
+}
+.sf-u31-fieldset textarea { min-height:6rem;resize:vertical; }
+.sf-u31-actions { display:flex;flex-wrap:wrap;gap:.5rem;margin-block:.7rem; }
+.sf-u31-definitions { display:grid;grid-template-columns:minmax(8rem,1fr) minmax(0,2fr);gap:.4rem .7rem; }
+.sf-u31-definitions dt { font-weight:600; }
+.sf-u31-definitions dd { margin:0;overflow-wrap:anywhere; }
+.sf-u31-rows { overflow-x:auto;max-width:100%; }
+.sf-u31-rows table { width:100%;border-collapse:collapse; }
+.sf-u31-rows th,.sf-u31-rows td { padding:.5rem;text-align:start;border-block-end:1px solid var(--border, currentColor); }
+.sf-u31-error { overflow-wrap:anywhere; }
+@media (max-width:1023px) { .sf-u31-grid { grid-template-columns:minmax(0,1fr); } }
+@media (max-width:479px) { .sf-u31-definitions { grid-template-columns:minmax(0,1fr); } }
