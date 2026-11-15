@@ -1,0 +1,255 @@
+{
+  "schema": "sf2h.native-ui.W07.successor-handoff.e2.v1",
+  "mission": "UX20-W07-R2",
+  "order": "S02",
+  "output": "SfMonthlyGrid",
+  "state": "ARTIFACT_READY",
+  "authoring_complete": true,
+  "integrated": false,
+  "qualified": false,
+  "closed": false,
+  "global_release": false,
+  "branch": "sf-ux-w07",
+  "pr": {
+    "number": 124,
+    "base": "sf2-stack",
+    "expected_state": "open-draft",
+    "intake": "Surgical owned output only; never merge wholesale UX branch"
+  },
+  "writer": {
+    "actor": "ChatGPT GPT-6 W07 e2 successor",
+    "github_actor": "gustavomhss",
+    "effective_model": "GPT-6",
+    "requested_label": "Astra",
+    "runtime_session_id": null,
+    "runtime_session_id_reason": "not exposed",
+    "epoch": "ux-native-w07-e2",
+    "previous_epoch": "ux-native-w07-e1",
+    "previous_epoch_revoked": true,
+    "fence_sha": "3caf1209b6a0faafac24fcd2bf10871119443f9f",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/S0-FENCE-e2.json",
+    "authority": "S0:8852ed4a060f6eb3b49c142b894852d0af49740f",
+    "ack_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/ACK-W07-e2.json",
+    "ack_blob": "b067a234c0ae0dcfeb09cee8d1feae5d710f00d4",
+    "ack_commit": "94a6f9c56db915bdf6bde642d907efff8ce8cb51",
+    "lease_terminal": "ARTIFACT_READY_HANDOFF_TO_114; no integrated/qualified release; new actor requires new bounded epoch/lease"
+  },
+  "material": {
+    "fence_head": "3caf1209b6a0faafac24fcd2bf10871119443f9f",
+    "fence_tree": "0746c30ad7cd22830f8ac7902294676a383c165a",
+    "ack_commit": "94a6f9c56db915bdf6bde642d907efff8ce8cb51",
+    "installed_commit": "a10c880807031f2b40523f1c646749a74a543919",
+    "fix_commit": "aa23f73d742a99266f71e430ab707ecea07f4c81",
+    "output_code_tree": "6dab39b4f13b3a82685e9e2cef1cd09f34ab09aa",
+    "all_writes": "CAS expected-head force=false"
+  },
+  "authoring": {
+    "allowlist": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/**",
+      "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+      "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/**"
+    ],
+    "written_files": [
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/types.ts",
+        "preimage": null,
+        "postimage": "c6764437b9021c4eccae91329df7f4710409eefe",
+        "staged_blob": "c6764437b9021c4eccae91329df7f4710409eefe"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+        "preimage": null,
+        "postimage": "8da2af9dd881d5879eb89b6bd83e073697fe4a10",
+        "staged_blob": "116584617a26e21d48952ce0d5767d804e73f0fd",
+        "update": "fix focus/copy/privacy/performance/overlapping apply"
+      },
+      {
+        "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/monthly-grid.css",
+        "preimage": null,
+        "postimage": "81849360c8972c68edf5c1e5e8d00a903257f084",
+        "staged_blob": "81849360c8972c68edf5c1e5e8d00a903257f084"
+      },
+      {
+        "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-s02.ts",
+        "preimage": null,
+        "postimage": "2ce5a8747c99df7aff33bce7b0a41172664bd498",
+        "staged_blob": "2ce5a8747c99df7aff33bce7b0a41172664bd498"
+      },
+      {
+        "path": "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+        "preimage": null,
+        "postimage": "a32178e91f85119c8d111c169899b0e2303c529b",
+        "staged_blob": "232365ecba46cb94933618ff97932dfeb9119a83",
+        "update": "hosted DOM cases for focus/Escape/copy/Shift+Tab/applying; i18n intl mock"
+      }
+    ],
+    "shared_direct_writes": false,
+    "generated_direct_writes": false
+  },
+  "sources": {
+    "product_material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021",
+    "source_pins_verified": {
+      "modules/sucafina/Sucafinav1/product/planner/monthly-edit.ts": "8cbcb05fb09b3a5edff59e6e76a9c8f9beafd3a1",
+      "modules/sucafina/Sucafinav1/product/planner/monthly-host.ts": "b8bdf6ef06a9883952faa010efdec80f8d3b69d5",
+      "modules/sucafina/Sucafinav1/product/interface/planner-http.ts": "2befb1d4c7964b30830311abe1c93c7c575b8f70"
+    },
+    "contract_blobs": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1"
+    },
+    "detected_drift": "None on the S02-consumed pinned producer blobs and frozen contract blobs; integration still needs composed tree verified by 114"
+  },
+  "public_contract": {
+    "entrypoint": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+    "value_export": "SfMonthlyGrid",
+    "type_exports": [
+      "SfMonthId",
+      "SfMonth",
+      "SfCellCoordinate",
+      "SfCellValue",
+      "SfGridCell",
+      "SfDraftCell",
+      "SfGridNavigation",
+      "SfGridRange",
+      "SfPasteMeasure",
+      "SfPasteCell",
+      "SfPasteRow",
+      "SfPasteState",
+      "SfPasteRequest",
+      "SfMonthlyGridProps"
+    ],
+    "leaf_copy": "SF_S02_COPY",
+    "leaf_copy_pt_br": "SF_S02_COPY_BR",
+    "effect_owner": "Caller A02 owns authorized preview/apply, row revisions/CAS, result mapping, no client-side financial domain"
+  },
+  "acceptance": {
+    "S02-AC01": {
+      "artifact": "AUTHORED",
+      "proof": "NOT_RUN",
+      "cases": [
+        "keyboard arrows/Tab/Enter/F2/Escape, Shift selection, Home/End/PageUp/Down no wrapping",
+        "edit permissions/closed/actual/read-only",
+        "zero/missing/null/inherited explicitly",
+        "320px alternate with all months"
+      ]
+    },
+    "S02-AC02": {
+      "artifact": "AUTHORED",
+      "proof": "NOT_RUN",
+      "cases": [
+        "pure Solid props and callbacks, no Core/Server producer import or parallel financial arithmetic"
+      ]
+    },
+    "S02-AC03": {
+      "artifact": "AUTHORED",
+      "proof": "NOT_RUN",
+      "cases": [
+        "TSV exact CRLF and trailing empty",
+        "overflow/shape error retains literal",
+        "producer-supplied row status/issue/revision",
+        "partial apply ready only and explicit retry failed/conflict",
+        "mobile multi-line paste path"
+      ]
+    },
+    "WP01.T02": {
+      "artifact": "AUTHORED",
+      "proof": "NOT_RUN"
+    },
+    "WP03.T02": {
+      "artifact": "AUTHORED",
+      "proof": "NOT_RUN"
+    }
+  },
+  "validation": {
+    "local_tests": false,
+    "local_parser": false,
+    "local_typecheck": false,
+    "actions_run": false,
+    "compiler_run": false,
+    "tests_status": "NOT_RUN",
+    "test_owner": "120 / PR106",
+    "test_selection": [
+      "packages/app-shell/test-browser/sucafina-native/s02.test.ts"
+    ],
+    "typecheck_owner": "119 / PR107",
+    "typecheck_packages": [
+      "packages/app-shell"
+    ],
+    "guard_owner": "119",
+    "dedup": "Only valid same-C/tree/runtime/config/fixture selection; do not inherit old green"
+  },
+  "integration": {
+    "sole_owner": "114 / S0-C-e17-browser114 / PR65",
+    "depends_on": [
+      "F01 public @orchestra/schema/sucafina/context",
+      "F03 shared state/copy and visual shell",
+      "A02/W15 monthly adapter and authorized preview/apply mapping",
+      "114 main i18n registry composition"
+    ],
+    "shared_patch": {
+      "target": "packages/app-shell/src/i18n/orchestra.ts",
+      "original_preimage": "2eeaa42e02a45b3301fc765c6c92635af5101079",
+      "stale_preimage_needs_reconciliation": true,
+      "proposed_postimage": "b2ed4f1adbaab1b6469c53f52e6b484cd24f0029",
+      "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/shared/orchestra.ts.patch.txt",
+      "full_postimage_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W07/shared/orchestra.ts.postimage.txt",
+      "writer": "114 ONLY"
+    },
+    "consumer_wiring": {
+      "component_import": "import { SfMonthlyGrid } from \"@/orchestra/chapters/sucafina/shared/monthly-grid\"",
+      "i18n_import": "import { SF_S02_COPY, SF_S02_COPY_BR } from \"./orchestra-chapters/sf-s02\"",
+      "i18n_spreads": [
+        "...SF_S02_COPY",
+        "...SF_S02_COPY_BR"
+      ],
+      "callback_requirements": [
+        "A02 reads SfPasteRequest {range,originalTsv}, producer parses raw TSV/revision",
+        "A02 converts zero-based month to MonthlyDraft month+1 exactly once",
+        "A02 sends only admitted ready rows to planner.monthly.apply with original row revision",
+        "On conflict/failed require current authorized source reread then explicit human retry; never auto replay unknown mutation"
+      ]
+    }
+  },
+  "known_gaps": [
+    {
+      "code": "FROZEN_CONTRACT_DISPLAY_GAP",
+      "owner": "114 + A02 + contract authority",
+      "reason": "SfPasteState has original TSV, per-row issues/revision and statuses, but not producer before/after grid snapshots. Present real before/after in authorized A02 review surface or controlled contract amendment; do not infer numbers in S02."
+    },
+    {
+      "code": "BLOCKED_INTEGRATION",
+      "owner": "114",
+      "reason": "F01/F03/A02 and central orchestra.ts i18n registration not installed/composed on isolated W07 branch; keep output independent pending intake."
+    },
+    {
+      "code": "NOT_QUALIFIED",
+      "owner": "120 +119",
+      "reason": "Hosted DOM selection and compiler/guards not run; no test claim from this author."
+    }
+  ],
+  "invariants": [
+    "0 is known numeric zero; null/unavailable/inherited explicit",
+    "Months remain 0..11 in UI, A02 maps once to 1..12",
+    "No Number/parseFloat in browser for financial input, no formulas or implicit save",
+    "No auto retry for network mutations or unknown outcomes",
+    "Authorized private projections disappear on denied/session-expired; local text also cleared",
+    "No hidden grants, metadata fallback, fake receipts, mock authorization, finance engine, local test, force, merge or deploy"
+  ],
+  "recipients": [
+    "114 / PR65 / I00",
+    "A02 / W15",
+    "F01 / W02",
+    "F03 / W04",
+    "120 / PR106",
+    "119 / PR107"
+  ],
+  "successor_lease_note": "W07 e2 artifact complete. 114 may take surgical copy of exclusive leaves after ownership/contract reconciliation; do not treat this status as consumer ACK or C-wide release."
+}
