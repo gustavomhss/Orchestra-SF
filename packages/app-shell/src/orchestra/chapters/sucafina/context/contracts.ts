@@ -5,7 +5,7 @@ import type {
   SfResolvedRoute, SfVersion, SurfaceId, SfRef, SfOperationId,
 } from "@orchestra/schema/sucafina/context"
 import type { SfJson } from "@orchestra/schema/sucafina/common"
-import type { SfTransport } from "@orchestra/sdk-next/sucafina/transport"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared/draft"
 
 export type {
