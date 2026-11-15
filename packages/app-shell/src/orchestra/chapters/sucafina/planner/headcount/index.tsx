@@ -366,7 +366,10 @@ export function SfPlannerHeadcountView(props: SfSurfaceProps<"CAP20">): JSX.Elem
     { id: "version", label: msg("sf.u08.version"), value: { kind: "data" as const, text: state.page?.data.selectedVersion?.name ?? "" } },
   ]
   const reviewFields = () => baseFields()
-  const canReview = () => !!state.review && !state.busy && !state.uncertainty && state.review.version >= 0
+  // The canonical CAP20 page does not supply a roster impact preview. S03 must
+  // block confirmation rather than fabricate a diff or apply blind HR sync.
+  const canReview = () => !!state.review && state.review.kind !== "sync" &&
+    !state.busy && !state.uncertainty && state.review.version >= 0
   const currentReview = () => state.review
   return (
     <SfPageFrame
