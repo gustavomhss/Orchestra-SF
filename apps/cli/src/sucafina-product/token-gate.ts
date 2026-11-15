@@ -162,7 +162,9 @@ export function createSfTokenGate(input: SfTokenGateStorage & { upstream: Node.L
           const model = yield* original.resolve(session)
           if (!maestroSame(yield* store.get(session.id), native) || !(yield* maestroCheck(native))) return yield* unavailable(session)
           const previous = maestroModels.get(model)
-          if (previous && previous !== native) return yield* unavailable(session)
+          if (previous && previous !== native && maestroAlive(previous)) return yield* unavailable(session)
+          // Prior Request was revoked/expired. A fresh, separately authenticated
+          // human continuation may replace its stale Model association only then.
           maestroModels.set(model, native)
           return model
         }
