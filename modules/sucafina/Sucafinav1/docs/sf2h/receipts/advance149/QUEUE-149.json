@@ -1,0 +1,307 @@
+{
+  "schema": "sf2h.compiler149.causal-queue.v1",
+  "epoch": "compiler-e3-browser149",
+  "authority_commit": "4f5b7c45329cf12d38136c7775859a1e03d5ab14",
+  "integrator": 132,
+  "compiler": 149,
+  "product_ci": 150,
+  "scope": "compilation, generated SDK, builder/guards; not product tests",
+  "audited_snapshot": {
+    "branch": "sf2-stack",
+    "sha": "926d82978652423ce8e211afd69c3d4dcb8c08e8",
+    "tree": "3fe88646d351cdccd80f7ab84041cf626b1db6a7",
+    "checked_files": 23,
+    "counts": {
+      "PREIMAGE_STILL_PRESENT": 19,
+      "ABSENT": 3,
+      "OTHER_RECONCILE": 1
+    },
+    "source_c64": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "note": "File blobs pinned to this exact historical consumer snapshot. Never promote to a later moving head."
+  },
+  "later_observation": {
+    "head": "0efd4289f3c05cc2e79d125938deb7388bbc956c",
+    "tree": "d41deedac4f2f917adb25efa29d619f030b24d2d",
+    "context_blob": "423050658692902ddb94358574762906fc06ccff",
+    "protocol_blob": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+    "sdk_query_repair_test": null,
+    "correction136_integrated": false
+  },
+  "source_intake": [
+    {
+      "mission": 133,
+      "path": "packages/schema/src/sucafina/planner.ts",
+      "expected_preimage": "30cd40e03ffb3d557243e26f772bdb3c7d5ae50c",
+      "expected_postimage": "8ecb147aacd13e089ee0a39824fc823e9801bd41",
+      "observed_blob": "30cd40e03ffb3d557243e26f772bdb3c7d5ae50c",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 133,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts",
+      "expected_preimage": "c35902310ce26be830d5aaaecde8603bb1bd2971",
+      "expected_postimage": "1630180b74a5775280e4c90038849f9df99b87ff",
+      "observed_blob": "c35902310ce26be830d5aaaecde8603bb1bd2971",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 134,
+      "path": "packages/schema/src/sucafina/decisions/source-contracts.ts",
+      "expected_preimage": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+      "expected_postimage": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+      "observed_blob": "f18a08ce25194864dfa0a54f39d7c16c4472d699",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 134,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "expected_preimage": "c530f05ffe4afa96e4b489eda62764dbdf37d572",
+      "expected_postimage": "6183175ebce968280b61668085d27771697a4b64",
+      "observed_blob": "c530f05ffe4afa96e4b489eda62764dbdf37d572",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 135,
+      "path": "packages/schema/src/sucafina/portfolio.ts",
+      "expected_preimage": "2ba680ae66d493b8f04c5d921773ac3a56f66829",
+      "expected_postimage": "708731dbbaf1fe69664715a4f34007976a4b0476",
+      "observed_blob": "2ba680ae66d493b8f04c5d921773ac3a56f66829",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 135,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/portfolio.test.ts",
+      "expected_preimage": "5453346c462d1f0f3e21db5b3822c502713ab294",
+      "expected_postimage": "3820d0dea2470e7ad620bbf48ee50120ccdaece6",
+      "observed_blob": "5453346c462d1f0f3e21db5b3822c502713ab294",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 136,
+      "path": "packages/schema/src/sucafina/context.ts",
+      "expected_preimage": "423050658692902ddb94358574762906fc06ccff",
+      "expected_postimage": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+      "observed_blob": "423050658692902ddb94358574762906fc06ccff",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 136,
+      "path": "packages/protocol/src/groups/sucafina.ts",
+      "expected_preimage": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+      "expected_postimage": "1fe0f77985758d0f5cee037db6a308934c85de0f",
+      "observed_blob": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 136,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/sdk-query-repair.test.ts",
+      "expected_preimage": null,
+      "expected_postimage": "d0d54dca9245feb151f9f6cf6015f344cfe741e2",
+      "observed_blob": null,
+      "observation_status": "ABSENT"
+    },
+    {
+      "mission": 137,
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "expected_preimage": "860d44eb7c215aafe05eba0df265a721c563c148",
+      "expected_postimage": "17db52d914ca49934953e1161461b03856eb29c5",
+      "observed_blob": "860d44eb7c215aafe05eba0df265a721c563c148",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 137,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "expected_preimage": "7fe06cad2bff509039e1a093bbd6224d2fd2c262",
+      "expected_postimage": "0789f34911cd97d82a870dcee2f17fa37c8b4578",
+      "observed_blob": "7fe06cad2bff509039e1a093bbd6224d2fd2c262",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 138,
+      "path": "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+      "expected_preimage": "0751e4861ab025a7bfc0f132fb24409fd29f8198",
+      "expected_postimage": "59013743317453a390e8092b2c8a49713eaf17cc",
+      "observed_blob": "0751e4861ab025a7bfc0f132fb24409fd29f8198",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 138,
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts",
+      "expected_preimage": "75df2cfc7a28cb6e0f545d7ac91a63b165a6a511",
+      "expected_postimage": "a2554957371a7fc1dcaa63a41ad2815f95252e45",
+      "observed_blob": "75df2cfc7a28cb6e0f545d7ac91a63b165a6a511",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 139,
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+      "expected_preimage": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+      "expected_postimage": "5523d9cc6680f8461e4f2a5ef31c687a7432dfbd",
+      "observed_blob": "eec796343345a7ce7b3d30f4b86055000b6847c2",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 139,
+      "path": "packages/app-shell/test-browser/sucafina-native/s01.test.ts",
+      "expected_preimage": "f0323b6b0711f7b034686214b1371747351a492d",
+      "expected_postimage": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+      "observed_blob": "f0323b6b0711f7b034686214b1371747351a492d",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 140,
+      "path": "packages/app-shell/test-browser/sucafina-native/page-frame.test.ts",
+      "expected_preimage": null,
+      "expected_postimage": "aa17ece934eb35f54602b6de99bcc39da39d1fed",
+      "observed_blob": "0d0cd166eda9c2f81d2a77e034c89c0206c78c0f",
+      "observation_status": "OTHER_RECONCILE"
+    },
+    {
+      "mission": 140,
+      "path": "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+      "expected_preimage": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+      "expected_postimage": "f7d032d5fdded022f40270727035577ae08228db",
+      "observed_blob": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 140,
+      "path": "packages/app-shell/test-browser/sucafina-native/platform-fixture.ts",
+      "expected_preimage": null,
+      "expected_postimage": "72bc7ed9ca0e5a3a295d99c6b147daf8f0aaae15",
+      "observed_blob": null,
+      "observation_status": "ABSENT"
+    },
+    {
+      "mission": 141,
+      "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+      "expected_preimage": "8da2af9dd881d5879eb89b6bd83e073697fe4a10",
+      "expected_postimage": "dc4410482ac81171d2c779c2a93240c236a42dc2",
+      "observed_blob": "8da2af9dd881d5879eb89b6bd83e073697fe4a10",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 141,
+      "path": "packages/app-shell/test-browser/sucafina-native/s02.test.ts",
+      "expected_preimage": "a32178e91f85119c8d111c169899b0e2303c529b",
+      "expected_postimage": "ea1a18fe9c5b39d6ed7c719fe8cf3f2916ab1d5e",
+      "observed_blob": "a32178e91f85119c8d111c169899b0e2303c529b",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 142,
+      "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "expected_preimage": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+      "expected_postimage": "2cae2a7f0a8b76f4759572099d8e27729c698b98",
+      "observed_blob": "3884ad35c7b471d2805d7444d24c4143b86ce197",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 142,
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "expected_preimage": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+      "expected_postimage": "ac73b9edc44bd5c8a616ce583084969d2a69e771",
+      "observed_blob": "7fa9c254c7c08b894d8b4c3336653c32b6270126",
+      "observation_status": "PREIMAGE_STILL_PRESENT"
+    },
+    {
+      "mission": 142,
+      "path": "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/print-layout.test.ts",
+      "expected_preimage": null,
+      "expected_postimage": "c53bdee17904f5a5e082ee9f2cae3b209c9002b5",
+      "observed_blob": null,
+      "observation_status": "ABSENT"
+    }
+  ],
+  "cohorts": [
+    {
+      "id": "sdk-repair-136",
+      "root_cause": "top-level query Schema.Union not a generator-compatible struct",
+      "depends_on": "132 consumer ACK with exact integrated 136 context, protocol, test blobs and coherent C/tree",
+      "commands": [
+        "packages/client: bun run generate",
+        "git diff --binary generated and generated-effect in disposable hosted checkout",
+        "packages/schema: bun typecheck",
+        "packages/protocol: bun typecheck",
+        "packages/server: bun typecheck",
+        "packages/client: bun typecheck"
+      ],
+      "status": "NOT_RUN",
+      "handoff_to": "132 exact SDK generated patch, source/pre/post hashes and original logs; no manual edits"
+    },
+    {
+      "id": "typed-fixes-133-135-137-138",
+      "depends_on": "132 admitted exact leaf diffs and consumer ACK, with I00 produced bindings",
+      "commands": [
+        "packages/schema: bun typecheck",
+        "packages/client: bun typecheck",
+        "modules/sucafina: bun typecheck",
+        "apps/cli: bun typecheck"
+      ],
+      "status": "NOT_RUN",
+      "dedupe": "single product SHA+scoped command, no duplicated per author"
+    },
+    {
+      "id": "app-fixes-139-141-and-140",
+      "depends_on": "132 admitted real app UI/fixtures plus host/I00",
+      "commands": [
+        "packages/app-shell: bun typecheck",
+        "packages/app-shell: bun run typecheck:sf-e2e --showConfig",
+        "packages/app-shell: bun run typecheck:sf-e2e --listFiles --pretty false",
+        "strict canonical e2e compiler evidence verifier"
+      ],
+      "status": "NOT_RUN",
+      "product_tests": "150 only"
+    },
+    {
+      "id": "new-source-guard-spawn",
+      "depends_on": "same coherent composed SHA with actual source diff vs origin/dev",
+      "commands": [
+        "bun run check:guards --base origin/dev",
+        "bun run check:spawn-imports"
+      ],
+      "status": "NOT_RUN",
+      "guards_open": "C64: 56 GATE; 55 historical logs and one native scratch; no self-approval/waiver"
+    },
+    {
+      "id": "bundle-yaml",
+      "depends_on": "test-ci source changes or 132 actual consumption of original generated bundle",
+      "commands": [],
+      "status": "C64_GENERATED_ARTIFACT_REUSE_ONLY_NO_REEXECUTION",
+      "source_test_ci_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+      "generated_yml_sha256": "c6c0e2583a5be2bb393d3db832232c6625ceb28370bf1f7f815eb3a661b77394",
+      "generated_yml_bytes": 57314,
+      "existing_yml_bytes": 54846,
+      "patch_sha256": "559b5b34a69ace7ee69b641909a4fa7da28d033a4",
+      "artifact_id": 14171118214,
+      "owner_to_consume": 132
+    },
+    {
+      "id": "unchanged-C64",
+      "depends_on": "none",
+      "commands": [],
+      "status": "NO_DUPLICATE_RUN",
+      "reason": "No causal input change, no cross-SHA PASS; Atlas generated v2 and other old PASS are historical only"
+    }
+  ],
+  "history": {
+    "source_sha": "8f933d3249f49e1234b745036672d7c7a6aabcd4",
+    "run_id": 43738074189,
+    "job_id": 132884987559,
+    "artifact_id": 14171118214,
+    "pass": 15,
+    "fail": 8,
+    "guard_gates": 56,
+    "sdk": "FAILED",
+    "bundle": "DRIFT",
+    "counts_are_historical": true
+  },
+  "dispatch": {
+    "status": "NOT_RUN",
+    "why": "Compiler wrapper on sf-compiler-checks still pins C64; 136 not in consumer head; receipt commits deliberately [skip ci]",
+    "rule": "Repin SHA/tree to a coherent consumed 132 C only, dispatch existing hosted compiler once for causally changed inputs",
+    "force": false
+  },
+  "global_release": false,
+  "goal": "paused"
+}
