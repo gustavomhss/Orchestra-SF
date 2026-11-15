@@ -1,0 +1,38 @@
+{
+  "schema": "sf2h.correction-author-checkpoint.v1",
+  "mission": 133,
+  "epoch": "ux-native-w15-e3",
+  "branch": "sf-ux-w15",
+  "pr": 116,
+  "state": "AUTHORING_COMPLETE_ARTIFACT_READY_UNINTEGRATED",
+  "head_at_handoff": "a202422d2d1a318ae3291165b75fa326b8d5f65f",
+  "product_commit": "304cbf337f15d9dff59fa25bd0c31f6ab62bc3cb",
+  "regression_commit": "a202422d2d1a318ae3291165b75fa326b8d5f65f",
+  "paths": [
+    "packages/schema/src/sucafina/planner.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/planner.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/ACK.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/EVIDENCE.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/PATCH-132.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/HANDOFF.md",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction133/CHECKPOINT.json"
+  ],
+  "consumer": {
+    "mission": 132,
+    "pr": 65,
+    "status": "AWAITING_REAL_ACK"
+  },
+  "compiler": {
+    "mission": 128,
+    "pr": 107,
+    "status": "NOT_RUN_FOR_E3"
+  },
+  "product_ci": {
+    "mission": 129,
+    "pr": 106,
+    "status": "NOT_RUN_FOR_E3"
+  },
+  "global_release": false,
+  "goal": "paused",
+  "handoff": "No additional writer; protected paths unchanged"
+}
