@@ -1,5 +1,5 @@
 import { A } from "@solidjs/router"
-import { createEffect, createMemo, createSignal, For, onCleanup, Show } from "solid-js"
+import { createEffect, createSignal, onCleanup, Show } from "solid-js"
 import { createStore } from "solid-js/store"
 import type { JSX } from "solid-js"
 import type { Schema } from "effect"
@@ -11,7 +11,7 @@ import { SfPlanner } from "@orchestra/schema/sucafina/planner"
 import { useSfContext } from "../../context"
 import type { SfEditScopeKey, SfIntentRef, SfRef, SfVersion, SfSurfaceProps } from "../../context/contracts"
 import { SfPageFrame } from "../../shared/frame"
-import type { SfAction, SfCopyKey, SfUiState } from "../../shared/frame"
+import type { SfCopyKey, SfUiState } from "../../shared/frame"
 import { SfStatePanel } from "../../shared/states"
 import { SfDataTable } from "../../shared/table"
 import type { SfSort } from "../../shared/table"
@@ -52,18 +52,16 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     busy: boolean
     problem: string | null
     lockedOutcome: boolean
-    revision: number
   }>({
     state: "loading", page: null, filter: props.route.query.filter ?? "",
     collection: props.route.kind === "allocation" ? "allocations" : "entities",
     selected: props.route.kind === "entity" ? props.route.params.entityRef
       : props.route.kind === "allocation" ? props.route.params.allocationRef : null,
     sort: { kind: "none" }, intent: null, busy: false, problem: null,
-    lockedOutcome: false, revision: 0,
+    lockedOutcome: false,
   })
   const [draft, setDraft] = createSignal<SfPublicDraftController<RecordDraft> | null>(null)
   const [newIntent, setNewIntent] = createSignal<SfIntentRef | null>(null)
-  const [draftVersion, setDraftVersion] = createSignal<SfVersion | null>(null)
   const canRead = () => host.ready()?.context.destinations.some(
     (item) => item.capabilityId === "CAP21" && item.canRead,
   ) === true
@@ -117,7 +115,10 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     if (!owner || !canRead()) return
     const client = createSfPlannerClient(owner.transport)
     const query = props.route.query.year === undefined ? {} : { year: props.route.query.year }
-    const result = await client["domain.page.CAP21"](query, { signal })
+    const result = await client["domain.page.CAP21"](query, { signal }).catch(() => {
+      console.error("N20 CAP21: authorized source read failed")
+      return { kind: "transport-error", reason: "network" } as const
+    })
     if (signal.aborted || host.generation() !== generation || !host.ready()) return
     if (result.kind !== "response") {
       setScreen("state", "unavailable")
@@ -171,8 +172,8 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
     const generation = host.generation()
     const year = props.route.query.year
     const controller = new AbortController()
-    if (status !== "ready" || !host.ready()) {
-      setScreen({ page: null, state: status === "denied" ? "denied" : "loading", intent: null })
+    if (status !== "ready" || !host.ready() || !canRead()) {
+      setScreen({ page: null, state: status === "denied" || status === "ready" ? "denied" : "loading", intent: null })
       setDraft(null)
     } else {
       void read(controller.signal, generation)
@@ -215,7 +216,6 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
         : { detail: row ? selectedDetail(row, collection) : "" }),
     }
     const version = row ? versionFor(collection, row.id) : null
-    setDraftVersion(version)
     const controller = owner.drafts.acquire<RecordDraft>({
       surfaceId: "CAP21", editScopeKey: "shared-catalog" as SfEditScopeKey,
       identity: row ? { kind: "record", recordRef: ref(row.id) }
@@ -282,7 +282,10 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
               ...(payload?.detail === undefined ? {}
                 : intent.collection === "entities" ? { code: payload.detail } : { desc: payload.detail }),
             },
-          }, options)
+          }, options).catch(() => {
+          console.error("N20 CAP21: command delivery failed; outcome unconfirmed")
+          return { kind: "transport-error", reason: "outcome-unknown" } as const
+        })
     if (host.generation() !== generation || !host.ready()) return
     setScreen("busy", false)
     if (result.kind !== "response") {
@@ -505,8 +508,8 @@ export function SfAllocationsView(props: SfSurfaceProps<"CAP21">): JSX.Element {
                   base={revisionSnapshot()} current={revisionSnapshot()} proposed={proposedSnapshot()}
                   effects={[]}
                   coverage={{
-                    state: "complete", summary: { key: key("sf.cap21.shared") },
-                    reasons: [], knownCount: 1, expectedCount: 1,
+                    state: "partial", summary: { key: key("sf.common.partial") },
+                    reasons: [], knownCount: null, expectedCount: null,
                   }}
                   blockingReasons={[]}
                   confirmation={{
