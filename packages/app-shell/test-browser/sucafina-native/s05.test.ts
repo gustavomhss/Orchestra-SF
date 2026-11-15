@@ -168,6 +168,8 @@ test("S05 thread preserves exact content, incarnation and version; unknown outco
     view.set("state", "ready")
     expect(view.host.textContent).not.toContain("Private discussion body")
     expect(view.host.querySelector<HTMLTextAreaElement>("textarea")?.value).toBe("  Next owner\nstill exact  ")
+    expect(edits).toEqual(["new comment"]) // changing owner cannot synthesize an edit
+    expect(posts).toHaveLength(1) // changing owner cannot replay a POST
     view.button("Post comment").click()
     expect(posts).toEqual([
       { threadRef: ref("thread-1"), incarnation: "incarnation-canonical", expectedVersion: 7, text: "  Keep whitespace  " },
