@@ -41,7 +41,7 @@ export function findSubmittedPr(page: Cap26PageOk, requestRef: string): PrLookup
   if (request.status !== "pr_pending") return { kind: "not-submitted", status: request.status }
 
   const version = page.value.versions["requests:" + requestRef]?.version
-  if (!Number.isSafeInteger(version) || version === undefined || version < 0)
+  if (typeof version !== "number" || !Number.isSafeInteger(version) || version < 0)
     return { kind: "source-unavailable", reason: "version" }
 
   const steps = request.prApproval?.steps
@@ -61,7 +61,7 @@ export function findSubmittedPr(page: Cap26PageOk, requestRef: string): PrLookup
     return { kind: "source-unavailable", reason: "group" }
 
   const amount = request.prApproval?.amount
-  if (amount === undefined || !Number.isFinite(amount))
+  if (typeof amount !== "number" || !Number.isFinite(amount))
     return { kind: "source-unavailable", reason: "amount" }
 
   const actions = (["approve", "reject"] as const).filter((action) =>
