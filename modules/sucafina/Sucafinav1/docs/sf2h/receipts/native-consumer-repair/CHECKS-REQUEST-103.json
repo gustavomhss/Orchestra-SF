@@ -1,0 +1,67 @@
+{
+  "schema": "sf2h-m103-ci-request-v1",
+  "mission": 103,
+  "source_W": "e957f66b00a3b05265e42d46e1d88201dea3e770",
+  "source_tree": "e4b359fea9157da76b6ae77cb558a34e6577232a",
+  "branch": "native-runtime-finish",
+  "ci_dispatcher": 101,
+  "dispatcher_pr": 106,
+  "case": "C51 run43682450677/job132715786509 failed five import screens before test bodies",
+  "request": {
+    "interface": "test:ci/request",
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "os": "linux",
+    "args": [
+      "./Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "./Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "./Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+      "./Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+      "./Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "./Sucafinav1/test/product/native-consumer-repair/observe.test.ts",
+      "./Sucafinav1/test/product/native-consumer-repair/deadline.test.ts"
+    ],
+    "env": {}
+  },
+  "expected": {
+    "exact_existing_specs": 5,
+    "new_negative_specs": 2,
+    "first_gate": "all seven test files import, no named export syntax error",
+    "additional": "bounds/lease/deadline/revoke/dispose/late-read/callback/history-only; do not claim native installed C15"
+  },
+  "deduplicate_by": [
+    "W",
+    "tree",
+    "request args",
+    "OS",
+    "runner",
+    "environment"
+  ],
+  "action": "REQUESTED_NOT_RUN",
+  "S": null,
+  "run": null,
+  "job": null,
+  "attempt": null,
+  "compiler_guard_request": {
+    "owner": 45,
+    "compiler": [
+      {
+        "cwd": "apps/cli",
+        "command": "bun typecheck"
+      },
+      {
+        "cwd": "modules/sucafina",
+        "command": "bun typecheck"
+      }
+    ],
+    "guards": [
+      {
+        "cwd": "repository root",
+        "command": "bun run check:guards --base origin/dev"
+      }
+    ],
+    "status": "REQUESTED_NOT_RUN"
+  },
+  "no_epic_or_global_release": true
+}

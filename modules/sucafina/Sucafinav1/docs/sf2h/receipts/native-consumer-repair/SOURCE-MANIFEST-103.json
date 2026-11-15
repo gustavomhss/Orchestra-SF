@@ -1,0 +1,111 @@
+{
+  "schema": "sf2h-native-consumer-repair-source-v1",
+  "mission": 103,
+  "branch": "native-runtime-finish",
+  "pr": 96,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "8819df6169abd94aaa89d50a21f113e5596d2aae",
+  "ack_commit": "058f29cc3aafeaa6551fb0e3654b2bbf8e431a2c",
+  "lease_epoch": "native-consumer-browser103",
+  "actor": "S0-B",
+  "effective_model": "GPT-6",
+  "session_id": "not exposed",
+  "source_W": "e957f66b00a3b05265e42d46e1d88201dea3e770",
+  "source_tree": "e4b359fea9157da76b6ae77cb558a34e6577232a",
+  "source_parent": "058f29cc3aafeaa6551fb0e3654b2bbf8e431a2c",
+  "target_ref": "sf2-stack",
+  "target_C_observed": "d083b422b6a587f47873abde4d866e35017ff8b8",
+  "target_C_tree": "91bc193b36fc46f09a9415e0b849e02503124a22",
+  "last_material_C51": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "current_C_preimage_matches": true,
+  "new_tests_absent_from_target": true,
+  "files": {
+    "apps/cli/src/sucafina-product/routine-native-origin.ts": {
+      "pre": "da69328f9e8aa4d68a08faf7c858ccae9d5c0e5b",
+      "post": "0d34ddeb14e9da525d6acc4960a54f35be18d577",
+      "operation": "modify",
+      "owner": "103 native consumer",
+      "scope": "export API; default max 30s; expire pending origin before awaits"
+    },
+    "apps/cli/src/sucafina-product/routine-native-registry.ts": {
+      "pre": "a6e4f6580cf5380d637ae5add2e7317606ccbf38",
+      "post": "b5a92ee1653873463e85e2445919c85828c7ef4d",
+      "operation": "modify",
+      "owner": "103 native consumer",
+      "scope": "expire pending historical attestations before awaits"
+    },
+    "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/observe.test.ts": {
+      "pre": null,
+      "post": "4a6198381e64f097dc0bcb941d60482cf1d037d1",
+      "operation": "add",
+      "owner": "103 native consumer tests",
+      "scope": "API import/fail-closed/abort/timeout/late results"
+    },
+    "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts": {
+      "pre": null,
+      "post": "12d73520e558ffec6b63dcc1c3f452f6add41ec6",
+      "operation": "add",
+      "owner": "103 native consumer tests",
+      "scope": "original Request and historical expiry while callback pending"
+    }
+  },
+  "patch_file": "assembly/source103-Ccurrent-to-W103.patch",
+  "full_images": {
+    "origin_pre": "assembly/origin-Ccurrent.preimage.txt",
+    "origin_post": "assembly/origin-W103.postimage.txt",
+    "registry_pre": "assembly/registry-Ccurrent.preimage.txt",
+    "registry_post": "assembly/registry-W103.postimage.txt"
+  },
+  "unchanged_dependencies": [
+    "native producer95/PR104 owns native-host, token-gate, native-authority-provider",
+    "105 owns host-context and composition",
+    "existing C15/native authorization, Session/Task/Relay engines untouched",
+    "original five suites retained byte-for-byte",
+    "existing 90/64 synthetic fixtures unchanged"
+  ],
+  "violations_avoided": [
+    "no synthetic C15 issuance or model-authorized origin",
+    "no Session ID based admission",
+    "no permission or human autoapproval",
+    "historical read has no Task authority",
+    "deadline and abort begin at acquisition",
+    "no broken test/oracle relaxation"
+  ],
+  "checks": {
+    "historical_C51": {
+      "W": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+      "S": "a856513eb61ca0d7c1cb7ddaf03a2b911e737d05",
+      "run": 43682450677,
+      "job": 132715786509,
+      "attempt": 1,
+      "pass": 0,
+      "import_errors": 5
+    },
+    "new_W103": {
+      "W": "e957f66b00a3b05265e42d46e1d88201dea3e770",
+      "tree": "e4b359fea9157da76b6ae77cb558a34e6577232a",
+      "S": null,
+      "run": null,
+      "job": null,
+      "attempt": null,
+      "product_tests": "REQUESTED_NOT_RUN",
+      "compiler": "REQUESTED_NOT_RUN",
+      "guards": "REQUESTED_NOT_RUN"
+    }
+  },
+  "owner_next": {
+    "product_ci": "101 via PR106",
+    "compiler_guards": "45 via PR32",
+    "integrator": "105 via PR65",
+    "independent_review": "93 via PR98"
+  },
+  "readiness": "OFF",
+  "global_release": false,
+  "criterion_promotion": 0,
+  "campaign_intact": {
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  }
+}
