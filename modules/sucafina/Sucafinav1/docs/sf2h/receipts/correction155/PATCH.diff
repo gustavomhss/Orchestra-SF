@@ -11,7 +11,6 @@ index ff222fc..c90cf04 100644
  export const SfIntelligenceAnalysisPrepareInput = Schema.Struct({
    input: Schema.Struct({ request: Request, selection: Selection }),
  })
-
 diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts
 index df21e92..8fb0ddb 100644
 --- a/modules/sucafina/Sucafinav1/test/native-ui-contract/analyses.test.ts
