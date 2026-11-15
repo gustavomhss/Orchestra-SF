@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h.am06-ack.v1",
+  "mission": 170,
+  "proof": "AM06",
+  "kind": "qualification",
+  "epoch": "proof-am06-e1-browser170",
+  "branch": "sf-am06-proof",
+  "expectedHead": "690a34cdd81c12d7311f3717c19679b950276161",
+  "expectedTree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "plannedParent": "690a34cdd81c12d7311f3717c19679b950276161",
+  "actorPack": "S3-C",
+  "requestedExecution": "new Astra browser session",
+  "observedExecution": "ChatGPT GPT-6 connector session; independent Astra/native SessionV2 not exposed",
+  "effectiveModel": "GPT-6",
+  "nativeSessionId": null,
+  "githubIdentityIsNotNativeAuthority": true,
+  "actorAdmitted": "NOT_VERIFIED",
+  "fence": {
+    "packetState": "PREPARED_NOT_STARTED",
+    "branchHeadMatched": true,
+    "epochMatched": true,
+    "writeOnlyAllowlist": true,
+    "noRuntimeAdmissionClaim": true
+  },
+  "inputsSHA": {
+    "packet170": "c05f131822c550c7fe2fd7ff1d1b93f4a484dec6",
+    "actorPackS3C": "7021eb06156089aba03f02ca855b776cbfa375d9",
+    "common": "d61f32af03fe10747a50274233f953af044decf6",
+    "start": "522782bb7e113124a937d7ef17313032be9d6850",
+    "workflow": "043205bee6031b4517a98591b3588fca0ab12925",
+    "sourceManifest": "5c35f0aa7e69798c885803fdc90ab3bf0896d798",
+    "proofMap": "3b2ff2424bba07656850105df3b341c2bc984708",
+    "productAcceptance": "ded082688fce327def0b48968fa3b89a5831029c",
+    "residentRuntime": "033737b1051b23443e633df7874c550629bf55a1",
+    "rootAgents": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "nativeAdapter": "d70e2e66488d5f4e40d963d664d05a254034e32b",
+    "nativeAdmissionFixture": "eab3ded0a4964793d7786a50e02d0b9f97962bf3",
+    "nativeAdmissionPositiveReader": "635fcee58fdf25453ed976f730649e0f922e484a",
+    "nativeOwnerBinding": "dfc38db2ef2552aa729bb73cbccdf1c991cfffbd",
+    "wp09ScheduleBoundary": "2e4b277dc0e2b15bbc7ff83fc3d6fae0d0d2f400",
+    "wp09Capability": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+    "wp12NativeMissionHarness": "49300a78a44ac0739791d10a11c386b317f4b51a"
+  },
+  "permissions": {
+    "writePrefixes": [
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/",
+      "packages/app-shell/e2e/sucafina/native/integrated-proofs/am06/",
+      "script/sf2h/proofs/am06/",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/"
+    ],
+    "forbidden": "existing product/runtime/engine/helpers/specs/CI/other AM namespaces"
+  },
+  "nativeGoal": "paused",
+  "ci": "NOT_RUN",
+  "am06": "NOT_RUN",
+  "consumers": {
+    "integrator": "162/S0-C-e20/PR65",
+    "compiler": "163/PR107",
+    "ci": "164/PR106"
+  },
+  "note": "ACK only. No runtime, model stream, native C07 admission, relay execution, Task running, skills, UI, runner or CI observed. No local tests/build/typecheck."
+}
