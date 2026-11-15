@@ -1,0 +1,75 @@
+{
+  "schema": "sf2h.mission102.ack.v1",
+  "mission": 102,
+  "status": "IN_PROGRESS",
+  "campaign": "sf2h-integral-20261112",
+  "t0": "2026-11-13T04:01:10Z",
+  "actor": "S2 export XLSX print-layout correction",
+  "model_effective": "GPT-6 (ChatGPT; not Astra)",
+  "session_id": null,
+  "session_id_note": "Host has not exposed a stable session id; none invented",
+  "github_authenticated_login": "gustavomhss",
+  "branch": "xlsx-print-layout",
+  "lease_epoch": "xlsx-layout-browser102",
+  "write_authority": "102.json disjoint override for XLSX print settings only",
+  "starting_head": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "expected_head": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "integrator_branch": "sf2-stack",
+  "integrator_head_observed": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+  "integrator": "100 sole writer of sf2-stack",
+  "validation_owner": "101 for hosted surgical product runs;45 compiler/guards only",
+  "inputs": [
+    {
+      "path": "docs/sf2h/control/handoff/astra/parallel-closure/102.json",
+      "ref": "ffdfff17bd3708cc606e8f0dd962d468c075dc51",
+      "blob": "503fedb89315e9abff7c9f41e0a99b27a4fcbbdc"
+    },
+    {
+      "path": "docs/sf2h-plan/execution/COMMON.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6"
+    },
+    {
+      "path": "docs/sf2h-plan/execution/actors/S2-A.json",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "7327be5449328c356a0f5b242ddc9d2014175e41"
+    },
+    {
+      "pr": 93,
+      "terminal": "057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f",
+      "findings": "VIS88-002/VIS88-003",
+      "sourceRun": 43678123870,
+      "artifactId": 14146978247
+    }
+  ],
+  "preimages": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+      "blob": "3884ad35c7b471d2805d7444d24c4143b86ce197"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+      "blob": "7fa9c254c7c08b894d8b4c3336653c32b6270126"
+    }
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+    "modules/sucafina/Sucafinav1/runtime/downloads.ts",
+    "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/xlsx-print-layout/"
+  ],
+  "excluded": [
+    "reader88",
+    "DOCX98",
+    "importers",
+    "parsers",
+    "security",
+    "fixtures source corpus",
+    "other VIS88 findings",
+    ".github/workflows",
+    "sf2-stack",
+    "dev"
+  ],
+  "execution_policy": "Remote GitHub MCP/CAS non-force; product tests GitHub Actions via 101; no local bun test; no GLOBAL_RELEASE."
+}
