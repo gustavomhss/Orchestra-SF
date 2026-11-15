@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.source-closure193.author-ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 193,
+  "order": "A04",
+  "epoch": "source-closure-e1-browser193",
+  "authority_commit": "13c27e4bd41ad277c18c5585d941feed04727b78",
+  "predecessor": {
+    "mission": 173,
+    "previous_head": "1710bfd33d0db91be4eee3158e25da995f6d87e3",
+    "future_writes": "REVOKED",
+    "runtime_termination_claimed": false
+  },
+  "actor": {
+    "effective_model": "GPT-6",
+    "requested_model": "Astra",
+    "session_id": null,
+    "session_id_status": "NOT_EXPOSED"
+  },
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-w16",
+  "pr": 135,
+  "preflight": {
+    "head": "13c27e4bd41ad277c18c5585d941feed04727b78",
+    "tree": "b12aa2b94314b52c3e6442608634494072ede9e7",
+    "fence_blob": "b3035607202d49ec6cafd776e8df5353f5c5cebb",
+    "source_test": {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "blob": "6183175ebce968280b61668085d27771697a4b64"
+    },
+    "source_decisions_blob": "6c1d974d807e84c244b601ae03a1402ecf27e405",
+    "source_evidence_blob": "1a77ff23bee415941916467d75c81304a4aab382",
+    "integrator_observed": {
+      "mission": 189,
+      "branch": "sf2-stack",
+      "head": "4426445c05823ed4932b8a8e35391df024bf74f3",
+      "test_blob": "6183175ebce968280b61668085d27771697a4b64"
+    }
+  },
+  "effect_api": {
+    "version": "4.0.0-beta.83",
+    "tag": "effect@4.0.0-beta.83",
+    "Schema": "packages/effect/src/Schema.ts",
+    "Schema_blob": "74f338311ccd446ee12bb73941d35c04476547e7",
+    "SchemaParser_blob": "ac029e68d28640a346ba392b5c2b85f56ece17ce",
+    "decoder": "Schema.decodeUnknownExit",
+    "strict_option": "onExcessProperty:error",
+    "success_tag": "Success"
+  },
+  "observed_failure": {
+    "run": 43772149086,
+    "job": 132990216337,
+    "passed": 3,
+    "failed": 8,
+    "total_tests": 11,
+    "reason": "Schema.decodeUnknownEither undefined"
+  },
+  "permissions": {
+    "write_paths": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/decisions.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure193/**"
+    ],
+    "shared_changes": "NONE",
+    "force": false,
+    "expected_head": true
+  },
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "no_local_tests": true,
+  "no_ci_dispatch": true,
+  "global_release": false,
+  "state": "ACK_SOURCE_AUTHORIZED_NOT_VALIDATED"
+}
