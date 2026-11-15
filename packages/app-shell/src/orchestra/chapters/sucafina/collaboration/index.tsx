@@ -96,6 +96,13 @@ export function SfRelations(props: SfRelationsProps) {
   const [createFence, setCreateFence] = createSignal<{ sourceRef: string; targetRef: string; kind: string }>()
   const [removeFences, setRemoveFences] = createSignal<readonly Readonly<{ ref: string; version: string | number }>[]>([])
   createEffect(() => {
+    const sourceRef = props.sourceRef
+    if (selection.sourceRef === sourceRef) return
+    setSelection({ sourceRef, query: "", targetRef: "", kind: "" })
+    setCreateFence(undefined)
+    setRemoveFences([])
+  })
+  createEffect(() => {
     if (!revoked(props.state)) return
     setSelection({ sourceRef: props.sourceRef, query: "", targetRef: "", kind: "" })
     setCreateFence(undefined)
@@ -274,7 +281,8 @@ export function SfThread(props: SfThreadProps) {
         </Show>
       </header>
       <SfNotice state={props.state} />
-      <Show when={props.state === "outcome-unknown"}>
+      <Show when={props.state === "outcome-unknown" || props.state === "stale" ||
+        props.state === "conflict" || props.state === "unavailable"}>
         <button class="mx-btn" type="button" onClick={() => props.onReconcileRead(props.threadRef)}>
           {copy.key("sf.s05.thread.reconcile")}
         </button>
@@ -335,6 +343,7 @@ export function SfQuestion(props: SfQuestionProps) {
     void props.sourceRef
     if (answerInput) answerInput.value = ""
     setAnswerHasText(false)
+    setAnswerFence(undefined)
   })
   createEffect(() => {
     if (!revoked(props.state)) return
