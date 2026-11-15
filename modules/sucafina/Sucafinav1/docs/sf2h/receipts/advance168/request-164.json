@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.am04.ci-request.v1",
+  "mission": 168,
+  "to": "164/PR106/product-ci-e4-browser164",
+  "from": "168/proof-am04-e1-browser168",
+  "requires": "only after 162 integrates exact source blobs into coherent candidate W; do not dispatch on receipt-only source commit",
+  "state": "REQUESTED_NOT_DISPATCHED",
+  "noLocalExecution": true,
+  "orderedSelections": [
+    {
+      "selectionId": "AM04-168-NEW-GATE-NEGATIVES",
+      "packageSelector": "sucafina",
+      "runner": "bun",
+      "os": "linux",
+      "args": [
+        "Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts"
+      ],
+      "reason": "Only new code; validates structurally sound correlation and 12 adversarial rejection cases; does NOT prove native AM04 positive."
+    },
+    {
+      "selectionId": "AM04-168-EXISTING-DOMAIN-CONSUMERS",
+      "packageSelector": "sucafina",
+      "runner": "bun",
+      "os": "linux",
+      "args": [
+        "Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+        "Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+        "Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+        "Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+        "Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+        "Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+        "Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+        "Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts"
+      ],
+      "reason": "Only if their source/consumer transitive inputs changed for integrated C or no valid same-W run exists; otherwise adopt valid previous run with original W/source SHA."
+    }
+  ],
+  "reconciliationKey": [
+    "candidateWandTree",
+    "orderedSelection",
+    "existingWorkflowBlob",
+    "runtimeConfig",
+    "fixturesAndSources",
+    "modelScannerAdmissionEvidence"
+  ],
+  "requiredResults": [
+    "real GitHub run/job/attempt/workflow/W and original artifact refs",
+    "actual selected tests and observed expected vs actual",
+    "no derived PASS from a name or a source-only assertion",
+    "separate full AM04 native end-to-end with real model/scanner/identity, interruption between domain and case commits"
+  ],
+  "cannotClaim": "AM04_PASS_UNTIL_REAL_INTEGRATED_NATIVE_OBSERVATION",
+  "preexistingSources": {
+    "choice-prepared": "d530558df74f6a0a0c7458a1a308ffdc0114b66b",
+    "execution-reconciliation": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e",
+    "cross-domain": "2be9d8b282315bf6c030eea4b92e1fd39ed20d55",
+    "indeterminate": "5e1b9f2b9a9368e25e8ff97d647288742f3cf7eb",
+    "approval-lifecycle": "1818c0f20b6121a810d09094dba41f62c46b76ac",
+    "c12-recovery-http": "76bf7963d30dde72eb369616dfcd0fee61948803",
+    "original-current-choice": "084f7050ca7f45fe22962207f706a5e0d71e3a93",
+    "promotion-grant": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3",
+    "finance-result-receipt": "438672355e67c0c4b0f445b01a993edb1b3ad7fc",
+    "native-operator-cookie": "a8865d50f22248d172f106030516e67ec8ee833e",
+    "e2e-apply-recovery": "cb70480c28e9382629d289c1c954e88379e173d3",
+    "e2e-lose-creation": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+    "producer-apply": "a2d08250d5104285dcdee87d86e39076535cf554",
+    "producer-prepared-apply": "a2bb5e7f74d7f1ac7c29ff3c604df14e11d30119",
+    "producer-receipts": "5649d5292247053e99b429d41dcd4ecbe2d8c3dc",
+    "producer-human-authority": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+    "producer-planner-prepared": "da7ed326826e1b63b5853248d3ba4a18ccce9736"
+  },
+  "newInputs": {
+    "script/sf2h/proofs/am04/correlate.ts": "d56510cf7afe03ed6189d16bbe909de7e9f9999b",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08"
+  }
+}

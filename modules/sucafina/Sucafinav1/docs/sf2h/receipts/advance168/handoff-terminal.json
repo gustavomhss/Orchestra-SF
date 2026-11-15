@@ -1,0 +1,45 @@
+{
+  "schema": "sf2h.am04.terminal-handoff.v1",
+  "mission": 168,
+  "branch": "sf-am04-proof",
+  "epoch": "proof-am04-e1-browser168",
+  "state": "SOURCE_PATCH_CREATED_EVIDENCE_NOT_RUN",
+  "ack": "2d81502849c7206cb166668862c61b1736a920dc",
+  "base": {
+    "head": "690a34cdd81c12d7311f3717c19679b950276161",
+    "tree": "07133fe09922121f3cca3bffd6b4463053b48ece"
+  },
+  "preparedProductBlobs": {
+    "script/sf2h/proofs/am04/correlate.ts": "d56510cf7afe03ed6189d16bbe909de7e9f9999b",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08"
+  },
+  "proofMatrix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/proof-matrix.json",
+  "requests": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/request-164.json",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/request-163.json"
+  ],
+  "integratorHandoff": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-162.json",
+  "nativeActor": "GPT-6 ChatGPT; Astra instance/sessionID not exposed",
+  "note": "This source receipt cannot contain its own eventual commit SHA; the actual post-head/tree and all blob IDs must be attached externally in PR comments and 162 intake.",
+  "runtimeModel": "NOT_RUN",
+  "realScanner": "NOT_RUN",
+  "hostedCI": "NOT_RUN",
+  "nativeEndToEnd": "NOT_RUN",
+  "positiveAM04": "NOT_RUN",
+  "independentFinal": "NOT_RUN",
+  "globalRelease": "FORBIDDEN",
+  "sourceSHAClassification": "All existing producer/test blobs are pinned to the prepared branch head and kept unchanged; new proof source is C product material, receipt JSON is D evidence material.",
+  "blockers": [
+    "No native runtime/model/scanner/host session or actual authenticated actor exposed through GitHub MCP",
+    "No hosted material integration/run by this writer; sole 164 dispatcher must use .ci-run.json protocol",
+    "No direct controlled interrupt between domain commit and case reconciliation provided to 168; source-only correlator cannot manufacture this witness"
+  ],
+  "nextConsumers": {
+    "integrator162": "apply exact source blobs to C, receipts to D only once admitted",
+    "hosted164": "run exact surgical selectors once integrated and produce real artifact IDs",
+    "compiler163": "typecheck/guard impacted source on integrated candidate",
+    "reviewerS2R2": "independently review original receipts and correlation evidence; author not FINAL"
+  },
+  "sourceOwner": "168/GPT-6",
+  "CvsD": "D must preserve C entirely; any product change makes new C; no local builds/tests; no own self-approval"
+}

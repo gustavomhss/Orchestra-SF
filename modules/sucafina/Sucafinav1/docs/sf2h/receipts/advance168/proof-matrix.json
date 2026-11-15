@@ -1,0 +1,182 @@
+{
+  "schema": "sf2h.am04.source-proof.v1",
+  "mission": 168,
+  "epoch": "proof-am04-e1-browser168",
+  "input": {
+    "sourceHead": "690a34cdd81c12d7311f3717c19679b950276161",
+    "sourceTree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "ackCommit": "2d81502849c7206cb166668862c61b1736a920dc",
+    "ackTree": "f765a028acdba3573db50922eede8caa37921364",
+    "packetRef": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "packetBlob": "3939156ae3b5d8ff2d4c0cf690b8baad90006d9e",
+    "S4APlanRef": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "S4APlanBlob": "75ead4aae6187f440df6d9f9cdda6b10e444da13"
+  },
+  "existingSourceBlobs": {
+    "choice-prepared": "d530558df74f6a0a0c7458a1a308ffdc0114b66b",
+    "execution-reconciliation": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e",
+    "cross-domain": "2be9d8b282315bf6c030eea4b92e1fd39ed20d55",
+    "indeterminate": "5e1b9f2b9a9368e25e8ff97d647288742f3cf7eb",
+    "approval-lifecycle": "1818c0f20b6121a810d09094dba41f62c46b76ac",
+    "c12-recovery-http": "76bf7963d30dde72eb369616dfcd0fee61948803",
+    "original-current-choice": "084f7050ca7f45fe22962207f706a5e0d71e3a93",
+    "promotion-grant": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3",
+    "finance-result-receipt": "438672355e67c0c4b0f445b01a993edb1b3ad7fc",
+    "native-operator-cookie": "a8865d50f22248d172f106030516e67ec8ee833e",
+    "e2e-apply-recovery": "cb70480c28e9382629d289c1c954e88379e173d3",
+    "e2e-lose-creation": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+    "producer-apply": "a2d08250d5104285dcdee87d86e39076535cf554",
+    "producer-prepared-apply": "a2bb5e7f74d7f1ac7c29ff3c604df14e11d30119",
+    "producer-receipts": "5649d5292247053e99b429d41dcd4ecbe2d8c3dc",
+    "producer-human-authority": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+    "producer-planner-prepared": "da7ed326826e1b63b5853248d3ba4a18ccce9736"
+  },
+  "newProductBlobs": {
+    "script/sf2h/proofs/am04/correlate.ts": "d56510cf7afe03ed6189d16bbe909de7e9f9999b",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08"
+  },
+  "revisionPolicy": "do not duplicate or rewrite prior scenarios; runtime and user authority remain in original owners",
+  "claim": "SOURCE_PATCH_ONLY_NOT_AM04_PASS",
+  "observed_runs": [],
+  "runtimeEvidence": [],
+  "realModelTrace": [],
+  "scannerTrace": [],
+  "authorizedHumanSessions": [],
+  "nativeGoal": "PAUSED",
+  "criterionMatrix": [
+    {
+      "criterion": "AM04.1;WP11.T03.CHK.01/02/03/20;WP11.T03.DOD.01;WP11.T03.INV.01",
+      "required": "real model prepares only; separate authorized human choice, domain review and application/approval; original choice remains immutable",
+      "existing": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/choice-prepared-execution.test.ts",
+          "sha": "d530558df74f6a0a0c7458a1a308ffdc0114b66b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-producer-lifecycle.test.ts",
+          "sha": "084f7050ca7f45fe22962207f706a5e0d71e3a93"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/lifecycle.test.ts",
+          "sha": "1818c0f20b6121a810d09094dba41f62c46b76ac"
+        }
+      ],
+      "new": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts",
+          "scenario": "model-applied-without-human-grant",
+          "assertion": "reject model application or missing separated human review/apply",
+          "status": "NOT_RUN"
+        }
+      ],
+      "evidence": {
+        "status": "NOT_RUN",
+        "reason": "existing host/UI tests use controlled admissions; no independently verified effective model/loaded skill/scanner/native principal supplied"
+      }
+    },
+    {
+      "criterion": "AM04.2;WP11.T04.CHK.02;WP11.T04.DOD.02;C12",
+      "required": "durable domain mutation+receipt same commit, response lost strictly before separate case reconciliation, retry read-only from authoritative receipt and single domain effect",
+      "existing": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/execution-reconciliation.test.ts",
+          "sha": "b6499c30a3a2482cd96c72e3b4b6bf9b2a04c72e"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+          "sha": "5e1b9f2b9a9368e25e8ff97d647288742f3cf7eb"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/decisions-support/apply-recovery.ts",
+          "sha": "cb70480c28e9382629d289c1c954e88379e173d3",
+          "limitation": "existing browser loss occurs after server handler return, not necessarily between the two domain/case commits"
+        }
+      ],
+      "new": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts",
+          "scenario": "after-handler-return-not-a-proof;separate-receipt-transaction;duplicate-effect",
+          "status": "NOT_RUN"
+        }
+      ],
+      "evidence": {
+        "status": "NOT_RUN",
+        "reason": "no actual hosted interrupt-after-domain-commit-before-case-reconcile witness or durable domain/case snapshots qualified for this C"
+      }
+    },
+    {
+      "criterion": "AM04.3;WP11.T04.CHK.02;C12",
+      "required": "same key+digest returns prior authorized receipt; same key+different command digest conflicts; no second physical effect",
+      "existing": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/c12-receipt-recovery/recovery-http.test.ts",
+          "sha": "76bf7963d30dde72eb369616dfcd0fee61948803"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/current-choice-cohort/real-authority-promotion.test.ts",
+          "sha": "2d70a19f54e4fcd7a9b2fe3fc409a1d71b4fe9c3"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/finance-journey-closure/result-receipt.test.ts",
+          "sha": "438672355e67c0c4b0f445b01a993edb1b3ad7fc"
+        }
+      ],
+      "new": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts",
+          "scenario": "receipt-replaced;retry-second-effect;changed-digest-accepted",
+          "status": "NOT_RUN"
+        }
+      ],
+      "evidence": {
+        "status": "NOT_RUN",
+        "reason": "source tests known, but no C/W hosted result or real original command receipt qualified"
+      }
+    },
+    {
+      "criterion": "AM04.4;WP11.T04.CHK.01/03;WP11.INV.02;WP11.T04.INV.01",
+      "required": "each domain revalidates its own version/authority; committed Planner survives Procurement conflict; partial case and no invented global transaction",
+      "existing": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/cross-domain-execution.test.ts",
+          "sha": "2be9d8b282315bf6c030eea4b92e1fd39ed20d55"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp11/application-indeterminate.test.ts",
+          "sha": "5e1b9f2b9a9368e25e8ff97d647288742f3cf7eb"
+        }
+      ],
+      "new": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts",
+          "scenario": "procurement-unaccounted-effect;falsely-shared-transaction;forged-principal",
+          "status": "NOT_RUN"
+        }
+      ],
+      "evidence": {
+        "status": "NOT_RUN",
+        "reason": "known source tests preserve partiality; no joint real hosted native AM04 case with per-domain receipt trail recorded"
+      }
+    }
+  ],
+  "correlationContract": {
+    "function": "correlateAm04",
+    "path": "script/sf2h/proofs/am04/correlate.ts",
+    "successStatus": "CORRELATABLE_NOT_ATTESTED",
+    "rejectStatus": "REJECTED",
+    "fullAcceptance": "EXTERNAL_REAL_RUN_AND_INDEPENDENT_ATTESTATION_ONLY",
+    "syntheticFixtures": "ONLY_TEST_GATE_REJECTIONS_NEVER_PROVE_AM04",
+    "strongNegative": "browser-after-handler-return cannot be promoted to intra-commit response-loss"
+  },
+  "preservedObligations": [
+    "one-integrator-162",
+    "one-product-CI-164",
+    "compiler-163",
+    "eight-final-C-CI",
+    "AM01-AM06",
+    "3-independent-FINAL",
+    "C/G7",
+    "D/G8",
+    "global-Goal-paused"
+  ]
+}

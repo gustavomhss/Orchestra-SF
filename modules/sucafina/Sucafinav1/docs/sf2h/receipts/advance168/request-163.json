@@ -1,0 +1,20 @@
+{
+  "schema": "sf2h.am04.compiler-request.v1",
+  "mission": 168,
+  "to": "163/PR107/compiler-e4-browser163",
+  "state": "REQUESTED_NOT_EXECUTED",
+  "policy": "163 alone compiles/SDK/guards; 168 created no exports from C16, schema, native runtime, or package manifest",
+  "exactInputs": {
+    "script/sf2h/proofs/am04/correlate.ts": "d56510cf7afe03ed6189d16bbe909de7e9f9999b",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08"
+  },
+  "requiredChecks": [
+    "For accepted integrated C verify import of script/sf2h/proofs/am04/correlate.ts from the Bun proof test path resolves and types; no permissive shim/any introduced",
+    "Preserve existing compile/SDK/guard checks and their original artifacts on C; do not reclassify this as a new SDK source or spawn guard exception"
+  ],
+  "skipIfUnchanged": [
+    "SDK generator when no SDK inputs changed",
+    "whole branch build without accepted C or an impacted dependency"
+  ],
+  "status": "NOT_RUN"
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "sf2h.am04.handoff.v1",
+  "mission": 168,
+  "to": "162/PR65/S0-C-e20-browser162",
+  "branch": "sf-am04-proof",
+  "epoch": "proof-am04-e1-browser168",
+  "sourceHeadBefore": "690a34cdd81c12d7311f3717c19679b950276161",
+  "sourceTreeBefore": "07133fe09922121f3cca3bffd6b4463053b48ece",
+  "sourceAckHead": "2d81502849c7206cb166668862c61b1736a920dc",
+  "sourceAckTree": "f765a028acdba3573db50922eede8caa37921364",
+  "productBlobs": {
+    "script/sf2h/proofs/am04/correlate.ts": "d56510cf7afe03ed6189d16bbe909de7e9f9999b",
+    "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts": "8f03a5483c07e8f4fbf8a647c5aae1b9cfe1dc08"
+  },
+  "proofReceiptRoot": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/",
+  "mode": "EXACT_BLOB_INTEGRATION_NOT_WHOLE_BRANCH",
+  "candidateC": {
+    "paths": [
+      "script/sf2h/proofs/am04/correlate.ts",
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am04/correlation-gate.test.ts"
+    ],
+    "requireSourceAndTreeReconciliation": true
+  },
+  "candidateD": {
+    "paths": [
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/ack.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/proof-matrix.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/request-164.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/request-163.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-162.json",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance168/handoff-terminal.json"
+    ],
+    "preserveCblobs": true
+  },
+  "consumers": [
+    "162 code integration into sf2-stack / PR65",
+    "164 hosted product selectors and live AM04 witness / PR106",
+    "163 compiler/SDK/guards / PR107",
+    "S2-R2 independent reviewer",
+    "WP11/decision case, Planner/Procurement domain ports, C12 receipts, native UI/agent/MCP"
+  ],
+  "missingBeforePositive": [
+    "real effect/model/skill execution IDs and source digests",
+    "real scanner binary/version/clean invocation",
+    "native principal/binding authenticated on actual runtime",
+    "hosted interruption after domain commit before case reconciliation with separate durable readback",
+    "one-effect and idempotency digest conflict actual host receipts"
+  ],
+  "status": "SOURCE_READY_TESTS_NOT_RUN",
+  "next": "162 integrate exact product blobs into accepted C; 164 exercise surgical selectors & native trace; S2-R2 review against source receipts; never GLOBAL_RELEASE from this task"
+}
