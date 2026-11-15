@@ -1,0 +1,44 @@
+{
+  "number": 102,
+  "id": "xlsx-print-layout",
+  "branch": "xlsx-print-layout",
+  "actor": "S2 export workbook pagination implementation",
+  "actor_pack": "execution/actors/S2-A.json",
+  "lease_epoch": "xlsx-layout-browser102",
+  "scope": "VIS88-002/003 XLSX printconsumption;disjointDOCX98/reader88 andfinancial formulas",
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/runtime/workbooks.ts (exportPlanner/exportMembers print settings only; import/parser untouched)",
+    "modules/sucafina/Sucafinav1/runtime/downloads.ts (opex-template print settings only; auth/data unchanged)",
+    "modules/sucafina/Sucafinav1/test/product/xlsx-print-layout/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/xlsx-print-layout/"
+  ],
+  "inputs": [
+    "PR93terminal88@057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f FINDINGS-R1 VIS88-002/003,MATRIX-14,RESULTS-R3",
+    "reader88/script/sf2h/export-visual/* inC51;regeneration nothistoricalartifactmutation",
+    "runtime/workbooks.ts exportPlanner/exportMembers ExcelJS andruntime/downloads.ts opex-template atC51"
+  ],
+  "mission": "Corrigir paginaçãoXLSX dePlanner21páginasesparsas,members6páginas eOPEXtemplate2páginasvazias/maldistribuídas. Implementar printarea/orientação/scale/repeatheaders/margins apropriados comlegibilidadereal,semalterar dados oucálculos.",
+  "acceptance": [
+    "Ler exportersreais/ExcelJS APIusadarepo antesedit. Ajustar printlayout porworksheet a intervaloefetivamenteusado,larguralegível,pageswide1 quandoadequado ealtura automática; nãoespremer tudoem1página ilegível.",
+    "Preservar planilhas/nomes/ordem/fórmulas/estilos/hyperlinks/dados/versões/fontes/FX/totais ecamposprivados omitidos. Nada de trocarcorpus/dados ou alterarimportparsers/segurança/limitesworkbook.",
+    "Testesdeconteúdoregressão comprodutoresreais eOOXML; prova visualviareader88hospedadoPDF/PNG todasassheets,casovazio/normal/largo/longo,mostrarantesdepois semalegarpagecountsozinhoésucesso.",
+    "Fontebytesnovos têmnovoshashes/digests/manifestos; preservaroriginaishistóricos88. Nãoeditarreader/workflow/DOCX98/outrosfindingsAptos oubackupJSONpolicy;reportar residualconcreto.",
+    "Enviarrequestcirúrgicoà101productCI(45sócompiler),coordinate100composição.Readinessproofnomocks/sourcePASSnãofinalrecheck. EntregarPRcomcódigo/tests eprovasrealizadas;pedirrecheckindependente91/93."
+  ],
+  "state": "PREPARED_NOT_STARTED",
+  "session_id": null,
+  "model_effective": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "base_sha": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "expected_head": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "consumer": "100 sole integrator;101 productCI;45 compiler;91–93 independentrechecks",
+  "common": [
+    "Plano fixo dbf9547211d9b0fade619790de7c19c0869b7c7d;T0 2026-11-13T04:01:10Z;preservar15WP74tasks17contratos1610critérios. Ler AGENTS, START,WORKFLOW,COMMON,packcompleto eanexos/critériosatribuídos.",
+    "Nova sessão browser ACK com actualmodel/session/inputsSHA/lease/paths eHEADreconciliados. Silêncio não revoga autoridade.100 única integração sf2-stack;95native96creation97denied98DOCX99P03/52Decisions mantêm paths. Sidebar/Azure do usuário foraescopo.",
+    "GitHub remoto MCP/CASexpectedhead/forcefalse only,semgh/push/devmerge/deploy/Azure/segredos/enginechanges/restart/novoGoal/controller. Goalnativa permanecepausada.",
+    "Nada de testesdeproduto/pesadoslocais/bun test. InterfaceGitHubActions test:ci/request já existente;semnovaplataforma/workflow/serviços. Epic/fullsuite final apenas no bundleC finalaceito. Compiler/typecheck/guards continuamcom45, bun typecheck conformeAGENTS.",
+    "Commitsremotos/PR sf2-stack,source-tree/prepost/dependencyclosure/W-S-runjob/artifacts/results/criteriagaps echeckpointterminalà100/S0. Fonte/fixture/componentPASS não é Caceito/AM/review/GLOBAL_RELEASE."
+  ]
+}
