@@ -4,7 +4,7 @@ import type {
 } from "./contracts"
 import type { SfDraftController, SfDraftIdentity, SfDraftInput } from "../shared/draft"
 import type { SfEditScopeKey, SfOwnerKey, SfVersion, SurfaceId } from "@orchestra/schema/sucafina/context"
-import type { SfTransport } from "@orchestra/sdk-next/sucafina/transport"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 
 type DraftEntry = {
   key: string
@@ -16,6 +16,8 @@ type DraftEntry = {
   originalOwner: SfOwnerIdentity
   controller: SfDraftController<unknown>
   facade: SfPublicDraftController<unknown>
+  quarantinedBaseVersion: SfVersion | null
+  quarantinedDirty: boolean
 }
 type RegistryState = "active" | "quarantined" | "revoked"
 
@@ -67,6 +69,8 @@ export function createSfOwnerDrafts(
         originalOwner: owner.identity,
         controller: raw as SfDraftController<unknown>,
         facade: facade as SfPublicDraftController<unknown>,
+        quarantinedBaseVersion: input.baseVersion,
+        quarantinedDirty: false,
       })
       return facade
     },
@@ -82,7 +86,14 @@ export function createSfOwnerDrafts(
   const quarantine = () => {
     if (state !== "active") return
     state = "quarantined"
-    entries.forEach((entry) => entry.controller.quarantine())
+    entries.forEach((entry) => {
+      const snapshot = entry.controller.snapshot()
+      if (snapshot.availability === "active") {
+        entry.quarantinedBaseVersion = snapshot.baseVersion
+        entry.quarantinedDirty = snapshot.dirty
+      }
+      entry.controller.quarantine()
+    })
   }
   const revoke = (reason: "logout" | "owner-changed" | "access-revoked" | "authority-changed") => {
     if (state === "revoked") return
@@ -128,10 +139,10 @@ export function createSfOwnerDrafts(
         revoke("authority-changed")
         return false
       }
-      const prior = entry.controller.snapshot()
-      const previousVersion: SfVersion | null = prior.availability === "active" ? prior.baseVersion : null
+      const previousVersion = entry.quarantinedBaseVersion
+      const wasDirty = entry.quarantinedDirty
       entry.controller.restoreSameAuthority(incoming.key)
-      if (prior.availability === "active" && prior.dirty && previousVersion !== proof.sourceVersion)
+      if (wasDirty && previousVersion !== proof.sourceVersion)
         entry.controller.setPhase("conflict") // No automatic merge or reuse of old review admission.
     }
     if (signal.aborted) return false
