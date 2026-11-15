@@ -123,6 +123,7 @@ async function correlate(input: Input) {
       matrix: tagged("SF_AM01_PROFILE_RECALL_CONSUMED:"),
       matrixNegatives: tagged("SF_AM01_PROFILE_RECALL_NEGATIVE:"),
       nativeCalls: tagged("SF_AM02_NATIVE_C16_TOOL:"),
+      nativeUiParity: tagged("SF_AM02_NATIVE_UI_PARITY:"),
     }
   })
   assert(new Set(runEvidence.map((run) => run.id)).size === runEvidence.length, "duplicate Actions run ID")
@@ -278,11 +279,27 @@ async function correlate(input: Input) {
           Array.isArray(consumption.toolCallIds) &&
           consumption.toolCallIds.includes(call.toolCallId) &&
           call.caseRef && sameRef(record(call.caseRef), record(consumption.caseRef))))
+      const verifiedNativeUiParity = requiredNativeCalls.every((operation) =>
+        run.nativeUiParity.some((parity) => parity.githubSha === run.headSha &&
+          parity.operation === operation && parity.profileId === profileId && parity.skillId === skill.id &&
+          parity.runRef === consumption.runRef && parity.nativeSessionId === consumption.nativeSessionId &&
+          parity.actualModel === consumption.actualModel && parity.sourceDigest === skill.sourceDigest &&
+          parity.accessRevision === consumption.accessRevision &&
+          parity.principalRef === "wp12-synthetic-am01-five-profile-recall-principal" &&
+          parity.uiDomainEntered === true && parity.nativeProviderTurnObserved === true &&
+          parity.sameCaseAndInputOutputDigest === true &&
+          parity.thirdTransportMcpParityNotClaimed === true &&
+          parity.caseRef && sameRef(record(parity.caseRef), record(consumption.caseRef)) &&
+          parity.consumerOutputRef === consumption.outputRef &&
+          run.nativeCalls.some((call) => call.githubSha === parity.githubSha &&
+            call.toolCallId === parity.toolCallId && call.runRef === parity.runRef &&
+            call.operation === operation && call.inputDigest === parity.inputDigest &&
+            call.resultDigest === parity.resultDigest && call.handlerExport === parity.handlerExport)))
       if (!actual || !actualReceipt || !started || !sha64.test(text(consumption.outputDigest)) ||
         !Array.isArray(consumption.toolCallIds) || consumption.toolCallIds.length < 4 ||
         receipt.nativeSessionId !== consumption.nativeSessionId || receipt.runId !== consumption.runRef ||
         receipt.loadedMessageId !== actualReceipt.loadedMessageId ||
-        !verifiedNativeCalls ||
+        !verifiedNativeCalls || !verifiedNativeUiParity ||
         receipt.profileId !== profileId || receipt.profileVersion !== selected.profile.version ||
         receipt.profileDigest !== selected.profile.sourceDigest || receipt.skillId !== skill.id ||
         receipt.skillVersion !== skill.version || receipt.sourceDigest !== skill.sourceDigest ||
