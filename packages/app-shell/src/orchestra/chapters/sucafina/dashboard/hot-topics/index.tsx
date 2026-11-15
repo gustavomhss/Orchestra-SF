@@ -206,3 +206,6 @@ export function SfHotTopicsPage(props: SfSurfaceProps<"CAP02">): JSX.Element {
     </div>
   </SfPageFrame>
 }
+
+// Frozen U38 entrypoint consumed by I00/current integrator125.
+export { SfHotTopicsPage as SfHotTopicsView }
