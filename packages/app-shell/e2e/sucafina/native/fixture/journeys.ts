@@ -42,7 +42,7 @@ export function nativeJourneyResolvedHref(
 }
 
 export function nativeDashboardCommandTarget(
-  manifest: NativeManifest, capabilityId: NativeJourney,
+  manifest: Pick<NativeManifest, "target">, capabilityId: NativeJourney,
 ): NativeFaultTarget {
   return {
     origin: manifest.target.publicOrigin,
