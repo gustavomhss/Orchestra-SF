@@ -1,0 +1,16 @@
+# N15 — real author ACK
+- Actor: OpenAI GPT-6, new N15 session (session identifier not exposed by available tools)
+- Epoch: `ux-native-n15-e1`
+- Branch: `sf-ux-n15`
+- Preflight HEAD: `526e7204b310756e552196bbf3d64037dbbf047c`
+- Tree: `a790f84d91b7755818de5d229fbad9ca04c06f26`
+- Material: `af479f68c22ef1d1e9ac100a81a820f8b0273338` (C60)
+- Package: `N15.json@b187c2b765c0a47cdc2317ebc083a61187ad58ac`
+- Authority: S0 new-session authoring grant, exclusive leaf files only; 125 sole integrator.
+- U04 + U29 assigned orders, required AGENTS/COMMON/protocol, surface entries, source fields and frozen component/host/route signatures read.
+- Source preflight: `runtime/application.ts` blob `a0deff8a3b272019f472aa2f93499d1940a78370` (C60, same C58, different historical), `runtime/dashboard-operations.ts` blob `a00c93ac141489e7cfca1895591f1496c7fabf45` unchanged.
+- Contract preimages: catalog `31dbec1726fd8147156b01dc545726650ffd49e1`, surface-manifest `50e2993a881e207aa3b2a1cd250a7da84cea5855`, component-locks `818728d0a47c3f4c826943a7ab7262b4faac6a24`.
+- Leaf preimages: U04/U29 entrypoints, leaf i18n and journey files absent on the branch preflight.
+- Effective writes: `operations/service/**`, `operations/security/**`, `sf-u04.ts`, `sf-u29.ts`, `u04.spec.ts`, `u29.spec.ts`, N15 receipts only.
+- No shared registry/route/i18n edits, no other author files, no local tests/typecheck, no new dispatcher, no merge/deploy.
+- Status: ACK_REAL; authoring admitted; not an integrated or qualified release.
