@@ -1,0 +1,84 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "missionId": "UX20-W11",
+  "seat": "W11",
+  "workOrderId": "A03",
+  "actor": "ChatGPT GPT-6 (current connector session)",
+  "requestedModel": "Astra",
+  "actualModel": "GPT-6",
+  "sessionId": "not-exposed",
+  "branch": "sf-ux-w11",
+  "cohortHead": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+  "cohortTree": "39fd91edd2a452097dc333cd2098d326ac87b1e0",
+  "productBase": "422f1ed7b549021d7c62c834c9d9041279112af4",
+  "authority": {
+    "userAuthorised": true,
+    "source": "explicit W11 prompt 2026-11-15",
+    "integrator": "114 / S0-C-e17-browser114 / sf2-stack PR65",
+    "otherOwners": [
+      "120 product CI",
+      "119 compiler/guards"
+    ],
+    "authoringLease": "ux-native-w11-e1",
+    "integratorOutputAdmission": "PENDING_114_ACK; never infer from silence",
+    "noSecondDispatcher": true
+  },
+  "scope": {
+    "allowedWrites": [
+      "packages/schema/src/sucafina/procurement.ts",
+      "packages/schema/src/sucafina/procurement/**",
+      "packages/client/src/sucafina/procurement.ts",
+      "packages/client/src/sucafina/procurement/**",
+      "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+      "apps/cli/src/sucafina-product/native-ui/procurement/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts",
+      "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/W11/**"
+    ],
+    "sharedWrites": false,
+    "generatedWrites": false
+  },
+  "contractPins": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+    "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75"
+  },
+  "consumedFamilies": [
+    "ctx",
+    "procurement",
+    "transport"
+  ],
+  "sourceDeltaReview": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "baseBlob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "currentBlob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "semantic": "download/asset visibility and post-generation egress reauthorization; no backport; retain original Request/auth"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "baseBlob": "20a3ec5a30ac0fce6b35f05750d1b3dced11c45b",
+      "currentBlob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "semantic": "request existence/visibility checked before CAS to avoid leakage; presentation toPrecision(15) formatting; preserve finance math"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-scenario-services.ts",
+      "blob": "004282527ee2dde0922ce0f08a5408b9d5fc1cf2",
+      "semantic": "unchanged"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/sourcing-input-http.ts",
+      "blob": "de85660b664826163c2e157ec382b97a425bb10d",
+      "semantic": "unchanged"
+    }
+  ],
+  "intendedOutput": "Author independent real A03 code against frozen pins; no claims of F01/F02 presence, installed qualification or I00 admission.",
+  "gates": {
+    "localTests": "NOT_RUN_BY_DESIGN",
+    "ci": "120_ONLY",
+    "compiler": "119_ONLY",
+    "noMergeDeploy": true
+  }
+}
