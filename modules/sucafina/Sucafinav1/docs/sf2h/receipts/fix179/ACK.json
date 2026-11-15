@@ -1,0 +1,57 @@
+{
+  "schema": "sf2h.fix179.ack.v1",
+  "mission": 179,
+  "order": "A09",
+  "epoch": "native-fix-e1-browser179",
+  "campaign": "sf2h-integral-20261112",
+  "state": "ACKED_AUTHORING",
+  "actor": "ChatGPT via connected GitHub MCP",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-a09",
+  "pr": 140,
+  "initial_head": "30e68e97d6a9ea66141c32ff493de27413d11b94",
+  "initial_tree": "a82a4660258e5ef0b98fc66e6c2108290aa587b7",
+  "fence": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/S0-FENCE.json",
+  "previous_epoch": "ux-native-a09-e2-browser152",
+  "previous_future_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+  "predecessor_runtime_termination_not_claimed": true,
+  "allowlist": [
+    "apps/cli/src/sucafina-product/native-ui/routines.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix179/**"
+  ],
+  "source_preimages": {
+    "apps/cli/src/sucafina-product/native-ui/routines.ts": "f7fd5dece84a8374e0fd89c8c357e94b843ba1b6",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/routines.test.ts": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee"
+  },
+  "consumer_observed": {
+    "branch": "sf2-stack",
+    "head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+    "routines_blob": "f7fd5dece84a8374e0fd89c8c357e94b843ba1b6",
+    "routines_test_blob": "f5e8046200167c6e224ac4d5ff85e8e9ed2725ee",
+    "qualification": "NOT_RUN_FOR_FIX179"
+  },
+  "evidence": {
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139,
+    "compiler_W": "690a34cdd81c12d7311f3717c19679b950276161",
+    "compiler_diagnostic": "apps/cli/src/sucafina-product/native-ui/routines.ts(178,31) TS2774",
+    "browser164_run": 43766970018,
+    "browser164_job": 132974180913,
+    "browser164_scope": "OTHER_UI_LANES_NOT_A09",
+    "scoped_previous_A09_run": 43766390097,
+    "scoped_previous_A09_status": "10_PASS_ON_OLDER_W_NOT_FIX179_PROOF"
+  },
+  "boundary": {
+    "cause": "HostProducts.withCase is a required function; truthiness as optional availability probe is TS2774. Native UI product binding itself is optional.",
+    "remedy": "Check installed nativeUiProducts object; required routines and withCase are provided as one typed binding. Keep existing admission, withCase, producer C07 and reauthorization.",
+    "local_tests": "PROHIBITED",
+    "dispatch": "163 compiler / 164 product CI only",
+    "integrator": "162 PR65",
+    "native_goal": "paused",
+    "global_release": false
+  }
+}
