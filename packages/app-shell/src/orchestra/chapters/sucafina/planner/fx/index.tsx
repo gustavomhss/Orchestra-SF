@@ -34,6 +34,12 @@ const reviewField = (label: Copy, value: string): SfReviewField => ({
   value: { kind: "text", text: { kind: "data", text: value } },
 })
 
+async function hashReviewedCommand(command: unknown): Promise<string> {
+  const bytes = new TextEncoder().encode(JSON.stringify(command))
+  const fingerprint = await crypto.subtle.digest("SHA-256", bytes)
+  return Array.from(new Uint8Array(fingerprint), (byte) => byte.toString(16).padStart(2, "0")).join("")
+}
+
 /** U45/CAP22. USD is a displayed canonical base, never an editable row.
  * Currency validation, conversion, precision and in-use checks remain in planner.ts.
  */
@@ -250,36 +256,63 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
     const intent = screen.intent
     const owner = host.ready()
     const versionId = activeVersionId()
-    if (!intent || !owner || !versionId || !can(intent.kind)) return
+    if (!intent || !owner || !versionId || screen.busy || !can(intent.kind)) return
+    const prior = draft()?.snapshot()
+    if (intent.kind === "save" && (!prior || prior.availability !== "active" ||
+        prior.conflict !== null || prior.pendingOperation !== null ||
+        !Object.is(prior.baseVersion, intent.id === null ? null : intent.version))) {
+      setScreen({ state: "conflict", problem: language.t("sf.common.conflict") })
+      return
+    }
     const client = createSfPlannerClient(owner.transport)
     const generation = host.generation()
-    const idempotencyKey = crypto.randomUUID()
-    const options = { signal: new AbortController().signal, idempotencyKey }
+    const options = { signal: new AbortController().signal, idempotencyKey: crypto.randomUUID() }
     const value = currentValue()
-    setScreen({ busy: true, problem: null })
-    draft()?.setPhase("submitting")
-    const result = intent.kind === "delete"
-      ? await client["domain.command.CAP22.delete"]({
+    const command = (() => {
+      if (intent.kind === "delete") {
+        const input = {
           page: "FX rates", action: "delete", version: intent.version,
           id: intent.id ?? undefined, values: { versionId },
-        }, options)
-      : await client["domain.command.CAP22.save"]({
-          page: "FX rates", action: "save", version: intent.version,
-          id: intent.id ?? undefined,
-          values: {
-            versionId, cur: value?.cur, rate: value?.rate,
-          },
-        }, options).catch(() => {
-          console.error("N20 CAP22: command delivery failed; outcome unconfirmed")
-          return { kind: "transport-error", reason: "outcome-unknown" } as const
-        })
+        } as const
+        return { input, call: () => client["domain.command.CAP22.delete"](input, options) }
+      }
+      const input = {
+        page: "FX rates", action: "save", version: intent.version,
+        id: intent.id ?? undefined,
+        values: { versionId, cur: value?.cur, rate: value?.rate },
+      } as const
+      return { input, call: () => client["domain.command.CAP22.save"](input, options) }
+    })()
+    setScreen({ busy: true, problem: null })
+    let digest: string
+    try {
+      digest = await hashReviewedCommand(command.input)
+    } catch {
+      setScreen({ busy: false, state: "unavailable", problem: language.t("sf.common.unavailable") })
+      console.error("N20 CAP22: command fingerprint unavailable; write not submitted")
+      return
+    }
+    if (generation !== host.generation() || !host.ready()) return
+    const bindPending = () => {
+      if (intent.kind !== "save") return
+      draft()?.setPending({
+        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["setPending"]>[0]["operationRef"],
+        idempotencyKey: options.idempotencyKey,
+        payloadDigest: digest,
+        expectedVersion: intent.id === null ? null : intent.version,
+      })
+    }
+    const result = await command.call().catch(() => {
+      console.error("N20 CAP22: submitted command delivery failed; outcome unconfirmed")
+      return { kind: "transport-error", reason: "outcome-unknown" } as const
+    })
     if (generation !== host.generation() || !host.ready()) return
     setScreen("busy", false)
     if (result.kind !== "response") {
-      if (result.reason === "outcome-unknown" || result.reason === "network" ||
-          result.reason === "aborted") {
-        setScreen({ state: "outcome-unknown", lockedOutcome: true, problem: null })
+      if (result.reason !== "contract-unavailable" && result.reason !== "contract-mismatch") {
+        bindPending()
         draft()?.setPhase("outcome-unknown")
+        setScreen({ state: "outcome-unknown", lockedOutcome: true, problem: null })
       } else {
         setScreen({ state: "unavailable", problem: result.reason })
         draft()?.setPhase("failed")
@@ -291,18 +324,19 @@ export function SfFxView(props: SfSurfaceProps<"CAP22">): JSX.Element {
       setScreen("state", status === 409 ? "conflict" : status === 403 ? "denied" :
         status === 404 ? "not-found" : status === 422 || status === 400 ? "invalid" : "unavailable")
       setScreen("problem", result.body.errors?.join("; ") ?? language.t("sf.cap22.errors"))
-      if (status === 403) setScreen({ page: null, intent: null })
+      if (status === 403) { setScreen({ page: null, intent: null }); setDraft(null) }
       if (status === 409) draft()?.setPhase("conflict")
       else draft()?.setPhase("validation-error")
       return
     }
     if (intent.kind === "save") {
+      bindPending()
       draft()?.confirmSave({
         kind: "confirmed-without-projection",
-        operationRef: intent.ref as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
+        operationRef: ref(intent.ref) as Parameters<NonNullable<ReturnType<typeof draft>>["confirmSave"]>[0]["operationRef"],
         resultVersion: null,
       })
-      setDraft(null)
+      if (draft()?.snapshot().availability === "confirmed-without-projection") setDraft(null)
     }
     setScreen({ intent: null, selection: null, problem: null, state: "loading" })
     await read(new AbortController().signal, generation, screen.versionId)
