@@ -1,13 +1,14 @@
 # UX nativa Sucafina — execução agressiva com 20 sessões potenciais
 
-**Estado exato: contrato e despacho RECONCILIADOS; GO de escrita ainda dependente de S0/71, releases dos owners, material C/HEAD e parecer independente do delta.** Este arquivo não dá autorização, não cria lanes, não executa CI, não libera produto. `GLOBAL_RELEASE=false`. Não chamar de `RUNNING`, `QUALIFIED` ou `CLOSED` sem evidência instalada.
+**Estado exato: contrato e despacho RECONCILIADOS; GO de escrita ainda dependente de S0 e integradora sucessora vigente (71/100 encerradas), releases dos owners, material C/HEAD e parecer independente do delta.** Este arquivo não dá autorização, não cria lanes, não executa CI, não libera produto. `GLOBAL_RELEASE=false`. Não chamar de `RUNNING`, `QUALIFIED` ou `CLOSED` sem evidência instalada.
 
 ## Fonte única de verdade
 
 - **Norma operacional corrigida:** branch `ux-20-dispatch`, PR99, base de contrato fixada no SHA `cbac654784714f68779ae1434d30e6ea8970c4d1` em `dispatch.json.source.commit`; até esse SHA, `CONTRACTS.md`, `host-signatures.ts`, `component-signatures.ts`, `SURFACE-SPECS.md`, `contract-catalog.json`, `surface-manifest.json`, `component-locks.json`, `ACCEPTANCE.md`, protocolo e ordens individuais foram reconciliados. Versões posteriores deste diretório apenas orientam distribuição e verificação, salvo nova mudança normativa declarada.
 - **Plano anterior:** PR76 `sf-sidebar-plan@de7da0689f1a2aba2ebe190f83d807ca949e2c5a` e review77 PR91 `native-plan-review@16712630025cad3de647f2ea49ecbcdb2cc854fa`. Sua triagem FIX-FIRST é origem dos achados, não contrato concorrente; as propostas 77A–77E **não** são uma segunda fila.
 - **Canônico preservado:** `dbf9547211d9b0fade619790de7c19c0869b7c7d`: 15 WPs, 74 tasks, 17 contratos e 1.610 critérios. O manifesto único mantém **78 ordens**: I00, D01, F01–F04, S01–S05, A01–A15, U01–U47, Q01–Q02 e R01–R03.
-- **Material real da stack:** `sf2-stack` e ACKs S0/71/45/72/73/74 mudam independentemente. Cada GO depende de *observação atual* de SHA/tree e blobs por família, jamais de um SHA histórico da documentação.
+- **Snapshot verificado 2026-11-15:** C51 `529142f63683de8e4b1f7d4232f88faf8ffcef6c`, tree `d679b541596dab3b280a87e15e4a0b29ee518262`; `sf2-stack@a6abd2c8d321daf1089f4d440027c46209a89cbe` é terminal documental da missão100, lease ENCERRADA; P03 original FAIL, produto sem freeze. Próxima autoridade depende de nomeação S0, não de inferência da71/100.
+- **Material real da stack:** `sf2-stack` e ACKs S0 e integradora sucessora vigente (71/100 encerradas)/45/72/73/74 mudam independentemente. Cada GO depende de *observação atual* de SHA/tree e blobs por família, jamais de um SHA histórico da documentação.
 
 ## Conteúdo pronto para o operador
 
