@@ -52,9 +52,9 @@ Todos os POSTs têm body JSON, Origin obrigatório, Idempotency-Key no formato c
 
 ## Aceite e verificação
 
-- **A09.AC01 — autoria da família e 12 bindings:** implementação submetida; qualificação CI pendente de 120.
-- **A09.AC02 — fidelidade de dados/autoridade:** implementado decoder source + PortResult exato, body fechado, leases e no-store; qualificação central pendente.
-- **A09.AC03 — Schedule:** adapter concluído; gates de instalação de produtor/reader e grant explicitamente em HOLD, não aprovados pelo PR.
-- **A09.AC04 — compartilhados e release:** integram 114/I00; 119/120 validam e S0 decide os gates; não aprovar por existência de DTO/adapters.
+- **A09-AC01 — mapeamento de campos autorizados, null/zero/ausência e versões:** implementado com codecs de fonte e sem snapshot privado; qualificação CI pendente de 120.
+- **A09-AC02 — rejeição de ação/payload desconhecido, sem despacho opaco:** implementado com operação fixa e decoder estrito; qualificação central pendente.
+- **A09-AC03 — chaves de operação/versão, invalidar fonte e acesso mudados:** implementação preserva as chaves, ref/versão, revalidação e CAS do produtor; prova de source-change/owner-change e checks centralizados ainda pendente.
+- **Gate externo não é AC04:** native Schedule e ScheduleDetails só ficam operacionais após produtor/readiness/grant reais; integram 114/I00, 119/120 validam e S0 decide os gates.
 
 Registro principal de evidência: commits exclusivos da branch e ACK.json. Os testes autorais são especificações **não executadas**.
