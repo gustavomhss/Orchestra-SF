@@ -1,0 +1,27 @@
+# Native installed host F04 / packaged desktop D01 — mission 199
+
+**Scope:** A host-only driver to be called by the already-authorized GitHub Actions 191 runner; never a new installer, local Orchestra launch, Azure provisioning, producer, grant or CI workflow. Original F04 closure is from 187@96c01020db59d9b4f8d44300638418d67ee11fea. Base product is integrated 6607c60d2a2be183d59c2e929b3ff06633e1cb54. All observed identity and source data remain in the runner, not Git.
+
+## Binding to a real hosted installation
+
+The authorized host supplies a **private 0700 directory per suite** (U15, U39, U40), with a private 0600 loopback CDP descriptor at SF_NATIVE_BROWSER_ENDPOINT_FILE and SF_NATIVE_INSTALLED_MANIFEST and a candidate SHA matching the product-under-test. BrowserContexts must have real distinct Microsoft sign-ins before registration; never create them with test.newContext(), route.fulfill, env flags, cookies or storageState.
+
+1. The authorized host supplies **actual** callbacks for ApprovedInstalledHost in register.ts: resolveApprovedConnection from the main-approved Orchestra registry; liveMicrosoftActorPages from existing authenticated BrowserContexts; resolveOriginalF01Route from the real F01 resolver; originalSourceRowId from the current original domain producer. A missing callback is an external blocker, not a fixture default.
+2. Call registerInstalledProofFromHost({suite, scratchRoot, candidateSha, host}) **once per isolated private suite root**. The writer validates target/wrong-server/wrong-project/wrong-installation, current Microsoft principal refs, distinct browser contexts, denied CAP14 and any present dashboard admin, original route/record/version, then creates two private files with wx mode 0600. This is only a prerequisite observation, not an installed PASS.
+3. Call consumeInstalledSuiteFromHost(suite) **inside that same approved suite job**, before suite tests. It reattaches current authenticated contexts and rechecks original producer admissions, current revision and row/CAS version. Its U15 URL mapping is only a private runner input and **must be assigned before the U15 spec module is imported**, not included in Git logs, comments, public build artifacts or screenshot. This mapping is not an authorization mechanism. Real UI tests still navigate and reread original state.
+4. U39/U40 currently use nativeInstalledFixture. U15's author 194 must replace its @playwright/test base test with nativeInstalledFixture (same six cases), so the real browser/context override is active; mission 199 does not edit 194-owned specs. If 194 has not done this, fail and report it rather than silently treating the default Playwright context as authenticated.
+
+**Producer authority:** fixture/selected-installation.ts accepts only exact F01 SfResolvedRoute, same owner binding, real CAP14/CAP04/CAP05 domain pages, source record references and versions. requireOriginalNativeOperations rechecks current domain-read and domain.command.*.save operational statuses. Page names, URL, actor labels and a displayed Save button never imply grants. After edits the saved CAS version is historical and must not become current authority.
+
+## D01 — packaged Electron only
+
+The authorized 191 runner must provide a **real packaged Electron artifact** for the exact candidate and its original build Actions run reference. After download/installation into the same isolated root, it calls registerD01PackagedArtifact (attest-d01.ts) to create its private 0600 descriptor. The SHA256 descriptor alone is **not** a proof. The D01 spec checks app.isPackaged, calls the live window.api.sucafina preload/main broker, signs in through its genuine Microsoft-owned login BrowserWindow, observes broker IPC -> Electron net -> original context, validates ephemeral partition cookie counts vs defaultSession, negative binding, logout and stale request rejection. It never serializes cookie names, values, tokens, credentials, grants or actual principal IDs. No web browser can satisfy D01.
+
+**Hard integration dependency for 189:** createSfDesktopBroker is defined in apps/desktop/src/main/sucafina/index.ts, but its IPC channels are not registered by the current main bootstrap. Only 189 may fix its actual SfOperationBindings, main-owned ownedConnection, renderer/window checks and real enrollment provider; don't simulate or add independent handlers in this branch. 189 also owns the exact **inert** production Playwright config patch under closure199 receipts, which disables webServer/build and secret-bearing traces for F04/D01.
+
+## Evidence and failure semantics
+
+- All drivers are executable code, but **no code, test, typecheck, build, validator, workflow or runtime was invoked in mission 199**. The outputs from registration, consumption and attestation explicitly denote prerequisite observations, never PASS.
+- 191 alone dispatches hosted product tests: nested U15/CAP14 (6 scenarios), U39/CAP04 (3 scenarios), U40/CAP05 (3 scenarios), D01/packaged Electron. No concurrent Actions jobs or new workflow are authorized here.
+- The single exact external dependency record is modules/sucafina/Sucafinav1/docs/sf2h/receipts/closure199/EXTERNAL-DEPENDENCY.json. No public receipt contains principal IDs, authorization, cookies, credentials or storageState.
+- F04 private scratch.ts is preserved with the 187 blob and not renamed to bypass guard 188. Shared config is untouched. Goal native remains paused; GLOBAL_RELEASE=false.
