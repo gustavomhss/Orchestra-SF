@@ -79,6 +79,10 @@ export async function readNativeManifest(): Promise<NativeManifest> {
     },
     scratchRoot: requiredText(raw.scratchRoot),
   }
+  // The candidate binding comes from the authorized runner, never from the manifest alone.
+  if (!process.env.SF_NATIVE_CANDIDATE_SHA ||
+      process.env.SF_NATIVE_CANDIDATE_SHA !== manifest.candidateSha)
+    throw new Error("F04_INSTALLED_CANDIDATE_NOT_BOUND_TO_RUNNER")
   if (!/^[0-9a-f]{40}$/.test(manifest.candidateSha) ||
       new Set(Object.values(manifest.actors)).size !== 3 ||
       manifest.target.serverKey === manifest.wrongServer.serverKey ||
@@ -135,7 +139,11 @@ export async function proveNativeWebReadiness(
       !record(discovered.installations[0]) ||
       discovered.installations[0].installationId !== selected.installationId ||
       discovered.installations[0].projectId !== selected.projectId ||
-      discovered.installations[0].hostId !== selected.hostId)
+      discovered.installations[0].hostId !== selected.hostId ||
+      discovered.installations[0].publicOrigin !== selected.publicOrigin ||
+      discovered.installations[0].mount !== selected.mount ||
+      discovered.installations[0].contractRevision !== "sf-native-ui/1" ||
+      !["local-operator", "microsoft"].includes(String(discovered.installations[0].authMode)))
     throw new Error("F04_DISCOVERY_OWNER_MISMATCH")
   const contextURL = new URL(selected.mount + "/api/ui/context", selected.publicOrigin)
   contextURL.search = new URLSearchParams({
@@ -146,6 +154,10 @@ export async function proveNativeWebReadiness(
   const context: unknown = await response.json()
   if (!record(context) || context.status !== "ok" || !record(context.value) ||
       !record(context.value.stamp) ||
+      context.value.contractRevision !== "sf-native-ui/1" ||
+      context.value.authMode !== discovered.installations[0].authMode ||
+      !["local-operator", "microsoft"].includes(String(context.value.authMode)) ||
+      !context.value.stamp.policyVersion || !context.value.stamp.accessRevision ||
       context.value.stamp.installationId !== selected.installationId ||
       context.value.stamp.projectId !== selected.projectId ||
       context.value.stamp.hostId !== selected.hostId)

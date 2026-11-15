@@ -32,8 +32,12 @@ export async function armLostResponse(page: Page, target: NativeFaultTarget) {
   }
   await page.route(matchesURL, handler)
   return {
-    observations: () => ({ phase: "DELIVERY_LOST_AFTER_REAL_PRODUCER", attempts, producerStatus,
-      automaticRetryProhibited: true, outcomeUnknownUntilOriginalRead: true }),
+    observations: () => {
+      if (attempts !== 1 || producerStatus === null) throw new Error("F04_REAL_PRODUCER_RESPONSE_NOT_OBSERVED")
+      return { phase: "RESPONSE_DELIVERY_LOST_AFTER_REAL_PRODUCER_STATUS", attempts, producerStatus,
+        producerCommit: "UNPROVEN_REQUIRES_ORIGINAL_AUTHORIZED_READ",
+        automaticRetryProhibited: true, outcomeUnknownUntilOriginalRead: true } as const
+    },
     dispose: () => page.unroute(matchesURL, handler),
   }
 }
@@ -43,6 +47,7 @@ export async function armLostResponse(page: Page, target: NativeFaultTarget) {
  */
 export async function armHeldResponse(page: Page, target: NativeFaultTarget) {
   let attempts = 0
+  let producerStatus: number | null = null
   let releaseResponse: () => void = () => {}
   const gate = new Promise<void>((resolve) => { releaseResponse = resolve })
   const matchesURL = (url: URL) => url.origin === target.origin && url.pathname === target.pathname
@@ -51,12 +56,17 @@ export async function armHeldResponse(page: Page, target: NativeFaultTarget) {
     attempts++
     if (attempts !== 1) return await route.continue()
     const response = await route.fetch({ maxRedirects: 0, maxRetries: 0 })
+    producerStatus = response.status()
     await gate
     await route.fulfill({ response })
   }
   await page.route(matchesURL, handler)
   return {
-    observations: () => ({ phase: "REAL_RESPONSE_HELD_FOR_OWNER_TRANSITION", attempts }),
+    observations: () => {
+      if (attempts !== 1 || producerStatus === null) throw new Error("F04_HELD_REAL_PRODUCER_RESPONSE_NOT_OBSERVED")
+      return { phase: "REAL_PRODUCER_RESPONSE_HELD", attempts, producerStatus,
+        ownerTransition: "MUST_BE_PROVEN_SEPARATELY_FROM_INSTALLED_CONTEXT" } as const
+    },
     release: () => releaseResponse(),
     dispose: async () => { releaseResponse(); await page.unroute(matchesURL, handler) },
   }
@@ -68,5 +78,6 @@ export async function armHeldResponse(page: Page, target: NativeFaultTarget) {
 export async function requestRealRevocation(revokeViaProducer: () => Promise<{ committed: boolean }>) {
   const actual = await revokeViaProducer()
   if (!actual.committed) throw new Error("F04_REAL_PRODUCER_REVOCATION_NOT_CONFIRMED")
-  return { phase: "REVOCATION_IN_REAL_PRODUCER_CONFIRMED", clientProjection: "REQUIRES_SEPARATE_UI_ASSERTION" } as const
+  return { phase: "PRODUCER_CALLBACK_REPORTED_REVOCATION",
+    originalAuthorizedRefetch: "REQUIRED", clientProjection: "REQUIRES_SEPARATE_UI_ASSERTION" } as const
 }

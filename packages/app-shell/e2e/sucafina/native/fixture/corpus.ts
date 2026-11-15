@@ -19,7 +19,8 @@ export const nativeCorpus = {
     actual2027: "$1000",
     forecast2027: "$2000",
     firstRequest: "synthetic-po-1",
-    firstAmount: "32000 USD",
+    firstAmount: "1 USD",
+    pilotPrEstimate: 32000,
     lastRequest: "synthetic-po-200",
     lastAmount: "200 USD",
     baseOutlook: "$590,000.00",
@@ -41,7 +42,12 @@ export function sourceNativeVolume() {
   const planner = createPlannerCorpus()
   if (volume.financial.length !== nativeCorpus.expected.financialLines ||
       volume.purchaseOrders.length !== nativeCorpus.expected.purchaseOrders ||
-      volume.projects.length !== nativeCorpus.expected.projects)
+      volume.projects.length !== nativeCorpus.expected.projects ||
+      volume.financial.reduce((total, line) => total + line.actual, 0) !== inputs.volume.expected.financialActual ||
+      volume.financial.reduce((total, line) => total + line.forecast, 0) !== inputs.volume.expected.financialForecast ||
+      volume.purchaseOrders.reduce((total, row) => total + row.pr.estAmount, 0) !== inputs.volume.expected.purchaseOrderTotal ||
+      volume.purchaseOrders[0]?.pr.estAmount !== 1 ||
+      volume.purchaseOrders.at(-1)?.pr.estAmount !== 200)
     throw new Error("F04_SOURCE_CORPUS_DRIFT")
   if (rows(planner.data.versions)[0]?.id !== inputs.planner.versionId)
     throw new Error("F04_PLANNER_CORPUS_DRIFT")
@@ -77,7 +83,8 @@ function requestId(value: unknown): string {
  * Seed an *already isolated*, genuine SQLite-backed producer using original
  * ProcurementModule commands, not fake approval snapshots/receipts. Callers
  * must supply actors resolved by their real host; this function CANNOT attest
- * that those actors were authenticated. Installed qualification MUST use real
+ * that those actors were authenticated. Actor roles are test input, never an auth grant.
+ * The denial below is a domain-only negative, not an HTTP/installed ACL proof. Installed qualification MUST use real
  * browser/server auth and the original HTTP Command/holder path afterwards.
  */
 export async function seedNativeProcurementCorpus(input: {
@@ -91,7 +98,7 @@ export async function seedNativeProcurementCorpus(input: {
       !requester.canWrite || !requester.roles.some((role) => role === "requester" || role === "admin") ||
       !holder.canWrite || !holder.roles.some((role) => role === "approver" || role === "admin") ||
       !denied.canWrite || !denied.roles.includes("approver"))
-    throw new Error("F04_REQUIRES_FOUR_DISTINCT_REAL_AUTHENTICATED_ACTORS")
+    throw new Error("F04_REQUIRES_FOUR_DISTINCT_DOMAIN_ACTOR_ARGUMENTS")
   const originalTitle = "F04 real domain P0 draft title"
   const submittedTitle = "F04 real domain P1 submitted PR"
   const seeded = await input.persistence.transaction("procurement", async (snapshot) => {
@@ -113,7 +120,7 @@ export async function seedNativeProcurementCorpus(input: {
 
     const requisition = (title: string) => ({
       pr: { title, type: "service", description: "F04 canonical service request",
-        estAmount: 32400, costCenter: "Synthetic IT", needBy: "2026-12-01",
+        estAmount: inputs.procurement.prEstimate, costCenter: "Synthetic IT", needBy: "2026-12-01",
         justification: "Verify real native CAS and holder admission", expenseType: "OPEX" },
     })
     const p0 = requestId(invoke(requester, "create", 0, requisition(originalTitle)))
@@ -131,7 +138,9 @@ export async function seedNativeProcurementCorpus(input: {
     const observedP1 = requests.find((row) => text(row.number) === p1)
     if (!observedP0 || text(observedP0.status) !== "draft" ||
         text(object(observedP0.pr).title) !== originalTitle ||
-        !observedP1 || text(observedP1.status) !== "pr_pending")
+        object(observedP0.pr).estAmount !== inputs.procurement.prEstimate ||
+        !observedP1 || text(observedP1.status) !== "pr_pending" ||
+        object(observedP1.pr).estAmount !== inputs.procurement.prEstimate)
       throw new Error("F04_REAL_DOMAIN_SEED_NOT_OBSERVABLE")
     const steps = rows(object(observedP1.prApproval).steps)
     if (!steps.some((step) => step.holderId === holder.id && step.status === "pending"))
