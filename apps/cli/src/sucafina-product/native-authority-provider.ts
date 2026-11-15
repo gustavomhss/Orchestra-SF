@@ -449,3 +449,91 @@ export function createSfNativeAuthorityProducer(input: {
     },
   }
 }
+
+
+/** A surgical adapter on the EXISTING workbench product HTTP hook. No listener, transport,
+ * credential, endpoint privilege, permission reply or new installation is introduced.
+ */
+export function createSfNativeMaestroHttp(input: {
+  origin: string
+  mount: string
+  producer: () => ReturnType<typeof createSfNativeAuthorityProducer> | undefined
+}) {
+  const record = (value: unknown): value is Record<string, unknown> =>
+    !!value && typeof value === "object" && !Array.isArray(value)
+  const closed = (value: Record<string, unknown>, keys: readonly string[]) =>
+    Object.keys(value).every((key) => keys.includes(key))
+  const bounded = async (request: Request, max: number) => {
+    if (!request.body) return undefined
+    const reader = request.body.getReader()
+    const chunks: Uint8Array[] = []
+    let size = 0
+    try {
+      while (true) {
+        if (request.signal.aborted) return undefined
+        const part = await reader.read()
+        if (part.done) break
+        size += part.value.byteLength
+        if (size > max) { await reader.cancel("sf-native-maestro-body-too-large").catch(() => {}); return undefined }
+        chunks.push(part.value)
+      }
+      const bytes = new Uint8Array(size)
+      let offset = 0
+      for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength }
+      return bytes
+    } catch { return undefined }
+    finally { reader.releaseLock() }
+  }
+  const reply = (result: unknown, status: number) => new Response(JSON.stringify(result), {
+    status, headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
+  })
+  const resultReply = (value: PortResult<unknown>) => reply(value,
+    value.status === "ok" ? 200 : value.status === "denied" ? 403 :
+      value.status === "unavailable" ? 503 : value.status === "conflict" ? 409 : 400)
+  return async (request: Request, surface: string): Promise<Response | undefined> => {
+    const url = new URL(request.url)
+    if (url.searchParams.get("sf") !== "workbench-native-maestro") return undefined
+    if (url.origin !== input.origin || request.method !== "POST" ||
+      !["dashboard", "planner", "procurement"].includes(surface) ||
+      url.pathname !== input.mount + "/" + surface ||
+      request.headers.get("origin") !== input.origin ||
+      request.headers.get("sec-fetch-site") === "cross-site")
+      return reply({ status: "denied", reason: "native-maestro-transport-denied" }, 403)
+    if (url.searchParams.size !== 1 || url.searchParams.getAll("sf").length !== 1 ||
+      request.headers.get("content-type")?.split(";", 1)[0]?.toLowerCase().trim() !== "application/json" ||
+      !/^[A-Za-z0-9._:-]{8,128}$/.test(request.headers.get("idempotency-key") ?? ""))
+      return reply({ status: "needs-input", reason: "native-maestro-request-invalid" }, 400)
+    const bytes = await bounded(request, 65_536)
+    if (!bytes) return reply({ status: "needs-input", reason: "native-maestro-body-limit" }, 413)
+    const parsed: unknown = await Promise.resolve().then(() =>
+      JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes))).catch(() => undefined)
+    if (!record(parsed) || !["admit", "run"].includes(String(parsed.action)))
+      return reply({ status: "needs-input", reason: "native-maestro-command-invalid" }, 400)
+    const producer = input.producer()
+    if (!producer?.ready()) return reply({ status: "unavailable", reason: "native-maestro-c15-or-publication-unavailable" }, 503)
+    if (parsed.action === "admit" && closed(parsed, ["action", "caseRef", "objective"]) &&
+      record(parsed.caseRef) && closed(parsed.caseRef, ["id", "incarnation", "version"]) &&
+      typeof parsed.caseRef.id === "string" && typeof parsed.caseRef.incarnation === "string" &&
+      typeof parsed.caseRef.version === "number" && typeof parsed.objective === "string") {
+      return resultReply(await producer.admit(request, { caseRef: {
+        id: parsed.caseRef.id, incarnation: parsed.caseRef.incarnation, version: parsed.caseRef.version },
+        objective: parsed.objective }).catch(() => ({ status: "unavailable", reason: "native-maestro-admit-error" })))
+    }
+    if (parsed.action === "run" && closed(parsed, ["action", "sessionID", "intent", "humanText"]) &&
+      typeof parsed.sessionID === "string" && record(parsed.intent) &&
+      closed(parsed.intent, ["caseRef", "planRevisionId", "authorizationId", "inputDigest"]) &&
+      record(parsed.intent.caseRef) && closed(parsed.intent.caseRef, ["id", "incarnation", "version"]) &&
+      typeof parsed.intent.planRevisionId === "string" && typeof parsed.intent.authorizationId === "string" &&
+      typeof parsed.intent.inputDigest === "string" && typeof parsed.intent.caseRef.id === "string" &&
+      typeof parsed.intent.caseRef.incarnation === "string" && typeof parsed.intent.caseRef.version === "number" &&
+      typeof parsed.humanText === "string") {
+      return resultReply(await producer.run(request, {
+        sessionID: SessionSchema.ID.make(parsed.sessionID), humanText: parsed.humanText,
+        intent: { planRevisionId: parsed.intent.planRevisionId, authorizationId: parsed.intent.authorizationId,
+          inputDigest: parsed.intent.inputDigest, caseRef: {
+            id: parsed.intent.caseRef.id, incarnation: parsed.intent.caseRef.incarnation, version: parsed.intent.caseRef.version } },
+      }).catch(() => ({ status: "unavailable", reason: "native-maestro-run-error" })))
+    }
+    return reply({ status: "needs-input", reason: "native-maestro-command-invalid" }, 400)
+  }
+}
