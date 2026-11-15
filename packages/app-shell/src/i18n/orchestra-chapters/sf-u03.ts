@@ -51,6 +51,11 @@ export const SF_U03_COPY = {
   "sf.u03.unknownLeader": "Unknown leader.",
   "sf.u03.affectedVersions": "Each affected member version is required.",
   "sf.u03.structure": "Team Structure",
+  "sf.u03.installation": "Installation",
+  "sf.u03.year": "Year",
+  "sf.u03.authorizedHeadcount": "Headcount",
+  "sf.u03.details": "Details",
+  "sf.u03.affectedMembers": "Members affected",
 } as const
 
 export const SF_U03_COPY_BR: Readonly<Record<keyof typeof SF_U03_COPY, string>> = {
