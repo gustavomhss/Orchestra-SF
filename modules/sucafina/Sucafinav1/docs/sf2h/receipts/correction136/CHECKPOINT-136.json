@@ -1,0 +1,72 @@
+{
+  "schema": "sf2h.correction-136.checkpoint.v1",
+  "mission": 136,
+  "epoch": "ux-native-w02-e2",
+  "actor": "new ChatGPT GPT-6 conversation",
+  "session_id": "NOT_EXPOSED",
+  "branch": "sf-ux-w02",
+  "pr": 131,
+  "last_author_commits": {
+    "ack": "509d7c74f7cbe10b0e10643a5854be5baac31429",
+    "implementation": "c80f6e84a97f5895f0f38cd1f4e112d0323f998b",
+    "handoff": "f0992c21390b665f27905278c6e0acee230f2547"
+  },
+  "remote_delivered": {
+    "schema_postblob": "cd4a8605ac733d3fe156365ed84daefa4ec5385e",
+    "protocol_postblob": "1fe0f77985758d0f5cee037db6a308934c85de0f",
+    "regression_postblob": "d0d54dca9245feb151f9f6cf6015f344cfe741e2",
+    "patch_receipt_sha": "9a94e1ab8d0eb30e3017fbae2dc35cac613cd8e9",
+    "handoff_receipt_sha": "17ebcde3542a241385e1c15bbb13c142f243441b"
+  },
+  "consumer_observation": {
+    "branch": "sf2-stack",
+    "head": "d8f14f81855858120f914af4f3934406bfdb74f1",
+    "schema_preblob": "423050658692902ddb94358574762906fc06ccff",
+    "protocol_preblob": "65b3b3baf0315554b96be1a669dae73b9232a23b",
+    "regression_file": "ABSENT",
+    "warning": "Concurrent sole integrator is advancing; immediately revalidate latest HEAD + blobs before applying, never force or overwrite."
+  },
+  "handoff_deliveries": [
+    {
+      "pr": 131,
+      "comment_id": 6900553617
+    },
+    {
+      "pr": 65,
+      "comment_id": 6900554042,
+      "owner": 132
+    },
+    {
+      "pr": 107,
+      "comment_id": 6900554436,
+      "owner": 128
+    },
+    {
+      "pr": 106,
+      "comment_id": 6900554895,
+      "owner": 129
+    }
+  ],
+  "proof": {
+    "confirmed_prior_run": 43738074189,
+    "confirmed_prior_job": 132884987559,
+    "prior_failure": "Input schema must be a struct: server.sucafina.sucafina.installations.query",
+    "post_fix_generator": "NOT_RUN",
+    "post_fix_tests": "NOT_RUN",
+    "post_fix_typechecks": "NOT_RUN",
+    "post_fix_guard": "NOT_RUN",
+    "consumer_ack": "NOT_RECEIVED",
+    "release": "NO_GLOBAL_RELEASE"
+  },
+  "terminal": {
+    "state": "ARTIFACT_READY_UNVERIFIED",
+    "native_goal": "PAUSED",
+    "raw_pr131_merge": "PROHIBITED",
+    "no_local_tests": true,
+    "no_dispatcher": true,
+    "no_deploy": true,
+    "no_force_reset": true,
+    "authors_and_foreign_paths_preserved": true,
+    "next_action": "132 apply exact semantic patch and ACK consumer; 128 generate SDK and typecheck; 129 surgical hosted regression."
+  }
+}
