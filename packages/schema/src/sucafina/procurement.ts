@@ -6,8 +6,8 @@ const NonEmpty = Schema.NonEmptyString
 const NonNegativeInteger = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0))
 const PositiveInteger = Schema.Int.check(Schema.isGreaterThan(0))
 const Amount = Schema.NullOr(Schema.Finite)
-const NumericInput = Schema.Union([Schema.Finite, Schema.String, Schema.Null]
-const BooleanInput = Schema.Union([Schema.Boolean, Schema.Literals(["true", "false", "on"])]
+const NumericInput = Schema.Union([Schema.Finite, Schema.String, Schema.Null])
+const BooleanInput = Schema.Union([Schema.Boolean, Schema.Literals(["true", "false", "on"])])
 const Version = Schema.Struct({ version: NonNegativeInteger, by: Schema.String })
 const Period = Schema.Struct({ start: Schema.String, end: Schema.String })
 const CaseRef = Schema.Struct({ id: NonEmpty, incarnation: NonEmpty, version: PositiveInteger })
@@ -49,8 +49,8 @@ const Quote = Schema.Struct({
   description: Schema.optional(Schema.String),
   notes: Schema.optional(Schema.String),
   attachments: Schema.optional(Schema.Array(Schema.Struct({ id: Schema.optional(Schema.String), name: Schema.optional(Schema.String) }))),
-  scores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record({ key: Schema.String, value: NumericInput })]),
-  cscores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record({ key: Schema.String, value: NumericInput })]),
+  scores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record(Schema.String, NumericInput)]),
+  cscores: Schema.optional(Schema.Union([Schema.Array(NumericInput), Schema.Record(Schema.String, NumericInput)]),
   techPass: Schema.optional(BooleanInput),
   qty: Schema.optional(NumericInput), unitPrice: Schema.optional(NumericInput),
 })
@@ -76,7 +76,7 @@ const Sourcing = Schema.Struct({
   fewQuotesJustification: Schema.optional(Schema.String),
   selectionJustification: Schema.optional(Schema.String),
   contractStrategy: Schema.optional(Schema.String),
-  fxSnapshot: Schema.optional(Schema.NullOr(Schema.Record({ key: Schema.String, value: Amount }))),
+  fxSnapshot: Schema.optional(Schema.NullOr(Schema.Record(Schema.String, Amount))),
   approvalBaseCurrency: Schema.optional(Schema.String),
   approval: Schema.optional(Schema.NullOr(Approval)),
   weights: Schema.optional(Schema.Struct({
@@ -195,7 +195,7 @@ const PageSelection = Schema.Struct({
   request: Schema.optional(Schema.String), supplier: Schema.optional(Schema.String),
   status: Schema.optional(Schema.String),
 })
-const RequestVersion = Schema.Record({ key: Schema.String, value: Version })
+const RequestVersion = Schema.Record(Schema.String, Version)
 const DirectoryEntry = Schema.Struct({ id: Schema.String, name: Schema.String })
 const PublicSettings = SfProcurementSettings
 const PageFailure = Schema.Union([
@@ -204,7 +204,7 @@ const PageFailure = Schema.Union([
   Schema.Struct({ status: Schema.Literal("unavailable"), reason: Schema.String }),
   Schema.Struct({ status: Schema.Literal("needs-input"), reason: Schema.String }),
   Schema.Struct({ status: Schema.Literal("stale"), reason: Schema.String }),
-]
+])
 const DashboardData = Schema.Struct({
   requests: Schema.Array(SfProcurementRequest),
   formSettings: PublicSettings,
@@ -239,7 +239,7 @@ const SettingsData = Schema.Struct({
   settings: SfProcurementSettings, directory: Schema.Array(DirectoryEntry),
 })
 function pageOutput<Capability extends "CAP24" | "CAP25" | "CAP26" | "CAP27" | "CAP28", Data>(
-  capabilityId: Capability, data: Schema.Schema<Data>,
+  capabilityId: Capability, data: Schema.Codec<Data>,
 ) {
   return Schema.Union([
     Schema.Struct({
@@ -250,7 +250,7 @@ function pageOutput<Capability extends "CAP24" | "CAP25" | "CAP26" | "CAP27" | "
       }),
     }),
     PageFailure,
-  ]
+  ])
 }
 const Failure = Schema.Struct({
   ok: Schema.Literal(false),
@@ -265,7 +265,7 @@ const Failure = Schema.Struct({
 const CommandResult = Schema.Union([
   Schema.Struct({ ok: Schema.Literal(true), warnings: Schema.optional(Schema.Array(Schema.String)) }),
   Failure,
-]
+])
 const EmptyValues = Schema.Struct({})
 const PrValues = Schema.Struct({ pr: Requisition })
 const SourcingValues = Schema.Struct({ sourcing: Sourcing })
@@ -282,14 +282,14 @@ export const SfProcurementTitleSave = Schema.Struct({
 })
 const CommandValues = {
   Requests: {
-    create: PrValues, save: Schema.Union([PrValues, SourcingValues, PoValues],
+    create: PrValues, save: Schema.Union([PrValues, SourcingValues, PoValues]),
     submit_pr: PrValues, submit_sourcing: SourcingValues,
     select_quote: QuoteSelectionValues, submit_po: PoValues,
     approve: ApprovalValues, reject: ReasonValues,
     issue: EmptyValues, cancel: ReasonValues, delete: EmptyValues,
   },
   "My approvals": {
-    create: PrValues, save: Schema.Union([PrValues, SourcingValues, PoValues],
+    create: PrValues, save: Schema.Union([PrValues, SourcingValues, PoValues]),
     submit_pr: PrValues, submit_sourcing: SourcingValues,
     select_quote: QuoteSelectionValues, submit_po: PoValues,
     approve: ApprovalValues, reject: ReasonValues,
@@ -303,7 +303,7 @@ const CommandValues = {
   Settings: { save: SettingsValues, reset: EmptyValues },
 } as const
 function domainCommand<Page extends string, Action extends string, Values>(
-  page: Page, action: Action, values: Schema.Schema<Values>,
+  page: Page, action: Action, values: Schema.Codec<Values>,
 ) {
   return Schema.Struct({
     page: Schema.Literal(page), action: Schema.Literal(action),
@@ -317,9 +317,9 @@ const PortFailure = Schema.Union([
     reason: Schema.String,
   }),
   Schema.Struct({ status: Schema.Literal("invalid") }),
-]
-function portOutput<Value>(value: Schema.Schema<Value>) {
-  return Schema.Union([Schema.Struct({ status: Schema.Literal("ok"), value }), PortFailure]
+])
+function portOutput<Value>(value: Schema.Codec<Value>) {
+  return Schema.Union([Schema.Struct({ status: Schema.Literal("ok"), value }), PortFailure])
 }
 const SourcingComparisonInput = Schema.Struct({
   request: Schema.Struct({ requestRef: NonEmpty, version: NonNegativeInteger, stage: Schema.String }),
@@ -349,7 +349,7 @@ const ScenarioSelection = Schema.Struct({
       currency: Schema.String.check(Schema.isPattern(/^[A-Z]{3}$/)),
       period: Period,
     }),
-  ],
+  ]),
 })
 const ScenarioAuthority = Schema.Struct({
   installationId: NonEmpty, projectId: NonEmpty, principalRef: NonEmpty,
@@ -378,7 +378,7 @@ const CostCoverageEntry = Schema.Union([
     status: Schema.Literal("pending"), categoryId: Schema.String,
     reason: Schema.String, questionRef: Schema.optional(Schema.String),
   }),
-]
+])
 const Coverage = Schema.Struct({
   basisId: Schema.String, basisVersion: NonNegativeInteger,
   alternativeId: Schema.String, alternativeVersion: NonNegativeInteger,
@@ -422,7 +422,7 @@ const ScenarioPreview = Schema.Struct({
       period: Schema.optional(Period),
     })),
     assumptions: Schema.Array(Schema.Struct({
-      id: Schema.String, value: Schema.Union([Schema.String, Schema.Number, Schema.Boolean, Schema.Null],
+      id: Schema.String, value: Schema.Union([Schema.String, Schema.Number, Schema.Boolean, Schema.Null]),
       evidenceRefs: Schema.Array(EvidenceRecord),
       state: Schema.Literals(["confirmed", "estimated", "hypothetical", "absent"]),
     })),
