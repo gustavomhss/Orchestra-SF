@@ -51,8 +51,6 @@ export function requestVersion(
   const version = read.versions["requests:" + ref]?.version
   return Number.isSafeInteger(version) && version >= 0 ? version : undefined
 }
-const value = (item: string | number | boolean | null | undefined) =>
-  item === null || item === undefined ? "" : String(item)
 const numberInput = (item: string | number | boolean | null | undefined): string | number | null | undefined =>
   item === null ? null : typeof item === "number" || typeof item === "string" ? item : undefined
 const booleanInput = (item: string | boolean | undefined): boolean | "true" | "false" | "on" | undefined =>
