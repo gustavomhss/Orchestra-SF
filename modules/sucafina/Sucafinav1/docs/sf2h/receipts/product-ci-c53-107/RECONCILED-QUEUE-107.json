@@ -1,0 +1,127 @@
+{
+  "schema": "sf2h.product-ci107.queue.v1",
+  "mission": 107,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "C": "C53",
+  "W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "actor": {
+    "effective_model": "GPT-6",
+    "label": "Astra",
+    "github_actor": "gustavomhss",
+    "runtime_session_id": null,
+    "lease": "product-ci-browser107"
+  },
+  "phase": "C53_TWO_REQUESTS_TERMINAL; WAIT_NEW_INTEGRATED_CAUSAL_C_FOR_NATIVE",
+  "control": {
+    "exclusive_dispatcher": "107 continuation of 101 by direct user S0 appointment",
+    "original_101_six_runs": "adopted historical/not replayed",
+    "snapshot_source": "material W only, no control/doc HEAD copy",
+    "no_concurrent_request_remaining": true
+  },
+  "items": [
+    {
+      "priority": 1,
+      "kind": "NATIVE103_C53",
+      "status": "COMPLETED_FAILURE",
+      "source_W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "run": 43707901079,
+      "job": 132792877003,
+      "verdict": "178 PASS/1 FAIL",
+      "failure": "historical-read.test.ts:54 observed?.status undefined vs ok",
+      "owner": "103 writer PR96",
+      "next": "causal patch + integration106 into NEW material C; retest affected selected specs only after W/tree reconciliation",
+      "do_not_rerun_same_key": true
+    },
+    {
+      "priority": 2,
+      "kind": "FIRST_SAVE104_C53",
+      "status": "COMPLETED_PASS_SCOPED",
+      "source_W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "run": 43707908864,
+      "job": 132792901856,
+      "verdict": "15 PASS/0 FAIL",
+      "next": "do not duplicate; separate original browser reload96/final gates",
+      "do_not_rerun_same_key": true
+    },
+    {
+      "priority": 3,
+      "kind": "XLSX102",
+      "status": "WAIT_106_COMPOSITION",
+      "source_W": "104bf61f67da9740024f38427c1580ba29f36e99",
+      "source_pr": 105,
+      "release": "draft",
+      "required_host_paths": [
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/runtime/downloads.ts"
+      ],
+      "source_requests": [
+        [
+          "Sucafinav1/test/product/xlsx-print-layout/print-layout.test.ts"
+        ],
+        [
+          "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts"
+        ]
+      ],
+      "qualification": "Only after materially composed into new W/tree; dedup; 2 independent Linux Bun selections. Existing reader88 recognized only for original export-artifact-closure selection; empty/normal/wide/long XLSX visual PDF/PNG for all 9 sheets not proven by OOXML-only test. No new workflow/reader modification by107."
+    },
+    {
+      "priority": 4,
+      "kind": "NATIVE_PRODUCER95",
+      "status": "WAIT_106_COMPOSITION_AND_RELEASE",
+      "source_pr": 104,
+      "source_head": "9757b5e7ee974684cff32a5a452f7dc5aefc0555",
+      "qualification": "C15 real provider and consumers must be composed before testing installed native/real identity; existing synthetic native tests not proof"
+    },
+    {
+      "priority": 5,
+      "kind": "CREATION_RELOAD96",
+      "status": "WAIT_106_COMPOSITION_AND_OWNER52_SHARED_HOST",
+      "source_pr": 103,
+      "source_head": "3ef1bbf2188275f5bc6ebaeed162a069ad3ae351",
+      "selection": "existing browser-startup → new SQLite C08 → new browser recovery → browser-lifecycle; 4 exact files from CI-REQUEST-45.json",
+      "qualification": "Do not run source-only W as current C; no overwrite C49 host/52"
+    },
+    {
+      "priority": 6,
+      "kind": "P03_99",
+      "status": "FAIL_HOLD_NO_CAUSAL_PATCH",
+      "latest_original_run": 43682515795,
+      "qualification": "Do not repeat original unchanged source/selection"
+    },
+    {
+      "priority": 7,
+      "kind": "COMPILER_GUARDS",
+      "status": "OWNED_BY_108_NOT_107",
+      "qualification": "no product Actions dispatch by 108; compiler/guards only"
+    },
+    {
+      "priority": 8,
+      "kind": "FINAL_ACCEPTANCE",
+      "status": "BLOCKED",
+      "requires": "One final material C, eight final selections/epic/AM01–06/G7/G8/3 independent reviews/S0; not by 107"
+    }
+  ],
+  "dedup_keys": {
+    "native103_C53": {
+      "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+      "run": 43707901079,
+      "request_blob": "efc6b8a87fc8d11202b7305c8114d5c30cc9f5d7"
+    },
+    "firstsave104_C53": {
+      "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+      "run": 43707908864,
+      "request_blob": "0d116fb9feb91f699b3bcca8176c77b7b0983e08"
+    }
+  },
+  "state": "NO_ADDITIONAL_DISPATCH_UNTIL_DEPENDENCY_OR_CAUSAL_DELTA",
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,288 @@
+{
+  "schema": "sf2h.product-ci107.results.v1",
+  "mission": 107,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_counts": {
+    "WPs": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "C": "C53",
+  "W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "actor": {
+    "effective_model": "GPT-6",
+    "label": "Astra",
+    "github_actor": "gustavomhss",
+    "runtime_session_id": null,
+    "lease": "product-ci-browser107"
+  },
+  "reference": {
+    "original_C51_runlist": "RUNS-101.json @4c46f8561a8a4ed7d1c98432dd0e2f395935b963",
+    "original_runs": [
+      43682386656,
+      43682448571,
+      43682451927,
+      43682453714,
+      43682455278,
+      43682450677
+    ],
+    "original_summary": "4 success / 2 failure; unchanged, no C53 pass transfer",
+    "integrator_pr": 65,
+    "integrator_106_head_at_dispatch": "49dded7b4fa955ff2e0282f9ef2ffd59ddd277b3",
+    "integrator_106_head_not_new_material": true
+  },
+  "routing": {
+    "provider": "GitHub Actions existing test:ci/.ci-run.json GitHub MCP; ci-run-linux-* push",
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "location_blob": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+    "registry_blob": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+    "os": "ubuntu-24.04",
+    "os_image": "ubuntu-24.04.5 LTS",
+    "bun_version": "1.3.14",
+    "runner": "bun",
+    "directory": "modules/sucafina",
+    "package": "sucafina",
+    "env": {},
+    "omni": "not applicable (focused: no declaring test ran); no omni spawn proven",
+    "omni_selection_control": "valid for focused tests only; cannot establish native-installed or omnispawn"
+  },
+  "dedup": {
+    "fields": [
+      "W",
+      "Wtree",
+      "ordered args",
+      "package/directory/runner",
+      "host/runtime",
+      "env/config",
+      "workflow and validator blobs",
+      "fixtures+tests bound to Wtree"
+    ],
+    "preflight_latest_runs_examined": 100,
+    "matched_c53_requests": 0,
+    "in_flight_matching_requests": 0,
+    "action": "created two unique snapshot branches only",
+    "original_C51_used_as_pass": false
+  },
+  "lanes": [
+    {
+      "lane": "NATIVE103_C53",
+      "source": "103",
+      "baseline_C51": {
+        "run_id": 43682450677,
+        "job_id": 132715786509,
+        "conclusion": "failure",
+        "failure": "five module import errors/no behavioral cases ran"
+      },
+      "W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+      "S": "e826732db28589f117f5e3c7fb0cd8d18f16496c",
+      "Stree": "c2536b5551bd7527def68f41659fa099d0462186",
+      "parent": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "changed_paths": [
+          ".ci-run.json"
+        ]
+      },
+      "request_blob": "efc6b8a87fc8d11202b7305c8114d5c30cc9f5d7",
+      "branch": "ci-run-linux-sf107-c53-native-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+          "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+          "Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+          "Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+          "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+          "Sucafinav1/test/product/native-consumer-repair/observe.test.ts",
+          "Sucafinav1/test/product/native-consumer-repair/deadline.test.ts"
+        ],
+        "env": {}
+      },
+      "expected_selected_files": [
+        "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+        "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+        "Sucafinav1/test/product/native-runtime-finish/origin.test.ts",
+        "Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+        "Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+        "Sucafinav1/test/product/native-consumer-repair/observe.test.ts",
+        "Sucafinav1/test/product/native-consumer-repair/deadline.test.ts"
+      ],
+      "observed_selected_file_count": 7,
+      "run": {
+        "id": 43707901079,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43707901079",
+        "head_sha": "e826732db28589f117f5e3c7fb0cd8d18f16496c",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "failure",
+        "attempt": 1,
+        "job_id": 132792877003,
+        "job_conclusion": "failure",
+        "cleanup_job_id": 132793257046,
+        "cleanup_conclusion": "success"
+      },
+      "steps": {
+        "checkout": "success",
+        "read_request": "success",
+        "setup_bun": "success",
+        "omni_binaries": "success",
+        "omni_nonce": "success",
+        "run_tests": "failure"
+      },
+      "tests": {
+        "total": 179,
+        "pass": 178,
+        "fail": 1,
+        "errors": 0,
+        "expect": 954,
+        "files": 7,
+        "verdict": "PRODUCT_CONTRACT_FAILURE"
+      },
+      "import_status": "ALL_SEVEN_LOADED; prior five missing-export import errors resolved",
+      "new_repair_specs": "observe and deadline tests passed",
+      "failure": {
+        "path": "modules/sucafina/Sucafinav1/test/product/native-runtime-finish/historical-read.test.ts",
+        "line": 54,
+        "column": 30,
+        "title": "component: fresh reauthorized read projects native admission with no Task execution authority",
+        "expression": "expect(observed?.status).toBe('ok')",
+        "expected": "ok",
+        "received": "undefined",
+        "scope": "positive historical reauthorized read from f.registry.withReauthenticatedRead(...); readAdmission(...) should return 'ok'",
+        "classification": "PRODUCT_CONTRACT_POSITIVE_HISTORICAL_READ",
+        "owner_pr": 96,
+        "writer_comment_id": 6893521879,
+        "integrator_pr": 65,
+        "integrator_comment_id": 6893522292,
+        "action": "Writer103 to fix cause with no oracle relaxation, integration106 to compose corrected W, retest only causal changed candidate; no duplicate C53 request"
+      },
+      "artifacts": [],
+      "artifact_count": 0,
+      "omni_control": "not applicable (focused: no declaring test ran)"
+    },
+    {
+      "lane": "FIRST_SAVE104_C53",
+      "source": "104",
+      "baseline_C51": {
+        "run_id": 43682448571,
+        "job_id": 132715780313,
+        "conclusion": "failure",
+        "failure": "absent Idempotency-Key unexpectedly returned503 vs403"
+      },
+      "W": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "Wtree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+      "S": "3735f357c91a6e8308647bcb17b716fdca00fa51",
+      "Stree": "ef28b943379f99d7fe637784ece2e1b8c816e774",
+      "parent": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "compare": {
+        "status": "ahead",
+        "ahead_by": 1,
+        "changed_paths": [
+          ".ci-run.json"
+        ]
+      },
+      "request_blob": "0d116fb9feb91f699b3bcca8176c77b7b0983e08",
+      "branch": "ci-run-linux-sf107-c53-firstsave-1",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+          "Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+          "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+          "Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts",
+          "--timeout",
+          "120000"
+        ],
+        "env": {}
+      },
+      "expected_selected_files": [
+        "Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts",
+        "Sucafinav1/test/product/wp11/hot-topic-draft-domain.test.ts",
+        "Sucafinav1/test/product/wp11/hot-topic-snapshot.test.ts",
+        "Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts"
+      ],
+      "observed_selected_file_count": 4,
+      "run": {
+        "id": 43707908864,
+        "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43707908864",
+        "head_sha": "3735f357c91a6e8308647bcb17b716fdca00fa51",
+        "event": "push",
+        "status": "completed",
+        "conclusion": "success",
+        "attempt": 1,
+        "job_id": 132792901856,
+        "job_conclusion": "success",
+        "cleanup_job_id": 132793327415,
+        "cleanup_conclusion": "success"
+      },
+      "steps": {
+        "checkout": "success",
+        "read_request": "success",
+        "setup_bun": "success",
+        "omni_binaries": "success",
+        "omni_nonce": "success",
+        "run_tests": "success"
+      },
+      "tests": {
+        "total": 15,
+        "pass": 15,
+        "fail": 0,
+        "errors": 0,
+        "expect": 256,
+        "files": 4,
+        "verdict": "SUCCESS_SURGICAL"
+      },
+      "regression": "original missing-key HTTP oracle passes; new cases absent/malformed/ambiguous reject before lookup; valid key 503 real identity outage, revoked 403",
+      "limitation": "not UI reload/browser acceptance or installed product",
+      "writer_pr": 92,
+      "writer_comment_id": 6893525482,
+      "integrator_pr": 65,
+      "artifacts": [],
+      "artifact_count": 0,
+      "omni_control": "not applicable (focused: no declaring test ran)"
+    }
+  ],
+  "execution_summary": {
+    "dispatched": 2,
+    "run_success": 1,
+    "run_failure": 1,
+    "bun_pass": 193,
+    "bun_fail": 1,
+    "bun_errors": 0,
+    "total_expect": 1210,
+    "total_observed_tests": 194,
+    "selected_test_files": 11,
+    "artifacts_generated": 0,
+    "artifacts_missing_required": 0,
+    "technical_note": "No artifact required for two pure-Bun focused selections. Existing C51 reader artifact is different W and is not result for 102."
+  },
+  "gates": {
+    "C53_native_component": "FAIL_178_PASS_1_FAIL",
+    "C53_first_save_http": "PASS_SCOPED",
+    "native_installed_C15": "NOT_PROVEN",
+    "first_save_reload_ui": "NOT_PROVEN",
+    "xlsx102": "NOT_RUN_ON_C53_NOT_COMPOSED",
+    "producer95": "NOT_COMPOSED",
+    "creation96": "NOT_COMPOSED",
+    "P03_original": "FAIL_OPEN_NO_RERUN",
+    "visual": "PENDING_INDEPENDENT",
+    "typechecks_guards": "OWNER108_NOT_RUN_BY107",
+    "eight_final": "NOT_RUN",
+    "AM01_AM06": "NOT_PROVEN",
+    "G7": "OPEN",
+    "G8": "OPEN",
+    "GLOBAL_RELEASE": false
+  }
+}
