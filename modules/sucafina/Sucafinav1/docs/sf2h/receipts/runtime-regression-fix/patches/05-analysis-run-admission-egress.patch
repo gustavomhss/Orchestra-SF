@@ -1,0 +1,98 @@
+diff --git a/apps/cli/src/sucafina-product/analysis-run-context.ts b/apps/cli/src/sucafina-product/analysis-run-context.ts
+index 1d9a8a9589f3884a083ac09cbc951d4cce0bbdca..0000000 100644
+--- a/apps/cli/src/sucafina-product/analysis-run-context.ts
++++ b/apps/cli/src/sucafina-product/analysis-run-context.ts
+@@ -11,28 +11,71 @@
+  * Lifecycle readers may reach a newer version of the same authorized case. The
+  * selector stays at the original version, so fresh domain execution still refuses drift. */
+ export function createSfAnalysisRunContext(input: {
+-  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "human">
+-  business: Pick<ReturnType<typeof createSfBusinessServices>, "withCase">
+-  request: Request
+-  runRef: string
+-  caseRef: SfNativeRunRecord["caseRef"]
+-  start: unknown
+-  active: () => boolean
+-  replayContexts: WeakMap<TrustedDomainContext, string>
+-}) {
+-  const selected = structuredClone(input.caseRef)
+-  const start = structuredClone(input.start)
+-  return async <T>(id: string, action: (call: TrustedDomainContext) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
+-    const denied = (): PortResult<T> => ({ status: "denied", reason: "analysis-authority-unavailable" })
+-    if (id !== input.runRef || input.request.signal.aborted || !input.active()) return denied()
+-    const admitted = await input.authority.human.admit(input.request, "analysis.start", start)
+-    if (admitted.status !== "ok") return admitted
+-    const call = admitted.value
+-    input.replayContexts.set(call, input.runRef)
+-    try {
+-      const result = await input.business.withCase(call, selected, { allowHistoricalRetry: true }, () => action(call))
+-      const current = await input.authority.human.authorize(call, "analysis.start", start)
+-      return current && !input.request.signal.aborted && input.active() && input.authority.host.requestFor(call) === input.request &&
++  authority: Pick<ReturnType<typeof createSfProductAuthority>, "host" | "human" | "state">
++  business: Pick<ReturnType<typeof createSfBusinessServices>, "withCase">
++  request: Request
++  runRef: string
++  caseRef: SfNativeRunRecord["caseRef"]
++  start: unknown
++  active: () => boolean
++  replayContexts: WeakMap<TrustedDomainContext, string>
++}) {
++  const selected = structuredClone(input.caseRef)
++  const start = structuredClone(input.start)
++  // The original case selection is never upgraded. A read-only outer SQLite
++  // scope lets us compare the held snapshot before/after the real C08
++  // projection, detecting reentrant snapshot tampering and finished leases.
++  // C08 still performs its own namespace authorization and current-membership
++  // check; an actor grant alone cannot replace the selected case.
++  const inspect = async (call: TrustedDomainContext) => {
++    const request = input.request
++    const lease = call.lease
++    const binding = digestSfValue([call.kind, call.binding])
++    const active = () => call.kind === "ui" && !request.signal.aborted && input.active() &&
++      input.authority.host.requestFor(call) === request && call.lease === lease &&
++      digestSfValue([call.kind, call.binding]) === binding
++    if (!active()) return undefined
++    try {
++      return await input.authority.host.persistence.transaction("dashboard", async (snapshot) => {
++        const before = digestSfValue(snapshot)
++        const read = await input.authority.state.read(request, "cases", (state, actor) => {
++          const current = state.cases[selected.id]
++          if (!current || current.id !== selected.id || current.incarnation !== selected.incarnation ||
++            !Number.isSafeInteger(current.version) || current.version < selected.version ||
++            !current.participants.includes(actor.principalRef) ||
++            actor.principalRef !== call.binding.principalRef ||
++            actor.accessRevision !== call.binding.accessRevision ||
++            actor.policyVersion !== call.binding.policyVersion) return undefined
++          return { version: current.version, caseDigest: digestSfValue(current) }
++        })
++        return { commit: false, value: active() && digestSfValue(snapshot) === before &&
++          read.status === "ok" && read.value ? read.value : undefined }
++      }, { signal: request.signal })
++    } catch {
++      return undefined
++    }
++  }
++  return async <T>(id: string, action: (call: TrustedDomainContext) => Promise<PortResult<T>>): Promise<PortResult<T>> => {
++    const denied = (): PortResult<T> => ({ status: "denied", reason: "analysis-authority-unavailable" })
++    if (id !== input.runRef || input.request.signal.aborted || !input.active()) return denied()
++    const admitted = await input.authority.human.admit(input.request, "analysis.start", start)
++    if (admitted.status !== "ok") return admitted
++    const call = admitted.value
++    input.replayContexts.set(call, input.runRef)
++    try {
++      const initial = await inspect(call)
++      if (!initial) return denied()
++      const result = await input.business.withCase(call, selected, { allowHistoricalRetry: true }, () => action(call))
++      // The final human check may itself revoke membership. Observe C08 again
++      // AFTER it has completed and never return an old successful payload on
++      // a changed projection, finished lease or mutated private result.
++      const resultDigest = digestSfValue(result)
++      const authorized = await input.authority.human.authorize(call, "analysis.start", start)
++      if (!authorized) return denied()
++      const current = await inspect(call)
++      return current && digestSfValue(current) === digestSfValue(initial) &&
++        digestSfValue(result) === resultDigest && !input.request.signal.aborted &&
++        input.active() && input.authority.host.requestFor(call) === input.request &&
+         input.replayContexts.get(call) === input.runRef ? result : denied()
+     } finally {
+       input.replayContexts.delete(call)
