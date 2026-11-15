@@ -1,0 +1,1178 @@
+diff --git a/packages/schema/src/sucafina/common.ts b/packages/schema/src/sucafina/common.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/schema/src/sucafina/common.ts
+@@ -0,0 +1,471 @@
++/**
++ * Closed, browser-safe Sucafina native operation contract.
++ * UX20 F02 / catalog 31dbec1726fd8147156b01dc545726650ffd49e1.
++ * This is the frozen ID set, NOT an operation dispatcher or a second SDK.
++ * The one canonical metadata table and admitted codecs are composed by I00.
++ */
++import { Schema } from "effect"
++
++export const SfOperationIds = [
++  "bi.bi-data",
++  "bi.bi-decision",
++  "bi.bi-options",
++  "bi.bi-source",
++  "collaboration.answer-confirm",
++  "collaboration.answer-prepare",
++  "collaboration.answer-prepare-message",
++  "collaboration.answer-read",
++  "collaboration.confirmation-confirm",
++  "collaboration.confirmation-prepare",
++  "collaboration.confirmation-project",
++  "collaboration.cycle-read",
++  "collaboration.handoff-create",
++  "collaboration.handoff-link",
++  "collaboration.handoff-update",
++  "collaboration.question-consume",
++  "collaboration.question-output",
++  "collaboration.recipients",
++  "collaboration.relation-create",
++  "collaboration.relation-read",
++  "collaboration.relation-remove",
++  "collaboration.selection-create",
++  "collaboration.selection-list",
++  "collaboration.selection-version",
++  "collaboration.storage-version",
++  "collaboration.thread-create",
++  "collaboration.thread-edit",
++  "collaboration.thread-history",
++  "collaboration.thread-read",
++  "collaboration.thread-reply",
++  "collaboration.thread-resolve",
++  "collaboration.work-destination",
++  "collaboration.work-list",
++  "ctx.context",
++  "ctx.installations",
++  "ctx.login",
++  "ctx.logout",
++  "dashboard.dashboard-agenda",
++  "dashboard.dashboard-capture",
++  "dashboard.dashboard-history",
++  "dashboard.dashboard-hot-topic-apply",
++  "dashboard.dashboard-hot-topic-draft",
++  "dashboard.dashboard-hot-topic-drafts",
++  "dashboard.dashboard-hot-topic-operation",
++  "dashboard.dashboard-hot-topic-prepare",
++  "dashboard.dashboard-hot-topic-review",
++  "dashboard.dashboard-hot-topic-source",
++  "dashboard.dashboard-review",
++  "dashboard.dashboard-review-preserve",
++  "dashboard.dashboard-workbench",
++  "decisions.choice.read",
++  "decisions.command.sf_case_draft",
++  "decisions.command.sf_change_prepare",
++  "decisions.command.sf_question_prepare",
++  "decisions.controls.read",
++  "decisions.current-choice-prepare",
++  "decisions.current-choice-promote",
++  "decisions.decision-add-question",
++  "decisions.decision-answer-question",
++  "decisions.decision-apply",
++  "decisions.decision-choose",
++  "decisions.decision-condition",
++  "decisions.decision-coverage",
++  "decisions.decision-criteria",
++  "decisions.decision-prepare-changes",
++  "decisions.decision-promote",
++  "decisions.decision-recover",
++  "decisions.decision-review",
++  "decisions.decision-select-portfolio",
++  "domain.command.CAP01.save-benchmark",
++  "domain.command.CAP01.save-users",
++  "domain.command.CAP02.delete",
++  "domain.command.CAP02.save",
++  "domain.command.CAP03.save-month",
++  "domain.command.CAP03.save-revenue",
++  "domain.command.CAP04.annual-entry",
++  "domain.command.CAP04.delete",
++  "domain.command.CAP04.import",
++  "domain.command.CAP04.save",
++  "domain.command.CAP04.save-deviation",
++  "domain.command.CAP04.save-entry",
++  "domain.command.CAP04.year-amount",
++  "domain.command.CAP05.annual-entry",
++  "domain.command.CAP05.delete",
++  "domain.command.CAP05.save",
++  "domain.command.CAP05.save-deviation",
++  "domain.command.CAP05.save-entry",
++  "domain.command.CAP05.year-amount",
++  "domain.command.CAP07.deleteLeader",
++  "domain.command.CAP07.deleteMember",
++  "domain.command.CAP07.saveCio",
++  "domain.command.CAP07.saveLeader",
++  "domain.command.CAP07.saveMember",
++  "domain.command.CAP08.delete",
++  "domain.command.CAP08.exportAllMembers",
++  "domain.command.CAP08.import",
++  "domain.command.CAP08.save",
++  "domain.command.CAP09.delete",
++  "domain.command.CAP09.delete-milestone",
++  "domain.command.CAP09.import",
++  "domain.command.CAP09.save",
++  "domain.command.CAP09.save-milestone",
++  "domain.command.CAP10.delete",
++  "domain.command.CAP10.delete-milestone",
++  "domain.command.CAP10.import",
++  "domain.command.CAP10.save",
++  "domain.command.CAP10.save-milestone",
++  "domain.command.CAP11.import-month",
++  "domain.command.CAP11.save-categories",
++  "domain.command.CAP11.save-heatmap",
++  "domain.command.CAP11.save-items",
++  "domain.command.CAP11.save-sla",
++  "domain.command.CAP11.save-tickets",
++  "domain.command.CAP12.delete-action",
++  "domain.command.CAP12.delete-campaign",
++  "domain.command.CAP12.delete-incident",
++  "domain.command.CAP12.delete-kpi",
++  "domain.command.CAP12.save-action",
++  "domain.command.CAP12.save-campaign",
++  "domain.command.CAP12.save-incident",
++  "domain.command.CAP12.save-kpi",
++  "domain.command.CAP13.delete",
++  "domain.command.CAP13.save",
++  "domain.command.CAP14.delete",
++  "domain.command.CAP14.save",
++  "domain.command.CAP15.delete",
++  "domain.command.CAP15.save",
++  "domain.command.CAP16.delete-item",
++  "domain.command.CAP16.delete-sub",
++  "domain.command.CAP16.save",
++  "domain.command.CAP16.save-item",
++  "domain.command.CAP16.save-sub",
++  "domain.command.CAP17.import-workbook",
++  "domain.command.CAP18.delete",
++  "domain.command.CAP18.import-workbook",
++  "domain.command.CAP18.reset",
++  "domain.command.CAP18.save",
++  "domain.command.CAP18.spread",
++  "domain.command.CAP19.delete",
++  "domain.command.CAP19.import-workbook",
++  "domain.command.CAP19.reset",
++  "domain.command.CAP19.save",
++  "domain.command.CAP19.spread",
++  "domain.command.CAP20.delete",
++  "domain.command.CAP20.import-workbook",
++  "domain.command.CAP20.save",
++  "domain.command.CAP20.sync",
++  "domain.command.CAP21.common",
++  "domain.command.CAP21.delete",
++  "domain.command.CAP21.import-workbook",
++  "domain.command.CAP21.save",
++  "domain.command.CAP22.delete",
++  "domain.command.CAP22.import-workbook",
++  "domain.command.CAP22.save",
++  "domain.command.CAP23.copy",
++  "domain.command.CAP23.delete",
++  "domain.command.CAP23.import-workbook",
++  "domain.command.CAP23.lock",
++  "domain.command.CAP23.official",
++  "domain.command.CAP23.save",
++  "domain.command.CAP23.unlock",
++  "domain.command.CAP25.approve",
++  "domain.command.CAP25.cancel",
++  "domain.command.CAP25.create",
++  "domain.command.CAP25.delete",
++  "domain.command.CAP25.issue",
++  "domain.command.CAP25.reject",
++  "domain.command.CAP25.save",
++  "domain.command.CAP25.select_quote",
++  "domain.command.CAP25.submit_po",
++  "domain.command.CAP25.submit_pr",
++  "domain.command.CAP25.submit_sourcing",
++  "domain.command.CAP26.approve",
++  "domain.command.CAP26.cancel",
++  "domain.command.CAP26.create",
++  "domain.command.CAP26.delete",
++  "domain.command.CAP26.issue",
++  "domain.command.CAP26.reject",
++  "domain.command.CAP26.save",
++  "domain.command.CAP26.select_quote",
++  "domain.command.CAP26.submit_po",
++  "domain.command.CAP26.submit_pr",
++  "domain.command.CAP26.submit_sourcing",
++  "domain.command.CAP27.activate",
++  "domain.command.CAP27.block",
++  "domain.command.CAP27.change-bank",
++  "domain.command.CAP27.create",
++  "domain.command.CAP27.delete",
++  "domain.command.CAP27.inactivate",
++  "domain.command.CAP27.save",
++  "domain.command.CAP28.reset",
++  "domain.command.CAP28.save",
++  "domain.page.CAP01",
++  "domain.page.CAP02",
++  "domain.page.CAP03",
++  "domain.page.CAP04",
++  "domain.page.CAP05",
++  "domain.page.CAP06",
++  "domain.page.CAP07",
++  "domain.page.CAP08",
++  "domain.page.CAP09",
++  "domain.page.CAP10",
++  "domain.page.CAP11",
++  "domain.page.CAP12",
++  "domain.page.CAP13",
++  "domain.page.CAP14",
++  "domain.page.CAP15",
++  "domain.page.CAP16",
++  "domain.page.CAP17",
++  "domain.page.CAP18",
++  "domain.page.CAP19",
++  "domain.page.CAP20",
++  "domain.page.CAP21",
++  "domain.page.CAP22",
++  "domain.page.CAP23",
++  "domain.page.CAP24",
++  "domain.page.CAP25",
++  "domain.page.CAP26",
++  "domain.page.CAP27",
++  "domain.page.CAP28",
++  "files.asset.download",
++  "files.asset.link",
++  "files.asset.upload",
++  "files.document-admit",
++  "files.document-candidates",
++  "files.document-confirm",
++  "files.document-extract",
++  "files.document-open",
++  "files.document-requests",
++  "files.document-scenario-preview",
++  "files.document-scenario-targets",
++  "files.document-schema",
++  "files.document-schemas",
++  "files.document-search",
++  "files.document-sources",
++  "files.export.json",
++  "files.export.register",
++  "files.export.suppliers",
++  "files.export.xlsx",
++  "files.import-admit",
++  "files.import-apply",
++  "files.import-detail",
++  "files.import-preview",
++  "files.import-reference",
++  "files.import-targets",
++  "intelligence.analysis.cancel",
++  "intelligence.analysis.choices",
++  "intelligence.analysis.list",
++  "intelligence.analysis.output",
++  "intelligence.analysis.prepare",
++  "intelligence.analysis.read",
++  "intelligence.analysis.start",
++  "intelligence.memory-catalog",
++  "intelligence.memory-condition",
++  "intelligence.memory-conditions",
++  "intelligence.memory-materiality",
++  "intelligence.memory-outcome",
++  "intelligence.memory-outcome-selection",
++  "intelligence.memory-signals",
++  "planner.forecast.prepare",
++  "planner.monthly.apply",
++  "planner.monthly.preview",
++  "portfolio.decision-portfolio-evaluate",
++  "portfolio.decision-portfolio-preview",
++  "portfolio.decision-portfolio-read",
++  "portfolio.decision-portfolio-reconcile",
++  "portfolio.decision-portfolio-results",
++  "portfolio.decision-prepare-portfolio",
++  "portfolio.decision-promote-portfolio",
++  "portfolio.decision-sensitivity-evaluate",
++  "portfolio.decision-sensitivity-read",
++  "portfolio.decision-sensitivity-units",
++  "procurement.procurement-scenario-controls",
++  "procurement.procurement-scenario-preview",
++  "procurement.sourcing.prepare",
++  "projection.case",
++  "projection.cases",
++  "projection.home",
++  "projection.local-admin",
++  "projection.residents",
++  "projection.review",
++  "projection.routine",
++  "projection.search",
++  "projection.work",
++  "projection.work-item",
++  "projection.work-selection",
++  "reviews.export.docx",
++  "reviews.export.pptx",
++  "reviews.review-source",
++  "reviews.review-update",
++  "routines.catalog",
++  "routines.prepare-admission",
++  "routines.read-admission",
++  "routines.read-run",
++  "routines.run",
++  "schedules.create",
++  "schedules.list",
++  "schedules.pause",
++  "schedules.read",
++  "schedules.read-run",
++  "schedules.update",
++  "views.list",
++  "views.open",
++  "views.remove",
++  "views.save",
++] as const
++
++export const SfOperationId = Schema.Literals(SfOperationIds).annotate({ identifier: "SfNative.OperationId" })
++export type SfOperationId = typeof SfOperationId.Type
++
++export const SfResourceNames = {
++  "ctx": [
++    "context"
++  ],
++  "transport": [],
++  "domain-read": [
++    "CAP01",
++    "CAP02",
++    "CAP03",
++    "CAP04",
++    "CAP05",
++    "CAP06",
++    "CAP07",
++    "CAP08",
++    "CAP09",
++    "CAP10",
++    "CAP11",
++    "CAP12",
++    "CAP13",
++    "CAP14",
++    "CAP15",
++    "CAP16",
++    "confirmations",
++    "home",
++    "hot-topic-proposal",
++    "local-admin",
++    "questions",
++    "relations",
++    "search",
++    "threads",
++    "views",
++    "work"
++  ],
++  "planner": [
++    "CAP17",
++    "CAP18",
++    "CAP19",
++    "CAP20",
++    "CAP21",
++    "CAP22",
++    "CAP23"
++  ],
++  "procurement": [
++    "CAP24",
++    "CAP25",
++    "CAP26",
++    "CAP27",
++    "CAP28"
++  ],
++  "decisions": [
++    "alternatives",
++    "assumptions",
++    "case-intent",
++    "cases",
++    "choice",
++    "prepared-changes",
++    "receipts"
++  ],
++  "portfolio": [
++    "campaign",
++    "results",
++    "sensitivity"
++  ],
++  "files": [
++    "document-scenario",
++    "documents",
++    "evidence",
++    "exports",
++    "import-admit",
++    "import-apply",
++    "import-preview"
++  ],
++  "reviews": [
++    "agenda",
++    "compare",
++    "preserved",
++    "report-export"
++  ],
++  "bi": [
++    "catalog",
++    "visual"
++  ],
++  "intelligence": [
++    "analysis",
++    "outcomes",
++    "residents",
++    "routine-admission",
++    "routine-runs",
++    "schedules",
++    "signals",
++    "similar-cases"
++  ]
++} as const
++export type SfFamilyId = keyof typeof SfResourceNames
++export type SfResourceKey = {
++  [Family in SfFamilyId]: Readonly<{
++    family: Family
++    resource: (typeof SfResourceNames)[Family][number]
++  }>
++}[SfFamilyId]
++
++export type SfJson =
++  | null
++  | boolean
++  | number
++  | string
++  | readonly SfJson[]
++  | Readonly<{ [key: string]: SfJson }>
++
++export type SfPublicHeaders = Readonly<{
++  "content-type"?: string
++  "content-disposition"?: string
++  "x-sf-access-revision"?: string
++  "x-sf-review-binding"?: string
++  "x-sf-contract-revision"?: string
++}>
++
++export type SfTransportFailure = Readonly<{
++  kind: "transport-error"
++  reason: "aborted" | "network" | "invalid-response" | "contract-mismatch" | "contract-unavailable" | "outcome-unknown"
++}>
++
++export type SfTransportResult<Output> =
++  | Readonly<{ kind: "response"; status: number; headers: SfPublicHeaders; body: Output }>
++  | SfTransportFailure
++
++export type SfOperation<Input, Output> = Readonly<{
++  operationId: SfOperationId
++  input: Schema.Schema<Input>
++  output: Schema.Schema<Output>
++}>
++
++export type SfOperationRegistration<Input, Output> = SfOperation<Input, Output> & Readonly<{
++  method: "GET" | "POST"
++  pathTemplate: string
++  fixedQuery?: Readonly<Record<string, string>>
++  fixedBodyDiscriminator?: Readonly<Record<string, string>>
++  effect: "read" | "preview" | "prepare" | "mutation" | "authentication"
++  maxRequestBytes?: number
++  responseMode: "json" | "bytes" | "empty" | "navigation"
++}>
++
++export type SfWireDecodeResult =
++  | Readonly<{ status: "ok"; value: SfJson | undefined }>
++  | Readonly<{ status: "invalid" }>
++
++export type SfOperationCodec = Readonly<{
++  decodeInput(value: unknown): SfWireDecodeResult
++  decodeOutput(value: unknown): SfWireDecodeResult
++}>
++
++export type SfOperationBindings = Readonly<Partial<Record<SfOperationId, SfOperationCodec>>>
+diff --git a/packages/client/src/sucafina/transport.ts b/packages/client/src/sucafina/transport.ts
+new file mode 100644
+--- /dev/null
++++ b/packages/client/src/sucafina/transport.ts
+@@ -0,0 +1,472 @@
++/**
++ * F02: browser/desktop Sucafina native transport. The catalogued route and
++ * admitted codec are separate mandatory inputs: an ID alone never grants IO.
++ * Shared operation metadata/exports are installed by the sole integrator I00.
++ */
++import { Option, Schema } from "effect"
++import type {
++  SfJson, SfOperation, SfOperationBindings, SfOperationId, SfPublicHeaders,
++  SfTransportFailure, SfTransportResult,
++} from "@orchestra/schema/sucafina/common"
++import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
++import type {
++  SfContext, SfContextStamp, SfInstallationDescriptor, SfResolvedRoute,
++} from "@orchestra/schema/sucafina/context"
++
++export type SfCallOptions = Readonly<{ signal: AbortSignal; idempotencyKey?: string }>
++export type SfTransport = Readonly<{
++  execute<Input, Output>(
++    operation: SfOperation<Input, Output>,
++    input: Input,
++    options: SfCallOptions,
++  ): Promise<SfTransportResult<Output>>
++}>
++
++export type SfDesktopBinding = Readonly<{
++  bindingHandle: string
++  generation: number
++  descriptor: SfInstallationDescriptor
++}>
++export type SfConnectionCandidate = Readonly<{
++  serverKey: string
++  projectId: string
++  baseUrl: string
++  location?: Readonly<{ directory: string; workspace?: string }>
++  credentials: Readonly<{ kind: "none" }> | Readonly<{ kind: "basic"; username: string; password: string }>
++}>
++export type SfRegisterConnectionResult =
++  | Readonly<{ status: "approved"; serverKey: string; projectId: string; transportIdentity: string; generation: number }>
++  | Readonly<{ status: "cancelled" }>
++  | Readonly<{ status: "unavailable"; reason: "connection-auth-unavailable" | "invalid-connection" | "owner-rejected" }>
++export type SfDesktopInvalidation = Readonly<{
++  bindingHandle: string
++  generation: number
++  reason: "logout" | "owner-changed" | "server-removed" | "host-changed" | "session-expired" | "access-revoked"
++}>
++export type SfDesktopBindResult =
++  | (Readonly<{ status: "ok" }> & SfDesktopBinding)
++  | Readonly<{ status: "denied" | "context-mismatch" }>
++  | Readonly<{ status: "unavailable"; reason: "connection-unapproved" | "connection-auth-unavailable" | "installation-unavailable" | "network" | "contract-mismatch" }>
++export type SfDesktopOwnerRequest = Readonly<{ bindingHandle: string; generation: number }>
++export type SfDesktopInvocation = SfDesktopOwnerRequest & (
++  | Readonly<{
++    kind: "request"
++    requestId: string
++    operationId: SfOperationId
++    input: SfJson | undefined
++    upload?: Readonly<{ fileName: string; mediaType: string; bytes: Uint8Array }>
++    idempotencyKey?: string
++  }>
++  | Readonly<{ kind: "response-chunk"; requestId: string; responseHandle: string; sequence: number }>
++)
++export type SfDesktopInvocationResult =
++  | Readonly<{ kind: "json-response"; status: number; headers: SfPublicHeaders; body: SfJson | null }>
++  | Readonly<{ kind: "byte-response"; status: number; headers: SfPublicHeaders; responseHandle: string }>
++  | Readonly<{ kind: "byte-chunk"; sequence: number; bytes: Uint8Array; done: boolean }>
++  | Readonly<{ kind: "empty-response"; status: number; headers: SfPublicHeaders }>
++  | SfTransportFailure
++export type SfDesktopLoginResult =
++  | Readonly<{ status: "authenticated"; context: SfContext }>
++  | Readonly<{ status: "cancelled" }>
++  | Readonly<{ status: "denied" }>
++  | Readonly<{ status: "unavailable"; reason: "auth-unavailable" | "identity-unavailable" | "enrollment-unavailable" | "network" | "contract-mismatch" }>
++export type SfDesktopCapability = Readonly<{
++  registerConnection(candidate: SfConnectionCandidate): Promise<SfRegisterConnectionResult>
++  bind(selection: Readonly<{ serverKey: string; projectId: string; installationId: string }>, onInvalidated: (event: SfDesktopInvalidation) => void): Promise<SfDesktopBindResult>
++  invoke(request: SfDesktopInvocation): Promise<SfDesktopInvocationResult>
++  abort(request: SfDesktopOwnerRequest & Readonly<{ requestId: string }>): Promise<void>
++  login(request: SfDesktopOwnerRequest & Readonly<{ returnRoute: SfResolvedRoute }>): Promise<SfDesktopLoginResult>
++  logout(request: SfDesktopOwnerRequest): Promise<Readonly<{ status: "cleared"; remote: "confirmed" | "unavailable" }>>
++  release(request: (SfDesktopOwnerRequest & Readonly<{ kind: "binding" }>) | Readonly<{ kind: "connection"; serverKey: string; projectId: string; generation: number; reason: "server-removed" }>): Promise<void>
++}>
++
++// Browser-safe, per-transport ephemeral authority; never placed in URL/storage.
++type SfInternal = Readonly<{
++  binding: SfInstallationDescriptor
++  fetch: typeof globalThis.fetch
++  current: () => boolean
++  clear: () => void
++}>
++const internals = new WeakMap<SfTransport, SfInternal>()
++const KEY = /^[A-Za-z0-9._:-]{8,128}$/
++const MOUNT = /^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/
++const SURFACES = new Set(["dashboard", "planner", "procurement"])
++const MUTATION_LIMIT = 256
++type ErrorReason = SfTransportFailure["reason"]
++const failure = (reason: ErrorReason): SfTransportFailure => ({ kind: "transport-error", reason })
++
++export function createSfTransport(options: Readonly<{
++  binding: SfInstallationDescriptor
++  generation: number
++  currentGeneration: () => number
++  fetch: typeof globalThis.fetch
++  operations: SfOperationBindings
++  desktop?: SfDesktopCapability
++  desktopBinding?: SfDesktopBinding
++}>): SfTransport {
++  const isCurrent = () => options.generation === options.currentGeneration()
++  const validBinding = validInstallation(options.binding)
++  const owned = options.desktop && options.desktopBinding
++    ? options.desktopBinding.generation === options.generation
++      && sameInstallation(options.desktopBinding.descriptor, options.binding)
++      && Boolean(options.desktopBinding.bindingHandle)
++    : !options.desktop && !options.desktopBinding
++  const webOrigin = () => typeof window !== "undefined" && window.location.origin === options.binding.publicOrigin
++  let stamp: SfContextStamp | undefined
++  const pending = new Map<string, string>()
++
++  const clear = () => { stamp = undefined; pending.clear() }
++  const transport: SfTransport = {
++    async execute<Input, Output>(
++      operation: SfOperation<Input, Output>,
++      input: Input,
++      call: SfCallOptions,
++    ): Promise<SfTransportResult<Output>> {
++      if (!validBinding || !owned || !isCurrent()) return failure("contract-mismatch")
++      if (call.signal.aborted) return failure("aborted")
++      if (!options.desktop && !webOrigin()) return failure("contract-mismatch")
++      const metadata = SfOperationRegistry[operation.operationId]
++      if (!metadata || metadata.effect === "authentication" || operation.operationId === "ctx.installations") {
++        // Auth and global discovery have their own canonical SDK/navigation.
++        return failure("contract-unavailable")
++      }
++      const codec = options.operations[operation.operationId]
++      if (!codec) return failure("contract-unavailable")
++      const parsedInput = Schema.decodeUnknownOption(operation.input)(input)
++      if (Option.isNone(parsedInput)) return failure("contract-mismatch")
++      const decoded = (() => {
++        try { return codec.decodeInput(parsedInput.value) }
++        catch { return { status: "invalid" } as const }
++      })()
++      if (decoded.status !== "ok") return failure("contract-mismatch")
++      if (metadata.responseMode !== "json" && metadata.responseMode !== "empty") {
++        // Bytes require the installed download-handle/chunk consumer, not buffering
++        // unbounded exports into memory. Navigation is never data transport.
++        return failure("contract-unavailable")
++      }
++      const route = operationUrl(options.binding, metadata, decoded.value, operation.operationId)
++      if (!route) return failure("contract-mismatch")
++      const mutating = metadata.method === "POST" && metadata.effect !== "read" && metadata.effect !== "preview"
++      const key = metadata.method === "POST"
++        ? metadata.effect === "read" || metadata.effect === "preview" ? crypto.randomUUID() : call.idempotencyKey
++        : undefined
++      if (metadata.method === "POST" && (!key || !KEY.test(key))) return failure("contract-mismatch")
++      if (metadata.method === "GET" && call.idempotencyKey !== undefined) return failure("contract-mismatch")
++      const bodyValue = metadata.method === "POST" ? operationBody(metadata, decoded.value) : undefined
++      if (metadata.method === "POST" && bodyValue === undefined) return failure("contract-mismatch")
++      const body = bodyValue === undefined ? undefined : JSON.stringify(bodyValue)
++      if (body !== undefined && metadata.maxRequestBytes !== undefined && new TextEncoder().encode(body).byteLength > metadata.maxRequestBytes) {
++        return failure("contract-mismatch")
++      }
++      const legacyMutation = mutating && /\{surface\}|\/dashboard$|\/planner$|\/procurement$/.test(metadata.pathTemplate)
++      if (legacyMutation && !stamp) return failure("contract-unavailable")
++      if (stamp && !sameStampInstallation(stamp, options.binding)) return failure("contract-mismatch")
++      if (mutating && pending.size >= MUTATION_LIMIT && !pending.has(key!)) return failure("contract-unavailable")
++      const digest = mutating ? await digestPayload(operation.operationId, body ?? "") : undefined
++      if (mutating && digest === undefined) return failure("contract-unavailable")
++      const ownerHeader = legacyMutation ? nativeOwnerHeader(stamp!) : undefined
++      if (legacyMutation && !ownerHeader) return failure("contract-mismatch")
++      if (mutating) {
++        const previous = pending.get(key!)
++        if (previous && previous !== digest) return failure("contract-mismatch")
++        pending.set(key!, digest!)
++      }
++      if (!isCurrent() || call.signal.aborted) {
++        if (mutating) pending.delete(key!)
++        return failure("aborted")
++      }
++
++      const headers: Record<string, string> = { Accept: "application/json" }
++      if (body !== undefined) headers["Content-Type"] = "application/json"
++      if (key) headers["Idempotency-Key"] = key
++      if (ownerHeader) headers["X-SF-Native-Owner"] = ownerHeader
++      let dispatched = false
++      let response: Readonly<{ status: number; headers: SfPublicHeaders; body: unknown }> | SfTransportFailure
++      if (options.desktop && options.desktopBinding) {
++        const owner = { bindingHandle: options.desktopBinding.bindingHandle, generation: options.generation }
++        const requestId = crypto.randomUUID()
++        const cancel = () => { void options.desktop?.abort({ ...owner, requestId }).catch(() => undefined) }
++        call.signal.addEventListener("abort", cancel, { once: true })
++        try {
++          dispatched = true
++          const result = await options.desktop.invoke({
++            kind: "request", ...owner, requestId, operationId: operation.operationId,
++            input: decoded.value, ...(key ? { idempotencyKey: key } : {}),
++          })
++          if (result.kind === "transport-error") response = result
++          else if (result.kind === "json-response") response = { status: result.status, headers: publicHeaders(result.headers), body: result.body }
++          else if (result.kind === "empty-response" && metadata.responseMode === "empty") response = { status: result.status, headers: publicHeaders(result.headers), body: undefined }
++          else response = failure("invalid-response")
++        } catch {
++          response = failure("network")
++        } finally { call.signal.removeEventListener("abort", cancel) }
++      } else {
++        try {
++          dispatched = true
++          const result = await options.fetch(route, {
++            method: metadata.method,
++            credentials: "same-origin",
++            cache: "no-store",
++            redirect: "error",
++            signal: call.signal,
++            headers,
++            ...(body !== undefined ? { body } : {}),
++          })
++          const extracted = publicHeaders(result.headers)
++          if (result.status === 401 || result.status === 403) stamp = undefined
++          if (metadata.responseMode === "empty") {
++            response = result.status === 204 && !result.headers.get("content-type")
++              ? { status: result.status, headers: extracted, body: undefined }
++              : failure("invalid-response")
++          } else if (!result.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
++            response = failure("invalid-response")
++          } else {
++            const wire = await readJsonBounded(result)
++            response = wire === undefined ? failure("invalid-response") : { status: result.status, headers: extracted, body: wire }
++          }
++        } catch { response = failure("network") }
++      }
++      if (!isCurrent() || call.signal.aborted) {
++        if (mutating && dispatched) return failure("outcome-unknown")
++        return failure("aborted")
++      }
++      if ("kind" in response && response.kind === "transport-error") {
++        if (mutating && dispatched && response.reason !== "contract-mismatch" && response.reason !== "contract-unavailable") return failure("outcome-unknown")
++        if (mutating) pending.delete(key!)
++        return response
++      }
++      if (!Number.isInteger(response.status) || response.status < 200 || response.status >= 600) return failure(mutating ? "outcome-unknown" : "invalid-response")
++      if (response.status === 401 || response.status === 403) stamp = undefined
++      const wireDecoded = (() => {
++        try { return codec.decodeOutput(response.body) }
++        catch { return { status: "invalid" } as const }
++      })()
++      if (wireDecoded.status !== "ok") return failure(mutating ? "outcome-unknown" : "invalid-response")
++      const parsedOutput = Schema.decodeUnknownOption(operation.output)(wireDecoded.value)
++      if (Option.isNone(parsedOutput)) return failure(mutating ? "outcome-unknown" : "invalid-response")
++      if (operation.operationId === "ctx.context") {
++        if (!validContextOutcome(parsedOutput.value, options.binding)) return failure("invalid-response")
++        const result = parsedOutput.value
++        if (typeof result === "object" && result !== null && "status" in result && result.status === "ok" && "value" in result && typeof result.value === "object" && result.value !== null && "stamp" in result.value && validContextStamp(result.value.stamp)) {
++          stamp = result.value.stamp
++        } else stamp = undefined
++      }
++      if (mutating) pending.delete(key!)
++      return { kind: "response", status: response.status, headers: response.headers, body: parsedOutput.value }
++    },
++  }
++  internals.set(transport, { binding: options.binding, fetch: options.fetch, current: isCurrent, clear })
++  return transport
++}
++
++export function createSfAuthActions(options: Readonly<{
++  binding: SfInstallationDescriptor
++  desktop?: SfDesktopCapability
++  desktopBinding?: SfDesktopBinding
++  navigate: (validatedSameOriginUrl: string) => void
++  transport: SfTransport
++}>): Readonly<{ login(returnRoute: SfResolvedRoute): Promise<void>; logout(): Promise<void> }> {
++  const internal = internals.get(options.transport)
++  const owner = options.desktopBinding && { bindingHandle: options.desktopBinding.bindingHandle, generation: options.desktopBinding.generation }
++  return {
++    async login(returnRoute) {
++      if (!internal || !internal.current() || !sameInstallation(options.binding, internal.binding)) throw new Error("SF_NATIVE_AUTH_CONTEXT_MISMATCH")
++      if (String(returnRoute.ownerSelection.projectId) !== options.binding.projectId ||
++          returnRoute.ownerSelection.installationId !== undefined && String(returnRoute.ownerSelection.installationId) !== options.binding.installationId) {
++        throw new Error("SF_NATIVE_AUTH_CONTEXT_MISMATCH")
++      }
++      if (options.desktop && owner) {
++        const result = await options.desktop.login({ ...owner, returnRoute })
++        if (result.status !== "authenticated" || !sameStampInstallation(result.context.stamp, options.binding)) {
++          throw new Error("SF_NATIVE_AUTH_NOT_CONFIRMED")
++        }
++        return
++      }
++      // An exact return-intents response codec is an I00 producer dependency.
++      // Do not guess a JSON loginUrl or expand the original safeReturn policy.
++      throw new Error("SF_NATIVE_RETURN_INTENT_CONTRACT_UNAVAILABLE")
++    },
++    async logout() {
++      if (!internal || !sameInstallation(options.binding, internal.binding)) throw new Error("SF_NATIVE_AUTH_CONTEXT_MISMATCH")
++      internal.clear()
++      if (options.desktop && owner) {
++        const result = await options.desktop.logout(owner)
++        if (result.status !== "cleared") throw new Error("SF_NATIVE_LOCAL_LOGOUT_UNCONFIRMED")
++        return
++      }
++      if (!internal.current() || typeof window === "undefined" || window.location.origin !== options.binding.publicOrigin) return
++      // Logout is the real identity handler, not a generic JSON RPC.
++      try {
++        const response = await internal.fetch(options.binding.publicOrigin + options.binding.mount + "/auth/logout", {
++          method: "POST", credentials: "same-origin", cache: "no-store", redirect: "error",
++          headers: { "Idempotency-Key": crypto.randomUUID() },
++        })
++        if (response.status !== 204) throw new Error("SF_NATIVE_REMOTE_LOGOUT_UNCONFIRMED")
++      } finally { internal.clear() }
++    },
++  }
++}
++
++function operationUrl(
++  binding: SfInstallationDescriptor,
++  meta: Readonly<{ method: "GET" | "POST"; pathTemplate: string; fixedQuery?: Readonly<Record<string, string>> }>,
++  input: SfJson | undefined,
++  operationId: SfOperationId,
++): string | undefined {
++  if (!meta.pathTemplate.startsWith("/") && !meta.pathTemplate.startsWith("{mount}/")) return undefined
++  const source = asJsonObject(input)
++  const surface = source?.surface
++  const path = meta.pathTemplate
++    .replaceAll("{mount}", binding.mount)
++    .replaceAll("{surface}", typeof surface === "string" && SURFACES.has(surface) ? surface : "__unbound__")
++  if (path.includes("{") || path.includes("}") || path.includes("__unbound__") || path.includes("//") || path.includes("..")) return undefined
++  if (!path.startsWith(binding.mount + "/") && operationId !== "ctx.installations") return undefined
++  try {
++    const url = new URL(path, binding.publicOrigin)
++    if (url.origin !== binding.publicOrigin || url.search || url.hash || url.pathname !== path) return undefined
++    for (const [key, value] of Object.entries(meta.fixedQuery ?? {})) {
++      if (!/^[a-zA-Z][a-zA-Z0-9._\[\]-]*$/.test(key) || value.includes("\n") || value.includes("\r")) return undefined
++      url.searchParams.set(key, value)
++    }
++    if (meta.method === "GET" && input !== undefined) {
++      if (!source) return undefined
++      for (const [key, value] of Object.entries(source)) {
++        if (!/^[a-zA-Z][a-zA-Z0-9._\[\]-]*$/.test(key) || url.searchParams.has(key)) return undefined
++        if (typeof value === "string" || typeof value === "number" && Number.isFinite(value) || typeof value === "boolean") url.searchParams.set(key, String(value))
++        else return undefined
++      }
++    }
++    if (operationId === "ctx.context" &&
++      (url.searchParams.size !== 3 ||
++       url.searchParams.get("installationId") !== binding.installationId ||
++       url.searchParams.get("projectId") !== binding.projectId ||
++       url.searchParams.get("hostId") !== binding.hostId)) return undefined
++    return url.href
++  } catch { return undefined }
++}
++
++function operationBody(
++  meta: Readonly<{ fixedBodyDiscriminator?: Readonly<Record<string, string>> }>,
++  input: SfJson | undefined,
++): SfJson | undefined {
++  const fixed = meta.fixedBodyDiscriminator ?? {}
++  if (!Object.keys(fixed).length) return input ?? {}
++  const value = asJsonObject(input)
++  if (!value) return undefined
++  if (Object.entries(fixed).some(([key, expected]) => key in value && value[key] !== expected)) return undefined
++  return { ...value, ...fixed }
++}
++
++function asJsonObject(value: SfJson | undefined): Readonly<Record<string, SfJson>> | undefined {
++  return value && typeof value === "object" && !Array.isArray(value) ? value as Readonly<Record<string, SfJson>> : undefined
++}
++
++function validInstallation(value: SfInstallationDescriptor): boolean {
++  if (!MOUNT.test(value.mount) || value.contractRevision !== "sf-native-ui/1") return false
++  if (![value.hostId, value.projectId, value.installationId].every((id) => typeof id === "string" && id.trim().length > 0)) return false
++  try {
++    const url = new URL(value.publicOrigin)
++    if (url.origin !== value.publicOrigin || url.username || url.password) return false
++    return value.authMode === "microsoft" && url.protocol === "https:" ||
++      value.authMode === "local-operator" && url.protocol === "http:" &&
++      (url.hostname === "127.0.0.1" || url.hostname === "[::1]")
++  } catch { return false }
++}
++
++function sameInstallation(a: SfInstallationDescriptor, b: SfInstallationDescriptor): boolean {
++  return a.installationId === b.installationId && a.projectId === b.projectId &&
++    a.hostId === b.hostId && a.publicOrigin === b.publicOrigin && a.mount === b.mount &&
++    a.contractRevision === b.contractRevision && a.authMode === b.authMode
++}
++
++function sameStampInstallation(stamp: SfContextStamp, binding: SfInstallationDescriptor): boolean {
++  return stamp.installationId === binding.installationId &&
++    stamp.projectId === binding.projectId && stamp.hostId === binding.hostId &&
++    stamp.principalRef.trim().length > 0 && stamp.policyVersion.trim().length > 0 &&
++    stamp.accessRevision.trim().length > 0
++}
++
++function validContextOutcome(value: unknown, binding: SfInstallationDescriptor): boolean {
++  if (!value || typeof value !== "object" || !("status" in value)) return false
++  if (value.status === "denied" || value.status === "unauthenticated") return true
++  if (value.status === "unavailable") return "reason" in value &&
++    ["identity-unavailable", "host-unavailable", "contract-mismatch"].includes(String(value.reason))
++  if (value.status !== "ok" || !("value" in value) || !value.value || typeof value.value !== "object") return false
++  const context = value.value
++  return "stamp" in context && context.stamp !== null && typeof context.stamp === "object" &&
++    validContextStamp(context.stamp) && sameStampInstallation(context.stamp, binding) &&
++    "contractRevision" in context && context.contractRevision === "sf-native-ui/1" &&
++    "authMode" in context && context.authMode === binding.authMode
++}
++
++function validContextStamp(value: unknown): value is SfContextStamp {
++  if (!value || typeof value !== "object") return false
++  const fields = ["installationId", "projectId", "hostId", "principalRef", "policyVersion", "accessRevision"] as const
++  return fields.every((field) => field in value && typeof value[field] === "string" && value[field].trim().length > 0)
++}
++
++function nativeOwnerHeader(stamp: SfContextStamp): string | undefined {
++  const bytes = new TextEncoder().encode(JSON.stringify({
++    installationId: stamp.installationId, hostId: stamp.hostId,
++    projectId: stamp.projectId, principalRef: stamp.principalRef,
++  }))
++  if (bytes.byteLength > 2048) return undefined
++  const binary = Array.from(bytes, (byte) => String.fromCharCode(byte)).join("")
++  return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "")
++}
++
++async function digestPayload(operationId: SfOperationId, body: string): Promise<string | undefined> {
++  if (typeof crypto === "undefined" || !crypto.subtle) return undefined
++  const bytes = new TextEncoder().encode(operationId + "\u0000" + body)
++  const digest = await crypto.subtle.digest("SHA-256", bytes).catch(() => undefined)
++  return digest ? Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("") : undefined
++}
++
++function publicHeaders(source: Headers | SfPublicHeaders): SfPublicHeaders {
++  const header = (name: keyof SfPublicHeaders) => source instanceof Headers ? source.get(name) : source[name]
++  const contentType = header("content-type")
++  const disposition = header("content-disposition")
++  const accessRevision = header("x-sf-access-revision")
++  const reviewBinding = header("x-sf-review-binding")
++  const contractRevision = header("x-sf-contract-revision")
++  const safeDisposition = disposition && /^attachment;\s*filename="[^\/\\\r\n"]{1,160}"$/i.test(disposition) ? disposition : undefined
++  return {
++    ...(contentType && /^[^\r\n]{1,256}$/.test(contentType) ? { "content-type": contentType } : {}),
++    ...(safeDisposition ? { "content-disposition": safeDisposition } : {}),
++    ...(accessRevision && /^[^\r\n]{1,256}$/.test(accessRevision) ? { "x-sf-access-revision": accessRevision } : {}),
++    ...(reviewBinding && /^[^\r\n]{1,256}$/.test(reviewBinding) ? { "x-sf-review-binding": reviewBinding } : {}),
++    ...(contractRevision && /^[^\r\n]{1,256}$/.test(contractRevision) ? { "x-sf-contract-revision": contractRevision } : {}),
++  }
++}
++
++/**
++ * Bounded JSON ingestion: content-length is only a hint, so enforce the limit
++ * on actual streamed bytes. Never render or log invalid producer JSON/HTML.
++ */
++async function readJsonBounded(response: Response): Promise<unknown | undefined> {
++  const MAX_JSON_BYTES = 32 * 1024 * 1024
++  const declared = response.headers.get("content-length")
++  if (declared !== null && (!/^\d+$/.test(declared) || Number(declared) > MAX_JSON_BYTES)) return undefined
++  const reader = response.body?.getReader()
++  if (!reader) return undefined
++  const chunks: Uint8Array[] = []
++  let size = 0
++  try {
++    while (true) {
++      const chunk = await reader.read()
++      if (chunk.done) break
++      size += chunk.value.byteLength
++      if (size > MAX_JSON_BYTES) {
++        await reader.cancel().catch(() => undefined)
++        return undefined
++      }
++      chunks.push(chunk.value)
++    }
++    if (!size) return undefined
++    const all = new Uint8Array(size)
++    let offset = 0
++    for (const chunk of chunks) { all.set(chunk, offset); offset += chunk.byteLength }
++    return JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(all))
++  } catch { return undefined }
++  finally { reader.releaseLock() }
++}
+diff --git a/apps/cli/src/sucafina-product/native-ui/router.ts b/apps/cli/src/sucafina-product/native-ui/router.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/native-ui/router.ts
+@@ -0,0 +1,88 @@
++/**
++ * F02 / CLI native projection router. This is an installation seam only.
++ * The original Request has already passed composeSfInstallation ingress,
++ * identity.handle / identity.prepare and the requested surface bootstrap.
++ * I00 mounts this BEFORE business(request), not as an alternate backend.
++ */
++import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
++import type { SfOperationId } from "@orchestra/schema/sucafina/common"
++import type { SfContextResult } from "@orchestra/schema/sucafina/context"
++import type { Application } from "../../../../../modules/sucafina/Sucafinav1/runtime/application.ts"
++import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
++import type { createSfContextHandler } from "./context.ts"
++
++export type SfNativeHostDependencies = Readonly<{
++  origin: string
++  mount: string
++  application: Application
++  runtime: () => SfHostServices | undefined
++  readContext: (request: Request) => Promise<SfContextResult>
++}>
++
++export type SfProjectionHandler = Readonly<{
++  operationId: SfOperationId
++  handle: (request: Request) => Promise<Response>
++}>
++
++export function mountSfNativeProjections(options: Readonly<{
++  mount: string
++  context: ReturnType<typeof createSfContextHandler>
++  handlers: readonly SfProjectionHandler[]
++}>): (request: Request) => Promise<Response | undefined> {
++  if (!/^\/(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+$/.test(options.mount)) {
++    throw new Error("SF_NATIVE_MOUNT_INVALID")
++  }
++  const routes = new Map<string, Readonly<{ method: "GET" | "POST"; handler: (request: Request) => Promise<Response>; maxRequestBytes?: number }>>()
++  const contextMeta = SfOperationRegistry["ctx.context"]
++  if (!contextMeta || contextMeta.method !== "GET" ||
++      contextMeta.pathTemplate !== "{mount}/api/ui/context" || contextMeta.responseMode !== "json") {
++    throw new Error("SF_NATIVE_CONTEXT_CONTRACT_MISMATCH")
++  }
++  routes.set(options.mount + "/api/ui/context", { method: "GET", handler: options.context.handle })
++  for (const candidate of options.handlers) {
++    const meta = SfOperationRegistry[candidate.operationId]
++    if (!meta || !["GET", "POST"].includes(meta.method)) {
++      throw new Error("SF_NATIVE_UNKNOWN_OPERATION")
++    }
++    const path = meta.pathTemplate.replaceAll("{mount}", options.mount)
++    if (!path.startsWith(options.mount + "/api/ui/") ||
++        path.includes("{") || path.includes("}") || path.includes("//") ||
++        path.includes("..") || path.includes("?") || path.includes("#")) {
++      throw new Error("SF_NATIVE_NOT_A_PROJECTION")
++    }
++    if (routes.has(path)) throw new Error("SF_NATIVE_DUPLICATE_PROJECTION_ROUTE")
++    routes.set(path, {
++      method: meta.method,
++      handler: candidate.handle,
++      ...(meta.maxRequestBytes !== undefined ? { maxRequestBytes: meta.maxRequestBytes } : {}),
++    })
++  }
++
++  return async (request) => {
++    const url = new URL(request.url)
++    const route = routes.get(url.pathname)
++    if (!route) return undefined
++    // No URL rewrite/new Request, no body pre-read, no authority from an ID.
++    if (request.method !== route.method) return new Response(null, {
++      status: 405, headers: { Allow: route.method, "Cache-Control": "no-store" },
++    })
++    if (url.username || url.password || url.hash || url.search.length > 4096 ||
++        [...url.searchParams.keys()].some((key) => url.searchParams.getAll(key).length !== 1)) {
++      return Response.json({ status: "invalid" }, {
++        status: 400, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" },
++      })
++    }
++    if (route.method === "GET" && (request.headers.has("transfer-encoding") || Number(request.headers.get("content-length")) > 0)) {
++      return Response.json({ status: "invalid" }, { status: 400, headers: { "Cache-Control": "no-store" } })
++    }
++    if (route.maxRequestBytes !== undefined) {
++      const size = Number(request.headers.get("content-length"))
++      if (Number.isFinite(size) && size > route.maxRequestBytes) {
++        return Response.json({ status: "invalid" }, { status: 413, headers: { "Cache-Control": "no-store" } })
++      }
++    }
++    // The injected handler is owned by its domain and must perform its own
++    // current principal/role/field admission and end-of-transaction revalidation.
++    return route.handler(request)
++  }
++}
+diff --git a/modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts b/modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts
+new file mode 100644
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts
+@@ -0,0 +1,127 @@
++/**
++ * F02 contract regressions. Author-owned source tests; they are NOT CI proof.
++ * Only 120 dispatches the installed Actions selection once I00 has composed
++ * the real registry/codecs and F01 context types on a material C.
++ */
++import { expect, test } from "bun:test"
++import { Schema } from "effect"
++import { createSfTransport } from "../../../../../packages/client/src/sucafina/transport.ts"
++import type { SfDesktopCapability } from "../../../../../packages/client/src/sucafina/transport.ts"
++import type { SfInstallationDescriptor } from "../../../../../packages/schema/src/sucafina/context.ts"
++
++const installation: SfInstallationDescriptor = {
++  installationId: "installation-synthetic-a",
++  projectId: "project-synthetic-a",
++  hostId: "host-synthetic-current",
++  publicOrigin: "https://sf.example.test",
++  mount: "/sucafina",
++  authMode: "microsoft",
++  contractRevision: "sf-native-ui/1",
++}
++const contextOperation = {
++  operationId: "ctx.context",
++  input: Schema.Struct({
++    installationId: Schema.String,
++    projectId: Schema.String,
++    hostId: Schema.String,
++  }),
++  output: Schema.Struct({ status: Schema.Literal("denied") }),
++} as const
++
++function forbiddenDesktop(onInvoke: () => void): SfDesktopCapability {
++  return {
++    registerConnection: async () => ({ status: "cancelled" }),
++    bind: async () => ({ status: "denied" }),
++    async invoke() { onInvoke(); throw new Error("desktop request must not be invoked") },
++    abort: async () => {},
++    login: async () => ({ status: "denied" }),
++    logout: async () => ({ status: "cleared", remote: "unavailable" }),
++    release: async () => {},
++  }
++}
++
++test("no real codec: known context ID does not imply an admitted producer", async () => {
++  let invoked = 0
++  const transport = createSfTransport({
++    binding: installation,
++    generation: 1,
++    currentGeneration: () => 1,
++    fetch: async () => { throw new Error("browser must not be used under desktop binding") },
++    operations: {},
++    desktop: forbiddenDesktop(() => invoked++),
++    desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 1 },
++  })
++  const result = await transport.execute(contextOperation, {
++    installationId: installation.installationId,
++    projectId: installation.projectId,
++    hostId: installation.hostId,
++  }, { signal: new AbortController().signal })
++  expect(result).toEqual({ kind: "transport-error", reason: "contract-unavailable" })
++  expect(invoked).toBe(0)
++})
++
++test("stale owner generation blocks before any IPC or network", async () => {
++  let invoked = 0
++  const transport = createSfTransport({
++    binding: installation,
++    generation: 2,
++    currentGeneration: () => 3,
++    fetch: async () => { throw new Error("must not fetch") },
++    operations: {},
++    desktop: forbiddenDesktop(() => invoked++),
++    desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 2 },
++  })
++  const result = await transport.execute(contextOperation, {
++    installationId: installation.installationId,
++    projectId: installation.projectId,
++    hostId: installation.hostId,
++  }, { signal: new AbortController().signal })
++  expect(result).toEqual({ kind: "transport-error", reason: "contract-mismatch" })
++  expect(invoked).toBe(0)
++})
++
++test("desktop descriptor change is not resolved by selection from another project", async () => {
++  let invoked = 0
++  const transport = createSfTransport({
++    binding: installation,
++    generation: 3,
++    currentGeneration: () => 3,
++    fetch: async () => { throw new Error("must not fetch") },
++    operations: {},
++    desktop: forbiddenDesktop(() => invoked++),
++    desktopBinding: {
++      descriptor: { ...installation, projectId: "project-synthetic-b" },
++      bindingHandle: "opaque-main-owned-handle",
++      generation: 3,
++    },
++  })
++  const result = await transport.execute(contextOperation, {
++    installationId: installation.installationId,
++    projectId: installation.projectId,
++    hostId: installation.hostId,
++  }, { signal: new AbortController().signal })
++  expect(result).toEqual({ kind: "transport-error", reason: "contract-mismatch" })
++  expect(invoked).toBe(0)
++})
++
++test("aborted signal does not enter the producer", async () => {
++  let invoked = 0
++  const controller = new AbortController()
++  controller.abort()
++  const transport = createSfTransport({
++    binding: installation,
++    generation: 4,
++    currentGeneration: () => 4,
++    fetch: async () => { throw new Error("must not fetch") },
++    operations: {},
++    desktop: forbiddenDesktop(() => invoked++),
++    desktopBinding: { descriptor: installation, bindingHandle: "opaque-main-owned-handle", generation: 4 },
++  })
++  const result = await transport.execute(contextOperation, {
++    installationId: installation.installationId,
++    projectId: installation.projectId,
++    hostId: installation.hostId,
++  }, { signal: controller.signal })
++  expect(result).toEqual({ kind: "transport-error", reason: "aborted" })
++  expect(invoked).toBe(0)
++})
