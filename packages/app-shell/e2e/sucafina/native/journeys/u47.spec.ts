@@ -56,7 +56,7 @@ test.describe("N14 U47 / CAP08", () => {
     if (!projection.value.allowedActionIds.includes("save")) {
       expect(members.every((member) => !Object.hasOwn(member, "cls") &&
         !Object.hasOwn(member, "outlook") && !Object.hasOwn(member, "notes"))).toBe(true)
-      await expect(page.getByRole("button", { name: "Edit review" })).toBeDisabled()
+      await expect(page.locator('[data-sf-action="edit-talent-review"] button')).toBeDisabled()
       await expect(page.getByText("Classification", { exact: true })).toHaveCount(0)
       await expect(page.getByText("Outlook", { exact: true })).toHaveCount(0)
     }
