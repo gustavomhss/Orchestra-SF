@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto"
 import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
-import { createSfCreationRecoveryHttp, type SfCreationRecoveryRuntime } from "../../../../../apps/cli/src/sucafina-product/creation-recovery-http.ts"
+import { createSfCreationRecoveryHttp, type SfCreationRecoveryRuntime } from "../../../../../../apps/cli/src/sucafina-product/creation-recovery-http.ts"
 import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
 import { digestSfValue } from "../../../product/contracts/canonical.ts"
 import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
@@ -106,7 +106,7 @@ test("111/HTTP+C08+SQLite: original key recovers once after restart; actor, revo
     try {
       if (!await runtime.ui.validate(admission.value, "sf_case_draft", digest))
         throw new Error("original C08 admission was not consumed")
-      return runtime.cases.draft(value, admission.value)
+      return await runtime.cases.draft(value, admission.value)
     } finally { runtime.ui.finish(admission.value) }
   }
   let runtime: Awaited<ReturnType<typeof createRuntime>> | undefined
