@@ -221,8 +221,9 @@ async function workItem(
     const found = await runtime.workDestinations.read(selection.value, actionRef, call)
     if (found.status !== "ok") return producerFailure(request, found, call.binding.accessRevision)
     const value = found.value.view
-    if (value.item.actionRef !== actionRef || value.item.ownerRef !== call.binding.principalRef ||
-      value.item.period && digestSfValue(value.item.period) !== digestSfValue(selection.value.period)) {
+    // Period authority remains owned by destinations.read: thread and
+    // confirmation item periods need not equal the work-list selector.
+    if (value.item.actionRef !== actionRef || value.item.ownerRef !== call.binding.principalRef) {
       return failure(request, "denied", call.binding.accessRevision)
     }
     // Only the original producer's redacted presentation fields may egress.
