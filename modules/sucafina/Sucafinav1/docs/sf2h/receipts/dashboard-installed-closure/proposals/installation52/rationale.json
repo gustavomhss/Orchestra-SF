@@ -1,0 +1,147 @@
+{
+  "schema": "sf2h.mission67.protected-adapter-proposal.v1",
+  "status": "UNVALIDATED_CANDIDATE_NOT_APPLIED",
+  "targetPath": "apps/cli/src/sucafina-product/installation.ts",
+  "preimage": {
+    "commit": "7e4a6587636c396d5052bbe848ed9b473ac1adb3",
+    "blob": "21236af83e4de879242fd298d9e15a9923f3bf41"
+  },
+  "observedCurrentDiagnostic": {
+    "run": 43671673378,
+    "job": 132682862827,
+    "W": "49a8f0d546289255407f65eae7dfe4747e3d9ca6",
+    "state": "FAILURE_OBSERVED_BY_ROOT",
+    "source": "Root independently downloaded/inspected run05 results and provided these values; this child did not re-execute or dispatch tests.",
+    "controls": {
+      "nodeGet": {
+        "status": 200,
+        "elapsedMs": 32
+      },
+      "browserGet": {
+        "status": 200,
+        "elapsedMs": 10
+      }
+    },
+    "postControls": {
+      "transports": [
+        "Node fetch",
+        "browser fetch"
+      ],
+      "payloads": [
+        "empty body",
+        "malformed JSON",
+        "valid read-only saved-view list"
+      ],
+      "attempts": 6,
+      "responses": 0,
+      "allAbortedAtMs": 15000
+    },
+    "conclusion": "The failure is not browser-specific and invalid JSON controls never reached a response. This does not identify the internal stage: lazy installed service initialization before body consumption remains possible."
+  },
+  "ownership": {
+    "protectedOwner": "52",
+    "intakeOwner": "60 or explicitly authorized successor",
+    "producer52State": "HOLD_NO_COMPLETE_EXPLICIT_QUALIFIED_RELEASE",
+    "sourceApplyAuthorized": false,
+    "isolatedWApplyAuthorized": false,
+    "requirement": "Owner52 release and intake60 authorization must precede any application, including an isolated validation W. This deliverable is inert review material only."
+  },
+  "purpose": "A complete minimal streaming alternative for the actual Node IncomingMessage branch, prepared for owner review if the bounded transport diagnosis supports that boundary. It is not a proven fix.",
+  "change": {
+    "nodeGuard": "Use source instanceof IncomingMessage from node:http, which matches the actual default NodeHttpServer request source and its subclasses.",
+    "singleConsumer": "The Node branch never calls HttpServerRequest.toWeb, so it does not create the old Effect body stream in addition to the native stream.",
+    "body": "Use node:stream Readable.toWeb only for methods other than GET/HEAD. Preserve raw bytes and streaming; no full buffering, body parsing, retries or synthetic response.",
+    "metadata": "Use the same pinned HttpServerRequest.toURL and sanitized headers/method as the existing Effect conversion; retain the existing host, proxy-header sanitization, exact origin and Microsoft public-origin adapter checks.",
+    "fallback": "Non-Node sources retain the existing HttpServerRequest.toWeb fallback, including an existing native Web Request source.",
+    "signal": "The existing Effect.tryPromise callback and installation.handler(new Request(request, {signal})) remain byte-for-byte unchanged. No weaker grant or fake signal is introduced.",
+    "lifecycle": "Return composition, privacy layer, mount, transport, original installation.dispose and response handling are unchanged. Native toWeb owns pause/resume/finished/cancel handling for this one request stream.",
+    "limits": "No limit constants or body readers change. Local canonical JSON readCommand retains its 2MiB configured maximum; product routes retain their existing bounded parsers. The global BodyLimit still rejects declared oversized Content-Length. Neither this candidate nor the existing Effect stream path proves enforcement of MaxBodySize for an arbitrary chunked stream.",
+    "error": "An invalid toURL result throws within the existing route effect and retains the catchCause\u2192503 behavior; origin mismatches remain 403."
+  },
+  "typeAndApiRationale": [
+    {
+      "api": "IncomingMessage",
+      "source": "node:http; Bun 1.3.14 _http_incoming.ts",
+      "reason": "A concrete request-source class guard narrows the source to a Node Readable. No unchecked arbitrary source cast or permissive duck-type fallback."
+    },
+    {
+      "api": "Readable.toWeb",
+      "source": "Bun 1.3.14 readable.ts:1638-1640; webstreams_adapters.ts:432-510",
+      "reason": "Public API delegates to a streaming adapter with byte-length high-water-mark strategy, data enqueue, pause/resume backpressure, terminal finished propagation, and cancel\u2192destroyer."
+    },
+    {
+      "api": "HttpServerRequest.toURL",
+      "source": "Effect 4.0.0-beta.83 HttpServerRequest.ts:1010-1018",
+      "reason": "Retains the exact original URL derivation rather than reconstructing a differently trusted origin."
+    },
+    {
+      "api": "Request constructor",
+      "source": "Effect 4.0.0-beta.83 HttpServerRequest.ts:1048-1059 and the existing Microsoft adapter",
+      "reason": "Preserves method, headers and duplex:'half' for a stream body; existing outer Request construction attaches the actual effect AbortSignal."
+    },
+    {
+      "api": "Compiler compatibility",
+      "source": "NOT EXECUTED",
+      "reason": "The candidate contains no any/unknown cast to conceal Node WebStream compatibility. Owner45 must verify the exact node:stream/web return type is assignable to the repository's Bun/global Request BodyInit and that the helper types resolve in the real typed program."
+    }
+  ],
+  "lifecycleCaveats": [
+    "Readable.toWeb's cancel() destroys its Node source; no new cancellation is performed on successful handler completion before the response is sent.",
+    "Request.signal alone does not establish that a pending arbitrary body reader is canceled. Preserve and explicitly test actual disconnect/abort behavior, underlying IncomingMessage close/error propagation and bounded termination.",
+    "An early denied response without reading the body must not leave paused listeners or corrupt the next keep-alive request; this remains a hosted check.",
+    "Native source ended/destroyed handling and empty-body EOF must be checked before using the alternative as business evidence.",
+    "No claim is made that the Effect scope, native bridge, or Bun implementation is the observed root cause."
+  ],
+  "requiredHostedChecks": [
+    {
+      "stage": "diagnostic prerequisite",
+      "check": "Retain failed run05 Node/browser controls and run04. Exact body/initialization stage remains unknown; the native streaming alternative remains unvalidated. If owner52 needs stage attribution before a candidate comparison, observe adapter conversion, installation handler entry, lazy service initialization, first body byte, body EOF and handler return with payload-free metadata under explicit owner authorization."
+    },
+    {
+      "stage": "authority",
+      "check": "Obtain explicit release for the protected adapter from52 and consumer60 authorization with exact preimage21236af83e4de879242fd298d9e15a9923f3bf41; stop on drift."
+    },
+    {
+      "stage": "surgical isolated candidate",
+      "check": "Run the same real CLI diagnostic with GET controls, empty-body rejection, malformed-body rejection and valid saved-view list for both Node and browser; no endpoint/payload/timeout weakening."
+    },
+    {
+      "stage": "body semantics",
+      "check": "One-chunk and split/delayed chunked UTF-8 bodies reach EOF exactly once; raw body bytes and JSON results agree with the current canonical readers."
+    },
+    {
+      "stage": "bounds",
+      "check": "Canonical bounded JSON rejects a body beyond its existing limit; declared oversized Content-Length retains the existing rejection. Do not infer chunked global cap coverage from header-only rejection."
+    },
+    {
+      "stage": "lifecycle",
+      "check": "Abort/disconnect during a pending body terminates without domain effects or unhandled rejections; early authorization rejection and a subsequent keep-alive request terminate cleanly."
+    },
+    {
+      "stage": "security",
+      "check": "Host mismatch, origin mismatch, forbidden forwarded/proxy hints and Microsoft fixed-origin normalization retain existing behavior; native Web Request fallback remains supported."
+    },
+    {
+      "stage": "installed business",
+      "check": "Rerun the original installed Dashboard saves and journeys unchanged against exact candidate W/S after transport controls succeed. Source/diagnostic success is not business closure."
+    },
+    {
+      "stage": "compiler45",
+      "check": "Use the owner45 authorized hosted typed-program/guard gate including the installed E2E directory; no local Node/Bun execution or compile claim."
+    }
+  ],
+  "repoPrecedentSearch": {
+    "state": "NOT_ESTABLISHED",
+    "detail": "Available GitHub default-branch searches for toWeb/Readable.toWeb returned no results, including a known branch-local occurrence. Materialized local sources did not expose another adapter. These limited results do not prove repository-wide absence."
+  },
+  "applicationState": {
+    "activeSourcePathsTouched": [],
+    "activeExternalPathsTouched": [],
+    "remoteWrites": 0,
+    "remoteTestsDispatched": 0,
+    "localNodeBunExecution": 0,
+    "localProductTests": 0,
+    "existingProtectedWMaterial": "Unchanged. Proposal is stored only under domain-review/transport-proposal."
+  },
+  "release": false
+}
