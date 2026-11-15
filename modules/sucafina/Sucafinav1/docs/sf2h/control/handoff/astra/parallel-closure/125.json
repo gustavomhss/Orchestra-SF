@@ -1,0 +1,163 @@
+{
+  "schema": "sf2h.integration-successor125.v1",
+  "mission": 125,
+  "id": "integrate-after114",
+  "logical_actor": "S0-C / C00 / I00",
+  "actor_pack": "execution/actors/S0-C.json",
+  "branch": "sf2-stack",
+  "pr": 65,
+  "lease_epoch": "S0-C-e18-browser125",
+  "state": "PREPARED_NOT_STARTED",
+  "actual_actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "campaign_sha256": "703dd257274bed829a978705de548cd1383225bf7aac76445104c053e2bb5fba",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "scope": {
+    "wps": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "ux_orders": 78,
+    "surfaces": 70,
+    "operations": 305
+  },
+  "expected_head": "9cbff3e4a111b4eaa5376c5419f5991ece67e492",
+  "material": {
+    "id": "C58",
+    "sha": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "tree": "647b024075265fc76d6253c99bec00a82618f816",
+    "state": "NOT_FROZEN_NOT_ACCEPTED"
+  },
+  "source_authority": "S0 explicitly revokes previous114 and designates NEW browser125 as sole successor after real ACK. No recycled session and no second concurrent integrator. Old actor retains no integration write authority.",
+  "predecessor": {
+    "mission": 114,
+    "lease": "S0-C-e17-browser114",
+    "status": "REVOKED_BY_S0_FOR_USER_REQUESTED_SUCCESSION",
+    "observed_head": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+    "fence_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/S0-FENCE-125.json",
+    "fence_sha": "9cbff3e4a111b4eaa5376c5419f5991ece67e492",
+    "runtime_termination_claimed": false,
+    "actual_ack": "receipts/integration/after106-114/ACK-114.json",
+    "checkpoint": "receipts/integration/after106-114/QUEUE-114-C58.json",
+    "candidate_receipt": "receipts/integration/after106-114/C58-CONSUMPTION.json"
+  },
+  "required_reads": [
+    "Applicable AGENTS at actual HEAD",
+    "START.md, WORKFLOW.md, execution/COMMON.md, COMPLETE execution/actors/S0-C.json, mandatory pack annexes/criteria at immutable planning SHA; validate manifest",
+    "predecessor ACK/C58 checkpoint/consumption from actual sf2-stack; source SHAs and latest PR65 receipts/comments",
+    "UX normative cbac654784714f68779ae1434d30e6ea8970c4d1; original docs39bff1976d33f5b1a85c3224186ce2e9207ed021; EXECUTION-PROTOCOL, CONTRACTS, COMPONENT-CONTRACTS, host/route/component signatures and relevant work orders",
+    "sf2-control native-ui AUTHORING-ADMISSION19@8852ed4; successors INDEX-e2@49a92b9; wave2 INDEX@a82ba0f; preserve pinned blobs and19+9 scopes"
+  ],
+  "write_authority": {
+    "branch": "sf2-stack integration of accepted ready source blobs and genuinely shared composition only",
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after114-125/",
+    "shared": "I00 registry/routes/exports/i18n/owner wiring and authorized generated outputs per contracts. Actual source owner retains exclusive paths; complete writer patches need provenance/preimage/contract review before integrating.",
+    "control": "Use sf2-control only for coordination receipts with CAS; never merge its tree into product."
+  },
+  "immediate_queue": [
+    {
+      "source": "121",
+      "pr": 117,
+      "head": "914b56e076ca80ea9ecbc97253486ea90ee2dedf",
+      "material": "1091aa090f9e401ece1b52b2aa74138560d04c88",
+      "action": "Intake three creation tests; fixes16TS. Preserve startup→creation consumers→lifecycle order."
+    },
+    {
+      "source": "122",
+      "pr": 126,
+      "head": "2b49748bc255f6a5cfa5dd71f5dad1fd348c8402",
+      "action": "Intake five residual type fixes plus complete mandatory owner patch relations-fixture after owner/preimage reconciliation, not consumer-only incomplete composition."
+    },
+    {
+      "source": "123",
+      "pr": 132,
+      "head": "35a4c7aa972cefb6b0d185cd66991f98edead721",
+      "action": "Review six causal runtime patches and stage probe. Some patches exceed123 source grants; identify real owner and consume only authorized correct patches, not waive security tests. WP08 timeout remains OPEN."
+    },
+    {
+      "source": "119 tooling",
+      "pr": 107,
+      "head": "1c5113845ad54db1f9582169d183e17d50a7b9e4",
+      "action": "Review/adopt builder+TSGo verifier v2, regenerate committed epic matching real source. Do not merely change recorded hash. Compiler C58 had22uniqueTS;13/17PASS;55guard gates pending independent allowed disposition."
+    },
+    {
+      "source": "UX originals with real code",
+      "prs": [
+        131,
+        130,
+        125,
+        119,
+        127,
+        128,
+        121,
+        133
+      ],
+      "action": "F01,A03,S01,S05,U10.queue,U11.title-save,A06,A01. Intake exact exclusive leaf sets; review generic output schema/local-admin503/typed context gaps. No raw merge of inherited UX envelopes."
+    },
+    {
+      "source": "UX11 e2",
+      "orders": [
+        "W01",
+        "W03",
+        "W04",
+        "W05",
+        "W07",
+        "W08",
+        "W09",
+        "W13",
+        "W15",
+        "W16",
+        "W17"
+      ],
+      "action": "All user-launched; only e2 ACK-authority accepted. Latest W07 PR124 ARTIFACT_READY@58554e019479eac01a5bd5c5c42127d88b886e2b; W04 PR129@4b1de4f6108a02cdef8e633309b4b2f0378e76ae materialized8leaves. Read current manifests, not preauth revisions."
+    },
+    {
+      "source": "UX wave2",
+      "orders": [
+        "A07",
+        "A08",
+        "A09",
+        "A10",
+        "A11",
+        "A12",
+        "A13",
+        "A14",
+        "A15"
+      ],
+      "action": "User reports9new sessions deployed. Independent authoring permitted by S0; integrate only actual versioned outputs, never demand another per-leaf admission loop."
+    },
+    {
+      "source": "legacy pending",
+      "action": "Restore95+110native child,99/109P03,102XLSX,124DOCX/112review, AM01–06 and3FINAL. Preserve historical results and known gaps; no mock/HOLD→PASS."
+    }
+  ],
+  "execution": [
+    "First reconcile HEAD, material, fence and sources/actual handles. Publish real ACK125 and sole-authority before shared/source integration. Supersede stale RUNNING114 queue operationally; do not falsify terminal/process state.",
+    "Integrate ready coherent increments immediately by verified SHA/epoch/allowlist/preimages and contract review. Record source→candidate map and consumer ACK. Return findings to owner without writing its branch. Source artifact alone is not DONE.",
+    "Own I00 composition: F01/F02/S03 atomic wiring, F03 visual foundations, exact operation-registry and closed codec/binding map, schema/client exports, central i18n, desktop IPC/provider/sidebar/context integration. Match frozen exported interfaces; no fake stubs, success adapters or alternate standalone app.",
+    "Public Protocol/Server HttpApi requires packages/client bun run generate before qualification, through authorized existing compiler/runner route; never edit generated by hand. Dependencies Schema→Core/Protocol→Server and client no Core/Server preserved.",
+    "120 remains only product dispatcher,119 compiler. Reconcile pending/inflight requests/run IDs before submitting. Surgical hosted checks on coherent material inputs; no duplicate CI/source-green laundering or repeated unchanged failures. Full epic/eightfinal at complete accepted freeze.",
+    "One integration writer and branch CAS expected-head forcefalse. If predecessor writes again, stop overlap/reconcile and notify S0, never overwrite. No new C00 supervisor, native Goal resume or watchdog.",
+    "Update durable queue/checkpoint at material changes with exact heads, inputs, leases, findings, consumers, CI and next ready action; last predecessor queue is stale, not proof that all stillpending entries remain unexecuted.",
+    "Remain executing integration while independent ready work exists. Do not end just after inventory/planning/ACK. End only concrete integrated handoff or real external blocker after independent ready work; record full resumable checkpoint."
+  ],
+  "final_acceptance": [
+    "Complete canonical15/74/17/1610 plus allUXoutputs and actual consumers",
+    "SameacceptedC eightfinalCI selections+mandatoryepic/gates/typechecks+AM01–06",
+    "Three independent FINAL approvals, sufficient delta rechecks, no mandatory findings",
+    "D allowed evidence envelope preserving C blobs and provenance",
+    "Actual C/G7 andD/G8 bun run check:guards --base origin/dev separate SHAs/results; no suppression or unauthorized approval label",
+    "All commits/remotes verifiedMCP; no sf2-control merge; no orphan authorized writer"
+  ],
+  "prohibitions": [
+    "No local tests/UX validator/parser/typecheck, heavy local suites or CI bypass",
+    "No gh/newtokens/gitpush/force/devmerge/deploy/Azure/engines/financialpolicy/secret exposure/Orchestra restart",
+    "No scope reduction/oracle weakening/fake metadata/model/runtime proofs",
+    "Native Goal remains paused; user asks browser continuation only."
+  ],
+  "global_release": false
+}
