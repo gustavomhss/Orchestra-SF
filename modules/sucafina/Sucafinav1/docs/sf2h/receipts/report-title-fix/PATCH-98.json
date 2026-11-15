@@ -1,0 +1,76 @@
+{
+  "schema": "sf98.patch-prepost.v1",
+  "mission": 98,
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "baseline": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "ackCommit": "5238a9b488503a0529b80d9fbea2bcd961f012c1",
+  "productCommit": "169a3edacb29f6b6bd78ea554008f8b5fd37073a",
+  "testCommit": "0d7a42051b4b182702e9d1f3bc2be9e8d0038786",
+  "cause": "Original DOCX built-in Title run is 28pt but inherits normal paragraph 280 twip (~14pt) line height; genuine reader88 PDF page1 wrapped the 64-char opaque ID and title words overlapped",
+  "correction": "DOCX-only title overrides paragraph spacing before 0/after 240 twips and minimum line height 760 twips using LineRuleType.AT_LEAST, allowing glyph expansion. Keeps complete untouched title and opaque ID; no zero-width insertion, font fallback hack, truncation or byte rewriting",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/reviews/render.ts",
+      "preimageBlob": "84d1494057e99551cc8544655f0e0468b8853428",
+      "postimageBlob": "7010c9e5ec1f5300388408573b5ace1273662070",
+      "change": "DOCX title paragraph and dynamic import only, plus widowControl true; review payload, chart, table, PPTX and seal left unchanged"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/reports.ts",
+      "preimageBlob": "80054e559574a9e13ce26cdfc7fbb3f778847b6f",
+      "postimageBlob": "729a6eeadd72f3ed122cd2ebc94ad8e4b52956c5",
+      "change": "Same DOCX-only title flow, leaves script body and PPTX untouched"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/report-title-fix/title-typography.test.ts",
+      "preimageBlob": null,
+      "testCommit": "0d7a42051b4b182702e9d1f3bc2be9e8d0038786",
+      "change": "Eight actual DOCX producer invocations short/long/extreme/Unicode, metadata/text/seal/table/figure assertions"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "docx",
+      "version": "9.5.1",
+      "api": "LineRuleType.AT_LEAST"
+    },
+    {
+      "name": "PR93 reader88",
+      "sha": "057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f",
+      "usage": "read-only existing reader, dispatched only by45"
+    },
+    {
+      "name": "sf2-stack",
+      "initial": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+      "observedLater": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+      "status": "target advanced by one documentary-only commit; both render/reports blobs unchanged"
+    }
+  ],
+  "unchanged": [
+    "report-layout.ts",
+    "collaboration/browser/e2eReports48",
+    "reader88/workflow45",
+    "runtime/application.ts egress86",
+    "source lifecycle97",
+    "business input/output, note/table/chart/branding/footers/authorization, PPTX"
+  ],
+  "sourceEvidence": {
+    "priorRunId": 43678123870,
+    "priorArtifactId": 14146978247,
+    "composedDocxSha256": "2401d27726f143033d922a4057bf15ba82d142c81bc55f140e2b059fb4bfe987",
+    "afterDriftSha256": "68a9ac07f9e0487d9d213d612e93e2519e7198733071140d4289129a49d4e2ed",
+    "pages": 15,
+    "originalIntegrity": "PASS historical",
+    "newDocxSha256": null,
+    "newRenderedPages": null,
+    "newPdfPng": null
+  },
+  "gates": {
+    "functional": "NOT_RUN",
+    "visual": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "independentReviewer": "NOT_SIGNED",
+    "globalRelease": false
+  }
+}

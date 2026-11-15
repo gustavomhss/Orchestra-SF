@@ -1,0 +1,80 @@
+{
+  "schema": "sf98.ci-request.v1",
+  "mission": 98,
+  "status": "PREPARED_NOT_DISPATCHED",
+  "owner": "45",
+  "sourceBranch": "report-title-fix",
+  "sourceW": "0d7a42051b4b182702e9d1f3bc2be9e8d0038786",
+  "targetBranch": "sf2-stack",
+  "baseC45": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "dedupBy": [
+    "source W/tree S",
+    "selected test paths",
+    "workflow + reader version",
+    "platform/runtime/config",
+    "fixtures"
+  ],
+  "lanes": [
+    {
+      "name": "DOCX-TITLE-REGRESSION",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/report-title-fix/title-typography.test.ts"
+        ],
+        "env": {}
+      },
+      "expected": "Eight producer cases: short / long opaque ID / extreme / Unicode in both genuine DOCX producers; content + XML checks; not a visual signoff",
+      "W": null,
+      "S": null,
+      "runId": null,
+      "jobId": null,
+      "status": "NOT_RUN"
+    },
+    {
+      "name": "DOCX-COMPOSED-AND-DRIFT-RENDER",
+      "request": {
+        "package": "sucafina",
+        "directory": "modules/sucafina",
+        "runner": "bun",
+        "args": [
+          "--timeout",
+          "120000",
+          "Sucafinav1/test/product/export-artifact-closure/artifact-integrity.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/format-consumers.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/legacy-egress.test.ts",
+          "Sucafinav1/test/product/export-artifact-closure/preserved-source-drift.test.ts"
+        ],
+        "env": {}
+      },
+      "whyFiveFiles": "existing reader88 requires its full mandatory corpus, so five existing test files are the narrowest read-friendly selection; product functional outcomes must remain distinct from reader/visual outcomes",
+      "composition": "dispatcher45 sole owner: create controlled hosted snapshot from current integrated product plus 98 patch and unchanged reader88 + PR93 conditional reader step; preimage and owner reconciliation required",
+      "reader88Head": "057476b4e46c39ab3d65fd2a5b2eaeefd64dd28f",
+      "reader88Blob": "23189c4187c5f4b4b13df554a4f05185b23b1b46",
+      "readerWorkflowBlob": "9841ca8009b7ef4b838571733c04df2fbae19b00",
+      "expected": "New composed-docx and after-drift-docx DOCX bytes + SHA256 manifests, PDF/PNG with LibreOffice/Poppler versions and fonts, before/after page1 comparison; originals unchanged by reader",
+      "W": null,
+      "S": null,
+      "runId": null,
+      "jobId": null,
+      "artifactId": null,
+      "status": "NOT_RUN"
+    }
+  ],
+  "rules": [
+    "45 central dispatcher only; do not create ci-run from mission98",
+    "deduplicate identical source/tree/selection/fixture/config",
+    "no local product test, no local render",
+    "preserve failures from 86 and 97 in functional status",
+    "no change to shared workflow, reader88 or other owners",
+    "visual recheck 91/93 is independent and separate from code author"
+  ],
+  "dispatched": false,
+  "globalRelease": false
+}
