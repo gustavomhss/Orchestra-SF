@@ -27,7 +27,7 @@ export type Am02CallObservation = {
   inputDigest: string
   resultDigest: string
   sourceRefs: readonly string[]
-  outputRef: string
+  outputRef?: string
   identity: Am02Identity
   receipt: {
     kind: "ui" | "native"
@@ -79,7 +79,7 @@ export type Am02OperationWitness = {
     outputDisclosed: boolean
   }[]
   consumer: {
-    outputRef: string
+    outputRef?: string
     observedActionRef: string
     observedAfterReload: boolean
     caseVersion: number
@@ -133,10 +133,11 @@ export function qualifyAm02(witnesses: readonly Am02OperationWitness[]): Am02Qua
         !call.domainPort || call.domainPort !== first.domainPort ||
         !call.inputDigest || call.inputDigest !== first.inputDigest ||
         !call.resultDigest || call.resultDigest !== first.resultDigest ||
-        !call.outputRef || call.outputRef !== first.outputRef ||
+        call.outputRef !== first.outputRef ||
         JSON.stringify([...call.sourceRefs].sort()) !== JSON.stringify([...first.sourceRefs].sort()))
         issues.push("domain-port-input-output-or-source-mismatch")
-      if (JSON.stringify(call.identity) !== JSON.stringify(first.identity))
+      if (JSON.stringify(Object.entries(call.identity).sort(([a], [b]) => a.localeCompare(b))) !==
+        JSON.stringify(Object.entries(first.identity).sort(([a], [b]) => a.localeCompare(b))))
         issues.push("authority-or-business-version-mismatch")
       if (call.receipt.operation !== descriptor.operation || call.receipt.handlerExport !== descriptor.handlerExport ||
         call.receipt.inputDigest !== call.inputDigest || call.receipt.resultDigest !== call.resultDigest ||
