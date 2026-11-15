@@ -1,0 +1,496 @@
+{
+  "schema": "sf2h.native-ui.launch30-author.v1",
+  "slot": "N17",
+  "title": "Portfólio, projetos e cenários",
+  "state": "PREPARED_NOT_STARTED",
+  "branch": "sf-ux-n17",
+  "lease_epoch": "ux-native-n17-e1",
+  "new_session_authorized": true,
+  "actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "expected_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "material_label": "C60, not accepted final",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "source_plan": "1d9d49ec26281ffd6486d722a97298596289605d",
+  "original_packet": {
+    "schema": "sf2h.next30.packet.v1",
+    "slot": "N17",
+    "role": "new-implementer",
+    "lane": "native-ui",
+    "title": "Portfólio, projetos e cenários",
+    "execution_state": "PREPARED_NOT_STARTED",
+    "authorization": false,
+    "actor": null,
+    "lease": null,
+    "branch_hint": "sf-ux-n17",
+    "source": {
+      "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+      "work_order_blobs": {
+        "U05": "0d65175c6742004453f0d0430bc2d64392611348",
+        "U19": "ec9df06bb6db075e19681ce1a4909317604d5088"
+      },
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "live_material": "REPIN_BY_114_AT_LAUNCH"
+    },
+    "scope": [
+      {
+        "order": "U05",
+        "output": "complete",
+        "title": "Portfólio overview e projetos",
+        "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U05.json",
+        "surfaces": [
+          "CAP09",
+          "CAP10"
+        ],
+        "operation_refs": [
+          "contract-catalog.json#/operations/domain.command.CAP09.delete",
+          "contract-catalog.json#/operations/domain.command.CAP09.delete-milestone",
+          "contract-catalog.json#/operations/domain.command.CAP09.import",
+          "contract-catalog.json#/operations/domain.command.CAP09.save",
+          "contract-catalog.json#/operations/domain.command.CAP09.save-milestone",
+          "contract-catalog.json#/operations/domain.command.CAP10.delete",
+          "contract-catalog.json#/operations/domain.command.CAP10.delete-milestone",
+          "contract-catalog.json#/operations/domain.command.CAP10.import",
+          "contract-catalog.json#/operations/domain.command.CAP10.save",
+          "contract-catalog.json#/operations/domain.command.CAP10.save-milestone",
+          "contract-catalog.json#/operations/domain.page.CAP09",
+          "contract-catalog.json#/operations/domain.page.CAP10"
+        ],
+        "entrypoints": [
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/index.tsx",
+            "symbol": "SfPortfolioOverviewView",
+            "signature": "(props: SfSurfaceProps) => JSX.Element",
+            "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+            "route_source": "surface-manifest.json: assigned surfaces only"
+          },
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/index.tsx",
+            "symbol": "SfProjectsView",
+            "signature": "(props: SfSurfaceProps) => JSX.Element",
+            "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+            "route_source": "surface-manifest.json: assigned surfaces only"
+          }
+        ],
+        "i18n_exports": [
+          {
+            "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u05.ts",
+            "en_symbol": "SF_U05_COPY",
+            "pt_br_symbol": "SF_U05_COPY_BR",
+            "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+          }
+        ],
+        "acceptance_cases": [
+          {
+            "id": "U05-AC01",
+            "expected": "Review and maintenance share the same project collection, IDs, milestones and watch state; no duplicate store or financial recalculation.",
+            "status": "PLANNED_NOT_RUN"
+          },
+          {
+            "id": "U05-AC02",
+            "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+            "status": "PLANNED_NOT_RUN"
+          },
+          {
+            "id": "U05-AC03",
+            "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+            "status": "PLANNED_NOT_RUN"
+          }
+        ],
+        "required_reads": {
+          "instructions": [
+            "AGENTS.md",
+            "packages/app-shell/AGENTS.md",
+            "packages/app-shell/e2e/AGENTS.md"
+          ],
+          "common": [
+            "EXECUTION-PROTOCOL.md",
+            "manifest.json",
+            "component-signatures.ts",
+            "host-signatures.ts",
+            "route-signatures.ts"
+          ],
+          "local": [
+            "work-orders/U05.json"
+          ],
+          "contracts": [
+            "bi",
+            "ctx",
+            "domain-read",
+            "surface-specs",
+            "ui-bi",
+            "ui-change-review",
+            "ui-frame",
+            "ui-table"
+          ],
+          "surfaces": [
+            "CAP09",
+            "CAP10"
+          ],
+          "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+          "source_bindings": [
+            "contract-catalog.json#/sources/application",
+            "contract-catalog.json#/sources/renderer-CAP09",
+            "contract-catalog.json#/sources/renderer-CAP10"
+          ]
+        },
+        "depends_authoring": [
+          {
+            "lock": "bi",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ctx",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "domain-read",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "surface-specs",
+            "source": "surface-manifest.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ui-bi",
+            "source": "component-locks.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ui-change-review",
+            "source": "component-locks.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ui-frame",
+            "source": "component-locks.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ui-table",
+            "source": "component-locks.json",
+            "requires": "FROZEN with digest in launch record"
+          }
+        ],
+        "depends_integration": [
+          "F01",
+          "F02",
+          "F03",
+          "A01",
+          "S01",
+          "S03",
+          "U21"
+        ],
+        "depends_qualification": {
+          "work_orders": [
+            "F01",
+            "F02",
+            "F03",
+            "A01",
+            "S01",
+            "S03",
+            "U21"
+          ],
+          "external": [
+            "Canonical producer releases and original blockers remain mandatory for qualification."
+          ],
+          "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+        }
+      },
+      {
+        "order": "U19",
+        "output": "complete",
+        "title": "Cenários e sensibilidade de portfólio",
+        "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/U19.json",
+        "surfaces": [
+          "UI42",
+          "UI43",
+          "UI44"
+        ],
+        "operation_refs": [
+          "contract-catalog.json#/operations/portfolio.decision-portfolio-evaluate",
+          "contract-catalog.json#/operations/portfolio.decision-portfolio-preview",
+          "contract-catalog.json#/operations/portfolio.decision-portfolio-read",
+          "contract-catalog.json#/operations/portfolio.decision-portfolio-reconcile",
+          "contract-catalog.json#/operations/portfolio.decision-portfolio-results",
+          "contract-catalog.json#/operations/portfolio.decision-prepare-portfolio",
+          "contract-catalog.json#/operations/portfolio.decision-promote-portfolio",
+          "contract-catalog.json#/operations/portfolio.decision-sensitivity-evaluate",
+          "contract-catalog.json#/operations/portfolio.decision-sensitivity-read",
+          "contract-catalog.json#/operations/portfolio.decision-sensitivity-units"
+        ],
+        "entrypoints": [
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/index.tsx",
+            "symbol": "SfPortfolioScenariosView",
+            "signature": "(props: SfSurfaceProps) => JSX.Element",
+            "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+            "route_source": "surface-manifest.json: assigned surfaces only"
+          },
+          {
+            "path": "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/index.tsx",
+            "symbol": "SfSensitivityView",
+            "signature": "(props: SfSurfaceProps) => JSX.Element",
+            "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+            "route_source": "surface-manifest.json: assigned surfaces only"
+          }
+        ],
+        "i18n_exports": [
+          {
+            "path": "packages/app-shell/src/i18n/orchestra-chapters/sf-u19.ts",
+            "en_symbol": "SF_U19_COPY",
+            "pt_br_symbol": "SF_U19_COPY_BR",
+            "source": "SURFACE-SPECS.md COPY-01 and original field labels; equal English values require existing policy classification"
+          }
+        ],
+        "acceptance_cases": [
+          {
+            "id": "U19-AC01",
+            "expected": "Universe/candidates/commitments, evaluation history and sensitivity retain coverage/condition and current selection; P03 budget/assertions stay original.",
+            "status": "PLANNED_NOT_RUN"
+          },
+          {
+            "id": "U19-AC02",
+            "expected": "All assigned surfaces implement READ-01 and the exact COMPONENT-CONTRACTS state mapping: filtered-empty retains filters; not-found is distinct from an empty collection; read-only/revoked map as specified. Draft reviewing/submitting/pending phases are separate from page state; late responses and return behavior preserve the authorized owner.",
+            "status": "PLANNED_NOT_RUN"
+          },
+          {
+            "id": "U19-AC03",
+            "expected": "At 320/768/1024/1280/1440px and 200% text resize plus 400% reflow (1280px to 320 CSS px) the frozen flow retains fields/actions and keyboard access; themes use existing tokens.",
+            "status": "PLANNED_NOT_RUN"
+          }
+        ],
+        "required_reads": {
+          "instructions": [
+            "AGENTS.md",
+            "packages/app-shell/AGENTS.md",
+            "packages/app-shell/e2e/AGENTS.md"
+          ],
+          "common": [
+            "EXECUTION-PROTOCOL.md",
+            "manifest.json",
+            "component-signatures.ts",
+            "host-signatures.ts",
+            "route-signatures.ts"
+          ],
+          "local": [
+            "work-orders/U19.json"
+          ],
+          "contracts": [
+            "bi",
+            "ctx",
+            "decisions",
+            "portfolio",
+            "surface-specs",
+            "ui-bi",
+            "ui-change-review",
+            "ui-frame",
+            "ui-table"
+          ],
+          "surfaces": [
+            "UI42",
+            "UI43",
+            "UI44"
+          ],
+          "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+          "source_bindings": [
+            "contract-catalog.json#/sources/portfolio"
+          ]
+        },
+        "depends_authoring": [
+          {
+            "lock": "bi",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ctx",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "decisions",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "portfolio",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "surface-specs",
+            "source": "surface-manifest.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ui-bi",
+            "source": "component-locks.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ui-change-review",
+            "source": "component-locks.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ui-frame",
+            "source": "component-locks.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "ui-table",
+            "source": "component-locks.json",
+            "requires": "FROZEN with digest in launch record"
+          }
+        ],
+        "depends_integration": [
+          "F01",
+          "F02",
+          "F03",
+          "A05",
+          "S01",
+          "S03",
+          "U22"
+        ],
+        "depends_qualification": {
+          "work_orders": [
+            "F01",
+            "F02",
+            "F03",
+            "A05",
+            "S01",
+            "S03",
+            "U22"
+          ],
+          "external": [
+            "Canonical producer releases and original blockers remain mandatory for qualification."
+          ],
+          "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+        }
+      }
+    ],
+    "write_paths": [
+      "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/**",
+      "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/**",
+      "packages/app-shell/src/i18n/orchestra-chapters/sf-u05.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u05.spec.ts",
+      "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/**",
+      "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/**",
+      "packages/app-shell/src/i18n/orchestra-chapters/sf-u19.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u19.spec.ts"
+    ],
+    "protected_paths": [
+      "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+      "any active writer's paths W01–W19 or outside this packet"
+    ],
+    "test_files": [
+      "packages/app-shell/e2e/sucafina/native/journeys/u05.spec.ts",
+      "packages/app-shell/e2e/sucafina/native/journeys/u19.spec.ts"
+    ],
+    "critical_invariants": "P03 pendente NÃO é aprovado; versões/replay/stale/timeout permanecem explícitos. Sem recalcular cenários em UI.",
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N17/",
+    "handoff_to": "114 only",
+    "compiler": "119 only",
+    "tests": "120 via GitHub Actions only",
+    "notes": "Implement actual Solid native Orchestra UI using current components/providers and existing mock reference. Each source order's full acceptance remains mandatory. Read next30/COMMON.md and full individual work orders."
+  },
+  "write_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/overview/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/projects/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u05.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u05.spec.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/scenarios/**",
+    "packages/app-shell/src/orchestra/chapters/sucafina/portfolio/sensitivity/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u19.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u19.spec.ts"
+  ],
+  "protected_paths": [
+    "central registry/route composition/global i18n/generated and foreign producer paths under 114",
+    "any active writer's paths W01–W19 or outside this packet"
+  ],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N17/",
+  "common": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/campaign-launch/COMMON.md@526e7204b310756e552196bbf3d64037dbbf047c",
+  "required_reads": [
+    "All applicable AGENTS",
+    "This entire launch packet including original_packet and whole assigned work-orders",
+    "NEXT30 COMMON, required_reads for each assigned scope, frozen CONTRACTS/COMPONENT-CONTRACTS/host+route+component signatures+surface specs/microcopy",
+    "Relevant canonical criterion pointers at dbf9547211d9b0fade619790de7c19c0869b7c7d and normative cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Relevant actual producer code/source delta before edits; source baseline is current cohort C60, not historical catalog"
+  ],
+  "source_binding_pins": {
+    "application": {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "changed": true,
+      "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source",
+      "C58_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "changed_since_C58": false,
+      "source_delta": "same blob as pinned C58"
+    },
+    "renderer-CAP09": {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "historical_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "changed": false,
+      "semantic_delta_status": "SAME_BLOB",
+      "C58_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "changed_since_C58": false,
+      "source_delta": "same blob as pinned C58"
+    },
+    "renderer-CAP10": {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "historical_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "changed": false,
+      "semantic_delta_status": "SAME_BLOB",
+      "C58_blob": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "changed_since_C58": false,
+      "source_delta": "same blob as pinned C58"
+    },
+    "portfolio": {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "historical_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "changed": false,
+      "semantic_delta_status": "SAME_BLOB",
+      "C58_blob": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "changed_since_C58": false,
+      "source_delta": "same blob as pinned C58"
+    }
+  },
+  "routing": {
+    "integrator": "125/S0-C-e18-browser125/PR65",
+    "product_ci": "120/PR106",
+    "compiler": "119/PR107"
+  },
+  "authoring_grant": "S0 authorizes exclusive leaf implementation upon real ACK/model/session/current-head/source preflight. This supersedes old114/waiting-admission text only; no additional central GO needed. No host controls or contracts bypassed.",
+  "acceptance": [
+    "Fresh N10–N30 session reads full packet, validates own preimages/allowlist, publishes real ACK binding actor/model/session if exposed + epoch + SHA. Do not claim started from PREPARED.",
+    "Implement FULL assigned orders/increments in real product leaves using native Orchestra Solid/components/tokens/theme/i18n/sidebar. No standalone/iframe, mocks as delivery, copied backend, stubs, permissive schemas, invented grants/receipts.",
+    "Effective writes are write_paths MINUS protected_paths. All shared imports/registries/routes/global i18n/packageexports/generated belong125; deliver complete inert patches/preimages, never write another author's source branch.",
+    "Work independently against frozen contracts; dependencies gate integration/qualification. Do not stall all authoring for missing producers or submit another preauth-only delivery. Unknown contract blocks only affected output with evidence.",
+    "Honor revocation/denied privacy, current owner and source versions/CAS, stale/timeouts, refresh/reopen and unknown mutation result without auto replay. Preserve old Procurement title/PR approval and queue outputs; author only assigned complement.",
+    "At unit completion request surgical hosted checks through120; compiler/guards/codegen119. No local tests/parsers/validators/typecheck, no extra dispatcher, no early epic or weakened assertions/fixtures/grants.",
+    "Use GitHub MCP/CAS/forcefalse, preserve commits and own branch. No nativeGoal/controller/devmerge/deploy/Azure/engine/secret/runtime restart actions.",
+    "Deliver one complete PR to sf2-stack with exact source blobs/prepost, relevant full patches, own specs and criteria trace, actual evidence or NOT_RUN, consumers and terminal handoff. ARTIFACT_READY not final release; final8CI/epic+AM01–06+3independentFINAL+G7C/G8D mandatory."
+  ],
+  "global_release": false
+}

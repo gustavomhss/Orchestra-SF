@@ -1,0 +1,544 @@
+{
+  "schema": "sf2h.native-ui.launch30-author.v1",
+  "slot": "N05",
+  "title": "Bindings finos: Operações, segurança, riscos e performance",
+  "state": "EXISTING_AUTHOR_ALREADY_LAUNCHED_DO_NOT_DUPLICATE",
+  "branch": "sf-ux-a11",
+  "lease_epoch": "ux-native-a11-e1",
+  "new_session_authorized": false,
+  "actor": null,
+  "effective_model": null,
+  "session_id": null,
+  "expected_head": "371da8d1af7350a468ef334034ad3589c95a4868",
+  "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "material_label": "C60, not accepted final",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "source_plan": "1d9d49ec26281ffd6486d722a97298596289605d",
+  "original_packet": {
+    "schema": "sf2h.next30.packet.v1",
+    "slot": "N05",
+    "role": "new-implementer",
+    "lane": "adapter",
+    "title": "Bindings finos: Operações, segurança, riscos e performance",
+    "execution_state": "PREPARED_NOT_STARTED",
+    "authorization": false,
+    "actor": null,
+    "lease": null,
+    "branch_hint": "sf-ux-n05",
+    "source": {
+      "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+      "work_order_blobs": {
+        "A11": "f57b5e6005aae63d9371b7a10d6da20284db6552"
+      },
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "live_material": "REPIN_BY_114_AT_LAUNCH"
+    },
+    "scope": [
+      {
+        "order": "A11",
+        "output": "complete",
+        "title": "Bindings finos: Operações, segurança, riscos e performance",
+        "order_file": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/A11.json",
+        "surfaces": [],
+        "operation_refs": [
+          "contract-catalog.json#/operations/domain.command.CAP11.import-month",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-categories",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-heatmap",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-items",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-sla",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-tickets",
+          "contract-catalog.json#/operations/domain.command.CAP12.delete-action",
+          "contract-catalog.json#/operations/domain.command.CAP12.delete-campaign",
+          "contract-catalog.json#/operations/domain.command.CAP12.delete-incident",
+          "contract-catalog.json#/operations/domain.command.CAP12.delete-kpi",
+          "contract-catalog.json#/operations/domain.command.CAP12.save-action",
+          "contract-catalog.json#/operations/domain.command.CAP12.save-campaign",
+          "contract-catalog.json#/operations/domain.command.CAP12.save-incident",
+          "contract-catalog.json#/operations/domain.command.CAP12.save-kpi",
+          "contract-catalog.json#/operations/domain.page.CAP11",
+          "contract-catalog.json#/operations/domain.page.CAP12"
+        ],
+        "entrypoints": [
+          {
+            "path": "packages/schema/src/sucafina/operations.ts",
+            "symbol": "SfOperations",
+            "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+          },
+          {
+            "path": "packages/client/src/sucafina/operations.ts",
+            "symbol": "createSfOperationsClient",
+            "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+          },
+          {
+            "path": "apps/cli/src/sucafina-product/native-ui/operations.ts",
+            "symbol": "createSfOperationsProjectionHandlers",
+            "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+          }
+        ],
+        "acceptance_cases": [
+          {
+            "id": "A11-AC01",
+            "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+            "status": "PLANNED_NOT_RUN"
+          },
+          {
+            "id": "A11-AC02",
+            "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+            "status": "PLANNED_NOT_RUN"
+          },
+          {
+            "id": "A11-AC03",
+            "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+            "status": "PLANNED_NOT_RUN"
+          }
+        ],
+        "required_reads": {
+          "instructions": [
+            "AGENTS.md",
+            "packages/schema/AGENTS.md"
+          ],
+          "common": [
+            "EXECUTION-PROTOCOL.md",
+            "manifest.json",
+            "host-signatures.ts"
+          ],
+          "local": [
+            "work-orders/A11.json"
+          ],
+          "contracts": [
+            "ctx",
+            "domain-read",
+            "transport"
+          ],
+          "surfaces": [],
+          "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+          "source_bindings": [
+            "contract-catalog.json#/sources/application",
+            "contract-catalog.json#/sources/renderer-CAP11",
+            "contract-catalog.json#/sources/renderer-CAP12"
+          ]
+        },
+        "depends_authoring": [
+          {
+            "lock": "ctx",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "domain-read",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          },
+          {
+            "lock": "transport",
+            "source": "contract-catalog.json",
+            "requires": "FROZEN with digest in launch record"
+          }
+        ],
+        "depends_integration": [
+          "F01",
+          "F02"
+        ],
+        "depends_qualification": {
+          "work_orders": [
+            "F01",
+            "F02"
+          ],
+          "external": [],
+          "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+        }
+      }
+    ],
+    "write_paths": [
+      "packages/schema/src/sucafina/operations.ts",
+      "packages/client/src/sucafina/operations.ts",
+      "apps/cli/src/sucafina-product/native-ui/operations.ts",
+      "packages/schema/src/sucafina/operations/**",
+      "packages/client/src/sucafina/operations/**",
+      "apps/cli/src/sucafina-product/native-ui/operations/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+    ],
+    "protected_paths": [
+      "any path owned by active other writer",
+      "shared registries/composition/global i18n/generated/producer code under 114"
+    ],
+    "test_files": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+    ],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/N05/",
+    "handoff_to": "114 only",
+    "compiler": "119 only",
+    "tests": "120 via GitHub Actions only",
+    "note": "Thin adapter only: schema/client/host to existing authorized producer. No recreated backend, business logic, mock-success or client Core/Server import. Read COMMON.md."
+  },
+  "original_adapter_packet": {
+    "schema": "sf2h.native-ui.wave2-author.v1",
+    "mission_id": "UX-A11",
+    "order": "A11",
+    "title": "Bindings finos: Operações, segurança, riscos e performance",
+    "branch": "sf-ux-a11",
+    "state": "PREPARED_NOT_STARTED",
+    "actor": null,
+    "effective_model": null,
+    "session_id": null,
+    "lease_epoch": "ux-native-a11-e1",
+    "expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "material": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "source": {
+      "canonical": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+      "ux_docs": "39bff1976d33f5b1a85c3224186ce2e9207ed021"
+    },
+    "authority": "S0 user-authorized further parallel browser work: per-output authoring grant on exclusive paths is given by this packet. After ACK real + current HEAD/path/source preflight, write code directly. Do not wait for114 permission for exclusive leaves. Old COMMON sentence requiring114 admission before leaf authoring superseded for this order only; contract scope and actual host controls preserved.",
+    "original_work_order": {
+      "id": "A11",
+      "title": "Bindings finos: Operações, segurança, riscos e performance",
+      "kind": "adapter",
+      "status": "PLANNED_NOT_AUTHORIZED",
+      "priority": 3,
+      "runtime_binding": "launch-record.json, resolved by I00; never by the worker",
+      "owns": [
+        "packages/schema/src/sucafina/operations.ts",
+        "packages/client/src/sucafina/operations.ts",
+        "apps/cli/src/sucafina-product/native-ui/operations.ts",
+        "packages/schema/src/sucafina/operations/**",
+        "packages/client/src/sucafina/operations/**",
+        "apps/cli/src/sucafina-product/native-ui/operations/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+      ],
+      "may_write_shared_registry": false,
+      "canonical": {
+        "commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+        "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/campaign.json",
+        "task_refs": [
+          "WP02.T01",
+          "WP02.T02"
+        ],
+        "inherit": "All checks and five axiom families of each task, their WPs and campaign; resolve immutable pointers from ../criteria-trace.json."
+      },
+      "surfaces": [],
+      "exports": [
+        "SfOperations",
+        "createSfOperationsClient",
+        "createSfOperationsProjectionHandlers"
+      ],
+      "depends_authoring": [
+        {
+          "lock": "ctx",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "domain-read",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        },
+        {
+          "lock": "transport",
+          "source": "contract-catalog.json",
+          "requires": "FROZEN with digest in launch record"
+        }
+      ],
+      "depends_integration": [
+        "F01",
+        "F02"
+      ],
+      "depends_qualification": {
+        "work_orders": [
+          "F01",
+          "F02"
+        ],
+        "external": [],
+        "candidate": "Same material C plus authorized installed harness; source proofs retain their original SHA."
+      },
+      "consumes": {
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "producer_exports": [
+          {
+            "order": "F01",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          },
+          {
+            "order": "F02",
+            "policy": "Only frozen public exports; no private file imports or source-copying."
+          }
+        ],
+        "surface_spec": "SURFACE-SPECS.md and exact entries in surface-manifest.json",
+        "microcopy": "SURFACE-SPECS.md COPY-01 and source English field/action labels via FIELD-01. Shared new copy uses the frozen copy/key table; no labels_en/labels_pt keys are presumed in surface JSON.",
+        "component_signatures": "COMPONENT-CONTRACTS.md and component-signatures.ts; exact named public types/callbacks and ownership of effects, no inferred props.",
+        "operation_refs": [
+          "contract-catalog.json#/operations/domain.command.CAP11.import-month",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-categories",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-heatmap",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-items",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-sla",
+          "contract-catalog.json#/operations/domain.command.CAP11.save-tickets",
+          "contract-catalog.json#/operations/domain.command.CAP12.delete-action",
+          "contract-catalog.json#/operations/domain.command.CAP12.delete-campaign",
+          "contract-catalog.json#/operations/domain.command.CAP12.delete-incident",
+          "contract-catalog.json#/operations/domain.command.CAP12.delete-kpi",
+          "contract-catalog.json#/operations/domain.command.CAP12.save-action",
+          "contract-catalog.json#/operations/domain.command.CAP12.save-campaign",
+          "contract-catalog.json#/operations/domain.command.CAP12.save-incident",
+          "contract-catalog.json#/operations/domain.command.CAP12.save-kpi",
+          "contract-catalog.json#/operations/domain.page.CAP11",
+          "contract-catalog.json#/operations/domain.page.CAP12"
+        ],
+        "host_signatures": "host-signatures.ts owns the exact public/private type placement, provider dependency injection, auth/navigation, broker IPC and host callbacks; no inference or private import into browser."
+      },
+      "required_reads": {
+        "instructions": [
+          "AGENTS.md",
+          "packages/schema/AGENTS.md"
+        ],
+        "common": [
+          "EXECUTION-PROTOCOL.md",
+          "manifest.json",
+          "host-signatures.ts"
+        ],
+        "local": [
+          "work-orders/A11.json"
+        ],
+        "contracts": [
+          "ctx",
+          "domain-read",
+          "transport"
+        ],
+        "surfaces": [],
+        "source_pins": "Read only relevant producer paths from SOURCE-BASELINE + contract-catalog source records, re-pinned by launch-record.",
+        "source_bindings": [
+          "contract-catalog.json#/sources/application",
+          "contract-catalog.json#/sources/renderer-CAP11",
+          "contract-catalog.json#/sources/renderer-CAP12"
+        ]
+      },
+      "deliver": [
+        "Implement schema projection and typed client wrappers for exact producer operations in contract catalog; no alternative engine or privilege inference.",
+        "Add server projection only for an existing HTML-only page or explicitly locked missing seam; existing JSON handlers retain original Request/admission.",
+        "Publish operation/field/source equivalence and current-access/redaction negative cases."
+      ],
+      "acceptance_cases": [
+        {
+          "id": "A11-AC01",
+          "expected": "Every output field maps to an authorized producer field; absent/null/zero and versions are retained.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A11-AC02",
+          "expected": "Unknown action/payload is rejected; no generic opaque body dispatch or privileged snapshot dump.",
+          "status": "PLANNED_NOT_RUN"
+        },
+        {
+          "id": "A11-AC03",
+          "expected": "All API calls preserve operation key and expected versions; source change invalidates affected read/action.",
+          "status": "PLANNED_NOT_RUN"
+        }
+      ],
+      "gates": {
+        "incremental": "Use canonical ci_plan.dispatch_policy.incremental_validation and invalidation_matrix; exact changed specs plus transitive consumers, one dispatcher.",
+        "test_files": [
+          "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+        ],
+        "typecheck_packages": [
+          "apps/cli",
+          "packages/client",
+          "packages/schema"
+        ],
+        "execute_after": "INTEGRATED and readiness satisfied; dispatcher resolves existing aliases before any request. Never invent workflow, runner or service.",
+        "final": "Canonical same-C gates remain; this work order cannot declare GLOBAL_RELEASE.",
+        "typecheck_command": "bun typecheck in each named package directory through the authorized compiler-only executor; never tsc directly."
+      },
+      "stop": [
+        "Unknown field, action, error, permission, route, export or schema => BLOCKED_CONTRACT for that output; publish exact question and source evidence; finish other independent authorized outputs.",
+        "Producer changed since locked family pin => BLOCKED_DRIFT for affected consumers; never silently rebase semantics or widen validation.",
+        "Required path outside owns or active foreign lease => BLOCKED_OWNER; provide complete inert patch to I00/current owner.",
+        "Live service absent => ARTIFACT_READY plus BLOCKED_INTEGRATION/QUALIFICATION; no stub, permissive substitute or synthetic receipt in production.",
+        "A failing unchanged input must not be rerun until causal change or a documented transient infrastructure cause is established.",
+        "No full-suite dispatch, merge, deploy, Azure, auth policy, financial rule or producer-engine change from this work order."
+      ],
+      "handoff": {
+        "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
+        "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
+        "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
+      },
+      "entrypoints": [
+        {
+          "path": "packages/schema/src/sucafina/operations.ts",
+          "symbol": "SfOperations",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "packages/client/src/sucafina/operations.ts",
+          "symbol": "createSfOperationsClient",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/native-ui/operations.ts",
+          "symbol": "createSfOperationsProjectionHandlers",
+          "signature": "CONTRACTS.md: family bindings; closed operation catalog/types, preserve original shapes and Request"
+        }
+      ],
+      "server_leaf_policy": "HTML-only CAP projections and explicitly cataloged additional projection IDs for this owner; existing JSON operations are reused directly."
+    },
+    "write_paths": [
+      "packages/schema/src/sucafina/operations.ts",
+      "packages/client/src/sucafina/operations.ts",
+      "apps/cli/src/sucafina-product/native-ui/operations.ts",
+      "packages/schema/src/sucafina/operations/**",
+      "packages/client/src/sucafina/operations/**",
+      "apps/cli/src/sucafina-product/native-ui/operations/**",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+    ],
+    "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A11/",
+    "frozen_contract_blobs": {
+      "COMPONENT-CONTRACTS.md": "5e53813bff5c4f515f9122393e308ad5336b041a",
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094",
+      "SURFACE-SPECS.md": "d62847af81dffdc129312e71e69692081fd74b75",
+      "component-locks.json": "818728d0a47c3f4c826943a7ab7262b4faac6a24",
+      "component-signatures.ts": "e283b2021697fb6666e88a13707cb05469540ae0",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "route-signatures.ts": "ea99b96a7a7e0ee860ed2c0fac137f6fc4e42e81",
+      "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855"
+    },
+    "source_binding_pins": {
+      "application": {
+        "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+        "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+        "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+        "changed": true,
+        "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source"
+      },
+      "renderer-CAP11": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      },
+      "renderer-CAP12": {
+        "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+        "commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+        "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+        "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+        "historical_blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+        "changed": false,
+        "semantic_delta_status": "SAME_BLOB"
+      }
+    },
+    "routing": {
+      "integrator": "114/S0-C-e17-browser114/PR65, sole stack and shared-path writer",
+      "product_ci": "120/PR106",
+      "compiler": "119/PR107"
+    },
+    "mission": "Implement complete assigned schema/client/projection adapter plus meaningful authored specs, directly in owned product paths. Deliver one complete PR to sf2-stack with exact blobs, shared integration patches, coverage and handoff. Planning/readiness inventory alone is not delivery.",
+    "instructions": [
+      "Read applicable AGENTS, this FULL packet including original_work_order, whole assigned work-order and its required contracts/source bindings/canonical criterion pointers. No unrelated packs.",
+      "Verify initial branch/head, compare only relevant C58 producer delta vs historical catalog. Record semantic impact and real actor/model/session if exposed, source hashes/allowlist/lease in own ACK before edits. Unknown IDs stay unknown. No new user approval or central admission loop for routine implementation.",
+      "Contracts permit independent authoring against frozen public exports while producers are written; dependencies gate integration and qualification. No producer stubs, clones, permissive opaque schemas or private Core/Server import into client.",
+      "Keep exact operation catalog/types/field semantics, Request provenance, auth/ACL/revocation, null/zero, CAS/idempotency and source version behavior. Use existing JSON routes directly. Only HTML projections explicitly assigned may be new server leaves, no duplicate REST forwarders.",
+      "No shared registry/index/package exports/i18n/generated edits. Provide complete pre/post patches to114 for composition. No merge whole inherited UX cohort;114 consumes source blobs selectively.",
+      "A09 preserves native readiness HOLD for real Schedule/Relay/resident producers; no engine changes. A12 v2 remains opt-in and unavailable until real producer is released, without suppressing legacy/v1 work. A15 resident inventory must be actual installed whitelist/grants, not fabricated five/18/8/39.",
+      "At complete-unit handoff request surgical hosted checks from120, compiler119. No local tests/validators/parser/typecheck, no new dispatcher/workflow/CI infra, no premature epic. Report NOT_RUN if dependencies not integrated; source artifact is not qualified.",
+      "GitHub remote MCP only, CAS expected-head/forcefalse; same own branch. Preserve others work, native Goal paused, no controller/devmerge/deploy/Azure/engines/runtime restart/secret access.",
+      "Release includes all15WP74tasks17contracts1610criteria and full UX; GLOBAL_RELEASE only original+UX final predicate. Final independent reviews remain separate from authors."
+    ],
+    "global_release": false
+  },
+  "existing_alias": {
+    "order": "A11",
+    "branch": "sf-ux-a11",
+    "epoch": "ux-native-a11-e1",
+    "state": "User reports session already launched; preserve current author/output. Fresh replacement requires explicit S0 fencing/handoff, not this reference prompt."
+  },
+  "write_paths": [
+    "packages/schema/src/sucafina/operations.ts",
+    "packages/client/src/sucafina/operations.ts",
+    "apps/cli/src/sucafina-product/native-ui/operations.ts",
+    "packages/schema/src/sucafina/operations/**",
+    "packages/client/src/sucafina/operations/**",
+    "apps/cli/src/sucafina-product/native-ui/operations/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/operations.test.ts"
+  ],
+  "protected_paths": [
+    "any path owned by active other writer",
+    "shared registries/composition/global i18n/generated/producer code under 114"
+  ],
+  "receipt_prefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A11/",
+  "common": "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/next30/campaign-launch/COMMON.md@526e7204b310756e552196bbf3d64037dbbf047c",
+  "required_reads": [
+    "All applicable AGENTS",
+    "This entire launch packet including original_packet and whole assigned work-orders",
+    "NEXT30 COMMON, required_reads for each assigned scope, frozen CONTRACTS/COMPONENT-CONTRACTS/host+route+component signatures+surface specs/microcopy",
+    "Relevant canonical criterion pointers at dbf9547211d9b0fade619790de7c19c0869b7c7d and normative cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "Relevant actual producer code/source delta before edits; source baseline is current cohort C60, not historical catalog"
+  ],
+  "source_binding_pins": {
+    "application": {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "historical_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+      "historical_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "changed": true,
+      "semantic_delta_status": "REVIEW_RELEVANT_DELTA_AT_SESSION_PREFLIGHT;do_not_restore_historical_source",
+      "C58_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "changed_since_C58": false,
+      "source_delta": "same blob as pinned C58"
+    },
+    "renderer-CAP11": {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+      "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "historical_blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+      "changed": false,
+      "semantic_delta_status": "SAME_BLOB",
+      "C58_blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+      "changed_since_C58": false,
+      "source_delta": "same blob as pinned C58"
+    },
+    "renderer-CAP12": {
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-operations.ts",
+      "commit": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+      "blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+      "historical_commit": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
+      "historical_blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+      "changed": false,
+      "semantic_delta_status": "SAME_BLOB",
+      "C58_blob": "a00c93ac141489e7cfca1895591f1496c7fabf45",
+      "changed_since_C58": false,
+      "source_delta": "same blob as pinned C58"
+    }
+  },
+  "routing": {
+    "integrator": "125/S0-C-e18-browser125/PR65",
+    "product_ci": "120/PR106",
+    "compiler": "119/PR107"
+  },
+  "authoring_grant": "No second writer admitted: keep existing A07–A15 owner. Original launch remains in effect; no automatic takeover.",
+  "acceptance": [
+    "Fresh N10–N30 session reads full packet, validates own preimages/allowlist, publishes real ACK binding actor/model/session if exposed + epoch + SHA. Do not claim started from PREPARED.",
+    "Implement FULL assigned orders/increments in real product leaves using native Orchestra Solid/components/tokens/theme/i18n/sidebar. No standalone/iframe, mocks as delivery, copied backend, stubs, permissive schemas, invented grants/receipts.",
+    "Effective writes are write_paths MINUS protected_paths. All shared imports/registries/routes/global i18n/packageexports/generated belong125; deliver complete inert patches/preimages, never write another author's source branch.",
+    "Work independently against frozen contracts; dependencies gate integration/qualification. Do not stall all authoring for missing producers or submit another preauth-only delivery. Unknown contract blocks only affected output with evidence.",
+    "Honor revocation/denied privacy, current owner and source versions/CAS, stale/timeouts, refresh/reopen and unknown mutation result without auto replay. Preserve old Procurement title/PR approval and queue outputs; author only assigned complement.",
+    "At unit completion request surgical hosted checks through120; compiler/guards/codegen119. No local tests/parsers/validators/typecheck, no extra dispatcher, no early epic or weakened assertions/fixtures/grants.",
+    "Use GitHub MCP/CAS/forcefalse, preserve commits and own branch. No nativeGoal/controller/devmerge/deploy/Azure/engine/secret/runtime restart actions.",
+    "Deliver one complete PR to sf2-stack with exact source blobs/prepost, relevant full patches, own specs and criteria trace, actual evidence or NOT_RUN, consumers and terminal handoff. ARTIFACT_READY not final release; final8CI/epic+AM01–06+3independentFINAL+G7C/G8D mandatory."
+  ],
+  "global_release": false
+}
