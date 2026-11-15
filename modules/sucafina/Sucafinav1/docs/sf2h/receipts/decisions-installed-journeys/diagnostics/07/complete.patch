@@ -1,0 +1,55 @@
+diff --git a/apps/cli/src/sucafina-product/portfolio-authority.ts b/apps/cli/src/sucafina-product/portfolio-authority.ts
+index 138238ca9273e84f39f8e1db484378a3e62d41d4..75bdb3b47ceb43d5a9c79eb10c1ab073aa6fb9f7 100644
+--- a/apps/cli/src/sucafina-product/portfolio-authority.ts
++++ b/apps/cli/src/sucafina-product/portfolio-authority.ts
+@@ -85,7 +85,26 @@
+       const selected = await business.resolveCase(binding)
+       return selected.status === "ok" ? rules.evaluate({ ...criterion, caseRef: selected.value }, binding) : selected
+     } } }, request, call) : business.planner.compareScenarios }
+-  const compareCanonical = createDecisionComparisonService({ state: authority.state, host, cases: business.cases, results: business.results, planner })
++  // SF52 diagnostic-only: stage names, timing and outcomes; never request or business data.
++  let sf52Sequence = 0
++  const sf52Profile = async <T>(stage: string, work: () => Promise<T>): Promise<T> => {
++    const id = ++sf52Sequence
++    const started = performance.now()
++    console.warn("SF52_PROFILE", JSON.stringify({ stage, id, event: "start", at: started }))
++    try {
++      const value = await work()
++      console.warn("SF52_PROFILE", JSON.stringify({ stage, id, event: "end", at: performance.now(), elapsed: performance.now() - started }))
++      return value
++    } catch (error) {
++      console.warn("SF52_PROFILE", JSON.stringify({ stage, id, event: "throw", at: performance.now(), elapsed: performance.now() - started }))
++      throw error
++    }
++  }
++  const compareCanonical = createDecisionComparisonService({ state: authority.state, host,
++    cases: { ...business.cases, read: (request, call) => sf52Profile("case.read", () => business.cases.read(request, call)) },
++    results: { ...business.results, readHistoricalScenario: (request, call) => sf52Profile("result.readHistoricalScenario", () => business.results.readHistoricalScenario(request, call)) },
++    planner: { compareScenarios: (request, call) => sf52Profile("planner.compareScenarios", () => planner.compareScenarios(request, call)) },
++  })
+   const comparisons = createSfPortfolioComparisonScope({ authority, business, compareCanonical, scenarios })
+   const compare: typeof compareCanonical = (request, call) => comparisons.run(call, () => comparisons.compare(request, call))
+   const selectionCanonical = createDecisionPortfolioSelection({ ...common, compare,
+diff --git a/modules/sucafina/Sucafinav1/product/decisions/http.ts b/modules/sucafina/Sucafinav1/product/decisions/http.ts
+index a77da76589ece60a6925bdd20731efbc8f19b597..0cf0f52fcf04adc4b1096e30a8dd19f2e101e222 100644
+--- a/modules/sucafina/Sucafinav1/product/decisions/http.ts
++++ b/modules/sucafina/Sucafinav1/product/decisions/http.ts
+@@ -209,8 +209,16 @@
+         if (action === "decision-portfolio-catalog")
+           return response(await input.catalog((payload as { caseRefs: CaseRef[] }).caseRefs, context))
+         const caseRef = (payload as { caseRef: CaseRef }).caseRef
+-        return response(await input.withCase<unknown>(context, caseRef, { allowHistoricalRetry: action === "decision-edit" }, () =>
+-          action === "decision-edit" ? input.management.edit(payload as Edit, context) : input.compare(payload as Compare, context)))
++        const started = performance.now()
++        if (action === "decision-compare") console.warn("SF52_PROFILE", JSON.stringify({ stage: "http.before-withCase", at: started }))
++        const result = await input.withCase<unknown>(context, caseRef, { allowHistoricalRetry: action === "decision-edit" }, async () => {
++          if (action === "decision-compare") console.warn("SF52_PROFILE", JSON.stringify({ stage: "http.producer-start", at: performance.now(), elapsed: performance.now() - started }))
++          const value = await (action === "decision-edit" ? input.management.edit(payload as Edit, context) : input.compare(payload as Compare, context))
++          if (action === "decision-compare") console.warn("SF52_PROFILE", JSON.stringify({ stage: "http.producer-end", at: performance.now(), elapsed: performance.now() - started, status: value.status }))
++          return value
++        })
++        if (action === "decision-compare") console.warn("SF52_PROFILE", JSON.stringify({ stage: "http.after-withCase", at: performance.now(), elapsed: performance.now() - started, status: result.status }))
++        return response(result)
+       } finally { input.human.finish(admitted.value) }
+     } catch {
+       return response({ status: "unavailable", reason: "decision-request-unavailable" })

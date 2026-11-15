@@ -1,6 +1,6 @@
 {
   "schema": "sf2-mission52-candidate-material-v1",
-  "status": "ACTIVE_P5_NOMINAL06_RUNNING",
+  "status": "ACTIVE_P5_NOMINAL06_FAILED_DIAGNOSTIC07_RUNNING",
   "source_product": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
   "source_tree": "a905bafed750476e6312df77c22a1d2407e987a9",
   "base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
@@ -312,8 +312,9 @@
       ],
       "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf"
     },
-    "status": "IN_PROGRESS_AT_PUBLICATION",
-    "run_id": 43663347199
+    "status": "COMPLETED_FAILURE_3_PASS_2_FAIL",
+    "run_id": 43663347199,
+    "receipt": "nominal-06.json"
   },
   "previous_nominal": {
     "run": 43662317407,
@@ -348,5 +349,30 @@
       "Original 180000ms tests and10000ms UI deadline unchanged"
     ],
     "causality_limit": "C27 Runtime56 is also consumed; this execution cannot isolate batching from runtime-copy performance."
+  },
+  "current_result": {
+    "selected": 5,
+    "passed": 3,
+    "failed": 2,
+    "J1": "FAILED_COMPARE_REQUEST_ABORTED_NO_HTTP_RESPONSE",
+    "J2": "FAILED_PROCUREMENT_QUEUE_503_BEFORE_FORM",
+    "J3": "PASS",
+    "J4": "PASS",
+    "J5": "PASS",
+    "not_reached": [
+      "numeric rule",
+      "choice/history",
+      "source change after choice",
+      "financial creation/approval/C12"
+    ]
+  },
+  "diagnostic": {
+    "run_id": 43664202278,
+    "W": "2a330245173d0530bc83ab70568b39f5e1633c01",
+    "S": "e43c6ef8265abad48eaff7c36782d65efd7c7281",
+    "source": "diagnostics/07/manifest.json",
+    "status": "RUNNING_TEMPORARY_TIMING_ONLY",
+    "acceptance": false,
+    "production_candidate_unchanged": true
   }
 }
