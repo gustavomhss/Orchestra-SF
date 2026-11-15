@@ -58,6 +58,7 @@ export type Snapshot79 = {
   readCalls: number
   readNull: number
   readBytes: number
+  readValueCallers: string[]
   pushCalls: number
   pushNull: number
   pushedBytes: number
@@ -142,6 +143,7 @@ function capture79(server: ReturnType<typeof createServer>) {
     readCalls: number
     readNull: number
     readBytes: number
+    readValueCallers: string[]
     pushCalls: number
     pushNull: number
     pushedBytes: number
@@ -185,7 +187,7 @@ function capture79(server: ReturnType<typeof createServer>) {
       incoming: request,
       id: typeof token === "string" && /^[A-Za-z0-9_-]{1,48}$/.test(token) ? token : `req-${records.length + 1}`,
       started: performance.now(), events: [] as Event79[], droppedEvents: 0,
-      readCalls: 0, readNull: 0, readBytes: 0,
+      readCalls: 0, readNull: 0, readBytes: 0, readValueCallers: [] as string[],
       pushCalls: 0, pushNull: 0, pushedBytes: 0,
       bodyReaderCalls: 0, bodyReadCalls: 0, bodyReadDone: 0, bodyReadBytes: 0,
       handlerEntered: false, handlerCompleted: false, responseFinished: false,
@@ -210,6 +212,10 @@ function capture79(server: ReturnType<typeof createServer>) {
       const result: unknown = Reflect.apply(original, this, args)
       if (result === null) record.readNull++
       record.readBytes += byteLength79(result)
+      if (result !== null && record.readValueCallers.length < 8) {
+        const caller = new Error().stack?.split("\n").slice(1).find((line) => !line.includes("installed-post-cause/listener79.ts")) ?? ""
+        record.readValueCallers.push(caller.includes("platform-node") ? "effect-node-adapter" : /readable|node:stream|internal\/streams/.test(caller) ? "node-readable" : "unclassified")
+      }
       record.mark(result === null ? "node.read.null" : "node.read.value")
       return result
     })
@@ -302,7 +308,7 @@ function capture79(server: ReturnType<typeof createServer>) {
           node: nodeState79(record.incoming),
           socket: { destroyed: socket.destroyed, readableEnded: socket.readableEnded, eofInProgress: eof79(socket),
             ...(socketStates.get(socket) ?? { pushCalls: 0, pushNull: 0, pushedBytes: 0 }) },
-          readCalls: record.readCalls, readNull: record.readNull, readBytes: record.readBytes,
+          readCalls: record.readCalls, readNull: record.readNull, readBytes: record.readBytes, readValueCallers: [...record.readValueCallers],
           pushCalls: record.pushCalls, pushNull: record.pushNull, pushedBytes: record.pushedBytes,
           bodyReaderCalls: record.bodyReaderCalls, bodyReadCalls: record.bodyReadCalls,
           bodyReadDone: record.bodyReadDone, bodyReadBytes: record.bodyReadBytes,

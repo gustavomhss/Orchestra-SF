@@ -1,0 +1,105 @@
+{
+  "schema": "sf2h.m79.validation-overlay.v1",
+  "id": "V1-exact74",
+  "state": "PREPARED_NOT_RUN",
+  "base": "0cd83576a6146f61df1bacf6de3990353b2d8c94",
+  "production_owner": 74,
+  "source74": "d2a1227ae8858ed6defd80df7383d5648dd97b5e",
+  "source74_unit": "owner74-candidate/MANIFEST.json",
+  "production_delta_by79": "NONE; exact existing74 candidate plus passive markers in isolated validation tree",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/installed-post-cause/probe.test.ts",
+      "./Sucafinav1/test/product/installed-post-cause/bridge-regression.test.ts",
+      "--timeout",
+      "18000"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    }
+  },
+  "expected_tests": 5,
+  "overlays": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "mode": "100644",
+      "preimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "postimage_blob": "fedeb3d6e8fbf7ec4162d2eff4ba6aa1f72e4a95",
+      "artifact": "instrumentation-v1/installation.postimage.txt",
+      "owner_postimage_blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+      "artifact": "owner74-candidate/02-request-body.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "mode": "100644",
+      "preimage_blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+      "postimage_blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+      "artifact": "owner74-candidate/03-http.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+      "mode": "100644",
+      "preimage_blob": null,
+      "postimage_blob": "458442baec9b23bb8a0ce35164d7c77ec37bc173",
+      "artifact": "instrumentation-v1/map.postimage.txt",
+      "owner_postimage_blob": "cd6a91c9f6fb11972220a11728300b6d7cdded6b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "mode": "100644",
+      "preimage_blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+      "postimage_blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+      "artifact": "owner74-candidate/05-integration-fixture.ts.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "mode": "100644",
+      "preimage_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "postimage_blob": "ccdd1e2833a8f2c6a3dc605f43c550bdb3671ac6",
+      "artifact": "instrumentation/entry.postimage.txt"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "mode": "100644",
+      "preimage_blob": "4edac56f32a082a0944a88fe5f231bc5aa739690",
+      "postimage_blob": "69bf5b0e64c2d7fca27c9192c035467169ebcd5a",
+      "artifact": "instrumentation/application.postimage.txt"
+    }
+  ],
+  "passive_additions": "Four installation boundary calls; same entry/application markers as V0; map updated to the two instrumented canonical files; stack labels fixed categories only, discarded original stack.",
+  "causal_controls": [
+    "Node raw data/end",
+    "Effect.runCollect(incoming.stream)",
+    "Raw Web stream from toReadableStreamEffect, default context/HWM",
+    "HttpServerRequest.toWeb without reconstruction",
+    "C34 new Request(web,{signal}) negative, unchanged NodeStream/default HWM",
+    "Conditional raw Web HWM0 and reconstructed Request HWM0, same captured context/closeOnDone"
+  ],
+  "regression_controls": [
+    "POST28 exact declared length",
+    "one real operator Versions77, SQLite1version+2audit and no replay",
+    "UTF8split30025bytes with slow consumer, chunked+declared, realEOF",
+    "413 on65537bytes before senderEOF",
+    "partial10/4096 disconnect, reader/signalcancellation and no postRead"
+  ],
+  "source74_prior_tests": {
+    "run": 43672712025,
+    "job": 132686076424,
+    "pass": 14,
+    "fail": 1,
+    "failure": "complete=false oracle after Bun local discard; consumer response/bytes tests passed"
+  },
+  "omni": "No spawn; existing focused control applicability only. No omni proof claimed.",
+  "dedup": "W1 fixtures and exact overlay different from S0; one run79 in flight; prior74 run reused as evidence, not rerun unchanged.",
+  "limits": "Not native CLI/browser journey, not stack C proof, not full compiler/guards. A45 request will use V1 exact tree.",
+  "GLOBAL_RELEASE": false
+}

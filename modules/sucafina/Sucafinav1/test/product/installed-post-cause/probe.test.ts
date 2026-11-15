@@ -5,9 +5,10 @@ import path from "node:path"
 import { createRequire } from "node:module"
 import { pathToFileURL } from "node:url"
 import type { IncomingMessage } from "node:http"
-import { Effect, Layer } from "effect"
+import { Effect, Layer, Option, Stream } from "effect"
 import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
 import { withListener79, markIncoming79 } from "./listener79.ts"
+import type { Snapshot79 } from "./listener79.ts"
 import { prepareLocalConfiguration } from "../../../runtime/local-configuration.ts"
 import { prepareOperatorAccess } from "../../../local/enroll.ts"
 import { createLocalInstallation } from "../../../local/entry.ts"
@@ -20,9 +21,9 @@ const { NodeHttpServerRequest } = await import(pathToFileURL(cli.resolve("@effec
 const { composeSfInstallation } = await import(pathToFileURL(path.join(repository, "apps/cli/src/sucafina-product/installation.ts")).href)
 const payload = '{"action":"list","scope":{}}'
 
-async function request79(url: string, init: RequestInit, capture: { take: () => unknown[] }, timeout = 1800) {
+async function request79(url: string, init: RequestInit, capture: { take: () => Snapshot79[] }, timeout = 1800) {
   const controller = new AbortController()
-  const state = { timedOut: false, beforeAbort: undefined as unknown[] | undefined }
+  const state = { timedOut: false, beforeAbort: undefined as Snapshot79[] | undefined }
   const started = performance.now()
   const timer = setTimeout(() => {
     state.beforeAbort = capture.take()
@@ -88,7 +89,65 @@ test("M79 exact-length POST crosses the installed Node Effect Web body boundary"
         const bytes = yield* Effect.tryPromise({ try: (signal) => flowControl(source, signal), catch: () => "flow-control-failed" as const })
         return HttpServerResponse.jsonUnsafe({ bytes })
       }))
-      return { ...installation, layer: Layer.merge(installation.layer, control) }
+      const collected = HttpRouter.add("POST", "/effect-collect-control", Effect.gen(function* () {
+        const incoming = yield* HttpServerRequest.HttpServerRequest
+        const source = NodeHttpServerRequest.toIncomingMessage(incoming)
+        markIncoming79(source, "control.effect.collect.start")
+        const chunks = yield* Stream.runCollect(incoming.stream)
+        markIncoming79(source, "control.effect.collect.complete")
+        return HttpServerResponse.jsonUnsafe({ bytes: chunks.reduce((total: number, chunk: Uint8Array) => total + chunk.byteLength, 0) })
+      }))
+      const rawWebRoute = Effect.gen(function* () {
+        const incoming = yield* HttpServerRequest.HttpServerRequest
+        const source = NodeHttpServerRequest.toIncomingMessage(incoming)
+        const body = yield* Stream.toReadableStreamEffect(incoming.stream, incoming.url === "/web-stream-zero-control" ? { strategy: { highWaterMark: 0 } } : undefined)
+        const bytes = yield* Effect.tryPromise({ try: async (signal) => {
+          const reader = body.getReader()
+          const aborted = () => { markIncoming79(source, "control.rawWeb.cancel"); void reader.cancel().catch(() => undefined) }
+          signal.addEventListener("abort", aborted, { once: true })
+          const state = { bytes: 0 }
+          try {
+            while (true) {
+              markIncoming79(source, "control.rawWeb.read.start")
+              const next = await reader.read()
+              if (signal.aborted) throw new Error("M79_CONTROL_CANCELLED")
+              markIncoming79(source, next.done ? "control.rawWeb.read.done" : "control.rawWeb.read.value")
+              if (next.done) return state.bytes
+              state.bytes += next.value.byteLength
+            }
+          } finally { signal.removeEventListener("abort", aborted); reader.releaseLock() }
+        }, catch: () => "raw-web-failed" as const })
+        return HttpServerResponse.jsonUnsafe({ bytes })
+      })
+      const rawWeb = Layer.merge(HttpRouter.add("POST", "/web-stream-control", rawWebRoute), HttpRouter.add("POST", "/web-stream-zero-control", rawWebRoute))
+      const directWeb = HttpRouter.add("POST", "/web-direct-control", Effect.gen(function* () {
+        const incoming = yield* HttpServerRequest.HttpServerRequest
+        const source = NodeHttpServerRequest.toIncomingMessage(incoming)
+        const web = yield* HttpServerRequest.toWeb(incoming)
+        markIncoming79(source, "control.directWeb.read.start")
+        const body = yield* Effect.tryPromise({ try: () => web.arrayBuffer(), catch: () => "direct-web-failed" as const })
+        markIncoming79(source, "control.directWeb.read.complete")
+        return HttpServerResponse.jsonUnsafe({ bytes: body.byteLength })
+      }))
+      // C34 remains as a causal negative in the same listener. Node EOF was
+      // observed in S0; the Web Request read did not complete before cancellation.
+      const paused = HttpRouter.add("POST", "/paused-effect-control", Effect.gen(function* () {
+        const incoming = yield* HttpServerRequest.HttpServerRequest
+        const web = yield* HttpServerRequest.toWeb(incoming)
+        const text = yield* Effect.tryPromise({ try: (signal) => new Request(web, { signal }).text(), catch: () => "paused-control-failed" as const })
+        return HttpServerResponse.jsonUnsafe({ bytes: Buffer.byteLength(text) })
+      }))
+      const zeroClone = HttpRouter.add("POST", "/clone-zero-control", Effect.gen(function* () {
+        const incoming = yield* HttpServerRequest.HttpServerRequest
+        const url = HttpServerRequest.toURL(incoming)
+        if (Option.isNone(url)) throw new Error("M79_CONTROL_URL_INVALID")
+        const context = yield* Effect.context<never>()
+        const init = { method: incoming.method, headers: incoming.headers, body: Stream.toReadableStreamWith(incoming.stream, context, { strategy: { highWaterMark: 0 } }), duplex: "half" }
+        const first = new Request(url.value, init)
+        const text = yield* Effect.tryPromise({ try: (signal) => new Request(first, { signal }).text(), catch: () => "zero-clone-failed" as const })
+        return HttpServerResponse.jsonUnsafe({ bytes: Buffer.byteLength(text) })
+      }))
+      return { ...installation, layer: Layer.mergeAll(installation.layer, control, collected, rawWeb, directWeb, paused, zeroClone) }
     },
     create: async () => ({ mount: "/probe", dispose() {}, async handler(request) {
       if (request.method === "GET") return Response.json({ ready: true })
@@ -99,13 +158,26 @@ test("M79 exact-length POST crosses the installed Node Effect Web body boundary"
       const get = await request79(`${listener}/probe`, { headers: { "x-m79-probe-id": "minimal-get", connection: "close" } }, capture)
       const flow = await request79(`${listener}/flow-control`, { method: "POST", headers: { ...headers, "x-m79-probe-id": "flow-control" }, body: payload }, capture)
       const post = await request79(`${listener}/probe`, { method: "POST", headers: { ...headers, "x-m79-probe-id": "minimal-post" }, body: payload }, capture)
-      console.log("M79_OBSERVATION " + JSON.stringify({ case: "minimal", runtime: { bun: Bun.version, node: process.version }, get, flow, post, traces: capture.take() }))
+      const controls: Record<string, Awaited<ReturnType<typeof request79>>> = {}
+      for (const name of ["effect-collect", "web-stream", "web-direct"]) {
+        controls[name] = await request79(`${listener}/${name}-control`, { method: "POST", headers: { ...headers, "x-m79-probe-id": name }, body: payload }, capture)
+      }
+      if (controls["web-stream"].timedOut) controls["web-stream-zero"] = await request79(`${listener}/web-stream-zero-control`, { method: "POST", headers: { ...headers, "x-m79-probe-id": "web-stream-zero" }, body: payload }, capture, 900)
+      const negative = await request79(`${listener}/paused-effect-control`, { method: "POST", headers: { ...headers, "x-m79-probe-id": "paused-negative" }, body: payload }, capture)
+      if (negative.timedOut) controls["clone-zero"] = await request79(`${listener}/clone-zero-control`, { method: "POST", headers: { ...headers, "x-m79-probe-id": "clone-zero" }, body: payload }, capture, 900)
+      console.log("M79_OBSERVATION " + JSON.stringify({ case: "minimal", runtime: { bun: Bun.version, node: process.version }, get, flow, post, controls, negative, traces: capture.take() }))
       expect(get.status).toBe(200)
       expect(flow.status).toBe(200)
       expect(JSON.parse(flow.text)).toEqual({ bytes: 28 })
       expect(post.timedOut).toBe(false)
       expect(post.status).toBe(200)
       expect(JSON.parse(post.text)).toEqual({ bytes: 28 })
+      expect(negative.timedOut).toBe(true)
+      const before = negative.beforeAbort?.find((trace) => trace.id === "paused-negative")
+      expect(before?.readBytes).toBe(28)
+      expect(before?.pushNull).toBe(1)
+      expect(before?.node.readableEnded).toBe(true)
+      expect(before?.responseFinished).toBe(false)
     },
   })
 }, 12000)
