@@ -1,0 +1,40 @@
+{
+  "schema": "sf2-mission52-comparison-inner-diagnostic-v1",
+  "purpose": "Decompose observed 12551ms Planner comparison; no behavior change, no acceptance.",
+  "base_candidate": "2a330245173d0530bc83ab70568b39f5e1633c01",
+  "material": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/scenario-comparison-port.ts",
+      "preimage": "1782c2094239c3712d3a895a6a25f4160fb429c7",
+      "postimage": "ed1d91fdfd248ec38d3a2aa11e3765ec05b18514",
+      "postimage_sha256": "6ea1ec9b7efc5f0d22f1d1d2b5378438d322a513013477a0c31c2f1a95d34f96"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "preimage": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "postimage": "571e48546c92396ff9d1e3058936b7367f5e0844",
+      "postimage_sha256": "76dfdcace8027fc979f57c157221e2ee0b67430c3a7cad2f597ecf82287836af"
+    }
+  ],
+  "preserved": {
+    "request": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "testCount": 5,
+    "testTimeoutMs": 180000,
+    "uiDeadlineMs": 10000,
+    "retries": 0,
+    "scope": "Only delegation and elapsed timing; source and batch identities remain intact."
+  },
+  "qualification": "DIAGNOSTIC_ONLY; remove all D7+D8 temporary changes before clean acceptance.",
+  "patch_sha256": "4cff23ac22231cc2314e1406f657e9bf15630269898240486eff32818f1e2b3e",
+  "W": "a6e4102a92742bda6bfede2c66ce1130b3d6df07",
+  "W_tree": "4381a0c21c481f7dd998f2e7bb60f007a96e6fd1",
+  "S": "8392e09ae87a6df68790a69d223585e830ec82ca",
+  "S_tree": "c801889a4e723859ed02b2f41105b36587a95267",
+  "run": 43665193618,
+  "review": {
+    "status": "STATIC_PASS_DIAGNOSTIC_ONLY",
+    "sha256": "9467e5b74acb366934cd56f3729918a9e76a0d642b135e74ccffe6651d9f1d71",
+    "path": "independent-review.md"
+  },
+  "preimage_material_owner": "Shared Planner; full inert snapshots here, temporary isolated W only."
+}

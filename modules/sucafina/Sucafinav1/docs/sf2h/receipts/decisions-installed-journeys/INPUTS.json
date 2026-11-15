@@ -722,6 +722,15 @@
       "P4_preimages_unchanged": true,
       "batch_preimage": "7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11",
       "authority_source52_unchanged": true
+    },
+    {
+      "source": "current-target-terminal57-after-diagnostic07.json",
+      "head": "d6d9816bb09f7595330862616305e0791e23e61e",
+      "tree": "69cf88239d09ee164b12fecd482c6da3350b8b71",
+      "product_base": "C27",
+      "product_delta": 0,
+      "authority": "57 ENDED;60 PREPARED_NOT_STARTED; no ACK60 observed",
+      "delivery_owner": "47 remains requested terminal destination;52 does not integrate target"
     }
   ],
   "second_qualification": {
@@ -1386,7 +1395,20 @@
       "other_active": [],
       "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf"
     },
-    "status": "IN_PROGRESS_DIAGNOSTIC_ONLY",
-    "run_id": 43664202278
+    "status": "COMPLETED_DIAGNOSTIC_ONLY",
+    "run_id": 43664202278,
+    "run": 43664202278,
+    "passed": 3,
+    "failed": 2,
+    "receipt": "diagnostic-07.json",
+    "planner_ms": 12551.298028
+  },
+  "eighth_diagnostic": {
+    "status": "RUNNING_DIAGNOSTIC_ONLY",
+    "run": 43665193618,
+    "W": "a6e4102a92742bda6bfede2c66ce1130b3d6df07",
+    "S": "8392e09ae87a6df68790a69d223585e830ec82ca",
+    "request": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "scope": "D7 measured Planner 12551ms; D8 separates scenario batch, stored-case, Forecast projection, source, coverage and criterion callbacks."
   }
 }

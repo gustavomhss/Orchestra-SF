@@ -1,6 +1,6 @@
 {
   "schema": "sf2-mission52-candidate-material-v1",
-  "status": "ACTIVE_P5_NOMINAL06_FAILED_DIAGNOSTIC07_RUNNING",
+  "status": "ACTIVE_P5_NOMINAL06_FAILED_DIAGNOSTIC08_RUNNING",
   "source_product": "c106deaed6a9acbfa6d1dc417f96c6605cf69a16",
   "source_tree": "a905bafed750476e6312df77c22a1d2407e987a9",
   "base": "b10c424a6b318879fc30f11d03ba1cfeffda7d1a",
@@ -367,12 +367,24 @@
     ]
   },
   "diagnostic": {
-    "run_id": 43664202278,
-    "W": "2a330245173d0530bc83ab70568b39f5e1633c01",
-    "S": "e43c6ef8265abad48eaff7c36782d65efd7c7281",
-    "source": "diagnostics/07/manifest.json",
-    "status": "RUNNING_TEMPORARY_TIMING_ONLY",
-    "acceptance": false,
-    "production_candidate_unchanged": true
+    "status": "RUNNING_NOT_ACCEPTANCE",
+    "diagnostic07": {
+      "run": 43664202278,
+      "passed": 3,
+      "failed": 2,
+      "receipt": "diagnostic-07.json",
+      "planner_ms": 12551.298028,
+      "producer_after_admission_ms": 17674.486764
+    },
+    "diagnostic08": {
+      "run": 43665193618,
+      "W": "a6e4102a92742bda6bfede2c66ce1130b3d6df07",
+      "S": "8392e09ae87a6df68790a69d223585e830ec82ca",
+      "request": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "reason": "Decompose dominant Planner time into existing canonical producers.",
+      "excluded_from_production": true,
+      "material": "diagnostics/08/manifest.json"
+    },
+    "requirement": "Remove all four temporary D7/D8 edits before final clean production qualification."
   }
 }
