@@ -282,6 +282,34 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     id: index as SfMonthId, labelKey: ("sf.u07.month." + (index+1)) as SfMonth["labelKey"],
     closed: index < (grid()?.closedThrough ?? 0),
   })))
+  // One keyboard tab stop owns the grid. Do not wrap at any edge or save on nav.
+  const navigateCell = (event: {
+    from: SfCellCoordinate
+    key: "ArrowUp" | "ArrowDown" | "ArrowLeft" | "ArrowRight" | "Home" | "End"
+      | "Control+Home" | "Control+End" | "PageUp" | "PageDown"
+    visibleRowCount: number
+  }) => {
+    const rows = grid()?.rows ?? []
+    const previous = rows.findIndex((row) => row.id === event.from.rowRef)
+    if (previous < 0) return
+    let row = previous, month = event.from.month
+    switch (event.key) {
+      case "ArrowUp": row -= 1; break
+      case "ArrowDown": row += 1; break
+      case "ArrowLeft": month -= 1; break
+      case "ArrowRight": month += 1; break
+      case "Home": month = 0; break
+      case "End": month = 11; break
+      case "Control+Home": row = 0; month = 0; break
+      case "Control+End": row = rows.length - 1; month = 11; break
+      case "PageUp": row -= event.visibleRowCount; break
+      case "PageDown": row += event.visibleRowCount; break
+    }
+    row = Math.max(0, Math.min(rows.length - 1, row))
+    month = Math.max(0, Math.min(11, month))
+    setState({ selection: { rowRef: rows[row]!.id as SfRef, month: month as SfMonthId,
+      measure: event.from.measure }, selectedRange: null })
+  }
   const columns: readonly SfColumn<GridRow>[] = [{
     id: "line", labelKey: "sf.u07.columns.line" as SfColumn<GridRow>["labelKey"], align: "start",
     widthPolicy: { kind: "flex", minPx: 160, weight: 1 },
@@ -324,7 +352,7 @@ export function SfBudgetView(props: BudgetSurface): JSX.Element {
     if (!ready || state.busy || state.uncertainty) return
     if (original.phase !== "review" && original.phase !== "partial" &&
         original.phase !== "conflict" && original.phase !== "failed") return
-    setState({ busy: true, paste: { ...original, phase: "applying" } })
+    setState({ busy: true, paste: { phase: "preparing", originalTsv: original.originalTsv, range: original.range } })
     const abort = new AbortController()
     try {
       const result = await createSfPlannerClient(ready.transport)["planner.monthly.preview"](
