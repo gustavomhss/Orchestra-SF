@@ -1,0 +1,62 @@
+{
+  "schema": "sf2h.causal-correction.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 153,
+  "order": "A12",
+  "branch": "sf-ux-a12",
+  "pr": 144,
+  "epoch": "ux-native-a12-e2-browser153",
+  "actor": "ChatGPT",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed",
+  "parent_head": "71af849aee29863334ea115844d454512786ac27",
+  "preflight_tree": "d78bc7c58d4c60f20a2d7479659a4f7c9c871269",
+  "fence": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/S0-FENCE.json",
+    "blob": "d2991f7329ffc13156f662e46262a992514b0c65",
+    "previous_epoch": "ux-native-a12-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "runtime_termination_claimed": false
+  },
+  "source_preflight": {
+    "views_http": "4f246d4b1e6090d509d8bed554d3556b50e61386",
+    "work_http": "b2dc424d96a67ddd581abbc460cfb938b35e0447",
+    "personal_views": "e424c7454a1aa4b7bd8290408001e65ae029d156",
+    "workbench_local_C58": "78574180369c9495cbe5e5d3e569bb500fbff277",
+    "workbench_current_C60": "9c666e7463b49a7c0cdeadb705b3266089d10bfb",
+    "relevant_delta": "C60 producer result.status names provider-conflict instead of conflict; no work/views/input changes; do not revert or alter external source"
+  },
+  "exclusive_preimage": {
+    "packages/schema/src/sucafina/work.ts": "0fa4c0cd2fc8a7c2d4b5502cd2ccfbb1d0fbe77b",
+    "packages/client/src/sucafina/work.ts": "f790637deb85ae93d85840dea625d953b73e619c",
+    "apps/cli/src/sucafina-product/native-ui/work.ts": "402b8a4599807d403065e561a427e230ae5981cb",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": "cc5a3e075d16aeb67eb604bb5e5b7139a48bb4f0"
+  },
+  "authority": "successor of A12 only; no authority over prior writer runtime or 132/149/150",
+  "allowlist": [
+    "packages/schema/src/sucafina/work.ts",
+    "packages/client/src/sucafina/work.ts",
+    "apps/cli/src/sucafina-product/native-ui/work.ts",
+    "packages/schema/src/sucafina/work/**",
+    "packages/client/src/sucafina/work/**",
+    "apps/cli/src/sucafina-product/native-ui/work/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/correction153/**"
+  ],
+  "causal_evidence": {
+    "run": 43758731378,
+    "job": 132948475697,
+    "comment": 6901000780,
+    "snapshot": "b9e68821206cdd9510b1faa5d07f98140b1df581",
+    "failures": [
+      "work.test.ts:61 missing surface",
+      "work.test.ts:78 accepts invalid V1/V2",
+      "work.test.ts:104 accepts extra secretRoleMap"
+    ]
+  },
+  "status": "ACKED_PRE_EDIT",
+  "tests": "NOT_RUN",
+  "native_goal": "paused",
+  "global_release": false
+}
