@@ -1,0 +1,90 @@
+{
+  "schema": "sf2h.portfolio-runtime-qualification.ack.v1",
+  "mission": 58,
+  "actor": "S4-C",
+  "epoch": "portfolio-runtime-browser58",
+  "state": "ACK58_ACCEPTED_SOURCE_ACTIVE",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "recorded_at": "2026-11-15T01:04:00Z",
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "astra-wp13",
+  "pr": 37,
+  "sole_source_writer": "Root58",
+  "expected_parent": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+  "authority": {
+    "direct_user_instruction": true,
+    "control": "1809a32ad042a0f98a5d93dc90447a7e13e78434",
+    "mission_path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/portfolio-runtime-qualification.json",
+    "mission_blob": "0b7e47921496525a22d904a44006f13bf5735726",
+    "current_control_matches": true
+  },
+  "predecessors": [
+    {
+      "mission": 54,
+      "terminal": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+      "handoff_blob": "425c11190c5a56cc26a24abaf2577a2da0c18047",
+      "authority_blob": "9f806a103790a384e79049ecbea413fb378a2ef9",
+      "state": "TERMINATED_WITH_P03_FAIL_AND_GATES_PENDING",
+      "branch_head_matches": true
+    },
+    {
+      "mission": 56,
+      "terminal": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+      "product": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+      "handoff_blob": "1066000950d2de43d025012fceb8b26d08425666",
+      "authority_blob": "73e17bd7485b534bc03218e04163203e240ec235",
+      "state": "TERMINATED_SOURCE_QUALIFIED_GATES_PENDING",
+      "branch_head_matches": true
+    }
+  ],
+  "integration": {
+    "mission": 57,
+    "sole_stack_writer": true,
+    "observed_head": "666ed28668ad3fc0bb9c89fdb57a0da33c57e2e4",
+    "ACK57_blob": "2572ec24161d5749987ae92d15405295add10ad6",
+    "state": "ACK_ONLY_NO_MATERIAL54_56_CANDIDATE",
+    "base_product": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "checks_owner": 45
+  },
+  "reconciliation": "All branch heads and explicit terminal authorities read before ACK. No newer WP13 or runtime writer observed; mission57 explicitly recognizes mission58. No authority inferred from silence.",
+  "readings": {
+    "root": "Full mission58 and57, root AGENTS, pinned START/WORKFLOW/executionCOMMON, full terminal54/56 handoffs/authorities, manifests and actual Portfolio source/P03.",
+    "distributed": "Read-only helpers reviewed complete54/56 patches, pre/postimages, runtime implementation and tests, test:ci/workflow and P03. Full S4-C pack and annexes assigned and must finish before dispatch."
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/product/portfolio/analysis.ts",
+    "modules/sucafina/Sucafinav1/product/portfolio/production.ts",
+    "modules/sucafina/Sucafinav1/test/product/wp13/semantic-union-source-scenario.test.ts (diagnostic/compatibilityonly;all72assertions/order/budgets unchanged)",
+    "modules/sucafina/Sucafinav1/test/product/portfolio-runtime-qualification/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/portfolio-runtime-qualification/"
+  ],
+  "boundaries": "No runtime-source or foreign legacy test editing; no stack/source-owner/workflow-ref writes. W may compose only minimal exact released blobs atop current composed base. Source branch never replaced with W tree. External fixes remain complete inert patches for57/owner.",
+  "qualification": {
+    "first": "OriginalP03 on54analysis+released56runtime; prefer actual57candidate, otherwise isolatedW with complete manifest.",
+    "all_72_original_expect_lines_and_order": true,
+    "test_budget_ms": 180000,
+    "fixture_budget_ms": 180000,
+    "original_data_producers_confirmation_history_replay_revocation": true,
+    "legacy_oracle": "NOT_RUN_UNADAPTED unless57 publishes its reviewed material candidate",
+    "hosted_interface": "existing test:ci/.ci-run.json only; deduplicate/reattach",
+    "local_tests": 0,
+    "epic": 0
+  },
+  "helpers": [
+    "runtime_audit",
+    "analysis54_audit",
+    "p03_runner_audit"
+  ],
+  "helper_authority": "Read-only/scratch audit, no remote writes or dispatches; not final campaign reviewers",
+  "preservation": {
+    "P02_and_historical22PASS": true,
+    "all_prior_receipts": true,
+    "work_packages": 15,
+    "tasks": 74,
+    "criteria": 1610,
+    "T0": true,
+    "GLOBAL_RELEASE": false
+  }
+}
