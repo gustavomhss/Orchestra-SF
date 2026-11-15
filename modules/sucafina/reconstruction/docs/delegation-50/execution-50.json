@@ -1,0 +1,1427 @@
+{
+  "revision": 5,
+  "status": "PLANNED_NOT_IMPLEMENTED",
+  "title": "Orchestra SF reconstruction — 50 session maximal-parallel plan",
+  "source": {
+    "attached_plan": "revision 2 supplied in this turn",
+    "prior_revision": "revision 4 prepared in current workspace, plan-only",
+    "fixes_included": [
+      "source revalidation before model calls",
+      "resume CAS and recalculate",
+      "knowledge/effective bitemporal split",
+      "DOCX tracked changes",
+      "CSV dialect choice",
+      "XLSX raw numeric fidelity",
+      "explicit financial oracle"
+    ]
+  },
+  "execution": {
+    "sessions": 50,
+    "waves": 5,
+    "sessions_per_wave": 10,
+    "all_waves_launch_in_parallel": true,
+    "launch_mode": "All 50 sessions can start NOW in PREP_ONLY; no task may write implementation until contract freeze and required predecessor receipts. Wave numbers group work, not barriers.",
+    "readiness": "READY_CODE iff C01 owner reservations ACKed + C02/C03/C04/C06/C07/C09 contract digest frozen as applicable + all requires have compatible released receipts + own paths unoccupied; other work remains PREP_ONLY, BLOCKED_CONTRACT or BLOCKED_EXTERNAL",
+    "no_automatic_trust": "Commit, ACK, passing isolated test or synthetic fixture do not imply integrated PASS",
+    "max_writers_per_path": 1,
+    "branches": "Prefer precreated unique per-session branches; create only after exact HEAD and branch-name collision check; never reset/rebase unrelated branches",
+    "release": "atomic pinned SHA plus tests and dependencies; integration owner consumes only complete release, never moving HEAD",
+    "batch_ci": "Targeted tests per change; group compatible changes into small hosted jobs; full suite at gate only, not per task",
+    "critical_path": "C01-C04/C06/C09 → L06/L08 + D01/D03 + U02/U03 → I01 real native thin slice; rest in parallel on frozen contracts",
+    "code_owner_rule": "Owner N0/N1/N2/N7/N10 alone edits shared navigation/protocol/client/auth/host/CI. If unavailable, integration is BLOCKED_EXTERNAL; no fake workaround.",
+    "coordination": "A single supervisor updates ledger mechanically; no new scheduler; all rounds of context are fixed and only real conflicts return to supervisor",
+    "rework_rule": "On contract change, issue new digest and only invalidate affected consumer releases; do not restart every session",
+    "bootstrap_exception": "C01 starts after read-only HEAD check. C02-C09 write only into exclusive draft contracts/reference after C01 reservation ACK, without frozen contract; their outputs collectively form freeze G0. C10 can research read-only immediately."
+  },
+  "technology": {
+    "runtime": "Bun / TypeScript",
+    "storage": "SQLite separate tables using existing runtime, scoped namespace",
+    "ui": "SolidJS and Orchestra native components",
+    "parsers": "Existing libraries (unpdf, JSZip, saxes, ExcelJS) with bounded adapters",
+    "model": "Existing authorized host/provider; no ad hoc credential management",
+    "not_mvp": [
+      "Neo4j/graph DB",
+      "generic agent framework",
+      "OCR",
+      "automatic connectors",
+      "DocETL/Splink",
+      "Reducto/Docling/LangExtract as mandatory",
+      "automated admission without evidence"
+    ]
+  },
+  "security_invariants": [
+    "SourceAccessPort verifies original request-bound authority and source version before every model call/retry/resume, publication and evidence read",
+    "Revoked/denied is not 503/unavailable; no content leaks from caches",
+    "No unqualified identity merge, no implicit FX or rounding, no proposal substituted for obligation",
+    "No extra domain apply or implicit document confirmation",
+    "Inputs from files are data, not executable instructions",
+    "Original source lexical value and location preserved; material unsupported data gives conditional answer",
+    "Exact request-key scope and CAS permit effect-once publication; stale worker fenced",
+    "Bitemporal knowledge and effective time separate with immutable revisions"
+  ],
+  "gates": {
+    "G0": "Shared contract signed and test selectors verified, authorities assigned",
+    "G1": "One REAL document/model into native Documentos with assertion, exact source and reload",
+    "G2": "Contract+addendum+proposal+budget with review and coverage",
+    "G3": "All four journeys with restart, duplicate, revocation and delta in same installed build",
+    "G4": "Independent adversarial evaluation with candidate digest, measured evidence, no critical failures"
+  },
+  "adversarial_cases": [
+    {
+      "id": "C01",
+      "name": "Authorization at every provider boundary",
+      "oracle": "Revoke source after parsing and before model invocation; no further content sent; publication and evidence read denied."
+    },
+    {
+      "id": "C02",
+      "name": "Explicit resume and recalculate",
+      "oracle": "Two simultaneous resume requests: one durable winner; identical requestKey same receipt; changed source revision -> stale, explicit recalculate."
+    },
+    {
+      "id": "C03",
+      "name": "Bitemporal query",
+      "oracle": "Same knowledge revision queried on Dec 31 vs Jan 1 changes effective validity, no model rerun; future proposal never auto-active."
+    },
+    {
+      "id": "C04",
+      "name": "Tracked changes DOCX",
+      "oracle": "DOCX with w:ins/w:del is partial/needs-resolution for affected facts, not auto-supported as clean final text."
+    },
+    {
+      "id": "C05",
+      "name": "CSV delimiter choices",
+      "oracle": "Ambiguous CSV -> needs-input; no partial acceptance in an atomic batch; chosen delimiter hashed into parser input key."
+    },
+    {
+      "id": "C06",
+      "name": "XLSX numeric fidelity",
+      "oracle": "9007199254740993 retained as source lexical or marked unverifiable; no silently rounded supported assertion."
+    },
+    {
+      "id": "C07",
+      "name": "Financial oracle F01",
+      "oracle": "USD 100000 2026 + explicit scoped additive USD 20000 = USD 120000 documented; budget 120000 comparison not obligation; future 2027 proposal 135000 separate; no assumed currency/period exchange."
+    },
+    {
+      "id": "C08",
+      "name": "Source access and scope",
+      "oracle": "Cross-user/project/installation/host references unreadable; logout removes private UI state; network outage retains private intent without inventing revocation."
+    },
+    {
+      "id": "C09",
+      "name": "Duplicate, retry, restart",
+      "oracle": "Duplicate upload/response lost/restart does not duplicate obligation or projection; stale worker cannot publish."
+    },
+    {
+      "id": "C10",
+      "name": "Incomplete evidence",
+      "oracle": "Unread material annex, unresolved identity or unsupported formula -> conditional/unanswerable; absence != 0."
+    },
+    {
+      "id": "C11",
+      "name": "Document prompt injection",
+      "oracle": "Instruction in a document to mark proposal active is treated only as data."
+    },
+    {
+      "id": "C12",
+      "name": "Version invalidation",
+      "oracle": "New relevant amendment invalidates previous absence; unrelated source does not reopen unrelated review."
+    }
+  ],
+  "sessions": [
+    {
+      "id": "C01",
+      "wave": 1,
+      "lane": "coord",
+      "title": "Baseline, owners, pins and AGENTS",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/docs/control/baseline/**"
+      ],
+      "steps": [
+        "Reconcile actual HEAD, AGENTS and native N0/N1/N7/N10 owners; write ownership ledger, identify collisions and stop only impacted scope"
+      ],
+      "acceptance": [
+        "No write to product; record exact HEAD and owners"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c01",
+      "checks": [
+        "C01-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C02",
+      "wave": 1,
+      "lane": "contract",
+      "title": "Public DTOs and invariants",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/contracts/types/**"
+      ],
+      "steps": [
+        "Define source, anchor, assertion, completeness, review, revision, operation, temporal and typed error DTOs; draft compatible TS signatures"
+      ],
+      "acceptance": [
+        "Compile-ready contract candidate no guessed authority"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c02",
+      "checks": [
+        "C02-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C03",
+      "wave": 1,
+      "lane": "contract",
+      "title": "Source and model ports",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/contracts/ports/**"
+      ],
+      "steps": [
+        "Specify original-request authority injection, source version/access checks and provider budgets; revalidate before each model call"
+      ],
+      "acceptance": [
+        "Ports admit mock-free real implementation and injected test doubles"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c03",
+      "checks": [
+        "C03-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C04",
+      "wave": 1,
+      "lane": "contract",
+      "title": "Dossier API and operations",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/contracts/api/**"
+      ],
+      "steps": [
+        "Define create, add, get, run, resume, cancel, recalculate, review, remove, evidence and operation-status with versioned preconditions"
+      ],
+      "acceptance": [
+        "Explicit result/error/request-key behavior"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c04",
+      "checks": [
+        "C04-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C05",
+      "wave": 1,
+      "lane": "contract",
+      "title": "Persistent SQL schema",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/contracts/persistence/**"
+      ],
+      "steps": [
+        "Freeze minimal tables, scoped unique keys, CAS, immutable inputs/projections, lease/fence, receipts, time indexes"
+      ],
+      "acceptance": [
+        "DDL-level invariant cases defined"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c05",
+      "checks": [
+        "C05-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C06",
+      "wave": 1,
+      "lane": "contract",
+      "title": "Document representation and anchors",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/contracts/document/**"
+      ],
+      "steps": [
+        "Specify PDF text span/page, DOCX paragraph/run and tracked changes, XLSX literal/fx/cache/cell, CSV delimiter/line/column"
+      ],
+      "acceptance": [
+        "Document provenance survives normalization"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c06",
+      "checks": [
+        "C06-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C07",
+      "wave": 1,
+      "lane": "contract",
+      "title": "Reconciliation, money and periods",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/contracts/semantics/**"
+      ],
+      "steps": [
+        "Fix entity matching strictness, additive vs replacement, proposal vs active, DECIMAL exactness, effective/known time, 3 readiness questions"
+      ],
+      "acceptance": [
+        "No implicit FX, zero, balance or semantic identity merge"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c07",
+      "checks": [
+        "C07-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C08",
+      "wave": 1,
+      "lane": "quality",
+      "title": "12 reference families and oracles",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/evaluation/reference/**"
+      ],
+      "steps": [
+        "Prepare 12 synthetic document families with independently calculated expected outcomes incl financial F01 and all critical negatives"
+      ],
+      "acceptance": [
+        "Gold corpus with versioned answer keys and denominator"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c08",
+      "checks": [
+        "C08-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C09",
+      "wave": 1,
+      "lane": "contract",
+      "title": "Client-state contract",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/contracts/ui/**"
+      ],
+      "steps": [
+        "Fix UI DTO discriminants, loading/partial/denied/needs-input, source links, revision guard, logout wipe, same-origin rules"
+      ],
+      "acceptance": [
+        "Native UI can implement before endpoint exists"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c09",
+      "checks": [
+        "C09-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "C10",
+      "wave": 1,
+      "lane": "coord",
+      "title": "CI lane and native integration requests",
+      "requires": [],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/docs/control/integration/**"
+      ],
+      "steps": [
+        "Read exact test:ci selection, typecheck include, native mount, auth and Documentos; author tiny owner requests and a positive selection proof plan"
+      ],
+      "acceptance": [
+        "No shared-file edits; defined owner requests and check selection"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-c10",
+      "checks": [
+        "C10-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L01",
+      "wave": 2,
+      "lane": "ingest",
+      "title": "Bounded PDF digital text",
+      "requires": [
+        "C03",
+        "C06"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/ingest/pdf/**"
+      ],
+      "steps": [
+        "Use current unpdf-compatible reader; preserve page/span and limits; fail without text layer"
+      ],
+      "acceptance": [
+        "Exact page anchor; non-text PDF explicit unreadable"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l01",
+      "checks": [
+        "L01-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L02",
+      "wave": 2,
+      "lane": "ingest",
+      "title": "DOCX content and tracked revisions",
+      "requires": [
+        "C03",
+        "C06"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/ingest/docx/**"
+      ],
+      "steps": [
+        "Parse bounded DOCX, preserve section/paragraph and w:ins/w:del; mark unresolved redlines partial"
+      ],
+      "acceptance": [
+        "A removed price cannot be promoted as current evidence"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l02",
+      "checks": [
+        "L02-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L03",
+      "wave": 2,
+      "lane": "ingest",
+      "title": "XLSX cell lexical preservation",
+      "requires": [
+        "C06"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/ingest/xlsx/**"
+      ],
+      "steps": [
+        "Use existing ExcelJS for workbook structure but preserve raw numeric token for unsafe numeric cells; count all sheets and formula/cache separately"
+      ],
+      "acceptance": [
+        "9007199254740993 never silently converted"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l03",
+      "checks": [
+        "L03-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L04",
+      "wave": 2,
+      "lane": "ingest",
+      "title": "CSV encoding and dialect",
+      "requires": [
+        "C06",
+        "C04"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/ingest/csv/**"
+      ],
+      "steps": [
+        "Parse CSV safely, report ambiguous delimiter needs-input, respect encoding/quote/rows/columns"
+      ],
+      "acceptance": [
+        "Chosen delimiter is part of immutable input digest"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l04",
+      "checks": [
+        "L04-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L05",
+      "wave": 2,
+      "lane": "ingest",
+      "title": "Bounded archive and media admission",
+      "requires": [
+        "C03",
+        "C06"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/ingest/safety/**"
+      ],
+      "steps": [
+        "Implement expansion, ZIP/XML/cell/page/byte caps before heavy parsing; no external references/macros execution"
+      ],
+      "acceptance": [
+        "Zip bomb and malformed input cannot overconsume"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l05",
+      "checks": [
+        "L05-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L06",
+      "wave": 2,
+      "lane": "provider",
+      "title": "Segment extraction and grounding",
+      "requires": [
+        "C02",
+        "C03",
+        "C06"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/providers/extract/**"
+      ],
+      "steps": [
+        "Generate typed candidate assertions from bounded segments; verify literal spans after provider output"
+      ],
+      "acceptance": [
+        "Wrong offsets remain unsupported, not silently repaired"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l06",
+      "checks": [
+        "L06-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L07",
+      "wave": 2,
+      "lane": "provider",
+      "title": "Provider access fencing",
+      "requires": [
+        "C03"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/providers/access/**"
+      ],
+      "steps": [
+        "Revalidate right before each call, schema repair, resume, and publication; typed cancellation and budget"
+      ],
+      "acceptance": [
+        "Revocation between parse/model means zero subsequent sends"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l07",
+      "checks": [
+        "L07-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L08",
+      "wave": 2,
+      "lane": "provider",
+      "title": "Authorized real-provider harness",
+      "requires": [
+        "C03",
+        "C10"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/providers/harness/**"
+      ],
+      "steps": [
+        "Implement narrow host-injected adapter; no direct credential handling; capture real request/response receipts without sensitive content"
+      ],
+      "acceptance": [
+        "Real evidence gate distinct from fixture tests"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l08",
+      "checks": [
+        "L08-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L09",
+      "wave": 2,
+      "lane": "quality",
+      "title": "Parsing adversarial tests",
+      "requires": [
+        "C08",
+        "C06"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/test/ingest/**"
+      ],
+      "steps": [
+        "Write cases for redlines, CSV ambiguity, numeric fidelity, unreadable PDF, malformed ZIP, empty sheets, omitted content"
+      ],
+      "acceptance": [
+        "No critical unsupported input called supported"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l09",
+      "checks": [
+        "L09-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "L10",
+      "wave": 2,
+      "lane": "ingest",
+      "title": "Reader coordinator and coverage",
+      "requires": [
+        "L01",
+        "L02",
+        "L03",
+        "L04",
+        "L05",
+        "L06",
+        "L07"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/ingest/pipeline/**"
+      ],
+      "steps": [
+        "Join readers with provenance, per-file coverage, typed errors and cancellation; no global parser edits"
+      ],
+      "acceptance": [
+        "One source yields consistent assertion bundle and reasons for gaps"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-l10",
+      "checks": [
+        "L10-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D01",
+      "wave": 3,
+      "lane": "domain",
+      "title": "SQLite schema and migrations",
+      "requires": [
+        "C05"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/store/schema/**"
+      ],
+      "steps": [
+        "Implement private scoped SQLite tables, compatibility migration and versioned indexes"
+      ],
+      "acceptance": [
+        "Reopen persistently without shared snapshots"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d01",
+      "checks": [
+        "D01-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D02",
+      "wave": 3,
+      "lane": "domain",
+      "title": "Source versions and anchors",
+      "requires": [
+        "C02",
+        "C06",
+        "D01"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/store/sources/**"
+      ],
+      "steps": [
+        "Persist digests, version and accessible locator; protect cross-project/actor resolution"
+      ],
+      "acceptance": [
+        "Source content scoped; original source version immutable"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d02",
+      "checks": [
+        "D02-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D03",
+      "wave": 3,
+      "lane": "domain",
+      "title": "Assertions and support derivations",
+      "requires": [
+        "C02",
+        "C07",
+        "D01"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/store/assertions/**"
+      ],
+      "steps": [
+        "Persist full assertion, original expression, normalized decimal, provenance/derivation and support states"
+      ],
+      "acceptance": [
+        "No unsupported statement becomes supported by DB write"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d03",
+      "checks": [
+        "D03-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D04",
+      "wave": 3,
+      "lane": "domain",
+      "title": "Operation receipts and CAS",
+      "requires": [
+        "C04",
+        "C05",
+        "D01"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/store/operations/**"
+      ],
+      "steps": [
+        "Implement scoped request-key uniqueness, atomic publication plus receipt, expectedRevision CAS"
+      ],
+      "acceptance": [
+        "Exactly one committed publication under concurrency"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d04",
+      "checks": [
+        "D04-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D05",
+      "wave": 3,
+      "lane": "domain",
+      "title": "Durable run checkpoints and leases",
+      "requires": [
+        "C05",
+        "D01"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/jobs/checkpoints/**"
+      ],
+      "steps": [
+        "Implement state machine, lease expiry/fencing, cancel invalidation, bounded retry/admission"
+      ],
+      "acceptance": [
+        "Obsolete worker cannot publish; restart resumes valid step"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d05",
+      "checks": [
+        "D05-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D06",
+      "wave": 3,
+      "lane": "domain",
+      "title": "Entity linking and negative matches",
+      "requires": [
+        "C07",
+        "D03"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/reconcile/identity/**"
+      ],
+      "steps": [
+        "Typed identifiers first; proposals from names stay candidates; reversible link/no-link decisions"
+      ],
+      "acceptance": [
+        "Homonyms and subsidiary never auto-merge by similarity"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d06",
+      "checks": [
+        "D06-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D07",
+      "wave": 3,
+      "lane": "domain",
+      "title": "Economic rules and document status",
+      "requires": [
+        "C07",
+        "D03"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/reconcile/economics/**"
+      ],
+      "steps": [
+        "Differentiate obligation, amendment, proposal, budget, credit, replacement; exact decimals"
+      ],
+      "acceptance": [
+        "F01 contract 100k + additive 20k = 120k; budget separate"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d07",
+      "checks": [
+        "D07-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D08",
+      "wave": 3,
+      "lane": "domain",
+      "title": "Knowledge/effective temporal projections",
+      "requires": [
+        "C07",
+        "D03"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/queries/temporal/**"
+      ],
+      "steps": [
+        "Separate knowledgeRevision and effectiveAt; project current vs proposed at read time"
+      ],
+      "acceptance": [
+        "Dec31 and Jan1 differ without model run; future proposal not auto-active"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d08",
+      "checks": [
+        "D08-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D09",
+      "wave": 3,
+      "lane": "domain",
+      "title": "Question readiness and partiality",
+      "requires": [
+        "C07",
+        "D06",
+        "D07"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/queries/readiness/**"
+      ],
+      "steps": [
+        "Implement three question envelopes, inventory coverage, typed absence and pending questions"
+      ],
+      "acceptance": [
+        "Unread material annex prevents full-ready total"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d09",
+      "checks": [
+        "D09-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "D10",
+      "wave": 3,
+      "lane": "quality",
+      "title": "Domain deterministic test battery",
+      "requires": [
+        "C08",
+        "D04",
+        "D05",
+        "D08"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/test/domain/**"
+      ],
+      "steps": [
+        "Independent concurrency, temporal, source scope, correction, refund and identity fixtures"
+      ],
+      "acceptance": [
+        "Tests fail with deliberately wrong implementation"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-d10",
+      "checks": [
+        "D10-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U01",
+      "wave": 4,
+      "lane": "ui",
+      "title": "Native dossier list shell",
+      "requires": [
+        "C09"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/list/**"
+      ],
+      "steps": [
+        "Build SolidJS dossier list under native kit/theme, loading/error/empty; no new sidebar"
+      ],
+      "acceptance": [
+        "Reactivity and owner switch verified"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u01",
+      "checks": [
+        "U01-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U02",
+      "wave": 4,
+      "lane": "ui",
+      "title": "Dossier detail evidence view",
+      "requires": [
+        "C09"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/detail/**"
+      ],
+      "steps": [
+        "Show current/proposed/budget/issues with status; all values labelled period and currency"
+      ],
+      "acceptance": [
+        "Each supported assertion has evidence affordance"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u02",
+      "checks": [
+        "U02-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U03",
+      "wave": 4,
+      "lane": "ui",
+      "title": "Evidence side panel",
+      "requires": [
+        "C09",
+        "C06"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/evidence/**"
+      ],
+      "steps": [
+        "Show exact authorized anchor, version, context and derived calculation steps"
+      ],
+      "acceptance": [
+        "No stale/revoked anchor leaks in UI"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u03",
+      "checks": [
+        "U03-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U04",
+      "wave": 4,
+      "lane": "ui",
+      "title": "Review question interactions",
+      "requires": [
+        "C09",
+        "C04"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/review/**"
+      ],
+      "steps": [
+        "Present competing interpretations, manual vs source corrections, CAS expected revision"
+      ],
+      "acceptance": [
+        "Corrections do not fabricate evidence or official approval"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u04",
+      "checks": [
+        "U04-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U05",
+      "wave": 4,
+      "lane": "ui",
+      "title": "File intake, coverage and CSV choice",
+      "requires": [
+        "C09",
+        "C04"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/intake/**"
+      ],
+      "steps": [
+        "Show per-file status and needs-input; batch atomic choice and cancel"
+      ],
+      "acceptance": [
+        "Ambiguous CSV cannot silently enter as accepted"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u05",
+      "checks": [
+        "U05-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U06",
+      "wave": 4,
+      "lane": "ui",
+      "title": "Run control and resume UX",
+      "requires": [
+        "C09",
+        "C04"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/runs/**"
+      ],
+      "steps": [
+        "Start/cancel/resume/recalculate, receipt lookup, no blind retrigger on timeout"
+      ],
+      "acceptance": [
+        "Same idempotent key recovers receipt"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u06",
+      "checks": [
+        "U06-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U07",
+      "wave": 4,
+      "lane": "ui",
+      "title": "Delta and temporal history",
+      "requires": [
+        "C09",
+        "C07"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/history/**"
+      ],
+      "steps": [
+        "View revision deltas, effectiveAt selector, source withdrawal status"
+      ],
+      "acceptance": [
+        "Separate historical knowledge and effective date"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u07",
+      "checks": [
+        "U07-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U08",
+      "wave": 4,
+      "lane": "ui",
+      "title": "Error/access and owner switch",
+      "requires": [
+        "C09"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/state/**"
+      ],
+      "steps": [
+        "Implement denied, revoked, offline, stale, partial and retries, cancel requests on context switch"
+      ],
+      "acceptance": [
+        "No old-owner content flashes after switch"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u08",
+      "checks": [
+        "U08-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U09",
+      "wave": 4,
+      "lane": "quality",
+      "title": "Browser reactivity and accessibility",
+      "requires": [
+        "C09",
+        "C08"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/test-browser/sucafina-reconstruction/**"
+      ],
+      "steps": [
+        "Test keyboard/focus, loading/error, aria, mobile and theme, exact reactions to revision changes"
+      ],
+      "acceptance": [
+        "No inert buttons or mock passed off as installed"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u09",
+      "checks": [
+        "U09-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "U10",
+      "wave": 4,
+      "lane": "ui",
+      "title": "Compose native chapter subtree",
+      "requires": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/reconstruction/compose/**"
+      ],
+      "steps": [
+        "Compose local chapter entry from parts and supplied ClientPort; produce N7 mount proposal"
+      ],
+      "acceptance": [
+        "No new theme or iframe; only local subtree writes"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-u10",
+      "checks": [
+        "U10-focused"
+      ],
+      "proof_level": "COMPONENT"
+    },
+    {
+      "id": "I01",
+      "wave": 5,
+      "lane": "integration",
+      "title": "Minimum real end-to-end adapter",
+      "requires": [
+        "L06",
+        "L08",
+        "D01",
+        "D03",
+        "U02",
+        "U03",
+        "C10"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/adapters/minimum/**"
+      ],
+      "steps": [
+        "Wire authorized source+model to store and chapter using owner-published mount; keep Request original"
+      ],
+      "acceptance": [
+        "Actual source and model → dossier → evidence → reload"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i01",
+      "checks": [
+        "I01-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I02",
+      "wave": 5,
+      "lane": "integration",
+      "title": "Host auth/mount/identity review",
+      "requires": [
+        "C10",
+        "C03"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/docs/integration/host/**"
+      ],
+      "steps": [
+        "Give N0/N1/N7 scoped exact diff requests, same-origin/cookie constraints and auth checks"
+      ],
+      "acceptance": [
+        "Native owner ACK or explicit BLOCKED_EXTERNAL"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i02",
+      "checks": [
+        "I02-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I03",
+      "wave": 5,
+      "lane": "integration",
+      "title": "Public API binding and conflict mapping",
+      "requires": [
+        "C04",
+        "C09"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/adapters/api/**"
+      ],
+      "steps": [
+        "Map typed DTO and allowed commands to existing installed sub-API; do not synthesize request identity"
+      ],
+      "acceptance": [
+        "Denials and missing ID privacy behavior verified"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i03",
+      "checks": [
+        "I03-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I04",
+      "wave": 5,
+      "lane": "integration",
+      "title": "Source admission and scanner bridge",
+      "requires": [
+        "C03",
+        "L05",
+        "D02"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/adapters/source/**"
+      ],
+      "steps": [
+        "Bridge source scanner and SourceAccessPort on authorized host; no simulated clean result"
+      ],
+      "acceptance": [
+        "Source security check before admission"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i04",
+      "checks": [
+        "I04-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I05",
+      "wave": 5,
+      "lane": "integration",
+      "title": "Provider and job bridge",
+      "requires": [
+        "L07",
+        "L08",
+        "D05"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/adapters/jobs/**"
+      ],
+      "steps": [
+        "Connect model host and durable job states; cancel, revalidate and reconcile uncertain response"
+      ],
+      "acceptance": [
+        "Restart and revocation behavior verified with real provider"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i05",
+      "checks": [
+        "I05-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I06",
+      "wave": 5,
+      "lane": "integration",
+      "title": "Reconciliation feature wiring",
+      "requires": [
+        "D06",
+        "D07",
+        "D09",
+        "U04"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/adapters/reconciliation/**"
+      ],
+      "steps": [
+        "Connect source assertions, linked contracts and review state to UI"
+      ],
+      "acceptance": [
+        "No invented finance/official effects"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i06",
+      "checks": [
+        "I06-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I07",
+      "wave": 5,
+      "lane": "integration",
+      "title": "Revision/delta wiring",
+      "requires": [
+        "D08",
+        "D09",
+        "U07"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/adapters/history/**"
+      ],
+      "steps": [
+        "Connect effectiveAt, knowledgeRevision, source changes and corrections"
+      ],
+      "acceptance": [
+        "History survives reload and revocation fences"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i07",
+      "checks": [
+        "I07-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I08",
+      "wave": 5,
+      "lane": "quality",
+      "title": "Four installed journey fixtures",
+      "requires": [
+        "I01",
+        "I04",
+        "I06",
+        "I07"
+      ],
+      "write_allowlist": [
+        "packages/app-shell/e2e/sucafina/reconstruction/**"
+      ],
+      "steps": [
+        "Create original real-host E2E tests for first dossier, review, change, withdrawal"
+      ],
+      "acceptance": [
+        "No fake backend or fixture-only PASS"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i08",
+      "checks": [
+        "I08-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I09",
+      "wave": 5,
+      "lane": "quality",
+      "title": "Independent adversarial audit",
+      "requires": [
+        "C08",
+        "L09",
+        "D10",
+        "U09"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/evaluation/adversarial/**"
+      ],
+      "steps": [
+        "Verify prompt injection, DOCX tracked, CSV ambiguity, XLSX exactness, duplicate and cross-tenant privacy"
+      ],
+      "acceptance": [
+        "Report reproducible faults with one owner each"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i09",
+      "checks": [
+        "I09-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    },
+    {
+      "id": "I10",
+      "wave": 5,
+      "lane": "integration",
+      "title": "Final pinned candidate/qualification",
+      "requires": [
+        "I01",
+        "I03",
+        "I04",
+        "I05",
+        "I06",
+        "I07",
+        "I08",
+        "I09",
+        "U10",
+        "L10",
+        "D04",
+        "D05"
+      ],
+      "write_allowlist": [
+        "modules/sucafina/reconstruction/docs/integration/candidate/**"
+      ],
+      "steps": [
+        "Pin SHAs, patches/receipts, execute installed E2E and check guards, record actual successes/blockers"
+      ],
+      "acceptance": [
+        "No GLOBAL_RELEASE by a session; acceptance belongs designated owner"
+      ],
+      "status_initial": "PREP_ONLY",
+      "branch": "rec-i10",
+      "checks": [
+        "I10-focused"
+      ],
+      "proof_level": "INSTALLED_OR_REVIEW"
+    }
+  ],
+  "receipts": {
+    "fields": [
+      "session_id",
+      "owner",
+      "baseline_sha",
+      "contract_digest",
+      "head_sha",
+      "changed_paths",
+      "test_run_urls",
+      "actual_outcomes",
+      "component_scope",
+      "negative_cases",
+      "blockers",
+      "handoff_to"
+    ],
+    "statuses": [
+      "PREP_ONLY",
+      "BLOCKED_CONTRACT",
+      "READY_CODE",
+      "IMPLEMENTING",
+      "BLOCKED_EXTERNAL",
+      "BLOCKED_DEFECT",
+      "COMPONENT_PASS",
+      "REAL_PASS",
+      "INSTALLED_PASS",
+      "ACCEPTED"
+    ]
+  },
+  "limits": {
+    "claims": "Plan is not implementation; no session or CI invoked in producing it",
+    "quality": "No 10x promise; measure lead time, integration latency, blocked dependency hours, reopenings"
+  },
+  "baseline_pins": {
+    "product_sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "native_plan_sha": "2f143330a0a44d34eb764ebfb851804c504edb6d",
+    "stale_by_design": true,
+    "R0_must_reconcile": true
+  }
+}

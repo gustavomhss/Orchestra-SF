@@ -1,0 +1,614 @@
+{
+  "status": "PLAN_ONLY",
+  "contract_digest": null,
+  "baseline_sha": null,
+  "candidate_sha": null,
+  "sessions": {
+    "C01": {
+      "status": "PREP_ONLY",
+      "owner": "coord",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C02": {
+      "status": "PREP_ONLY",
+      "owner": "contract",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C03": {
+      "status": "PREP_ONLY",
+      "owner": "contract",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C04": {
+      "status": "PREP_ONLY",
+      "owner": "contract",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C05": {
+      "status": "PREP_ONLY",
+      "owner": "contract",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C06": {
+      "status": "PREP_ONLY",
+      "owner": "contract",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C07": {
+      "status": "PREP_ONLY",
+      "owner": "contract",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C08": {
+      "status": "PREP_ONLY",
+      "owner": "quality",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C09": {
+      "status": "PREP_ONLY",
+      "owner": "contract",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "C10": {
+      "status": "PREP_ONLY",
+      "owner": "coord",
+      "depends_on": [],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L01": {
+      "status": "PREP_ONLY",
+      "owner": "ingest",
+      "depends_on": [
+        "C03",
+        "C06"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L02": {
+      "status": "PREP_ONLY",
+      "owner": "ingest",
+      "depends_on": [
+        "C03",
+        "C06"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L03": {
+      "status": "PREP_ONLY",
+      "owner": "ingest",
+      "depends_on": [
+        "C06"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L04": {
+      "status": "PREP_ONLY",
+      "owner": "ingest",
+      "depends_on": [
+        "C06",
+        "C04"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L05": {
+      "status": "PREP_ONLY",
+      "owner": "ingest",
+      "depends_on": [
+        "C03",
+        "C06"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L06": {
+      "status": "PREP_ONLY",
+      "owner": "provider",
+      "depends_on": [
+        "C02",
+        "C03",
+        "C06"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L07": {
+      "status": "PREP_ONLY",
+      "owner": "provider",
+      "depends_on": [
+        "C03"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L08": {
+      "status": "PREP_ONLY",
+      "owner": "provider",
+      "depends_on": [
+        "C03",
+        "C10"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L09": {
+      "status": "PREP_ONLY",
+      "owner": "quality",
+      "depends_on": [
+        "C08",
+        "C06"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "L10": {
+      "status": "PREP_ONLY",
+      "owner": "ingest",
+      "depends_on": [
+        "L01",
+        "L02",
+        "L03",
+        "L04",
+        "L05",
+        "L06",
+        "L07"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D01": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C05"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D02": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C02",
+        "C06",
+        "D01"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D03": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C02",
+        "C07",
+        "D01"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D04": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C04",
+        "C05",
+        "D01"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D05": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C05",
+        "D01"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D06": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C07",
+        "D03"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D07": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C07",
+        "D03"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D08": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C07",
+        "D03"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D09": {
+      "status": "PREP_ONLY",
+      "owner": "domain",
+      "depends_on": [
+        "C07",
+        "D06",
+        "D07"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "D10": {
+      "status": "PREP_ONLY",
+      "owner": "quality",
+      "depends_on": [
+        "C08",
+        "D04",
+        "D05",
+        "D08"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U01": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "C09"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U02": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "C09"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U03": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "C09",
+        "C06"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U04": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "C09",
+        "C04"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U05": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "C09",
+        "C04"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U06": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "C09",
+        "C04"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U07": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "C09",
+        "C07"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U08": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "C09"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U09": {
+      "status": "PREP_ONLY",
+      "owner": "quality",
+      "depends_on": [
+        "C09",
+        "C08"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "U10": {
+      "status": "PREP_ONLY",
+      "owner": "ui",
+      "depends_on": [
+        "U01",
+        "U02",
+        "U03",
+        "U04",
+        "U05",
+        "U06",
+        "U07",
+        "U08"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I01": {
+      "status": "PREP_ONLY",
+      "owner": "integration",
+      "depends_on": [
+        "L06",
+        "L08",
+        "D01",
+        "D03",
+        "U02",
+        "U03",
+        "C10"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I02": {
+      "status": "PREP_ONLY",
+      "owner": "integration",
+      "depends_on": [
+        "C10",
+        "C03"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I03": {
+      "status": "PREP_ONLY",
+      "owner": "integration",
+      "depends_on": [
+        "C04",
+        "C09"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I04": {
+      "status": "PREP_ONLY",
+      "owner": "integration",
+      "depends_on": [
+        "C03",
+        "L05",
+        "D02"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I05": {
+      "status": "PREP_ONLY",
+      "owner": "integration",
+      "depends_on": [
+        "L07",
+        "L08",
+        "D05"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I06": {
+      "status": "PREP_ONLY",
+      "owner": "integration",
+      "depends_on": [
+        "D06",
+        "D07",
+        "D09",
+        "U04"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I07": {
+      "status": "PREP_ONLY",
+      "owner": "integration",
+      "depends_on": [
+        "D08",
+        "D09",
+        "U07"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I08": {
+      "status": "PREP_ONLY",
+      "owner": "quality",
+      "depends_on": [
+        "I01",
+        "I04",
+        "I06",
+        "I07"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I09": {
+      "status": "PREP_ONLY",
+      "owner": "quality",
+      "depends_on": [
+        "C08",
+        "L09",
+        "D10",
+        "U09"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    },
+    "I10": {
+      "status": "PREP_ONLY",
+      "owner": "integration",
+      "depends_on": [
+        "I01",
+        "I03",
+        "I04",
+        "I05",
+        "I06",
+        "I07",
+        "I08",
+        "I09",
+        "U10",
+        "L10",
+        "D04",
+        "D05"
+      ],
+      "branch": null,
+      "head_sha": null,
+      "checks": [],
+      "blocker": null
+    }
+  }
+}
