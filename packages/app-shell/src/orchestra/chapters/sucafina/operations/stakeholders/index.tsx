@@ -8,6 +8,7 @@ type Save = typeof SfDomain.operations["domain.command.CAP15.save"]["input"]["Ty
 type Values = Save["values"]
 const txt = (value: unknown) => value === undefined || value === null ? "" :
   typeof value === "string" || typeof value === "number" || typeof value === "boolean" ? String(value) : ""
+const optionalText = (value: unknown) => value === null || value === undefined ? undefined : txt(value)
 const fields: readonly Field<Stakeholder, Values>[] = [
   {name:"name",label:"sf.u30.stakeholder.name",kind:"text",required:true},
   {name:"position",label:"sf.u30.stakeholder.position",kind:"text"},
@@ -24,15 +25,15 @@ const fields: readonly Field<Stakeholder, Values>[] = [
   {name:"notes",label:"sf.u30.stakeholder.notes",kind:"textarea"},
 ]
 const initial = (row?: Stakeholder): Values => ({
-  name: row ? txt(row.name) : "", position: row ? txt(row.position) : "",
-  title: row ? txt(row.title) : "", company: row ? txt(row.company) : "",
-  department: row ? txt(row.department) : "", email: row ? txt(row.email) : "",
-  biz: row?.biz === undefined ? undefined : txt(row.biz),
-  iti: row?.iti === undefined ? undefined : txt(row.iti),
-  perc: row?.perc === undefined ? undefined : txt(row.perc),
-  priority: row ? txt(row.priority) : "",
-  owner: row ? txt(row.owner) : "", action: row ? txt(row.action) : "",
-  notes: row ? txt(row.notes) : "",
+  name: row ? optionalText(row.name) : "", position: row ? optionalText(row.position) : "",
+  title: row ? optionalText(row.title) : "", company: row ? optionalText(row.company) : "",
+  department: row ? optionalText(row.department) : "", email: row ? optionalText(row.email) : "",
+  biz: row?.biz === null ? null : row?.biz === undefined ? undefined : txt(row.biz),
+  iti: row?.iti === null ? null : row?.iti === undefined ? undefined : txt(row.iti),
+  perc: row?.perc === null ? null : row?.perc === undefined ? undefined : txt(row.perc),
+  priority: row ? optionalText(row.priority) : "",
+  owner: row ? optionalText(row.owner) : "", action: row ? optionalText(row.action) : "",
+  notes: row ? optionalText(row.notes) : "",
 })
 const spec: CollectionSpec<"CAP15", Stakeholder, Values> = {
   id:"CAP15", collection:"stakeholders", title:"sf.cap15.title", primary:"sf.cap15.primary",
