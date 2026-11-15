@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.96.dispatcher45.request.v1",
+  "state": "PREPARED_NOT_DISPATCHED",
+  "owner": "45",
+  "source_branch": "creation-reload-fix",
+  "source_head_pre_docs": "22d0db3549081a740ee7edc40bcea617b8dcc690",
+  "dedup": [
+    "exact git tree",
+    "selected Bun tests",
+    "Linux runner",
+    "test-ci workflow configuration"
+  ],
+  "workflow": ".github/workflows/test-ci.yml",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+      "Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts"
+    ],
+    "env": {}
+  },
+  "repository_catalog": "script/module-registry.json: alias sucafina -> @orchestra/sucafina -> modules/sucafina",
+  "advice": "Dispatch by dispatcher45 using existing test:ci request/snapshot only after checking no identical W/tree+selector in flight. No new workflow or broad/epic job.",
+  "typecheck_guards": "Ask owner45 to run only authorized checks; do not run from mission96",
+  "return_fields": [
+    "W.source_commit",
+    "W.source_tree",
+    "S.snapshot_commit",
+    "S.snapshot_tree",
+    "run_id",
+    "job_id",
+    "runner",
+    "test_count",
+    "assertions",
+    "Omni_control",
+    "cleanup",
+    "logs",
+    "verdict"
+  ],
+  "observed": {
+    "W": "source commits only",
+    "S": null,
+    "run": null,
+    "job": null,
+    "C08": null,
+    "HTTP": null,
+    "browser": null,
+    "typecheck": null,
+    "guards": null
+  },
+  "global_release": false
+}

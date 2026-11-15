@@ -1,0 +1,63 @@
+{
+  "schema": "sf2h.96.prepost.v1",
+  "branch": "creation-reload-fix",
+  "base": {
+    "commit": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "tree": "5bb9151ba20f606c42b8a073f246365e49d6e116"
+  },
+  "ack": {
+    "commit": "b47af7b8f02b241133ec202de61977a359848945",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-reload-fix/ACK96.json"
+  },
+  "code_commits": [
+    {
+      "sha": "f3f0c91ca28dc97f6cf80782924c91712798b26e",
+      "tree": "fe83548d48479781e838d5beac242d069e14dc7b"
+    },
+    {
+      "sha": "22d0db3549081a740ee7edc40bcea617b8dcc690",
+      "tree": "79c5c1915f16aabfd7038b6bdeeabc99f2266839"
+    }
+  ],
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/ui/decision-create.ts",
+      "preimage": "1c3bf805fed4d0cf186964b4631def5b0161d9ef",
+      "postimage": "d3a3088833a2a7fcfdee52d6af9b4cd25f9c345f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/case-port.ts",
+      "preimage": "2bbcf63bb0fa56dd3a93190f7711f99aef2efb74",
+      "postimage": "122281c82d15e5732fee287cc4bcead4b6f97eb4"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-correlation.test.ts",
+      "preimage": null,
+      "postimage": "a03f70c0a4adc2fe388e3d62f4436bdcf17b7be2"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/creation-reload-fix/creation-browser.test.ts",
+      "preimage": null,
+      "postimage": "eda13fa8d39b6dd378849ca57ce9b710bbe40e87"
+    }
+  ],
+  "owner_patch": {
+    "patch_blob": "15aafd7b5afb127e8250b279f1f9d67f86088af3",
+    "manifest_blob": "ccc939d64c5eebfd5dfd584c379725266e0234c3",
+    "static_replay": "4/4 exact pre/post bytes",
+    "composed": false
+  },
+  "checks": {
+    "local_product_tests": "NOT_RUN",
+    "actions_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "epic": "NOT_RUN",
+    "W": "source commits only",
+    "S": null,
+    "run": null,
+    "job": null,
+    "cleanup": null
+  },
+  "release": false
+}

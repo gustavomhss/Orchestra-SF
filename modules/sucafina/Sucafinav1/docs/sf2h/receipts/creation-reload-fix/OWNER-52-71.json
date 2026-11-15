@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.96.owner-handoff.v1",
+  "finding": "R1-91-001",
+  "state": "PROPOSED_NOT_COMPOSED",
+  "owner": "HTTP/UI52 + integrator71",
+  "planned_base": "C45:5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+  "patch": {
+    "sha": "15aafd7b5afb127e8250b279f1f9d67f86088af3",
+    "format": "unified-diff"
+  },
+  "proposed": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+      "postimage": "1776ccbd83a9dbb49d2f4926e0de1152db7fb847",
+      "charsDiff": 2942
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+      "preimage": "5245f469fab7f23474c4c406ddd1d2f1f43d65a2",
+      "postimage": "c00afe5f9bec072c6236441e1b650327d26853ea",
+      "charsDiff": 120
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "preimage": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "postimage": "5431ad92cde1e1e2454b46380ae54b8a1e38ec40",
+      "charsDiff": 262
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "preimage": "297a4050323d80648684725f9c7e9a8680aa318f",
+      "postimage": "0f62198ff90ede40ef49b02ffc8a1c5a62a1dcab",
+      "charsDiff": 54
+    }
+  ],
+  "adoption": [
+    "Check exact preimages against current owner and C candidate before applying",
+    "Integrate product/UI96 from PR",
+    "Apply HTTP+contextual+host port+composition changes only through their owners",
+    "Dispatch only selected narrow tests via45; request independent recheck by91"
+  ],
+  "not_run": [
+    "Typecheck",
+    "unit test",
+    "Playwright",
+    "installed HTTP",
+    "Actions"
+  ]
+}

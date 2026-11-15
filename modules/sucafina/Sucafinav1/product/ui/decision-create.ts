@@ -1,6 +1,13 @@
 import type { BusinessEvidenceRef } from "../contracts/business-context.ts"
 import type { Period } from "../contracts/context.ts"
 import { esc } from "../../src/screen-shell.ts"
+import { digestSfValue } from "../contracts/canonical.ts"
+
+/** This is an opaque routing partition, never a session token or authentication proof. */
+export function decisionCreationScope(binding: { installationId: string; projectId: string; principalRef: string; policyVersion: string }): string {
+  return digestSfValue({ installationId: binding.installationId, projectId: binding.projectId,
+    principalRef: binding.principalRef, policyVersion: binding.policyVersion })
+}
 
 /** Bind only a non-secret scope digest issued after host authorization. */
 export function scopeDecisionCreateForm(html: string, scope: string): string {

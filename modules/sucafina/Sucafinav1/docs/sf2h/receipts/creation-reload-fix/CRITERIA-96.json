@@ -1,0 +1,71 @@
+{
+  "schema": "sf2h.96.criteria.v1",
+  "finding": "R1-91-001",
+  "frozen_plan": {
+    "sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610
+  },
+  "status": "SOURCE_PATCH_NOT_QUALIFIED",
+  "evidence_not_run": true,
+  "items": [
+    {
+      "id": "96-ACK-LOST-RELOAD-RESTART",
+      "sources": [
+        "product/ui/decision-create.ts",
+        "product/decisions/case-port.ts"
+      ],
+      "tests": [
+        "creation-correlation.test.ts",
+        "creation-browser.test.ts"
+      ],
+      "assertion": "same original key, same original C08 transaction, same original case/receipt",
+      "state": "CODE_PRESENT_TEST_NOT_RUN"
+    },
+    {
+      "id": "96-EXPLICIT-SAME-INTENT-DISTINCT",
+      "sources": [
+        "product/ui/decision-create.ts",
+        "product/decisions/case-port.ts"
+      ],
+      "tests": [
+        "creation-correlation.test.ts",
+        "creation-browser.test.ts"
+      ],
+      "assertion": "same objective with two distinct v4 keys creates two distinct identities",
+      "state": "CODE_PRESENT_TEST_NOT_RUN"
+    },
+    {
+      "id": "96-PAYLOAD-CHANGE",
+      "tests": [
+        "creation-correlation.test.ts",
+        "creation-browser.test.ts"
+      ],
+      "assertion": "C08 conflict and never automatic duplicate POST; HTTP requires owner52 patch",
+      "state": "CODE_PRESENT_TEST_NOT_RUN"
+    },
+    {
+      "id": "96-PRIVACY-AUTH-REPLACEMENT",
+      "tests": [
+        "creation-correlation.test.ts",
+        "creation-browser.test.ts"
+      ],
+      "assertion": "principal isolation, grant revocation, expired admission, version/incarnation replacement, no browser tokens",
+      "state": "CODE_PRESENT_TEST_NOT_RUN"
+    },
+    {
+      "id": "96-INSTALLED-HTTP-AND-REVIEW",
+      "sources": [
+        "OWNER-52-71.patch"
+      ],
+      "tests": [
+        "owner52 installed e2e to be supplied"
+      ],
+      "assertion": "GET recovery installed and recheck91 independent on composed C candidate",
+      "state": "BLOCKED_OWNER_52_71_45_91"
+    }
+  ],
+  "external_unmodified": "15WP/74tasks/17contracts/1610criteria; no acceptance declaration"
+}
