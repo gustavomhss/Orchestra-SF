@@ -1,32 +1,103 @@
-# INERT ONLY — mission 199, deliver to sole integrator 189 (PR #65).
-# DO NOT execute/apply as part of this branch. No shared config was edited here.
-# Preconditions: base path at blob e2b615a50c3907bbe21fd6158be47fcebf477679
-# Original integrated candidate: 6607c60d2a2be183d59c2e929b3ff06633e1cb54.
-# Why: Native F04 and packaged D01 MUST NOT spawn apps/web or produce
-# cookie-bearing trace/video/screenshot artifacts. This is not a PASS of tests.
+# INERT ONLY: assigned to 189; do not apply in mission199
+# Preimage blob e2b615a50c3907bbe21fd6158be47fcebf477679; full exact pre/post unified diff; no shared path modified
+# Required before native F04/D01 hosted selection to prevent webServer/build and secret-bearing trace.
 diff --git a/packages/app-shell/e2e/playwright.production.config.ts b/packages/app-shell/e2e/playwright.production.config.ts
 --- a/packages/app-shell/e2e/playwright.production.config.ts
 +++ b/packages/app-shell/e2e/playwright.production.config.ts
-@@ -23,9 +23,11 @@ export default defineConfig({
-   // Specs read this to prove dev-only marks and controls are absent from the built bundle.
-   metadata: { ...config.metadata, bundle: "production" },
-   outputDir: "./test-results",
-+  // F04/D01 attach an existing approved installation or packaged Electron.
+@@ -1,46 +1,50 @@
+-import path from "node:path"
+-import { defineConfig } from "@playwright/test"
+-import config from "../playwright.config"
+-import { wp04BrowserSelected } from "./sucafina/wp04/selection"
+-import { nativeSpecSelected } from "./sucafina/native/fixture/selection"
+-
+-const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
+-// The existing CI runner supplies an exact filename regex. This only starts the
+-// declared real Procurement fixture; it changes no grep, selector or CI allowlist.
+-const wp04 = wp04BrowserSelected(process.argv.slice(2)) && !process.argv.includes("--list")
+-const sfNative = nativeSpecSelected(process.argv.slice(2))
+-// I00 starts the real host before collection; no synthetic webServer or legacy WP04 substitution.
+-if (sfNative && (process.env.GITHUB_ACTIONS !== "true" ||
+-    !process.env.SF_NATIVE_INSTALLED_MANIFEST || !process.env.SF_NATIVE_CANDIDATE_SHA)) {
+-  throw new Error("F04_NATIVE_REAL_HOST_MANIFEST_AND_CANDIDATE_REQUIRED")
+-}
+-
+-// defineConfig(config, override) concatenates webServer entries, which starts dev and preview on one port.
+-export default defineConfig({
+-  ...config,
+-  testDir: ".",
+-  // The DebugBar these specs drive exists only in the dev server.
+-  grepInvert: process.env.ORCHESTRA_CHANNEL === "prod"
+-    ? /@development-only|@development-channel/
+-    : /@development-only|@production-channel/,
+-  // Specs read this to prove dev-only marks and controls are absent from the built bundle.
+-  metadata: { ...config.metadata, bundle: "production" },
+-  outputDir: "./test-results",
+-  reporter: [["html", { outputFolder: "./playwright-report", open: "never" }], ["line"], ["./utils/flaky-reporter.ts"]],
+-  webServer: [{
+-    ...config.webServer,
+-    cwd: path.resolve(import.meta.dirname, "../../../apps/web"),
+-    command: `bun run build && bun run serve -- --host 0.0.0.0 --port ${port} --strictPort`,
+-    reuseExistingServer: false,
+-  }, ...(wp04 ? [{
+-    command: "bun e2e/sucafina/wp04/host.ts",
+-    cwd: path.resolve(import.meta.dirname, ".."),
+-    url: "http://127.0.0.1:4174/__wp04_ready",
+-    reuseExistingServer: false,
+-    timeout: 60_000,
+-  }] : [])],
+-  use: {
+-    ...config.use,
+-    trace: "retain-on-failure",
+-  },
+-})
++import path from "node:path"
++import { defineConfig } from "@playwright/test"
++import config from "../playwright.config"
++import { wp04BrowserSelected } from "./sucafina/wp04/selection"
++import { nativeSpecSelected } from "./sucafina/native/fixture/selection"
++
++const port = Number(process.env.PLAYWRIGHT_PORT ?? 3000)
++// The existing CI runner supplies an exact filename regex. This only starts the
++// declared real Procurement fixture; it changes no grep, selector or CI allowlist.
++const wp04 = wp04BrowserSelected(process.argv.slice(2)) && !process.argv.includes("--list")
++const sfNative = nativeSpecSelected(process.argv.slice(2))
++// I00 starts the real host before collection; no synthetic webServer or legacy WP04 substitution.
++if (sfNative && (process.env.GITHUB_ACTIONS !== "true" ||
++    !process.env.SF_NATIVE_INSTALLED_MANIFEST || !process.env.SF_NATIVE_CANDIDATE_SHA)) {
++  throw new Error("F04_NATIVE_REAL_HOST_MANIFEST_AND_CANDIDATE_REQUIRED")
++}
++
++// defineConfig(config, override) concatenates webServer entries, which starts dev and preview on one port.
++export default defineConfig({
++  ...config,
++  testDir: ".",
++  // The DebugBar these specs drive exists only in the dev server.
++  grepInvert: process.env.ORCHESTRA_CHANNEL === "prod"
++    ? /@development-only|@development-channel/
++    : /@development-only|@production-channel/,
++  // Specs read this to prove dev-only marks and controls are absent from the built bundle.
++  metadata: { ...config.metadata, bundle: "production" },
++  outputDir: "./test-results",
 +  workers: sfNative ? 1 : config.workers,
 +  fullyParallel: sfNative ? false : config.fullyParallel,
-   reporter: [["html", { outputFolder: "./playwright-report", open: "never" }], ["line"], ["./utils/flaky-reporter.ts"]],
--  webServer: [{
++  reporter: [["html", { outputFolder: "./playwright-report", open: "never" }], ["line"], ["./utils/flaky-reporter.ts"]],
 +  webServer: sfNative ? [] : [{
-     ...config.webServer,
-     cwd: path.resolve(import.meta.dirname, "../../../apps/web"),
-     command: `bun run build && bun run serve -- --host 0.0.0.0 --port ${port} --strictPort`,
-@@ -41,6 +43,8 @@ export default defineConfig({
-   }] : [])],
-   use: {
-     ...config.use,
--    trace: "retain-on-failure",
-+    // Browser/Electron Microsoft sessions can contain secrets in raw traces.
++    ...config.webServer,
++    cwd: path.resolve(import.meta.dirname, "../../../apps/web"),
++    command: `bun run build && bun run serve -- --host 0.0.0.0 --port ${port} --strictPort`,
++    reuseExistingServer: false,
++  }, ...(wp04 ? [{
++    command: "bun e2e/sucafina/wp04/host.ts",
++    cwd: path.resolve(import.meta.dirname, ".."),
++    url: "http://127.0.0.1:4174/__wp04_ready",
++    reuseExistingServer: false,
++    timeout: 60_000,
++  }] : [])],
++  use: {
++    ...config.use,
++    // Real Microsoft sessions must not leak via trace, screenshot or video.
 +    trace: sfNative ? "off" : "retain-on-failure",
 +    ...(sfNative ? { screenshot: "off" as const, video: "off" as const } : {}),
-   },
- })
++  },
++})
