@@ -187,7 +187,7 @@ test.each(["normal", "empty", "wide", "long"] as Scenario[])(
         expect(capex.rowCount).toBeGreaterThan(170)
       }
       const plannerXml = (await Promise.all(Object.entries(plannerResult.zip.files)
-        .filter(([name]) => /^xl\/worksheets\/sheet\d+\.xml$/.test(name))
+        .filter(([, file]) => !file.dir && file.name.endsWith(".xml"))
         .map(([, file]) => file.async("string")))).join("\n")
       for (const secret of ["PRIVATE_RATE_SENTINEL_66", "987654.32", "123456.78"])
         expect(plannerXml).not.toContain(secret)
@@ -211,7 +211,7 @@ test.each(["normal", "empty", "wide", "long"] as Scenario[])(
       }
       if (scenario === "long") expect(membersResult.book.getWorksheet("All Members")!.rowCount).toBe(122)
       const memberXml = (await Promise.all(Object.entries(membersResult.zip.files)
-        .filter(([name]) => /^xl\/worksheets\/sheet\d+\.xml$/.test(name))
+        .filter(([, file]) => !file.dir && file.name.endsWith(".xml"))
         .map(([, file]) => file.async("string")))).join("\n")
       expect(memberXml).not.toContain("SALARY_SENTINEL_66")
       expect(memberXml).not.toContain("PRIVATE_SALARY_LAYOUT_102")
