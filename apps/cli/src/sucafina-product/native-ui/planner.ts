@@ -13,7 +13,7 @@ import { publicSfData } from "../../../../../modules/sucafina/Sucafinav1/product
  */
 const PAGES = [
   { id: "CAP17", page: "Overview", query: ["year", "version", "filter"] },
-  { id: "CAP18", page: "OPEX", query: ["year", "version", "mode"] },
+  { id: "CAP18", page: "OPEX", query: ["year", "version", "mode", "owner", "class", "q"] },
   { id: "CAP19", page: "CAPEX", query: ["year", "version", "mode", "owner", "class", "q"] },
   { id: "CAP20", page: "Headcount", query: ["year", "version"] },
   { id: "CAP21", page: "Entities & allocations", query: ["year"] },
@@ -132,7 +132,8 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
   if (cap === "CAP17") {
     const summary = current ? object(current.summary) : undefined
     const comparisons = rows(view.data.versions)
-      .filter((v) => current && Number(v.year) === Number(current.year))
+      .filter((v) => current && Number(v.year) === Number(current.year) &&
+        (!selection.filter || id(v.id) === id(current.id) || id(v.id) === selection.filter))
       .map((v) => ({ id: id(v.id), name: text(v.name), year: Number(v.year),
         total: money(object(v.summary).total), fte: money(object(v.summary).fte) }))
       .filter((v) => v.id !== "")
@@ -203,7 +204,7 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
       ...(typeof p.start === "number" && Number.isFinite(p.start) ? { start: p.start } : {}),
       ...(typeof p.end === "number" && Number.isFinite(p.end) ? { end: p.end } : {}),
       ...(privileged && string(p.rateId) !== undefined ? { rateId: p.rateId } : {}),
-      ...(privileged && (p.rateOverride === null || typeof p.rateOverride === "number" && Number.isFinite(p.rateOverride)) ? { rateOverride: p.rateOverride } : {}),
+      ...(privileged && (p.rateOverride === null || typeof p.rateOverride === "string" || typeof p.rateOverride === "number" && Number.isFinite(p.rateOverride)) ? { rateOverride: p.rateOverride } : {}),
       ...(typeof p.hasRate === "boolean" ? { hasRate: p.hasRate } : {}),
       ...(string(p.src) !== undefined ? { src: p.src } : {}),
       ...(typeof p.left === "boolean" ? { left: p.left } : {}),
@@ -226,7 +227,7 @@ function project(view: View, actor: Actor, cap: Cap, selection: Selection, curre
     }
   }
   const rates = rows(current?.fx).map((r) => ({
-    id: id(r.id), cur: text(r.cur), rate: money(r.rate),
+    id: id(r.id), cur: text(r.cur), rate: typeof r.rate === "string" ? r.rate : money(r.rate),
     revision: revision(view, id(current?.id) + ":fx:" + id(r.id)),
   })).filter((r) => r.id !== "")
   const raw = object(current?.summary).warnings

@@ -6,12 +6,14 @@ import { NonNegativeInt } from "../schema"
 // This leaf deliberately does not import the I00 shared registry.
 const NonEmpty = Schema.String.check(Schema.isMinLength(1))
 const Month = Schema.Int.check(Schema.isGreaterThanOrEqualTo(1)).check(Schema.isLessThanOrEqualTo(12))
+const MonthIndex = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)).check(Schema.isLessThanOrEqualTo(11))
 const Through = Schema.Int.check(Schema.isGreaterThanOrEqualTo(0)).check(Schema.isLessThanOrEqualTo(12))
 const Year = Schema.Int.check(Schema.isGreaterThanOrEqualTo(2024)).check(Schema.isLessThanOrEqualTo(2027))
 const Optional = Schema.optionalKey
 const NullableAmount = Schema.Union([Schema.Finite, Schema.Null])
-const Amounts = Schema.Array(Schema.Finite)
-const NullableAmounts = Schema.Array(NullableAmount)
+const EditableAmount = Schema.Union([Schema.String, NullableAmount])
+const Amounts = Schema.Array(Schema.Finite).check(Schema.isBetweenLength(12, 12))
+const NullableAmounts = Schema.Array(NullableAmount).check(Schema.isBetweenLength(12, 12))
 const RecordVersion = Schema.Struct({ version: NonNegativeInt })
 const ContextStamp = Schema.Struct({
   installationId: NonEmpty, projectId: NonEmpty, hostId: NonEmpty,
@@ -30,7 +32,7 @@ const BasicQuery = { year: Optional(Year) }
 const VersionQuery = { ...BasicQuery, version: Optional(NonEmpty) }
 const Queries = {
   CAP17: Schema.Struct({ ...VersionQuery, filter: Optional(NonEmpty) }),
-  CAP18: Schema.Struct({ ...VersionQuery, mode: Optional(Schema.Literals(["budget", "actual", "forecast", "compare"])) }),
+  CAP18: Schema.Struct({ ...VersionQuery, mode: Optional(Schema.Literals(["budget", "actual", "forecast", "compare"])), owner: Optional(NonEmpty), class: Optional(Schema.Literals(["capex", "opex"])), q: Optional(Schema.String) }),
   CAP19: Schema.Struct({ ...VersionQuery, mode: Optional(Schema.Literals(["budget", "actual", "forecast", "compare"])), owner: Optional(NonEmpty), class: Optional(Schema.Literals(["capex", "opex"])), q: Optional(Schema.String) }),
   CAP20: Schema.Struct(VersionQuery),
   CAP21: Schema.Struct(BasicQuery),
@@ -80,7 +82,7 @@ const HeadcountPosition = Schema.Struct({
   include: Optional(Schema.Boolean), domain: Optional(Schema.String),
   type: Optional(Schema.String), location: Optional(Schema.String),
   fte: Optional(Schema.Finite), start: Optional(Schema.Finite), end: Optional(Schema.Finite),
-  rateId: Optional(Schema.String), rateOverride: Optional(NullableAmount),
+  rateId: Optional(Schema.String), rateOverride: Optional(EditableAmount),
   hasRate: Optional(Schema.Boolean), src: Optional(Schema.String),
   left: Optional(Schema.Boolean), months: Optional(NullableAmounts),
 })
@@ -94,7 +96,7 @@ const CatalogEntry = Schema.Struct({
   code: Optional(Schema.String), desc: Optional(Schema.String),
 })
 const FxEntry = Schema.Struct({
-  id: NonEmpty, cur: Schema.String, rate: NullableAmount, revision: NonNegativeInt,
+  id: NonEmpty, cur: Schema.String, rate: EditableAmount, revision: NonNegativeInt,
 })
 const PageData = {
   CAP17: Schema.Struct({ versions: Schema.Array(PlanVersion), selectedVersion: Optional(PlanVersion), summary: Optional(MoneySummary), comparisons: Schema.Array(Schema.Struct({ id: NonEmpty, name: Schema.String, year: Schema.Finite, total: NullableAmount, fte: NullableAmount })) }),
@@ -150,17 +152,18 @@ const ImportValues = Schema.Struct({
   sheets: Schema.Record(Schema.String, Schema.Array(ImportRow)),
   newVersion: Optional(Schema.Boolean),
   removeMissing: Optional(Schema.Boolean),
-  versions: Optional(Schema.Record(Schema.String, Schema.Record(Schema.String, NonNegativeInt))),
+  versions: Optional(Schema.Record(Schema.String, Schema.Struct({ version: NonNegativeInt, by: Optional(Schema.String) }))),
 })
 const LineFields = {
   name: Optional(Schema.String), desc: Optional(Schema.String), owner: Optional(Schema.String),
   entity: Optional(Schema.String), alloc: Optional(Schema.String), cls: Optional(Schema.String),
-  cur: Optional(Schema.String), annual: Optional(Schema.Finite), b: Optional(Amounts),
-  a: Optional(NullableAmounts), f: Optional(NullableAmounts),
-  el: Optional(Schema.String), proj: Optional(Schema.String),
-  month: Optional(Schema.Int), value: Optional(NullableAmount),
-  ...Object.fromEntries(["b","a","f"].flatMap((prefix) =>
-    Array.from({ length: 12 }, (_, index) => [prefix + index, Optional(NullableAmount)]))),
+  cur: Optional(Schema.String), annual: Optional(Schema.Union([Schema.String, Schema.Finite])),
+  b: Optional(Amounts), a: Optional(NullableAmounts), f: Optional(NullableAmounts),
+  el: Optional(Schema.String), proj: Optional(Schema.String), domain: Optional(Schema.String),
+  month: Optional(Schema.Union([MonthIndex, Schema.String])), value: Optional(EditableAmount),
+  b0: Optional(EditableAmount), b1: Optional(EditableAmount), b2: Optional(EditableAmount), b3: Optional(EditableAmount), b4: Optional(EditableAmount), b5: Optional(EditableAmount), b6: Optional(EditableAmount), b7: Optional(EditableAmount), b8: Optional(EditableAmount), b9: Optional(EditableAmount), b10: Optional(EditableAmount), b11: Optional(EditableAmount),
+  a0: Optional(EditableAmount), a1: Optional(EditableAmount), a2: Optional(EditableAmount), a3: Optional(EditableAmount), a4: Optional(EditableAmount), a5: Optional(EditableAmount), a6: Optional(EditableAmount), a7: Optional(EditableAmount), a8: Optional(EditableAmount), a9: Optional(EditableAmount), a10: Optional(EditableAmount), a11: Optional(EditableAmount),
+  f0: Optional(EditableAmount), f1: Optional(EditableAmount), f2: Optional(EditableAmount), f3: Optional(EditableAmount), f4: Optional(EditableAmount), f5: Optional(EditableAmount), f6: Optional(EditableAmount), f7: Optional(EditableAmount), f8: Optional(EditableAmount), f9: Optional(EditableAmount), f10: Optional(EditableAmount), f11: Optional(EditableAmount),
 }
 const LineSave = Schema.Struct({ versionId: NonEmpty, collection: Optional(Schema.Literal("lines")), ...LineFields })
 const ProjectSave = Schema.Struct({
@@ -169,9 +172,9 @@ const ProjectSave = Schema.Struct({
   owner: Optional(Schema.String), code: Optional(Schema.String),
 })
 const OpexSave = Schema.Union([
+  Schema.Struct({ versionId: NonEmpty, closed: Schema.Union([Through, Schema.String]) }),
+  Schema.Struct({ versionId: NonEmpty, el: Schema.String, split: Schema.Union([Schema.Boolean, Schema.Literals(["true", "false"])]) }),
   LineSave,
-  Schema.Struct({ versionId: NonEmpty, closed: Through }),
-  Schema.Struct({ versionId: NonEmpty, el: Schema.String, split: Schema.Boolean }),
 ])
 const CapexSave = Schema.Union([LineSave, ProjectSave])
 const HeadcountSave = Schema.Union([
@@ -249,8 +252,8 @@ function legacyInput<P extends keyof typeof CommandValues, A extends keyof (type
   })
 }
 const DraftCell = Schema.Struct({ measure: Schema.Literals(["budget","actual","forecast"]), month: Month, text: Schema.String })
-const Draft = Schema.Struct({ rowId: NonEmpty, revision: NonNegativeInt, cells: Schema.Array(DraftCell) })
-const MonthlyRequest = Schema.Struct({ page: Schema.Literals(["OPEX","CAPEX"]), versionId: NonEmpty, drafts: Schema.Array(Draft) })
+const Draft = Schema.Struct({ rowId: NonEmpty, revision: NonNegativeInt, cells: Schema.Array(DraftCell).check(Schema.isBetweenLength(1, 36)) })
+const MonthlyRequest = Schema.Struct({ page: Schema.Literals(["OPEX","CAPEX"]), versionId: NonEmpty, drafts: Schema.Array(Draft).check(Schema.isBetweenLength(1, 500)) })
 const MonthlyRow = Schema.Struct({
   draft: Draft, errors: Schema.Array(Schema.Struct({ cell: Optional(DraftCell), reason: Schema.String })),
   result: Optional(LegacyResult),
@@ -270,7 +273,7 @@ const MonthlyOutput = Schema.Union([
   Schema.Struct({ status: Schema.Literal("ok"), value: MonthlyValue }),
   HostFailure,
 ])
-const Period = Schema.Struct({ start: Schema.String, end: Schema.String })
+const Period = Schema.Struct({ start: Schema.String.check(Schema.isPattern(/^\d{4}-\d{2}-\d{2}$/)), end: Schema.String.check(Schema.isPattern(/^\d{4}-\d{2}-\d{2}$/)) })
 const CaseRef = Schema.Struct({ id: NonEmpty, incarnation: NonEmpty, version: NonNegativeInt })
 const ForecastInput = Schema.Struct({
   baseRef: NonEmpty, candidateRef: NonEmpty, period: Period, currency: NonEmpty, caseRef: CaseRef,
