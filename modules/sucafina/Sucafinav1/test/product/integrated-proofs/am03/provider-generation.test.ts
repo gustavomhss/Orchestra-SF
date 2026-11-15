@@ -61,9 +61,9 @@ test("AM03: an invalidated provider generation cannot be revived; a new loaded s
       if (firstLease.status !== "ok" || secondLease.status !== "ok")
         throw new Error("Real registry refused the existing fixture's two separate bindings")
       expect(fixture.registry.consume(firstLease.value, "sf_forecast_compare", digest)).toBe(true)
-      expect(fixture.registry.consume(secondLease.value, "sf_forecast_compare", digest)).toBe(true)
+      expect(yield* Effect.promise(() => fixture.registry.revalidate(secondLease.value))).toBe(true)
       expect(fixture.registry.requestFor(firstLease.value)).toBe(first.request)
-      expect(fixture.registry.requestFor(secondLease.value)).toBe(second.request)
+      expect(fixture.registry.requestFor(secondLease.value)).toBeUndefined()
       // Direct substitution after issuance cannot borrow a live opaque lease.
       for (const field of ["caseId", "caseIncarnation", "installationId", "projectId", "locationId", "principalRef"] as const) {
         const forged = { ...secondLease.value, binding: { ...secondLease.value.binding, [field]: "foreign-am03-" + field } }
@@ -71,6 +71,11 @@ test("AM03: an invalidated provider generation cannot be revived; a new loaded s
         expect(fixture.registry.consume(forged, "sf_forecast_compare", digest)).toBe(false)
         expect(fixture.registry.requestFor(forged)).toBeUndefined()
       }
+      // The original unconsumed lease must still work after all forged attempts:
+      // these denials are binding-identity failures, not replay failures.
+      expect(yield* Effect.promise(() => fixture.registry.revalidate(secondLease.value))).toBe(true)
+      expect(fixture.registry.consume(secondLease.value, "sf_forecast_compare", digest)).toBe(true)
+      expect(fixture.registry.requestFor(secondLease.value)).toBe(second.request)
       expect((yield* Effect.promise(() => fixture.registry.lease({
         ...second.context, toolCallID: "am03-forbidden-direct",
       }, "sf_routine_run", digest)))).toMatchObject({ status: "denied", reason: "operation-not-granted" })

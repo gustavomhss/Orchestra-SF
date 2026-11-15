@@ -72,6 +72,11 @@ export type Am03Observation = Readonly<{
   oldNativeSessionId?: string
   oldAuthenticatedRequestId?: string
   oldProviderGeneration?: number
+  providerObjectFingerprint?: string
+  priorProviderObjectFingerprint?: string
+  priorProviderGeneration?: number
+  runtimeInstanceId?: string
+  oldRuntimeInstanceId?: string
 }>
 
 export type Am03HostedCandidate = Readonly<{
@@ -152,10 +157,20 @@ export function correlateAm03(input: Am03HostedCandidate) {
       (record.outcome !== "ok" || !record.bridgeCallId || !record.domainCallId ||
         !record.domainPort || !Number.isSafeInteger(record.exposedRecordCount) ||
         !record.privateCacheNamespaceDigest || !digest64.test(record.privateCacheNamespaceDigest) ||
-        !record.privateRefDigests || !record.privateRefDigests.every((value) => digest64.test(value))))
+        !record.privateRefDigests || record.privateRefDigests.length === 0 ||
+        record.exposedRecordCount <= 0 ||
+        !record.privateRefDigests.every((value) => digest64.test(value))))
       gaps.push("scenario:" + id + ":missing-real-bridge-to-domain-or-cache-correlation")
-    if (id === "revoked-memory" && (!record.scannerBinaryVersion || !record.scannerResult))
-      gaps.push("scenario:" + id + ":real-scanner-not-observed")
+    if (id === "revoked-memory" && (!record.scannerBinaryVersion || record.scannerResult !== "clean"))
+      gaps.push("scenario:" + id + ":real-clean-scanner-not-observed")
+    if (id === "provider-object-replaced" &&
+      (!record.providerObjectFingerprint || !record.priorProviderObjectFingerprint ||
+        record.providerObjectFingerprint === record.priorProviderObjectFingerprint))
+      gaps.push("scenario:" + id + ":real-provider-object-change-not-observed")
+    if (id === "provider-generation-replaced" &&
+      (!Number.isSafeInteger(record.priorProviderGeneration) ||
+        record.priorProviderGeneration === record.binding.providerGeneration))
+      gaps.push("scenario:" + id + ":real-provider-generation-change-not-observed")
     if (id === "restart-new-binding-authenticated" &&
       (record.outcome !== "ok" || !record.oldAuthenticatedBindingId ||
         !record.oldAuthenticatedRequestId || !record.oldNativeSessionId ||
@@ -163,7 +178,9 @@ export function correlateAm03(input: Am03HostedCandidate) {
         record.binding.authenticatedBindingId === record.oldAuthenticatedBindingId ||
         record.binding.authenticatedRequestId === record.oldAuthenticatedRequestId ||
         record.binding.nativeSessionId === record.oldNativeSessionId ||
-        record.binding.providerGeneration === record.oldProviderGeneration))
+        record.binding.providerGeneration === record.oldProviderGeneration ||
+        !record.runtimeInstanceId || !record.oldRuntimeInstanceId ||
+        record.runtimeInstanceId === record.oldRuntimeInstanceId))
       gaps.push("scenario:" + id + ":no-fresh-post-restart-authentication")
   }
 
