@@ -70,13 +70,14 @@ export const SfRecipientThread = Schema.Struct({
   mutationReceipt: Schema.optional(SfRecipientMutationReceipt),
 })
 export const SfThreadReadResult = Schema.Union([
-  SfThread,
-  // Read may preserve both original and currently reissued source identities.
+  // A recipient projection must be selected before the base thread branch,
+  // otherwise a non-strict union could erase its current reissued source.
   Schema.Struct({
     ...SfRecipientThread.fields,
     sourceRef: SfNonEmpty, sourceIncarnation: SfNonEmpty, observedVersion: SfPositive,
     period: SfPeriod, evidenceRefs: Schema.Array(SfEvidenceRef),
   }),
+  SfThread,
 ])
 export const SfThreadActionResult = Schema.Union([
   SfThread,
