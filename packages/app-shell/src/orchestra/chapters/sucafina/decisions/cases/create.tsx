@@ -6,6 +6,7 @@ import { createSfDecisionsClient } from "@orchestra/client/sucafina/decisions"
 import { sfDecisionHref } from "./route"
 import { sfOperationReady } from "./model"
 import type { SfResolvedRoute } from "@orchestra/schema/sucafina/context"
+import type { SfTransport } from "@orchestra/client/sucafina/transport"
 import type { SfContext } from "../../context/contracts"
 
 type Phase = "editing" | "reviewing" | "submitting" | "unknown" | "confirmed" | "invalid" | "unavailable"
@@ -41,8 +42,7 @@ function pendingKeys(prefix: string): string[] | null {
 export function SfCreateCase(props: Readonly<{
   route: SfResolvedRoute<"UI33">
   context: () => SfContext | undefined
-  transport: () => ReturnType<import("../../context").useSfContext>["ready"] extends () => infer A
-    ? A extends { transport: infer T } ? T | undefined : never : never
+  transport: () => SfTransport | undefined
   onCreated: () => void
 }>) {
   const language = useLanguage()
