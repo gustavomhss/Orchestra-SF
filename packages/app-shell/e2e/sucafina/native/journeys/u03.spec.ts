@@ -136,8 +136,13 @@ test.describe("N14 U03 / CAP06-CAP07", () => {
     for (const selector of ["server", "project", "installation", "year", "month"])
       expect(destinationUrl.searchParams.getAll(selector), selector + " must preserve the source owner/period")
         .toEqual(sourceUrl.searchParams.getAll(selector))
-    expect(await page.evaluate(() => document.activeElement?.tagName))
-      .not.toBe("BODY")
+    const focusMovedToDestination = await page.evaluate(() => {
+      const frame = document.querySelector('[data-sf-frame="page"]')
+      const focused = document.activeElement
+      return !!frame && !!focused && focused !== document.body &&
+        focused !== document.documentElement && frame.contains(focused)
+    })
+    expect(focusMovedToDestination, "Keyboard focus must land within the newly authorized CAP07 page").toBe(true)
 
     await page.goBack()
     await expect(page).toHaveURL(sourceUrl.href)
