@@ -14,6 +14,9 @@ function requiredText(value: unknown): string {
 }
 export type NativeTarget = Readonly<{
   serverKey: string
+  // Orchestra SDK/discovery connection and shell UI are distinct from the SF host origin.
+  discoveryOrigin: string
+  shellOrigin: string
   publicOrigin: string
   installationId: string
   projectId: string
@@ -35,6 +38,8 @@ function target(value: unknown): NativeTarget {
   if (!record(value)) throw new Error("F04_MISSING_REAL_TARGET")
   const result: NativeTarget = {
     serverKey: requiredText(value.serverKey),
+    discoveryOrigin: requiredText(value.discoveryOrigin),
+    shellOrigin: requiredText(value.shellOrigin),
     publicOrigin: requiredText(value.publicOrigin),
     installationId: requiredText(value.installationId),
     projectId: requiredText(value.projectId),
@@ -42,13 +47,17 @@ function target(value: unknown): NativeTarget {
     mount: requiredText(value.mount),
     chapterHref: requiredText(value.chapterHref),
   }
-  const origin = new URL(result.publicOrigin)
-  if (origin.origin !== result.publicOrigin || origin.username || origin.password ||
-      !/^\/[A-Za-z0-9_\/-]+$/.test(result.mount) || !result.mount.startsWith("/") ||
-      !result.chapterHref.startsWith("/") ||
-      (origin.protocol !== "https:" &&
-        !(origin.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname))))
-    throw new Error("F04_TARGET_ORIGIN_OR_MOUNT_INVALID")
+  for (const source of [result.discoveryOrigin, result.shellOrigin, result.publicOrigin]) {
+    const origin = new URL(source)
+    if (origin.origin !== source || origin.username || origin.password ||
+        (origin.protocol !== "https:" &&
+          !(origin.protocol === "http:" && ["localhost", "127.0.0.1", "[::1]"].includes(origin.hostname))))
+      throw new Error("F04_TARGET_ORIGIN_INVALID")
+  }
+  if (!/^\/[A-Za-z0-9_\/-]+$/.test(result.mount) ||
+      !result.chapterHref.startsWith("/") || result.chapterHref.startsWith("//") ||
+      new URL(result.chapterHref, result.shellOrigin).origin !== result.shellOrigin)
+    throw new Error("F04_TARGET_MOUNT_OR_CHAPTER_INVALID")
   return result
 }
 
@@ -58,7 +67,8 @@ export async function readNativeManifest(): Promise<NativeManifest> {
   const file = process.env.SF_NATIVE_INSTALLED_MANIFEST
   if (!file || !path.isAbsolute(file)) throw new Error("F04_REAL_INSTALLED_MANIFEST_REQUIRED")
   const metadata = await lstat(file)
-  if (!metadata.isFile() || metadata.isSymbolicLink() || (metadata.mode & 0o077) !== 0 ||
+  if (!metadata.isFile() || metadata.isSymbolicLink() || metadata.size > 65_536 ||
+      (metadata.mode & 0o077) !== 0 ||
       await realpath(file) !== path.resolve(file) ||
       (typeof process.getuid === "function" && metadata.uid !== process.getuid()))
     throw new Error("F04_PRIVATE_MANIFEST_ISOLATION_REQUIRED")
@@ -92,7 +102,9 @@ export async function readNativeManifest(): Promise<NativeManifest> {
       manifest.target.publicOrigin !== manifest.wrongInstallation.publicOrigin)
     throw new Error("F04_REAL_HOST_BOUNDARIES_NOT_DISTINCT")
   const scratch = await lstat(manifest.scratchRoot)
-  if (!scratch.isDirectory() || scratch.isSymbolicLink() || (scratch.mode & 0o077) !== 0 ||
+  if (!scratch.isDirectory() || scratch.isSymbolicLink() ||
+      await realpath(manifest.scratchRoot) !== path.resolve(manifest.scratchRoot) ||
+      (scratch.mode & 0o077) !== 0 ||
       (typeof process.getuid === "function" && scratch.uid !== process.getuid()))
     throw new Error("F04_PRIVATE_SCRATCH_ROOT_REQUIRED")
   return manifest
@@ -122,12 +134,14 @@ export async function proveNativeWebReadiness(
 ): Promise<NativeWebObservation> {
   const selected = manifest.target
   const actualURL = new URL(page.url())
-  const expectedURL = new URL(selected.chapterHref, selected.publicOrigin)
-  if (actualURL.origin !== selected.publicOrigin ||
-      actualURL.pathname !== expectedURL.pathname)
+  const expectedURL = new URL(selected.chapterHref, selected.shellOrigin)
+  if (actualURL.origin !== selected.shellOrigin ||
+      actualURL.pathname !== expectedURL.pathname ||
+      actualURL.search !== expectedURL.search)
     throw new Error("F04_NOT_ON_THE_REAL_INSTALLED_NATIVE_CHAPTER")
   await expect(nativeChapter, "Native chapter must be present, not a mock/legacy page").toBeVisible()
-  const installedURL = new URL("/api/sucafina/installations", selected.publicOrigin)
+  // Discovery belongs to the approved Orchestra connection, not the SF host.
+  const installedURL = new URL("/api/sucafina/installations", selected.discoveryOrigin)
   installedURL.search = new URLSearchParams({
     select: "ids", installationId: selected.installationId, projectId: selected.projectId,
   }).toString()
