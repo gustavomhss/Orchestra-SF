@@ -1,5 +1,6 @@
 import { expect, test } from "bun:test"
 import { Effect } from "effect"
+import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
 import { createSfRoutineNativeOrigin } from "../../../../../../apps/cli/src/sucafina-product/routine-native-origin.ts"
 import type { SfRoutineNativeOriginalAdmission } from "../../../../../../apps/cli/src/sucafina-product/routine-native-origin.ts"
 import type { SfRoutineNativeHistoricalAuthority } from "../../../../../../apps/cli/src/sucafina-product/routine-native-registry.ts"
@@ -41,8 +42,9 @@ test("pending historical read expires before attestation, with zero egress or Ta
     const beganAt = Date.now()
     f.state.now = beganAt
     const request = new Request("https://sf-fixture.invalid/routines/history", { method: "GET" })
-    const context = { ...f.ui(), binding: {
-      ...f.binding, expiresAt: new Date(beganAt + 400).toISOString(),
+    const ui = f.ui()
+    const context: TrustedUiContext = { ...ui, binding: {
+      ...ui.binding, expiresAt: new Date(beganAt + 400).toISOString(),
     } }
     f.state.request = request
     f.state.context = context

@@ -188,7 +188,8 @@ export function createSfRoutineNativeAdapter(input: SfRoutineNativeAdapterInput)
   }
   const readAdmission = async (scope: Scope, reference: string) => {
     const record = await scope.resources.records.readAdmission(reference)
-    if (!record || record.reference !== reference) return hold("unavailable", "native-routine-admission-unavailable")
+    if (!record || (record.reference !== reference && record.authorizationID !== reference))
+      return hold("unavailable", "native-routine-admission-unavailable")
     await checkPlan(scope, record.revision, false)
     return record
   }
