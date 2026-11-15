@@ -1,0 +1,136 @@
+{
+  "schema": "sf2h-native-ui-author-handoff-v1",
+  "slot": "N21",
+  "epoch": "ux-native-n21-e1",
+  "title": "Procurement overview U10.overview + CAP28 settings U36",
+  "repo": "gustavomhss/Orchestra-SF",
+  "branch": "sf-ux-n21",
+  "target": "sf2-stack",
+  "integrator": {
+    "slot": "125",
+    "pr": 65
+  },
+  "source": {
+    "launch_packet": "b187c2b765c0a47cdc2317ebc083a61187ad58ac",
+    "owner_HEAD_preflight": "526e7204b310756e552196bbf3d64037dbbf047c",
+    "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+    "A03": "sf-ux-w11, PR130",
+    "original_auth_producer": "runtime/procurement.ts at C60"
+  },
+  "prepost": "PREPOST.json",
+  "inert_shared_patch": "SHARED-PATCHES.md",
+  "ack": "ACK.json",
+  "source_files": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/index.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/overview.css",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/overview/copy.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/index.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/fields.tsx",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/model.ts",
+    "packages/app-shell/src/orchestra/chapters/sucafina/procurement/settings/settings.css",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-u36.ts",
+    "packages/app-shell/e2e/sucafina/native/journeys/u36.spec.ts"
+  ],
+  "entrypoints": [
+    {
+      "surface": "CAP24",
+      "symbol": "SfProcurementOverviewView",
+      "route": "/orchestra/sf-procurement/overview",
+      "operation": "domain.page.CAP24",
+      "scope": "U10.overview only"
+    },
+    {
+      "surface": "CAP28",
+      "symbol": "SfProcurementSettingsView",
+      "route": "/orchestra/sf-procurement/settings",
+      "operations": [
+        "domain.page.CAP28",
+        "domain.command.CAP28.save"
+      ],
+      "reset": "REVIEW_ONLY_BLOCKED_NO_SOURCE_DEFAULTS"
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "U10-AC01",
+      "status": "BLOCKED_CONTRACT",
+      "evidence": "CAP24 page exposes producer-authorized metrics/requests; stage queue, holder/version, measured aging not in W11 CAP24 projection. Overview displays unavailable/unknown, not fabricated.",
+      "needs": "W11/U21/W12/125 admit measured real source and qualify"
+    },
+    {
+      "id": "U10-AC02",
+      "status": "PARTIAL_IMPLEMENTED_NOT_QUALIFIED",
+      "evidence": "Ready/loading/empty/filtered-empty/partial/stale/denied/session-expired/unavailable through F03 state with current F01 identity+policy fence; no private content on denied.",
+      "needs": "Installed owner/permissions/race/return validation by120; combined U10 queue W12"
+    },
+    {
+      "id": "U10-AC03",
+      "status": "CSS_AUTHORED_NOT_RUN",
+      "evidence": "Responsive CSS uses existing mx tokens, width-safe cards and table scroll",
+      "needs": "120 CI 320/768/1024/1280/1440 + 200% text + 400% reflow"
+    },
+    {
+      "id": "U36-AC01",
+      "status": "PARTIAL_IMPLEMENTED_RESET_BLOCKED",
+      "evidence": "Original configuration fields, holder directory/matrix, currency/rates, criteria, list values and addresses use W11 read and producer-authorized CAS save with same-owner refetch; original reset remains blocked pending default projection",
+      "needs": "A03 canonical reset preview/defaults, 120 installed CAS/matrix/security checks"
+    },
+    {
+      "id": "U36-AC02",
+      "status": "PARTIAL_IMPLEMENTED_NOT_QUALIFIED",
+      "evidence": "F01 owner scoped drafts, S03 review source versus draft fields, revision fence and idempotency payload digest, no auto replay after unknown response, revocation hides projection",
+      "needs": "120 installed denied/expired/stale/late/known error; S03 known 4xx pending settlement"
+    },
+    {
+      "id": "U36-AC03",
+      "status": "CSS_AUTHORED_NOT_RUN",
+      "evidence": "Native fieldsets, labels, 44px targets, responsive theme tokens",
+      "needs": "120 CI layout at 320/768/1024/1280/1440 with text 200% and 400% reflow"
+    }
+  ],
+  "proofs": {
+    "localTests": "NOT_RUN_PROHIBITED",
+    "typecheck": "NOT_RUN_AUTHORITY_119",
+    "compiler": "NOT_RUN_AUTHORITY_119",
+    "GH_Actions": "NOT_RUN_AUTHORITY_120",
+    "installedWeb": "NOT_RUN",
+    "realDesktop": "NOT_RUN",
+    "integration": "NOT_RUN_AUTHORITY_125",
+    "producerReset": "BLOCKED_NO_DEFAULT_PROJECTION",
+    "CAP24MeasuredAging": "BLOCKED_NO_TYPED_SOURCE",
+    "release": "NOT_RELEASED"
+  },
+  "safety": {
+    "source_public_copy_frozen": true,
+    "protected_paths_intact": true,
+    "parallel_backend": false,
+    "custom_dispatcher": false,
+    "local_tests": false,
+    "auto_replay": false,
+    "mocks_delivery": false,
+    "secrets_exfiltrated": false,
+    "author_merge": false,
+    "deploy": false
+  },
+  "next": [
+    {
+      "owner": "125",
+      "action": "Rebase scoped N21 leaf postimages onto live stack, apply inert global i18n/router fragments only in 125-owned files, connect A03 and W12 without changing their files from N21, request integration evidence"
+    },
+    {
+      "owner": "119",
+      "action": "Run compiler/guards/codegen against integrated candidate and report type failures; N21 did not run local checks"
+    },
+    {
+      "owner": "120",
+      "action": "Run surgical Actions suite u36.spec.ts against installed F04 real admin fixture + W12-owned u10.spec.ts separately; collect 320/768/1024/1280/1440, 200/400% reflow; race/CAS/permission/unknown cases"
+    },
+    {
+      "owner": "W11/U21/S03",
+      "action": "Provide measured stage/holder/aging projection, canonical reset preview/confirmation and producer-backed 4xx settlement if qualification requires them"
+    }
+  ],
+  "state": "ARTIFACT_READY_UNQUALIFIED",
+  "release_gate": "global_release:false; final8 CI, AM01-AM06, 3 independent FINAL and G7C/G8D not provided",
+  "notes": "No fake results. All exclusively authored new files have absent preimage at original branch HEAD and exact leaf blobs in PREPOST. S0 ACK exists. PR for sf2-stack to be opened after this handoff receipt commit."
+}
