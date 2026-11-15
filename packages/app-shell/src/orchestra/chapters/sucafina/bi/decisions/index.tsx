@@ -110,7 +110,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
           xLabel: data(recorded
             ? recorded.period.start + " – " + recorded.period.end
             : valueId),
-          value: recorded && typeof recorded.value === "number"
+          value: recorded && typeof recorded.value === "number" && recorded.evidenceState !== "absent"
             ? { kind: "known" as const, value: recorded.value }
             : { kind: "missing" as const, reason: msg("sf.u22.chart.missing") },
           ...(sourceToken ? { selectionRef: sourceToken } : {}),
@@ -124,6 +124,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
       { id: "label", label: msg("sf.u22.chart.measure") },
       { id: "value", label: msg("sf.u22.chart.value") },
       { id: "unit", label: msg("sf.u22.chart.unit") },
+      { id: "evidence", label: msg("sf.u22.chart.evidenceState") },
       { id: "period", label: msg("sf.u22.chart.period") },
       { id: "source", label: msg("sf.u22.chart.source") },
     ] as const
@@ -140,6 +141,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
             label: display(item.label),
             value: measured ? display(measured.value) : missing(),
             unit: display(measured?.unit ?? measured?.currency ?? item.unit),
+            evidence: display(measured?.evidenceState ?? "absent"),
             period: measured ? display(measured.period.start + " – " + measured.period.end) : missing(),
             source: source ? display(source.refId) : missing(),
           },
@@ -252,7 +254,7 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
                       <dt>{t("sf.u22.chart.threshold")}</dt>
                       <dd>{sensitivity.threshold === null ? t("sf.u22.chart.missing") : String(sensitivity.threshold)}</dd>
                       <dt>{t("sf.u22.chart.thresholdEvidence")}</dt>
-                      <dd>{sensitivity.thresholdEvidence.state}</dd>
+                      <dd>{thresholdEvidence(sensitivity.thresholdEvidence)}</dd>
                     </dl>
                     <div class="sf-u22-table-scroll">
                       <table>
@@ -322,8 +324,16 @@ export function SfDecisionFigure(props: SfDecisionFigureProps): JSX.Element {
 
   function readValue(id: string) {
     const value = exactValue(id)
-    return value ? value.value === null ? t("sf.u22.chart.missing") :
-      String(value.value) + " " + (value.unit ?? value.currency ?? projection().context.currency) :
-      t("sf.u22.chart.missing")
+    if (!value || value.value === null || value.evidenceState === "absent")
+      return t("sf.u22.chart.missing")
+    const unit = value.unit ?? value.currency
+    return String(value.value) + (unit ? " " + unit : "")
+  }
+
+  function thresholdEvidence(evidence: NonNullable<NonNullable<ReturnType<typeof scenario>>["sensitivity"]>["thresholdEvidence"]): string {
+    if (evidence.state === "exact") return evidence.state + ": " + evidence.value
+    if (evidence.state === "sampled") return evidence.state + ": [" +
+      evidence.interval.minimum + ", " + evidence.interval.maximum + "]"
+    return evidence.state + ": " + evidence.reason
   }
 }
