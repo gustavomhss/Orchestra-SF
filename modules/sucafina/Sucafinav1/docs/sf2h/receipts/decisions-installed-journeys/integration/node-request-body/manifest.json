@@ -1,37 +1,56 @@
 {
+  "schema": "sf2-mission52-shared-transport-v3",
+  "status": "PROPOSED_C23_PRESERVING_MICROSOFT49_ISOLATED_W4",
+  "base_commit": "25ed395829f9ec5f06a80c70467c23b25376f853",
+  "base_tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70",
   "path": "apps/cli/src/sucafina-product/installation.ts",
-  "preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
-  "postimage_blob": "2e51c6741dae8b4ae2bd24b07b3bd1acb2eaa25c",
-  "files": {
-    "installation.ts.preimage.txt": {
-      "bytes": 2476,
-      "sha256": "26c989c2ab37d87363e77a06b96ed55eaccb97f9c4f586879bd4539de869f93d"
-    },
-    "complete.patch": {
-      "bytes": 2762,
-      "sha256": "28eed01f6a6184e66ca4012afda60ab49b7122ecdd5070cbd47ebd299ce90585"
-    },
-    "installation.ts.postimage.txt": {
-      "bytes": 3254,
-      "sha256": "1202343284091bb0af0771dec927a231e141c57e2d53de185600133fa6a25d9f"
-    }
+  "preimage": {
+    "git_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+    "bytes": 5315
   },
-  "status": "PROPOSED_SHARED_PATCH_V2_ISOLATED_W3_ONLY",
-  "owner": 47,
-  "recorded_integration_successor": 55,
-  "source_namespace_only": true,
-  "source_live_file_unchanged": true,
-  "stack_live_file_unchanged": true,
-  "base_C20": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
-  "preimage_C20_confirmed": true,
-  "preimage_C21_confirmed": true,
+  "postimage": {
+    "git_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
+    "bytes": 6258
+  },
+  "patch": {
+    "git_blob": "41749cabf80392bdfcb1a7db97c1cb0e2bb04a77",
+    "sha256": "7cf592dc41c98248089f24f69abf07d6488c128895cff5094483da4baa614b7f",
+    "bytes": 3523
+  },
+  "effect_pin": "Effect-TS/effect-smol@cd7ab658994104bd6fe8f841f1440bea32c387f5",
+  "effect_version": "4.0.0-beta.83",
+  "preserved": [
+    "Microsoft49 composeSfInstallation and exported factory validation",
+    "explicit transport origin and host fences",
+    "sanitized proxy hints before URL reconstruction",
+    "microsoftRequest public HTTPS bridge",
+    "listener privacy Layer and exact transport validator",
+    "final native Request(signal) before installation handler",
+    "all other causes redacted to503"
+  ],
+  "changed": [
+    "canonical sanitized.arrayBuffer buffered once before native Web Request",
+    "only exact bounded-body HttpServerError defect reaches canonical BodyLimit413"
+  ],
+  "not_claimed": [
+    "No live Microsoft/B2B authentication executed",
+    "No underlying Bun socket-destroy cause established",
+    "No CLI/app-shell/E2E strict compiler result on this W",
+    "No independent chunked-over-limit/binary/abort network test",
+    "No actual integration into sf2-stack"
+  ],
+  "supporting_api_evidence": "pinned-api-evidence.json",
   "qualification": {
-    "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
-    "baseTree": "b51fce068f7cee96e6f22013d729087643e3b684",
-    "W": "13203d7b6d9e0b27ad23c6b046f770c779c35687",
-    "Wtree": "cb1875110b02a16ed2bf4a501a92b921493aa897",
-    "S": "ab6caae944aad804c1bd6286270a78b74734d0a7",
-    "Stree": "9f1d388996dc73274e037bf6479cc59eb8451a23",
+    "base": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "baseTree": "d4cb4fbd02ddc064beffa0e6bd796013ed30f6de",
+    "material_base": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "material_base_label": "C23",
+    "W": "68c3d09188bd71b5a02edca3416de2d051025fe4",
+    "Wtree": "4701bb5275224f34b0c3eae9ac8389340a229d54",
+    "S": "5c09907f25e92eb1a16c7be4f4e932b066cea23a",
+    "Stree": "b39a20e3931688d33eef34705ec59668955ab448",
     "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
     "unchanged_root_entries": 43,
     "only_extra": {
@@ -42,66 +61,46 @@
       "size": 229,
       "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
     },
-    "source": "1a475ee1ca6b270d7dad8368560cbd9966d7f8ab",
-    "sourceTree": "27be5e258a3369f84191745bf75815155e1ad18f",
-    "latest_stack_observed": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
-    "fixed_base_reason": "Controlled P2/V2 causal qualification on C20; C21 Agenda delta and successor authority are separately reconciled."
+    "source": "7119929344dfa407abc7ebab179481139c43191a",
+    "sourceTree": "802315f5273eded8fd97ba2695eade8ea65277ad",
+    "owned_paths": 8,
+    "shared_proposal_paths": 2,
+    "shared_installation": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "shared_material_map": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+    "stack_live_edits": 0,
+    "source_shared_live_edits": 0
   },
-  "runtime_verdict": "PENDING_nominal-03.json",
-  "historical_V1": {
-    "postimage": "3664ef2af77e447323e20d5b70095683dae00aee",
-    "packet_commit": "1b6a68647000422f7922d396a3f40bda471eff8a",
-    "qualification": {
-      "base": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
-      "baseTree": "b51fce068f7cee96e6f22013d729087643e3b684",
-      "W": "7493ea6500c113ee83f785244ab6a9c2b5bc7f6b",
-      "Wtree": "6d1a2f1b593fcb9ce2d821d34ba2bf07000db3aa",
-      "S": "70dfa38e6ae258e1b9a3001db5f6d24b1a7cdaf5",
-      "Stree": "94bd05f72b2f460dc25c922b49c6b3961562a526",
-      "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
-      "unchanged_root_entries": 43,
-      "only_extra": {
-        "path": ".ci-run.json",
-        "mode": "100644",
-        "type": "blob",
-        "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
-        "size": 229,
-        "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
-      },
-      "source": "a0f69c88607461820a92e9fcde785fd813f8f03f",
-      "sourceTree": "27a1de25f94e98f239809f22e8ed83be833f9cd5"
+  "runtime_verdict": "PENDING_nominal-04.json",
+  "owner": "Requested handoff47;47 and55 ended. Explicit successor integration ACK required.",
+  "source_namespace_only": true,
+  "source_live_file_unchanged": true,
+  "stack_live_file_unchanged": true,
+  "complete_patch": "complete.patch",
+  "preimage_file": "installation.ts.preimage.txt",
+  "postimage_file": "installation.ts.postimage.txt",
+  "atomic_dependency": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "manifest": "../microsoft49-map/manifest.json",
+    "preimage": "302334c0e5a50c681005d6c6463132abce84d8b1",
+    "postimage": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+    "reason": "The unchanged Microsoft integration fixture checks canonical bytes against this material map; update its three installation fields in the same candidate."
+  },
+  "historical_versions": [
+    {
+      "version": "V1",
+      "base": "C20",
+      "source_packet": "1b6a68647000422f7922d396a3f40bda471eff8a",
+      "run": 43656679164,
+      "receipt": "nominal-02.json"
     },
-    "runtime_receipt": "nominal-02.json",
-    "runtime_result": "1_PASS_4_FAIL",
-    "do_not_transfer_to_V2": true
-  },
-  "closure": {
-    "imports": [
-      "Effect",
-      "HttpMethod",
-      "HttpServerError",
-      "HttpServerRequest",
-      "Option"
-    ],
-    "dependency": "effect 4.0.0-beta.83 / cd7ab658994104bd6fe8f841f1440bea32c387f5",
-    "canonical_limit": "packages/server/src/body-limit.ts / f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
-    "preserved": [
-      "origin validation",
-      "same URL/method/headers",
-      "same bytes consumed once",
-      "existing handler selection",
-      "Effect abort signal",
-      "existing response bridge",
-      "16 MiB canonical maxBytes failure mapped by existing global413 path",
-      "other typed read failures remain503"
-    ],
-    "static_review": "P2 independent review found no blocker; exact canonical RequestParseError/maxBytes predicate preserved.",
-    "not_run": [
-      "CLI/app-shell/E2E strict typecheck on W3",
-      "independent chunked oversized body test",
-      "binary upload test",
-      "abort propagation network test"
-    ]
-  },
-  "causal_limit": "Baseline lacked requestfailed details. No claim that normal Bun stream destruction necessarily destroys the socket. W2 proves actual POST progress and C09 recovery; W3 must qualify V2."
+    {
+      "version": "V2",
+      "base": "C20",
+      "postimage": "2e51c6741dae8b4ae2bd24b07b3bd1acb2eaa25c",
+      "source_packet": "e0ad5906a74517cb579932f4bc304d071d7583cd",
+      "run": 43658424202,
+      "receipt": "nominal-03.json"
+    }
+  ],
+  "independent_review": "independent-review.md"
 }

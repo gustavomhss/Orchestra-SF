@@ -1,47 +1,113 @@
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
 new file mode 100644
-index 0000000000000000000000000000000000000000..007c27ebfd79a28cf051864305d9692c1d6b2409
+index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed840effd65
 --- /dev/null
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
-@@ -0,0 +1,27 @@
+@@ -0,0 +1,84 @@
 +import type { Locator, Page, Request, Response } from "@playwright/test"
 +
-+/** Read the original response before a successful UI command navigates away. */
-+export async function clickForResponse<T>(page: Page, button: Locator, matches: (request: Request) => boolean,
-+  read: (response: Response) => Promise<T>) {
++type CommandRequest = Pick<Request, "url" | "method" | "postDataJSON">
++export type CommandResponse = Pick<Response, "url" | "status" | "headers" | "json">
++type PausedResponse = {
++  requestId: string
++  request: { url: string; method: string; postData?: string; headers: Record<string, string> }
++  responseStatusCode?: number
++  responseErrorReason?: string
++  responseHeaders?: { name: string; value: string }[]
++}
++
++/** Copy the original response while paused, then resume it unchanged; never replay a UI command. */
++export async function clickForResponse<T>(page: Page, button: Locator, urlPattern: string, matches: (request: CommandRequest) => boolean,
++  read: (response: CommandResponse) => Promise<T>) {
++  const session = await page.context().newCDPSession(page)
 +  const pending = Promise.withResolvers<T>()
-+  const matching = (request: Request) => {
-+    try { return matches(request) } catch (error) { pending.reject(error); return false }
++  const running = new Set<Promise<void>>()
++  let claimed = false
++  let closing = false
++  const capture = async (event: PausedResponse) => {
++    const request: CommandRequest = {
++      url: () => event.request.url,
++      method: () => event.request.method,
++      postDataJSON: () => {
++        if (!event.request.postData) return null
++        const type = Object.entries(event.request.headers).find(([name]) => name.toLowerCase() === "content-type")?.[1] ?? ""
++        return type.includes("application/x-www-form-urlencoded")
++          ? Object.fromEntries(new URLSearchParams(event.request.postData)) : JSON.parse(event.request.postData)
++      },
++    }
++    if (closing || claimed || !matches(request)) return
++    claimed = true
++    if (event.responseErrorReason) throw new Error(`The original UI response failed: ${event.responseErrorReason}`)
++    if ([301, 302, 303, 307, 308].includes(event.responseStatusCode ?? 0) && event.responseHeaders?.some(({ name }) => name.toLowerCase() === "location"))
++      throw new Error(`The original UI response redirected with HTTP ${event.responseStatusCode}; its body is unavailable`)
++    const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId }) as { body: string; base64Encoded: boolean }
++    const body = raw.base64Encoded ? Buffer.from(raw.body, "base64").toString("utf8") : raw.body
++    const headers = Object.fromEntries((event.responseHeaders ?? []).map(({ name, value }) => [name.toLowerCase(), value]))
++    const response: CommandResponse = {
++      url: () => event.request.url,
++      status: () => event.responseStatusCode ?? 0,
++      headers: () => headers,
++      json: async () => JSON.parse(body),
++    }
++    return { value: await read(response) }
 +  }
-+  const responded = (response: Response) => {
-+    if (!matching(response.request())) return
-+    page.off("response", responded)
-+    try { pending.resolve(read(response)) } catch (error) { pending.reject(error) }
++  const paused = (event: PausedResponse) => {
++    const task = capture(event)
++      .then((value) => ({ status: "fulfilled" as const, value }), (reason: unknown) => ({ status: "rejected" as const, reason }))
++      .then(async (outcome) => {
++        try { await session.send("Fetch.continueRequest", { requestId: event.requestId }) }
++        catch (error) {
++          pending.reject(outcome.status === "rejected"
++            ? new AggregateError([outcome.reason, error], "Original response capture and continuation failed") : error)
++          return
++        }
++        if (outcome.status === "rejected") pending.reject(outcome.reason)
++        else if (outcome.value) pending.resolve(outcome.value.value)
++      })
++      .catch((error: unknown) => { pending.reject(error) })
++    running.add(task)
++    void task.then(() => { running.delete(task) })
 +  }
 +  const failed = (request: Request) => {
-+    if (matching(request)) pending.reject(new Error(`The original UI request failed before a response: ${request.failure()?.errorText ?? "requestfailed"}`))
++    try {
++      if (matches(request)) pending.reject(new Error(`The original UI request failed before a response: ${request.failure()?.errorText ?? "requestfailed"}`))
++    } catch (error) { pending.reject(error) }
 +  }
-+  page.on("response", responded)
 +  page.on("requestfailed", failed)
++  session.on("Fetch.requestPaused", paused)
 +  try {
++    await session.send("Fetch.enable", { patterns: [{ urlPattern, requestStage: "Response" }] })
 +    const [result] = await Promise.all([pending.promise, button.click()])
 +    return result
 +  } finally {
-+    page.off("response", responded)
++    closing = true
 +    page.off("requestfailed", failed)
++    // Fetch must stay enabled until every body read and original-response continuation completes.
++    await Promise.all(running)
++    try { await session.send("Fetch.disable") }
++    finally { session.off("Fetch.requestPaused", paused); await Promise.all(running); await session.detach() }
 +  }
 +}
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
-index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..377ad1ea3c961fbf0cbb6522403074bc1fce6d78 100644
+index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
 @@ -1,5 +1,6 @@
  import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
  import { startPlannerInstallation } from "../wp03/installation-fixture"
-+import { clickForResponse } from "./command-response"
++import { clickForResponse, type CommandResponse } from "./command-response"
  
  export const draft = {
    objective: "CI Decisions — annual service decision",
+@@ -9,7 +10,7 @@
+   sourceRefs: [],
+ }
+ 
+-export function isCommand(request: Request, mode: string, method = "POST") {
++export function isCommand(request: Pick<Request, "url" | "method">, mode: string, method = "POST") {
+   const url = new URL(request.url())
+   return request.method() === method && url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
+ }
 @@ -42,17 +43,38 @@
        ...(body && typeof body === "object" && "operation" in body && typeof body.operation === "string" ? { operation: body.operation } : {}),
        ...(request.headers()["idempotency-key"] ? { idempotencyKey: request.headers()["idempotency-key"] } : {}) })
@@ -82,7 +148,7 @@ index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..377ad1ea3c961fbf0cbb6522403074bc
          verdict: "The Playwright runtime report owns the terminal test result.",
          limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
        }, null, 2) })
-@@ -86,10 +108,7 @@
+@@ -86,13 +108,10 @@
  
  export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
    await expect(button).toBeEnabled()
@@ -90,12 +156,16 @@ index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..377ad1ea3c961fbf0cbb6522403074bc
 -  await button.click()
 -  const response = await pending
 -  return readReply(response, observations)
-+  return clickForResponse(page, button, (request) => isCommand(request, mode, method), (response) => readReply(response, observations))
++  return clickForResponse(page, button, `${new URL(page.url()).origin}/sucafina/dashboard*`, (request) => isCommand(request, mode, method), (response) => readReply(response, observations))
  }
  
- export async function readReply(response: Response, observations: Record<string, unknown>[]) {
+-export async function readReply(response: Response, observations: Record<string, unknown>[]) {
++export async function readReply(response: CommandResponse, observations: Record<string, unknown>[]) {
+   const contentType = response.headers()["content-type"] ?? ""
+   const record = { mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(), contentType }
+   observations.push(record)
 diff --git a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
-index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..13ab9556628ebc118e0afc2470833bbdbfa9dd25 100644
+index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f 100644
 --- a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
 +++ b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
 @@ -1,5 +1,6 @@
@@ -149,7 +219,7 @@ index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..13ab9556628ebc118e0afc2470833bbd
 -  expect(result.ok).toBe(true)
 -  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
 -  return result
-+  return clickForResponse(page, button, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action, async (response) => {
++  return clickForResponse(page, button, `${new URL(page.url()).origin}/sucafina/planner*`, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action, async (response) => {
 +    expect(response.status()).toBe(200)
 +    expect(response.headers()["content-type"]).toContain("application/json")
 +    const result = asRecord(await response.json())

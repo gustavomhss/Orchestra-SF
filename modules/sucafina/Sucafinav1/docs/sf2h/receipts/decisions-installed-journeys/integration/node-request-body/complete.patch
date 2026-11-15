@@ -1,36 +1,44 @@
 diff --git a/apps/cli/src/sucafina-product/installation.ts b/apps/cli/src/sucafina-product/installation.ts
-index e1392759f00d6d42477249823bbb6b3cec51601c..2e51c6741dae8b4ae2bd24b07b3bd1acb2eaa25c 100644
 --- a/apps/cli/src/sucafina-product/installation.ts
 +++ b/apps/cli/src/sucafina-product/installation.ts
 @@ -2,8 +2,8 @@
  import { realpath } from "node:fs/promises"
  import { pathToFileURL } from "node:url"
  import type { Host } from "@orchestra/core/host"
--import { Effect } from "effect"
--import { HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
-+import { Effect, Option } from "effect"
-+import { HttpMethod, HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+-import { Effect, Layer } from "effect"
+-import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
++import { Cause, Effect, Layer, Option } from "effect"
++import { Headers, HttpMethod, HttpMiddleware, HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
  import { createSfHostRuntime } from "./host-context"
+ import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
  
- export type SfInstallation = {
-@@ -24,9 +24,17 @@
-   const route = Effect.gen(function* () {
-     const incoming = yield* HttpServerRequest.HttpServerRequest
-     if (incoming.headers.host?.toLowerCase() !== new URL(origin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
--    const web = yield* HttpServerRequest.toWeb(incoming)
--    if (new URL(web.url).origin !== origin) return HttpServerResponse.empty({ status: 403 })
--    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(web, { signal })), catch: () => "installation-unavailable" as const })
-+    const url = HttpServerRequest.toURL(incoming)
+@@ -40,13 +40,26 @@
+     if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+     // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
+     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
+-    const web = yield* HttpServerRequest.toWeb(sanitized)
+-    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
++    const url = HttpServerRequest.toURL(sanitized)
 +    if (Option.isNone(url)) return HttpServerResponse.empty({ status: 503 })
-+    if (url.value.origin !== origin) return HttpServerResponse.empty({ status: 403 })
++    if (url.value.origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
 +    // Consume the bounded body in the server request scope before crossing the Web Request boundary.
-+    const body = HttpMethod.hasBody(incoming.method) ? yield* incoming.arrayBuffer.pipe(Effect.catch((error) => {
-+      // Preserve the canonical body's 413 response without changing other read errors.
-+      if (HttpServerError.isHttpServerError(error) && error.reason._tag === "RequestParseError" &&
-+        error.reason.cause instanceof Error && error.reason.cause.message === "maxBytes exceeded") return Effect.die(error)
-+      return Effect.fail(error)
-+    })) : undefined
-+    const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(url.value, { method: incoming.method, headers: incoming.headers, ...(body === undefined ? {} : { body }), signal })), catch: () => "installation-unavailable" as const })
++    const body = HttpMethod.hasBody(sanitized.method) ? yield* sanitized.arrayBuffer.pipe(Effect.orDie) : undefined
++    const web = new Request(url.value, { method: sanitized.method, headers: sanitized.headers, ...(body === undefined ? {} : { body }) })
+     const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+     if (!request) return HttpServerResponse.empty({ status: 403 })
+     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
      return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
-   }).pipe(Effect.catch(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
+-  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
++  }).pipe(Effect.catchCause((cause) => {
++    for (const reason of cause.reasons) {
++      if (!Cause.isDieReason(reason)) continue
++      const defect = reason.defect
++      // Only the canonical bounded-body error reaches BodyLimit; all other causes remain redacted.
++      if (HttpServerError.isHttpServerError(defect) && defect.reason._tag === "RequestParseError" &&
++        defect.reason.cause instanceof Error && defect.reason.cause.message === "maxBytes exceeded") return Effect.die(defect)
++    }
++    return Effect.succeed(HttpServerResponse.empty({ status: 503 }))
++  }))
+   // The listener must install privacy before HttpRouter.serve, outside the request route.
    // Effect registers a trailing wildcard at both the subtree and its base path.
+   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }

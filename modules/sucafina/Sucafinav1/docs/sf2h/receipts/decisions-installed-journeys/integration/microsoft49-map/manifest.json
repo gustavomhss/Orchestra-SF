@@ -1,0 +1,57 @@
+{
+  "schema": "sf2-mission52-shared-material-map-v1",
+  "state": "PROPOSED_ATOMIC_WITH_INSTALLATION_V3",
+  "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+  "preimage_blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+  "postimage_blob": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+  "preimage_sha256": "d7b63c7b70e009e6cc08804bad167fdbd16c5d26d2ed8c604730f77cb85e39a9",
+  "postimage_sha256": "432a4db46c1a2bb0bd71f52a5adfa58bcd7358d9ca8f31e44977527482537357",
+  "changed_fields": [
+    "files[installation].postimage_blob",
+    "files[installation].postimage_sha256",
+    "files[installation].bytes"
+  ],
+  "other_entries_unchanged": true,
+  "source49_fields_unchanged": true,
+  "original_target_base_unchanged": "The existing field records the original Microsoft49 intake baseline C21. The mission52 overlay base and intermediate preimage are bound separately here and in W4.",
+  "overlay_base": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+  "atomic_with": "apps/cli/src/sucafina-product/installation.ts",
+  "qualification": {
+    "base": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "baseTree": "d4cb4fbd02ddc064beffa0e6bd796013ed30f6de",
+    "material_base": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "material_base_label": "C23",
+    "W": "68c3d09188bd71b5a02edca3416de2d051025fe4",
+    "Wtree": "4701bb5275224f34b0c3eae9ac8389340a229d54",
+    "S": "5c09907f25e92eb1a16c7be4f4e932b066cea23a",
+    "Stree": "b39a20e3931688d33eef34705ec59668955ab448",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "unchanged_root_entries": 43,
+    "only_extra": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "size": 229,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+    },
+    "source": "7119929344dfa407abc7ebab179481139c43191a",
+    "sourceTree": "802315f5273eded8fd97ba2695eade8ea65277ad",
+    "owned_paths": 8,
+    "shared_proposal_paths": 2,
+    "shared_installation": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "shared_material_map": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+    "stack_live_edits": 0,
+    "source_shared_live_edits": 0
+  },
+  "microsoft_runtime": "NOT_RUN; Decisions nominal04 does not qualify Microsoft live authentication or its synthetic suite.",
+  "source_live_file_unchanged": true,
+  "stack_live_file_unchanged": true,
+  "patch": {
+    "path": "complete.patch",
+    "bytes": 1345,
+    "sha256": "0d01556b2563c9d96154945fde6263b170533436bc08ea771a5b6ab5e29eb609"
+  },
+  "preimage_file": "microsoft49-composition.preimage.json",
+  "postimage_file": "microsoft49-composition.postimage.json"
+}

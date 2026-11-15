@@ -679,5 +679,91 @@
     "sourceTree": "27be5e258a3369f84191745bf75815155e1ad18f",
     "latest_stack_observed": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
     "fixed_base_reason": "Controlled P2/V2 causal qualification on C20; C21 Agenda delta and successor authority are separately reconciled."
+  },
+  "fourth_qualification": {
+    "base": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "baseTree": "d4cb4fbd02ddc064beffa0e6bd796013ed30f6de",
+    "material_base": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "material_base_label": "C23",
+    "W": "68c3d09188bd71b5a02edca3416de2d051025fe4",
+    "Wtree": "4701bb5275224f34b0c3eae9ac8389340a229d54",
+    "S": "5c09907f25e92eb1a16c7be4f4e932b066cea23a",
+    "Stree": "b39a20e3931688d33eef34705ec59668955ab448",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "unchanged_root_entries": 43,
+    "only_extra": {
+      "path": ".ci-run.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "size": 229,
+      "url": "https://api.github.com/repos/gustavomhss/Orchestra-SF/git/blobs/3619f1fd8b14262b0c89ee9830269f2b05356aaf"
+    },
+    "source": "7119929344dfa407abc7ebab179481139c43191a",
+    "sourceTree": "802315f5273eded8fd97ba2695eade8ea65277ad",
+    "owned_paths": 8,
+    "shared_proposal_paths": 2,
+    "shared_installation": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "shared_material_map": "b572fbf4525e2d5015a1e8d4245c96085703e1c1",
+    "stack_live_edits": 0,
+    "source_shared_live_edits": 0
+  },
+  "final_target_reconciliation": {
+    "current_material": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "symbol": "C23",
+    "head": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "head_tree": "d4cb4fbd02ddc064beffa0e6bd796013ed30f6de",
+    "control": "3796e60a25c6478a38f0fc98997a8582d1356b37",
+    "source": "current-target-reconciliation.json",
+    "authority47": "ENDED",
+    "authority55": "ENDED",
+    "next_integrator_requires_successor_ACK": true,
+    "source52_scope_unchanged": true,
+    "material_overlaps": [
+      "installation.ts replaced by Microsoft49; V3 semantically preserves its transport/privacy/origin behavior",
+      "Microsoft49 composition material map must update the same installation postimage SHA and bytes atomically"
+    ],
+    "preimages_verified": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+        "expected": null,
+        "observed": null
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+        "expected": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+        "observed": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+        "expected": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad",
+        "observed": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+        "expected": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+        "observed": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+        "expected": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+        "observed": "2d9c867af87fa0a26b182365b1780232b49bcaf9"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+        "expected": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a",
+        "observed": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+        "expected": "c469187a2e04d49d157cf9d3830145ca845f4064",
+        "observed": "c469187a2e04d49d157cf9d3830145ca845f4064"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+        "expected": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa",
+        "observed": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa"
+      }
+    ]
   }
 }

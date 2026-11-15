@@ -1,0 +1,420 @@
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..0832650685246e386f0270533bb58ed840effd65
+--- /dev/null
++++ b/packages/app-shell/e2e/sucafina/decisions-support/command-response.ts
+@@ -0,0 +1,84 @@
++import type { Locator, Page, Request, Response } from "@playwright/test"
++
++type CommandRequest = Pick<Request, "url" | "method" | "postDataJSON">
++export type CommandResponse = Pick<Response, "url" | "status" | "headers" | "json">
++type PausedResponse = {
++  requestId: string
++  request: { url: string; method: string; postData?: string; headers: Record<string, string> }
++  responseStatusCode?: number
++  responseErrorReason?: string
++  responseHeaders?: { name: string; value: string }[]
++}
++
++/** Copy the original response while paused, then resume it unchanged; never replay a UI command. */
++export async function clickForResponse<T>(page: Page, button: Locator, urlPattern: string, matches: (request: CommandRequest) => boolean,
++  read: (response: CommandResponse) => Promise<T>) {
++  const session = await page.context().newCDPSession(page)
++  const pending = Promise.withResolvers<T>()
++  const running = new Set<Promise<void>>()
++  let claimed = false
++  let closing = false
++  const capture = async (event: PausedResponse) => {
++    const request: CommandRequest = {
++      url: () => event.request.url,
++      method: () => event.request.method,
++      postDataJSON: () => {
++        if (!event.request.postData) return null
++        const type = Object.entries(event.request.headers).find(([name]) => name.toLowerCase() === "content-type")?.[1] ?? ""
++        return type.includes("application/x-www-form-urlencoded")
++          ? Object.fromEntries(new URLSearchParams(event.request.postData)) : JSON.parse(event.request.postData)
++      },
++    }
++    if (closing || claimed || !matches(request)) return
++    claimed = true
++    if (event.responseErrorReason) throw new Error(`The original UI response failed: ${event.responseErrorReason}`)
++    if ([301, 302, 303, 307, 308].includes(event.responseStatusCode ?? 0) && event.responseHeaders?.some(({ name }) => name.toLowerCase() === "location"))
++      throw new Error(`The original UI response redirected with HTTP ${event.responseStatusCode}; its body is unavailable`)
++    const raw = await session.send("Fetch.getResponseBody", { requestId: event.requestId }) as { body: string; base64Encoded: boolean }
++    const body = raw.base64Encoded ? Buffer.from(raw.body, "base64").toString("utf8") : raw.body
++    const headers = Object.fromEntries((event.responseHeaders ?? []).map(({ name, value }) => [name.toLowerCase(), value]))
++    const response: CommandResponse = {
++      url: () => event.request.url,
++      status: () => event.responseStatusCode ?? 0,
++      headers: () => headers,
++      json: async () => JSON.parse(body),
++    }
++    return { value: await read(response) }
++  }
++  const paused = (event: PausedResponse) => {
++    const task = capture(event)
++      .then((value) => ({ status: "fulfilled" as const, value }), (reason: unknown) => ({ status: "rejected" as const, reason }))
++      .then(async (outcome) => {
++        try { await session.send("Fetch.continueRequest", { requestId: event.requestId }) }
++        catch (error) {
++          pending.reject(outcome.status === "rejected"
++            ? new AggregateError([outcome.reason, error], "Original response capture and continuation failed") : error)
++          return
++        }
++        if (outcome.status === "rejected") pending.reject(outcome.reason)
++        else if (outcome.value) pending.resolve(outcome.value.value)
++      })
++      .catch((error: unknown) => { pending.reject(error) })
++    running.add(task)
++    void task.then(() => { running.delete(task) })
++  }
++  const failed = (request: Request) => {
++    try {
++      if (matches(request)) pending.reject(new Error(`The original UI request failed before a response: ${request.failure()?.errorText ?? "requestfailed"}`))
++    } catch (error) { pending.reject(error) }
++  }
++  page.on("requestfailed", failed)
++  session.on("Fetch.requestPaused", paused)
++  try {
++    await session.send("Fetch.enable", { patterns: [{ urlPattern, requestStage: "Response" }] })
++    const [result] = await Promise.all([pending.promise, button.click()])
++    return result
++  } finally {
++    closing = true
++    page.off("requestfailed", failed)
++    // Fetch must stay enabled until every body read and original-response continuation completes.
++    await Promise.all(running)
++    try { await session.send("Fetch.disable") }
++    finally { session.off("Fetch.requestPaused", paused); await Promise.all(running); await session.detach() }
++  }
++}
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
+index 171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4..3f548f0afdbb2d0c17c3cf9f0c3d4dd63b25f2b2 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/journey.ts
+@@ -1,5 +1,6 @@
+ import { expect, type Locator, type Page, type Request, type Response, type TestInfo } from "@playwright/test"
+ import { startPlannerInstallation } from "../wp03/installation-fixture"
++import { clickForResponse, type CommandResponse } from "./command-response"
+ 
+ export const draft = {
+   objective: "CI Decisions — annual service decision",
+@@ -9,7 +10,7 @@
+   sourceRefs: [],
+ }
+ 
+-export function isCommand(request: Request, mode: string, method = "POST") {
++export function isCommand(request: Pick<Request, "url" | "method">, mode: string, method = "POST") {
+   const url = new URL(request.url())
+   return request.method() === method && url.pathname === "/sucafina/dashboard" && url.searchParams.get("sf") === mode
+ }
+@@ -42,17 +43,38 @@
+       ...(body && typeof body === "object" && "operation" in body && typeof body.operation === "string" ? { operation: body.operation } : {}),
+       ...(request.headers()["idempotency-key"] ? { idempotencyKey: request.headers()["idempotency-key"] } : {}) })
+   }
++  const network: Record<string, unknown>[] = []
++  const selected = (request: Request) => {
++    const url = new URL(request.url())
++    return url.origin === installation.origin && ["/sucafina/dashboard", "/sucafina/planner", "/sucafina/procurement"].includes(url.pathname)
++  }
++  const responseListener = (response: Response) => {
++    if (!selected(response.request())) return
++    const url = new URL(response.url())
++    network.push({ event: "response", method: response.request().method(), path: url.pathname, mode: url.searchParams.get("sf"),
++      httpStatus: response.status(), contentType: response.headers()["content-type"] ?? "" })
++  }
++  const failureListener = (request: Request) => {
++    if (!selected(request)) return
++    const url = new URL(request.url())
++    network.push({ event: "requestfailed", method: request.method(), path: url.pathname, mode: url.searchParams.get("sf"),
++      error: request.failure()?.errorText ?? "requestfailed" })
++  }
+   page.on("request", listener)
++  page.on("response", responseListener)
++  page.on("requestfailed", failureListener)
+   try {
+     await page.context().addCookies([installation.cookie])
+     await action(installation, observations)
+     body.completed = true
+   } finally {
+     page.off("request", listener)
++    page.off("response", responseListener)
++    page.off("requestfailed", failureListener)
+     // Never retain cookies, authorization headers, enrollment URLs or arbitrary response bodies.
+     try {
+       await info.attach("decisions-observations.json", { contentType: "application/json", body: JSON.stringify({
+-        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests,
++        selection: "CI-UI-DECISIONS", snapshot: process.env.GITHUB_SHA ?? null, test: info.title, bodyCompleted: body.completed, observations, requests, network,
+         verdict: "The Playwright runtime report owns the terminal test result.",
+         limit: "Observed stages only; unexecuted choice, C10, C12, native critique and C17 replay are not accepted by this receipt.",
+       }, null, 2) })
+@@ -86,13 +108,10 @@
+ 
+ export async function clickCommand(page: Page, button: Locator, mode: string, observations: Record<string, unknown>[], method = "POST") {
+   await expect(button).toBeEnabled()
+-  const pending = page.waitForResponse((response) => isCommand(response.request(), mode, method))
+-  await button.click()
+-  const response = await pending
+-  return readReply(response, observations)
++  return clickForResponse(page, button, `${new URL(page.url()).origin}/sucafina/dashboard*`, (request) => isCommand(request, mode, method), (response) => readReply(response, observations))
+ }
+ 
+-export async function readReply(response: Response, observations: Record<string, unknown>[]) {
++export async function readReply(response: CommandResponse, observations: Record<string, unknown>[]) {
+   const contentType = response.headers()["content-type"] ?? ""
+   const record = { mode: new URL(response.url()).searchParams.get("sf"), httpStatus: response.status(), contentType }
+   observations.push(record)
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
+index c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad..ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts
+@@ -1,5 +1,6 @@
+ import { expect, type Locator, type Page } from "@playwright/test"
+ import { asRecord } from "./journey"
++import { clickForResponse } from "./command-response"
+ 
+ export const sourceNames = { baseline: "Decisions baseline plan", candidate: "Decisions candidate plan", line: "Decision annual service" }
+ 
+@@ -26,9 +27,9 @@
+   const line = page.locator('form[data-page="OPEX"][data-command="save"][data-record=""]').filter({ has: page.getByLabel("Name", { exact: true }) })
+   await expect(line).toHaveCount(1)
+   await line.getByLabel("Name", { exact: true }).fill(sourceNames.line)
+-  await line.getByLabel("Owner", { exact: true }).selectOption(actorId)
+-  await line.getByLabel("Element", { exact: true }).selectOption("licenses")
+-  await expect(line.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await line.getByRole("combobox", { name: "Owner", exact: true }).selectOption({ value: actorId })
++  await line.getByRole("combobox", { name: "Element", exact: true }).selectOption({ value: "licenses" })
++  await expect(line.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await line.getByLabel("Annual budget", { exact: true }).fill("1200")
+   await plannerCommand(page, line.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -51,7 +52,7 @@
+   const copiedLine = page.getByRole("row").filter({ has: page.getByRole("cell", { name: sourceNames.line, exact: true }) })
+   await expect(copiedLine).toHaveCount(1)
+   await copiedLine.getByRole("button", { name: "Manage", exact: true }).click()
+-  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await expect(manager.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await manager.getByLabel("Annual budget", { exact: true }).fill("2400")
+   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -68,7 +69,7 @@
+   await row.getByRole("button", { name: "Manage", exact: true }).click()
+   const manager = page.getByRole("dialog", { name: "Manage record", exact: true })
+   await expect(manager.getByLabel("Annual budget", { exact: true })).toHaveValue("2400")
+-  await expect(manager.getByLabel("Currency", { exact: true })).toHaveValue("USD")
++  await expect(manager.getByRole("combobox", { name: "Currency", exact: true })).toHaveValue("USD")
+   await manager.getByLabel("Annual budget", { exact: true }).fill(String(annualBudget))
+   await plannerCommand(page, manager.getByRole("button", { name: "Save", exact: true }), "save", observations)
+   await expect(page.getByRole("cell", { name: sourceNames.line, exact: true })).toBeVisible()
+@@ -79,13 +80,12 @@
+ 
+ async function plannerCommand(page: Page, button: Locator, action: string, observations: Record<string, unknown>[]) {
+   await expect(button).toBeEnabled()
+-  const pending = page.waitForResponse((response) => response.request().method() === "POST" && new URL(response.url()).pathname === "/sucafina/planner" && response.request().postDataJSON()?.action === action)
+-  await button.click()
+-  const response = await pending
+-  expect(response.status()).toBe(200)
+-  expect(response.headers()["content-type"]).toContain("application/json")
+-  const result = asRecord(await response.json())
+-  expect(result.ok).toBe(true)
+-  observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
+-  return result
++  return clickForResponse(page, button, `${new URL(page.url()).origin}/sucafina/planner*`, (request) => request.method() === "POST" && new URL(request.url()).pathname === "/sucafina/planner" && request.postDataJSON()?.action === action, async (response) => {
++    expect(response.status()).toBe(200)
++    expect(response.headers()["content-type"]).toContain("application/json")
++    const result = asRecord(await response.json())
++    expect(result.ok).toBe(true)
++    observations.push({ stage: "planner-human-command", action, httpStatus: response.status(), ok: result.ok })
++    return result
++  })
+ }
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
+index c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e..9fe64294027cf6805ff8e7ba4b7cfac83455de85 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts
+@@ -1,4 +1,4 @@
+-import { expect, type Page } from "@playwright/test"
++import { expect, type Page, type Request } from "@playwright/test"
+ 
+ type PausedResponse = {
+   requestId: string
+@@ -11,7 +11,13 @@
+ export async function loseCreationResponse(page: Page, origin: string) {
+   const session = await page.context().newCDPSession(page)
+   const completed = Promise.withResolvers<{ httpStatus: number; contentType: string; body: unknown; payload: unknown }>()
++  const state = { responsePaused: false }
++  const failed = (request: Request) => {
++    if (request.url() === `${origin}/sucafina/dashboard?sf=workbench-command` && request.method() === "POST" && !state.responsePaused)
++      completed.reject(new Error(`Creation failed before the original response could be intercepted: ${request.failure()?.errorText ?? "requestfailed"}`))
++  }
+   const listener = async (event: PausedResponse) => {
++    state.responsePaused = true
+     try {
+       const payload: unknown = event.request.postData ? JSON.parse(event.request.postData) : undefined
+       expect(event.request.url).toBe(`${origin}/sucafina/dashboard?sf=workbench-command`)
+@@ -27,7 +33,8 @@
+       completed.reject(error)
+     }
+   }
++  page.on("requestfailed", failed)
+   session.once("Fetch.requestPaused", listener)
+   await session.send("Fetch.enable", { patterns: [{ urlPattern: `${origin}/sucafina/dashboard\\?sf=workbench-command`, requestStage: "Response" }] })
+-  return { completed: completed.promise, close: async () => { await session.send("Fetch.disable"); await session.detach() } }
++  return { completed: completed.promise, close: async () => { page.off("requestfailed", failed); await session.send("Fetch.disable"); await session.detach() } }
+ }
+diff --git a/packages/app-shell/e2e/sucafina/decisions.spec.ts b/packages/app-shell/e2e/sucafina/decisions.spec.ts
+index 2d9c867af87fa0a26b182365b1780232b49bcaf9..b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf 100644
+--- a/packages/app-shell/e2e/sucafina/decisions.spec.ts
++++ b/packages/app-shell/e2e/sucafina/decisions.spec.ts
+@@ -146,9 +146,8 @@
+       // CDP pauses the original browser response, after the real handler committed.
+       // It neither issues an APIRequest/route.fetch nor supplies a synthetic response.
+       const failed = page.waitForEvent("requestfailed", { predicate: (request) => isCommand(request, "workbench-command") })
+-      const observed = Promise.all([interruption.completed, failed])
+-      await form.getByRole("button", { name: "Create decision", exact: true }).click()
+-      const [lost] = await observed
++      const [lost] = await Promise.all([interruption.completed, failed,
++        form.getByRole("button", { name: "Create decision", exact: true }).click()])
+       observations.push({ stage: "creation-response-dropped", httpStatus: lost.httpStatus, contentType: lost.contentType })
+       expect(lost.httpStatus).toBe(200)
+       expect(lost.contentType).toContain("application/json")
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
+index 979bfeeb460e85fe1911affe0ac9ad4d21a27e3a..903b48594ff95e0d1f78539982adcf75eb3b9272 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts
+@@ -24,7 +24,7 @@
+     const editor = page.locator("form[data-decision-edit]")
+     await expect(editor).toHaveAttribute("data-sf-edit-ready", "true")
+     await editor.getByRole("button", { name: "Find Planner sources", exact: true }).click()
+-    const select = editor.getByLabel("Planner source", { exact: true })
++    const select = editor.getByRole("combobox", { name: "Planner source", exact: true })
+     for (const entry of [{ name: sourceNames.baseline, id: sources.baseline, monthlyAmount: 100, count: 1 }, { name: sourceNames.candidate, id: sources.candidate, monthlyAmount: 200, count: 2 }]) {
+       await selectSource(select, entry.name, entry.id)
+       await editor.getByRole("button", { name: "Inspect selected source", exact: true }).click()
+@@ -106,7 +106,7 @@
+       expect(lost.body).toEqual({ status: "ok", value: { caseRef: { ...identity, version: 4 }, resultRef: receipt.resultRef } })
+       await expect(editor.getByLabel("Alternative title", { exact: true })).toHaveValue(titles.candidate)
+       await expect(editor.getByLabel("Alternative title", { exact: true })).toBeDisabled()
+-      await expect(editor.getByLabel("Source for alternative", { exact: true })).toBeDisabled()
++      await expect(editor.getByRole("combobox", { name: "Source for alternative", exact: true })).toBeDisabled()
+       await expect(editor.getByRole("button", { name: "Retry same request", exact: true })).toBeEnabled()
+       expect(promotions).toHaveLength(2)
+       const original = promotions[1]!
+@@ -140,8 +140,8 @@
+       expect(new Set(alternatives.map((item) => item.id)).size).toBe(2)
+       expect(alternatives.map((item) => item.title).sort()).toEqual(Object.values(titles).sort())
+       for (const alternative of alternatives) expect(alternative).toMatchObject({ version: 1, currency: "USD", horizon: draft.horizon })
+-      await choice.getByLabel("Baseline", { exact: true }).selectOption({ label: titles.baseline })
+-      await choice.getByLabel("Alternative", { exact: true }).selectOption({ label: titles.candidate })
++      await choice.getByRole("combobox", { name: "Baseline", exact: true }).selectOption({ label: titles.baseline })
++      await choice.getByRole("combobox", { name: "Alternative", exact: true }).selectOption({ label: titles.candidate })
+       const compared = await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)
+       const value = asRecord(compared.value)
+       // C10 compares cost as alternative minus baseline; savings has the opposite orientation.
+@@ -222,7 +222,7 @@
+   const editor = page.locator("form[data-decision-alternatives]")
+   await expect(editor).toHaveAttribute("data-sf-alternatives-ready", "true")
+   await editor.getByRole("button", { name: "Load attached scenarios", exact: true }).click()
+-  const source = editor.getByLabel("Source for alternative", { exact: true })
++  const source = editor.getByRole("combobox", { name: "Source for alternative", exact: true })
+   await selectSource(source, sourceName, versionId)
+   const sourceDigest = await source.inputValue()
+   const inspected = page.waitForResponse((response) => isCommand(response.request(), "decision-controls", "GET") && new URL(response.url()).searchParams.get("source") === sourceDigest)
+@@ -240,7 +240,7 @@
+   await expect(preview).toContainText("USD")
+   await expect(preview).toContainText(`Component: ${monthlyAmount} USD · 2027-01-01 – 2027-01-31`)
+   await editor.getByLabel("Alternative title", { exact: true }).fill(title)
+-  const inventory = editor.getByLabel("Cost inventory", { exact: true })
++  const inventory = editor.getByRole("combobox", { name: "Cost inventory", exact: true })
+   const offered = inventory.getByRole("option", { name: /renewal|transition/i })
+   await expect(offered).toHaveCount(1)
+   await inventory.selectOption({ label: (await offered.textContent())!.trim() })
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
+index c469187a2e04d49d157cf9d3830145ca845f4064..de8671b4482339791b8f03bd5616c13d50dc4a87 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts
+@@ -23,8 +23,8 @@
+   expect(before.choices).toEqual([])
+   const alternative = (before.alternatives as unknown[]).map(asRecord).find((item) => item.title === selection.titles.candidate)
+   expect(alternative).toBeDefined()
+-  await choice.getByLabel("Baseline", { exact: true }).selectOption({ label: selection.titles.baseline })
+-  await choice.getByLabel("Alternative", { exact: true }).selectOption({ label: selection.titles.candidate })
++  await choice.getByRole("combobox", { name: "Baseline", exact: true }).selectOption({ label: selection.titles.baseline })
++  await choice.getByRole("combobox", { name: "Alternative", exact: true }).selectOption({ label: selection.titles.candidate })
+   const initial = asRecord((await clickCommand(page, choice.getByRole("button", { name: "Compare", exact: true }), "decision-compare", observations)).value)
+   expect(asRecord(initial.comparison)).toMatchObject({ comparisonStatus: "conditioned", knownDifference: 1200, completeDifference: null })
+   await expect(choice.getByRole("button", { name: "Record choice", exact: true })).toBeDisabled()
+diff --git a/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
+index 9e02b30fee0e1f37afeac28b0296bdfbbbab70aa..10b59adfce7d8fb5143f49c9df9a0d7321425018 100644
+--- a/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
++++ b/packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts
+@@ -25,7 +25,7 @@
+     await expect(evidence.getByRole("option")).not.toHaveCount(0)
+     const digests = await evidence.getByRole("option").evaluateAll((options) => options.map((option) => (option as HTMLOptionElement).value))
+     expect(new Set(digests).size).toBe(digests.length)
+-    const selectedIds = [await form.getByLabel("Baseline", { exact: true }).inputValue(), await form.getByLabel("Alternative", { exact: true }).inputValue()]
++    const selectedIds = [await form.getByRole("combobox", { name: "Baseline", exact: true }).inputValue(), await form.getByRole("combobox", { name: "Alternative", exact: true }).inputValue()]
+     const comparedAlternatives = (asRecord(selected.decision).alternatives as unknown[]).map(asRecord).filter((alternative) => selectedIds.includes(String(alternative.id)))
+     expect(comparedAlternatives).toHaveLength(2)
+     const comparedRefs = comparedAlternatives.flatMap((alternative) => asRecord(alternative.result).sourceRefs as unknown[]).map(asRecord)
+diff --git a/apps/cli/src/sucafina-product/installation.ts b/apps/cli/src/sucafina-product/installation.ts
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -2,8 +2,8 @@
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect, Layer } from "effect"
+-import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
++import { Cause, Effect, Layer, Option } from "effect"
++import { Headers, HttpMethod, HttpMiddleware, HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ import { createSfHostRuntime } from "./host-context"
+ import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
+ 
+@@ -40,13 +40,26 @@
+     if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+     // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
+     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
+-    const web = yield* HttpServerRequest.toWeb(sanitized)
+-    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
++    const url = HttpServerRequest.toURL(sanitized)
++    if (Option.isNone(url)) return HttpServerResponse.empty({ status: 503 })
++    if (url.value.origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
++    // Consume the bounded body in the server request scope before crossing the Web Request boundary.
++    const body = HttpMethod.hasBody(sanitized.method) ? yield* sanitized.arrayBuffer.pipe(Effect.orDie) : undefined
++    const web = new Request(url.value, { method: sanitized.method, headers: sanitized.headers, ...(body === undefined ? {} : { body }) })
+     const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+     if (!request) return HttpServerResponse.empty({ status: 403 })
+     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
+     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+-  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
++  }).pipe(Effect.catchCause((cause) => {
++    for (const reason of cause.reasons) {
++      if (!Cause.isDieReason(reason)) continue
++      const defect = reason.defect
++      // Only the canonical bounded-body error reaches BodyLimit; all other causes remain redacted.
++      if (HttpServerError.isHttpServerError(defect) && defect.reason._tag === "RequestParseError" &&
++        defect.reason.cause instanceof Error && defect.reason.cause.message === "maxBytes exceeded") return Effect.die(defect)
++    }
++    return Effect.succeed(HttpServerResponse.empty({ status: 503 }))
++  }))
+   // The listener must install privacy before HttpRouter.serve, outside the request route.
+   // Effect registers a trailing wildcard at both the subtree and its base path.
+   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
+index 302334c0e5a50c681005d6c6463132abce84d8b1..b572fbf4525e2d5015a1e8d4245c96085703e1c1 100644
+--- a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
+@@ -22,9 +22,9 @@
+       "path": "apps/cli/src/sucafina-product/installation.ts",
+       "mode": "100644",
+       "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+-      "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+-      "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+-      "bytes": 5315,
++      "postimage_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
++      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
++      "bytes": 6258,
+       "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+       "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+       "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"

@@ -1,0 +1,477 @@
+{
+  "status": "READ_ONLY_TARGET_AND_AUTHORITY_RECONCILIATION",
+  "repository": "gustavomhss/Orchestra-SF",
+  "prior_causal_run_base": {
+    "symbol": "C20",
+    "commit": "7f3f4f0066269f7642c82b5694f21c9c9741e9d5",
+    "tree": "b51fce068f7cee96e6f22013d729087643e3b684",
+    "runs": [
+      43656679164,
+      43658424202
+    ],
+    "relabel_as_current": false
+  },
+  "material_current": {
+    "symbol": "C23",
+    "commit": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "tree": "4082dba2644a6adf71de7a1af844dd7d063cbd70"
+  },
+  "current_target": {
+    "commit": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+    "tree": "d4cb4fbd02ddc064beffa0e6bd796013ed30f6de",
+    "parent": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "delta": "30 added final55 receipt paths; no material/product/test/workflow changes"
+  },
+  "control": {
+    "commit": "3796e60a25c6478a38f0fc98997a8582d1356b37",
+    "since_c1df70": "only runtime-fresh-copy-cost.json added, new56 narrow LocalStore authority;52 package unchanged"
+  },
+  "authority": {
+    "predecessor47": {
+      "terminal": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+      "state": "HANDOFF_TERMINAL_LEASE_ENDED"
+    },
+    "successor55": {
+      "terminal": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+      "authority_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/AUTHORITY.json",
+      "authority_blob": "70ea49f6f6bc1a9b0da707f8c10ce1da495050e1",
+      "handoff_blob": "acfc9362552433a8374443469f5428d1bbf7a308",
+      "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+      "lease": {
+        "epoch": "S0-C-e10-browser55",
+        "state": "ENDED",
+        "ends_at": "Successful CAS publication of the containing terminal documentation commit on sf2-stack",
+        "further_product_writes": false,
+        "continuation_rule": "Any later integrator reconciles this terminal HEAD, current control and source authorities, then publishes an explicit successor ACK. Readback and PR65 metadata closure do not extend product-write authority. No source branch is assigned to55."
+      }
+    },
+    "current_stack_successor": "not observed; source52 authority does not grant stack writes"
+  },
+  "material_deltas": {
+    "C20_C21": {
+      "commits": [
+        {
+          "sha": "12b459f6997298f79e3360c4aaeb8ffc0a106a50",
+          "message": "docs(sf2h): close mission47 at C20 with exact released intake handoff [skip ci]"
+        },
+        {
+          "sha": "aab587293e20b15884bbd34b21f351d8dfc829bd",
+          "message": "docs(sf2h): acknowledge mission55 succession after terminal47 [skip ci]"
+        },
+        {
+          "sha": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+          "message": "feat(sucafina): compose released Agenda39 first-use as C21 [skip ci]"
+        }
+      ],
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/extended-browser.ts",
+          "blob": "480dcc9c1b299542552e8a6a2e4e3ce2a659db10",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-business-services.ts",
+          "blob": "ff43e324d280498e629f867d0ac93714bdf608cc",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/extended-http.ts",
+          "blob": "72c145ad805c38bd3d3d88c81bd55a5c72df5d09",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-agenda-services.ts",
+          "blob": "1d161deed336cde3753c6f8dd8a7f02854833dca",
+          "status": "added"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/review-services.ts",
+          "blob": "da98ee9b674a1d7b4f3ba2c8a230745c33ccdbd7",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/agenda-picker.ts",
+          "blob": "4d2e9087e4adfb57cdcfb6b0c686e1a6b9d7a516",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/reviews/workspace.ts",
+          "blob": "bc60164d6606c583a44247346e261674a7859ef0",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/browser-entry.ts",
+          "blob": "fe224fae69ddf4288580bac1a20eede1082794ab",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/first-agenda.test.ts",
+          "blob": "6c4814ac7386d287a4e6a2e39c052ef32d2fad10",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/review-first-agenda/fixture.ts",
+          "blob": "98003837dd9b8f564e577130170f217eae6727d9",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/review-agenda-support/first-agenda.ts",
+          "blob": "a9a1378ef1d6d5ba7ae185528230dd962b2ba6f1",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/review-agenda-support/source-corpus.ts",
+          "blob": "7ed00acd45a04bc1a3f4ca7c243e7510772c8911",
+          "status": "added"
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/review-agenda-support/source-seed.ts",
+          "blob": "ec7e98c12ff5aa98f4a8f894b49edfed5182efb3",
+          "status": "added"
+        }
+      ]
+    },
+    "C21_C23": {
+      "commits": [
+        {
+          "sha": "713e979cdea58f822ddaa91abe64b4e9531391fe",
+          "message": "feat(sucafina): compose atomic Microsoft49 auth and installed entry as C22 [skip ci]"
+        },
+        {
+          "sha": "25ed395829f9ec5f06a80c70467c23b25376f853",
+          "message": "fix(sucafina): integrate released Portfolio50 P02 history as C23 [skip ci]"
+        }
+      ],
+      "files": [
+        {
+          "path": "apps/cli/src/commands/handlers/serve.ts",
+          "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+          "status": "modified"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/installation.ts",
+          "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+          "status": "modified"
+        },
+        {
+          "path": "docs/guides/sucafina-microsoft-login.md",
+          "blob": "80274ee805a1c3b65dc11d42a3d41c628d66a3b6",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+          "blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/proof.ts",
+          "blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/entra-client.ts",
+          "blob": "4d149f3947cdb2bc697ebed8849a3c91337c398f",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+          "blob": "69275afbb0ecd7bcdaf7b9eefc2a9dc1d39db917",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-identity.ts",
+          "blob": "9b501e6c0a4ee13764fd94be755077a3b1bb5844",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/microsoft-configuration.ts",
+          "blob": "6d12711d2eb04a19d39da0b429450691073a47d5",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts",
+          "blob": "6e3b56e13795b60949bc14548921c37af16b615f",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/microsoft-policy.ts",
+          "blob": "bd046251ececd05a5a179dd44d2c7b55f81b7498",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/entra-client.test.ts",
+          "blob": "98058a94fba8d4100dde3ebf8247ec77b7f2e4cf",
+          "status": "modified"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts",
+          "blob": "4a055c82dfba70c09d9bcc3865bacdfd5e567b9f",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-configuration.test.ts",
+          "blob": "5d9dea7a547e54bca461fd38aab6d60fac5aee58",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts",
+          "blob": "9f6556bd33444d37b4e5ddb6931e560d234cd28e",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+          "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/oidc-fixture.ts",
+          "blob": "aebdce1642c5a9ca9171fa37ddfeafb6aaa60a81",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-login/private-fixture.ts",
+          "blob": "cec0dcecb3633861e90e7717fb000761acf1e567",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-node.test.ts",
+          "blob": "e62f0c8ec0764b60c14f3ff7e03d027154ba8a0a",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-routes.test.ts",
+          "blob": "dad523572076009e91a2605afd96dc6cb11c6047",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/microsoft-session.test.ts",
+          "blob": "fbd8f212520c8085c6585fbcce738021ae6e3290",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/wp13/history-provenance.test.ts",
+          "blob": "09b5c3fe64493d15cbd42596ce73d7c7f0a52188",
+          "status": "modified"
+        }
+      ]
+    },
+    "C23_terminal55": {
+      "commits": [
+        {
+          "sha": "9b1670be4132ef78efb9126fca1562a3fcb1d633",
+          "message": "docs(sucafina): close mission55 with C23 inputs and terminal handoff [skip ci]"
+        }
+      ],
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/AUTHORITY.json",
+          "blob": "70ea49f6f6bc1a9b0da707f8c10ce1da495050e1",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/HANDOFF.md",
+          "blob": "acfc9362552433a8374443469f5428d1bbf7a308",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/candidates-final.json",
+          "blob": "3ee8eee514b11005879529f2c4b20cdb9d14c16c",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/consumer-acks-final.json",
+          "blob": "5c433bfdf789bb74ff989f77ec7042d3cc376a23",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/dependency-closure-final.json",
+          "blob": "a4b9f6d941245371b5238192e4a1fd2b1632ca61",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/finding-routing-final.json",
+          "blob": "7b0da0044701345cf8a889bf59888778d90ba53e",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/gate-queue-final.json",
+          "blob": "d8b18c7cececccdac884acdbae373833a74a2315",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/memory51-diagnostic-intake.json",
+          "blob": "530ece57b838233f985eeaf9308ad17a306a8258",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/pending-owners-final.json",
+          "blob": "d6803d7240622c3b8e49631f437e65458d80ab5d",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/read-coverage-final.json",
+          "blob": "3bc9290a1277ba5227c734c96f083a32926313b6",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-census-final.json",
+          "blob": "4886a47a4c26bfb3d4e4c69cf5014f8cb89c22b5",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-output-manifest-final.json",
+          "blob": "b782ed8a26f5571ea86750696a924145d3cc1997",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/AUTHORITY-ACK51.json",
+          "blob": "ef60e8b9501fc319be3a4a56da8dab0b704d858f",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/CRITERIA.json",
+          "blob": "7c25b74cce6443787172ce626aa0cba785f05f21",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/DELIVERY-MANIFEST.json",
+          "blob": "2b0ba26634f9753368d0a4aaeef43893b2fd7202",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/FINDINGS.json",
+          "blob": "16ff348c3e2b747217efc4cc42af8b1265fa7248",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/HANDOFF-TERMINAL.json",
+          "blob": "2dc836f8bc7cd2f65bcc1d919e637d4a20f20d4f",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/HANDOFF.md",
+          "blob": "5db58f57cb095d5694819b509d288c4878e6dd4e",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/M51-MI07-01-manifest.json",
+          "blob": "3bd40bc47fcde99316cc4ebdb8d7b3be7a4282ce",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/RECONCILIATION-53.json",
+          "blob": "9854ea62fbdfe7ca1ff9f8697bb6c0542f8bbb52",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/RECONCILIATION-C19.json",
+          "blob": "dbda5a3c056faf2084b7105d8100fa2874f779f7",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/logs/M51-MI07-01.log.txt",
+          "blob": "f366184c022c1640ae7660e4ea7e23b1af4b56e1",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/logs/MI07-prior-failure.log.txt",
+          "blob": "a7e03e0b3643a0fcf695b9ce58e3754f1621c6c5",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/owner-patch/0001-memory40-preserved.patch",
+          "blob": "5d7237afc2b58ea200bb1ec1b8b55c1a199d0fd5",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/owner-patch/manifest.json",
+          "blob": "f8b6cd1a6617cfd8aac07ee7ced8b70e472da9fe",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/requests/M51-MI07-01.json",
+          "blob": "6d6531c8be34410efe3366662c437556ff65b1d0",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/runs/M51-MI07-01.json",
+          "blob": "a469fc411158c9418396f1d97dc73914cd09f22e",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/memory51/runs/MI07-prior-failure.json",
+          "blob": "c027068b439fdbf34007690f5deeac3ab7704c28",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/validation-inputs-final.json",
+          "blob": "cf2884365477a56bb27accb0f66550584e7cee41",
+          "status": "added"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/verification-final.json",
+          "blob": "61581abae45b7dfa8b4364866f6846c6dbdf0f60",
+          "status": "added"
+        }
+      ]
+    }
+  },
+  "observed_overlap": {
+    "installation": {
+      "current_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+      "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+      "changes": [
+        "composeSfInstallation export",
+        "explicit Microsoft transport and trusted ingress/public origin fences",
+        "proxy header sanitization",
+        "listener tracing privacy",
+        "catchCause redacts all causes"
+      ]
+    },
+    "unchanged_since_C20": [
+      "Decisions own UI/HTTP/support product paths",
+      "Planner production paths",
+      "Procurement/C12 financial policy and configuration",
+      "host-context.ts",
+      "decision-controls.ts"
+    ],
+    "local_entry": {
+      "current_blob": "0591ee43590b6db4f7b574b071eaada8346ccc1f",
+      "preserved": "CurrentChoice fence and local-operator flow; Microsoft route conditional on explicit configuration; no invented credentials"
+    },
+    "serve": {
+      "current_blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+      "changes": "Installation validates before daemon/DB effects and listener installs returned privacy Layer"
+    },
+    "portfolio": {
+      "proof_blob": "d99af3b43388b510e510908fff2371a34b57eee1",
+      "scope": "historical candidate admitted read root; no nominal Decisions own path change"
+    }
+  },
+  "proposed_shared_patch": {
+    "status": "NOT_APPLIED_NOT_EXECUTED",
+    "base_preimage": "21236af83e4de879242fd298d9e15a9923f3bf41",
+    "postimage": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
+    "bytes": 6258,
+    "manifest": "/workspace/scratch/fec39c0682b3/m52-audit/transport-c23-candidate/manifest.json",
+    "required_owner_companion": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+      "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+      "fields_to_reconcile": [
+        "installation files[].postimage_blob",
+        "installation files[].postimage_sha256",
+        "installation files[].bytes"
+      ],
+      "preserve": "original source49 identities, both other entries, all fixture assertions/budgets"
+    }
+  },
+  "interpretation": "Old C20 qualification remains causal evidence only. Current-composition candidate requires Microsoft-preserving installation rebase and corresponding material fixture map reconciliation. New shared postimage is static proposed composition, not a runtime pass.",
+  "actions": {
+    "remote_reads": "GitHub MCP only",
+    "remote_writes": 0,
+    "local_product_tests": 0,
+    "typechecks": 0,
+    "workflow_dispatches": 0
+  }
+}

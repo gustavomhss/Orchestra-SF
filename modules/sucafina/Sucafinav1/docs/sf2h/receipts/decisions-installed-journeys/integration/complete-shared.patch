@@ -1,0 +1,61 @@
+diff --git a/apps/cli/src/sucafina-product/installation.ts b/apps/cli/src/sucafina-product/installation.ts
+--- a/apps/cli/src/sucafina-product/installation.ts
++++ b/apps/cli/src/sucafina-product/installation.ts
+@@ -2,8 +2,8 @@
+ import { realpath } from "node:fs/promises"
+ import { pathToFileURL } from "node:url"
+ import type { Host } from "@orchestra/core/host"
+-import { Effect, Layer } from "effect"
+-import { Headers, HttpMiddleware, HttpRouter, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
++import { Cause, Effect, Layer, Option } from "effect"
++import { Headers, HttpMethod, HttpMiddleware, HttpRouter, HttpServerError, HttpServerRequest, HttpServerResponse } from "effect/unstable/http"
+ import { createSfHostRuntime } from "./host-context"
+ import type { MicrosoftTransport } from "../../../../modules/sucafina/Sucafinav1/runtime/microsoft-installation.ts"
+ 
+@@ -40,13 +40,26 @@
+     if (incoming.headers.host?.toLowerCase() !== new URL(requestOrigin).host.toLowerCase()) return HttpServerResponse.empty({ status: 403 })
+     // The pinned Effect adapter reads x-forwarded-proto in toWeb; erase proxy hints first.
+     const sanitized = transport ? incoming.modify({ headers: Headers.fromInput(Object.entries(incoming.headers).filter(([name]) => name !== "forwarded" && !name.startsWith("x-forwarded-"))) }) : incoming
+-    const web = yield* HttpServerRequest.toWeb(sanitized)
+-    if (new URL(web.url).origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
++    const url = HttpServerRequest.toURL(sanitized)
++    if (Option.isNone(url)) return HttpServerResponse.empty({ status: 503 })
++    if (url.value.origin !== requestOrigin) return HttpServerResponse.empty({ status: 403 })
++    // Consume the bounded body in the server request scope before crossing the Web Request boundary.
++    const body = HttpMethod.hasBody(sanitized.method) ? yield* sanitized.arrayBuffer.pipe(Effect.orDie) : undefined
++    const web = new Request(url.value, { method: sanitized.method, headers: sanitized.headers, ...(body === undefined ? {} : { body }) })
+     const request = transport && microsoftRequest ? microsoftRequest(web, transport) : web
+     if (!request) return HttpServerResponse.empty({ status: 403 })
+     const response = yield* Effect.tryPromise({ try: (signal) => installation.handler(new Request(request, { signal })), catch: () => "installation-unavailable" as const })
+     return response ? HttpServerResponse.fromWeb(response) : HttpServerResponse.empty({ status: 404 })
+-  }).pipe(Effect.catchCause(() => Effect.succeed(HttpServerResponse.empty({ status: 503 }))))
++  }).pipe(Effect.catchCause((cause) => {
++    for (const reason of cause.reasons) {
++      if (!Cause.isDieReason(reason)) continue
++      const defect = reason.defect
++      // Only the canonical bounded-body error reaches BodyLimit; all other causes remain redacted.
++      if (HttpServerError.isHttpServerError(defect) && defect.reason._tag === "RequestParseError" &&
++        defect.reason.cause instanceof Error && defect.reason.cause.message === "maxBytes exceeded") return Effect.die(defect)
++    }
++    return Effect.succeed(HttpServerResponse.empty({ status: 503 }))
++  }))
+   // The listener must install privacy before HttpRouter.serve, outside the request route.
+   // Effect registers a trailing wildcard at both the subtree and its base path.
+   return { ...installation, ...(transport ? { transport } : {}), privacy, layer: HttpRouter.add("*", `${installation.mount}/*`, route) }
+diff --git a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
+index 302334c0e5a50c681005d6c6463132abce84d8b1..b572fbf4525e2d5015a1e8d4245c96085703e1c1 100644
+--- a/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
++++ b/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json
+@@ -22,9 +22,9 @@
+       "path": "apps/cli/src/sucafina-product/installation.ts",
+       "mode": "100644",
+       "target_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+-      "postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+-      "postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+-      "bytes": 5315,
++      "postimage_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
++      "postimage_sha256": "db7ff3461010172b2555795b1c1ef7b7c9d31cb46629de7dda2fe399ae74e4c2",
++      "bytes": 6258,
+       "source_preimage_blob": "e1392759f00d6d42477249823bbb6b3cec51601c",
+       "source_postimage_blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+       "source_postimage_sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294"
