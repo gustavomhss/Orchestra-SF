@@ -14,7 +14,7 @@ export type PeopleField = Readonly<{
   labelKey: SfCopyKey
   input: "text" | "date" | "textarea" | "select"
   required?: boolean
-  options?: readonly Readonly<{ value: string; labelKey: SfCopyKey }>[]
+  options?: readonly Readonly<{ value: string; labelKey?: SfCopyKey; label?: string }>[]
 }>
 export type PeopleFormValues = Readonly<Record<string, string>>
 export type PeopleSaveOutcome =
@@ -224,7 +224,7 @@ export function SfPeopleEditor(props: PeopleEditorProps): JSX.Element {
                         disabled={!props.admitted || busy()}
                         onChange={(event) => update(field.name, event.currentTarget.value)}>
                         <For each={field.options}>
-                          {(option) => <option value={option.value}>{t(option.labelKey)}</option>}
+                          {(option) => <option value={option.value}>{option.label ?? (option.labelKey ? t(option.labelKey) : option.value)}</option>}
                         </For>
                       </select>
                     </Show>
