@@ -1,0 +1,120 @@
+{
+  "schema": "sf2h.product-ci101.ack.v1",
+  "mission": 101,
+  "campaign": "sf2h-integral-20261112",
+  "actor": "S2-product-CI-browser101",
+  "lease_epoch": "product-ci-browser101",
+  "lease_state": "ACTIVE_ONLY_FOR_PRODUCT_TEST_DISPATCH",
+  "model_effective": "GPT-6",
+  "model_label_user": "Astra",
+  "provider_session_id": null,
+  "provider_session_note": "No independently exposed runtime session identifier; not invented",
+  "github_actor": "gustavomhss",
+  "branch": "sf-ci-validation",
+  "source_C": "529142f63683de8e4b1f7d4232f88faf8ffcef6c",
+  "source_tree": "d679b541596dab3b280a87e15e4a0b29ee518262",
+  "baseline_verified": true,
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_blob": "3c237ec756da8b83598b1326124de68bed89ddf9",
+  "correction_blob": "97c2b426eeec4584497019b2064250eb0350731e",
+  "control_ref": "ffdfff17bd3708cc606e8f0dd962d468c075dc51",
+  "authority": {
+    "product_test_dispatcher": 101,
+    "compiler_guards": 45,
+    "integration": 100,
+    "final_acceptance": "S0",
+    "independent_reviews": [
+      91,
+      92,
+      93
+    ]
+  },
+  "inputs_observed": [
+    "AGENTS.md",
+    "sf2h-plan/execution/COMMON.md",
+    "sf2h-plan/execution/actors/S2.json",
+    "script/test-ci-request.ts@5007e48270b80c83eb719d35cec9e6343206a195",
+    "script/module-registry.json@c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+    ".github/workflows/test-ci.yml@3185885e123f9bb13c16c670e4df2fcffab38290",
+    "100 checkpoint @38124138d21289a3bd20c86cd8d4e9c78c157417",
+    "PR32 routing requests and producer PRs",
+    "GitHub Actions latest 120 runs"
+  ],
+  "dedup": {
+    "observed_recent_runs": 120,
+    "active_C51_matching_product_runs": 0,
+    "observed_in_flight_recent": 0,
+    "reattached_p03": {
+      "original_run": 43681302722,
+      "original_conclusion": "failure",
+      "causal_run": 43681797855,
+      "causal_conclusion": "success",
+      "product_original_P03": "OPEN; causal run does not qualify original",
+      "no_repeat": true
+    }
+  },
+  "adopted_queue": [
+    {
+      "source": 94,
+      "priority": 1,
+      "selection": "listener + body-limit listener + Microsoft bridge",
+      "candidate": "C51"
+    },
+    {
+      "source": 87,
+      "priority": 2,
+      "selection": "first-save recovery + WP11 C08 controls",
+      "candidate": "C51"
+    },
+    {
+      "source": 97,
+      "priority": 3,
+      "selection": "denied-read original composed-storage and bound-source preflight",
+      "candidate": "C51"
+    },
+    {
+      "source": 98,
+      "priority": 4,
+      "selection": "DOCX typography plus SF66 five-file reader run",
+      "candidate": "C51"
+    },
+    {
+      "source": 90,
+      "priority": 5,
+      "selection": "five synthetic native component tests only",
+      "candidate": "C51"
+    }
+  ],
+  "deferred": [
+    {
+      "source": 95,
+      "requires": "producer integrated/100"
+    },
+    {
+      "source": 96,
+      "requires": "owner52 patch integrated/100"
+    },
+    {
+      "source": 99,
+      "requires": "P03 causal patch+original success, no repeat original failing run"
+    },
+    {
+      "source": 102,
+      "requires": "source and dependencies confirmed"
+    }
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/product-ci-execution/",
+    "ci-run-*/.ci-run.json-only-snapshot-on-existing-workflow"
+  ],
+  "constraints": [
+    "No product/test/fixture/workflow/oracle changes",
+    "No local tests or broad suite",
+    "No epic or 8 final selections",
+    "No new controller",
+    "No provider/installed/normative acceptance inferred from component PASS",
+    "No GLOBAL_RELEASE"
+  ],
+  "status": "ACK_ACTIVATED_DISPATCH_PENDING"
+}
