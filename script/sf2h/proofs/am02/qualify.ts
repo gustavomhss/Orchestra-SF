@@ -133,7 +133,6 @@ export function qualifyAm02(witnesses: readonly Am02OperationWitness[]): Am02Qua
         !call.domainPort || call.domainPort !== first.domainPort ||
         !call.inputDigest || call.inputDigest !== first.inputDigest ||
         !call.resultDigest || call.resultDigest !== first.resultDigest ||
-        call.outputRef !== first.outputRef ||
         JSON.stringify([...call.sourceRefs].sort()) !== JSON.stringify([...first.sourceRefs].sort()))
         issues.push("domain-port-input-output-or-source-mismatch")
       if (JSON.stringify(Object.entries(call.identity).sort(([a], [b]) => a.localeCompare(b))) !==
@@ -155,6 +154,8 @@ export function qualifyAm02(witnesses: readonly Am02OperationWitness[]): Am02Qua
       witness.agent.receipt.runId !== witness.mcp.receipt.runId ||
       witness.mcp.receipt.nativeSessionId !== witness.skill.nativeSessionId)
       issues.push("bridgecallid-domaincallid-receipt-chain-broken")
+    if (witness.agent.outputRef !== witness.mcp.outputRef)
+      issues.push("bridge-output-reference-changed")
     const native = witness.native
     const sha = /^[a-f0-9]{40}$/
     const digest = /^[a-f0-9]{64}$/
@@ -171,7 +172,7 @@ export function qualifyAm02(witnesses: readonly Am02OperationWitness[]): Am02Qua
       witness.negatives.some((item) => !item.unbound || item.domainEntered || item.outputDisclosed))
       issues.push("negative-authorization-or-revocation-unproven")
     if (!witness.consumer.observedAfterReload || !witness.consumer.observedActionRef ||
-      witness.consumer.outputRef !== first.outputRef ||
+      witness.consumer.outputRef !== witness.agent.outputRef ||
       witness.consumer.caseVersion !== first.identity.caseVersion ||
       witness.consumer.authorizedPrincipalRef !== first.identity.principalRef)
       issues.push("authorized-consumer-not-observed-after-reload")
