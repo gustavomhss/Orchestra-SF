@@ -1,0 +1,54 @@
+{
+  "schema": "sf2h.native-ui.author-ack.v1",
+  "slot": "N16",
+  "branch": "sf-ux-n16",
+  "leaseEpoch": "ux-native-n16-e1",
+  "actor": "ChatGPT GPT-6 | N16 new author",
+  "model": "GPT-6",
+  "sessionId": "not exposed to executor",
+  "ack": "REAL_ACK_AFTER_HEAD_AND_SOURCE_CHECK",
+  "sourceHead": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "sourceTree": "a790f84d91b7755818de5d229fbad9ca04c06f26",
+  "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "sourceBlobs": [
+    {
+      "name": "entry",
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "expected": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "observed": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877",
+      "match": true
+    },
+    {
+      "name": "application",
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "expected": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "observed": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "match": true
+    },
+    {
+      "name": "portfolio",
+      "path": "modules/sucafina/Sucafinav1/runtime/dashboard-portfolio.ts",
+      "expected": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "observed": "20a6cec3713f95e4dfac262ce7e741f72c857231",
+      "match": true
+    }
+  ],
+  "scope": [
+    "U28",
+    "U30",
+    "U31"
+  ],
+  "authorizedEffectiveWrites": "N16 packet.write_paths minus protected_paths; canonical receipts only",
+  "integrator": "125",
+  "productCI": "120",
+  "compiler": "119",
+  "constraints": [
+    "no local tests",
+    "no dispatcher",
+    "no foreign write",
+    "no merge",
+    "no deploy",
+    "no Goal restart"
+  ],
+  "note": "ACK attests this session's observed remote HEAD and source blobs, not product qualification or test success."
+}
