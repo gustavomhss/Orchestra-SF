@@ -1,0 +1,102 @@
+{
+  "schema": "sf-m69-owner-patches-v2",
+  "status": "BLOCKED",
+  "disposition": "HELD_FOR_OWNER_REVIEW_AND_ACTIONS",
+  "applied_to_product": false,
+  "local_product_tests_run": false,
+  "artifact_processing_only": true,
+  "source_ref": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "source_label": "W1 frozen for F1",
+  "observed_integration_target_ref": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "target_integrated": false,
+  "generation": "difflib.SequenceMatcher(autojunk=False), four context lines, exact full preimages and postimages retained",
+  "requires": "Root mission69 canonical rank completion. Series remains prospective: no product application or external egress PASS.",
+  "patches": [
+    {
+      "file": "01-capability-terminal-rank.HELD.patch",
+      "status": "BLOCKED",
+      "execution": "NOT_RUN",
+      "depends_on": [],
+      "changes": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+          "preimage": {
+            "git_blob": "eb14812f4e3e6545b9732a3930da6c2cececa81c",
+            "sha256": "530e5f1a44ee48e17c7aedf9a9ca1bce47b1b7ef80cb18547ca9d1e52dbd1e5f",
+            "bytes": 10922
+          },
+          "postimage": {
+            "git_blob": "d2148b66c10d382bd4269d7b8d0727d047941995",
+            "sha256": "fbe03f73bb67c8683f0786da7df42e681beed236920fc6dcdf6e4dac85dd9e01",
+            "bytes": 11054
+          },
+          "preimage_file": "preimages/capabilities.before01.txt",
+          "postimage_file": "postimages/capabilities.after01.txt",
+          "preimage_origin": "GitHub MCP at frozen W1"
+        }
+      ],
+      "patch_sha256": "b9f316be18b80729a11cf6f8b1b1dd706af2050e5a9081777bd45c993dd523dc",
+      "patch_bytes": 1945
+    },
+    {
+      "file": "02-selection-final-hook.HELD.patch",
+      "status": "BLOCKED",
+      "execution": "NOT_RUN",
+      "depends_on": [
+        "01-capability-terminal-rank.HELD.patch"
+      ],
+      "changes": [
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+          "preimage": {
+            "git_blob": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+            "sha256": "c80d441dd33160d0d3b3f782c8b00361a4a0a85658a392ed3697bf07c9d9f6de",
+            "bytes": 51194
+          },
+          "postimage": {
+            "git_blob": "ab30451c0122b511962e1e4f492e5f76ff312e6c",
+            "sha256": "26332410874a84f53090a114de0486498877e014fed3da06e5c806d0129ec1ff",
+            "bytes": 51586
+          },
+          "preimage_file": "preimages/atlas-memory69.before02.txt",
+          "postimage_file": "postimages/atlas-memory69.after02.txt",
+          "preimage_origin": "GitHub MCP at frozen W1"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts",
+          "preimage": {
+            "git_blob": "d2148b66c10d382bd4269d7b8d0727d047941995",
+            "sha256": "fbe03f73bb67c8683f0786da7df42e681beed236920fc6dcdf6e4dac85dd9e01",
+            "bytes": 11054
+          },
+          "postimage": {
+            "git_blob": "802464deceed5389894d0e9260a6161e6cc3530f",
+            "sha256": "d48f1bd89350246bc2d6067ab0b1bcb331147662ae73dafbe12d361560cd8329",
+            "bytes": 11751
+          },
+          "preimage_file": "postimages/capabilities.after01.txt",
+          "postimage_file": "postimages/capabilities.after02.txt",
+          "preimage_origin": "exact patch01 postimage"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts",
+          "preimage": {
+            "git_blob": "03e75875386483c7e37dce3f7bb21189f3066774",
+            "sha256": "1adf7204fc8ff8fb1383418e311ca7a6271065f0301fde3cf7881d6e632d48c9",
+            "bytes": 8461
+          },
+          "postimage": {
+            "git_blob": "077140ecd4a36a8638ab6fc4e974565aa12546fb",
+            "sha256": "8d10b1d05841fe951867220247c5962cff6f865784d130b4a9d1cb53a20384fe",
+            "bytes": 10753
+          },
+          "preimage_file": "preimages/case-recall.before02.txt",
+          "postimage_file": "postimages/case-recall.after02.txt",
+          "preimage_origin": "GitHub MCP at frozen W1"
+        }
+      ],
+      "patch_sha256": "e6e2ab65df9ce71fd6015923845d30c9d171d6554be9c5bdbeb55d08369a3ddc",
+      "patch_bytes": 11905
+    }
+  ]
+}

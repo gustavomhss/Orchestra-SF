@@ -1,0 +1,130 @@
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts b/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
+index f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de..ab30451c0122b511962e1e4f492e5f76ff312e6c 100644
+--- a/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
+@@ -495,8 +495,10 @@
+   runtimeVersions: Pick<RecallScope, "boundaryVersion" | "schemaVersion" | "manifestVersion" | "skillVersion">
+   call: TrustedDomainContext
+   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
+   revalidate: (call: TrustedDomainContext) => Promise<boolean>
++  /** Host-only selection recheck; completed before the canonical C08 egress fence. */
++  beforeFinalize?: () => Promise<boolean>
+ }) {
+   try {
+     const call = input.call, lease = call.lease
+     const selection = () => digestSfValue({ caseRefs: input.caseRefs, features: input.features,
+@@ -567,8 +569,11 @@
+       records.push(matches[0]!)
+     }
+     const result = { status: "ok" as const, cases: ranked.cases, records }
+     const resultDigest = digestSfValue(result)
++    // The caller may own a source case or selection outside the candidate set.
++    // Its final read must precede the one-use canonical snapshot comparison.
++    if (input.beforeFinalize && !await input.beforeFinalize()) return { status: "unavailable" as const }
+     // Ranking performs continuity/authority awaits after its last per-candidate
+     // read. Reopen the complete private observations once, after all of them.
+     if (completionGroups.size ? !await revalidateSfAtlasRecall([...completionGroups.values()], input.call) :
+       input.caseRefs.length !== 0 || !await input.revalidate(input.call)) return { status: "unavailable" as const }
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts b/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts
+index d2148b66c10d382bd4269d7b8d0727d047941995..802464deceed5389894d0e9260a6161e6cc3530f 100644
+--- a/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts
+@@ -74,10 +74,12 @@
+ export async function recallSfDecisions(value: unknown, call: TrustedDomainContext, host: EvidenceCapabilityHost): Promise<CapabilityResult> {
+   const input = decodeSfOperationInput("sf_decision_recall", value)
+   if (!input.ok) return reject("sf_decision_recall", "invalid-input", "needs-input")
+   if (!host.createReceipt(call, "sf_decision_recall", digestSfValue(input.value))) return reject("sf_decision_recall", "invalid-binding")
++  const requestDigest = digestSfValue(input.value)
+   const selection = await host.recallSelections(input.value, call)
+   if (!selection || (input.value.selectionRefs.length > 0 && selection.caseRefs.length === 0) || new Set(selection.caseRefs.map((ref) => JSON.stringify([ref.id, ref.incarnation]))).size !== selection.caseRefs.length) return reject("sf_decision_recall", "unavailable")
++  const selectionDigest = digestSfValue(selection)
+   const ranked = await rankSfAtlasRecall({ memory: host.memory, caseRefs: selection.caseRefs, features: selection.features, featuresForCase: host.featuresForCase, runtimeVersions: host.runtimeVersions, call, proveContinuity: host.proveContinuity, revalidate: host.revalidate })
+   if (ranked.status !== "ok") return reject("sf_decision_recall", "unavailable")
+   const buildMatches = (result: Extract<Awaited<ReturnType<typeof rankSfAtlasRecall>>, { status: "ok" }>) => {
+     const matches = []
+@@ -91,14 +93,24 @@
+     return matches
+   }
+   const matches = buildMatches(ranked)
+   if (!matches) return reject("sf_decision_recall", "unavailable")
+-  // The final canonical rank owns the last protected source/authority read.
+-  if (!await host.revalidate(call)) return reject("sf_decision_recall", "unavailable")
+-  const checked = await rankSfAtlasRecall({ memory: host.memory, caseRefs: selection.caseRefs, features: selection.features, featuresForCase: host.featuresForCase, runtimeVersions: host.runtimeVersions, call, proveContinuity: host.proveContinuity, revalidate: host.revalidate })
++  const matchesDigest = digestSfValue(matches)
++  const rankedCasesDigest = digestSfValue(ranked.cases)
++  let selectionFinalized = false
++  const checked = await rankSfAtlasRecall({ memory: host.memory, caseRefs: selection.caseRefs, features: selection.features, featuresForCase: host.featuresForCase, runtimeVersions: host.runtimeVersions, call, proveContinuity: host.proveContinuity, revalidate: host.revalidate,
++    beforeFinalize: async () => {
++      selectionFinalized = false
++      const again = await host.recallSelections(input.value, call)
++      const authorized = await host.revalidate(call)
++      selectionFinalized = authorized && !!again && requestDigest === digestSfValue(input.value) &&
++        selectionDigest === digestSfValue(selection) && selectionDigest === digestSfValue(again)
++      return selectionFinalized
++    },
++  })
+   if (checked.status !== "ok") return reject("sf_decision_recall", "unavailable")
+   const current = buildMatches(checked)
+-  if (!current || digestSfValue(checked.cases) !== digestSfValue(ranked.cases) || digestSfValue(current) !== digestSfValue(matches)) return reject("sf_decision_recall", "unavailable")
++  if (!selectionFinalized || requestDigest !== digestSfValue(input.value) || selectionDigest !== digestSfValue(selection) || !current || digestSfValue(ranked.cases) !== rankedCasesDigest || digestSfValue(checked.cases) !== rankedCasesDigest || digestSfValue(matches) !== matchesDigest || digestSfValue(current) !== matchesDigest) return reject("sf_decision_recall", "unavailable")
+   return deliver("sf_decision_recall", input.value, { matches: current, limitations: ["Semelhança não recomenda uma escolha."], accessRevision: call.binding.accessRevision }, call, host)
+ }
+ 
+ function deliver(operation: "sf_context_get" | "sf_decision_recall" | "sf_source_get" | "sf_evidence_get" | "sf_freshness_check", input: unknown, result: unknown, call: TrustedDomainContext, host: EvidenceCapabilityHost): CapabilityResult {
+diff --git a/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts b/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts
+index 03e75875386483c7e37dce3f7bb21189f3066774..077140ecd4a36a8638ab6fc4e974565aa12546fb 100644
+--- a/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts
++++ b/modules/sucafina/Sucafinav1/product/decision-memory/case-recall.ts
+@@ -61,8 +61,9 @@
+         return { case: current.value.case, context: current.value.context, evidenceRefs: current.value.evidenceRefs, events: current.value.events, features, refs }
+       }
+       const selected = await read()
+       if (!selected || source.signal.aborted || !await input.host.revalidate(call)) return { status: "unavailable" as const }
++      const selectionDigest = digestSfValue(selected)
+       const rankInput: RankInput = { memory, caseRefs: selected.refs, features: selected.features, featuresForCase: access?.featuresForCase ?? input.featuresForCase, runtimeVersions: input.runtimeVersions, call, proveContinuity: access?.proveContinuity ?? input.proveContinuity, revalidate: input.host.revalidate }
+       const ranked = await input.rank(rankInput)
+       if (ranked.status !== "ok") return { status: "unavailable" as const }
+       const eligible = ranked.cases.filter((item) => wanted.scope?.recallScope.includeHistorical !== false || !item.sourceStates.includes("historical"))
+@@ -75,12 +76,38 @@
+         const records = recalled.records.filter((record) => record.recordDigest === match.atlasTrace.recordDigest)
+         if (records.length !== 1) return { status: "unavailable" as const }
+         matches.push({ caseRef: match.candidateCaseRef, memoryRecordRef: records[0]!.envelope.eventId, explanation: { candidateCaseRef: match.candidateCaseRef, matchedCriteria: match.matchedCriteria, currentDifferences: match.currentDifferences, sourceStates: match.sourceStates, limitations: match.limitations }, evidenceRefs: records[0]!.envelope.evidenceRefs })
+       }
+-      const checked = await input.rank(rankInput)
+-      const again = await read()
+-      if (!await input.host.revalidate(call) || checked.status !== "ok" || digestSfValue(checked.cases) !== digestSfValue(ranked.cases) || !again || digestSfValue(again) !== digestSfValue(selected) || source.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || digestSfValue(wanted) !== requestDigest || digestSfValue(request) !== requestDigest) return { status: "unavailable" as const }
+-      return { status: "ok" as const, matches, limitations: [...new Set(matches.flatMap((item) => item.explanation.limitations))], accessRevision: call.binding.accessRevision }
++      const matchesDigest = digestSfValue(matches)
++      const rankedCasesDigest = digestSfValue(ranked.cases)
++      let selectionFinalized = false
++      const checked = await input.rank({ ...rankInput, beforeFinalize: async () => {
++        selectionFinalized = false
++        const again = await read()
++        const authorized = await input.host.revalidate(call)
++        selectionFinalized = authorized && !!again && digestSfValue(again) === selectionDigest &&
++          digestSfValue(selected) === selectionDigest && !source.signal.aborted &&
++          digestSfValue([call.kind, call.binding]) === binding &&
++          digestSfValue(wanted) === requestDigest && digestSfValue(request) === requestDigest
++        return selectionFinalized
++      } })
++      if (!selectionFinalized || checked.status !== "ok" || digestSfValue(ranked.cases) !== rankedCasesDigest || digestSfValue(checked.cases) !== rankedCasesDigest || digestSfValue(matches) !== matchesDigest || digestSfValue(selected) !== selectionDigest || source.signal.aborted || digestSfValue([call.kind, call.binding]) !== binding || digestSfValue(wanted) !== requestDigest || digestSfValue(request) !== requestDigest) return { status: "unavailable" as const }
++      // Build egress only from the final rank's original canonical records.
++      // Earlier arrays are comparison observations, never the returned witness.
++      const currentMatches = []
++      const currentEligible = checked.cases.filter((item) => wanted.scope?.recallScope.includeHistorical !== false || !item.sourceStates.includes("historical"))
++      if (wanted.scope && currentEligible.length > wanted.limit) return { status: "unavailable" as const }
++      for (const match of currentEligible.slice(0, wanted.limit)) {
++        if (!selected.refs.some((ref) => ref.id === match.candidateCaseRef.id && ref.incarnation === match.candidateCaseRef.incarnation)) return { status: "unavailable" as const }
++        const records = checked.records.filter((record) => record.recordDigest === match.atlasTrace.recordDigest &&
++          digestSfValue(record.envelope.caseRef) === digestSfValue(match.candidateCaseRef))
++        if (records.length !== 1) return { status: "unavailable" as const }
++        currentMatches.push({ caseRef: match.candidateCaseRef, memoryRecordRef: records[0]!.envelope.eventId,
++          explanation: { candidateCaseRef: match.candidateCaseRef, matchedCriteria: match.matchedCriteria, currentDifferences: match.currentDifferences, sourceStates: match.sourceStates, limitations: match.limitations },
++          evidenceRefs: records[0]!.envelope.evidenceRefs })
++      }
++      if (digestSfValue(currentMatches) !== matchesDigest) return { status: "unavailable" as const }
++      return { status: "ok" as const, matches: currentMatches, limitations: [...new Set(currentMatches.flatMap((item) => item.explanation.limitations))], accessRevision: call.binding.accessRevision }
+     } catch {
+       return { status: "unavailable" as const }
+     }
+   }
