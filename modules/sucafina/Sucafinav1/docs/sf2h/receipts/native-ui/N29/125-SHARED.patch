@@ -1,0 +1,33 @@
+diff --git a/packages/app-shell/src/i18n/orchestra.ts b/packages/app-shell/src/i18n/orchestra.ts
+--- a/packages/app-shell/src/i18n/orchestra.ts
++++ b/packages/app-shell/src/i18n/orchestra.ts
+@@ -7,6 +7,9 @@
+ import { SF_S01_COPY, SF_S01_COPY_BR } from "./orchestra-chapters/sf-s01"
+ import { SF_S04_COPY, SF_S04_COPY_BR } from "./orchestra-chapters/sf-s04"
+ import { SF_S05_COPY, SF_S05_COPY_BR } from "./orchestra-chapters/sf-s05"
++import { SF_U27_COPY, SF_U27_COPY_BR } from "./orchestra-chapters/sf-u27"
++import { SF_U34_COPY, SF_U34_COPY_BR } from "./orchestra-chapters/sf-u34"
++import { SF_U35_COPY, SF_U35_COPY_BR } from "./orchestra-chapters/sf-u35"
+ import { MCP_COPY, MCP_COPY_BR } from "./orchestra-chapters/mcp"
+ import { SKILLS_COPY, SKILLS_COPY_BR } from "./orchestra-chapters/skills"
+ import { PLUGINS_COPY, PLUGINS_COPY_BR } from "./orchestra-chapters/plugins"
+@@ -377,6 +380,9 @@
+   ...SF_S03_COPY,
+   ...SF_S01_COPY,
+   ...SF_S04_COPY,
+   ...SF_S05_COPY,
++  ...SF_U27_COPY,
++  ...SF_U34_COPY,
++  ...SF_U35_COPY,
+   ...MCP_COPY,
+   ...SKILLS_COPY,
+@@ -732,6 +738,9 @@
+   ...SF_S03_COPY_BR,
+   ...SF_S01_COPY_BR,
+   ...SF_S04_COPY_BR,
+   ...SF_S05_COPY_BR,
++  ...SF_U27_COPY_BR,
++  ...SF_U34_COPY_BR,
++  ...SF_U35_COPY_BR,
+   ...MCP_COPY_BR,
+   ...SKILLS_COPY_BR,

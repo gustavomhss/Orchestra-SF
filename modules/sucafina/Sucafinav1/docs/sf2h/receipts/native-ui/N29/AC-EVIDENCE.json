@@ -1,0 +1,100 @@
+{
+  "schema": "sf2h.native-ui.launch30.ac-evidence.v1",
+  "slot": "N29",
+  "commit": "2e0fbe7df4f90a49f3fbae84e00e9b228cce0a66",
+  "status": "ARTIFACT_READY_PENDING_INTEGRATION_125_COMPILER_119_CI_120",
+  "ack": "ACK_REAL",
+  "code": "REMOTE_COMMITS_PUBLISHED",
+  "compile": "NOT_RUN",
+  "e2e": "NOT_RUN",
+  "unit": "NOT_RUN",
+  "browser": "NOT_RUN",
+  "runtime": "NOT_PROVEN",
+  "deploy": "NOT_RUN",
+  "merge": "NOT_RUN",
+  "criteria": [
+    {
+      "id": "U27-AC01",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "catalog/index.tsx; runs/index.tsx; sf-u27.ts",
+      "unverified": "producer operational, A15 case choices, native input digest, no real cancel op"
+    },
+    {
+      "id": "U27-AC02",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "catalog/ui.ts; catalog/index.tsx; runs/index.tsx",
+      "unverified": "current authorized/stale/revoked fixture + S03 review"
+    },
+    {
+      "id": "U27-AC03",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "catalog/catalog.css; runs/runs.css; u27.spec.ts",
+      "unverified": "120 viewport/text/theme/keyboard"
+    },
+    {
+      "id": "U34-AC01",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "schedules/index.tsx; sf-u34.ts",
+      "unverified": "schedule producer, optional scheduleDetails.read, positive real create/pause"
+    },
+    {
+      "id": "U34-AC02",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "schedules/index.tsx; catalog/ui.ts",
+      "unverified": "120 CAS/unknown loss/revocation"
+    },
+    {
+      "id": "U34-AC03",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "schedules/schedules.css; u34.spec.ts",
+      "unverified": "120 responsive browser matrix"
+    },
+    {
+      "id": "U35-AC01",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "residents/index.tsx; sf-u35.ts",
+      "unverified": "projection.residents operational, real packs/load/contributions absent from A15"
+    },
+    {
+      "id": "U35-AC02",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "residents/index.tsx; catalog/ui.ts",
+      "unverified": "120 owner revocation/denial"
+    },
+    {
+      "id": "U35-AC03",
+      "authored": true,
+      "accepted": false,
+      "verification": "NOT_RUN",
+      "authoredPaths": "residents/residents.css; u35.spec.ts",
+      "unverified": "120 responsive browser matrix"
+    }
+  ],
+  "source_pins": {
+    "ports": "88b6efb4840b8731f707862a8baf14683526c7a9",
+    "routines": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+    "http": "9c666e7463b49a7c0cdeadb705b3266089d10bfb",
+    "host": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+    "residents": "38e3d664f4dedb56f3e614bde41d51548e44f805"
+  },
+  "protected_paths_modified": [],
+  "parallel_storage": false,
+  "new_dispatcher": false,
+  "other_authors_preserved": true
+}

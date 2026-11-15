@@ -1,0 +1,61 @@
+{
+  "schema": "sf2h.native-ui.launch30-author.ack.v1",
+  "slot": "N29",
+  "state": "ACK_REAL",
+  "branch": "sf-ux-n29",
+  "lease_epoch": "ux-native-n29-e1",
+  "actor": "ChatGPT (GPT-6), executing as N29",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed to connector",
+  "expected_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "observed_head": "526e7204b310756e552196bbf3d64037dbbf047c",
+  "material": "af479f68c22ef1d1e9ac100a81a820f8b0273338",
+  "source_preflight": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/ports.ts",
+      "observed_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "expected_blob": "88b6efb4840b8731f707862a8baf14683526c7a9",
+      "match": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "observed_blob": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "expected_blob": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "observed_blob": "9c666e7463b49a7c0cdeadb705b3266089d10bfb",
+      "expected_blob": "9c666e7463b49a7c0cdeadb705b3266089d10bfb",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "observed_blob": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+      "expected_blob": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/resident-ai.ts",
+      "observed_blob": "38e3d664f4dedb56f3e614bde41d51548e44f805",
+      "expected_blob": "38e3d664f4dedb56f3e614bde41d51548e44f805",
+      "match": true
+    }
+  ],
+  "scope": [
+    "U27/UI64",
+    "U27/UI65",
+    "U34/UI66",
+    "U35/UI70"
+  ],
+  "auth": "S0 authoring grant, exclusive write_paths only, protected_paths excluded",
+  "inherited_gates": [
+    "Runtime routine producer not proven",
+    "Schedule producer and scheduleDetails.read not proven",
+    "Resident producer/grants not proven",
+    "120 only CI",
+    "119 only compiler"
+  ],
+  "session_notice": "This ACK acknowledges authorship against frozen contracts; it does not claim services operational, integration, tests or qualification."
+}
