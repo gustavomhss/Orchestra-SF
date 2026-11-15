@@ -5,6 +5,7 @@ import type { Host } from "@orchestra/core/host"
 import { LocationServiceMap } from "@orchestra/core/location-service-map"
 import type { Location } from "@orchestra/core/location"
 import { Mcp } from "@orchestra/core/mcp"
+import { PermissionV2 } from "@orchestra/core/permission"
 import type { ModelV2 } from "@orchestra/core/model"
 import { SessionV2 } from "@orchestra/core/session"
 import { SessionMessage } from "@orchestra/core/session/message"
@@ -120,7 +121,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
   const runs = new WeakMap<TrustedExecutionBinding, { admission: SfNativeAdmission; ticket: SfTokenGateTicket; prompt: string; used: boolean; release: () => void }>()
   const observations = new Map<SessionSchema.ID, () => void>()
   const nativeMaestro = new Map<SessionSchema.ID, {
-    request: Request; context: TrustedUiContext; action: SfMaestroHostInput["action"]; intent: unknown;
+    request: Request; context: TrustedUiContext; action: SfMaestroHostInput["action"]; intent: unknown; location: Location.Ref;
     ticket: SfMaestroGateTicket; close: () => void
   }>()
   const maestroPending = new WeakSet<Request>()
@@ -218,7 +219,7 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             void Effect.runPromise(session.interrupt(sessionID)).catch(() => {})
           }
           nativeMaestro.set(sessionID, { request: value.request, context: value.context, action: value.action,
-            intent: value.intent, ticket, close })
+            intent: value.intent, location: value.location, ticket, close })
           value.request.signal.addEventListener("abort", onAbort, { once: true })
           if (value.request.signal.aborted || !(yield* maestroCurrent(sessionID))) {
             close()
@@ -274,10 +275,11 @@ export function createSfNativeHostContribution(input: SfNativeHostPolicy) {
             if (!admitted) return { status: "denied", reason: "native-maestro-origin-unavailable" } as const
             // Pending Permission belongs to the native human UI. Never manufacture reply/approval.
             const pending = yield* Effect.result(Effect.gen(function* () {
-              const perm = yield* import("@orchestra/core/permission").then(() => Effect.succeed(undefined))
-              return perm
-            }))
-            void pending
+              const perm = yield* PermissionV2.Service
+              return yield* perm.forSession(sessionID)
+            }).pipe(Effect.provide(locations.get(admitted.location))))
+            if (pending._tag !== "Success" || pending.success.length !== 0)
+              return { status: "denied", reason: "native-maestro-permission-pending" } as const
             if (!(yield* maestroCurrent(sessionID))) return { status: "denied", reason: "native-maestro-origin-changed" } as const
             const written = yield* Effect.result(session.prompt({ id: SessionMessage.ID.create(), sessionID,
               prompt: { text: prompt }, resume: false }))
