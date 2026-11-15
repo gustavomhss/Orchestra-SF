@@ -1,0 +1,63 @@
+/* N20 U09: scoped to the native SF page; no global shell override. */
+.sf-n20-allocations {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+  max-width: 100%;
+}
+.sf-n20-toolbar,
+.sf-n20-catalog-heading,
+.sf-n20-actions {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+.sf-n20-toolbar > label,
+.sf-n20-editor > label {
+  display: grid;
+  gap: .375rem;
+  min-width: min(100%, 15rem);
+}
+.sf-n20-toolbar input,
+.sf-n20-editor input {
+  min-width: 0;
+  max-width: 100%;
+}
+.sf-n20-catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr));
+  gap: 1.25rem;
+  min-width: 0;
+}
+.sf-n20-catalog { min-width: 0; }
+.sf-n20-catalog-heading { justify-content: space-between; margin-bottom: .75rem; }
+.sf-n20-catalog-heading h2 { margin: 0; overflow-wrap: anywhere; }
+.sf-n20-editor,
+.sf-n20-detail,
+.sf-n20-review {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+  max-width: 100%;
+  padding: 1.25rem;
+}
+.sf-n20-editor { grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); }
+.sf-n20-editor h2,
+.sf-n20-editor .sf-n20-actions { grid-column: 1 / -1; }
+.sf-n20-detail dl { display: grid; gap: .25rem .75rem; grid-template-columns: minmax(0, 10rem) minmax(0, 1fr); }
+.sf-n20-detail dt { font-weight: 600; }
+.sf-n20-detail dd { margin: 0; overflow-wrap: anywhere; }
+.sf-n20-error { color: var(--mx-danger, currentColor); overflow-wrap: anywhere; }
+.sf-n20-catalog .sf-s01-table-viewport { max-width: 100%; overflow-x: auto; }
+.sf-n20-allocations :is(input, button, a):focus-visible { outline: 2px solid var(--mx-focus, currentColor); outline-offset: 2px; }
+@media (max-width: 500px) {
+  .sf-n20-toolbar > label,
+  .sf-n20-catalog-heading > button,
+  .sf-n20-actions > button { width: 100%; }
+  .sf-n20-detail dl { grid-template-columns: minmax(0, 1fr); }
+  .sf-n20-editor, .sf-n20-detail, .sf-n20-review { padding: .75rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sf-n20-allocations * { scroll-behavior: auto; animation: none; }
+}
