@@ -19,6 +19,8 @@ export type ReportsInstallation = {
   setup: (operation: string, args?: readonly string[]) => Promise<string>
   /** Redeems a new, real, single-use operator enrollment without tracing its code. */
   signIn: (page: Page) => Promise<void>
+  /** Bounded, allowlisted CLI transport errors; contains no raw stdout/stderr. */
+  diagnostics?: () => string
 }
 
 type InstallationInput = {
@@ -154,6 +156,7 @@ export async function withReportsInstallation<T>(input: InstallationInput, use: 
 
       const authenticated = {
         ...installation,
+        diagnostics: () => diagnosticTail(tail.value),
         signIn: (page: Page) => track(async () => {
           if (!enrollment.prepared) await run(["run", path.join(local, "enroll.ts"), config])
           await redeemOperatorEnrollment(page, installation,
@@ -232,4 +235,21 @@ async function redeemOperatorEnrollment(page: Page, installation: Omit<ReportsIn
 
 function redact(value: string) {
   return value.replace(/[a-f0-9]{64}/g, "[redacted]").replace(/(code=)[^&\s"']+/g, "$1[redacted]")
+}
+
+/** Only recognized transport errors and repository stack locations leave the fixture. */
+function diagnosticTail(value: string) {
+  const lines: string[] = []
+  for (const incoming of value.split("\n")) {
+    const line = incoming.replace(/\u001b\[[0-9;]*m/g, "")
+    const timeout = /(?:(?:\[Bun\.serve\]|Bun\.serve\(\))[: ]*)?request timed out after \d+(?:\.\d+)? seconds\.?/i.exec(line)?.[0]
+    if (timeout) lines.push(timeout)
+    const message = /\b(?:TypeError|ReferenceError|RangeError|SyntaxError): (?:Cannot read properties of (?:undefined|null)(?: \(reading '[A-Za-z_$][\w$]*'\))?|[A-Za-z_$][\w.$]* is not (?:a function|defined)|Invalid URL|Body already used)/.exec(line)?.[0]
+    if (message) lines.push(message)
+    const codes = line.match(/\b(?:SF_[A-Z0-9_]+|ERR_[A-Z0-9_]+|ECONNRESET|ECONNREFUSED|ETIMEDOUT|EADDRINUSE|EPIPE)\b/g) ?? []
+    lines.push(...codes.slice(0, 5))
+    const locations = line.match(/(?:apps\/cli|modules\/sucafina|packages\/[a-z-]+)\/[A-Za-z0-9_./-]+:\d+:\d+/g) ?? []
+    lines.push(...locations.slice(0, 3))
+  }
+  return [...new Set(lines)].slice(-20).join("\n").slice(-4096) || "No recognized transport error or repository stack location in the bounded CLI tail."
 }

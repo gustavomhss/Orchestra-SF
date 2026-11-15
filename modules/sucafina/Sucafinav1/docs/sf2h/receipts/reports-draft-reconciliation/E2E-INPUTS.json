@@ -396,5 +396,31 @@
     "tree": "647569d14e2f01959b17d4245bfbf0485c32fa8c",
     "evidence": "Root GitHub MCP verified every target preimage in prepared/own-overlay/manifest.json; this proposal only changes Reports-owned review-flow.ts after the actual W2 nominal03 failure."
   },
-  "root_qualification_limit": "W1 boundary selection produced 75 PASS / 3 FAIL. Two fixture defects receive causal patches; the unchanged real closure creator remains blocked before the HTTP oracle. Do not rerun unchanged failing fixture or use filtering/skips to call the 78-case gate green. Four nominal Reports remain required on this explicit composition."
+  "root_qualification_limit": "W1 boundary selection produced 75 PASS / 3 FAIL. Two fixture defects receive causal patches; the unchanged real closure creator remains blocked before the HTTP oracle. Do not rerun unchanged failing fixture or use filtering/skips to call the 78-case gate green. Four nominal Reports remain required on this explicit composition.",
+  "root_observability_addendum": {
+    "reason": "nominal06 on W4 produced unavailable UI state without a matching response or transport evidence",
+    "proposal": "diagnosis/nominal06-agenda/manifest.json",
+    "review": "diagnosis/nominal06-agenda/REVIEW.json",
+    "files": [
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+        "preimage_blob": "6f77c86427ec23b3cd2b3675a0294a736495dac4",
+        "postimage_blob": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5",
+        "postimage_sha256": "4425ae1ae062404a8a5fb959d80f7a77600b100145e526215e588e1a2900c9c7"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+        "preimage_blob": "977dc142768d8e7d79d6862a3b2353934dfb833a",
+        "postimage_blob": "494fe03f46beea037cff45e70259ac875758e3b6",
+        "postimage_sha256": "6a0208d3571abf6f66e4f7b769ef82b739f33f7eb64cd852ab44068a07b3e7ad"
+      },
+      {
+        "path": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+        "preimage_blob": null,
+        "postimage_blob": "c2948d5b96ba06172227c446e1c6e15fc174b2d6",
+        "postimage_sha256": "5539a26a0354c1f11e2d3298cf6f77d71a3cdc49e3167ba5fb0d142d8149ca84"
+      }
+    ],
+    "scope": "One new own diagnostic spec; four nominal journeys remain unchanged and mandatory. No PASS is inferred."
+  }
 }

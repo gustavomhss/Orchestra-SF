@@ -1,0 +1,48 @@
+{
+  "schema": "orchestra-sf.reports48.agenda-diagnostic-review.v1",
+  "verdict": "STATIC_PASS_PENDING_HOSTED_DIAGNOSIS",
+  "independent_reviewer": "qualification",
+  "root_reviewed": true,
+  "patch_sha256": "a4e08e47aa1da1ded1b46c217294ca886ca6b28b7e5b089cff009337e00b029c",
+  "manifest_sha256": "294c85a8d9059e413d95e438783fad232cb62c15d55eff2064758adf278b2e24",
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "preimage_blob": "6f77c86427ec23b3cd2b3675a0294a736495dac4",
+      "postimage_blob": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5",
+      "postimage_sha256": "4425ae1ae062404a8a5fb959d80f7a77600b100145e526215e588e1a2900c9c7"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+      "preimage_blob": "977dc142768d8e7d79d6862a3b2353934dfb833a",
+      "postimage_blob": "494fe03f46beea037cff45e70259ac875758e3b6",
+      "postimage_sha256": "6a0208d3571abf6f66e4f7b769ef82b739f33f7eb64cd852ab44068a07b3e7ad"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+      "preimage_blob": null,
+      "postimage_blob": "c2948d5b96ba06172227c446e1c6e15fc174b2d6",
+      "postimage_sha256": "5539a26a0354c1f11e2d3298cf6f77d71a3cdc49e3167ba5fb0d142d8149ca84"
+    }
+  ],
+  "limits": {
+    "case_count": 1,
+    "budget_ms": 180000,
+    "retries": 0,
+    "workers": 1,
+    "trace": "off",
+    "video": "off",
+    "screenshot": "off",
+    "no_mutation_retry": true,
+    "no_nominal_acceptance": true
+  },
+  "observations": [
+    "The original response predicate/parser and all business assertions remain unchanged.",
+    "The only early failure is an exact matching observed requestfailed.",
+    "No production, Agenda39 or shared boundary changed for this diagnosis.",
+    "Event and CLI evidence excludes raw URLs, credentials, headers, payloads and idempotency keys."
+  ],
+  "request_sha256": "1e6da53d110967854023b0d46a57864dc6ebcc6244e39db8fe95943da1d43df3",
+  "request_blob": "70b49a8117513630b084f07d3f16c63f06035dfb",
+  "runtime_result": "NOT_RUN"
+}

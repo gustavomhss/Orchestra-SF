@@ -1,0 +1,289 @@
+{
+  "id": "E-M48-NOMINAL-06",
+  "run": 43660186245,
+  "job": 132647536371,
+  "cleanup_job": 132651296497,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43660186245",
+  "source": "d1ddde582bdd99db92f37b6d3abef70578e7a2d8",
+  "W": "25b00c94c25fc36363cfd8c0063c5ab85d6966c8",
+  "W_tree": "2a3442a86ab02a9739303575d31c5d9093fd8049",
+  "S": "2b4dab4bb1689bbfb8bf307f0ae8397a7bee208a",
+  "S_tree": "ba1638e4645db39192e24a2ba7daf2cb44d77307",
+  "request": {
+    "package": "app",
+    "packageSelector": "packages/app",
+    "directory": "packages/app-shell",
+    "runner": "playwright",
+    "args": [
+      "e2e/sucafina/reports.spec.ts"
+    ],
+    "env": {
+      "ORCHESTRA_CHANNEL": "prod"
+    },
+    "config": "e2e/playwright.production.config.ts"
+  },
+  "request_sha256": "37251a43f26b5cd4b6a513334f38c537a80b7a613ac8da8fa9aa819ca3cbc22f",
+  "request_blob": "b216b474fff3eb0dbb720678080899908fab5a0c",
+  "conclusion": "failure",
+  "pass": 0,
+  "fail": 4,
+  "total": 4,
+  "started": 4,
+  "skip": 0,
+  "selected_files": [
+    "e2e/sucafina/reports.spec.ts"
+  ],
+  "case_results": [
+    {
+      "case_id": "RPT-01",
+      "title_from_runtime": "RPT-01 preserves authorized sources, exports 25 real projects and reopens before following the current source",
+      "runtime_status": "TIMED_OUT",
+      "runtime_status_raw": "timedOut",
+      "duration_ms": 180024,
+      "start_time": "2026-11-15T00:53:07.345Z",
+      "retry": 0,
+      "log_line": 1091,
+      "runtime_json_pointer": "/suites/0/suites/0/specs/0/tests/0/results/0",
+      "runtime_report_sha256": "74e471bd510fd15cb08df0ba22ea039c0eef50d40fe27d3d54dabdd2a3b0a0ba",
+      "blocking_stage": "prepareReview waits for the review-agenda POST response at reports-support/review-flow.ts:40:30; the 180000 ms case timeout expires before agendaResult and the selected-section assertions complete.",
+      "assertions_reached": "The installed Prepare review region is present and Load selection is enabled before the pending response wait. No preserved-review, reconciliation, answer, export, revision or purge business result is established.",
+      "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+      "ui_status_context_line": 53,
+      "ui_status_is_proven_cause": false,
+      "context_receipt": {
+        "local_path": "evidence/nominal-06-context/sucafina-reports-CI-UI-REP-13ecb-ollowing-the-current-source-chromium.md",
+        "bytes": 13641,
+        "sha256": "1c33aff8db8c92c0003e05023b93285672f013f1b75ae0fb779a135a5b283b24"
+      },
+      "error": {
+        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+      },
+      "errors": [
+        {
+          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+        },
+        {
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+            "column": 30,
+            "line": 40
+          },
+          "message": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.\n\n   at sucafina/reports-support/review-flow.ts:40\n\n  38 |   const load = preparation.getByRole(\"button\", { name: \"Load selection\", exact: true })\n  39 |   await expect(load).toBeEnabled()\n> 40 |   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, \"review-agenda\", \"POST\"))\n     |                              ^\n  41 |   await load.click()\n  42 |   const selected = await agendaResult(await pendingAgenda)\n  43 |   expect(selected.sections.map((section) => section.title).sort()).toEqual([\"Budget\", \"Hot Topics\", \"Projects\"])\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:40:30)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:24:23"
+        }
+      ],
+      "step_errors": [
+        {
+          "step_path": [
+            "Prepare and explicitly preserve the authorized dossier"
+          ],
+          "duration_ms": 180066,
+          "error": {
+            "message": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.",
+            "stack": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:40:30)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:24:23",
+            "location": {
+              "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+              "column": 30,
+              "line": 40
+            },
+            "snippet": "   at sucafina/reports-support/review-flow.ts:40\n\n\u001b[0m \u001b[90m 38 |\u001b[39m   \u001b[36mconst\u001b[39m load \u001b[33m=\u001b[39m preparation\u001b[33m.\u001b[39mgetByRole(\u001b[32m\"button\"\u001b[39m\u001b[33m,\u001b[39m { name\u001b[33m:\u001b[39m \u001b[32m\"Load selection\"\u001b[39m\u001b[33m,\u001b[39m exact\u001b[33m:\u001b[39m \u001b[36mtrue\u001b[39m })\n \u001b[90m 39 |\u001b[39m   \u001b[36mawait\u001b[39m expect(load)\u001b[33m.\u001b[39mtoBeEnabled()\n\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 40 |\u001b[39m   \u001b[36mconst\u001b[39m pendingAgenda \u001b[33m=\u001b[39m page\u001b[33m.\u001b[39mwaitForResponse(responseFor(app\u001b[33m.\u001b[39mdashboardURL\u001b[33m,\u001b[39m \u001b[32m\"review-agenda\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"POST\"\u001b[39m))\n \u001b[90m    |\u001b[39m                              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 41 |\u001b[39m   \u001b[36mawait\u001b[39m load\u001b[33m.\u001b[39mclick()\n \u001b[90m 42 |\u001b[39m   \u001b[36mconst\u001b[39m selected \u001b[33m=\u001b[39m \u001b[36mawait\u001b[39m agendaResult(\u001b[36mawait\u001b[39m pendingAgenda)\n \u001b[90m 43 |\u001b[39m   expect(selected\u001b[33m.\u001b[39msections\u001b[33m.\u001b[39mmap((section) \u001b[33m=>\u001b[39m section\u001b[33m.\u001b[39mtitle)\u001b[33m.\u001b[39msort())\u001b[33m.\u001b[39mtoEqual([\u001b[32m\"Budget\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"Hot Topics\"\u001b[39m\u001b[33m,\u001b[39m \u001b[32m\"Projects\"\u001b[39m])\u001b[0m"
+          }
+        }
+      ],
+      "criterion_acceptance_credit": false,
+      "business_journey_completed": false
+    },
+    {
+      "case_id": "RPT-02",
+      "title_from_runtime": "RPT-02 confirms and reuses the exact human answer under C05, then rejects its edited version",
+      "runtime_status": "TIMED_OUT",
+      "runtime_status_raw": "timedOut",
+      "duration_ms": 180019,
+      "start_time": "2026-11-15T00:56:12.975Z",
+      "retry": 0,
+      "log_line": 1113,
+      "runtime_json_pointer": "/suites/0/suites/0/specs/1/tests/0/results/0",
+      "runtime_report_sha256": "74e471bd510fd15cb08df0ba22ea039c0eef50d40fe27d3d54dabdd2a3b0a0ba",
+      "blocking_stage": "prepareReview waits for the review-agenda POST response at reports-support/review-flow.ts:40:30; the 180000 ms case timeout expires before agendaResult and the selected-section assertions complete.",
+      "assertions_reached": "The installed Prepare review region is present and Load selection is enabled before the pending response wait. No preserved-review, reconciliation, answer, export, revision or purge business result is established.",
+      "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+      "ui_status_context_line": 53,
+      "ui_status_is_proven_cause": false,
+      "context_receipt": {
+        "local_path": "evidence/nominal-06-context/sucafina-reports-CI-UI-REP-3dd22--rejects-its-edited-version-chromium.md",
+        "bytes": 13624,
+        "sha256": "e551ac3d305844f874ee6efc52d6f3422b67089093a3bf0500d890f4b2e9d19f"
+      },
+      "error": {
+        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+      },
+      "errors": [
+        {
+          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+        },
+        {
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+            "column": 30,
+            "line": 40
+          },
+          "message": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.\n\n   at sucafina/reports-support/review-flow.ts:40\n\n  38 |   const load = preparation.getByRole(\"button\", { name: \"Load selection\", exact: true })\n  39 |   await expect(load).toBeEnabled()\n> 40 |   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, \"review-agenda\", \"POST\"))\n     |                              ^\n  41 |   await load.click()\n  42 |   const selected = await agendaResult(await pendingAgenda)\n  43 |   expect(selected.sections.map((section) => section.title).sort()).toEqual([\"Budget\", \"Hot Topics\", \"Projects\"])\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:40:30)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:38:23"
+        }
+      ],
+      "step_errors": [],
+      "criterion_acceptance_credit": false,
+      "business_journey_completed": false
+    },
+    {
+      "case_id": "RPT-03",
+      "title_from_runtime": "RPT-03 removes one authorized record without editing its source and creates only an explicit new revision",
+      "runtime_status": "TIMED_OUT",
+      "runtime_status_raw": "timedOut",
+      "duration_ms": 180021,
+      "start_time": "2026-11-15T00:59:17.343Z",
+      "retry": 0,
+      "log_line": 1135,
+      "runtime_json_pointer": "/suites/0/suites/0/specs/2/tests/0/results/0",
+      "runtime_report_sha256": "74e471bd510fd15cb08df0ba22ea039c0eef50d40fe27d3d54dabdd2a3b0a0ba",
+      "blocking_stage": "prepareReview waits for the review-agenda POST response at reports-support/review-flow.ts:40:30; the 180000 ms case timeout expires before agendaResult and the selected-section assertions complete.",
+      "assertions_reached": "The installed Prepare review region is present and Load selection is enabled before the pending response wait. No preserved-review, reconciliation, answer, export, revision or purge business result is established.",
+      "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+      "ui_status_context_line": 53,
+      "ui_status_is_proven_cause": false,
+      "context_receipt": {
+        "local_path": "evidence/nominal-06-context/sucafina-reports-CI-UI-REP-275ed-ly-an-explicit-new-revision-chromium.md",
+        "bytes": 13638,
+        "sha256": "3ed00966662551babff8dca6077b2dcf24f54788cc62b7f9813b66b013d7cd54"
+      },
+      "error": {
+        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+      },
+      "errors": [
+        {
+          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+        },
+        {
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+            "column": 30,
+            "line": 40
+          },
+          "message": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.\n\n   at sucafina/reports-support/review-flow.ts:40\n\n  38 |   const load = preparation.getByRole(\"button\", { name: \"Load selection\", exact: true })\n  39 |   await expect(load).toBeEnabled()\n> 40 |   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, \"review-agenda\", \"POST\"))\n     |                              ^\n  41 |   await load.click()\n  42 |   const selected = await agendaResult(await pendingAgenda)\n  43 |   expect(selected.sections.map((section) => section.title).sort()).toEqual([\"Budget\", \"Hot Topics\", \"Projects\"])\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:40:30)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:104:23"
+        }
+      ],
+      "step_errors": [],
+      "criterion_acceptance_credit": false,
+      "business_journey_completed": false
+    },
+    {
+      "case_id": "RPT-04",
+      "title_from_runtime": "RPT-04 revokes the real session and clears cached meeting data, export and answer access",
+      "runtime_status": "TIMED_OUT",
+      "runtime_status_raw": "timedOut",
+      "duration_ms": 180018,
+      "start_time": "2026-11-15T01:02:21.912Z",
+      "retry": 0,
+      "log_line": 1157,
+      "runtime_json_pointer": "/suites/0/suites/0/specs/3/tests/0/results/0",
+      "runtime_report_sha256": "74e471bd510fd15cb08df0ba22ea039c0eef50d40fe27d3d54dabdd2a3b0a0ba",
+      "blocking_stage": "prepareReview waits for the review-agenda POST response at reports-support/review-flow.ts:40:30; the 180000 ms case timeout expires before agendaResult and the selected-section assertions complete.",
+      "assertions_reached": "The installed Prepare review region is present and Load selection is enabled before the pending response wait. No preserved-review, reconciliation, answer, export, revision or purge business result is established.",
+      "observed_ui_status": "Selection unavailable: agenda-unavailable. Captured content is hidden until access is checked again.",
+      "ui_status_context_line": 53,
+      "ui_status_is_proven_cause": false,
+      "context_receipt": {
+        "local_path": "evidence/nominal-06-context/sucafina-reports-CI-UI-REP-6a452-ta-export-and-answer-access-chromium.md",
+        "bytes": 13621,
+        "sha256": "5e8e89fee6bb2b1c2a0b7c9bf79280da096ecc1e87d489790fba9a685056ce1f"
+      },
+      "error": {
+        "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m",
+        "stack": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+      },
+      "errors": [
+        {
+          "message": "\u001b[31mTest timeout of 180000ms exceeded.\u001b[39m"
+        },
+        {
+          "location": {
+            "file": "/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+            "column": 30,
+            "line": 40
+          },
+          "message": "Error: page.waitForResponse: Test timeout of 180000ms exceeded.\n\n   at sucafina/reports-support/review-flow.ts:40\n\n  38 |   const load = preparation.getByRole(\"button\", { name: \"Load selection\", exact: true })\n  39 |   await expect(load).toBeEnabled()\n> 40 |   const pendingAgenda = page.waitForResponse(responseFor(app.dashboardURL, \"review-agenda\", \"POST\"))\n     |                              ^\n  41 |   await load.click()\n  42 |   const selected = await agendaResult(await pendingAgenda)\n  43 |   expect(selected.sections.map((section) => section.title).sort()).toEqual([\"Budget\", \"Hot Topics\", \"Projects\"])\n    at prepareReview (/home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts:40:30)\n    at /home/runner/work/Orchestra-SF/Orchestra-SF/packages/app-shell/e2e/sucafina/reports.spec.ts:118:23"
+        }
+      ],
+      "step_errors": [],
+      "criterion_acceptance_credit": false,
+      "business_journey_completed": false
+    }
+  ],
+  "log": "evidence/nominal-06.log",
+  "log_receipt": {
+    "local_path": "evidence/nominal-06.log",
+    "bytes": 109393,
+    "sha256": "05ebea03518e82e8daaa627bc03ab79c6a3eea0a08b1dfaa837f3f658b53a73b"
+  },
+  "runtime_receipt": "evidence/nominal-06-runtime/playwright-runtime.json",
+  "runtime_report": {
+    "local_path": "evidence/nominal-06-runtime/playwright-runtime.json",
+    "bytes": 23506,
+    "sha256": "74e471bd510fd15cb08df0ba22ea039c0eef50d40fe27d3d54dabdd2a3b0a0ba"
+  },
+  "runtime_request": {
+    "local_path": "evidence/nominal-06-runtime/request.json",
+    "bytes": 320,
+    "sha256": "487647545a9638ab9d5eab3d02670991bd189c0b82975ad2c20c131644b8e354"
+  },
+  "selection_receipt": {
+    "local_path": "evidence/nominal-06-runtime/playwright-selection.json",
+    "bytes": 4904,
+    "sha256": "79e31b46db0351ac8edb34d691b2a14f8286abd0aa68a931edf457b27ebe6d5d"
+  },
+  "selection_semantics": "Selection/list inventory is not an execution outcome. Actual runtime contains four started timedOut results, zero skips and zero passes.",
+  "runtime_stats": {
+    "startTime": "2026-11-15T00:52:33.910Z",
+    "duration": 771912.113,
+    "expected": 0,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  },
+  "runtime_global_errors": [],
+  "duration_ms": 771912.113,
+  "controls": {
+    "workers": 1,
+    "retries": 0,
+    "repeatEach": 1,
+    "timeout_ms": 180000,
+    "expect_timeout_ms": 10000,
+    "trace": "off",
+    "video": "off",
+    "screenshot": "off"
+  },
+  "controls_provenance": "workers/retries/repeatEach and per-case timeout verified in actual runtime; expect timeout and disabled trace/video/screenshot preserved from the explicit nominal request/config and root handoff inputs.",
+  "artifact": {
+    "id": 14140102297,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43660186245/artifacts/14140102297",
+    "archive": {
+      "local_path": "evidence/nominal-06.zip",
+      "bytes": 261191,
+      "sha256": "62405994e19f931862197e6e8219b072a54e3d417b330146912b13c0d063837a"
+    }
+  },
+  "identity_provenance": {
+    "source_W_S_trees_run_jobs_request_blob": "Exact root-provided identities; no new remote verification by this receipt author.",
+    "runtime_S_and_run": "Matched actual runtime config metadata and runtime request envelope.",
+    "artifact": "Artifact ID matches log upload lines1217-1219; local ZIP SHA256 matches root-provided digest.",
+    "cleanup_job": "Root-provided cleanup job identity; no cleanup outcome is inferred here.",
+    "request_only_diff": "Not independently verified by this local receipt author; preserve root envelope verification separately."
+  },
+  "causality": {
+    "observed": "All four cases timed out in page.waitForResponse at review-flow.ts:40. All four UI contexts contain Prepare review and agenda-unavailable.",
+    "root_cause": "NOT_ESTABLISHED",
+    "forbidden_inference": "UI status alone does not establish backend cause, HTTP status, authorization loss or the reason the response predicate did not complete."
+  },
+  "scope": "Actual four W4 nominal journeys started and timed out at the review-agenda response wait (review-flow.ts:40), with Prepare review mounted. agenda-unavailable is observed UI state, not a proven cause. No completed Reports business journey or draft-reconciliation/revocation browser credit. Earlier failures remain unchanged; no retry is authorized by this receipt."
+}

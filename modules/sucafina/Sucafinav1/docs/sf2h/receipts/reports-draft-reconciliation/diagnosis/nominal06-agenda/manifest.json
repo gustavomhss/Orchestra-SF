@@ -1,0 +1,55 @@
+{
+  "schema": "sf-mission48-agenda-transport-diagnostic-proposal-v1",
+  "status": "FROZEN_INERT_NOT_APPLIED",
+  "base_commit": "25b00c94c25fc36363cfd8c0063c5ab85d6966c8",
+  "source_preimages_verified_by_root": true,
+  "new_spec_not_found_by_mcp": true,
+  "files": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/review-flow.ts",
+      "preimage": "preimage/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt",
+      "postimage": "postimage/packages/app-shell/e2e/sucafina/reports-support/review-flow.ts.txt",
+      "preimage_blob": "6f77c86427ec23b3cd2b3675a0294a736495dac4",
+      "postimage_blob": "68b98171201c72ebf3f746ba8e4dfa8d758b65e5",
+      "preimage_sha256": "22beac90a611a76d97c4b198e353734477c7fb3ca32ee55353c4d818e75e1963",
+      "postimage_sha256": "4425ae1ae062404a8a5fb959d80f7a77600b100145e526215e588e1a2900c9c7",
+      "postimage_bytes": 28028
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/production-installation.ts",
+      "preimage": "preimage/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts.txt",
+      "postimage": "postimage/packages/app-shell/e2e/sucafina/reports-support/production-installation.ts.txt",
+      "preimage_blob": "977dc142768d8e7d79d6862a3b2353934dfb833a",
+      "postimage_blob": "494fe03f46beea037cff45e70259ac875758e3b6",
+      "preimage_sha256": "bcaa39d986cae374ebd59957a35f7814db5fd3ac2ddc6104ec6b464acdc18934",
+      "postimage_sha256": "6a0208d3571abf6f66e4f7b769ef82b739f33f7eb64cd852ab44068a07b3e7ad",
+      "postimage_bytes": 14155
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts",
+      "preimage": "preimage/packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts.txt",
+      "postimage": "postimage/packages/app-shell/e2e/sucafina/reports-support/agenda-transport.spec.ts.txt",
+      "preimage_blob": null,
+      "postimage_blob": "c2948d5b96ba06172227c446e1c6e15fc174b2d6",
+      "preimage_sha256": null,
+      "postimage_sha256": "5539a26a0354c1f11e2d3298cf6f77d71a3cdc49e3167ba5fb0d142d8149ca84",
+      "postimage_bytes": 683
+    }
+  ],
+  "tests_executed": false,
+  "remote_writes": false,
+  "budget_ms": 180000,
+  "retries": 0,
+  "diagnostic_cases": 1,
+  "patch": "agenda-transport.patch",
+  "patch_sha256": "a4e08e47aa1da1ded1b46c217294ca886ca6b28b7e5b089cff009337e00b029c",
+  "observer_bounds": {
+    "entries": 40,
+    "mode_chars": 64,
+    "error_name_chars": 40,
+    "codes_per_event": 5,
+    "code_chars": 80,
+    "cli_lines": 20,
+    "cli_chars": 4096
+  }
+}
