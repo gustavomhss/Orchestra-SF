@@ -5,7 +5,7 @@
  * No alternative REST path, client cache, view storage or automatic retry.
  */
 import { SfWork } from "@orchestra/schema/sucafina/work"
-import { SfOperationRegistry } from "@orchestra/schema/sucafina/operation-registry"
+import { SfOperationRegistry, type SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
 import type { SfOperation, SfTransportResult } from "@orchestra/schema/sucafina/common"
 import type { SfTransport, SfCallOptions } from "./transport"
 
@@ -37,10 +37,10 @@ export function createSfWorkClient(transport: SfTransport) {
   // metadata is integrated, never hand a private search string to F02:
   // its legacy GET serializer would place q in the request URL.
   const privateSearch = (input: typeof SfWork.operations["projection.search"]["input"]["Type"], options: SfCallOptions) => {
-    const meta = SfOperationRegistry["projection.search"]
+    const meta: SfNativeOperationRoute = SfOperationRegistry["projection.search"]
     if (meta.method !== "POST" || meta.pathTemplate !== "{mount}/api/ui/projections/search" ||
       meta.effect !== "read" || meta.responseMode !== "json" ||
-      !("maxRequestBytes" in meta) || !Number.isSafeInteger(meta.maxRequestBytes) ||
+      typeof meta.maxRequestBytes !== "number" || !Number.isSafeInteger(meta.maxRequestBytes) ||
       meta.maxRequestBytes < 4096 || meta.maxRequestBytes > 8192 ||
       "fixedQuery" in meta || "fixedBodyDiscriminator" in meta ||
       typeof input.q !== "string" || !input.q.trim() || options.idempotencyKey !== undefined) {
