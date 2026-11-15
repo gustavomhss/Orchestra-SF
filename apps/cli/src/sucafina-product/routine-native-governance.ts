@@ -80,6 +80,13 @@ export function createSfRoutineNativeGovernance(input: {
     return release
   }
 
+  // Original Task settlement may race a retry. Refusing that retry must not revoke the in-flight
+  // owner's lease. Keep bind's existing replacement contract for its current private callers.
+  const tryBind = (planRevisionId: string, authority: SfRoutineNativeAuthorityLease): (() => void) | undefined => {
+    if (authority.signal.aborted || leases.has(planRevisionId)) return undefined
+    return bind(planRevisionId, authority)
+  }
+
   const assertCurrent = (checked: Checked) => Effect.gen(function* () {
     const stillBound = () => checked.active() && input.records() === checked.records &&
       leases.get(checked.plan.id) === checked.lease && !checked.lease.signal.aborted
@@ -272,6 +279,7 @@ export function createSfRoutineNativeGovernance(input: {
   return {
     contribution,
     bind,
+    tryBind,
     registerLease: bind,
     installed: (service: TaskGovernance.Interface) => installations.has(service),
     installation: (service: TaskGovernance.Interface) => installations.get(service),
