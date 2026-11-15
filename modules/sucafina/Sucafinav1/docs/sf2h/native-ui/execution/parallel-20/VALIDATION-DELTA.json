@@ -1,0 +1,91 @@
+{
+  "schema": "sf2h.native-ui.parallel20.structural-audit.v1",
+  "executed_kind": "Live readback via connected GitHub + ad hoc JS structural assertions; not Python validator, not CI, not source compiler",
+  "executed_at_date": "2026-11-15",
+  "plan": {
+    "repository": "gustavomhss/Orchestra-SF",
+    "branch": "ux-20-dispatch",
+    "design_commit": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "canonical_criteria": 1610,
+    "original_plan_pr": 76,
+    "independent_old_pin_review_pr": 91,
+    "dispatch_pr": 99
+  },
+  "results": {
+    "state": "DOCUMENTARY_ASSERTIONS_PASS",
+    "assertions": {
+      "source_78_orders": true,
+      "catalog_305_operations": true,
+      "surfaces_70": true,
+      "canonical_1610": true,
+      "legacy_baseline_strict_pass_historical": true,
+      "twenty_exact_lanes": true,
+      "one_integrator_nineteen_authors": true,
+      "first_wave_19_rest_58": true,
+      "all_non_i00_covered": true,
+      "zero_colliding_first_wave_paths": true,
+      "no_implicit_launch": true,
+      "two_phase_real_pilot": true,
+      "correct_u43_owner": true,
+      "monthly_producer_reuse": true,
+      "personal_view_v2_not_false_green": true,
+      "full_prompt_readback_exact": true,
+      "final_scope_r01_product_ux": true,
+      "final_scope_r02_finance": true,
+      "final_scope_r03_ai_mcp": true,
+      "safeReturn_closed_contract": true,
+      "typed_ctx_fence_contract": true,
+      "script_file_present": true
+    },
+    "passed": 22,
+    "failed": 0,
+    "failures": [],
+    "claim_count": 138,
+    "overlap_count": 0
+  },
+  "blobs": {
+    "manifest.json": "3d444da59c661faa17d23798f8a212a71d3d8f6d",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+    "surface-manifest.json": "50e2993a881e207aa3b2a1cd250a7da84cea5855",
+    "../ACCEPTANCE.md": "3e12ac729ac5f814e5f681ad4a20fa09535dcc5c",
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "PLAN-VALIDATION.json": "0a6dc45288fe1f3f523f7f238749e8061326a9cf"
+  },
+  "historicalBaseline": {
+    "plan_validation_sha": "0a6dc45288fe1f3f523f7f238749e8061326a9cf",
+    "status": "PASS_DOCUMENT_STRUCTURE",
+    "errors": [],
+    "warnings": [],
+    "scope": "PR76 historical only; does not qualify current PR99 normative delta"
+  },
+  "liveMaterialReconnaissance": {
+    "base_source_examined": "5585e57f90d7b8d45e0577a8f0f4aa7884d3b58d",
+    "last_observed_sf2_stack_sha": "b02ac1251c754620c5d8ab98cfd0c1d51315da27",
+    "compare_commits_ahead": 4,
+    "changed_paths": 211,
+    "changed_material_subset": [
+      "modules/sucafina/Sucafinav1/product/decisions/hot-topic-draft.ts",
+      "modules/sucafina/Sucafinav1/test/product/http-abort-adoption/listener.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts"
+    ],
+    "interpretation": "At least Decisions/HotTopic source family changed, so dynamically re-pin affected consumers. This reconnaissance does not lock latest HEAD or authorize code edits."
+  },
+  "mandatoryNotRun": [
+    "python execution/parallel-20/validate_dispatch.py --root execution",
+    "python execution/validate_plan.py --strict --canonical <campaign.json>",
+    "TypeScript parser/typecheck",
+    "product unit/e2e/installed web and desktop",
+    "Microsoft session/live",
+    "CI/runner/test dispatcher 45",
+    "independent external cold review of PR99",
+    "P0/P1 installed source and M31/MI07",
+    "three FINAL independent of implementation",
+    "S0/71/45 and active owner lease authorization"
+  ],
+  "release": {
+    "global_release": false,
+    "authorized_to_write_product": false,
+    "reason": "Current material C/tree, source family re-pin, author/lease/owner releases, S0/71/45 and independent review not yet observed."
+  }
+}

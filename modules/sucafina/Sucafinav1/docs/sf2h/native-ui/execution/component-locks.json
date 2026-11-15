@@ -1,0 +1,239 @@
+{
+  "schema_version": 1,
+  "status": "FROZEN_DESIGN_DOCUMENTARY_REVIEWED_NOT_IMPLEMENTED",
+  "source": "COMPONENT-CONTRACTS.md",
+  "locks": {
+    "ui-frame": {
+      "producer": "F03",
+      "exports": [
+        "SfPageFrame",
+        "SfStatePanel",
+        "SfContextBar",
+        "SfChartFrame",
+        "SfRunState"
+      ],
+      "invariants": [
+        "Existing Mx/Orchestra tokens and Inter, one primary action, one contextual panel",
+        "Five fixed viewport classes; focus/read state semantics from SURFACE-SPECS"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfPageFrame",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "symbol": "SfStatePanel",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfContextBar",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx",
+          "symbol": "SfChartFrame",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx",
+          "symbol": "SfRunState",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "typed_source": "component-signatures.ts"
+    },
+    "ui-table": {
+      "producer": "S01",
+      "exports": [
+        "SfDataTable",
+        "SfListDetail",
+        "SfRecordDetail"
+      ],
+      "invariants": [
+        "Stable authorized record identity, same-owner filter/selection/scroll restoration",
+        "Native table semantics unless interactive grid specified"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/table/index.tsx",
+          "symbol": "SfDataTable",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "symbol": "SfListDetail",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/detail/index.tsx",
+          "symbol": "SfRecordDetail",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "typed_source": "component-signatures.ts"
+    },
+    "ui-grid": {
+      "producer": "S02",
+      "exports": [
+        "SfMonthlyGrid"
+      ],
+      "invariants": [
+        "Frozen month-cell type and state matrix; keyboard APG",
+        "No financial arithmetic, owner/grant inference or implicit save",
+        "Rectangular selection and TSV preview/apply via existing planner.monthly.preview/apply, row CAS and partial outcomes; original text preserved; zero-based UI month maps to one-based producer exactly once"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/monthly-grid/index.tsx",
+          "symbol": "SfMonthlyGrid",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "typed_source": "component-signatures.ts"
+    },
+    "ui-change-review": {
+      "producer": "S03",
+      "exports": [
+        "createSfDraft",
+        "SfChangeReview",
+        "SfReceiptView"
+      ],
+      "invariants": [
+        "Owner/expected version/payloadDigest/pending key tracked as one immutable operation intent",
+        "Unavailable preserves authorized draft; revoked/disposed removes private projection"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/draft/index.ts",
+          "symbol": "createSfDraft",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/change-review/index.tsx",
+          "symbol": "SfChangeReview",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/receipt/index.tsx",
+          "symbol": "SfReceiptView",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "typed_source": "component-signatures.ts"
+    },
+    "ui-evidence": {
+      "producer": "S04",
+      "exports": [
+        "SfEvidencePanel",
+        "SfAttachmentField"
+      ],
+      "invariants": [
+        "Candidate/confirmed and version/access states remain distinct",
+        "Existing authorized upload/download/scanner path only"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/evidence/index.tsx",
+          "symbol": "SfEvidencePanel",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/shared/attachments/index.tsx",
+          "symbol": "SfAttachmentField",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "typed_source": "component-signatures.ts"
+    },
+    "ui-collaboration": {
+      "producer": "S05",
+      "exports": [
+        "SfRelations",
+        "SfThread",
+        "SfQuestion",
+        "SfConfirmation"
+      ],
+      "invariants": [
+        "Reference relation independent of decision case",
+        "C06 materiality/incarnation/version preserved; no new approval layer"
+      ],
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "symbol": "SfRelations",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "symbol": "SfThread",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "symbol": "SfQuestion",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+          "symbol": "SfConfirmation",
+          "signature": "COMPONENT-CONTRACTS.md exact public signature"
+        }
+      ],
+      "typed_source": "component-signatures.ts"
+    },
+    "ui-bi": {
+      "producer": [
+        "U20",
+        "U21",
+        "U22"
+      ],
+      "exports": [
+        "SfFinancialFigure",
+        "SfOperationalFigure",
+        "SfBiCatalog",
+        "SfDecisionFigure"
+      ],
+      "invariants": [
+        "Frozen discriminated producer view union; graph and table from same authorized result",
+        "No browser recalculation; drilldown emits current source reference"
+      ],
+      "integration": "I00 maps producer viewId to one family renderer; no duplicate SfBiFigure export.",
+      "entrypoints": [
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/finance/index.tsx",
+          "symbol": "SfFinancialFigure",
+          "signature": "COMPONENT-CONTRACTS.md §6 BI renderer signature",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/operations/index.tsx",
+          "symbol": "SfOperationalFigure",
+          "signature": "COMPONENT-CONTRACTS.md §6 BI renderer signature",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/catalog/index.tsx",
+          "symbol": "SfBiCatalog",
+          "signature": "COMPONENT-CONTRACTS.md §6 BI renderer signature",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        },
+        {
+          "path": "packages/app-shell/src/orchestra/chapters/sucafina/bi/decisions/index.tsx",
+          "symbol": "SfDecisionFigure",
+          "signature": "COMPONENT-CONTRACTS.md §6 BI renderer signature",
+          "type_source": "packages/app-shell/src/orchestra/chapters/sucafina/context/contracts.ts",
+          "route_source": "surface-manifest.json: assigned surfaces only"
+        }
+      ],
+      "typed_source": "COMPONENT-CONTRACTS.md §6 + catalogued BI discriminated DTOs"
+    }
+  },
+  "dispatch_rule": "Use exact signatures in COMPONENT-CONTRACTS.md; no worker inference or extension. Launch records digest the source.",
+  "typed_source": "component-signatures.ts"
+}
