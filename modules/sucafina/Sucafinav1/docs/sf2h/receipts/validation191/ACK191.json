@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.product-ci191.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "execution_instance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 191,
+  "role": "SOLE_PRODUCT_CI_DISPATCHER",
+  "epoch": "product-ci-e5-browser191",
+  "branch": "sf-ci-validation",
+  "pr": 106,
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_reason": "Current ChatGPT/GitHub connection does not expose a stable runtime session ID; Astra session not claimed",
+  "github_actor": "gustavomhss",
+  "predecessor": {
+    "mission": 164,
+    "epoch": "product-ci-e4-browser164",
+    "authority": "REVOKED_FOR_FUTURE_WRITES_AND_DISPATCH",
+    "historical_evidence": "PRESERVED"
+  },
+  "observed": {
+    "head": "211e6c0b40512c1d016b04c1095b5872ec56b807",
+    "tree": "43b87adfb85dae2ddb241e6801461c87ebde6186",
+    "source_pr65_head": "8a81e11df2bf78a55de3166e07a53ee366aad2ab",
+    "workflow": ".github/workflows/test-ci.yml",
+    "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+    "request_validator_blob": "5007e48270b80c83eb719d35cec9e6343206a195",
+    "actions": {
+      "in_progress": 0,
+      "queued": 0,
+      "waiting": 0
+    },
+    "prior_runs": [
+      43765725305,
+      43766390097,
+      43766719584,
+      43766970018
+    ]
+  },
+  "source_fix_preimages": {
+    "decisions": "17295d70e40abbf0b9f78b4009ca28ac3c171baf",
+    "f03_states": "7084c442f96e3b7d0f91b66027118df6eb003ebc",
+    "f03_frame": "06165f1ac7c6b9918a712570caa6a076559f2ec7",
+    "s01_test": "65c74a68a7658706b18e70c5f98e52a419910fb3",
+    "s05_collaboration": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e"
+  },
+  "next": "No duplicate on unchanged inputs. Await confirmed 189 integrated product W/tree and consumer ACK; first run decisions corrected source then causally changed exact native contract files. Run corrected ./test-browser paths after 182/183/184 and actual fixture/test patches. AM native positive requires installed runtime/identity/provider/Atlas/Relay. Full epic/final eight not eligible.",
+  "state": "ACK_ACTIVE_RECONCILED_WAITING_ON_NEW_PRODUCT_INPUT",
+  "native_goal": "paused",
+  "global_release": false
+}
