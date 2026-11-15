@@ -1,0 +1,98 @@
+{
+  "schema": "sf2h.atlas-memory-composed.verification.v1",
+  "mission": 69,
+  "scope": "Remote publication/source identity and static documentary consistency; runtime assertions are only those in actual Actions receipts.",
+  "preterminalSourceHead": "2443a01973a5dcbdb3fdee59d868385f5ff54a85",
+  "preterminalSourceTree": "132732f8ced3b3c399ba5efb9ba95429522488a5",
+  "sourceManifest": "SOURCE-MANIFEST.json",
+  "sourceFiles": 12,
+  "productFiles": 2,
+  "testHelperFiles": 10,
+  "completeSourcePatch": {
+    "git_blob_sha": "33f1c0e9ad5980acea06c8732c9345b064788622",
+    "sha256": "b1b8ea0678f7b977115d2e05d202db1c89009e3a227e9d5d07e088d84c6f1574",
+    "bytes": 126884
+  },
+  "remoteReadback": {
+    "W1": "Both products and seven initial test files exact content/blob readback.",
+    "G1": "Both rank files exact content/blob readback.",
+    "F2": "Modified group test, new pending test and .ci-run.json exact content/blob readback; W1→F2 compare excludes product changes and changes to the six passing F1 files.",
+    "staticReceipts": "All14 initial source/owner-patch blobs verified through remote directory/tree readback; later five F2 source documents use exact hashes and own-receipt CAS."
+  },
+  "CI": {
+    "protocol": "Existing test-ci workflow. Each S is a direct child of W adding only .ci-run.json. Unique ci-run-linux branches created at S, sequential runs, cleanup jobs succeeded.",
+    "runs": [
+      {
+        "phase": "B0",
+        "run": 43667468344,
+        "job": 132669931229,
+        "summary": "0PASS/5FAIL"
+      },
+      {
+        "phase": "F1",
+        "run": 43668245381,
+        "job": 132672330771,
+        "summary": "12PASS/14FAIL"
+      },
+      {
+        "phase": "F2",
+        "run": 43670181263,
+        "job": 132678279994,
+        "summary": "8PASS/0FAIL"
+      }
+    ],
+    "G1": "No separate run; three tests are inside F2.",
+    "artifacts": "Empty Actions artifact lists are recorded; decoded job logs and bounded excerpts supply the Bun evidence."
+  },
+  "staticInvariants": {
+    "all84OriginalIdsRequired": true,
+    "normativeTextUnmodified": true,
+    "scopeOwnersUnchanged": true,
+    "original40And35Unmodified": true,
+    "MI07UnmodifiedNotSelected": true,
+    "noMixed61Duplication": true,
+    "allRuntime59ReadOnly": true
+  },
+  "target": {
+    "history": "C28→60 terminal30 receipts;60 terminal→ACK71 three receipts. Thereafter C29 runtime59, C30 operations63 and C31 native64 add26 material paths plus177 receipts; this material advance does not inherit source69 qualification.",
+    "reconciliation": "TARGET-RECONCILIATION.json",
+    "latestDelta": "TARGET-C31-DELTA.json",
+    "lastObserved": {
+      "name": "C31",
+      "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+      "parent": "947a4add941893c8247b95a5ce6386468313838b",
+      "qualification": "SOURCE69_COMPOSITION_NOT_RUN_NATIVE_ACTIVATION_HELD"
+    },
+    "ownProductPreimagesMatch": true,
+    "ownTestDirectoryAbsent": true,
+    "sourceClosureDependenciesChanged": 3
+  },
+  "limits": [
+    "No compiler/typecheck/guard execution inferred from textual imports or Bun runtime tests.",
+    "No local product execution.",
+    "Cold source review is not one of the global FINAL reviews.",
+    "Terminal containing commit/tree CAS/readback will be published in delivery metadata; no self-SHA invented."
+  ],
+  "GLOBAL_RELEASE": false,
+  "terminalDocumentReview": {
+    "reviewer": "/root/atlas_review",
+    "scope": "Independent final receipt and handoff review; not a global FINAL review.",
+    "result": "APPROVED_BOUNDED_PACKAGE",
+    "correction": "One remaining Prefer60 reference in checks request dedup replaced with authorized integrator71 before publication.",
+    "lateDelta": "C31 addendum is pinned documentary reconciliation; original source/test/runtime outcomes unchanged."
+  },
+  "matrix": {
+    "bytes": 464562,
+    "git_blob_sha": "3cd666474bcb4c647c30aed127face53b748db63",
+    "sha256": "4670d75a4b1185aed575fc7398c6a515737789d6af5da334d3b7ea9c14726472",
+    "count": 84,
+    "uniqueIds": 84,
+    "normativeTextChanged": 0,
+    "integralClosed": 0,
+    "states": {
+      "NOT_RUN": 56,
+      "BLOCKED": 28
+    }
+  }
+}

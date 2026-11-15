@@ -1,0 +1,343 @@
+{
+  "schema": "sf2h.atlas-memory-composed.result.v1",
+  "mission": 69,
+  "phase": "F2",
+  "state": "COMPLETED_SUCCESS_BOUNDED_COMPONENTS",
+  "W": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+  "WTree": "01211640e7fa6ccc77b9ac702fde94edf9565678",
+  "productW": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "productTree": "f7ddae5cfd84866517ce88cacf09b5b245854954",
+  "productBlobs": {
+    "atlasMemory": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+    "businessContext": "2e7b312561f3f027ab070c61e15ecb6886fa169c"
+  },
+  "S": "86c84a1b86de7af819f278edbd7fce5a8f4cffe7",
+  "STree": "76421e65c14f54323afd8a454b40fc9201f108f2",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "requestBlob": "7913dcf95e9cc73c3e85d0df85e98a03734f84d7",
+  "lineage": "S is a direct child of W. Remote compare/readback verifies only .ci-run.json added in S; W2 keeps both product files and all six F1 passing test files unchanged.",
+  "runId": 43670181263,
+  "runUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43670181263",
+  "jobId": 132678279994,
+  "cleanupJobId": 132680990912,
+  "attempt": 1,
+  "conclusion": "success",
+  "createdAt": "2026-11-15T02:58:07Z",
+  "terminalRunUpdatedAt": "2026-11-15T03:09:38Z",
+  "summary": {
+    "pass": 8,
+    "fail": 0,
+    "tests": 8,
+    "files": 3,
+    "expectCalls": 403,
+    "seconds": 589.57
+  },
+  "omni": {
+    "status": "PASS",
+    "nonce": "3de0090fd530f5840f8e460235210d93",
+    "declared": 8,
+    "spawns": 16,
+    "delegated": 0,
+    "rootGuardEquivalence": false
+  },
+  "artifacts": [],
+  "artifactLimit": "Bun request has no required generic artifact upload. Exact job log plus bounded marker excerpts are the execution evidence.",
+  "tests": [
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "status": "PASS",
+      "name": "M69 complete public recall preserves two real cases, authenticated empty selection and one-use original groups",
+      "durationMs": 73417.77,
+      "budgetMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "status": "PASS",
+      "name": "M69 complete recall rejects group order changed during real revalidation and preserves intact groups",
+      "durationMs": 96644.92,
+      "budgetMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "status": "PASS",
+      "name": "M69 complete recall rejects group membership changed during real revalidation and preserves intact groups",
+      "durationMs": 96379.49,
+      "budgetMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "status": "PASS",
+      "name": "M69 complete recall binds observations to their original arrays, actual call and actual reader",
+      "durationMs": 81851.86,
+      "budgetMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts",
+      "status": "PASS",
+      "name": "M69 settled documentary A remains authorized while B is pending without another publication effect",
+      "durationMs": 24935.17,
+      "budgetMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "status": "PASS",
+      "name": "M69 rank returns both real event records from the final case group after an older egress object changes",
+      "durationMs": 76024.33,
+      "budgetMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "status": "PASS",
+      "name": "M69 rank denies features changed during its last real authority await and accepts the restored input",
+      "durationMs": 69669.67,
+      "budgetMs": 180000
+    },
+    {
+      "file": "Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "status": "PASS",
+      "name": "M69 rank denies runtimeVersions changed during its last real authority await and accepts the restored input",
+      "durationMs": 70083.37,
+      "budgetMs": 180000
+    }
+  ],
+  "proofs": [
+    {
+      "marker": "SF_MEMORY_M69_MULTI_CASE_PUBLIC",
+      "data": {
+        "publicRecords": 2,
+        "authenticatedEmptySelection": true,
+        "originalGroupsAccepted": true,
+        "replayedObservationDenied": true,
+        "sameDurableReceipts": true,
+        "counts": {
+          "events": 2,
+          "envelopes": 2,
+          "outbox": 2,
+          "receipts": 0,
+          "settled": 2,
+          "scans": 2
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T03:00:51.3666999Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_GROUP_ORDER_FENCE",
+      "data": {
+        "originalGroupsAccepted": true,
+        "changedDuringRealRevalidation": true,
+        "changedGroupDenied": true,
+        "intactGroupsAcceptedAfter": true,
+        "sameDurableReceipts": true,
+        "counts": {
+          "events": 2,
+          "envelopes": 2,
+          "outbox": 2,
+          "receipts": 0,
+          "settled": 2,
+          "scans": 2
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T03:02:28.0124404Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_GROUP_MEMBERSHIP_FENCE",
+      "data": {
+        "originalGroupsAccepted": true,
+        "changedDuringRealRevalidation": true,
+        "changedGroupDenied": true,
+        "intactGroupsAcceptedAfter": true,
+        "sameDurableReceipts": true,
+        "counts": {
+          "events": 2,
+          "envelopes": 2,
+          "outbox": 2,
+          "receipts": 0,
+          "settled": 2,
+          "scans": 2
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T03:04:04.3928647Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_OBSERVATION_BINDINGS",
+      "data": {
+        "copiedArrayDenied": true,
+        "originalArrayAccepted": true,
+        "otherActualCallDenied": true,
+        "crossCallObservationConsumed": true,
+        "mixedReadersDenied": true,
+        "intactReaderAcceptedAfter": true,
+        "sameDurableReceipts": true,
+        "counts": {
+          "events": 2,
+          "envelopes": 2,
+          "outbox": 2,
+          "receipts": 0,
+          "settled": 2,
+          "scans": 2
+        },
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T03:05:26.2445242Z"
+    },
+    {
+      "marker": "SF_MEMORY_PENDING_REPLAY_M69",
+      "data": {
+        "scenario": "documentary-A-settled-B-pending",
+        "originalA": "accepted",
+        "replayA": "already-committed-same-receipt",
+        "pendingB": "no-publication-no-receipt-no-original",
+        "wholeCaseRecall": "unavailable",
+        "currentCredentialRemoval": "original-and-replay-refused",
+        "auditDigest": "ba12e470dae850b38cf96edc131aea10250920b016990aefe546efa06d87aa5b",
+        "originalDigest": "6dd08027a954adbb1eab28efbfb510859b21d56a0e675e6f94b0c3782a38d9f5",
+        "recordDigest": "d990abf6f87f46a161362d8a14a83a21cf0c195ace0772d4ca28dea2189765c6",
+        "scanner": {
+          "name": "gitleaks",
+          "version": "8.30.1",
+          "status": "clean"
+        },
+        "scans": 1,
+        "atlasUnchanged": true,
+        "outboxUnchangedAfterB": true,
+        "nativeSessionWitness": false,
+        "financialC12Executed": false,
+        "installedInitializeAtlasCallbackExecuted": false
+      },
+      "timestamp": "2026-11-15T03:05:51.1903548Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_RANK_FINAL_GROUP",
+      "data": {
+        "realEvents": 2,
+        "sameCase": true,
+        "realReads": 3,
+        "olderEgressMutated": true,
+        "returnedOriginalRecords": 2,
+        "latestReadIntact": true,
+        "counts": {
+          "events": 2,
+          "envelopes": 2,
+          "outbox": 2,
+          "receipts": 0,
+          "settled": 2,
+          "scans": 2
+        },
+        "syntheticDocumentClassification": true,
+        "acceptedLedgerPremise": true,
+        "financialCapture": false,
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T03:07:07.2101374Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_RANK_SELECTION_TAIL",
+      "data": {
+        "mutation": "features",
+        "lastRealAuthorization": 8074,
+        "authorityAllowedAtFault": true,
+        "sameActualRequest": true,
+        "denied": "unavailable",
+        "restoredRecords": 1,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "syntheticDocumentClassification": true,
+        "financialCapture": false,
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T03:08:16.8785751Z"
+    },
+    {
+      "marker": "SF_MEMORY_M69_RANK_SELECTION_TAIL",
+      "data": {
+        "mutation": "runtimeVersions",
+        "lastRealAuthorization": 8074,
+        "authorityAllowedAtFault": true,
+        "sameActualRequest": true,
+        "denied": "unavailable",
+        "restoredRecords": 1,
+        "counts": {
+          "events": 1,
+          "envelopes": 1,
+          "outbox": 1,
+          "receipts": 0,
+          "settled": 1,
+          "scans": 1
+        },
+        "syntheticDocumentClassification": true,
+        "financialCapture": false,
+        "nativeSessionWitness": false
+      },
+      "timestamp": "2026-11-15T03:09:26.9638868Z"
+    }
+  ],
+  "coverage": {
+    "groups": {
+      "pass": 4,
+      "oldF1MonolithicState": "FAIL_TIMEOUT",
+      "oldF1BudgetMs": 180000,
+      "oldF1ObservedMs": 265303.43,
+      "newBudgetPerIndependentTestMs": 180000,
+      "newAggregateCeilingsMs": 720000,
+      "assertionMap": "recall-groups-split-map.json",
+      "claim": "All original semantic controls retained and passed in independent fixtures with current authorization, positive controls, two real publications and two exact replays/audits each. Does not establish the original monolithic deadline or lower total cost."
+    },
+    "pendingReplay": {
+      "pass": 1,
+      "claim": "Legitimate documentary C17 A remains individually readable/replayable while B is queued without publication. Whole-case recall is withheld. Removing the real admitted Request credential denies original and replay without effects.",
+      "financialC12Executed": false,
+      "installedInitializeAtlasCallbackExecuted": false
+    },
+    "ranking": {
+      "pass": 3,
+      "dispatch": "These are the previously prepared G1 tests. No separate G1 snapshot/run exists and no double count.",
+      "claims": [
+        "Both real same-case event records come from the final intact read after an older object mutation.",
+        "Features mutation after the last permitted actual authority await denies; restored input is positive.",
+        "RuntimeVersions mutation after the last permitted actual authority await denies; restored input is positive."
+      ]
+    }
+  },
+  "preservation": {
+    "productChangedAfterF1": false,
+    "original40And35TestsChanged": false,
+    "MI07Repeated": false,
+    "mixed61Duplicated": false,
+    "localProductTests": 0,
+    "localTypechecks": 0,
+    "localGuards": 0,
+    "newWorkflows": 0
+  },
+  "limits": [
+    "Full C12 regression preservation remains blocked by the unchanged upstream financial preparation;13 F1 bodies were not reached.",
+    "F1 remains a failed26-test run; F2 does not relabel its results.",
+    "G1 classifications and accepted ledger events are explicit synthetic premises followed by actual authorized persistence/publication.",
+    "No native SessionV2 or rendered UI witness.",
+    "External capability/case-recall/dispatcher/bridge tail patches are held and not applied.",
+    "Source W1/W2 component evidence does not qualify C28 or the final global predicates."
+  ],
+  "GLOBAL_RELEASE": false
+}

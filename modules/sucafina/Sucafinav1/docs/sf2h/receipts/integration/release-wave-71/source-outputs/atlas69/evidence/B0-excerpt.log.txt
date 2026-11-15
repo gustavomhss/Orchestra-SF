@@ -1,0 +1,32 @@
+2026-11-15T02:24:24.7739506Z SF_MEMORY_M69_RAW_LAST_AUTHORITY_CAPTURE {"result":"ok","returnedRecords":1,"lastRealRevalidation":2426,"sameCallAndRequest":true,"fault":"committed-capture-corruption","originalRestored":true,"auditDigest":"7926f39a9b1e8d2d05ad5e278db16c050b27f472d97ec142b226ecee0dbc6aa8","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+2026-11-15T02:24:24.7838294Z error: expect(received).toEqual(expected)
+2026-11-15T02:24:24.8174070Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts:72:24)
+2026-11-15T02:24:24.8175292Z (fail) M69 raw recall fences capture corruption during its last real authority revalidation [31787.85ms]
+2026-11-15T02:24:56.1865437Z SF_MEMORY_M69_RAW_LAST_DOCUMENT_CASE {"result":"ok","returnedRecords":1,"lastRealDocumentResolution":2,"sourceWasFresh":true,"fault":"committed-case-revision","ledgerDigest":"5b274d2bac80084e362b3cdfce3e41f806b60bcca00dec77ad5406d92e18db18","originalRestored":true,"auditDigest":"d0a6ce8e920a6fc8e78c6c5b0a386cd343e39f10ca856c1cf29908fb5e69a173","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+2026-11-15T02:24:56.1963936Z error: expect(received).toEqual(expected)
+2026-11-15T02:24:56.2308529Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts:154:24)
+2026-11-15T02:24:56.2309540Z (fail) M69 raw recall fences a real case change after its last authorized document resolution [31412.28ms]
+2026-11-15T02:25:36.9488554Z SF_MEMORY_M69_PUBLIC_POST_CONTEXT_CAPTURE {"result":"returned","returnedRecords":1,"realContextReads":21,"sourceWasFresh":true,"fault":"committed-capture-corruption","originalRestored":true,"eventId":"dfe2450d876f7c9c0af32926f6df02f257e3922700b3af2afaaded6589afe51a","recordDigest":"79c8a4ea89e9c82360410bac552b790383fd21a3ae51d6b10d2a6d1c79f6aba6","auditDigest":"b67309b41ea81aff914f613e87a1375b2f5b16d32b6c5518d83b399abcb02c22","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+2026-11-15T02:25:36.9549024Z error: expect(received).toBe(expected)
+2026-11-15T02:25:36.9549359Z Expected: "rejected"
+2026-11-15T02:25:36.9549737Z Received: "returned"
+2026-11-15T02:25:36.9551145Z       at requireRecallDenied (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts:48:23)
+2026-11-15T02:25:36.9553459Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts:70:9)
+2026-11-15T02:25:36.9555759Z (fail) M69 public recall rejects capture corruption after its real context returned authorized sources [40755.01ms]
+2026-11-15T02:25:56.0520242Z SF_MEMORY_M69_PUBLIC_SELECTION_FENCE {"result":"rejected","returnedRecords":0,"selectionChangedAfterRealContext":true,"originalRestored":true,"eventId":"82d89e1a8610aebbbf836766062ac9e3753960eb2aa409dabd959d843266808f","recordDigest":"bdb19bd18872583b17fb8f4b1e371e694d2485cc1f3845dcc96ebfc765319683","auditDigest":"03ecdea21918efe93d3d217dc7d5d82af0982b3fbcbd4573c95e99c800630a94","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+2026-11-15T02:25:56.0589591Z error: expect(received).toBe(expected)
+2026-11-15T02:25:56.0590595Z Expected: "SF_MEMORY_AUTHORITY_UNAVAILABLE"
+2026-11-15T02:25:56.0591076Z Received: "SF_MEMORY_READ_UNAVAILABLE"
+2026-11-15T02:25:56.0592110Z       at requireRecallDenied (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts:52:32)
+2026-11-15T02:25:56.0593359Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts:112:9)
+2026-11-15T02:25:56.0596086Z (fail) M69 public recall binds its selection across real source context and preserves an intact retry [19104.03ms]
+2026-11-15T02:26:50.9476670Z SF_MEMORY_M69_RECORD_INTEGRITY {"fault":"scanner-receipt-digest","raw":"ok","public":"returned","privateConsumer":true,"returnedRawRecords":1,"returnedPublicRecords":1,"atlasWireRemainsValid":true,"ledgerDigest":"7d298a1aec2969c115fd890d279438633f2a3685897f71d47200dbc2c125b6d8","originalsPreserved":true,"restoredEventId":"cc54235693b12606c92e61cb946a2c918dbd4f86dd8dcb26548abb66a84bfc49","restoredRecordDigest":"6d59e29698109d995937d63c024948c2838030dbfd6e01976ab6bb78f17f6903","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+2026-11-15T02:27:25.2063671Z SF_MEMORY_M69_RECORD_INTEGRITY {"fault":"content-addressed-entry-without-ledger-change","raw":"ok","public":"returned","privateConsumer":true,"returnedRawRecords":1,"returnedPublicRecords":1,"atlasWireRemainsValid":true,"ledgerDigest":"7d298a1aec2969c115fd890d279438633f2a3685897f71d47200dbc2c125b6d8","originalsPreserved":true,"restoredEventId":"cc54235693b12606c92e61cb946a2c918dbd4f86dd8dcb26548abb66a84bfc49","restoredRecordDigest":"6d59e29698109d995937d63c024948c2838030dbfd6e01976ab6bb78f17f6903","counts":{"events":1,"envelopes":1,"outbox":1,"receipts":0,"settled":1,"scans":1},"nativeSessionWitness":false}
+2026-11-15T02:27:25.2144745Z error: expect(received).toEqual(expected)
+2026-11-15T02:27:25.2468250Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts:125:31)
+2026-11-15T02:27:25.2469286Z (fail) M69 raw public and private-consumer recall reject scanner and ledger projection tampering [89152.45ms]
+2026-11-15T02:27:25.2469793Z  0 pass
+2026-11-15T02:27:25.2469972Z  5 fail
+2026-11-15T02:27:25.2470164Z  232 expect() calls
+2026-11-15T02:27:25.2470425Z Ran 5 tests across 3 files. [212.92s]
+2026-11-15T02:27:25.2472106Z omni positive control [f33c8871ff630218f23b9da91b9b833b]: pass (declared: 5 test(s) in Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts, Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts, Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts); 10 omni spawn(s), 0 delegated.

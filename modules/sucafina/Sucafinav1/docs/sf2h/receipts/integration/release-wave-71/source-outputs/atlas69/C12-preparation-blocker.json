@@ -1,0 +1,78 @@
+{
+  "schema": "sf2h.atlas-memory-composed.c12-prerequisite.v1",
+  "mission": 69,
+  "state": "BLOCKED_BEFORE_CAPTURE",
+  "observed": {
+    "runId": 43668245381,
+    "jobId": 132672330771,
+    "productW": "d962e08b81a707f3536344614c1faa3e728917b8",
+    "ciS": "7823c05e28fbda36c7c0b1bd62eb5c5e64a4f537",
+    "failures": 13,
+    "files": {
+      "test/product/memory-original-reauthorization/installed-original.test.ts": 10,
+      "test/product/wp10/memory-integrity/revocation-tail.test.ts": 3
+    },
+    "error": "Real C12 original capture unavailable",
+    "at": "test/product/wp10/memory-integrity/fixture.ts:142",
+    "runtimeReasonLimitation": "The fixture logs its generic preparation error; F1 does not print the returned command reason. The financial path diagnosis below is source-level evidence, not an invented runtime reason."
+  },
+  "exactSources": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "base_blob_sha": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/prepared.ts",
+      "base_blob_sha": "517f50991fb7f057aff943c9e0b626ef6ddc91d6"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "base_blob_sha": "82b7d822ec5ca65ba9450cde74c5e8f39da84493"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp10/memory-integrity/fixture.ts",
+      "base_blob_sha": "352efd3fa2aefefa7fbdf88e6ef2d0886a669737"
+    }
+  ],
+  "sourceComparison": {
+    "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "W": "d962e08b81a707f3536344614c1faa3e728917b8",
+    "result": "The three causal files scenario-preparation, decision-host and fixture were independently fetched at both commits and are byte-identical. prepared.ts is also an unchanged dependency catalog pin.",
+    "reviewers": [
+      "/root/atlas_review",
+      "/root/criteria_audit",
+      "/root"
+    ]
+  },
+  "staticCausalChain": [
+    {
+      "path": "product/procurement/scenario-preparation.ts",
+      "range": "17-49",
+      "finding": "createProcurementScenarioPreparation has no command-producing ok path. Its canonical transaction is PortResult<never>; current sources/authority still return needs-input for unsupported financial approval."
+    },
+    {
+      "path": "product/procurement/prepared.ts",
+      "range": "91-97",
+      "finding": "Changing estAmount is financial-approval-command-unavailable; the fixture's explicit replacement selects estAmount."
+    },
+    {
+      "path": "product/procurement/decision-host.ts",
+      "range": "123-128",
+      "finding": "prepareDomainCommands returns the first non-ok bridge result before captureSource. No original capture is written on this path."
+    },
+    {
+      "path": "test/product/wp10/memory-integrity/fixture.ts",
+      "range": "141-144",
+      "finding": "The original positive command assertion throws before emitFromLedger. Atlas publication, private original reader and the later regression assertions are not reached."
+    }
+  ],
+  "conclusion": "These 13 FAIL results do not discriminate source69 versus the current integrated base and do not qualify their downstream memory40 assertions. No own Atlas-path change can create the missing upstream financial command.",
+  "disposition": {
+    "originalTests": "UNCHANGED; downstream assertions NOT_RUN at this prerequisite",
+    "retry": "No unchanged retry of these 13 C12 preparations and no MI07 retry.",
+    "ownIndependentWork": "Supported real C17 capture/publication/replay/restart and a separate same-case A-settled/B-pending documentary test. This is a bounded component proof and does not replace original C12 acceptance.",
+    "financialPolicy": "UNCHANGED; no fabricated historical capture, permissive grant, seeded financial receipt or positive assertion weakening.",
+    "owner": "Canonical financial/C12 producer under current S0 authority; source69 does not assume or revive another writer."
+  },
+  "GLOBAL_RELEASE": false
+}

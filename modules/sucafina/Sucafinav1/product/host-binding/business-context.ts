@@ -3,9 +3,9 @@ import { digestSfValue, sfEvidenceSourceMaps } from "../contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
 import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
 import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
-import { createSfAtlasMemory } from "./atlas-memory.ts"
+import { createSfAtlasMemory, revalidateSfAtlasRecall, sfAtlasPublicationMatches } from "./atlas-memory.ts"
 import { createSfAtlasDurableMemory } from "./atlas-store.ts"
-import { deriveSfMemoryOwner } from "../decision-memory/atlas-projection.ts"
+import { deriveSfMemoryOwner, mapSfAtlasEntry } from "../decision-memory/atlas-projection.ts"
 import { encodeCaseRef } from "../decisions/case-port.ts"
 import type { MemoryRecord } from "@orchestra/atlas-boundary/business-memory-ports"
 import { createSfAtlasScanner } from "./atlas-scanner.ts"
@@ -74,6 +74,7 @@ function assembleSfBusinessContext(host: {
   resolveSource: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution>
   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
   recall: BusinessContextService["recall"]
+  finalizeRecall?: (records: Awaited<ReturnType<BusinessContextService["recall"]>>, call: TrustedDomainContext) => Promise<boolean>
   emitFromLedger: BusinessContextService["emitFromLedger"]
 }): { service: BusinessContextService; resolveAncestry: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution> } {
   async function resolveAncestry(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>): Promise<BusinessEvidenceResolution> {
@@ -130,15 +131,22 @@ function assembleSfBusinessContext(host: {
         reads.set(key, pending)
         return pending
       })
-      if (requestDigest !== digestSfValue(request.refs) || binding !== digestSfValue([call.kind, call.binding]) || !await host.revalidate(call)) return unavailable()
+      if (!await host.revalidate(call) || requestDigest !== digestSfValue(request.refs) || binding !== digestSfValue([call.kind, call.binding])) return unavailable()
       return values.map((value) => structuredClone(value))
     },
     async recall(request, call) {
-      if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
-      const records = await host.recall(request, call)
+      const selected = structuredClone(request)
+      const selectionDigest = digestSfValue(selected)
+      const binding = digestSfValue([call.kind, call.binding])
+      const lease = call.lease
+      const stable = () => selectionDigest === digestSfValue(request) && selectionDigest === digestSfValue(selected) &&
+        binding === digestSfValue([call.kind, call.binding]) && call.lease === lease
+      if (!(await host.revalidate(call)) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
+      const records = await host.recall(selected, call)
+      if (!stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       const allowed = await mapSfEvidenceInOrder(records, async (record) => {
         const caseRef = record.envelope.caseRef
-        if (!caseRef || !request.caseRefs.some((ref) => ref.id === caseRef.id && ref.incarnation === caseRef.incarnation)) return false
+        if (!caseRef || !selected.caseRefs.some((ref) => ref.id === caseRef.id && ref.incarnation === caseRef.incarnation)) return false
         const refs = [...record.envelope.evidenceRefs, ...record.envelope.dependencies]
         if (!evidenceWithinBudget(refs)) return false
         try {
@@ -150,8 +158,10 @@ function assembleSfBusinessContext(host: {
         const resolved = await service.context({ refs }, call)
         return refs.length > 0 && resolved.every((item) => item.state === "fresh" || (item.state === "historical" && item.differences !== undefined))
       })
-      if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
+      if (!(await host.revalidate(call)) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       if (allowed.some((value) => !value)) throw new Error("SF_MEMORY_EVIDENCE_UNAVAILABLE")
+      if (host.finalizeRecall && !await host.finalizeRecall(records, call)) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
+      if (!stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
       return records
     },
     async emitFromLedger(ref, call) {
@@ -424,12 +434,36 @@ export function createSfAtlasBusiness(input: {
     plannerProof: recordHistory.proveContinuity,
     calculationProof,
   })
+  const recallCompletions = new WeakMap<Awaited<ReturnType<BusinessContextService["recall"]>>, {
+    call: TrustedDomainContext; selection: CaptureSelection; selectionDigest: string; recordsDigest: string; groups: readonly (readonly unknown[])[]
+  }>()
   const assembled = assembleSfBusinessContext({
     revalidate: input.host.revalidate, ...router,
     recall: async (request, call) => {
       const records = await mapSfEvidenceInOrder(request.caseRefs, (ref) => memory.recall(ref, call))
       if (records.some((result) => result.status !== "ok")) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
-      return records.flatMap((result) => result.status === "ok" ? result.records : [])
+      const groups = records.flatMap((result) => result.status === "ok" ? [result.records] : [])
+      const values = groups.flat()
+      recallCompletions.set(values, { call, selection: request, selectionDigest: digestSfValue(request),
+        recordsDigest: digestSfValue(values), groups })
+      return values
+    },
+    finalizeRecall: async (records, call) => {
+      const observed = recallCompletions.get(records)
+      recallCompletions.delete(records)
+      if (!observed || observed.call !== call) return false
+      const stable = () => observed.selectionDigest === digestSfValue(observed.selection) && observed.recordsDigest === digestSfValue(records)
+      if (!observed.groups.length) {
+        const request = input.host.requestFor(call)
+        if (!request || !stable() || observed.selection.caseRefs.length || records.length) return false
+        const binding = digestSfValue([call.kind, call.binding]), lease = call.lease, headers = digestSfValue([...request.headers.entries()])
+        const current = () => stable() && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
+          binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()])
+        const final = await input.state.read(request, "atlas", async () =>
+          current() && await input.host.revalidate(call) && current()).catch(() => undefined)
+        return final?.status === "ok" && final.value === true && current()
+      }
+      return stable() && await revalidateSfAtlasRecall(observed.groups, call) && stable()
     },
     emitFromLedger: (ref, call) => memory.emitFromLedger(ref, call),
   })
@@ -510,12 +544,22 @@ export function createSfAtlasBusiness(input: {
       } catch { return undefined }
     },
   }
+  // The canonical writer already owns source/replay authorization through its
+  // final C08 read. An outer await here would reopen that completed boundary.
+  context.emitFromLedger = (ref, call) => memory.emitFromLedger(ref, call)
   const readContext = context.context
   context.context = async (selection, call) => {
+    const selected = structuredClone(selection)
+    const selectionDigest = digestSfValue(selected)
     const request = input.host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])
+    const lease = call.lease
     const headers = request && digestSfValue([...request.headers.entries()])
-    const sources = await readContext(selection, call)
+    const sources = await readContext(selected, call)
+    if (!request || request.signal.aborted || input.host.requestFor(call) !== request || call.lease !== lease ||
+      binding !== digestSfValue([call.kind, call.binding]) || headers !== digestSfValue([...request.headers.entries()]) ||
+      selectionDigest !== digestSfValue(selection) || selectionDigest !== digestSfValue(selected))
+      return selected.refs.map((ref) => ({ state: "unavailable" as const, ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }))
     const sourceIdentity = digestSfValue(sources)
     if (request) captureObservations.set(sources, { call, read: async (requested) => {
       const selected = structuredClone(requested)
@@ -524,7 +568,7 @@ export function createSfAtlasBusiness(input: {
       const snapshotIdentity = digestSfValue(snapshots)
       const extras: { values: readonly BusinessEvidenceResolution[]; identity: string }[] = []
       const captures: { value: ProtectedEvidenceCapture; identity: string }[] = []
-      const stable = () => !!snapshots && !request.signal.aborted &&
+      const stable = () => !!snapshots && !request.signal.aborted && call.lease === lease &&
         input.host.requestFor(call) === request &&
         binding === digestSfValue([call.kind, call.binding]) &&
         headers === digestSfValue([...request.headers.entries()]) &&
@@ -568,7 +612,7 @@ export function createSfAtlasBusiness(input: {
         if (outbox.status !== "ok" || outbox.value.pending) return false
         const topology = await input.state.read(request, "atlas", (state) => {
           const value = object(state.atlas[owner])
-          return { events: value.events, envelopes: value.envelopes }
+          return { events: value.events, envelopes: value.envelopes, outbox: state.outbox }
         })
         if (topology.status !== "ok") return false
 
@@ -593,6 +637,14 @@ export function createSfAtlasBusiness(input: {
             boundCase.version > current.value.case.version || !Array.isArray(envelope.evidenceRefs) ||
             !Array.isArray(envelope.dependencies) || !("taskId" in record.entry) ||
             typeof record.entry.ref !== "string" || !record.entry.ref.trim()) return undefined
+          // The fast capture path must establish the same scanner and ledger
+          // identity as canonical recall before it can use the private reader.
+          const bundleRef = envelope.evidenceRefs.find((ref) => ref.kind === "case-event" && ref.target.eventId === envelope.sourceEventId)
+          const mapped = bundleRef && mapSfAtlasEntry({ kind: "task", projection: current.value, eventId: envelope.sourceEventId, bundleRef })
+          if (!sfAtlasPublicationMatches(envelope, record, partition.outbox) ||
+            !mapped || mapped.status !== "mapped" || mapped.projection.kind !== "task" ||
+            mapped.projection.owner !== owner || mapped.projection.projectionDigest !== envelope.projectionDigest ||
+            digestSfValue(mapped.projection.entry) !== digestSfValue(record.entry)) return undefined
           const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
           if (!originals.length || !evidenceWithinBudget(originals)) return undefined
           try {

@@ -1,0 +1,20 @@
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts b/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts
+index eb14812f4e3e6545b9732a3930da6c2cececa81c..d2148b66c10d382bd4269d7b8d0727d047941995 100644
+--- a/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/capabilities.ts
+@@ -91,12 +91,14 @@
+     return matches
+   }
+   const matches = buildMatches(ranked)
+   if (!matches) return reject("sf_decision_recall", "unavailable")
++  // The final canonical rank owns the last protected source/authority read.
++  if (!await host.revalidate(call)) return reject("sf_decision_recall", "unavailable")
+   const checked = await rankSfAtlasRecall({ memory: host.memory, caseRefs: selection.caseRefs, features: selection.features, featuresForCase: host.featuresForCase, runtimeVersions: host.runtimeVersions, call, proveContinuity: host.proveContinuity, revalidate: host.revalidate })
+   if (checked.status !== "ok") return reject("sf_decision_recall", "unavailable")
+   const current = buildMatches(checked)
+-  if (!current || digestSfValue(checked.cases) !== digestSfValue(ranked.cases) || digestSfValue(current) !== digestSfValue(matches) || !await host.revalidate(call)) return reject("sf_decision_recall", "unavailable")
++  if (!current || digestSfValue(checked.cases) !== digestSfValue(ranked.cases) || digestSfValue(current) !== digestSfValue(matches)) return reject("sf_decision_recall", "unavailable")
+   return deliver("sf_decision_recall", input.value, { matches: current, limitations: ["Semelhança não recomenda uma escolha."], accessRevision: call.binding.accessRevision }, call, host)
+ }
+ 
+ function deliver(operation: "sf_context_get" | "sf_decision_recall" | "sf_source_get" | "sf_evidence_get" | "sf_freshness_check", input: unknown, result: unknown, call: TrustedDomainContext, host: EvidenceCapabilityHost): CapabilityResult {

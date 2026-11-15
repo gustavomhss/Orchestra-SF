@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "mission": 69,
+  "phase": "B0_BASELINE_COUNTEREXAMPLE",
+  "state": "PREPARED_NOT_RUN",
+  "preparedAt": "2026-11-15 02:21:46 UTC",
+  "branch": "atlas-memory-proof",
+  "baseSha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "parentSha": "c8f7855989da65f6ec5af3b70bfb444b361db3e0",
+  "productUnchanged": true,
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "expected": "Discriminate baseline egress/integrity faults; any failure requires exact log inspection. No baseline success inferred.",
+  "selection": [
+    {
+      "path": "recall-boundaries.test.ts",
+      "tests": 2,
+      "oracles": [
+        "capture at final real revalidation",
+        "case revision after last actual document resolution"
+      ]
+    },
+    {
+      "path": "context-egress.test.ts",
+      "tests": 2,
+      "oracles": [
+        "capture after actual authorized context",
+        "selection changes at context boundary"
+      ]
+    },
+    {
+      "path": "record-integrity.test.ts",
+      "tests": 1,
+      "oracles": [
+        "scanner digest integrity",
+        "content addressed Atlas payload against unchanged ledger",
+        "private capture consumer"
+      ]
+    }
+  ],
+  "preserved": [
+    "correction40 product bytes",
+    "MI07 bytes and hold",
+    "mission61 discriminators"
+  ],
+  "constraints": {
+    "localTestsRun": false,
+    "syntheticAcceptedLedgerPremise": true,
+    "nativeSessionWitness": false,
+    "realC08": true,
+    "realAtlas": true,
+    "realScanner": true
+  },
+  "dedup": {
+    "activeInspected": [
+      {
+        "id": 43667294352,
+        "branch": "ci-run-linux-export66-r1-75e46959",
+        "sha": "b382a3823d1112ffba7e351c13e6f0be843332fe",
+        "status": "in_progress"
+      },
+      {
+        "id": 43667290771,
+        "branch": "ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1",
+        "sha": "92ac331081a61b4724193488777599d4d8eec257",
+        "status": "in_progress"
+      },
+      {
+        "id": 43667093423,
+        "branch": "ci-run-linux-m62-contracts-r1",
+        "sha": "1579fa24510bb06dc5c39641ce2c523c1a0f4087",
+        "status": "in_progress"
+      },
+      {
+        "id": 43665180272,
+        "branch": "ci-run-linux-m59r1",
+        "sha": "4e9c34e38bea4e9c6ed34595ea70c6e1edf6d946",
+        "status": "in_progress"
+      }
+    ],
+    "sameMissionActive": false
+  },
+  "result": null
+}

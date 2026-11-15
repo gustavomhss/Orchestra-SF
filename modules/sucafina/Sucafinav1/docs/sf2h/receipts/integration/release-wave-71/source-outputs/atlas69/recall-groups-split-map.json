@@ -1,0 +1,665 @@
+{
+  "schema": "sf.m69.recall-groups-split-map.v1",
+  "status": "LOCAL_TEXT_REVIEW_ONLY",
+  "reason": "F1 original test reached its completion marker but failed its declared 180000ms timeout after 265303.43ms. No timeout increase.",
+  "source": {
+    "runId": 43668245381,
+    "jobId": 132672330771,
+    "headSha": "7823c05e28fbda36c7c0b1bd62eb5c5e64a4f537",
+    "file": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+    "bytes": 6630,
+    "sha256": "7720afa889cf75da094cdb69b7f6caa665217d6d14bf01a0de9293ddbec3fcb0",
+    "gitBlobSha1": "40a2fdf9de46dbdfbec99a61173902d9a3dd8561",
+    "preservedLocalPreimage": "m69/ci-restart-plan/recall-groups.f1-before-split.ts.txt"
+  },
+  "postimage": {
+    "file": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+    "bytes": 8944,
+    "sha256": "d296ec62455b9f8aa38449b26e7eb5c204c3a54ea3c06973d6deeb36d88945b3",
+    "gitBlobSha1": "71b947d40374176f225634cddfd4fffcd4dd7061",
+    "declaredTests": 4,
+    "timeoutPerTestMs": 180000,
+    "expectSpawnCalls": 4
+  },
+  "tests": [
+    {
+      "id": "A",
+      "name": "M69 complete public recall preserves two real cases, authenticated empty selection and one-use original groups",
+      "marker": "SF_MEMORY_M69_MULTI_CASE_PUBLIC",
+      "coverage": [
+        "Two actual published cases with distinct identities and exact counts",
+        "Authenticated empty selection returns [] without durable changes",
+        "Public two-case recall retains both event IDs, original evidence bindings and canonical digests",
+        "Original same-call two-group observation is accepted exactly once"
+      ]
+    },
+    {
+      "id": "B",
+      "name": "M69 complete recall rejects group order changed during real revalidation and preserves intact groups",
+      "marker": "SF_MEMORY_M69_GROUP_ORDER_FENCE",
+      "coverage": [
+        "Intact same-call two-group positive before the fault",
+        "Actual permitted host.revalidate mutates the same group container order",
+        "Exact reversed identities and negative completion",
+        "Fresh intact same-call two-group positive after host restoration"
+      ]
+    },
+    {
+      "id": "C",
+      "name": "M69 complete recall rejects group membership changed during real revalidation and preserves intact groups",
+      "marker": "SF_MEMORY_M69_GROUP_MEMBERSHIP_FENCE",
+      "coverage": [
+        "Intact same-call two-group positive before the fault",
+        "Actual permitted host.revalidate removes second group from the same container",
+        "Exact surviving identity and negative completion",
+        "Fresh intact same-call two-group positive after host restoration"
+      ]
+    },
+    {
+      "id": "D",
+      "name": "M69 complete recall binds observations to their original arrays, actual call and actual reader",
+      "marker": "SF_MEMORY_M69_OBSERVATION_BINDINGS",
+      "coverage": [
+        "Copied array denied, original array accepted",
+        "A distinct real admitted call is denied and consumes the observation",
+        "Two actual reader instances cannot be mixed",
+        "Fresh intact real-reader completion remains accepted"
+      ]
+    }
+  ],
+  "sharedControls": {
+    "usedBy": [
+      "A",
+      "B",
+      "C",
+      "D"
+    ],
+    "fixture": "withComposedDocumentReplayFixture",
+    "secondCase": "publishSecondDocumentCase",
+    "historicalFixture40Modified": false,
+    "actualPublicationsPerTest": 2,
+    "exactSettledReplaysPerTest": 2,
+    "durableAudits": "Exact equality of complete before/after audit, including scan/event/envelope/outbox/settled counts.",
+    "markerTiming": "Marker emitted only after both settled replays and final unchanged audit pass.",
+    "syntheticPremise": "Accepted ledger entries remain the explicitly declared fixture premise; capture, scanner publication and replay execute real modules in Actions."
+  },
+  "assertionMap": [
+    {
+      "originalLine": 13,
+      "statement": "expect(second.caseRef).not.toEqual(f.caseRef)",
+      "splitTests": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "newLines": [
+        22
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 14,
+      "statement": "expect(second.receipt.eventId).not.toBe(f.receipt.eventId)",
+      "splitTests": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "newLines": [
+        23
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 16,
+      "statement": "expect(before.counts).toMatchObject({ scans: 2, events: 2, envelopes: 2, outbox: 2, settled: 2 })",
+      "splitTests": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "newLines": [
+        25
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 19,
+      "statement": "expect(await f.atlas.context.recall(emptySelection, call)).toEqual([])",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        51
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 21,
+      "statement": "expect(await f.audit()).toEqual(before)",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        53
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 25,
+      "statement": "expect(publicRecords).toHaveLength(2)",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        57
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 26,
+      "statement": "expect(new Set(publicRecords.map((record) => record.envelope.eventId))) .toEqual(new Set([f.receipt.eventId, second.receipt.eventId]))",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        58
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 28,
+      "statement": "requireOriginalRecord(f, publicRecords.filter((record) => record.envelope.eventId === f.receipt.eventId))",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        60
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 30,
+      "statement": "if (!secondRecord) throw new Error(\"Public multi-case recall dropped the second actual record\")",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        62
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 31,
+      "statement": "expect(secondRecord.envelope.caseRef).toMatchObject(second.caseRef)",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        63
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 32,
+      "statement": "expect(secondRecord.envelope.sourceEventId).toBe(second.eventRef.target.eventId)",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        64
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 33,
+      "statement": "expect(secondRecord.envelope.scannerReceipt.digest).toBe(second.receipt.recordDigest)",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        65
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 34,
+      "statement": "expect(digestSfValue({ kind: secondRecord.envelope.kind, owner: secondRecord.envelope.owner, entry: secondRecord.entry })) .toBe(second.receipt.recordDigest)",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        66
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 40,
+      "statement": "expect(another.status).toBe(\"ok\")",
+      "splitTests": [
+        "A",
+        "B",
+        "C"
+      ],
+      "newLines": [
+        39
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 41,
+      "statement": "if (another.status !== \"ok\") throw new Error(\"Second actual raw recall unavailable\")",
+      "splitTests": [
+        "A",
+        "B",
+        "C"
+      ],
+      "newLines": [
+        40
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 42,
+      "statement": "expect(another.records).toHaveLength(1)",
+      "splitTests": [
+        "A",
+        "B",
+        "C"
+      ],
+      "newLines": [
+        41
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 43,
+      "statement": "expect(another.records[0]?.recordDigest).toBe(second.receipt.recordDigest)",
+      "splitTests": [
+        "A",
+        "B",
+        "C"
+      ],
+      "newLines": [
+        42
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 47,
+      "statement": "expect(await revalidateSfAtlasRecall(groups, call)).toBe(true)",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        69
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 48,
+      "statement": "expect(await revalidateSfAtlasRecall(groups, call)).toBe(false)",
+      "splitTests": [
+        "A"
+      ],
+      "newLines": [
+        70
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 69,
+      "statement": "expect(observation.calls).toBeGreaterThan(0)",
+      "splitTests": [
+        "B",
+        "C"
+      ],
+      "newLines": [
+        101
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 70,
+      "statement": "expect(observation.changed).toBe(true)",
+      "splitTests": [
+        "B",
+        "C"
+      ],
+      "newLines": [
+        102
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 72,
+      "statement": "expect(changingGroups).toHaveLength(2)",
+      "splitTests": [
+        "B"
+      ],
+      "newLines": [
+        104
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 73,
+      "statement": "expect(changingGroups[0]).toBe(originalGroups[1])",
+      "splitTests": [
+        "B"
+      ],
+      "newLines": [
+        105
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 74,
+      "statement": "expect(changingGroups[1]).toBe(originalGroups[0])",
+      "splitTests": [
+        "B"
+      ],
+      "newLines": [
+        106
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 76,
+      "statement": "expect(changingGroups).toHaveLength(1)",
+      "splitTests": [
+        "C"
+      ],
+      "newLines": [
+        108
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 77,
+      "statement": "expect(changingGroups[0]).toBe(originalGroups[0])",
+      "splitTests": [
+        "C"
+      ],
+      "newLines": [
+        109
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 79,
+      "statement": "expect(result).toBe(false)",
+      "splitTests": [
+        "B",
+        "C"
+      ],
+      "newLines": [
+        111
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 80,
+      "statement": "expect(await revalidateSfAtlasRecall(await readGroups(), call)).toBe(true)",
+      "splitTests": [
+        "B",
+        "C"
+      ],
+      "newLines": [
+        112
+      ],
+      "textChange": "Same helper extracted; explicit fixture, second case and call arguments."
+    },
+    {
+      "originalLine": 81,
+      "statement": "expect(await f.audit()).toEqual(before)",
+      "splitTests": [
+        "B",
+        "C"
+      ],
+      "newLines": [
+        113
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 86,
+      "statement": "expect(await revalidateSfAtlasRecall([structuredClone(copied)], call)).toBe(false)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        136
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 87,
+      "statement": "expect(await revalidateSfAtlasRecall([copied], call)).toBe(true)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        137
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 91,
+      "statement": "expect(other).not.toBe(call)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        141
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 92,
+      "statement": "expect(await revalidateSfAtlasRecall([wrongCall], other)).toBe(false)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        142
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 95,
+      "statement": "expect(await revalidateSfAtlasRecall([wrongCall], call)).toBe(false)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        145
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 99,
+      "statement": "expect(otherReader.status).toBe(\"ok\")",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        149
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 100,
+      "statement": "if (otherReader.status !== \"ok\") throw new Error(\"Second real reader unavailable\")",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        150
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 101,
+      "statement": "requireOriginalRecord(f, otherReader.records)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        151
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 102,
+      "statement": "expect(await revalidateSfAtlasRecall([firstReader, otherReader.records], call)).toBe(false)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        152
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 103,
+      "statement": "expect(await revalidateSfAtlasRecall([await readOriginalRaw(f, call)], call)).toBe(true)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        153
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 104,
+      "statement": "expect(await f.audit()).toEqual(before)",
+      "splitTests": [
+        "D"
+      ],
+      "newLines": [
+        154
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 106,
+      "statement": "expect(await f.replay()).toEqual({ ...f.receipt, status: \"already-committed\" })",
+      "splitTests": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "newLines": [
+        27
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 107,
+      "statement": "expect(await second.replay()).toEqual({ ...second.receipt, status: \"already-committed\" })",
+      "splitTests": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "newLines": [
+        28
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    },
+    {
+      "originalLine": 108,
+      "statement": "expect(await f.audit()).toEqual(before)",
+      "splitTests": [
+        "A",
+        "B",
+        "C",
+        "D"
+      ],
+      "newLines": [
+        29
+      ],
+      "textChange": "Unchanged assertion or explicit narrowing guard."
+    }
+  ],
+  "additionalControls": [
+    {
+      "newLine": 71,
+      "tests": [
+        "A"
+      ],
+      "description": "Exact audit after original group completion/reuse."
+    },
+    {
+      "newLine": 82,
+      "tests": [
+        "B",
+        "C"
+      ],
+      "description": "Fresh intact two-group positive before each late mutation, so each isolated negative has its own preceding positive."
+    }
+  ],
+  "preservedCausality": [
+    {
+      "originalLines": [
+        55,
+        67
+      ],
+      "newLines": [
+        87,
+        99
+      ],
+      "description": "Hook delegates actual revalidate first, restricts mutation to exact call, requires actual permission and changes container at most once."
+    },
+    {
+      "originalLine": 82,
+      "newLine": 114,
+      "description": "Original host method restored in finally; result assertions run after explicit restoration."
+    },
+    {
+      "originalLines": [
+        38,
+        44
+      ],
+      "newLines": [
+        36,
+        43
+      ],
+      "description": "Same actual raw readers; inherited readOriginalRaw positive and exact second record digest remain unchanged."
+    }
+  ],
+  "budgetAssessment": {
+    "observedOriginalMs": 265303.43,
+    "declaredOriginalMs": 180000,
+    "declaredSplitMs": 180000,
+    "perBlockMeasured": false,
+    "reasoning": "A removes both late-mutation blocks and all copied/cross-call/mixed-reader operations. B and C each contain one mutation with their own before/after positives. D contains only identity binding cases. Each retains complete actual fixture setup and both replays.",
+    "performanceClaim": "No claim of faster total execution or PASS before Actions. These independent fixtures may take more aggregate time. No local product/test/typecheck execution.",
+    "totalDeclaredCeilingsMs": 720000,
+    "independentFixtureCount": 4,
+    "qualificationLimit": "The original monolithic sequence remains FAIL at its 180000ms deadline. Four independent tests each keep that ceiling, distribute the total budget across fresh fixtures, and do not prove the original whole sequence ran within its deadline."
+  },
+  "validation": {
+    "kind": "Deterministic source-text comparison only",
+    "originalAssertionOrGuardAnchors": 43,
+    "matchedOriginalAnchors": 43,
+    "unmappedOriginalAnchors": 0,
+    "testsRun": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "remoteWrites": false,
+    "ciDispatched": false,
+    "independentReview": {
+      "reviewer": "atlas_review",
+      "mode": "source-text diff against F1",
+      "blockingFindings": [],
+      "result": "All original oracles retained; two publications/two replays/audit per fixture, added B/C positives, coherent RecallCall/DocumentFixture types. No execution."
+    }
+  }
+}

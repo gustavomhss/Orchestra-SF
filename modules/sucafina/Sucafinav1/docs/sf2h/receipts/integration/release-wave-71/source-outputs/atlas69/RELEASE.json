@@ -1,0 +1,117 @@
+{
+  "schema": "sf2h.atlas-memory-composed.release.v1",
+  "mission": 69,
+  "state": "RELEASED_FOR_AUTHORIZED_CANDIDATE_PREPARATION_WITH_HELD_ACCEPTANCE",
+  "recordedAt": "2026-11-15 03:24:34 UTC",
+  "branch": "atlas-memory-proof",
+  "PR": 79,
+  "productW": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "productTree": "f7ddae5cfd84866517ce88cacf09b5b245854954",
+  "sourceW": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+  "sourceTree": "01211640e7fa6ccc77b9ac702fde94edf9565678",
+  "sourceManifest": "SOURCE-MANIFEST.json",
+  "completePatch": "patches/source.patch",
+  "patchSha256": "b1b8ea0678f7b977115d2e05d202db1c89009e3a227e9d5d07e088d84c6f1574",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "preimage": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+      "postimage": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "preimage": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "postimage": "2e7b312561f3f027ab070c61e15ecb6886fa169c"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/composed-document-fixture.ts",
+      "preimage": null,
+      "postimage": "891b404a8feb286ddf5f110528ac57b5713e7cc0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "preimage": null,
+      "postimage": "7ce0f91a655bf40f90030b489bfff75dec33ab7f"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts",
+      "preimage": null,
+      "postimage": "83ca43d9785787613daadd26dbb9cd1a5ddbbfb9"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts",
+      "preimage": null,
+      "postimage": "c5f9e443286e055d0d84dd734fb9b0626267b084"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail-fixture.ts",
+      "preimage": null,
+      "postimage": "f2e9e9f9e4a54e05186151acdf811dfecac96bce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "preimage": null,
+      "postimage": "31f6297303d1dd1abc204f120a9a859134705f80"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts",
+      "preimage": null,
+      "postimage": "2cc3f53be41b01660244e6660aa8fb42c1f54cce"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "preimage": null,
+      "postimage": "71b947d40374176f225634cddfd4fffcd4dd7061"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+      "preimage": null,
+      "postimage": "d745826c18ca2fc36e1f19b40f51249b471c86ea"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/second-case-fixture.ts",
+      "preimage": null,
+      "postimage": "c669c3bd781fa108e228125f2e8027b0d7e6d307"
+    }
+  ],
+  "activation": {
+    "permittedNow": "The explicitly authorized current integrator71 may review and consume this exact12-file source unit to prepare a coherent candidate. Do not wait for global gates before constructing that candidate; preserve all held qualifications.",
+    "currentIntegrator": 71,
+    "lease": "S0-C-e13-browser71",
+    "authorityAck": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "originalDeliveryRoute": "69→60 / PR65;60 ended and71 is the explicit successor.",
+    "requirements": [
+      "Reconcile current target and exact preimages/dependencies before material CAS.",
+      "Consume the complete source unit, not an in-flight branch snapshot or unrelated historical tree.",
+      "Publish consumer ACK with resulting candidate SHA/tree and held items.",
+      "Qualify the actual composed candidate through45/S0 owners; source PASS does not transfer."
+    ],
+    "lastObservedTarget": {
+      "branch": "sf2-stack",
+      "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+      "materialCandidate": "C31",
+      "delta": "TARGET-C31-DELTA.json",
+      "mustReconcileActualHeadAtIntake": true
+    }
+  },
+  "evidence": {
+    "B0": "0PASS/5FAIL; four tests exposed five escapes and one error-class oracle defect",
+    "F1": "12PASS/14FAIL; five core69, five documentary40, two35 passed; one monolithic timeout and13 C12 prerequisites failed",
+    "F2": "8PASS/0FAIL; independent group controls, documentary pending replay and rank completion",
+    "productBytesIdenticalAcrossF1F2": true
+  },
+  "held": [
+    "13 original C12-dependent regression bodies not reached; upstream financial preparation remains blocked.",
+    "Original F1 monolithic180s sequence remains failed; independent F2 fixtures do not prove that deadline.",
+    "External owner patches are prospective, not part of the applied source unit and not qualified.",
+    "Compiler/guards45 NOT_RUN by69; native SessionV2/real Task/C15, rendered UI, complete AM05 and final predicates not established.",
+    "Observed material C31 and any subsequent composed target remain separately unqualified with source69; see TARGET-C31-DELTA.json."
+  ],
+  "externalProposals": {
+    "state": "HELD_NOT_RELEASED_FOR_AUTOMATIC_APPLICATION",
+    "manifest": "owner-patches/R2-preimages.json",
+    "scope": "01 then02 require path-owner review, target reconciliation and separate qualification. Dispatcher/native bridge completion still requires its authorized owner."
+  },
+  "GLOBAL_RELEASE": false
+}

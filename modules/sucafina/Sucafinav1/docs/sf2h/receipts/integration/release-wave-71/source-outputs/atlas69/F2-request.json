@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.atlas-memory-composed.selection.v1",
+  "mission": 69,
+  "phase": "F2_INDEPENDENT_COMPLETION",
+  "state": "PREPARED_NOT_RUN",
+  "parent": "52925e5d8bfb5f8bb1ff5baab11c78b47a3ba2fc",
+  "productW": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "productTree": "f7ddae5cfd84866517ce88cacf09b5b245854954",
+  "productBlobs": {
+    "atlasMemory": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+    "businessContext": "2e7b312561f3f027ab070c61e15ecb6886fa169c"
+  },
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts",
+      "./Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {
+      "ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER": "strict"
+    }
+  },
+  "expectedTests": 8,
+  "groups": [
+    {
+      "path": "recall-groups.test.ts",
+      "tests": 4,
+      "meaning": "All assertions from the timed-out own F1 monolith are retained across independent fixtures. Each retains 180000ms; the failed original whole-sequence deadline remains failed."
+    },
+    {
+      "path": "pending-replay.test.ts",
+      "tests": 1,
+      "meaning": "Independent legitimate C17 documentary A settled / B pending / current credential removal. No financial C12 capture, no installed initializeAtlas claim."
+    },
+    {
+      "path": "rank-tail.test.ts",
+      "tests": 3,
+      "meaning": "The previously prepared G1 supplemental tests, byte-unchanged. They are executed here instead of a separate G1 run."
+    }
+  ],
+  "prior": {
+    "F1": {
+      "runId": 43668245381,
+      "jobId": 132672330771,
+      "result": "12PASS/14FAIL",
+      "ownMonolith": "TIMEOUT_180000MS; elapsed265303.43ms",
+      "C12": "13 prerequisites failed before capture; assertions not reached; no unchanged rerun.",
+      "productChangeAfterF1": false
+    },
+    "G1": {
+      "W": "7a5e45c2bffb3a89cc4be8a3318ad99ae8058b83",
+      "state": "PREPARED_SUPERSEDED_NOT_DISPATCHED",
+      "separateRunId": null
+    }
+  },
+  "controls": [
+    "All real C08/source/current authorization/Atlas/scanner behavior retained.",
+    "No product, original40/35 fixture or per-test timeout changed.",
+    "No selected C12 test is relabeled as passing; F1 FAIL remains in its receipt.",
+    "No new workflow or compiler execution; existing request interface only.",
+    "No MI07 selection or duplication of61 mixed-source discriminators."
+  ],
+  "review": {
+    "method": "Independent read-only source review of split and documentary pending test",
+    "reviewer": "/root/atlas_review",
+    "result": "NO_IDENTIFIED_STATIC_BLOCKER",
+    "runtimePassClaim": false
+  },
+  "results": null,
+  "GLOBAL_RELEASE": false
+}

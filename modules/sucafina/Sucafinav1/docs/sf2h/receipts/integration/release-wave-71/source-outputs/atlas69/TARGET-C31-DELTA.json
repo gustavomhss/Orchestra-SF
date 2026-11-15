@@ -1,0 +1,423 @@
+{
+  "schema": "sf2h.atlas-memory-composed.target-c31-delta.v1",
+  "mission": 69,
+  "observedAt": "2026-11-15 03:24:34 UTC",
+  "kind": "LAST_OBSERVED_DOCUMENTARY_SNAPSHOT_NOT_CONTINUOUS_HEAD_TRACKING",
+  "sourceW": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+  "sourceProductW": "d962e08b81a707f3536344614c1faa3e728917b8",
+  "from": {
+    "sha": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+    "tree": "8962e2dce1cad73b93dcd75a4a5bce5807eb3de4"
+  },
+  "to": {
+    "name": "C31",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "parent": "947a4add941893c8247b95a5ce6386468313838b",
+    "qualification": "SOURCE69_COMPOSITION_NOT_RUN_NATIVE_ACTIVATION_HELD"
+  },
+  "control": {
+    "sha": "1f01a01f51521ae39b7a4e730acefde3b9999891",
+    "mission69Blob": "f4111edcf289c78aad5564002a32401fea4915c0",
+    "mission69Unchanged": true,
+    "integrator": 71,
+    "lease": "S0-C-e13-browser71"
+  },
+  "compare": {
+    "status": "ahead",
+    "aheadBy": 3,
+    "totalCommits": 3,
+    "files": 203,
+    "materialFiles": 26,
+    "receiptFiles": 177,
+    "owned69ProductOrTestOverlap": 0,
+    "scope": "GitHub MCP full compare plus 26 exact material blob readbacks and two own preimage reads at the pinned C31 commit. Source and target were not mutated by these reads."
+  },
+  "candidates": [
+    {
+      "name": "C29",
+      "commit": "342f04688aa173914f36a81e80e6781242616e82",
+      "parent": "99d404ef15e12161b9043b3ac020bbb814d710dc",
+      "parentTree": "8962e2dce1cad73b93dcd75a4a5bce5807eb3de4",
+      "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C29-runtime59.json",
+      "receiptBlob": "45bc614b3550b3e36ec99712cbeaae7d0c5d766f",
+      "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+      "source": {
+        "mission": 59,
+        "terminal": "608763f1765e0eac34565a3668d330bb1cdbd140",
+        "terminal_tree": "a696510c5c10871095733437efd7b73140f88920",
+        "work": "26f7af7efcc143d558df51eeb35e4a7011f456fe",
+        "work_tree": "2d2a76b513f282214fbc0fca67053c1146a8e18d",
+        "release_blob": "6ab5c38380cb9ad81123022af416d18e55798000",
+        "archive_tree": "6c15ebe879acd3ded251cadcd31efa9a85d9428b",
+        "archive_path": "source-outputs/runtime59",
+        "archive_blob_count": 47
+      },
+      "held": [
+        "P03 FAIL/HELD; no retry unchanged without new qualified causal change and owner authority",
+        "C28 Reports functional/runtime HOLD",
+        "A45 typecheck/generation/guards required separately",
+        "Installed composed evidence, final selections, AM/reviews/C-G7/D-G8 and global acceptance remain"
+      ],
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+          "preimageBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+          "postimageBlob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+          "C31BlobReadback": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+          "match": true,
+          "source69ClosureFile": 305,
+          "source69BaseBlob": "9e9bac976b503409de65868a366f352ca1e65071"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+          "preimageBlob": "666259511ad459629ef52f48aca20b231b0dff4b",
+          "postimageBlob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+          "C31BlobReadback": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+          "match": true,
+          "source69ClosureFile": 314,
+          "source69BaseBlob": "666259511ad459629ef52f48aca20b231b0dff4b"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+          "preimageBlob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+          "postimageBlob": "0e812842ad0d534998c182100a8466548d70e915",
+          "C31BlobReadback": "0e812842ad0d534998c182100a8466548d70e915",
+          "match": true,
+          "source69ClosureFile": 229,
+          "source69BaseBlob": "d43a630254142bc5e5fb3589d1120a328abf2d1c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts",
+          "preimageBlob": "095a0e5764e115fb874a5f5c0c16a9c73466c340",
+          "postimageBlob": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+          "C31BlobReadback": "3cf82bd82b2716ee689b4c48bd9551540b058287",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/canonical-fixture.ts",
+          "preimageBlob": null,
+          "postimageBlob": "35741770154ccea55944674239e5b29cadc3abb6",
+          "C31BlobReadback": "35741770154ccea55944674239e5b29cadc3abb6",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/wrappers.test.ts",
+          "preimageBlob": null,
+          "postimageBlob": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
+          "C31BlobReadback": "1d0ca64fb5c181e4a08321758871c0d0b874802d",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/runtime.test.ts",
+          "preimageBlob": null,
+          "postimageBlob": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+          "C31BlobReadback": "14ad0af44fc6c4af8c33d1af1130e82220b822b3",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/freshness.test.ts",
+          "preimageBlob": null,
+          "postimageBlob": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
+          "C31BlobReadback": "0dac654465c7ad43e025d10f660ecad297cc5c1c",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/runtime-readonly-root/cost.test.ts",
+          "preimageBlob": null,
+          "postimageBlob": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
+          "C31BlobReadback": "6b0e7ae0e7dea667570ccee65175b8a9089a171e",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        }
+      ]
+    },
+    {
+      "name": "C30",
+      "commit": "947a4add941893c8247b95a5ce6386468313838b",
+      "parent": "342f04688aa173914f36a81e80e6781242616e82",
+      "parentTree": "ac40db3e52bc58b171bc1bb4f311ed0d1d13bbab",
+      "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C30-operations63.json",
+      "receiptBlob": "9be9ba8788fec5b58887a90e684810f4975d59fe",
+      "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+      "source": {
+        "mission": 63,
+        "terminal": "f0682b3ca9a792dcef2166a867aa06974e242874",
+        "terminal_tree": "8a3b0ad5c426a621a013203552c2e48dd1074e51",
+        "work": "83aabd95ab423816002a623d1a998eb51bb89173",
+        "work_tree": "187cc50fc323e3a6958d4e4489cc124bfc26b302",
+        "release_blob": "150bdcb7589ad921d0305bf37087cdd951ccc92a",
+        "archive_path": "source-outputs/operations63",
+        "archive_tree": "2eafc1c9cb8ad2e9e7179a9a3aa85b66a05f4860",
+        "archive_blob_count": 62
+      },
+      "held": [
+        "Real ClamD readiness/live clean/EICAR/clean-after/ERROR/DOWN NOT_RUN",
+        "Five original journeys latest 1PASS4FAIL: money precision, duplicate FX description, import admit403, document scan422",
+        "Compiler/typechecks/guards NOT_RUN",
+        "C06 invalidation, PDF/DOCX/text extraction completeness, native parity, AM01-06 and final eight/reviews/C-G7/D-G8 remain mandatory",
+        "Import403 cause still not established by generic denial; no unsupported conclusion beyond missing scanner blocks admission"
+      ],
+      "paths": [
+        {
+          "path": "modules/sucafina/Sucafinav1/runtime/local-scanner.ts",
+          "preimageBlob": "f4fc6bc7c653213c61b8d05ecfad6bfd765df261",
+          "postimageBlob": "d4847ae8096764205e00ccfaedf36a9f84f66a83",
+          "C31BlobReadback": "d4847ae8096764205e00ccfaedf36a9f84f66a83",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/protocol.test.ts",
+          "preimageBlob": null,
+          "postimageBlob": "458c33783954d9b8465f289690718a4fe8c34ec6",
+          "C31BlobReadback": "458c33783954d9b8465f289690718a4fe8c34ec6",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts",
+          "preimageBlob": null,
+          "postimageBlob": "6b2e5ae65131e4d050fe07b9185d2ec7c1156d4c",
+          "C31BlobReadback": "6b2e5ae65131e4d050fe07b9185d2ec7c1156d4c",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "script/sf2h/operations-scanner/README.md",
+          "preimageBlob": null,
+          "postimageBlob": "1cca813f15c94cd397825a42c28ac9b9020212df",
+          "C31BlobReadback": "1cca813f15c94cd397825a42c28ac9b9020212df",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "script/sf2h/operations-scanner/cleanup.sh",
+          "preimageBlob": null,
+          "postimageBlob": "034be3399187c8b8683c166987795f210a7421c2",
+          "C31BlobReadback": "034be3399187c8b8683c166987795f210a7421c2",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "script/sf2h/operations-scanner/select.mjs",
+          "preimageBlob": null,
+          "postimageBlob": "4b4dabacea4c2b47daec81a9de95c61b5ca78fc4",
+          "C31BlobReadback": "4b4dabacea4c2b47daec81a9de95c61b5ca78fc4",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "script/sf2h/operations-scanner/service.mjs",
+          "preimageBlob": null,
+          "postimageBlob": "c6d3edbe33e014efae925aaa36ab36701bb7147d",
+          "C31BlobReadback": "c6d3edbe33e014efae925aaa36ab36701bb7147d",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "script/sf2h/operations-scanner/setup.sh",
+          "preimageBlob": null,
+          "postimageBlob": "66bd6df24499027328f22b598e50268023287071",
+          "C31BlobReadback": "66bd6df24499027328f22b598e50268023287071",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "script/sf2h/operations-scanner/tools.lock.json",
+          "preimageBlob": null,
+          "postimageBlob": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+          "C31BlobReadback": "cbcea48086755f45ea92e1abb516cf0222d0ebbc",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/documents.ts",
+          "preimageBlob": "7136131cdb713abecccde2c29e8b6c1204b60a6c",
+          "postimageBlob": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+          "C31BlobReadback": "9d40e85fa71293148753c5c08ee12f775266d6c8",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "packages/app-shell/e2e/sucafina/operations-support/imports.ts",
+          "preimageBlob": "c03cf0ec947f10548557643dd8a57a39e098fef0",
+          "postimageBlob": "c229bc6e85d2474d057a21859d0d88055100a078",
+          "C31BlobReadback": "c229bc6e85d2474d057a21859d0d88055100a078",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        }
+      ]
+    },
+    {
+      "name": "C31",
+      "commit": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "parent": "947a4add941893c8247b95a5ce6386468313838b",
+      "parentTree": "280cbcaa7a73a88f7c9d4c13ae8efd796aa63caf",
+      "receiptPath": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/candidates/C31-native64.json",
+      "receiptBlob": "74fea0e133ca45f43337a6301107690ed16355a0",
+      "status": "MATERIAL_COMPOSED_NATIVE_ACTIVATION_HELD",
+      "source": {
+        "branch": "native-admission-proof",
+        "pr": 80,
+        "W": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "W_tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a",
+        "terminal": "4d0421669054a131de0df0c95994b45229ab354e",
+        "terminal_tree": "39ecc1620f8edcbd43281db4e94386d32b76c089",
+        "snapshot": "e148ff33a1c3f4864d039f5d443934173b8e9030",
+        "snapshot_tree": "e7c0ff75835c65c60611162e9f95934d2ac0e2fd",
+        "terminal_authority": "TERMINATED_COMPONENT_PASS_EXTERNAL_NATIVE_BLOCKED_CHECKS45_PENDING",
+        "release_state": "SOURCE_DELTA_RELEASED_FOR_SELECTIVE_HELD_COMPOSITION"
+      },
+      "held": [
+        "CAP64-ORIGIN authentic native Request/Session/Task origin absent",
+        "CAP64-POLICY-C15 bounded parent/child policy and authentic token/skill/budget admission absent",
+        "CAP64-HUMAN visible real review/approval/Permission continuation absent",
+        "CAP64-TASK-RELAY actual provider/Task/Relay/artifact consumer not proved",
+        "CAP64-RELOAD fresh read/continuation after reload not installed",
+        "CAP64-LIFECYCLE source component coverage only, installed composition pending",
+        "CAP64-READINESS actual scoped descriptor registration lifecycle absent",
+        "CAP64-SCHEDULE separate admission required before enabling watch",
+        "Existing41 provider.executed===true incompatibility preserved; no engine edit",
+        "Checks45 and composed host qualification NOT_RUN; GLOBAL_RELEASE=false"
+      ],
+      "paths": [
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+          "preimageBlob": null,
+          "postimageBlob": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+          "C31BlobReadback": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+          "preimageBlob": "9934aca5899142f9715d82bf7d4a073e9912f7cc",
+          "postimageBlob": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+          "C31BlobReadback": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+          "preimageBlob": "7b7f127610450ed531fbb11464a0308e860a9296",
+          "postimageBlob": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+          "C31BlobReadback": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+          "preimageBlob": null,
+          "postimageBlob": "63751102171be3ca9b61e3811a378b426ee36c3f",
+          "C31BlobReadback": "63751102171be3ca9b61e3811a378b426ee36c3f",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+          "preimageBlob": null,
+          "postimageBlob": "e6d0f3c7f8f2e6cfa19da57de109984bf3c7ada9",
+          "C31BlobReadback": "e6d0f3c7f8f2e6cfa19da57de109984bf3c7ada9",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/host-context.ts",
+          "preimageBlob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+          "postimageBlob": "297a4050323d80648684725f9c7e9a8680aa318f",
+          "C31BlobReadback": "297a4050323d80648684725f9c7e9a8680aa318f",
+          "match": true,
+          "source69ClosureFile": null,
+          "source69BaseBlob": null
+        }
+      ]
+    }
+  ],
+  "own69Preimages": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "expectedPreimage": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+      "C31Observed": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+      "match": true,
+      "releasedPostimage": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "expectedPreimage": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "C31Observed": "390bce2594e39a28defce1d47fafa0d7291e940e",
+      "match": true,
+      "releasedPostimage": "2e7b312561f3f027ab070c61e15ecb6886fa169c"
+    }
+  ],
+  "own69TestAdditions": {
+    "count": 10,
+    "prefix": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/",
+    "directoryReadback": "GitHub contents GET at C31 returned404 NOT_FOUND; candidate receipts and full compare contain no own69 test path."
+  },
+  "source69ClosureIntersection": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "preimageBlob": "9e9bac976b503409de65868a366f352ca1e65071",
+      "postimageBlob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "C31BlobReadback": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "match": true,
+      "source69ClosureFile": 305,
+      "source69BaseBlob": "9e9bac976b503409de65868a366f352ca1e65071"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimageBlob": "666259511ad459629ef52f48aca20b231b0dff4b",
+      "postimageBlob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "C31BlobReadback": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+      "match": true,
+      "source69ClosureFile": 314,
+      "source69BaseBlob": "666259511ad459629ef52f48aca20b231b0dff4b"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "preimageBlob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+      "postimageBlob": "0e812842ad0d534998c182100a8466548d70e915",
+      "C31BlobReadback": "0e812842ad0d534998c182100a8466548d70e915",
+      "match": true,
+      "source69ClosureFile": 229,
+      "source69BaseBlob": "d43a630254142bc5e5fb3589d1120a328abf2d1c"
+    }
+  ],
+  "previousC28Dependency": "product/integration/product-authority.ts also differs from the source base; full pinned history remains in TARGET-RECONCILIATION.json. The original source closure is not rewritten as a C31 closure.",
+  "limits": [
+    "This is a bounded static delta/preimage inventory, not a semantic equivalence or runtime proof.",
+    "B0/F1/F2 results remain tied to their source W/S snapshots. No C31+69 execution or inherited source green is asserted.",
+    "Native64 activation remains held according to the C31 receipt; no native Session/Task/provider witness is created by composition.",
+    "No69 consumer ACK observed.71 must reconcile actual HEAD, control/authority, released source unit, preimages and dependencies at intake.",
+    "No additional69 CI dispatch follows merely from this moving target observation.45 and S0 retain their gates."
+  ],
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,1806 @@
+--- a/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts
+@@ -5,7 +5,7 @@
+ import type { SourceRef } from "../contracts/context.ts"
+ import type { DecisionCasePort, DomainPortHost } from "../contracts/ports.ts"
+ import type { DecisionCase } from "../contracts/decisions.ts"
+-import type { SfProductStatePort } from "../contracts/state.ts"
++import type { SfAtlasOutboxEntry, SfProductStatePort } from "../contracts/state.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import { encodeCaseRef } from "../decisions/case-port.ts"
+ import { deriveSfMemoryOwner, mapSfAtlasEntry } from "../decision-memory/atlas-projection.ts"
+@@ -16,6 +16,39 @@
+ import { mapSfEvidenceInOrder } from "./evidence-order.ts"
+ 
+ type AtlasPartition = { events: Parameters<typeof createSfAtlasDurableMemory>[0]["events"]; envelopes: Record<string, BusinessMemoryEnvelope>; originals: Record<string, { ref: BusinessEvidenceRef; projection: NonNullable<Awaited<ReturnType<BusinessContextService["resolve"]>>["authorizedProjection"]> }>; captureDigests: Record<string, Record<string, string>> }
++
++type RecallObservation = {
++  call: TrustedDomainContext; stable: () => boolean; recordsDigest: string; sourceState: string; sourceFence: string
++  complete: (observations: readonly { records: readonly unknown[]; observed?: RecallObservation }[], call: TrustedDomainContext) => Promise<boolean>
++}
++const recallObservations = new WeakMap<readonly unknown[], RecallObservation>()
++
++/** Consume private canonical observations and reopen one C08 scope for the
++ * complete result. Fabricated arrays, mixed readers and reused observations deny. */
++export async function revalidateSfAtlasRecall(groups: readonly (readonly unknown[])[], call: TrustedDomainContext) {
++  const selected = [...groups]
++  const stable = () => groups.length === selected.length && selected.every((records, index) => groups[index] === records)
++  const observations = selected.map((records) => ({ records, observed: recallObservations.get(records) }))
++  selected.forEach((records) => recallObservations.delete(records))
++  const first = observations[0]?.observed
++  if (!first || !stable() || new Set(selected).size !== selected.length || observations.some(({ observed }) => observed?.complete !== first.complete || observed.call !== call)) return false
++  try { return await first.complete(observations, call) && stable() } catch { return false }
++}
++
++/** Bind the record and scanner identity to the durable publication receipt,
++ * without substituting the currently installed scanner for its historical one. */
++export function sfAtlasPublicationMatches(envelope: BusinessMemoryEnvelope, record: MemoryRecord, outbox: Readonly<Record<string, SfAtlasOutboxEntry>>) {
++  const ref = envelope.caseRef
++  const item = ref && outbox[JSON.stringify([ref.id, ref.incarnation, envelope.sourceEventId])]
++  if (!item || item.state !== "settled") return false
++  const receipt = item.receipt
++  const scanner = envelope.scannerReceipt
++  return (receipt.status === "committed" || receipt.status === "already-committed") &&
++    receipt.sourceEventId === envelope.sourceEventId && receipt.eventId === envelope.eventId &&
++    receipt.recordDigest === digestSfValue(record) && !!scanner && scanner.status === "clean" &&
++    !!scanner.name?.trim() && !!scanner.version?.trim() && scanner.digest === receipt.recordDigest &&
++    receipt.scanner.status === "clean" && receipt.scanner.name === scanner.name && receipt.scanner.version === scanner.version
++}
+ 
+ /** C09 remains authoritative. This writer only projects an authenticated outbox event. */
+ export function createSfAtlasMemory(input: {
+@@ -33,6 +66,25 @@
+     const snapshots = input.host.persistence.currentSnapshots?.()
+     return snapshots ? digestSfValue({ dashboard: sfRunSourceFence(snapshots.dashboard),
+       planner: sfRunSourceFence(snapshots.planner), procurement: sfRunSourceFence(snapshots.procurement) }) : undefined
++  }
++
++  // The callback identity binds all observations to this exact reader/store.
++  const completeRecall: RecallObservation["complete"] = async (observations, call) => {
++    const request = input.host.requestFor(call)
++    const binding = digestSfValue([call.kind, call.binding])
++    const lease = call.lease
++    const headers = request && digestSfValue([...request.headers.entries()])
++    const stable = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
++      binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()]) &&
++      observations.every(({ records, observed }) => observed?.call === call && observed.complete === completeRecall &&
++        observed.stable() && observed.recordsDigest === digestSfValue(records))
++    if (!request || !stable()) return false
++    const final = await input.state.read(request, "atlas", async (state) => {
++      if (!stable() || !await input.host.revalidate(call) || !stable()) return undefined
++      return { sourceState: digestSfValue(state), sourceFence: lockedSourceFence() }
++    }).catch(() => undefined)
++    return !!final && final.status === "ok" && !!final.value?.sourceFence && stable() && observations.every(({ observed }) =>
++      observed?.sourceState === final.value!.sourceState && observed?.sourceFence === final.value!.sourceFence)
+   }
+ 
+   async function readOriginalCapture(caseRef: { id: string; incarnation: string }, digest: string, call: TrustedDomainContext): Promise<AtlasPartition["originals"][string] | undefined> {
+@@ -76,7 +128,8 @@
+         const event = log.get(envelope.eventId as Parameters<typeof log.get>[0])
+         const record = event?.payload as MemoryRecord | undefined
+         const boundCase = envelope.caseRef
+-        if (!record || !boundCase || record.owner !== owner || record.kind !== envelope.kind || envelope.owner !== owner || boundCase.id !== selected.id || boundCase.incarnation !== selected.incarnation || partition.captureDigests[envelope.eventId]?.[digest] !== digestSfValue(capture)) return false
++        if (!record || !boundCase || record.owner !== owner || record.kind !== envelope.kind || envelope.owner !== owner || boundCase.id !== selected.id || boundCase.incarnation !== selected.incarnation || partition.captureDigests[envelope.eventId]?.[digest] !== digestSfValue(capture) ||
++          !sfAtlasPublicationMatches(envelope, record, state.outbox)) return false
+         if (![...envelope.evidenceRefs, ...envelope.dependencies].some((ref) => ref.refDigest === digest)) return false
+         return envelope.projectionDigest === digestSfValue({ kind: envelope.kind, owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })
+       })
+@@ -108,12 +161,15 @@
+         digestSfValue(incomingCaseRef) === digestSfValue(caseRef) && observations.every((item) => digestSfValue(item.value) === item.identity)
+       const authorized = async () => stable() && await input.host.revalidate(call) && stable()
+       if (!request || !await authorized()) return { status: "unavailable" as const }
++      const caseBefore = await input.state.read(request, "cases", (state) => state.cases[caseRef.id]).catch(() => undefined)
++      if (!caseBefore || caseBefore.status !== "ok" || !caseBefore.value || !stable()) return { status: "unavailable" as const }
++      pin(caseBefore.value)
+       const found = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+       if (found.status !== "ok" || !stable()) return { status: "unavailable" as const }
+       pin(found.value)
+       const owner = deriveSfMemoryOwner(found.value.context, found.value.case)
+       if (!owner) return { status: "unavailable" as const }
+-      const outbox = await input.state.read(request, "outbox", (state) => ({ version: state.versions.outbox, pending: !selection && Object.values(state.outbox).some((item) => item.state === "pending" && item.eventRef.target.caseId === caseRef.id && item.eventRef.target.caseIncarnation === caseRef.incarnation) })).catch(() => undefined)
++      const outbox = await input.state.read(request, "outbox", (state) => ({ items: state.outbox, version: state.versions.outbox, pending: !selection && Object.values(state.outbox).some((item) => item.state === "pending" && item.eventRef.target.caseId === caseRef.id && item.eventRef.target.caseIncarnation === caseRef.incarnation) })).catch(() => undefined)
+       if (!outbox || outbox.status !== "ok" || outbox.value.pending || !stable()) return { status: "unavailable" as const }
+       pin(outbox.value)
+       const snapshot = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
+@@ -121,11 +177,20 @@
+       pin(snapshot.value)
+       if (snapshot.value === undefined) {
+         if (selection) return { status: "unavailable" as const }
+-        const latest = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
+-        const latestOutbox = await input.state.read(request, "outbox", (state) => state.versions.outbox).catch(() => undefined)
+         const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+-        if (!latest || latest.status !== "ok" || latest.value !== undefined || !latestOutbox || latestOutbox.status !== "ok" || latestOutbox.value !== outbox.value.version || current.status !== "ok" || current.value.case.version !== found.value.case.version || !await authorized()) return { status: "unavailable" as const }
+-        return { status: "ok" as const, records: [] }
++        if (current.status !== "ok" || digestSfValue(current.value.case) !== digestSfValue(found.value.case) || !stable()) return { status: "unavailable" as const }
++        const latest = await input.state.read(request, "atlas", async (state) => {
++          if (!await authorized()) return undefined
++          return { partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
++            sourceState: digestSfValue(state), sourceFence: lockedSourceFence() }
++        }).catch(() => undefined)
++        if (!latest || latest.status !== "ok" || !latest.value?.sourceFence || latest.value.partition !== undefined ||
++          latest.value.outboxVersion !== outbox.value.version || digestSfValue(latest.value.case) !== digestSfValue(caseBefore.value) || !stable())
++          return { status: "unavailable" as const }
++        const records: never[] = []
++        recallObservations.set(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
++          sourceState: latest.value.sourceState, sourceFence: latest.value.sourceFence })
++        return { status: "ok" as const, records }
+       }
+       const partition = snapshot.value as AtlasPartition
+       if (!partition || !Array.isArray(partition.events) || !partition.envelopes || !partition.originals || !partition.captureDigests) return { status: "unavailable" as const }
+@@ -137,7 +202,13 @@
+         const envelope = partition.envelopes[id]
+         const boundCase = envelope?.caseRef
+         if (!envelope || !boundCase || envelope.eventId !== id || envelope.owner !== owner || record.owner !== owner || envelope.kind !== "task" || record.kind !== "task" || boundCase.id !== caseRef.id || boundCase.incarnation !== caseRef.incarnation || boundCase.version > found.value.case.version) return { status: "unavailable" as const }
+-        if (envelope.projectionDigest !== digestSfValue({ kind: "task", owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs })) return { status: "unavailable" as const }
++        if (envelope.projectionDigest !== digestSfValue({ kind: "task", owner, entry: record.entry, sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs }) ||
++          !sfAtlasPublicationMatches(envelope, record, outbox.value.items)) return { status: "unavailable" as const }
++        const bundleRef = envelope.evidenceRefs.find((ref) => ref.kind === "case-event" && ref.target.eventId === envelope.sourceEventId)
++        const mapped = bundleRef && mapSfAtlasEntry({ kind: "task", projection: found.value, eventId: envelope.sourceEventId, bundleRef })
++        if (!mapped || mapped.status !== "mapped" || mapped.projection.kind !== "task" ||
++          mapped.projection.owner !== owner || mapped.projection.projectionDigest !== envelope.projectionDigest ||
++          digestSfValue(mapped.projection.entry) !== digestSfValue(record.entry)) return { status: "unavailable" as const }
+         // A settled event/original remains readable while a later projection is
+         // pending. Public recall keeps its existing whole-outbox readiness gate.
+         if (selection && (selection.eventId ? id !== selection.eventId :
+@@ -165,6 +236,17 @@
+       const records = approved.flatMap((item) => recalled.some((record) => digestSfValue(record) === digestSfValue(item.event.payload)) ? [{ envelope: item.envelope, entry: item.entry, resolutions: item.resolutions, case: found.value, recordDigest: digestSfValue(item.event.payload) }] : [])
+       const current = await input.cases.read({ caseRef: encodeCaseRef(caseRef) }, call)
+       if (current.status !== "ok" || digestSfValue(current.value.case) !== digestSfValue(found.value.case) || !await authorized()) return { status: "unavailable" as const }
++      pin(records)
++      // Source readers may issue metadata. Fence their completed observations,
++      // then check the final source round and case against the same C08 state.
++      const before = await input.state.read(request, "atlas", (state) => ({
++        partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
++        sourceState: digestSfValue(state), sourceFence: lockedSourceFence(),
++      })).catch(() => undefined)
++      if (!before || before.status !== "ok" || !before.value.sourceFence || !stable() ||
++        before.value.outboxVersion !== outbox.value.version || digestSfValue(before.value.partition) !== digestSfValue(snapshot.value) ||
++        digestSfValue(before.value.case) !== digestSfValue(caseBefore.value)) return { status: "unavailable" as const }
++      pin(before.value)
+       for (const record of records) {
+         for (const resolution of record.resolutions) {
+           const again = await input.evidence.resolve(resolution.ref, call)
+@@ -172,10 +254,17 @@
+           if (!stable() || again.accessRevision !== resolution.accessRevision || digestSfValue(again.ref) !== digestSfValue(resolution.ref) || again.state !== resolution.state || !again.currentRef || !again.authorizedProjection || digestSfValue(again.currentRef) !== digestSfValue(resolution.currentRef) || digestSfValue(projectionForComparison(again)) !== digestSfValue(projectionForComparison(resolution)) || (again.state === "historical" && (again.differences === undefined || digestSfValue(again.differences) !== digestSfValue(resolution.differences))) || !await input.proveContinuity(resolution.ref, again.currentRef, call) || !stable()) return { status: "unavailable" as const }
+         }
+       }
+-      const latest = await input.state.read(request, "atlas", (state) => state.atlas[owner]).catch(() => undefined)
+-      const latestOutbox = await input.state.read(request, "outbox", (state) => state.versions.outbox).catch(() => undefined)
+-      if (!latest || latest.status !== "ok" || !latestOutbox || latestOutbox.status !== "ok" || latestOutbox.value !== outbox.value.version || digestSfValue(latest.value) !== digestSfValue(snapshot.value) || !await authorized()) return { status: "unavailable" as const }
+-      return stable() ? { status: "ok" as const, records } : { status: "unavailable" as const }
++      const latest = await input.state.read(request, "atlas", async (state) => {
++        // No authority await may reopen a race after this protected read.
++        if (!await authorized()) return undefined
++        return { partition: state.atlas[owner], outboxVersion: state.versions.outbox, case: state.cases[caseRef.id],
++          sourceState: digestSfValue(state), sourceFence: lockedSourceFence() }
++      }).catch(() => undefined)
++      if (!latest || latest.status !== "ok" || !latest.value || !stable() ||
++        digestSfValue(latest.value) !== digestSfValue(before.value)) return { status: "unavailable" as const }
++      recallObservations.set(records, { call, stable, complete: completeRecall, recordsDigest: digestSfValue(records),
++        sourceState: before.value.sourceState, sourceFence: before.value.sourceFence })
++      return { status: "ok" as const, records }
+       } catch { return { status: "unavailable" as const } }
+   }
+ 
+@@ -409,9 +498,15 @@
+   revalidate: (call: TrustedDomainContext) => Promise<boolean>
+ }) {
+   try {
++    const call = input.call, lease = call.lease
++    const selection = () => digestSfValue({ caseRefs: input.caseRefs, features: input.features,
++      runtimeVersions: input.runtimeVersions, kind: call.kind, binding: call.binding })
++    const selectionDigest = selection()
++    const stable = () => input.call === call && call.lease === lease && selection() === selectionDigest
+     const candidates: AuthorizedMemoryProjection[] = []
+     const observations = new Map<string, { records: readonly AtlasRecallRecord[]; fingerprint: string }>()
+-    const egress = new Map<AuthorizedMemoryProjection, AtlasRecallRecord>()
++    const completionGroups = new Map<string, readonly AtlasRecallRecord[]>()
++    const egress = new Set<AuthorizedMemoryProjection>()
+     const sourceVersions: Record<string, number> = {}
+     const sourceIncarnations: Record<string, string> = {}
+     for (const caseRef of input.caseRefs) {
+@@ -420,6 +515,7 @@
+       const key = JSON.stringify([caseRef.id, caseRef.incarnation])
+       if (observations.has(key)) return { status: "unavailable" as const }
+       observations.set(key, { records: read.records, fingerprint: digestSfValue(read.records.map(recallRecordFingerprint)) })
++      completionGroups.set(key, read.records)
+       for (const record of read.records) {
+         const features = await input.featuresForCase(record.case, input.call)
+         if (!features) return { status: "unavailable" as const }
+@@ -455,12 +551,29 @@
+         if (reread.status !== "ok" || digestSfValue(reread.records.map(recallRecordFingerprint)) !== observed.fingerprint) return false
+         const records = reread.records.filter((record) => recallRecordFingerprint(record) === fingerprint)
+         if (records.length !== 1) return false
+-        egress.set(candidate, records[0]!)
++        egress.add(candidate)
++        completionGroups.set(JSON.stringify([caseRef.id, caseRef.incarnation]), reread.records)
+         return true
+       },
+     })
+-    if (ranked.status !== "ok" || candidates.some((candidate) => !egress.has(candidate))) return { status: "unavailable" as const }
+-    return { status: "ok" as const, cases: ranked.cases, records: candidates.map((candidate) => egress.get(candidate)!) }
++    if (ranked.status !== "ok" || candidates.some((candidate) => !egress.has(candidate)) || !stable()) return { status: "unavailable" as const }
++    const records: AtlasRecallRecord[] = []
++    for (const candidate of candidates) {
++      const ref = candidate.envelope.caseRef
++      const group = ref && completionGroups.get(JSON.stringify([ref.id, ref.incarnation]))
++      const fingerprint = recallRecordFingerprint({ ...candidate, recordDigest: candidate.atlasTrace.recordDigest })
++      const matches = group?.filter((record) => recallRecordFingerprint(record) === fingerprint)
++      if (matches?.length !== 1) return { status: "unavailable" as const }
++      records.push(matches[0]!)
++    }
++    const result = { status: "ok" as const, cases: ranked.cases, records }
++    const resultDigest = digestSfValue(result)
++    // Ranking performs continuity/authority awaits after its last per-candidate
++    // read. Reopen the complete private observations once, after all of them.
++    if (completionGroups.size ? !await revalidateSfAtlasRecall([...completionGroups.values()], input.call) :
++      input.caseRefs.length !== 0 || !await input.revalidate(input.call)) return { status: "unavailable" as const }
++    if (!stable() || resultDigest !== digestSfValue(result)) return { status: "unavailable" as const }
++    return result
+   } catch { return { status: "unavailable" as const } }
+ }
+ 
+--- a/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
+@@ -3,9 +3,9 @@
+ import type { BusinessContextService, BusinessEvidenceRef, BusinessEvidenceResolution, BusinessMemoryEnvelope } from "../contracts/business-context.ts"
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
+-import { createSfAtlasMemory } from "./atlas-memory.ts"
++import { createSfAtlasMemory, revalidateSfAtlasRecall, sfAtlasPublicationMatches } from "./atlas-memory.ts"
+ import { createSfAtlasDurableMemory } from "./atlas-store.ts"
+-import { deriveSfMemoryOwner } from "../decision-memory/atlas-projection.ts"
++import { deriveSfMemoryOwner, mapSfAtlasEntry } from "../decision-memory/atlas-projection.ts"
+ import { encodeCaseRef } from "../decisions/case-port.ts"
+ import type { MemoryRecord } from "@orchestra/atlas-boundary/business-memory-ports"
+ import { createSfAtlasScanner } from "./atlas-scanner.ts"
+@@ -74,6 +74,7 @@
+   resolveSource: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution>
+   proveContinuity: (original: BusinessEvidenceRef, current: BusinessEvidenceRef, call: TrustedDomainContext) => Promise<boolean>
+   recall: BusinessContextService["recall"]
++  finalizeRecall?: (records: Awaited<ReturnType<BusinessContextService["recall"]>>, call: TrustedDomainContext) => Promise<boolean>
+   emitFromLedger: BusinessContextService["emitFromLedger"]
+ }): { service: BusinessContextService; resolveAncestry: (ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>) => Promise<BusinessEvidenceResolution> } {
+   async function resolveAncestry(ref: BusinessEvidenceRef, call: TrustedDomainContext, ancestors: ReadonlySet<string>): Promise<BusinessEvidenceResolution> {
+@@ -130,15 +131,22 @@
+         reads.set(key, pending)
+         return pending
+       })
+-      if (requestDigest !== digestSfValue(request.refs) || binding !== digestSfValue([call.kind, call.binding]) || !await host.revalidate(call)) return unavailable()
++      if (!await host.revalidate(call) || requestDigest !== digestSfValue(request.refs) || binding !== digestSfValue([call.kind, call.binding])) return unavailable()
+       return values.map((value) => structuredClone(value))
+     },
+     async recall(request, call) {
+-      if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
+-      const records = await host.recall(request, call)
++      const selected = structuredClone(request)
++      const selectionDigest = digestSfValue(selected)
++      const binding = digestSfValue([call.kind, call.binding])
++      const lease = call.lease
++      const stable = () => selectionDigest === digestSfValue(request) && selectionDigest === digestSfValue(selected) &&
++        binding === digestSfValue([call.kind, call.binding]) && call.lease === lease
++      if (!(await host.revalidate(call)) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
++      const records = await host.recall(selected, call)
++      if (!stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
+       const allowed = await mapSfEvidenceInOrder(records, async (record) => {
+         const caseRef = record.envelope.caseRef
+-        if (!caseRef || !request.caseRefs.some((ref) => ref.id === caseRef.id && ref.incarnation === caseRef.incarnation)) return false
++        if (!caseRef || !selected.caseRefs.some((ref) => ref.id === caseRef.id && ref.incarnation === caseRef.incarnation)) return false
+         const refs = [...record.envelope.evidenceRefs, ...record.envelope.dependencies]
+         if (!evidenceWithinBudget(refs)) return false
+         try {
+@@ -150,8 +158,10 @@
+         const resolved = await service.context({ refs }, call)
+         return refs.length > 0 && resolved.every((item) => item.state === "fresh" || (item.state === "historical" && item.differences !== undefined))
+       })
+-      if (!(await host.revalidate(call))) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
++      if (!(await host.revalidate(call)) || !stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
+       if (allowed.some((value) => !value)) throw new Error("SF_MEMORY_EVIDENCE_UNAVAILABLE")
++      if (host.finalizeRecall && !await host.finalizeRecall(records, call)) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
++      if (!stable()) throw new Error("SF_MEMORY_AUTHORITY_UNAVAILABLE")
+       return records
+     },
+     async emitFromLedger(ref, call) {
+@@ -424,12 +434,36 @@
+     plannerProof: recordHistory.proveContinuity,
+     calculationProof,
+   })
++  const recallCompletions = new WeakMap<Awaited<ReturnType<BusinessContextService["recall"]>>, {
++    call: TrustedDomainContext; selection: CaptureSelection; selectionDigest: string; recordsDigest: string; groups: readonly (readonly unknown[])[]
++  }>()
+   const assembled = assembleSfBusinessContext({
+     revalidate: input.host.revalidate, ...router,
+     recall: async (request, call) => {
+       const records = await mapSfEvidenceInOrder(request.caseRefs, (ref) => memory.recall(ref, call))
+       if (records.some((result) => result.status !== "ok")) throw new Error("SF_MEMORY_READ_UNAVAILABLE")
+-      return records.flatMap((result) => result.status === "ok" ? result.records : [])
++      const groups = records.flatMap((result) => result.status === "ok" ? [result.records] : [])
++      const values = groups.flat()
++      recallCompletions.set(values, { call, selection: request, selectionDigest: digestSfValue(request),
++        recordsDigest: digestSfValue(values), groups })
++      return values
++    },
++    finalizeRecall: async (records, call) => {
++      const observed = recallCompletions.get(records)
++      recallCompletions.delete(records)
++      if (!observed || observed.call !== call) return false
++      const stable = () => observed.selectionDigest === digestSfValue(observed.selection) && observed.recordsDigest === digestSfValue(records)
++      if (!observed.groups.length) {
++        const request = input.host.requestFor(call)
++        if (!request || !stable() || observed.selection.caseRefs.length || records.length) return false
++        const binding = digestSfValue([call.kind, call.binding]), lease = call.lease, headers = digestSfValue([...request.headers.entries()])
++        const current = () => stable() && !request.signal.aborted && input.host.requestFor(call) === request && call.lease === lease &&
++          binding === digestSfValue([call.kind, call.binding]) && headers === digestSfValue([...request.headers.entries()])
++        const final = await input.state.read(request, "atlas", async () =>
++          current() && await input.host.revalidate(call) && current()).catch(() => undefined)
++        return final?.status === "ok" && final.value === true && current()
++      }
++      return stable() && await revalidateSfAtlasRecall(observed.groups, call) && stable()
+     },
+     emitFromLedger: (ref, call) => memory.emitFromLedger(ref, call),
+   })
+@@ -510,12 +544,22 @@
+       } catch { return undefined }
+     },
+   }
++  // The canonical writer already owns source/replay authorization through its
++  // final C08 read. An outer await here would reopen that completed boundary.
++  context.emitFromLedger = (ref, call) => memory.emitFromLedger(ref, call)
+   const readContext = context.context
+   context.context = async (selection, call) => {
++    const selected = structuredClone(selection)
++    const selectionDigest = digestSfValue(selected)
+     const request = input.host.requestFor(call)
+     const binding = digestSfValue([call.kind, call.binding])
++    const lease = call.lease
+     const headers = request && digestSfValue([...request.headers.entries()])
+-    const sources = await readContext(selection, call)
++    const sources = await readContext(selected, call)
++    if (!request || request.signal.aborted || input.host.requestFor(call) !== request || call.lease !== lease ||
++      binding !== digestSfValue([call.kind, call.binding]) || headers !== digestSfValue([...request.headers.entries()]) ||
++      selectionDigest !== digestSfValue(selection) || selectionDigest !== digestSfValue(selected))
++      return selected.refs.map((ref) => ({ state: "unavailable" as const, ref, accessRevision: call.binding.accessRevision, checkedAt: input.now() }))
+     const sourceIdentity = digestSfValue(sources)
+     if (request) captureObservations.set(sources, { call, read: async (requested) => {
+       const selected = structuredClone(requested)
+@@ -524,7 +568,7 @@
+       const snapshotIdentity = digestSfValue(snapshots)
+       const extras: { values: readonly BusinessEvidenceResolution[]; identity: string }[] = []
+       const captures: { value: ProtectedEvidenceCapture; identity: string }[] = []
+-      const stable = () => !!snapshots && !request.signal.aborted &&
++      const stable = () => !!snapshots && !request.signal.aborted && call.lease === lease &&
+         input.host.requestFor(call) === request &&
+         binding === digestSfValue([call.kind, call.binding]) &&
+         headers === digestSfValue([...request.headers.entries()]) &&
+@@ -568,7 +612,7 @@
+         if (outbox.status !== "ok" || outbox.value.pending) return false
+         const topology = await input.state.read(request, "atlas", (state) => {
+           const value = object(state.atlas[owner])
+-          return { events: value.events, envelopes: value.envelopes }
++          return { events: value.events, envelopes: value.envelopes, outbox: state.outbox }
+         })
+         if (topology.status !== "ok") return false
+ 
+@@ -593,6 +637,14 @@
+             boundCase.version > current.value.case.version || !Array.isArray(envelope.evidenceRefs) ||
+             !Array.isArray(envelope.dependencies) || !("taskId" in record.entry) ||
+             typeof record.entry.ref !== "string" || !record.entry.ref.trim()) return undefined
++          // The fast capture path must establish the same scanner and ledger
++          // identity as canonical recall before it can use the private reader.
++          const bundleRef = envelope.evidenceRefs.find((ref) => ref.kind === "case-event" && ref.target.eventId === envelope.sourceEventId)
++          const mapped = bundleRef && mapSfAtlasEntry({ kind: "task", projection: current.value, eventId: envelope.sourceEventId, bundleRef })
++          if (!sfAtlasPublicationMatches(envelope, record, partition.outbox) ||
++            !mapped || mapped.status !== "mapped" || mapped.projection.kind !== "task" ||
++            mapped.projection.owner !== owner || mapped.projection.projectionDigest !== envelope.projectionDigest ||
++            digestSfValue(mapped.projection.entry) !== digestSfValue(record.entry)) return undefined
+           const originals = [...envelope.evidenceRefs, ...envelope.dependencies]
+           if (!originals.length || !evidenceWithinBudget(originals)) return undefined
+           try {
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/composed-document-fixture.ts
+@@ -0,0 +1,282 @@
++import { randomUUID } from "node:crypto"
++import { createWp06Runtime } from "../wp06/runtime-fixture.ts"
++import { prepareAtlasScanner } from "../wp02/atlas-consumer-fixture.ts"
++import { createSfDocumentTargetAuthority } from "../../../../../../apps/cli/src/sucafina-product/document-authority.ts"
++import { createSfDocumentServices } from "../../../../../../apps/cli/src/sucafina-product/document-services.ts"
++import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
++import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
++import { createDashboardSourceIssuer, createDashboardRecordSourceIssuer } from "../../../product/integration/dashboard-sources.ts"
++import { createDashboardRecordEvidenceHost } from "../../../product/dashboard/sources.ts"
++import { enqueueSfLedgerEvent } from "../../../product/integration/ledger-outbox.ts"
++import { sfSourceIdentity } from "../../../product/integration/source-lifecycle.ts"
++import { createSfAtlasBusiness } from "../../../product/host-binding/business-context.ts"
++import { createSfAtlasMemory } from "../../../product/host-binding/atlas-memory.ts"
++import { createSfAtlasScanner } from "../../../product/host-binding/atlas-scanner.ts"
++import { deriveAuthorizedRecallFeatures } from "../../../product/decision-memory/case-features.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { roleMap } from "../../../runtime/admin.ts"
++import { captureRecordAssets, deleteRecordAssets, uploadAsset } from "../../../runtime/assets.ts"
++import { object, rows } from "../../../runtime/contract.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { CaseLedgerEvent, DecisionCase, DocumentEvidence } from "../../../product/contracts/decisions.ts"
++import type { TrustedDomainContext, TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++
++type DocumentSource = { assetId: string; supplierId: string; bytes: Uint8Array; ref: Extract<BusinessEvidenceRef, { kind: "document" }>; evidence: DocumentEvidence }
++const period = { start: "2026-01-01", end: "2026-12-31" }
++
++/** Real local credentials, C08/SQLite, C17 extraction/confirmation, outbox and Atlas.
++ * Supplier data and the accepted ledger event are explicit synthetic premises.
++ * WP06 substitutes the ingress asset scan; Atlas uses qualified upstream Gitleaks.
++ * There is no native Session/model-acceptance or separate-process restart claim. */
++export async function withComposedDocumentReplayFixture(work: (fixture: Awaited<ReturnType<typeof createFixture>>) => Promise<void>, documentCount: 1 | 2 = 1) {
++  const app = await createWp06Runtime()
++  const resources: { documents?: ReturnType<typeof createSfDocumentServices>; business?: ReturnType<typeof createSfBusinessServices> } = {}
++  try { await work(await createFixture(app, resources, documentCount)) }
++  finally {
++    try { resources.business?.dispose() }
++    finally { try { resources.documents?.dispose() } finally { await app.dispose() } }
++  }
++}
++
++async function createFixture(app: Awaited<ReturnType<typeof createWp06Runtime>>, resources: { documents?: ReturnType<typeof createSfDocumentServices>; business?: ReturnType<typeof createSfBusinessServices> }, documentCount: 1 | 2) {
++  const scannerPin = await prepareAtlasScanner(app.directory)
++  const procurementEvidenceWrites = new WeakSet<object>()
++  const authority = createSfProductAuthority({ identity: () => app.installation, installationId: app.operator.installationId,
++    origin: app.origin, policyVersion: "policy", persistence: app.store, procurementEvidenceWrites,
++    authenticate: app.runtime.authenticate, environment: app.runtime.environment,
++    grants: [app.principal, app.otherPrincipal].map((principal) => ({ principalRef: principal.id,
++      namespaces: ["documents", "receipts", "cases", "outbox", "atlas"] as const,
++      operations: ["sf_document_extract", "sf_evidence_get", "sf_case_draft", "sf_case_read", "sf_decision_recall"],
++      humanActions: ["documents.schema", "documents.confirm"] as const })),
++    createId: randomUUID, now: () => Date.parse(app.at),
++    commandIdentity: async (request, operation) => {
++      const key = request.headers.get("Idempotency-Key")
++      return key && /^[A-Za-z0-9._:-]{8,128}$/.test(key) ? digestSfValue({ operation, key }) : undefined
++    },
++    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false, providerGeneration: async () => 1,
++    authorizeDocument: createSfDocumentTargetAuthority(app.runtime) })
++  const documents = createSfDocumentServices({ runtime: app.runtime, authority })
++  resources.documents = documents
++  if (!documents) throw new Error("Actual document services unavailable")
++  const business = createSfBusinessServices({ authority, persistence: app.store, proposalCoverageWrites: new WeakSet(), procurementEvidenceWrites, documentRead: documents.documents.reader })
++  resources.business = business
++  const host = authority.host
++  const selected: { caseRef?: { id: string; incarnation: string } } = {}
++  // Intentionally light: membership and actual host authority only. No case/source
++  // resolver is hidden in this callback; replay itself must reauthorize sources.
++  const authorizeCase = async (value: DecisionCase, call: TrustedDomainContext) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call)
++  const atlas = createSfAtlasBusiness({ host, authority: authority.authority, state: authority.state, cases: business.cases, authorizeCase,
++    dashboard: business.dashboard, dashboardIssue: createDashboardSourceIssuer({ host, scopedSources: app.store }),
++    dashboardRecords: createDashboardRecordEvidenceHost({ host, scopedSources: app.store, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: app.store }) }),
++    procurement: business.procurement, procurementResolve: { resolve: business.resolveProcurement }, documentRead: documents.documents.reader,
++    scanner: scannerPin, now: () => app.at,
++    caseForEvidence: async (digest, call) => {
++      const request = host.requestFor(call)
++      const binding = digestSfValue([call.kind, call.binding])
++      const lease = call.lease
++      const headers = request && digestSfValue([...request.headers.entries()])
++      const stable = () => !!request && !request.signal.aborted && host.requestFor(call) === request &&
++        call.lease === lease && digestSfValue([call.kind, call.binding]) === binding &&
++        digestSfValue([...request.headers.entries()]) === headers
++      if (!request || !stable() || !await host.revalidate(call) || !stable()) return undefined
++      const listed = await authority.state.read(request, "cases", (state, actor) =>
++        actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
++        actor.policyVersion === call.binding.policyVersion
++          ? Object.values(state.cases).filter((value) => value.participants.includes(actor.principalRef))
++            .map((value) => ({ id: value.id, incarnation: value.incarnation }))
++          : undefined)
++      if (listed.status !== "ok" || !listed.value || listed.value.length > 500 || !stable()) return undefined
++      const found: { id: string; incarnation: string; version: number; evidence: boolean }[] = []
++      // Enumerated IDs only select candidates. The unchanged real case reader
++      // authorizes all sources before the current outbox can link this digest.
++      for (const ref of listed.value) {
++        const current = await business.cases.read({ caseRef: encodeCaseRef(ref) }, call)
++        if (!stable()) return undefined
++        if (current.status !== "ok") continue
++        const evidence = current.value.evidenceRefs.some((item) => item.refDigest === digest)
++        const linked = await authority.state.read(request, "outbox", (state, actor) => {
++          const value = state.cases[ref.id]
++          return actor.principalRef === call.binding.principalRef && actor.accessRevision === call.binding.accessRevision &&
++            actor.policyVersion === call.binding.policyVersion && value?.incarnation === ref.incarnation &&
++            value.version === current.value.case.version && value.participants.includes(actor.principalRef) &&
++            (evidence || Object.values(state.outbox).some((entry) => entry.eventRef.refDigest === digest &&
++              entry.eventRef.target.caseId === ref.id && entry.eventRef.target.caseIncarnation === ref.incarnation))
++        })
++        if (!stable()) return undefined
++        if (linked.status === "ok" && linked.value) found.push({ ...ref, version: current.value.case.version, evidence })
++      }
++      if (!found.length || !await host.revalidate(call) || !stable()) return undefined
++      // Refilter every selected case and its outbox after the other case reads.
++      // Atlas subsequently reauthorizes these selectors and verifies captures.
++      const current = await authority.state.read(request, "outbox", async (state, actor) => {
++        if (actor.principalRef !== call.binding.principalRef || actor.accessRevision !== call.binding.accessRevision ||
++          actor.policyVersion !== call.binding.policyVersion || !await host.revalidate(call) || !stable()) return undefined
++        return found.filter((ref) => {
++          const value = state.cases[ref.id]
++          return value?.incarnation === ref.incarnation && value.version === ref.version &&
++            value.participants.includes(actor.principalRef) &&
++            (ref.evidence || Object.values(state.outbox).some((entry) => entry.eventRef.refDigest === digest &&
++              entry.eventRef.target.caseId === ref.id && entry.eventRef.target.caseIncarnation === ref.incarnation))
++        }).map((ref) => ({ id: ref.id, incarnation: ref.incarnation }))
++      })
++      return current.status === "ok" && current.value?.length && stable() ? current.value : undefined
++    },
++    selections: {
++      runtimeVersions: { boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" },
++      featuresForCase: async (value, call) => deriveAuthorizedRecallFeatures(value, call),
++      contextSelections: async (request, call) => {
++        const found = await Promise.all(request.selectionRefs.map((caseRef) => business.cases.read({ caseRef }, call)))
++        if (!found.length || found.some((item) => item.status !== "ok" || digestSfValue(item.value.case.horizon) !== digestSfValue(request.period))) return undefined
++        return found.flatMap((item) => item.status === "ok" ? item.value.evidenceRefs : [])
++      },
++      recallSelections: async (request, call) => {
++        if (request.selectionRefs.length !== 1) return undefined
++        const current = await business.cases.read({ caseRef: request.selectionRefs[0]! }, call)
++        if (current.status !== "ok" || digestSfValue(current.value.case.horizon) !== digestSfValue(request.period)) return undefined
++        const features = deriveAuthorizedRecallFeatures(current.value, call)
++        return features ? { caseRefs: [{ id: current.value.case.id, incarnation: current.value.case.incarnation }], features } : undefined
++      },
++    } })
++  business.evidence.current = atlas.context
++  const counts = { scans: 0 }
++  const realScanner = createSfAtlasScanner({ scanners: [scannerPin.spec] })
++  const memory = createSfAtlasMemory({ state: authority.state, cases: business.cases, authorizeCase, host,
++    evidence: atlas.context, proveContinuity: atlas.proveContinuity,
++    scanner: { name: realScanner.name, scan(record) { counts.scans += 1; return realScanner.scan(record) } },
++    scannerVersion: scannerPin.version, now: () => app.at })
++  const ui = async <T>(operation: string, payload: unknown, work: (call: TrustedUiContext) => Promise<T>, request = app.request()) => {
++    const digest = digestSfValue(payload)
++    const admitted = await authority.ui.admit(request, operation, digest)
++    if (admitted.status !== "ok") throw new Error(`Actual UI admission failed: ${admitted.reason}`)
++    try {
++      if (!await authority.ui.validate(admitted.value, operation, digest)) throw new Error("Actual UI grant unavailable")
++      return await work(admitted.value)
++    } finally { authority.ui.finish(admitted.value) }
++  }
++  const definitions = Array.from({ length: documentCount }, (_, index) => ({ assetId: `m40-doc-${index}`, supplierId: `m40-supplier-${index}`, bytes: new TextEncoder().encode(`Price: ${42 + index}`) }))
++  await app.store.transaction("procurement", async (snapshot) => {
++    snapshot.data.store = { suppliers: definitions.map((item) => ({ id: item.supplierId, name: `Document supplier ${item.assetId}` })), settings: { uploadCap: 100_000 } }
++    return { commit: true, value: undefined }
++  })
++  const upload = async (item: Pick<DocumentSource, "assetId" | "supplierId" | "bytes">) => {
++    const result = await app.store.transaction("procurement", async (snapshot, blobs) => {
++      const actor = await app.runtime.authenticate(app.request("procurement"), { surface: "procurement", roleMap: roleMap(snapshot, "procurement") })
++      if (!actor || actor.id !== app.principal.id) throw new Error("Actual supplier principal unavailable")
++      const uploaded = await uploadAsset(snapshot, blobs, { id: actor.id, roles: actor.roles.filter((role) => role.surface === "procurement").map((role) => role.role), canWrite: actor.canWrite, assigned: [], domains: [] },
++        { page: "Suppliers", action: "upload", id: item.supplierId, version: snapshot.versions[`suppliers:${item.supplierId}`]?.version ?? 0, values: {} },
++        { at: app.at, id: () => item.assetId, directory: [] }, app.runtime.assets.services,
++        "supplier", { name: `${item.assetId}.txt`, type: "text/plain", bytes: item.bytes })
++      return { commit: uploaded.ok, value: uploaded }
++    })
++    if (!result.ok) throw new Error("Actual document upload failed")
++  }
++  const sources: DocumentSource[] = []
++  for (const definition of definitions) {
++    await upload(definition)
++    const discovered = await ui("sf_document_extract", {}, (call) => documents.discover(call))
++    if (discovered.status !== "ok") throw new Error(discovered.reason)
++    const selection = discovered.value.find((item) => item.label === `${definition.assetId}.txt`)
++    if (!selection) throw new Error("Actual uploaded document was not discovered")
++    const admitted = await ui("sf_document_extract", { selectionRef: selection.selectionRef }, (call) => documents.admitSelection(selection.selectionRef, call))
++    if (admitted.status !== "ok") throw new Error(admitted.reason)
++    const schemaInput = { documentRef: admitted.value.documentId, fields: [{ id: "Price", type: "number" as const, unit: "USD" }] }
++    const schemaGrant = await authority.human.admit(app.request(), "documents.schema", schemaInput)
++    if (schemaGrant.status !== "ok") throw new Error(schemaGrant.reason)
++    const schema = await documents.schemas.register(schemaInput, schemaGrant.value).finally(() => authority.human.finish(schemaGrant.value))
++    if (schema.status !== "ok") throw new Error(schema.reason)
++    const extractInput = { documentRef: admitted.value.documentId, fieldSchemaRef: schema.value.ref }
++    const candidate = await ui("sf_document_extract", extractInput, (call) => documents.documents.extract(extractInput, call))
++    if (candidate.status !== "ok") throw new Error(candidate.reason)
++    const confirmGrant = await authority.human.admit(app.request(), "documents.confirm", candidate.value)
++    if (confirmGrant.status !== "ok") throw new Error(confirmGrant.reason)
++    const confirmed = await documents.documents.confirm(candidate.value.id, confirmGrant.value).finally(() => authority.human.finish(confirmGrant.value))
++    if (confirmed.status !== "ok" || confirmed.value.status !== "confirmed" || confirmed.value.ref.target.confirmationVersion !== 1) throw new Error("Actual document confirmation unavailable")
++    sources.push({ ...definition, ref: confirmed.value.ref, evidence: confirmed.value })
++  }
++  const sourceRefs = sources.map((item) => item.ref)
++  const draftInput = { objective: "Review confirmed supplier prices", horizon: period, currency: "USD", criteria: ["Use confirmed document amounts"], sourceRefs }
++  const drafted = await ui("sf_case_draft", draftInput, (call) => business.cases.draft(draftInput, call))
++  if (drafted.status !== "ok") throw new Error(drafted.reason)
++  const caseRef = { id: drafted.value.id, incarnation: drafted.value.incarnation }
++  selected.caseRef = caseRef
++  // Fixture premise only: C08 commits the accepted event and real outbox producer.
++  const event: CaseLedgerEvent = { id: randomUUID(), caseRef: { ...caseRef, version: drafted.value.version + 1 }, kind: "analysis-accepted",
++    principalRef: app.principal.id, at: app.at, consideredActions: ["Review confirmed supplier prices"], factualGaps: [], lifecycleState: "investigating",
++    rationale: "Human-confirmed supplier documents provide the compared prices.", evidenceRefs: sourceRefs,
++    outputDigest: digestSfValue({ premise: "accepted-document-review", sourceRefs }) }
++  const eventRef = await ui("sf_case_read", { caseRef: encodeCaseRef(caseRef) }, async (call) => {
++    const request = host.requestFor(call)
++    if (!request || !await host.revalidate(call)) throw new Error("Actual ledger authority unavailable")
++    const cases = await authority.state.read(request, "cases", (state) => state.cases[caseRef.id])
++    const outbox = await authority.state.read(request, "outbox", (state) => state.versions.outbox)
++    if (cases.status !== "ok" || !cases.value || outbox.status !== "ok") throw new Error("Actual ledger storage unavailable")
++    const saved = await authority.state.transaction(request, { namespace: "cases", expectedStorageVersion: cases.storageVersion,
++      additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: outbox.storageVersion }], targetRef: encodeCaseRef(caseRef), targetIncarnation: caseRef.incarnation,
++      idempotencyKey: `accepted-document:${event.id}`, commandDigest: digestSfValue(event) }, async (state, actor) => {
++      const current = state.cases[caseRef.id]
++      if (!current || current.incarnation !== caseRef.incarnation || current.version !== drafted.value.version || actor.principalRef !== call.binding.principalRef ||
++        actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion || !current.participants.includes(actor.principalRef)) throw new Error("Actual ledger premise changed")
++      state.cases[current.id] = { ...current, version: event.caseRef.version, state: "investigating", ledger: [...current.ledger, event] }
++      const queued = enqueueSfLedgerEvent(state, event, { installationId: call.binding.installationId, projectId: call.binding.projectId, authority: actor })
++      if (queued.status !== "ok") throw new Error(queued.reason)
++      return { commit: true, value: queued.value.eventRef }
++    })
++    if (saved.status !== "ok") throw new Error("Actual ledger/outbox commit failed")
++    return saved.value
++  })
++  const replayKey = `m40-replay:${event.id}`
++  const replayRequest = (cookie = app.cookie) => new Request(`${app.origin}/sucafina/dashboard`, { method: "POST", headers: { cookie, origin: app.origin, "Idempotency-Key": replayKey } })
++  const replay = (request = replayRequest()) => ui("sf_evidence_get", { evidenceRef: eventRef }, (call) => memory.emitFromLedger(eventRef, call), request)
++  const receipt = await replay()
++  if (receipt.status !== "committed" || !receipt.eventId || !receipt.recordDigest || receipt.scanner.status !== "clean") throw new Error(`Real Atlas publication failed: ${receipt.reason ?? receipt.status}`)
++  const audit = () => app.store.transaction("dashboard", async (snapshot) => {
++    const state = object(snapshot.data.__sfProductV1)
++    const versions = object(state.versions)
++    const partitions = Object.values(object(state.atlas)).map(object)
++    return { commit: false, value: structuredClone({ atlas: state.atlas, outbox: state.outbox, receipts: state.receipts, transactions: state.transactions,
++      versions: { atlas: versions.atlas, outbox: versions.outbox, receipts: versions.receipts },
++      counts: { events: partitions.reduce((sum, partition) => sum + (Array.isArray(partition.events) ? partition.events.length : 0), 0),
++        envelopes: partitions.reduce((sum, partition) => sum + Object.keys(object(partition.envelopes)).length, 0),
++        outbox: Object.keys(object(state.outbox)).length, receipts: Object.keys(object(state.receipts)).length,
++        settled: Object.values(object(state.outbox)).filter((item) => object(item).state === "settled").length, scans: counts.scans } }) }
++  })
++  const original = (source = sources[0]!, ref = caseRef) => ui("sf_evidence_get", { evidenceRef: source.ref }, (call) => atlas.memory.readOriginal(ref, source.ref.refDigest, call))
++  const resolve = (source = sources[0]!) => ui("sf_evidence_get", { evidenceRef: source.ref }, (call) => atlas.context.resolve(source.ref, call))
++  const replaceBytes = (source: DocumentSource, bytes: Uint8Array) => app.store.transaction("procurement", async (_snapshot, blobs) => {
++    await blobs.put(`supplier/${source.supplierId}/${source.assetId}`, bytes, "text/plain")
++    return { commit: true, value: undefined }
++  })
++  const corruptCapture = (source: DocumentSource) => app.store.transaction("dashboard", async (snapshot) => {
++    const partition = Object.values(object(object(snapshot.data.__sfProductV1).atlas)).map(object).find((item) => object(item.originals)[source.ref.refDigest])
++    if (!partition) throw new Error("Capture unavailable for explicit corruption fault")
++    const capture = object(object(partition.originals)[source.ref.refDigest])
++    const intact = structuredClone(capture)
++    capture.projection = { ...object(capture.projection), value: 999 }
++    return { commit: true, value: intact }
++  })
++  const restoreCapture = (source: DocumentSource, capture: Record<string, unknown>) => app.store.transaction("dashboard", async (snapshot) => {
++    const partition = Object.values(object(object(snapshot.data.__sfProductV1).atlas)).map(object).find((item) => object(item.originals)[source.ref.refDigest])
++    if (!partition) throw new Error("Capture unavailable for explicit fault restoration")
++    object(partition.originals)[source.ref.refDigest] = structuredClone(capture)
++    return { commit: true, value: undefined }
++  })
++  const removeSource = (source: DocumentSource) => app.store.transaction("procurement", async (snapshot, blobs) => {
++    const captured = captureRecordAssets(snapshot, "supplier", source.supplierId)
++    const store = object(snapshot.data.store)
++    store.suppliers = rows(store.suppliers).filter((supplier) => supplier.id !== source.supplierId)
++    await deleteRecordAssets(snapshot, blobs, "supplier", source.supplierId, captured)
++    return { commit: true, value: undefined }
++  })
++  const recreateSource = async (source: DocumentSource) => {
++    await app.store.transaction("procurement", async (snapshot) => {
++      const store = object(snapshot.data.store)
++      store.suppliers = [...rows(store.suppliers), { id: source.supplierId, name: "Recreated document supplier" }]
++      return { commit: true, value: undefined }
++    })
++    await upload(source)
++    return app.store.transaction("procurement", async (snapshot) => ({ commit: false, value: sfSourceIdentity(snapshot, "document-asset", source.assetId) }))
++  }
++  return { app, authority, atlas, memory, ui, sources, caseRef, eventRef, receipt, scannerPin, counts, replayKey, replayRequest, replay, audit, original, resolve, replaceBytes, corruptCapture, restoreCapture, removeSource, recreateSource }
++}
++
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts
+@@ -0,0 +1,125 @@
++import { expect, test } from "bun:test"
++import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { withDocumentReplayFixture } from "../memory-original-reauthorization/document-fixture.ts"
++import { readOriginalRaw, requireNestedWriteFence, requireOnlyCaptureFault, requireOriginalRecord, requireRecallDenied, settleRecall } from "./fixture-assertions.ts"
++import type { BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
++
++test("M69 public recall rejects capture corruption after its real context returned authorized sources", async () => {
++  expectSpawn(import.meta.path)
++  await withDocumentReplayFixture(async (f) => {
++    const before = await f.audit()
++    const source = f.sources[0]!
++    const request = f.replayRequest()
++    const selection = { caseRefs: [{ ...f.caseRef }], query: "supplier" }
++    const context = f.atlas.context.context
++    const observation = { reads: 0, target: 0, attempted: false, sameRequest: false, committed: false }
++    const fault: { intact?: Record<string, unknown>; error?: unknown; resolutions?: readonly BusinessEvidenceResolution[] } = {}
++    try {
++      await f.ui("sf_decision_recall", selection, async (call) => {
++        requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
++        f.atlas.context.context = async (incoming, trusted) => {
++          const resolved = await context(incoming, trusted)
++          if (trusted !== call) return resolved
++          observation.reads += 1
++          if (observation.target > 0 && observation.reads === observation.target) {
++            observation.attempted = true
++            observation.sameRequest = f.authority.host.requestFor(trusted) === request
++            fault.resolutions = structuredClone(resolved)
++            try {
++              fault.intact = await f.corruptCapture(source)
++              observation.committed = true
++            } catch (error: unknown) { fault.error = error }
++          }
++          return resolved
++        }
++        requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
++        expect(observation.reads).toBeGreaterThan(0)
++        observation.target = observation.reads
++        observation.reads = 0
++        const result = await settleRecall(f.atlas.context.recall(selection, call))
++        f.atlas.context.context = context
++        expect(observation.attempted).toBe(true)
++        expect(observation.sameRequest).toBe(true)
++        expect(observation.reads).toBe(observation.target)
++        expect(fault.resolutions?.length).toBeGreaterThan(0)
++        expect(fault.resolutions?.every((item) => item.state === "fresh")).toBe(true)
++        expect(fault.resolutions?.some((item) => item.ref.refDigest === source.ref.refDigest &&
++          digestSfValue(item.authorizedProjection) === digestSfValue(source.evidence))).toBe(true)
++        const after = await f.audit()
++        if (observation.committed) {
++          expect(fault.error).toBeUndefined()
++          if (!fault.intact) throw new Error("Public recall corruption did not retain its actual capture")
++          requireOnlyCaptureFault(f, before, after, fault.intact)
++          await f.restoreCapture(source, fault.intact)
++        } else {
++          requireNestedWriteFence(fault.error)
++          expect(fault.intact).toBeUndefined()
++          expect(after).toEqual(before)
++        }
++        requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
++        await readOriginalRaw(f, call)
++        expect(await f.audit()).toEqual(before)
++        console.info("SF_MEMORY_M69_PUBLIC_POST_CONTEXT_CAPTURE", JSON.stringify({
++          result: result.kind, returnedRecords: result.kind === "returned" ? result.value.length : 0,
++          realContextReads: observation.reads, sourceWasFresh: true,
++          fault: observation.committed ? "committed-capture-corruption" : "nested-write-blocked",
++          originalRestored: true, eventId: f.receipt.eventId, recordDigest: f.receipt.recordDigest,
++          auditDigest: digestSfValue(before), counts: before.counts, nativeSessionWitness: false,
++        }))
++        requireRecallDenied(result)
++      }, request)
++    } finally { f.atlas.context.context = context }
++  })
++}, 180_000)
++
++test("M69 public recall binds its selection across real source context and preserves an intact retry", async () => {
++  expectSpawn(import.meta.path)
++  await withDocumentReplayFixture(async (f) => {
++    const before = await f.audit()
++    const selection = { caseRefs: [{ ...f.caseRef }], query: "supplier" }
++    const selectionDigest = digestSfValue(selection)
++    const context = f.atlas.context.context
++    const observation = { reads: 0, target: 0, changed: false, sourcesWereFresh: false }
++    try {
++      await f.ui("sf_decision_recall", selection, async (call) => {
++        requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
++        f.atlas.context.context = async (incoming, trusted) => {
++          const resolved = await context(incoming, trusted)
++          if (trusted !== call) return resolved
++          observation.reads += 1
++          if (observation.target > 0 && observation.reads === observation.target) {
++            observation.sourcesWereFresh = resolved.length > 0 && resolved.every((item) => item.state === "fresh")
++            selection.caseRefs[0]!.incarnation = `${f.caseRef.incarnation}:changed-after-context`
++            observation.changed = true
++          }
++          return resolved
++        }
++        // Case authorization also calls context. Calibrate the complete public
++        // read on this same call, then mutate only its final real context.
++        requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
++        expect(observation.reads).toBeGreaterThan(0)
++        observation.target = observation.reads
++        observation.reads = 0
++        const result = await settleRecall(f.atlas.context.recall(selection, call))
++        f.atlas.context.context = context
++        expect(observation.changed).toBe(true)
++        expect(observation.sourcesWereFresh).toBe(true)
++        expect(observation.reads).toBe(observation.target)
++        expect(digestSfValue(selection)).not.toBe(selectionDigest)
++        expect(await f.audit()).toEqual(before)
++        selection.caseRefs[0]!.incarnation = f.caseRef.incarnation
++        expect(digestSfValue(selection)).toBe(selectionDigest)
++        requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
++        expect(await f.audit()).toEqual(before)
++        console.info("SF_MEMORY_M69_PUBLIC_SELECTION_FENCE", JSON.stringify({
++          result: result.kind, returnedRecords: result.kind === "returned" ? result.value.length : 0,
++          realContextReads: observation.reads, selectionChangedAfterLastRealContext: true, originalRestored: true,
++          eventId: f.receipt.eventId, recordDigest: f.receipt.recordDigest,
++          auditDigest: digestSfValue(before), counts: before.counts, nativeSessionWitness: false,
++        }))
++        requireRecallDenied(result, "SF_MEMORY_AUTHORITY_UNAVAILABLE")
++      })
++    } finally { f.atlas.context.context = context }
++  })
++}, 180_000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts
+@@ -0,0 +1,59 @@
++import { expect } from "bun:test"
++import { withDocumentReplayFixture } from "../memory-original-reauthorization/document-fixture.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { object } from "../../../runtime/contract.ts"
++import type { BusinessMemoryEnvelope, SfAtlasProjection } from "../../../product/contracts/business-context.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++
++export type DocumentFixture = Parameters<Parameters<typeof withDocumentReplayFixture>[0]>[0]
++
++export function requireOriginalRecord(fixture: DocumentFixture, records: readonly { envelope: BusinessMemoryEnvelope; entry: SfAtlasProjection["entry"]; recordDigest?: string }[]) {
++  expect(records).toHaveLength(1)
++  const record = records[0]
++  if (!record) throw new Error("Real Atlas recall did not retain its committed record")
++  expect(digestSfValue({ kind: record.envelope.kind, owner: record.envelope.owner, entry: record.entry })).toBe(fixture.receipt.recordDigest)
++  if ("recordDigest" in record) expect(record.recordDigest).toBe(fixture.receipt.recordDigest)
++  expect(record.envelope.eventId).toBe(fixture.receipt.eventId)
++  expect(record.envelope.sourceEventId).toBe(fixture.eventRef.target.eventId)
++  expect(record.envelope.scannerReceipt.digest).toBe(fixture.receipt.recordDigest)
++  expect(record.envelope.dependencies).toEqual(fixture.sources.map((source) => source.ref))
++}
++
++export async function readOriginalRaw(fixture: DocumentFixture, call: TrustedDomainContext) {
++  const read = await fixture.memory.recall(fixture.caseRef, call)
++  expect(read.status).toBe("ok")
++  if (read.status !== "ok") throw new Error("Intact raw recall unavailable")
++  requireOriginalRecord(fixture, read.records)
++  expect(read.records[0]?.recordDigest).toBe(fixture.receipt.recordDigest)
++  return read.records
++}
++
++export function requireOnlyCaptureFault(fixture: DocumentFixture, before: Awaited<ReturnType<DocumentFixture["audit"]>>, after: Awaited<ReturnType<DocumentFixture["audit"]>>, intact: Record<string, unknown>) {
++  const source = fixture.sources[0]!
++  const normalized = structuredClone(after)
++  const partition = Object.values(object(normalized.atlas)).map(object).find((item) => object(item.originals)[source.ref.refDigest])
++  if (!partition) throw new Error("Real captured document missing from fault snapshot")
++  const capture = object(object(partition.originals)[source.ref.refDigest])
++  expect(capture).toEqual({ ...intact, projection: { ...object(intact.projection), value: 999 } })
++  object(partition.originals)[source.ref.refDigest] = intact
++  expect(normalized).toEqual(before)
++  expect(after.counts).toEqual(before.counts)
++}
++
++export function settleRecall<T>(promise: Promise<T>) {
++  return promise.then((value) => ({ kind: "returned" as const, value }), (error: unknown) => ({ kind: "rejected" as const, error }))
++}
++
++export function requireRecallDenied(result: { kind: "returned"; value: unknown } | { kind: "rejected"; error: unknown }, message = "SF_MEMORY_READ_UNAVAILABLE") {
++  expect(result.kind).toBe("rejected")
++  if (result.kind !== "rejected") throw new Error("Private recall records crossed the denied boundary")
++  expect(result.error).toBeInstanceOf(Error)
++  if (!(result.error instanceof Error)) throw new Error("Recall rejected without a domain error")
++  expect(result.error.message).toBe(message)
++}
++
++export function requireNestedWriteFence(error: unknown) {
++  expect(error).toBeInstanceOf(Error)
++  if (!(error instanceof Error)) throw new Error("Capture fault failed without the C08 nested-write guard")
++  expect(error.message).toBe("Nested local writes are forbidden")
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts
+@@ -0,0 +1,128 @@
++import { randomUUID } from "node:crypto"
++import { expect, test } from "bun:test"
++import { expectSpawn } from "@orchestra/core/test/fixture/omni-expect"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { CaseLedgerEvent } from "../../../product/contracts/decisions.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { enqueueSfLedgerEvent } from "../../../product/integration/ledger-outbox.ts"
++import { object } from "../../../runtime/contract.ts"
++import { withDocumentReplayFixture } from "../memory-original-reauthorization/document-fixture.ts"
++import { requireOriginalRecord } from "./fixture-assertions.ts"
++
++// The unchanged40 fixture creates and confirms real C17 document sources, then
++// publishes A through C08/Atlas/Gitleaks. The accepted ledger event is an explicit
++// synthetic premise. This independent document case does not exercise the
++// blocked financial C12 preparation or its installed initializeAtlas callback.
++test("M69 settled documentary A remains authorized while B is pending without another publication effect", async () => {
++  expectSpawn(import.meta.path)
++  const completed: unknown[] = []
++  await withDocumentReplayFixture(async (f) => {
++    await f.ui("sf_evidence_get", { evidenceRef: f.eventRef }, async (call) => {
++      const request = f.authority.host.requestFor(call)
++      if (!request || !await f.authority.host.revalidate(call)) throw new Error("Actual document replay authority unavailable")
++      const source = f.sources[0]!
++      const before = await f.audit()
++      const keyA = JSON.stringify([f.caseRef.id, f.caseRef.incarnation, f.eventRef.target.eventId])
++      const itemA = object(object(before.outbox)[keyA])
++      const receiptA = object(itemA.receipt)
++      expect(itemA.state).toBe("settled")
++      expect(receiptA).toEqual(f.receipt)
++      expect(receiptA.status).toBe("committed")
++      expect(receiptA.sourceEventId).toBe(f.eventRef.target.eventId)
++      expect(object(receiptA.scanner).status).toBe("clean")
++      expect(before.counts.scans).toBe(1)
++      const partitionA = Object.values(object(before.atlas)).map(object)
++        .find((partition) => object(partition.originals)[source.ref.refDigest])
++      if (!partitionA) throw new Error("Real committed document capture A unavailable")
++      const captureA = object(object(partitionA.originals)[source.ref.refDigest])
++      expect(captureA.ref).toEqual(source.ref)
++      expect(object(object(partitionA.captureDigests)[f.receipt.eventId!])[source.ref.refDigest]).toBe(digestSfValue(captureA))
++
++      const ready = await f.memory.recall(f.caseRef, call)
++      expect(ready.status).toBe("ok")
++      if (ready.status !== "ok") throw new Error("Whole-case recall must succeed before pending B")
++      requireOriginalRecord(f, ready.records)
++      const stored = await f.authority.state.read(request, "cases", (state) => ({
++        versions: state.versions, decision: state.cases[f.caseRef.id],
++      }))
++      if (stored.status !== "ok" || !stored.value.decision) throw new Error("Real committed case A unavailable")
++      const decision = stored.value.decision
++      const eventA = decision.ledger.find((event) => event.id === f.eventRef.target.eventId)
++      if (!eventA) throw new Error("Committed event A missing from the real C08 ledger")
++      expect(eventA.evidenceRefs).toEqual([source.ref])
++      const pending: CaseLedgerEvent = { ...structuredClone(eventA), id: randomUUID(),
++        caseRef: { ...f.caseRef, version: decision.version + 1 },
++        rationale: "Explicit later accepted document review awaiting Memory publication",
++        outputDigest: digestSfValue({ premise: "M69 accepted pending documentary review",
++          previousEvent: eventA.id, evidenceRefs: eventA.evidenceRefs }),
++      }
++      // Queue B through the real producer in one C08 case/outbox transaction.
++      // Do not emit B, seed an Atlas capture, or manufacture a settled receipt.
++      const added = await f.authority.state.transaction(request, {
++        namespace: "cases", expectedStorageVersion: stored.storageVersion,
++        additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: stored.value.versions.outbox }],
++        targetRef: encodeCaseRef(f.caseRef), targetIncarnation: f.caseRef.incarnation,
++        idempotencyKey: `m69-document-pending:${pending.id}`, commandDigest: digestSfValue(pending),
++      }, async (state, actor) => {
++        const current = state.cases[f.caseRef.id]
++        if (!current || current.incarnation !== f.caseRef.incarnation || digestSfValue(current) !== digestSfValue(decision) ||
++          !current.participants.includes(actor.principalRef) || actor.principalRef !== call.binding.principalRef ||
++          actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion)
++          throw new Error("Actual pending document premise changed before commit")
++        state.cases[current.id] = { ...current, version: pending.caseRef.version, ledger: [...current.ledger, pending] }
++        const queued = enqueueSfLedgerEvent(state, pending, {
++          installationId: call.binding.installationId, projectId: call.binding.projectId, authority: actor,
++        })
++        if (queued.status !== "ok") throw new Error(queued.reason)
++        return { commit: true, value: queued.value.eventRef }
++      })
++      expect(added.status).toBe("ok")
++      if (added.status !== "ok") throw new Error("Real C08 pending document event was not committed")
++      const pendingRef = added.value
++      const keyB = JSON.stringify([f.caseRef.id, f.caseRef.incarnation, pendingRef.target.eventId])
++      const withPending = await f.audit()
++      expect(withPending.atlas).toEqual(before.atlas)
++      expect(object(withPending.outbox)[keyA]).toEqual(itemA)
++      expect(Object.keys(object(withPending.outbox))).toHaveLength(Object.keys(object(before.outbox)).length + 1)
++      expect(object(object(withPending.outbox)[keyB]).state).toBe("pending")
++      expect(object(object(withPending.outbox)[keyB]).receipt).toBeUndefined()
++      expect(object(object(withPending.outbox)[keyB]).eventRef).toEqual(pendingRef)
++      expect(withPending.counts.events).toBe(before.counts.events)
++      expect(withPending.counts.envelopes).toBe(before.counts.envelopes)
++      expect(withPending.counts.settled).toBe(before.counts.settled)
++      expect(withPending.counts.scans).toBe(before.counts.scans)
++
++      expect((await f.memory.recall(f.caseRef, call)).status).toBe("unavailable")
++      expect(await f.atlas.memory.readOriginal(f.caseRef, source.ref.refDigest, call)).toEqual(source.ref)
++      // Real continuity uses the original40 caseForEvidence composition and the
++      // private capture lookup. Success must not depend on publishing pending B.
++      expect(await f.atlas.proveContinuity(source.ref, source.ref, call)).toBe(true)
++      const replay = await f.memory.emitFromLedger(f.eventRef, call)
++      expect(digestSfValue(replay)).toBe(digestSfValue({ ...receiptA, status: "already-committed" }))
++      expect(await f.atlas.memory.readOriginal(f.caseRef, pendingRef.refDigest, call)).toBeUndefined()
++      expect(await f.audit()).toEqual(withPending)
++
++      // A settled receipt is not authority. Remove the live Request credential;
++      // the same admitted call must lose both original access and exact replay.
++      expect(request.headers.get("cookie")).toBeTruthy()
++      request.headers.delete("cookie")
++      expect(await f.authority.host.revalidate(call)).toBe(false)
++      expect(await f.atlas.memory.readOriginal(f.caseRef, source.ref.refDigest, call)).toBeUndefined()
++      const denied = await f.memory.emitFromLedger(f.eventRef, call)
++      expect(denied.status).toBe("unavailable")
++      expect(denied.eventId).toBeUndefined()
++      expect(denied.recordDigest).toBeUndefined()
++      expect(await f.audit()).toEqual(withPending)
++      completed.push({ scenario: "documentary-A-settled-B-pending", originalA: "accepted",
++        replayA: "already-committed-same-receipt", pendingB: "no-publication-no-receipt-no-original",
++        wholeCaseRecall: "unavailable", currentCredentialRemoval: "original-and-replay-refused",
++        auditDigest: digestSfValue(withPending), originalDigest: source.ref.refDigest,
++        recordDigest: f.receipt.recordDigest, scanner: f.receipt.scanner, scans: f.counts.scans,
++        atlasUnchanged: true, outboxUnchangedAfterB: true, nativeSessionWitness: false,
++        financialC12Executed: false, installedInitializeAtlasCallbackExecuted: false })
++    }, f.replayRequest())
++  })
++  // Emit the witness only after the real fixture has completed its teardown.
++  expect(completed).toHaveLength(1)
++  console.info("SF_MEMORY_PENDING_REPLAY_M69", JSON.stringify(completed[0]))
++}, 180_000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail-fixture.ts
+@@ -0,0 +1,70 @@
++import { randomUUID } from "node:crypto"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { enqueueSfLedgerEvent } from "../../../product/integration/ledger-outbox.ts"
++import type { BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { CaseLedgerEvent, CostCoverageBasis } from "../../../product/contracts/decisions.ts"
++import type { DocumentFixture } from "./fixture-assertions.ts"
++
++/** Classification of this documentary case is an explicit synthetic premise,
++ * as in the original WP14 ranking fixture. It declares no scenario, calculation,
++ * result or financial capture. All references are the actual confirmed documents.
++ * Optional event B has the same accepted-ledger premise as fixture40; C08/outbox,
++ * publication, capture, scanner and every later authorization remain real. */
++export async function prepareDocumentRankCase(fixture: DocumentFixture, publishSecond: boolean) {
++  const sourceRefs = fixture.sources.map((source) => source.ref)
++  const basis: CostCoverageBasis = { id: `m69-document-classification:${randomUUID()}`, version: 1,
++    decisionType: "supplier-document-review", categoryIds: [], additionalCategoryIds: [], sourceRefs }
++  const eventRef = await fixture.ui("sf_case_read", { caseRef: encodeCaseRef(fixture.caseRef) }, async (call) => {
++    const request = fixture.authority.host.requestFor(call)
++    if (!request || !await fixture.authority.host.revalidate(call)) throw new Error("Actual rank premise authority unavailable")
++    const cases = await fixture.authority.state.read(request, "cases", (state) => state.cases[fixture.caseRef.id])
++    const outbox = await fixture.authority.state.read(request, "outbox", (state) => state.versions.outbox)
++    if (cases.status !== "ok" || !cases.value || outbox.status !== "ok" || cases.value.costCoverageBases.length)
++      throw new Error("Actual rank premise storage changed")
++    const before = cases.value
++    const version = before.version + 1
++    const event: CaseLedgerEvent | undefined = publishSecond ? {
++      id: randomUUID(), caseRef: { ...fixture.caseRef, version }, kind: "analysis-accepted",
++      principalRef: call.binding.principalRef, at: fixture.app.at,
++      consideredActions: ["Review the same confirmed supplier documents again"], factualGaps: [],
++      lifecycleState: "investigating", rationale: "The second accepted documentary review retains the confirmed supplier prices.",
++      evidenceRefs: sourceRefs, outputDigest: digestSfValue({ premise: "M69 accepted second documentary review", basis, sourceRefs }),
++    } : undefined
++    const saved = await fixture.authority.state.transaction<Extract<BusinessEvidenceRef, { kind: "case-event" }> | undefined>(request, {
++      namespace: "cases", expectedStorageVersion: cases.storageVersion,
++      additionalNamespaces: publishSecond ? [{ namespace: "outbox", expectedStorageVersion: outbox.storageVersion }] : [],
++      targetRef: encodeCaseRef(fixture.caseRef), targetIncarnation: fixture.caseRef.incarnation,
++      idempotencyKey: `m69-document-rank:${basis.id}`, commandDigest: digestSfValue({ basis, event }),
++    }, async (state, actor) => {
++      const value = state.cases[fixture.caseRef.id]
++      if (!value || value.incarnation !== fixture.caseRef.incarnation || digestSfValue(value) !== digestSfValue(before) ||
++        !value.participants.includes(actor.principalRef) || actor.principalRef !== call.binding.principalRef ||
++        actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion)
++        throw new Error("Actual rank premise changed before commit")
++      state.cases[value.id] = { ...value, version, costCoverageBases: [basis],
++        ledger: event ? [...value.ledger, event] : value.ledger }
++      if (!event) return { commit: true, value: undefined }
++      const queued = enqueueSfLedgerEvent(state, event, {
++        installationId: call.binding.installationId, projectId: call.binding.projectId, authority: actor,
++      })
++      if (queued.status !== "ok") throw new Error(queued.reason)
++      return { commit: true, value: queued.value.eventRef }
++    })
++    if (saved.status !== "ok") throw new Error("Actual documentary rank premise commit failed")
++    return saved.value
++  })
++  if (!publishSecond) {
++    if (eventRef) throw new Error("Classification unexpectedly enqueued another event")
++    return undefined
++  }
++  if (!eventRef) throw new Error("Actual second documentary event was not enqueued")
++  const receipt = await fixture.ui("sf_evidence_get", { evidenceRef: eventRef },
++    (call) => fixture.memory.emitFromLedger(eventRef, call), new Request(`${fixture.app.origin}/sucafina/dashboard`, {
++      method: "POST", headers: { cookie: fixture.app.cookie, origin: fixture.app.origin,
++        "Idempotency-Key": `m69-rank-publish:${eventRef.target.eventId}` },
++    }))
++  if (receipt.status !== "committed" || !receipt.eventId || !receipt.recordDigest || receipt.scanner.status !== "clean")
++    throw new Error(`Actual second documentary publication failed: ${receipt.reason ?? receipt.status}`)
++  return { eventRef, receipt }
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts
+@@ -0,0 +1,176 @@
++import { expect, test } from "bun:test"
++import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { deriveAuthorizedRecallFeatures } from "../../../product/decision-memory/case-features.ts"
++import { rankSfAtlasRecall } from "../../../product/host-binding/atlas-memory.ts"
++import type { BusinessMemoryEnvelope, MemoryWriteReceipt, SfAtlasProjection } from "../../../product/contracts/business-context.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { withDocumentReplayFixture } from "../memory-original-reauthorization/document-fixture.ts"
++import { readOriginalRaw } from "./fixture-assertions.ts"
++import type { DocumentFixture } from "./fixture-assertions.ts"
++import { prepareDocumentRankCase } from "./rank-tail-fixture.ts"
++
++type RecallResult = Awaited<ReturnType<DocumentFixture["memory"]["recall"]>>
++type RecallRecord = Extract<RecallResult, { status: "ok" }>["records"][number]
++type RankResult = Awaited<ReturnType<typeof rankSfAtlasRecall>>
++const runtimeVersions = () => ({ boundaryVersion: "1", schemaVersion: "1", manifestVersion: "1", skillVersion: "1" })
++
++function requirePublishedRecords(records: readonly { envelope: BusinessMemoryEnvelope; entry: SfAtlasProjection["entry"]; recordDigest: string }[], receipts: readonly MemoryWriteReceipt[]) {
++  expect(records).toHaveLength(receipts.length)
++  expect(new Set(records.map((record) => record.envelope.eventId))).toEqual(new Set(receipts.map((receipt) => receipt.eventId)))
++  for (const receipt of receipts) {
++    const matches = records.filter((record) => record.envelope.eventId === receipt.eventId)
++    expect(matches).toHaveLength(1)
++    const record = matches[0]
++    if (!record) throw new Error("Rank omitted an actual published record")
++    expect(record.envelope.sourceEventId).toBe(receipt.sourceEventId)
++    expect(record.recordDigest).toBe(receipt.recordDigest)
++    expect(digestSfValue({ owner: record.envelope.owner, kind: record.envelope.kind, entry: record.entry })).toBe(receipt.recordDigest)
++    expect(record.envelope.scannerReceipt).toEqual({ ...receipt.scanner, digest: receipt.recordDigest })
++  }
++}
++
++function requireRank(result: RankResult, receipts: readonly MemoryWriteReceipt[]) {
++  expect(result.status).toBe("ok")
++  if (result.status !== "ok") throw new Error("Actual documentary rank was unavailable")
++  expect(result.cases).toHaveLength(receipts.length)
++  expect(result.cases.every((match) => match.matchedCriteria.includes("decision-type"))).toBe(true)
++  requirePublishedRecords(result.records, receipts)
++  return result
++}
++
++function rankInput(fixture: DocumentFixture, call: TrustedDomainContext, record: RecallRecord) {
++  const features = deriveAuthorizedRecallFeatures(record.case, call)
++  if (!features) throw new Error("Actual authorized case did not yield documentary recall features")
++  expect(features).toMatchObject({ decisionType: "supplier-document-review", resultAvailable: false })
++  return { memory: fixture.memory, caseRefs: [{ ...fixture.caseRef }], features,
++    featuresForCase: async (value: Parameters<typeof deriveAuthorizedRecallFeatures>[0], trusted: TrustedDomainContext) => deriveAuthorizedRecallFeatures(value, trusted),
++    runtimeVersions: runtimeVersions(), call, proveContinuity: fixture.atlas.proveContinuity,
++    revalidate: (trusted: TrustedDomainContext) => fixture.authority.host.revalidate(trusted) }
++}
++
++test("M69 rank returns both real event records from the final case group after an older egress object changes", async () => {
++  expectSpawn(import.meta.path)
++  await withDocumentReplayFixture(async (f) => {
++    const second = await prepareDocumentRankCase(f, true)
++    if (!second) throw new Error("Actual second publication missing")
++    const receipts = [f.receipt, second.receipt]
++    expect(second.eventRef.target.caseId).toBe(f.caseRef.id)
++    expect(second.eventRef.target.caseIncarnation).toBe(f.caseRef.incarnation)
++    expect(second.receipt.eventId).not.toBe(f.receipt.eventId)
++    const before = await f.audit()
++    expect(before.counts).toMatchObject({ scans: 2, events: 2, envelopes: 2, outbox: 2, settled: 2 })
++    const selection = { caseRefs: [{ ...f.caseRef }], query: "supplier" }
++    await f.ui("sf_decision_recall", selection, async (call) => {
++      const initial = await f.memory.recall(f.caseRef, call)
++      if (initial.status !== "ok" || !initial.records[0]) throw new Error("Actual two-event recall unavailable")
++      requirePublishedRecords(initial.records, receipts)
++      const input = rankInput(f, call, initial.records[0])
++      const recall = f.memory.recall
++      const observed: { reads: number; firstEvent?: string; older?: RecallRecord; changed: boolean; latest?: readonly RecallRecord[] } = { reads: 0, changed: false }
++      try {
++        f.memory.recall = async (ref, trusted) => {
++          const returned = await recall(ref, trusted)
++          if (trusted !== call) return returned
++          observed.reads += 1
++          if (returned.status !== "ok") throw new Error("Real rank reread failed before the in-memory fault")
++          requirePublishedRecords(returned.records, receipts)
++          if (observed.reads === 1) observed.firstEvent = returned.records[0]?.envelope.eventId
++          if (observed.reads === 2) observed.older = returned.records.find((record) => record.envelope.eventId === observed.firstEvent)
++          if (observed.reads === 3) {
++            if (!observed.older || !("lesson" in observed.older.entry)) throw new Error("Earlier actual egress record unavailable for the fault")
++            observed.latest = returned.records
++            // Fault only the object obtained from the preceding real read. The
++            // durable event, capture, receipt and final real reader stay intact.
++            Object.assign(observed.older.entry, { lesson: "M69 explicit mutation of an older completed egress object" })
++            observed.changed = true
++          }
++          return returned
++        }
++        const ranked = await rankSfAtlasRecall(input)
++        f.memory.recall = recall
++        expect(observed.reads).toBe(3)
++        expect(observed.changed).toBe(true)
++        if (!observed.older || !observed.latest) throw new Error("Rank did not reach the intended stale-prefix boundary")
++        expect(digestSfValue({ owner: observed.older.envelope.owner, kind: observed.older.envelope.kind, entry: observed.older.entry }))
++          .not.toBe(observed.older.recordDigest)
++        expect(observed.latest.includes(observed.older)).toBe(false)
++        requirePublishedRecords(observed.latest, receipts)
++        const result = requireRank(ranked, receipts)
++        expect(await f.audit()).toEqual(before)
++        console.info("SF_MEMORY_M69_RANK_FINAL_GROUP", JSON.stringify({ realEvents: 2, sameCase: true,
++          realReads: observed.reads, olderEgressMutated: observed.changed, returnedOriginalRecords: result.records.length,
++          latestReadIntact: true, counts: before.counts, syntheticDocumentClassification: true,
++          acceptedLedgerPremise: true, financialCapture: false, nativeSessionWitness: false }))
++      } finally { f.memory.recall = recall }
++    })
++    expect(await f.audit()).toEqual(before)
++  })
++}, 180_000)
++
++// Each fault has its own real fixture and the existing 180 s ceiling. Counting
++// actual authorizations selects the last await without replacing its decision.
++for (const mutation of ["features", "runtimeVersions"] as const) {
++  test(`M69 rank denies ${mutation} changed during its last real authority await and accepts the restored input`, async () => {
++    expectSpawn(import.meta.path)
++    await withDocumentReplayFixture(async (f) => {
++      await prepareDocumentRankCase(f, false)
++      const before = await f.audit()
++      expect(before.counts).toMatchObject({ scans: 1, events: 1, envelopes: 1, outbox: 1, settled: 1 })
++      const selection = { caseRefs: [{ ...f.caseRef }], query: "supplier" }
++      await f.ui("sf_decision_recall", selection, async (call) => {
++        const original = await readOriginalRaw(f, call)
++        if (!original[0]) throw new Error("Actual rank feature source missing")
++        const input = rankInput(f, call, original[0])
++        const features = structuredClone(input.features)
++        const versions = structuredClone(input.runtimeVersions)
++        const request = f.authority.host.requestFor(call)
++        const revalidate = f.authority.host.revalidate
++        const observed = { checks: 0, target: 0, armed: false, changed: false, allowedAtFault: false, sameRequest: false }
++        try {
++          f.authority.host.revalidate = async (trusted) => {
++            const permitted = await revalidate(trusted)
++            if (trusted !== call) return permitted
++            observed.checks += 1
++            if (observed.armed && observed.checks === observed.target) {
++              observed.allowedAtFault = permitted
++              observed.sameRequest = f.authority.host.requestFor(trusted) === request
++              if (mutation === "features") input.features.decisionType = "different-documentary-question"
++              else input.runtimeVersions.boundaryVersion = "changed-after-ranking"
++              observed.changed = true
++            }
++            return permitted
++          }
++          requireRank(await rankSfAtlasRecall(input), [f.receipt])
++          observed.target = observed.checks
++          expect(observed.target).toBeGreaterThan(0)
++          observed.checks = 0
++          observed.armed = true
++          const denied = await rankSfAtlasRecall(input)
++          f.authority.host.revalidate = revalidate
++          expect(observed.checks).toBe(observed.target)
++          expect(observed.changed).toBe(true)
++          expect(observed.allowedAtFault).toBe(true)
++          expect(observed.sameRequest).toBe(true)
++          expect(mutation === "features" ? input.features.decisionType : input.runtimeVersions.boundaryVersion)
++            .toBe(mutation === "features" ? "different-documentary-question" : "changed-after-ranking")
++          Object.assign(input.features, features)
++          Object.assign(input.runtimeVersions, versions)
++          requireRank(await rankSfAtlasRecall(input), [f.receipt])
++          expect(await f.audit()).toEqual(before)
++          console.info("SF_MEMORY_M69_RANK_SELECTION_TAIL", JSON.stringify({ mutation,
++            lastRealAuthorization: observed.target, authorityAllowedAtFault: observed.allowedAtFault,
++            sameActualRequest: observed.sameRequest, denied: denied.status, restoredRecords: 1,
++            counts: before.counts, syntheticDocumentClassification: true, financialCapture: false,
++            nativeSessionWitness: false }))
++          expect(denied).toEqual({ status: "unavailable" })
++        } finally {
++          f.authority.host.revalidate = revalidate
++          Object.assign(input.features, features)
++          Object.assign(input.runtimeVersions, versions)
++        }
++      })
++      expect(await f.audit()).toEqual(before)
++    })
++  }, 180_000)
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts
+@@ -0,0 +1,158 @@
++import { expect, test } from "bun:test"
++import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { object } from "../../../runtime/contract.ts"
++import { withDocumentReplayFixture } from "../memory-original-reauthorization/document-fixture.ts"
++import { readOriginalRaw, requireNestedWriteFence, requireOnlyCaptureFault } from "./fixture-assertions.ts"
++import type { BusinessEvidenceResolution } from "../../../product/contracts/business-context.ts"
++
++test("M69 raw recall fences capture corruption during its last real authority revalidation", async () => {
++  expectSpawn(import.meta.path)
++  await withDocumentReplayFixture(async (f) => {
++    const before = await f.audit()
++    const source = f.sources[0]!
++    const request = f.replayRequest()
++    const selection = { caseRefs: [f.caseRef], query: "supplier" }
++    const revalidate = f.authority.host.revalidate
++    const observation = { calls: 0, target: 0, attempted: false, sameRequest: false, committed: false }
++    const fault: { intact?: Record<string, unknown>; error?: unknown } = {}
++    expect(before.counts).toMatchObject({ scans: 1, events: 1, envelopes: 1, outbox: 1, settled: 1 })
++    try {
++      await f.ui("sf_decision_recall", selection, async (call) => {
++        await readOriginalRaw(f, call)
++        f.authority.host.revalidate = async (trusted) => {
++          const permitted = await revalidate(trusted)
++          if (trusted !== call) return permitted
++          observation.calls += 1
++          if (permitted && observation.target > 0 && observation.calls === observation.target) {
++            observation.attempted = true
++            observation.sameRequest = f.authority.host.requestFor(trusted) === request
++            // This is a real C08 write after the real authority returned. On the
++            // protected implementation its nested-write guard must reject it.
++            try {
++              fault.intact = await f.corruptCapture(source)
++              observation.committed = true
++            } catch (error: unknown) { fault.error = error }
++          }
++          return permitted
++        }
++        await readOriginalRaw(f, call)
++        expect(observation.calls).toBeGreaterThan(0)
++        observation.target = observation.calls
++        observation.calls = 0
++        const result = await f.memory.recall(f.caseRef, call)
++        f.authority.host.revalidate = revalidate
++        expect(observation.attempted).toBe(true)
++        expect(observation.sameRequest).toBe(true)
++        expect(observation.calls).toBe(observation.target)
++        expect(f.authority.host.requestFor(call)).toBe(request)
++        expect(request.headers.get("Idempotency-Key")).toBe(f.replayKey)
++        expect(request.signal.aborted).toBe(false)
++        const after = await f.audit()
++        if (observation.committed) {
++          expect(fault.error).toBeUndefined()
++          if (!fault.intact) throw new Error("Capture corruption did not retain its actual prior value")
++          requireOnlyCaptureFault(f, before, after, fault.intact)
++          await f.restoreCapture(source, fault.intact)
++        } else {
++          requireNestedWriteFence(fault.error)
++          expect(fault.intact).toBeUndefined()
++          expect(after).toEqual(before)
++        }
++        await readOriginalRaw(f, call)
++        expect(await f.audit()).toEqual(before)
++        console.info("SF_MEMORY_M69_RAW_LAST_AUTHORITY_CAPTURE", JSON.stringify({
++          result: result.status, returnedRecords: result.status === "ok" ? result.records.length : 0,
++          lastRealRevalidation: observation.calls, sameCallAndRequest: true,
++          fault: observation.committed ? "committed-capture-corruption" : "nested-write-blocked",
++          originalRestored: true, auditDigest: digestSfValue(before), counts: before.counts,
++          nativeSessionWitness: false,
++        }))
++        // No rejected Promise or generic exception is an acceptable denial.
++        expect(result).toEqual({ status: "unavailable" })
++      }, request)
++    } finally { f.authority.host.revalidate = revalidate }
++  })
++}, 180_000)
++
++test("M69 raw recall fences a real case change after its last authorized document resolution", async () => {
++  expectSpawn(import.meta.path)
++  await withDocumentReplayFixture(async (f) => {
++    const before = await f.audit()
++    const source = f.sources[0]!
++    const request = f.replayRequest()
++    const selection = { caseRefs: [f.caseRef], query: "supplier" }
++    const resolve = f.atlas.context.resolve
++    const observation = { reads: 0, target: 0, attempted: false, sameRequest: false, committed: false }
++    const fault: { error?: unknown; resolution?: BusinessEvidenceResolution } = {}
++    try {
++      await f.ui("sf_decision_recall", selection, async (call) => {
++        const stored = await f.authority.state.read(request, "cases", (state) => state.cases[f.caseRef.id])
++        if (stored.status !== "ok" || !stored.value) throw new Error("Actual accepted case unavailable")
++        const intact = structuredClone(stored.value)
++        const changed = { ...intact, version: intact.version + 1, objective: "M69 concurrent revision of the same case" }
++        expect(intact.id).toBe(f.caseRef.id)
++        expect(intact.incarnation).toBe(f.caseRef.incarnation)
++        await readOriginalRaw(f, call)
++        f.atlas.context.resolve = async (incoming, trusted) => {
++          const resolved = await resolve(incoming, trusted)
++          if (trusted !== call || incoming.refDigest !== source.ref.refDigest) return resolved
++          observation.reads += 1
++          if (observation.target > 0 && observation.reads === observation.target) {
++            observation.attempted = true
++            observation.sameRequest = f.authority.host.requestFor(trusted) === request
++            fault.resolution = structuredClone(resolved)
++            try {
++              await f.app.store.transaction("dashboard", async (snapshot) => {
++                object(object(snapshot.data.__sfProductV1).cases)[f.caseRef.id] = structuredClone(changed)
++                return { commit: true, value: undefined }
++              })
++              observation.committed = true
++            } catch (error: unknown) { fault.error = error }
++          }
++          return resolved
++        }
++        await readOriginalRaw(f, call)
++        expect(observation.reads).toBeGreaterThan(0)
++        observation.target = observation.reads
++        observation.reads = 0
++        const result = await f.memory.recall(f.caseRef, call)
++        f.atlas.context.resolve = resolve
++        expect(observation.attempted).toBe(true)
++        expect(observation.sameRequest).toBe(true)
++        expect(observation.reads).toBe(observation.target)
++        expect(fault.resolution?.state).toBe("fresh")
++        expect(fault.resolution?.currentRef).toEqual(source.ref)
++        expect(fault.resolution?.authorizedProjection).toEqual(source.evidence)
++        const current = await f.app.store.transaction("dashboard", async (snapshot) => ({
++          commit: false, value: structuredClone(object(object(snapshot.data.__sfProductV1).cases)[f.caseRef.id]),
++        }))
++        if (observation.committed) {
++          expect(fault.error).toBeUndefined()
++          expect(current).toEqual(changed)
++        } else {
++          requireNestedWriteFence(fault.error)
++          expect(current).toEqual(intact)
++        }
++        expect(digestSfValue(object(current).ledger)).toBe(digestSfValue(intact.ledger))
++        // The actual case is the only changed source: Atlas, receipt, outbox,
++        // namespace versions and scanner count are byte-for-byte unchanged.
++        expect(await f.audit()).toEqual(before)
++        if (observation.committed) await f.app.store.transaction("dashboard", async (snapshot) => {
++          object(object(snapshot.data.__sfProductV1).cases)[f.caseRef.id] = structuredClone(intact)
++          return { commit: true, value: undefined }
++        })
++        await readOriginalRaw(f, call)
++        expect(await f.audit()).toEqual(before)
++        console.info("SF_MEMORY_M69_RAW_LAST_DOCUMENT_CASE", JSON.stringify({
++          result: result.status, returnedRecords: result.status === "ok" ? result.records.length : 0,
++          lastRealDocumentResolution: observation.reads, sourceWasFresh: true,
++          fault: observation.committed ? "committed-case-revision" : "nested-write-blocked",
++          ledgerDigest: digestSfValue(intact.ledger), originalRestored: true,
++          auditDigest: digestSfValue(before), counts: before.counts, nativeSessionWitness: false,
++        }))
++        expect(result).toEqual({ status: "unavailable" })
++      }, request)
++    } finally { f.atlas.context.resolve = resolve }
++  })
++}, 180_000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts
+@@ -0,0 +1,159 @@
++import { expect, test } from "bun:test"
++import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { revalidateSfAtlasRecall } from "../../../product/host-binding/atlas-memory.ts"
++import { withComposedDocumentReplayFixture } from "./composed-document-fixture.ts"
++import { readOriginalRaw, requireOriginalRecord, type DocumentFixture } from "./fixture-assertions.ts"
++import { publishSecondDocumentCase } from "./second-case-fixture.ts"
++
++type SecondCase = Awaited<ReturnType<typeof publishSecondDocumentCase>>
++type RecallCall = Parameters<DocumentFixture["memory"]["recall"]>[1]
++type Audit = Awaited<ReturnType<DocumentFixture["audit"]>>
++
++/** Each split retains two real publications and both exact settled replays.
++ * Each independent test keeps the original 180000ms ceiling.
++ * F1's monolithic deadline remains failed; this split does not prove that
++ * original whole sequence completed within its deadline. */
++async function withTwoPublishedCases(marker: string, work: (
++  fixture: DocumentFixture, second: SecondCase, before: Audit,
++) => Promise<Record<string, boolean | number>>) {
++  await withComposedDocumentReplayFixture(async (f) => {
++    const second = await publishSecondDocumentCase(f)
++    expect(second.caseRef).not.toEqual(f.caseRef)
++    expect(second.receipt.eventId).not.toBe(f.receipt.eventId)
++    const before = await f.audit()
++    expect(before.counts).toMatchObject({ scans: 2, events: 2, envelopes: 2, outbox: 2, settled: 2 })
++    const observations = await work(f, second, before)
++    expect(await f.replay()).toEqual({ ...f.receipt, status: "already-committed" })
++    expect(await second.replay()).toEqual({ ...second.receipt, status: "already-committed" })
++    expect(await f.audit()).toEqual(before)
++    console.info(marker, JSON.stringify({
++      ...observations, sameDurableReceipts: true, counts: before.counts, nativeSessionWitness: false,
++    }))
++  })
++}
++
++async function readGroups(f: DocumentFixture, second: SecondCase, call: RecallCall) {
++  const first = await readOriginalRaw(f, call)
++  const another = await f.memory.recall(second.caseRef, call)
++  expect(another.status).toBe("ok")
++  if (another.status !== "ok") throw new Error("Second actual raw recall unavailable")
++  expect(another.records).toHaveLength(1)
++  expect(another.records[0]?.recordDigest).toBe(second.receipt.recordDigest)
++  return [first, another.records]
++}
++
++test("M69 complete public recall preserves two real cases, authenticated empty selection and one-use original groups", async () => {
++  expectSpawn(import.meta.path)
++  await withTwoPublishedCases("SF_MEMORY_M69_MULTI_CASE_PUBLIC", async (f, second, before) => {
++    const emptySelection = { caseRefs: [], query: "supplier" }
++    await f.ui("sf_decision_recall", emptySelection, async (call) => {
++      expect(await f.atlas.context.recall(emptySelection, call)).toEqual([])
++    })
++    expect(await f.audit()).toEqual(before)
++    const selection = { caseRefs: [{ ...f.caseRef }, { ...second.caseRef }], query: "supplier" }
++    await f.ui("sf_decision_recall", selection, async (call) => {
++      const publicRecords = await f.atlas.context.recall(selection, call)
++      expect(publicRecords).toHaveLength(2)
++      expect(new Set(publicRecords.map((record) => record.envelope.eventId)))
++        .toEqual(new Set([f.receipt.eventId, second.receipt.eventId]))
++      requireOriginalRecord(f, publicRecords.filter((record) => record.envelope.eventId === f.receipt.eventId))
++      const secondRecord = publicRecords.find((record) => record.envelope.eventId === second.receipt.eventId)
++      if (!secondRecord) throw new Error("Public multi-case recall dropped the second actual record")
++      expect(secondRecord.envelope.caseRef).toMatchObject(second.caseRef)
++      expect(secondRecord.envelope.sourceEventId).toBe(second.eventRef.target.eventId)
++      expect(secondRecord.envelope.scannerReceipt.digest).toBe(second.receipt.recordDigest)
++      expect(digestSfValue({ kind: secondRecord.envelope.kind, owner: secondRecord.envelope.owner, entry: secondRecord.entry }))
++        .toBe(second.receipt.recordDigest)
++      const groups = await readGroups(f, second, call)
++      expect(await revalidateSfAtlasRecall(groups, call)).toBe(true)
++      expect(await revalidateSfAtlasRecall(groups, call)).toBe(false)
++      expect(await f.audit()).toEqual(before)
++    })
++    return { publicRecords: 2, authenticatedEmptySelection: true, originalGroupsAccepted: true, replayedObservationDenied: true }
++  })
++}, 180_000)
++
++async function proveLateGroupMutation(mutation: "order" | "membership") {
++  const marker = mutation === "order" ? "SF_MEMORY_M69_GROUP_ORDER_FENCE" : "SF_MEMORY_M69_GROUP_MEMBERSHIP_FENCE"
++  await withTwoPublishedCases(marker, async (f, second, before) => {
++    const selection = { caseRefs: [{ ...f.caseRef }, { ...second.caseRef }], query: "supplier" }
++    await f.ui("sf_decision_recall", selection, async (call) => {
++      expect(await revalidateSfAtlasRecall(await readGroups(f, second, call), call)).toBe(true)
++      const changingGroups = await readGroups(f, second, call)
++      const originalGroups = [...changingGroups]
++      const revalidate = f.authority.host.revalidate
++      const observation = { calls: 0, changed: false }
++      try {
++        f.authority.host.revalidate = async (trusted) => {
++          const permitted = await revalidate(trusted)
++          if (trusted !== call) return permitted
++          observation.calls += 1
++          if (permitted && !observation.changed) {
++            if (mutation === "order") changingGroups.reverse()
++            else changingGroups.splice(1, 1)
++            observation.changed = true
++          }
++          return permitted
++        }
++        const result = await revalidateSfAtlasRecall(changingGroups, call)
++        f.authority.host.revalidate = revalidate
++        expect(observation.calls).toBeGreaterThan(0)
++        expect(observation.changed).toBe(true)
++        if (mutation === "order") {
++          expect(changingGroups).toHaveLength(2)
++          expect(changingGroups[0]).toBe(originalGroups[1])
++          expect(changingGroups[1]).toBe(originalGroups[0])
++        } else {
++          expect(changingGroups).toHaveLength(1)
++          expect(changingGroups[0]).toBe(originalGroups[0])
++        }
++        expect(result).toBe(false)
++        expect(await revalidateSfAtlasRecall(await readGroups(f, second, call), call)).toBe(true)
++        expect(await f.audit()).toEqual(before)
++      } finally { f.authority.host.revalidate = revalidate }
++    })
++    return { originalGroupsAccepted: true, changedDuringRealRevalidation: true, changedGroupDenied: true, intactGroupsAcceptedAfter: true }
++  })
++}
++
++test("M69 complete recall rejects group order changed during real revalidation and preserves intact groups", async () => {
++  expectSpawn(import.meta.path)
++  await proveLateGroupMutation("order")
++}, 180_000)
++
++test("M69 complete recall rejects group membership changed during real revalidation and preserves intact groups", async () => {
++  expectSpawn(import.meta.path)
++  await proveLateGroupMutation("membership")
++}, 180_000)
++
++test("M69 complete recall binds observations to their original arrays, actual call and actual reader", async () => {
++  expectSpawn(import.meta.path)
++  await withTwoPublishedCases("SF_MEMORY_M69_OBSERVATION_BINDINGS", async (f, second, before) => {
++    const selection = { caseRefs: [{ ...f.caseRef }, { ...second.caseRef }], query: "supplier" }
++    await f.ui("sf_decision_recall", selection, async (call) => {
++      const copied = await readOriginalRaw(f, call)
++      expect(await revalidateSfAtlasRecall([structuredClone(copied)], call)).toBe(false)
++      expect(await revalidateSfAtlasRecall([copied], call)).toBe(true)
++
++      const wrongCall = await readOriginalRaw(f, call)
++      await f.ui("sf_decision_recall", selection, async (other) => {
++        expect(other).not.toBe(call)
++        expect(await revalidateSfAtlasRecall([wrongCall], other)).toBe(false)
++      })
++      // An unsuccessful cross-call attempt consumes the private observation.
++      expect(await revalidateSfAtlasRecall([wrongCall], call)).toBe(false)
++
++      const firstReader = await readOriginalRaw(f, call)
++      const otherReader = await f.atlas.memory.recall(f.caseRef, call)
++      expect(otherReader.status).toBe("ok")
++      if (otherReader.status !== "ok") throw new Error("Second real reader unavailable")
++      requireOriginalRecord(f, otherReader.records)
++      expect(await revalidateSfAtlasRecall([firstReader, otherReader.records], call)).toBe(false)
++      expect(await revalidateSfAtlasRecall([await readOriginalRaw(f, call)], call)).toBe(true)
++      expect(await f.audit()).toEqual(before)
++    })
++    return { copiedArrayDenied: true, originalArrayAccepted: true, otherActualCallDenied: true,
++      crossCallObservationConsumed: true, mixedReadersDenied: true, intactReaderAcceptedAfter: true }
++  })
++}, 180_000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts
+@@ -0,0 +1,150 @@
++import { expect, test } from "bun:test"
++import { versioned } from "@orchestra/atlas-boundary/business-memory-ports"
++import type { MemoryRecord } from "@orchestra/atlas-boundary/business-memory-ports"
++import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { readSfMemoryCaptureIntegrity } from "../../../product/host-binding/business-context.ts"
++import { createSfAtlasDurableMemory } from "../../../product/host-binding/atlas-store.ts"
++import { object } from "../../../runtime/contract.ts"
++import { withDocumentReplayFixture } from "../memory-original-reauthorization/document-fixture.ts"
++import { readOriginalRaw, requireOriginalRecord, requireRecallDenied, settleRecall } from "./fixture-assertions.ts"
++import type { DocumentFixture } from "./fixture-assertions.ts"
++import type { BusinessMemoryEnvelope } from "../../../product/contracts/business-context.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++
++type RawRecall = Awaited<ReturnType<DocumentFixture["memory"]["recall"]>>
++type PublicRecall = Awaited<ReturnType<DocumentFixture["atlas"]["context"]["recall"]>>
++type RecallOutcome = { kind: "returned"; value: PublicRecall } | { kind: "rejected"; error: unknown }
++
++async function consumeCapturedDocument(fixture: DocumentFixture, call: TrustedDomainContext) {
++  const sources = await fixture.atlas.context.context({ refs: [fixture.sources[0]!.ref] }, call)
++  expect(sources).toHaveLength(1)
++  expect(sources[0]?.state).toBe("fresh")
++  return fixture.app.store.transaction("dashboard", async () => ({
++    commit: false,
++    value: await readSfMemoryCaptureIntegrity(sources, { caseRefs: [fixture.caseRef], query: "supplier" }, call),
++  }))
++}
++
++test("M69 raw public and private-consumer recall reject scanner and ledger projection tampering", async () => {
++  expectSpawn(import.meta.path)
++  await withDocumentReplayFixture(async (f) => {
++    const before = await f.audit()
++    const eventId = f.receipt.eventId
++    if (!eventId) throw new Error("Actual Atlas publication has no event id")
++    const selection = { caseRefs: [{ ...f.caseRef }], query: "supplier" }
++    const observations: { fault: string; raw: RawRecall; public: RecallOutcome; consumed: boolean }[] = []
++    await f.ui("sf_decision_recall", selection, async (call) => {
++      await readOriginalRaw(f, call)
++      requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
++      expect(await consumeCapturedDocument(f, call)).toBe(true)
++      for (const fault of ["scanner-receipt-digest", "scanner-name", "scanner-version", "content-addressed-entry-without-ledger-change"] as const) {
++        const changed = await f.app.store.transaction("dashboard", async (snapshot) => {
++          const state = object(snapshot.data.__sfProductV1)
++          const atlas = object(state.atlas)
++          const owner = Object.keys(atlas).find((key) => object(object(atlas[key]).envelopes)[eventId])
++          if (!owner) throw new Error("Real committed Atlas partition unavailable for explicit integrity fault")
++          const partition = object(atlas[owner])
++          const intact = structuredClone(partition)
++          const envelopes = object(partition.envelopes)
++          const envelope = envelopes[eventId] as BusinessMemoryEnvelope
++          const events = partition.events as Parameters<typeof createSfAtlasDurableMemory>[0]["events"]
++          const index = events.findIndex(([id]) => id === eventId)
++          const stored = events[index]
++          if (!stored || !envelope) throw new Error("Actual event/envelope pair unavailable for integrity fault")
++          const record = stored[1].payload as MemoryRecord
++          if (record.kind !== "task" || !("taskId" in record.entry)) throw new Error("Fixture published an unexpected record kind")
++          if (fault === "scanner-receipt-digest") {
++            envelopes[eventId] = { ...envelope, scannerReceipt: { ...envelope.scannerReceipt,
++              digest: digestSfValue({ fault: "M69 scanner digest differs from the actual committed record" }) } }
++          } else if (fault === "scanner-name") {
++            envelopes[eventId] = { ...envelope, scannerReceipt: { ...envelope.scannerReceipt,
++              name: `${envelope.scannerReceipt.name}-m69-different-scanner` } }
++          } else if (fault === "scanner-version") {
++            envelopes[eventId] = { ...envelope, scannerReceipt: { ...envelope.scannerReceipt,
++              version: `${envelope.scannerReceipt.version}-m69-different-version` } }
++          } else {
++            // Explicit storage corruption, never a publication: produce a valid
++            // content-addressed Atlas event while the authorized case ledger
++            // and original durable receipt remain unchanged. The complete
++            // publication/ledger checks must refuse this inconsistent pair.
++            const replacement: MemoryRecord = { ...record, entry: { ...record.entry,
++              lesson: "M69 corrupted lesson absent from the accepted case ledger" } }
++            const generated = [...versioned([replacement])][0]
++            if (!generated) throw new Error("Real Atlas versioning did not produce the replacement fault")
++            const [replacementId, replacementEvent] = generated
++            events[index] = [replacementId, { ...replacementEvent, seq: stored[1].seq }]
++            delete envelopes[eventId]
++            envelopes[replacementId] = { ...envelope, eventId: replacementId,
++              projectionDigest: digestSfValue({ kind: replacement.kind, owner: replacement.owner, entry: replacement.entry,
++                sourceEventId: envelope.sourceEventId, evidenceRefs: envelope.evidenceRefs }),
++              scannerReceipt: { ...envelope.scannerReceipt, digest: digestSfValue(replacement) } }
++            const captureDigests = object(partition.captureDigests)
++            captureDigests[replacementId] = captureDigests[eventId]
++            delete captureDigests[eventId]
++          }
++          return { commit: true, value: { owner, intact, corrupted: structuredClone(partition),
++            ledger: structuredClone(object(object(state.cases)[f.caseRef.id]).ledger) } }
++        })
++        const corrupted = await f.audit()
++        expect(corrupted).not.toEqual(before)
++        expect(corrupted.counts).toEqual(before.counts)
++        expect(corrupted.versions).toEqual(before.versions)
++        expect(corrupted.outbox).toEqual(before.outbox)
++        expect(corrupted.receipts).toEqual(before.receipts)
++        expect(changed.corrupted.originals).toEqual(changed.intact.originals)
++        if (fault === "scanner-name" || fault === "scanner-version") {
++          const scanner = object(object(object(changed.corrupted.envelopes)[eventId]).scannerReceipt)
++          const originalScanner = object(object(object(changed.intact.envelopes)[eventId]).scannerReceipt)
++          const field = fault === "scanner-name" ? "name" : "version"
++          expect(typeof scanner[field]).toBe("string")
++          expect(String(scanner[field]).trim().length).toBeGreaterThan(0)
++          expect(scanner[field]).not.toBe(originalScanner[field])
++          expect({ ...scanner, [field]: originalScanner[field] }).toEqual(originalScanner)
++        }
++        const normalized = structuredClone(corrupted)
++        object(normalized.atlas)[changed.owner] = changed.intact
++        expect(normalized).toEqual(before)
++        const events = changed.corrupted.events as Parameters<typeof createSfAtlasDurableMemory>[0]["events"]
++        const loaded = createSfAtlasDurableMemory({ events }).read()
++        expect(loaded.rejected).toBe(0)
++        expect(loaded.log.size).toBe(1)
++        const raw = await f.memory.recall(f.caseRef, call)
++        const publicRecall = await settleRecall(f.atlas.context.recall(selection, call))
++        const consumed = await consumeCapturedDocument(f, call)
++        observations.push({ fault, raw, public: publicRecall, consumed })
++        expect(await f.audit()).toEqual(corrupted)
++        const ledger = await f.app.store.transaction("dashboard", async (snapshot) => ({
++          commit: false, value: structuredClone(object(object(object(snapshot.data.__sfProductV1).cases)[f.caseRef.id]).ledger),
++        }))
++        expect(ledger).toEqual(changed.ledger)
++        await f.app.store.transaction("dashboard", async (snapshot) => {
++          object(object(snapshot.data.__sfProductV1).atlas)[changed.owner] = structuredClone(changed.intact)
++          return { commit: true, value: undefined }
++        })
++        await readOriginalRaw(f, call)
++        requireOriginalRecord(f, await f.atlas.context.recall(selection, call))
++        expect(await consumeCapturedDocument(f, call)).toBe(true)
++        expect(await f.audit()).toEqual(before)
++        console.info("SF_MEMORY_M69_RECORD_INTEGRITY", JSON.stringify({
++          fault, raw: raw.status, public: publicRecall.kind, privateConsumer: consumed,
++          returnedRawRecords: raw.status === "ok" ? raw.records.length : 0,
++          returnedPublicRecords: publicRecall.kind === "returned" ? publicRecall.value.length : 0,
++          atlasWireRemainsValid: true, ledgerDigest: digestSfValue(ledger), originalsPreserved: true,
++          durableReceiptAndOutboxPreserved: true,
++          restoredEventId: f.receipt.eventId, restoredRecordDigest: f.receipt.recordDigest,
++          counts: before.counts, nativeSessionWitness: false,
++        }))
++      }
++    })
++    // All four explicit faults and their restoration positives run before the
++    // final negative assertions, so one escape cannot hide the other faults.
++    expect(observations).toHaveLength(4)
++    for (const observation of observations) {
++      expect(observation.raw).toEqual({ status: "unavailable" })
++      requireRecallDenied(observation.public)
++      expect(observation.consumed).toBe(false)
++    }
++    expect(await f.audit()).toEqual(before)
++  })
++}, 180_000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/second-case-fixture.ts
+@@ -0,0 +1,71 @@
++import { randomUUID } from "node:crypto"
++import { createDecisionCasePort, encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { enqueueSfLedgerEvent } from "../../../product/integration/ledger-outbox.ts"
++import type { CaseLedgerEvent } from "../../../product/contracts/decisions.ts"
++import type { DocumentFixture } from "./fixture-assertions.ts"
++
++/** Extend the real fixture40 store with another real draft/publication. Only
++ * acceptance of its ledger event is a declared synthetic premise, as in40. */
++export async function publishSecondDocumentCase(fixture: DocumentFixture) {
++  const host = fixture.authority.host
++  const cases = createDecisionCasePort({
++    state: fixture.authority.state, host, creationTarget: fixture.authority.creationTarget,
++    operationIdentity: (call) => call.kind === "ui" ? fixture.authority.ui.operationIdentity(call) : undefined,
++    authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call),
++    // This private helper uses only draft. It grants no scenario-reader access;
++    // every later recall uses the actual assembled services of fixture40.
++    verifyScenarioOperations: async () => false,
++    evidence: fixture.atlas.context, createId: randomUUID, now: () => fixture.app.at,
++  })
++  const sourceRefs = fixture.sources.map((source) => source.ref)
++  const draft = { objective: "Review the same confirmed prices in an independent case",
++    horizon: { start: "2026-01-01", end: "2026-12-31" }, currency: "USD",
++    criteria: ["Use the confirmed supplier documents"], sourceRefs }
++  const drafted = await fixture.ui("sf_case_draft", draft, (call) => cases.draft(draft, call))
++  if (drafted.status !== "ok") throw new Error(`Second actual case draft failed: ${drafted.reason}`)
++  const caseRef = { id: drafted.value.id, incarnation: drafted.value.incarnation }
++  const event: CaseLedgerEvent = {
++    id: randomUUID(), caseRef: { ...caseRef, version: drafted.value.version + 1 }, kind: "analysis-accepted",
++    principalRef: fixture.app.principal.id, at: fixture.app.at,
++    consideredActions: ["Review the same confirmed supplier prices independently"], factualGaps: [],
++    lifecycleState: "investigating", rationale: "Second accepted case uses the actual confirmed supplier documents.",
++    evidenceRefs: sourceRefs, outputDigest: digestSfValue({ premise: "M69 second accepted document review", caseRef, sourceRefs }),
++  }
++  const eventRef = await fixture.ui("sf_case_read", { caseRef: encodeCaseRef(caseRef) }, async (call) => {
++    const request = host.requestFor(call)
++    if (!request || !await host.revalidate(call)) throw new Error("Second actual ledger authority unavailable")
++    const current = await fixture.authority.state.read(request, "cases", (state) => state.cases[caseRef.id])
++    const outbox = await fixture.authority.state.read(request, "outbox", (state) => state.versions.outbox)
++    if (current.status !== "ok" || !current.value || outbox.status !== "ok") throw new Error("Second actual ledger storage unavailable")
++    const saved = await fixture.authority.state.transaction(request, {
++      namespace: "cases", expectedStorageVersion: current.storageVersion,
++      additionalNamespaces: [{ namespace: "outbox", expectedStorageVersion: outbox.storageVersion }],
++      targetRef: encodeCaseRef(caseRef), targetIncarnation: caseRef.incarnation,
++      idempotencyKey: `m69-accepted-document:${event.id}`, commandDigest: digestSfValue(event),
++    }, async (state, actor) => {
++      const value = state.cases[caseRef.id]
++      if (!value || value.incarnation !== caseRef.incarnation || value.version !== drafted.value.version ||
++        !value.participants.includes(actor.principalRef) || actor.principalRef !== call.binding.principalRef ||
++        actor.accessRevision !== call.binding.accessRevision || actor.policyVersion !== call.binding.policyVersion)
++        throw new Error("Second actual ledger premise changed")
++      state.cases[value.id] = { ...value, version: event.caseRef.version, state: "investigating", ledger: [...value.ledger, event] }
++      const queued = enqueueSfLedgerEvent(state, event, {
++        installationId: call.binding.installationId, projectId: call.binding.projectId, authority: actor,
++      })
++      if (queued.status !== "ok") throw new Error(queued.reason)
++      return { commit: true, value: queued.value.eventRef }
++    })
++    if (saved.status !== "ok") throw new Error("Second actual ledger/outbox commit failed")
++    return saved.value
++  })
++  const replayKey = `m69-second-replay:${event.id}`
++  const replay = () => fixture.ui("sf_evidence_get", { evidenceRef: eventRef },
++    (call) => fixture.memory.emitFromLedger(eventRef, call), new Request(`${fixture.app.origin}/sucafina/dashboard`, {
++      method: "POST", headers: { cookie: fixture.app.cookie, origin: fixture.app.origin, "Idempotency-Key": replayKey },
++    }))
++  const receipt = await replay()
++  if (receipt.status !== "committed" || !receipt.eventId || !receipt.recordDigest || receipt.scanner.status !== "clean")
++    throw new Error(`Second actual Atlas publication failed: ${receipt.reason ?? receipt.status}`)
++  return { caseRef, eventRef, receipt, replay }
++}

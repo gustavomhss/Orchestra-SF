@@ -1,0 +1,221 @@
+{
+  "schema": "sf2h.atlas-memory-composed.source-manifest.v1",
+  "mission": 69,
+  "repository": "gustavomhss/Orchestra-SF",
+  "branch": "atlas-memory-proof",
+  "sourceBase": {
+    "sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "tree": "12594fd5a48f934847db717dd872d51776484296"
+  },
+  "productW": {
+    "sha": "d962e08b81a707f3536344614c1faa3e728917b8",
+    "tree": "f7ddae5cfd84866517ce88cacf09b5b245854954"
+  },
+  "supplementaryTestW": {
+    "sha": "7a5e45c2bffb3a89cc4be8a3318ad99ae8058b83",
+    "tree": "dd08615710c8a4dd0e98d19cf5c3f168c859e71d"
+  },
+  "envelopeAtAssembly": {
+    "sha": "2443a01973a5dcbdb3fdee59d868385f5ff54a85",
+    "tree": "132732f8ced3b3c399ba5efb9ba95429522488a5",
+    "meaning": "This is the preterminal receipts head. Complete source remains W2 and products remain W1; containing terminal commit/tree are delivered in PR79/PR65."
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/atlas-memory.ts",
+      "status": "modified",
+      "preimage": {
+        "git_blob_sha": "a45ab53b1dab706eedb3b0d075bbfe36a00be40d",
+        "sha256": "254ca1eff93c4da9850680ed16415dbd97e7afbfe5cefe2519d5c38b62eece1f",
+        "bytes": 43049
+      },
+      "postimage": {
+        "git_blob_sha": "f68e20ef62f14c98ca9ccda9e2fec0a5c579b4de",
+        "sha256": "c80d441dd33160d0d3b3f782c8b00361a4a0a85658a392ed3697bf07c9d9f6de",
+        "bytes": 51194
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "status": "modified",
+      "preimage": {
+        "git_blob_sha": "390bce2594e39a28defce1d47fafa0d7291e940e",
+        "sha256": "72e649b0022b590f406dc5e29ad9b92e51d8a939067b4cbb1095897c0c3ee09a",
+        "bytes": 63436
+      },
+      "postimage": {
+        "git_blob_sha": "2e7b312561f3f027ab070c61e15ecb6886fa169c",
+        "sha256": "d3a128587a44e9d6ccc7e3144629e1dd30b1cb5c3905e7353a61b10a4a057f62",
+        "bytes": 67821
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/composed-document-fixture.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "891b404a8feb286ddf5f110528ac57b5713e7cc0",
+        "sha256": "98fa78e10106962a098e6a0b14844cebacbffa285766618da79809aece41cc36",
+        "bytes": 23772
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/context-egress.test.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "7ce0f91a655bf40f90030b489bfff75dec33ab7f",
+        "sha256": "3391454c09c2c80701ba4ed4c977fe732ce40be513ae40da3c52d1b62c7fbc93",
+        "bytes": 7181
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/fixture-assertions.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "83ca43d9785787613daadd26dbb9cd1a5ddbbfb9",
+        "sha256": "244290a633f4b332d7f8dbc0e8c29360a2ec6998e5278f1ee1d7add30464df9b",
+        "bytes": 3653
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/pending-replay.test.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "c5f9e443286e055d0d84dd734fb9b0626267b084",
+        "sha256": "82cf4fe7797200f3536d06b2c13b11ed53818f1d0eaeb61b037f6428a7c35b99",
+        "bytes": 8761
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail-fixture.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "f2e9e9f9e4a54e05186151acdf811dfecac96bce",
+        "sha256": "9c5d0c5dd76801958f9858bddd25d0743db8fdc83c4a8ae8f5250b7633250bf8",
+        "bytes": 5195
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/rank-tail.test.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "31f6297303d1dd1abc204f120a9a859134705f80",
+        "sha256": "9f09e061ffe743b9cd29813cbd51481e3200dfa2751d58c76714cc38491202d7",
+        "bytes": 11039
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-boundaries.test.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "2cc3f53be41b01660244e6660aa8fb42c1f54cce",
+        "sha256": "d226bca92b75d5164642e109a878f7c3d73e4978f24441d213e46a5850fa79a0",
+        "bytes": 8716
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/recall-groups.test.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "71b947d40374176f225634cddfd4fffcd4dd7061",
+        "sha256": "d296ec62455b9f8aa38449b26e7eb5c204c3a54ea3c06973d6deeb36d88945b3",
+        "bytes": 8944
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/record-integrity.test.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "d745826c18ca2fc36e1f19b40f51249b471c86ea",
+        "sha256": "e677c2c3cc060d9c2195d89a04849806092af1902ed23e69ba50eeab4dd74b8c",
+        "bytes": 9931
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/atlas-memory-composed/second-case-fixture.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha": "c669c3bd781fa108e228125f2e8027b0d7e6d307",
+        "sha256": "b2cce66b75fd21240ee582894b419480ebce1e6e6f4cbd9340ac6015216b6a80",
+        "bytes": 5273
+      }
+    }
+  ],
+  "sourceDiff": {
+    "path": "patches/source.patch",
+    "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "head": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+    "gitBlob": "33f1c0e9ad5980acea06c8732c9345b064788622",
+    "sha256": "b1b8ea0678f7b977115d2e05d202db1c89009e3a227e9d5d07e088d84c6f1574",
+    "bytes": 126884,
+    "scope": "Complete current 12 product/test files. Receipt additions are separate and do not modify executable source."
+  },
+  "preservation": {
+    "original40": "All four selected correction40 test files and imported original fixtures remain unchanged from the source base.",
+    "original35": "source-access-atlas.test.ts and atlas-restart-reader.ts unchanged; no budgets raised.",
+    "MI07": {
+      "gitBlob": "ee5c725ae78e0eba5c12600da80eb51b7173c2ed",
+      "state": "UNMODIFIED_NOT_RERUN_FINANCIAL_CAPTURE_BLOCKED"
+    },
+    "mixed61": "The four owned mixed-source discriminators are not duplicated.",
+    "runtime59": "No runtime, source-lifecycle or read-snapshot file changed.",
+    "workflow45": "No workflow or compiler configuration changed."
+  },
+  "dependencyClosure": {
+    "path": "dependency-closure.json",
+    "gitBlob": "f8503a521d4bb64771f27955b04d1ff1d654373e",
+    "sha256": "48f1c8ba2b7c846e4dd8199a7a6459bcda323dc45980541da830e576ef90df8e",
+    "bytes": 402708,
+    "method": "Preserves W1/G1 textual closure exactly and adds F2 override for split test plus documentary pending test. Runtime child assets and generated/config/export boundaries remain explicit; not a compiler proof."
+  },
+  "remoteVerification": {
+    "method": "MCP exact file content/blob equality at W1/G1, exact F2 test/request readback, and W1→F2 compare confirming unchanged products and six files containing the12 F1 passing tests.",
+    "productsVerifiedAt": "d962e08b81a707f3536344614c1faa3e728917b8",
+    "G1FilesVerifiedAt": "7a5e45c2bffb3a89cc4be8a3318ad99ae8058b83",
+    "outsideAssignedPaths": [],
+    "F2FilesVerifiedAt": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+    "unchangedF1ProductAndPassingTestFiles": true
+  },
+  "externalProposals": {
+    "state": "HELD_NOT_APPLIED_NOT_QUALIFIED",
+    "manifest": "owner-patches/R2-preimages.json",
+    "boundaryAnalysis": "owner-patches/R2-boundaries.md",
+    "series": [
+      "owner-patches/01-capability-terminal-rank.HELD.patch",
+      "owner-patches/02-selection-final-hook.HELD.patch"
+    ],
+    "rule": "Source pin is W1. The future authorized path owner must reconcile target preimages, decide consumer boundaries and qualify the applied composed candidate. Including a patch as receipt never authorizes or applies it."
+  },
+  "execution": "Actual B0/F1/F2 outcomes and exact W/S/run/job lineage are recorded separately. G1 dispatch was superseded by F2. This manifest itself does not assert runtime PASS.",
+  "GLOBAL_RELEASE": false,
+  "qualifyingTestW": {
+    "sha": "c3c99ae2f9416c56384a7a7b016a92988e030cbf",
+    "tree": "01211640e7fa6ccc77b9ac702fde94edf9565678"
+  },
+  "qualificationBoundaries": {
+    "F1": "12PASS/14FAIL, including one own monolithic timeout and13 C12 prerequisite failures; full original40 preservation is not established.",
+    "F2": "8PASS/0FAIL,403expectCalls,589.57s on unchanged W1 product; includes the three G1 tests without a separate G1 run.",
+    "C12": "Canonical financial preparation is blocked before original capture; original assertions are untouched.",
+    "timeout": "Original monolithic180s deadline remains failed. Four independent180s tests do not prove lower total cost or the old sequence deadline."
+  },
+  "currentTargetReconciliation": "TARGET-RECONCILIATION.json",
+  "currentAuthorizedConsumer": 71,
+  "currentTargetDelta": "TARGET-C31-DELTA.json",
+  "lastObservedTarget": {
+    "branch": "sf2-stack",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "materialCandidate": "C31",
+    "source69ExecutionOnTarget": "NOT_RUN",
+    "mustReconcileActualHeadAtIntake": true
+  }
+}
