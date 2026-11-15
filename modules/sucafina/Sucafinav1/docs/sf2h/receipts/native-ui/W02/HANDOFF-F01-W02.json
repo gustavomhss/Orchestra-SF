@@ -117,5 +117,24 @@
     "Shared registration postimages were computed against sf2-stack at authoring; 114 must rebase on current target",
     "Existing native authority lacks public read-only stamp producer; requires 114/owner coordination; context read intentionally fail-closed until implemented",
     "Real-world correctness, compilation and per-output source qualification await 119/120 hosted runs"
-  ]
+  ],
+  "pull_request": {
+    "number": 131,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/131",
+    "state": "OPEN_DRAFT",
+    "base": "sf2-stack",
+    "head": "sf-ux-w02",
+    "merge_prohibited": true
+  },
+  "base_divergence": {
+    "merge_base": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "planning_commit": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "target_head_at_pr": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+    "comparison_status": "diverged",
+    "ahead_by": 28,
+    "behind_by": 1,
+    "pr_changed_files": 171,
+    "w02_delta_before_handoff": 14,
+    "rule": "Do not merge 171-file GitHub diff; 114 must import only W02-owned artifacts with exact pre/post comparison and manage planning commits separately."
+  }
 }
