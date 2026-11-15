@@ -1,0 +1,126 @@
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx
+index efd0e79..6c04f69 100644
+--- a/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/frame/index.tsx
+@@ -276,25 +276,27 @@
+   const { t } = useSfPresentation()
+   const id = createUniqueId()
+   const privateState = () => props.state === "denied" || props.state === "session-expired"
+   return (
+-    <section class="sf-chart-frame" data-sf-chart-state={props.state} aria-labelledby={`sf-chart-${id}`}>
+-      <header class="sf-chart-header">
+-        <h2 id={`sf-chart-${id}`}>{t(props.titleKey)}</h2>
+-        <p>{t(props.questionKey)}</p>
+-        <Show when={!privateState() && props.context.length > 0}>
+-          <dl class="sf-chart-context">
+-            <For each={props.context}>
+-              {(entry) => (
+-                <div>
+-                  <dt><SfMessageText message={entry.label} /></dt>
+-                  <dd><SfTextValue value={entry.value} /></dd>
+-                </div>
+-              )}
+-            </For>
+-          </dl>
+-        </Show>
+-      </header>
++    <section class="sf-chart-frame" data-sf-chart-state={props.state} aria-labelledby={privateState() ? undefined : `sf-chart-${id}`}>
++      <Show when={!privateState()}>
++        <header class="sf-chart-header">
++          <h2 id={`sf-chart-${id}`}>{t(props.titleKey)}</h2>
++          <p>{t(props.questionKey)}</p>
++          <Show when={!privateState() && props.context.length > 0}>
++            <dl class="sf-chart-context">
++              <For each={props.context}>
++                {(entry) => (
++                  <div>
++                    <dt><SfMessageText message={entry.label} /></dt>
++                    <dd><SfTextValue value={entry.value} /></dd>
++                  </div>
++                )}
++              </For>
++            </dl>
++          </Show>
++        </header>
++      </Show>
+       <SfStatePanel
+         state={props.state}
+         messageKey={sfCommonKey(SF_STATE_FALLBACK_KEY[props.state])}
+         coverage={props.coverage}
+diff --git a/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx b/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx
+index 7084c44..15433e5 100644
+--- a/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx
++++ b/packages/app-shell/src/orchestra/chapters/sucafina/shared/states/index.tsx
+@@ -54,9 +54,9 @@
+             <div class="sf-state-skeleton" aria-hidden="true">
+               <span /><span /><span />
+             </div>
+           </Show>
+-          <Show when={props.coverage && !privacy() && !loading()}>
++          <Show when={privacy() || loading() ? undefined : props.coverage}>
+             {(coverage) => <SfCoverageView coverage={coverage()} />}
+           </Show>
+           <div class="sf-state-actions">
+             <Show when={props.onRetryRead && RETRY_STATES.has(props.state)}>
+diff --git a/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts b/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts
+index aa17ece..92024c7 100644
+--- a/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts
++++ b/packages/app-shell/test-browser/sucafina-native/page-frame.test.ts
+@@ -161,27 +161,38 @@
+       expect(select.value).toBe("this")
+     } finally { screen.close() }
+   })
+ 
+-  test("denied chart does not expose its previous owner's context or SVG", () => {
+-    const screen = mount(() => createComponent(frame.SfChartFrame, {
+-      titleKey: key("sf.common.currentSource"),
+-      questionKey: key("sf.common.partial"),
+-      context: [{ label: message("sf.common.source"), value: { kind: "data", text: "PRIVATE_CONTEXT" } }],
+-      coverage: emptyCoverage,
+-      series: [],
+-      table: { caption: message("sf.common.currentSource"), columns: [], rows: [] },
+-      selection: null,
+-      state: "denied",
+-      onSelect: () => { throw new Error("unauthorized select") },
+-      onOpenSource: () => { throw new Error("unauthorized source") },
+-      children: document.createTextNode("PRIVATE_CHART"),
+-    }))
+-    try {
+-      expect(screen.host.textContent).not.toContain("PRIVATE_CONTEXT")
+-      expect(screen.host.textContent).not.toContain("PRIVATE_CHART")
+-      expect(screen.host.textContent).not.toContain("Partial coverage")
+-    } finally { screen.close() }
++  test("denied and session-expired charts never expose previous owner context, SVG or table", () => {
++    for (const state of ["denied", "session-expired"] as const) {
++      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg")
++      const svgTitle = document.createElementNS("http://www.w3.org/2000/svg", "title")
++      svgTitle.textContent = "PRIVATE_CHART"
++      svg.append(svgTitle)
++      const screen = mount(() => createComponent(frame.SfChartFrame, {
++        titleKey: key("sf.common.currentSource"),
++        questionKey: key("sf.common.partial"),
++        context: [{ label: message("sf.common.source"), value: { kind: "data", text: "PRIVATE_CONTEXT" } }],
++        coverage: emptyCoverage,
++        series: [],
++        table: { caption: message("sf.common.currentSource"), columns: [], rows: [] },
++        selection: null,
++        state,
++        onSelect: () => { throw new Error("unauthorized select") },
++        onOpenSource: () => { throw new Error("unauthorized source") },
++        children: svg,
++      }))
++      try {
++        expect(screen.host.textContent).not.toContain("PRIVATE_CONTEXT")
++        expect(screen.host.textContent).not.toContain("PRIVATE_CHART")
++        expect(screen.host.textContent).not.toContain("Partial coverage")
++        expect(screen.host.querySelector(".sf-chart-header")).toBeNull()
++        expect(screen.host.querySelector(".sf-chart-context")).toBeNull()
++        expect(screen.host.querySelector("svg")).toBeNull()
++        expect(screen.host.querySelector(".sf-chart-table")).toBeNull()
++        expect(screen.host.querySelector(`[data-sf-state="${state}"]`)).not.toBeNull()
++      } finally { screen.close() }
++    }
+   })
+ 
+   test("run unadmitted is not forged as queued/executed and offers only admitted actions", () => {
+     const screen = mount(() => createComponent(states.SfRunState, {
