@@ -120,7 +120,7 @@ function reviewFields(action: SfServiceAction, values: DraftValues): SfReviewFie
   }))
 }
 
-export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
+export function SfServiceView(props: SfSurfaceProps<"CAP11">) {
   const language = useLanguage()
   const t = (key: SfCopyKey) => language.t(key as Parameters<typeof language.t>[0])
   const owner = useSfContext()
