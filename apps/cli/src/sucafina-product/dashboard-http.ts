@@ -11,7 +11,7 @@ import type { createSfDashboardDecisions, DashboardPrepareRequest } from "./dash
 
 type Runtime = { authority: ReturnType<typeof createSfProductAuthority>; dashboard: ReturnType<typeof createSfDashboardServices>; decisions: ReturnType<typeof createSfDashboardDecisions> }
 const modes = ["dashboard-workbench", "dashboard-agenda", "dashboard-review-preserve", "dashboard-review", "dashboard-capture", "dashboard-history", "dashboard-hot-topic-source",
-  "dashboard-hot-topic-draft", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
+  "dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome", "dashboard-hot-topic-drafts", "dashboard-hot-topic-operation", "dashboard-hot-topic-prepare", "dashboard-hot-topic-review", "dashboard-hot-topic-apply"] as const
 
 /** Same-origin host routes. Browser payloads contain selections and human intent, never private commands. */
 export function createSfDashboardHttp(input: { origin: string; mount: string; runtime: () => Runtime | undefined }) {
@@ -31,7 +31,7 @@ export function createSfDashboardHttp(input: { origin: string; mount: string; ru
     const runtime = input.runtime()
     if (!runtime) return reply({ status: "unavailable" }, 503)
     const action: SfHumanAction | undefined = ["dashboard-review-preserve", "dashboard-capture"].includes(mode!) ? "reviews.preserve" :
-      mode === "dashboard-hot-topic-draft" ? "decisions.edit" : mode === "dashboard-hot-topic-prepare" ? "decisions.prepare-changes" : mode === "dashboard-hot-topic-apply" ? "decisions.apply" : undefined
+      ["dashboard-hot-topic-draft", "dashboard-hot-topic-draft-outcome"].includes(mode!) ? "decisions.edit" : mode === "dashboard-hot-topic-prepare" ? "decisions.prepare-changes" : mode === "dashboard-hot-topic-apply" ? "decisions.apply" : undefined
     const digest = digestSfValue(payload)
     const admitted = action ? await runtime.authority.human.admit(request, action, payload) : await runtime.authority.ui.admit(request, "sf_dashboard_read", digest)
     if (admitted.status !== "ok") return reply({ status: admitted.status }, 403)
@@ -69,6 +69,8 @@ async function dispatch(runtime: Runtime, mode: string, value: unknown, context:
       incarnation: result.value.target.incarnation, version: result.value.target.version, fields: result.value.target.fields, period: payload.period, observedAt: environment.at } } }
   }
   if (mode === "dashboard-hot-topic-draft" && isDraft(value)) return runtime.decisions.drafts.register(value, context)
+  if (mode === "dashboard-hot-topic-draft-outcome" && keys(payload, ["caseRef"]) && isCaseRef(payload.caseRef))
+    return runtime.decisions.drafts.lookupFirstSave({ caseRef: payload.caseRef }, context)
   if (mode === "dashboard-hot-topic-drafts" && keys(payload, ["caseRef"]) && isCaseRef(payload.caseRef)) return runtime.decisions.drafts.list({ caseRef: payload.caseRef }, context)
   if (mode === "dashboard-hot-topic-operation" && keys(payload, ["caseRef", "draftRef", "operation"]) && isCaseRef(payload.caseRef) && text(payload.draftRef)) {
     const operation = object(payload.operation)
