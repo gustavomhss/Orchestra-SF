@@ -1,0 +1,69 @@
+{
+  "schema": "sf2h.111.owner-patch.current-c53.v1",
+  "mission": 111,
+  "branch": "creation-recovery-link",
+  "base": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "base52": "3cce0806f4e958b2282afae5717e4948e270745a",
+  "base106": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "inputs": {
+    "patch96": "64de6285477b5373eef9caa248f50b95d6e77b7d",
+    "producer96": "3ef1bbf2188275f5bc6ebaeed162a069ad3ae351",
+    "adapter111": "96a83583afef331274ce1ea9f5c2877175434433"
+  },
+  "state": "PROPOSED_NOT_COMPOSED",
+  "patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/creation-recovery-link/OWNER-52-106-C53.patch",
+    "format": "unified",
+    "bytes": 12624,
+    "blob": "205f48bc7ea6b8bac08d339a574f8c4609f94d15"
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "preimage": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+      "postimage": "78574180369c9495cbe5e5d3e569bb500fbff277",
+      "pre_chars": 25765,
+      "post_chars": 26236,
+      "patch_hunks": 3
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/contextual-decision.ts",
+      "preimage": "5245f469fab7f23474c4c406ddd1d2f1f43d65a2",
+      "postimage": "c00afe5f9bec072c6236441e1b650327d26853ea",
+      "pre_chars": 7863,
+      "post_chars": 7983,
+      "patch_hunks": 2
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "preimage": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "postimage": "6c85ddc7544ea8318cfc14b6c6142b1e8faca593",
+      "pre_chars": 6799,
+      "post_chars": 7057,
+      "patch_hunks": 2
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "preimage": "f03ab621e96cfda23456be73bba2d24f24754d36",
+      "postimage": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+      "pre_chars": 81389,
+      "post_chars": 81787,
+      "patch_hunks": 2
+    }
+  ],
+  "requirements": [
+    "Integrate mission96 source case-port.ts and decision-create.ts at their exact source identities before these four owner-controlled hunks",
+    "The GET is handled ONLY by new private CLI adapter preceding generic workbench router, not by a second GET branch in product/interface/http.ts",
+    "Do not edit owner52, 96 or 106 product files from branch111",
+    "Check HEAD/target/preimage on adoption; any preimage mismatch requires refreshed CAS before applying",
+    "Normal and contextual form scope come from admitted binding; same 96 key survives reload and GET lookup only",
+    "Test installed paths via dispatcher107; request independent reviewer91 R1-91-001"
+  ],
+  "not_run": {
+    "typecheck": true,
+    "guards": true,
+    "actions": true,
+    "browser": true
+  },
+  "global_release": false
+}
