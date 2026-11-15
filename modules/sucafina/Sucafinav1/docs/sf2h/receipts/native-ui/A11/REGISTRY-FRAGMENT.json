@@ -1,0 +1,340 @@
+{
+  "document": "sf2h-native-ux-A11-registry-fragment",
+  "lease": "ux-native-a11-e1",
+  "owner": "A11",
+  "schemaSource": "@orchestra/schema/sucafina/operations",
+  "baseCatalogSha": "31dbec1726fd8147156b01dc545726650ffd49e1",
+  "ownerOnlyIntegration": true,
+  "expectedOperations": 16,
+  "targetRegistry": "packages/schema/src/sucafina/operation-registry.ts",
+  "targetBindings": "packages/schema/src/sucafina/index.ts",
+  "targetExports": [
+    "packages/schema/package.json",
+    "packages/client/package.json"
+  ],
+  "records": {
+    "domain.page.CAP11": {
+      "schemaExport": "SfDomainPageCap11",
+      "method": "GET",
+      "pathTemplate": "{mount}/api/ui/pages/CAP11",
+      "effect": "read",
+      "responseMode": "json",
+      "sourceRef": "renderer-CAP11",
+      "sourceSelector": "domain.view + render(page=\"IT Operations\") fields/derivations only",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.page.CAP11\"]",
+      "clientMethod": "domain.page.CAP11"
+    },
+    "domain.command.CAP11.save-categories": {
+      "schemaExport": "SfDomainCommandCap11SaveCategories",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Operations"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Operations",
+        "action": "save-categories"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Operations\",action=\"save-categories\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP11.save-categories\"]",
+      "clientMethod": "domain.command.CAP11.save-categories"
+    },
+    "domain.command.CAP11.save-items": {
+      "schemaExport": "SfDomainCommandCap11SaveItems",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Operations"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Operations",
+        "action": "save-items"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Operations\",action=\"save-items\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP11.save-items\"]",
+      "clientMethod": "domain.command.CAP11.save-items"
+    },
+    "domain.command.CAP11.save-tickets": {
+      "schemaExport": "SfDomainCommandCap11SaveTickets",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Operations"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Operations",
+        "action": "save-tickets"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Operations\",action=\"save-tickets\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP11.save-tickets\"]",
+      "clientMethod": "domain.command.CAP11.save-tickets"
+    },
+    "domain.command.CAP11.save-sla": {
+      "schemaExport": "SfDomainCommandCap11SaveSla",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Operations"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Operations",
+        "action": "save-sla"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Operations\",action=\"save-sla\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP11.save-sla\"]",
+      "clientMethod": "domain.command.CAP11.save-sla"
+    },
+    "domain.command.CAP11.save-heatmap": {
+      "schemaExport": "SfDomainCommandCap11SaveHeatmap",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Operations"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Operations",
+        "action": "save-heatmap"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Operations\",action=\"save-heatmap\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP11.save-heatmap\"]",
+      "clientMethod": "domain.command.CAP11.save-heatmap"
+    },
+    "domain.command.CAP11.import-month": {
+      "schemaExport": "SfDomainCommandCap11ImportMonth",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Operations"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Operations",
+        "action": "import-month"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Operations\",action=\"import-month\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP11.import-month\"]",
+      "clientMethod": "domain.command.CAP11.import-month"
+    },
+    "domain.page.CAP12": {
+      "schemaExport": "SfDomainPageCap12",
+      "method": "GET",
+      "pathTemplate": "{mount}/api/ui/pages/CAP12",
+      "effect": "read",
+      "responseMode": "json",
+      "sourceRef": "renderer-CAP12",
+      "sourceSelector": "domain.view + render(page=\"IT Security KPIs\") fields/derivations only",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.page.CAP12\"]",
+      "clientMethod": "domain.page.CAP12"
+    },
+    "domain.command.CAP12.save-kpi": {
+      "schemaExport": "SfDomainCommandCap12SaveKpi",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Security KPIs"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Security KPIs",
+        "action": "save-kpi"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Security KPIs\",action=\"save-kpi\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP12.save-kpi\"]",
+      "clientMethod": "domain.command.CAP12.save-kpi"
+    },
+    "domain.command.CAP12.delete-kpi": {
+      "schemaExport": "SfDomainCommandCap12DeleteKpi",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Security KPIs"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Security KPIs",
+        "action": "delete-kpi"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Security KPIs\",action=\"delete-kpi\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP12.delete-kpi\"]",
+      "clientMethod": "domain.command.CAP12.delete-kpi"
+    },
+    "domain.command.CAP12.save-action": {
+      "schemaExport": "SfDomainCommandCap12SaveAction",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Security KPIs"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Security KPIs",
+        "action": "save-action"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Security KPIs\",action=\"save-action\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP12.save-action\"]",
+      "clientMethod": "domain.command.CAP12.save-action"
+    },
+    "domain.command.CAP12.delete-action": {
+      "schemaExport": "SfDomainCommandCap12DeleteAction",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Security KPIs"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Security KPIs",
+        "action": "delete-action"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Security KPIs\",action=\"delete-action\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP12.delete-action\"]",
+      "clientMethod": "domain.command.CAP12.delete-action"
+    },
+    "domain.command.CAP12.save-incident": {
+      "schemaExport": "SfDomainCommandCap12SaveIncident",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Security KPIs"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Security KPIs",
+        "action": "save-incident"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Security KPIs\",action=\"save-incident\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP12.save-incident\"]",
+      "clientMethod": "domain.command.CAP12.save-incident"
+    },
+    "domain.command.CAP12.delete-incident": {
+      "schemaExport": "SfDomainCommandCap12DeleteIncident",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Security KPIs"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Security KPIs",
+        "action": "delete-incident"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Security KPIs\",action=\"delete-incident\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP12.delete-incident\"]",
+      "clientMethod": "domain.command.CAP12.delete-incident"
+    },
+    "domain.command.CAP12.save-campaign": {
+      "schemaExport": "SfDomainCommandCap12SaveCampaign",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Security KPIs"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Security KPIs",
+        "action": "save-campaign"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Security KPIs\",action=\"save-campaign\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP12.save-campaign\"]",
+      "clientMethod": "domain.command.CAP12.save-campaign"
+    },
+    "domain.command.CAP12.delete-campaign": {
+      "schemaExport": "SfDomainCommandCap12DeleteCampaign",
+      "method": "POST",
+      "pathTemplate": "{mount}/dashboard",
+      "fixedQuery": {
+        "page": "IT Security KPIs"
+      },
+      "fixedBodyDiscriminator": {
+        "page": "IT Security KPIs",
+        "action": "delete-campaign"
+      },
+      "effect": "mutation",
+      "maxRequestBytes": 2097152,
+      "responseMode": "json",
+      "sourceRef": "application",
+      "sourceSelector": "decodeCommand + domain.execute(page=\"IT Security KPIs\",action=\"delete-campaign\")",
+      "automaticRetry": false,
+      "codecExport": "SfOperations.operations[\"domain.command.CAP12.delete-campaign\"]",
+      "clientMethod": "domain.command.CAP12.delete-campaign"
+    }
+  },
+  "codecRule": {
+    "inputs": "From exact SfOperations.operations[id].input with Schema.decodeUnknownOption(schema, {onExcessProperty:'error'}); do not strip unknown keys before codec",
+    "outputs": "From exact SfOperations.operations[id].output with same strict decoder; preserve legacy safeFailure not product envelope",
+    "mutation": "F02 transport injects only fixedPage/fixedAction from registry, owner fence + uuid idempotency key, never retry ambiguous writes",
+    "noRuntimeGenericDispatcher": true
+  },
+  "sharedPatch": {
+    "owner": "114 / F02",
+    "file": "packages/client/src/sucafina/transport.ts",
+    "match": "const parsedInput = Schema.decodeUnknownOption(operation.input)(input)",
+    "replace": "const parsedInput = Schema.decodeUnknownOption(operation.input, { onExcessProperty: 'error' })(input)",
+    "required": "F02 must not strip extra fields before the admitted operation codec; preserve operation input shape across IPC and backend"
+  },
+  "expectedOwners": {
+    "integration": 114,
+    "ci": 120,
+    "compiler": 119
+  },
+  "notExecuted": true
+}
