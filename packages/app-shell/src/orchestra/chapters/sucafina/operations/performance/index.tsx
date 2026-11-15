@@ -643,11 +643,13 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                 <Show when={ownerAssignments().length} fallback={<p>{t("sf.common.empty")}</p>}>
                   <div class="sf-u31-rows" role="region" aria-label={t("sf.u31.ownerDashboard")} tabindex="0">
                     <table><thead><tr><th scope="col">{t("sf.u31.owner")}</th>
+                      <th scope="col">{t("sf.u31.role")}</th>
                       <th scope="col">{t("sf.u31.subName")}</th>
                       <th scope="col">{t("sf.u31.allocations")}</th>
                     </tr></thead><tbody>
                       <For each={ownerAssignments()}>{(assignment) => <tr>
                         <th scope="row"><bdi>{assignment.name}</bdi></th>
+                        <td>{t("sf.u31." + assignment.role)}</td>
                         <td><bdi>{assignment.item + " / " + assignment.sub}</bdi></td>
                         <td><bdi>{text(assignment.weight)}</bdi></td>
                       </tr>}</For>
