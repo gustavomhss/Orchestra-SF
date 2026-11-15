@@ -1,0 +1,77 @@
+{
+  "schema": "sf52-nominal17-normalization-plan-v1",
+  "state": "AWAITING_REAL_HOSTED_ARTIFACT_AND_REVIEWED_ANNOTATIONS",
+  "run_id": 43686512586,
+  "artifact_directory": "/workspace/scratch/fec39c0682b3/m52-audit/nominal17-43686512586",
+  "envelope": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/nominal17-dispatched-envelope.json",
+    "sha256": "3de0d3a802ec6c60c98c3e524eec0618b251ea2155d4c555fc0620c9a5ee20ba",
+    "bytes": 10706
+  },
+  "preflight": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/nominal17-preflight.json",
+    "sha256": "8d22fa129e8bfa479dcca89ba2d09c0441f393b3d326136a2da6958f493ada7f",
+    "bytes": 2818
+  },
+  "dispatch_run_metadata": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/nominal17-run.json",
+    "sha256": "3da6a7e0dcf017ed472de9381f2df6562fe720630ff899ab3dbddae153dc2cf0",
+    "bytes": 14143
+  },
+  "W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+  "W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+  "S": "5ae402f2c3347619d882af10cc043952048a74c8",
+  "S_tree": "57569579d8a1c33e908db1e368899c78ac42df73",
+  "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+  "base_label": "C53 product plus terminal105 documentary commit",
+  "source": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+  "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+  "overlay_count": 34,
+  "spec_source": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-work/p13-delivery/postimage/packages/app-shell/e2e/sucafina/decisions.spec.ts",
+    "sha256": "9924641f3fef04434be4987509ad865d03d9cf46a1f021d92acd89dc9504f81d",
+    "bytes": 12983
+  },
+  "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+  "expected_titles": [
+    "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+    "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+    "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+    "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+    "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting"
+  ],
+  "configured_test_budget_ms": 180000,
+  "configured_ui_deadline_ms": 10000,
+  "case_count": 5,
+  "workers": 1,
+  "retries": 0,
+  "repeat": 1,
+  "unit05_receipt": {
+    "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/p13-unit05-43686211157/unit-05-receipt.json",
+    "sha256": "32855c95ed883d4dcc0e3147a928f56f73c52bba27f3b11de59b50cd40fbbbad",
+    "bytes": 91575
+  },
+  "unit05_scope": "Actual74PASS/0FAIL/0SKIP,477expects,selected3files on identical W; supplemental only and no installed acceptance.",
+  "authority_at_dispatch": {
+    "source52": "ACK52_ACTIVE_BOUNDED_SUCCESSION",
+    "target105": "ENDED_BY_INTEGRATOR105",
+    "terminal_blob": "b59f98f415dd114a9b797fa3d1ef667c6293c05c",
+    "appointed_successor": null,
+    "requested_handoff47": true
+  },
+  "configured_deadline_basis": "Exact dispatch envelope + root preflight. This normalizer performs no fresh repository source read and must not relabel W15 deadline audit as W17.",
+  "required_artifacts": [
+    "runtime-extracted.json",
+    "reviewed-case-annotations.json",
+    "artifact-report-digests.json",
+    "actual ZIP named by reviewed annotations",
+    "actual job log named by reviewed annotations"
+  ],
+  "runtime_result": null,
+  "actual_reviewed_annotations_required": true,
+  "no_prior_results_transferred": true,
+  "diagnostic16_fragments_promoted": 0,
+  "criterion_promotions": 0,
+  "GLOBAL_RELEASE": false
+}

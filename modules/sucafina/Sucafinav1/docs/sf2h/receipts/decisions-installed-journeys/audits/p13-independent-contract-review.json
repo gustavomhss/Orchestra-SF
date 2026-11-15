@@ -1,0 +1,49 @@
+{
+  "schema": "sf52-p13-independent-contract-static-review-v1",
+  "reviewer": "financial_contract",
+  "status": "NO_MATERIAL_STATIC_BLOCKER_IDENTIFIED",
+  "execution": "No product/tests/compiler/builds or CI dispatch executed; static review and proposal authoring only.",
+  "proposal": {
+    "material": "m52-work/p13-access-proposal/material.json",
+    "sha256": "45e1d1c8298992f9004a314fdbe87f0f89910326eab1bb2f630c33989820c72d",
+    "patch_sha256": "fede08518c2e5ff92ec789ef2396c84c4150538b4e9f2c218a046c8dc9000e16"
+  },
+  "findings": [
+    "Optional currentAccessSnapshots observes the same admitted root and copies only the selected own data descriptors plus all outer Snapshot metadata through cloneSnapshot; it does not manufacture principals or skip authenticate/revalidate/digest calls.",
+    "The original currentSnapshots body and prior P11 credential read paths are unchanged. Root lifetime, abort, SQL admission, mutable snapshots and readonly scope invariants remain.",
+    "ProductAuthority uses the selected method with its persistence receiver. Absence of the capability selects the original full reader. A present method returning undefined never invokes the full reader; canonical transaction entry may still occur and must also obtain an admitted projection.",
+    "RoleMap and access semantics continue to be checked by the existing canonical roleMap and principal observer. The new copier rejects selected object accessors, data symbols and invalid prototypes without invoking those getters, and retains outer metadata validation.",
+    "The projection intentionally omits unrelated business graphs. It does not promise equivalence to traversal errors in excluded data, and is not a business/source read capability.",
+    "The real installed spread order retains this optional capability through CurrentChoiceFence and SourcePersistence while full source reads remain available. No CurrentChoice/source-lifecycle modification is proposed.",
+    "The proposed unit fixtures use real LocalStore SQLite, ProductAuthority, private UI leases, canonical role resolution and C08 state. Authentication membership is an explicit synthetic port boundary. They do not replace installed UI acceptance."
+  ],
+  "limits": [
+    "No performance PASS or installed acceptance follows from static inspection.",
+    "No retained ACL result, credential, authority verdict or SQL result is introduced.",
+    "Tests must honor the real BEGIN IMMEDIATE order: external writer pending during held root, release root, await commit, then read new root. No external commit inside held C08 is asserted.",
+    "No test timeout, skip, retry, UI identity, assertion or workflow change is proposed."
+  ],
+  "source_pins": {
+    "runtime_contract_pre": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+    "runtime_contract_post": "c0ae6388a48ba44dd393cc62f2dfec83c0635a14",
+    "local_store_P11_pre": "5d7bccf29c38bc6a6b83ec2f2b3d543640b8dada",
+    "local_store_post": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+    "product_authority_pre": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+    "product_authority_post": "b2490cb7abeb071681e4fd2f43596d0407a491bc",
+    "ui_authority": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+    "identity": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+    "current_choice": "db487cd1b6263835302e9bcf80499d18531aa592",
+    "source_lifecycle": "0e812842ad0d534998c182100a8466548d70e915"
+  },
+  "material_blockers": [],
+  "test_proposal": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p13-access-tests/current-access-snapshots.test.ts.txt",
+    "git_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+    "sha256": "48f8a1c1997b7f8c53cb4b41c9f726b565d2807013d42f76d1afc756941638f0",
+    "bytes": 26612,
+    "logical_cases": 23,
+    "state": "INERT_REVIEWED_NOT_RUN",
+    "material_sha256": "ed2bd8c7d5cc8ca828581a689629487ddf70110efd4529c1928dd4bcad6c1852",
+    "independent_review": "composition_audit confirmed static interop/counts/cleanup on exact test blob; no changes required"
+  }
+}

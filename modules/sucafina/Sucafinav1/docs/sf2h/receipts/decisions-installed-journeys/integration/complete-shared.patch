@@ -95,7 +95,7 @@
  import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
  import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
  import { createSfAlternativeCaptures } from "./alternative-captures.ts"
-@@ -277,6 +278,15 @@
+@@ -293,6 +294,15 @@
      runtime: () => identity() && currentChoice ? { authority, currentChoice } : undefined })
    const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
    const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
@@ -111,10 +111,10 @@
    residentReviewReaders.bindOutcome(memory.reviewOutcome)
    const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
    for (const replacement of extended.replacements) {
-@@ -852,7 +862,7 @@
-   const services: SfHostServices & { productHtml: SfProductHtml } = { ...authority, productView: business.procurementQueueView, productHtml: extended.productHtml,
-     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work,
-     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents, routineRuns: routineServices.routineRuns,
+@@ -887,7 +897,7 @@
+       context.kind !== "ui" || !nativeRoutineProducer ? routineServices.routineRuns.discoverRuns(context)
+         : (await reauthenticatedRoutineHistory(context, () => routineServices.routineRuns.discoverRuns(context))
+           ?? { status: "denied" as const, reason: "native-routine-historical-origin-unavailable" }) },
 -    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
 +    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await decisionCaseHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
      selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
@@ -822,7 +822,7 @@
  import { createSfAtlasDurableMemory } from "./atlas-store.ts"
  import { deriveSfMemoryOwner, mapSfAtlasEntry } from "../decision-memory/atlas-projection.ts"
  import { encodeCaseRef } from "../decisions/case-port.ts"
-@@ -326,7 +327,7 @@
+@@ -338,7 +339,7 @@
    // private callback may use the integrity reader without resolving its own
    // historical source again. An overlapping public call cannot inherit it.
    const captureLookup = new AsyncLocalStorage<{ call: TrustedDomainContext; digest: string; active: boolean; stable: () => boolean }>()
@@ -831,7 +831,7 @@
      const request = input.host.requestFor(call)
      const lease = call.lease
      const binding = digestSfValue([call.kind, call.binding])
-@@ -346,6 +347,26 @@
+@@ -358,6 +359,26 @@
      const originals = found.filter((capture): capture is NonNullable<typeof capture> => !!capture)
      return stable() && originals.length && originals.every((ref) => digestSfValue(ref) === digestSfValue(originals[0])) &&
        await input.host.revalidate(call) && stable() ? originals[0] : undefined
@@ -1136,7 +1136,38 @@
      },
      write: <T>(work: (db: Database) => T) => operation(true, async (db) => {
        const value = work(db)
-@@ -444,7 +471,10 @@
+@@ -265,6 +292,30 @@
+         const snapshot = scope.root.snapshots[surface]
+         if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+         return cloneSnapshot(snapshot)
++      }
++      return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
++    },
++    currentAccessSnapshots: () => {
++      const scope = context.getStore()
++      if (!scope) return undefined
++      requireScope(scope)
++      const copy = (surface: Surface) => {
++        const snapshot = scope.root.snapshots[surface]
++        if (!snapshot) throw new Error("Local transaction snapshots unavailable")
++        const descriptors = Object.getOwnPropertyDescriptors(snapshot)
++        const data = descriptors.data
++        if (!data || !Object.hasOwn(data, "value") || !record(data.value))
++          throw new Error("Invalid local access snapshot data")
++        if (Object.getOwnPropertySymbols(data.value).length) throw new Error("Unsupported symbol properties")
++        // Preserve selected descriptors: a getter is refused by the existing
++        // copier rather than invoked here. Mutable roots are observed anew on
++        // every call; readonly roots expose only detached selected copies.
++        const fields = Object.fromEntries(["roleMap", "access"].flatMap((key) => {
++          const field = Object.getOwnPropertyDescriptor(data.value, key)
++          return field ? [[key, field]] : []
++        }))
++        descriptors.data = { ...data, value: Object.create(Object.getPrototypeOf(data.value), fields) }
++        return cloneSnapshot(Object.create(Object.getPrototypeOf(snapshot), descriptors))
+       }
+       return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
+     },
+@@ -444,7 +495,10 @@
      dispose: () => {
        if (context.getStore()) return Promise.reject(new Error("Cannot dispose a store from its transaction scope"))
        lifecycle.closed = true
@@ -1163,3 +1194,48 @@
  export function createAuthenticationSecrets(options: {
    read: <T>(work: (db: Database) => T) => T
    write: <T>(work: (db: Database) => T) => Promise<T>
+--- a/modules/sucafina/Sucafinav1/runtime/contract.ts
++++ b/modules/sucafina/Sucafinav1/runtime/contract.ts
+@@ -79,6 +79,13 @@
+   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
++  // Optional host-only authority projection of the same current root. Each call
++  // freshly copies data.roleMap/data.access and all outer Snapshot metadata;
++  // unrelated business data is absent. No authority, credential or ACL result
++  // is cached. Keep scope/abort/lifetime guards and fresh observations unchanged.
++  // This projection is not a source/business read. Omitted adapters keep the
++  // canonical full-copy path; undefined still means no admitted current root.
++  currentAccessSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
+   // Internal root-only scope, not source admission or business authorization.
+   // Consumers must still use their canonical transaction(surface, work) inside it
+   // so every wrapper keeps its guards. No snapshot or commit capability is exposed.
+--- a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+@@ -84,7 +84,14 @@
+     Object.freeze(copy.location)
+     return Object.freeze(copy)
+   }
+-  const principal = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.()) => {
++  // The optional projection copies current raw access data, not an admitted
++  // principal. Authentication, role/access checks and revalidation still run
++  // for every observation. A present capability returning undefined fails closed.
++  const accessSnapshots = () => {
++    const read = input.persistence.currentAccessSnapshots ?? input.persistence.currentSnapshots
++    return read?.call(input.persistence)
++  }
++  const principal = async (request: Request, dashboard: Snapshot, snapshots = accessSnapshots()) => {
+     if (!snapshots) return undefined
+     const current = identity()
+     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
+@@ -117,8 +124,8 @@
+     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
+   }
+   const resolve = async (request: Request) => {
+-    if (!input.persistence.currentSnapshots) return undefined
+-    const snapshots = input.persistence.currentSnapshots()
++    if (!input.persistence.currentAccessSnapshots && !input.persistence.currentSnapshots) return undefined
++    const snapshots = accessSnapshots()
+     if (snapshots) return principal(request, snapshots.dashboard, snapshots)
+     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
+   }

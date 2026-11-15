@@ -1,0 +1,100 @@
+{
+  "schema": "sf52-p13-independent-static-review-v1",
+  "reviewer": "composition_audit",
+  "verdict": "PASS_STATIC_NO_MATERIAL_BLOCKER",
+  "qualification": "STATIC_ONLY_NOT_COMPILED_NOT_EXECUTED_NOT_INSTALLED_ACCEPTANCE",
+  "target": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "target_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "material_base": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+  "base_note": "P13 sources were pinned at C51; parent audit reports no P13 overlap through C53. Installed forwarding snapshots are pinned to C53 except canonical admin roleMap pinned C51.",
+  "inputs": {
+    "m52-work/p13-access-proposal/material.json": "45e1d1c8298992f9004a314fdbe87f0f89910326eab1bb2f630c33989820c72d",
+    "m52-work/p13-access-proposal/complete.patch": "fede08518c2e5ff92ec789ef2396c84c4150538b4e9f2c218a046c8dc9000e16",
+    "m52-work/p13-access-proposal/README.md": "1121c7db623386aab6af192bd615f20d7281b98e09ad468229775587971b76ec",
+    "m52-audit/P13-installed-forwarding-static.json": "624dcd890c0d215ec2d3825bbd3d8d778ebf67e10bd42fd4229e084d115f06c8",
+    "m52-audit/P13-root-static-preservation.json": "8c6db4f195d426e02f746baedb59bc5a166ff5bb46d328150447f1facc8a148a"
+  },
+  "postimages": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "preimage": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "postimage": "c0ae6388a48ba44dd393cc62f2dfec83c0635a14",
+      "postimage_sha256": "9d1789e3fb8dae3dfa07f2f3920597740124eccf9889ca0f190edbd7e8144d58",
+      "postimage_bytes": 5922
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "preimage": "5d7bccf29c38bc6a6b83ec2f2b3d543640b8dada",
+      "postimage": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+      "postimage_sha256": "8952f2065f841aa9c5682cd3306bf0c681e45141246ff34dfd2b41d05c83b41b",
+      "postimage_bytes": 38167
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "preimage": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+      "postimage": "b2490cb7abeb071681e4fd2f43596d0407a491bc",
+      "postimage_sha256": "9bb7e1598ab5c2253fed48a123ff7a7c1378ba4853f3d783ca3d948147e95a8d",
+      "postimage_bytes": 23313
+    }
+  ],
+  "checks": [
+    {
+      "name": "actual_authority_inputs",
+      "result": "PASS",
+      "finding": "Canonical roleMap reads only data.roleMap. The unchanged principal observer additionally reads data.access[actor.id]. No source/business graph is passed to authenticate: its options remain surface and canonical roleMap."
+    },
+    {
+      "name": "projection_and_descriptors",
+      "result": "PASS",
+      "finding": "Selects only own roleMap/access descriptors without reading accessors, preserves data and Snapshot prototypes and every outer own descriptor, rejects data symbol properties, then invokes unchanged cloneSnapshot -> copyValue -> validateSnapshot. Selected accessors, cycles, unsupported values/prototypes and invalid outer metadata retain canonical refusal. Output descriptor flags are normalized by the unchanged copier, as before; there is no claim that returned descriptor flags equal source flags."
+    },
+    {
+      "name": "fresh_mutable_root",
+      "result": "PASS",
+      "finding": "Each invocation obtains current ALS scope.root.snapshots and new descriptors. No projected graph or authority result is retained between calls. transactionAll changes and the mutable target of transaction are visible to the next invocation. Readonly roots keep private root observations and return detached selected copies. Full currentSnapshots and original copy-plan paths are unchanged."
+    },
+    {
+      "name": "lifetime_abort_and_storage",
+      "result": "PASS",
+      "finding": "Method uses the same no-scope undefined and requireScope admission as currentSnapshots. Parent scope open/signal checks are preserved; the method has no await. Original SQL order, locks, write poisoning, joined-reader checks, root cleanup and disposal semantics remain byte-identical. Existing admitted roots may drain under existing disposal semantics; this proposal does not add a stronger or weaker disposal rule."
+    },
+    {
+      "name": "fallback_only_absent",
+      "result": "PASS",
+      "finding": "Nullish optional-method selection chooses currentAccessSnapshots when supplied, including a supplied function returning undefined. Such undefined never invokes currentSnapshots as an alternate reader: resolve uses the existing dashboard transaction admission, and principal remains denied if the projection is still undefined inside that root. A thrown projection is not replaced by the full reader. Omitted capability uses existing currentSnapshots. Invalid non-function host values are outside typed contract and are not a permissive fallback."
+    },
+    {
+      "name": "receiver_and_observation_order",
+      "result": "PASS",
+      "finding": "Extracted reader is called with input.persistence as receiver. Principal body, three-surface Promise.all order, authentication calls, grant checks, access digest, identity recheck and every state/target/UI/native callback after const state are byte-identical. One snapshot-provider observation remains per principal call, with the same outer-resolve versus nested-transaction observation structure. No authentication or final revalidation is removed."
+    },
+    {
+      "name": "installed_forwarding",
+      "result": "PASS_STATIC",
+      "finding": "Actual LocalStore method is an enumerable closure. CurrentChoiceFence generic P spreads the original driver before its transaction wrappers. Local entry spreads fence persistence before source lifecycle, which neither defines nor deletes currentAccessSnapshots. createHostRuntime receives that store; host-context spreads input into createSfProductAuthority without replacing persistence. Source/CurrentChoice guards retain original full-currentSnapshots readers and callbacks."
+    },
+    {
+      "name": "textual_identity",
+      "result": "PASS",
+      "finding": "Recomputed all three pre/post Git blob hashes from complete strings. Strictly reconstructed complete.patch hunks to exact postimages. Removing only the new LocalStore method recovers P11 byte-for-byte. Independently compared principal body and all content from const state onward to the preimage; exact equality."
+    }
+  ],
+  "explicit_limits": [
+    "Projection intentionally does not traverse unrelated business fields. It is not universally equivalent to full-graph validation/getter traversal and must not be used as a source or business-data read.",
+    "No measured performance gain, TypeScript compile result or installed-UI PASS is inferred from this review.",
+    "Capability is a trusted optional host implementation contract, not an HTTP/model-selected option. A general third-party adapter forwarding claim is not established beyond inspected installed chain.",
+    "LocalStore incremental preimage is P11 proposal postimage 5d7bcc, not target d9eaac; cumulative packet must retain P11 auth reader and current target changes.",
+    "P12 is excluded. C53 rebase of host-context/BCS is separate inert material with no P13 behavior mixed in."
+  ],
+  "required_hosted_verification": [
+    "Real SQLite selected/full copy parity for authority data and outer metadata, independent copies, mutable-root access edits, fresh next-root committed edits",
+    "Selected accessors/prototypes/symbols/cycles and malformed outer metadata refused; no selected getter invoked",
+    "Late access revision or role changes rejected under unchanged authority before/after callbacks, abort and ended-scope refusal",
+    "Legacy adapter uses full reader; present capability undefined/throw does not fall back; extracted method receiver retained",
+    "Installed fence/source forwarding and unchanged five nominal UI journeys with original budgets"
+  ],
+  "material_blockers": [],
+  "no_product_execution": true,
+  "no_tests_executed": true,
+  "no_remote_mutations": true
+}

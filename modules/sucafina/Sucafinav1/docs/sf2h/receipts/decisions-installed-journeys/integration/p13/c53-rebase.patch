@@ -1,0 +1,85 @@
+diff --git a/apps/cli/src/sucafina-product/host-context.ts b/apps/cli/src/sucafina-product/host-context.ts
+index f03ab621e96cfda23456be73bba2d24f24754d36..c714c553537758e484c50beb83665eb9823f618a 100644
+--- a/apps/cli/src/sucafina-product/host-context.ts
++++ b/apps/cli/src/sucafina-product/host-context.ts
+@@ -42,6 +42,7 @@
+ import { createSfCurrentChoiceServices } from "./current-choice-services.ts"
+ import { createSfCurrentChoiceHttp } from "./current-choice-http.ts"
+ import { createSfDecisionDomainHttp } from "./decision-domain-http.ts"
++import { createSfDecisionCaseHttp } from "./decision-case-http.ts"
+ import { createSfNativeAnalysisInputs, createSfAlternativeRunState } from "./analysis-native-inputs.ts"
+ import type { SfAdmittedAnalysisInput } from "./analysis-native-inputs.ts"
+ import { createSfAlternativeCaptures } from "./alternative-captures.ts"
+@@ -293,6 +294,15 @@
+     runtime: () => identity() && currentChoice ? { authority, currentChoice } : undefined })
+   const procurementScenarioHttp = createSfProcurementScenarioHttp({ origin: input.origin, mount: input.mount, host: authority.host, ui: authority.ui, services: business.procurementScenarios })
+   const portfolioHttp = extended.portfolioServices.http({ origin: input.origin, mount: input.mount })
++  const decisionCaseHttp = createSfDecisionCaseHttp({ origin: input.origin, mount: input.mount, available: () => !!identity(), authority, business, portfolio: extended.portfolioServices,
++    lockedProductRevision: () => {
++      const snapshots = input.persistence.currentSnapshots?.()
++      if (!snapshots) return undefined
++      const stored = object(snapshots.dashboard.data.__sfProductV1)
++      return stored.schemaVersion === 1 && typeof stored.incarnation === "string" && !!stored.incarnation.trim() && Number.isSafeInteger(stored.revision) && Number(stored.revision) >= 0
++        ? { incarnation: stored.incarnation, aggregateRevision: Number(stored.revision) } : undefined
++    },
++  })
+   residentReviewReaders.bindOutcome(memory.reviewOutcome)
+   const memoryHttp = createSfMemoryHttp({ origin: input.origin, mount: input.mount, authority, memory, withCase: business.withCase })
+   for (const replacement of extended.replacements) {
+@@ -887,7 +897,7 @@
+       context.kind !== "ui" || !nativeRoutineProducer ? routineServices.routineRuns.discoverRuns(context)
+         : (await reauthenticatedRoutineHistory(context, () => routineServices.routineRuns.discoverRuns(context))
+           ?? { status: "denied" as const, reason: "native-routine-historical-origin-unavailable" }) },
+-    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
++    productHttp: async (request, surface) => await currentChoiceHttp(request, surface) ?? await decisionCaseHttp(request, surface) ?? await analysisHttp(request, surface) ?? await decisionDomainHttp(request, surface) ?? await procurementScenarioHttp(request, surface) ?? await portfolioHttp(request, surface) ?? await baselineServices.productHttp(request, surface) ?? await memoryHttp(request, surface) ?? await workHttp(request, surface) ?? await extended.productHttp(request, surface) ?? await dashboardHttp(request, surface) ?? await procurementDecisionHttp(request, surface) ?? await collaborationHttp.get(surface)?.(request) ?? await documentHttp(request, surface) ?? await importHttp(request, surface) ?? await dossier?.http(request, surface) ?? await documentScenarioHttp(request, surface),
+     selected, dispatch: createSfProductDispatch({ descriptors, authority: authority.authority }), models: async () => state.models ? state.models() : [], sessions: {
+     prepare: async (request) => {
+       if (!state.api || !identity()) return { status: "unavailable", reason: "native-host-unavailable" }
+diff --git a/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts b/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
+index 12d6b27c52e29ac0cb8ccc65fba63ad20ddbc4ef..8d46a62489755a817155740eab4486017c23eb78 100644
+--- a/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/business-context.ts
+@@ -4,6 +4,7 @@
+ import type { TrustedDomainContext } from "../contracts/sf-execution.ts"
+ import { createSfDashboardSourceAccess, createSfDashboardRecordSourceAccess, createSfCaseEventSourceAccess, createSfProcurementSourceAccess, createSfDocumentSourceAccess, createSfDashboardContinuityProof, createSfSourceContinuityProof } from "../decision-memory/source-access.ts"
+ import { createSfAtlasMemory, revalidateSfAtlasRecall, sfAtlasPublicationMatches } from "./atlas-memory.ts"
++import { createSfChoiceSourceCaptureReader } from "../decisions/choice-source-history.ts"
+ import { createSfAtlasDurableMemory } from "./atlas-store.ts"
+ import { deriveSfMemoryOwner, mapSfAtlasEntry } from "../decision-memory/atlas-projection.ts"
+ import { encodeCaseRef } from "../decisions/case-port.ts"
+@@ -338,7 +339,7 @@
+   // private callback may use the integrity reader without resolving its own
+   // historical source again. An overlapping public call cannot inherit it.
+   const captureLookup = new AsyncLocalStorage<{ call: TrustedDomainContext; digest: string; active: boolean; stable: () => boolean }>()
+-  const readOriginalCapture = async (digest: string, call: TrustedDomainContext) => {
++  const readAtlasOriginalCapture = async (digest: string, call: TrustedDomainContext) => {
+     const request = input.host.requestFor(call)
+     const lease = call.lease
+     const binding = digestSfValue([call.kind, call.binding])
+@@ -358,6 +359,26 @@
+     const originals = found.filter((capture): capture is NonNullable<typeof capture> => !!capture)
+     return stable() && originals.length && originals.every((ref) => digestSfValue(ref) === digestSfValue(originals[0])) &&
+       await input.host.revalidate(call) && stable() ? originals[0] : undefined
++  }
++  const readChoiceCapture = createSfChoiceSourceCaptureReader({ host: input.host, state: input.state, authorizeCase: input.authorizeCase })
++  const readOriginalCapture = async (digest: string, call: TrustedDomainContext) => {
++    const host = input.host, requestFor = host.requestFor, revalidate = host.revalidate
++    const request = requestFor.call(host, call), lease = call.lease, binding = call.binding
++    const identity = digestSfValue([call.kind, call.binding])
++    const fingerprint = () => request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
++    const transport = fingerprint()
++    const stable = () => !!request && !request.signal.aborted && input.host === host && host.requestFor === requestFor &&
++      host.revalidate === revalidate && requestFor.call(host, call) === request && call.lease === lease && call.binding === binding &&
++      identity === digestSfValue([call.kind, call.binding]) && fingerprint() === transport
++    if (!stable() || !await revalidate.call(host, call) || !stable()) return undefined
++    // Atlas retains precedence. The fallback is a separate original captured in
++    // the choice transaction; it does not settle the outbox or create a receipt.
++    const atlas = await readAtlasOriginalCapture(digest, call)
++    if (!stable()) return undefined
++    const capture = atlas ?? await readChoiceCapture(digest, call)
++    // Both private readers own their final authority boundary. Only synchronous
++    // transport/lease checks may follow the completed protected read.
++    return stable() ? capture : undefined
+   }
+   const readOriginal = async (digest: string, call: TrustedDomainContext) => (await readOriginalCapture(digest, call))?.ref
+   const recordHistory = createSfRecordHistory({ host: input.host, readOriginalCapture, now: input.now,

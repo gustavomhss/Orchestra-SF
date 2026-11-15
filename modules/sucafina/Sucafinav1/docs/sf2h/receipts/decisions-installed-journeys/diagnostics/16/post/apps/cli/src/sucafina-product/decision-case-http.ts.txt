@@ -1,0 +1,85 @@
+import { sf52Profile } from "../../../../modules/sucafina/Sucafinav1/runtime/sf52-profile.ts"
+import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+import { createDecisionCaseManagement } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-management.ts"
+import { createDecisionEvidenceChecks } from "../../../../modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts"
+import { createDecisionCaseHttp } from "../../../../modules/sucafina/Sucafinav1/product/decisions/http.ts"
+import { readPortfolioSnapshot } from "../../../../modules/sucafina/Sucafinav1/product/portfolio/read-snapshot.ts"
+import type { createSfProductAuthority } from "../../../../modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+import type { createSfBusinessServices } from "./business-services.ts"
+import type { createSfPortfolioServices } from "./portfolio-services.ts"
+
+type ProductRevision = { incarnation: string; aggregateRevision: number }
+
+/** Bind the installed case UI to its existing authority, C08 state and Portfolio registries. */
+export function createSfDecisionCaseHttp(input: {
+  origin: string
+  mount: string
+  available: () => boolean
+  lockedProductRevision: () => ProductRevision | undefined
+  authority: ReturnType<typeof createSfProductAuthority>
+  business: ReturnType<typeof createSfBusinessServices>
+  portfolio: ReturnType<typeof createSfPortfolioServices>
+}) {
+  const { authority, business, portfolio } = input
+  const evidence = createDecisionEvidenceChecks({ host: authority.host, evidence: business.context, recomputeMetric: portfolio.readMetric })
+  const editFences = new WeakMap<object, ProductRevision & { source: Request; bindingDigest: string; payloadDigest: string }>()
+  const management = createDecisionCaseManagement({
+    state: authority.state, host: authority.host, authorizeCase: portfolio.authorizeCase, operationIdentity: business.operationIdentity,
+    authorizeEdit: async (request, call) => {
+      editFences.delete(call)
+      const source = authority.host.requestFor(call)
+      const bindingDigest = digestSfValue([call.kind, call.binding])
+      const payloadDigest = digestSfValue(request)
+      const current = () => !!source && authority.host.requestFor(call) === source && !source.signal.aborted && digestSfValue([call.kind, call.binding]) === bindingDigest
+      if (!source || !current() || !await portfolio.intent.authorize(call, "decisions.edit", request) || !current()) return false
+      const read = await authority.state.read(source, "cases", (_state, actor) =>
+        actor.principalRef === call.binding.principalRef && actor.policyVersion === call.binding.policyVersion && actor.accessRevision === call.binding.accessRevision)
+      if (read.status !== "ok" || !read.value || !await authority.host.revalidate(call) || !current()) return false
+      editFences.set(call, { source, bindingDigest, payloadDigest, incarnation: read.incarnation, aggregateRevision: read.aggregateRevision })
+      return true
+    },
+    verifyEvidence: evidence.refs, verifyReadEvidence: evidence.readRefs,
+    verifyEdit: (_snapshot, _before, _after, call) => {
+      const payload = portfolio.intent.payload(call, "decisions.edit")
+      const captured = editFences.get(call)
+      const locked = input.lockedProductRevision()
+      return payload !== undefined && !!captured && !!locked && authority.host.requestFor(call) === captured.source && !captured.source.signal.aborted &&
+        digestSfValue([call.kind, call.binding]) === captured.bindingDigest && digestSfValue(payload) === captured.payloadDigest &&
+        locked.incarnation === captured.incarnation && locked.aggregateRevision === captured.aggregateRevision &&
+        portfolio.intent.verify(call, "decisions.edit", payload)
+    },
+  })
+  const handlers = new Map(["dashboard", "planner", "procurement"].map((surface): [string, ReturnType<typeof createDecisionCaseHttp>] => [surface, createDecisionCaseHttp({
+    origin: input.origin, mount: `${input.mount}/${surface}`, human: authority.human,
+    withCase: business.withCase, management,
+    compare: (request, call) => sf52Profile(() => readPortfolioSnapshot(authority.host, call, request,
+      () => portfolio.compare(request, call), { status: "unavailable", reason: "decision-comparison-snapshot-unavailable" })),
+    admitList: async (request) => {
+      const operation = "sf_case_read"
+      const digest = digestSfValue({ purpose: "decision-list", surface })
+      const admitted = await authority.ui.admit(request, operation, digest)
+      if (admitted.status !== "ok") return admitted
+      if (!await authority.ui.validate(admitted.value, operation, digest)) {
+        authority.ui.finish(admitted.value)
+        return { status: "denied", reason: "decision-list-authority-unavailable" }
+      }
+      return admitted
+    },
+    finishList: authority.ui.finish,
+    admitComparison: (request, payload) => authority.human.admit(request, "decisions.portfolio.read", payload),
+    catalog: (caseRefs, call) => portfolio.product
+      ? portfolio.product.http.catalog(caseRefs, call)
+      : Promise.resolve({ status: "unavailable", reason: "portfolio-planner-stored-scenarios-unavailable" }),
+  })]))
+  return async (request: Request, surface: string): Promise<Response | undefined> => {
+    const url = new URL(request.url)
+    const action = url.searchParams.get("sf")
+    if (!action || !["decision-list", "decision-edit", "decision-compare", "decision-portfolio-catalog"].includes(action)) return undefined
+    const handler = handlers.get(surface)
+    if (!handler || url.origin !== input.origin || url.pathname !== `${input.mount}/${surface}`)
+      return Response.json({ status: "denied", reason: "decision-origin-unavailable" }, { status: 403, headers: { "cache-control": "no-store" } })
+    if (!input.available())
+      return Response.json({ status: "unavailable", reason: "native-host-unavailable" }, { status: 503, headers: { "cache-control": "no-store" } })
+    return handler(request)
+  }
+}

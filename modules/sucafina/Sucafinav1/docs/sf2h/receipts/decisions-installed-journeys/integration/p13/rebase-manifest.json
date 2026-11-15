@@ -1,0 +1,72 @@
+{
+  "schema": "sf52-c53-shared-rebase-v1",
+  "state": "INERT_PROPOSAL_NOT_EXECUTED_NOT_PUBLISHED",
+  "base": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "base_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+  "base_label": "C53; these two blobs unchanged since C51",
+  "prior_material": "m52-work/p11-delivery/cumulative-material.json",
+  "prior_material_sha256": "18f3309fed076ff5e3f40f5392c2fb86809f08a76594296d31055dbdb6661936",
+  "scope_count": 2,
+  "preserved_owner_changes": [
+    "Native C49 host-private origin capability, historical reauthentication, subscribe/dispose, default absence and conflict guard",
+    "Denied-read C50 Planner/Dashboard current-access preflight before read(selected)"
+  ],
+  "validation": {
+    "text_only": true,
+    "product_executed": false,
+    "tests_executed": false,
+    "remote_mutation": false,
+    "own_delta_inverse_exact": true,
+    "no_new_functional_delta_beyond_P11": true,
+    "P12_included": false
+  },
+  "patch": {
+    "path": "complete.patch",
+    "sha256": "7dfd207e9ad4306b3891d1d2841d7a128de2d9a6a3600bf7ad5235b97e42ad12",
+    "bytes": 8431
+  },
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "mode": "100644",
+      "status": "modified",
+      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52",
+      "preimage": "f03ab621e96cfda23456be73bba2d24f24754d36",
+      "postimage": "c714c553537758e484c50beb83665eb9823f618a",
+      "preimage_sha256": "2d28c33a8cad5b6e834d1aca7df12d0b49ff229f5ca80d0784145ebb0f537255",
+      "postimage_sha256": "45d4cea3554718fad5c0c4e709120580ef99cef3b2373b5dffee46d16fb8101c",
+      "preimage_bytes": 81389,
+      "bytes": 82192,
+      "prior_p11_preimage": "297a4050323d80648684725f9c7e9a8680aa318f",
+      "prior_p11_postimage": "46d3a77a819f4127b073cb8f5572838824019075",
+      "prior_delta_sha256": "058ab7258dfeb597097212b37807414caf1f465526438d84bb690d50f9165019",
+      "proof": {
+        "p11_edits_applied_exactly": true,
+        "invert_only_p11_edits_yields_c53_exactly": true,
+        "operation_count": 3
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "mode": "100644",
+      "status": "modified",
+      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52",
+      "preimage": "12d6b27c52e29ac0cb8ccc65fba63ad20ddbc4ef",
+      "postimage": "8d46a62489755a817155740eab4486017c23eb78",
+      "preimage_sha256": "92151f677b62356920a90102922bc8eac8b66cc728e018d79a52cf8a30c352be",
+      "postimage_sha256": "beaedc11d7972774ea4ad200561e6b4203291d12188236bab94a9d5838733a68",
+      "preimage_bytes": 68621,
+      "bytes": 70314,
+      "prior_p11_preimage": "2e7b312561f3f027ab070c61e15ecb6886fa169c",
+      "prior_p11_postimage": "1400fa4894c55e99ae7fa18c809be9c2298fc49d",
+      "prior_delta_sha256": "0b5d6fde073d15c134f777ceff20d6ef3d883258feb15eca598cea39157c365c",
+      "proof": {
+        "p11_edits_applied_exactly": true,
+        "invert_only_p11_edits_yields_c53_exactly": true,
+        "operation_count": 3
+      }
+    }
+  ],
+  "complete_images": "delivery/current-image-index.json",
+  "original_material_sha256": "b1e1e7be32ffd16307cc297d7d4379a33548a0c785d113e28735c3b09a733ec6"
+}

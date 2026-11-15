@@ -1,0 +1,42 @@
+{
+  "schema": "sf52-p13-installed-capability-forwarding-static-v1",
+  "target": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "status": "STATIC_ONLY_NOT_UI_ACCEPTANCE",
+  "chain": [
+    "LocalStore implements optional Persistence.currentAccessSnapshots",
+    "CurrentChoiceFence generic P spreads every original driver property unchanged before wrapping transactions",
+    "local entry spreads the fence persistence first, then source lifecycle methods; the latter neither supplies nor deletes currentAccessSnapshots",
+    "The resulting store is passed to createHostRuntime",
+    "HostRuntime passes input persistence unchanged to ProductAuthority"
+  ],
+  "dependencies": [
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "blob": "04fa7d53b8f2a4d4f7375c0f069a6ae38523e877"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/current-choice-preview.ts",
+      "blob": "db487cd1b6263835302e9bcf80499d18531aa592"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+      "blob": "0e812842ad0d534998c182100a8466548d70e915"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "f03ab621e96cfda23456be73bba2d24f24754d36"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-contract.ts",
+      "blob": "d82b40928a235f2d249e45e59732f281dfded97f"
+    }
+  ],
+  "assertions": {
+    "CurrentChoice46_source_edit_required": false,
+    "source_lifecycle_edit_required": false,
+    "local_entry_edit_required": false,
+    "original_full_snapshot_methods_still_used_by_current_choice_and_source_guards": true,
+    "no_callback_or_guard_forwarding_removed": true
+  },
+  "limit": "Runtime spread/function behavior must still be checked by a supplemental composition test and the unchanged installed UI journeys."
+}

@@ -1,0 +1,116 @@
+{
+  "schema": "sf52-p13-access-tests-independent-review-v1",
+  "reviewer": "composition_audit",
+  "verdict": "PASS_STATIC_NO_MATERIAL_BLOCKER",
+  "state": "NOT_RUN_NOT_COMPILED_NO_INSTALLED_QUALIFICATION",
+  "test": {
+    "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+    "draft": "m52-work/p13-access-tests/current-access-snapshots.test.ts.txt",
+    "git_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+    "sha256": "48f8a1c1997b7f8c53cb4b41c9f726b565d2807013d42f76d1afc756941638f0",
+    "bytes": 26612,
+    "lines": 473,
+    "cases_static": 23,
+    "registrations_static": 13
+  },
+  "material": {
+    "path": "m52-work/p13-access-tests/material.json",
+    "sha256": "ed2bd8c7d5cc8ca828581a689629487ddf70110efd4529c1928dd4bcad6c1852",
+    "reviewed_provisional_sha256": "5fe0a75bf3d20cd76936a70af7ad12b2a5ca803588b8cd7e20bd2d4d916ae649",
+    "freeze_note": "Initial read inspected provisional material 5fe0a75b; Finance then changed only status/review metadata. Final reviewed material is ed2bd8c7, with identical test text and product dependencies."
+  },
+  "api_evidence": [
+    {
+      "path": "m52-work/p13-access-tests/evidence/identity.ts.txt",
+      "git_blob": "5a146c7a1c05598bdc67596e282ce150c720e9c0",
+      "sha256": "bdeb9ff9943d0c1785dfe7f56d450093fcffc09a9aecbe63e079d3851a78d13b"
+    },
+    {
+      "path": "m52-work/p13-access-tests/evidence/ui-authority.ts.txt",
+      "git_blob": "502fb1ab3a4116a62aeb504a4bb26040c66d81b2",
+      "sha256": "b6e875b8fc9ff731d225af16f84966bf78f6c1f65aefb852ef52a2983c6ec93e"
+    },
+    {
+      "path": "m52-work/p13-access-tests/evidence/host-context.ts.txt",
+      "git_blob": "bd7df025e12aa457898f48fcf9634273ec5be381",
+      "sha256": "6890256adf55319ac3da3d7c5943587462a1defb0ba5da48079bc390dfd9560e"
+    }
+  ],
+  "checks": [
+    {
+      "name": "exact_api_types",
+      "result": "PASS_STATIC",
+      "finding": "Canonical resolve(id, RoleRow[], member) matches the fixture. Optional Application.authenticate context is checked before use; readonly roleMap is copied to a mutable RoleRow array. Host identity uses the actual inferred location type. Real ProductAuthority, state.transaction/read, UiAuthority admit/validate/finish/revalidate and persistence methods are called with matching inspected contracts. No import alias, any, globalThis mock, new timer or timeout override."
+    },
+    {
+      "name": "authority_observation_oracle",
+      "result": "PASS_STATIC",
+      "finding": "Inspected real UiAuthority: admit authorizes once and calls revalidate once; each principal observation authenticates dashboard/planner/procurement in that order. Therefore 6 observation rows and 2 projection reads at admission, plus 3 on validate and 3 on subsequent host.revalidate, are correct inside the existing held root. The test compares legacy and projected complete role-map observations and binding identity fields; receivers are checked explicitly."
+    },
+    {
+      "name": "real_c08_final_drift",
+      "result": "PASS_STATIC",
+      "finding": "State is created with real canonical state.transaction. The negative then holds a mutable Planner parent and calls real dashboard C08 read. Its work changes the held Planner ACL between the before and after authority observations. Since the principal uses fresh current roots for the non-dashboard surface, final accessRevision differs and the exact product-authority-changed denial is required. This does not await an external writer while holding the root."
+    },
+    {
+      "name": "real_ui_final_lease",
+      "result": "PASS_STATIC",
+      "finding": "The synthetic authentication boundary calls real ui.finish after revalidation starts. Real UiAuthority then performs its post-await current(context) check; test requires false and no Request capability. A new real admission is checked afterward."
+    },
+    {
+      "name": "projection_and_invalid_state",
+      "result": "PASS_STATIC",
+      "finding": "Cold and warm real SQLite roots compare selected data plus every outer Snapshot field with the full reader, then mutate detached returned data and metadata and verify fresh observations remain unchanged. Nine negative cases cover outer/selected accessors, nested selected accessor, selected cycle, data symbol/prototype, invalid outer version and audit accessor. Getter counts must remain zero; commit=false rollback is checked durably. A separate test records the explicit unrelated-business-getter projection boundary."
+    },
+    {
+      "name": "fallback_and_semantic_controls",
+      "result": "PASS_STATIC",
+      "finding": "Legacy fixture omits the optional property entirely; present-undefined fixture requires full-reader counter zero, no authentication rows and denied admission while allowing the existing canonical transaction attempt. Real canonical role-map/access-scope semantic invalidity is also refused. Mutable-root role and ACL changes invalidate an existing lease, and rollback restores the old revision under a new lease."
+    },
+    {
+      "name": "isolation_cancellation_and_peer_order",
+      "result": "PASS_STATIC",
+      "finding": "Each case owns a private real directory and two stores with deterministic finally disposal/removal. Ended-scope continuation is created inside the old ALS root and released during a distinct later root; it must still fail. Peer writer is started outside reader ALS, remains unable to enter under BEGIN IMMEDIATE, and is awaited only after release. Early failures and cleanup release promises and await outstanding work; no lock-wait deadlock pattern or unhandled rejection found."
+    },
+    {
+      "name": "installed_forwarding",
+      "result": "PASS_STATIC",
+      "finding": "Test uses actual CurrentChoiceFence generic spread and source lifecycle composition. No promotion is admitted; a promotion attempt would throw the explicit fixture guard. Projected/full methods are compared and a real ProductAuthority admission/validation is made through the composed persistence. Full source reader remains available."
+    }
+  ],
+  "proposed_gate": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "git_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "cases_static": 23,
+      "state": "NEW_INERT_TEST_DEFAULT_BUDGET"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "git_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "cases_static": 50,
+      "state": "UNCHANGED_EXISTING_TEST"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+      "git_blob": "50dd7e88b4611302b8d97d6c383087508a62351e",
+      "cases_static": 1,
+      "state": "UNCHANGED_EXISTING_TEST",
+      "existing_timeout_ms": 120000
+    }
+  ],
+  "gate_file_count": 3,
+  "gate_cases_static": 74,
+  "gate_note": "The inherited bound-source-read timeout already exists in its exact blob; no increase is proposed. Three-file supplemental gate does not replace the original five installed UI journeys.",
+  "material_blockers": [],
+  "limits": [
+    "Synthetic group-membership authenticator is explicit; canonical role resolution, ProductAuthority, private lease and SQLite/C08 are real. This is not local-operator login or financial-policy proof.",
+    "No runtime, compilation, timing, installed acceptance or release claim from this review.",
+    "Independent read of existing gate files confirms pins/counts and relevant preservation, not a new runtime result."
+  ],
+  "product_execution": false,
+  "tests_executed": false,
+  "remote_calls": false,
+  "remote_mutations": false,
+  "prior_review_sha256": "fb6f7703b675fa9d3964fe871f3831672d515f45f49e7dfdfb3d3ed474bfd673"
+}

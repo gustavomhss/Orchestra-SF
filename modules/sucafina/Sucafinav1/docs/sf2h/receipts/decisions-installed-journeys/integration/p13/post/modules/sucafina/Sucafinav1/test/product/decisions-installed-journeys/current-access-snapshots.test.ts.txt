@@ -1,0 +1,473 @@
+import { expect, test } from "bun:test"
+import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+import { tmpdir } from "node:os"
+import { join } from "node:path"
+import { openLocalStore } from "../../../runtime/local-store.ts"
+import type { LocalStore } from "../../../runtime/local-contract.ts"
+import type { Persistence, Snapshot } from "../../../runtime/contract.ts"
+import { resolve } from "../../../src/identity.ts"
+import type { RoleRow, Surface } from "../../../src/identity.ts"
+import { digestSfValue } from "../../../product/contracts/canonical.ts"
+import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
+import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
+import { createCurrentChoiceFence } from "../../../product/decisions/current-choice-preview.ts"
+
+// Supplemental unit fixtures only: real SQLite, ProductAuthority, private UI
+// leases, canonical role resolution and C08 state. The authenticator is an
+// explicit synthetic membership boundary, not an installed-login/UI proof.
+// No fixture or direct setup mutation is imported by the five UI journeys.
+type AuthorityInput = Parameters<typeof createSfProductAuthority>[0]
+type Authority = ReturnType<typeof createSfProductAuthority>
+type HostIdentity = NonNullable<ReturnType<AuthorityInput["identity"]>>
+const surfaces: readonly Surface[] = ["dashboard", "planner", "procurement"]
+const origin = "https://access-projection.synthetic.example"
+const subject = "access-projection-human"
+const group = "access-projection-members"
+const at = "2026-11-15T06:00:00.000Z"
+const intent = digestSfValue({ purpose: "access-projection-contract" })
+
+async function withStores(work: (input: { directory: string; store: LocalStore; other: LocalStore }) => Promise<void>) {
+  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-current-access-"))
+  const opened: LocalStore[] = []
+  await chmod(directory, 0o700)
+  try {
+    const store = await openLocalStore(directory)
+    opened.push(store)
+    const other = await openLocalStore(directory)
+    opened.push(other)
+    await store.transactionAll!(async (snapshots) => {
+      for (const surface of surfaces) {
+        const snapshot = snapshots[surface]
+        snapshot.data.roleMap = [{ surface, role: "admin", entra: group, version: 1, by: subject }]
+        snapshot.data.access = { [subject]: { assigned: [`assigned:${surface}`], domains: [`domain:${surface}`] } }
+        snapshot.data.business = { private: { amount: 1200, rows: ["unrelated", surface] } }
+        snapshot.versions.unit = { version: 1, by: subject }
+        snapshot.sequences.next = 7
+        snapshot.audit.push({ who: subject, at, record: "unit", was: null, became: { surface } })
+        snapshot.notices.push({ kind: "approved", to: [subject], record: "unit", at })
+        snapshot.sfSources = { schemaVersion: 1, records: {}, scopes: {} }
+        snapshot.sfCommandPreviews = { unit: { principalRef: subject, actorDigest: intent,
+          command: { page: "Unit", action: "save", version: 0, values: {} }, baseDigest: intent,
+          commandDigest: intent, ids: [], expiresAt: "2026-11-15T07:00:00.000Z" } }
+      }
+      return { commit: true, value: undefined }
+    })
+    await work({ directory, store, other })
+  } finally {
+    try { await Promise.all(opened.map((store) => store.dispose())) }
+    finally { await rm(directory, { recursive: true, force: true }) }
+  }
+}
+
+function readRoot<T>(store: LocalStore, work: () => Promise<T>, signal?: AbortSignal) {
+  if (!store.readSnapshotRoot) throw new Error("Real readonly root is required")
+  return store.readSnapshotRoot(work, signal ? { signal } : undefined)
+}
+
+function access(persistence: Persistence) {
+  const value = persistence.currentAccessSnapshots?.()
+  if (!value) throw new Error("Current access observation is required")
+  return value
+}
+
+function full(persistence: Persistence) {
+  const value = persistence.currentSnapshots?.()
+  if (!value) throw new Error("Current full observation is required")
+  return value
+}
+
+function record(value: unknown): Record<string, unknown> {
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Expected unit fixture record")
+  return value as Record<string, unknown>
+}
+
+function makeAuthority(store: LocalStore, directory: string, mode: "projected" | "legacy" | "undefined" = "projected") {
+  const controls = { now: Date.parse(at), serial: 0, allowed: true, projected: 0, full: 0, wrongReceiver: false,
+    observations: [] as { request: Request; surface: Surface; roleMap: RoleRow[] }[],
+    beforeAuthenticate: undefined as (() => void) | undefined }
+  const persistence: Persistence = {
+    transaction: (surface, work, options) => store.transaction(surface, work, options),
+    currentSnapshots() {
+      controls.full++
+      controls.wrongReceiver ||= this !== persistence
+      return store.currentSnapshots?.()
+    },
+  }
+  if (mode !== "legacy") persistence.currentAccessSnapshots = function () {
+    controls.projected++
+    controls.wrongReceiver ||= this !== persistence
+    return mode === "undefined" ? undefined : store.currentAccessSnapshots?.()
+  }
+  // The realpath/openLocalStore checks above establish this fixture directory.
+  const identity: HostIdentity = { installationId: "access-unit-install", hostId: "access-unit-host",
+    projectId: "access-unit-project", location: { directory: directory as HostIdentity["location"]["directory"] } }
+  const service = createSfProductAuthority({ identity: () => identity, installationId: identity.installationId,
+    origin, policyVersion: "access-unit-policy", persistence,
+    authenticate: async (request, context) => {
+      if (!context) return null
+      const map = structuredClone([...context.roleMap])
+      controls.observations.push({ request, surface: context.surface, roleMap: map })
+      controls.beforeAuthenticate?.()
+      if (!controls.allowed || request.signal.aborted || request.headers.get("x-unit-subject") !== subject) return null
+      return resolve(subject, map, (candidate) => candidate === group)
+    },
+    environment: async () => ({ at, id: () => `environment-${++controls.serial}`, directory: [{ id: subject, name: "Unit human" }] }),
+    grants: [{ principalRef: subject, namespaces: ["cases", "preferences"], operations: ["sf_case_read"] }],
+    createId: () => `access-unit-${++controls.serial}`, now: () => controls.now,
+    commandIdentity: async () => "access-unit-intention",
+    inspectSession: async () => undefined, verifySelection: async () => false,
+    verifySkillReceipt: async () => false, providerGeneration: async () => undefined,
+    authorizeDocument: async () => undefined,
+  })
+  const request = (signal?: AbortSignal) => new Request(`${origin}/sucafina/planner?sf=decision-list`, {
+    headers: { origin, "x-unit-subject": subject }, ...(signal ? { signal } : {}),
+  })
+  return { service, controls, persistence, request }
+}
+
+async function admit(service: Authority, request: Request) {
+  const result = await service.ui.admit(request, "sf_case_read", intent)
+  if (result.status !== "ok") throw new Error(`Real ProductAuthority admission failed: ${result.status}`)
+  return result.value
+}
+
+async function initializeState(service: Authority, request: Request) {
+  const result = await service.state.transaction(request, { namespace: "preferences", expectedStorageVersion: 0,
+    targetRef: service.creationTarget.ref, targetIncarnation: service.creationTarget.incarnation,
+    idempotencyKey: "access-unit-initialize", commandDigest: intent }, async (state) => {
+    state.preferences.marker = { private: "protected-unit-value" }
+    return { commit: true, value: undefined }
+  })
+  if (result.status !== "ok") throw new Error(`Real C08 initialization failed: ${result.status}`)
+}
+
+for (const temperature of ["cold", "warm"] as const) {
+  test(`${temperature} access projections detach selected data and preserve every outer snapshot field`, async () => {
+    await withStores(async ({ other }) => {
+      if (temperature === "warm") await readRoot(other, async () => { full(other) })
+      expect(other.currentAccessSnapshots?.()).toBeUndefined()
+      await readRoot(other, async () => {
+        const original = full(other)
+        const first = access(other)
+        for (const surface of surfaces) {
+          const expected = { ...original[surface], data: {
+            roleMap: original[surface].data.roleMap, access: original[surface].data.access,
+          } }
+          expect(first[surface]).toEqual(expected)
+          expect(first[surface]).not.toBe(original[surface])
+          expect(first[surface].data.access).not.toBe(original[surface].data.access)
+          expect(Object.keys(first[surface].data).sort()).toEqual(["access", "roleMap"])
+          first[surface].data.roleMap = []
+          record(record(first[surface].data.access)[subject]).domains = ["copy-only"]
+          first[surface].versions.unit!.version = 90
+          first[surface].sequences.next = 90
+          first[surface].audit[0]!.record = "copy-only"
+          first[surface].notices[0]!.to.length = 0
+          first[surface].sfCommandPreviews!.unit!.ids.push("copy-only")
+          first[surface].sfSources!.records.changed = { incarnation: "copy", version: 1, alive: true, inputDigest: intent }
+          expect(access(other)[surface]).toEqual(expected)
+        }
+        expect(full(other)).toEqual(original)
+        expect(full(other).dashboard.data.business).toEqual(original.dashboard.data.business)
+      })
+      expect(other.currentAccessSnapshots?.()).toBeUndefined()
+    })
+  })
+}
+
+test("access projection deliberately omits unrelated business getters while the full reader retains refusal", async () => {
+  await withStores(async ({ store }) => {
+    const seen = { getters: 0 }
+    await store.transaction("planner", async (snapshot) => {
+      snapshot.data.business = Object.defineProperty({}, "private", {
+        enumerable: true, get() { seen.getters++; throw new Error("Unrelated business getter must not run") },
+      })
+      expect(access(store).planner.data).toEqual({ roleMap: snapshot.data.roleMap, access: snapshot.data.access })
+      expect(() => full(store)).toThrow("Unsupported snapshot accessor")
+      expect(seen.getters).toBe(0)
+      return { commit: false, value: undefined }
+    })
+    await readRoot(store, async () => { expect(full(store).planner.data.business).toEqual({ private: { amount: 1200, rows: ["unrelated", "planner"] } }) })
+  })
+})
+
+const malformed: readonly { name: string; corrupt: (snapshot: Snapshot, seen: { getters: number }) => void }[] = [
+  { name: "outer data accessor", corrupt: (snapshot, seen) => { Object.defineProperty(snapshot, "data", { configurable: true, get() { seen.getters++; return {} } }) } },
+  ...["roleMap", "access"].map((field) => ({ name: `selected ${field} accessor`, corrupt: (snapshot: Snapshot, seen: { getters: number }) => {
+    Object.defineProperty(snapshot.data, field, { configurable: true, enumerable: true, get() { seen.getters++; return {} } })
+  } })),
+  { name: "nested selected object accessor", corrupt: (snapshot, seen) => { snapshot.data.access = { [subject]: Object.defineProperty({}, "domains", { enumerable: true, get() { seen.getters++; return [] } }) } } },
+  { name: "selected cycle", corrupt: (snapshot) => { const value: Record<string, unknown> = {}; value.self = value; snapshot.data.access = value } },
+  { name: "data symbol", corrupt: (snapshot) => { Object.defineProperty(snapshot.data, Symbol("unsupported"), { value: "private" }) } },
+  { name: "data custom prototype", corrupt: (snapshot) => { Object.setPrototypeOf(snapshot.data, { inherited: "not-plain" }) } },
+  { name: "invalid outer version", corrupt: (snapshot) => { snapshot.versions.unit = { version: Number.NaN, by: subject } } },
+  { name: "outer audit accessor", corrupt: (snapshot, seen) => { Object.defineProperty(snapshot, "audit", { configurable: true, get() { seen.getters++; return [] } }) } },
+]
+for (const example of malformed) {
+  test(`access projection refuses ${example.name} without invoking a getter or committing`, async () => {
+    await withStores(async ({ store }) => {
+      const before = await readRoot(store, async () => full(store))
+      const seen = { getters: 0 }
+      await store.transaction("planner", async (snapshot) => {
+        example.corrupt(snapshot, seen)
+        expect(() => access(store)).toThrow()
+        expect(seen.getters).toBe(0)
+        return { commit: false, value: undefined }
+      })
+      expect(await readRoot(store, async () => full(store))).toEqual(before)
+    })
+  })
+}
+
+test("real ProductAuthority preserves principal, access revision and all authenticator observations with legacy fallback", async () => {
+  await withStores(async ({ store, directory }) => {
+    const projected = makeAuthority(store, directory)
+    const legacy = makeAuthority(store, directory, "legacy")
+    expect(Object.hasOwn(legacy.persistence, "currentAccessSnapshots")).toBe(false)
+    await readRoot(store, async () => {
+      const request = projected.request()
+      const first = await admit(projected.service, request)
+      const second = await admit(legacy.service, request)
+      for (const field of ["installationId", "projectId", "principalRef", "policyVersion", "accessRevision"] as const)
+        expect(first.binding[field]).toBe(second.binding[field])
+      expect(first.binding.principalRef).toBe(subject)
+      expect(projected.controls.observations.map((row) => row.surface)).toEqual([...surfaces, ...surfaces])
+      expect(legacy.controls.observations).toEqual(projected.controls.observations)
+      expect(projected.controls.observations.every((row) => row.roleMap.some((role) => role.role === "admin" && role.entra === group))).toBe(true)
+      expect(projected.controls.full).toBe(0)
+      expect(projected.controls.projected).toBe(2)
+      expect(legacy.controls.full).toBe(2)
+      expect(projected.controls.wrongReceiver || legacy.controls.wrongReceiver).toBe(false)
+      expect(await projected.service.ui.validate(first, "sf_case_read", intent)).toBe(true)
+      expect(projected.service.host.requestFor(first)).toBe(request)
+      expect(await projected.service.host.revalidate(first)).toBe(true)
+      expect(projected.controls.observations).toHaveLength(12)
+      projected.service.ui.finish(first)
+      legacy.service.ui.finish(second)
+    })
+  })
+})
+
+test("a present access capability returning undefined fails closed without falling back to the full reader", async () => {
+  await withStores(async ({ store, directory }) => {
+    const fixture = makeAuthority(store, directory, "undefined")
+    await readRoot(store, async () => {
+      expect(full(store).dashboard.data.roleMap).toBeDefined()
+      expect((await fixture.service.ui.admit(fixture.request(), "sf_case_read", intent)).status).toBe("denied")
+      expect(fixture.controls.projected).toBeGreaterThan(0)
+      expect(fixture.controls.full).toBe(0)
+      expect(fixture.controls.observations).toHaveLength(0)
+    })
+  })
+})
+
+for (const invalid of ["role map", "access scope"] as const) {
+  test(`real ProductAuthority refuses malformed selected ${invalid}`, async () => {
+    await withStores(async ({ store, directory }) => {
+      const fixture = makeAuthority(store, directory)
+      await store.transaction("planner", async (snapshot) => {
+        if (invalid === "role map") snapshot.data.roleMap = { admin: group }
+        else snapshot.data.access = { [subject]: { assigned: [42] } }
+        expect((await fixture.service.ui.admit(fixture.request(), "sf_case_read", intent)).status).toBe("denied")
+        return { commit: false, value: undefined }
+      })
+      const current = await admit(fixture.service, fixture.request())
+      expect(current.binding.principalRef).toBe(subject)
+      fixture.service.ui.finish(current)
+    })
+  })
+}
+
+test("mutable-root ACL changes are observed afresh and invalidate an existing private lease", async () => {
+  await withStores(async ({ store, directory }) => {
+    const fixture = makeAuthority(store, directory)
+    const request = fixture.request()
+    const previous = await admit(fixture.service, request)
+    expect(await fixture.service.ui.validate(previous, "sf_case_read", intent)).toBe(true)
+    await store.transaction("planner", async (snapshot) => {
+      const first = access(store)
+      snapshot.data.access = { [subject]: { assigned: ["new-assignment"], domains: ["new-domain"] } }
+      snapshot.data.roleMap = [{ surface: "planner", role: "viewer", entra: group, version: 2, by: subject }]
+      expect(access(store).planner.data.access).toEqual(snapshot.data.access)
+      expect(first.planner.data.access).not.toEqual(snapshot.data.access)
+      expect(await fixture.service.host.revalidate(previous)).toBe(false)
+      expect(fixture.service.host.requestFor(previous)).toBeUndefined()
+      const changed = await admit(fixture.service, request)
+      expect(changed.binding.accessRevision).not.toBe(previous.binding.accessRevision)
+      fixture.service.ui.finish(changed)
+      return { commit: false, value: undefined }
+    })
+    const restored = await admit(fixture.service, request)
+    expect(restored.binding.accessRevision).toBe(previous.binding.accessRevision)
+    fixture.service.ui.finish(restored)
+  })
+})
+
+test("real C08 state reads retain final access authorization and never return a value after ACL drift", async () => {
+  await withStores(async ({ store, directory }) => {
+    const fixture = makeAuthority(store, directory)
+    const request = fixture.request()
+    await initializeState(fixture.service, request)
+    await store.transaction("planner", async (snapshot) => {
+      fixture.controls.observations.length = 0
+      const result = await fixture.service.state.read(request, "preferences", (state) => {
+        expect(state.preferences.marker).toEqual({ private: "protected-unit-value" })
+        snapshot.data.access = { [subject]: { domains: ["changed-during-read"] } }
+        return "must-not-be-returned"
+      })
+      expect(result).toEqual({ status: "denied", reason: "product-authority-changed" })
+      expect(fixture.controls.observations.map((row) => row.surface)).toEqual([...surfaces, ...surfaces])
+      return { commit: false, value: undefined }
+    })
+    expect(await fixture.service.state.read(request, "preferences", (state) => state.preferences.marker))
+      .toMatchObject({ status: "ok", value: { private: "protected-unit-value" } })
+  })
+})
+
+test("private UI revalidation retains its final lease check after asynchronous authentication", async () => {
+  await withStores(async ({ store, directory }) => {
+    const fixture = makeAuthority(store, directory)
+    const call = await admit(fixture.service, fixture.request())
+    expect(await fixture.service.ui.validate(call, "sf_case_read", intent)).toBe(true)
+    fixture.controls.observations.length = 0
+    fixture.controls.beforeAuthenticate = () => fixture.service.ui.finish(call)
+    expect(await fixture.service.host.revalidate(call)).toBe(false)
+    expect(fixture.controls.observations.map((row) => row.surface)).toEqual(surfaces)
+    expect(fixture.service.host.requestFor(call)).toBeUndefined()
+    fixture.controls.beforeAuthenticate = undefined
+    const again = await admit(fixture.service, fixture.request())
+    expect(await fixture.service.ui.validate(again, "sf_case_read", intent)).toBe(true)
+    fixture.service.ui.finish(again)
+  })
+})
+
+test("access projection and ProductAuthority reject cancellation and expired leases without reusing old copies", async () => {
+  await withStores(async ({ store, directory }) => {
+    const fixture = makeAuthority(store, directory)
+    const controller = new AbortController()
+    const call = await admit(fixture.service, fixture.request(controller.signal))
+    expect(await fixture.service.ui.validate(call, "sf_case_read", intent)).toBe(true)
+    await expect(readRoot(store, async () => {
+      const before = access(store)
+      expect(before.planner.data.access).toBeDefined()
+      controller.abort(new Error("Access observation cancelled"))
+      expect(() => access(store)).toThrow("Access observation cancelled")
+      expect(await fixture.service.host.revalidate(call)).toBe(false)
+      return "must-not-escape"
+    }, controller.signal)).rejects.toThrow("Access observation cancelled")
+    expect(fixture.service.host.requestFor(call)).toBeUndefined()
+    const expires = await admit(fixture.service, fixture.request())
+    expect(await fixture.service.ui.validate(expires, "sf_case_read", intent)).toBe(true)
+    fixture.controls.observations.length = 0
+    fixture.controls.now = Date.parse(expires.binding.expiresAt)
+    expect(await fixture.service.host.revalidate(expires)).toBe(false)
+    expect(fixture.controls.observations).toHaveLength(0)
+    expect(fixture.service.host.requestFor(expires)).toBeUndefined()
+  })
+})
+
+test("ended access scopes cannot borrow a later root or another store's current observation", async () => {
+  await withStores(async ({ store, other }) => {
+    const released = Promise.withResolvers<void>()
+    const late: { value?: Promise<ReturnType<typeof access>> } = {}
+    try {
+      await readRoot(store, async () => {
+        expect(access(store).planner.data.access).toBeDefined()
+        expect(other.currentAccessSnapshots?.()).toBeUndefined()
+        late.value = released.promise.then(() => access(store))
+        void late.value.catch(() => undefined)
+      })
+      await readRoot(store, async () => {
+        released.resolve()
+        await expect(late.value).rejects.toThrow("scope has ended")
+        expect(access(store).planner.data.access).toBeDefined()
+        expect(other.currentAccessSnapshots?.()).toBeUndefined()
+      })
+      expect(store.currentAccessSnapshots?.()).toBeUndefined()
+    } finally { released.resolve(); await late.value?.catch(() => undefined) }
+  })
+})
+
+test("a later root observes a peer's committed ACL after the real C08 lock releases", async () => {
+  await withStores(async ({ store, other, directory }) => {
+    const fixture = makeAuthority(store, directory)
+    const previous = await admit(fixture.service, fixture.request())
+    expect(await fixture.service.ui.validate(previous, "sf_case_read", intent)).toBe(true)
+    const entered = Promise.withResolvers<void>()
+    const released = Promise.withResolvers<void>()
+    const writer = { committed: false, callbacks: 0, pending: undefined as Promise<void> | undefined }
+    const reading = readRoot(store, async () => {
+      const original = access(store)
+      expect(await fixture.service.host.revalidate(previous)).toBe(true)
+      entered.resolve()
+      await released.promise
+      expect(writer.committed).toBe(false)
+      expect(writer.callbacks).toBe(0)
+      expect(access(store)).toEqual(original)
+      return "root-finished"
+    })
+    void reading.catch(() => undefined)
+    try {
+      await Promise.race([entered.promise, reading])
+      // Started outside the reader's ALS. BEGIN IMMEDIATE forbids a peer COMMIT
+      // while this root is held; never await that writer inside the held root.
+      writer.pending = other.transaction("planner", async (snapshot) => {
+        writer.callbacks++
+        snapshot.data.access = { [subject]: { domains: ["committed-by-peer"] } }
+        return { commit: true, value: undefined }
+      }).then(() => { writer.committed = true })
+      void writer.pending.catch(() => undefined)
+      released.resolve()
+      expect(await reading).toBe("root-finished")
+      await writer.pending
+      expect(writer.committed).toBe(true)
+      expect(writer.callbacks).toBe(1)
+      await readRoot(store, async () => {
+        expect(access(store).planner.data.access).toEqual({ [subject]: { domains: ["committed-by-peer"] } })
+        expect(await fixture.service.host.revalidate(previous)).toBe(false)
+        const current = await admit(fixture.service, fixture.request())
+        expect(current.binding.accessRevision).not.toBe(previous.binding.accessRevision)
+        fixture.service.ui.finish(current)
+      })
+    } finally {
+      released.resolve()
+      await reading.catch(() => undefined)
+      await writer.pending?.catch(() => undefined)
+    }
+  })
+})
+
+test("the real CurrentChoice and source wrappers forward access projection while keeping full source reads", async () => {
+  await withStores(async ({ store, directory }) => {
+    const fence = createCurrentChoiceFence({ persistence: store,
+      host: () => { throw new Error("No CurrentChoice promotion is admitted by this read fixture") },
+      identity: () => undefined, operationIdentity: () => undefined })
+    const sources = createSfSourcePersistence({ persistence: fence.persistence, enumerate: () => [], createId: () => "projection-source-unit" })
+    const installed = { ...fence.persistence, ...sources }
+    expect(installed.currentAccessSnapshots).toBe(store.currentAccessSnapshots)
+    await readRoot(store, async () => {
+      expect(access(installed)).toEqual(access(store))
+      expect(full(installed)).toEqual(full(store))
+      expect(full(installed).dashboard.data.business).toBeDefined()
+      expect(access(installed).dashboard.data.business).toBeUndefined()
+    })
+    const fixture = makeAuthority(store, directory)
+    const service = createSfProductAuthority({
+      // This second composition reuses the fixture's public authenticator and
+      // environment but passes the actual installed persistence spread.
+      identity: () => ({ installationId: "access-unit-install", hostId: "access-unit-host", projectId: "access-unit-project",
+        location: { directory: directory as HostIdentity["location"]["directory"] } }),
+      installationId: "access-unit-install", origin, policyVersion: "access-unit-policy", persistence: installed,
+      authenticate: fixture.service.host.authenticate, environment: fixture.service.host.environment,
+      grants: [{ principalRef: subject, namespaces: ["cases"], operations: ["sf_case_read"] }],
+      createId: () => `installed-access-${++fixture.controls.serial}`, now: () => fixture.controls.now,
+      commandIdentity: async () => "installed-access-intention", inspectSession: async () => undefined,
+      verifySelection: async () => false, verifySkillReceipt: async () => false,
+      providerGeneration: async () => undefined, authorizeDocument: async () => undefined,
+    })
+    const call = await admit(service, fixture.request())
+    expect(call.binding.principalRef).toBe(subject)
+    expect(await service.ui.validate(call, "sf_case_read", intent)).toBe(true)
+    service.ui.finish(call)
+  })
+})

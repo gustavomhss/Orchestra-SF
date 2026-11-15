@@ -1,0 +1,135 @@
+{
+  "schema": "sf52.diagnostic16.limited-observations.v1",
+  "kind": "DIAGNOSTIC_ONLY_NOT_ACCEPTANCE",
+  "run": {
+    "id": 43682706028,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682706028",
+    "head_sha": "bba4a4f0487df3194ed2acb8e353c719325311fc",
+    "status": "completed",
+    "conclusion": "failure",
+    "run_attempt": 1,
+    "created_at": "2026-11-15T05:49:18Z",
+    "updated_at": "2026-11-15T05:54:07Z",
+    "test_job": 132716569985,
+    "test_conclusion": "failure",
+    "cleanup_job": 132717571992,
+    "cleanup_conclusion": "success"
+  },
+  "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+  "W": "c7591b8a99f95e7b5f356663e984bd4fdfc3d8fd",
+  "S": "bba4a4f0487df3194ed2acb8e353c719325311fc",
+  "cases": [
+    {
+      "id": "J1",
+      "title": "CI-UI-DECISIONS — attach evidence, compare two alternatives and preserve the human choice after a source change",
+      "line": 12,
+      "runtime_status": "failed",
+      "duration_ms": 73712,
+      "body_completed": false,
+      "acceptance_fragments": 0
+    },
+    {
+      "id": "J2",
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "line": 21,
+      "runtime_status": "failed",
+      "duration_ms": 14727,
+      "body_completed": false,
+      "acceptance_fragments": 0
+    },
+    {
+      "id": "J3",
+      "title": "CI-UI-DECISIONS — create, edit and reopen the same durable case through Workbench",
+      "line": 35,
+      "runtime_status": "passed",
+      "duration_ms": 10569,
+      "body_completed": true,
+      "acceptance_fragments": 0
+    },
+    {
+      "id": "J4",
+      "title": "CI-UI-DECISIONS — alternative discovery consumes a real Decisions catalog, not HTML 200",
+      "line": 87,
+      "runtime_status": "passed",
+      "duration_ms": 7051,
+      "body_completed": true,
+      "acceptance_fragments": 0
+    },
+    {
+      "id": "J5",
+      "title": "CI-UI-DECISIONS — recover a lost creation response by reading the same case without resubmitting",
+      "line": 135,
+      "runtime_status": "passed",
+      "duration_ms": 7518,
+      "body_completed": true,
+      "acceptance_fragments": 0
+    }
+  ],
+  "J1": {
+    "comparison_responses": [
+      {
+        "event": "response",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-compare",
+        "httpStatus": 200,
+        "contentType": "application/json;charset=utf-8"
+      },
+      {
+        "event": "response",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-compare",
+        "httpStatus": 200,
+        "contentType": "application/json;charset=utf-8"
+      },
+      {
+        "event": "response",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-compare",
+        "httpStatus": 200,
+        "contentType": "application/json;charset=utf-8"
+      }
+    ],
+    "numeric_rule_response": [
+      {
+        "event": "response",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-criteria",
+        "httpStatus": 200,
+        "contentType": "application/json;charset=utf-8"
+      }
+    ],
+    "choose_post_count": 1,
+    "choose_network": [
+      {
+        "event": "requestfailed",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-choose",
+        "error": "net::ERR_ABORTED"
+      }
+    ],
+    "original_response_intercepted": false,
+    "deliberate_original_response_drop": "NOT_REACHED",
+    "choice_commit": "UNKNOWN_UNQUALIFIED",
+    "P9_capture": "UNKNOWN_UNQUALIFIED",
+    "retry": "NOT_REACHED",
+    "persisted_history": "NOT_REACHED",
+    "source_change": "NOT_REACHED"
+  },
+  "J2": {
+    "Requests": "GET503_PROCUREMENT_QUEUE_UNAVAILABLE",
+    "form_count": 0,
+    "financial_mutation": "NOT_REACHED",
+    "formal_approval": "NOT_REACHED",
+    "MI07": "NOT_REACHED",
+    "M31": "NOT_REACHED"
+  },
+  "criteria_acceptance_fragments_added": 0,
+  "criteria15_modified": false,
+  "GLOBAL_RELEASE": false,
+  "WP11_DONE": false
+}

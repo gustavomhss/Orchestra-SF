@@ -1,0 +1,78 @@
+--- a/modules/sucafina/Sucafinav1/runtime/contract.ts
++++ b/modules/sucafina/Sucafinav1/runtime/contract.ts
+@@ -79,6 +79,13 @@
+   transaction: <T>(surface: Surface, work: (snapshot: Snapshot) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+   transactionAll?: <T>(work: (snapshots: Record<Surface, Snapshot>) => Promise<{ commit: boolean; value: T }>, options?: TransactionOptions) => Promise<T>
+   currentSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
++  // Optional host-only authority projection of the same current root. Each call
++  // freshly copies data.roleMap/data.access and all outer Snapshot metadata;
++  // unrelated business data is absent. No authority, credential or ACL result
++  // is cached. Keep scope/abort/lifetime guards and fresh observations unchanged.
++  // This projection is not a source/business read. Omitted adapters keep the
++  // canonical full-copy path; undefined still means no admitted current root.
++  currentAccessSnapshots?: () => Readonly<Record<Surface, Snapshot>> | undefined
+   // Internal root-only scope, not source admission or business authorization.
+   // Consumers must still use their canonical transaction(surface, work) inside it
+   // so every wrapper keeps its guards. No snapshot or commit capability is exposed.
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -295,6 +295,30 @@
+       }
+       return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
+     },
++    currentAccessSnapshots: () => {
++      const scope = context.getStore()
++      if (!scope) return undefined
++      requireScope(scope)
++      const copy = (surface: Surface) => {
++        const snapshot = scope.root.snapshots[surface]
++        if (!snapshot) throw new Error("Local transaction snapshots unavailable")
++        const descriptors = Object.getOwnPropertyDescriptors(snapshot)
++        const data = descriptors.data
++        if (!data || !Object.hasOwn(data, "value") || !record(data.value))
++          throw new Error("Invalid local access snapshot data")
++        if (Object.getOwnPropertySymbols(data.value).length) throw new Error("Unsupported symbol properties")
++        // Preserve selected descriptors: a getter is refused by the existing
++        // copier rather than invoked here. Mutable roots are observed anew on
++        // every call; readonly roots expose only detached selected copies.
++        const fields = Object.fromEntries(["roleMap", "access"].flatMap((key) => {
++          const field = Object.getOwnPropertyDescriptor(data.value, key)
++          return field ? [[key, field]] : []
++        }))
++        descriptors.data = { ...data, value: Object.create(Object.getPrototypeOf(data.value), fields) }
++        return cloneSnapshot(Object.create(Object.getPrototypeOf(snapshot), descriptors))
++      }
++      return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
++    },
+     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+       const parent = context.getStore()
+       if (parent) return (async () => {
+--- a/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
++++ b/modules/sucafina/Sucafinav1/product/integration/product-authority.ts
+@@ -84,7 +84,14 @@
+     Object.freeze(copy.location)
+     return Object.freeze(copy)
+   }
+-  const principal = async (request: Request, dashboard: Snapshot, snapshots = input.persistence.currentSnapshots?.()) => {
++  // The optional projection copies current raw access data, not an admitted
++  // principal. Authentication, role/access checks and revalidation still run
++  // for every observation. A present capability returning undefined fails closed.
++  const accessSnapshots = () => {
++    const read = input.persistence.currentAccessSnapshots ?? input.persistence.currentSnapshots
++    return read?.call(input.persistence)
++  }
++  const principal = async (request: Request, dashboard: Snapshot, snapshots = accessSnapshots()) => {
+     if (!snapshots) return undefined
+     const current = identity()
+     if (!current || request.signal.aborted || new URL(request.url).origin !== input.origin ||
+@@ -117,8 +124,8 @@
+     return { principalRef: first.id, policyVersion: input.policyVersion, accessRevision, canWrite, grant, identity: current }
+   }
+   const resolve = async (request: Request) => {
+-    if (!input.persistence.currentSnapshots) return undefined
+-    const snapshots = input.persistence.currentSnapshots()
++    if (!input.persistence.currentAccessSnapshots && !input.persistence.currentSnapshots) return undefined
++    const snapshots = accessSnapshots()
+     if (snapshots) return principal(request, snapshots.dashboard, snapshots)
+     return input.persistence.transaction("dashboard", async (snapshot) => ({ commit: false, value: await principal(request, snapshot) }), { signal: request.signal })
+   }

@@ -1,0 +1,32 @@
+{
+  "schema": "sf52-nominal17-ui-deadline-v1",
+  "state": "EXACT_IMMUTABLE_W_READ",
+  "ref": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+  "path": "modules/sucafina/Sucafinav1/product/ui/decision-choice.ts",
+  "blob": "0a330a1377326e3ea919b4714cada83a208efc39",
+  "configured_decision_compare_deadline_ms": 10000,
+  "evidence": [
+    {
+      "line": 138,
+      "text": "  const send = async (action, payload, id) => {"
+    },
+    {
+      "line": 140,
+      "text": "    const controller = new AbortController(); const deadline = setTimeout(() => controller.abort(), 10000)"
+    },
+    {
+      "line": 149,
+      "text": "    } finally { clearTimeout(deadline) }"
+    },
+    {
+      "line": 169,
+      "text": "      const compared = await send('decision-compare', { caseRef: context.caseRef, baselineAlternativeId: baseline, alternativeId: alternative, criteria }, crypto.randomUUID())"
+    },
+    {
+      "line": 307,
+      "text": "      const receipt = await send('decision-choose', retained.body, retained.key)"
+    }
+  ],
+  "unchanged_from_prior_nominals": true,
+  "runtime_latency_inferred": false
+}

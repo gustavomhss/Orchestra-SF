@@ -1,0 +1,73 @@
+{
+  "schema": "sf52-p13-current-access-tests-matrix-v1",
+  "cases_static": 23,
+  "groups": [
+    {
+      "name": "cold/warm detached copies",
+      "cases": 2,
+      "oracle": "Real separate SQLite store; compare all outer metadata and selected ACL with full snapshot; mutate returned copies; later observations and full graph unchanged."
+    },
+    {
+      "name": "explicit projection boundary",
+      "cases": 1,
+      "oracle": "Unrelated business getter excluded without invocation; existing full reader still refuses it; no durable change."
+    },
+    {
+      "name": "malformed projection inputs",
+      "cases": 9,
+      "oracle": "Own data/roleMap/access and nested object accessors, selected cycle, data symbol/prototype, outer invalid version and audit accessor refused without getter invocation or commit."
+    },
+    {
+      "name": "authority equivalence and older-adapter fallback",
+      "cases": 1,
+      "oracle": "Real principal/access revision equality, both full sets of three authenticate calls, preserved receiver, legacy full method selected only when capability absent."
+    },
+    {
+      "name": "present undefined fails closed",
+      "cases": 1,
+      "oracle": "Valid full root exists; optional method present returns undefined; actual UI admission denied and full fallback call count remains zero."
+    },
+    {
+      "name": "canonical role/access semantics",
+      "cases": 2,
+      "oracle": "Invalid persisted role map and invalid assigned scope are denied by real ProductAuthority, then normal admission succeeds after rollback."
+    },
+    {
+      "name": "mutable-root ACL and lease",
+      "cases": 1,
+      "oracle": "Planner ACL/roles changed in actual mutable root; new projection sees change and prior UI lease loses authority; rollback restores original access revision."
+    },
+    {
+      "name": "final C08 authorization",
+      "cases": 1,
+      "oracle": "Callback observes actual protected preference; ACL changes before final authorize; C08 returns denied without protected value and performs both three-surface observations."
+    },
+    {
+      "name": "final private lease",
+      "cases": 1,
+      "oracle": "Lease is finished during authentication; real UI revalidator checks current lease after await and refuses; later new lease works."
+    },
+    {
+      "name": "abort and expiry",
+      "cases": 1,
+      "oracle": "Root signal cancellation rejects synchronous projection and final root; private request invalidated; clock-expired lease denied without reauth."
+    },
+    {
+      "name": "scope lifetime and isolation",
+      "cases": 1,
+      "oracle": "Late descendant of ended root cannot borrow current later root; second store has no access scope from first store ALS."
+    },
+    {
+      "name": "fresh next-root SQL",
+      "cases": 1,
+      "oracle": "Actual peer writer stays pending outside held BEGIN IMMEDIATE; after release and committed write the next root sees new ACL and old lease is denied."
+    },
+    {
+      "name": "installed wrapper forwarding",
+      "cases": 1,
+      "oracle": "Actual CurrentChoiceFence + SourcePersistence spread preserves optional projection and complete original reader, then actual ProductAuthority admits through composed persistence."
+    }
+  ],
+  "product_execution": "NOT_RUN",
+  "mandatory_five_ui": "PRESERVED_AND_NOT_REPLACED"
+}

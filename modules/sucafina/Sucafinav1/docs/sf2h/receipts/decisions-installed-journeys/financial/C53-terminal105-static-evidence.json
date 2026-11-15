@@ -1,0 +1,383 @@
+{
+  "schema": "sf2h.m52.financial-C53-static-supplement.v1",
+  "kind": "STATIC_DOCUMENTARY_SUPPLEMENT_NOT_A_NEW_NOMINAL_RESULT",
+  "repository": "gustavomhss/Orchestra-SF",
+  "frozen_financial_v8": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-financial-terminal-draft-v8.md",
+    "bytes": 23972,
+    "sha256": "7467fa9a2897262bee3d6330d036967f1b1edcab2001cff8c7ddb4925bd82f01"
+  },
+  "material_C53": {
+    "sha": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "state": "COMPOSED_NOT_FROZEN_NOT_ACCEPTED"
+  },
+  "documentary_target": {
+    "sha": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "parent": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "product_changes": 0
+  },
+  "authority105": {
+    "schema": "sf2h.integration105.terminal-authority.v1",
+    "campaign": "sf2h-integral-20261112",
+    "T0": "2026-11-13T04:01:10Z",
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "repo": "gustavomhss/Orchestra-SF",
+    "branch": "sf2-stack",
+    "pr": 65,
+    "actor": "S0-C-e15-browser105",
+    "effective_model": "GPT-6",
+    "session_id": null,
+    "scope": {
+      "WPs": 15,
+      "tasks": 74,
+      "contracts": 17,
+      "criteria": 1610
+    },
+    "last_material": {
+      "name": "C53",
+      "commit": "180212940105e7b9ad15171b067c1c1b7841df5f",
+      "tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+      "state": "COMPOSED_NOT_FROZEN_NOT_ACCEPTED"
+    },
+    "lease_epoch": "S0-C-e15-browser105",
+    "lease_state": "ENDED_BY_INTEGRATOR105",
+    "effective_on": "terminal documentary commit on sf2-stack",
+    "pre_terminal_head": "180212940105e7b9ad15171b067c1c1b7841df5f",
+    "pre_terminal_tree": "c423dd1e0828242534fd45d4183104ecc1d20edd",
+    "material_candidate": "C53",
+    "new_integrator_appointee": null,
+    "assumption_prohibited": "No other session may infer active integrator105 or auto-adopt patches. Explicit S0/user appointment and new CAS acknowledgment required.",
+    "predecessor_100": "ENDED_BY_INTEGRATOR100",
+    "wrote_source_branches": false,
+    "dispatched_product_CI": false,
+    "ran_local_tests": false,
+    "dev_merge": false,
+    "control_merge": false,
+    "deploy": false,
+    "engine_changes": false,
+    "GLOBAL_RELEASE": false,
+    "next_lease_requires": [
+      "explicit user/S0 appointment",
+      "verify head/tree against terminal commit",
+      "read handoff/checkpoint/queue and live owner releases",
+      "new ACK prior writing"
+    ]
+  },
+  "inputs": [
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/post-C51-delta.json",
+      "bytes": 52963,
+      "sha256": "3a27d2d6992e76c499bc5fb71b18444b657128f571f051e6fd19534ca6b1daec"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/post-C53-delta.json",
+      "bytes": 34380,
+      "sha256": "733d3f9f9f11e9cdb8a41d315888cbd64b2e483d6446ed97d2d9b202054f7f19"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/post-C53-commit.json",
+      "bytes": 1351,
+      "sha256": "0a4a30875fefe1cc7225abd31e280e7dac6bbbdb4390ae90ca417b20218e3c1e"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/authority-terminal105-read.json",
+      "bytes": 2164,
+      "sha256": "78fc4f3f599ad8bf6d3f6cb4741b59c26887ed83eea79065b0c55e2e00bc67be"
+    },
+    {
+      "path": "/workspace/scratch/fec39c0682b3/m52-audit/financial-current-C51-terminal100-read-audit.json",
+      "bytes": 1120712,
+      "sha256": "edba6d8b74ad29dbd3313b51df6a39ba08d673c3ded4a19b7cebc182ff75fcdd"
+    }
+  ],
+  "comparison_summary": {
+    "C51_to_C53": {
+      "commits": 3,
+      "files": [
+        {
+          "path": "apps/cli/src/sucafina-product/dashboard-http.ts",
+          "status": "modified",
+          "postimage": "72dc59d7b2b0a23148a24e6457fd82e37daa6f08"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-origin.ts",
+          "status": "modified",
+          "postimage": "0d34ddeb14e9da525d6acc4960a54f35be18d577"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+          "status": "modified",
+          "postimage": "b5a92ee1653873463e85e2445919c85828c7ef4d"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/ACK-105.json",
+          "status": "added",
+          "postimage": "43fcad0d5fdb20e30db80835496ae135c6040632"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/C52-CONSUMPTION-103.json",
+          "status": "added",
+          "postimage": "a2da014a74d6b23d296961381d4cc62daa2c7bef"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/C53-CONSUMPTION-104.json",
+          "status": "added",
+          "postimage": "c2946ee8edb128a83da86348f893a0cab6242b87"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts",
+          "status": "added",
+          "postimage": "e5e3783efa011f80ca4e9ac9467776bc9bca2b19"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts",
+          "status": "added",
+          "postimage": "12d73520e558ffec6b63dcc1c3f452f6add41ec6"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/native-consumer-repair/observe.test.ts",
+          "status": "added",
+          "postimage": "4a6198381e64f097dc0bcb941d60482cf1d037d1"
+        }
+      ],
+      "existing_product_files": 3,
+      "new_test_files": 3,
+      "documents": 3
+    },
+    "C53_to_terminal105": {
+      "commits": 1,
+      "files": [
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/AUTHORITY-TERMINAL-105.json",
+          "status": "added",
+          "postimage": "b59f98f415dd114a9b797fa3d1ef667c6293c05c"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/CHECKPOINT-105-C53.json",
+          "status": "added",
+          "postimage": "f1ffa43b4ab54339edaeac343a92daad515590f7"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/GATE-QUEUE-105.json",
+          "status": "added",
+          "postimage": "75e5782c687c7620dd56c64d04be3221164183dc"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/HANDOFF-TERMINAL-105.md",
+          "status": "added",
+          "postimage": "bc5964e81550972ac319f071f54f2945179b321b"
+        }
+      ],
+      "documents_only": true
+    }
+  },
+  "financial_blob_continuity": [
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "git_blob": "a0deff8a3b272019f472aa2f93499d1940a78370",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/procurement.ts",
+      "git_blob": "a4ab021f646c0fc819b3afdde18796630fb9603f",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "git_blob": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/queue-page.ts",
+      "git_blob": "91784d3ea3358565e19b62922c8867f134af9ac4",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/scenario-preparation.ts",
+      "git_blob": "82b7d822ec5ca65ba9450cde74c5e8f39da84493",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+      "git_blob": "9b48c999661e4b8a10593ae7cd5d6e2ed1e2f635",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/procurement/decision-preparation.ts",
+      "git_blob": "b75e0923535f4b91b71a2f2d79eef9cefde45db4",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/consumer-ack53.json",
+      "git_blob": "81a26f9dd69634057ea1406626e096205ac78184",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/release-wave-71/source-outputs/mixed61/checks/M31-S0.json",
+      "git_blob": "a6f59190656be518311cb203d2ad1dd30e255a1f",
+      "last_direct_read": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+      "C53_proof": "Both complete comparison path sets exclude this path; no new remote read or runtime inference."
+    }
+  ],
+  "historical_runtime": [
+    {
+      "cut": "NOMINAL15_HISTORICAL_C45",
+      "receipt": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal15-43680980170/nominal-15-receipt.json",
+        "bytes": 124663,
+        "sha256": "24ab7a11603e37cc9703d83a39f0896c7951ab8a140aa459877162dec6c22f16"
+      },
+      "run_id": 43680980170,
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 21,
+      "duration_ms": 14734,
+      "configured_budget_ms": 180000,
+      "assertion_budget_ms": 10000,
+      "runtime_status": "failed",
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/procurement",
+          "mode": null,
+          "httpStatus": 503,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "financial_mutations_observed": 0,
+      "formal_approval_apply_recovery": "NOT_REACHED",
+      "acceptance_on_C53": false
+    },
+    {
+      "cut": "DIAGNOSTIC16_HISTORICAL_C45_ZERO_ACCEPTANCE",
+      "receipt": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-audit/diagnostic16-43682706028/diagnostic-16-receipt.json",
+        "bytes": 117410,
+        "sha256": "81b403026b54f7f124648643a5d2fc7724efe47e32dec3c7c01da6ef58cd4521"
+      },
+      "run_id": 43682706028,
+      "title": "CI-UI-DECISIONS — require a real Procurement proposal and approval before Apply and recover its unique receipt",
+      "file": "e2e/sucafina/decisions.spec.ts",
+      "line": 21,
+      "duration_ms": 14727,
+      "configured_budget_ms": 180000,
+      "assertion_budget_ms": 10000,
+      "runtime_status": "failed",
+      "network": [
+        {
+          "event": "response",
+          "method": "GET",
+          "path": "/sucafina/procurement",
+          "mode": null,
+          "httpStatus": 503,
+          "contentType": "application/json;charset=utf-8"
+        }
+      ],
+      "financial_mutations_observed": 0,
+      "formal_approval_apply_recovery": "NOT_REACHED",
+      "acceptance_on_C53": false
+    }
+  ],
+  "documents": [
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/ACK-105.json",
+      "git_blob": "43fcad0d5fdb20e30db80835496ae135c6040632",
+      "local": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-work/financial-C53-supplement/evidence/ACK-105.json",
+        "bytes": 4082,
+        "sha256": "1e47d8b9e1feedb791378dc4bec477ce9491b1e39abb96cee0fb45094ccc866a"
+      },
+      "content": "{\n  \"schema\": \"sf2h.integration105.ack.v1\",\n  \"campaign\": \"sf2h-integral-20261112\",\n  \"T0\": \"2026-11-13T04:01:10Z\",\n  \"mission\": 105,\n  \"lease_epoch\": \"S0-C-e15-browser105\",\n  \"lease_state\": \"ACTIVE_USER_APPOINTED\",\n  \"actor\": \"S0-C sole sf2-stack product integrator successor100\",\n  \"model_effective\": \"GPT-6\",\n  \"ui_session_label\": \"Astra (requested label, not model identity)\",\n  \"session_id\": null,\n  \"session_id_reason\": \"not exposed by GitHub connector\",\n  \"github_actor\": \"gustavomhss\",\n  \"repo\": \"gustavomhss/Orchestra-SF\",\n  \"branch\": \"sf2-stack\",\n  \"pr\": 65,\n  \"plan_sha\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\",\n  \"mission_source_sha\": \"8819df6169abd94aaa89d50a21f113e5596d2aae\",\n  \"mission_path\": \"modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/105.json\",\n  \"mission_blob\": \"d31292284041294ff3fa8c5a2705a7b627105793\",\n  \"read_inputs\": [\n    {\n      \"path\": \"AGENTS.md\",\n      \"blob\": \"643ec9f8f960895b2e3294f7f2cc25db6f8488e4\",\n      \"ref\": \"a6abd2c8d321daf1089f4d440027c46209a89cbe\"\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md\",\n      \"ref\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\"\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md\",\n      \"ref\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\"\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md\",\n      \"blob\": \"d61f32af03fe10747a50274233f953af044decf6\",\n      \"ref\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\"\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S0-C.json\",\n      \"blob\": \"4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b\",\n      \"ref\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\"\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/continuation-100/{HANDOFF-TERMINAL-100.md,AUTHORITY-TERMINAL-100.json,CONSUMPTION-100.json,GATE-QUEUE-100.json,PENDING-OWNERS-100.json}\",\n      \"ref\": \"a6abd2c8d321daf1089f4d440027c46209a89cbe\"\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/ci-routing-correction-101.json\",\n      \"ref\": \"8819df6169abd94aaa89d50a21f113e5596d2aae\"\n    }\n  ],\n  \"reconciled\": {\n    \"previous_lease\": \"S0-C-e14-browser100\",\n    \"previous_lease_state\": \"ENDED_BY_INTEGRATOR100\",\n    \"no_later_stack_writer_observed\": true,\n    \"pr65_state\": \"OPEN_DRAFT\",\n    \"start_head\": \"a6abd2c8d321daf1089f4d440027c46209a89cbe\",\n    \"start_tree\": \"731f3705bbac15752df8fd69c5f7b1510bb43fc4\",\n    \"last_material\": {\n      \"candidate\": \"C51\",\n      \"sha\": \"529142f63683de8e4b1f7d4232f88faf8ffcef6c\",\n      \"tree\": \"d679b541596dab3b280a87e15e4a0b29ee518262\",\n      \"state\": \"COMPOSED_NOT_FROZEN\"\n    },\n    \"material_units_C46_C51\": [\n      94,\n      87,\n      88,\n      90,\n      97,\n      98\n    ],\n    \"unique_paths\": 21\n  },\n  \"routing\": {\n    \"product_CI\": 101,\n    \"compiler_guards\": 45,\n    \"independent_reviews\": [\n      91,\n      92,\n      93\n    ],\n    \"acceptance\": \"S0\",\n    \"owner95\": \"native producer\",\n    \"owner96\": \"creation reload\",\n    \"owner52\": \"UI/shared host\",\n    \"owner99\": \"P03\",\n    \"owner102\": \"XLSX\",\n    \"owner103\": \"native consumer imports/deadline\",\n    \"owner104\": \"first-save 503/403\"\n  },\n  \"invariants\": {\n    \"wps\": 15,\n    \"tasks\": 74,\n    \"contracts\": 17,\n    \"criteria\": 1610,\n    \"G7\": \"OPEN\",\n    \"G8\": \"OPEN\",\n    \"AM01_06\": \"NOT_PROVEN\",\n    \"final_selectors\": 8,\n    \"GLOBAL_RELEASE\": false\n  },\n  \"constraints\": [\n    \"GitHub MCP only\",\n    \"non-force expected-head CAS\",\n    \"no source-branch edits\",\n    \"no control merge\",\n    \"no local tests or product dispatch (101 only)\",\n    \"no dev merge/deploy/Azure/engines/secrets/restart\",\n    \"selective intake released source only with blob pre/post validation\",\n    \"no reuse of W76 result-store\",\n    \"maintain native readiness OFF and P03 FAIL until verified\"\n  ],\n  \"next\": \"Verify source release/manifest/preimage/CI W/S/run/job; integrate ready independent patches with CAS and exact receipts; route failures to owners; preserve open gates.\"\n}\n"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/C52-CONSUMPTION-103.json",
+      "git_blob": "a2da014a74d6b23d296961381d4cc62daa2c7bef",
+      "local": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-work/financial-C53-supplement/evidence/C52-CONSUMPTION-103.json",
+        "bytes": 3345,
+        "sha256": "f3006162e68c76f0cefe9f15ca13e0980a3d194eb7ef9e81a3d1e641f4cb0cfc"
+      },
+      "content": "{\n  \"schema\": \"sf2h.integration105.consumption.v1\",\n  \"candidate\": \"C52\",\n  \"material\": true,\n  \"actor\": \"S0-C-e15-browser105\",\n  \"model_effective\": \"GPT-6\",\n  \"session_id\": null,\n  \"repo\": \"gustavomhss/Orchestra-SF\",\n  \"branch\": \"sf2-stack\",\n  \"pr\": 65,\n  \"planning_sha\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\",\n  \"T0\": \"2026-11-13T04:01:10Z\",\n  \"expected_parent\": \"d083b422b6a587f47873abde4d866e35017ff8b8\",\n  \"parent_tree\": \"91bc193b36fc46f09a9415e0b849e02503124a22\",\n  \"source\": {\n    \"mission\": 103,\n    \"pr\": 96,\n    \"branch\": \"native-runtime-finish\",\n    \"material_W\": \"e957f66b00a3b05265e42d46e1d88201dea3e770\",\n    \"source_tree\": \"e4b359fea9157da76b6ae77cb558a34e6577232a\",\n    \"terminal\": \"4159c2e02e8a56900331a8ec646253ce6a6e5ce9\",\n    \"lease\": \"native-consumer-browser103\",\n    \"terminal_state\": \"HANDOFF_TERMINAL_LEASE_ENDED\",\n    \"manifest_path\": \"modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-consumer-repair/SOURCE-MANIFEST-103.json\",\n    \"manifest_blob\": \"393e429ba31083448cdd7ef78aa055c39bcf820b\"\n  },\n  \"intake\": [\n    {\n      \"path\": \"apps/cli/src/sucafina-product/routine-native-origin.ts\",\n      \"preimage\": \"da69328f9e8aa4d68a08faf7c858ccae9d5c0e5b\",\n      \"postimage\": \"0d34ddeb14e9da525d6acc4960a54f35be18d577\",\n      \"source_hash_verified\": true,\n      \"exact_preimage_matched\": true\n    },\n    {\n      \"path\": \"apps/cli/src/sucafina-product/routine-native-registry.ts\",\n      \"preimage\": \"a6e4f6580cf5380d637ae5add2e7317606ccbf38\",\n      \"postimage\": \"b5a92ee1653873463e85e2445919c85828c7ef4d\",\n      \"source_hash_verified\": true,\n      \"exact_preimage_matched\": true\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/test/product/native-consumer-repair/observe.test.ts\",\n      \"preimage\": null,\n      \"postimage\": \"4a6198381e64f097dc0bcb941d60482cf1d037d1\",\n      \"source_hash_verified\": true,\n      \"exact_preimage_matched\": true\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts\",\n      \"preimage\": null,\n      \"postimage\": \"12d73520e558ffec6b63dcc1c3f452f6add41ec6\",\n      \"source_hash_verified\": true,\n      \"exact_preimage_matched\": true\n    }\n  ],\n  \"preserved\": {\n    \"material_C51\": \"529142f63683de8e4b1f7d4232f88faf8ffcef6c\",\n    \"C46_to_C51_unique_material_paths\": 21,\n    \"producer95_not_modified\": true,\n    \"host_context_C49_not_modified\": true,\n    \"original_native_tests_unchanged\": true,\n    \"result_store76_not_reapplied\": true\n  },\n  \"historical_failure\": {\n    \"W\": \"529142f63683de8e4b1f7d4232f88faf8ffcef6c\",\n    \"S\": \"a856513eb61ca0d7c1cb7ddaf03a2b911e737d05\",\n    \"run\": 43682450677,\n    \"job\": 132715786509,\n    \"attempt\": 1,\n    \"pass\": 0,\n    \"import_errors\": 5\n  },\n  \"proof\": {\n    \"new_product_tests\": \"NOT_RUN_ON_C52\",\n    \"typechecks\": \"NOT_RUN_ON_C52\",\n    \"guards\": \"NOT_RUN_ON_C52\",\n    \"readiness\": \"OFF\",\n    \"native_producer_C15\": \"NOT_COMPOSED\",\n    \"AM01_AM06\": \"NOT_PROVEN\",\n    \"independent_R3\": \"RECHECK_PENDING\",\n    \"FINAL\": \"NOT_SIGNED\",\n    \"GLOBAL_RELEASE\": false\n  },\n  \"routing\": {\n    \"CI_product\": 101,\n    \"compiler_guards\": 45,\n    \"recheck\": 93,\n    \"acceptance\": \"S0\"\n  },\n  \"next\": \"Request 101 original five native90 suites plus two new native103 negative specs on exact C52 W/tree, dedup Actions. Preserve preflight/independent FINAL gates and wait producer95 legitimate release.\"\n}\n"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/C53-CONSUMPTION-104.json",
+      "git_blob": "c2946ee8edb128a83da86348f893a0cab6242b87",
+      "local": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-work/financial-C53-supplement/evidence/C53-CONSUMPTION-104.json",
+        "bytes": 3244,
+        "sha256": "9b9c9d6c1ccbefb16bb20be3adee09217f0bd966f08f02d1be48284016fdfca0"
+      },
+      "content": "{\n  \"schema\": \"sf2h.integration105.consumption.v1\",\n  \"candidate\": \"C53\",\n  \"material\": true,\n  \"actor\": \"S0-C-e15-browser105\",\n  \"model_effective\": \"GPT-6\",\n  \"session_id\": null,\n  \"repo\": \"gustavomhss/Orchestra-SF\",\n  \"branch\": \"sf2-stack\",\n  \"pr\": 65,\n  \"planning_sha\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\",\n  \"T0\": \"2026-11-13T04:01:10Z\",\n  \"expected_parent\": \"751741abf263fff6f002907c53fcbac973ccde63\",\n  \"parent_tree\": \"a274225298ccf3b1b2f27e50ae8c8dddaed0181d\",\n  \"previous_material\": {\n    \"candidate\": \"C52\",\n    \"sha\": \"751741abf263fff6f002907c53fcbac973ccde63\",\n    \"tree\": \"a274225298ccf3b1b2f27e50ae8c8dddaed0181d\"\n  },\n  \"source\": {\n    \"mission\": 104,\n    \"branch\": \"minimal-first-save\",\n    \"pr\": 92,\n    \"material_W\": \"2356b2a453087784d3e2dbb191252e4c04e1c151\",\n    \"source_tree\": \"2ecec1a1135f6e43cc8ee800ed08af58f99c54d5\",\n    \"terminal\": \"e72345a97b20e2d817537cca4b635622b621d54f\",\n    \"lease\": \"first-save-http-browser104\",\n    \"handoff\": \"modules/sucafina/Sucafinav1/docs/sf2h/receipts/first-save-http-repair/HANDOFF-104.md\",\n    \"patch_spec\": \"modules/sucafina/Sucafinav1/docs/sf2h/receipts/first-save-http-repair/PATCH-C51-104.md\",\n    \"receipt_blob\": \"21ecde44f87d41cac31c2df7141d6ccf41a2d379\"\n  },\n  \"material_changes\": [\n    {\n      \"path\": \"apps/cli/src/sucafina-product/dashboard-http.ts\",\n      \"preimage\": \"9369722db40a922887c63481753776e3b01e97d8\",\n      \"postimage\": \"72dc59d7b2b0a23148a24e6457fd82e37daa6f08\",\n      \"mode\": \"exact owner104 precreated C51-based Git blob; guard only\",\n      \"strip_guard_equals_current_exact\": true,\n      \"protects\": [\n        \"dashboard-draft-read\",\n        \"owner52 specific read fallback\",\n        \"genuine 503 infrastructure status\",\n        \"revoked 403\"\n      ]\n    },\n    {\n      \"path\": \"modules/sucafina/Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts\",\n      \"preimage\": null,\n      \"postimage\": \"e5e3783efa011f80ca4e9ac9467776bc9bca2b19\"\n    }\n  ],\n  \"preserved\": {\n    \"original_oracle_path\": \"modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts\",\n    \"original_oracle_blob\": \"566e765f201d1a45677c0c52c75eb92ecb16d482\",\n    \"source87_lookups_unchanged\": true,\n    \"dashboard_decisions_C51_unchanged\": true,\n    \"other_C51_and_C52_paths_unchanged\": true,\n    \"host_C49_native_unchanged\": true,\n    \"result_store76_not_reapplied\": true\n  },\n  \"historical_failure\": {\n    \"W\": \"529142f63683de8e4b1f7d4232f88faf8ffcef6c\",\n    \"S\": \"32c186de11afc265a47aa06355ba560b5e89650b\",\n    \"run\": 43682448571,\n    \"job\": 132715780313,\n    \"attempt\": 1,\n    \"pass\": 12,\n    \"fail\": 1,\n    \"expects\": 213,\n    \"missing_key_observed\": 503,\n    \"missing_key_expected\": 403\n  },\n  \"proof\": {\n    \"product_tests_C53\": \"NOT_RUN\",\n    \"typechecks\": \"NOT_RUN\",\n    \"guards\": \"NOT_RUN\",\n    \"reviewers91_92\": \"RECHECK_PENDING\",\n    \"GLOBAL_RELEASE\": false\n  },\n  \"routing\": {\n    \"productCI\": 101,\n    \"compiler_guards\": 45,\n    \"reviewers\": [\n      91,\n      92\n    ],\n    \"acceptance\": \"S0\"\n  },\n  \"next\": \"101 dedup first-save original 3 exact files plus first-save-http-repair negative spec in same ordered Linux/Bun request on C53 W/tree; 45 compiler/guards; 91/92 independent recheck. No automatic acceptance.\"\n}\n"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/AUTHORITY-TERMINAL-105.json",
+      "git_blob": "b59f98f415dd114a9b797fa3d1ef667c6293c05c",
+      "local": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-work/financial-C53-supplement/evidence/AUTHORITY-TERMINAL-105.json",
+        "bytes": 1636,
+        "sha256": "9f0330949fb7261be1a96bf7f95ac624942fe87c9b75f377fb5911fd74e22434"
+      },
+      "content": "{\n  \"schema\": \"sf2h.integration105.terminal-authority.v1\",\n  \"campaign\": \"sf2h-integral-20261112\",\n  \"T0\": \"2026-11-13T04:01:10Z\",\n  \"planning_sha\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\",\n  \"repo\": \"gustavomhss/Orchestra-SF\",\n  \"branch\": \"sf2-stack\",\n  \"pr\": 65,\n  \"actor\": \"S0-C-e15-browser105\",\n  \"effective_model\": \"GPT-6\",\n  \"session_id\": null,\n  \"scope\": {\n    \"WPs\": 15,\n    \"tasks\": 74,\n    \"contracts\": 17,\n    \"criteria\": 1610\n  },\n  \"last_material\": {\n    \"name\": \"C53\",\n    \"commit\": \"180212940105e7b9ad15171b067c1c1b7841df5f\",\n    \"tree\": \"c423dd1e0828242534fd45d4183104ecc1d20edd\",\n    \"state\": \"COMPOSED_NOT_FROZEN_NOT_ACCEPTED\"\n  },\n  \"lease_epoch\": \"S0-C-e15-browser105\",\n  \"lease_state\": \"ENDED_BY_INTEGRATOR105\",\n  \"effective_on\": \"terminal documentary commit on sf2-stack\",\n  \"pre_terminal_head\": \"180212940105e7b9ad15171b067c1c1b7841df5f\",\n  \"pre_terminal_tree\": \"c423dd1e0828242534fd45d4183104ecc1d20edd\",\n  \"material_candidate\": \"C53\",\n  \"new_integrator_appointee\": null,\n  \"assumption_prohibited\": \"No other session may infer active integrator105 or auto-adopt patches. Explicit S0/user appointment and new CAS acknowledgment required.\",\n  \"predecessor_100\": \"ENDED_BY_INTEGRATOR100\",\n  \"wrote_source_branches\": false,\n  \"dispatched_product_CI\": false,\n  \"ran_local_tests\": false,\n  \"dev_merge\": false,\n  \"control_merge\": false,\n  \"deploy\": false,\n  \"engine_changes\": false,\n  \"GLOBAL_RELEASE\": false,\n  \"next_lease_requires\": [\n    \"explicit user/S0 appointment\",\n    \"verify head/tree against terminal commit\",\n    \"read handoff/checkpoint/queue and live owner releases\",\n    \"new ACK prior writing\"\n  ]\n}\n"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/CHECKPOINT-105-C53.json",
+      "git_blob": "f1ffa43b4ab54339edaeac343a92daad515590f7",
+      "local": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-work/financial-C53-supplement/evidence/CHECKPOINT-105-C53.json",
+        "bytes": 6103,
+        "sha256": "e892358432b345e7fe07077157c07b5990659a0032cb9aaa0e41a2f579afa4d5"
+      },
+      "content": "{\n  \"schema\": \"sf2h.integration105.checkpoint.v1\",\n  \"campaign\": \"sf2h-integral-20261112\",\n  \"T0\": \"2026-11-13T04:01:10Z\",\n  \"planning_sha\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\",\n  \"repo\": \"gustavomhss/Orchestra-SF\",\n  \"branch\": \"sf2-stack\",\n  \"pr\": 65,\n  \"actor\": \"S0-C-e15-browser105\",\n  \"effective_model\": \"GPT-6\",\n  \"session_id\": null,\n  \"scope\": {\n    \"WPs\": 15,\n    \"tasks\": 74,\n    \"contracts\": 17,\n    \"criteria\": 1610\n  },\n  \"last_material\": {\n    \"name\": \"C53\",\n    \"commit\": \"180212940105e7b9ad15171b067c1c1b7841df5f\",\n    \"tree\": \"c423dd1e0828242534fd45d4183104ecc1d20edd\",\n    \"state\": \"COMPOSED_NOT_FROZEN_NOT_ACCEPTED\"\n  },\n  \"history\": {\n    \"predecessor\": \"100\",\n    \"predecessor_lease\": \"ENDED_BY_INTEGRATOR100\",\n    \"last_prior_material_C51\": {\n      \"sha\": \"529142f63683de8e4b1f7d4232f88faf8ffcef6c\",\n      \"tree\": \"d679b541596dab3b280a87e15e4a0b29ee518262\",\n      \"units\": [\n        \"C46\",\n        \"C47\",\n        \"C48\",\n        \"C49\",\n        \"C50\",\n        \"C51\"\n      ],\n      \"unique_paths\": 21\n    },\n    \"ack105\": {\n      \"commit\": \"d083b422b6a587f47873abde4d866e35017ff8b8\",\n      \"tree\": \"91bc193b36fc46f09a9415e0b849e02503124a22\",\n      \"receipt_blob\": \"43fcad0d5fdb20e30db80835496ae135c6040632\"\n    }\n  },\n  \"material_intakes\": [\n    {\n      \"candidate\": \"C52\",\n      \"sha\": \"751741abf263fff6f002907c53fcbac973ccde63\",\n      \"tree\": \"a274225298ccf3b1b2f27e50ae8c8dddaed0181d\",\n      \"mission\": 103,\n      \"pr\": 96,\n      \"source_W\": \"e957f66b00a3b05265e42d46e1d88201dea3e770\",\n      \"source_tree\": \"e4b359fea9157da76b6ae77cb558a34e6577232a\",\n      \"terminal\": \"4159c2e02e8a56900331a8ec646253ce6a6e5ce9\",\n      \"manifest_blob\": \"393e429ba31083448cdd7ef78aa055c39bcf820b\",\n      \"receipt\": \"modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/C52-CONSUMPTION-103.json\",\n      \"changed_product\": 4,\n      \"old_paths\": 2,\n      \"new_tests\": 2,\n      \"readback\": \"EXACT\",\n      \"CI\": \"NOT_RUN\"\n    },\n    {\n      \"candidate\": \"C53\",\n      \"sha\": \"180212940105e7b9ad15171b067c1c1b7841df5f\",\n      \"tree\": \"c423dd1e0828242534fd45d4183104ecc1d20edd\",\n      \"mission\": 104,\n      \"pr\": 92,\n      \"source_W\": \"2356b2a453087784d3e2dbb191252e4c04e1c151\",\n      \"source_tree\": \"2ecec1a1135f6e43cc8ee800ed08af58f99c54d5\",\n      \"terminal\": \"e72345a97b20e2d817537cca4b635622b621d54f\",\n      \"receipt\": \"modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/C53-CONSUMPTION-104.json\",\n      \"changed_product\": 2,\n      \"old_paths\": 1,\n      \"new_tests\": 1,\n      \"guard_pre\": \"9369722db40a922887c63481753776e3b01e97d8\",\n      \"guard_post\": \"72dc59d7b2b0a23148a24e6457fd82e37daa6f08\",\n      \"guard_only_byte_equivalence\": true,\n      \"original_oracle_blob\": \"566e765f201d1a45677c0c52c75eb92ecb16d482\",\n      \"readback\": \"EXACT\",\n      \"CI\": \"NOT_RUN\"\n    }\n  ],\n  \"material_delta\": {\n    \"from_C51_to_C53_existing_modified\": [\n      \"apps/cli/src/sucafina-product/dashboard-http.ts\",\n      \"apps/cli/src/sucafina-product/routine-native-origin.ts\",\n      \"apps/cli/src/sucafina-product/routine-native-registry.ts\"\n    ],\n    \"new_tests\": [\n      \"modules/sucafina/Sucafinav1/test/product/first-save-http-repair/outcome-key-admission.test.ts\",\n      \"modules/sucafina/Sucafinav1/test/product/native-consumer-repair/deadline.test.ts\",\n      \"modules/sucafina/Sucafinav1/test/product/native-consumer-repair/observe.test.ts\"\n    ],\n    \"other_paths\": \"only append-only receipts\",\n    \"no_shared_host_overwrite\": true,\n    \"no_result_store76_reapply\": true\n  },\n  \"dispatch\": {\n    \"authority_product\": 101,\n    \"source_pr\": 106,\n    \"request_comment\": 6890198921,\n    \"mode\": \"REQUESTED_ONLY_NOT_RUN_ON_C53\",\n    \"exact_W\": \"180212940105e7b9ad15171b067c1c1b7841df5f\",\n    \"exact_tree\": \"c423dd1e0828242534fd45d4183104ecc1d20edd\",\n    \"lanes\": [\n      {\n        \"mission\": 103,\n        \"files\": 7,\n        \"selection\": \"original five native90 + observe + deadline\",\n        \"status\": \"PENDING_101\"\n      },\n      {\n        \"mission\": 104,\n        \"files\": 4,\n        \"selection\": \"original 3 first-save + outcome-key negative test\",\n        \"status\": \"PENDING_101\"\n      }\n    ],\n    \"authority_compiler_guards\": 45,\n    \"request_pr\": 32,\n    \"mode_guards\": \"REQUESTED_NOT_RUN\"\n  },\n  \"rechecks\": {\n    \"reviewer91\": {\n      \"pr\": 100,\n      \"comment\": 6890204503,\n      \"status\": \"PRELIMINARY_RECHECK_REQUESTED\"\n    },\n    \"reviewer92\": {\n      \"pr\": 97,\n      \"comment\": 6890204910,\n      \"status\": \"PRELIMINARY_RECHECK_REQUESTED\"\n    },\n    \"reviewer93\": {\n      \"pr\": 98,\n      \"comment\": 6890205243,\n      \"status\": \"PRELIMINARY_RECHECK_REQUESTED\"\n    }\n  },\n  \"remaining_owners\": [\n    {\n      \"owner\": 95,\n      \"pr\": 104,\n      \"head\": \"9757b5e7ee974684cff32a5a452f7dc5aefc0555\",\n      \"status\": \"NO_EXPLICIT_RELEASE_C15_REAL\"\n    },\n    {\n      \"owner\": 96,\n      \"pr\": 103,\n      \"source\": \"3ef1bbf2188275f5bc6ebaeed162a069ad3ae351\",\n      \"status\": \"SOURCE_AND_PATCH_READY_BUT_52_AUTHORIZED_HOST_UI_ACK_MISSING\",\n      \"host_preimages\": \"MATCH_AT_C53\"\n    },\n    {\n      \"owner\": 52,\n      \"pr\": 40,\n      \"status\": \"WAIT_APPROVAL_OR_RECONCILED_PATCH_FOR_CREATION96_AND_UI87\",\n      \"comment\": 6890111280\n    },\n    {\n      \"owner\": 99,\n      \"pr\": 95,\n      \"status\": \"P03_ORIGINAL_F2_FAIL_NOT_CONSUMABLE\",\n      \"run\": 43682515795,\n      \"job\": 132715983023,\n      \"comment\": 6890091782\n    },\n    {\n      \"owner\": 102,\n      \"pr\": 105,\n      \"source_W\": \"104bf61f67da9740024f38427c1580ba29f36e99\",\n      \"status\": \"SOURCE_PRINT_PATCH_READY_BUT_NEW_CI_AND_INDEPENDENT_VISUAL_PROOF_MISSING\",\n      \"comment\": 6890012252\n    }\n  ],\n  \"lease_state_on_documentary_terminal\": \"ENDED_BY_INTEGRATOR105\",\n  \"no_next_integrator_appointed\": true,\n  \"GLOBAL_RELEASE\": false,\n  \"next\": \"S0 explicitly appoints new integrator after terminal, or resumes workflow in new live session. 101 centralized dispatcher runs bounded C53 selections, 45 compiler/guards; owner52 approves host/UI; owner95 releases C15; owner99 fixes P03; source102 visual validation; then compose independent deliveries, freeze C only with proof and run G7/G8/eight/AM/FINAL.\"\n}\n"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/GATE-QUEUE-105.json",
+      "git_blob": "75e5782c687c7620dd56c64d04be3221164183dc",
+      "local": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-work/financial-C53-supplement/evidence/GATE-QUEUE-105.json",
+        "bytes": 3504,
+        "sha256": "b2aecd235fbcc702a74d938b9458bee793a176b4a74c17f3eb36b9c4a2ec5616"
+      },
+      "content": "{\n  \"schema\": \"sf2h.integration105.gate-queue.v1\",\n  \"campaign\": \"sf2h-integral-20261112\",\n  \"T0\": \"2026-11-13T04:01:10Z\",\n  \"planning_sha\": \"dbf9547211d9b0fade619790de7c19c0869b7c7d\",\n  \"repo\": \"gustavomhss/Orchestra-SF\",\n  \"branch\": \"sf2-stack\",\n  \"pr\": 65,\n  \"actor\": \"S0-C-e15-browser105\",\n  \"effective_model\": \"GPT-6\",\n  \"session_id\": null,\n  \"scope\": {\n    \"WPs\": 15,\n    \"tasks\": 74,\n    \"contracts\": 17,\n    \"criteria\": 1610\n  },\n  \"last_material\": {\n    \"name\": \"C53\",\n    \"commit\": \"180212940105e7b9ad15171b067c1c1b7841df5f\",\n    \"tree\": \"c423dd1e0828242534fd45d4183104ecc1d20edd\",\n    \"state\": \"COMPOSED_NOT_FROZEN_NOT_ACCEPTED\"\n  },\n  \"provider\": \"GitHub Actions via 101 product CI (45 compiler/guards only)\",\n  \"historical_C51\": {\n    \"sha\": \"529142f63683de8e4b1f7d4232f88faf8ffcef6c\",\n    \"tree\": \"d679b541596dab3b280a87e15e4a0b29ee518262\",\n    \"results\": [\n      {\n        \"lane\": \"94 HTTP\",\n        \"run\": 43682386656,\n        \"status\": \"PASS_SCOPED\",\n        \"passed\": 7\n      },\n      {\n        \"lane\": \"87 first save\",\n        \"run\": 43682448571,\n        \"job\": 132715780313,\n        \"status\": \"FAIL\",\n        \"passed\": 12,\n        \"failed\": 1,\n        \"expected_missing_key\": 403,\n        \"observed_missing_key\": 503\n      },\n      {\n        \"lane\": \"97 denied read\",\n        \"run\": 43682451927,\n        \"status\": \"PASS_SCOPED\",\n        \"passed\": 5,\n        \"expects\": 944\n      },\n      {\n        \"lane\": \"98 DOCX title\",\n        \"run\": 43682453714,\n        \"status\": \"PASS_SCOPED\",\n        \"passed\": 8\n      },\n      {\n        \"lane\": \"88 reader/render\",\n        \"run\": 43682455278,\n        \"status\": \"PASS_TECHNICAL_ONLY\",\n        \"passed\": 14,\n        \"artifact\": 14148499941,\n        \"pngs\": 139,\n        \"pdfs\": 12,\n        \"visual\": \"NOT_SIGNED\"\n      },\n      {\n        \"lane\": \"90 native\",\n        \"run\": 43682450677,\n        \"job\": 132715786509,\n        \"status\": \"FAIL_IMPORT\",\n        \"import_errors\": 5,\n        \"behavior_cases_pass\": 0\n      }\n    ]\n  },\n  \"current_C53\": {\n    \"sha\": \"180212940105e7b9ad15171b067c1c1b7841df5f\",\n    \"tree\": \"c423dd1e0828242534fd45d4183104ecc1d20edd\",\n    \"owner103_product\": \"REQUESTED_101_NOT_RUN\",\n    \"owner104_product\": \"REQUESTED_101_NOT_RUN\",\n    \"compiler\": \"REQUESTED_45_NOT_RUN\",\n    \"guards\": \"REQUESTED_45_NOT_RUN\"\n  },\n  \"P03_original\": {\n    \"source99\": \"54cff4caf3cbd1d94751009bcfa9564622e926b3\",\n    \"run\": 43682515795,\n    \"job\": 132715983023,\n    \"snapshot\": \"78b361a2c101c11937a341f30c493cfbc1ef1bc5\",\n    \"status\": \"FAIL_180000MS\",\n    \"observed_revalidation_calls\": 139454,\n    \"read_cases\": 11452,\n    \"verifyOperation_calls\": 4454,\n    \"reason\": \"portfolio-selection-changed\",\n    \"needs\": \"NEW_CAUSAL_PATCH_KEEP_ORIGINAL72_ASSERTIONS_180000MS\"\n  },\n  \"XLSX102\": {\n    \"pr\": 105,\n    \"source\": \"104bf61f67da9740024f38427c1580ba29f36e99\",\n    \"status\": \"CI_NOT_RUN_AND_VISUAL_NOT_SIGNED\",\n    \"baseline_reader_C51_run\": 43682455278\n  },\n  \"natives\": {\n    \"producer95\": \"NOT_COMPOSED\",\n    \"readiness\": \"OFF\",\n    \"C15_original\": \"NOT_VERIFIED\",\n    \"AM01_06\": \"NOT_PROVEN\"\n  },\n  \"acceptance\": {\n    \"candidateFrozen\": false,\n    \"eight_final_selections\": \"NOT_RUN\",\n    \"full_epic_and_suites\": \"NOT_RUN\",\n    \"typechecks\": \"NOT_RUN_ON_C53\",\n    \"AM01_06\": \"NOT_PROVEN\",\n    \"R1_R2_R3\": \"PRELIMINARY_NOT_FINAL\",\n    \"G7_C\": \"OPEN\",\n    \"G8_D\": \"OPEN\",\n    \"global\": \"OPEN\",\n    \"GLOBAL_RELEASE\": false\n  },\n  \"no_duplicate_dispatch\": true,\n  \"CI101_request_comment\": 6890198472,\n  \"guards45_comment\": 6890198921\n}\n"
+    },
+    {
+      "repository_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c51-105/HANDOFF-TERMINAL-105.md",
+      "git_blob": "bc5964e81550972ac319f071f54f2945179b321b",
+      "local": {
+        "path": "/workspace/scratch/fec39c0682b3/m52-work/financial-C53-supplement/evidence/HANDOFF-TERMINAL-105.md",
+        "bytes": 4344,
+        "sha256": "aabf0ae9adc4b1bc7e799befe423837ec412bbe19f14a001deac347145812c38"
+      },
+      "content": "# Integrator105 — terminal material handoff (C53 is NOT frozen)\n \n**Authority:** GPT-6 (Astra requested label; runtime session ID unavailable), GitHub actor gustavomhss, campaign sf2h-integral-20261112, T0 2026-11-13T04:01:10Z; fixed plan dbf9547211d9b0fade619790de7c19c0869b7c7d. Predecessor100 ENDED. Session105 ACK was published before writing (`d083b422b6a587f47873abde4d866e35017ff8b8`, `S0-C-e15-browser105`). Its lease **ENDS with this documentary terminal commit**; no successor automatically appointed.\n\n## Material integrations actually completed\n- **C52:** `751741abf263fff6f002907c53fcbac973ccde63`; tree `a274225298ccf3b1b2f27e50ae8c8dddaed0181d`. Exact four blobs from W103 `e957f66b00a3b05265e42d46e1d88201dea3e770`, two native consumer sources and two new specs. Original C51 native imports failed all 5 suites before behavior tests; W103 was source-only, and **new C52/C53 product tests remain NOT_RUN**.\n- **C53 (LATEST MATERIAL):** `180212940105e7b9ad15171b067c1c1b7841df5f`; tree `c423dd1e0828242534fd45d4183104ecc1d20edd`. Exact C51-specific owner104 HTTP guard blob `72dc59d7b2b0a23148a24e6457fd82e37daa6f08` on C51 pre `9369722db40a922887c63481753776e3b01e97d8`, plus negative test `e5e3783efa011f80ca4e9ac9467776bc9bca2b19`. Verified deleting only the guard reproduces preimage *byte-for-byte*; preserves `dashboard-draft-read`, native host, fallback 503/403. The original first-save test remains blob `566e765f201d1a45677c0c52c75eb92ecb16d482`. **C53 product CI is NOT_RUN.**\n- Both materials were committed through GitHub MCP using expected-head, non-force CAS and readback HEAD/tree/receipt. Receipts: `C52-CONSUMPTION-103.json`, `C53-CONSUMPTION-104.json` in this directory. No branch copying, no result-store76 reapply, no extra HTTP/host owner modifications.\n\n## Current checks and sources\n- CI101 PR #106: six C51 runs, 4 green scoped/2 fail; preserve original W/S/run/job. Material C53 **7 native103 + 4 first-save104** bounded product test selections were routed in [#6890198472](https://github.com/gustavomhss/Orchestra-SF/pull/106#issuecomment-6890198472), not dispatched by105. 101 is **the only product dispatcher**; if its session ended, S0 must explicitly resume or appoint a single successor. 45 receives only compiler and guards, [#6890198921](https://github.com/gustavomhss/Orchestra-SF/pull/32#issuecomment-6890198921).\n- Native producer95 PR #104 remains without explicit C15 real release; readiness OFF. Creation96 PR #103 supplies a four-path patch whose current target preimages match, but **owner52 UI/host approval and complete composition are absent**, so no half installation. UI87 consumer52 also unadopted. XLSX102 PR #105 source print patch exists but new 101 W/S/visual PDF/PNG/independent91/93 not proven; do not consume yet. P03 F2 original [run43682515795](https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682515795) FAIL (180s/revalidation amp + `portfolio-selection-changed`), source99 not accepted. No other independent release ready.\n- Requested fresh independent reviewer91 on PR #100, reviewer92 on PR #97, reviewer93 on PR #98; **none FINAL**. Technical reader88 success is not visual approval. Do not inherit greens from C51 to C53.\n- G7/C, G8/D, eight final selectors on a single future C, full suites/epic, typechecks, AM01–AM06, final three reviews and S0 decision all remain required. **GLOBAL_RELEASE=false.**\n\n## Executable next\n1. S0 explicitly appoints next integrator and acknowledges latest `sf2-stack` documentary terminal HEAD, with a fresh lease, source/preimage reconciliation.\n2. Central **101** dedupes and runs bounded C53 product selections, returns true W/S/run/job/attempt/artifacts. **45** runs compiler/typecheck/guards only; route any failure to its source owner.\n3. Owner52 releases UI87+creation96 host patch, owner95 releases real native producer, owner99 fixes P03 without relaxing original, owner102 provides CI+visual proof; integrate qualified releases selectively and checkpoint material.\n4. After corrections, run 8 selectors/epic/suites, AM01–AM06, 91–93 independent FINAL and G7/C/G8/D separately. Freeze/sign only on actual evidence; never `GLOBAL_RELEASE` by this integrator.\n\nDetailed state is in `CHECKPOINT-105-C53.json` and `GATE-QUEUE-105.json`. The documentation terminal itself is **not another material candidate**.\n"
+    }
+  ],
+  "conclusions": {
+    "early_runtime_barrier": "Requests GET503/form0 before any observed financial mutation on N15 and D16, both C45-based isolated candidates.",
+    "currency": "Persisted formSettings.currency is a static prerequisite. The generic 503 does not isolate which queue/context check failed.",
+    "formal_approval": "M31/MI07 remain inherited OPEN by unchanged source contract and C51 gate, not a newly reached runtime failure. Terminal105 does not itself restate their literal keys.",
+    "legacy_composite": "C24/C25 lifecycle/composite and later Mixed61 structural fixes remain preserved. Do not relabel the old P37 shape mismatch as current.",
+    "authority": "105 ended, no named successor. Requested handoff47 is not an active integrator claim.",
+    "source52": "No fresh source branch read in this subtask; keep existing owner/source receipts separate.",
+    "N17": "AWAITING_ACTUAL_RECEIPT; no predicted HTTP/status/result.",
+    "unit05": "Dispatched per parent; no result consumed here and no financial acceptance inferred.",
+    "GLOBAL_RELEASE": false,
+    "new_criteria_acceptance": 0
+  },
+  "execution": {
+    "local_product_or_tests": false,
+    "remote_calls": false,
+    "remote_writes": false,
+    "CI_dispatches": false,
+    "work": "Read cached MCP evidence; parse JSON/text; verify hashes; write this separate scratch supplement."
+  }
+}

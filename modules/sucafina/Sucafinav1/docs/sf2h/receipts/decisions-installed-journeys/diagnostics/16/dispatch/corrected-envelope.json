@@ -1,0 +1,39 @@
+{
+  "schema": "sf-m52-diagnostic-envelope-v1",
+  "diagnostic": 16,
+  "state": "PREPARED_CORRECTED_SENTINEL_MESSAGE",
+  "purpose": "DIAGNOSTIC_ONLY_NOT_ACCEPTANCE",
+  "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+  "base_symbol": "C45_WITH_TERMINAL71_DOCUMENTARY_HEAD",
+  "parent_W": "c725f9b8307a84562258c478414ec0b39d428b99",
+  "W": "c7591b8a99f95e7b5f356663e984bd4fdfc3d8fd",
+  "W_tree": "1e807f754efc40adbb89cf43090128058a58aac5",
+  "S": "bba4a4f0487df3194ed2acb8e353c719325311fc",
+  "S_tree": "a9ef18dcddfdd3e8a993f3a77b0eb1dcde436eb0",
+  "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+  "request_bytes": 229,
+  "branch": "ci-run-linux-astra-wp11-c7591b8a-3619f1fd-m52-d16",
+  "preserved_root_entries": 43,
+  "test_budget_ms": 180000,
+  "ui_deadline_ms": 10000,
+  "tests": 5,
+  "workers": 1,
+  "retries": 0,
+  "repeatEach": 1,
+  "observed_current_target": "a6abd2c8d321daf1089f4d440027c46209a89cbe",
+  "current_target_disposition": "C51/T100 observed; separate reconciliation required before any next nominal. Diagnostic16 is causal-only on frozen W15.",
+  "suppressed_request": {
+    "S": "87620bef3d4d661702436bb7f6584076af0805d0",
+    "S_tree": "a9ef18dcddfdd3e8a993f3a77b0eb1dcde436eb0",
+    "message_contains_skip_ci": true,
+    "workflow_runs_created": 0,
+    "reason": "Root accidentally appended [skip ci] to the sentinel commit; no test was executed.",
+    "correction": "Same tree, fast-forward child commit without skip directive. No test/config/request/code change."
+  },
+  "preflight_dedup": {
+    "time": "2026-11-15 05:49:13 UTC",
+    "existing_branch_sha": "87620bef3d4d661702436bb7f6584076af0805d0",
+    "branch_runs": 0,
+    "last100_active_wp11": 0
+  }
+}

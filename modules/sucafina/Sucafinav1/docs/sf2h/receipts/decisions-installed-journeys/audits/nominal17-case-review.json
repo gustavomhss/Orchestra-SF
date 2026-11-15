@@ -1,0 +1,161 @@
+{
+  "schema": "sf52-nominal17-reviewed-case-annotations-v1",
+  "run_id": 43686512586,
+  "job_id": 132728008356,
+  "cleanup_job_id": 132729059840,
+  "run_attempt": 1,
+  "run_conclusion": "failure",
+  "job_conclusion": "failure",
+  "cleanup_conclusion": "success",
+  "artifact": {
+    "id": 14150947601,
+    "name": "playwright-ubuntu-24.04-1",
+    "local_filename": "artifact.zip",
+    "bytes": 4697348,
+    "sha256": "61e8bceea2db583e6b11354bcb1361edb9fcca8bbf76db46a38e28db6d5ba68b",
+    "identity_source": "Actual GitHub MCP artifact metadata and independently hashed downloaded ZIP."
+  },
+  "setup_failed": 0,
+  "counts": {
+    "pass": 3,
+    "fail": 2,
+    "skipped": 0,
+    "timed_out": 0,
+    "flaky": 0,
+    "setup_failed": 0
+  },
+  "summary": {
+    "J1": "FAIL: three comparisons200/ok and numeric rule200/ok; choice POST aborted before original response. Choice commit and P9 capture UNKNOWN_UNQUALIFIED; retry/history/source change NOT_REACHED.",
+    "J2": "FAIL: RequestsGET503/procurement-queue-unavailable/form0 before any financial mutation; later formal-approval contract NOT_REACHED.",
+    "J3": "PASS",
+    "J4": "PASS",
+    "J5": "PASS"
+  },
+  "diagnostic_code_present": false,
+  "profile_records": 0,
+  "HTTP_duration_measured": false,
+  "teardown": {
+    "observations_and_cli_present_all_five": true,
+    "EADDRINUSE_in_failures": false,
+    "CLI_listen_and_SIGTERM_disposed_all_five": true,
+    "cleanup_job_success": true
+  },
+  "causal_limit": "N17 proves three original comparison responses200/ok, including the comparison after rule registration, then one choice POST with requestfailed ERR_ABORTED before the original response could be intercepted. It does not prove whether choice/capture committed. No server profiling was present; neither the composite step duration nor the UI timer measures HTTP producer latency or attributes the abort to P13/P9/SQL. Unit05 is supplemental on the same W. D16 is separate and supplies no nominal acceptance.",
+  "cases": [
+    {
+      "journey_id": "M52-J1",
+      "runtime_status": "failed",
+      "reached": [
+        "Six actual Planner human commands returned200/ok; distinct baseline/candidate versions carried annual inputs1200/2400USD for2027.",
+        "A real Workbench case was created and edited; both authorized Planner evidence references were attached at version2.",
+        "Both real coverage registrations preserved all nine explicitly pending categories; known service amounts did not establish complete coverage.",
+        "Both alternatives persisted and reopened at caseversion4. The second promotion response was deliberately lost and recovered with the identical retained UI intention: three POSTs, two distinct intentions.",
+        "The original decision-list/catalog consumed the same alternatives without portfolio evaluation.",
+        "Three decision-compare POSTs returned200/ok. The third followed explicit human numeric-rule registration200/ok, version1, lte2000USD, with both actual Planner evidence refs.",
+        "Original assertions before the choice step preserved comparisonStatus conditioned, knownDifference1200, completeDifference:null and criterion unknown/criterion-metric-conditioned. Numeric rules did not grant approval or resolve missing costs.",
+        "The UI submitted one decision-choose POST with a retained intention; it aborted before the original response interception."
+      ],
+      "failure_boundary": {
+        "phase": "original human-choice request before response interception",
+        "method": "POST",
+        "path": "/sucafina/dashboard",
+        "mode": "decision-choose",
+        "choice_request_count": 1,
+        "requestfailed": "net::ERR_ABORTED",
+        "original_HTTP_response_observed": false,
+        "deliberate_lost_choice_response_reached": false,
+        "comparison_requests": 3,
+        "observed_successful_comparison_responses": 3,
+        "numeric_rule_registration_observed": true,
+        "numeric_rule_evaluation_observed_after_registration": true,
+        "choice_commit": "UNKNOWN_UNQUALIFIED",
+        "P9_capture": "UNKNOWN_UNQUALIFIED",
+        "retry": "NOT_REACHED",
+        "history_after_source_change": "NOT_REACHED",
+        "failure_location": "decisions-support/closure-response.ts:17",
+        "test_duration_ms": 83611,
+        "choice_step_duration_ms": 10064,
+        "HTTP_duration_measured": false,
+        "configured_UI_abort_ms": 10000,
+        "DOM_retry_same_choice_visible": true,
+        "DOM_no_human_choice_recorded": true,
+        "DOM_does_not_establish_server_commit_absence": true
+      },
+      "not_reached_or_not_proved": [
+        "Original successful choice response and its deliberate loss.",
+        "Same-key choice retry, saved ChoiceRecord, rationale/history, real Planner2400-to3600 revision and preservation of the original historical ChoiceRecord.",
+        "Whether the aborted request committed choice/capture.",
+        "Server stage responsible for abort or a performance improvement attributable solely to P13."
+      ],
+      "diagnosis": "The comparison phase now completed in this nominal. The original choice request failed before the deliberate response-loss fixture; the fixture correctly refuses to fabricate a successful original response. J1 remains FAIL.",
+      "page_snapshot_source": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal17-43686512586/extracted/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-5bcff-hoice-after-a-source-change-chromium/error-context.md",
+        "bytes": 28636,
+        "sha256": "68b01a9fa9323b41ef0ccd91a3980656e98a7f7b864a2f94e9a85330639a02b6"
+      }
+    },
+    {
+      "journey_id": "M52-J2",
+      "runtime_status": "failed",
+      "reached": [
+        "Installed Procurement Requests navigation returned HTTP503.",
+        "DOM reported unavailable/procurement-queue-unavailable.",
+        "Original create-form assertion found0 forms instead of1 at its unchanged10000ms timeout."
+      ],
+      "failure_boundary": {
+        "phase": "real requisition human form discovery",
+        "method": "GET",
+        "path": "/sucafina/procurement?page=Requests",
+        "http_status": 503,
+        "page_status": "unavailable",
+        "page_reason": "procurement-queue-unavailable",
+        "creation_form_count": 0,
+        "expected_creation_form_count": 1,
+        "financial_mutation_count": 0,
+        "formal_approval_reached": false,
+        "MI07_M31_runtime_boundary_reached": false,
+        "failure_location": "decisions-support/procurement-source.ts:7",
+        "test_duration_ms": 15917,
+        "step_duration_ms": 10085,
+        "assertion_timeout_ms": 10000
+      },
+      "not_reached_or_not_proved": [
+        "Requisition creation, Decisions proposal, formal approval, Apply, financial receipt and uncertain financial recovery.",
+        "Runtime reproduction or resolution of the later editing-versus-approval incompatibility M31/MI07."
+      ],
+      "diagnosis": "Mandatory financial journey was executed and failed before financial mutation. Actual queue unavailability and later static approval-contract gap remain distinct; no policy change or equivalence between choice and approval.",
+      "page_snapshot_source": {
+        "local_path": "/workspace/scratch/fec39c0682b3/m52-audit/nominal17-43686512586/extracted/packages/app-shell/e2e/test-results/sucafina-decisions-CI-UI-D-44857--recover-its-unique-receipt-chromium/error-context.md",
+        "bytes": 8745,
+        "sha256": "b66c78721311dddd1d351ab8c65ece81cae65ba08c890d45ed9618f6a2b2081c"
+      }
+    },
+    {
+      "journey_id": "M52-J3",
+      "runtime_status": "passed",
+      "reached": [
+        "Actual Workbench creation200/ok and same id/incarnation reopened at version1.",
+        "Actual human decision-edit200/ok and identical case reopened at persisted version2."
+      ],
+      "proof_limit": "Original complete create/edit/reopen UI body passed on exact W17/S17; no provider/process restart, multi-user concurrency or financial application is inferred."
+    },
+    {
+      "journey_id": "M52-J4",
+      "runtime_status": "passed",
+      "reached": [
+        "Real Workbench creation followed by decision-list/catalog JSON200/ok.",
+        "Exact case id/incarnation/version1, horizon, currency and criteria returned with alternatives:[]; no fabricated alternative."
+      ],
+      "proof_limit": "Original empty-case catalog body passed on exact W17/S17; no full C10 or portfolio evaluation proof."
+    },
+    {
+      "journey_id": "M52-J5",
+      "runtime_status": "passed",
+      "reached": [
+        "Original UI creation response observed200 and deliberately lost.",
+        "Exactly one creation POST; draft retained and read-only recovery plus reload reopened the same durable case without resubmission."
+      ],
+      "proof_limit": "Original uncertain-creation UI body passed on exact W17/S17; expected deliberate connection reset is not a runtime failure, and no financial receipt recovery is inferred."
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "purpose": "STATIC_TEXT_CHECK_NOT_RUNTIME_PROOF",
+  "parent_W": "c725f9b8307a84562258c478414ec0b39d428b99",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "unchanged_call_counts": {
+        "portfolio.compare(request, call)": [
+          1,
+          1
+        ],
+        "readPortfolioSnapshot(authority.host, call, request": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "unchanged_call_counts": {
+        "requireAuthenticationFile()": [
+          2,
+          2
+        ],
+        "requireScope(scope)": [
+          10,
+          10
+        ]
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts",
+      "unchanged_call_counts": {
+        "structuredClone(state)": [
+          2,
+          2
+        ],
+        "structuredClone(selected.value)": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "unchanged_call_counts": {
+        "new Bun.CryptoHasher(\"sha256\")": [
+          1,
+          1
+        ]
+      }
+    }
+  ],
+  "tests_changed": false,
+  "auth_values_cached": false,
+  "external_payload_logging": false,
+  "shared_source_live_writes": false
+}

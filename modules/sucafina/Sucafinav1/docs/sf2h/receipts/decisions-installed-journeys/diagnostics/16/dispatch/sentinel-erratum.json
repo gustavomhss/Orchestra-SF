@@ -1,0 +1,88 @@
+{
+  "schema": "sf52.diagnostic16.sentinel-metadata-erratum.v1",
+  "scope": "COMMIT_MESSAGE_AND_REF_CORRECTION_ONLY_NO_TEST_SKIPPED",
+  "initial": {
+    "S": "87620bef3d4d661702436bb7f6584076af0805d0",
+    "S_tree": "a9ef18dcddfdd3e8a993f3a77b0eb1dcde436eb0",
+    "message_contains_skip_ci": true,
+    "workflow_runs_created": 0,
+    "envelope_path": "diagnostics/16/dispatch/initial-suppressed-envelope.json",
+    "original_preflight_S_is_historical": true
+  },
+  "corrected": {
+    "S": "bba4a4f0487df3194ed2acb8e353c719325311fc",
+    "S_tree": "a9ef18dcddfdd3e8a993f3a77b0eb1dcde436eb0",
+    "operation": "NON_FORCE_FAST_FORWARD_CHILD_SAME_TREE",
+    "envelope_path": "diagnostics/16/dispatch/final-dispatched-envelope.json",
+    "preflight_dedup": {
+      "time": "2026-11-15 05:49:13 UTC",
+      "existing_branch_sha": "87620bef3d4d661702436bb7f6584076af0805d0",
+      "branch_runs": 0,
+      "last100_active_wp11": 0
+    },
+    "dispatched_at": "2026-11-15 05:49:17 UTC",
+    "actual_run": {
+      "id": 43682706028,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43682706028",
+      "head_sha": "bba4a4f0487df3194ed2acb8e353c719325311fc",
+      "status": "completed",
+      "conclusion": "failure",
+      "run_attempt": 1,
+      "created_at": "2026-11-15T05:49:18Z",
+      "updated_at": "2026-11-15T05:54:07Z",
+      "test_job": 132716569985,
+      "test_conclusion": "failure",
+      "cleanup_job": 132717571992,
+      "cleanup_conclusion": "success"
+    }
+  },
+  "unchanged": {
+    "W": "c7591b8a99f95e7b5f356663e984bd4fdfc3d8fd",
+    "W_tree": "1e807f754efc40adbb89cf43090128058a58aac5",
+    "S_tree": "a9ef18dcddfdd3e8a993f3a77b0eb1dcde436eb0",
+    "request_blob": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+    "request_bytes": 229,
+    "branch": "ci-run-linux-astra-wp11-c7591b8a-3619f1fd-m52-d16",
+    "original_tests": 5,
+    "test_budget_ms": 180000,
+    "UI_deadline_ms": 10000,
+    "retries": 0,
+    "workers": 1,
+    "product_code": true,
+    "test_code": true,
+    "test_configuration": true
+  },
+  "source_envelope_digests": {
+    "m52-work/diagnostic16-envelope.json": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic16-envelope.json",
+      "sha256": "1b24f708879b6a6437964242bafc237c1705860bdad580cecd03dc07a48d57ff",
+      "git_blob": "d43e1f3f570c1af926754e0a729160e55d73ca1d",
+      "bytes": 1067
+    },
+    "m52-work/diagnostic16-dispatched-envelope.json": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic16-dispatched-envelope.json",
+      "sha256": "8577262c85f0d2af0383903a8b8143d824175f59cfe6824810388469ef0b1880",
+      "git_blob": "880d1f474efb64352bd90ecaee58c57314405e6d",
+      "bytes": 1279
+    },
+    "m52-work/diagnostic16-corrected-envelope.json": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic16-corrected-envelope.json",
+      "sha256": "9cb684ab7564e537dc0547b2f1dd0be264aeb5580b18d35a6f900be69bf81f4b",
+      "git_blob": "8c04deaf46ca7f32cd1222cc2d064e0e8514c799",
+      "bytes": 1697
+    },
+    "m52-work/diagnostic16-final-dispatched-envelope.json": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic16-final-dispatched-envelope.json",
+      "sha256": "9e33fdaff37a284033a20f515bb0a823bcf76fdb5e4a1b3b6d845a56182ab475",
+      "git_blob": "ebce6ad52d21524cf43698db87882438cc16e944",
+      "bytes": 1767
+    },
+    "m52-work/diagnostic16-preflight.json": {
+      "local_path": "/workspace/scratch/fec39c0682b3/m52-work/diagnostic16-preflight.json",
+      "sha256": "2250e1615dac8906717eac36086ae3a49e3ca4a6434874481a2ed6e0aa050362",
+      "git_blob": "4be176f277baab4de26bf9ba38e6b76b73d820e9",
+      "bytes": 1709
+    }
+  },
+  "no_acceptance_credit": true
+}

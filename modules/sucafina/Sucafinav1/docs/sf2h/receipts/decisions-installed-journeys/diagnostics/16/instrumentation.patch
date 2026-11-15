@@ -1,0 +1,145 @@
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/runtime/sf52-profile.ts
+@@ -0,0 +1,32 @@
++import { AsyncLocalStorage } from "node:async_hooks"
++
++// SF52 diagnostic16 only: aggregate fixed stage names, counts and durations.
++// No payload, identifier, credential, projection or authority value is retained.
++type Stage = { count: number; total_ms: number; max_ms: number }
++const profiles = new AsyncLocalStorage<Record<string, Stage>>()
++
++export function sf52Measure<T>(stage: string, work: () => T): T {
++  const stats = profiles.getStore()
++  if (!stats) return work()
++  const at = performance.now()
++  try {
++    return work()
++  } finally {
++    const elapsed = performance.now() - at
++    const row = stats[stage] ??= { count: 0, total_ms: 0, max_ms: 0 }
++    row.count += 1
++    row.total_ms += elapsed
++    row.max_ms = Math.max(row.max_ms, elapsed)
++  }
++}
++
++export async function sf52Profile<T>(work: () => Promise<T>): Promise<T> {
++  const stats: Record<string, Stage> = Object.create(null)
++  const at = performance.now()
++  try {
++    return await profiles.run(stats, work)
++  } finally {
++    // An unavailable diagnostic sink cannot replace the producer's return/throw.
++    try { console.info("SF52_COST", JSON.stringify({ diagnostic: 16, elapsed_ms: performance.now() - at, stages: stats })) } catch { /* Timing only. */ }
++  }
++}
+--- a/apps/cli/src/sucafina-product/decision-case-http.ts
++++ b/apps/cli/src/sucafina-product/decision-case-http.ts
+@@ -1,3 +1,4 @@
++import { sf52Profile } from "../../../../modules/sucafina/Sucafinav1/runtime/sf52-profile.ts"
+ import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import { createDecisionCaseManagement } from "../../../../modules/sucafina/Sucafinav1/product/decisions/case-management.ts"
+ import { createDecisionEvidenceChecks } from "../../../../modules/sucafina/Sucafinav1/product/decisions/host-evidence.ts"
+@@ -51,8 +52,8 @@
+   const handlers = new Map(["dashboard", "planner", "procurement"].map((surface): [string, ReturnType<typeof createDecisionCaseHttp>] => [surface, createDecisionCaseHttp({
+     origin: input.origin, mount: `${input.mount}/${surface}`, human: authority.human,
+     withCase: business.withCase, management,
+-    compare: (request, call) => readPortfolioSnapshot(authority.host, call, request,
+-      () => portfolio.compare(request, call), { status: "unavailable", reason: "decision-comparison-snapshot-unavailable" }),
++    compare: (request, call) => sf52Profile(() => readPortfolioSnapshot(authority.host, call, request,
++      () => portfolio.compare(request, call), { status: "unavailable", reason: "decision-comparison-snapshot-unavailable" })),
+     admitList: async (request) => {
+       const operation = "sf_case_read"
+       const digest = digestSfValue({ purpose: "decision-list", surface })
+--- a/modules/sucafina/Sucafinav1/runtime/local-store.ts
++++ b/modules/sucafina/Sucafinav1/runtime/local-store.ts
+@@ -1,3 +1,4 @@
++import { sf52Measure } from "./sf52-profile.ts"
+ import { Database } from "bun:sqlite"
+ import { AsyncLocalStorage } from "node:async_hooks"
+ import { constants, lstatSync, realpathSync } from "node:fs"
+@@ -214,7 +215,7 @@
+     limits: authentication,
+     // Each SELECT observes current committed auth in autocommit, independently
+     // of an older business snapshot. Reusing a connection never reuses a value.
+-    read: <T>(work: (db: Database) => T): T => {
++    read: <T>(work: (db: Database) => T): T => sf52Measure("runtime.auth.read", () => {
+       if (lifecycle.closed) throw new Error("Local store is disposed")
+       const scope = context.getStore()
+       try {
+@@ -222,7 +223,7 @@
+         requireAuthenticationFile()
+         const db = authenticationRead.db ??= connect()
+         if (db.inTransaction) throw new Error("Authentication reads require autocommit")
+-        const value = work(db)
++        const value = sf52Measure("runtime.auth.sql", () => work(db))
+         if (db.inTransaction) throw new Error("Authentication reads require autocommit")
+         requireAuthenticationFile()
+         if (lifecycle.closed) throw new Error("Local store is disposed")
+@@ -234,7 +235,7 @@
+         try { closeAuthenticationRead() } catch { /* The read still fails closed. */ }
+         throw error
+       }
+-    },
++    }),
+     write: <T>(work: (db: Database) => T) => operation(true, async (db) => {
+       const value = work(db)
+       db.exec("COMMIT")
+@@ -282,19 +283,19 @@
+           delete copies.procurement
+         }
+       }, transactionOptions?.signal),
+-    currentSnapshots: () => {
++    currentSnapshots: () => sf52Measure("runtime.currentSnapshots", () => {
+       const scope = context.getStore()
+       if (!scope) return undefined
+       requireScope(scope)
+-      const copy = (surface: Surface) => {
++      const copy = (surface: Surface) => sf52Measure(`runtime.currentSnapshots.${surface}`, () => {
+         const materialize = scope.root.copies?.[surface]
+         if (materialize) return materialize()
+         const snapshot = scope.root.snapshots[surface]
+         if (!snapshot) throw new Error("Local transaction snapshots unavailable")
+         return cloneSnapshot(snapshot)
+-      }
++      })
+       return { dashboard: copy("dashboard"), planner: copy("planner"), procurement: copy("procurement") }
+-    },
++    }),
+     transaction: <T>(surface: Surface, work: (snapshot: Snapshot, blobs: BlobTransaction) => Promise<{ commit: boolean; value: T }>, transactionOptions?: TransactionOptions) => {
+       const parent = context.getStore()
+       if (parent) return (async () => {
+--- a/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
++++ b/modules/sucafina/Sucafinav1/product/host-binding/state-provider.ts
+@@ -1,3 +1,4 @@
++import { sf52Measure } from "../../runtime/sf52-profile.ts"
+ import type { Persistence, Snapshot } from "../../runtime/contract.ts"
+ import { object } from "../../runtime/contract.ts"
+ import type { SfProductState, SfProductStatePort, SfStateAuthority, SfStateNamespace, SfStateResult, SfStateMutation } from "../contracts/state.ts"
+@@ -61,8 +62,8 @@
+         // path. Durable SQLite snapshots contain plain cloneable data.
+         const value = selection && selected?.enumerable && "value" in selected && selected.value &&
+           typeof selected.value === "object" && !Array.isArray(selected.value)
+-          ? await selection.project({ [selection.id]: structuredClone(selected.value) }, authority) as T
+-          : await read(structuredClone(state), authority)
++          ? await selection.project({ [selection.id]: sf52Measure("c08.clone.selected-case", () => structuredClone(selected.value)) }, authority) as T
++          : await read(sf52Measure(`c08.clone.full-state.${namespace}`, () => structuredClone(state)), authority)
+         if (request.signal.aborted) return { commit: false, value: { status: "unavailable", reason: "cancelled" } }
+         const current = await input.authorize(request, snapshot, namespace, "read")
+         if (!sameAuthority(authority, current)) return { commit: false, value: { status: "denied", reason: "product-authority-changed" } }
+--- a/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
++++ b/modules/sucafina/Sucafinav1/product/contracts/canonical.ts
+@@ -1,3 +1,4 @@
++import { sf52Measure } from "../../runtime/sf52-profile.ts"
+ /** Tagged canonical bytes distinguish absent, null, zero and inherited value descriptors. */
+ import type { BusinessEvidenceRef } from "./business-context.ts"
+ import type { ContributionEnvelope } from "./resident-ai.ts"
+@@ -7,7 +8,7 @@
+ }
+ 
+ export function digestSfValue(value: unknown): string {
+-  return new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex")
++  return sf52Measure("canonical.digest", () => new Bun.CryptoHasher("sha256").update(canonicalSfValue(value)).digest("hex"))
+ }
+ 
+ /** Integrity of the whole reference; authentication remains in the source resolver. */

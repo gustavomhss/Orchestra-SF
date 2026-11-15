@@ -1,0 +1,1707 @@
+{
+  "schema": "sf52-p13-supplemental-unit-receipt-v5",
+  "state": "COMPLETED_TEST_AND_CLEANUP_JOBS",
+  "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+  "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+  "source": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+  "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+  "W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+  "W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+  "material_sha256": "69537e7eae28cffecad1ab87c31469d5d612e6122e15afdc2fbef68c4db6677e",
+  "patch_sha256": "c2ff073b0e1a1f12b2ee3e58f18428eac695f0c443d2c68b6672da76fa0bee75",
+  "overlay": [
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/command-response.ts",
+      "sha": "0832650685246e386f0270533bb58ed840effd65",
+      "preimage": null,
+      "scope": "owned"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/journey.ts",
+      "sha": "e5a510068cc16a41b29446524b4c7870c98568c5",
+      "preimage": "171cd775bfb5d3f6f68b3a72e3e1ceb9e45ba3e4",
+      "scope": "owned"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/planner-sources.ts",
+      "sha": "ef401f74f0af0b3c6f0dcf0f23e554c6e71c2c6f",
+      "preimage": "c27eb39b9ef0d36a48d329e5767ba5cb3a4aa0ad",
+      "scope": "owned"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/lost-response.ts",
+      "sha": "9fe64294027cf6805ff8e7ba4b7cfac83455de85",
+      "preimage": "c7c55d0763b69215bc3f6f6f1f2f084b1ba3988e",
+      "scope": "owned"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions.spec.ts",
+      "sha": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+      "preimage": "2d9c867af87fa0a26b182365b1780232b49bcaf9",
+      "scope": "owned"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/initial-alternatives.ts",
+      "sha": "903b48594ff95e0d1f78539982adcf75eb3b9272",
+      "preimage": "979bfeeb460e85fe1911affe0ac9ad4d21a27e3a",
+      "scope": "owned"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/choice-history.ts",
+      "sha": "de8671b4482339791b8f03bd5616c13d50dc4a87",
+      "preimage": "c469187a2e04d49d157cf9d3830145ca845f4064",
+      "scope": "owned"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/comparison-rule.ts",
+      "sha": "10b59adfce7d8fb5143f49c9df9a0d7321425018",
+      "preimage": "9e02b30fee0e1f37afeac28b0296bdfbbbab70aa",
+      "scope": "owned"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/http.ts",
+      "sha": "a77da76589ece60a6925bdd20731efbc8f19b597",
+      "preimage": "596512b4e12c094fd178ea845f4b560bbf23a348",
+      "scope": "owned"
+    },
+    {
+      "path": "packages/app-shell/e2e/sucafina/decisions-support/closure-response.ts",
+      "sha": "e1c78c9311d9af5df81191acc490b9574421ad3d",
+      "preimage": "fa509e9d7a7da9d0024c9487975f7b26b3b29146",
+      "scope": "owned"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-case-http.ts",
+      "sha": "1c0fabda68c92b3d7a14b569c2c3e960ff39476c",
+      "preimage": null,
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "c714c553537758e484c50beb83665eb9823f618a",
+      "preimage": "f03ab621e96cfda23456be73bba2d24f24754d36",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-http.ts",
+      "sha": "8a15b3ac6c14a2cb4b5cfa9075ec75320884dd90",
+      "preimage": "6cbfc373ea72a90351e4f9997f65663e0f5fc775",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/decision-domain-http.ts",
+      "sha": "e91191ec5fa37da12db4d92e973e9105c00be4e5",
+      "preimage": "5cb8e4e45c1e68af4c59ec096b499ed0907f6c66",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-comparison-scope.ts",
+      "sha": "feae4846feb657924d9229193eeeded58b378851",
+      "preimage": "7d43f60fdb1a6400cdec1b89c1717e6a2b8a2f11",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
+      "sha": "1761a5d2558c9091d1c02730774751ace44e9131",
+      "preimage": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/planner-evidence.ts",
+      "sha": "30e67e56d5b78ebb2adebbec10194f19d725b570",
+      "preimage": "13153182e357b716a12d2554654905d54fa30ee4",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/business-services.ts",
+      "sha": "c7f8b5e31b835632fdbe6b6c195ead5f304838f1",
+      "preimage": "7f77d2443c220ba153cf38ee538a15a7f9a4b78d",
+      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-authority.ts",
+      "sha": "632a47e792502d7476149d2b790ad447cbd96649",
+      "preimage": "138238ca9273e84f39f8e1db484378a3e62d41d4",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/portfolio-services.ts",
+      "sha": "8c0548252444adf21acc7e6bdc206fca016ed5f6",
+      "preimage": "881ce4672d9d0e641d1cc849663c0980c118774d",
+      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/known-subtotal-metric.ts",
+      "sha": "0fbe3adf8280621b93972385e3af36dfa833c831",
+      "preimage": null,
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/state.ts",
+      "sha": "2b8aa07e730bdc73891b14faced899e6f54ee487",
+      "preimage": "755639b2a16265fe164ba2e6343738c1362d168c",
+      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/ledger-outbox.ts",
+      "sha": "8e097896028878d2072239858534ed99c2463207",
+      "preimage": "393aebdac3b6b5c80b41a1ca73227413563ad440",
+      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/mutations.ts",
+      "sha": "ca21c3690f71d28c04c4bbd5045aa8389c42d384",
+      "preimage": "3f31dd52babca16249fb04fec29abbf74e7a5da4",
+      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/business-context.ts",
+      "sha": "8d46a62489755a817155740eab4486017c23eb78",
+      "preimage": "12d6b27c52e29ac0cb8ccc65fba63ad20ddbc4ef",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/decisions/choice-source-history.ts",
+      "sha": "791de0d1ea25c0488c9124157d21f18cd3faf315",
+      "preimage": null,
+      "scope": "SHARED_OWNER_PROPOSAL_INERT_ON_SOURCE52"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+      "sha": "d9cbd51b85514fca0c7e36f190746d2282bde2c5",
+      "preimage": "d9eaac043514141abb2f1f978a6fd2ceaf4040d6",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/auth-maintenance.ts",
+      "sha": "6f024be93e31329270cc266742038a6e58807b1c",
+      "preimage": "af6e6749f7b61e07c419c90a264fdc48f3b32e21",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+      "sha": "c0ae6388a48ba44dd393cc62f2dfec83c0635a14",
+      "preimage": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "sha": "b2490cb7abeb071681e4fd2f43596d0407a491bc",
+      "preimage": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+      "scope": "shared_owner_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/known-subtotal-metric.test.ts",
+      "sha": "6dc37ec8d08fb4c0c0274ffa7d25ad951a7cd388",
+      "preimage": null,
+      "scope": "unit_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "sha": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "preimage": null,
+      "scope": "UNIT_PROPOSAL_INERT_ON_SOURCE52"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/auth-read-connection.test.ts",
+      "sha": "f66d5912c35217c90e891251549d6a4a03b77d00",
+      "preimage": null,
+      "scope": "unit_proposal"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "sha": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "preimage": null,
+      "scope": "unit_proposal"
+    }
+  ],
+  "unit_selection": [
+    "Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+    "Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+    "Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts"
+  ],
+  "target_writes": 0,
+  "kind": "SUPPLEMENTAL_UNIT05",
+  "S": "c07766ac05fab41c6433746a9bd78001d4f599a3",
+  "S_tree": "62d1b052653f250ed1b61f3e1114534eee51218c",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts"
+    ],
+    "env": {}
+  },
+  "request_blob": "e1f7decee3472cba5d83c56e7c7e2746bf6492bc",
+  "request_bytes": 365,
+  "branch": "ci-run-linux-astra-wp11-2624fe74-e1f7dece-m52-u05",
+  "workflow_blob": "3185885e123f9bb13c16c670e4df2fcffab38290",
+  "expected_cases_static": 74,
+  "counts_basis": "23 P13 +50 P9 +1 C50; only actual hosted log may establish execution counts.",
+  "acceptance_claim": false,
+  "dispatched_at": "2026-11-15 06:36:25 UTC",
+  "create_branch_result": {
+    "branch": "ci-run-linux-astra-wp11-2624fe74-e1f7dece-m52-u05"
+  },
+  "unit": 5,
+  "run_id": 43686211157,
+  "job_id": 132727117045,
+  "cleanup_job_id": 132727553319,
+  "conclusion": "success",
+  "cleanup_conclusion": "success",
+  "scoped_unit_result": "PASS",
+  "passed": 74,
+  "failed": 0,
+  "skipped": 0,
+  "todo": 0,
+  "expects": 477,
+  "files": 3,
+  "duration_ms": 8840.0,
+  "observed_case_count": 74,
+  "expected_case_count": 74,
+  "assertions": {
+    "expect_calls": 477,
+    "basis": "One actual Bun expect() calls summary in the supplied hosted job log",
+    "per_case_expect_counts": null,
+    "prior_unit_assert_counts_transferred": false
+  },
+  "retry_evidence": {
+    "actions_run_attempt": 1,
+    "bun_invocations": 1,
+    "repeated_case_observations": 0,
+    "no_retry_flags_in_exact_request": true,
+    "zero_retries_verified_in_supplied_run": true,
+    "retries": 0,
+    "scope": "Supplied complete test job log plus supplied Actions attempt metadata; prior unit runs remain separate history."
+  },
+  "runtime_counts": {
+    "PASS": 74
+  },
+  "summary_evidence": {
+    "pass": [
+      {
+        "line": 924,
+        "text": "74 pass"
+      }
+    ],
+    "fail": [
+      {
+        "line": 925,
+        "text": "0 fail"
+      }
+    ],
+    "skip": [],
+    "todo": [],
+    "expects": [
+      {
+        "line": 926,
+        "text": "477 expect() calls"
+      }
+    ],
+    "ran": [
+      {
+        "line": 927,
+        "text": "Ran 74 tests across 3 files. [8.84s]"
+      }
+    ]
+  },
+  "source_tests": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "sha256": "48f8a1c1997b7f8c53cb4b41c9f726b565d2807013d42f76d1afc756941638f0",
+      "name_basis": "Exact authored literal/template expansions checked against 23-case P13 matrix; no prior runtime result."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "sha256": "fad6ccb9cab9b6399dd4a2ef3a4f9ee11da4c94be7065d4e76e0b72a416cec96",
+      "name_basis": "Exact source blob a91e70fc; P9 matrix equals prior Unit03 observed-name inventory. Only names reused; no prior statuses, durations or expects transferred."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+      "blob": "50dd7e88b4611302b8d97d6c383087508a62351e",
+      "sha256": "2001e4ae75ba61acc9a6f556269e0bfbeced346d14729608bea6871a4d06b924",
+      "name_basis": "Exact existing C50 bound-source-read literal test name."
+    }
+  ],
+  "results": [
+    {
+      "name": "cold access projections detach selected data and preserve every outer snapshot field",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 47.06,
+      "log_line_number": 844,
+      "log_line": "2026-11-15T06:38:14.6711408Z (pass) cold access projections detach selected data and preserve every outer snapshot field [47.06ms]"
+    },
+    {
+      "name": "warm access projections detach selected data and preserve every outer snapshot field",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 9.03,
+      "log_line_number": 845,
+      "log_line": "2026-11-15T06:38:14.6801542Z (pass) warm access projections detach selected data and preserve every outer snapshot field [9.03ms]"
+    },
+    {
+      "name": "access projection deliberately omits unrelated business getters while the full reader retains refusal",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 9.06,
+      "log_line_number": 846,
+      "log_line": "2026-11-15T06:38:14.6892503Z (pass) access projection deliberately omits unrelated business getters while the full reader retains refusal [9.06ms]"
+    },
+    {
+      "name": "access projection refuses outer data accessor without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 12.84,
+      "log_line_number": 847,
+      "log_line": "2026-11-15T06:38:14.7020781Z (pass) access projection refuses outer data accessor without invoking a getter or committing [12.84ms]"
+    },
+    {
+      "name": "access projection refuses selected roleMap accessor without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 8.44,
+      "log_line_number": 848,
+      "log_line": "2026-11-15T06:38:14.7105338Z (pass) access projection refuses selected roleMap accessor without invoking a getter or committing [8.44ms]"
+    },
+    {
+      "name": "access projection refuses selected access accessor without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 7.43,
+      "log_line_number": 849,
+      "log_line": "2026-11-15T06:38:14.7179657Z (pass) access projection refuses selected access accessor without invoking a getter or committing [7.43ms]"
+    },
+    {
+      "name": "access projection refuses nested selected object accessor without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 8.03,
+      "log_line_number": 850,
+      "log_line": "2026-11-15T06:38:14.7260059Z (pass) access projection refuses nested selected object accessor without invoking a getter or committing [8.03ms]"
+    },
+    {
+      "name": "access projection refuses selected cycle without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 7.92,
+      "log_line_number": 851,
+      "log_line": "2026-11-15T06:38:14.7339073Z (pass) access projection refuses selected cycle without invoking a getter or committing [7.92ms]"
+    },
+    {
+      "name": "access projection refuses data symbol without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 8.39,
+      "log_line_number": 852,
+      "log_line": "2026-11-15T06:38:14.7422976Z (pass) access projection refuses data symbol without invoking a getter or committing [8.39ms]"
+    },
+    {
+      "name": "access projection refuses data custom prototype without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 25.46,
+      "log_line_number": 853,
+      "log_line": "2026-11-15T06:38:14.7678233Z (pass) access projection refuses data custom prototype without invoking a getter or committing [25.46ms]"
+    },
+    {
+      "name": "access projection refuses invalid outer version without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 9.4,
+      "log_line_number": 854,
+      "log_line": "2026-11-15T06:38:14.7771741Z (pass) access projection refuses invalid outer version without invoking a getter or committing [9.40ms]"
+    },
+    {
+      "name": "access projection refuses outer audit accessor without invoking a getter or committing",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 7.88,
+      "log_line_number": 855,
+      "log_line": "2026-11-15T06:38:14.7850599Z (pass) access projection refuses outer audit accessor without invoking a getter or committing [7.88ms]"
+    },
+    {
+      "name": "real ProductAuthority preserves principal, access revision and all authenticator observations with legacy fallback",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 13.97,
+      "log_line_number": 856,
+      "log_line": "2026-11-15T06:38:14.7990639Z (pass) real ProductAuthority preserves principal, access revision and all authenticator observations with legacy fallback [13.97ms]"
+    },
+    {
+      "name": "a present access capability returning undefined fails closed without falling back to the full reader",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 7.14,
+      "log_line_number": 857,
+      "log_line": "2026-11-15T06:38:14.8061951Z (pass) a present access capability returning undefined fails closed without falling back to the full reader [7.14ms]"
+    },
+    {
+      "name": "real ProductAuthority refuses malformed selected role map",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 9.7,
+      "log_line_number": 858,
+      "log_line": "2026-11-15T06:38:14.8158998Z (pass) real ProductAuthority refuses malformed selected role map [9.70ms]"
+    },
+    {
+      "name": "real ProductAuthority refuses malformed selected access scope",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 7.8,
+      "log_line_number": 859,
+      "log_line": "2026-11-15T06:38:14.8236903Z (pass) real ProductAuthority refuses malformed selected access scope [7.80ms]"
+    },
+    {
+      "name": "mutable-root ACL changes are observed afresh and invalidate an existing private lease",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 12.03,
+      "log_line_number": 860,
+      "log_line": "2026-11-15T06:38:14.8357784Z (pass) mutable-root ACL changes are observed afresh and invalidate an existing private lease [12.03ms]"
+    },
+    {
+      "name": "real C08 state reads retain final access authorization and never return a value after ACL drift",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 12.98,
+      "log_line_number": 861,
+      "log_line": "2026-11-15T06:38:14.8487920Z (pass) real C08 state reads retain final access authorization and never return a value after ACL drift [12.98ms]"
+    },
+    {
+      "name": "private UI revalidation retains its final lease check after asynchronous authentication",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 11.46,
+      "log_line_number": 862,
+      "log_line": "2026-11-15T06:38:14.8602706Z (pass) private UI revalidation retains its final lease check after asynchronous authentication [11.46ms]"
+    },
+    {
+      "name": "access projection and ProductAuthority reject cancellation and expired leases without reusing old copies",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 13.37,
+      "log_line_number": 863,
+      "log_line": "2026-11-15T06:38:14.8736446Z (pass) access projection and ProductAuthority reject cancellation and expired leases without reusing old copies [13.37ms]"
+    },
+    {
+      "name": "ended access scopes cannot borrow a later root or another store's current observation",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 7.8,
+      "log_line_number": 864,
+      "log_line": "2026-11-15T06:38:14.8814516Z (pass) ended access scopes cannot borrow a later root or another store's current observation [7.80ms]"
+    },
+    {
+      "name": "a later root observes a peer's committed ACL after the real C08 lock releases",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 23.9,
+      "log_line_number": 865,
+      "log_line": "2026-11-15T06:38:14.9053238Z (pass) a later root observes a peer's committed ACL after the real C08 lock releases [23.90ms]"
+    },
+    {
+      "name": "the real CurrentChoice and source wrappers forward access projection while keeping full source reads",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "source_test_blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "status": "PASS",
+      "duration_ms": 9.66,
+      "log_line_number": 866,
+      "log_line": "2026-11-15T06:38:14.9150096Z (pass) the real CurrentChoice and source wrappers forward access projection while keeping full source reads [9.66ms]"
+    },
+    {
+      "name": "one canonical choice atomically captures original Planner evidence in the cases/outbox commit",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 338.66,
+      "log_line_number": 869,
+      "log_line": "2026-11-15T06:38:15.4186479Z (pass) one canonical choice atomically captures original Planner evidence in the cases/outbox commit [338.66ms]"
+    },
+    {
+      "name": "exact retry keeps the original choice and capture and never captures again",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 47.77,
+      "log_line_number": 870,
+      "log_line": "2026-11-15T06:38:15.4663973Z (pass) exact retry keeps the original choice and capture and never captures again [47.77ms]"
+    },
+    {
+      "name": "legacy choice entries remain uncaptured on retry and cannot synthesize an original projection",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 32.36,
+      "log_line_number": 871,
+      "log_line": "2026-11-15T06:38:15.4987584Z (pass) legacy choice entries remain uncaptured on retry and cannot synthesize an original projection [32.36ms]"
+    },
+    {
+      "name": "capture failure source-denied commits neither a choice nor any outbox effect",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 38.06,
+      "log_line_number": 872,
+      "log_line": "2026-11-15T06:38:15.5368046Z (pass) capture failure source-denied commits neither a choice nor any outbox effect [38.06ms]"
+    },
+    {
+      "name": "capture failure incomplete-records commits neither a choice nor any outbox effect",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 32.66,
+      "log_line_number": 873,
+      "log_line": "2026-11-15T06:38:15.5694834Z (pass) capture failure incomplete-records commits neither a choice nor any outbox effect [32.66ms]"
+    },
+    {
+      "name": "capture failure not-an-array commits neither a choice nor any outbox effect",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 30.31,
+      "log_line_number": 874,
+      "log_line": "2026-11-15T06:38:15.5997910Z (pass) capture failure not-an-array commits neither a choice nor any outbox effect [30.31ms]"
+    },
+    {
+      "name": "capture failure selection-mutation commits neither a choice nor any outbox effect",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 34.11,
+      "log_line_number": 875,
+      "log_line": "2026-11-15T06:38:15.6339143Z (pass) capture failure selection-mutation commits neither a choice nor any outbox effect [34.11ms]"
+    },
+    {
+      "name": "capture failure headers-drift commits neither a choice nor any outbox effect",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 31.86,
+      "log_line_number": 876,
+      "log_line": "2026-11-15T06:38:15.6658063Z (pass) capture failure headers-drift commits neither a choice nor any outbox effect [31.86ms]"
+    },
+    {
+      "name": "capture failure lease-ended commits neither a choice nor any outbox effect",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 29.2,
+      "log_line_number": 877,
+      "log_line": "2026-11-15T06:38:15.6949920Z (pass) capture failure lease-ended commits neither a choice nor any outbox effect [29.20ms]"
+    },
+    {
+      "name": "capture failure capture-method-replaced commits neither a choice nor any outbox effect",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 30.48,
+      "log_line_number": 878,
+      "log_line": "2026-11-15T06:38:15.7255165Z (pass) capture failure capture-method-replaced commits neither a choice nor any outbox effect [30.48ms]"
+    },
+    {
+      "name": "unsupported operations remains an explicit empty capture without reading a source",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 59.28,
+      "log_line_number": 879,
+      "log_line": "2026-11-15T06:38:15.7848168Z (pass) unsupported operations remains an explicit empty capture without reading a source [59.28ms]"
+    },
+    {
+      "name": "unsupported assumptions remains an explicit empty capture without reading a source",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 19.27,
+      "log_line_number": 880,
+      "log_line": "2026-11-15T06:38:15.8040541Z (pass) unsupported assumptions remains an explicit empty capture without reading a source [19.27ms]"
+    },
+    {
+      "name": "unsupported non-planner remains an explicit empty capture without reading a source",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 20.57,
+      "log_line_number": 881,
+      "log_line": "2026-11-15T06:38:15.8246127Z (pass) unsupported non-planner remains an explicit empty capture without reading a source [20.57ms]"
+    },
+    {
+      "name": "capture refuses request-missing under a real UI lease",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 26.01,
+      "log_line_number": 882,
+      "log_line": "2026-11-15T06:38:15.8506132Z (pass) capture refuses request-missing under a real UI lease [26.01ms]"
+    },
+    {
+      "name": "capture refuses request-replaced under a real UI lease",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 21.55,
+      "log_line_number": 883,
+      "log_line": "2026-11-15T06:38:15.8722078Z (pass) capture refuses request-replaced under a real UI lease [21.55ms]"
+    },
+    {
+      "name": "capture refuses aborted under a real UI lease",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 20.89,
+      "log_line_number": 884,
+      "log_line": "2026-11-15T06:38:15.8931110Z (pass) capture refuses aborted under a real UI lease [20.89ms]"
+    },
+    {
+      "name": "capture refuses lease-ended under a real UI lease",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 40.59,
+      "log_line_number": 885,
+      "log_line": "2026-11-15T06:38:15.9337009Z (pass) capture refuses lease-ended under a real UI lease [40.59ms]"
+    },
+    {
+      "name": "capture refuses binding-revoked under a real UI lease",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 26.86,
+      "log_line_number": 886,
+      "log_line": "2026-11-15T06:38:15.9606111Z (pass) capture refuses binding-revoked under a real UI lease [26.86ms]"
+    },
+    {
+      "name": "capture refuses source-argument drift while awaiting the authorized projector",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 20.66,
+      "log_line_number": 887,
+      "log_line": "2026-11-15T06:38:15.9835730Z (pass) capture refuses source-argument drift while awaiting the authorized projector [20.66ms]"
+    },
+    {
+      "name": "capture refuses projector-method drift while awaiting the authorized projector",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 49.79,
+      "log_line_number": 888,
+      "log_line": "2026-11-15T06:38:16.0311248Z (pass) capture refuses projector-method drift while awaiting the authorized projector [49.79ms]"
+    },
+    {
+      "name": "capture refuses headers drift while awaiting the authorized projector",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 28.4,
+      "log_line_number": 889,
+      "log_line": "2026-11-15T06:38:16.0595033Z (pass) capture refuses headers drift while awaiting the authorized projector [28.40ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-capture without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 41.9,
+      "log_line_number": 890,
+      "log_line": "2026-11-15T06:38:16.1015074Z (pass) protected capture reader refuses missing-capture without historical substitution [41.90ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-case without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 56.23,
+      "log_line_number": 891,
+      "log_line": "2026-11-15T06:38:16.1576603Z (pass) protected capture reader refuses missing-case without historical substitution [56.23ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-choice without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 82.2,
+      "log_line_number": 892,
+      "log_line": "2026-11-15T06:38:16.2399585Z (pass) protected capture reader refuses missing-choice without historical substitution [82.20ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-event without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 42.63,
+      "log_line_number": 893,
+      "log_line": "2026-11-15T06:38:16.2825362Z (pass) protected capture reader refuses missing-event without historical substitution [42.63ms]"
+    },
+    {
+      "name": "protected capture reader refuses choice-bytes without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 45.97,
+      "log_line_number": 894,
+      "log_line": "2026-11-15T06:38:16.3285446Z (pass) protected capture reader refuses choice-bytes without historical substitution [45.97ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-rationale without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 57.52,
+      "log_line_number": 895,
+      "log_line": "2026-11-15T06:38:16.3860510Z (pass) protected capture reader refuses event-rationale without historical substitution [57.52ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-lifecycle without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 54.69,
+      "log_line_number": 896,
+      "log_line": "2026-11-15T06:38:16.4408537Z (pass) protected capture reader refuses event-lifecycle without historical substitution [54.69ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-actions without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 39.4,
+      "log_line_number": 897,
+      "log_line": "2026-11-15T06:38:16.4801556Z (pass) protected capture reader refuses event-actions without historical substitution [39.40ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-ref without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 42.96,
+      "log_line_number": 898,
+      "log_line": "2026-11-15T06:38:16.5231295Z (pass) protected capture reader refuses event-ref without historical substitution [42.96ms]"
+    },
+    {
+      "name": "protected capture reader refuses capture-bytes without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 50.44,
+      "log_line_number": 899,
+      "log_line": "2026-11-15T06:38:16.5736301Z (pass) protected capture reader refuses capture-bytes without historical substitution [50.44ms]"
+    },
+    {
+      "name": "protected capture reader refuses capture-digest without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 52.65,
+      "log_line_number": 900,
+      "log_line": "2026-11-15T06:38:16.6262706Z (pass) protected capture reader refuses capture-digest without historical substitution [52.65ms]"
+    },
+    {
+      "name": "protected capture reader refuses writer without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 40.04,
+      "log_line_number": 901,
+      "log_line": "2026-11-15T06:38:16.6663222Z (pass) protected capture reader refuses writer without historical substitution [40.04ms]"
+    },
+    {
+      "name": "protected capture reader refuses access-revision without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 40.66,
+      "log_line_number": 902,
+      "log_line": "2026-11-15T06:38:16.7069860Z (pass) protected capture reader refuses access-revision without historical substitution [40.66ms]"
+    },
+    {
+      "name": "protected capture reader refuses policy without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 49.21,
+      "log_line_number": 903,
+      "log_line": "2026-11-15T06:38:16.7562230Z (pass) protected capture reader refuses policy without historical substitution [49.21ms]"
+    },
+    {
+      "name": "protected capture reader refuses created-at without historical substitution",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 38.0,
+      "log_line_number": 904,
+      "log_line": "2026-11-15T06:38:16.7942242Z (pass) protected capture reader refuses created-at without historical substitution [38.00ms]"
+    },
+    {
+      "name": "outbox replay cannot add or change a protected capture on an existing event",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 32.6,
+      "log_line_number": 905,
+      "log_line": "2026-11-15T06:38:16.8268471Z (pass) outbox replay cannot add or change a protected capture on an existing event [32.60ms]"
+    },
+    {
+      "name": "protected original bytes remain historical after a real same-record Planner edit",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 68.23,
+      "log_line_number": 906,
+      "log_line": "2026-11-15T06:38:16.8950888Z (pass) protected original bytes remain historical after a real same-record Planner edit [68.23ms]"
+    },
+    {
+      "name": "a delete and recreate with the same logical Planner id cannot inherit the old capture",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 47.4,
+      "log_line_number": 907,
+      "log_line": "2026-11-15T06:38:16.9425070Z (pass) a delete and recreate with the same logical Planner id cannot inherit the old capture [47.40ms]"
+    },
+    {
+      "name": "stored capture is not a grant when current source ACL is revoked",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 44.54,
+      "log_line_number": 908,
+      "log_line": "2026-11-15T06:38:16.9870826Z (pass) stored capture is not a grant when current source ACL is revoked [44.54ms]"
+    },
+    {
+      "name": "protected reader rechecks case-authorization after its asynchronous case authorization",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 36.27,
+      "log_line_number": 909,
+      "log_line": "2026-11-15T06:38:17.0233687Z (pass) protected reader rechecks case-authorization after its asynchronous case authorization [36.27ms]"
+    },
+    {
+      "name": "protected reader rechecks case-argument after its asynchronous case authorization",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 46.06,
+      "log_line_number": 910,
+      "log_line": "2026-11-15T06:38:17.0694625Z (pass) protected reader rechecks case-argument after its asynchronous case authorization [46.06ms]"
+    },
+    {
+      "name": "protected reader rechecks headers after its asynchronous case authorization",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 35.74,
+      "log_line_number": 911,
+      "log_line": "2026-11-15T06:38:17.1051825Z (pass) protected reader rechecks headers after its asynchronous case authorization [35.74ms]"
+    },
+    {
+      "name": "protected reader rechecks lease after its asynchronous case authorization",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 35.91,
+      "log_line_number": 912,
+      "log_line": "2026-11-15T06:38:17.1410806Z (pass) protected reader rechecks lease after its asynchronous case authorization [35.91ms]"
+    },
+    {
+      "name": "historical resolution refuses current-source drift between independent observations",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 41.96,
+      "log_line_number": 913,
+      "log_line": "2026-11-15T06:38:17.1831216Z (pass) historical resolution refuses current-source drift between independent observations [41.96ms]"
+    },
+    {
+      "name": "capture requires the real held C08 snapshot even with otherwise valid UI authority",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 20.76,
+      "log_line_number": 914,
+      "log_line": "2026-11-15T06:38:17.2038396Z (pass) capture requires the real held C08 snapshot even with otherwise valid UI authority [20.76ms]"
+    },
+    {
+      "name": "recordHistory rereads protected original bytes after observing the current source",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 45.38,
+      "log_line_number": 915,
+      "log_line": "2026-11-15T06:38:17.2492860Z (pass) recordHistory rereads protected original bytes after observing the current source [45.38ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to choice before exposing original bytes",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 48.52,
+      "log_line_number": 916,
+      "log_line": "2026-11-15T06:38:17.2977957Z (pass) final capture egress serializes a concurrent change to choice before exposing original bytes [48.52ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to outbox-entry before exposing original bytes",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 41.59,
+      "log_line_number": 917,
+      "log_line": "2026-11-15T06:38:17.3394056Z (pass) final capture egress serializes a concurrent change to outbox-entry before exposing original bytes [41.59ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to captured-source before exposing original bytes",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "source_test_blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "status": "PASS",
+      "duration_ms": 44.17,
+      "log_line_number": 918,
+      "log_line": "2026-11-15T06:38:17.3835708Z (pass) final capture egress serializes a concurrent change to captured-source before exposing original bytes [44.17ms]"
+    },
+    {
+      "name": "old source captures cannot be probed under viewer, foreign or revoked authority; pure probe survives retry and SQLite reopen",
+      "source_file": "modules/sucafina/Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+      "source_test_blob": "50dd7e88b4611302b8d97d6c383087508a62351e",
+      "status": "PASS",
+      "duration_ms": 5778.9,
+      "log_line_number": 921,
+      "log_line": "2026-11-15T06:38:23.2690414Z (pass) old source captures cannot be probed under viewer, foreign or revoked authority; pure probe survives retry and SQLite reopen [5778.90ms]"
+    }
+  ],
+  "all_observations": [
+    {
+      "name": "cold access projections detach selected data and preserve every outer snapshot field",
+      "status": "PASS",
+      "duration_ms": 47.06,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 844,
+      "log_line": "2026-11-15T06:38:14.6711408Z (pass) cold access projections detach selected data and preserve every outer snapshot field [47.06ms]"
+    },
+    {
+      "name": "warm access projections detach selected data and preserve every outer snapshot field",
+      "status": "PASS",
+      "duration_ms": 9.03,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 845,
+      "log_line": "2026-11-15T06:38:14.6801542Z (pass) warm access projections detach selected data and preserve every outer snapshot field [9.03ms]"
+    },
+    {
+      "name": "access projection deliberately omits unrelated business getters while the full reader retains refusal",
+      "status": "PASS",
+      "duration_ms": 9.06,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 846,
+      "log_line": "2026-11-15T06:38:14.6892503Z (pass) access projection deliberately omits unrelated business getters while the full reader retains refusal [9.06ms]"
+    },
+    {
+      "name": "access projection refuses outer data accessor without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 12.84,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 847,
+      "log_line": "2026-11-15T06:38:14.7020781Z (pass) access projection refuses outer data accessor without invoking a getter or committing [12.84ms]"
+    },
+    {
+      "name": "access projection refuses selected roleMap accessor without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 8.44,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 848,
+      "log_line": "2026-11-15T06:38:14.7105338Z (pass) access projection refuses selected roleMap accessor without invoking a getter or committing [8.44ms]"
+    },
+    {
+      "name": "access projection refuses selected access accessor without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 7.43,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 849,
+      "log_line": "2026-11-15T06:38:14.7179657Z (pass) access projection refuses selected access accessor without invoking a getter or committing [7.43ms]"
+    },
+    {
+      "name": "access projection refuses nested selected object accessor without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 8.03,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 850,
+      "log_line": "2026-11-15T06:38:14.7260059Z (pass) access projection refuses nested selected object accessor without invoking a getter or committing [8.03ms]"
+    },
+    {
+      "name": "access projection refuses selected cycle without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 7.92,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 851,
+      "log_line": "2026-11-15T06:38:14.7339073Z (pass) access projection refuses selected cycle without invoking a getter or committing [7.92ms]"
+    },
+    {
+      "name": "access projection refuses data symbol without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 8.39,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 852,
+      "log_line": "2026-11-15T06:38:14.7422976Z (pass) access projection refuses data symbol without invoking a getter or committing [8.39ms]"
+    },
+    {
+      "name": "access projection refuses data custom prototype without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 25.46,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 853,
+      "log_line": "2026-11-15T06:38:14.7678233Z (pass) access projection refuses data custom prototype without invoking a getter or committing [25.46ms]"
+    },
+    {
+      "name": "access projection refuses invalid outer version without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 9.4,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 854,
+      "log_line": "2026-11-15T06:38:14.7771741Z (pass) access projection refuses invalid outer version without invoking a getter or committing [9.40ms]"
+    },
+    {
+      "name": "access projection refuses outer audit accessor without invoking a getter or committing",
+      "status": "PASS",
+      "duration_ms": 7.88,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 855,
+      "log_line": "2026-11-15T06:38:14.7850599Z (pass) access projection refuses outer audit accessor without invoking a getter or committing [7.88ms]"
+    },
+    {
+      "name": "real ProductAuthority preserves principal, access revision and all authenticator observations with legacy fallback",
+      "status": "PASS",
+      "duration_ms": 13.97,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 856,
+      "log_line": "2026-11-15T06:38:14.7990639Z (pass) real ProductAuthority preserves principal, access revision and all authenticator observations with legacy fallback [13.97ms]"
+    },
+    {
+      "name": "a present access capability returning undefined fails closed without falling back to the full reader",
+      "status": "PASS",
+      "duration_ms": 7.14,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 857,
+      "log_line": "2026-11-15T06:38:14.8061951Z (pass) a present access capability returning undefined fails closed without falling back to the full reader [7.14ms]"
+    },
+    {
+      "name": "real ProductAuthority refuses malformed selected role map",
+      "status": "PASS",
+      "duration_ms": 9.7,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 858,
+      "log_line": "2026-11-15T06:38:14.8158998Z (pass) real ProductAuthority refuses malformed selected role map [9.70ms]"
+    },
+    {
+      "name": "real ProductAuthority refuses malformed selected access scope",
+      "status": "PASS",
+      "duration_ms": 7.8,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 859,
+      "log_line": "2026-11-15T06:38:14.8236903Z (pass) real ProductAuthority refuses malformed selected access scope [7.80ms]"
+    },
+    {
+      "name": "mutable-root ACL changes are observed afresh and invalidate an existing private lease",
+      "status": "PASS",
+      "duration_ms": 12.03,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 860,
+      "log_line": "2026-11-15T06:38:14.8357784Z (pass) mutable-root ACL changes are observed afresh and invalidate an existing private lease [12.03ms]"
+    },
+    {
+      "name": "real C08 state reads retain final access authorization and never return a value after ACL drift",
+      "status": "PASS",
+      "duration_ms": 12.98,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 861,
+      "log_line": "2026-11-15T06:38:14.8487920Z (pass) real C08 state reads retain final access authorization and never return a value after ACL drift [12.98ms]"
+    },
+    {
+      "name": "private UI revalidation retains its final lease check after asynchronous authentication",
+      "status": "PASS",
+      "duration_ms": 11.46,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 862,
+      "log_line": "2026-11-15T06:38:14.8602706Z (pass) private UI revalidation retains its final lease check after asynchronous authentication [11.46ms]"
+    },
+    {
+      "name": "access projection and ProductAuthority reject cancellation and expired leases without reusing old copies",
+      "status": "PASS",
+      "duration_ms": 13.37,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 863,
+      "log_line": "2026-11-15T06:38:14.8736446Z (pass) access projection and ProductAuthority reject cancellation and expired leases without reusing old copies [13.37ms]"
+    },
+    {
+      "name": "ended access scopes cannot borrow a later root or another store's current observation",
+      "status": "PASS",
+      "duration_ms": 7.8,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 864,
+      "log_line": "2026-11-15T06:38:14.8814516Z (pass) ended access scopes cannot borrow a later root or another store's current observation [7.80ms]"
+    },
+    {
+      "name": "a later root observes a peer's committed ACL after the real C08 lock releases",
+      "status": "PASS",
+      "duration_ms": 23.9,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 865,
+      "log_line": "2026-11-15T06:38:14.9053238Z (pass) a later root observes a peer's committed ACL after the real C08 lock releases [23.90ms]"
+    },
+    {
+      "name": "the real CurrentChoice and source wrappers forward access projection while keeping full source reads",
+      "status": "PASS",
+      "duration_ms": 9.66,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "log_line_number": 866,
+      "log_line": "2026-11-15T06:38:14.9150096Z (pass) the real CurrentChoice and source wrappers forward access projection while keeping full source reads [9.66ms]"
+    },
+    {
+      "name": "one canonical choice atomically captures original Planner evidence in the cases/outbox commit",
+      "status": "PASS",
+      "duration_ms": 338.66,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 869,
+      "log_line": "2026-11-15T06:38:15.4186479Z (pass) one canonical choice atomically captures original Planner evidence in the cases/outbox commit [338.66ms]"
+    },
+    {
+      "name": "exact retry keeps the original choice and capture and never captures again",
+      "status": "PASS",
+      "duration_ms": 47.77,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 870,
+      "log_line": "2026-11-15T06:38:15.4663973Z (pass) exact retry keeps the original choice and capture and never captures again [47.77ms]"
+    },
+    {
+      "name": "legacy choice entries remain uncaptured on retry and cannot synthesize an original projection",
+      "status": "PASS",
+      "duration_ms": 32.36,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 871,
+      "log_line": "2026-11-15T06:38:15.4987584Z (pass) legacy choice entries remain uncaptured on retry and cannot synthesize an original projection [32.36ms]"
+    },
+    {
+      "name": "capture failure source-denied commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 38.06,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 872,
+      "log_line": "2026-11-15T06:38:15.5368046Z (pass) capture failure source-denied commits neither a choice nor any outbox effect [38.06ms]"
+    },
+    {
+      "name": "capture failure incomplete-records commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 32.66,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 873,
+      "log_line": "2026-11-15T06:38:15.5694834Z (pass) capture failure incomplete-records commits neither a choice nor any outbox effect [32.66ms]"
+    },
+    {
+      "name": "capture failure not-an-array commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 30.31,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 874,
+      "log_line": "2026-11-15T06:38:15.5997910Z (pass) capture failure not-an-array commits neither a choice nor any outbox effect [30.31ms]"
+    },
+    {
+      "name": "capture failure selection-mutation commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 34.11,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 875,
+      "log_line": "2026-11-15T06:38:15.6339143Z (pass) capture failure selection-mutation commits neither a choice nor any outbox effect [34.11ms]"
+    },
+    {
+      "name": "capture failure headers-drift commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 31.86,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 876,
+      "log_line": "2026-11-15T06:38:15.6658063Z (pass) capture failure headers-drift commits neither a choice nor any outbox effect [31.86ms]"
+    },
+    {
+      "name": "capture failure lease-ended commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 29.2,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 877,
+      "log_line": "2026-11-15T06:38:15.6949920Z (pass) capture failure lease-ended commits neither a choice nor any outbox effect [29.20ms]"
+    },
+    {
+      "name": "capture failure capture-method-replaced commits neither a choice nor any outbox effect",
+      "status": "PASS",
+      "duration_ms": 30.48,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 878,
+      "log_line": "2026-11-15T06:38:15.7255165Z (pass) capture failure capture-method-replaced commits neither a choice nor any outbox effect [30.48ms]"
+    },
+    {
+      "name": "unsupported operations remains an explicit empty capture without reading a source",
+      "status": "PASS",
+      "duration_ms": 59.28,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 879,
+      "log_line": "2026-11-15T06:38:15.7848168Z (pass) unsupported operations remains an explicit empty capture without reading a source [59.28ms]"
+    },
+    {
+      "name": "unsupported assumptions remains an explicit empty capture without reading a source",
+      "status": "PASS",
+      "duration_ms": 19.27,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 880,
+      "log_line": "2026-11-15T06:38:15.8040541Z (pass) unsupported assumptions remains an explicit empty capture without reading a source [19.27ms]"
+    },
+    {
+      "name": "unsupported non-planner remains an explicit empty capture without reading a source",
+      "status": "PASS",
+      "duration_ms": 20.57,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 881,
+      "log_line": "2026-11-15T06:38:15.8246127Z (pass) unsupported non-planner remains an explicit empty capture without reading a source [20.57ms]"
+    },
+    {
+      "name": "capture refuses request-missing under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 26.01,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 882,
+      "log_line": "2026-11-15T06:38:15.8506132Z (pass) capture refuses request-missing under a real UI lease [26.01ms]"
+    },
+    {
+      "name": "capture refuses request-replaced under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 21.55,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 883,
+      "log_line": "2026-11-15T06:38:15.8722078Z (pass) capture refuses request-replaced under a real UI lease [21.55ms]"
+    },
+    {
+      "name": "capture refuses aborted under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 20.89,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 884,
+      "log_line": "2026-11-15T06:38:15.8931110Z (pass) capture refuses aborted under a real UI lease [20.89ms]"
+    },
+    {
+      "name": "capture refuses lease-ended under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 40.59,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 885,
+      "log_line": "2026-11-15T06:38:15.9337009Z (pass) capture refuses lease-ended under a real UI lease [40.59ms]"
+    },
+    {
+      "name": "capture refuses binding-revoked under a real UI lease",
+      "status": "PASS",
+      "duration_ms": 26.86,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 886,
+      "log_line": "2026-11-15T06:38:15.9606111Z (pass) capture refuses binding-revoked under a real UI lease [26.86ms]"
+    },
+    {
+      "name": "capture refuses source-argument drift while awaiting the authorized projector",
+      "status": "PASS",
+      "duration_ms": 20.66,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 887,
+      "log_line": "2026-11-15T06:38:15.9835730Z (pass) capture refuses source-argument drift while awaiting the authorized projector [20.66ms]"
+    },
+    {
+      "name": "capture refuses projector-method drift while awaiting the authorized projector",
+      "status": "PASS",
+      "duration_ms": 49.79,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 888,
+      "log_line": "2026-11-15T06:38:16.0311248Z (pass) capture refuses projector-method drift while awaiting the authorized projector [49.79ms]"
+    },
+    {
+      "name": "capture refuses headers drift while awaiting the authorized projector",
+      "status": "PASS",
+      "duration_ms": 28.4,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 889,
+      "log_line": "2026-11-15T06:38:16.0595033Z (pass) capture refuses headers drift while awaiting the authorized projector [28.40ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-capture without historical substitution",
+      "status": "PASS",
+      "duration_ms": 41.9,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 890,
+      "log_line": "2026-11-15T06:38:16.1015074Z (pass) protected capture reader refuses missing-capture without historical substitution [41.90ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-case without historical substitution",
+      "status": "PASS",
+      "duration_ms": 56.23,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 891,
+      "log_line": "2026-11-15T06:38:16.1576603Z (pass) protected capture reader refuses missing-case without historical substitution [56.23ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-choice without historical substitution",
+      "status": "PASS",
+      "duration_ms": 82.2,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 892,
+      "log_line": "2026-11-15T06:38:16.2399585Z (pass) protected capture reader refuses missing-choice without historical substitution [82.20ms]"
+    },
+    {
+      "name": "protected capture reader refuses missing-event without historical substitution",
+      "status": "PASS",
+      "duration_ms": 42.63,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 893,
+      "log_line": "2026-11-15T06:38:16.2825362Z (pass) protected capture reader refuses missing-event without historical substitution [42.63ms]"
+    },
+    {
+      "name": "protected capture reader refuses choice-bytes without historical substitution",
+      "status": "PASS",
+      "duration_ms": 45.97,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 894,
+      "log_line": "2026-11-15T06:38:16.3285446Z (pass) protected capture reader refuses choice-bytes without historical substitution [45.97ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-rationale without historical substitution",
+      "status": "PASS",
+      "duration_ms": 57.52,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 895,
+      "log_line": "2026-11-15T06:38:16.3860510Z (pass) protected capture reader refuses event-rationale without historical substitution [57.52ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-lifecycle without historical substitution",
+      "status": "PASS",
+      "duration_ms": 54.69,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 896,
+      "log_line": "2026-11-15T06:38:16.4408537Z (pass) protected capture reader refuses event-lifecycle without historical substitution [54.69ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-actions without historical substitution",
+      "status": "PASS",
+      "duration_ms": 39.4,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 897,
+      "log_line": "2026-11-15T06:38:16.4801556Z (pass) protected capture reader refuses event-actions without historical substitution [39.40ms]"
+    },
+    {
+      "name": "protected capture reader refuses event-ref without historical substitution",
+      "status": "PASS",
+      "duration_ms": 42.96,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 898,
+      "log_line": "2026-11-15T06:38:16.5231295Z (pass) protected capture reader refuses event-ref without historical substitution [42.96ms]"
+    },
+    {
+      "name": "protected capture reader refuses capture-bytes without historical substitution",
+      "status": "PASS",
+      "duration_ms": 50.44,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 899,
+      "log_line": "2026-11-15T06:38:16.5736301Z (pass) protected capture reader refuses capture-bytes without historical substitution [50.44ms]"
+    },
+    {
+      "name": "protected capture reader refuses capture-digest without historical substitution",
+      "status": "PASS",
+      "duration_ms": 52.65,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 900,
+      "log_line": "2026-11-15T06:38:16.6262706Z (pass) protected capture reader refuses capture-digest without historical substitution [52.65ms]"
+    },
+    {
+      "name": "protected capture reader refuses writer without historical substitution",
+      "status": "PASS",
+      "duration_ms": 40.04,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 901,
+      "log_line": "2026-11-15T06:38:16.6663222Z (pass) protected capture reader refuses writer without historical substitution [40.04ms]"
+    },
+    {
+      "name": "protected capture reader refuses access-revision without historical substitution",
+      "status": "PASS",
+      "duration_ms": 40.66,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 902,
+      "log_line": "2026-11-15T06:38:16.7069860Z (pass) protected capture reader refuses access-revision without historical substitution [40.66ms]"
+    },
+    {
+      "name": "protected capture reader refuses policy without historical substitution",
+      "status": "PASS",
+      "duration_ms": 49.21,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 903,
+      "log_line": "2026-11-15T06:38:16.7562230Z (pass) protected capture reader refuses policy without historical substitution [49.21ms]"
+    },
+    {
+      "name": "protected capture reader refuses created-at without historical substitution",
+      "status": "PASS",
+      "duration_ms": 38.0,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 904,
+      "log_line": "2026-11-15T06:38:16.7942242Z (pass) protected capture reader refuses created-at without historical substitution [38.00ms]"
+    },
+    {
+      "name": "outbox replay cannot add or change a protected capture on an existing event",
+      "status": "PASS",
+      "duration_ms": 32.6,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 905,
+      "log_line": "2026-11-15T06:38:16.8268471Z (pass) outbox replay cannot add or change a protected capture on an existing event [32.60ms]"
+    },
+    {
+      "name": "protected original bytes remain historical after a real same-record Planner edit",
+      "status": "PASS",
+      "duration_ms": 68.23,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 906,
+      "log_line": "2026-11-15T06:38:16.8950888Z (pass) protected original bytes remain historical after a real same-record Planner edit [68.23ms]"
+    },
+    {
+      "name": "a delete and recreate with the same logical Planner id cannot inherit the old capture",
+      "status": "PASS",
+      "duration_ms": 47.4,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 907,
+      "log_line": "2026-11-15T06:38:16.9425070Z (pass) a delete and recreate with the same logical Planner id cannot inherit the old capture [47.40ms]"
+    },
+    {
+      "name": "stored capture is not a grant when current source ACL is revoked",
+      "status": "PASS",
+      "duration_ms": 44.54,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 908,
+      "log_line": "2026-11-15T06:38:16.9870826Z (pass) stored capture is not a grant when current source ACL is revoked [44.54ms]"
+    },
+    {
+      "name": "protected reader rechecks case-authorization after its asynchronous case authorization",
+      "status": "PASS",
+      "duration_ms": 36.27,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 909,
+      "log_line": "2026-11-15T06:38:17.0233687Z (pass) protected reader rechecks case-authorization after its asynchronous case authorization [36.27ms]"
+    },
+    {
+      "name": "protected reader rechecks case-argument after its asynchronous case authorization",
+      "status": "PASS",
+      "duration_ms": 46.06,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 910,
+      "log_line": "2026-11-15T06:38:17.0694625Z (pass) protected reader rechecks case-argument after its asynchronous case authorization [46.06ms]"
+    },
+    {
+      "name": "protected reader rechecks headers after its asynchronous case authorization",
+      "status": "PASS",
+      "duration_ms": 35.74,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 911,
+      "log_line": "2026-11-15T06:38:17.1051825Z (pass) protected reader rechecks headers after its asynchronous case authorization [35.74ms]"
+    },
+    {
+      "name": "protected reader rechecks lease after its asynchronous case authorization",
+      "status": "PASS",
+      "duration_ms": 35.91,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 912,
+      "log_line": "2026-11-15T06:38:17.1410806Z (pass) protected reader rechecks lease after its asynchronous case authorization [35.91ms]"
+    },
+    {
+      "name": "historical resolution refuses current-source drift between independent observations",
+      "status": "PASS",
+      "duration_ms": 41.96,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 913,
+      "log_line": "2026-11-15T06:38:17.1831216Z (pass) historical resolution refuses current-source drift between independent observations [41.96ms]"
+    },
+    {
+      "name": "capture requires the real held C08 snapshot even with otherwise valid UI authority",
+      "status": "PASS",
+      "duration_ms": 20.76,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 914,
+      "log_line": "2026-11-15T06:38:17.2038396Z (pass) capture requires the real held C08 snapshot even with otherwise valid UI authority [20.76ms]"
+    },
+    {
+      "name": "recordHistory rereads protected original bytes after observing the current source",
+      "status": "PASS",
+      "duration_ms": 45.38,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 915,
+      "log_line": "2026-11-15T06:38:17.2492860Z (pass) recordHistory rereads protected original bytes after observing the current source [45.38ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to choice before exposing original bytes",
+      "status": "PASS",
+      "duration_ms": 48.52,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 916,
+      "log_line": "2026-11-15T06:38:17.2977957Z (pass) final capture egress serializes a concurrent change to choice before exposing original bytes [48.52ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to outbox-entry before exposing original bytes",
+      "status": "PASS",
+      "duration_ms": 41.59,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 917,
+      "log_line": "2026-11-15T06:38:17.3394056Z (pass) final capture egress serializes a concurrent change to outbox-entry before exposing original bytes [41.59ms]"
+    },
+    {
+      "name": "final capture egress serializes a concurrent change to captured-source before exposing original bytes",
+      "status": "PASS",
+      "duration_ms": 44.17,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "log_line_number": 918,
+      "log_line": "2026-11-15T06:38:17.3835708Z (pass) final capture egress serializes a concurrent change to captured-source before exposing original bytes [44.17ms]"
+    },
+    {
+      "name": "old source captures cannot be probed under viewer, foreign or revoked authority; pure probe survives retry and SQLite reopen",
+      "status": "PASS",
+      "duration_ms": 5778.9,
+      "source_file": "modules/sucafina/Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+      "log_line_number": 921,
+      "log_line": "2026-11-15T06:38:23.2690414Z (pass) old source captures cannot be probed under viewer, foreign or revoked authority; pure probe survives retry and SQLite reopen [5778.90ms]"
+    }
+  ],
+  "integrity": {
+    "expected_file_name_keys_exactly_once": true,
+    "file_associations_exact": true,
+    "single_bun_invocation": true,
+    "selected_headers_exactly_once": true,
+    "one_pass_fail_ran_expect_summary": true,
+    "summary_matches_observations": true,
+    "selected_file_count_matches": true,
+    "expected_case_count_matches": true,
+    "positive_actual_assert_count": true,
+    "no_skips_or_todos": true,
+    "actions_attempt_one": true,
+    "request_has_only_exact_files": true,
+    "jobs_completed_successfully": true
+  },
+  "unknown_cases": [],
+  "duplicate_case_keys": [],
+  "missing_cases": [],
+  "wrong_file_associations": [],
+  "bun_headers": [
+    {
+      "line": 841,
+      "text": "bun test v1.3.14 (0d9b296a)"
+    }
+  ],
+  "file_headers": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "line": 843
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "line": 868
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+      "line": 920
+    }
+  ],
+  "per_file": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/current-access-snapshots.test.ts",
+      "blob": "29ca71634808efeecb6da13b3931d07b80b85a8c",
+      "expected": 23,
+      "observed": 23,
+      "counts": {
+        "PASS": 23
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/decisions-installed-journeys/choice-source-history.test.ts",
+      "blob": "a91e70fc04807132c756c40bc2ecdd0fa0c5e91a",
+      "expected": 50,
+      "observed": 50,
+      "counts": {
+        "PASS": 50
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/denied-read-fix/bound-source-read.test.ts",
+      "blob": "50dd7e88b4611302b8d97d6c383087508a62351e",
+      "expected": 1,
+      "observed": 1,
+      "counts": {
+        "PASS": 1
+      }
+    }
+  ],
+  "raw_log": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/p13-unit05-43686211157/job-132727117045.log",
+    "sha256": "8fcc67333540a793a709cfc6dd24fe7549002e51c5e895057be610a648d4ea43",
+    "bytes": 80954,
+    "job": 132727117045
+  },
+  "jobs_evidence": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-audit/p13-unit05-final-jobs.json",
+    "sha256": "970c1ff7748f32143440b4bc55578d387950b9690caaa4d8e831bc4a19778b96",
+    "job_ids": [
+      132727117045,
+      132727553319
+    ]
+  },
+  "run_metadata_evidence": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p13-unit05-run.json",
+    "sha256": "a09c2fa7574a8189aae2ed2d26ad1bfb3cb5bafd1b2b80bb409868613d2987c9",
+    "status_in_supplied_snapshot": "in_progress",
+    "conclusion_in_supplied_snapshot": null,
+    "note": "Run metadata may be the dispatch snapshot; completed job states above come from the supplied final jobs record."
+  },
+  "normalizer": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/normalize-p13-unit05.py",
+    "sha256": "62ebaa2750a42a5dd57661d694114f72ff504e6b0e644c33e91fe3da49e110e5"
+  },
+  "normalization_plan": {
+    "path": "/workspace/scratch/fec39c0682b3/m52-work/p13-unit05-normalizer-plan.json",
+    "sha256": "dbd280e56c15d94db8d3ad310dc20acb58a1d453895c92b13fc1af6b06665077"
+  },
+  "authority_at_dispatch": {
+    "basis": "Root dispatch instructions and immutable envelope",
+    "target": "C53 product plus terminal105 at eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "source52_checkpoint": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+    "source52_state": "ACTIVE; no terminalization by this gate",
+    "GLOBAL_RELEASE": false
+  },
+  "limits": [
+    "Only the three explicitly selected supplemental Bun files on exact W/base; not the five installed UI journeys.",
+    "P13 uses real SQLite, ProductAuthority, C08 and private UI leases with explicit synthetic membership authentication; this is not installed-login proof.",
+    "P9 protected-history and C50 denied-bound-source test names are reused solely as an inventory. Actual statuses, durations and assertions come from this run.",
+    "No latency improvement, global acceptance, financial approval or Apply is established by this unit gate.",
+    "No criterion is promoted, no integrated_proof is inferred, and source52 is not terminalized by this receipt.",
+    "No local product execution; normalization only reads supplied Actions logs and static source metadata."
+  ],
+  "GLOBAL_RELEASE": false
+}

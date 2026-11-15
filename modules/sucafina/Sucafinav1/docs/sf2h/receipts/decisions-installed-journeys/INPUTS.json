@@ -2023,118 +2023,98 @@
     "audit": "audits/control-delta-before-p7.json"
   },
   "latest_checkpoint52": {
-    "schema": "sf52.checkpoint15.active.v1",
-    "state": "ACTIVE_FUNCTIONAL_QUALIFICATION_OPEN",
-    "source_parent": "20944c7cc1ef0fb7254793a421468ac12300356d",
-    "source_tree": "ca67b33deb0fe3586c996db925922bedcc5d9ac7",
-    "ACK52": {
-      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ACK52.json",
-      "commit": "20944c7cc1ef0fb7254793a421468ac12300356d",
-      "blob": "ee4f18cc45421f300b453b7c385d677b77001ea5"
-    },
-    "last_nominal": {
-      "number": 15,
-      "run": 43680980170,
-      "job": 132711320639,
-      "cleanup_job": 132712239127,
-      "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
-      "base_tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
-      "W": "c725f9b8307a84562258c478414ec0b39d428b99",
-      "W_tree": "44d2d591fac429609ff1a1e02c892185cfed4944",
-      "S": "5e84420631d4b162f38956aef6e0828e23a39e82",
-      "S_tree": "900eae757fddcdb1d6587c6635b84e3e93229dff",
-      "summary": {
-        "J1": "FAIL at the third decision-compare after two comparisons200 and explicit numeric-rule registration200; no post-rule comparison result, choice or P9 installed history observed",
-        "J2": "FAIL RequestsGET503/procurement-queue-unavailable/form0 before financial mutation",
-        "J3": "PASS",
-        "J4": "PASS",
-        "J5": "PASS",
-        "pass": 3,
-        "fail": 2,
-        "skipped": 0,
-        "timed_out": 0,
-        "flaky": 0,
-        "setup_failed": 0
+    "schema": "sf52.p13.documentary-checkpoint.v1",
+    "state": "ACTIVE_MATERIAL_AND_COMPLETED_EVIDENCE_ONLY",
+    "source_parent": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+    "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+    "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+    "W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+    "bindings": {
+      "unit05": {
+        "state": "COMPLETED_ACTUAL_RECEIPT_BOUND",
+        "receipt": "unit-05.json",
+        "sha256": "32855c95ed883d4dcc0e3147a928f56f73c52bba27f3b11de59b50cd40fbbbad",
+        "run_id": 43686211157,
+        "W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+        "S": "c07766ac05fab41c6433746a9bd78001d4f599a3",
+        "conclusion": "success",
+        "counts": {
+          "passed": 74,
+          "failed": 0,
+          "skipped": 0,
+          "expects": 477,
+          "duration_ms": 8840.0
+        },
+        "acceptance": "SUPPLEMENTAL_ONLY"
       },
-      "receipt": "nominal-15.json",
-      "receipt_sha256": "24ab7a11603e37cc9703d83a39f0896c7951ab8a140aa459877162dec6c22f16"
-    },
-    "additional_evidence": {
-      "nominal13": {
-        "run": 43678234266,
+      "nominal": {
+        "state": "COMPLETED_ACTUAL_RECEIPT_BOUND",
+        "number": 17,
+        "receipt": "nominal-17.json",
+        "sha256": "df6172f2f3f8627a4733bb2be8a9fe877ce8867a545ec3ce3fcf7da791373838",
+        "run_id": 43686512586,
+        "W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+        "S": "5ae402f2c3347619d882af10cc043952048a74c8",
         "summary": {
+          "J1": "FAIL: three comparisons200/ok and numeric rule200/ok; choice POST aborted before original response. Choice commit and P9 capture UNKNOWN_UNQUALIFIED; retry/history/source change NOT_REACHED.",
+          "J2": "FAIL: RequestsGET503/procurement-queue-unavailable/form0 before any financial mutation; later formal-approval contract NOT_REACHED.",
+          "J3": "PASS",
+          "J4": "PASS",
+          "J5": "PASS",
           "pass": 3,
           "fail": 2,
           "skipped": 0,
           "timed_out": 0,
           "flaky": 0,
-          "setup_failed": 0,
-          "J1": "FAIL at first decision-compare requestfailed ERR_ABORTED; source creation, attachment and two alternatives with exact recovery passed; executable numeric rule, choice and P9 history not reached",
-          "J2": "FAIL Requests503/form0 before financial mutation",
-          "J3": "PASS",
-          "J4": "PASS",
-          "J5": "PASS"
+          "setup_failed": 0
         },
-        "receipt": "nominal-13.json"
+        "conclusion": "failure"
       },
-      "diagnostic14": {
-        "run": 43679231538,
-        "receipt": "diagnostic-14.json",
-        "acceptance_fragments": 0
+      "criteria": {
+        "state": "UPDATED_FROM_ACTUAL_RECEIPT_ORIGINAL83_PRESERVED",
+        "path": "criteria.json",
+        "sha256": "8bcdbd967eb2d6eb08a7e1e4c642788a5295405cfd9eb926712200e403c41219",
+        "original_projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
+        "integrated_proofs_empty_arrays": 83,
+        "fragment_count": 226
       },
-      "unit04": {
-        "run": 43680704374,
-        "passed": 20,
-        "failed": 0,
-        "expects": 194,
-        "files": 3,
-        "duration_ms": 1487,
-        "receipt": "unit-04.json",
-        "scope": "SUPPLEMENTAL_ONLY"
+      "financial": {
+        "state": "BOUND_DOCUMENT_NO_AUTOMATIC_ACCEPTANCE",
+        "path": "FINANCIAL-CONTRACT.md",
+        "sha256": "39823ae5adf66321be6a6451f4e816b0af6a3a0e96da0556e4ce30c0e530b23c"
       }
     },
-    "criteria": {
-      "literal_count": 83,
-      "original_projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
-      "integrated_proofs_empty_arrays": 83,
-      "fragment_count": 198,
-      "new_whole_criterion_PASS": 0,
-      "receipt": "criteria.json",
-      "integrity": "audits/criteria-integrity.json"
+    "diagnostic16": {
+      "receipt": "diagnostic-16.json",
+      "run": 43682706028,
+      "acceptance_fragments": 0,
+      "choice_commit": "UNKNOWN_UNQUALIFIED",
+      "P9_capture": "UNKNOWN_UNQUALIFIED",
+      "retry_history_source_change": "NOT_REACHED"
     },
     "material": {
-      "P10_paths": 28,
-      "P11_paths": 31,
+      "paths": 34,
       "owned": 10,
-      "shared_owner_proposals": 18,
-      "unit_proposals": 3,
-      "image_index": "delivery/current-image-index.json",
-      "immutable_images_reused": 50,
-      "new_full_images": 5,
-      "prepared_manifest_statuses_are_historical": true
+      "shared_owner_proposals": 20,
+      "unit_proposals": 4,
+      "reused_images": 50,
+      "new_images": 10,
+      "P12_included": false,
+      "D7_D8_D14_D16_instrumentation_in_W": false
     },
     "authority": {
       "source52": "ACTIVE",
-      "last_nominal_target71": "ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS",
-      "later_target105": "ACTIVE_USER_APPOINTED",
-      "later_target": "180212940105e7b9ad15171b067c1c1b7841df5f",
-      "observations": "audits/current-target-after-nominal15.json",
-      "requested_terminal_handoff": 47,
+      "last_target_writer": 105,
+      "target_lease_state": "ENDED_BY_INTEGRATOR105",
+      "appointed_successor": null,
+      "target_writes_by52": 0,
+      "requested_handoff_recipient": 47,
       "terminal_handoff_issued": false,
-      "consumer_release_issued": false
+      "consumer_release_issued": false,
+      "CI101": "Own queue active; preserve existing52; no takeover or duplicated central selections claimed"
     },
-    "constraints": {
-      "five_original_UI_journeys": true,
-      "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
-      "test_budget_ms": 180000,
-      "UI_deadline_ms": 10000,
-      "retries": 0,
-      "seeds_or_direct_mutation_replacement": false,
-      "diagnostic14_promoted": false,
-      "local_product_execution": 0,
-      "source_checks02_failure_waived": false
-    },
-    "future_qualification": "NO_FUTURE_RESULT_BOUND_IN_THIS_CHECKPOINT",
     "GLOBAL_RELEASE": false,
     "WP11_DONE": false
   },
@@ -2167,7 +2147,237 @@
         "GLOBAL_RELEASE": false
       },
       "immutable_INPUTS_blob": "f3837e4f5a3cd64b4fdc6e99f3e38091b8ad5883"
+    },
+    {
+      "source_commit": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+      "pointer": "/latest_checkpoint52",
+      "record": {
+        "schema": "sf52.checkpoint15.active.v1",
+        "state": "ACTIVE_FUNCTIONAL_QUALIFICATION_OPEN",
+        "source_parent": "20944c7cc1ef0fb7254793a421468ac12300356d",
+        "source_tree": "ca67b33deb0fe3586c996db925922bedcc5d9ac7",
+        "ACK52": {
+          "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/decisions-installed-journeys/ACK52.json",
+          "commit": "20944c7cc1ef0fb7254793a421468ac12300356d",
+          "blob": "ee4f18cc45421f300b453b7c385d677b77001ea5"
+        },
+        "last_nominal": {
+          "number": 15,
+          "run": 43680980170,
+          "job": 132711320639,
+          "cleanup_job": 132712239127,
+          "base": "384f9eb172f0e6761a2af1e92d8b4bb11d9b01df",
+          "base_tree": "3115f239fe8bcdc5ea38b5089b6208224620d214",
+          "W": "c725f9b8307a84562258c478414ec0b39d428b99",
+          "W_tree": "44d2d591fac429609ff1a1e02c892185cfed4944",
+          "S": "5e84420631d4b162f38956aef6e0828e23a39e82",
+          "S_tree": "900eae757fddcdb1d6587c6635b84e3e93229dff",
+          "summary": {
+            "J1": "FAIL at the third decision-compare after two comparisons200 and explicit numeric-rule registration200; no post-rule comparison result, choice or P9 installed history observed",
+            "J2": "FAIL RequestsGET503/procurement-queue-unavailable/form0 before financial mutation",
+            "J3": "PASS",
+            "J4": "PASS",
+            "J5": "PASS",
+            "pass": 3,
+            "fail": 2,
+            "skipped": 0,
+            "timed_out": 0,
+            "flaky": 0,
+            "setup_failed": 0
+          },
+          "receipt": "nominal-15.json",
+          "receipt_sha256": "24ab7a11603e37cc9703d83a39f0896c7951ab8a140aa459877162dec6c22f16"
+        },
+        "additional_evidence": {
+          "nominal13": {
+            "run": 43678234266,
+            "summary": {
+              "pass": 3,
+              "fail": 2,
+              "skipped": 0,
+              "timed_out": 0,
+              "flaky": 0,
+              "setup_failed": 0,
+              "J1": "FAIL at first decision-compare requestfailed ERR_ABORTED; source creation, attachment and two alternatives with exact recovery passed; executable numeric rule, choice and P9 history not reached",
+              "J2": "FAIL Requests503/form0 before financial mutation",
+              "J3": "PASS",
+              "J4": "PASS",
+              "J5": "PASS"
+            },
+            "receipt": "nominal-13.json"
+          },
+          "diagnostic14": {
+            "run": 43679231538,
+            "receipt": "diagnostic-14.json",
+            "acceptance_fragments": 0
+          },
+          "unit04": {
+            "run": 43680704374,
+            "passed": 20,
+            "failed": 0,
+            "expects": 194,
+            "files": 3,
+            "duration_ms": 1487,
+            "receipt": "unit-04.json",
+            "scope": "SUPPLEMENTAL_ONLY"
+          }
+        },
+        "criteria": {
+          "literal_count": 83,
+          "original_projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
+          "integrated_proofs_empty_arrays": 83,
+          "fragment_count": 198,
+          "new_whole_criterion_PASS": 0,
+          "receipt": "criteria.json",
+          "integrity": "audits/criteria-integrity.json"
+        },
+        "material": {
+          "P10_paths": 28,
+          "P11_paths": 31,
+          "owned": 10,
+          "shared_owner_proposals": 18,
+          "unit_proposals": 3,
+          "image_index": "delivery/current-image-index.json",
+          "immutable_images_reused": 50,
+          "new_full_images": 5,
+          "prepared_manifest_statuses_are_historical": true
+        },
+        "authority": {
+          "source52": "ACTIVE",
+          "last_nominal_target71": "ENDED_AFTER_TERMINAL_DOCUMENTARY_CAS",
+          "later_target105": "ACTIVE_USER_APPOINTED",
+          "later_target": "180212940105e7b9ad15171b067c1c1b7841df5f",
+          "observations": "audits/current-target-after-nominal15.json",
+          "requested_terminal_handoff": 47,
+          "terminal_handoff_issued": false,
+          "consumer_release_issued": false
+        },
+        "constraints": {
+          "five_original_UI_journeys": true,
+          "spec_blob": "b6f63bfa1b8eacb5bf37a5c5b0d508fd658d70cf",
+          "test_budget_ms": 180000,
+          "UI_deadline_ms": 10000,
+          "retries": 0,
+          "seeds_or_direct_mutation_replacement": false,
+          "diagnostic14_promoted": false,
+          "local_product_execution": 0,
+          "source_checks02_failure_waived": false
+        },
+        "future_qualification": "NO_FUTURE_RESULT_BOUND_IN_THIS_CHECKPOINT",
+        "GLOBAL_RELEASE": false,
+        "WP11_DONE": false
+      },
+      "immutable_INPUTS_blob": "6ac64215cf3f43c0dad5605a45754a9eb853c686"
     }
   ],
-  "retained_metadata_context": "All prior fields, including current_* and pending dispatch statements in earlier records, are immutable historical cuts. latest_checkpoint52 and its explicitly dated later-target observation describe this checkpoint. No earlier claim is retrospectively reinterpreted."
+  "retained_metadata_context": "All prior fields, including current_* and pending dispatch statements in earlier records, are immutable historical cuts. latest_checkpoint52 and its explicitly dated later-target observation describe this checkpoint. No earlier claim is retrospectively reinterpreted.",
+  "current_material_candidate52": {
+    "schema": "sf52.p13.documentary-checkpoint.v1",
+    "state": "ACTIVE_MATERIAL_AND_COMPLETED_EVIDENCE_ONLY",
+    "source_parent": "4a6e73d88565ee8e6d51f00707f9eee63437629a",
+    "source_tree": "a52b769cd9da5d2670dad82f44e6bf21f14e5abf",
+    "base": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "base_tree": "072950bafdc50b9eddc549f7a327742bc5086bf6",
+    "W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+    "W_tree": "73ef254b9b9e75f8a9a3db900684b0b756f080b3",
+    "bindings": {
+      "unit05": {
+        "state": "COMPLETED_ACTUAL_RECEIPT_BOUND",
+        "receipt": "unit-05.json",
+        "sha256": "32855c95ed883d4dcc0e3147a928f56f73c52bba27f3b11de59b50cd40fbbbad",
+        "run_id": 43686211157,
+        "W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+        "S": "c07766ac05fab41c6433746a9bd78001d4f599a3",
+        "conclusion": "success",
+        "counts": {
+          "passed": 74,
+          "failed": 0,
+          "skipped": 0,
+          "expects": 477,
+          "duration_ms": 8840.0
+        },
+        "acceptance": "SUPPLEMENTAL_ONLY"
+      },
+      "nominal": {
+        "state": "COMPLETED_ACTUAL_RECEIPT_BOUND",
+        "number": 17,
+        "receipt": "nominal-17.json",
+        "sha256": "df6172f2f3f8627a4733bb2be8a9fe877ce8867a545ec3ce3fcf7da791373838",
+        "run_id": 43686512586,
+        "W": "2624fe74b31cb5613f9c8546961e7a393f06ab9e",
+        "S": "5ae402f2c3347619d882af10cc043952048a74c8",
+        "summary": {
+          "J1": "FAIL: three comparisons200/ok and numeric rule200/ok; choice POST aborted before original response. Choice commit and P9 capture UNKNOWN_UNQUALIFIED; retry/history/source change NOT_REACHED.",
+          "J2": "FAIL: RequestsGET503/procurement-queue-unavailable/form0 before any financial mutation; later formal-approval contract NOT_REACHED.",
+          "J3": "PASS",
+          "J4": "PASS",
+          "J5": "PASS",
+          "pass": 3,
+          "fail": 2,
+          "skipped": 0,
+          "timed_out": 0,
+          "flaky": 0,
+          "setup_failed": 0
+        },
+        "conclusion": "failure"
+      },
+      "criteria": {
+        "state": "UPDATED_FROM_ACTUAL_RECEIPT_ORIGINAL83_PRESERVED",
+        "path": "criteria.json",
+        "sha256": "8bcdbd967eb2d6eb08a7e1e4c642788a5295405cfd9eb926712200e403c41219",
+        "original_projection_sha256": "9d22ddded549270e6a5510808f02f7f43a5adb42f15ba2fa146f458fe8d63652",
+        "integrated_proofs_empty_arrays": 83,
+        "fragment_count": 226
+      },
+      "financial": {
+        "state": "BOUND_DOCUMENT_NO_AUTOMATIC_ACCEPTANCE",
+        "path": "FINANCIAL-CONTRACT.md",
+        "sha256": "39823ae5adf66321be6a6451f4e816b0af6a3a0e96da0556e4ce30c0e530b23c"
+      }
+    },
+    "diagnostic16": {
+      "receipt": "diagnostic-16.json",
+      "run": 43682706028,
+      "acceptance_fragments": 0,
+      "choice_commit": "UNKNOWN_UNQUALIFIED",
+      "P9_capture": "UNKNOWN_UNQUALIFIED",
+      "retry_history_source_change": "NOT_REACHED"
+    },
+    "material": {
+      "paths": 34,
+      "owned": 10,
+      "shared_owner_proposals": 20,
+      "unit_proposals": 4,
+      "reused_images": 50,
+      "new_images": 10,
+      "P12_included": false,
+      "D7_D8_D14_D16_instrumentation_in_W": false
+    },
+    "authority": {
+      "source52": "ACTIVE",
+      "last_target_writer": 105,
+      "target_lease_state": "ENDED_BY_INTEGRATOR105",
+      "appointed_successor": null,
+      "target_writes_by52": 0,
+      "requested_handoff_recipient": 47,
+      "terminal_handoff_issued": false,
+      "consumer_release_issued": false,
+      "CI101": "Own queue active; preserve existing52; no takeover or duplicated central selections claimed"
+    },
+    "GLOBAL_RELEASE": false,
+    "WP11_DONE": false
+  },
+  "diagnostic16": {
+    "receipt": "diagnostic-16.json",
+    "run": 43682706028,
+    "acceptance_fragments": 0
+  },
+  "current_target_authority_reconciled_at_P13": {
+    "target": "eeff9b78219b5efe1ad78e68d4490af0d7c5ed07",
+    "terminal_blob": "b59f98f415dd114a9b797fa3d1ef667c6293c05c",
+    "state": "ENDED_BY_INTEGRATOR105",
+    "new_integrator_appointee": null,
+    "source52": "ACTIVE",
+    "source_lease_unaffected": true
+  }
 }

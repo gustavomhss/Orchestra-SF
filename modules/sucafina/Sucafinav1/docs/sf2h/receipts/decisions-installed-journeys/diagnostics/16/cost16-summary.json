@@ -1,0 +1,191 @@
+{
+  "schema": "sf52-aggregate-cost-diagnostic16-v1",
+  "purpose": "DIAGNOSTIC_ONLY_NOT_ACCEPTANCE",
+  "records": [
+    {
+      "case_line": 12,
+      "ordinal_within_case": 1,
+      "diagnostic": 16,
+      "elapsed_ms": 5717.404162999999,
+      "stages": {
+        "canonical.digest": {
+          "count": 111956,
+          "total_ms": 1956.5824660018698,
+          "max_ms": 12.504939999998896
+        },
+        "runtime.currentSnapshots": {
+          "count": 4030,
+          "total_ms": 2018.4759500001092,
+          "max_ms": 12.451696000003722
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "count": 4029,
+          "total_ms": 1805.0502349999588,
+          "max_ms": 12.359569000000192
+        },
+        "runtime.currentSnapshots.planner": {
+          "count": 4029,
+          "total_ms": 185.18424899986712,
+          "max_ms": 8.662623999996867
+        },
+        "runtime.currentSnapshots.procurement": {
+          "count": 4029,
+          "total_ms": 18.78053300033207,
+          "max_ms": 0.03468799999973271
+        },
+        "runtime.auth.sql": {
+          "count": 45621,
+          "total_ms": 77.67658400018263,
+          "max_ms": 0.07894700000179
+        },
+        "runtime.auth.read": {
+          "count": 45621,
+          "total_ms": 373.22072899968043,
+          "max_ms": 0.08553300000494346
+        },
+        "c08.clone.selected-case": {
+          "count": 48,
+          "total_ms": 12.046184999984689,
+          "max_ms": 0.3601409999973839
+        },
+        "c08.clone.full-state.cases": {
+          "count": 63,
+          "total_ms": 66.38805600000342,
+          "max_ms": 1.7362040000007255
+        },
+        "c08.clone.full-state.preferences": {
+          "count": 2,
+          "total_ms": 1.9538370000009309,
+          "max_ms": 0.9956329999986337
+        }
+      }
+    },
+    {
+      "case_line": 12,
+      "ordinal_within_case": 2,
+      "diagnostic": 16,
+      "elapsed_ms": 5663.460561,
+      "stages": {
+        "canonical.digest": {
+          "count": 111956,
+          "total_ms": 1931.2328339994347,
+          "max_ms": 12.602814999998373
+        },
+        "runtime.currentSnapshots": {
+          "count": 4030,
+          "total_ms": 1983.1209990000498,
+          "max_ms": 12.37091700000019
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "count": 4029,
+          "total_ms": 1780.515091000154,
+          "max_ms": 12.287042000003566
+        },
+        "runtime.currentSnapshots.planner": {
+          "count": 4029,
+          "total_ms": 175.79749900006573,
+          "max_ms": 0.08628300000418676
+        },
+        "runtime.currentSnapshots.procurement": {
+          "count": 4029,
+          "total_ms": 17.721596999756002,
+          "max_ms": 0.03787200000078883
+        },
+        "runtime.auth.sql": {
+          "count": 45621,
+          "total_ms": 75.56838199993217,
+          "max_ms": 0.11446199999772944
+        },
+        "runtime.auth.read": {
+          "count": 45621,
+          "total_ms": 365.4242600002399,
+          "max_ms": 0.122070999997959
+        },
+        "c08.clone.selected-case": {
+          "count": 48,
+          "total_ms": 12.203680000013264,
+          "max_ms": 0.5487199999988661
+        },
+        "c08.clone.full-state.cases": {
+          "count": 63,
+          "total_ms": 66.50695399997494,
+          "max_ms": 1.334921999994549
+        },
+        "c08.clone.full-state.preferences": {
+          "count": 2,
+          "total_ms": 1.9618520000076387,
+          "max_ms": 0.9812270000038552
+        }
+      }
+    },
+    {
+      "case_line": 12,
+      "ordinal_within_case": 3,
+      "diagnostic": 16,
+      "elapsed_ms": 8711.000879,
+      "stages": {
+        "canonical.digest": {
+          "count": 167110,
+          "total_ms": 3002.8563919996013,
+          "max_ms": 21.522650999999314
+        },
+        "runtime.currentSnapshots": {
+          "count": 6004,
+          "total_ms": 3065.5904180000434,
+          "max_ms": 12.701761000003899
+        },
+        "runtime.currentSnapshots.dashboard": {
+          "count": 6003,
+          "total_ms": 2763.2398229996397,
+          "max_ms": 12.624367000003986
+        },
+        "runtime.currentSnapshots.planner": {
+          "count": 6003,
+          "total_ms": 264.0619439997463,
+          "max_ms": 0.12438199999451172
+        },
+        "runtime.currentSnapshots.procurement": {
+          "count": 6003,
+          "total_ms": 27.46889199958241,
+          "max_ms": 0.04681600000185426
+        },
+        "runtime.auth.sql": {
+          "count": 68193,
+          "total_ms": 116.7013989996849,
+          "max_ms": 0.03735500000038883
+        },
+        "runtime.auth.read": {
+          "count": 68193,
+          "total_ms": 556.0455420001817,
+          "max_ms": 0.06369599999743514
+        },
+        "c08.clone.selected-case": {
+          "count": 56,
+          "total_ms": 14.054694999962521,
+          "max_ms": 0.32271100000070874
+        },
+        "c08.clone.full-state.cases": {
+          "count": 97,
+          "total_ms": 105.68636699997296,
+          "max_ms": 1.5950680000023567
+        },
+        "c08.clone.full-state.preferences": {
+          "count": 8,
+          "total_ms": 8.122516000010364,
+          "max_ms": 1.1056430000026012
+        }
+      }
+    }
+  ],
+  "record_count": 3,
+  "fixed_fields_and_stages_only": true,
+  "scope": "CLI compare producer inside existing withCase; every marker is the complete aggregate at producer return or throw",
+  "limits": [
+    "The total producer interval excludes admission and withCase overhead.",
+    "Nested synchronous stage times overlap; never sum them as exclusive CPU.",
+    "No HTTP status or delivery can be inferred from this timing marker.",
+    "Canonical digests and all authority/SQL/clone operations remain executed; no value cache.",
+    "Instrumentation overhead is not measured separately.",
+    "Final acceptance must use a snapshot without this temporary diagnostic."
+  ]
+}
