@@ -1,0 +1,77 @@
+{
+  "schema": "sf2h-fixture-type-repair-batch-v1",
+  "mission": 118,
+  "batch": "B2",
+  "source_parent": "6bf39c732f78a9cb6e2245988e430fa6407137a9",
+  "source_tree": "ba348993a5ba16bafbccc6d88c5398d524ae6cfd",
+  "writer": "fixture-types-browser118",
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "preimage_blob_sha": "24dda67176121efe50f91148d6b2291a4f975d4b",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts",
+      "preimage_blob_sha": "3c735804c3956fc5df98113f8f76050da35c74b0",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts",
+      "preimage_blob_sha": "291e72cf1c356d76f1671ec971eac5b44a70edd0",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts",
+      "preimage_blob_sha": "65dd8c157ad31d288ee0f9142e1b41e08221de7c",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts",
+      "preimage_blob_sha": "529f6b98b6215f750912ac87161555eb2d9a555d",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts",
+      "preimage_blob_sha": "fc4d57604c21ab5d007f747a908b17b67027ffd6",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts",
+      "preimage_blob_sha": "e22020011f464a2cc7277d4fe0f9a999c5587d38",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts",
+      "preimage_blob_sha": "d239f1056f97a85f4caafac772ee79921806289a",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts",
+      "preimage_blob_sha": "4087659570356188c546b59ba112dfd33a2a189c",
+      "postimage_sha": "see commit tree",
+      "change_class": "typed contract repair"
+    }
+  ],
+  "findings": [
+    {
+      "id": "WP00-JOURNEY-ORACLE-MISSING-FIELDS",
+      "source": "modules/sucafina/Sucafinav1/docs/product-campaign/wp00/oracles/journeys-j01-j08.json",
+      "evidence": "Eight journey rows contain id/title/actors/given/when/then but not fixtureBindings or executionStatus. Test now performs actual runtime guards, retains exact field requirement and must fail until oracle owner fixes source data.",
+      "needs": "114 route to owner; do not fabricate fixture metadata"
+    }
+  ],
+  "not_run": [
+    "typecheck 119",
+    "scoped test 120",
+    "epic"
+  ]
+}

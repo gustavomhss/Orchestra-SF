@@ -1,7 +1,7 @@
 import { expect, test } from "bun:test"
 import { randomUUID } from "node:crypto"
 import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
-import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
 import type { CostCoverageBasis, DecisionCase } from "../../../product/contracts/decisions.ts"
 import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
 import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
@@ -126,13 +126,14 @@ test("mixed form offers explicit request and amount controls only for attached P
   const fixture = await createCompositeFixture()
   try {
     const binding = fixture.context.binding
-    const projection = { context: { kind: "ui" as const, installationId: binding.installationId, projectId: binding.projectId, principalRef: binding.principalRef, accessRevision: binding.accessRevision, policyVersion: binding.policyVersion }, case: fixture.decision, events: [], evidenceRefs: fixture.decision.sourceRefs, checkedAt: fixture.clock.at }
+    if (fixture.decision.preparedChanges.length || fixture.decision.receipts.length) throw new Error("Unexecuted form fixture must have no committed effects")
+    const projection: AuthorizedCaseProjection = { context: { kind: "ui", installationId: binding.installationId, projectId: binding.projectId, principalRef: binding.principalRef, accessRevision: binding.accessRevision, policyVersion: binding.policyVersion }, case: { ...fixture.decision, preparedChanges: [], receipts: [] }, events: [], evidenceRefs: fixture.decision.sourceRefs, checkedAt: fixture.clock.at }
     const before = structuredClone(projection)
     const html = decisionAlternativesForm(projection)
     expect(html).toContain('Procurement request<select name="procurement-request" disabled')
     expect(html).toContain('Proposed estimated amount<input name="procurement-proposed-amount" type="number" min="0" step="any" disabled')
     expect(html).toContain("does not save or submit the requisition or grant financial approval")
-    expect(decisionAlternativesForm({ ...projection, case: { ...fixture.decision, sourceRefs: fixture.plannerRefs } })).not.toContain('name="procurement-proposed-amount"')
+    expect(decisionAlternativesForm({ ...projection, case: { ...projection.case, sourceRefs: fixture.plannerRefs } })).not.toContain('name="procurement-proposed-amount"')
     expect(projection).toEqual(before)
     // Parse in Actions only. This file is delivered inert and is never executed locally.
     expect(() => new Bun.Transpiler({ loader: "js" }).transformSync(decisionAlternativesScript)).not.toThrow()

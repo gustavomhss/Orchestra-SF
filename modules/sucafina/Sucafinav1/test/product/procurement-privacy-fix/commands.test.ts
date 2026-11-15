@@ -25,7 +25,7 @@ async function refused(fixture: Fixture, principal: string, input: Command, stat
   return response.json()
 }
 
-test.each(actions)("M73 %s: requester-only sees identical missing/hidden responses at equal and divergent versions", async (action) => {
+test.each([...actions])("M73 %s: requester-only sees identical missing/hidden responses at equal and divergent versions", async (action) => {
   const fixture = await createPrivacyFixture()
   try {
     await fixture.create("alice")
