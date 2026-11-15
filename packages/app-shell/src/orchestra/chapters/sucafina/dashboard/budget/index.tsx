@@ -96,7 +96,7 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
               <Show when={admitted("save-month")}>
                 <SfU02Edit surfaceId="CAP03" operationId="domain.command.CAP03.save-month"
                   actionId="save-month" labelKey="sf.u02.editMonth" valueLabelKey="sf.u02.currentMonth"
-                  value={currentMonth()} version={versions()["budgetCurrentMonth"] ?? 0}
+                  value={currentMonth()} version={versions()["budgetCurrentMonth"]}
                   scope={String(year()) + ":month"} year={year()!} integerOnly min={1} max={12}
                   admitted={admitted("save-month")} drafts={ready().drafts}
                   readInput={{ year: year()! }} onConfirmed={read.refresh}
@@ -107,7 +107,7 @@ export function SfBudgetOverview(props: SfSurfaceProps<"CAP03">): JSX.Element {
               <Show when={admitted("save-revenue")}>
                 <SfU02Edit surfaceId="CAP03" operationId="domain.command.CAP03.save-revenue"
                   actionId="save-revenue" labelKey="sf.u02.editRevenue" valueLabelKey="sf.u02.revenue"
-                  value={revenue()} version={versions()["revenueByYear"] ?? 0}
+                  value={revenue()} version={versions()["revenueByYear"]}
                   scope={String(year()) + ":revenue"} year={year()!} integerOnly={false} min={0}
                   admitted={admitted("save-revenue")} drafts={ready().drafts}
                   readInput={{ year: year()! }} onConfirmed={read.refresh}
