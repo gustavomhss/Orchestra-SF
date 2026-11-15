@@ -1,0 +1,193 @@
+{
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "existing": [
+    {
+      "mission": 189,
+      "observed_head": "4426445c05823ed4932b8a8e35391df024bf74f3",
+      "message": "test(sf2h): consume released U15/U39/U40 installed journeys 185-186 [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": false,
+      "state": "RECENT_PROGRESS_OBSERVED"
+    },
+    {
+      "mission": 190,
+      "observed_head": "b935f51ca9333c77d2b13ced8e7ad743df79468d",
+      "message": "ci(sf2h): verify changed U15 U39 U40 guards and E2E on W442",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": false,
+      "state": "RECENT_PROGRESS_OBSERVED"
+    },
+    {
+      "mission": 191,
+      "observed_head": "225bddc1df6e50a479c933a531712454404db83d",
+      "message": "docs(sf): terminal CI191 four hosted batches, source findings and exact queue [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": false,
+      "state": "TERMINAL_SUPPLEMENT_PRESERVED_AUTHORITY_TRANSFERRED_TO200"
+    },
+    {
+      "mission": 193,
+      "observed_head": "460ddcaf6cf013bc42a100132c5d7478df4138f0",
+      "message": "fix(sf): use Effect 4 exit decoder for Decisions proof [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": true,
+      "state": "CODE_COMMIT_OBSERVED_HANDOFF_NOT_YET_CONFIRMED"
+    },
+    {
+      "mission": 194,
+      "observed_head": "97c2c456cd0edf688392faa06bd1dffe6233a890",
+      "message": "docs(sf): prepare fresh source closure 194 [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": true,
+      "state": "USER_LAUNCHED_NO_ACK_AT_LAST_READ"
+    },
+    {
+      "mission": 195,
+      "observed_head": "7534cb39a2024f5c4d258845a874e82156cb343d",
+      "message": "docs(sf): prepare fresh source closure 195 [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": true,
+      "state": "USER_LAUNCHED_NO_ACK_AT_LAST_READ"
+    },
+    {
+      "mission": 196,
+      "observed_head": "ab37cd458f02b0f74b321c3dd934924909fcf2c8",
+      "message": "docs(sf): reserve complete native closure 196 [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": true,
+      "state": "USER_LAUNCHED_NO_ACK_AT_LAST_READ"
+    },
+    {
+      "mission": 197,
+      "observed_head": "5e32f2ad8dfc9d71e165e348769d9203fff91add",
+      "message": "docs(sf): reserve complete native closure 197 [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": true,
+      "state": "USER_LAUNCHED_NO_ACK_AT_LAST_READ"
+    },
+    {
+      "mission": 198,
+      "observed_head": "3d12706365880ee4e12d01db6c875029183a00b0",
+      "message": "docs(sf): reserve complete native closure 198 [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": true,
+      "state": "USER_LAUNCHED_NO_ACK_AT_LAST_READ"
+    },
+    {
+      "mission": 199,
+      "observed_head": "587a4a8c632a2a510c5992cac226743ddcff6caa",
+      "message": "docs(sf): reserve complete native closure 199 [skip ci]",
+      "observability": "GitHub only, not browser lifecycle",
+      "user_reported_launched": true,
+      "state": "USER_LAUNCHED_NO_ACK_AT_LAST_READ"
+    }
+  ],
+  "ci191_final": "39da658c14f172f8424f50ee49defb47ce605fe2",
+  "no_inflight_at_transfer": {
+    "running": 0,
+    "queued": 0
+  },
+  "new": [
+    {
+      "mission": 200,
+      "title": "Retomar o dispatcher único e fechar a fila de testes",
+      "branch": "sf-ci-validation",
+      "epoch": "product-ci-e6-browser200",
+      "expected_head": "38b88f976992da68085bdf2f0b9ed549ee49b517",
+      "state": "PREPARED_NOT_STARTED",
+      "paths": [
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation200/**",
+        "existing validated ci-run-* .ci-run.json requests only",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation200/**"
+      ]
+    },
+    {
+      "mission": 201,
+      "title": "Fechar tipagem de Work/A12 sem relaxar schemas",
+      "branch": "sf-work-types",
+      "epoch": "compiler-source-e1-browser201",
+      "expected_head": "835f751fa8d0e37ba2c4b009db0bf6a0aec5544a",
+      "state": "PREPARED_NOT_STARTED",
+      "paths": [
+        "packages/schema/src/sucafina/work.ts",
+        "packages/schema/src/sucafina/work/**",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair201/**"
+      ]
+    },
+    {
+      "mission": 202,
+      "title": "Fechar tipagem F01 do contexto vivo e seus testes",
+      "branch": "sf-context-types",
+      "epoch": "compiler-source-e1-browser202",
+      "expected_head": "9a2ca9055c8cf7f82deb5fa2d711383e5729b2da",
+      "state": "PREPARED_NOT_STARTED",
+      "paths": [
+        "apps/cli/src/sucafina-product/native-ui/live-context.ts",
+        "apps/cli/src/sucafina-product/native-ui/context.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/live-context.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair202/**"
+      ]
+    },
+    {
+      "mission": 203,
+      "title": "Fechar transporte Client/F02 e os tipos públicos",
+      "branch": "sf-transport-types",
+      "epoch": "compiler-source-e1-browser203",
+      "expected_head": "50acf465f573ff27255c97634d9b98f04985a281",
+      "state": "PREPARED_NOT_STARTED",
+      "paths": [
+        "packages/client/src/sucafina/transport.ts",
+        "packages/client/src/sucafina/bindings.ts",
+        "packages/client/src/sucafina/people.ts",
+        "packages/client/src/sucafina/context.ts",
+        "packages/client/test/sucafina/transport-type-repair/**",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/**"
+      ]
+    },
+    {
+      "mission": 204,
+      "title": "Fechar tipos de exportação XLSX e fixtures BI/People",
+      "branch": "sf-fixture-types",
+      "epoch": "compiler-source-e1-browser204",
+      "expected_head": "2c086e65163feaa15b59f91e9daa8a9d45e1a691",
+      "state": "PREPARED_NOT_STARTED",
+      "paths": [
+        "modules/sucafina/Sucafinav1/runtime/workbooks.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts",
+        "modules/sucafina/Sucafinav1/test/native-ui-contract/people.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair204/**"
+      ]
+    },
+    {
+      "mission": 205,
+      "title": "Fechar S05: troca de owner e normalização do textarea",
+      "branch": "sf-thread-newlines",
+      "epoch": "compiler-source-e1-browser205",
+      "expected_head": "988d770ed29fa947ef20eb19ca94cd3379158c28",
+      "state": "PREPARED_NOT_STARTED",
+      "paths": [
+        "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/index.tsx",
+        "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair205/**"
+      ]
+    }
+  ],
+  "routing": {
+    "integrator": 189,
+    "compiler": 190,
+    "product_ci": 200
+  },
+  "latest_known_product": "4426445c05823ed4932b8a8e35391df024bf74f3",
+  "known_results": {
+    "A12_F01": "31PASS_on_W77e",
+    "AM_negative": "20PASS_not_positive_AM",
+    "browser": "7PASS1FAIL_S05_run43773852118",
+    "compiler": "FAIL_6selections_rooted_schema_work_client_context_workbook; package error occurrences not issue count"
+  },
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false
+}

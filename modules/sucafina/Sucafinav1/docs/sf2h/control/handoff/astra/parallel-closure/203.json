@@ -1,0 +1,73 @@
+{
+  "schema": "sf2h.causal-repair.v1",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+  "normative": "cbac654784714f68779ae1434d30e6ea8970c4d1",
+  "mission": 203,
+  "title": "Fechar transporte Client/F02 e os tipos públicos",
+  "branch": "sf-transport-types",
+  "epoch": "compiler-source-e1-browser203",
+  "kind": "source",
+  "previous": [
+    137
+  ],
+  "product_base": "4426445c05823ed4932b8a8e35391df024bf74f3",
+  "state": "PREPARED_NOT_STARTED",
+  "write_paths": [
+    "packages/client/src/sucafina/transport.ts",
+    "packages/client/src/sucafina/bindings.ts",
+    "packages/client/src/sucafina/people.ts",
+    "packages/client/src/sucafina/context.ts",
+    "packages/client/test/sucafina/transport-type-repair/**",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/repair203/**"
+  ],
+  "actions": [
+    "Corrigir a raiz dos22 diagnósticos de transport.ts no run43772959867: Decoder/schema de entrada/saída, narrowing de responseMode/maxRequestBytes, discriminação transport-error vs respostaHTTP, status/body/headers e indexação do contexto.",
+    "Fechar bindings.ts:36 e people.ts:18 usando generics/API Effect instalada e disponibilizar o tipo público SfTransportResult requerido por context.ts:9, preservando o contrato real. Não usar any ou type assertion para esconder incompatibilidade.",
+    "Manter NAV-01: busca privada só POST JSON body, limite4096, nenhuma q em URI/log. Preservar abort/outcome-unknown/sem replay automático, errolegível, closed decoding, principal/policy/accessRevision atuais e request original nos consumidores.",
+    "Ler os testes reais de F02 e o contrato normativo; exercitar comportamento nas regressões necessárias sem espelhar implementação. Só escrever nos paths concedidos. Edits de testes existentes ou shared registry/router são patch inerte para189; não tocar SDKgerado ou runtime Core/Server.",
+    "Entregar solução completa e pre/post blobs; requests cirúrgicos para200 e typecheck190. Não reverter NAV-01 para GET para passar compilador."
+  ],
+  "original_work_orders": [
+    "modules/sucafina/Sucafinav1/docs/sf2h/native-ui/execution/work-orders/F02.json"
+  ],
+  "predecessor_packet_urls": [
+    "https://github.com/gustavomhss/Orchestra-SF/blob/8b0db4f8122a645a17dd6d6e43ab3ff33e2548ba/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/137.json"
+  ],
+  "evidence": {
+    "compiler_run": 43772959867,
+    "compiler_job": 132992733158,
+    "artifact": 14185067705,
+    "compiler_head": "b935f51ca9333c77d2b13ced8e7ad743df79468d",
+    "findings": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/validation190/FINDINGS-190-W77e.md",
+    "native_ci_terminal": "225bddc1df6e50a479c933a531712454404db83d"
+  },
+  "routing": {
+    "integrator": 189,
+    "compiler": 190,
+    "sole_product_ci": 200,
+    "other_sources": [
+      193,
+      194,
+      195,
+      196,
+      197,
+      198,
+      199
+    ]
+  },
+  "rules": [
+    "Leia AGENTS, plano START/WORKFLOW/executionCOMMON, seu pacote COMPLETO e próprios workorders/anexos normativos referenciados; critérios não reduzidos. Leia código real e dependências antes de editar.",
+    "Use sessão NOVA e branch exclusiva indicada; escritor único por path.189 é única integradora do produto. Source193–199 continua com leases preservadas. Não escrever em paths deles, engine/infra/SDK gerado/guardrules/allowlists. Source pode devolver patch inerte para compartilhados.",
+    "GitHub MCP apenas para remoto; CAS expected-head/force:false; sem gh/git push/token/deploy/devmerge. ACK real com modelo/session se exposto; não inventar lifecycle.",
+    "Source201–204 não executa testes/typecheck/build/validator local nem CI.200 usa runner test:ci existente, deduplicado por W/tree/seleção/runtime/fixtures e reanexa runs.190 mantém compiler e guards já existentes; ninguém duplica dispatcher.",
+    "A missão é código completo, não catálogo/relatório ou replanejamento. Devolver patch causal e continuar trabalho independente quando houver dependência em voo. Não reduzir asserts/schema/fixtures para passar.",
+    "Entregar commits/PR para sf2-stack e handoff pre/post blobs, comportamento, validação real/NOT_RUN, pendências externas exatas e consumidor.200 mantém PR106/branchexistente e handoff detalhado de requests/runs.",
+    "Goal nativa continua pausada; não criar novoS0/watchdog. GLOBAL_RELEASEfalse; provas e gates integrais no mesmoC continuam obrigatórios."
+  ],
+  "native_goal": "paused",
+  "GLOBAL_RELEASE": false,
+  "expected_head": "50acf465f573ff27255c97634d9b98f04985a281"
+}
