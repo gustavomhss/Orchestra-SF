@@ -1,0 +1,98 @@
+{
+  "schema": "sf-native-admission-source-manifest-v1",
+  "mission": 64,
+  "branch": "native-admission-proof",
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "ack_commit": "ca9a04ca451e4457b2afcfc3def171baf23de9ae",
+  "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0",
+  "source_tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a",
+  "github_compare_readback": "exact five product/test paths and blobs observed",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha1": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+        "sha256": "6244fcaf30ec2accd63d8614c266de2368978060729167d7c0813f122dc7b7a6",
+        "bytes": 12025
+      },
+      "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "status": "modified",
+      "preimage": {
+        "git_blob_sha1": "9934aca5899142f9715d82bf7d4a073e9912f7cc",
+        "sha256": "7364dbbb543fa113d8d898d03cc0ace00cb1376830d1718527aa5e7eddfa5521",
+        "bytes": 14900
+      },
+      "postimage": {
+        "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+        "sha256": "0e1f2093f3b31eead495b70dbedb8a66344fb08142e4ba31587422431c05e3aa",
+        "bytes": 15351
+      },
+      "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "status": "modified",
+      "preimage": {
+        "git_blob_sha1": "7b7f127610450ed531fbb11464a0308e860a9296",
+        "sha256": "cecb3106c48a211a627f1f1b2a7d6e4d302c180a6685aedaec46b8846b7ff51c",
+        "bytes": 11619
+      },
+      "postimage": {
+        "git_blob_sha1": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+        "sha256": "989d57a0283948420ed5040b05b0b16b940fd3c707d2cb41416445eaf11534fa",
+        "bytes": 12601
+      },
+      "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha1": "63751102171be3ca9b61e3811a378b426ee36c3f",
+        "sha256": "726db16c604397d495c9b6ac3f51d916d4e00907a0488b742e53f4a7a447ed2c",
+        "bytes": 8236
+      },
+      "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "status": "added",
+      "preimage": null,
+      "postimage": {
+        "git_blob_sha1": "e6d0f3c7f8f2e6cfa19da57de109984bf3c7ada9",
+        "sha256": "7b32ec8688575596795f30e3352e296b7fcf780dee3798e67d0fab3173abb86c",
+        "bytes": 25952
+      },
+      "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0"
+    }
+  ],
+  "complete_patch": {
+    "path": "owned-overlay/complete.patch",
+    "git_blob_sha1": "f39fc0fa25d4bf5555c98483f664fb9aecc2361a",
+    "sha256": "56c51b009e75806d8addeb3463310eabf6acf2560e5f715384d04a7a8adbde4e",
+    "bytes": 57779
+  },
+  "shared_host": "assembly/manifest.json",
+  "dependency_contract": "contracts/source-pins.json",
+  "target_observed": {
+    "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+    "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+    "host_preimage_blob": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+    "role": "C28 Reports48 composition; not tested by source64"
+  },
+  "no_engine_or_shared_live_source_changes": true,
+  "full_campaign_acceptance": false,
+  "target_authority_reconciliation": "TARGET-AUTHORITY.json",
+  "target_terminal_readback": {
+    "sha": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+    "material_candidate": "C28 unchanged",
+    "host_preimage_unchanged": true
+  }
+}

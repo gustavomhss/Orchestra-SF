@@ -1,0 +1,471 @@
+{
+  "schema": "sf-native-admission-dependency-closure-v1",
+  "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0",
+  "source_tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a",
+  "source_parent": "ca9a04ca451e4457b2afcfc3def171baf23de9ae",
+  "static_method": "Resolve every literal from-import in the five changed source/test files against exact Git trees and public package exports; no local product execution.",
+  "edges": [
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "node:util",
+      "resolution": "Bun/Node builtin"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "effect",
+      "resolution": "external dependency pinned by W bun.lock"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "@orchestra/core/relay-workflow-binding",
+      "target": "packages/core/src/relay-workflow-binding.ts",
+      "git_blob_sha1": "7149e276e0c214d70c2dafad90dadff5d2c21059",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "@orchestra/core/session/schema",
+      "target": "packages/core/src/session/schema.ts",
+      "git_blob_sha1": "7f9d46d97a61d7e661f319ec2eb5c47e663d64cd",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "@orchestra/core/tool/task",
+      "target": "packages/core/src/tool/task.ts",
+      "git_blob_sha1": "0e82455ca428e5b498551496bc65bdc0f6551df3",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "@orchestra/core/tool-safety",
+      "target": "packages/core/src/tool-safety.ts",
+      "git_blob_sha1": "effd9af70e95a38de93c9e472bd03728666c4da8",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "git_blob_sha1": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "git_blob_sha1": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "./routine-native-adapter.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "git_blob_sha1": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "./routine-native-dispatch.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "git_blob_sha1": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "./routine-native-governance.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "./routine-native-input.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "git_blob_sha1": "f0a3a1f9b743161a98b5545fce1ca71c8d9c0abe"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "./routine-native-owner.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "git_blob_sha1": "a4dce61b612729bb317761bb0d63ff622f55a8cd"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "./routine-native-registry.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "git_blob_sha1": "9f108bf7af9f2d23d912bc568bb1f3a0523af085"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "specifier": "./routine-services.ts",
+      "target": "apps/cli/src/sucafina-product/routine-services.ts",
+      "git_blob_sha1": "4b455444cdeb560e85f6a17e6192c0420287d48a"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "effect",
+      "resolution": "external dependency pinned by W bun.lock"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/llm",
+      "target": "packages/llm/src/index.ts",
+      "git_blob_sha1": "735520ff77c2c8a106b5e5b27f7301f1907d46a8",
+      "public_export_manifest_blob": "44778fe89942ba8a70dbd6b97c3da656e1e22ac0"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/core/database/database",
+      "target": "packages/core/src/database/database.ts",
+      "git_blob_sha1": "aa519134efff085e960affd9be376b0dc92456e1",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/core/host",
+      "target": "packages/core/src/host.ts",
+      "git_blob_sha1": "a0fc5bc9a36e50315b0ddddf4de3566555711250",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/core/location",
+      "target": "packages/core/src/location.ts",
+      "git_blob_sha1": "af889448fe9340187266ab622cb7249751e52328",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/core/relay",
+      "target": "packages/core/src/relay.ts",
+      "git_blob_sha1": "25fb509203f933a2e8b0f311c3fc8f9476d53e16",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/core/relay-workflow-binding",
+      "target": "packages/core/src/relay-workflow-binding.ts",
+      "git_blob_sha1": "7149e276e0c214d70c2dafad90dadff5d2c21059",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/core/session/schema",
+      "target": "packages/core/src/session/schema.ts",
+      "git_blob_sha1": "7f9d46d97a61d7e661f319ec2eb5c47e663d64cd",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/core/tool-safety",
+      "target": "packages/core/src/tool-safety.ts",
+      "git_blob_sha1": "effd9af70e95a38de93c9e472bd03728666c4da8",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "@orchestra/core/tool/task-governance",
+      "target": "packages/core/src/tool/task-governance.ts",
+      "git_blob_sha1": "12173c0769e62212a4a01003a0a253e7d1d1ba38",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "../../../../modules/relay/src/arm/state.ts",
+      "target": "modules/relay/src/arm/state.ts",
+      "git_blob_sha1": "fbd6be395cc87d0d81069154cd78caca90db95fc"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "../../../../modules/maestro/coordination/src/v2/governance.ts",
+      "target": "modules/maestro/coordination/src/v2/governance.ts",
+      "git_blob_sha1": "78841580d6b70d124cdce19b41f9eeea05c4ef8e"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "../../../../modules/maestro/coordination/src/v2/governance/records.ts",
+      "target": "modules/maestro/coordination/src/v2/governance/records.ts",
+      "git_blob_sha1": "800ba56aeb7865b2b2fd8b9adc9539523b408e5a"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "../../../../modules/maestro/coordination/src/v2/governance/write-roots.ts",
+      "target": "modules/maestro/coordination/src/v2/governance/write-roots.ts",
+      "git_blob_sha1": "964f22804a2b06b9a14a5f95b2b428e1af77d586"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "../../../../modules/maestro/coordination/src/v2/workflow/records.ts",
+      "target": "modules/maestro/coordination/src/v2/workflow/records.ts",
+      "git_blob_sha1": "ec921d50bb9b4aabc7be2b047805a8f00770c379"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "./routine-native-input.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "git_blob_sha1": "f0a3a1f9b743161a98b5545fce1ca71c8d9c0abe"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "specifier": "./routine-native-records.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-records.ts",
+      "git_blob_sha1": "d918fa52cdf301ed90ed243329caa799dcfc8ebd"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "effect",
+      "resolution": "external dependency pinned by W bun.lock"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "@orchestra/core/tool-safety",
+      "target": "packages/core/src/tool-safety.ts",
+      "git_blob_sha1": "effd9af70e95a38de93c9e472bd03728666c4da8",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/canonical.ts",
+      "git_blob_sha1": "1769271386cdda1017c38023b0988ce2d64423d2"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "target": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "git_blob_sha1": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "./routine-native-adapter.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "git_blob_sha1": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "./routine-native-dispatch.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "git_blob_sha1": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "./routine-native-governance.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "./routine-native-owner.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "git_blob_sha1": "a4dce61b612729bb317761bb0d63ff622f55a8cd"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "./routine-native-input.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "git_blob_sha1": "f0a3a1f9b743161a98b5545fce1ca71c8d9c0abe"
+    },
+    {
+      "from": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "specifier": "./routine-native-runtime.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "git_blob_sha1": "5383051da7cda4523d81f34d93430871e564bb06"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "node:util",
+      "resolution": "Bun/Node builtin"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "effect",
+      "resolution": "external dependency pinned by W bun.lock"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "@orchestra/core/capability/invocation",
+      "target": "packages/core/src/capability/invocation.ts",
+      "git_blob_sha1": "e2ddcb3e3f0da61b8d9d5fe8c7c74436b844e890",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "@orchestra/core/tool-safety",
+      "target": "packages/core/src/tool-safety.ts",
+      "git_blob_sha1": "effd9af70e95a38de93c9e472bd03728666c4da8",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "../../../product/routines/publication.ts",
+      "target": "modules/sucafina/Sucafinav1/product/routines/publication.ts",
+      "git_blob_sha1": "0c1eef9e9f298d5bada09d3e46c38ff8d228b1f2"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "git_blob_sha1": "68f9114d94eaee84f19a5f353d12967fe05fdf86"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "git_blob_sha1": "68f9114d94eaee84f19a5f353d12967fe05fdf86"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/routine-native-input.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "git_blob_sha1": "f0a3a1f9b743161a98b5545fce1ca71c8d9c0abe"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "specifier": "../routine-native-owner-binding/fixture.ts",
+      "target": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+      "git_blob_sha1": "68c277780db8d4c7ddfa1e55820b80e31b0f8605"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "bun:test",
+      "resolution": "Bun/Node builtin"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "effect",
+      "resolution": "external dependency pinned by W bun.lock"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "@orchestra/core/event",
+      "target": "packages/core/src/event.ts",
+      "git_blob_sha1": "c525362f4e9120501a5f9428d82914a7061eeeeb",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "@orchestra/core/session/sql",
+      "target": "packages/core/src/session/sql.ts",
+      "git_blob_sha1": "21b589483ae47f8d924cc58b8d2377525d381cc0",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "@orchestra/core/tool-safety",
+      "target": "packages/core/src/tool-safety.ts",
+      "git_blob_sha1": "effd9af70e95a38de93c9e472bd03728666c4da8",
+      "public_export_manifest_blob": "f38171409c219dafd27f8eddedbd417e0f6657b5"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "@orchestra/schema/maestro-event",
+      "target": "packages/schema/src/maestro-event.ts",
+      "git_blob_sha1": "e6b614beca3af95b53e294055af2e3a885794f27",
+      "public_export_manifest_blob": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "../../../../../../apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "target": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "git_blob_sha1": "9f108bf7af9f2d23d912bc568bb1f3a0523af085"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "../routine-native-admission/fixture.ts",
+      "target": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/fixture.ts",
+      "git_blob_sha1": "eab3ded0a4964793d7786a50e02d0b9f97962bf3"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "../routine-native-owner-binding/fixture.ts",
+      "target": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fixture.ts",
+      "git_blob_sha1": "68c277780db8d4c7ddfa1e55820b80e31b0f8605"
+    },
+    {
+      "from": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "specifier": "./fixture.ts",
+      "target": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "git_blob_sha1": "63751102171be3ca9b61e3811a378b426ee36c3f"
+    }
+  ],
+  "missing_targets": [],
+  "subtrees": [
+    {
+      "path": "apps",
+      "base_tree": "f8375509db5b7d81951a4221071a49f9ff39cbcc",
+      "source_W_override": [
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+          "git_blob": "68f9114d94eaee84f19a5f353d12967fe05fdf86"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+          "git_blob": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845"
+        },
+        {
+          "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+          "git_blob": "9f108bf7af9f2d23d912bc568bb1f3a0523af085"
+        }
+      ]
+    },
+    {
+      "path": "modules/sucafina",
+      "base_tree": "55dde9d6c7353334572dfc3453839f3f9693be03",
+      "source_W_override": [
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+          "git_blob": "63751102171be3ca9b61e3811a378b426ee36c3f"
+        },
+        {
+          "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+          "git_blob": "e6d0f3c7f8f2e6cfa19da57de109984bf3c7ada9"
+        }
+      ]
+    },
+    {
+      "path": "packages/core",
+      "base_tree": "c4cdc7e8854fa8aab2fe7ce03dfd1536593c81da",
+      "source_W_override": []
+    },
+    {
+      "path": "packages/llm",
+      "base_tree": "26513d5592de12ad0197bdd187c89217e89c2b80",
+      "source_W_override": []
+    },
+    {
+      "path": "packages/schema",
+      "base_tree": "c00be7f48be7ea833afe1bfd0bce0f7682cb0ee1",
+      "source_W_override": []
+    },
+    {
+      "path": "modules/maestro",
+      "base_tree": "e1426eefa49939d584c1ab8db93289c0e726cd3e",
+      "source_W_override": []
+    },
+    {
+      "path": "modules/relay",
+      "base_tree": "cd61675eb3aa08dec4a9e23e3e2196db0216eb56",
+      "source_W_override": []
+    }
+  ],
+  "inherited_transitive_closure": "The complete W Git tree is the runner input. All inherited dependency/config/fixture subtrees are retained byte-for-byte from the acknowledged base except the five listed overrides. This direct-edge inventory is not a compiler or installed runtime claim; hosted component loading and request45 provide separate checks.",
+  "lockfile": {
+    "path": "bun.lock",
+    "git_blob_sha1": "e3f0c6443c12dd16cb66030f75e2f71f16508098"
+  },
+  "shared_composition": "assembly/manifest.json specifies its separate unchanged host preimage and all composition dependencies; patch remains inert."
+}

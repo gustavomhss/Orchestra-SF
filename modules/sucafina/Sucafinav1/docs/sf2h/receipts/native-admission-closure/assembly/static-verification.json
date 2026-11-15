@@ -1,0 +1,29 @@
+{
+  "schema": "sf-native-admission-static-assembly-verification-v1",
+  "target": "apps/cli/src/sucafina-product/host-context.ts",
+  "source_untouched": true,
+  "preimage_matches_pinned_git_blob": true,
+  "diff_reconstruction_matches_full_postimage": true,
+  "patch_hunks": 5,
+  "artifacts": {
+    "host-context.preimage.txt": {
+      "git_blob_sha1": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "sha256": "09017349a0e60c625ab92f68bb209ea0d369aaa9ab7570d1e585fbae5e3689ea",
+      "bytes": 77300
+    },
+    "host-context.postimage.txt": {
+      "git_blob_sha1": "297a4050323d80648684725f9c7e9a8680aa318f",
+      "sha256": "b89aed44d0e22ddd59b550a13d750501113d3a18852264ca66468b484e0244a5",
+      "bytes": 78701
+    },
+    "host-context.patch": {
+      "git_blob_sha1": "30c639d37afc202f8f1bf7d15bd427e3bfca79ad",
+      "sha256": "6d26703fb0e38cd55e2bc8a5c7b8d65c0d4b91dee3a863f614ea74d1d9b8399b",
+      "bytes": 7941
+    }
+  },
+  "product_execution": false,
+  "product_tests": false,
+  "typecheck": false,
+  "integrated_native_acceptance": false
+}

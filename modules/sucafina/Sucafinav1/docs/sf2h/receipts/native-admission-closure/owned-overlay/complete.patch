@@ -1,0 +1,970 @@
+--- /dev/null
++++ b/apps/cli/src/sucafina-product/routine-native-admission.ts
+@@ -0,0 +1,184 @@
++import { isDeepStrictEqual } from "node:util"
++import { Effect } from "effect"
++import { RelayWorkflowBinding } from "@orchestra/core/relay-workflow-binding"
++import type { SessionSchema } from "@orchestra/core/session/schema"
++import { TaskTool } from "@orchestra/core/tool/task"
++import { ToolSafety } from "@orchestra/core/tool-safety"
++import { digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
++import type { TrustedUiContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
++import type { SfRoutineNativeAdapterInput } from "./routine-native-adapter.ts"
++import { withSfRoutineNativeAbort } from "./routine-native-dispatch.ts"
++import type { createSfRoutineNativeGovernance, SfRoutineNativeOwnerHook } from "./routine-native-governance.ts"
++import { readSfRoutineNativeInput, sameSfRoutineNativeOwner, SF_ROUTINE_INPUT_PARAMETER } from "./routine-native-input.ts"
++import { captureSfRoutineNativeOwner } from "./routine-native-owner.ts"
++import type { createSfRoutineNativeOwnerRegistry } from "./routine-native-registry.ts"
++import { routineSourceDigest } from "./routine-services.ts"
++
++/** The exact payload independently authorized by the existing SF human routines.run command. */
++export type SfRoutineNativeAdmissionIntent = Readonly<{
++  planRevisionId: string
++  authorizationId: string
++  inputDigest: string
++  caseRef: Readonly<{ id: string; incarnation: string; version: number }>
++}>
++
++/**
++ * Issued only by the authenticated native admission origin. The original Request and consumed SF lease
++ * accompany a separately admitted native Maestro Session. IDs and SF_ROUTINE_INPUT are consistency data.
++ * current/signal must also fence the native policy, C15 budget and admitted human continuation.
++ */
++export type SfRoutineNativeAdmissionBinding = Readonly<{
++  request: Request
++  context: TrustedUiContext
++  authoritySessionID: SessionSchema.ID
++  intent: SfRoutineNativeAdmissionIntent
++  signal: AbortSignal
++  current: () => Promise<boolean>
++}>
++
++/**
++ * Private host capability, never an HTTP/model service or a session-ID lookup. resolve observes the exact
++ * original core invocation and returns the same live object until its native owner releases it. A production
++ * implementation must possess the authenticated native origin; resolving plan.owner or caller IDs is invalid.
++ * No default implementation is installed: the SF resident registry cannot issue this native capability.
++ */
++export type SfRoutineNativeAdmissionOrigin = {
++  ready: () => boolean
++  resolve: (invocation: ToolSafety.Invocation) => Promise<SfRoutineNativeAdmissionBinding | undefined>
++}
++
++export type SfRoutineNativeAdmissionInput = Pick<SfRoutineNativeAdapterInput,
++  "resources" | "requestFor" | "authorize" | "generation" | "publication" | "resolveCase" | "resolveInputs" | "revalidateSources"> & {
++  origin: () => SfRoutineNativeAdmissionOrigin | undefined
++  registry: ReturnType<typeof createSfRoutineNativeOwnerRegistry>
++  governance: ReturnType<typeof createSfRoutineNativeGovernance>
++  /** Must be createSfHumanAuthority.authorize(context, "routines.run", intent), with the exact payload. */
++  authorizeIntent: (context: TrustedUiContext, intent: SfRoutineNativeAdmissionIntent) => Promise<boolean>
++}
++
++/**
++ * Installs the missing C07 lease around the ORIGINAL native Task settlement, after independent Request/native
++ * origin verification. It never allocates a Session/Task, answers Permission, publishes an approval, invokes
++ * another dispatcher or adopts a busy coordinator. Native governance still owns review/approval/arm/Task/Relay.
++ */
++export function createSfRoutineNativeAdmission(input: SfRoutineNativeAdmissionInput) {
++  let disposed = false
++  const lifetime = new AbortController()
++  const readiness = () => {
++    if (disposed) return "disposed" as const
++    const resources = input.resources()
++    if (!resources?.current() || !input.governance.installed(resources.governance) ||
++      !input.governance.guardsInstalled(resources.safety, resources.relay)) return "native-runtime-unavailable" as const
++    if (!input.publication()) return "publication-unavailable" as const
++    if (!input.origin()?.ready()) return "authenticated-native-origin-unavailable" as const
++    return "ready" as const
++  }
++
++  const run: SfRoutineNativeOwnerHook["run"] = (invocation, effect) => Effect.gen(function* () {
++    if (invocation.tool !== TaskTool.name) return yield* effect
++    const args = invocation.args
++    const workflow = args && typeof args === "object" && "workflow" in args ? args.workflow : undefined
++    const revisionId = workflow && typeof workflow === "object" && "planRevisionID" in workflow
++      ? workflow.planRevisionID : undefined
++    if (typeof revisionId !== "string") return yield* effect
++    const resources = input.resources()
++    // The existing governance wrapper remains responsible for refusing unavailable/malformed plans.
++    if (!resources?.current()) return yield* effect
++    const plan = yield* checked(() => resources.records.readPlan(revisionId))
++    if (!plan || !Object.hasOwn(plan.workflowBinding.parameters, SF_ROUTINE_INPUT_PARAMETER)) return yield* effect
++    if (!readSfRoutineNativeInput(plan) || readiness() !== "ready") return yield* denied()
++    // Dispose interrupts only the SF branch, even while its origin lookup is still pending.
++    return yield* withSfRoutineNativeAbort(Effect.gen(function* () {
++      const origin = input.origin()
++      if (!origin) return yield* denied()
++      const binding = yield* checked(() => origin.resolve(invocation))
++      if (!binding || binding.context.kind !== "ui" || binding.request.method !== "POST" || binding.signal.aborted ||
++        binding.request.signal.aborted || input.requestFor(binding.context) !== binding.request) return yield* denied()
++      const context = binding.context
++      const request = binding.request
++      const signal = binding.signal
++      // Protect all post-origin awaits, including initial registry acquisition, not only the Task body.
++      return yield* withSfRoutineNativeAbort(input.registry.withRequest(context, request, Effect.gen(function* () {
++        const intent = Object.freeze({ planRevisionId: binding.intent.planRevisionId,
++          authorizationId: binding.intent.authorizationId, inputDigest: binding.intent.inputDigest,
++          caseRef: Object.freeze({ ...binding.intent.caseRef }) })
++        const bindingDigest = digestSfValue(context.binding)
++        const headersDigest = digestSfValue([...request.headers])
++        const nativeCurrent = binding.current
++        const generation = yield* checked(input.generation)
++        if (generation === undefined || !Number.isSafeInteger(generation) || generation < 0) return yield* denied()
++        const witness = yield* captureSfRoutineNativeOwner(resources, invocation)
++        if (!isDeepStrictEqual(plan, witness.plan) || binding.authoritySessionID !== witness.authoritySessionID ||
++          intent.planRevisionId !== witness.plan.id || intent.inputDigest !== witness.retained.inputDigest ||
++          !isDeepStrictEqual(intent.caseRef, witness.retained.input.caseRef) ||
++          !args || typeof args !== "object" || !("authorizationID" in args) || args.authorizationID !== intent.authorizationId)
++          return yield* denied()
++        const expectedOwner = {
++          installationId: resources.identity.installationId, hostId: resources.identity.hostId,
++          projectId: resources.identity.projectId, locationId: digestSfValue(resources.identity.location),
++          authoritySessionId: witness.authoritySessionID, principalRef: context.binding.principalRef,
++          policyVersion: context.binding.policyVersion, accessRevision: context.binding.accessRevision, providerGeneration: generation,
++        }
++        if (!sameSfRoutineNativeOwner(witness.retained.owner, expectedOwner)) return yield* denied()
++        const publication = input.publication()
++        if (!publication || publication.publication.projectID !== resources.identity.projectId) return yield* denied()
++        const publicationPort = publication.publication
++        const sync = () => !disposed && input.resources() === resources && resources.current() &&
++          input.origin() === origin && origin.ready() && input.publication() === publication && publication.publication === publicationPort &&
++          input.governance.installed(resources.governance) && input.governance.guardsInstalled(resources.safety, resources.relay) &&
++          binding.request === request && binding.context === context && binding.signal === signal && binding.current === nativeCurrent &&
++          binding.authoritySessionID === witness.authoritySessionID && !request.signal.aborted && !signal.aborted &&
++          input.requestFor(context) === request && digestSfValue(context.binding) === bindingDigest &&
++          digestSfValue([...request.headers]) === headersDigest && isDeepStrictEqual(binding.intent, intent)
++        const current = async () => {
++          if (!sync() || !await nativeCurrent() || !sync() || !await input.authorize(context) ||
++            !await input.authorizeIntent(context, intent) || !sync() || await origin.resolve(invocation) !== binding ||
++            await input.generation() !== generation || !await witness.current() || !sync()) return false
++          const selectedCase = await input.resolveCase(context)
++          if (selectedCase.status !== "ok" || !isDeepStrictEqual(selectedCase.value, witness.retained.input.caseRef) || !sync()) return false
++          const sources = await input.resolveInputs(witness.retained.input.inputRefs, context)
++          if (sources.status !== "ok" || routineSourceDigest(sources.value) !== routineSourceDigest(witness.retained.sourceRefs) || !sync() ||
++            !await publication.authorize(context)) return false
++          const verified = await Effect.runPromise(Effect.result(RelayWorkflowBinding.revalidate(publicationPort, witness.plan.workflowBinding)))
++          if (verified._tag === "Failure" || !sync() || !await input.revalidateSources(witness.retained.sourceRefs, context)) return false
++          // All source/publication awaits precede one final identity/authority fence, including egress.
++          return sync() && await input.authorize(context) && await input.authorizeIntent(context, intent) &&
++            await nativeCurrent() && await origin.resolve(invocation) === binding && await input.generation() === generation &&
++            await witness.current() && sync()
++        }
++        if (!(yield* checked(current))) return yield* denied()
++        const guarded = Effect.acquireUseRelease(
++          Effect.sync(() => input.governance.tryBind(witness.plan.id, { current, signal: AbortSignal.any([request.signal, signal]) })),
++          (release) => Effect.gen(function* () {
++            if (!release) return yield* denied()
++            if (!(yield* checked(current))) return yield* denied()
++            const result = yield* effect
++            if (!(yield* checked(current))) return yield* denied()
++            return result
++          }),
++          (release) => Effect.sync(() => release?.()),
++        )
++        // The native coordinator already owns this settlement. No exclusive/resume/Task call is made here.
++        // Claim the existing registry replay fence before touching the plan lease. A rejected duplicate must
++        // not replace/release the original caller's authority, including two calls with distinct Request objects.
++        return yield* input.registry.run(invocation, guarded)
++      })), AbortSignal.any([request.signal, signal]))
++    }), lifetime.signal)
++  })
++
++  return {
++    run, readiness,
++    revoke: input.registry.revoke,
++    invalidateGeneration: input.registry.invalidateGeneration,
++    dispose: () => { disposed = true; lifetime.abort(); input.registry.dispose() },
++  }
++}
++
++function denied() {
++  return new ToolSafety.Denied({ reason: "SF_ROUTINE_NATIVE_ADMISSION_UNAVAILABLE" })
++}
++
++function checked<A>(read: () => Promise<A>) {
++  return Effect.tryPromise({ try: read, catch: () => denied() })
++}
++
+--- a/apps/cli/src/sucafina-product/routine-native-governance.ts
++++ b/apps/cli/src/sucafina-product/routine-native-governance.ts
+@@ -76,10 +76,17 @@
+     leases.set(planRevisionId, lease)
+     authority.signal.addEventListener("abort", release, { once: true })
+     // Abort can race registration; a capability already revoked must never become current again.
+     if (authority.signal.aborted) release()
+     return release
++  }
++
++  // Original Task settlement may race a retry. Refusing that retry must not revoke the in-flight
++  // owner's lease. Keep bind's existing replacement contract for its current private callers.
++  const tryBind = (planRevisionId: string, authority: SfRoutineNativeAuthorityLease): (() => void) | undefined => {
++    if (authority.signal.aborted || leases.has(planRevisionId)) return undefined
++    return bind(planRevisionId, authority)
+   }
+ 
+   const assertCurrent = (checked: Checked) => Effect.gen(function* () {
+     const stillBound = () => checked.active() && input.records() === checked.records &&
+       leases.get(checked.plan.id) === checked.lease && !checked.lease.signal.aborted
+@@ -270,10 +277,11 @@
+   }
+ 
+   return {
+     contribution,
+     bind,
++    tryBind,
+     registerLease: bind,
+     installed: (service: TaskGovernance.Interface) => installations.has(service),
+     installation: (service: TaskGovernance.Interface) => installations.get(service),
+     guardsInstalled: (safety: ToolSafety.Interface, relay: Relay.Interface) => safeties.has(safety) && relays.has(relay),
+     dispose: () => { for (const lease of leases.values()) lease.release() },
+--- a/apps/cli/src/sucafina-product/routine-native-registry.ts
++++ b/apps/cli/src/sucafina-product/routine-native-registry.ts
+@@ -46,10 +46,12 @@
+  * leaves owners unavailable. Never use a retained plan or a resident sf_maestro as that producer.
+  */
+ export function createSfRoutineNativeOwnerRegistry(input: SfRoutineNativeRegistryInput) {
+   const identity = Object.freeze({})
+   const scopes = new Set<RequestScope>()
++  // These are cancellable acquisitions in this same registry, never issued ownership capabilities.
++  const acquiring = new Set<{ request: Request; close: () => void }>()
+   const entries = new Map<string, Entry>()
+   const issued = new Set<string>()
+   const invalidGenerations = new Set<number>()
+   const now = input.now ?? Date.now
+   let disposed = false
+@@ -57,67 +59,77 @@
+   const withRequest = <A, E, R>(
+     context: TrustedDomainContext, request: Request, effect: Effect.Effect<A, E, R>,
+   ): Effect.Effect<A, E | ToolSafety.Denied, R> => Effect.gen(function* () {
+     if (disposed || (yield* CurrentRequest) || !context || !request || input.requestFor(context) !== request ||
+       request.signal.aborted) return yield* denied()
+-    const resources = input.resources()
+-    const generation = yield* Effect.tryPromise({ try: input.generation, catch: () => denied() })
+     const expires = Date.parse(context.binding.expiresAt)
+     const acquiredAt = now()
+-    if (!resources?.current() || generation === undefined || !Number.isSafeInteger(generation) || generation < 0 ||
+-      invalidGenerations.has(generation) || !Number.isFinite(expires) || expires <= acquiredAt) return yield* denied()
++    if (!Number.isFinite(expires) || expires <= acquiredAt) return yield* denied()
+     const binding = context.binding
+     const lease = context.lease
+     const kind = context.kind
+     const bindingDigest = digestSfValue(binding)
+-    const resourcesDigest = digestSfValue(resources.identity)
+     const headersDigest = digestSfValue([...request.headers])
+     const lifetime = Math.min(expires - acquiredAt, 300_000)
+     const deadline = acquiredAt + lifetime
+     const monotonicDeadline = performance.now() + lifetime
+     const cancellation = new AbortController()
+     let expiryTimer: ReturnType<typeof setTimeout> | undefined
++    let releaseScope: (() => void) | undefined
+     let active = true
+-    const sync = () => active && !disposed && scopes.has(scope) && input.resources() === resources &&
+-      resources.current() && input.requestFor(context) === request && !request.signal.aborted &&
+-      !invalidGenerations.has(generation) && now() < deadline && performance.now() < monotonicDeadline &&
+-      context.kind === kind && context.binding === binding && context.lease === lease &&
+-      digestSfValue(context.binding) === bindingDigest && digestSfValue(resources.identity) === resourcesDigest &&
+-      digestSfValue([...request.headers]) === headersDigest &&
+-      binding.installationId === resources.identity.installationId && binding.projectId === resources.identity.projectId &&
+-      (context.kind !== "native" || (context.binding.hostId === resources.identity.hostId &&
+-        context.binding.locationId === digestSfValue(resources.identity.location) &&
+-        context.binding.providerGeneration === generation))
+-    const current = async () => {
+-      const authorized = sync() && await input.authorize(context).catch(() => false)
+-      const actualGeneration = authorized && sync() ? await input.generation().catch(() => undefined) : undefined
+-      if (authorized && actualGeneration === generation && sync()) return true
+-      close()
+-      return false
+-    }
+     const close = () => {
+       if (!active) return
+       active = false
+-      scopes.delete(scope)
++      acquiring.delete(acquisition)
+       if (expiryTimer !== undefined) clearTimeout(expiryTimer)
+       request.signal.removeEventListener("abort", close)
+-      for (const entry of [...entries.values()]) if (entry.scope === scope) entry.close()
++      releaseScope?.()
+       // Interrupt only this privately scoped operation, never another session owner selected by ID.
+       cancellation.abort()
+     }
+-    const scope: RequestScope = { registry: identity, request, context, resources, generation, sync, current, close }
++    const acquisition = { request, close }
+     return yield* Effect.acquireUseRelease(Effect.sync(() => {
+-      scopes.add(scope)
++      // revoke/dispose/expiry must reach generation/authority awaits before a full scope can exist.
++      acquiring.add(acquisition)
+       expiryTimer = setTimeout(close, lifetime)
+       request.signal.addEventListener("abort", close, { once: true })
+-      if (request.signal.aborted) close()
+-    }), () => Effect.gen(function* () {
+-      if (!(yield* checked(current))) return yield* denied()
+-      const result = yield* withSfRoutineNativeAbort(Effect.provideService(effect, CurrentRequest, scope), cancellation.signal)
++      if (request.signal.aborted || disposed) close()
++    }), () => withSfRoutineNativeAbort(Effect.gen(function* () {
++      const resources = input.resources()
++      const generation = yield* Effect.tryPromise({ try: input.generation, catch: () => denied() })
++      if (!active || disposed || !resources?.current() || generation === undefined ||
++        !Number.isSafeInteger(generation) || generation < 0 || invalidGenerations.has(generation)) return yield* denied()
++      const resourcesDigest = digestSfValue(resources.identity)
++      const sync = () => active && !disposed && scopes.has(scope) && input.resources() === resources &&
++        resources.current() && input.requestFor(context) === request && !request.signal.aborted &&
++        !invalidGenerations.has(generation) && now() < deadline && performance.now() < monotonicDeadline &&
++        context.kind === kind && context.binding === binding && context.lease === lease &&
++        digestSfValue(context.binding) === bindingDigest && digestSfValue(resources.identity) === resourcesDigest &&
++        digestSfValue([...request.headers]) === headersDigest &&
++        binding.installationId === resources.identity.installationId && binding.projectId === resources.identity.projectId &&
++        (context.kind !== "native" || (context.binding.hostId === resources.identity.hostId &&
++          context.binding.locationId === digestSfValue(resources.identity.location) &&
++          context.binding.providerGeneration === generation))
++      const current = async () => {
++        const authorized = sync() && await input.authorize(context).catch(() => false)
++        const actualGeneration = authorized && sync() ? await input.generation().catch(() => undefined) : undefined
++        if (authorized && actualGeneration === generation && sync()) return true
++        close()
++        return false
++      }
++      const scope: RequestScope = { registry: identity, request, context, resources, generation, sync, current, close }
++      releaseScope = () => {
++        scopes.delete(scope)
++        for (const entry of [...entries.values()]) if (entry.scope === scope) entry.close()
++      }
++      scopes.add(scope)
++      acquiring.delete(acquisition)
++      if (!(yield* checked(current))) return yield* denied()
++      const result = yield* Effect.provideService(effect, CurrentRequest, scope)
+       if (!(yield* checked(current))) return yield* denied()
+       return result
+-    }), () => Effect.sync(close))
++    }), cancellation.signal), () => Effect.sync(close))
+   })
+ 
+   const run: SfRoutineNativeOwnerHook["run"] = (invocation, effect) => Effect.gen(function* () {
+     if (invocation.tool !== "task") return yield* effect
+     const scope = yield* CurrentRequest
+@@ -193,18 +205,24 @@
+   })
+   const entriesHas = (entry: Entry) => [...entries.values()].includes(entry) && entry.scope.sync()
+ 
+   return {
+     owners, withRequest, run,
+-    revoke: (request: Request) => { for (const scope of [...scopes]) if (scope.request === request) scope.close() },
++    revoke: (request: Request) => {
++      for (const acquisition of [...acquiring]) if (acquisition.request === request) acquisition.close()
++      for (const scope of [...scopes]) if (scope.request === request) scope.close()
++    },
+     invalidateGeneration: (generation: number) => {
+       invalidGenerations.add(generation)
++      // An acquisition has not established its generation yet; none may span a rotation.
++      for (const acquisition of [...acquiring]) acquisition.close()
+       for (const scope of [...scopes]) if (scope.generation === generation) scope.close()
+     },
+     dispose: () => {
+       if (disposed) return
+       disposed = true
++      for (const acquisition of [...acquiring]) acquisition.close()
+       for (const scope of [...scopes]) scope.close()
+       for (const entry of [...entries.values()]) entry.close()
+     },
+   }
+ }
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts
+@@ -0,0 +1,143 @@
++import { isDeepStrictEqual } from "node:util"
++import { Effect, type Scope } from "effect"
++import { CapabilityInvocation } from "@orchestra/core/capability/invocation"
++import type { ToolSafety } from "@orchestra/core/tool-safety"
++import type { RoutinePublicationHost } from "../../../product/routines/publication.ts"
++import { createSfRoutineNativeAdmission } from "../../../../../../apps/cli/src/sucafina-product/routine-native-admission.ts"
++import type { SfRoutineNativeAdmissionBinding, SfRoutineNativeAdmissionInput, SfRoutineNativeAdmissionIntent, SfRoutineNativeAdmissionOrigin } from "../../../../../../apps/cli/src/sucafina-product/routine-native-admission.ts"
++import { createSfRoutineNativeGovernance } from "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts"
++import type { SfRoutineNativeAuthorityLease } from "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts"
++import { readSfRoutineNativeInput } from "../../../../../../apps/cli/src/sucafina-product/routine-native-input.ts"
++import { ids, withOwnerFixture, type OwnerFixture } from "../routine-native-owner-binding/fixture.ts"
++
++/**
++ * COMPONENT PROOF ONLY. Reuses component41's real SQLite, records, Permission, ToolRegistry,
++ * publication compiler/store and owner registry. Request/UI lease, authenticated origin, native
++ * CapabilityInvocation frame, sessions, approval, arm and Task records are synthetic fixture data.
++ * installed/guardsInstalled below are fixture predicates; no production composition is installed.
++ * Original settlement is an observable test Effect, never a Task/provider/Relay/Schedule dispatch.
++ * The inherited Task registration throws SYNTHETIC_TASK_MUST_NOT_DISPATCH if execution is attempted.
++ * These tests cannot certify native execution, AM02, AM06, provider return or installed admission.
++ */
++const build = Effect.fn("SfNativeAdmissionComponentFixture.build")(function* (owner: OwnerFixture) {
++  const uiContext = owner.ui()
++  owner.state.context = uiContext
++  owner.state.request = new Request("https://sf-fixture.invalid/routines/run", {
++    method: "POST", signal: owner.controller.signal,
++    headers: { "x-sf-fixture-actor": owner.retained.owner.principalRef },
++  })
++  const retained = readSfRoutineNativeInput(owner.plan)
++  if (!retained) return yield* Effect.die("Existing synthetic native plan has no retained SF input")
++  const expectedIntent: SfRoutineNativeAdmissionIntent = {
++    planRevisionId: owner.plan.id, authorizationId: ids.authorization,
++    inputDigest: retained.inputDigest, caseRef: { ...retained.input.caseRef },
++  }
++  const nativeController = new AbortController()
++  const admissionState: {
++    origin: SfRoutineNativeAdmissionOrigin | undefined
++    binding: SfRoutineNativeAdmissionBinding | undefined
++    originReady: boolean
++    nativeCurrent: boolean
++    intentAuthorized: boolean
++    installed: boolean
++    guardsInstalled: boolean
++    publication: RoutinePublicationHost | undefined
++    publicationAuthorized: boolean
++    selectedCase: Awaited<ReturnType<SfRoutineNativeAdmissionInput["resolveCase"]>>
++    sources: Awaited<ReturnType<SfRoutineNativeAdmissionInput["resolveInputs"]>>
++    sourceReader: SfRoutineNativeAdmissionInput["resolveInputs"] | undefined
++    sourcesCurrent: boolean
++  } = {
++    origin: undefined, binding: undefined, originReady: true, nativeCurrent: true,
++    intentAuthorized: true, installed: true, guardsInstalled: true,
++    publication: undefined, publicationAuthorized: true,
++    selectedCase: { status: "ok", value: { ...retained.input.caseRef } },
++    sources: { status: "ok", value: [...retained.sourceRefs] }, sourceReader: undefined, sourcesCurrent: true,
++  }
++  const trace = {
++    resolutions: [] as ToolSafety.Invocation[], intents: [] as SfRoutineNativeAdmissionIntent[],
++    bindAttempts: 0, binds: 0, releases: 0,
++    active: new Map<string, SfRoutineNativeAuthorityLease>(),
++  }
++  const admissionBinding: SfRoutineNativeAdmissionBinding = {
++    request: owner.state.request, context: uiContext, authoritySessionID: ids.parent,
++    intent: structuredClone(expectedIntent), signal: nativeController.signal,
++    current: async () => admissionState.nativeCurrent,
++  }
++  const fixtureOrigin: SfRoutineNativeAdmissionOrigin = {
++    ready: () => admissionState.originReady,
++    resolve: async (invocation) => {
++      trace.resolutions.push(invocation)
++      // An explicit fake issuer maps the exact invocation object, never a user-supplied ID.
++      return invocation === owner.invocation ? admissionState.binding : undefined
++    },
++  }
++  admissionState.binding = admissionBinding
++  admissionState.origin = fixtureOrigin
++  const publicationHost: RoutinePublicationHost = {
++    publication: owner.publication,
++    authorize: async (context) => admissionState.publicationAuthorized && owner.state.authorized && context === owner.state.context,
++    authorSession: async () => ids.parent,
++  }
++  admissionState.publication = publicationHost
++  const realGovernance = createSfRoutineNativeGovernance({ records: () => owner.resources.records })
++  const governance: ReturnType<typeof createSfRoutineNativeGovernance> = {
++    ...realGovernance,
++    // ONLY the composition predicates are substituted. Binding/replay/release use the real map.
++    installed: (service) => admissionState.installed && service === owner.resources.governance,
++    guardsInstalled: (safety, relay) => admissionState.guardsInstalled && safety === owner.resources.safety && relay === owner.resources.relay,
++    tryBind: (planRevisionId, authority) => {
++      trace.bindAttempts++
++      const release = realGovernance.tryBind(planRevisionId, authority)
++      if (!release) return undefined
++      trace.binds++
++      trace.active.set(planRevisionId, authority)
++      let active = true
++      const observedRelease = () => {
++        if (!active) return
++        active = false
++        authority.signal.removeEventListener("abort", observedRelease)
++        release()
++        trace.releases++
++        if (trace.active.get(planRevisionId) === authority) trace.active.delete(planRevisionId)
++      }
++      authority.signal.addEventListener("abort", observedRelease, { once: true })
++      if (authority.signal.aborted) observedRelease()
++      return observedRelease
++    },
++  }
++  const admission = createSfRoutineNativeAdmission({
++    resources: () => owner.state.resources,
++    requestFor: (context) => context === owner.state.context ? owner.state.request : undefined,
++    authorize: async (context) => owner.state.authorized && context === owner.state.context,
++    generation: async () => owner.state.generation,
++    publication: () => admissionState.publication,
++    resolveCase: async () => admissionState.selectedCase,
++    resolveInputs: async (references, context) => admissionState.sourceReader
++      ? admissionState.sourceReader(references, context) : admissionState.sources,
++    revalidateSources: async () => admissionState.sourcesCurrent,
++    origin: () => admissionState.origin,
++    registry: owner.registry, governance,
++    authorizeIntent: async (context, intent) => {
++      trace.intents.push(structuredClone(intent))
++      return admissionState.intentAuthorized && context === owner.state.context && isDeepStrictEqual(intent, expectedIntent)
++    },
++  })
++  yield* Effect.addFinalizer(() => Effect.sync(() => { admission.dispose(); realGovernance.dispose() }))
++  const enter = <A, E, R>(effect: Effect.Effect<A, E, R>, options: {
++    invocation?: ToolSafety.Invocation; frame?: CapabilityInvocation.HostInput | null
++  } = {}) => {
++    const settled = admission.run(options.invocation ?? owner.invocation, effect)
++    return options.frame === null ? settled : CapabilityInvocation.withContext(options.frame ?? owner.frame, settled)
++  }
++  return { ...owner, enter, uiContext, admissionBinding, expectedIntent, admissionState, nativeController,
++    fixtureOrigin, publicationHost, realGovernance, governance, trace, admission }
++})
++
++export type AdmissionFixture = Effect.Success<ReturnType<typeof build>>
++
++export const withAdmissionFixture = <A, E>(body: (fixture: AdmissionFixture) => Effect.Effect<A, E, Scope.Scope>) =>
++  withOwnerFixture((owner) => Effect.gen(function* () {
++    const fixture = yield* build(owner)
++    return yield* body(fixture)
++  }))
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts
+@@ -0,0 +1,452 @@
++import { expect, test } from "bun:test"
++import { Cause, Deferred, Effect, Exit, Fiber, type Scope } from "effect"
++import { EventV2 } from "@orchestra/core/event"
++import { SessionMessageTable } from "@orchestra/core/session/sql"
++import { ToolSafety } from "@orchestra/core/tool-safety"
++import { MaestroEvent } from "@orchestra/schema/maestro-event"
++import type { SfRoutineNativeAuthorityLease } from "../../../../../../apps/cli/src/sucafina-product/routine-native-governance.ts"
++import { createSfRoutineNativeOwnerRegistry } from "../../../../../../apps/cli/src/sucafina-product/routine-native-registry.ts"
++import { fixturePlan } from "../routine-native-admission/fixture.ts"
++import { ids } from "../routine-native-owner-binding/fixture.ts"
++import { withAdmissionFixture, type AdmissionFixture } from "./fixture.ts"
++
++// Every test is COMPONENT evidence with a deliberately synthetic origin and original settlement.
++// No Task, provider turn, Relay run, installed host, native admission or terminal return is claimed.
++const resolve = (f: AdmissionFixture) => Effect.promise(() => f.registry.owners.resolve(f.state.context, f.state.request))
++const refused = (exit: Exit.Exit<unknown, unknown>) => {
++  expect(Exit.isFailure(exit)).toBe(true)
++  if (Exit.isFailure(exit)) expect(Cause.hasInterruptsOnly(exit.cause) || Cause.squash(exit.cause) instanceof ToolSafety.Denied).toBe(true)
++}
++const deniedBeforeSettlement = (f: AdmissionFixture, options?: Parameters<AdmissionFixture["enter"]>[1]) =>
++  Effect.gen(function* () {
++    const calls = { original: 0 }
++    refused(yield* f.enter(Effect.sync(() => ++calls.original), options).pipe(Effect.exit))
++    expect(calls.original).toBe(0)
++    expect(f.trace.binds).toBe(0)
++    expect(f.registry.owners.available()).toBe(false)
++    expect(yield* resolve(f)).toBeUndefined()
++  })
++
++test("component: exact POST/UI origin wraps one original settlement with the real plan lease and stable owner", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const beforeEvents = yield* f.database.db.select().from(EventV2.EventTable).all().pipe(Effect.orDie)
++    const beforeMessages = yield* f.database.db.select().from(SessionMessageTable).all().pipe(Effect.orDie)
++    const calls = { original: 0 }
++    const originalResult = { value: "synthetic-settlement-result", executionProof: false }
++    expect(f.admission.readiness()).toBe("ready")
++    expect(f.state.request.method).toBe("POST")
++    expect(f.registry.owners.available()).toBe(false)
++    const result = yield* f.enter(Effect.gen(function* () {
++      calls.original++
++      const lease = f.trace.active.get(f.plan.id)
++      if (!lease) return yield* Effect.die("Original settlement did not observe the real registered lease")
++      expect(yield* Effect.promise(lease.current)).toBe(true)
++      // Real governance's map must already hold this lease, independent of the observation map.
++      expect(f.realGovernance.tryBind(f.plan.id, lease)).toBeUndefined()
++      const owner = yield* resolve(f)
++      expect(owner?.request).toBe(f.state.request)
++      expect(owner?.authoritySessionID).toBe(ids.parent)
++      expect(owner?.task).toEqual({ assistantMessageID: ids.task, toolCallID: ids.call })
++      expect(yield* resolve(f)).toBe(owner)
++      expect(Object.isFrozen(owner)).toBe(true)
++      expect(f.registry.owners.available()).toBe(true)
++      expect(yield* Effect.promise(() => f.registry.owners.resolve(f.ui(), f.state.request))).toBeUndefined()
++      expect(yield* Effect.promise(() => f.registry.owners.resolve(f.uiContext, new Request(f.state.request)))).toBeUndefined()
++      return originalResult
++    }))
++    expect(result).toBe(originalResult)
++    expect(calls.original).toBe(1)
++    expect(f.trace.bindAttempts).toBe(1)
++    expect(f.trace.binds).toBe(1)
++    expect(f.trace.releases).toBe(1)
++    expect(f.trace.active.size).toBe(0)
++    expect(f.trace.resolutions.length).toBeGreaterThan(1)
++    expect(f.trace.resolutions.every((invocation) => invocation === f.invocation)).toBe(true)
++    expect(f.trace.intents.length).toBeGreaterThan(0)
++    f.trace.intents.forEach((intent) => expect(intent).toEqual(f.expectedIntent))
++    expect(f.registry.owners.available()).toBe(false)
++    expect(yield* resolve(f)).toBeUndefined()
++    expect(yield* f.permission.list()).toEqual([])
++    expect(yield* f.saved.list()).toEqual([])
++    expect(yield* f.database.db.select().from(EventV2.EventTable).all().pipe(Effect.orDie)).toEqual(beforeEvents)
++    expect(yield* f.database.db.select().from(SessionMessageTable).all().pipe(Effect.orDie)).toEqual(beforeMessages)
++  })))
++
++const unavailable: ReadonlyArray<[string, string, (f: AdmissionFixture) => void]> = [
++  ["missing authenticated origin", "authenticated-native-origin-unavailable", (f) => { f.admissionState.origin = undefined }],
++  ["unready authenticated origin", "authenticated-native-origin-unavailable", (f) => { f.admissionState.originReady = false }],
++  ["missing publication", "publication-unavailable", (f) => { f.admissionState.publication = undefined }],
++  ["fixture installation predicate false", "native-runtime-unavailable", (f) => { f.admissionState.installed = false }],
++  ["fixture guard predicate false", "native-runtime-unavailable", (f) => { f.admissionState.guardsInstalled = false }],
++  ["disposed admission", "disposed", (f) => { f.admission.dispose() }],
++]
++for (const [name, readiness, change] of unavailable) test(`component: ${name} exposes unavailability before original settlement`, () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    change(f)
++    expect(f.admission.readiness()).toBe(readiness)
++    yield* deniedBeforeSettlement(f)
++  })))
++
++const invalidBindings: ReadonlyArray<[string, (f: AdmissionFixture) => void]> = [
++  ["missing mapping", (f) => { f.admissionState.binding = undefined }],
++  ["different Request object", (f) => { Reflect.set(f.admissionBinding, "request", new Request(f.state.request)) }],
++  ["different UI context object with equal claims", (f) => { Reflect.set(f.admissionBinding, "context", f.ui()) }],
++  ["principal", (f) => { Reflect.set(f.uiContext.binding, "principalRef", "principal-forged") }],
++  ["native authority session", (f) => { Reflect.set(f.admissionBinding, "authoritySessionID", "ses_forged") }],
++  ["plan intent", (f) => { Reflect.set(f.admissionBinding.intent, "planRevisionId", "evt_maestro_plan_revision_forged") }],
++  ["authorization intent", (f) => { Reflect.set(f.admissionBinding.intent, "authorizationId", "evt_authorization_forged") }],
++  ["input digest", (f) => { Reflect.set(f.admissionBinding.intent, "inputDigest", "0".repeat(64)) }],
++  ["case identity", (f) => { Reflect.set(f.admissionBinding.intent.caseRef, "id", "case-forged") }],
++  ["case incarnation", (f) => { Reflect.set(f.admissionBinding.intent.caseRef, "incarnation", "incarnation-forged") }],
++  ["case version", (f) => { Reflect.set(f.admissionBinding.intent.caseRef, "version", 2) }],
++  ["revoked UI authority", (f) => { f.state.authorized = false }],
++  ["denied exact human intent", (f) => { f.admissionState.intentAuthorized = false }],
++  ["revoked native admission", (f) => { f.admissionState.nativeCurrent = false }],
++  ["missing provider generation", (f) => { f.state.generation = undefined }],
++  ["different provider generation", (f) => { f.state.generation = 3 }],
++  ["expired UI lease", (f) => { Reflect.set(f.uiContext.binding, "expiresAt", new Date(f.state.now - 1).toISOString()) }],
++  ["aborted Request", (f) => { f.controller.abort() }],
++  ["aborted native admission", (f) => { f.nativeController.abort() }],
++  ["GET instead of the admitted POST", (f) => {
++    f.state.request = new Request(f.state.request.url, { signal: f.controller.signal })
++    Reflect.set(f.admissionBinding, "request", f.state.request)
++  }],
++]
++for (const [name, change] of invalidBindings) test(`component: ${name} cannot issue original settlement authority`, () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    change(f)
++    yield* deniedBeforeSettlement(f)
++  })))
++
++test("component: a native sf_maestro context cannot replace the authenticated UI command", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    f.state.context = f.nativeContext
++    Reflect.set(f.admissionBinding, "context", f.nativeContext)
++    expect(f.nativeContext.binding.profileId).toBe("sf_maestro")
++    yield* deniedBeforeSettlement(f)
++  })))
++
++test("component: invocation identity must be resolved by the explicit origin, not copied IDs", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    yield* deniedBeforeSettlement(f, { invocation: { ...f.invocation } })
++  })))
++
++test("component: a new binding object on each origin read is not a stable capability", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    f.admissionState.origin = { ready: () => true, resolve: async () => ({ ...f.admissionBinding }) }
++    yield* deniedBeforeSettlement(f)
++  })))
++
++test("component: a forged origin mapping cannot override the canonical core invocation", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    f.admissionState.origin = { ready: () => true, resolve: async () => f.admissionBinding }
++    yield* deniedBeforeSettlement(f, { invocation: { ...f.invocation, agent: "sf_maestro" } })
++  })))
++
++test("component: the explicit origin still needs the separately issued native core frame", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    yield* deniedBeforeSettlement(f, { frame: null })
++  })))
++
++test("component: origin errors fail closed before original settlement", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    f.admissionState.origin = { ready: () => true, resolve: async () => { throw new Error("synthetic-origin-unavailable") } }
++    yield* deniedBeforeSettlement(f)
++  })))
++
++test("component: admission disposal interrupts an unresolved origin before any Request scope or original settlement", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const entered = yield* Deferred.make<void>()
++    const release = yield* Deferred.make<void>()
++    const calls = { original: 0 }
++    f.admissionState.origin = { ready: () => true, resolve: async () => {
++      await Effect.runPromise(Deferred.succeed(entered, undefined))
++      await Effect.runPromise(Deferred.await(release))
++      return undefined
++    } }
++    yield* Effect.addFinalizer(() => Deferred.succeed(release, undefined))
++    const running = yield* f.enter(Effect.sync(() => ++calls.original)).pipe(Effect.exit, Effect.forkChild)
++    yield* Effect.raceFirst(Deferred.await(entered), Fiber.join(running).pipe(
++      Effect.flatMap(() => Effect.die("Component fixture exited before the origin wait"))))
++    f.admission.dispose()
++    refused(yield* Fiber.join(running).pipe(Effect.timeout("2 seconds")))
++    expect(calls.original).toBe(0)
++    expect(f.trace.bindAttempts).toBe(0)
++    expect(f.registry.owners.available()).toBe(false)
++  })))
++
++for (const [phase, cancellation] of [
++  ["generation", "revoke"], ["generation", "dispose"], ["authorization", "revoke"],
++] as const) test(`component: real registry ${phase} pending during acquisition is interrupted by ${cancellation}`, () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const entered = yield* Deferred.make<void>()
++    const release = yield* Deferred.make<void>()
++    const calls = { original: 0 }
++    const waitForCancellation = async () => {
++      await Effect.runPromise(Deferred.succeed(entered, undefined))
++      await Effect.runPromise(Deferred.await(release))
++    }
++    // A second instance exercises the real registry's acquisition boundary directly; no native frame
++    // or Task is used here, and the owner-binding fixture's production reader implementations stay intact.
++    const registry = createSfRoutineNativeOwnerRegistry({
++      resources: () => f.state.resources,
++      requestFor: (context) => context === f.uiContext ? f.state.request : undefined,
++      authorize: async (context) => {
++        if (phase === "authorization") await waitForCancellation()
++        return f.state.authorized && context === f.uiContext
++      },
++      generation: async () => {
++        if (phase === "generation") await waitForCancellation()
++        return f.state.generation
++      },
++      now: () => f.state.now,
++    })
++    yield* Effect.addFinalizer(() => Effect.sync(() => registry.dispose()))
++    yield* Effect.addFinalizer(() => Deferred.succeed(release, undefined))
++    const running = yield* registry.withRequest(f.uiContext, f.state.request,
++      Effect.sync(() => ++calls.original)).pipe(Effect.exit, Effect.forkChild)
++    yield* Effect.raceFirst(Deferred.await(entered), Fiber.join(running).pipe(
++      Effect.flatMap(() => Effect.die("Component registry exited before the acquisition wait"))))
++    if (cancellation === "revoke") registry.revoke(f.state.request)
++    if (cancellation === "dispose") registry.dispose()
++    refused(yield* Fiber.join(running).pipe(Effect.timeout("2 seconds")))
++    expect(calls.original).toBe(0)
++    expect(registry.owners.available()).toBe(false)
++  })))
++
++const sourceChanges: ReadonlyArray<[string, (f: AdmissionFixture) => Effect.Effect<unknown, never, Scope.Scope>]> = [
++  ["selected case drift", (f) => Effect.sync(() => {
++    f.admissionState.selectedCase = { status: "ok", value: { ...f.expectedIntent.caseRef, version: 2 } }
++  })],
++  ["resolved source set drift", (f) => Effect.sync(() => {
++    f.admissionState.sources = { status: "ok", value: [{ surface: "planner", type: "synthetic-source",
++      id: "source-added-after-plan", incarnation: "source-incarnation", version: 2, fields: ["amount"],
++      period: { start: "2026-01-01", end: "2026-12-31" }, observedAt: "2026-11-15T00:00:00.000Z" }] }
++  })],
++  ["source revalidation denial", (f) => Effect.sync(() => { f.admissionState.sourcesCurrent = false })],
++  ["publication authority denial", (f) => Effect.sync(() => { f.admissionState.publicationAuthorized = false })],
++  ["real stored publication revocation", (f) => f.authoring.unpublish(f.draft.id).pipe(Effect.orDie)],
++]
++for (const [name, change] of sourceChanges) test(`component: ${name} is checked before binding`, () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    yield* change(f)
++    yield* deniedBeforeSettlement(f)
++  })))
++
++for (const [name, cancel] of [
++  ["Request abort", (f: AdmissionFixture) => f.controller.abort()],
++  ["native admission abort", (f: AdmissionFixture) => f.nativeController.abort()],
++  ["Request revoke", (f: AdmissionFixture) => f.admission.revoke(f.state.request)],
++] as const) test(`component: ${name} interrupts a pending source read before binding or original settlement`, () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const entered = yield* Deferred.make<void>()
++    const release = yield* Deferred.make<void>()
++    const calls = { original: 0 }
++    f.admissionState.sourceReader = async () => {
++      await Effect.runPromise(Deferred.succeed(entered, undefined))
++      await Effect.runPromise(Deferred.await(release))
++      return { status: "unavailable", reason: "synthetic-source-gate-released-after-cancellation" }
++    }
++    yield* Effect.addFinalizer(() => Deferred.succeed(release, undefined))
++    const running = yield* f.enter(Effect.sync(() => ++calls.original)).pipe(Effect.exit, Effect.forkChild)
++    yield* Effect.raceFirst(Deferred.await(entered), Fiber.join(running).pipe(
++      Effect.flatMap(() => Effect.die("Component fixture exited before the source wait"))))
++    cancel(f)
++    refused(yield* Fiber.join(running).pipe(Effect.timeout("2 seconds")))
++    expect(calls.original).toBe(0)
++    expect(f.trace.bindAttempts).toBe(0)
++    expect(f.registry.owners.available()).toBe(false)
++  })))
++
++const pendingChanges: ReadonlyArray<[string, (f: AdmissionFixture) => void]> = [
++  ["UI revocation", (f) => { f.state.authorized = false }],
++  ["human intent revocation", (f) => { f.admissionState.intentAuthorized = false }],
++  ["native admission revocation", (f) => { f.admissionState.nativeCurrent = false }],
++  ["provider generation drift", (f) => { f.state.generation = 3 }],
++  ["runtime resource replacement", (f) => { f.state.resources = { ...f.resources } }],
++  ["origin replacement", (f) => { f.admissionState.origin = { ...f.fixtureOrigin } }],
++  ["origin readiness loss", (f) => { f.admissionState.originReady = false }],
++  ["binding replacement", (f) => { f.admissionState.binding = { ...f.admissionBinding } }],
++  ["binding intent mutation", (f) => { Reflect.set(f.admissionBinding.intent, "authorizationId", "evt_changed") }],
++  ["Request headers mutation", (f) => { f.state.request.headers.set("x-sf-fixture-actor", "changed") }],
++  ["publication host replacement", (f) => { f.admissionState.publication = { ...f.publicationHost } }],
++  ["publication port replacement", (f) => { Reflect.set(f.publicationHost, "publication", { ...f.publication }) }],
++  ["source revalidation drift", (f) => { f.admissionState.sourcesCurrent = false }],
++  ["lease expiry", (f) => { f.state.now += 60_001 }],
++]
++for (const [name, change] of pendingChanges) test(`component: ${name} during an asynchronous settlement blocks egress`, () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const entered = yield* Deferred.make<void>()
++    const release = yield* Deferred.make<void>()
++    const calls = { original: 0 }
++    const running = yield* f.enter(Effect.gen(function* () {
++      calls.original++
++      yield* Deferred.succeed(entered, undefined)
++      yield* Deferred.await(release)
++      return "must-not-cross-egress"
++    })).pipe(Effect.exit, Effect.forkChild)
++    yield* Effect.raceFirst(Deferred.await(entered), Fiber.join(running).pipe(
++      Effect.flatMap(() => Effect.die("Component fixture exited before original settlement"))))
++    change(f)
++    yield* Deferred.succeed(release, undefined)
++    refused(yield* Fiber.join(running))
++    expect(calls.original).toBe(1)
++    expect(f.trace.releases).toBe(1)
++    expect(f.trace.active.size).toBe(0)
++    expect(f.registry.owners.available()).toBe(false)
++  })))
++
++test("component: real publication revocation while original settlement awaits blocks its result", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const entered = yield* Deferred.make<void>()
++    const release = yield* Deferred.make<void>()
++    const running = yield* f.enter(Effect.gen(function* () {
++      yield* Deferred.succeed(entered, undefined)
++      yield* Deferred.await(release)
++      return "revoked-publication-result"
++    })).pipe(Effect.exit, Effect.forkChild)
++    yield* Effect.raceFirst(Deferred.await(entered), Fiber.join(running).pipe(
++      Effect.flatMap(() => Effect.die("Component fixture exited before publication revocation"))))
++    yield* f.authoring.unpublish(f.draft.id)
++    yield* Deferred.succeed(release, undefined)
++    refused(yield* Fiber.join(running))
++    expect(f.trace.releases).toBe(1)
++    expect(f.registry.owners.available()).toBe(false)
++  })))
++
++const cancellations: ReadonlyArray<[string, (f: AdmissionFixture) => Effect.Effect<unknown>]> = [
++  ["Request revoke", (f) => Effect.sync(() => f.admission.revoke(f.state.request))],
++  ["Request abort", (f) => Effect.sync(() => f.controller.abort())],
++  ["native admission abort", (f) => Effect.sync(() => f.nativeController.abort())],
++  ["generation invalidation", (f) => Effect.sync(() => f.admission.invalidateGeneration(2))],
++  ["disposal", (f) => Effect.sync(() => f.admission.dispose())],
++  ["expired registry lease observed on read", (f) => Effect.gen(function* () {
++    f.state.now += 60_001
++    expect(yield* resolve(f)).toBeUndefined()
++  })],
++]
++for (const [name, cancel] of cancellations) test(`component: ${name} interrupts the pending scoped settlement`, () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const entered = yield* Deferred.make<void>()
++    const release = yield* Deferred.make<void>()
++    const calls = { original: 0, interrupted: 0, afterWait: 0 }
++    const running = yield* f.enter(Effect.gen(function* () {
++      calls.original++
++      yield* Deferred.succeed(entered, undefined)
++      yield* Deferred.await(release)
++      calls.afterWait++
++    }).pipe(Effect.onInterrupt(() => Effect.sync(() => { calls.interrupted++ })))).pipe(Effect.exit, Effect.forkChild)
++    yield* Effect.raceFirst(Deferred.await(entered), Fiber.join(running).pipe(
++      Effect.flatMap(() => Effect.die("Component fixture exited before cancellation"))))
++    yield* cancel(f)
++    refused(yield* Fiber.join(running).pipe(Effect.timeout("2 seconds")))
++    expect(calls).toEqual({ original: 1, interrupted: 1, afterWait: 0 })
++    expect(f.trace.releases).toBe(1)
++    expect(f.trace.active.size).toBe(0)
++    expect(f.registry.owners.available()).toBe(false)
++  })))
++
++test("component: a concurrent duplicate cannot replace or release the first original caller's lease", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const entered = yield* Deferred.make<void>()
++    const release = yield* Deferred.make<void>()
++    const calls = { original: 0, duplicate: 0 }
++    const running = yield* f.enter(Effect.gen(function* () {
++      calls.original++
++      yield* Deferred.succeed(entered, undefined)
++      yield* Deferred.await(release)
++      return "first-original-result"
++    })).pipe(Effect.exit, Effect.forkChild)
++    yield* Effect.raceFirst(Deferred.await(entered), Fiber.join(running).pipe(
++      Effect.flatMap(() => Effect.die("Component fixture exited before duplicate"))))
++    const owner = yield* resolve(f)
++    const lease = f.trace.active.get(f.plan.id)
++    if (!lease) return yield* Effect.die("First caller did not retain the real plan lease")
++    const error = yield* f.enter(Effect.sync(() => ++calls.duplicate)).pipe(Effect.flip)
++    expect(error).toBeInstanceOf(ToolSafety.Denied)
++    expect(yield* resolve(f)).toBe(owner)
++    expect(f.trace.active.get(f.plan.id)).toBe(lease)
++    expect(yield* Effect.promise(lease.current)).toBe(true)
++    expect(f.trace.bindAttempts).toBe(1)
++    expect(f.trace.releases).toBe(0)
++    yield* Deferred.succeed(release, undefined)
++    const finished = yield* Fiber.join(running)
++    expect(Exit.isSuccess(finished)).toBe(true)
++    if (Exit.isSuccess(finished)) expect(finished.value).toBe("first-original-result")
++    expect(calls).toEqual({ original: 1, duplicate: 0 })
++    expect(f.trace.releases).toBe(1)
++    expect(f.registry.owners.available()).toBe(false)
++  })))
++
++test("component: real tryBind refuses occupied or aborted leases and reopens only after release or abort", () =>
++  withAdmissionFixture((f) => Effect.sync(() => {
++    const first = new AbortController()
++    const second = new AbortController()
++    const aborted = new AbortController()
++    aborted.abort()
++    const authority: SfRoutineNativeAuthorityLease = { current: async () => true, signal: first.signal }
++    expect(f.realGovernance.tryBind(f.plan.id, { ...authority, signal: aborted.signal })).toBeUndefined()
++    const release = f.realGovernance.tryBind(f.plan.id, authority)
++    expect(release).toBeDefined()
++    expect(f.realGovernance.tryBind(f.plan.id, { ...authority, signal: second.signal })).toBeUndefined()
++    first.abort()
++    const next = f.realGovernance.tryBind(f.plan.id, { ...authority, signal: second.signal })
++    expect(next).toBeDefined()
++    release?.()
++    expect(f.realGovernance.tryBind(f.plan.id, { ...authority, signal: second.signal })).toBeUndefined()
++    next?.()
++    next?.()
++    const final = f.realGovernance.tryBind(f.plan.id, { ...authority, signal: second.signal })
++    expect(final).toBeDefined()
++    final?.()
++  })))
++
++test("component: an existing real governance lease is preserved when this admission cannot bind", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const authority: SfRoutineNativeAuthorityLease = { current: async () => true, signal: new AbortController().signal }
++    const release = f.realGovernance.bind(f.plan.id, authority)
++    yield* deniedBeforeSettlement(f)
++    expect(f.trace.bindAttempts).toBe(1)
++    expect(f.trace.releases).toBe(0)
++    expect(f.realGovernance.tryBind(f.plan.id, authority)).toBeUndefined()
++    release()
++    const rebound = f.realGovernance.tryBind(f.plan.id, authority)
++    expect(rebound).toBeDefined()
++    rebound?.()
++  })))
++
++test("component: the original settlement error remains identical and both scopes finalize", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const originalError = { code: "SYNTHETIC_ORIGINAL_SETTLEMENT_ERROR" }
++    const actual = yield* f.enter(Effect.fail(originalError)).pipe(Effect.flip)
++    expect(actual).toBe(originalError)
++    expect(f.trace.binds).toBe(1)
++    expect(f.trace.releases).toBe(1)
++    expect(f.trace.active.size).toBe(0)
++    expect(f.registry.owners.available()).toBe(false)
++    expect(yield* resolve(f)).toBeUndefined()
++  })))
++
++test("component: unrelated non-SF Task and other native tools retain their original settlement after SF disposal", () =>
++  withAdmissionFixture((f) => Effect.gen(function* () {
++    const plan = fixturePlan(ids.parent)
++    yield* f.events.publish(MaestroEvent.PlanRevision.RecordedV3, plan, { id: plan.id })
++    f.admissionState.origin = undefined
++    f.admission.dispose()
++    const calls = { original: 0 }
++    const originalResult = { unrelated: true }
++    const task = { ...f.invocation, args: { ...f.taskInput, workflow: {
++      documentID: plan.workflowBinding.publication.documentID, planRevisionID: plan.id,
++      parameters: plan.workflowBinding.parameters,
++    } } }
++    const taskResult = yield* f.enter(Effect.sync(() => { calls.original++; return originalResult }), { invocation: task })
++    const toolResult = yield* f.enter(Effect.sync(() => { calls.original++; return originalResult }), {
++      invocation: { ...f.invocation, tool: "read", args: {} },
++    })
++    expect(taskResult).toBe(originalResult)
++    expect(toolResult).toBe(originalResult)
++    expect(calls.original).toBe(2)
++    expect(f.trace.resolutions).toEqual([])
++    expect(f.trace.bindAttempts).toBe(0)
++    expect(f.registry.owners.available()).toBe(false)
++  })))

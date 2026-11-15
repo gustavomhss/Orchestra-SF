@@ -1,0 +1,93 @@
+{
+  "schema": "sf-m64-ci-result-summary-v1",
+  "status": "PASS_COMPONENT_ONLY",
+  "source": {
+    "commit": "0846710321afab84e0c0a3a79653f41df8a284a0",
+    "tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a"
+  },
+  "snapshot": {
+    "commit": "e148ff33a1c3f4864d039f5d443934173b8e9030",
+    "tree": "e7c0ff75835c65c60611162e9f95934d2ac0e2fd",
+    "first_parent": "0846710321afab84e0c0a3a79653f41df8a284a0",
+    "branch": "ci-run-linux-m64-08467103-8e5e0bf8-1",
+    "sole_delta": ".ci-run.json",
+    "request_blob": "91a886d742fbd40231ca9d9ef5d88423c336c03f",
+    "request_sha256": "8e5e0bf88cca655839d6bae21f9fde38bd362defb1488434d15c8fe38785b715",
+    "compare_evidence": "run64/compare-W-S.json",
+    "readback": "GitHub MCP commit, file and compare GETs independently confirm first parent, tree and exact one-file delta."
+  },
+  "run": {
+    "id": 43667749802,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667749802",
+    "workflow": "test-ci",
+    "workflow_path": ".github/workflows/test-ci.yml",
+    "workflow_id": 416464764,
+    "attempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-15T02:25:53Z",
+    "updated_at": "2026-11-15T02:27:55Z"
+  },
+  "results": {
+    "pass": 158,
+    "fail": 0,
+    "expect_calls": 829,
+    "test_files": 3,
+    "test_duration_seconds": 14.32,
+    "per_file": {
+      "Sucafinav1/test/product/native-admission-closure/admission.test.ts": {
+        "pass": 71,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts": {
+        "pass": 38,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts": {
+        "pass": 49,
+        "fail": 0
+      }
+    },
+    "raw_summary_lines": [
+      " 158 pass",
+      " 0 fail",
+      " 829 expect() calls",
+      "Ran 158 tests across 3 files. [14.32s]"
+    ],
+    "failed_test_or_error_log_lines": []
+  },
+  "omni": {
+    "nonce": "1198837a2c77cd67530bfb9bb95968e7",
+    "nonce_line_count": 1,
+    "verdict_line_count": 1,
+    "nonce_matches_own_job": true,
+    "verdict": "not applicable",
+    "line": "omni positive control [1198837a2c77cd67530bfb9bb95968e7]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "spawn_count": 0,
+    "delegation_count": 0,
+    "native_or_omni_execution_proven": false
+  },
+  "receipt": "run64/CI-RECEIPT.json",
+  "evidence_root": "run64/",
+  "qualification": {
+    "scope": "Hosted component tests for admission64 plus source41 owner binding/fences regression.",
+    "real_facts": [
+      "The original consumer source from W was executed on GitHub Actions via the pinned surgical snapshot S.",
+      "71 admission component tests, 38 owner binding tests and 49 fencing tests completed successfully.",
+      "Actual log includes pending generation/revoke, pending generation/dispose, pending authorization/revoke, abort/revoke during pending source read, asynchronous egress fences and duplicate lease preservation controls."
+    ],
+    "not_proven": [
+      "Authenticated installed Request-to-native-Maestro producer",
+      "Real provider execution or native Task materialization from an installed user flow",
+      "C15 token/budget/continuation admission",
+      "Independent human native review/approval/Permission in a production flow",
+      "Installed arm/Relay return and immutable business artifact consumer",
+      "Fresh authentication/reload consumer",
+      "AM02, AM06 or overall native acceptance",
+      "Typecheck or guards"
+    ],
+    "fixture_limit": "The test origins, native invocation frames and durable Task/governance records include controlled/synthetic fixtures. A passing component test is not a real installed native execution receipt."
+  },
+  "root_readback": "Root independently read actual run metadata, test job log, jobs/artifacts and W-to-S compare through GitHub MCP; agrees with delegated monitor."
+}

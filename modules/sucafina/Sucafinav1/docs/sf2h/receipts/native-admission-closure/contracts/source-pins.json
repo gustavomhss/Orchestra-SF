@@ -1,0 +1,577 @@
+{
+  "schema": "sf-native-admission-public-contract-pins-v2",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source_commit": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "retrieval": "Remote source reads used GitHub MCP at explicit immutable refs. Git blob and SHA256 identities were recomputed from the fetched source bytes; source analysis is not execution proof.",
+  "source_roles": {
+    "public_native_and_sf_apis": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "mission64_package": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "historical41_contract_and_handoff": "61af072c7385feba8c89ba6044ca09a90941213d"
+  },
+  "consumer64_content": {
+    "kind": "mission64-published-source-content",
+    "commit": "0846710321afab84e0c0a3a79653f41df8a284a0",
+    "publication_note": "These exact source W files were independently fetched through GitHub MCP and matched to the reviewed local bytes. Their source identity is verified; installed composition, provider execution and acceptance are separate evidence.",
+    "files": [
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+        "blob_sha": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+        "sha256": "6244fcaf30ec2accd63d8614c266de2368978060729167d7c0813f122dc7b7a6",
+        "byte_length": 12025,
+        "base_blob_sha": null,
+        "ref": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-admission.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+        "blob_sha": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+        "sha256": "0e1f2093f3b31eead495b70dbedb8a66344fb08142e4ba31587422431c05e3aa",
+        "byte_length": 15351,
+        "base_blob_sha": "9934aca5899142f9715d82bf7d4a073e9912f7cc",
+        "ref": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-governance.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+        "blob_sha": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+        "sha256": "989d57a0283948420ed5040b05b0b16b940fd3c707d2cb41416445eaf11534fa",
+        "byte_length": 12601,
+        "base_blob_sha": "7b7f127610450ed531fbb11464a0308e860a9296",
+        "ref": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-registry.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+        "blob_sha": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+        "sha256": "9a04db76741494bf6e710a50e17a1df05e27e8c3e4ed2db248c4aaa673477e1f",
+        "byte_length": 11691,
+        "base_blob_sha": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+        "ref": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-owner.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+        "blob_sha": "5383051da7cda4523d81f34d93430871e564bb06",
+        "sha256": "1455a3cc71648018364cc0c9a429e7b98cd2eadd963ff0bf00ad88d5c43cb328",
+        "byte_length": 10807,
+        "base_blob_sha": "5383051da7cda4523d81f34d93430871e564bb06",
+        "ref": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-runtime.ts"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+        "blob_sha": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+        "sha256": "166d15578beca43de868af4bd78c752acd821cca7a99e2492732b78c92b83673",
+        "byte_length": 12229,
+        "base_blob_sha": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+        "ref": "0846710321afab84e0c0a3a79653f41df8a284a0",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-dispatch.ts"
+      }
+    ]
+  },
+  "shared_source_preserved": {
+    "path": "apps/cli/src/sucafina-product/host-context.ts",
+    "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "blob_sha": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+    "sha256": "09017349a0e60c625ab92f68bb209ea0d369aaa9ab7570d1e585fbae5e3689ea",
+    "byte_length": 77300,
+    "note": "Preserved real shared source. The proposed postimage is an inert assembly artifact for60."
+  },
+  "verification": {
+    "existing31_pin_checks": "PASS",
+    "additional_mcp_returned_blob_checks": 4,
+    "public_and_control_source_count": 61,
+    "checks": "JSON parse, deterministic content identities and source-link/contract alignment only. No product runtime, local tests, compiler, provider or installed acceptance was executed by this documentation work.",
+    "source_w_mcp_blob_checks": 6
+  },
+  "files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/native-admission-closure.json",
+      "ref": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "blob_sha": "b8baa2bca5588283fb3982edc98ab14971f3769f",
+      "sha256": "f15f93a34e3393fcb50b2bc407810bed973ee704c7015352874b4b7a791f307f",
+      "byte_length": 5876,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/173c3507e40579f1a1a2dfb068bda40084a678bc/modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/native-admission-closure.json"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/HANDOFF.md",
+      "ref": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "blob_sha": "777eb719e9570b3dc695ad142f5647f4b10bf467",
+      "sha256": "7384cc6d46b5065fcbfcc5df184d76852e7d9e7ab79dd10ed47c87d1cfd5136f",
+      "byte_length": 10904,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/61af072c7385feba8c89ba6044ca09a90941213d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/HANDOFF.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/missing-capability.json",
+      "ref": "61af072c7385feba8c89ba6044ca09a90941213d",
+      "blob_sha": "173481b40206729055be2cc61468e9e4a4332b46",
+      "sha256": "a110cf47d039cc602cecd3ce0bed82434cc021e2ffbca6e3d7ced8f90a9a872b",
+      "byte_length": 7409,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/61af072c7385feba8c89ba6044ca09a90941213d/modules/sucafina/Sucafinav1/docs/sf2h/receipts/routine-native-owner-binding/assembly/missing-capability.json"
+    },
+    {
+      "path": "AGENTS.md",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "sha256": "f87f3c732f8aafec8d02501a5f11f050c07d33d350890fb12f69d8b288b830f9",
+      "byte_length": 16583,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/AGENTS.md"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/contribution.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "8d44320acedc4afec9ffc100f5f6a171cdf26993",
+      "sha256": "ba0a78312a3a9682a470f2cdc2bf8292a56e15c9102b52651e99d10c5c58a903",
+      "byte_length": 4185,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/contribution.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "b19c56fdd21fe829fd3bbbb3e377b6fbe0a5825b",
+      "sha256": "09017349a0e60c625ab92f68bb209ea0d369aaa9ab7570d1e585fbae5e3689ea",
+      "byte_length": 77300,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/host-context.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-host.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "f43e9ae216a94f16daf985bac32f2c9e2627a2b7",
+      "sha256": "7ddced1e31d41e02e58e6f88ab5d8ad5fe2e706e8bb2ed87cdde8ba815a39bf1",
+      "byte_length": 19114,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/native-host.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-inputs.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "a7c3cfa6723bf68770f58fca6ebb78cea6eefb4e",
+      "sha256": "723b9d9d241d05fb694a32094b7f55f50040cb128cf401cbe3ef46b12a7c69eb",
+      "byte_length": 5507,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-inputs.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-installed-publication.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "6405d4a2e4aa41a3bb8fb8da40641093d3eee7ff",
+      "sha256": "b63a0e28e855f9ec387d246a46e24e32e9b3e4734963829d3227b6f3e3dee49a",
+      "byte_length": 10689,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-installed-publication.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-adapter.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "dfde682c3233b36b7c172459f4bc1788c8f7e4b3",
+      "sha256": "e130b2122c90fb8be0e21129e50f3749830a24bcf21b37f1de2da5d03998115f",
+      "byte_length": 29251,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-native-adapter.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+      "sha256": "166d15578beca43de868af4bd78c752acd821cca7a99e2492732b78c92b83673",
+      "byte_length": 12229,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-native-dispatch.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "9934aca5899142f9715d82bf7d4a073e9912f7cc",
+      "sha256": "7364dbbb543fa113d8d898d03cc0ace00cb1376830d1718527aa5e7eddfa5521",
+      "byte_length": 14900,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-native-governance.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-input.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "f0a3a1f9b743161a98b5545fce1ca71c8d9c0abe",
+      "sha256": "d90866bef08d30bac3312724e583a2c7534b0ef991d8362b0a004f3c44242a92",
+      "byte_length": 4631,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-native-input.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+      "sha256": "9a04db76741494bf6e710a50e17a1df05e27e8c3e4ed2db248c4aaa673477e1f",
+      "byte_length": 11691,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-native-owner.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "7b7f127610450ed531fbb11464a0308e860a9296",
+      "sha256": "cecb3106c48a211a627f1f1b2a7d6e4d302c180a6685aedaec46b8846b7ff51c",
+      "byte_length": 11619,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-native-registry.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-runtime.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "5383051da7cda4523d81f34d93430871e564bb06",
+      "sha256": "1455a3cc71648018364cc0c9a429e7b98cd2eadd963ff0bf00ad88d5c43cb328",
+      "byte_length": 10807,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-native-runtime.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-publication.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "21e22bb8bb4813711e8b1f7851c0d10369200426",
+      "sha256": "d6a6036c0da025a22f5ccf84f0b55e6328cac8e15aa57750d79ea3de7a02ee1c",
+      "byte_length": 4361,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-publication.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-services.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "4b455444cdeb560e85f6a17e6192c0420287d48a",
+      "sha256": "ae09e051924b204f80de30e50964cd22410f8c7d45432ae3aeb00501d101ebb4",
+      "byte_length": 22976,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/routine-services.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/token-gate.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "4d7b395aa29a03a8311d8dec87cb1e69e0a4ab30",
+      "sha256": "ad0f3cb8937d1b807b330494da347efe4f2ca5180463123840f08498e8da2032",
+      "byte_length": 17340,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/apps/cli/src/sucafina-product/token-gate.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "78841580d6b70d124cdce19b41f9eeea05c4ef8e",
+      "sha256": "ce8493ad1e2f5408bdd457bcb4eee01d151089703b917449f161fec1ca64e1c5",
+      "byte_length": 27629,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/governance.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance/caller.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "fa962883aab5ee982da671d5983bd84cb1306324",
+      "sha256": "b615682563757c48c261f9ec342f5c34d9c58d51959e77bdc4ecd7801d1acf61",
+      "byte_length": 1245,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/governance/caller.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance/dispatch.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "63af3a2e95eb280dfe0a98f22fd51079e1323819",
+      "sha256": "5f13bf85bf3bd74ba3e17caf4e6899dd2fd19503430b262976b57a82e53f7300",
+      "byte_length": 8908,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/governance/dispatch.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/governance/input.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "38b4a278af265b48eff320a532ae460ef37d701b",
+      "sha256": "7e5498ede362ab6dbb0a7f713e1b649eef7b7ca4b81d1dabc5b92e35950d30d3",
+      "byte_length": 3258,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/governance/input.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/tools/approval.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "8feb2c32f951142ea7f516f1f08d90f9582a03a6",
+      "sha256": "521ccbbe660520982296d9146549847b330916ad889aa43356dad78c636db847",
+      "byte_length": 34032,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/tools/approval.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/tools/chain.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "d11442e74ac2aa38f0d953a4c223e011d17797e5",
+      "sha256": "e38a4edcec6729b0d9a6031f42877cd17abb3dced54672b6d2491fac3a2896e7",
+      "byte_length": 5091,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/tools/chain.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/tools/gate.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "4a34873539145118daee41d4f12df2ef01c250b6",
+      "sha256": "4e4d69624acb9a73685db6376a778edcec4185caacc34f9506b2b81f790639d4",
+      "byte_length": 1444,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/tools/gate.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/tools/planning.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "453aa9d944cd7a92d9c8fc577ef5d7b4e61ac88e",
+      "sha256": "4ba858803e843e8aa809847ef0f5bdca98a39322bb84ae1dfa5a665f44086df0",
+      "byte_length": 18726,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/tools/planning.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/workflow/arm.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "e13c671478e395e2b06f37fee680440090e98572",
+      "sha256": "26afc064b2966c158ed17c55556fb711ea4e1145a779cfa70cb8e0b8c8211d21",
+      "byte_length": 7487,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/workflow/arm.ts"
+    },
+    {
+      "path": "modules/maestro/coordination/src/v2/workflow/host.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "111dac220a84bdeffe94956244b728b29eb98ea4",
+      "sha256": "e089aab5fd69259b2f9f7c91d948fac7e2ebcb8b92e7d3b91f1a6f14b1982b32",
+      "byte_length": 22139,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/maestro/coordination/src/v2/workflow/host.ts"
+    },
+    {
+      "path": "modules/relay/AGENTS.md",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "8b48d7183c2872fb0a2fb8ba9ea41f715c31f74b",
+      "sha256": "02d23e86df2695b0acaa8bffa338554025ce8777d104167febee7c937f9dd32a",
+      "byte_length": 2553,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/relay/AGENTS.md"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "beba733084e87da8664b0f4067b52d4b29795c5c",
+      "sha256": "b3677455be84df9549d3230eefbdbbc97a3bae33445fff119e3bd2e4ddcde4f1",
+      "byte_length": 5296,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/contracts/runtime.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "78a2f6ab5f33c6fd8338da77980ef57a328f2e95",
+      "sha256": "a3cf340b5c4e73b9a6cb64892ee47de1c2176bb77a34d93cec326b09f5fdc1d6",
+      "byte_length": 3022,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "18a9d4dbfa4bd8b3421685482f431fa6b5b1469f",
+      "sha256": "88f2ae42e9f85f38c33a3d2763301c2e7eb2482367d9ffb9ed3c5cc93b4bb5dc",
+      "byte_length": 10224,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/host-binding/execution-context.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/human-authority.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "78529a89586ce9f22d2b2cdd2cd0b1c61d20668a",
+      "sha256": "9e9c6a91d75479a65f6fa09775d45a8b360c52cb60523773f28e9799b6e4f495",
+      "byte_length": 4062,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "sha256": "c3d843a4bb26a0f74fce550aa1114ae490e0410e1bcc4016a33b62c72c49eb81",
+      "byte_length": 22358,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    },
+    {
+      "path": "packages/core/src/capability/invocation.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "e2ddcb3e3f0da61b8d9d5fe8c7c74436b844e890",
+      "sha256": "6f7d95bbb07aa7d3e12c63d56dbf8458bde5b7053aaf51f97b078c41a2da53ae",
+      "byte_length": 5979,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/capability/invocation.ts"
+    },
+    {
+      "path": "packages/core/src/capability/operator/scope.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "032186d948c031f781140c5ca687c4b1a671f023",
+      "sha256": "72d0d49f083a2e015c929f73410bfea956fab2e34195070f8debef48f6d6c77f",
+      "byte_length": 9662,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/capability/operator/scope.ts"
+    },
+    {
+      "path": "packages/core/src/capability/schedule/contract.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "7ad50379631e7a00fb4885c00fba736272899552",
+      "sha256": "9e7d6a04cafac8072304f828cef817183222801d494bb0d0bc97b5acbf07ad3d",
+      "byte_length": 2913,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/capability/schedule/contract.ts"
+    },
+    {
+      "path": "packages/core/src/capability/schedule/index.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "14ca7dea9d1e59fa650028cb3f2b7433de0387f5",
+      "sha256": "9ec23a9a116d4de344917940b96b84045386d815fc07277d8fdfd4d8895fa181",
+      "byte_length": 9299,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/capability/schedule/index.ts"
+    },
+    {
+      "path": "packages/core/src/permission.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "2e3d29d3f1ec1fe805d21af091029721c9fa738e",
+      "sha256": "19e4a3668e1689c0b9565cb4d09444e155e1a06a571484e37e642d3cff3857d6",
+      "byte_length": 14981,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/permission.ts"
+    },
+    {
+      "path": "packages/core/src/relay-workflow-binding.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "7149e276e0c214d70c2dafad90dadff5d2c21059",
+      "sha256": "3174f65f835ea0c4ba64c6a597a2169902627b94673cbb1c54cc5e90a414e0e2",
+      "byte_length": 14859,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/relay-workflow-binding.ts"
+    },
+    {
+      "path": "packages/core/src/relay.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "25fb509203f933a2e8b0f311c3fc8f9476d53e16",
+      "sha256": "446774386bf8020528bdc2138a066fd9dc4b214d3288dc069cb5da9d3cef2b2a",
+      "byte_length": 30225,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/relay.ts"
+    },
+    {
+      "path": "packages/core/src/scheduled-task/port.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "8ea347436e18a93f8dc43926c7fb84108fc0a20c",
+      "sha256": "5fb969a9e8a030b02e31ff1678e1e0c2887c4e30c3078a5016642131de95ead7",
+      "byte_length": 2092,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/scheduled-task/port.ts"
+    },
+    {
+      "path": "packages/core/src/session.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "00b276d8f2c9e634ae55a37e800fae388eb595e6",
+      "sha256": "58ced98737a77e8bb5affbd618ab57a02b83cba83983a354bdb0b694a7a1310f",
+      "byte_length": 38090,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session.ts"
+    },
+    {
+      "path": "packages/core/src/session/execution.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "770dd6e0a169f10560c771dd1b912d8456632a12",
+      "sha256": "c9d3664b771def2d68c6edd5aea8a82d4d209a423449c003b6981e46fa2a1f8a",
+      "byte_length": 2715,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/execution.ts"
+    },
+    {
+      "path": "packages/core/src/session/execution/local.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "ea5759db2a1a7465e03752f655a84bd74bd897bb",
+      "sha256": "aef828fc518ecabc0efe082eb89a934eeef2b4ec64cfa78d800de782c535a88c",
+      "byte_length": 2989,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/execution/local.ts"
+    },
+    {
+      "path": "packages/core/src/session/run-coordinator.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "62b78b092729652d38ff86a3254c7913af81724a",
+      "sha256": "1d840afd3d39c6dc46313a7d81b6768ab069e54a3b61fab9f748cd162b59b063",
+      "byte_length": 6882,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/run-coordinator.ts"
+    },
+    {
+      "path": "packages/core/src/session/runner/index.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "c891e6b253a7a194c49ee58fd385305fdac456c2",
+      "sha256": "e4c36d2813c7fb66d94ae9f0702653df0368a718d5f72aa7ca82dacce727e1c6",
+      "byte_length": 2684,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/runner/index.ts"
+    },
+    {
+      "path": "packages/core/src/session/runner/llm.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "256f5e21b8305131c36474b4c69ea747a8fdfc73",
+      "sha256": "913e1a19a0217fecfdfc63b6437b19f372b6afdce89013eb6c45e9aac5c6e122",
+      "byte_length": 39397,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/runner/llm.ts"
+    },
+    {
+      "path": "packages/core/src/session/runner/step-tools.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "edba1591ac5b603e936eb942ee4bdd96cf8bcd25",
+      "sha256": "ecd3ce06c813a61ec61de37bed039bfdb7b440b664078bb2b834b70ecf2ac59b",
+      "byte_length": 2018,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/runner/step-tools.ts"
+    },
+    {
+      "path": "packages/core/src/session/schema.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "7f9d46d97a61d7e661f319ec2eb5c47e663d64cd",
+      "sha256": "7837a31cc28b1ffd5da074398c915d8ecba47beb534ee13bc541712c3af9e05b",
+      "byte_length": 223,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/schema.ts"
+    },
+    {
+      "path": "packages/core/src/session/scope.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "5a46114bdfa8a47b410136d91c2b750bf85302cb",
+      "sha256": "e2108022677b9af5ec647ef28268d982395275afe1bfd3ac3f8f1294e4ea769d",
+      "byte_length": 4568,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/scope.ts"
+    },
+    {
+      "path": "packages/core/src/session/store.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "69793447f694d7ba2fdd3993e238670571985002",
+      "sha256": "3aae03c5aeb1dbf2cc5dd41e110ce11071d5613b981254030fb7365f7cc7d8ff",
+      "byte_length": 11518,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/store.ts"
+    },
+    {
+      "path": "packages/core/src/session/subagent-models.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "18c24ee3248a7f3de398077d44c4282e80214041",
+      "sha256": "d4a93874cee96eeb2c396f7588ab7b126d7643b41b8571ab762d28e6c86aaeba",
+      "byte_length": 10256,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/session/subagent-models.ts"
+    },
+    {
+      "path": "packages/core/src/tool-safety.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "effd9af70e95a38de93c9e472bd03728666c4da8",
+      "sha256": "c33a3088b858884bbb2b358836df8a971e80575bf3d15eccfe75ac554c1aa015",
+      "byte_length": 35966,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/tool-safety.ts"
+    },
+    {
+      "path": "packages/core/src/tool/AGENTS.md",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "be8f7a3182aed6554fe9767002743e825a27fe69",
+      "sha256": "3a6caabfd391f1c08a424002a86c2ddae3e7a60d17dd1a3a0793586feac963bc",
+      "byte_length": 5382,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/tool/AGENTS.md"
+    },
+    {
+      "path": "packages/core/src/tool/registry.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "27c06bb2060a792ca1a2237673f2627b8d04f3fc",
+      "sha256": "59fa8e24ba581e3d0337fa9684bb50d38b8bbe8d2edcaf4f04398a5b2af790d7",
+      "byte_length": 17985,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/tool/registry.ts"
+    },
+    {
+      "path": "packages/core/src/tool/task-governance.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "12173c0769e62212a4a01003a0a253e7d1d1ba38",
+      "sha256": "ffded2d7222b72f450e43cfc0cf2415c7516f4fb932a00450ef3aee038ec62d0",
+      "byte_length": 4151,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/tool/task-governance.ts"
+    },
+    {
+      "path": "packages/core/src/tool/task-permission.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "1a3c81a3a321a22509730275814c4339059f4115",
+      "sha256": "3932582a01a39963f209495d25d1ef6ee60322e61f1e25ee25a557e0d0af82bd",
+      "byte_length": 1489,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/tool/task-permission.ts"
+    },
+    {
+      "path": "packages/core/src/tool/task.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "0e82455ca428e5b498551496bc65bdc0f6551df3",
+      "sha256": "ec3ff8e684c131e2894071e2f46af78fbdccbc80d2a47531088e65e678e9cb05",
+      "byte_length": 30815,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/tool/task.ts"
+    },
+    {
+      "path": "packages/core/src/tool/tools.ts",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob_sha": "1a1116bab24d5cb1f0a2dd3a52ba36695607a0b6",
+      "sha256": "5329e4999ee224b0eeaddf7fc4537fb8923f7e1e9d35797fbafcd3be7a9a8dfd",
+      "byte_length": 429,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85/packages/core/src/tool/tools.ts"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.native-admission-closure.compiler-request.v1",
+  "mission": 64,
+  "consumer": 45,
+  "state": "REQUESTED_NOT_RUN",
+  "W": "0846710321afab84e0c0a3a79653f41df8a284a0",
+  "W_tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a",
+  "branch": "native-admission-proof",
+  "PR": 80,
+  "commands": [
+    {
+      "cwd": "apps/cli",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_ref": "origin/dev",
+      "base_observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    }
+  ],
+  "scope": "Three changed native-admission/registry/governance source files, two new component test/helper files. Evidence-only terminal descendant retains these exact five blobs. Source manifest and DEPENDENCIES record all literal import targets.",
+  "authority": "45 owns hosted compiler/guards lane.64 does not seize astra-check-compose, astra-check-wp09, workflows or foreign source refs. Use package bun typecheck, never tsc directly.",
+  "observed_interface": {
+    "branch": "astra-compose",
+    "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "PR": 32,
+    "scoped_workflow": "No published scoped interface observed in readback",
+    "existing": "Foreign check refs remain untouched"
+  },
+  "required_evidence": [
+    "Executed exact W/tree, command/cwd/config/base and exit statuses",
+    "Nonempty program provenance and own-versus-inherited diagnostic attribution",
+    "Actual GitHub run/job/log/artifact identities",
+    "Failed packages remain FAIL even with only inherited diagnostics; absent execution remains NOT_RUN"
+  ],
+  "deduplication": "Reuse only exact product tree plus command/config/base with complete valid evidence; do not dispatch duplicate in-flight key.",
+  "generation": "NOT_REQUESTED: no Protocol/Server HttpApi or Atlas generation surface changes.",
+  "source_tests": {
+    "status": "PASS_COMPONENT_ONLY",
+    "run": 43667749802,
+    "pass": 158,
+    "fail": 0
+  },
+  "composition_limit": "Shared host patch is inert and not in product W. The next explicitly authorized integrator must request composed checks on the actual candidate after intake;60 epoch is ended. Source checks cannot certify that assembly or C28.",
+  "handoff_transport": "Publish this pinned request to PR32 after the receipt commit; the delivered PR80/handoff comment records the actual issue-comment URL.",
+  "proof_limits": [
+    "No local product/typecheck/guard execution",
+    "No waiver, ignored diagnostic or synthetic approval",
+    "Source run does not transfer to integrated C/G7, D/G8 or AM acceptance"
+  ]
+}

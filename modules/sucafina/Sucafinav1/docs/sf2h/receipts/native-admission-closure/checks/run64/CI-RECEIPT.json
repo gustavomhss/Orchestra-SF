@@ -1,0 +1,447 @@
+{
+  "schema": "sf-m64-hosted-component-receipt-v1",
+  "mission": 64,
+  "status": "PASS_COMPONENT_ONLY",
+  "observed_at_utc": "2026-11-15 02:29:24 UTC",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source": {
+    "commit": "0846710321afab84e0c0a3a79653f41df8a284a0",
+    "tree": "4675d209168b5f2fc2f55aa39a7e046d1141db8a"
+  },
+  "snapshot": {
+    "commit": "e148ff33a1c3f4864d039f5d443934173b8e9030",
+    "tree": "e7c0ff75835c65c60611162e9f95934d2ac0e2fd",
+    "first_parent": "0846710321afab84e0c0a3a79653f41df8a284a0",
+    "branch": "ci-run-linux-m64-08467103-8e5e0bf8-1",
+    "sole_delta": ".ci-run.json",
+    "request_blob": "91a886d742fbd40231ca9d9ef5d88423c336c03f",
+    "request_sha256": "8e5e0bf88cca655839d6bae21f9fde38bd362defb1488434d15c8fe38785b715",
+    "compare_evidence": "compare-W-S.json",
+    "readback": "GitHub MCP commit, file and compare GETs independently confirm first parent, tree and exact one-file delta."
+  },
+  "run": {
+    "id": 43667749802,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667749802",
+    "workflow": "test-ci",
+    "workflow_path": ".github/workflows/test-ci.yml",
+    "workflow_id": 416464764,
+    "attempt": 1,
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "created_at": "2026-11-15T02:25:53Z",
+    "updated_at": "2026-11-15T02:27:55Z"
+  },
+  "jobs": [
+    {
+      "id": 132670817059,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667749802/job/132670817059",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Assert Linux ARM64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 3
+        },
+        {
+          "name": "Assert macOS arm64",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 4
+        },
+        {
+          "name": "Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Read request",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Fetch source history for Script fixtures",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 7
+        },
+        {
+          "name": "Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "ripgrep",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Setup Playwright Node",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Install Chromium",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 11
+        },
+        {
+          "name": "Linux sandbox dependencies",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Setup Python",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Install Python test dependencies",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Configure git identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Export requested environment",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "omni binaries",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Rust toolchain (rust-toolchain.toml)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 18
+        },
+        {
+          "name": "Omni control nonce",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19
+        },
+        {
+          "name": "Run tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20
+        },
+        {
+          "name": "Upload Lean dashboard previews (extension)",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 21
+        },
+        {
+          "name": "Upload Playwright evidence",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 22
+        },
+        {
+          "name": "Post Setup Bun",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 42
+        },
+        {
+          "name": "Post Setup request validator Node",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 43
+        },
+        {
+          "name": "Post Checkout repository",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 44
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 45
+        }
+      ]
+    },
+    {
+      "id": 132671266536,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667749802/job/132671266536",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Delete the snapshot branch",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        }
+      ]
+    }
+  ],
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "packageSelector": "packages/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "./Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts",
+      "./Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "results": {
+    "pass": 158,
+    "fail": 0,
+    "expect_calls": 829,
+    "test_files": 3,
+    "test_duration_seconds": 14.32,
+    "per_file": {
+      "Sucafinav1/test/product/native-admission-closure/admission.test.ts": {
+        "pass": 71,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/routine-native-owner-binding/binding.test.ts": {
+        "pass": 38,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts": {
+        "pass": 49,
+        "fail": 0
+      }
+    },
+    "raw_summary_lines": [
+      " 158 pass",
+      " 0 fail",
+      " 829 expect() calls",
+      "Ran 158 tests across 3 files. [14.32s]"
+    ],
+    "failed_test_or_error_log_lines": []
+  },
+  "omni": {
+    "nonce": "1198837a2c77cd67530bfb9bb95968e7",
+    "nonce_line_count": 1,
+    "verdict_line_count": 1,
+    "nonce_matches_own_job": true,
+    "verdict": "not applicable",
+    "line": "omni positive control [1198837a2c77cd67530bfb9bb95968e7]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni.",
+    "spawn_count": 0,
+    "delegation_count": 0,
+    "native_or_omni_execution_proven": false
+  },
+  "qualification": {
+    "scope": "Hosted component tests for admission64 plus source41 owner binding/fences regression.",
+    "real_facts": [
+      "The original consumer source from W was executed on GitHub Actions via the pinned surgical snapshot S.",
+      "71 admission component tests, 38 owner binding tests and 49 fencing tests completed successfully.",
+      "Actual log includes pending generation/revoke, pending generation/dispose, pending authorization/revoke, abort/revoke during pending source read, asynchronous egress fences and duplicate lease preservation controls."
+    ],
+    "not_proven": [
+      "Authenticated installed Request-to-native-Maestro producer",
+      "Real provider execution or native Task materialization from an installed user flow",
+      "C15 token/budget/continuation admission",
+      "Independent human native review/approval/Permission in a production flow",
+      "Installed arm/Relay return and immutable business artifact consumer",
+      "Fresh authentication/reload consumer",
+      "AM02, AM06 or overall native acceptance",
+      "Typecheck or guards"
+    ],
+    "fixture_limit": "The test origins, native invocation frames and durable Task/governance records include controlled/synthetic fixtures. A passing component test is not a real installed native execution receipt."
+  },
+  "artifacts": {
+    "count": 0,
+    "evidence": "artifacts.json",
+    "explanation": "This Bun lane has no unconditional artifact-upload step. Full decoded job logs and the exact request are saved here; no artifact ZIP was reported by GitHub."
+  },
+  "evidence": {
+    "full_test_log": {
+      "file": "test-job-132670817059.log",
+      "bytes": 88508,
+      "sha256": "334d4d8886ea91d5329ae6580f1f6dbc20cf0723d3d302b593628ad1e2a0e165"
+    },
+    "full_cleanup_log": {
+      "file": "cleanup-job-132671266536.log",
+      "bytes": 2304,
+      "sha256": "91c8e6907e08a33556344df282f805e0614d0f203750977ed4e5af87fe47a26f"
+    },
+    "test_output": {
+      "file": "test-output.txt",
+      "sha256": "cf124307912fcfa1fae2aa93f515e1657509f825d4345e605686f1d0c4eff39a"
+    },
+    "request": "request.json",
+    "run": "run-final.json",
+    "jobs": "jobs-final.json",
+    "parsed": "parsed-log.json",
+    "manifest": "evidence-hashes.json"
+  },
+  "source_and_config_pins": [
+    {
+      "path": ".github/workflows/test-ci.yml",
+      "git_blob_sha1": "9f078f4e37b758691bcd073e5590f05d5444392a",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/.github/workflows/test-ci.yml"
+    },
+    {
+      "path": "script/test-ci.ts",
+      "git_blob_sha1": "6f67619958ce0567ea93dd66c53ae3aca242cb95",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci.ts"
+    },
+    {
+      "path": "script/test-ci-request.ts",
+      "git_blob_sha1": "5007e48270b80c83eb719d35cec9e6343206a195",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci-request.ts"
+    },
+    {
+      "path": "script/test-ci-location.ts",
+      "git_blob_sha1": "ee07aaf93c54fa935e6c4e9d845aa73af3b464ee",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci-location.ts"
+    },
+    {
+      "path": "script/test-ci-package.ts",
+      "git_blob_sha1": "a10c7b04ca6633f688b62069a9a9832aaa4543dd",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci-package.ts"
+    },
+    {
+      "path": "script/test-ci-paths.ts",
+      "git_blob_sha1": "b6977405d4dd8b2db95f3926f2a0322fd511357e",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-ci-paths.ts"
+    },
+    {
+      "path": "script/module-registry.json",
+      "git_blob_sha1": "c0f283ebff3bd3d5c087c8c7d4e61c3e7b15e903",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/module-registry.json"
+    },
+    {
+      "path": "packages/script/src/module-catalog.ts",
+      "git_blob_sha1": "c0439d3e356a42db80a2f1397837c33b1514a170",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/packages/script/src/module-catalog.ts"
+    },
+    {
+      "path": "modules/sucafina/package.json",
+      "git_blob_sha1": "10a8d5da1d074de28ab701ee388c4c2cd37e2917",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/modules/sucafina/package.json"
+    },
+    {
+      "path": "modules/sucafina/bunfig.toml",
+      "git_blob_sha1": "7000633db2c4f11e3f1aff351cd28c0df9affeca",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/modules/sucafina/bunfig.toml"
+    },
+    {
+      "path": "script/test-guard.ts",
+      "git_blob_sha1": "f2f55d97fd05a5136e17eac7043bbf315de88bb6",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-guard.ts"
+    },
+    {
+      "path": "script/test-omni-control.ts",
+      "git_blob_sha1": "643ad90a4606c2afd6c6c9aee389ca6389ab54e9",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/script/test-omni-control.ts"
+    },
+    {
+      "path": ".github/actions/setup-bun/action.yml",
+      "git_blob_sha1": "e2cda5b54676d4d1c35785aaef7aa69d66944597",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/.github/actions/setup-bun/action.yml"
+    },
+    {
+      "path": "package.json",
+      "git_blob_sha1": "947de9b5a8ef226c9dd5ec4dc9125b0e144cb6f2",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/package.json"
+    },
+    {
+      "path": "bunfig.toml",
+      "git_blob_sha1": "c506ff57c4bf3fa3a6bd3501b8ce2fc29122accb",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/bunfig.toml"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "git_blob_sha1": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-admission.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "git_blob_sha1": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-registry.ts"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+      "readback": "GitHub MCP fetch_file at W",
+      "url": "https://github.com/gustavomhss/Orchestra-SF/blob/0846710321afab84e0c0a3a79653f41df8a284a0/apps/cli/src/sucafina-product/routine-native-governance.ts"
+    }
+  ],
+  "operations": {
+    "monitoring": "GitHub MCP GET only",
+    "rerun": "NONE",
+    "cancel": "NONE",
+    "dispatch": "NONE",
+    "remote_mutation_by_monitor": "NONE",
+    "local_product_tests": "NONE",
+    "local_typecheck_or_guards": "NONE",
+    "cleanup": "Existing workflow cleanup job completed success; monitor performed no deletion."
+  }
+}

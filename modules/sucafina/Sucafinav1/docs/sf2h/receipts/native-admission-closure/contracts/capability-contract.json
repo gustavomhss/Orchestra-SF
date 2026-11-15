@@ -1,0 +1,288 @@
+{
+  "schema": "sf-native-admission-capability-contract-v2",
+  "mission": 64,
+  "state": "BOUNDED_CONSUMER64_IMPLEMENTED; AUTHENTICATED_NATIVE_PRODUCER_NOT_INSTALLED",
+  "repository": "gustavomhss/Orchestra-SF",
+  "public_api_source": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "mission_package_source": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "source_pins": "source-pins.json",
+  "api_notes": "API-NOTES.md",
+  "scope": "The native Session, Maestro, Task, Permission, Relay and Schedule APIs exist. The missing capability is their installed, authenticated SF origin with bounded native policy, C15, human continuation, readiness and reload ownership. This contract does not claim installed execution or introduce an engine API.",
+  "owners": {
+    "consumer64": {
+      "responsibility": "Validate the actual original Task invocation against the authenticated Request and exact routines.run intent, reuse registry41, and hold the strong SF governance lease around the original settlement.",
+      "paths": [
+        "apps/cli/src/sucafina-product/routine-native-admission.ts",
+        "apps/cli/src/sucafina-product/routine-native-registry.ts",
+        "apps/cli/src/sucafina-product/routine-native-governance.ts"
+      ]
+    },
+    "native_origin_and_c15": {
+      "responsibility": "The authenticated native composition and C15/authority semantic owners, designated by S0, must implement the producer and its real lifecycle. Their authority is not assigned to mission64 by this contract.",
+      "paths": [
+        "apps/cli/src/sucafina-product/native-host.ts",
+        "apps/cli/src/sucafina-product/token-gate.ts",
+        "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "modules/sucafina/Sucafinav1/product/integration/human-authority.ts"
+      ]
+    },
+    "integration60": {
+      "responsibility": "Assigned selective integration lane into sf2-stack. Mission60 explicitly ended its epoch at faa30fddb7e7b61696b66fd069f51cf18c51125f; further intake requires renewed or successor authority. Review the inert host patch, preserve dependencies and obtain the authentic producer/scoped readiness. Integration authority alone does not provide native admission or authorize shared-auth/engine changes.",
+      "paths": [
+        "apps/cli/src/sucafina-product/host-context.ts",
+        "apps/cli/src/sucafina-product/contribution.ts",
+        "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-admission-closure/assembly/"
+      ]
+    },
+    "final_acceptance": "S0 retains installed acceptance; 45 owns the compiler/check request lane. This document neither transfers those roles nor dispatches work."
+  },
+  "origin": {
+    "name": "SfRoutineNativeAdmissionOrigin",
+    "type_source": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+    "boundary": "Private dependency of the trusted host factory. Never an HTTP/model service, parsed DTO, public session-ID resolver or second owner registry.",
+    "signature": {
+      "ready": "() => boolean",
+      "resolve": "(invocation: ToolSafety.Invocation) => Promise<SfRoutineNativeAdmissionBinding | undefined>"
+    },
+    "binding_type": {
+      "request": "Request",
+      "context": "TrustedUiContext",
+      "authoritySessionID": "SessionSchema.ID",
+      "intent": {
+        "planRevisionId": "string",
+        "authorizationId": "string",
+        "inputDigest": "string",
+        "caseRef": {
+          "id": "string",
+          "incarnation": "string",
+          "version": "number"
+        }
+      },
+      "signal": "AbortSignal",
+      "current": "() => Promise<boolean>"
+    },
+    "exact_payload_authorization": "authority.human.authorize(context, 'routines.run', intent), where intent contains exactly planRevisionId, authorizationId, inputDigest and caseRef. The context must have been admitted/consumed for this exact action and payload; routines.admit or a generic read lease does not authorize routines.run.",
+    "invariants": [
+      "The producer possesses the original authenticated POST Request before native admission and associates it with the independently admitted native Maestro Session. IDs are consistency and lookup data after that trusted association, never the source of authority.",
+      "authority.host.requestFor(binding.context) === binding.request. The actual context is kind ui, its lease and Request are current, and the principal, policy/access revision, installation/project and native Location remain consistent.",
+      "authoritySessionID identifies the legitimate native authority Session and must equal the captured native witness. It is not the resident sf_maestro Session and cannot be derived from SF_ROUTINE_INPUT.owner alone.",
+      "Return the same immutable binding object on every resolve of the same original invocation for its admitted lifetime. Keep Request, context, signal and current callback identities stable; freeze binding/intent/caseRef facts and never mutate Request headers or context binding facts.",
+      "ready is synchronous service readiness, not an operation grant. resolve is a prompt, bounded, read-only observation of an association already established by the producer. It must return undefined when no live association exists.",
+      "resolve/current must not create/adopt a Session, record a Task or plan, publish a review/grant, prompt a provider, wait for human input, answer Permission, dispatch, acquire another coordinator owner or enter registry.withRequest.",
+      "current is a bounded revalidation of the producer's actual native policy, C15 admission and admitted human continuation. It must not merely compare IDs or return a constant true.",
+      "After abort, expiry, revocation, policy/access/provider-generation drift, ownership release, runtime disposal or completion of this binding, resolve returns undefined and current returns false. The binding never revives; signal aborts promptly when its native authority/lifetime ends."
+    ],
+    "no_default_producer": true,
+    "producer_deliverable": "A host-private implementation of this exact interface, backed by an authenticated native-origin lifecycle, plus the capability proofs below. A closure/map created from caller selectors or test fixture records is not that implementation."
+  },
+  "consumer64": {
+    "factory": "createSfRoutineNativeAdmission",
+    "canonical_dependencies": {
+      "resources": "Captured createSfRoutineNativeRuntime resources and canonical native records/services",
+      "requestFor": "authority.host.requestFor",
+      "authorize": "authority.authority.revalidateDomainContext",
+      "authorizeIntent": "(context, intent) => authority.human.authorize(context, 'routines.run', intent)",
+      "generation": "Current host provider generation reader",
+      "publication": "Current authorized installed publication port",
+      "resolveCase": "business.resolveCase",
+      "resolveInputs_and_revalidateSources": "Existing routineInputs readers",
+      "registry": "One createSfRoutineNativeOwnerRegistry instance from component41",
+      "governance": "The same createSfRoutineNativeGovernance instance installed in runtime safety/Relay guards"
+    },
+    "sequence": [
+      "Classify the actual native task/workflow and canonical SF plan. Non-SF calls retain the original safety path. Missing SF readiness denies the SF call.",
+      "Under the admission lifetime signal, resolve the exact original ToolSafety.Invocation. Validate binding existence, TrustedUiContext, POST, both live signals and requestFor(context) === request.",
+      "Enter registry41.withRequest(context, request, ...), wrapped by the combined Request/origin signal. The registry establishes cancellable acquisition, expiry, live authority and provider generation BEFORE consumer64 captures the native owner.",
+      "Inside that Request scope, snapshot intent/context/header identities and generation; captureSfRoutineNativeOwner reads the genuine core frame and persisted running Task. Compare authoritySessionID, plan, authorizationId, inputDigest, exact caseRef and retained SF owner metadata.",
+      "Revalidate stable origin/binding identities, native current(), SF domain authority and exact routines.run intent, current case/incarnation/version, SourceRefs, publication permission and RelayWorkflowBinding.revalidate, native witness and provider generation. Repeat the final authority fence after source/publication awaits.",
+      "Call registry41.run(invocation, guarded). Its own native witness check and existing replay/duplicate-Request claim occur BEFORE guarded acquires governance.tryBind. Do not introduce another registry or replay ledger.",
+      "governance.tryBind(plan.id, {current, signal}) refuses an existing plan lease without replacing it. After another current() check, execute the ORIGINAL native settlement exactly once. The installed safety wrapper then runs protectPlan and the unchanged native governance/Permission/Task/Relay path.",
+      "Revalidate before releasing the result. Release the acquired plan lease, registry entry and Request scope on success, denial, failure or interruption. The native runner remains responsible for publishing the terminal tool result."
+    ],
+    "ordering_precision": "registry.withRequest acquisition precedes capture. registry.run performs the replay claim before tryBind; it does not precede the consumer's first capture. The lease is acquired before the existing governance guarded effect checks protectPlan.",
+    "single_scope_rule": "In route64 the hook owns registry.withRequest for one original Task settlement. The producer MUST NOT wrap the whole runner in the same withRequest: registry41 rejects a nested CurrentRequest. No dispatcher/exclusive/resume call is made from the active Task hook.",
+    "failure_reason": "SF_ROUTINE_NATIVE_ADMISSION_UNAVAILABLE",
+    "readiness_values": [
+      "disposed",
+      "native-runtime-unavailable",
+      "publication-unavailable",
+      "authenticated-native-origin-unavailable",
+      "ready"
+    ],
+    "lifecycle": [
+      "Admission dispose aborts its own lifetime even while origin.resolve is pending, then disposes registry41. A producer must not rely on Effect interruption to cancel hidden side effects in an unresolved Promise; resolve is read-only and promptly bounded.",
+      "Once binding is returned, combined Request/origin abort covers registry acquisition and all later awaits, not only the Task body.",
+      "Registry41 begins cancellable acquisition before generation/authority awaits. It enforces Request expiry with both wall and monotonic deadlines, capped at 300000 ms, and handles revoke, invalidateGeneration and dispose while acquiring or active.",
+      "Host assembly disposes admission/registry before asynchronous execution shutdown. It closes only its own scope; it never interrupts or adopts a foreign coordinator owner by supplied Session ID.",
+      "A denied replay cannot replace or release the original call's plan lease, including a duplicate invocation carried by a different Request object."
+    ]
+  },
+  "creation_and_execution": {
+    "owner": "Authenticated native origin and C15 semantic owners; selective assembly by60",
+    "public_existing": [
+      "SessionV2.Service.create({id?, parentID?, agent?, model?, location})",
+      "SessionV2.Service.prompt({sessionID, prompt, resume:false})",
+      "SessionStore.Service.narrow(sessionID, SessionScope.Scope)",
+      "SessionV2.Service.setPermission({sessionID, permission})",
+      "SessionSubagentModels.Service.set(sessionID, policy)",
+      "SessionExecution.Service.exclusive(sessionID, effect, {wait:false})",
+      "SessionExecution.Service.withRunner(sessionID, runner => runner.run(...))"
+    ],
+    "requirements": [
+      "Separate authentic routines.admit preparation from the final exact routines.run Request. The run intent contains canonical plan/authorization facts that do not exist at initial Session creation.",
+      "Before the first provider turn, narrow exact tool IDs, skills and load/tool-call budgets and preserve native Permission denies. An SF human action does not grant the complete native Maestro toolbox.",
+      "Provide actual C15 admission for the real native agent and all intended children before model resolution/execution. A durable prompt admission with resume:false is not provider execution.",
+      "Only the existing coordinator owns execution. Busy remains busy; no competing dispatcher, coordinator replacement, ambient session adoption or widening of native permissions.",
+      "SessionScope is not automatically inherited by Task children. TaskPermission.inheritedPermissions retains parent denies/external_directory and adds primary-tool denies; it does not carry all parent allows or the parent scope. Child policy/budget admission must be concrete.",
+      "Use native SessionInput, Maestro/Task/Relay records and immutable output readers as the durable ledger; do not introduce another admission/run database."
+    ],
+    "context_propagation_note": "The coordinator captures a FiberSet runtime; wrapping execution.resume externally in registry41.withRequest is not generic Context.Reference propagation. This is a factual limitation of alternative41 compositions, not an instruction for route64. Route64 opens its Request scope in the actual Task hook and must not nest it around the runner."
+  },
+  "c15": {
+    "owner_paths": [
+      "apps/cli/src/sucafina-product/token-gate.ts",
+      "apps/cli/src/sucafina-product/native-host.ts",
+      "modules/sucafina/Sucafinav1/product/contracts/runtime.ts",
+      "modules/sucafina/Sucafinav1/product/integration/product-authority.ts"
+    ],
+    "public_existing": "createSfTokenGate.register({admission, binding, model, location, revalidate, persistReceipt}), valid/revoke/revokeSession and the installed model/LLM/ExecutionHost guards",
+    "current_limit": "register accepts resident SfNativeAdmission/TrustedExecutionBinding. It verifies selected profile and real skill receipts, minimum context budget, manifest/run/case/Session/model/Location, active host/model mounts and live revalidation. The inspected composition does not install a matching native-Maestro admission producer.",
+    "producer_must_supply": [
+      "Approved bounded policy for actual native maestro and real child seats, with trusted parent-child lineage and authorized tools/skills",
+      "Exact installation/host/project/Location, live Request/principal/grants and model/provider generation",
+      "Genuine profile/skill admission receipts and finite context/response/tool/skill budgets; actual per-turn budget enforcement and token/byte receipt persistence",
+      "Ticket current()/signal lifecycle through cancellation, revoke, generation change, shutdown and every admitted continuation",
+      "After reload, fresh reauthorization and genuine ticket re-admission from trusted canonical evidence; no reuse of a process-local ticket or stale Request"
+    ],
+    "forbidden": [
+      "Relabel sf_maestro as native maestro",
+      "Manufacture selected profiles, loaded-skill receipts, bindings or token tickets",
+      "Remove SF tools/skills/ownership markers to evade sfLineage",
+      "Add an unguarded provider route, bypass ExecutionHost/LLM guards or treat toolCallBudget as the token gate",
+      "Broaden resident/native approval or toolbox grants to make the demonstration pass"
+    ]
+  },
+  "plan_and_human_continuation": {
+    "public_existing": [
+      "maestro_record_admission",
+      "maestro_record_plan_revision",
+      "RelayWorkflowBinding.acquire/revalidate",
+      "maestro_present_approval",
+      "maestro_record_approval",
+      "maestro_grant_authorization",
+      "SessionV2.Service.prompt",
+      "PermissionV2.Service.askExplicit/reply"
+    ],
+    "requirements": [
+      "Feed authorized case/source/publication facts to the actual native planner. SF_ROUTINE_INPUT and its owner fields remain consistency metadata; native READY_TO_DRAFT, required real upstream Task evidence and publication acquisition remain canonical producers' responsibility.",
+      "Expose the completed exact native approval presentation to the authenticated principal with its plan, validation, context, policy and task hashes. Preserve independent native review APPROVE.",
+      "Deliver only the principal's actual explicit reply through the authorized Request-to-native continuation as a direct user prompt to the origin-owned Session, with resume:false. The first user message after the current presentation must be that reply, and it must remain current when approval/grant are recorded.",
+      "A programmatically inserted approve, synthetic message, Task output or silently interpreted control does not prove human approval. The routines.run command and its payload do not replace native plan approval.",
+      "A pending Permission question is separate from native plan approval. The owner must expose the exact live question and authorize the principal's explicit answer before Permission.reply; do not auto-answer once/always. Unresolved native Permission remains a refusal.",
+      "Freshly authorize each admitted continuation and C15 lifetime. Never retain the initial planning Request across expiration or use a later prompt to manufacture the historical approval chain."
+    ],
+    "missing_installation": "The inspected SF host has no authenticated native presentation/reply/continuation binding completing this chain. These APIs are present; their legitimate SF ownership and UI/host lifecycle must be supplied and demonstrated."
+  },
+  "provider_path_compatibility": {
+    "source": "packages/core/src/session/runner/llm.ts",
+    "observed": "The hosted ExecutionHost turn.execute path persists Orchestra tool calls with provider.executed=true and providerMetadata.orchestra.executor='orchestra'.",
+    "consumer_limit": "captureSfRoutineNativeOwner and adapter41 reject provider.executed. This flag is therefore a current compatibility boundary, not proof that every hosted tool call is fabricated.",
+    "acceptance": "Use a real native path accepted by the present witness for initial installed proof. If the intended engine produces hosted provider-executed calls, its compatibility requires a separately authorized supported adapter contract preserving provenance and all guards; this contract does not remove the check or authorize engine edits."
+  },
+  "reload_and_return": {
+    "public_existing": "Session/Task/Maestro/Relay record and immutable-result readers, including adapter41 readAdmission/readRun/readExecution/readArtifact",
+    "current_limit": "SessionV2 CreateInput has only id,parentID,agent,model,location. The inspected public SessionStore offers no generic SF principal/origin-attestation writer. Registry41 is ephemeral and exposes owners only during a live original Task settlement; a completed Task witness cannot be revived as historical ownership.",
+    "required_capability": "Trusted durable origin evidence from the authentic producer, with a fresh authenticated Request resolving a read-only historical/result scope through supported readers. This scope is separate from the live Task witness and never grants dispatch.",
+    "requirements": [
+      "Reauthorize current principal/grants/policy/access, case incarnation/version, source revisions and publication before historical egress.",
+      "Do not reconstruct authority solely from caller IDs, SF_ROUTINE_INPUT.owner or a lost in-memory map; do not add a parallel durable run/Task ledger.",
+      "Prove actual Task child/provider execution and terminal Relay/Task provenance, immutable output reference and digest, then a factual authorized consumer after reload.",
+      "Re-admit C15 for any new provider continuation; historical reading does not implicitly authorize execution or resurrect a ticket."
+    ]
+  },
+  "schedule": {
+    "public_existing": [
+      "CapabilitySchedule.make and schedule_manage",
+      "CapabilityInvocation.require",
+      "CapabilityPolicy.authorize/commit",
+      "ScheduledTaskPort.Service"
+    ],
+    "requirements": [
+      "Use the actual root schedule_manage invocation frame and owner/Location; never an owner selector from input.",
+      "Admit explicit schedules.create/update/pause with actual Permission when required, scheduler binding, revision and native run idempotency.",
+      "Provide fresh per-occurrence SF/C15 authority and revocation handling; never retain an expired HTTP Request as perpetual watch authority.",
+      "Keep sf_watch_prepare unadvertised until the complete real Schedule admission is installed and proved."
+    ],
+    "current_limit": "The existing SF prepareWatch path returns unavailable. A callback or prepared object alone is not Schedule execution."
+  },
+  "scoped_readiness": {
+    "public_existing": "Tools.Service.register(tools) returns Effect<void, Tool.RegistrationError, Scope.Scope>; ToolRegistry materialization captures registration identity.",
+    "current_limit": "contribution.ts registers the then-current descriptor array once. origin.ready is only a synchronous read and provides no change subscription. The inert assembly does not supply a dynamic readiness producer or re-registration lifecycle.",
+    "required_capability": "Authorized host assembly must observe the real origin/runtime/publication/owner lifecycle, open and close its own registration Scope, and coordinate descriptor installation before the relevant provider materialization.",
+    "requirements": [
+      "Default missing origin remains unavailable and advertises zero routine/watch descriptors. Installing the consumer hook is not installed readiness.",
+      "Do not equate origin.ready with a grant or registry.owners.available with durable historical authority. A real per-operation binding is still required.",
+      "Changing a descriptor array does not register Tool.dynamic instances already materialized. Use actual public scoped registration and preserve canonical registration identities.",
+      "On readiness loss, close only the owned registration Scope, remove advertisement and independently deny stale captured calls through current authority/registration checks.",
+      "Demonstrate the actual lifecycle and first-turn registration order. A constant available:true or simulated readiness event does not meet this contract."
+    ]
+  },
+  "required_capability_proofs": [
+    {
+      "id": "CAP64-ORIGIN",
+      "accept": "A real authenticated POST resolves by the producer's prior ownership to the exact native Maestro Session and original Task invocation, with the same binding object, exact routines.run payload and independently current principal/project/Location.",
+      "reject": "Caller IDs, retained owner text, synthetic frame, constant current, resident sf_maestro or fabricated binding."
+    },
+    {
+      "id": "CAP64-POLICY-C15",
+      "accept": "Real parent/child restricted policies, profile/skill receipts, genuine token gate admission, selected model/generation, bounded provider turn and budget receipt.",
+      "reject": "Provider bypass, permissive grants, false receipts, token-budget omission or provider.executed incompatibility credited as passing."
+    },
+    {
+      "id": "CAP64-HUMAN",
+      "accept": "Actual native plan/review, exact visible presentation, authenticated first direct human reply, canonical approval and authorization; actual Permission answer separately where required.",
+      "reject": "Synthetic grant/review/message, injected approve or automated Permission reply."
+    },
+    {
+      "id": "CAP64-TASK-RELAY",
+      "accept": "Actual provider-produced persisted Task, original settlement once, child provider execution, native arm/Relay terminal result and immutable artifact/digest.",
+      "reject": "Nonexecuting Task row, fixture completion, duplicate dispatcher or second ledger."
+    },
+    {
+      "id": "CAP64-RELOAD",
+      "accept": "Fresh authenticated Request after reload resolves trusted historical ownership and consumes the actual immutable result under current case/source/publication authority; any new model turn has fresh C15 admission.",
+      "reject": "Stale lease/ticket, revived running witness, ID-based ownership or result existing without a consumer."
+    },
+    {
+      "id": "CAP64-LIFECYCLE",
+      "accept": "Abort/dispose during pending origin and registry acquisition; Request expiry; native/C15 revoke; policy/access/provider-generation drift; lease replacement protection; duplicate/replay and native outbox idempotency. No foreign owner is cancelled and no stale result escapes.",
+      "reject": "Only happy path, arbitrary sleeps, fake revocation or expired bindings revived."
+    },
+    {
+      "id": "CAP64-READINESS",
+      "accept": "Real scoped registration is present before provider materialization, disappears on revoke/dispose, and stale captured registration is denied without closing unrelated registrations.",
+      "reject": "Late descriptor-array mutation or fabricated readiness."
+    },
+    {
+      "id": "CAP64-SCHEDULE",
+      "accept": "If watch is enabled, actual schedule_manage owner/policy/scheduler admission and per-occurrence authority/idempotency proof.",
+      "reject": "A prepareWatch object without real native Schedule admission."
+    }
+  ],
+  "proof_receipt_requirements": {
+    "record": "Exact source W/tree and installed composition, model/provider receipt, actual Session/message/Task/Relay/job identifiers and timestamps, registration/publication/source revisions, artifact reference/digest and consumer receipt, without tokens or credentials.",
+    "classification": "This contract and its pins are source evidence. Fixture-created frames, approvals or Tasks remain component evidence even when genuine services execute around them. Hosted test results belong to their exact W/S/run/job receipts and do not by themselves establish installed native proof.",
+    "acceptance_not_awarded_by_this_contract": [
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06"
+    ],
+    "global_release": false,
+    "constraints": "No engine, shared-auth or runtime59 edits by mission64; no real business/financial effects, third-party messages, new credentials or local product tests are authorized by this contract."
+  },
+  "source_implementation": "0846710321afab84e0c0a3a79653f41df8a284a0",
+  "target_authority_reconciliation": "../TARGET-AUTHORITY.json"
+}

@@ -1,0 +1,120 @@
+{
+  "schema": "sf-m64-static-adversarial-review-v1",
+  "mission": 64,
+  "reviewer": "ci_authority",
+  "observed_at_utc": "2026-11-15T02:22:10.042830+00:00",
+  "status": "STATIC_REVIEW_ONLY; NO_REMAINING_OWN_DEFECT_IDENTIFIED_WITHIN_READ_SCOPE",
+  "installed_native_certification": false,
+  "local_product_tests": "NOT_RUN",
+  "local_typecheck_or_guards": "NOT_RUN",
+  "remote_mutations": "NONE",
+  "scope": {
+    "root": "/workspace/scratch/811090bdcb58/work",
+    "basis": "Latest local candidate64, reviewed after root corrected lease replacement and acquisition cancellation. Source41 and native public core APIs were read at the provided base 7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85.",
+    "source_files": [
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+        "git_blob_sha1": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+        "sha256": "6244fcaf30ec2accd63d8614c266de2368978060729167d7c0813f122dc7b7a6",
+        "bytes": 12025
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+        "git_blob_sha1": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+        "sha256": "989d57a0283948420ed5040b05b0b16b940fd3c707d2cb41416445eaf11534fa",
+        "bytes": 12601
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+        "git_blob_sha1": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+        "sha256": "0e1f2093f3b31eead495b70dbedb8a66344fb08142e4ba31587422431c05e3aa",
+        "bytes": 15351
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-owner.ts",
+        "git_blob_sha1": "a4dce61b612729bb317761bb0d63ff622f55a8cd",
+        "sha256": "9a04db76741494bf6e710a50e17a1df05e27e8c3e4ed2db248c4aaa673477e1f",
+        "bytes": 11691
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/routine-native-dispatch.ts",
+        "git_blob_sha1": "40fbb2c2abdc26463ee20b34d1e2081287c2ea63",
+        "sha256": "166d15578beca43de868af4bd78c752acd821cca7a99e2492732b78c92b83673",
+        "bytes": 12229
+      }
+    ]
+  },
+  "resolved_during_review": [
+    {
+      "id": "LEASE_PREEMPTION",
+      "earlier_risk": "A duplicate caller acquiring a replacing plan lease before the registry replay fence could revoke the original caller and then fail admission itself.",
+      "current_evidence": "admission.run now enters registry.run before acquireUseRelease(governance.tryBind). tryBind refuses an existing or aborted lease synchronously. Its release deletes only the exact lease object.",
+      "classification": "STATICALLY_RESOLVED; runtime tests are separate"
+    },
+    {
+      "id": "PREFLIGHT_ABORT",
+      "earlier_risk": "Post-binding generation/witness/source/publication authority awaits occurred before the scoped abort bracket and expiry timer.",
+      "current_evidence": "All post-binding work is inside registry.withRequest and an outer race against Request.signal and binding.signal. The registry cancellation race now contains initial and final current() checks too.",
+      "classification": "STATICALLY_RESOLVED; runtime tests are separate"
+    },
+    {
+      "id": "ACQUISITION_REVOKE",
+      "earlier_risk": "revoke(Request) during the first generation await found no registered scope and could be lost if generation later returned.",
+      "current_evidence": "The same registry now registers an acquiring entry and timer before its first generation await. revoke, dispose and generation invalidation close acquiring entries. The same cancellation/controller and deadline continue into the scope. Transfer adds scope before deleting acquisition, without an intervening await. No owner binding is emitted by acquiring.",
+      "classification": "STATICALLY_RESOLVED; runtime tests are separate"
+    },
+    {
+      "id": "ORIGIN_DISPOSE",
+      "earlier_risk": "dispose64 could not interrupt a pending origin.resolve Promise before a Request scope existed.",
+      "current_evidence": "A private lifetime controller now wraps only the already classified SF branch, including origin.resolve; dispose aborts it and the existing registry. Non-SF passthrough is outside that controller.",
+      "classification": "STATICALLY_RESOLVED; runtime tests are separate"
+    }
+  ],
+  "bounded_observations": [
+    {
+      "topic": "Trust boundary and caller IDs",
+      "evidence": "Origin is an optional private host capability. A binding must remain the exact same object returned for the original invocation, carry the exact Request/context registered by requestFor, and match actual native records through captureSfRoutineNativeOwner. Plan, authorization, case and session IDs serve consistency comparisons; they are not a lookup that issues authority.",
+      "limit": "TypeScript structural typing is not authentication. A production trusted producer must be supplied independently; a fabricated host fixture cannot establish installed origin authenticity. No default producer is present."
+    },
+    {
+      "topic": "Human intent and Request identity",
+      "evidence": "UI context, POST Request, requestFor(context) identity, context binding/header snapshots, same signal/current function, and exact frozen intent are checked. The assembly routes authorizeIntent to authority.human.authorize(context, routines.run, intent), whose existing authority binds action and payload digest before and after UI revalidation.",
+      "limit": "The shared assembly is inert and was not installed or executed. The module does not by itself create an authenticated HTTP human-intent producer."
+    },
+    {
+      "topic": "Native Maestro and Task",
+      "evidence": "The existing owner witness checks core issuer/root Task/no lineage, actual AgentV2.defaultID, parent Session/location, native assistant message and running tool part, canonical plan/authorization/review/approval, and native permission evaluation. It does not relabel sf_maestro or answer an ask permission. The consumer yields the supplied original settlement exactly once and does not dispatch, create a Task, resume, or take Session exclusivity.",
+      "limit": "This is source evidence, not a real provider/native Task execution receipt."
+    },
+    {
+      "topic": "Hook order",
+      "evidence": "The public ToolRegistry settlement path calls safety.run around canonical settlement. The SF governance ownerHook wraps original.run before its own check. The core runner issues the core CapabilityInvocation frame around materialization.settle. Thus the inspected public path permits the lease to be installed before native safety/governance checks.",
+      "limit": "Other execution paths and installed engine composition were not exercised."
+    },
+    {
+      "topic": "C07 case, source and publication",
+      "evidence": "current() resolves the current case, compares retained source identity through existing routineSourceDigest, authorizes the real publication port, invokes public RelayWorkflowBinding.revalidate, revalidates sources, and repeats native/human/generation/owner authority before and after the original settlement. The publication wrapper and inner capability identities are held stable.",
+      "limit": "These are repeated optimistic authority fences, not a newly introduced atomic transaction across all external sources. Cooperative external current/signal behavior remains required."
+    },
+    {
+      "topic": "Lifetime, replay, concurrency and cleanup",
+      "evidence": "The same registry owns pending acquisitions, active scopes, process-local replay identities and exact owner entries. The timer and monotonic deadline begin before the first generation await. Abort, revoke, expiry, generation invalidation and disposal reach that operation. acquireUseRelease finalizers remove only their own scope/entry/lease; a duplicate cannot replace an active lease.",
+      "limit": "The existing issued set is process local, not a durable replay ledger. After-restart protection must remain in canonical native records and the trusted origin. A Promise supplied by an external port may continue its own internal work if that port ignores cancellation, even when the consumer fiber is interrupted."
+    }
+  ],
+  "external_blockers_not_source_defects": [
+    "Authenticated Request-to-native-Maestro producer with the real consumed human lease, exact invocation binding, current/signal policy, C15 budget and human continuation. It must fence cancellation while origin.resolve is pending, before the Request is knowable to this consumer.",
+    "Mission60 application of the inert shared-host assembly, reconciliation of source hashes, and real scoped descriptor readiness/materialization lifecycle. A getter becoming ready after initialization is not dynamic registration.",
+    "Fresh authenticated read/continuation authority after Task settlement and reload. A running-Task witness is not persistent read authority or an artifact consumer.",
+    "Real provider, native review/approval/Permission where required, Task/arm/Relay settlement, immutable artifact/digest, reload and adversarial installed proof. No AM02/AM06 or full acceptance is inferred here."
+  ],
+  "remaining_own_findings": [],
+  "required_separate_validation": [
+    "Hosted component tests for each resolved race, including pending generation plus revoke and pending origin plus dispose, with original settlement count zero on cancellation.",
+    "Hosted duplicate/concurrent attempts proving the original lease survives rejected retries and no second settlement executes.",
+    "Required surgical typecheck/guards through the authorized mission45 lane; no local compiler execution was performed.",
+    "Refresh assembly dependency hashes for the revised admission and registry before release/intake; the earlier assembly snapshot referenced pre-fix files."
+  ],
+  "source_W": "0846710321afab84e0c0a3a79653f41df8a284a0",
+  "author_exclusion": "Reviewer did not write source/test delta. This is source review, not one of the three final campaign acceptance reviews."
+}
