@@ -1,6 +1,6 @@
 # Migração, compatibilidade e reconciliação de handoffs
 
-Leitura documental, sem execução de produto. A inspeção abrangente de arquitetura foi fixada em **C27** e complementada pela reconciliação de **C28 `d088708276b48f896ad4e0ecd2a95cb73dc413b1`**, publicada durante esta sessão. C28 é candidato material em **QUALIFICATION HOLD**, não aceite funcional. Nenhum código ou receipt de terceiros foi copiado para esta branch de planejamento.
+Registro histórico da primeira edição, preservado após cold review. Os estados C27/C28 abaixo são observações daqueles pins, não afirmações de HEAD atual. O pin observado no cold review foi faa30fddb7e7b61696b66fd069f51cf18c51125f; a nova execução deve reconciliar somente os deltas pertinentes e a autoridade vigente. Leitura documental, sem execução de produto. A inspeção abrangente de arquitetura foi fixada em **C27** e complementada pela reconciliação de **C28 `d088708276b48f896ad4e0ecd2a95cb73dc413b1`**, publicada durante esta sessão. C28 é candidato material em **QUALIFICATION HOLD**, não aceite funcional. Nenhum código ou receipt de terceiros foi copiado para esta branch de planejamento.
 
 ## 1. Reconciliação de autoridade e candidatos
 
@@ -23,7 +23,7 @@ Fontes: [HANDOFF57](https://github.com/gustavomhss/Orchestra-SF/blob/d6d9816bb09
 
 O terminal 57 relata 27 paths materiais + 137 artefatos de origem + 13 receipts no delta55→C27, preservação de 56 obrigações e 17 findings. Esta adaptação referencia esse ledger; não o substitui, não reclassifica seus estados e não afirma ter executado sua auditoria de produto.
 
-**A autorização de escrever documentos e abrir esta draft PR não constitui sucessão da integração.** A60 já publicou sucessão após 57 no pin observado; o N0 futuro deve obter autorização específica para a adaptação e reconciliar essa custódia vigente, sem iniciar uma segunda integração. Só uma nova sucessão exigirá novo ACK. Nenhuma branch de produtor, controle ou workflow foi alterada por esta sessão.
+**A autorização de escrever documentos e abrir esta draft PR não constitui sucessão da integração.** A60 já publicou sucessão após 57 no pin observado; o I00 futuro deve obter autorização específica para a adaptação e reconciliar essa custódia vigente, sem iniciar uma segunda integração. Só uma nova sucessão exigirá novo ACK. Nenhuma branch de produtor, controle ou workflow foi alterada por esta sessão.
 
 ## 2. Pendências que afetam a UX e o plano de execução
 
@@ -49,11 +49,11 @@ A inspeção dos deltas e dos contratos C28 de autoridade, Reviews e discussion 
 
 Evidência de 48 continua limitada: installed 09 tem 4 PASS / 103 expects no W6/C27; diagnostic 08 tem 0 PASS / 1 FAIL, 180025 ms, sem causa de POST estabelecida. O CHECK02 da fonte relata 186 TypeScript / 3 GATE / 12 WARN. Nenhum desses resultados é prova de C28. O próprio incremento diz current_candidate=NOT_RUN, quatro jornadas OPEN e criteria86=NOT_ESTABLISHED. Criar C28 sozinho não autoriza repetir a mesma jornada sem corrigir sua precondição causal.
 
-A reconciliação 60 mantém **dois problemas distintos**: `review-agenda-services.ts` classifica qualquer `ui.admit != ok` como denied/403 na descoberta, podendo apagar seleção recuperável; o POST de preparação fica sem resposta, com causalidade não estabelecida. Corrigir a classificação não comprova a causa do POST. N1/N8 consomem a correção liberada pelo owner Agenda39; não disfarçam 403 no cliente.
+A reconciliação 60 mantém **dois problemas distintos**: `review-agenda-services.ts` classifica qualquer `ui.admit != ok` como denied/403 na descoberta, podendo apagar seleção recuperável; o POST de preparação fica sem resposta, com causalidade não estabelecida. Corrigir a classificação não comprova a causa do POST. Os owners de transporte/reuniões consomem a correção liberada pelo owner Agenda39; não disfarçam 403 no cliente.
 
 [Decisions52](https://github.com/gustavomhss/Orchestra-SF/blob/d088708276b48f896ad4e0ecd2a95cb73dc413b1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/decisions52.json) permanece não liberado no pin `fd3cad4adf076ba1c18e8e3d86e5ae7aa8c614c1`. Nominal06, run 43663347199: 3 PASS / 2 FAIL na fonte. Comparação aborta sem HTTP/body; outra jornada recebe 503 na fila Procurement antes de criar o pedido. Esses achados não provam causa de servidor nem fecham M31/MI07. O mapa histórico Microsoft55 deve continuar imutável; eventual mapa sucessor e fixture só entram juntos com a instalação52 liberada. Nenhuma declaração textual de RUNNING é usada para inferir processo ativo ou abandonado.
 
-[Runtime59](https://github.com/gustavomhss/Orchestra-SF/blob/d088708276b48f896ad4e0ecd2a95cb73dc413b1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/runtime59-current.json), em `c0d2094357a8566d3a1329f0ec2dab70378d1892`, publicou ACK, contrato e adendo de disposal; nesse pin não há produto, release nem qualificação. A capacidade readonly proposta não reativa a projeção C08 rejeitada, não permite cache entre observações e não altera mutable roots. N1 não depende de uma otimização ainda não liberada para começar a especificar DTOs.
+[Runtime59](https://github.com/gustavomhss/Orchestra-SF/blob/d088708276b48f896ad4e0ecd2a95cb73dc413b1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/runtime59-current.json), em `c0d2094357a8566d3a1329f0ec2dab70378d1892`, publicou ACK, contrato e adendo de disposal; nesse pin não há produto, release nem qualificação. A capacidade readonly proposta não reativa a projeção C08 rejeitada, não permite cache entre observações e não altera mutable roots. Os adapters não dependem de uma otimização ainda não liberada para começar a especificar DTOs.
 
 [ACK60](https://github.com/gustavomhss/Orchestra-SF/blob/d088708276b48f896ad4e0ecd2a95cb73dc413b1/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/ACK60.json) fixa a custódia de stack; 45 conserva checks e S0 conserva epic/AM/final. A adaptação registra esse snapshot para revisão e exige reconciliação de drift antes da implementação. Não aguarda fontes para concluir o planejamento, não presume release futura e não toca suas branches.
 
@@ -61,11 +61,11 @@ A reconciliação 60 mantém **dois problemas distintos**: `review-agenda-servic
 
 ### M0 — Base e contratos
 
-Fixar candidato material, versões de schema/client, mapa CAP/rotas, binding Microsoft/mount, matriz de papéis e catálogo de ações. Catalogar a correspondência field/action do DTO com cada produtor e publicar os diffs de apresentação. A documentação atual é a entrada, não permissão para mexer em canonical plan.
+O pacote execution já fixa mapa de rotas, bindings, componentes e ações. Antes do despacho, I00 reconcilia os fatos de candidato/lease/consumo e compara source pins, sem reabrir o design ou reescrever o canônico. Mudança material incompatível exige finding e correção central, limitada à footprint afetada.
 
 ### M1 — Casca nativa e piloto vertical
 
-Adicionar os capítulos/roteamento/contexto sem substituir domínios. Pilotar Procurement: fila autorizada, detalhe, review e ação canônica de uma etapa admitida, com dois atores e prova de troca de owner. Manter o fluxo M31 separado e aberto. Somente após o piloto, congelar as composições comuns.
+Adicionar os capítulos/roteamento/contexto sem substituir domínios. Pilotar Procurement: fila autorizada, detalhe, review e ação canônica de uma etapa admitida, com dois atores e prova de troca de owner. Manter o fluxo M31 separado e aberto. As assinaturas das composições comuns já estão congeladas no planejamento. Seus autores e consumidores podem avançar em paralelo; o piloto é a primeira prova integrada e gate de rollout, não barreira universal de autoria.
 
 ### M2 — Migração por família
 
@@ -75,7 +75,7 @@ Não mostrar novo menu completo como se todos os serviços estivessem prontos. D
 
 ### M3 — Compatibilidade de links e qualificação
 
-Resolver aliases de GET/HEAD legados após autorização. Preferir redirecionamento temporário 307/302 de leitura durante coexistência, preservando seleção sem cache permanente; não redirecionar POSTs de domínio para rotas de página. Downloads/assets/auth permanecem handlers próprios até paridade comprovada.
+Resolver aliases de GET/HEAD legados após autorização. Usar redirecionamento temporário 307 para GET/HEAD durante coexistência, preservando seleção sem cache permanente; não redirecionar POSTs de domínio para rotas de página. Downloads/assets/auth permanecem handlers próprios até paridade comprovada.
 
 Comparar fluxos novo/legado com a mesma persistência e versões, sem duas escritas para “sincronizar”. Prova é leitura antes/depois e receipt do produtor, não igualdade apenas de HTML.
 
@@ -131,4 +131,9 @@ URL antiga desconhecida recebe estado explícito com busca/retorno seguros; não
 
 Paridade de todas as capacidades e fluxos; aliases e downloads aprovados; todos os papéis/contextos e estados adversos; compatibilidade de dados/IDs/receipts; acessibilidade; validação visual nos temas; trabalho dos agentes preservado; gates completos do candidato e aceitação final conforme canônico.
 
-A retirada não é automática ao merge da futura UI. Esta PR só solicita revisão do plano.
+A retirada não é automática ao merge da futura UI. Esta PR permanece de planejamento; a autorização de implementar será uma etapa explícita. O comportamento de compatibilidade é o fixado acima, sem o executor escolher redirects, remover handlers ou migrar armazenamento por conta própria.
+
+
+## 7. Handoff desta revisão
+
+O fatiamento N0–N10 foi substituído pelas ordens do manifesto execution. Referências históricas a N1/N8 acima descrevem papéis da edição original; ownership efetivo e dependências vêm exclusivamente de execution/manifest.json e work-orders. Nenhuma atribuição documental é lease de produção. A custódia de stack/CI/produtores continua com os responsáveis vigentes; I00 futuro coordena a adaptação por autorização e consumer ACK, sem iniciar segunda integração.

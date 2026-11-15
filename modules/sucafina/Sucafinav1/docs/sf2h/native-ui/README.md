@@ -1,51 +1,54 @@
-# Redesenho nativo da Sucafina no Orchestra
+# Redesenho nativo Sucafina — plano revisto para execução paralela
 
-**Estado: proposta de UX e arquitetura para revisão. Somente planejamento.** Esta adaptação responde ao [briefing](PLANNING-BRIEF.md) e às duas orientações adicionais do usuário: a Sucafina é o centro do Orchestra SF; o trabalho inclui um redesenho completo da experiência, hierarquia e distribuição das telas.
+**Somente planejamento.** O produto não foi implementado, testado ou liberado por esta PR. Esta revisão responde ao pedido de cold review adversarial e fatiamento agressivo, preservando o [briefing](PLANNING-BRIEF.md), a direção Sucafina primeiro e o plano canônico imutável.
 
-## Decisão proposta
+## Decisão de produto
 
-Transformar o Orchestra SF em um espaço de trabalho de negócio, com **15 destinos Sucafina na sidebar nativa**, agrupados por frequência e finalidade. Hoje abre o trabalho que exige atenção; Dashboard explica a situação do negócio; Planner, Procurement, Portfólio e Decisões dão continuidade à ação. Pessoas, Operações, Análises, Documentos, Importações, Memória e Rotinas têm lugares explícitos. Chat e Inbox são apoio; ferramentas técnicas ficam recolhidas.
+As quinze áreas Sucafina serão chapters reais da sidebar Orchestra: Hoje, Dashboard, Planner, Procurement, Portfólio, Decisões, Meu trabalho, Reuniões, Pessoas, Operações, Análises, Documentos, Importações, Memória e Rotinas. Chat e Inbox são apoio. O shell, a identidade visual, os providers, as autorizações, os domínios e a persistência continuam sendo os existentes.
 
-Cada destino será um chapter SolidJS do Orchestra, no mesmo registro e ciclo de navegação dos módulos existentes. O desenho usa os componentes e materiais reais do repositório. A mudança de organização visual não muda o domínio que autoriza, calcula, persiste ou emite um recibo.
+A entrada respeita deep link e preferência pessoal autorizados; Hoje é o padrão quando não há preferência. A navegação conserva owner, seleção e draft conforme regras explícitas. Browser e desktop pertencem ao alvo; o transporte desktop tem uma entrega própria, sem fingir que `oc://renderer` funciona como a origem HTTP.
 
-A proposta inclui telas de trabalho, estados adversos, composição responsiva, interações de teclado, textos, APIs, isolamento e plano de integração. As pranchas são **design proposto com dados sintéticos**, não capturas de produto implementado nem evidência de funcionamento.
+## O que mudou após o cold review
 
-## Como revisar
+O plano anterior era uma proposta revisável, mas ainda deixava decisões de contrato, rotas, estados e fatiamento para os executores. A revisão identificou defeitos concretos de montagem HTTP, bootstrap, autenticação desktop, paridade de comandos e ownership. [COLD-REVIEW.md](COLD-REVIEW.md) registra evidência, correção e o limite de cada conclusão.
 
-| Ordem | Documento | Decisão que permite revisar |
-| --- | --- | --- |
-| 1 | [UX-DESIGN.md](UX-DESIGN.md) e [UX-BOARDS.pdf](UX-BOARDS.pdf) | Organização, hierarquia visual, distribuição de conteúdo e jornadas |
-| 2 | [SCREEN-INVENTORY.md](SCREEN-INVENTORY.md) | Destino das 28 capacidades originais e das funções previstas |
-| 3 | [API-AND-ISOLATION.md](API-AND-ISOLATION.md) | Contrato de dados, Microsoft, contexto e autoridade |
-| 4 | [NATIVE-ARCHITECTURE.md](NATIVE-ARCHITECTURE.md) | Reuso real do Orchestra e o que precisa ser composto |
-| 5 | [MIGRATION-AND-HANDOFFS.md](MIGRATION-AND-HANDOFFS.md) | Paridade, deep links, coexistência e limites dos handoffs |
-| 6 | [DELIVERY-PLAN.md](DELIVERY-PLAN.md) | Fatias, paths exclusivos, dependências, ordem e dimensionamento |
-| 7 | [ACCEPTANCE.md](ACCEPTANCE.md) | Aceite funcional, visual, acessível e segurança via GitHub Actions |
-| 8 | [TRACEABILITY.md](TRACEABILITY.md) e [criteria-trace.json](criteria-trace.json) | 15 WPs, 74 tasks e 1610 critérios sem alteração do canônico |
-| 9 | [RESEARCH.md](RESEARCH.md) e [SOURCE-BASELINE.json](SOURCE-BASELINE.json) | Fontes primárias, decisões derivadas e pins de inspeção |
+Esta edição acrescenta um pacote operacional com contratos fechados, rotas e ações por superfície, componentes compartilhados, ordens de trabalho com allowlists disjuntas e três dependências separadas: **para autorar, para integrar e para qualificar**. O piloto continua sendo gate de integração/rollout; não mantém autores independentes ociosos.
 
-## Pranchas para a revisão visual
+O número de ordens vem do [manifesto](execution/manifest.json); não é promessa de agentes simultâneos. O dispatcher existente admite todos os trabalhos prontos até a capacidade real, sem criar outro supervisor, outra fila ou outra política de CI.
 
-O [UX-BOARDS.pdf](UX-BOARDS.pdf) reúne 17 pranchas: uma para cada um dos 15 destinos de negócio, uma de continuidade em telas menores e uma de conflitos, resultado incerto e perda de acesso. Light e Dark demonstram a direção com tokens do Orchestra; os sete temas continuam obrigatórios na qualificação futura. As 17 páginas foram renderizadas e inspecionadas como documento, sem executar o produto.
+## Como executar uma ordem quando houver autorização
 
-## Base e autoridade
+1. Ler [EXECUTION-PROTOCOL.md](execution/EXECUTION-PROTOCOL.md) e a ficha exata em [work-orders](execution/work-orders).
+2. Consumir somente os contratos, superfícies, campos e tasks pinados pela ficha. [CONTRACTS.md](execution/CONTRACTS.md), [COMPONENT-CONTRACTS.md](execution/COMPONENT-CONTRACTS.md), [component-signatures.ts](execution/component-signatures.ts) e [SURFACE-SPECS.md](execution/SURFACE-SPECS.md) são fontes únicas; não reinterpretar o conjunto de documentos como permissão de redesenho.
+3. O integrador preenche fatos reais de lançamento: candidato, ator, branch, lease, capacidade e evidência de dependência. Esses campos não são decisões de produto em aberto.
+4. Implementar apenas a allowlist; entregar fragmentos de registro ao integrador, sem editar arquivos compartilhados. Se um contrato estiver contraditório ou a fonte tiver mudado, registrar `BLOCKED_CONTRACT` com contraexemplo e continuar o restante independente.
+5. Entregar o artefato e liberar capacidade conforme o protocolo. Integração e qualificação são estados distintos; fixture ou aparência não produzem aceite de produto.
 
-- Brief/planning branch: `sf-sidebar-plan@87d6e496a6a1e08e64ffb6d3c06890647a401459`, baseada em C26.
-- Base de inspeção abrangente: **C27 `b10c424a6b318879fc30f11d03ba1cfeffda7d1a`**, em `sf2-stack` / [PR65](https://github.com/gustavomhss/Orchestra-SF/pull/65).
-- Planejamento canônico imutável: [`dbf9547211d9b0fade619790de7c19c0869b7c7d`](https://github.com/gustavomhss/Orchestra-SF/tree/dbf9547211d9b0fade619790de7c19c0869b7c7d/modules/sucafina/Sucafinav1/docs/sf2h-plan).
-- T0 preservado: `2026-11-13T04:01:10Z`. **GLOBAL_RELEASE continua false.**
-- Handoff terminal a57: `d6d9816bb09f7595330862616305e0791e23e61e`, com lease encerrada e somente 14 receipts sobre C27. Handoff a58: `00813b2ebacf5b0cd1c69d871c7a757ac323ebb4`, P03 FAIL/HELD. A sucessão permanece explícita; esta sessão não assume autoridade de implementação.
-- Reconciliação final: **C28 `d088708276b48f896ad4e0ecd2a95cb73dc413b1`**, publicado por a60 durante a sessão, incorpora Reports48 completo sob **QUALIFICATION HOLD**. A60 já possui ACK de sucessão; esta proposta não assume essa custódia.
-- A branch de planejamento recebe apenas documentos. Ela não absorve candidatos por merge, não altera `sf2-stack`, não altera o briefing nem o plano canônico.
+## Ordem de leitura para revisão humana
 
-## Recomendações para autorização posterior
+| Objetivo | Fonte |
+| --- | --- |
+| Findings e fechamento | [COLD-REVIEW](COLD-REVIEW.md) |
+| Organização e composição visual | [UX-DESIGN](UX-DESIGN.md), [SURFACE-SPECS](execution/SURFACE-SPECS.md), [pranchas conceituais](UX-BOARDS.pdf) |
+| Fatiamento, dependências e ausência de colisões | [DELIVERY-PLAN](DELIVERY-PLAN.md), [manifesto](execution/manifest.json), [ordens](execution/work-orders) |
+| Montagem, identidade e desktop | [API-AND-ISOLATION](API-AND-ISOLATION.md), [CONTRACTS](execution/CONTRACTS.md), [catálogo](execution/contract-catalog.json) |
+| Tipos públicos e callbacks fechados | [Host/transporte](execution/host-signatures.ts), [componentes](execution/component-signatures.ts), [rotas](execution/route-signatures.ts) |
+| Paridade de cada capacidade/ação | [SCREEN-INVENTORY](SCREEN-INVENTORY.md), [surface-manifest](execution/surface-manifest.json) |
+| Migração e coexistência | [MIGRATION-AND-HANDOFFS](MIGRATION-AND-HANDOFFS.md) |
+| Verificações e critérios herdados | [ACCEPTANCE](ACCEPTANCE.md), [TRACEABILITY](TRACEABILITY.md), [criteria-trace](criteria-trace.json) |
 
-Aprovar a arquitetura de informação e a direção visual; autorizar primeiro **N0–N2 e um piloto vertical de Procurement**, com navegação real, contexto Microsoft, leitura autorizada, detalhe e revisão de uma ação canônica. A validação do piloto deverá ocorrer no GitHub Actions e produzir evidência do mesmo candidato.
+## Fonte de verdade e prevenção de divergência
 
-Depois do aceite desse contrato e do piloto, liberar as famílias de tela em paralelo conforme o DAG. O piloto calibra custo e experiência; não reduz o produto a um MVP, não fecha o epic e não dispensa nenhuma obrigação canônica.
+O briefing e o canônico prevalecem. Para esta adaptação, contratos/rotas/ownership machine-readable e as especificações operacionais da pasta execution definem o trabalho. Os documentos superiores explicam essas decisões, não criam opções adicionais. Uma divergência entre fontes é finding bloqueante da parte afetada, nunca licença para o executor escolher a interpretação mais fácil.
 
-A autorização de execução deverá manter os gates existentes: M31/MI07, P03, Reports e admissão nativa/Relay não são resolvidos por uma aprovação visual. Ausência de serviço deve ter estado de UI honesto; não recebe um substituto permissivo.
+As 17 pranchas originais são propostas com dados sintéticos. Sua identificação foi mantida para revisão; o adendo nelas aponta as correções normativas de entrada, BI e responsividade. Elas não são screenshots de produto nem a lista completa de controles. Cada campo, comando e estado executável vem da matriz operacional e de sua fonte pinada.
 
-## O que esta entrega demonstra
+## Bases e limites
 
-Demonstra uma proposta concreta, um inventário rastreável e uma ordem de execução. **Não demonstra implementação, readiness nativa, aprovação de testes ou fechamento de critérios.** Nenhum teste, typecheck, guard, servidor, deploy ou operação Azure foi executado nesta sessão. Renderização das pranchas e conferência documental não são validação do produto.
+- Entrega inicialmente examinada: `2f143330a0a44d34eb764ebfb851804c504edb6d` na `sf-sidebar-plan`, PR76.
+- Fontes originais: C27 `b10c424a6b318879fc30f11d03ba1cfeffda7d1a`, com reconciliação C28 `d088708276b48f896ad4e0ecd2a95cb73dc413b1`. [SOURCE-BASELINE](SOURCE-BASELINE.json) é o registro histórico dessa inspeção.
+- Pin de stack observado nesta revisão: `faa30fddb7e7b61696b66fd069f51cf18c51125f`; não significa qualificação nem aceitação. Cada fonte nova mantém sua identidade nos catálogos e no relatório.
+- Canônico preservado: `dbf9547211d9b0fade619790de7c19c0869b7c7d`, 15 WPs, 74 tasks e 1.610 critérios. Nenhum critério recebeu PASS por revisão documental.
+- T0 e GLOBAL_RELEASE continuam os do canônico; esta frente não assume a custódia da stack, dos produtores ou do CI. A implementação continua dependente de autorização e leases explícitos.
+
+Os bloqueios reais dos produtores e as provas finais continuam obrigatórios. A velocidade vem de trabalho disjunto, contratos estáveis e reaproveitamento válido de evidência — não de eliminar gates ou repetir testes sem mudança causal.

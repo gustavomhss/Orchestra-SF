@@ -14,7 +14,7 @@ A hierarquia de cada tela será:
 4. **Onde trabalho:** lista, grid, comparação ou documento.
 5. **Como verifico:** detalhes, fonte, histórico, perguntas e recibos em contexto.
 
-A home da instalação SF será **Hoje**, resolvida após carregar o contexto autorizado. O Home técnico do Orchestra continua acessível no grupo complementar. Abrir um deep link nunca redireciona silenciosamente para Hoje.
+A entrada é resolvida nesta ordem fechada: **deep link explícito autorizado → preferência pessoal válida do mesmo owner → Hoje autorizado → primeiro destino autorizado na ordem da sidebar**. Deep link inválido, removido ou negado mostra o estado correspondente e uma ação de retorno; não faz fallback silencioso. Uma preferência removida é informada e pode ser substituída pelo usuário através de “Usar como entrada”; não autoriza escolher outra versão de dados. Hoje é o padrão para quem ainda não escolheu uma entrada. O Home técnico do Orchestra continua acessível no grupo complementar. O contrato detalhado está em [SURFACE-SPECS](execution/SURFACE-SPECS.md).
 
 Hoje e Dashboard têm funções diferentes: Hoje organiza responsabilidade e retomada; Dashboard explica situação, variações e riscos do negócio. Meu trabalho é a fila completa pesquisável, enquanto Hoje é uma seleção curta dessa mesma projeção. Não haverá estados de tarefa duplicados.
 
@@ -66,7 +66,7 @@ Formato de rota estável proposto:
 
 `/orchestra/<chapter>/<rest>?server=<encoded ServerConnection.Key>&project=<opaque projectId>&installation=<installationId>`
 
-Os três parâmetros resolvem uma instalação conhecida no servidor selecionado. Não são credenciais ou grants. Links internos sempre os conservam; o servidor confirma o vínculo project/installation e retorna o directory autorizado. Não aceitar path arbitrário de filesystem na URL. Links sem contexto abrem o seletor do shell; escolher explicitamente só então resolve dados. Contexto incompatível mostra uma decisão legível; não consulta o servidor ativo por conveniência.
+Os três parâmetros resolvem uma instalação conhecida no servidor selecionado. Não são credenciais ou grants. Links internos sempre os conservam; o servidor confirma o vínculo project/installation; o discovery SF retorna somente metadata opaca permitida, sem directory ou credenciais. Não aceitar path arbitrário de filesystem na URL. Links sem contexto usam o contexto explicitamente selecionado no shell e o discovery vigente; zero instalações mostra indisponibilidade, uma permite seleção determinística, várias exigem o seletor. Nenhum servidor/projeto é substituído silenciosamente. Contexto incompatível mostra uma decisão legível; não consulta o servidor ativo por conveniência.
 
 Após resolução, conservar em URL somente filtros não sensíveis: ano, período, versão, status, sort, cursor/seleção opaca e tab. Texto livre de busca potencialmente sensível permanece em memória por padrão; URL compartilhável é uma ação explícita com revisão. Notas, salários, conteúdo de documentos, prompts e rascunhos nunca vão para query.
 
@@ -200,14 +200,15 @@ Exemplos de texto são decisões de produto propostas; entram em i18n, não lite
 
 ## 8. Responsividade e acessibilidade
 
-- **1440px e acima:** lista/detalhe simultâneos quando úteis; grid amplo; contexto lateral somente se há espaço.
-- **768–1023px:** sidebar pelo comportamento adaptativo do shell; lista ou detalhe conforme largura útil; toolbar quebra em linhas; cabeçalhos e totais continuam legíveis.
+- **1440px e acima:** lista/detalhe simultâneos quando os mínimos da superfície cabem; grid amplo; contexto lateral somente se há espaço.
+- **1024–1439px:** comportamento de notebook explicitamente coberto. Medir a largura útil depois da sidebar e dos gutters; lista+detalhe só coexistem quando cabem os mínimos de 320px e 480px, mais o separador. Caso contrário, mostrar lista ou detalhe com retorno. O painel contextual ocupa a área de detalhe ou uma página, nunca uma terceira coluna comprimida. Toolbar quebra em linhas e tabs excedentes usam “Mais vistas” com o ativo visível.
+- **768–1023px:** sidebar pelo comportamento adaptativo do shell; lista ou detalhe conforme largura útil e os mesmos mínimos; toolbar quebra em linhas; cabeçalhos e totais continuam legíveis.
 - **320–767px:** uma superfície de tarefa por vez; navegação global em drawer do mesmo shell, retorno visível; tabelas simples podem ter linhas resumidas sem perder campos no detalhe. Grid mensal oferece editor por linha/mês e rolagem localizada; não comprimir 12 meses em números ilegíveis.
-- **Zoom 200%:** reflow preserva tarefa, foco e ação; comparação pode virar seleção de duas alternativas e seções sequenciais.
+- **Zoom e reflow:** 200% verifica ampliação de texto; reflow é verificado também no equivalente a 320 CSS px (por exemplo 1280px a 400%). Comparação vira seleção explícita de duas alternativas e seções sequenciais; rolagem bidimensional fica restrita ao grid/tabela cuja estrutura a exige, sem aplicar essa exceção a cabeçalhos, ações ou textos de célula.
 - Tabelas de leitura usam table/headers/caption; grids interativos implementam APG. Tab entra/sai do grid; setas navegam; Enter/F2 editam; Esc cancela a edição da célula; salvar global nunca ocorre por navegação.
 - Labels explícitos em formulário, tooltip acessível em ícones; alvos mínimos e espaçamento WCAG 2.2; meta 44px para toque.
 - Foco retorna à linha acionadora ao fechar detalhe/modal, com fallback ao cabeçalho se removida; erro de envio foca resumo; seleção não muda foco arbitrariamente.
-- Headers/rodapés sticky não encobrem foco. Texto ≥4, 5:1, ícones/controles ≥3:1 conforme referência real, verificados nos temas.
+- Headers/rodapés sticky não encobrem foco. Texto normal ≥4,5:1, ícones/controles ≥3:1 conforme referência real, verificados nos temas.
 - Status anunciado com aria-live com parcimônia; não ler toda a lista a cada polling. Não usar cor como único sinal; gráficos têm tabela e descrição.
 - Paginação e virtualização, se necessária por volume medido, preservam anúncio de total autorizado e posição lógica. Não virtualizar prematuramente todas as listas.
 
@@ -223,6 +224,7 @@ Exemplos de texto são decisões de produto propostas; entram em i18n, não lite
 
 ## 10. Limites do desenho e decisão de revisão
 
-O plano define composição completa, mas não declara aprovação estética final nem comprovação de usabilidade. A revisão deve confirmar os quinze destinos, ordem/prioridade, distinção Hoje/Dashboard/Meu trabalho, redistribuição de Pessoas/Operações/Contratos e a direção das pranchas.
+Os quinze destinos, ordem, precedência de entrada, padrões de composição, rotas e eventos de edição são decisões de planejamento especificadas em [SURFACE-SPECS](execution/SURFACE-SPECS.md) e [surface-manifest](execution/surface-manifest.json). O executor implementa essas decisões; não reorganiza a arquitetura de informação. Uma inconsistência concreta volta como finding com fonte e impacto. A direção visual continua sujeita ao aceite visual do produto real, sem transformar a prancha em prova de usabilidade.
 
 A primeira implementação autorizada deve comprovar que esses padrões funcionam com dados e autorização reais. Refinamentos de espaçamento, colunas e microcopy são esperados após esse piloto; alterações de domínio, escopo ou gates precisam seguir o planejamento existente.
+

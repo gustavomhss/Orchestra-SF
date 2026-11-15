@@ -28,7 +28,7 @@ Consulta: 15 de novembro de 2026 UTC. Fontes primárias; leitura de padrões, n�
 
 ## Pesquisa aplicada ao conteúdo e linguagem
 
-Rótulos propostos em português nas pranchas são parte da revisão de UX. Na implementação, inglês e pt-BR entram pelas APIs tipadas de i18n e os demais locales seguem o fallback atual. O app exige verificação de terminologia com corpora oficiais e revisão de todas as strings iguais ao inglês; esse trabalho está em N2/N10, não foi declarado concluído.
+Rótulos propostos em português nas pranchas são parte da revisão de UX. Na implementação, inglês e pt-BR entram pelas APIs tipadas de i18n e os demais locales seguem o fallback atual. O app exige verificação de terminologia com corpora oficiais e revisão de todas as strings iguais ao inglês; a copy nova e o fallback existente estão fechados em surface-manifest/SURFACE-SPECS; a verificação da implementação pertence a F03, Uxx, I00 e R01, sem inventar traduções durante execução.
 
 “Planner”, “Procurement” e “Dashboard” ficam preservados porque foram explicitamente pedidos e já nomeiam capacidades do produto. Descrições explicam planejamento, compras e visão executiva. “Portfólio” descreve projetos/cenários; “Decisões” descreve casos e escolhas; “Reuniões” abriga pauta, revisões preservadas e relatórios.
 
@@ -37,3 +37,14 @@ Rótulos propostos em português nas pranchas são parte da revisão de UX. Na i
 Realizar revisão de tarefas por papéis reais depois do piloto, usando corpus autorizado/sintético: encontrar a próxima aprovação, explicar seu valor e versão; editar um mês sem alterar actual; localizar uma diferença de cenário; identificar um custo ausente; voltar sem perder filtro; preservar e exportar uma reunião. Registrar dificuldade, caminho, erros e interpretação. Conservar o critério canônico de compreensão do resumo de aprovação em 30 segundos; não inventar métricas já alcançadas.
 
 As pranchas permitem julgar composição e direção. A aceitação depende também de teclado, leitores de tela, dados extensos, responsividade, estados adversos e comportamento real. Não aceitar somente semelhança visual.
+
+
+## Fontes primárias adicionais usadas no cold review
+
+- [Electron ClientRequest](https://www.electronjs.org/docs/latest/api/client-request): sessão e origem explícitas no transporte main; sustenta a escolha `net.request` descrita em CONTRACTS.
+- [Electron Session](https://www.electronjs.org/docs/latest/api/session): partição em memória por binding, sem exportar cookie para renderer.
+- [Electron Security](https://www.electronjs.org/docs/latest/tutorial/security): isolamento da janela de autenticação e validação de sender/frame IPC.
+- [WCAG 2.2 Reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html): reflow a 320 CSS px é prova distinta de aumentar texto a 200%; o conteúdo em torno de tabelas também deve se adaptar.
+- [APG Grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) e [Dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/): sequência de foco, navegação do grid e retorno de foco; contratos concretos em COMPONENT-CONTRACTS.
+
+A documentação externa fundamenta a decisão de arquitetura/interação; não substitui a prova na versão Electron instalada nem nas duas plataformas reais. Não há nova biblioteca de grid/chart neste plano.

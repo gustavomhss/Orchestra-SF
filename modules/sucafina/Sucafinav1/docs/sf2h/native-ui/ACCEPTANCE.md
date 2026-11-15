@@ -1,6 +1,6 @@
 # Aceite e validação funcional/visual
 
-**PLANNED / NOT_RUN.** Nenhum teste, servidor, build, geração, typecheck, guard, CI ou AM foi executado/disparado nesta sessão. Os grupos NUI abaixo organizam evidência da adaptação; não substituem os 1610 critérios canônicos nem criam um atalho para GLOBAL_RELEASE.
+**PLANNED / NOT_RUN.** Nenhum teste de produto, servidor, build, geração de client, typecheck, guard de produto, CI ou AM foi executado/disparado neste review. A validação local limitou-se à integridade dos documentos e à renderização do PDF. Os grupos NUI abaixo organizam evidência da adaptação; não substituem os 1610 critérios canônicos nem criam um atalho para GLOBAL_RELEASE.
 
 ## 1. Grupos de aceite
 
@@ -19,7 +19,7 @@
 | **NUI11 IA/rotinas/residentes** | Admissão real, modelos/sessões/recipes pinados, cancel/needs-input/stale, Schedule e retorno | J07/J13; AM01–AM06, 5 perfis/18skills/8packs/39ops e contribuições consumidas, sem mock como prova |
 | **NUI12 BI/memória** | BI01–11 com dados/tabela equivalentes; materialidade/dedup/previsto×observado sem falsa causalidade | J12, oráculos de granularidade/ausência/cobertura, Atlas autorizado e revalidação |
 | **NUI13 Migração/deep links** | Aliases de todas as entradas, filtros/scroll/selection, download/auth/asset intactos; rollback só de apresentação | Matriz legado→native, refresh/return/cross-owner; mesmos IDs/receipts antes/depois |
-| **NUI14 Acessibilidade/i18n** | Teclado, foco, leitura de tabela/grid, zoom de 200%, 320/768/1440px, contraste, labels e traduções tipadas | Inspeção automática e manual apropriada; screenshots, percurso de foco, audit de texto/locale |
+| **NUI14 Acessibilidade/i18n** | Teclado, foco, leitura de tabela/grid, texto a 200%, reflow a 320 CSS px e 320/768/1024/1280/1440px, contraste, labels e traduções tipadas | Inspeção automática e manual apropriada; screenshots, percurso de foco, audit de texto/locale |
 | **NUI15 Falha/retomada** | Loading/empty/partial/denied/unavailable/stale distintos; draft autorizado conservado; nenhum replay automático | Fault injection controlada, perda de resposta, troca de owner e revogação; estado+efeito persistido |
 | **NUI16 Candidato e fechamento** | Evidências do mesmo C; suites/guards/geração/AMs/revisões; D somente envelope válido | SHAs/trees/requests/runs/artifacts e três FINAL independentes; C/G7 e D/G8, todos critérios obrigatórios |
 
@@ -34,7 +34,7 @@
 | J05 | Pauta com competências distintas/25 projetos/notas longas → preservar → mudar fonte → apresentar → comparar/export | Revisão estável, todos registros uma vez, paginação legível e acesso atual nos downloads |
 | J06 | Vincular contrato/pedido/linha distintos → pergunta → ação Hot Topic → perder resposta → retomar | Uma ação canônica; nomes homônimos não viram identidade; nenhum lançamento financeiro implícito |
 | J07 | Executar rotinas com admissão real → cancel/failure/changed source → recorrência/pausa | Run/receita/entrada rastreáveis, output revalidado, sem aprovação/envio externo automático |
-| J08 | Abrir28 capacidades/papéis; busca/filtros/back; 320/768/1440 e zoom de 200% | Paridade, contexto, componentes reais, sem restrito em DOM/rede/cache |
+| J08 | Abrir28 capacidades/papéis; busca/filtros/back; 320/768/1024/1280/1440, texto a 200% e reflow equivalente a 320 CSS px | Paridade, contexto, componentes reais, sem restrito em DOM/rede/cache |
 | J09 | Contrato→intenção→contradição→alternativa→resposta→escolha→propostas/recibos→nova cotação | Escolha preservada; reavaliação material e efeito por domínio corretos |
 | J10 | Universo/compromissos→combinações/limites→escolha→handoff | Cobertura e condição não mascaradas; sem execução financeira duplicada; P03 completo |
 | J11 | PDF digital/DOCX/texto autorizado→trecho/candidato→confirmar→cenário e sourcing | Mesma evidenceRef; conteúdo malicioso não vira instrução; fonte stale/revogada bloqueada |
@@ -56,7 +56,7 @@ Fontes lidas em C27:
 
 O fluxo vigente recebe snapshot **S** descendente do candidato **C** com `.ci-run.json`; a branch `ci-run-linux-<id>` dispara a execução. O workflow valida seleção e gera `playwright-selection.json`, `playwright-runtime.json` e relatório; faz upload de `test-ci-evidence`, `e2e/test-results` e `e2e/playwright-report` com retenção de 7 dias. Esse upload já permite anexar capturas nativas sem inventar um workflow novo.
 
-A configuração de produção compila/serve o app no runner e tem fixture especial WP04. **Ela não monta automaticamente a futura sub-API nativa.** N0/N10 precisam adicionar uma fixture instalada real ao harness autorizado, com mount/origin/contexto e persistência correta. Só criar um spec novo não estabelece essa disponibilidade. Essa alteração é implementação futura e passa pelos donos/configuração existentes.
+A configuração de produção compila/serve o app no runner e tem fixture especial WP04. **Ela não monta automaticamente as projeções/transportes nativos.** F04 é a entrega de harness instalado, iniciada com a fundação; I00 aplica os hooks exatos de configuração. O piloto depende de F04 integrado, com mount/origin/contexto e persistência correta. D01 acrescenta o caminho desktop: um run web não o qualifica. Só criar um spec novo não estabelece essa disponibilidade.
 
 ### Seleções mínimas herdadas — todas retidas
 
@@ -75,7 +75,7 @@ Essas oito são o mínimo da footprint canônica, não a suite global inteira do
 
 ### Seleções incrementais nativas propostas
 
-Após os arquivos existirem, publicar requests exatos, um por seleção pertinente:
+As fichas em execution/work-orders fixam arquivos e seleções; após materialização, o dispatcher valida o request exato na árvore do candidato, sem escolher um plano de teste novo:
 
 - `e2e/sucafina/native/navigation.spec.ts`:15 destinations, owner, back/reload e aliases.
 - `e2e/sucafina/native/isolation.spec.ts`: principal/papel/servidor/projeto/instalação, atraso de resposta, logout/revogação/download.
@@ -95,9 +95,9 @@ Usar corpus sintético determinístico **na aplicação real** para capturas, co
 | 15 chapters | Estado principal de cada área em Light e Dark, 1440px, mesma fonte e versão de produto |
 | Planner/Procurement/Decisões | Normal/denso, conteúdo extenso, valores ausentes/parciais, conflito e review; desktop e tablet |
 | Reuniões/Documentos/Importações | 25 registros/notas longas, documento sem texto, preview stale, scanner indisponível e export paginado |
-| Mobile/zoom | Hoje, lista/detalhe, aprovação, editor mensal e comparação em 320px e768px; zoom de 200% |
+| Mobile/zoom | Hoje, lista/detalhe, aprovação, editor mensal e comparação em 320/768/1024/1280/1440px conforme a família; texto a 200% e reflow a 320 CSS px (1280 a 400%) |
 | Temas adicionais | Componentes representativos com texto/estado/foco em Graphite/Gruvbox/GitHub/Nord/AMOLED |
-| Locales | en e pt-BR completos, frases longas e locale de direção/formato representativo da cobertura suportada; placeholders sem quebra |
+| Locales | Copy nova completa em en e pt-BR; copy herdada segue o fallback literal fechado em COPY-01, frases longas e locale de direção/formato representativo da cobertura suportada; placeholders sem quebra |
 | Falha/segurança | Empty real vs filtro vazio, unavailable vs denied, loading, pending receipt, session expired, contexto trocado |
 | Export | PPTX/DOCX renderizados pelo pipeline existente, comparação de conteúdo/ordem e imagens, não apenas XML |
 
@@ -117,7 +117,7 @@ Reads/estado podem usar auto-wait; uma ação que muda dados é executada uma ve
 
 Cada seleção precisa registrar C/tree, S/parent, request normalizado/hash, workflow/config/runner/runtime, arquivos e casos coletados, pass/fail/skip/filtered, run/job/attempt, artefato/digest e limites. Copiar a evidência autorizada para os paths de receipts antes de expirar a retenção; não vazar cookies/tokens/dados reais em screenshots, traces ou logs.
 
-As [filas finais57](https://github.com/gustavomhss/Orchestra-SF/blob/d6d9816bb09f7595330862616305e0791e23e61e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/gate-queue-final.json) e seus 15 comandos do responsável 45 continuam vigentes. Geração de client e de paletas, typechecks do grafo/app/E2E, Atlas generated, spawn-imports, guards e preflights são gates separados; confirmar executor autorizado em vez de chamar um suite full para imitar compiler-only.
+As [filas históricas finais57](https://github.com/gustavomhss/Orchestra-SF/blob/d6d9816bb09f7595330862616305e0791e23e61e/modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/closure-intake-57/gate-queue-final.json) e seus 15 comandos do responsável 45 registram a baseline anterior; os requisitos de gate são retidos e I00 confirma custódia/requests vigentes antes da execução, sem assumir autoridade por esse registro. Geração de client e de paletas, typechecks do grafo/app/E2E, Atlas generated, spawn-imports, guards e preflights são gates separados; confirmar executor autorizado em vez de chamar um suite full para imitar compiler-only.
 
 Três revisões FINAL independentes examinam o mesmo candidato corrigido: arquitetura/autorização, paridade/números e UX/acessibilidade. Nenhuma revisão desta proposta vale como FINAL de implementação.
 
@@ -125,6 +125,18 @@ C/G7 exige o conjunto cumulativo e nenhum obrigatório aberto. D/G8 só arquiva 
 
 ## 7. Aceite desta PR de planejamento
 
-A revisão desta PR deve conseguir localizar cada capacidade, compreender uma tela em cada família, identificar dono e path de cada pacote, verificar os pins/limites dos handoffs, ler o seam proposto e rastrear os 1610 IDs.
+A revisão desta PR exige resolver as 70 superfícies e suas ações/rotas até owner e ficha, validar todos os IDs/dependências/allowlists e conferir os contratos compartilhados. O relatório documental e os pareceres cruzados identificam a baseline corrigida, limites e findings. A integridade dos 1.610 pointers continua exigida; contagem não é prova funcional.
 
 Esta PR pode ser aprovada como plano com testes **NOT_RUN** porque não implementa produto. Sua aprovação não é aprovação funcional/visual da futura aplicação.
+
+
+## 8. Complementos do cold review
+
+- Primeiro acesso nativo sem visita ao legado, mapa de papel ausente versus vazio intencional e descriptor filtrado por projeto.
+- Cookie e login reais no desktop, IPC limitado a operationId/binding e negativas de URL/headers/redirect/sender; local-operator segue o produtor de enrollment, sem grant por IDs.
+- Idempotency-Key em todo POST UI, inclusive leitura; perda de resposta conserva a identidade sem assumir idempotência de operação que não a oferece.
+- Procurement: excluir rascunho e cancelar pedido são comportamentos diferentes, com verificação própria; People import/export preserva a página Talent Review e o gate originais.
+- Preferência de entrada, deep link negado, relação sem caso e draft após troca de chapter no mesmo owner.
+- Notebook 1024/1280/1366 e limites de split; largura útil, tabelas grandes e textos longos. Reflow em 320 CSS px é separado da ampliação de texto a 200%.
+
+As referências primárias de [reflow](https://www.w3.org/WAI/WCAG22/Understanding/reflow.html), [grid](https://www.w3.org/WAI/ARIA/apg/patterns/grid/) e [dialog](https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/) orientam os casos. A matriz é por risco/componente/ligação, sem executar todas as combinações cegamente. Todas as seleções canônicas finais permanecem obrigatórias.

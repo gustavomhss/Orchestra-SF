@@ -1,147 +1,65 @@
-# API tipada, autenticação e isolamento
+# API, identidade e isolamento — decisões após o cold review
 
-**Proposta de contrato para congelamento antes da implementação dependente.** Nenhum endpoint, schema ou client é criado nesta entrega. Contratos C01–C17 e produtores existentes continuam canônicos.
+**Especificação; implementação não executada.** O contrato normativo completo está em [execution/CONTRACTS.md](execution/CONTRACTS.md) e no [catálogo de operações](execution/contract-catalog.json). Este documento explica as decisões e substitui a matriz aproximada de endpoints da primeira revisão. O executor não projeta uma segunda API de negócio.
 
-## 1. Decisão de transporte
+## 1. Transporte e reutilização
 
-A UI será nativa no Orchestra; os dados continuam pertencendo à instalação Sucafina. Criar uma **sub-API tipada sob o mount existente**:
+Reutilizar os endpoints JSON, handlers, payloads, outcomes e mecanismos de admissão existentes por família. Wrappers browser-safe ficam em Schema/Client e adapters finos nos subtrees exclusivos A. Campos e ações são referenciados pelo source pin e símbolo/branch de origem; a UI não parseia HTML, não recebe Snapshot privilegiado e não reimplementa cálculo financeiro.
 
-`<origin aprovado><mount>/api/native/...`
+Uma projeção nativa nova só existe para a capacidade que hoje está exposta exclusivamente pelo renderizador. O catálogo define os métodos e shapes fechados. Ela usa o mesmo domínio/ACL/versões e não cria outro engine, store ou semântica de comando.
 
-Exemplo somente ilustrativo: `https://host.example/sucafina/api/native/context`. O mount vem da configuração publicada da instalação, nunca de input arbitrário da URL. O client usa a conexão selecionada pelo shell e um binding de instalação validado.
+## 2. Bootstrap sem dependência circular
 
-### Motivo verificável
+Um único recurso global de descoberta, `GET /api/sucafina/installations`, publica metadados mínimos de instalações registradas por factory confiável, filtrados pelo contexto servidor/projeto autorizado. Descritores usam IDs opacos, origin, mount e revisão de contrato; não retornam directory, principal, papéis, grants, dados SF nem segredos.
 
-Em [runtime/local-identity.ts](https://github.com/gustavomhss/Orchestra-SF/blob/b10c424a6b318879fc30f11d03ba1cfeffda7d1a/modules/sucafina/Sucafinav1/runtime/local-identity.ts), o cookie Microsoft usa **Path=options.mount**, HttpOnly, SameSite=Lax e Secure em HTTPS. `safeReturn` aceita apenas as três superfícies dentro do mount. Uma chamada ingênua à API global `/api/...` não recebe esse cookie; um retorno direto para `/orchestra/...` também não é aceito hoje.
+O descriptor não autentica ninguém na Sucafina. Depois de selecionar binding válido, o client consulta o contexto SF dentro do mount, com a sessão SF real. Nenhuma inferência de papel vem do login global Orchestra, email, URL, nome ou origem de tenant B2B.
 
-**Decisão:** preservar o path, callback, sessão e fences existentes. A nova sub-API é montada dentro da mesma instalação. Não alargar cookie para `/`, não copiar token para localStorage, não usar auth global Orchestra como substituto da identidade SF e não enfraquecer Origin/CORS.
+Esse recurso usa a geração pública já existente **uma vez na integração**. Não há novo alvo dedicado de codegen, cópia manual de arquivos gerados nem registro dos dados SF na API global. Os paths e a injeção sem dependência Server→CLI estão fechados em CONTRACTS e nas fichas F01/I00.
 
-### Topologia admitida
+## 3. Montagem correta da projeção
 
-O piloto requer shell e instalação SF publicados no mesmo origin aprovado pela composição Microsoft atual. Isso é uma condição de implantação a verificar, não uma alteração Azure autorizada. Conexões remotas continuam sendo selecionáveis no Orchestra, mas um binding SF com origin incompatível deve mostrar “Instalação indisponível neste contexto” e não tentar proxy de credenciais.
+`runtime/application.ts` rejeita path que não seja uma das três superfícies legadas antes de chamar sua product chain. Portanto, simplesmente acrescentar `/api/native` à product chain produziria 404.
 
-Suporte adicional a uma topologia cross-origin precisa de design de autenticação próprio e prova do produtor; não será obtido com `Access-Control-Allow-Origin: *`, relaxamento de SameSite ou compartilhamento de cookie. Isolamento entre servidores deve ser comprovado mesmo para conexões cujo SF não está disponível.
+A montagem nativa acontece na fronteira local de entrada **depois de `identity.prepare(request)` e antes de `business()`**, mantendo a proteção externa de transporte/privacidade. O objeto Request recebido pelo host é preservado; autoridade privada WeakMap não é serializada nem reconstruída a partir de IDs do renderer.
 
-## 2. Contratos públicos e client
+O primeiro acesso nativo inicializa somente mapas ausentes pelo bootstrap legítimo já existente: associação admin real da superfície, mesma política e proteção de mapa vazio intencional. Não exige visitar o HTML legado antes e não cria papel para resolver um estado vazio. A consulta de contexto e o catálogo de destinos refletem os mapas do produtor.
 
-| Camada proposta | Path de implementação futura | Responsabilidade |
-| --- | --- | --- |
-| Schema browser-safe | `packages/schema/src/sucafina.ts` e `packages/schema/src/sucafina/*` | DTOs mínimos serializáveis, unions fechadas, IDs/referências existentes; sem serviços |
-| Protocol fragment | `packages/protocol/src/groups/sucafina-native.ts` | Métodos, payloads e erros da sub-API |
-| Sub-API | `packages/protocol/src/sucafina-api.ts` | Compor somente esse grupo; prefixo relativo `/api/native` |
-| Client gerado | entrada dedicada `packages/client/src/sucafina-contract.ts`, geração dedicada e export `./sucafina` | Promise/Effect clients gerados do mesmo HttpApi, baseURL = origin+mount |
-| Adapter de apresentação | `modules/sucafina/Sucafinav1/product/native-ui/*` | Projeções e despacho para serviços existentes, sem novo engine |
-| Montagem HTTP | `apps/cli/src/sucafina-product/native-ui/*` | Receber Request original, auth, limites, host injection e sub-API no mount |
-| Consumption browser | `packages/app-shell/src/orchestra/chapters/sucafina/shared/*` | Client provider, recursos, cancelamento e cache por owner |
+## 4. Browser e desktop têm transportes distintos
 
-Essa é uma **extensão proposta da geração**, não uma capacidade de sub-client já verificada. O build atual de `packages/client/script/build.ts` gera o ClientApi global; N0/N1 acrescentam o alvo dedicado, com exports e geração sob um único dono. Não registrar automaticamente esse grupo na API global do servidor. O grupo é servido somente pela instalação montada.
+**Browser:** shell e instalação SF compartilham a origem aprovada para o perfil web; cookie mantém Path do mount, HttpOnly, SameSite e Secure atuais. Cross-origin incompatível não recebe CORS amplo nem mudança de cookie como atalho. A descoberta pode identificar conexão, mas dados exigem topologia admitida.
 
-Nomes de contrato são não versionados (`Sucafina.Context`, `Sucafina.Page`, `Sucafina.Result`), conforme AGENTS de Schema; negociar `contractRevision` no contexto. Não editar `generated` ou `generated-effect` à mão. A execução futura gera e confere os artefatos pelo fluxo autorizado; nada é gerado nesta sessão.
+**Desktop:** `oc://renderer` não compartilha a origem do cookie SF. D01 entrega um broker mínimo main-process, com Session isolada por binding, login real na mesma partition e IPC tipado por operationId. O main calcula destino/origin da configuração validada, usa o catálogo fechado e rejeita URL, header, cookie ou path arbitrário do renderer. Nenhum token/cookie é devolvido à UI. Login Microsoft, local-operator, cancelamento, downloads e revogação têm contratos separados e concretos em CONTRACTS.
 
-O browser não importa `SfHostServices`, Core, Server ou runtime de módulos. Referências de C01–C17 devem ser projetadas sem redefinir identidade/validação financeira. Não transportar funções, leases, Requests, chaves, snapshots privilegiados ou modelos internos completos.
+O broker é uma capacidade **nova planejada**, não um recurso já encontrado em Platform.fetch. O transporte passa pelas mesmas verificações do servidor. Web verde não prova desktop; ambas as superfícies integram o aceite.
 
-## 3. Envelope mínimo a congelar
+## 5. Identidade de operação e resultados incertos
 
-Os nomes abaixo são especificação, não código de produção:
+O host exige `Idempotency-Key` nas chamadas UI não GET/HEAD, incluindo leituras POST. O client cria e conserva a identidade conforme o tipo catalogado da operação; uma leitura nova tem identidade própria, uma reconciliação usa a correlação exigida pelo produtor. Não confundir uma request key com prova de que todo comando é idempotente.
 
-| DTO | Campos necessários | Regra |
-| --- | --- | --- |
-| Context | contractRevision; installationId; hostId; projectId; server binding; principalRef/displayName; accessRevision; policyVersion; permitted destinations; available capabilities; period/version catalog; login action | Autoridade resolvida no servidor; sem tokens, grupos completos, segredos ou directory privado arbitrário |
-| PageQuery | capabilityId; source surface; selectionRef opcional; período/ano/versão; filtros tipados; sort; cursor | Capability allowlist; filtros não concedem acesso; período compatível com capacidade |
-| Page | capabilityId; contextStamp; baseVersions; authorized rows/summary; coverage; field/action descriptors; cursor/total autorizado; sourceRefs | `domain.view` e projeções de produto antes de serializar; sem HTML e sem Snapshot |
-| Reference | referência opaca tipada existente + tipo + versão/recorte quando exigido | Resolver existência e ACL a cada uso; nome igual não é vínculo |
-| Measure | valor/unidade/moeda/origem/cobertura nos tipos canônicos; ausência explícita | Finite/rounding/FX seguem domínio. UI só formata; não reimplementa soma ou cenário |
-| Action | id estável; labelKey; disponibilidade; razão segura; expected input/ref/version | Disponibilidade é affordance, não token de permissão; servidor revalida na execução |
-| Command | ação permitida por capacidade, recordRef, versões esperadas, payload específico, correlação existente quando suportada | Union por ação, sem `action:string + JSON arbitrário` e sem endpoint execute-anything |
-| Preview | preview/manifest/change ref existente; versão-base; efeitos conhecidos; bloqueios/cobertura; fonte | Usar preview/prepare do produtor; UI não simula efeito |
-| Result | `ok` ou `needs-input/stale/denied/unavailable/conflict/provider-conflict/failed`; reasonCode seguro; fieldErrors; refs autorizadas | Preservar semântica de PortResult, distinguir auth/session de indisponibilidade |
-| ReceiptView | receiptRef/estado/correlação/efeitos realmente emitidos pelo produtor | Não fabricar receipt para comandos que só retornam ok/warnings; nesses, refetch autorizado confirma estado |
+Uma mutação é disparada uma vez por intenção confirmada. Resposta perdida conserva a operação pendente. Se há receipt/status canônico, consultá-lo; se o comando só retorna estado, usar a releitura autorizada prevista e manter a incerteza que restar. Não criar recibo sintético, redispatch automático nem inventar aprovação.
 
-`contextStamp` é eco de isolamento/consistência, não bearer token. Uma ação de UI não pode enviar seu próprio principalRef/role/lease para ganhar autoridade. Incluir expectedVersions somente nas formas já definidas pelos produtores; não inventar uma versão global que substitua C06 ou refs de caso.
+Unions de payload/outcome e affordances são fechadas no catálogo. Ação disponível na UI é orientação, não grant. O servidor revalida principal, superfície, escopo, holder, versão e fontes no momento do efeito.
 
-## 4. Matriz de endpoints proposta
+## 6. Owner, cache e drafts
 
-Todos os paths são relativos a `<mount>/api/native`. Sufixos `:ref` são validados conforme o contrato correspondente. GET não muda estado de negócio. Alguns reads protegidos que exigem payload/digest podem continuar POST com semântica read explícita no contrato, sem inventar um GET para contornar admissão.
+O owner de dados inclui server/projeto/instalação/principal e a geração de autoridade. O provider de dados/drafts fica fora da boundary keyed por chapter, preservando navegação no mesmo owner; troca de contexto cancela recursos, remove projeções privadas e só então monta o próximo owner. Resposta atrasada não publica em owner novo.
 
-| Família | Endpoints / métodos propostos | Produtor reutilizado e observação |
-| --- | --- | --- |
-| Contexto | GET `/context`; GET `/capabilities` | authenticate, roleMap, instalação/projeto, disponibilidade real |
-| Projeções das 28 capacidades | GET `/pages/:capabilityId`; GET `/records/:type/:ref` | Domain.view/publicSfData + projeções de produto; detail autorizado |
-| Comandos de domínio | POST `/commands/:capabilityId/:actionId` | Domain.execute no transaction/versão atual; catálogo fechado, payload discriminado |
-| Trabalho/busca/views | POST `/work/select`; GET `/work`; POST `/search`; GET/POST/PATCH/DELETE `/views/:ref?` | work selections, context search, personalViews; operation key e grants existentes |
-| Planner | POST `/planner/preview`; POST `/planner/apply`; POST `/planner/compare` | plannerMonthly, forecast inputs, PlannerPort; não faz cálculo no client |
-| Procurement | GET `/procurement/queues`; GET `/procurement/requests/:ref/review`; POST ação tipada | Canonical queue/holder/version, sourcing inputs/compare e decision review |
-| Casos | GET/POST `/cases`; GET/PATCH `/cases/:ref`; POST `/cases/:ref/compare` | Case store e mutation ports; editar intenção não aplica domínio |
-| Escolha/mudanças | POST `/cases/:ref/choice/preview`, `/choice/record`, `/changes/prepare`, `/changes/:ref/review`, `/apply`, `/reject`; GET `/receipts/:ref` | CurrentChoiceFence, human authority, prepared changes/receipts; M31/MI07 conservados |
-| Análises | POST `/cases/:ref/analyses`; GET list/detail/output; POST `/analyses/:ref/cancel` | SfHostServices.analyses, modelo/sessão/Relay reais; nenhuma resposta mock em produção |
-| Portfólio | POST catalog/preview/evaluate/selection/reconcile/promote/prepare sob `/portfolio`; GET results/history por ref | Portfolio/coverage/history services; dependência P03 |
-| Sensibilidade | POST `/sensitivity/units`, `/evaluate`; GET `/sensitivity/:ref` | Unidades/limites e cálculos existentes |
-| BI | POST `/bi/options`, `/bi/select`; GET `/bi/:selectionRef`; POST source/decision resolution | Bi producers; graph e tabela do mesmo resultado |
-| Revisões/relatórios | POST `/reviews/selection`, `/reviews/preserve`, `/reviews/compare`; GET review/history; POST export request; GET download admitido | Review/ref/version, fonte/ACL atual, geradores PPTX/DOCX existentes |
-| Colaboração | POST operações fechadas sob `/relations`, `/threads`, `/questions`, `/confirmations`, `/hot-topics` | C06, human authority, operação/correlação canônica; sem novo approval layer |
-| Imports | GET targets/reference/detail; POST `/imports/admit` multipart, `/preview`, `/:manifestId/apply`; GET receipt | Host de import; limites/formatos/scanner/manifest já existentes |
-| Documentos | GET requests/schemas/sources; POST search/admit/extract/confirm; GET candidates/open; POST scenario targets/preview | C14, evidência confirmada; fontes privadas via handler autorizado |
-| Memória | POST selection/materiality/outcome; GET catalog/conditions/signals/detail | C13/BCS/Atlas; acesso, cutoff e materialidade atuais |
-| Rotinas | GET catalog/admission/run/result; POST prepareAdmission/run/cancel admitidos; schedules create/update/pause/list/readRun | C07/Relay/Schedule; não publicar disponibilidade até readiness |
-| Assets/backup | Upload/download/asset-link por referência de registro/versão; comando administrativo backup-import | Handlers existentes de assets/downloads e backup, limites/scanner/papel atuais; sem dump aberto |
-| Download/export | GET recurso de download autorizado por ref/versão | JSON/CSV/PO/reports, cache no-store; não URL pública permanente |
+O contrato de componentes fixa eventos de draft e refetch em [COMPONENT-CONTRACTS](execution/COMPONENT-CONTRACTS.md). Timeout/503 não prova revogação; perda comprovada de acesso limpa conteúdo afetado imediatamente. Sessão expirada bloqueia apresentação privada até revalidar a identidade. Não usar URL, localStorage, service worker ou preferência de vista como armazenamento/autoridade de dados sensíveis.
 
-O congelamento N0/N1 deve especificar os nomes finais e schema de cada ação concreta antes de UI dependente. Esta tabela fixa recursos, fronteiras e comportamento; não autoriza inventar operações ausentes no produtor. Se a porta não existe, registrar patch pedido ao dono e estado indisponível, não converter o endpoint num bypass.
+HTTP, reason code e outcome do produtor permanecem distinguíveis. 400 input, 401 sessão, 403 negativa comprovada, 404 não divulgação, 409 conflito, 413 limite e 503 indisponibilidade não são fundidos no cliente. O catálogo conserva exceções semânticas reais por operação.
 
-Para evitar um adapter monolítico, famílias têm arquivos separados sob o mesmo dono inicial de contrato/transporte. Depois do freeze, extension points são interfaces fechadas; alteração pública exige nova revisão/geração e consumer ACK.
+## 7. Limites e provas futuras
 
-## 5. Sequência de uma leitura e de uma escrita
+Origin/CSRF, limites de upload/JSON/parser/scanner, logs redigidos, privacidade de downloads, autoridade humana e ordem de transação continuam nos produtores. Nenhum header sensível, OAuth code, documento, salário ou prompt é registrado em log/fixture/URL de navegação.
 
-1. Resolver ServerConnection conhecido e instalação/projeto publicados. Remontar o owner quando qualquer eixo mudar.
-2. Chamar sub-API dentro do mount com os mecanismos existentes de transporte, sem credenciais vindas de query.
-3. No host: manter a proteção de logs externa; validar origin/path/método/limites; `identity.prepare(request)`; autenticar principal Microsoft/local explícito conforme perfil instalado.
-4. Admissão SF usa a **Request original**, parâmetros/digest exatos e grants. `TrustedUiContext` usa WeakMap; não é serializável/reconstituível no client nem via um Request sintético.
-5. Preparar productView fora do lock quando o produtor assim exige; na transação revalidar roleMap/scope/versões e fazer `current` antes de ler. `finish` em finally. Não segurar lock enquanto chama outro serviço que reacquire o mesmo lock.
-6. Leitura aplica `publicSfData` e Domain.view/redaction, ou porta de produto autorizada. Comando executa o produtor com versões esperadas e fences.
-7. Só serializar DTO autorizado e headers privados. Ao concluir escrita, respeitar receipt/resultado do produtor e refetch da projeção corrente.
-8. Verificar ainda owner/request generation/AbortSignal antes de publicar no UI. Uma resposta atrasada do projeto A nunca aparece no projeto B.
+Casos de aceite incluem primeiro login sem visita ao legado; roleMap ausente versus vazio intencional; POST de leitura com key; comando com resposta perdida; dois usuários/servidores/projetos; revogação; atraso de resposta; escape de IPC/URL; cookies isolados; download; e equivalência de operações web/desktop. Execução ocorre somente no harness autorizado e não é alegada por este documento.
 
-A nova API deve preservar a ordenação já existente em `runtime/application.ts`, `local/entry.ts` e `ui-authority.ts`. Não chamar rotas HTML como se fossem APIs, não parsear DOM e não fazer dump privilegiado seguido de filtro no browser.
+Qualquer incompatibilidade entre source pin e contrato interrompe a parte afetada com finding explícito. O executor não escolhe novos nomes, relaxa auth ou usa endpoint genérico como workaround. O restante independente pode avançar segundo o manifesto.
 
-## 6. Login Microsoft e retorno ao chapter
+## Declarações e seams adicionais fechados
 
-Reutilizar `<mount>/auth/login`, callback e logout existentes. B2B conserva principal do resource tenant, membership/grants explícitos e armazenamento privado atual. Não inferir papel por email, nome, tenant de origem ou mera presença de login.
+Os tipos novos e sua localização por pacote estão em [host-signatures.ts](execution/host-signatures.ts); o DTO público de rotas está em [route-signatures.ts](execution/route-signatures.ts). Schema/Client nunca importam App/CLI. O registro central tem metadata de todas as operações, sem importar todos os adapters: I00 injeta somente codecs reais já admitidos no candidato. Ausência é resultado fechado antes de rede; o aceite final exige o catálogo integral resolvido.
 
-Proposta de bridge de navegação: login recebe um returnTo ainda válido para `<mount>/dashboard?sf=native-return&resume=<opaqueRef>`. Um handler novo **dentro do mount** resolve esse estado de retorno, revalida instalação/ator e redireciona somente para uma rota SF allowlisted no shell do mesmo origin. O estado contém apenas destino/filtros não privados e tem vida curta; não concede acesso. O handler não aceita URL externa, scheme, host ou directory arbitrário. Esta bridge é nova e precisa de revisão do produtor Microsoft; não mudar `safeReturn` para aceitar qualquer path.
+No desktop, `registerConnection` é uma capability nova separada de `bind/invoke`: valida a conexão resolvida, obtém confirmação nativa da origem para conexão remota e só então permite discovery pelo novo broker. OwnedServe usa sua configuração confiável do main. Credenciais globais suportadas servem ao discovery da mesma origem, não concedem papel SF. Copy do diálogo e cancelamento estão fechados em COPY-02, sem import de i18n App no main.
 
-Nenhuma mudança em redirect URI Azure, tenant, client secret, consentimento ou política é pressuposta. Até a bridge ser qualificada, retornar ao destino permitido e oferecer “Continuar no Orchestra” com caminho validado é fallback de migração, não o destino final de UX.
-
-## 7. Matriz de isolamento e invalidação
-
-| Eixo / evento | Regra verificável |
-| --- | --- |
-| Usuário | Todas as leituras, contagens, fontes, sugestões, análises e downloads são autorizados pelo principal atual. Logout/rotação não reaproveita cache de outro principal |
-| Papel / assigned domain | Permissão por superfície, registro, campo, operação e holder. Destino visível não é autorização; permissão revogada não sobrevive numa view salva |
-| Servidor | Chave da conexão selecionada, origin aprovado e client próprio; sem fallback para outro servidor em erro |
-| Projeto / instalação | Binding server-owned, diretório resolvido no host, mesma instalação/projeto em lease e serviço; não aceitar pasta só porque veio da URL |
-| Período / versão | Keys e refs contêm recorte; C06 materialidade e versão de approval/case/document permanecem específicas |
-| Troca de perfil | Cancelar requests, desmontar projeções e limpar estado sensível antes de novo fetch; manter apenas preferências permitidas |
-| Revogação comprovada / logout | Remover conteúdo privado, encerrar runs/continuations conforme produtor, invalidar links e rascunhos conforme política existente |
-| 503/timeout/erro de rede | Não classificar como revogação. Manter draft privado no mesmo owner ainda autorizado e identidade de operação pendente; consultar estado, sem replay automático |
-| Conflito/stale | Preservar edição local autorizada, mostrar base/atual/draft, nova prévia ou escolha; nunca overwrite silencioso |
-| Expiração de sessão | Bloquear acesso e reautenticar; só restaurar estado privado após revalidar mesmo principal/escopo e retenção permitida. Não persistir draft sensível em storage comum |
-| Mutação com resposta perdida | Consulta de receipt/status por identidade existente; retry explícito e idempotente apenas se produtor oferece essa garantia |
-| Fonte alterada/revogada | Revalidar documento/versão/digest e seleção; analisar novamente só com autorização; não usar cache de fonte obsoleta |
-
-## 8. Erros, segurança e observabilidade
-
-HTTP status acompanha o erro tipado: 400 input, 401 sessão quando identificável, 403 denied, 404 existência não revelável quando aplicável, 409 stale/conflict/provider-conflict, 413 limite, 503 unavailable. Um erro sem prova de revogação não purga rascunho por conveniência. A razão pública deve ser segura e traduzível; campos de diagnóstico ficam no servidor.
-
-Manter limits de JSON, workbook, upload, parsers/scanner e cancelamento. `Cache-Control: no-store`, nosniff e política de referrer para material privado; nenhuma resposta privada no service-worker cache. Logs redigidos devem preservar a proteção Microsoft49 antes do roteamento, inclusive query OAuth. Métricas podem registrar duração/família/status/correlation ID seguro, nunca salário, documento, prompt, código OAuth ou cookie.
-
-CSRF/origin e admissão humana continuam necessários em mutation. UI pré-carrega somente chunks e leituras permitidas; hover de sidebar não inicia análise, import, geração ou mutação.
-
-## 9. Freeze obrigatório antes de paralelizar UI
-
-N0/N1 entregam um pacote revisável com DTOs e exemplos sintéticos de sucesso/parcial/erro, route manifest, action unions, binding mount/cookie/return, semântica de owner/reset, versionamento e proof obligations. Consumidores confirmam o mesmo revision/digest.
-
-O piloto valida leitura e uma ação real sob papéis separados. Se cookie/topologia ou admission bloquear, o achado volta ao produtor competente; os demais chapters podem desenvolver composição contra contrato congelado, mas não recebem aceite de integração por fixture.
-
-## Reconciliação do contrato de leitura em C28
-
-A inspeção de encerramento incluiu o pacote Reports48 composto em `d088708276b48f896ad4e0ecd2a95cb73dc413b1`, ainda sob qualificação HOLD. Os hooks `revalidateReadEvidence`/`revalidateReadAccess`, a distinção entre `denied`, `stale` e `unavailable` e a recuperação de discussion client são responsabilidades do produtor. O adapter nativo deve preservar esse resultado, inclusive falha sem prova de revogação; não converter todas as falhas em 403 nem inferir acesso a partir da retenção do draft. Os pins, limites e o finding separado de Agenda39 estão em [MIGRATION-AND-HANDOFFS](MIGRATION-AND-HANDOFFS.md).
+Rotinas e Schedule reutilizam os tipos BusinessPorts existentes por seams HTTP específicos. A leitura de detalhe de Schedule é uma nova porta privada opcional e tipada; sem binding real, a edição contextual fica indisponível. Não reconstruir recurrence/timezone a partir de uma lista que só fornece ref/versão/estado, nem consultar o core Schedule para contornar a autoridade SF.

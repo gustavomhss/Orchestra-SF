@@ -36,7 +36,7 @@ Regra de contagem: axiomas da campanha, axiomas dos WPs e checks/axiomas das tas
 
 ## 2. Como interpretar o índice
 
-`mappingRef=WPxx.Tyy` leva ao pacote operacional, chapter, obrigação de adaptação e grupos NUI em taskMappings. `mappingRef=WPxx` conserva axiomas herdados por todas as tasks daquele WP. `mappingRef=campaign` vale para o conjunto inteiro. Nenhum critério transversal fica dispensado porque não desenha um componente.
+`mappingRef=WPxx.Tyy` leva ao agrupamento histórico N0–N10, chapter, obrigação de adaptação e grupos NUI em taskMappings. Esses agrupamentos foram preservados para integridade do índice original; não são ordens atuais de execução. O pacote operacional vigente é [execution/manifest.json](execution/manifest.json); cada work order declara os IDs consumidos em canonical.task_refs, e cada superfície declara canonicalTaskIds. `mappingRef=WPxx` conserva axiomas herdados por todas as tasks daquele WP. `mappingRef=campaign` vale para o conjunto inteiro. Nenhum critério transversal fica dispensado porque não desenha um componente.
 
 As classes UI_REDESIGN/UI_REBIND/STATE descrevem onde muda a apresentação. RETAIN_ENGINE/RETAIN_ORACLE/LIVE_GATE/QUALIFICATION/CONTRACT/BASELINE descrevem obrigação preservada. A classe é atribuída à task para orientar revisão; não afirma classificação semântica individual nem validação dos seus critérios.
 
@@ -44,7 +44,7 @@ Exemplo: `WP13.T02.CHK.20` continua exigindo o oráculo canônico; seu índice l
 
 ## 3. Mapa explícito das 74 tasks
 
-Cada título abaixo é referência ao task existente. “Todos” significa os 15 chapters sob as regras comuns, não autorização ampla. Paths exclusivos e DAG estão em DELIVERY-PLAN.
+Cada título abaixo é referência ao task existente. “Todos” significa os 15 chapters sob as regras comuns, não autorização ampla. Paths exclusivos e os DAGs de autoria, integração e qualificação estão no [manifesto de execução](execution/manifest.json). A coluna N0–N10 abaixo é apenas referência histórica; não atribui ownership ou bloqueio.
 
 | Task canônica | Chapters / fatias | Obrigação nesta adaptação | Aceite |
 | --- | --- | --- | --- |
@@ -246,6 +246,15 @@ As 13 jornadas J01–J13 têm exercícios explícitos em ACCEPTANCE.md. Os oito 
 
 A apresentação original de três superfícies vira 15 chapters. As superfícies **dashboard/planner/procurement** continuam sendo boundaries de domínio/permissão, inclusive quando seu conteúdo aparece em outro chapter. Portanto, a intenção canônica de navegação completa e contexto preservado continua válida.
 
-A distribuição N0–N10 não altera dependências canônicas, estados de execução, ownership de produtores atuais ou gates. Não alterar deadlines, dados, assertions, criterios de coverage, política financeira ou autorização para facilitar a UI. Não converter bloqueado em “fora de escopo” e não zerar status no plano original.
+O agrupamento histórico N0–N10 e a decomposição operacional atual não alteram dependências canônicas, estados de execução, ownership de produtores atuais ou gates. Não alterar deadlines, dados, assertions, criterios de coverage, política financeira ou autorização para facilitar a UI. Não converter bloqueado em “fora de escopo” e não zerar status no plano original.
 
 Toda evidência futura deve ligar: ID canônico → capacidade/rota/ação → implementação/contrato → candidato/ator/recorte → teste/prova/artefato → limite. O índice entregue cobre os dois primeiros elos e os grupos de prova planejados; os demais serão preenchidos em receipts separados após execução autorizada.
+
+
+## 5. Rastreabilidade operacional após o cold review
+
+A decomposição atual tem 78 ordens, 70 superfícies e os mesmos 74 IDs de task canônica. O [validador documental](execution/validate_plan.py) verifica referências resolvidas, unicidade, owners, sobreposição de paths e ciclos; verifica também o índice canônico contra o blob imutável fornecido. A contagem de mapeamentos prova integridade estrutural, não satisfação semântica de 1610 critérios.
+
+Leitura por executor: somente o protocolo comum, sua ficha e os contratos/componentes/trechos canônicos explicitamente referenciados. Axiomas de campanha e WP continuam herdados, mesmo sem cópia em todas as fichas. Revisor consulta os critérios relevantes por pointer; não reescreve nem abre outro backlog equivalente.
+
+`ARTIFACT_READY`, `INTEGRATED` e `QUALIFIED` são estados diferentes. Uma superfície de indisponibilidade pode estar corretamente implementada enquanto o produtor segue HOLD; isso não cumpre a capacidade indisponível nem libera a campanha. As provas canônicas C/D e os bloqueios herdados continuam como descritos em [ACCEPTANCE](ACCEPTANCE.md).
