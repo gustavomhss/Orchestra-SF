@@ -14,6 +14,7 @@ import sys
 import urllib.parse
 import zipfile
 from html.parser import HTMLParser
+from sheet_views import render_sheet_views
 from xml.etree import ElementTree
 
 ROOT = pathlib.Path(os.environ["RUNNER_TEMP"]) / "sf66-export-artifacts"
@@ -53,21 +54,6 @@ def metadata(path):
             "bytes": path.stat().st_size}
 
 
-def xlsx_sheets(path):
-    with zipfile.ZipFile(path) as archive:
-        workbook = ElementTree.fromstring(archive.read("xl/workbook.xml"))
-        ns = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
-        names = [node.attrib.get("name", "") for node in workbook.iter(ns + "sheet")]
-        result = []
-        for index, name in enumerate(names, 1):
-            member = "xl/worksheets/sheet%d.xml" % index
-            dimension = "unknown"
-            if member in archive.namelist():
-                node = ElementTree.fromstring(archive.read(member)).find(ns + "dimension")
-                if node is not None:
-                    dimension = node.attrib.get("ref", "unknown")
-            result.append({"name": name, "dimension": dimension})
-        return result
 
 class HtmlEvidence(HTMLParser):
     def __init__(self):
@@ -97,11 +83,14 @@ def source_view(source, format_, target):
     raw = source.read_bytes()
     details = {}
     if format_ == "xlsx":
-        details["sheets"] = xlsx_sheets(source)
+        details["sheets"] = render_sheet_views(source, target)
     if format_ in ("docx", "pptx", "xlsx"):
         with zipfile.ZipFile(source) as archive:
-            visible = "\n".join(archive.read(name).decode("utf-8", "replace")
-                for name in archive.namelist() if name.endswith(".xml"))
+            xml_parts = [archive.read(name).decode("utf-8", "replace")
+                         for name in archive.namelist() if name.endswith(".xml")]
+            visible = "\n".join(xml_parts)
+            visible += "\n" + "\n".join("".join(ElementTree.fromstring(xml).itertext())
+                                              for xml in xml_parts)
         details["officeXmlEntries"] = len([n for n in archive.namelist() if n.endswith(".xml")])
     else:
         visible = raw.decode("utf-8-sig", "strict")
@@ -185,29 +174,32 @@ def gallery(entries, inspection):
             "</a><br> SHA-256 <code>" + entry["sha256"] + "</code>; reader " +
             html.escape(entry["status"]) + ".</p>"])
         if entry.get("details", {}).get("sheets"):
-            parts.append("<p>Actual workbook sheets: " + ", ".join(
-                html.escape(sheet["name"]) + " [" + html.escape(sheet["dimension"]) + "]"
-                for sheet in entry["details"]["sheets"]) +
-                ". The native PDF page-to-sheet mapping is not independently established.</p>")
+            parts.append("<p>Actual workbook sheets; each linked view is an OOXML cell inspection, not a native XLSX render:</p><ul>")
+            for sheet in entry["details"]["sheets"]:
+                url = urllib.parse.quote("../../" + entry["folder"] + "/" + sheet["sourceView"], safe="/-_.")
+                parts.append('<li><a href="' + url + '">' + html.escape(sheet["name"]) + '</a> '
+                             + html.escape(sheet["dimension"]) + ' — ' + str(sheet["cells"]) +
+                             ' cells, ' + str(sheet["formulaCells"]) + ' formulas</li>')
+            parts.append("</ul><p>The native PDF page-to-sheet correspondence is not independently established.</p>")
         if entry["format"] == "html":
             parts.append("<p>Actual original HTML (sandboxed browser display; not a stored screenshot):</p>"
                          '<iframe sandbox="" src="' + original + '"></iframe>')
         if entry.get("derivedView"):
-            path = urllib.parse.quote("../" + entry["derivedView"], safe="/-_.")
+            path = urllib.parse.quote("../../" + entry["derivedView"], safe="/-_.")
             parts.append('<p><a href="' + path +
                          '">Source-derived inspection HTML</a> (not the original export).</p>')
         if entry.get("pages"):
             pdf = next((output["path"] for output in entry["outputs"]
                        if output["path"].endswith(".pdf")), "")
             if pdf:
-                parts.append('<p><a href="' + urllib.parse.quote("../" + pdf, safe="/-_.") +
+                parts.append('<p><a href="' + urllib.parse.quote("../../" + pdf, safe="/-_.") +
                              '">Converted PDF</a> · <a href="' +
-                             urllib.parse.quote("../" + entry["folder"] + "/extracted.txt", safe="/-_.") +
+                             urllib.parse.quote("../../" + entry["folder"] + "/extracted.txt", safe="/-_.") +
                              '">PDF extracted text</a> · <a href="' +
-                             urllib.parse.quote("../" + entry["folder"] + "/fonts.txt", safe="/-_.") +
+                             urllib.parse.quote("../../" + entry["folder"] + "/fonts.txt", safe="/-_.") +
                              '">PDF fonts</a></p>')
             for page in entry["pages"]:
-                src = urllib.parse.quote("../" + page["path"], safe="/-_.")
+                src = urllib.parse.quote("../../" + page["path"], safe="/-_.")
                 parts.append('<figure><img loading="lazy" src="' + src +
                              '" alt="' + name + ' page ' + str(page["number"]) +
                              '"><figcaption>' + name + ', PDF page ' + str(page["number"]) +
