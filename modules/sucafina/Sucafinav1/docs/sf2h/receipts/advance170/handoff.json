@@ -1,0 +1,351 @@
+{
+  "schema": "sf2h.advance170.handoff.v1",
+  "mission": 170,
+  "scope": "AM06 qualification only",
+  "branch": "sf-am06-proof",
+  "epoch": "proof-am06-e1-browser170",
+  "ownerPack": "S3-C",
+  "modelObserved": "GPT-6",
+  "nativeSessionId": null,
+  "astraNativeSessionObserved": false,
+  "source": {
+    "baselineHead": "690a34cdd81c12d7311f3717c19679b950276161",
+    "baselineTree": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "packetRef": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "packetBlob": "c05f131822c550c7fe2fd7ff1d1b93f4a484dec6",
+    "ackCommit": "7d54237dbffed8f67c8cdad471bc3bae6c795c70",
+    "ackTree": "e17bc4e5795f5e47cbf3c91ef9ca0a671f044198",
+    "patchCommit": "4950d1330c9ca6521cdbffdab090e41f54dbf4a0",
+    "patchTree": "ac26762aae56126a60e575af1db6d4e706f5e3c2",
+    "patchParent": "7d54237dbffed8f67c8cdad471bc3bae6c795c70",
+    "readSourceShas": {
+      "S3-C.json": "7021eb06156089aba03f02ca855b776cbfa375d9",
+      "AGENTS.md": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "wp09/routines/capabilities.ts": "b8adcb574a84c213bfdec0659c7cc074a543564c",
+      "product/contracts/operations.ts": "88550f78693ba1a66b285f2f53abcd3f8c09afdc",
+      "product/ai/run-provenance.ts": "b303ef7a4968ffb2cc2f51e6318e165a07ac3c73",
+      "product/routines/result-access.ts": "098a92920857926f117e266f5b63325f6ad112ca",
+      "apps/cli/routine-native-adapter.ts": "d70e2e66488d5f4e40d963d664d05a254034e32b",
+      "wp12/native-mission-harness.ts": "49300a78a44ac0739791d10a11c386b317f4b51a"
+    }
+  },
+  "codeBlobs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.ts",
+      "sha": "a0b079929cb010d8943c9042275408903174c1b9",
+      "purpose": "Correlate C07 pin/admission/status/native terminal artifact to actual C11 run/loaded skill/DecisionBrief/UI consumption and five host-bound call receipts; never returns PASS"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+      "sha": "0e8edac9d862cd68db387695d8aa476ad775c235",
+      "purpose": "New negative checks: missing real stages remain NOT_RUN; mismatched publication, admission version and child run reject; catalog without actual bound calls rejects"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts",
+      "sha": "673a0f0d8c039cda65c4fd88dc13b638db4ab27a",
+      "purpose": "New negative checks: sf_maestro routine-result cannot prepare/run; extra entryMode from model refused before any C07 producer invocation"
+    }
+  ],
+  "preexistingExecutables": [
+    {
+      "id": "WP09-REAL-RELAY-PUBLICATION",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/recipes.test.ts",
+      "blob": "7b7d5526dc1b277b6217b8459df46dacab960aa2",
+      "coverage": "Real Relay published pinned document/version; no native approval/run"
+    },
+    {
+      "id": "WP09-PUBLICATION-GATE",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/publication.test.ts",
+      "blob": "00be9a2905947596b749743a86124756f9d9405b",
+      "coverage": "Published vs draft, authority, no fake production arm"
+    },
+    {
+      "id": "WP09-NATIVE-ADMISSION-READER",
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+      "blob": "635fcee58fdf25453ed976f730649e0f922e484a",
+      "coverage": "Real EventV2/SQLite reader against synthetic rows. Explicitly NOT proof of real Task/Relay or AM06"
+    },
+    {
+      "id": "WP09-OWNER-FENCES",
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-owner-binding/fences.test.ts",
+      "blob": "4abe43ac65b1006d154ee4b686a995c028079b18",
+      "coverage": "Native owner/generation, approval revocation and Task registration negatives"
+    },
+    {
+      "id": "WP09-ADAPTER-ABORT",
+      "path": "modules/sucafina/Sucafinav1/test/product/routine-native-admission/adapter-boundaries.test.ts",
+      "blob": "b3a178758751b5a12d0d16f33d2a68872014edea",
+      "coverage": "Abort, current owner and no side effects after lease disappears"
+    },
+    {
+      "id": "WP09-SCHEDULE",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "blob": "d50cefb50aa0b92637a7fd45e04fc5281beabf0d",
+      "coverage": "Native Schedule gate/terminal/cancel/provider changes; not autonomous C07 approval"
+    },
+    {
+      "id": "WP09-SCHEDULE-BOUNDS",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-boundaries.test.ts",
+      "blob": "2e4b277dc0e2b15bbc7ff83fc3d6fae0d0d2f400",
+      "coverage": "Owner, due/retry/cadence/failure/recurrence/revocation"
+    },
+    {
+      "id": "WP09-SCHEDULE-RESULT",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/schedule-result-consumer.test.ts",
+      "blob": "541363d7fc456c595b5b8f454a47d798a2847a34",
+      "coverage": "No fabricated completion, result ownership"
+    },
+    {
+      "id": "WP09-QUESTION-CONTINUATION",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "blob": "e0ff844b564285cb6503a7c491a568c8c64e43c1",
+      "coverage": "Real case versioned answer/new version/replay no duplicate"
+    },
+    {
+      "id": "WP09-REVIEW-UI-CONSUMER",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/review-product-consumer.test.ts",
+      "blob": "3286e1aa4415ade72aed5d1f6d3737ca32a9ab9a",
+      "coverage": "WP07 selection and preserved C05 review"
+    },
+    {
+      "id": "WP09-RESULT-ACCESS",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp09/result-access.test.ts",
+      "blob": "0d70e60587dff4f3379e9dc0c6a633c1074e5311",
+      "coverage": "Immutable authenticated terminal source and cancellation revocation"
+    },
+    {
+      "id": "WP12-NATIVE-EXECUTIVE",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+      "blob": "fbac0c8e04cdab45ecf3be21810b48e57b102b83",
+      "coverage": "Actual installed model/skill+product consumer when available; declares C07 admission NOT observed"
+    },
+    {
+      "id": "WP12-REVIEW-CROSSROUTES",
+      "path": "modules/sucafina/Sucafinav1/test/product/wp12/native-execution-review-crossroutes.test.ts",
+      "blob": "33a8103345de3addbd5dd75ed1303d3ff9826095",
+      "coverage": "Actual executive/meeting native model path if available, without C07 admission; no false AM06"
+    }
+  ],
+  "mapping": [
+    {
+      "criteria": [
+        "CAMP.DOD.90",
+        "WP09.T01.CHK.01",
+        "WP09.T01.CHK.02",
+        "WP09.T01.CHK.18",
+        "WP09.T01.CHK.60"
+      ],
+      "proofs": [
+        "AM06",
+        "E11",
+        "E14",
+        "E16"
+      ],
+      "reused": [
+        "WP09-REAL-RELAY-PUBLICATION",
+        "WP09-NATIVE-ADMISSION-READER",
+        "WP09-OWNER-FENCES"
+      ],
+      "new": [
+        "test/product/integrated-proofs/am06/correlate.test.ts",
+        "test/product/integrated-proofs/am06/reentry-fence.test.ts"
+      ],
+      "status": "NOT_RUN",
+      "missing": "Actual human-governed native Maestro/Task admission and Relay completion tied to published version; permission/identity/arm/session/ledger and actual operation transcript"
+    },
+    {
+      "criteria": [
+        "WP09.T01.CHK.03",
+        "WP09.T01.CHK.04",
+        "WP09.T07.CHK.02",
+        "WP09.T07.CHK.03"
+      ],
+      "proofs": [
+        "AM06",
+        "E13",
+        "E16"
+      ],
+      "reused": [
+        "WP09-ADAPTER-ABORT",
+        "WP09-RESULT-ACCESS",
+        "WP09-QUESTION-CONTINUATION"
+      ],
+      "new": [
+        "test/product/integrated-proofs/am06/correlate.test.ts"
+      ],
+      "status": "NOT_RUN",
+      "missing": "Hosted observations of intervention response->new case version->new real admitted run, no duplicate result/effect, cancel/revoke after real hosted execution"
+    },
+    {
+      "criteria": [
+        "WP09.T06.CHK.01",
+        "WP09.T06.CHK.02",
+        "WP09.T06.CHK.03",
+        "WP09.T06.CHK.04",
+        "WP09.T06.CHK.18"
+      ],
+      "proofs": [
+        "AM06",
+        "E14",
+        "E16"
+      ],
+      "reused": [
+        "WP09-SCHEDULE",
+        "WP09-SCHEDULE-BOUNDS",
+        "WP09-SCHEDULE-RESULT"
+      ],
+      "new": [],
+      "status": "NOT_RUN",
+      "missing": "Actual admitted Schedule occurrence with owner/timezone/paused/missed/revoked bound to real C07 run; no server policy or automatic approval inferred"
+    },
+    {
+      "criteria": [
+        "WP12.T04",
+        "WP09.T07.CHK.01",
+        "CAMP.INV.90",
+        "WP09.T01.CHK.60"
+      ],
+      "proofs": [
+        "AM06",
+        "E11",
+        "E13",
+        "E14"
+      ],
+      "reused": [
+        "WP12-NATIVE-EXECUTIVE",
+        "WP12-REVIEW-CROSSROUTES",
+        "WP09-REVIEW-UI-CONSUMER"
+      ],
+      "new": [
+        "test/product/integrated-proofs/am06/correlate.test.ts",
+        "test/product/integrated-proofs/am06/reentry-fence.test.ts"
+      ],
+      "status": "NOT_RUN",
+      "missing": "Real sf_maestro/sf-preparar-revisao-executiva loaded model and five native capability call receipts tied to C07 status/result, persisted DecisionBrief and reopened UI/C05 consumer; routine-result recursion independently denied"
+    }
+  ],
+  "negativeOnlyAssertions": [
+    {
+      "case": "AM06-R-01",
+      "file": "test/product/integrated-proofs/am06/reentry-fence.test.ts",
+      "expected": "routine-result prepares/runs denied by production handler before C07 read/side effects",
+      "observed": "NOT_RUN hosted"
+    },
+    {
+      "case": "AM06-R-02",
+      "file": "test/product/integrated-proofs/am06/reentry-fence.test.ts",
+      "expected": "model-provided entryMode rejected as input extra before any authority/producer",
+      "observed": "NOT_RUN hosted"
+    },
+    {
+      "case": "AM06-C-01",
+      "file": "test/product/integrated-proofs/am06/correlate.test.ts",
+      "expected": "missing real runtime witness remains NOT_RUN",
+      "observed": "NOT_RUN hosted"
+    },
+    {
+      "case": "AM06-C-02",
+      "file": "test/product/integrated-proofs/am06/correlate.test.ts",
+      "expected": "publication/version/admission/child mismatch REJECTED",
+      "observed": "NOT_RUN hosted"
+    },
+    {
+      "case": "AM06-C-03",
+      "file": "test/product/integrated-proofs/am06/correlate.test.ts",
+      "expected": "catalog-only or absent operation receipts REJECTED",
+      "observed": "NOT_RUN hosted"
+    }
+  ],
+  "selection164": {
+    "dispatch": false,
+    "trigger": "Only after integrator 162 has integrated these exact code blobs into final candidate C and reconciled actual hosted CI request snapshot",
+    "runner": "bun",
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "args": [
+      "Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+      "Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts"
+    ],
+    "os": "linux",
+    "proposed_request": {
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "runner": "bun",
+      "args": [
+        "Sucafinav1/test/product/integrated-proofs/am06/correlate.test.ts",
+        "Sucafinav1/test/product/integrated-proofs/am06/reentry-fence.test.ts"
+      ],
+      "env": {}
+    },
+    "reason": "Only two new test files are input-delta; correlation utility is imported by its test. Do not rerun unchanged giant packages merely to inflate coverage.",
+    "relatedExistingByGate": [
+      "Sucafinav1/test/product/wp09/recipes.test.ts",
+      "Sucafinav1/test/product/routine-native-admission/positive-admission.test.ts",
+      "Sucafinav1/test/product/wp09/schedule-native.test.ts",
+      "Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts",
+      "Sucafinav1/test/product/wp12/native-execution-executive.test.ts"
+    ],
+    "caveat": "Existing admission reader uses synthetic EventV2 and cannot satisfy positive AM06. Hosted real model/Relay/permission cannot be inferred from green unit checks."
+  },
+  "request163": {
+    "dispatch": false,
+    "trigger": "After 162 integrates code in candidate C",
+    "checks": [
+      "Compile/new test imports and TypeScript against installed Effect/domain types under existing script; no local actions by 170",
+      "Check SDK exports and guards as required for same C; do not edit generated files on 170 branch"
+    ],
+    "noNewCodegenInfra": true
+  },
+  "request162": {
+    "writer": "S0-C-e20-browser162",
+    "pr": 65,
+    "sourceBranch": "sf-am06-proof",
+    "sourcePatchCommit": "4950d1330c9ca6521cdbffdab090e41f54dbf4a0",
+    "codePaths": 3,
+    "receiptPrefix": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance170/",
+    "instruction": "Reconcile fixed source SHAs and pre/post tree, apply only allowlisted new files, never product runtime or cloud; mark AM06 NOT_RUN pending hosted admission and review",
+    "notASecondIntegrator": true
+  },
+  "handoff": {
+    "nativeGoal": "PAUSED",
+    "integration": "REQUESTED_NOT_APPLIED",
+    "runtime": "NOT_RUN",
+    "modelInference": "NOT_RUN",
+    "C07": "NOT_RUN",
+    "RelayTerminal": "NOT_RUN",
+    "UI": "NOT_RUN",
+    "newHostedCI": "NOT_RUN",
+    "compilerSDK": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "AM06": "NOT_RUN",
+    "finalCandidateC": null,
+    "deliveryD": null,
+    "finalReviewR3": "NOT_RUN",
+    "mandatoryOtherGates": [
+      "C",
+      "8CI",
+      "epic",
+      "AM01",
+      "AM02",
+      "AM03",
+      "AM04",
+      "AM05",
+      "AM06",
+      "3FINAL",
+      "D",
+      "guards"
+    ],
+    "status": "PARTIAL_INDEPENDENT_PATCH_READY"
+  },
+  "security": "Synthetic negative-only fixtures do not assert humanPermission, Task.running, hosted model, Relay approval, scanner or business identity; static correlation never yields PASS.",
+  "constraints": {
+    "noLocalTests": true,
+    "noBuild": true,
+    "noTypecheck": true,
+    "noRestart": true,
+    "noDeploy": true,
+    "noEngineChanges": true,
+    "noBranchAlternative": true,
+    "noForce": true
+  }
+}
