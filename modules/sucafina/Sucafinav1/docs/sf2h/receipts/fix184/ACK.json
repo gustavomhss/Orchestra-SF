@@ -1,0 +1,56 @@
+{
+  "schema": "sf2h.causal-fix184.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 184,
+  "order": "S05",
+  "epoch": "native-fix-e1-browser184",
+  "actor": {
+    "requested_model": "Astra",
+    "effective_model": "GPT-6",
+    "session_id": "not-exposed",
+    "kind": "new-chat-session"
+  },
+  "authority": {
+    "branch": "sf-ux-w10",
+    "pr": 119,
+    "integrator": 162,
+    "compiler": 163,
+    "product_ci": 164,
+    "global_release": false,
+    "native_goal": "paused",
+    "previous_epoch": "ux-native-w10-e1; S05-test aux authority from140 explicitly revoked for this path only",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS"
+  },
+  "preflight": {
+    "expected_head": "fd69ed12f556470dfbc1ff4d9096ccf3d04ef8c7",
+    "observed_head": "fd69ed12f556470dfbc1ff4d9096ccf3d04ef8c7",
+    "observed_tree": "c72dda1e682ed698533730f5e4920351aebad889",
+    "fence": "native-fix-e1-browser184",
+    "AGENTS": [
+      "AGENTS.md",
+      "packages/app-shell/AGENTS.md"
+    ],
+    "source_pin": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+    "test_pin": "912d5f7cdee87a310cffb2b6baf794497ebdc182",
+    "consumer_test_pin": "f7d032d5fdded022f40270727035577ae08228db",
+    "consumer_source_pin": "3127ace8fc21958b3e434fea6e8e8d08b917cc4e",
+    "browser_run": 43766970018,
+    "browser_job": 132974180913,
+    "compiler_run": 43766055614,
+    "compiler_job": 132971280139
+  },
+  "owned_paths": [
+    "packages/app-shell/src/orchestra/chapters/sucafina/collaboration/**",
+    "packages/app-shell/src/i18n/orchestra-chapters/sf-s05.ts",
+    "packages/app-shell/test-browser/sucafina-native/s05.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix184/**"
+  ],
+  "state": "ACK_PUBLISHED_FIX_IN_PROGRESS",
+  "qualification": "NOT_RUN",
+  "claims": {
+    "no_local_commands": true,
+    "no_runner_dispatch": true,
+    "no_new_branch": true,
+    "no_unauthorized_shared_write": true
+  }
+}
