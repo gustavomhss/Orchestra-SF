@@ -1,0 +1,68 @@
+{
+  "schema": "sf2h.planner-p03-finish.terminal-handoff.v1",
+  "mission": 89,
+  "status": "OWNED_PATCH_QUALIFIED__P03_NOT_CLOSED__EXTERNAL_OWNER_REQUIRED",
+  "branch": "planner-p03-finish",
+  "pr": 95,
+  "latest_source_commit_before_terminal": "2ad648e59c77de68d1c284a1a6f9923ae8b307be",
+  "latest_source_tree_before_terminal": "0a7c011e5c860de6ebac1a8e8469f35c04dcf39b",
+  "latest_target_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_sha": "b9935108fccc20776c60e5536a9eeddcbbaa3c83",
+  "lease": {
+    "epoch": "planner-p03-browser89",
+    "local_writer_stopped_after_terminal": true,
+    "owner_71_handoff_pending_ack": true,
+    "no_central_lease_revoke_claimed": true
+  },
+  "actor": {
+    "github": "gustavomhss",
+    "github_id": 228147811,
+    "model_observed": "GPT-6",
+    "model_audit_external": false
+  },
+  "product": {
+    "result_store": {
+      "blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+      "target_already_same": true,
+      "origin76": true
+    },
+    "stored_scenarios": {
+      "pre": "529e29806b3faf15f88eec009c198e783f4248a3",
+      "post": "c1634b7388216af2da62f1af0d229e2dc78affad",
+      "new_detached_return_candidate": true
+    }
+  },
+  "evidence": {
+    "ci_receipt": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/ci/CI-RECEIPT89.json",
+    "full_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/delivery/PRODUCT-AND-TESTS89.patch",
+    "full_patch_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/delivery/MANIFEST89.json",
+    "prepostimages_dir": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/delivery/",
+    "external_portfolio": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/external/PORTFOLIO-ANALYSIS89.patch",
+    "external_verifier": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/planner-p03-finish/external/OPERATION-VERIFIER89.patch",
+    "run_controls": 43677135575,
+    "run_diagnostic": 43677538070,
+    "run_original_76": 43673511994
+  },
+  "bounded_cause": {
+    "diagnostic_run": 43677538070,
+    "measurement_context": "bounded fixture, not original P03",
+    "verifier_digest_sha256_calls": 1272,
+    "verifier_digest_exclusive_ms": 5894,
+    "private_full_root_clone_calls": 2104,
+    "private_full_root_clone_exclusive_ms": 6545,
+    "comparison_replay_inclusive_ms": 21342,
+    "comments": "inclusive spans overlap; do not sum as exclusive saved time or infer speedup from candidate external patches"
+  },
+  "closure": {
+    "originalP03_original76": "FAIL",
+    "originalP03_on89": "NOT_RUN_HELD_TO_CAUSAL_QUALIFICATION",
+    "P03_72_assertions_unchanged": true,
+    "timeout_ms": 180000,
+    "owner_71_acceptance": "NOT_OBSERVED",
+    "CI45_independent_final": "NOT_OBSERVED",
+    "independent_review": "REQUIRED_AUTHOR_CANNOT_FINAL_APPROVE",
+    "GLOBAL_RELEASE": false
+  },
+  "next": "Owner of operation-verifier and Portfolio should qualify complete external candidate patches with identical bounded diagnostic and negative test selection, then re-run original P03 once if a material causal improvement is demonstrated. 71 composes, 45 checks, S0 alone owns release."
+}

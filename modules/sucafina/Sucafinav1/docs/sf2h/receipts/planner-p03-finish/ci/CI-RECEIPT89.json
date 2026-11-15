@@ -1,0 +1,69 @@
+{
+  "schema": "sf2h.planner-p03-finish.ci-receipt.v1",
+  "mission": 89,
+  "lease": "planner-p03-browser89",
+  "R1": {
+    "source_sha": "900ba649088a367ca070aa6189ddcc3cf18b41c7",
+    "source_tree": "1505c76ca6b5cbc0641eadc75dc101bf0605853f",
+    "snapshot": "f5bc9f431349664d2409e8f04d677d8d7910ead5",
+    "snapshot_tree": "b7e059c0070ffdf65f5aa8c45e3e1fb552fb61f8",
+    "request_blob": "b5dedccd4fbafcc6815cad6d8c662ebe8e795c59",
+    "run": 43677135575,
+    "job": 132699649922,
+    "cleanup_job": 132700543494,
+    "result": "FAIL",
+    "pass": 58,
+    "fail": 1,
+    "expects": 589,
+    "files": 12,
+    "elapsedSeconds": 145.66,
+    "failure": "Copied diagnostic-probe.ts attributed own relocated stacks instead of excluding the planner-p03-finish/diagnostic- prefix; only diagnostic-cost.test.ts:63 failed",
+    "other_controls": "58 PASS, no product regression observed"
+  },
+  "R2": {
+    "source_sha": "aa6e8299885a7d415ab9e907f68ddd9d6d300049",
+    "source_tree": "25d54e1b17c9a5decb7434d571d6fe26f4828a61",
+    "snapshot": "af1d8d09855d2644622a4db062f624ab72a8a41a",
+    "snapshot_tree": "e0842c8cfefae9bb93103092838a3eeab928cbcc",
+    "run": 43677538070,
+    "job": 132700853984,
+    "cleanup_job": 132701339119,
+    "result": "SUCCESS",
+    "pass": 1,
+    "fail": 0,
+    "expects": 17,
+    "selection": "only relocated diagnostic-cost.test.ts",
+    "durationMs": 39408.16,
+    "callbackEvents": 87440,
+    "callbackOrderSha256": "979b2e2ed8ca4658f1b9138abd0f69aca87b616ff8e3ca6f3996523d38cbacb4",
+    "outputDigests": {
+      "comparison": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73",
+      "rule": "297d2038040a7ab226fe6b625464c19c10eb79f1201a082997f2d0338b493987",
+      "evaluation": "57db0af20092a4f30afc0ea4ff4cef0a4ef8ae4e7b1c7ef4ce82e1db1399e002",
+      "binding": "a9bb95f4b7004d7af4cc3c5dea1b451b7b9cd6e3d8ed3e24a98bf196226acfae",
+      "comparisonAgain": "f1cae0ba8d37d37ea8e47992dd8459d29fd447f4063f230132dee8359ffc9d73"
+    },
+    "note": "Compare exact outputDigests to terminal76; only diagnostic-probe test location exclusion was changed (product unchanged)."
+  },
+  "combined": {
+    "result": "58 original negative controls PASS + 1 diagnostic PASS, on different snapshots; not one 59-pass run",
+    "P03_89": "NOT_RUN_CAUSAL_GATE_HELD",
+    "product_digest_both_snapshots": "unchanged",
+    "source_after_R2": "only documentation added, no product/test changes"
+  },
+  "originalP03": {
+    "source76_w": "6854c0f966e4fd78322932181359c3742c53c16d",
+    "source76_v": "ccd7384a75efd69da203c7c42f04f3083ceb4974",
+    "snapshot76": "e827b3d6d8de3832ea903d5cb914c59eaf12ba26",
+    "run": 43673511994,
+    "job": 132688523969,
+    "elapsedMs": 180011.68,
+    "actual": "FAIL timeout portfolio-analysis-changed",
+    "preservedExpectLines": 72,
+    "executedExpectCalls": 24,
+    "originalTestBlob": "47b5358c8dda3179045499388ce98871576a2aa9",
+    "budgetMs": 180000
+  },
+  "typecheck": "NOT_RUN",
+  "GLOBAL_RELEASE": false
+}

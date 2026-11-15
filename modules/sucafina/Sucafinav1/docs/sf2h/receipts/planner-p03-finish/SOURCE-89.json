@@ -1,7 +1,7 @@
 {
   "schema": "sf2h.planner-p03-finish.source-manifest.v1",
   "mission": 89,
-  "stage": "material-first-qualification",
+  "stage": "controlled-source-and-negative-regressions-qualified; original P03 blocked by foreign producer causality",
   "base_branch_sha": "a9eb6d3e70714e712c48f7286c53a27b45236d95",
   "ack_sha": "a4152b4201e83fc9985748955452e631fe61bfab",
   "product": [
@@ -14,7 +14,7 @@
     {
       "path": "modules/sucafina/Sucafinav1/product/planner/stored-scenarios.ts",
       "pre": "529e29806b3faf15f88eec009c198e783f4248a3",
-      "post": "pending computed immutable blob",
+      "post": "c1634b7388216af2da62f1af0d229e2dc78affad",
       "origin": "external candidate76; final detached private envelope; estimated 135-141ms, no P03 closure"
     }
   ],
@@ -35,5 +35,14 @@
     "changed": false
   },
   "limits": "This branch does not claim to have fixed the dominant cross-owner caller/replay cost. Use targeted proof first; no identical original P03 rerun until causal improvement.",
-  "GLOBAL_RELEASE": false
+  "GLOBAL_RELEASE": false,
+  "latest_target_reconciliation": {
+    "observed_target_sha": "eecbdacb21734695094332deb6142aa35d5c9c3c",
+    "result_store_target_blob": "c76d9bc385a4b5102b756812b778c844f20ab733",
+    "result_store_status": "same exact candidate already integrated independently by 71; no overwrite or double counting",
+    "stored_scenarios_target_blob": "529e29806b3faf15f88eec009c198e783f4248a3",
+    "stored_scenarios_candidate_blob": "c1634b7388216af2da62f1af0d229e2dc78affad",
+    "original_P03_target_blob": "47b5358c8dda3179045499388ce98871576a2aa9"
+  },
+  "remaining": "Unresolved cross-owner nested verifier/replay cost; original P03 run gated. See HANDOFF-71.md, external complete patches and measured evidence."
 }
