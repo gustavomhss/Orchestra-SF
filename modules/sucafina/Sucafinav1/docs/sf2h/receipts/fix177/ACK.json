@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h.native-fix177.ack.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 177,
+  "order": "A01",
+  "requested_model": "Astra",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_reason": "not exposed by ChatGPT runtime or GitHub connector",
+  "actor": "ChatGPT GPT-6",
+  "epoch": "native-fix-e1-browser177",
+  "branch": "sf-ux-w14",
+  "pr": 133,
+  "source_pre_head": "32b69bd448c3141f2d68e39a8021d4ef0bbc31eb",
+  "source_pre_tree": "dcbc0774a934c040d68683c140e859860db54876",
+  "source_pre_domain_blob": "1aa4a2360f94cadfdc49e7e0579f61fb97dfa0f4",
+  "frozen_projection_blob": "eae532dae73f282d9cefd66228da15fc26b63040",
+  "consumer_observed_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+  "consumer_observed_tree": "99d4788774ce548d4cd64a96c0f2481db1fb15eb",
+  "compiler_run": 43766055614,
+  "compiler_job": 132971280139,
+  "browser_run": 43766970018,
+  "browser_job": 132974180913,
+  "fence": {
+    "previous_epoch": "ux-native-w14-e1",
+    "previous_authority": "REVOKED_FOR_FUTURE_WRITES_ON_CURRENT_PACKET_PATHS",
+    "next_epoch": "native-fix-e1-browser177",
+    "runtime_termination_claimed": false
+  },
+  "contract_blobs": {
+    "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+    "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+    "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1"
+  },
+  "diagnostics": [
+    "TS2307 missing source dependency at consumer: domain/projection.ts original blob exists on W14",
+    "TS2345 transaction inference denied-only; TS18046 outcome unknown",
+    "TS2322 dynamic operation ID not narrowed to frozen SfOperationId"
+  ],
+  "state": "ACK_ACTIVE_SOURCE_FIX",
+  "validation": "NOT_RUN_POLICY",
+  "native_goal": "paused",
+  "global_release": false,
+  "write_paths": [
+    "apps/cli/src/sucafina-product/native-ui/domain.ts",
+    "apps/cli/src/sucafina-product/native-ui/domain/**",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/domain.test.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fix177/**"
+  ]
+}
