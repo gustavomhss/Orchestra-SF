@@ -248,6 +248,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
       }
       // The response confirms the command, not a current editable snapshot.
       setView("lastRef", result.body.value.scheduleRef)
+      setView("selected", result.body.value.scheduleRef)
       setView("phase", "clean")
       setView("mode", "inspect")
       setView("detail", null)
@@ -274,7 +275,7 @@ export function SfSchedulesView(props: SfSurfaceProps<"UI66">): JSX.Element {
     setView("runState", "loading")
     try {
       const result = await createSfRoutinesClient(active.transport)["schedules.read-run"]({ runRef }, { signal: abort.signal })
-      if (!n29SameAuthority(owner, generation, stamp)) return
+      if (!n29SameAuthority(owner, generation, stamp) || view.runRef.trim() !== runRef) return
       const state = n29ResponseState(result)
       if (result.kind !== "response" || result.body.status !== "ok") {
         setView("runState", state)

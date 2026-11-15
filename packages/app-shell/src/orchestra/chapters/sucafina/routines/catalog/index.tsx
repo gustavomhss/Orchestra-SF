@@ -147,7 +147,8 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
   const catalog = async () => {
     const current = owner.ready()
     const selected = currentCase()
-    if (!current || !selected || !view.purpose.trim() || !permitted("routines.catalog")
+    const purpose = view.purpose.trim()
+    if (!current || !selected || !purpose || !permitted("routines.catalog")
       || busy() || view.phase === "outcome-unknown") return
     const abort = new AbortController()
     const generation = owner.generation()
@@ -157,9 +158,10 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
     setView("recipeIndex", null)
     try {
       const result = await createSfRoutinesClient(current.transport)["routines.catalog"]({
-        caseRef: selected, input: { purpose: view.purpose.trim() },
+        caseRef: selected, input: { purpose },
       }, { signal: abort.signal })
-      if (!n29SameAuthority(owner, generation, stamp)) return
+      if (!n29SameAuthority(owner, generation, stamp) || !currentCase()
+        || !sameCase(selected, currentCase()!) || view.purpose.trim() !== purpose) return
       const next = n29ResponseState(result)
       if (result.kind !== "response" || result.body.status !== "ok") {
         setView("recipesState", next)
@@ -262,7 +264,8 @@ export function SfRoutineCatalogView(props: SfSurfaceProps<"UI64">): JSX.Element
       const result = await createSfRoutinesClient(current.transport)["routines.read-admission"]({
         caseRef: selected, input: { admissionRef: ref },
       }, { signal: abort.signal })
-      if (!n29SameAuthority(owner, generation, stamp)) return
+      if (!n29SameAuthority(owner, generation, stamp) || !currentCase()
+        || !sameCase(selected, currentCase()!) || currentAdmissionRef() !== ref) return
       const next = n29ResponseState(result)
       if (result.kind !== "response" || result.body.status !== "ok") {
         setView("admissionState", next)
