@@ -1,7 +1,6 @@
 import { createEffect, For, onCleanup, Show, untrack } from "solid-js"
 import { createStore } from "solid-js/store"
 import { useLanguage } from "@/context/language"
-import { SfOperations } from "@orchestra/schema/sucafina/operations"
 import { createSfOperationsClient } from "@orchestra/client/sucafina/operations"
 import { useSfContext } from "../../context"
 import type { SfSurfaceProps, SfEditScopeKey, SfIntentRef, SfRef, SfOperationRef, SfOwnerKey } from "../../context/contracts"
@@ -12,8 +11,7 @@ import { SfStatePanel } from "../../shared/states"
 import { SfChangeReview } from "../../shared/change-review"
 import type { SfReviewField, SfReviewSnapshot } from "../../shared/change-review"
 import {
-  SERVICE_DEFAULT_CATEGORIES, SERVICE_HEAT_FIELDS, SERVICE_MONTHS, SERVICE_SLA_FIELDS,
-  SERVICE_YEARS, SERVICE_TICKET_MEASURES, SERVICE_TICKET_TYPES,
+  SERVICE_HEAT_FIELDS, SERVICE_MONTHS, SERVICE_SLA_FIELDS, SERVICE_YEARS,
   SOURCE_OPERATION_IDS, serviceCategories, serviceCurrentHeatmap, serviceCurrentMonthHeatmap,
   serviceCurrentSla, serviceCurrentTickets, serviceItems, serviceListVersion,
   serviceMonthVersion, serviceRecordId, serviceString, serviceTicketKeys,
@@ -52,8 +50,6 @@ const asOperation = (value: string) => value as SfOperationRef
 const numeric = (value: string) => value === "" || Number.isFinite(Number(value)) && Number(value) >= 0
 const lists = (value: string) => value.split("\n").map((row) => row.trim()).filter(Boolean)
 const noDupes = (items: string[]) => new Set(items).size === items.length && items.every((item) => !item.includes("|"))
-const validYear = (value: number) => SERVICE_YEARS.some((year) => year === value)
-const validMonth = (value: number) => SERVICE_MONTHS.some((month) => month === value)
 
 function initialValues(page: SfServicePage, action: SfServiceAction, item: string | null): DraftValues {
   if (action === "save-categories" || action === "save-items") {
@@ -82,17 +78,16 @@ function initialValues(page: SfServicePage, action: SfServiceAction, item: strin
   // fieldsets. No second upload endpoint, hidden workbook parser or snapshot.
   const tickets = serviceCurrentTickets(page)
   const sla = serviceCurrentSla(page)
-  return {
-    tickets: JSON.stringify(Object.fromEntries(serviceTicketKeys(page).map(
-      (key) => [key, tickets?.[key] ?? 0],
-    )), null, 2),
-    sla: JSON.stringify({
-      incSLA: sla?.incSLA ?? 0, svcSLA: sla?.svcSLA ?? 0, avail: sla?.avail ?? 100,
-    }, null, 2),
-    heatmap: JSON.stringify(serviceCurrentMonthHeatmap(page).map((row) => ({
-      item: row.item, p1: row.p1, p2: row.p2, tickets: row.tickets, comments: row.comments,
-    })), null, 2),
+  const fields: Record<string, string> = {}
+  for (const name of serviceTicketKeys(page)) fields["ticket." + name] = serviceString(tickets?.[name])
+  for (const name of SERVICE_SLA_FIELDS) fields["sla." + name] = serviceString(sla?.[name])
+  for (const item of serviceItems(page)) {
+    const row = serviceCurrentHeatmap(page, item)
+    for (const name of SERVICE_HEAT_FIELDS)
+      fields["heatmap." + item + "." + name] = serviceString(row?.[name])
+    fields["heatmap." + item + ".comments"] = serviceString(row?.comments)
   }
+  return fields
 }
 
 function sourceFields(action: SfServiceAction, values: DraftValues): string[] {
@@ -100,7 +95,7 @@ function sourceFields(action: SfServiceAction, values: DraftValues): string[] {
   if (action === "save-sla") return [...SERVICE_SLA_FIELDS]
   if (action === "save-heatmap") return ["item", ...SERVICE_HEAT_FIELDS, "comments"]
   if (action === "save-categories" || action === "save-items") return ["names"]
-  return ["tickets", "sla", "heatmap"]
+  return Object.keys(values)
 }
 
 function isValid(action: SfServiceAction, values: DraftValues, page: SfServicePage): boolean {
@@ -109,21 +104,18 @@ function isValid(action: SfServiceAction, values: DraftValues, page: SfServicePa
   if (action === "save-sla") return SERVICE_SLA_FIELDS.every((key) => numeric(values[key] ?? ""))
   if (action === "save-heatmap") return serviceItems(page).includes(values.item ?? "") &&
     SERVICE_HEAT_FIELDS.every((key) => numeric(values[key] ?? ""))
-  try {
-    const tickets: unknown = JSON.parse(values.tickets ?? "")
-    const sla: unknown = JSON.parse(values.sla ?? "")
-    const heatmap: unknown = JSON.parse(values.heatmap ?? "")
-    return tickets !== null && typeof tickets === "object" && !Array.isArray(tickets) &&
-      sla !== null && typeof sla === "object" && !Array.isArray(sla) && Array.isArray(heatmap)
-  } catch {
-    return false
-  }
+  return Object.entries(values).every(([field, value]) =>
+    field.endsWith(".comments") || numeric(value))
+
 }
 
 function reviewFields(action: SfServiceAction, values: DraftValues): SfReviewField[] {
   return sourceFields(action, values).map((field) => ({
     path: field,
-    label: message(sourceKey("field." + field + ".label")),
+    label: message(field.startsWith("ticket.") ? sourceKey("section.tickets") :
+      field.startsWith("sla.") ? sourceKey("section.sla") :
+      field.startsWith("heatmap.") ? sourceKey("section.heatmap") :
+      sourceKey("field." + field + ".label")),
     value: { kind: "text" as const, text: { kind: "data" as const, text: values[field] ?? "" } },
   }))
 }
@@ -140,6 +132,7 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
   let draft: Draft | undefined
   let draftOwner: SfOwnerKey | undefined
   let submitted: Readonly<{ operationRef: SfOperationRef; action: SfServiceAction; owner: SfOwnerKey; year: number; month: number }> | undefined
+  let routeEntryConsumed: string | undefined
   const pendingRequests = new Set<AbortController>()
   onCleanup(() => {
     for (const request of pendingRequests) request.abort()
@@ -147,7 +140,10 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
     draft = undefined
   })
 
-  const currentOwner = () => owner.state().status === "ready" ? owner.state().ownerKey : undefined
+  const currentOwner = () => {
+    const current = owner.state()
+    return current.status === "ready" ? current.ownerKey : undefined
+  }
   const can = (action: SfServiceAction) =>
     state.page?.allowedActionIds.includes(action) === true &&
     owner.state().status === "ready" && !!owner.ready()
@@ -262,8 +258,9 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
       ...(month === undefined ? {} : { operationsMonth: month }),
     }
     void client["domain.page.CAP11"](input, { signal: request.signal }).then((response) => {
+      const latest = owner.state()
       if (request.signal.aborted || owner.generation() !== generation ||
-        owner.state().status !== "ready" || owner.state().ownerKey !== ownerState.ownerKey) return
+        latest.status !== "ready" || latest.ownerKey !== ownerState.ownerKey) return
       if (response.kind !== "response") {
         console.error("Sucafina CAP11 read failure", response.reason)
         setState("page", undefined)
@@ -309,7 +306,8 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
         setState("editor", null)
         setState("operationState", "saved")
       }
-      if (state.editor === null) {
+      if (state.editor === null && routeEntryConsumed !== String(props.route.href)) {
+        routeEntryConsumed = String(props.route.href)
         const kind = props.route.kind
         if (kind === "edit-month" && value.allowedActionIds.includes("save-tickets"))
           untrack(() => openEditor("save-tickets"))
@@ -351,7 +349,8 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
     const ownerKey = currentOwner()
     const snap = activeDraft()
     if (!editor || !page || !active || !ownerKey || !snap || editor.review !== true ||
-      !can(editor.action) || state.submitting || !isValid(editor.action, snap.value, page)) return
+      !can(editor.action) || state.submitting || snap.pendingOperation !== null ||
+      !isValid(editor.action, snap.value, page)) return
     if (editor.version !== (
       editor.action === "save-categories" || editor.action === "save-items"
         ? serviceListVersion(page, editor.action === "save-categories" ? "opsCats" : "opsHmItems")
@@ -368,11 +367,21 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
     const values = snap.value
     const inputBase = { version: editor.version }
     setState("submitting", true)
-    draft?.setPhase("submitting")
-    // A fresh idempotency key is created for one *single* explicit invocation,
-    // never regenerated to retry an uncertain mutation.
+    // This key and digest bind exactly one reviewed intent. They are never
+    // regenerated for an implicit replay of an uncertain result.
     const options = { signal: request.signal, idempotencyKey: crypto.randomUUID() }
     try {
+      const intentBytes = new TextEncoder().encode(JSON.stringify([
+        SOURCE_OPERATION_IDS[editor.action], editor.version, snap.value,
+      ]))
+      const digest = new Uint8Array(await crypto.subtle.digest("SHA-256", intentBytes))
+      if (request.signal.aborted || owner.generation() !== generation || currentOwner() !== ownerKey) return
+      const payloadDigest = Array.from(digest, (byte) => byte.toString(16).padStart(2, "0")).join("")
+      draft?.setPending({
+        operationRef: editor.operationRef, idempotencyKey: options.idempotencyKey,
+        payloadDigest, expectedVersion: editor.version,
+      })
+      draft?.setPhase("submitting")
       let result: Awaited<ReturnType<typeof client["domain.command.CAP11.save-sla"]>>
       switch (editor.action) {
         case "save-categories":
@@ -412,14 +421,22 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
           }, options)
           break
         case "import-month": {
-          const tickets = JSON.parse(values.tickets ?? "{}") as Record<string, string | number | null>
-          const sla = JSON.parse(values.sla ?? "{}") as {
-            incSLA?: string | number | null; svcSLA?: string | number | null; avail?: string | number | null
+          const tickets = Object.fromEntries(serviceTicketKeys(page).map(
+            (name) => [name, values["ticket." + name] ?? ""],
+          ))
+          const sla = {
+            incSLA: values["sla.incSLA"] ?? "", svcSLA: values["sla.svcSLA"] ?? "",
+            avail: values["sla.avail"] ?? "",
           }
-          const heatmap = JSON.parse(values.heatmap ?? "[]") as {
-            item: string; p1?: string | number | null; p2?: string | number | null;
-            tickets?: string | number | null; comments?: string
-          }[]
+          const heatmap = serviceItems(page).flatMap((item) => {
+            const prefix = "heatmap." + item + "."
+            const cell = {
+              item, p1: values[prefix + "p1"] ?? "", p2: values[prefix + "p2"] ?? "",
+              tickets: values[prefix + "tickets"] ?? "", comments: values[prefix + "comments"] ?? "",
+            }
+            return [cell.p1, cell.p2, cell.tickets, cell.comments].every((value) => value === "")
+              ? [] : [cell]
+          })
           result = await client["domain.command.CAP11.import-month"]({
             ...inputBase, confirmed: true,
             values: { year: page.selection.year, month: page.selection.month, tickets, sla, heatmap,
@@ -484,7 +501,10 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
   }
   const sourceDataField = (name: string, type: "number" | "text" | "textarea" = "number") => (
     <label class="sf-ops-field">
-      <span>{name.includes("|") ? name : t(sourceKey("field." + name + ".label"))}</span>
+      <span>{name.startsWith("ticket.") ? name.slice(7) :
+        name.startsWith("sla.") ? t(sourceKey("field." + name.slice(4) + ".label")) :
+        name.startsWith("heatmap.") ? name.slice(8).replace(/.(p1|p2|tickets|comments)$/, " / $1") :
+        name.includes("|") ? name : t(sourceKey("field." + name + ".label"))}</span>
       <Show when={type !== "textarea"} fallback={
         <textarea value={currentFields()[name] ?? ""} onInput={(event) => edit(name, event.currentTarget.value)} />
       }>
@@ -755,11 +775,30 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
                     {sourceDataField("names", "textarea")}
                   </Show>
                   <Show when={state.editor!.action === "import-month"}>
-                    <div class="sf-ops-grid">
-                      {sourceDataField("tickets", "textarea")}
-                      {sourceDataField("sla", "textarea")}
-                      {sourceDataField("heatmap", "textarea")}
-                    </div>
+                    <section>
+                      <h3>{t(sourceKey("section.tickets"))}</h3>
+                      <div class="sf-ops-grid">
+                        <For each={serviceTicketKeys(state.page!)}>{(name) =>
+                          sourceDataField("ticket." + name)}</For>
+                      </div>
+                    </section>
+                    <section>
+                      <h3>{t(sourceKey("section.sla"))}</h3>
+                      <div class="sf-ops-grid">
+                        <For each={SERVICE_SLA_FIELDS}>{(name) =>
+                          sourceDataField("sla." + name)}</For>
+                      </div>
+                    </section>
+                    <section>
+                      <h3>{t(sourceKey("section.heatmap"))}</h3>
+                      <div class="sf-ops-grid">
+                        <For each={serviceItems(state.page!)}>{(item) =>
+                          <For each={[...SERVICE_HEAT_FIELDS, "comments"]}>{(name) =>
+                            sourceDataField("heatmap." + item + "." + name,
+                              name === "comments" ? "textarea" : "number")}</For>
+                        }</For>
+                      </div>
+                    </section>
                     <p>{t(commonKey("reviewImport"))}</p>
                   </Show>
                   <div class="sf-ops-actions">
@@ -770,6 +809,8 @@ export function SfServicePage(props: SfSurfaceProps<"CAP11">) {
                       {t(commonKey("close"))}
                     </button>
                     <button type="button" onClick={() => {
+                      const snapshot = activeDraft()
+                      if (snapshot?.dirty && !window.confirm(t(commonKey("navigationDiscard")))) return
                       draft?.discard()
                       setState("editor", null)
                     }}>{t(commonKey("discard"))}</button>
