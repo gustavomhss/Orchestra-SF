@@ -7,6 +7,6 @@ export function nativeSpecSelected(args: readonly string[]): boolean {
   if (args.includes("--list")) return false
   return args.some((argument) => {
     const normalized = argument.replaceAll("[\\\\/]", "/").replaceAll("\\.", ".").replaceAll("\\", "/")
-    return /(?:^|\/)e2e\/sucafina\/native\/(?!fixture\/)[A-Za-z0-9._/-]+\.spec\.ts(?:\$|:\d+(?::\d+)?)?$/.test(normalized)
+    return /(?:^|\/)e2e\/sucafina\/native\/(?!fixture\/)(?:[A-Za-z0-9._-]+\/)*[A-Za-z0-9._-]+\.spec\.ts(?:\$|:\d+(?::\d+)?)?$/.test(normalized)
   })
 }
