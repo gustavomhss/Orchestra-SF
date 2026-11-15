@@ -357,11 +357,14 @@ function attach() {
       event.preventDefault()
       if (pending.closed || form.dataset.saving === "true" || commandBlocked(form)) return
       const errorScope = form.closest("section") || form
-      errorScope.querySelectorAll("[data-field-error]").forEach((message) => {
+      errorScope.querySelectorAll("[data-field-error], [data-error-for]").forEach((message) => {
         errorScope.querySelectorAll("[aria-describedby]").forEach((input) => {
-          const ids = input.getAttribute("aria-describedby").split(/\\s+/).filter((id) => id !== message.id)
+          const described = input.getAttribute("aria-describedby").split(/\\s+/)
+          if (!described.includes(message.id)) return
+          const ids = described.filter((id) => id !== message.id)
           if (ids.length) input.setAttribute("aria-describedby", ids.join(" ")); else input.removeAttribute("aria-describedby")
-          if (input.dataset.fieldInvalid) { input.removeAttribute("aria-invalid"); delete input.dataset.fieldInvalid }
+          input.removeAttribute("aria-invalid")
+          delete input.dataset.fieldInvalid
         })
         message.remove()
       })
