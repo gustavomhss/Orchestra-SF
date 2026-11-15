@@ -23,14 +23,6 @@ type RendererApi = Readonly<{
 type Owned = Readonly<{ bindingHandle: string; generation: number }>
 type CookieCounts = Readonly<{ isolated: number; isolatedHttpOnly: number; default: number }>
 
-const requireRenderer = () => {
-  const api = (window as unknown as { api?: RendererApi }).api
-  if (!api?.sucafina || typeof api.sucafina.registerConnection !== "function" ||
-      typeof api.awaitInitialization !== "function")
-    throw new Error("D01_REAL_PACKAGED_PRELOAD_SUCAFINA_API_REQUIRED")
-  return api
-}
-
 test.describe("D01 · real packaged Electron / Sucafina broker / private partition", () => {
   test("original Microsoft login stays within ephemeral partition; reject foreign owner and purge on logout", async ({}, info) => {
     const manifest = await readNativeManifest()
@@ -57,15 +49,14 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
       if (!main.isPackaged) throw new Error("D01_MUST_USE_PACKAGED_ELECTRON_NOT_DEV_WEB")
       const window = await app.firstWindow()
       await expect.poll(() => window.evaluate(() => {
-        try { requireRenderer(); return true }
-        catch { return false }
+        return typeof (window as unknown as { api?: RendererApi }).api?.sucafina?.registerConnection === "function"
       }), { message: "Packaged Electron preload must expose the real broker API" }).toBe(true)
 
       // Credentials, if the app owns them, are read INSIDE its trusted renderer
       // and forwarded by its existing preload to main. They are never returned,
       // serialized to Node, written to a file or passed through test arguments.
       const approved = await window.evaluate(async (nonsecret) => {
-        const api = requireRenderer()
+        const api = ((window as unknown as { api?: RendererApi }).api!)
         const owned = await api.awaitInitialization()
         if ((owned.username === null) !== (owned.password === null))
           throw new Error("D01_OWNED_CONNECTION_CREDENTIAL_PAIR_INCONSISTENT")
@@ -90,7 +81,7 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
         installationId: manifest.target.installationId,
       }
       const bound = await window.evaluate(async (target) => {
-        return requireRenderer().sucafina.bind(target, () => {
+        return ((window as unknown as { api?: RendererApi }).api!).sucafina.bind(target, () => {
           // Real broker handles invalidation. This callback supplies no grant.
         })
       }, selection).catch(() => {
@@ -135,7 +126,7 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
       // An unavailable Microsoft login is a missing external dependency,
       // never converted to a mock or an 'authenticated' fixture flag.
       const login = await window.evaluate(async (args) => {
-        return requireRenderer().sucafina.login({
+        return ((window as unknown as { api?: RendererApi }).api!).sucafina.login({
           ...args.owner, returnRoute: args.route as SfResolvedRoute,
         })
       }, { owner, route }).catch(() => {
@@ -152,7 +143,7 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
       // This is an actual ctx.context IPC -> Electron net.request -> original
       // producer in the partition. It is NOT page.request or a web fetch.
       const invoked = await window.evaluate(async (args) => {
-        return requireRenderer().sucafina.invoke({
+        return ((window as unknown as { api?: RendererApi }).api!).sucafina.invoke({
           kind: "request", ...args.owner,
           requestId: crypto.randomUUID(), operationId: "ctx.context",
           input: {
@@ -188,19 +179,19 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
           installationId: manifest.target.installationId },
       ]) {
         const denied = await window.evaluate(async (target) =>
-          requireRenderer().sucafina.bind(target, () => undefined), wrong)
+          ((window as unknown as { api?: RendererApi }).api!).sucafina.bind(target, () => undefined), wrong)
         if (denied.status === "ok")
           throw new Error("D01_FOREIGN_UNAPPROVED_REGISTRY_BOUND_SUCCESSFULLY")
       }
 
       const logout = await window.evaluate(async (target) =>
-        requireRenderer().sucafina.logout(target), owner)
+        ((window as unknown as { api?: RendererApi }).api!).sucafina.logout(target), owner)
       expect(logout.status).toBe("cleared")
       const cleared = await countCookies()
       expect(cleared.isolated, "Logout purges the real Electron private partition").toBe(0)
       expect(cleared.default).toBe(0)
       const stale = await window.evaluate(async (args) =>
-        requireRenderer().sucafina.invoke({
+        ((window as unknown as { api?: RendererApi }).api!).sucafina.invoke({
           kind: "request", ...args.owner, requestId: crypto.randomUUID(),
           operationId: "ctx.context", input: {
             installationId: args.target.installationId,
@@ -208,8 +199,7 @@ test.describe("D01 · real packaged Electron / Sucafina broker / private partiti
             hostId: args.target.hostId,
           },
         }), { owner, target: manifest.target })
-      if (stale.kind !== "transport-error" &&
-          !(stale.kind === "failure" && stale.reason !== undefined))
+      if (stale.kind !== "transport-error")
         throw new Error("D01_REVOKED_ELECTRON_BINDING_STILL_USABLE")
 
       // Safe evidence only; no URLs with query, handles, cookie metadata,
