@@ -1,0 +1,217 @@
+{
+  "schema": "sf2h.advance171.terminal.v1",
+  "campaign": "sf2h-integral-20261112",
+  "mission": 171,
+  "order": "A12",
+  "branch": "sf-ux-a12",
+  "pr": 144,
+  "epoch": "ux-native-a12-e3-browser171",
+  "actor": "ChatGPT",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_status": "not exposed",
+  "astra_native_session_proof": false,
+  "predecessor_153": {
+    "epoch": "ux-native-a12-e2-browser153",
+    "authority": "REVOKED_FUTURE_ONLY",
+    "source_history_preserved": true
+  },
+  "preflight": {
+    "source_head": "502b8dc8131dac4f45f9a1cecdb3ae81d7c21319",
+    "source_tree": "1a0789ba7ea6f3aba141aa5819e17969fa35b005",
+    "ack_commit": "ac226a79a62f9d80693d710f77d40e90306e8a56",
+    "ack_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/ACK.json",
+    "ack_blob": "da84603db0e05bc6f764853221270f08869a7a88",
+    "inputs_sha": "in ACK.json",
+    "user_allowlist_enforced": true
+  },
+  "delivery": {
+    "source_commit": "cf4174b76a87ce093932fb157bc7af02a55c2d71",
+    "source_tree": "d168332488d6a73556ceb36bfb6c2d276eabfc5f",
+    "pr_url": "https://github.com/gustavomhss/Orchestra-SF/pull/144",
+    "pr_base": "sf2-stack",
+    "pr_draft": true,
+    "pr_head_observed": "cf4174b76a87ce093932fb157bc7af02a55c2d71",
+    "changed_paths": {
+      "packages/schema/src/sucafina/work.ts": {
+        "preimage_git_blob": "ef6f3ef73966caf976e1bd816984356eedd6e007",
+        "postimage_git_blob": "3b3f87ed7c74a3e7965fbb8d3d00776d2ebba61a",
+        "source_author_commit": "cf4174b76a87ce093932fb157bc7af02a55c2d71"
+      },
+      "packages/client/src/sucafina/work.ts": {
+        "preimage_git_blob": "f790637deb85ae93d85840dea625d953b73e619c",
+        "postimage_git_blob": "c6092505e5e146775615da2d131f270d681cfc97",
+        "source_author_commit": "cf4174b76a87ce093932fb157bc7af02a55c2d71"
+      },
+      "apps/cli/src/sucafina-product/native-ui/work.ts": {
+        "preimage_git_blob": "402b8a4599807d403065e561a427e230ae5981cb",
+        "postimage_git_blob": "fde98b609f88d5bdb3ca472bddc4b373092da2a6",
+        "source_author_commit": "cf4174b76a87ce093932fb157bc7af02a55c2d71"
+      },
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts": {
+        "preimage_git_blob": "70fbd980e1a8bb18b27095c88488386f62227253",
+        "postimage_git_blob": "18d330c2980cc18bb35cd4976c8635ec94295828",
+        "source_author_commit": "cf4174b76a87ce093932fb157bc7af02a55c2d71"
+      }
+    },
+    "protected_paths_modified": false,
+    "protected_patch": {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/protected-shared-inert-patch.json",
+      "git_blob": "0aef655cbfd6561f1cf3cb591a2e130ef31ac418",
+      "source_target_head": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+      "current_integrator_head_observed": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+      "unreferenced_proposed_blobs": 5,
+      "status": "INERT_NOT_APPLIED"
+    }
+  },
+  "real_sources": {
+    "producer": {
+      "path": "apps/cli/src/sucafina-product/work-destinations.ts",
+      "blob": "506888f365643e0276d9098c6b924186212da5ee",
+      "commit": "690a34cdd81c12d7311f3717c19679b950276161",
+      "symbol": "createSfWorkDestinations.read",
+      "return": "PortResult<{view,verify}>",
+      "read_proof": "source inspection only",
+      "grant_faked": false
+    },
+    "host": {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "blob": "8e9f96a13efa112b94e2578f9c0b8a663cd04aed",
+      "original_producer_instantiated": true,
+      "read_port_exposed_in_C": false
+    },
+    "host_router": {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "blob": "17db52d914ca49934953e1161461b03856eb29c5",
+      "original_Request_preserved_source_inspection": true
+    },
+    "registry_preimage": {
+      "path": "packages/schema/src/sucafina/operation-registry.ts",
+      "blob": "e18f1fa448b7fcff8a2691dd1b0778640b3f6a84",
+      "search_still_GET_until_I00": true
+    }
+  },
+  "implementation": {
+    "work_item": "projection.work-item GET exact selection/actionRef/period, ui.admit/validate original Request + read + revalidate + verify, field-by-field safe output, producer period semantics, finally finish; missing port fail-closed",
+    "private_search": "projection.search POST only, no URI query, application/json, bounded original stream at 4096B, strict single q property, duplicate/unknown JSON keys denied, original sf_knowledge_search dispatch, no raw query logs, client blocks stale GET metadata before F02",
+    "preservation": "nine IDs, strict153 closed V1 views, CAS zero/null, no V2 or changes to foreign code",
+    "owner_only_patch": "five protected Git blob postimages constructed but never referenced in a protected branch tree"
+  },
+  "criteria": [
+    {
+      "id": "A12-AC01",
+      "status": "SOURCE_ARTIFACT_READY_NOT_RUN",
+      "scenarios": [
+        "work-item closed typed detail + source redaction",
+        "title:null/sourceVersion:0/observedVersion:0 unchanged",
+        "source period/view version/owner"
+      ],
+      "evidence": "author schema/client/CLI/test blobs; real producer code inspected; no runtime"
+    },
+    {
+      "id": "A12-AC02",
+      "status": "SOURCE_ARTIFACT_READY_NOT_RUN",
+      "scenarios": [
+        "unknown/repeated work-item query denied",
+        "wrong origin/date/owner extra denied",
+        "private body q duplicate/extra/malformed/oversize denied",
+        "V1 recursively closed and no unknown action/field"
+      ],
+      "evidence": "A12 tests authored NOT_RUN"
+    },
+    {
+      "id": "A12-AC03",
+      "status": "SOURCE_ARTIFACT_READY_NOT_RUN",
+      "scenarios": [
+        "V1 save nullable create and positive CAS",
+        "V1 strict153 retained",
+        "work state no optimistic owner grant"
+      ],
+      "evidence": "source code static only"
+    },
+    {
+      "id": "A12-NAV-01",
+      "status": "BLOCKED_INTEGRATION_NOT_RUN",
+      "scenarios": [
+        "private POST read registry/transport/browser/IPC/host wiring",
+        "no q in any URI",
+        "after in-place body decode use real authentication"
+      ],
+      "evidence": "five-file inert protected patch; branch client server fail-closed prior to I00"
+    },
+    {
+      "id": "A12-WORK-ITEM-REAL",
+      "status": "BLOCKED_INTEGRATION_NOT_RUN",
+      "scenarios": [
+        "real original Request+ui admission and producer read/verify",
+        "per-owner/session/project isolation",
+        "revocation after source read"
+      ],
+      "evidence": "producer signature and source current, no live operation"
+    }
+  ],
+  "upstream_criterion_groups": {
+    "WP01_T04_count": 9,
+    "WP08_T04_count": 22,
+    "source": "criteria-trace.json@1dba83d77882073af587c031d63299ed472905e8",
+    "statuses": "NOT_RUN_PENDING_C_AND_HOSTED_EVIDENCE"
+  },
+  "qualification": {
+    "local_tests": "NOT_RUN_PROHIBITED",
+    "local_typecheck": "NOT_RUN_PROHIBITED",
+    "local_parsers_validators_builds": "NOT_RUN_PROHIBITED",
+    "hosted_compiler_sdk": "NOT_RUN_WAITING_162_AND_163",
+    "hosted_ci": "NOT_RUN_WAITING_162_AND_164",
+    "runtime_identity": "NOT_RUN",
+    "sessionID": "UNEXPOSED",
+    "model_execution": "NOT_RUN",
+    "scanner_binary": "NOT_RUN",
+    "real_admission": "NOT_RUN",
+    "positive_live": "NOT_RUN",
+    "negative_live": "NOT_RUN",
+    "no_mock_claim": true,
+    "previous_CI": "not reused as new proof"
+  },
+  "consumer_edges": [
+    "162/S0-C PR65 sole integration",
+    "163/PR107 hosted compilation SDK guards",
+    "164/PR106 hosted surgical CI",
+    "WP01.T04 sf-work/sf-home native chapter consumers",
+    "WP08.T04 current My work projection/revocation",
+    "D01 desktop IPC broker and main network after 162",
+    "WP10 native admission and MCP bridge gated by AM proofs",
+    "V1 personal-views existing producer retained"
+  ],
+  "requests_file": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/REQUESTS-162-163-164.json",
+  "pending": [
+    "162 apply author outputs+protected inert blobs with CAS + contract delta NAV-01 and live host port",
+    "163 hosted typecheck/codegen/guards after same C",
+    "164 hosted surgical tests after same C",
+    "real model/session/owner/admission/scanner AM proofs required elsewhere",
+    "V2 views unimplemented producer: fail closed only, no new V2 interface"
+  ],
+  "final_gates": {
+    "C": "OPEN",
+    "eight_CI": "OPEN",
+    "epic": "OPEN",
+    "AM01_to_AM06": "OPEN",
+    "three_FINAL": "OPEN",
+    "D": "OPEN",
+    "guards": "OPEN",
+    "native_goal": "PAUSED",
+    "global_release": false
+  },
+  "scope_compliance": {
+    "no_foreign_writes": true,
+    "no_local_tests": true,
+    "no_new_ci": true,
+    "no_dispatcher": true,
+    "no_branch_alternative": true,
+    "no_reset_force": true,
+    "no_deploy": true,
+    "no_azure_or_secrets": true,
+    "no_restart": true
+  },
+  "lease_terminal": "AUTHOR_SOURCE_ARTIFACT_READY_HANDOFF_162_PENDING_INTEGRATION_AND_163_164_PROOF",
+  "status": "ARTIFACT_READY_NOT_QUALIFIED"
+}

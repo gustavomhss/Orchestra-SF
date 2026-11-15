@@ -1,0 +1,117 @@
+{
+  "schema": "sf2h.advance171.outgoing-requests.v1",
+  "epoch": "ux-native-a12-e3-browser171",
+  "mission": 171,
+  "source_head": "cf4174b76a87ce093932fb157bc7af02a55c2d71",
+  "source_tree": "d168332488d6a73556ceb36bfb6c2d276eabfc5f",
+  "status": "REQUESTED_PENDING_INTEGRATION",
+  "local_execution": "NOT_RUN_PROHIBITED",
+  "integrator_162": {
+    "pr": 65,
+    "actor": "S0-C",
+    "epoch": "S0-C-e20-browser162",
+    "target_branch": "sf2-stack",
+    "consumer_head_observed": "913b6b8f143e6c3e869eee293d02f04259c7cdd1",
+    "sole_integrator": true,
+    "apply_author_only": [
+      {
+        "path": "packages/schema/src/sucafina/work.ts",
+        "preimage": "ef6f3ef73966caf976e1bd816984356eedd6e007",
+        "postimage": "3b3f87ed7c74a3e7965fbb8d3d00776d2ebba61a"
+      },
+      {
+        "path": "packages/client/src/sucafina/work.ts",
+        "preimage": "f790637deb85ae93d85840dea625d953b73e619c",
+        "postimage": "c6092505e5e146775615da2d131f270d681cfc97"
+      },
+      {
+        "path": "apps/cli/src/sucafina-product/native-ui/work.ts",
+        "preimage": "402b8a4599807d403065e561a427e230ae5981cb",
+        "postimage": "fde98b609f88d5bdb3ca472bddc4b373092da2a6"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+        "preimage": "70fbd980e1a8bb18b27095c88488386f62227253",
+        "postimage": "18d330c2980cc18bb35cd4976c8635ec94295828"
+      }
+    ],
+    "inert_patch": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance171/protected-shared-inert-patch.json",
+    "inert_patch_git_blob": "0aef655cbfd6561f1cf3cb591a2e130ef31ac418",
+    "precondition": "CAS-matched current protected source blobs; explicit owner lease and no competing active integrator",
+    "operations": [
+      "Use exact 5 protected postimages: product/contracts/host-context.ts host narrow reader; host-context.ts exposes read only; registry POST 4096; browser SfTransport GET failclosed; desktop broker planSfOperation GET failclosed.",
+      "Do NOT reconstruct Request, bind fake grant, alter original workDestinations.read/verify, relax V1/CAS strict153, enable V2, or open Goal.",
+      "Compose 4 authored A12 files and patch in same product-C candidate, preserve old source changes and foreign leases.",
+      "Verify actual installed codecs for nine SfWork operation IDs; private POST JSON {q} must be admitted in web and desktop and query-free in URI; UI chapter search must not use legacy GET link.",
+      "Record source+postimage SHA and notify 163/164 only when C candidate and CI snapshot are pinned."
+    ],
+    "status": "PENDING_CONSUMER_ACK"
+  },
+  "compiler_163": {
+    "pr": 107,
+    "actor": "compiler",
+    "runs_only_after": "162 integrates exact author blobs+5 shared patches into same C candidate",
+    "files": [
+      "packages/schema/src/sucafina/work.ts",
+      "packages/schema/src/sucafina/operation-registry.ts",
+      "packages/client/src/sucafina/work.ts",
+      "packages/client/src/sucafina/transport.ts",
+      "apps/cli/src/sucafina-product/native-ui/work.ts",
+      "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "apps/cli/src/sucafina-product/host-context.ts",
+      "apps/desktop/src/main/sucafina/protocol.ts"
+    ],
+    "typecheck_packages": [
+      "packages/schema",
+      "packages/client",
+      "apps/cli",
+      "apps/desktop"
+    ],
+    "actions": [
+      "existing hosted compiler/typecheck gates",
+      "existing SDK codec/generator with projection.search as POST bounded 4096 and projection.work-item GET",
+      "existing guards: 9 closed op IDs, no GET search q, private data not in URI, V1/CAS/strict153 retained"
+    ],
+    "must_record": "run_id/job_id/candidate_sha/status/verified compiler input SHA and guard diff",
+    "status": "NOT_RUN"
+  },
+  "ci_164": {
+    "pr": 106,
+    "actor": "surgical-hosted-CI",
+    "runs_only_after": "same integrated C candidate and approved .ci-run snapshot; no broad suite, no local runs",
+    "selected_files": [
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/work.test.ts",
+      "modules/sucafina/Sucafinav1/test/native-ui-contract/transport.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp01/work-destination-recovery.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp01/record-search.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/work-presentation.test.ts",
+      "modules/sucafina/Sucafinav1/test/product/wp08/host-work.test.ts",
+      "apps/desktop/src/main/sucafina/broker.test.ts",
+      "packages/app-shell/test-browser/sucafina-native/transport-integration.test.ts"
+    ],
+    "exact_test_titles": [
+      "A12 work.test.ts: NAV-01 integration requires an exact bounded POST-read registry route without query",
+      "A12 work.test.ts: new projections reject unsafe methods, query strings, extra selectors and invalid periods before host access",
+      "A12 work.test.ts: private POST search rejects q in URI, wrong content-type, extras, oversized chunks and malformed JSON before host access",
+      "A12 work.test.ts: work-item uses a closed redacted source shape without losing null/zero/version",
+      "A12 work.test.ts: work-item is fail-closed without I00's real installed read+verify host port",
+      "transport.test.ts: projection POST enforces the catalog byte cap before invoking the original handler",
+      "transport.test.ts: the projection router retains original Request identity and rejects duplicate query keys",
+      "work-destination-recovery.test.ts: real destination unavailability preserves My work, while real logout denial purges every protected work item",
+      "work-destination-recovery.test.ts: an earlier real destination response cannot reactivate My work after a later authenticated denial",
+      "work-presentation.test.ts: canonical My Work presentation resolves current Procurement title and destination through SQLite, then revocation removes it",
+      "host-work.test.ts: product authority and shared dispatch read a current Procurement work item through SQLite",
+      "record-search.test.ts: role reduction during final search revalidation clears earlier authorized results",
+      "broker.test.ts: two approved frames get distinct in-memory SF Sessions; cross-frame handles are rejected"
+    ],
+    "new_integrated_live_scenarios_needed": [
+      "Original Request identity is identical through UI.admit, host.requestFor and destinations.read under real auth",
+      "work-item exact two-pass read+verify and second actor/session denied, owner revocation after read denied, newer version/selectionRef denied, origin/mount and project isolation",
+      "private POST q does not appear in web/desktop URLs, network/IPC/referrer/navigation/history; GET/HEAD q is blocked before send and server; no broad full-suite",
+      "Identity/accessRevision/policyVersion/current context revalidated; no fake grant/mock counts as passing a live positive",
+      "Legacy V1 personal-view null creation/positive CAS/strict extras, 0/null and output redaction preserved"
+    ],
+    "must_record": "hosted run ID/job ID, C candidate SHA, CI snapshot SHA, pass/fail, owner/fixture/entrypoint, actual per-case evidence or NOT_RUN",
+    "status": "NOT_RUN"
+  }
+}
