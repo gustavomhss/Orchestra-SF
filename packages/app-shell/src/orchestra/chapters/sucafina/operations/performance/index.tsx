@@ -638,7 +638,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
             <Show when={store.mode === "edit" && snapshot()?.availability === "active" ? active() : null}>
               {(editing) => {
                 const snap = () => editing().controller.snapshot()
-                const draft = () => snap().availability === "active" ? snap().value : undefined
+                const draft = () => { const state = snap(); return state.availability === "active" ? state.value : undefined }
                 const modify = (field: FieldName, value: string) => {
                   const previous = snap()
                   if (previous.availability === "active")
@@ -689,7 +689,7 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
             <Show when={store.mode === "review-edit" && snapshot()?.availability === "active" ? active() : null}>
               {(editing) => {
                 const currentDraft = () => editing().controller.snapshot()
-                const proposed = () => currentDraft().availability === "active" ? currentDraft().value : undefined
+                const proposed = () => { const state = currentDraft(); return state.availability === "active" ? state.value : undefined }
                 return <section class="sf-u31-panel" aria-label={t("sf.common.review")}>
                   <label><input type="checkbox" checked={store.confirmedWeights}
                     onChange={(event) => setStore("confirmedWeights", event.currentTarget.checked)} />
@@ -704,8 +704,8 @@ export function SfPerformanceView(props: SfSurfaceProps<"CAP16">): JSX.Element {
                       ? editing().identity.newIntentRef :
                         ("n16-edit:" + String(editing().identity.recordRef)) as SfIntentRef,
                       sourceRef: editing().identity.kind === "record" ? editing().identity.recordRef : null,
-                      sourceVersion: currentDraft().availability === "active"
-                        ? currentDraft().baseVersion : null,
+                      sourceVersion: (() => { const state = currentDraft(); return state.availability === "active"
+                        ? state.baseVersion : null })(),
                       fields: proposed() ? fields(proposed()!) : [] }}
                     effects={[{ id: "itperf-save", domain: "dashboard", state: "proposed",
                       title: { kind: "message", message: labelMessage("sf.cap16.title") },
