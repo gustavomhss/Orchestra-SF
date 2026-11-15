@@ -12,6 +12,7 @@ import { isSfPeriod } from "../../../../../modules/sucafina/Sucafinav1/product/c
 import { decodeSfOperationInput, decodeSfOperationOutput } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/schema-admission.ts"
 import { encodeCaseRef } from "../../../../../modules/sucafina/Sucafinav1/product/decisions/case-port.ts"
 import type { SfHostServices } from "../../../../../modules/sucafina/Sucafinav1/product/contracts/host-context.ts"
+import type { WorkPresentationItem } from "../../../../../modules/sucafina/Sucafinav1/product/collaboration/work-port.ts"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 
 type WorkProjection = "home" | "search" | "work" | "work-selection"
@@ -110,8 +111,7 @@ async function search(
   }
 }
 
-function safeWorkItem(item: Awaited<ReturnType<NonNullable<SfHostServices["work"]>["listPresentation"]>> extends
-  { status: "ok"; value: { items: readonly (infer T)[] } } ? T : never) {
+function safeWorkItem(item: WorkPresentationItem) {
   // Field-by-field allowlist. No reviewContext, sourceRefs or trusted ports.
   return {
     kind: item.kind, actionRef: item.actionRef, title: item.title,
