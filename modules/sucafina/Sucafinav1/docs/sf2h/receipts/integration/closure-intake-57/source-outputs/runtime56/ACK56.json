@@ -1,0 +1,99 @@
+{
+  "schema": "sf2h.runtime-fresh-copy-cost.authority.v1",
+  "mission": 56,
+  "epoch": "runtime-copy-browser56",
+  "state": "ACK56_ACCEPTED_ISOLATED_SOURCE_WRITER",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "branch": "runtime-read-cost",
+  "expected_parent": "3f35d8ee987cdeaafd3341c2fde13c4125a1f69e",
+  "authority_source": {
+    "control": "3796e60a25c6478a38f0fc98997a8582d1356b37",
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/rolling-wave/runtime-fresh-copy-cost.json",
+    "blob": "b6f4c2f4a4fac4fc261f718898327841c7737776",
+    "direct_user_instruction": true
+  },
+  "reconciliation": {
+    "prepared_branch_unchanged": true,
+    "stack": "25ed395829f9ec5f06a80c70467c23b25376f853",
+    "stack_owner": 55,
+    "ACK55_blob": "a6caa04d8c525339697d3e40f7d61ae5830d6e6d",
+    "portfolio_head": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+    "portfolio_owner": 54,
+    "ACK54_blob": "0f630a70bbc383b48ed3897442f0cdf21f937db9",
+    "runtime_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+    "latest_runtime_commit": "31578c35c1e66371647f1e00ceefff1cdb85fed3",
+    "Finance34_terminal_handoff_blob": "5296e6d757fc6313412660dfa0bce49d0093cadf",
+    "no_later_runtime_writer_observed": true,
+    "existing_source_PRs": 0,
+    "authority_not_inferred_from_silence": true,
+    "portfolio_terminal": {
+      "sha": "651738f8ebcf003a4c66517a72f0ebd9a7c95050",
+      "authority_blob": "9f806a103790a384e79049ecbea413fb378a2ef9",
+      "handoff_blob": "425c11190c5a56cc26a24abaf2577a2da0c18047",
+      "state": "TERMINATED_WITH_P03_FAIL_AND_GATES_PENDING",
+      "active_runs": 0,
+      "meaning": "54 explicitly ended during56 reading. No assumption of continued execution or takeover; qualified output still routed to54/55. P03 not run by56."
+    }
+  },
+  "reading": {
+    "AGENTS": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "START": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW": "043205bee6031b4517a98591b3588fca0ab12925",
+    "COMMON": "d61f32af03fe10747a50274233f953af044decf6",
+    "S0C": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "appendices": {
+      "product_acceptance": "ded082688fce327def0b48968fa3b89a5831029c",
+      "resident_runtime": "033737b1051b23443e633df7874c550629bf55a1",
+      "atlas_packaging": "907750ae7c945e5f303480cc6e14f11bb1696eb9"
+    },
+    "scope": "Full S0-C pack, START/WORKFLOW/COMMON and all three appendices read by read_pack_ci; root read mission, AGENTS, protocol, runtime, proposals and live authorities. Historical links are references, not a claim of recursive reading."
+  },
+  "sole_remote_writer": "Root56",
+  "helpers": [
+    {
+      "id": "review_runtime_proposal",
+      "role": "read-only proposal and code review"
+    },
+    {
+      "id": "design_runtime_tests",
+      "role": "scratch-only proposed own tests; no remote writes or runs"
+    },
+    {
+      "id": "read_pack_ci",
+      "role": "read-only full pack, annexes and CI review"
+    }
+  ],
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/runtime-fresh-copy-cost/"
+  ],
+  "implementation_decision": "Adapt A54 v2: reusable fresh factories only for plans already hit during root admission, not newly built plans; total retained plan set remains a subset of initial memo budget. Mutable target and transactionAll retain clone/validation. Qualification pending.",
+  "consumers": [
+    {
+      "mission": 54,
+      "scope": "Portfolio analysis/production/P03; no duplicate P03 by56"
+    },
+    {
+      "mission": 55,
+      "scope": "sole target integrator; selective explicit source release only"
+    },
+    {
+      "mission": 45,
+      "scope": "hosted package bun typecheck and guards; no workflow/ref takeover"
+    }
+  ],
+  "validation": {
+    "local_product_tests": 0,
+    "epic": 0,
+    "P03_dispatches": 0,
+    "source_tests": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "guards": "NOT_RUN",
+    "remote": "GitHub MCP/CAS expected_sha force:false",
+    "deduplication_required": true
+  },
+  "GLOBAL_RELEASE": false
+}

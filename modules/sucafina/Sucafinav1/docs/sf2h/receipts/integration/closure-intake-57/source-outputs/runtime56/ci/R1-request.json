@@ -1,0 +1,24 @@
+{
+  "package": "sucafina",
+  "packageSelector": "packages/sucafina",
+  "directory": "modules/sucafina",
+  "runner": "bun",
+  "args": [
+    "./Sucafinav1/test/product/runtime-fresh-copy-cost/fresh-copies.test.ts",
+    "./Sucafinav1/test/product/runtime-fresh-copy-cost/lifecycle.test.ts",
+    "./Sucafinav1/test/product/runtime-fresh-copy-cost/sql-freshness.test.ts",
+    "./Sucafinav1/test/product/runtime-fresh-copy-cost/authority.test.ts",
+    "./Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+    "./Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+    "./Sucafinav1/test/product/finance-persistence-performance/bounds.test.ts",
+    "./Sucafinav1/test/product/finance-persistence-performance/isolation.test.ts",
+    "./Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+    "./Sucafinav1/test/product/wp10/integration/store-read-scope.test.ts",
+    "./Sucafinav1/test/product/finance-state-read-performance/isolation.test.ts",
+    "--timeout",
+    "120000",
+    "-t",
+    "^(?!one root materializes a demanded sibling once while nested and current snapshots remain independent staged copies$).+"
+  ],
+  "env": {}
+}

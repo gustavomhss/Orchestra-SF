@@ -1,0 +1,146 @@
+{
+  "schema": "sf2h.runtime-fresh-copy-cost.comparison.v1",
+  "mission": 56,
+  "before": {
+    "run": 43659727318,
+    "job": 132646107638,
+    "W": "94b2768385d181ee6f7aba7b42558a62d3e5a98d",
+    "runtime_blob": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+    "host": {
+      "cloud": "Azure",
+      "region": "centralus",
+      "image": "ubuntu-24.04",
+      "image_version": "20261111.370.1"
+    }
+  },
+  "after": {
+    "run": 43660001174,
+    "job": 132646961999,
+    "W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+    "runtime_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+    "host": {
+      "cloud": "AWS",
+      "region": "us-east-1",
+      "image": "ubuntu-24.04",
+      "image_version": "20261111.127.1"
+    }
+  },
+  "identicalWorkload": true,
+  "identicalPersisted": true,
+  "runtimeEqual": true,
+  "medians": {
+    "totalWallMs": {
+      "baseline": 274.86412499999983,
+      "candidate": 113.01543049999998,
+      "changePercent": -58.88316436348322
+    },
+    "rootAdmissionWallMs": {
+      "baseline": 1.2624570000000404,
+      "candidate": 1.141196999999977,
+      "changePercent": -9.605079618558065
+    },
+    "nestedBeforeCallbackSyncMs": {
+      "baseline": 176.2548880000012,
+      "candidate": 62.27775450000047,
+      "changePercent": -64.66608375706434
+    },
+    "currentSnapshotsSyncMs": {
+      "baseline": 84.11721149999926,
+      "candidate": 37.008564000000035,
+      "changePercent": -56.003577222718135
+    },
+    "callbackSyncMs": {
+      "baseline": 16.624545499997453,
+      "candidate": 12.766949499999441,
+      "changePercent": -23.2042193273711
+    }
+  },
+  "descriptorWork": {
+    "baseline": {
+      "descriptorCalls": 236980,
+      "descriptorObjectsBySurface": {
+        "dashboard": 12000,
+        "planner": 192000,
+        "procurement": 32000
+      },
+      "parseCalls": 4,
+      "parseCharacters": 511152,
+      "wireParseCalls": 0
+    },
+    "candidate": {
+      "descriptorCalls": 12140,
+      "descriptorObjectsBySurface": {
+        "dashboard": 12000,
+        "planner": 0,
+        "procurement": 0
+      },
+      "parseCalls": 240,
+      "parseCharacters": 35658440,
+      "wireParseCalls": 0
+    }
+  },
+  "cost_test_blob": "0a46c9113127542c43aed60951514a7397b5fdb6",
+  "cost_test_sha256": "900b1d820a4c47d90419f36df9a4373442c629593139d5d85f24e2bbe42a2896",
+  "workload": {
+    "rowCounts": {
+      "dashboard": 300,
+      "planner": 1200,
+      "procurement": 400
+    },
+    "timedPairs": 6,
+    "measuredRoots": 12,
+    "warmupRoots": 1,
+    "instrumentedRoots": 1,
+    "perRoot": {
+      "counts": {
+        "root": 1,
+        "nested": {
+          "dashboard": 0,
+          "planner": 60,
+          "procurement": 20
+        },
+        "current": 20,
+        "callbacks": 81,
+        "consumedRows": {
+          "dashboard": 6300,
+          "planner": 96000,
+          "procurement": 16000
+        }
+      },
+      "digest": 797967235,
+      "orderHash": "2e2dd068fabc6e72a65fc02388a21448125db4adecaba771b7ce4f7276232182"
+    }
+  },
+  "persisted": {
+    "dashboard": {
+      "rows": 300,
+      "characters": 138952,
+      "sha256": "fdc35d79836255ca6edf5d94e33a59bc44a77dec346b5bcc566c46e1e412553c",
+      "digest": 796188
+    },
+    "planner": {
+      "rows": 1200,
+      "characters": 549733,
+      "sha256": "af195aad742ac7a921ffc66dab6e9fb22b2b6bb5391a77c8279c2b25da885d98",
+      "digest": 9124795
+    },
+    "procurement": {
+      "rows": 400,
+      "characters": 187667,
+      "sha256": "15a7fda97b56441148a166415bd53c000b926c54a165644818024d432be3aeb8",
+      "digest": 1281586
+    }
+  },
+  "structural_meaning": "Repeat JS descriptor traversal replaced by independent native parsing for admitted warm non-target plans. Copy allocation was not removed. Target traversal remains12000 marked objects; copies parse calls rise4->240 and characters511152->35658440.",
+  "limits": [
+    "Different hosted machines, regions and runner image versions; no paired same-machine causal timing estimate or statistical speedup guarantee.",
+    "B0 ran only cost file; R1 ran other tests before cost in the same selection, allowing process-state/JIT/GC differences.",
+    "12 timed roots per revision are six sequential same-revision pairs, not randomized cross-revision A/B pairs.",
+    "Timed roots use native globals; wrappers only in a separate work-accounting root. Descriptor/parse counts are structural counters, not CPU/heap profiling.",
+    "Copy spans are disjoint synchronous measurements; root admission and total are wall observations and must not be summed as CPU cost.",
+    "No timer ratio assertion. No heap/RSS or total allocation byte measurement.",
+    "Real SQLite/runtime synthetic workload only. No original P03 execution, replay reduction, composed acceptance or production latency claim."
+  ],
+  "P03": "HELD_NOT_EXECUTED_BY_56",
+  "GLOBAL_RELEASE": false
+}

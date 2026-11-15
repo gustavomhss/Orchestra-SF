@@ -1,0 +1,31 @@
+{
+  "schema": "sf2h.runtime-fresh-copy-cost.implementation.v1",
+  "mission": 56,
+  "parent": "94b2768385d181ee6f7aba7b42558a62d3e5a98d",
+  "runtime": {
+    "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+    "pre": "e9da289bdce680f2429904c1e83dec60c39aa2a8",
+    "post": "666259511ad459629ef52f48aca20b231b0dff4b"
+  },
+  "cost": {
+    "file": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/cost.test.ts",
+    "blob": "0a46c9113127542c43aed60951514a7397b5fdb6",
+    "same_as_baseline": true
+  },
+  "review": "review_runtime_proposal read complete diff: no functional blocker; captured plan union remains subset of initial memo. Cleanup record removal only, lazy materializers may retain bounded plan refs.",
+  "validation": "NOT_RUN on this product yet; baseline B0 in flight uses W0 with old runtime",
+  "external_test_adjustment": {
+    "state": "NOT_APPLIED_TO_FOREIGN_PATH",
+    "pre": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+    "post": "0ac3c01f77c013d05ee8fecb69c401acd126b942",
+    "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+    "consumer": 55,
+    "owned_replacement": "modules/sucafina/Sucafinav1/test/product/runtime-fresh-copy-cost/surface-demand-replacement.test.ts",
+    "replacement_blob": "dbca223c910c74662b4a42150146d666a42f154d",
+    "same_scenario_all_semantic_assertions": true,
+    "change": "Name and structural nativeDashboard count1->4 only. Old counts1private parse+4clones; new4independent native graphs.",
+    "request_filter": "Only exact old title excluded; replacement plus six remaining original tests selected. This is a scoped selection, not a full original-file PASS."
+  },
+  "write_scope_compliant": true,
+  "GLOBAL_RELEASE": false
+}

@@ -1,0 +1,115 @@
+{
+  "schema": "sf2h.runtime-fresh-copy-cost.acceptance.v1",
+  "mission": 56,
+  "W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+  "scope": "Six mission56 acceptance items; no rewriting or closure of campaign1610 criteria.",
+  "items": [
+    {
+      "id": "M56-01",
+      "state": "PASS_REVIEW",
+      "evidence": [
+        "ACK56.json",
+        "DESIGN.json",
+        "reviews/FINAL.json"
+      ],
+      "result": "A54 v1/v2 and phase evidence reviewed; v2 adapted to retain fresh factories only for already-admitted memo hits. Cold new plans not captured."
+    },
+    {
+      "id": "M56-02",
+      "state": "PASS_R1_SELECTED_SCOPE",
+      "evidence": [
+        "fresh-copies.test.ts",
+        "sql-freshness.test.ts",
+        "surface-demand-replacement.test.ts",
+        "cost.test.ts"
+      ],
+      "result": "Independent fresh graphs, three target surfaces, current target mutations, old copies unaffected, same call count/consumed data/order."
+    },
+    {
+      "id": "M56-03",
+      "state": "PASS_R1_SELECTED_SCOPE",
+      "evidence": [
+        "fresh-copies.test.ts",
+        "finance-persistence-performance/bounds.test.ts",
+        "finance-persistence-performance/isolation.test.ts"
+      ],
+      "result": "transactionAll mutability, rejection and canonical special values preserved; all original optimization thresholds retain fallback.",
+      "limit": "Baseline Array.from may evaluate indexed array getters. Blanket rejection of array accessors is not claimed; object accessors remain rejected."
+    },
+    {
+      "id": "M56-04",
+      "state": "PASS_R1_SELECTED_SCOPE",
+      "evidence": [
+        "lifecycle.test.ts",
+        "sql-freshness.test.ts",
+        "authority.test.ts",
+        "wp10/integration/store-read-scope.test.ts",
+        "finance-state-read-performance/isolation.test.ts"
+      ],
+      "result": "Rollback false/throw/abort, captured/swallowed writes, outstanding readers, closed generations/capabilities, SQL commits/deletion/corruption, reopen/dispose and real authority revocation/Request abort exercised."
+    },
+    {
+      "id": "M56-05",
+      "state": "PASS_STRUCTURAL_WITH_TIMING_LIMITS",
+      "evidence": [
+        "ci/B0-result.json",
+        "ci/R1-result.json",
+        "metrics/comparison.json"
+      ],
+      "result": "Same immutable cost test/data/load, real SQLite/runtime. Marked non-target traversal224000->0, target12000 unchanged; native parse work explicitly increased. No fixed ratio assertion.",
+      "limits": [
+        "Different CI machines/images",
+        "No heap measurement",
+        "One exact structural legacy oracle filtered and equivalent replacement executed"
+      ]
+    },
+    {
+      "id": "M56-06",
+      "state": "RELEASED_ACK_REQUESTED",
+      "evidence": [
+        "CONSUMER-RELEASE.json",
+        "HANDOFF-FINAL.md",
+        "delivery/MANIFEST.json"
+      ],
+      "result": "Qualified exact patch delivered to55/54. Only55 integrates. A54 explicitly terminated651738f8; no P03 run or takeover by56.",
+      "pending": "Consumer ACKs,45 actual checks,55 composed qualification and authorized P03 owner work"
+    }
+  ],
+  "memory": {
+    "shared_max_UTF16_units": 8388608,
+    "shared_entries_max": 3,
+    "captured_union_max_additional_UTF16_units": 8388608,
+    "proof": "Synchronous admission visits each surface once under existing writer lock. All captured plans are hits from the initial bounded memo; misses capture only decoded graph, never newly built plan. Lazy and copy factories share the same plans, so their union cannot exceed the initial memo budget.",
+    "cleanup": "copies record cleared when root closes; unused lazy materializers and descendants may retain same captured plans.",
+    "excluded": [
+      "decoded graphs",
+      "temporary allocation",
+      "object overhead",
+      "caller-retained output graphs",
+      "other instances",
+      "total process heap",
+      "process-wide sum across retained closed roots"
+    ],
+    "thresholds": {
+      "depth": 128,
+      "nodes": 200000,
+      "undefined_paths": 4096
+    },
+    "new_data_rejection_limit": false
+  },
+  "gates": {
+    "typecheck": "NOT_RUN_REQUESTED_45",
+    "guards": "NOT_RUN_REQUESTED_45",
+    "P03": "HELD_NOT_RUN_BY_56",
+    "composed": "NOT_QUALIFIED",
+    "GLOBAL_RELEASE": false
+  },
+  "campaign": {
+    "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "work_packages": 15,
+    "tasks": 74,
+    "contracts": 17,
+    "criteria": 1610,
+    "T0": "2026-11-13T04:01:10Z"
+  }
+}

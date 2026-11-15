@@ -1,0 +1,60 @@
+{
+  "schema": "sf2h.closure-intake-57.consumer-ack.v1",
+  "consumer": 57,
+  "source": 56,
+  "source_release": "8cfbf59067b44df166d4b0550dfb4ea9aa73362e",
+  "state": "CONSUMED_QUALIFIED_SOURCE_AS_COMPOSED_CANDIDATE",
+  "candidate": "C27",
+  "sha_resolution": "Containing commit",
+  "owned_paths": 8,
+  "shared_oracle": {
+    "path": "modules/sucafina/Sucafinav1/test/product/finance-persistence-performance/surface-demand.test.ts",
+    "preimage_blob": "8a81665075aab6f8afa37105d3174d698f18bb9e",
+    "postimage_blob": "0ac3c01f77c013d05ee8fecb69c401acd126b942",
+    "source_release_state": "EXTERNAL_PROPOSAL_NOT_INSTALLED_IN_SOURCE_W",
+    "integrator_decision": "APPLY_MINIMAL_REVIEWED_ADAPTATION_WITH_RUNTIME56",
+    "exact_changes": [
+      {
+        "line": 149,
+        "kind": "test title",
+        "before": "materializes a demanded sibling once",
+        "after": "emits fresh demanded sibling graphs"
+      },
+      {
+        "line": 185,
+        "kind": "structural materialization count",
+        "before": "expect(observed.counts.nativeDashboard).toBe(1)",
+        "after": "expect(observed.counts.nativeDashboard).toBe(4)"
+      }
+    ],
+    "reason": "Two nested non-target reads plus two currentSnapshots calls each emit a fresh sibling graph from the admitted immutable plan. Preserving one materialization is no longer the implementation contract.",
+    "affected_case_assertions": 19,
+    "assertions_removed": 0,
+    "other_lines_changed": 0,
+    "composed_qualification": "NOT_RUN_UNFILTERED_CASE_REQUIRED"
+  },
+  "source_names_reconciled": {
+    "integrator55": "Explicitly ended;57 accepted succession at ACK57.",
+    "portfolio54": "Explicitly ended;58 owns P03 under control1809a32ad042a0f98a5d93dc90447a7e13e78434.",
+    "checks45": "Retains checks; no interface takeover."
+  },
+  "prior_C26_ack": {
+    "symbol": "C26",
+    "sha": "8274e3fe307a5046b7802d6651b0d21fc4f8cbb7",
+    "tree": "ab41682ea4879c5921242889dac20f4b5cec2d07",
+    "parent": "4b15af2d8f8a5b96cdd0a8117951939bde0b9d02",
+    "material_paths": 2,
+    "archive": 43,
+    "manifest_blob": "03e24ec1170b947bc7a20ec08ae8f4665fbcd838",
+    "consumer_ack54_blob": "9f6a2598bdbc1e3b71312d794b429c7910d58f5c"
+  },
+  "source_test_results_transferred": false,
+  "remaining": [
+    "Composed unfiltered11-file regression",
+    "45 compiler/generation/guards/preflight and interface",
+    "Original P03 by58",
+    "Original M31/MI07 contract",
+    "S0 full eight functional selections, AM01-06, FINAL reviews and acceptance"
+  ],
+  "GLOBAL_RELEASE": false
+}

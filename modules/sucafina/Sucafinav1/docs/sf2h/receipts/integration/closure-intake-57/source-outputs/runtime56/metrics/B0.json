@@ -1,0 +1,340 @@
+{
+  "schema": "runtime-fresh-copy-cost/v1",
+  "runtime": {
+    "bun": "1.3.14",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "workload": {
+    "rowCounts": {
+      "dashboard": 300,
+      "planner": 1200,
+      "procurement": 400
+    },
+    "timedPairs": 6,
+    "measuredRoots": 12,
+    "warmupRoots": 1,
+    "instrumentedRoots": 1,
+    "perRoot": {
+      "counts": {
+        "root": 1,
+        "nested": {
+          "dashboard": 0,
+          "planner": 60,
+          "procurement": 20
+        },
+        "current": 20,
+        "callbacks": 81,
+        "consumedRows": {
+          "dashboard": 6300,
+          "planner": 96000,
+          "procurement": 16000
+        }
+      },
+      "digest": 797967235,
+      "orderHash": "2e2dd068fabc6e72a65fc02388a21448125db4adecaba771b7ce4f7276232182"
+    }
+  },
+  "persisted": {
+    "dashboard": {
+      "rows": 300,
+      "characters": 138952,
+      "sha256": "fdc35d79836255ca6edf5d94e33a59bc44a77dec346b5bcc566c46e1e412553c",
+      "digest": 796188
+    },
+    "planner": {
+      "rows": 1200,
+      "characters": 549733,
+      "sha256": "af195aad742ac7a921ffc66dab6e9fb22b2b6bb5391a77c8279c2b25da885d98",
+      "digest": 9124795
+    },
+    "procurement": {
+      "rows": 400,
+      "characters": 187667,
+      "sha256": "15a7fda97b56441148a166415bd53c000b926c54a165644818024d432be3aeb8",
+      "digest": 1281586
+    }
+  },
+  "measured": [
+    {
+      "pair": 0,
+      "member": "first",
+      "timing": {
+        "totalWallMs": 273.39602299999996,
+        "rootAdmissionWallMs": 1.4737309999999866,
+        "nestedBeforeCallbackSyncMs": 171.4107180000002,
+        "currentSnapshotsSyncMs": 81.37179100000003,
+        "callbackSyncMs": 18.551616999999567
+      }
+    },
+    {
+      "pair": 0,
+      "member": "second",
+      "timing": {
+        "totalWallMs": 267.849246,
+        "rootAdmissionWallMs": 1.1399650000000747,
+        "nestedBeforeCallbackSyncMs": 176.16876000000025,
+        "currentSnapshotsSyncMs": 74.43117199999972,
+        "callbackSyncMs": 15.58023400000036
+      }
+    },
+    {
+      "pair": 1,
+      "member": "first",
+      "timing": {
+        "totalWallMs": 272.9993330000001,
+        "rootAdmissionWallMs": 1.3836669999999458,
+        "nestedBeforeCallbackSyncMs": 179.22842499999842,
+        "currentSnapshotsSyncMs": 75.94581100000073,
+        "callbackSyncMs": 15.985987000000137
+      }
+    },
+    {
+      "pair": 1,
+      "member": "second",
+      "timing": {
+        "totalWallMs": 305.62700199999995,
+        "rootAdmissionWallMs": 1.4263499999999567,
+        "nestedBeforeCallbackSyncMs": 180.5409370000002,
+        "currentSnapshotsSyncMs": 106.71790500000043,
+        "callbackSyncMs": 16.406480999999303
+      }
+    },
+    {
+      "pair": 2,
+      "member": "first",
+      "timing": {
+        "totalWallMs": 287.841459,
+        "rootAdmissionWallMs": 1.2839890000000196,
+        "nestedBeforeCallbackSyncMs": 180.095552,
+        "currentSnapshotsSyncMs": 86.43911700000012,
+        "callbackSyncMs": 19.52093200000104
+      }
+    },
+    {
+      "pair": 2,
+      "member": "second",
+      "timing": {
+        "totalWallMs": 288.6982330000001,
+        "rootAdmissionWallMs": 1.2409250000000611,
+        "nestedBeforeCallbackSyncMs": 183.97383599999944,
+        "currentSnapshotsSyncMs": 82.5703199999989,
+        "callbackSyncMs": 20.45232699999997
+      }
+    },
+    {
+      "pair": 3,
+      "member": "first",
+      "timing": {
+        "totalWallMs": 275.92147699999987,
+        "rootAdmissionWallMs": 1.5612009999999827,
+        "nestedBeforeCallbackSyncMs": 181.38954499999954,
+        "currentSnapshotsSyncMs": 76.34162000000151,
+        "callbackSyncMs": 16.23101499999757
+      }
+    },
+    {
+      "pair": 3,
+      "member": "second",
+      "timing": {
+        "totalWallMs": 273.8067729999998,
+        "rootAdmissionWallMs": 1.2158079999999245,
+        "nestedBeforeCallbackSyncMs": 170.41551599999957,
+        "currentSnapshotsSyncMs": 85.66410299999961,
+        "callbackSyncMs": 16.090408000002753
+      }
+    },
+    {
+      "pair": 4,
+      "member": "first",
+      "timing": {
+        "totalWallMs": 271.009454,
+        "rootAdmissionWallMs": 1.3842580000000453,
+        "nestedBeforeCallbackSyncMs": 166.00370399999883,
+        "currentSnapshotsSyncMs": 86.38710599999968,
+        "callbackSyncMs": 16.842609999995602
+      }
+    },
+    {
+      "pair": 4,
+      "member": "second",
+      "timing": {
+        "totalWallMs": 282.46056,
+        "rootAdmissionWallMs": 1.1699989999997342,
+        "nestedBeforeCallbackSyncMs": 174.28060400000277,
+        "currentSnapshotsSyncMs": 87.37252200000194,
+        "callbackSyncMs": 19.167547999999442
+      }
+    },
+    {
+      "pair": 5,
+      "member": "first",
+      "timing": {
+        "totalWallMs": 263.01008999999976,
+        "rootAdmissionWallMs": 1.144612000000052,
+        "nestedBeforeCallbackSyncMs": 174.4090130000027,
+        "currentSnapshotsSyncMs": 73.19561299999987,
+        "callbackSyncMs": 13.852330000000165
+      }
+    },
+    {
+      "pair": 5,
+      "member": "second",
+      "timing": {
+        "totalWallMs": 295.7614840000001,
+        "rootAdmissionWallMs": 1.0603360000000066,
+        "nestedBeforeCallbackSyncMs": 176.34101600000213,
+        "currentSnapshotsSyncMs": 95.70434999999861,
+        "callbackSyncMs": 21.533822000001237
+      }
+    }
+  ],
+  "timings": {
+    "totalWallMs": {
+      "samples": [
+        273.39602299999996,
+        267.849246,
+        272.9993330000001,
+        305.62700199999995,
+        287.841459,
+        288.6982330000001,
+        275.92147699999987,
+        273.8067729999998,
+        271.009454,
+        282.46056,
+        263.01008999999976,
+        295.7614840000001
+      ],
+      "min": 263.01008999999976,
+      "median": 274.86412499999983,
+      "max": 305.62700199999995
+    },
+    "rootAdmissionWallMs": {
+      "samples": [
+        1.4737309999999866,
+        1.1399650000000747,
+        1.3836669999999458,
+        1.4263499999999567,
+        1.2839890000000196,
+        1.2409250000000611,
+        1.5612009999999827,
+        1.2158079999999245,
+        1.3842580000000453,
+        1.1699989999997342,
+        1.144612000000052,
+        1.0603360000000066
+      ],
+      "min": 1.0603360000000066,
+      "median": 1.2624570000000404,
+      "max": 1.5612009999999827
+    },
+    "nestedBeforeCallbackSyncMs": {
+      "samples": [
+        171.4107180000002,
+        176.16876000000025,
+        179.22842499999842,
+        180.5409370000002,
+        180.095552,
+        183.97383599999944,
+        181.38954499999954,
+        170.41551599999957,
+        166.00370399999883,
+        174.28060400000277,
+        174.4090130000027,
+        176.34101600000213
+      ],
+      "min": 166.00370399999883,
+      "median": 176.2548880000012,
+      "max": 183.97383599999944
+    },
+    "currentSnapshotsSyncMs": {
+      "samples": [
+        81.37179100000003,
+        74.43117199999972,
+        75.94581100000073,
+        106.71790500000043,
+        86.43911700000012,
+        82.5703199999989,
+        76.34162000000151,
+        85.66410299999961,
+        86.38710599999968,
+        87.37252200000194,
+        73.19561299999987,
+        95.70434999999861
+      ],
+      "min": 73.19561299999987,
+      "median": 84.11721149999926,
+      "max": 106.71790500000043
+    },
+    "callbackSyncMs": {
+      "samples": [
+        18.551616999999567,
+        15.58023400000036,
+        15.985987000000137,
+        16.406480999999303,
+        19.52093200000104,
+        20.45232699999997,
+        16.23101499999757,
+        16.090408000002753,
+        16.842609999995602,
+        19.167547999999442,
+        13.852330000000165,
+        21.533822000001237
+      ],
+      "min": 13.852330000000165,
+      "median": 16.624545499997453,
+      "max": 21.533822000001237
+    }
+  },
+  "work": {
+    "admission": {
+      "descriptorCalls": 0,
+      "descriptorObjectsBySurface": {
+        "dashboard": 0,
+        "planner": 0,
+        "procurement": 0
+      },
+      "parseCalls": 2,
+      "parseCharacters": 96228,
+      "wireParseCalls": 0
+    },
+    "copies": {
+      "descriptorCalls": 236980,
+      "descriptorObjectsBySurface": {
+        "dashboard": 12000,
+        "planner": 192000,
+        "procurement": 32000
+      },
+      "parseCalls": 4,
+      "parseCharacters": 511152,
+      "wireParseCalls": 0
+    },
+    "callback": {
+      "descriptorCalls": 0,
+      "descriptorObjectsBySurface": {
+        "dashboard": 0,
+        "planner": 0,
+        "procurement": 0
+      },
+      "parseCalls": 0,
+      "parseCharacters": 0,
+      "wireParseCalls": 0
+    },
+    "settlement": {
+      "descriptorCalls": 0,
+      "descriptorObjectsBySurface": {
+        "dashboard": 0,
+        "planner": 0,
+        "procurement": 0
+      },
+      "parseCalls": 0,
+      "parseCharacters": 0,
+      "wireParseCalls": 0
+    }
+  },
+  "limits": {
+    "timing": "Native globals in all 12 timed roots; wrappers only in one separate work-accounting root. No timing-ratio assertion.",
+    "attribution": "Nested admission and currentSnapshots are disjoint synchronous spans; callbackSyncMs excludes them. rootAdmissionWallMs and totalWallMs are wall observations, not additive copy costs.",
+    "scope": "Real SQLite/local-store synthetic workload. This is not a Portfolio/P03 run or a proof of composed product latency."
+  }
+}

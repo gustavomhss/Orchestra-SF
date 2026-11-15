@@ -1,0 +1,38 @@
+{
+  "schema": "sf2h.runtime-fresh-copy-cost.compiler-request.v1",
+  "mission": 56,
+  "consumer": 45,
+  "state": "REQUESTED_NOT_RUN",
+  "W": "b6b8f664c3ba6766891731267177ba541dbe47b6",
+  "W_tree": "f629c4cd1e73c090de2e820c4c1a214b8ca99e9e",
+  "branch": "runtime-read-cost",
+  "PR": 71,
+  "commands": [
+    {
+      "cwd": "modules/sucafina",
+      "command": "bun typecheck"
+    },
+    {
+      "cwd": ".",
+      "command": "bun run check:guards --base origin/dev",
+      "base_ref": "origin/dev",
+      "base_observed": "a1d37698a7bb097c1578f827eba6a19b9917ef07"
+    }
+  ],
+  "scope": "One changed product file runtime/local-store.ts, seven new own test/helpers, own evidence only; no Protocol/HttpApi or Atlas generation changes.",
+  "authority": "45 owns hosted compiler/guards lane;56 has no workflow/source ref grant outside package. Request requires package bun typecheck (never tsc) and actual guards on W.",
+  "observed_interface": {
+    "branch": "astra-compose",
+    "head": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "PR": 32,
+    "scoped_workflow": "sf2-scoped-check.yml absent",
+    "existing": "astra-compose-check.yml bound to foreign astra-check-compose; not seized"
+  },
+  "proof_limits": [
+    "Surgical tests do not substitute typecheck or guards",
+    "Source result never transfers to later55 composition",
+    "No waiver/ignore/approval label added",
+    "No new CI platform or foreign ref"
+  ],
+  "deduplication": "Reuse only exact W/product-tree, command/config and full valid evidence. Do not dispatch duplicate in-flight key."
+}
