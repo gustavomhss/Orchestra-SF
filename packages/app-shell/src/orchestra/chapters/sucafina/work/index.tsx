@@ -1,4 +1,4 @@
-import { A } from "@solidjs/router"
+import { useNavigate } from "@solidjs/router"
 import { For, Show, createEffect, createMemo, createSignal, on, onCleanup } from "solid-js"
 import { useLanguage } from "@/context/language"
 import { SF_U41_COPY } from "@/i18n/orchestra-chapters/sf-u41"
@@ -19,7 +19,7 @@ type Listed = Extract<typeof SfCollaboration.operations["collaboration.work-list
 type WorkItem = Listed["items"][number]
 type Selection = Readonly<{ selectionRef: string; period: Readonly<{ start: string; end: string }> }>
 type Details = Extract<typeof SfWork.operations["projection.work-item"]["output"]["Type"], { status: "ok" }>["value"]
-type Snapshot = Readonly<{ generation: number; ownerKey: string; accessRevision: string; transport: NonNullable<ReturnType<ReturnType<typeof useSfContext>["ready"]>>["transport"]; publicOrigin: string; mount: string }>
+type Snapshot = Readonly<{ generation: number; ownerKey: string; accessRevision: string; transport: NonNullable<ReturnType<ReturnType<typeof useSfContext>["ready"]>>["transport"]; publicOrigin: string }>
 
 /** U41 only reads the two real product projections. It never creates a task or infers an owner. */
 function resultState(result: { kind: string; status?: number; reason?: string; body?: unknown }): SfUiState {
@@ -36,14 +36,16 @@ function resultState(result: { kind: string; status?: number; reason?: string; b
   return "unavailable"
 }
 const dateOnly = (value: string) => /^\d{4}-\d{2}-\d{2}$/.test(value)
-function safeSourceHref(raw: string, publicOrigin: string, mount: string): string | undefined {
-  // Desktop is oc://renderer: a remote producer URL cannot become a renderer navigation.
-  if (typeof window === "undefined" || window.location.origin !== publicOrigin || !raw || raw.startsWith("//")) return undefined
+/** D01 transports reads; only a matching typed F01 route can navigate in-app.
+ * The oc:// renderer origin is unrelated to the approved source publicOrigin.
+ * A legacy workbench href is not an approved native route. */
+function admittedNativeSource(raw: string, publicOrigin: string, nativeRoute: string | undefined): string | undefined {
+  if (!nativeRoute || !raw || raw.startsWith("//") || raw.includes("\\")) return undefined
   try {
     const url = new URL(raw, publicOrigin)
-    if (url.origin !== publicOrigin || url.username || url.password || url.hash) return undefined
-    if (url.pathname !== mount && !url.pathname.startsWith(mount + "/") && !url.pathname.startsWith("/orchestra/")) return undefined
-    return url.pathname + url.search
+    if (url.origin !== publicOrigin || url.username || url.password || url.hash || url.search ||
+        url.pathname !== nativeRoute) return undefined
+    return nativeRoute
   } catch { return undefined }
 }
 function nextNativeRoute(item: Details["item"]): string | undefined {
@@ -55,6 +57,7 @@ function nextNativeRoute(item: Details["item"]): string | undefined {
 export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const navigate = useNavigate()
   type Copy = keyof typeof SF_U41_COPY | "sf.common.loading" | "sf.common.empty" |
     "sf.common.filterEmpty" | "sf.common.unavailable" | "sf.common.noAccess" |
     "sf.common.invalidLink" | "sf.common.loginAgain" | "sf.common.stale" |
@@ -74,6 +77,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
   const [destination, setDestination] = createSignal<string>()
   const [state, setState] = createSignal<SfUiState>("ready")
   const [detailState, setDetailState] = createSignal<SfUiState>("ready")
+  const [destinationState, setDestinationState] = createSignal<SfUiState>("ready")
   let listAbort: AbortController | undefined
   let detailAbort: AbortController | undefined
   let destinationAbort: AbortController | undefined
@@ -85,7 +89,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
     return {
       generation: owner.generation(), ownerKey: current.ownerKey,
       accessRevision: current.context.stamp.accessRevision,
-      transport: active.transport, publicOrigin: current.binding.publicOrigin, mount: current.binding.mount,
+      transport: active.transport, publicOrigin: current.binding.publicOrigin,
     }
   }
   const current = (source: Snapshot, signal: AbortSignal) => {
@@ -104,7 +108,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
     listAbort?.abort(); detailAbort?.abort(); destinationAbort?.abort()
     setItems(undefined); setSelection(undefined); setSelectedRef(undefined)
     setDetails(undefined); setDestination(undefined)
-    setState("ready"); setDetailState("ready")
+    setState("ready"); setDetailState("ready"); setDestinationState("ready")
     setStart(""); setEnd(""); setFilter(""); setSort({ kind: "none" })
   }))
   onCleanup(() => { listAbort?.abort(); detailAbort?.abort(); destinationAbort?.abort() })
@@ -131,6 +135,13 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
       default: return "sf.common.unavailable"
     }
   }
+  // A denied/revoked producer read invalidates all private projections in this leaf.
+  const revokeWorkView = (reason: SfUiState) => {
+    listAbort?.abort(); detailAbort?.abort(); destinationAbort?.abort()
+    setItems(undefined); setSelection(undefined); setSelectedRef(undefined)
+    setDetails(undefined); setDestination(undefined)
+    setState(reason); setDetailState(reason); setDestinationState(reason)
+  }
   const loadWork = async () => {
     const s = snapshot()
     if (!s) return
@@ -138,7 +149,7 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
     const abort = new AbortController()
     listAbort = abort
     setSelection(undefined); setItems(undefined); setSelectedRef(undefined)
-    setDetails(undefined); setDestination(undefined)
+    setDetails(undefined); setDestination(undefined); setDestinationState("ready")
     if (!dateOnly(start()) || !dateOnly(end()) || start() > end()) { setState("invalid"); return }
     setState("loading")
     const work = createSfWorkClient(s.transport)
@@ -149,7 +160,10 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
       const chosen = await work["projection.work-selection"]({ start: start(), end: end() }, { signal: abort.signal })
       if (!current(s, abort.signal)) return
       if (chosen.kind !== "response" || chosen.body.status !== "ok") {
-        setState(resultState(chosen)); return
+        const failure = resultState(chosen)
+        if (failure === "denied" || failure === "session-expired") revokeWorkView(failure)
+        else setState(failure)
+        return
       }
       const selected = { selectionRef: chosen.body.value.selectionRef, period: chosen.body.value.period }
       if (!selected.selectionRef || selected.period.start !== start() || selected.period.end !== end()) {
@@ -158,22 +172,31 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
       const list = await collaboration["collaboration.work-list"](selected, { signal: abort.signal })
       if (!current(s, abort.signal)) return
       if (list.kind !== "response" || list.body.status !== "ok") {
-        setState(resultState(list)); return
+        const failure = resultState(list)
+        if (failure === "denied" || failure === "session-expired") revokeWorkView(failure)
+        else setState(failure)
+        return
       }
       setSelection(selected)
       setItems(list.body.value.items)
       setState(list.body.value.items.length ? "ready" : "empty")
-    } catch {
-      if (current(s, abort.signal)) setState("unavailable")
+    } catch (error) {
+      if (current(s, abort.signal)) {
+        console.error("Sucafina work list read failed", error instanceof Error ? error.name : "unknown")
+        setState("unavailable")
+      }
     }
   }
   const selectWork = async (actionRef: string) => {
     const s = snapshot(), selected = selection()
-    if (!s || !selected || !items()?.some((item) => item.actionRef === actionRef)) return
+    const matches = items()?.filter((item) => item.actionRef === actionRef)
+    const listed = matches?.length === 1 ? matches[0] : undefined
+    if (!s || !selected || !listed) return
     detailAbort?.abort(); destinationAbort?.abort()
     const abort = new AbortController()
     detailAbort = abort
-    setSelectedRef(actionRef); setDetails(undefined); setDestination(undefined); setDetailState("loading")
+    setSelectedRef(actionRef); setDetails(undefined); setDestination(undefined)
+    setDetailState("loading"); setDestinationState("ready")
     try {
       const work = createSfWorkClient(s.transport)
       const result = await work["projection.work-item"]({
@@ -181,32 +204,71 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
         start: selected.period.start, end: selected.period.end,
       }, { signal: abort.signal })
       if (!current(s, abort.signal) || selection() !== selected || selectedRef() !== actionRef) return
-      if (result.kind !== "response" || result.body.status !== "ok") { setDetailState(resultState(result)); return }
-      if (result.body.value.item.actionRef !== actionRef) { setDetailState("invalid"); return }
-      // Work-item output is the producer's currently authorized selection, not HTML parsing.
+      if (result.kind !== "response" || result.body.status !== "ok") {
+        const failure = resultState(result)
+        if (failure === "denied" || failure === "session-expired") revokeWorkView(failure)
+        else setDetailState(failure)
+        return
+      }
+      const item = result.body.value.item
+      if (item.actionRef !== actionRef || item.ownerRef !== listed.ownerRef || item.kind !== listed.kind) {
+        setDetailState("invalid")
+        return
+      }
+      // A change to source version, owner or destination after list read is stale,
+      // not a grant to display or open whatever the new response happens to describe.
+      if (item.sourceVersion !== listed.sourceVersion ||
+          item.observedVersion !== listed.observedVersion ||
+          item.state !== listed.state ||
+          JSON.stringify(item.destination ?? null) !== JSON.stringify(listed.destination ?? null)) {
+        setDetailState("stale")
+        return
+      }
       setDetails(result.body.value)
       setDetailState("ready")
-    } catch {
-      if (current(s, abort.signal)) setDetailState("unavailable")
+    } catch (error) {
+      if (current(s, abort.signal)) {
+        console.error("Sucafina work-item read failed", error instanceof Error ? error.name : "unknown")
+        setDetailState("unavailable")
+      }
     }
   }
-  const readDestination = async () => {
-    const s = snapshot(), selected = selection(), actionRef = selectedRef()
-    if (!s || !selected || !actionRef || detailState() !== "ready") return
+  const readDestination = async (open = false) => {
+    const s = snapshot(), selected = selection(), actionRef = selectedRef(), view = details()
+    if (!s || !selected || !actionRef || !view || detailState() !== "ready") return
     destinationAbort?.abort()
     const abort = new AbortController()
     destinationAbort = abort
-    setDestination(undefined)
-    const result = await createSfCollaborationClient(s.transport)["collaboration.work-destination"](
-      { selection: selected, actionRef }, { signal: abort.signal },
-    ).catch(() => undefined)
-    if (!result || !current(s, abort.signal) || selection() !== selected || selectedRef() !== actionRef) return
-    if (result.kind !== "response" || result.body.status !== "ok") {
-      setDetailState(resultState(result)); return
+    // A checked destination is never a reusable grant: opening checks again.
+    setDestination(undefined); setDestinationState("loading")
+    try {
+      const result = await createSfCollaborationClient(s.transport)["collaboration.work-destination"](
+        { selection: selected, actionRef }, { signal: abort.signal },
+      )
+      if (!current(s, abort.signal) || selection() !== selected ||
+          selectedRef() !== actionRef || details() !== view) return
+      if (result.kind !== "response" || result.body.status !== "ok") {
+        const failure = resultState(result)
+        if (failure === "denied" || failure === "session-expired") revokeWorkView(failure)
+        else setDestinationState(failure)
+        return
+      }
+      const internal = admittedNativeSource(result.body.value.href, s.publicOrigin, nextNativeRoute(view.item))
+      if (!internal) {
+        // D01 provides no arbitrary URL opening. Legacy HTML targets stay blocked
+        // until I00 supplies an authorized mapping to a typed native route.
+        console.error("Sucafina work destination has no admitted native route")
+        setDestinationState("unavailable")
+        return
+      }
+      setDestination(internal); setDestinationState("ready")
+      if (open) navigate(internal)
+    } catch (error) {
+      if (!current(s, abort.signal) || selection() !== selected ||
+          selectedRef() !== actionRef || details() !== view) return
+      console.error("Sucafina work destination read failed", error instanceof Error ? error.name : "unknown")
+      setDestinationState("unavailable")
     }
-    const internal = safeSourceHref(result.body.value.href, s.publicOrigin, s.mount)
-    if (internal) setDestination(internal)
-    else setDetailState("partial") // desktop/unsupported origin: keep details, do not navigate off-owner.
   }
 
   const visible = createMemo(() => {
@@ -227,7 +289,10 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
   const columns: readonly SfColumn<WorkItem>[] = [
     { id: "title", labelKey: tableKey("sf.u41.action"), align: "start",
       widthPolicy: { kind: "flex", minPx: 210, weight: 3 }, sortKey: "title",
-      render: (row) => <span class="sf-work-action">{row.title ?? t("sf.common.unavailable")}</span> },
+      render: (row) => <span class="sf-work-action" data-sf-work-row-action={row.actionRef}
+        data-sf-work-row-owner={row.ownerRef}
+        data-sf-work-row-source-version={row.sourceVersion ?? ""}
+        data-sf-work-row-observed-version={row.observedVersion ?? ""}>{row.title ?? t("sf.common.unavailable")}</span> },
     { id: "kind", labelKey: tableKey("sf.u41.kind"), align: "start",
       widthPolicy: { kind: "content", minPx: 100, maxPx: 170 },
       render: (row) => <span>{row.kind}</span> },
@@ -312,30 +377,35 @@ export function SfWorkView(_props: SfSurfaceProps<"UI30">) {
                             <>
                               <h2>{view().item.title ?? t("sf.common.unavailable")}</h2>
                               <dl>
-                                <div><dt>{t("sf.u41.owner")}</dt><dd>{view().item.ownerLabel ?? view().item.ownerRef}</dd></div>
+                                <div><dt>{t("sf.u41.actionRef")}</dt><dd data-sf-work-action-ref>{view().item.actionRef}</dd></div>
+                                 <div><dt>{t("sf.u41.owner")}</dt><dd data-sf-work-owner-ref={view().item.ownerRef}>{view().item.ownerLabel ?? view().item.ownerRef}</dd></div>
                                 <div><dt>{t("sf.u41.state")}</dt><dd>{view().item.state}</dd></div>
                                 <Show when={view().item.sourceVersion !== undefined}>
-                                  <div><dt>{t("sf.u41.sourceVersion")}</dt><dd>{view().item.sourceVersion}</dd></div>
+                                  <div><dt>{t("sf.u41.sourceVersion")}</dt><dd data-sf-work-source-version>{view().item.sourceVersion}</dd></div>
                                 </Show>
                                 <Show when={view().item.observedVersion !== undefined}>
-                                  <div><dt>{t("sf.u41.observedVersion")}</dt><dd>{view().item.observedVersion}</dd></div>
+                                  <div><dt>{t("sf.u41.observedVersion")}</dt><dd data-sf-work-observed-version>{view().item.observedVersion}</dd></div>
                                 </Show>
                                 <For each={view().details}>{(field) => <div><dt>{field.label}</dt><dd>{field.value}</dd></div>}</For>
                               </dl>
                               <div class="sf-work-links">
-                                <Show when={nextNativeRoute(view().item)}>
-                                  {(href) => <A href={href()} class="mx-btn primary">{t("sf.u41.openThread")}</A>}
-                                </Show>
-                                <For each={view().links}>
-                                  {(link) => <Show when={safeSourceHref(link.url, snapshot()?.publicOrigin ?? "", snapshot()?.mount ?? "")}>
-                                    {(href) => <a href={href()}>{link.label}</a>}
-                                  </Show>}
-                                </For>
-                                <button class="mx-btn" type="button" onClick={() => void readDestination()}>
-                                  {t("sf.u41.checkDestination")}
-                                </button>
-                                <Show when={destination()}>{(href) => <a href={href()}>{t("sf.u41.openSource")}</a>}</Show>
-                              </div>
+                                 <Show when={nextNativeRoute(view().item)}>
+                                   <button class="mx-btn primary" type="button" disabled={destinationState() === "loading"}
+                                     onClick={() => void readDestination(true)}>{t("sf.u41.openThread")}</button>
+                                 </Show>
+                                 {/* Producer-provided link labels are display-only. Their URLs do not
+                                     authorize opening another origin or a private desktop window. */}
+                                 <For each={view().links}>{(link) => <span class="sf-work-source-label">{link.label}</span>}</For>
+                                 <button class="mx-btn" type="button" disabled={destinationState() === "loading"}
+                                   onClick={() => void readDestination()}>{t("sf.u41.checkDestination")}</button>
+                                 <Show when={destination()}>
+                                   <button class="mx-btn" type="button" disabled={destinationState() === "loading"}
+                                     onClick={() => void readDestination(true)}>{t("sf.u41.openSource")}</button>
+                                 </Show>
+                                 <Show when={destinationState() !== "ready"}>
+                                   <p role="status" data-sf-work-source-state={destinationState()}>{t(stateKey(destinationState()))}</p>
+                                 </Show>
+                               </div>
                             </>
                           )}
                         </Show>

@@ -3,14 +3,39 @@ import { createStore } from "solid-js/store"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
 import { SfProjectionHome } from "@orchestra/schema/sucafina/work"
 import type { Schema } from "effect"
-import type { SfSurfaceProps } from "../context/contracts"
+import type { SfContextHandle, SfSurfaceProps } from "../context/contracts"
+import type { SfContextStamp, SfOwnerKey, SfResolvedRoute } from "@orchestra/schema/sucafina/context"
 import { useSfContext } from "../context"
 import { SfPageFrame, type SfCopyKey, type SfUiState } from "../shared/frame"
 import { SfStatePanel } from "../shared/states"
 import { useSfPresentation } from "../shared/frame/presentation"
 
 type Home = Extract<Schema.Schema.Type<typeof SfProjectionHome.Output>, { status: "ok" }>["value"]
+type HomeCase = Extract<Home["cases"], { status: "ok" }>["items"][number]
 type State = Readonly<{ status: SfUiState; data: Home | null }>
+type ResumeRequest = Readonly<{
+  caseRef: HomeCase["caseRef"]
+  sourceVersion: HomeCase["version"]
+  ownerKey: SfOwnerKey
+  sourceStamp: SfContextStamp
+  returnRoute: SfResolvedRoute<"UI29">
+  focusCaseRef: HomeCase["caseRef"]
+}>
+type ResumeResult = Readonly<{
+  status: "committed" | "aborted" | "kept-editing" | "denied" | "not-found" | "invalid-link" | "unavailable"
+}>
+/**
+ * Pending I00/F01 public navigation seam, NOT an existing provider guarantee.
+ * The callback must build/reauthorize UI34, mint an owner-bound returnRef and
+ * restore focus from focusCaseRef. Never accept a client-constructed href.
+ * Until 132 installs this exact port, no case can be opened from the leaf.
+ */
+export type SfTodayResumePort = Readonly<{
+  resumeCase(request: ResumeRequest, signal: AbortSignal): Promise<ResumeResult>
+}>
+function hasResumePort(handle: SfContextHandle): handle is SfContextHandle & SfTodayResumePort {
+  return "resumeCase" in handle && typeof handle.resumeCase === "function"
+}
 const key = (value: string) => value as SfCopyKey
 
 /**
@@ -18,10 +43,21 @@ const key = (value: string) => value as SfCopyKey
  * actual work items, meeting records, or material-change events. Never turn
  * them into successful work, completed routines, or synthetic meetings.
  */
-export function SfTodayView(_props: SfSurfaceProps<"UI29">): JSX.Element {
+export function SfTodayView(props: SfSurfaceProps<"UI29">): JSX.Element {
   const owner = useSfContext()
   const { t } = useSfPresentation()
   const [screen, setScreen] = createStore<State>({ status: "loading", data: null })
+  const [resume, setResume] = createStore<{ caseRef: string | null; status: SfUiState | "idle" }>({
+    caseRef: null, status: "idle",
+  })
+  let resumeInFlight: AbortController | undefined
+  createEffect(() => {
+    owner.generation()
+    owner.state().status
+    resumeInFlight?.abort()
+    setResume({ caseRef: null, status: "idle" })
+    onCleanup(() => resumeInFlight?.abort())
+  })
   const statusFromContext = (): SfUiState => {
     const status = owner.state().status
     if (status === "resolving") return "loading"
@@ -88,8 +124,64 @@ export function SfTodayView(_props: SfSurfaceProps<"UI29">): JSX.Element {
     return routines?.status === "ok" ? routines.items : []
   }
   const caseState = (): SfUiState => {
+    if (resume.status === "denied" || resume.status === "not-found" || resume.status === "invalid") return resume.status
     const cases = data()?.cases
     return cases?.status !== "ok" ? "unavailable" : cases.items.length ? "ready" : "empty"
+  }
+  const canResume = () => owner.state().status === "ready" && hasResumePort(owner)
+  const beginResume = (item: HomeCase) => {
+    const state = owner.state()
+    const ready = owner.ready()
+    if (state.status !== "ready" || !ready || !hasResumePort(owner)) return
+    if (props.route.ownerSelection.serverKey !== state.selection.serverKey ||
+        props.route.ownerSelection.projectId !== state.selection.projectId ||
+        props.route.ownerSelection.installationId !== state.selection.installationId) {
+      setResume({ caseRef: item.caseRef, status: "invalid" })
+      return
+    }
+    const source = caseItems().find((candidate) => candidate.caseRef === item.caseRef)
+    if (!source || source.version !== item.version) {
+      setResume({ caseRef: item.caseRef, status: "stale" })
+      return
+    }
+    resumeInFlight?.abort()
+    const request = new AbortController()
+    resumeInFlight = request
+    const generation = owner.generation()
+    setResume({ caseRef: item.caseRef, status: "loading" })
+    void owner.resumeCase({
+      caseRef: source.caseRef,
+      sourceVersion: source.version,
+      ownerKey: state.ownerKey,
+      sourceStamp: ready.context.stamp,
+      returnRoute: props.route,
+      focusCaseRef: source.caseRef,
+    }, request.signal).then((result) => {
+      if (request.signal.aborted || generation !== owner.generation() || owner.state().status !== "ready") return
+      if (result.status === "committed" || result.status === "aborted" || result.status === "kept-editing") {
+        setResume({ caseRef: null, status: "idle" })
+        return
+      }
+      if (result.status === "denied" || result.status === "not-found") {
+        // A target-level revocation or removal must not leave that case's
+        // previously authorized title/version in the in-memory home list.
+        const current = screen.data
+        if (current?.cases.status === "ok") {
+          setScreen("data", {
+            ...current,
+            cases: { status: "ok", items: current.cases.items.filter((entry) => entry.caseRef !== source.caseRef) },
+          })
+        }
+      }
+      setResume({
+        caseRef: source.caseRef,
+        status: result.status === "invalid-link" ? "invalid" : result.status,
+      })
+    }).catch((error: unknown) => {
+      if (request.signal.aborted || generation !== owner.generation()) return
+      console.error("SF case navigation failed", error instanceof Error ? error.name : "unknown")
+      setResume({ caseRef: source.caseRef, status: "unavailable" })
+    })
   }
   const routineState = (): SfUiState => {
     const routines = data()?.routines
@@ -128,16 +220,52 @@ export function SfTodayView(_props: SfSurfaceProps<"UI29">): JSX.Element {
             <h3>{t(key("sf.ui29.cases"))}</h3>
             <SfStatePanel
               state={caseState()}
-              messageKey={key(data()?.cases.status === "ok" && !caseItems().length ? "sf.common.empty" : "sf.ui29.casesUnavailable")}
+              messageKey={key(
+                caseState() === "denied" ? "sf.common.noAccess"
+                : caseState() === "not-found" ? "sf.common.removed"
+                : caseState() === "invalid" ? "sf.common.invalidLink"
+                : data()?.cases.status === "ok" && !caseItems().length ? "sf.common.empty"
+                : "sf.ui29.casesUnavailable"
+              )}
               onRetryRead={refresh}
+              onBack={() => { setResume({ caseRef: null, status: "idle" }); void owner.reload() }}
             >
               <Show when={caseItems().length > 0}>
+                <Show when={!canResume()}>
+                  <p role="status" data-sf-case-resume="blocked">{t(key("sf.ui29.resumeUnavailable"))}</p>
+                </Show>
                 <ul class="list-disc ps-5">
                   <For each={caseItems()}>
                     {(item) => (
-                      <li>
+                      <li class="min-w-0 py-2" data-sf-case-row="authorized">
                         <strong><bdi>{item.title}</bdi></strong>
                         <span class="block text-sm">{t(key("sf.ui29.caseVersion"), { version: item.version })}</span>
+                        <Show when={canResume()}>
+                          <button
+                            type="button"
+                            class="mx-btn mt-2"
+                            data-sf-resume-case="authorized"
+                            aria-label={t(key("sf.ui29.resumeCaseLabel"), { title: item.title })}
+                            disabled={resume.status === "loading"}
+                            onClick={() => beginResume(item)}
+                          >
+                            {t(key("sf.ui29.resumeCase"))}
+                          </button>
+                        </Show>
+                        <Show when={resume.caseRef === item.caseRef && (
+                          resume.status === "loading" || resume.status === "stale" ||
+                          resume.status === "unavailable"
+                        )}>
+                          <SfStatePanel
+                            state={resume.status === "idle" ? "unavailable" : resume.status}
+                            messageKey={key(
+                              resume.status === "loading" ? "sf.common.loading"
+                              : resume.status === "stale" ? "sf.common.stale"
+                              : "sf.common.unavailable"
+                            )}
+                            onRetryRead={() => { setResume({ caseRef: null, status: "idle" }); void owner.reload() }}
+                          />
+                        </Show>
                       </li>
                     )}
                   </For>

@@ -2,6 +2,7 @@ import { createEffect, For, onCleanup, Show, type JSX } from "solid-js"
 import { createStore } from "solid-js/store"
 import { createSfWorkClient } from "@orchestra/client/sucafina/work"
 import { SfProjectionSearch } from "@orchestra/schema/sucafina/work"
+import { SfOperationRegistry, type SfNativeOperationRoute } from "@orchestra/schema/sucafina/operation-registry"
 import type { Schema } from "effect"
 import type { SfSurfaceProps } from "../context/contracts"
 import { useSfContext } from "../context"
@@ -25,6 +26,21 @@ type State = {
 const key = (value: string) => value as SfCopyKey
 const TYPES: readonly KindFilter[] = ["all", "document", "record", "calculation", "receipt", "case-event", "policy"]
 
+/**
+ * The published GET search route serializes q in the HTTP URL. Neither an
+ * unchanged address bar nor no-store makes that safe. This is deliberately a
+ * fail-closed consumer fence, not a new route: 153/132 must publish the real
+ * POST-read contract across HTTP and desktop before search can dispatch.
+ */
+function hasPrivateSearchBodyRoute(route: SfNativeOperationRoute): boolean {
+  return route.method === "POST" && route.effect === "read" &&
+    route.responseMode === "json" &&
+    route.pathTemplate === "{mount}/api/ui/projections/search" &&
+    route.fixedQuery === undefined && route.fixedBodyDiscriminator === undefined &&
+    route.maxRequestBytes !== undefined && Number.isInteger(route.maxRequestBytes) &&
+    route.maxRequestBytes >= 2_048 && route.maxRequestBytes <= 8_192
+}
+
 /** UI31. Search is scoped by the real source; no cross-owner cache or local corpus. */
 export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
   const owner = useSfContext()
@@ -43,12 +59,13 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
     if (status === "context-mismatch") return "invalid"
     return "unavailable"
   }
+  const privateRouteReady = () => hasPrivateSearchBodyRoute(SfOperationRegistry["projection.search"])
   const sourceReady = () => {
     const ready = owner.ready()
     const operation = ready?.context.availability
       .find((entry) => entry.family === "domain-read" && entry.resource === "search")
       ?.operations.find((entry) => entry.operationId === "projection.search")
-    return !!ready && operation?.state === "ready" && operation.operational
+    return !!ready && operation?.state === "ready" && operation.operational && privateRouteReady()
   }
   const selected = () => screen.kind === "all"
     ? screen.matches
@@ -91,7 +108,7 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
       clear(owner.state().status === "ready" ? "unavailable" : statusFromContext(), false)
       return
     }
-    if (!value) {
+    if (!value || value.length > 500) {
       setScreen({ state: "invalid", searched: false, submitted: "", matches: [], limitations: [] })
       return
     }
@@ -162,6 +179,9 @@ export function SfSearchView(_props: SfSurfaceProps<"UI31">): JSX.Element {
     >
       <section class="mx-card min-w-0" aria-labelledby="sf-u42-query">
         <h2 id="sf-u42-query">{t(key("sf.ui31.query"))}</h2>
+        <Show when={owner.state().status === "ready" && !privateRouteReady()}>
+          <p role="status" data-sf-search-privacy="blocked">{t(key("sf.ui31.privateRouteUnavailable"))}</p>
+        </Show>
         <form onSubmit={(event) => { event.preventDefault(); submit() }}>
           <div class="flex min-w-0 flex-col gap-3 sm:flex-row">
             <label class="min-w-0 flex-1">

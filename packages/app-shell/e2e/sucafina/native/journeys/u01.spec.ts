@@ -36,3 +36,26 @@ test("UI29 Today reflows at 320 CSS px without hiding source states", async ({ p
   const size = await page.evaluate(() => ({ document: document.documentElement.scrollWidth, window: window.innerWidth }))
   expect(size.document).toBeLessThanOrEqual(size.window)
 })
+
+test("UI29 resumes an authorized real case by keyboard and restores focus on return", async ({ page, nativeHarness }) => {
+  const installed = new URL(nativeHarness.manifest.target.chapterHref, nativeHarness.manifest.target.shellOrigin)
+  await page.goto(installed.toString())
+  await nativeHarness.proveWeb(page.locator('[data-sf-frame="page"]'))
+  const homeUrl = new URL(installed)
+  homeUrl.pathname = "/orchestra/sf-home"
+  await page.goto(homeUrl.toString())
+  const home = page.locator('[data-sf-home="authorized"]')
+  await expect(home).toBeVisible()
+  const resumes = home.getByRole("button", { name: /^(Resume case|Retomar caso):/ })
+  await expect(resumes, "Fixture must expose a real authorized case and the F01 navigation port").not.toHaveCount(0)
+  // Choose the first source-backed case intentionally, not a fallback guessed from its title.
+  const action = resumes.nth(0)
+  const accessibleName = await action.getAttribute("aria-label")
+  expect(accessibleName).toBeTruthy()
+  await action.focus()
+  await page.keyboard.press("Enter")
+  await expect(page).toHaveURL(/\/orchestra\/sf-decisions\/r_[A-Za-z0-9_-]+(?:\?|$)/)
+  await page.goBack()
+  await expect(home).toBeVisible()
+  await expect(home.getByRole("button", { name: accessibleName! })).toBeFocused()
+})
