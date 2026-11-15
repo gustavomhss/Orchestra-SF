@@ -115,7 +115,10 @@ function serviceReadState(page: SfServicePage): "ready" | "empty" | "filtered-em
   const collections = [page.data.opsTickets, page.data.opsSLA, page.data.opsHeatmap]
   if (collections.every((rows) => rows == null)) return "unavailable"
   if (collections.some((rows) => rows == null) || page.data.display == null) return "partial"
-  const records = collections.flatMap((rows) => rows ?? [])
+  const records = [
+    ...(page.data.opsTickets ?? []), ...(page.data.opsSLA ?? []),
+    ...(page.data.opsHeatmap ?? []),
+  ]
   if (records.length === 0) return "empty"
   return records.some((row) => row.year === page.selection.year) ? "ready" : "filtered-empty"
 }

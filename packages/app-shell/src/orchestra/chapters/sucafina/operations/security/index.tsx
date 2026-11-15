@@ -159,7 +159,10 @@ function securityReadState(page: SfSecurityPage): "ready" | "empty" | "filtered-
   ]
   if (collections.every((rows) => rows == null)) return "unavailable"
   if (collections.some((rows) => rows == null) || page.data.display == null) return "partial"
-  const records = collections.flatMap((rows) => rows ?? [])
+  const records = [
+    ...(page.data.secKpi ?? []), ...(page.data.secActions ?? []),
+    ...(page.data.secIncidents ?? []), ...(page.data.secPhishing ?? []),
+  ]
   if (records.length === 0) return "empty"
   if ((page.data.secActions ?? []).length || (page.data.secPhishing ?? []).length ||
     (page.data.secKpi ?? []).some((row) => row.year === page.selection.year) ||
