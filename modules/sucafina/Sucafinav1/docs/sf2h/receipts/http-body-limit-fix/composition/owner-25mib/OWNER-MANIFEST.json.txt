@@ -1,0 +1,76 @@
+{
+  "schema": "sf2h.http-body-limit-fix.owner-proposal.v1",
+  "state": "INERT_NOT_APPLIED_REQUIRES_OWNER_AUTHORITY_AND_REVIEW",
+  "purpose": "Preserve the existing trusted SF contract-upload business limit for Content-Length preflight and streamed bodies through the same finite server middleware policy.",
+  "target_observed": "342f04688aa173914f36a81e80e6781242616e82",
+  "applied_to_source74": false,
+  "files": [
+    {
+      "path": "packages/server/src/body-limit.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "f55e2c264aade5a27c9f1abcccf3c5a9c661f226",
+        "sha256": "2035683c0397d879432c7db98e6d11c7ed8200fd509ec57a2cc15869f848a5ee",
+        "bytes": 2461,
+        "artifact": "owner-25mib/preimages/body-limit.ts.txt"
+      },
+      "postimage": {
+        "blob": "fff47ebb99a8265d49b49bc2c2e1f2473d23c5e2",
+        "sha256": "5c58ad903b087094062855ccb29624a5c7c9c9ed408687498ea29520c8933dfa",
+        "bytes": 3133,
+        "artifact": "owner-25mib/postimages/body-limit.ts.txt"
+      }
+    },
+    {
+      "path": "packages/server/src/routes.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "ccd11b2b4e6a59d4bb90019883b4de1ee90596dd",
+        "sha256": "9465ae38e78394abad85a37273bbd24e7b20b00508de4fe92f057ecc576e1b82",
+        "bytes": 7021,
+        "artifact": "owner-25mib/preimages/routes.ts.txt"
+      },
+      "postimage": {
+        "blob": "79b3de68654ffeb0c7c117374da88e37bf04a0e3",
+        "sha256": "a0640ddcaab8f87c6d53f661be2cfa0c0f7ff0b3d2d90e5df7cf6c79e4693473",
+        "bytes": 7185,
+        "artifact": "owner-25mib/postimages/routes.ts.txt"
+      }
+    },
+    {
+      "path": "apps/cli/src/commands/handlers/serve.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "1356a4c3099d10c62e470142209ced0f8033a6e1",
+        "sha256": "13c593602b7a5ae9465cadeb9da674657a900f9354b1061db0ef817d6db964f4",
+        "bytes": 8960,
+        "artifact": "owner-25mib/preimages/serve.ts.txt"
+      },
+      "postimage": {
+        "blob": "131358924c1130b1c77440e6ed6baf61059861a2",
+        "sha256": "4360982e33319b71e5f045bbf3a1edc4241289eae9689d9c3e5b9a4e76b72d3b",
+        "bytes": 9696,
+        "artifact": "owner-25mib/postimages/serve.ts.txt"
+      }
+    }
+  ],
+  "exact_policy": "Only an explicit loaded installation, POST at its exact mount/dashboard, one upload=contract parameter and no sf parameter receives 26214400 bytes. All other requests retain limitFor. Invalid trusted policy values fail closed. No unbounded override.",
+  "preserved": [
+    "Global defaults16MiB and64MiB",
+    "Host/origin/authentication/privacy layers",
+    "Workbench65536 enforced by74",
+    "Domain upload grants and scanner",
+    "HttpApi and Protocol unchanged"
+  ],
+  "dependencies": [
+    "Not in mission74 write paths. Mission71 must obtain the relevant server/CLI owner authority before application.",
+    "If adopted, serve.ts changes and the active Microsoft composition map MUST be regenerated for that exact serve postimage. The primary map74 intentionally retains the current serve bytes and cannot qualify this optional owner proposal.",
+    "The owner must qualify valid declared and chunked contract uploads above16MiB through25MiB and oversize/malformed selectors on the real full listener, plus default-route/Workbench/auth/origin/privacy negatives.",
+    "No public HttpApi/Protocol declaration changes; no client generation is proposed by this patch."
+  ],
+  "verification": "NOT_RUN; static authored proposal, no product execution/typecheck/guard/CI by this generator.",
+  "GLOBAL_RELEASE": false
+}

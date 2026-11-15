@@ -1,0 +1,141 @@
+{
+  "schema": "sf2h.http-body-limit-fix.composition-proposal.v1",
+  "state": "INERT_COMPLETE_COMPOSITION_POSTIMAGES_NOT_APPLIED",
+  "source_branch": "http-body-limit-fix",
+  "source_base": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "target_observed": "342f04688aa173914f36a81e80e6781242616e82",
+  "tested_candidate": null,
+  "qualification": "NOT_RUN by artifact generation. Authoritative source74 W/S/run receipts and later composed-candidate receipts must be linked separately; no source result is transferred to71.",
+  "historical_map": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/microsoft49-composition.json",
+    "blob": "302334c0e5a50c681005d6c6463132abce84d8b1",
+    "sha256": "d7b63c7b70e009e6cc08804bad167fdbd16c5d26d2ed8c604730f77cb85e39a9",
+    "bytes": 2411,
+    "disposition": "KEEP_BYTE_IDENTICAL"
+  },
+  "source49_manifest_blob": "89d033326a26ed4c0674a85a5e2ba86a2799d36e",
+  "source49_archive": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/final-intake-55/source-outputs/microsoft49/integration",
+  "files": [
+    {
+      "path": "apps/cli/src/sucafina-product/installation.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "21236af83e4de879242fd298d9e15a9923f3bf41",
+        "sha256": "6e20349d72f7131a1b66507d81907df78d18e2e8eedcafd9b741bba77b67b294",
+        "bytes": 5315,
+        "artifact": "preimages/installation.ts.txt"
+      },
+      "postimage": {
+        "blob": "8a62babdccaa4bcecbfc64e385b728315208a7c1",
+        "sha256": "8f5659edaef5a20875486837ef569697245e2cb5d7e373af5d01b8e35409d78f",
+        "bytes": 9786,
+        "artifact": "postimages/installation.ts.txt"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/request-body.ts",
+      "mode": "100644",
+      "action": "add",
+      "preimage": null,
+      "postimage": {
+        "blob": "5b3cca2a473258633bd00c9c29de7189cb52a5ce",
+        "sha256": "ca824aaed4746dcfab581e14d67aacc3e3e513ba18fa1e8f35c3e835d367019c",
+        "bytes": 5077,
+        "artifact": "postimages/request-body.ts.txt"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/product/interface/http.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "164c8208067d9feaa2c720adfd9e8bf27e272715",
+        "sha256": "43148e811b8e23cd2cb2a2e6fcee5027362b893c4ecac68467e73960bb22bd82",
+        "bytes": 25541,
+        "artifact": "preimages/http.ts.txt"
+      },
+      "postimage": {
+        "blob": "eb7322e915c61594a6cf1a05d562dc39ad7b6c38",
+        "sha256": "948b190b53a725c673ac9a57cdf587d20a3f0c2ec351db4af1fc46fd7dd6fab1",
+        "bytes": 25782,
+        "artifact": "postimages/http.ts.txt"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+      "mode": "100644",
+      "action": "add",
+      "preimage": null,
+      "postimage": {
+        "blob": "cd6a91c9f6fb11972220a11728300b6d7cdded6b",
+        "sha256": "c149a655d62ea1346dd3a74b7a9f0279f782503701a8b08cdbb9df98e22620f0",
+        "bytes": 2411,
+        "artifact": "microsoft49-composition-74.json.txt"
+      }
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "mode": "100644",
+      "action": "modify",
+      "preimage": {
+        "blob": "bf99964856dca491e5ccf922f76a5e3e1fb6b22b",
+        "sha256": "020a65af381b94ded41ad516d08c8337a4a5d62ed9676a353136172e31907c1e",
+        "bytes": 3543,
+        "artifact": "preimages/integration-fixture.ts.txt"
+      },
+      "postimage": {
+        "blob": "6517ff7b77fcb48bd0c471352d3906ddd43157f0",
+        "sha256": "6d8ba7820763c2461dccb118020352e11b05389a27fe8f322fcc6519b9e3594c",
+        "bytes": 3615,
+        "artifact": "postimages/integration-fixture.ts.txt"
+      }
+    }
+  ],
+  "material_test_inputs": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/http-body-limit-fix/composition/microsoft49-composition-74.json",
+      "role": "Normative exact canonical-byte map when activated by fixture; this is not a final evidence receipt."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/microsoft-login/integration-fixture.ts",
+      "role": "Normative test fixture lookup; schema/release/manifest/preimage/postimage/filecount/uniqueness/sourcepair and installed-byte fences remain identical."
+    }
+  ],
+  "inert_artifacts": "Every file emitted under this composition namespace has a .txt extension. The .json map and .ts fixture exist only as patch destinations/postimages until owner71 explicitly composes them.",
+  "map_change": "Only installation postimage_blob/postimage_sha256/bytes change from map55. Both other entries and every source49 identity are preserved as exact JSON values.",
+  "historical_metadata": "The new map retains inherited target_base3f35d8ee and target_preimage fields solely as49/55 provenance. Actual current application preimages/base are this enclosing manifest; do not use inherited fields as CAS preconditions.",
+  "atomicity": "Compose the three product74 files, complete released source74 tests/dependencies, new map74 and fixture lookup in one material candidate. The two mapping files alone are not applicable to unchanged installation21236af8.",
+  "scope": "compose-74.patch.txt contains exactly the3 product74 paths and2 Microsoft mapping paths. Source74 test files are delivered by the source PR and must be included in its complete release unit; they are not duplicated in this mapping patch.",
+  "preserved_fences": [
+    "Archived manifest89d03332",
+    "Archived pre/post SHA256 and Git blobs",
+    "Schema/source_release/source_manifest_blob",
+    "Exact count and unique paths",
+    "Source postimage identity pairs",
+    "Canonical installed blob and SHA256",
+    "Canonical import target, never an archived postimage"
+  ],
+  "decisions52_compatibility": {
+    "proposal_manifest": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/proposals/MANIFEST.json",
+    "proposal_manifest_blob": "d0b727ee6a7d26ab72c882c7f1d84eddbf04d51f",
+    "installation_postimage_blob": "5d9fe7ec2f070dbbedc2bdbfff4c8458e1187437",
+    "state": "READ_ONLY_NOT_APPLIED",
+    "conflict": "The retained52 proposal buffers sanitized.arrayBuffer before the Web Request boundary, depends on global MaxBodySize and reconstructs Request. It must not overwrite74's bounded stream. Its old map expects different installation bytes.",
+    "rebase": "71/52 must preserve74's final transport bytes/fences and rebase only released52 business changes, then produce a new exact map for the resulting canonical installation. Do not apply map52 or copy its old transport wholesale."
+  },
+  "owner_contract_limit": "See owner-25mib/OWNER-MANIFEST.json.txt. This separate3path proposal is not applied and is not silently part of map74. Main74 retains the inherited global16MiB Content-Length preflight until owner adoption; qualifying the25MiB full listener path requires that explicit integration and a matching new map.",
+  "commands": {
+    "regenerate_artifacts": "node /workspace/scratch/e5565cc31993/m74/build-composition.mjs",
+    "local_product_execution": false
+  },
+  "execution": {
+    "product_tests": 0,
+    "typechecks": 0,
+    "guards": 0,
+    "builds": 0,
+    "CI_dispatches": 0,
+    "remote_writes": 0
+  },
+  "GLOBAL_RELEASE": false
+}
