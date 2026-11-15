@@ -1,0 +1,166 @@
+{
+  "schema": "sf88-export-reader-run-result-v1",
+  "mission": 88,
+  "sourceW": "dc2e7c84d6996d61ee24cf0e5cd4cba8376faf72",
+  "snapshotS": "4cf4a5526ce5d61aa3dbdd6ee83da9a25c7aa426",
+  "requestBranch": "ci-run-linux-sf88-dc2e7c-own5-r2",
+  "runId": 43677729466,
+  "jobId": 132701451206,
+  "artifactId": 14147640872,
+  "artifactName": "sf66-exports-4cf4a5526ce5d61aa3dbdd6ee83da9a25c7aa426-ubuntu-24.04-1",
+  "artifactSizeBytes": 16129062,
+  "artifactUrl": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43677729466",
+  "originalCount": 13,
+  "originalBytes": 3144507,
+  "mandatoryCaseCount": 12,
+  "missingMandatoryCaseIds": [],
+  "invariant_originalSha256BeforeAfter": "PASS_13_OF_13",
+  "derivedPages": 130,
+  "sheetSourceViews": 9,
+  "galleryLocalLinks": 196,
+  "brokenGalleryLinks": 0,
+  "reader": {
+    "step": "Render SF66 generated exports",
+    "conclusion": "success",
+    "reportedVerdict": "COMPLETED"
+  },
+  "functional": {
+    "step": "Run tests",
+    "conclusion": "failure",
+    "exitCode": 1,
+    "totalTests": 14,
+    "pass": 12,
+    "fail": 2,
+    "assertions": 1723,
+    "failures": [
+      {
+        "id": "EA66-LEGACY-EGRESS",
+        "expectedHttp": 403,
+        "observedHttp": 200,
+        "reproducedLeakedSyntheticDocx": true,
+        "owner": 86
+      },
+      {
+        "id": "EA66-READONLY-SOURCE-SIDE-EFFECT",
+        "path": "modules/sucafina/Sucafinav1/test/product/export-artifact-closure/composed-storage.test.ts",
+        "line": 157,
+        "observed": "Denied read-only viewer changes persisted source lifecycle metadata",
+        "expected": "Durable snapshot equal initial",
+        "owner": 71
+      }
+    ]
+  },
+  "officeFonts": {
+    "requested": "Aptos in OOXML",
+    "observedSubstitutes": [
+      "LiberationSans",
+      "DejaVuSans",
+      "Carlito"
+    ],
+    "renderer": "LibreOffice 24.2.7.2"
+  },
+  "privacy": {
+    "adminJsonSalarySentinel": true,
+    "memberRosterSalaryExcluded": true,
+    "contractReviewRequired": true,
+    "syntheticOnly": true
+  },
+  "notes": [
+    "13 unique cases from a single new run. 14 historical observations across 3 legacy runs include an extra composed-docx case instance; do not invent a fourteenth unique case.",
+    "CSV HTML derivatives on this W still had wide tables clipped; follow-up source W a1be5ae corrects reader-only layout.",
+    "Visual defects are findings, not a passing independent FINAL review."
+  ],
+  "files": [
+    {
+      "caseId": "after-drift-docx",
+      "format": "docx",
+      "sha256": "f6d149f5ba649449deb9e06c24c54e0362a0fbe489e14d22a2fc0e4ff37f0e26",
+      "pdfPages": 15,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "after-drift-pptx",
+      "format": "pptx",
+      "sha256": "89bdbb01d97f92969593da434af3dc1248bdd8ba6acd4ac36e4920377479269a",
+      "pdfPages": 29,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "composed-docx",
+      "format": "docx",
+      "sha256": "eb81db71872f80c7496a1de62f40858b67632306e5509c2963be25ae33431914",
+      "pdfPages": 15,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "composed-pptx",
+      "format": "pptx",
+      "sha256": "ae2e1fa99d326641144115b0f97e3ec5ebb8dc0e60c2e92a5b6a47294307592e",
+      "pdfPages": 29,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "dashboard-backup",
+      "format": "json",
+      "sha256": "b28668a0a42fb47fc46a28152bf9711d7451cedf42a39a7b25971a6bdac3c1d7",
+      "pdfPages": 7,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "legacy-egress-control",
+      "format": "docx",
+      "sha256": "e47e4af2a800c4387cf134d59744d09f60e29327ca8ba66a16dfbf416427bcfb",
+      "pdfPages": 1,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "legacy-egress-revoked",
+      "format": "docx",
+      "sha256": "2ee042584d396f2a4ed6f54f18d0873c24a844fb0a309c5333e397de97ee6c9b",
+      "pdfPages": 1,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "members-admin",
+      "format": "xlsx",
+      "sha256": "9b0ea1d2f0cf8bedd9d540d78087069dcfd81167f42a56bd245833ee38a688e5",
+      "pdfPages": 6,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "opex-template",
+      "format": "xlsx",
+      "sha256": "fc02c8b2cfca80140bd16bf894c040cba24f90be3f4fe881969ea36a3ecf74bb",
+      "pdfPages": 2,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "planner-viewer",
+      "format": "xlsx",
+      "sha256": "062893b55e6757a71392414b615e54a28f350fb347f35a56b7179ab2c9b27bfd",
+      "pdfPages": 21,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "procurement-register",
+      "format": "csv",
+      "sha256": "5c6a777f2bf17cf1c2b7015304861d8bbae589a46ad1982237147b919389ef81",
+      "pdfPages": 1,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "purchase-order",
+      "format": "html",
+      "sha256": "a3db32b6f749e12dc7be488ae1e623ece1123f4a5a4629061065472d92f5d24c",
+      "pdfPages": 2,
+      "sha256OriginalUnchanged": true
+    },
+    {
+      "caseId": "suppliers-buyer",
+      "format": "csv",
+      "sha256": "c2be0f72d297a77d6fcb278fb48f9eadbfc13f52b52b621e1f8bc6eacc160b22",
+      "pdfPages": 1,
+      "sha256OriginalUnchanged": true
+    }
+  ]
+}

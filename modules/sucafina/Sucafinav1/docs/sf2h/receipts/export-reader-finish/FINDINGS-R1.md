@@ -4,7 +4,7 @@
 
 ## Distinct verdicts
 
-- Functional `Run tests`: **FAIL**; specifically `EA66-LEGACY-EGRESS`: after SQLite authenticated read and revocation, DOCX still returned HTTP 200 containing the authorized synthetic marker, subsequent request HTTP 401; expected suppress bytes and return 403. Product owner: mission 86, NOT this lease.
+- Functional `Run tests`: **FAIL, 12 pass / 2 fail** of 14 tests (1,723 assertions); (1) `EA66-LEGACY-EGRESS`: after SQLite authenticated read and revocation, DOCX still returned HTTP 200 containing the authorized synthetic marker, subsequent request HTTP 401; expected suppress bytes and return 403. Product owner: mission 86. (2) `composed-storage.test.ts:157`: a denied read-only viewer transition changes the durable source lifecycle snapshot (new alive scoped source metadata entries, +57 lines of diff) instead of preserving `initial`. Product/source authority and integrator71; **not** this reader lease.
 - Technical reader: **FAIL** because a naive global sentinel check rejected `dashboard-backup` JSON at `SALARY_SENTINEL_66`. This admin backup includes its original synthetic member `salary` field; independent access-contract review still needed. The original file was never rewritten. The follow-up reader classifies this separately from the members roster XLSX, which excluded salary.
 - Preservation: **PASS limited to this reader run**; source/manifest SHA-256 before/after identical for all inputs, 13 generated cases; 12 mandatory, none missing, 1 negative control.
 - Visual: **FAIL / REQUIRES OWNER FIXES** based on actual Action-produced PNGs; not independent FINAL approval.
@@ -21,7 +21,7 @@
 | VIS88-006 | dashboard-backup.json | Admin JSON contains an explicit synthetic `salary` field; member roster XLSX deliberately excludes it. The test rejects viewer backup (403), but independent policy review of admin backup contents remains necessary. | Authorization/policy reviewer/71 |
 | VIS88-007 | composed-pptx, after-drift-pptx | 29 genuine slide pages each render, with coverage/title/table continuation visible; title wraps without the specific DOCX overlap. Did not certify every slide free of fine clipping at full zoom. | Review required |
 | VIS88-008 | purchase-order.html | LibreOffice derivative uses two pages, moving approvals/details to page 2; this is not a Chromium print/browser equivalence check. Real HTML escapes synthetic script as content and has zero script elements according to original producer tests. | Renderer parity open |
-| VIS88-009 | Preserved Review charts | The source review itself reports `no chart captured`; no absent chart can be given a visual PASS. | Report producer/71 |
+| VIS88-010 | composed-storage.test.ts:157, viewer denied source capture | Despite read-only deny, durable snapshot differs by 57 lines of source scope/version entries. Reproduce and isolate producer/source read side effects; do not paper over with an assertion change. | 71 / source lifecycle owner |\n| VIS88-009 | Preserved Review charts | The source review itself reports `no chart captured`; no absent chart can be given a visual PASS. | Report producer/71 |
 
 ## Exact recorded limitations
 
