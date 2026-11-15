@@ -1,0 +1,275 @@
+{
+  "schema": "sf2h.native-ui.author-handoff.v1",
+  "mission_id": "UX-A08",
+  "order": "A08",
+  "lease_epoch": "ux-native-a08-e1",
+  "actor": "ChatGPT (GitHub connector)",
+  "effective_model": "GPT-6",
+  "session_id": null,
+  "session_id_reason": "No runtime-exposed session identifier",
+  "status": "ARTIFACT_READY",
+  "lease_state": "RELEASED_AFTER_HANDOFF",
+  "is_integrated": false,
+  "is_qualified": false,
+  "is_global_release": false,
+  "branch": "sf-ux-a08",
+  "base_branch": "sf2-stack",
+  "pr": {
+    "number": 142,
+    "url": "https://github.com/gustavomhss/Orchestra-SF/pull/142",
+    "draft": false,
+    "whole_branch_merge_authorized": false,
+    "integration_mode": "114 selectively consumes only the A08 blobs; the PR GitHub diff includes inherited UX cohort changes (161 files/70040 additions at creation). Never merge inherited cohort through this PR."
+  },
+  "fencings": {
+    "initial_expected_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "initial_observed_head": "f8e442616c96651f3b26013b34b8ce697860e3e2",
+    "source_material_commit": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "code_complete_head": "5f1731aae33f96185a8cda03440960fe8bda6688",
+    "code_complete_tree": "7bfdd53b3827e11384e235c76c7305e84fb21b32",
+    "head_before_handoff": "c68dde2ff60720b64bb289b4c1339f4f868690a3",
+    "tree_before_handoff": "801e708f943c25741de6382e4b8112a374e8d61c",
+    "no_force": true,
+    "no_reset": true,
+    "no_merge": true
+  },
+  "ack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A08/ACK.json",
+    "blob": "c605b2678b4b7bac9aa082e07781d8711f871290",
+    "commit": "b1b6fcb5302bfeede8e73a1dfa7c6e2bab43ca02"
+  },
+  "file_artifacts": [
+    {
+      "path": "packages/schema/src/sucafina/bi/wire.ts",
+      "preimage": null,
+      "postimage": "8240444a692f6e4d35de26bbb9daf6b8cf4760b8",
+      "owner": "A08",
+      "role": "typed source/result projection schemas and closed evidence ancestry"
+    },
+    {
+      "path": "packages/schema/src/sucafina/bi.ts",
+      "preimage": null,
+      "postimage": "02504f838da6680a5fff1d1f9f6a337d075d68ca",
+      "owner": "A08",
+      "role": "four named schemaExports, SfBi namespace, operation-key union"
+    },
+    {
+      "path": "packages/client/src/sucafina/bi.ts",
+      "preimage": null,
+      "postimage": "396d7120e6db25be1dae4255edaa7e87f8544def",
+      "owner": "A08",
+      "role": "four typed client methods consuming F02 transport without generic RPC"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/native-ui-contract/bi.test.ts",
+      "preimage": null,
+      "postimage": "26017329781b67185ffdfb2b0e5cfdfc00c001b2",
+      "owner": "A08",
+      "role": "authored NOT_RUN isolated contract specs"
+    }
+  ],
+  "shared_handoff": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/native-ui/A08/SHARED-PATCHES.json",
+    "blob": "aa5b56f75184f3ee3fa6eabffde5a161ed88359e",
+    "owner": "114",
+    "state": "INERT_NOT_APPLIED",
+    "package_preimages": {
+      "packages/schema/package.json": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a",
+      "packages/client/package.json": "4cd0244e98ff18b5e65d3c2808196705095b6691"
+    },
+    "includes": [
+      "complete UTF-8 preimage/postimage for two package export maps",
+      "exact 4 operation-registry metadata records",
+      "exact 4 SfNativeOperationBindings codec references",
+      "allowed query sets and no duplicate server requirement",
+      "producer identity and source access fences"
+    ]
+  },
+  "producer_fences": {
+    "existing_get": "GET {mount}/dashboard",
+    "source_path": "apps/cli/src/sucafina-product/extended-http.ts",
+    "historical_blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+    "current_blob": "5e14d72bebc783af6e4bb29c0f73d8aca336f56a",
+    "semantic_delta": "SAME_BLOB",
+    "unchanged": true,
+    "contracts": {
+      "CONTRACTS.md": "94553a3119826ef1c44271966233dd58042ddd70",
+      "host-signatures.ts": "e99e094fc3ad5e74832a55aa2639c6bdb27f5255",
+      "contract-catalog.json": "31dbec1726fd8147156b01dc545726650ffd49e1",
+      "EXECUTION-PROTOCOL.md": "0151a8e6cbb0da2118e058142af801ba7cf72094"
+    },
+    "protocol_note": "Wave2 packet pins normative EXECUTION-PROTOCOL blob 0151a8; inherited branch has older 4a50ab. Inspected difference: dispatcher/owner procedure wording, no BI operation or frozen source semantic change. Following wave2 packet and normative pin without editing shared docs."
+  },
+  "operations": [
+    {
+      "id": "bi.bi-data",
+      "sf": "bi-data",
+      "method": "GET",
+      "source": "createSfExtendedHttp(mode=bi-data) -> input.bi.dispatchPresentation -> C16",
+      "schemaExport": "SfBiBiData",
+      "fields": [
+        "request",
+        "projection",
+        "presentation",
+        "receipt",
+        "navigation?"
+      ],
+      "on_success": "RAW_BODY_NOT_PortResult",
+      "version_fields": [
+        "projection.version",
+        "projection.engineVersion",
+        "projection.context.accessRevision",
+        "receipt.accessRevision",
+        "sourceRefs[].version",
+        "decision?.scenario.version"
+      ],
+      "redaction": "missing[].reason and null preserved"
+    },
+    {
+      "id": "bi.bi-source",
+      "sf": "bi-source",
+      "method": "GET",
+      "source": "createSfExtendedHttp(mode=bi-source) -> input.bi.source.read -> sfExtendedSourceLinks -> sameBiProjection",
+      "schemaExport": "SfBiBiSource",
+      "fields": [
+        "links"
+      ],
+      "on_success": "RAW_BODY_NOT_PortResult",
+      "version_fields": [
+        "selectionRef exact",
+        "referenceDigest selection",
+        "source target version",
+        "sameBiProjection current"
+      ],
+      "redaction": "denied/stale/unavailable preserve error, no link fabricated"
+    },
+    {
+      "id": "bi.bi-decision",
+      "sf": "bi-decision",
+      "method": "GET",
+      "source": "createSfExtendedHttp(mode=bi-decision) -> sfBiDecisionNavigation -> current selection/target/case revalidation",
+      "schemaExport": "SfBiBiDecision",
+      "fields": [
+        "status",
+        "value.title",
+        "value.reference",
+        "value.facts",
+        "value.tables",
+        "value.links"
+      ],
+      "on_success": "PortResult",
+      "version_fields": [
+        "selectionRef",
+        "snapshot",
+        "target"
+      ],
+      "redaction": "only producer-authorized detail and links"
+    },
+    {
+      "id": "bi.bi-options",
+      "sf": "bi-options",
+      "method": "GET",
+      "source": "createSfExtendedHttp(mode=bi-options) -> createSfExtendedBiOptions.read",
+      "schemaExport": "SfBiBiOptions",
+      "fields": [
+        "status",
+        "value.choices",
+        "value.choices[].caseRef?.version",
+        "value.versions",
+        "value.links",
+        "value.limitations"
+      ],
+      "on_success": "PortResult",
+      "version_fields": [
+        "versions[].ref",
+        "caseRef.version"
+      ],
+      "redaction": "only explicitly authorized candidate/version, limitations not empty success"
+    }
+  ],
+  "delivery_checks": {
+    "A08-AC01": {
+      "status": "AUTHORED_NOT_RUN",
+      "evidence": [
+        "bi/wire.ts: Projection/SourceRef/EvidenceRef/Scenario/Sensitivity nullable and versioned schemas",
+        "bi.test.ts:zero/null/redacted reason, exact source context and revision",
+        "extended producer JSON success shape kept unchanged"
+      ],
+      "not_claimed": "actual authorized tenant E2E"
+    },
+    "A08-AC02": {
+      "status": "AUTHORED_NOT_RUN",
+      "evidence": [
+        "bi.ts:exact four operation descriptors; no dynamic action",
+        "client/bi.ts: rejects unknown input keys and ambiguous compare selection",
+        "bi.test.ts:strict schema parsing for invalid view/digest/unknown sf"
+      ],
+      "not_claimed": "F02 codec registration/strict decoding before integration"
+    },
+    "A08-AC03": {
+      "status": "AUTHORED_NOT_RUN",
+      "evidence": [
+        "client/bi.ts: literal operation ID keys, AbortSignal preserved",
+        "bi/wire.ts:full revision/receipt/C16 snapshot fields",
+        "bi.test.ts:denied/stale retained; source refs and snapshot/target forwarded",
+        "original extended-http.ts remains responsible for current-access, source-change, denial"
+      ],
+      "not_claimed": "live source/ACL/revocation under installed identity"
+    }
+  },
+  "criteria": {
+    "canonical_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "criteria_trace_blob": "1dba83d77882073af587c031d63299ed472905e8",
+    "task_refs": [
+      "WP05.T01",
+      "WP05.T02",
+      "WP05.T03",
+      "WP05.T04",
+      "WP05.T05"
+    ],
+    "task_pointer_count": 81,
+    "notes": "Owned slice is the BI schema/client bindings; downstream UI and full 81 criteria remain separate and NOT claimed as passed."
+  },
+  "server_leaf": {
+    "path": "apps/cli/src/sucafina-product/native-ui/bi.ts",
+    "created": false,
+    "reason": "The locked server_leaf_policy expressly forbids new forwarder for installed JSON GET endpoints; all four are directly available."
+  },
+  "qualification": {
+    "local_tests": "NOT_RUN_BY_INSTRUCTION",
+    "local_typecheck": "NOT_RUN_BY_INSTRUCTION",
+    "hosted_ci": "NOT_DISPATCHED",
+    "compiler": "NOT_DISPATCHED",
+    "installed_auth": "NOT_RUN",
+    "desktop": "NOT_RUN",
+    "output_status": "ARTIFACT_READY_NOT_QUALIFIED",
+    "requested_handoff": {
+      "114": "Compose exact A08 source blobs via shared patches after owner release. Do not whole-PR merge.",
+      "119": "After 114/F01/F02 integration, bun typecheck in packages/schema, packages/client and apps/cli, and applicable compiler/guards through authorized executor.",
+      "120": "After 114 integrates on same-C candidate, dispatch only the authored native-ui-contract/bi.test.ts plus transitive consumer checks per canonical dispatcher; preserve raw failure status and redaction checks."
+    }
+  },
+  "blockers": [
+    {
+      "class": "BLOCKED_INTEGRATION",
+      "owner": "114",
+      "detail": "F01/F02 transport, operation registry, bindings and explicit package exports are shared/integrator-owned; branch does not register them."
+    },
+    {
+      "class": "BLOCKED_VALIDATION",
+      "owner": "120/119",
+      "detail": "No hosted spec run, compiler or installed identity permission proof; code is not qualified."
+    }
+  ],
+  "forbidden_changes_respected": [
+    "no producer/auth/finance edit",
+    "no runtime server forwarder",
+    "no local tests",
+    "no shared product writes",
+    "no force/reset",
+    "no merge to dev/sf2-stack",
+    "no deploy/Azure",
+    "no Goal restart"
+  ],
+  "final": "A08 source artifact and handoff available for authorized surgical integration; writer slot released."
+}
