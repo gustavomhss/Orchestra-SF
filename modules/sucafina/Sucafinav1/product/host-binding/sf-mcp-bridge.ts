@@ -67,13 +67,15 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
       const reject = (status: "denied" | "unavailable" | "provider-conflict", reason: string): CapabilityResult => ({
         status, reason, receipt: { kind: "unbound", operation, code: status === "provider-conflict" ? "provider-conflict" : status === "denied" ? "invalid-binding" : "unavailable", callId: context.toolCallID, at: new Date().toISOString() },
       })
+      // The caller may retain its arguments while configuration and authority are awaited.
+      const captured = captureMcpInput(payload)
+      if (!captured) return reject("denied", "invalid-operation-input")
       const configured = await conflict()
       if (configured === undefined) return reject("unavailable", "provider-configuration-unavailable")
       if (configured) return reject("provider-conflict", "provider-conflict")
-      if (!payload || typeof payload !== "object" || Array.isArray(payload)) return reject("denied", "invalid-operation-input")
       const descriptor = input.descriptors.filter((item) => item.id === operation)
       if (descriptor.length !== 1) return reject("unavailable", "operation-unavailable")
-      const lease = await input.registry.lease(context, operation, digestSfValue(payload))
+      const lease = await input.registry.lease(context, operation, captured.digest)
       if (lease.status !== "ok") return reject("denied", lease.reason)
       const [clientTransport, serverTransport] = InMemoryTransport.createLinkedPair()
       const server = new Server({ name: "sucafina-workbench", version: "1" }, { capabilities: { tools: {} } })
@@ -85,7 +87,7 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
           name: operation, inputSchema: descriptor[0]!.inputSchema as { type: "object"; properties?: Record<string, object> },
         }] }))
         server.setRequestHandler(CallToolRequestSchema, async (call) => {
-          if (call.params.name !== operation || digestSfValue(call.params.arguments ?? {}) !== digestSfValue(payload) ||
+          if (call.params.name !== operation || digestSfValue(call.params.arguments ?? {}) !== captured.digest ||
             !(await input.registry.revalidate(lease.value))) throw new Error("private-call-denied")
           const handlerConfig = await conflict()
           if (handlerConfig === undefined) throw new Error("provider-configuration-unavailable")
@@ -93,9 +95,10 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
             observed.providerConflict = true
             throw new Error("provider-conflict")
           }
-          observed.result = await input.dispatch(operation, call.params.arguments ?? {}, lease.value)
+          // Detach the validated wire result from references retained by its producer.
+          observed.result = structuredClone(await input.dispatch(operation, call.params.arguments ?? {}, lease.value))
           if (observed.result.status === "ok") {
-            const expected = input.registry.receiptFor(lease.value, operation, digestSfValue(call.params.arguments ?? {}), digestSfValue(observed.result.result))
+            const expected = input.registry.receiptFor(lease.value, operation, captured.digest, digestSfValue(observed.result.result))
             const receipt = observed.result.receipt
             if (!expected || expected.kind !== "native" || receipt.kind !== "native" || receipt.operation !== expected.operation ||
               receipt.handlerExport !== expected.handlerExport || receipt.inputDigest !== expected.inputDigest ||
@@ -112,7 +115,7 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
         const catalog = await client.listTools()
         if (catalog.tools.length !== 1 || catalog.tools[0]?.name !== operation || !(await input.registry.revalidate(lease.value)))
           return reject("denied", "authority-changed")
-        const result = await client.callTool({ name: operation, arguments: payload as Record<string, unknown> })
+        const result = await client.callTool({ name: operation, arguments: structuredClone(captured.value) })
         if (!(await transport.close())) return reject("unavailable", "private-mcp-close-unavailable")
         const currentConfig = await conflict()
         if (currentConfig === undefined) return reject("unavailable", "provider-configuration-unavailable")
@@ -122,7 +125,7 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
           return reject("unavailable", "private-mcp-response-mismatch")
         if (observed.result.receipt.kind === "native" && observed.result.receipt.callId !== context.toolCallID)
           return reject("unavailable", "private-mcp-receipt-mismatch")
-        if (observed.result.status === "ok" && input.onVerifiedCall && !input.onVerifiedCall(operation, structuredClone(payload), structuredClone(observed.result), lease.value))
+        if (observed.result.status === "ok" && input.onVerifiedCall && !input.onVerifiedCall(operation, structuredClone(captured.value), structuredClone(observed.result), lease.value))
           return reject("unavailable", "private-call-capture-unavailable")
         return observed.result
       } catch {
@@ -133,6 +136,17 @@ export const createSfBusinessMcpBridge = (input: Parameters<CreateSfBusinessMcpB
         input.registry.finish(lease.value)
       }
     },
+  }
+}
+
+function captureMcpInput(payload: unknown) {
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) return undefined
+  try {
+    const digest = digestSfValue(payload)
+    const value = structuredClone(payload) as Record<string, unknown>
+    return { value, digest }
+  } catch {
+    return undefined
   }
 }
 
@@ -150,4 +164,5 @@ function privateTransportLifetime(client: Client, server: Server) {
     },
   }
 }
+
 
