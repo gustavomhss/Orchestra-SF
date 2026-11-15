@@ -20,7 +20,7 @@ export const nativeCorpus = {
     forecast2027: "$2000",
     firstRequest: "synthetic-po-1",
     firstAmount: "1 USD",
-    pilotPrEstimate: 32000,
+    pilotPrEstimate: inputs.procurement.prEstimate,
     lastRequest: "synthetic-po-200",
     lastAmount: "200 USD",
     baseOutlook: "$590,000.00",
@@ -49,7 +49,11 @@ export function sourceNativeVolume() {
       volume.purchaseOrders[0]?.pr.estAmount !== 1 ||
       volume.purchaseOrders.at(-1)?.pr.estAmount !== 200)
     throw new Error("F04_SOURCE_CORPUS_DRIFT")
-  if (rows(planner.data.versions)[0]?.id !== inputs.planner.versionId)
+  if (rows(planner.data.versions)[0]?.id !== inputs.planner.versionId ||
+      inputs.procurement.prEstimate !== 32000 ||
+      inputs.planner.expected.baseOutlook !== 590000 ||
+      inputs.planner.expected.replacement84000 !== 602000 ||
+      inputs.planner.expected.replacement78000 !== 596000)
     throw new Error("F04_PLANNER_CORPUS_DRIFT")
   return { volume, planner }
 }
