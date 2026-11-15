@@ -1,0 +1,114 @@
+{
+  "schema": "sf2h.shared-patches.v1",
+  "mission": "UX20-W11",
+  "workOrder": "A03",
+  "state": "PROPOSED_NOT_APPLIED",
+  "integrator": "114 / S0-C-e17-browser114",
+  "branch": "sf-ux-w11",
+  "sourceHead": "46463622b2130178d7adaa9c8c2b91aa68c7b4a3",
+  "patches": [
+    {
+      "path": "packages/schema/package.json",
+      "kind": "full-file-postimage",
+      "owner": "114 / I00",
+      "preimageSha": "adc53ecfa8f4ac83fee37854db2dc0ec2bb9136a",
+      "preimage": "{\n  \"$schema\": \"https://json.schemastore.org/package.json\",\n  \"name\": \"@orchestra/schema\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./actions\": \"./src/actions.ts\",\n    \"./actions/command\": \"./src/actions/command.ts\",\n    \"./actions/identity\": \"./src/actions/identity.ts\",\n    \"./actions/operation\": \"./src/actions/operation.ts\",\n    \"./actions/resource\": \"./src/actions/resource.ts\",\n    \"./actions/run\": \"./src/actions/run.ts\",\n    \"./actions/workflow\": \"./src/actions/workflow.ts\",\n    \"./agent\": \"./src/agent.ts\",\n    \"./agent-file\": \"./src/agent-file.ts\",\n    \"./atlas-knowledge\": \"./src/atlas-knowledge.ts\",\n    \"./atlas-review\": \"./src/atlas-review.ts\",\n    \"./atlas-screen\": \"./src/atlas-screen.ts\",\n    \"./atlas-setup\": \"./src/atlas-setup.ts\",\n    \"./behavior\": \"./src/behavior.ts\",\n    \"./board\": \"./src/board.ts\",\n    \"./board-queue\": \"./src/board-queue.ts\",\n    \"./capability\": \"./src/capability.ts\",\n    \"./catalog\": \"./src/catalog.ts\",\n    \"./command\": \"./src/command.ts\",\n    \"./config-mcp\": \"./src/config-mcp.ts\",\n    \"./config-maestro\": \"./src/config-maestro.ts\",\n    \"./connection\": \"./src/connection.ts\",\n    \"./credential\": \"./src/credential.ts\",\n    \"./durable-event-manifest\": \"./src/durable-event-manifest.ts\",\n    \"./elf\": \"./src/elf.ts\",\n    \"./event\": \"./src/event.ts\",\n    \"./event-manifest\": \"./src/event-manifest.ts\",\n    \"./file-diff\": \"./src/file-diff.ts\",\n    \"./filesystem\": \"./src/filesystem.ts\",\n    \"./filesystem-watcher\": \"./src/filesystem-watcher.ts\",\n    \"./hook-glob\": \"./src/hook-glob.ts\",\n    \"./hook-match\": \"./src/hook-match.ts\",\n    \"./ide-event\": \"./src/ide-event.ts\",\n    \"./identifier\": \"./src/identifier.ts\",\n    \"./index\": \"./src/index.ts\",\n    \"./installation-event\": \"./src/installation-event.ts\",\n    \"./integration\": \"./src/integration.ts\",\n    \"./integration-id\": \"./src/integration-id.ts\",\n    \"./lean-coverage\": \"./src/lean-coverage.ts\",\n    \"./lean-dashboard\": \"./src/lean-dashboard.ts\",\n    \"./lean-engine\": \"./src/lean-engine.ts\",\n    \"./lean-metrics\": \"./src/lean-metrics.ts\",\n    \"./llm\": \"./src/llm.ts\",\n    \"./location\": \"./src/location.ts\",\n    \"./lsp-event\": \"./src/lsp-event.ts\",\n    \"./maestro-context\": \"./src/maestro-context.ts\",\n    \"./maestro-event\": \"./src/maestro-event.ts\",\n    \"./mcp\": \"./src/mcp.ts\",\n    \"./mcp-event\": \"./src/mcp-event.ts\",\n    \"./model\": \"./src/model.ts\",\n    \"./models-dev\": \"./src/models-dev.ts\",\n    \"./permission\": \"./src/permission.ts\",\n    \"./permission-saved\": \"./src/permission-saved.ts\",\n    \"./plugin\": \"./src/plugin.ts\",\n    \"./project\": \"./src/project.ts\",\n    \"./project-copy\": \"./src/project-copy.ts\",\n    \"./project-directories\": \"./src/project-directories.ts\",\n    \"./project-id\": \"./src/project-id.ts\",\n    \"./prompt\": \"./src/prompt.ts\",\n    \"./prompt-context\": \"./src/prompt-context.ts\",\n    \"./prompt-input\": \"./src/prompt-input.ts\",\n    \"./provider\": \"./src/provider.ts\",\n    \"./pty\": \"./src/pty.ts\",\n    \"./pty-ticket\": \"./src/pty-ticket.ts\",\n    \"./inbox\": \"./src/inbox.ts\",\n    \"./guardrail\": \"./src/guardrail.ts\",\n    \"./meeting\": \"./src/meeting.ts\",\n    \"./pull-request\": \"./src/pull-request.ts\",\n    \"./question\": \"./src/question.ts\",\n    \"./rag-studio\": \"./src/rag-studio.ts\",\n    \"./reference\": \"./src/reference.ts\",\n    \"./relay-arm\": \"./src/relay-arm.ts\",\n    \"./relay-authoring\": \"./src/relay-authoring.ts\",\n    \"./relay-external\": \"./src/relay-external.ts\",\n    \"./relay-hook\": \"./src/relay-hook.ts\",\n    \"./relay-ledger\": \"./src/relay-ledger.ts\",\n    \"./relay-run\": \"./src/relay-run.ts\",\n    \"./relay-sprint\": \"./src/relay-sprint.ts\",\n    \"./research\": \"./src/research.ts\",\n    \"./research-event\": \"./src/research-event.ts\",\n    \"./revert\": \"./src/revert.ts\",\n    \"./review-precision-event\": \"./src/review-precision-event.ts\",\n    \"./scheduled-task\": \"./src/scheduled-task.ts\",\n    \"./schema\": \"./src/schema.ts\",\n    \"./server-event\": \"./src/server-event.ts\",\n    \"./session\": \"./src/session.ts\",\n    \"./session-compaction-event\": \"./src/session-compaction-event.ts\",\n    \"./session-delivery\": \"./src/session-delivery.ts\",\n    \"./session-event\": \"./src/session-event.ts\",\n    \"./session-id\": \"./src/session-id.ts\",\n    \"./session-activity\": \"./src/session-activity.ts\",\n    \"./session-input\": \"./src/session-input.ts\",\n    \"./session-message\": \"./src/session-message.ts\",\n    \"./session-status-event\": \"./src/session-status-event.ts\",\n    \"./session-subagent-models\": \"./src/session-subagent-models.ts\",\n    \"./session-todo\": \"./src/session-todo.ts\",\n    \"./skill\": \"./src/skill.ts\",\n    \"./tui-event\": \"./src/tui-event.ts\",\n    \"./upstream-attribution\": \"./src/upstream-attribution.ts\",\n    \"./vcs\": \"./src/vcs.ts\",\n    \"./vcs-event\": \"./src/vcs-event.ts\",\n    \"./workspace\": \"./src/workspace.ts\",\n    \"./workspace-event\": \"./src/workspace-event.ts\",\n    \"./workspace-id\": \"./src/workspace-id.ts\",\n    \"./worktree-event\": \"./src/worktree-event.ts\",\n    \"./capability-artifact-management\": \"./src/capability-artifact-management.ts\",\n    \"./capability-management\": \"./src/capability-management.ts\",\n    \"./capability-schedule-management\": \"./src/capability-schedule-management.ts\",\n    \"./capability-setup\": \"./src/capability-setup.ts\",\n    \"./lsp\": \"./src/lsp.ts\"\n  },\n  \"scripts\": {\n    \"test\": \"bun test ./test --preload ../../script/test-guard.ts --timeout 30000 --only-failures\",\n    \"typecheck\": \"tsgo --noEmit\"\n  },\n  \"dependencies\": {\n    \"effect\": \"catalog:\"\n  },\n  \"devDependencies\": {\n    \"@tsconfig/bun\": \"catalog:\",\n    \"@types/bun\": \"catalog:\",\n    \"@typescript/native-preview\": \"catalog:\"\n  }\n}\n",
+      "postimageSha": "e74d1a79a8b332f3b3ea86f675178b633e76eabe",
+      "postimage": "{\n  \"$schema\": \"https://json.schemastore.org/package.json\",\n  \"name\": \"@orchestra/schema\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./actions\": \"./src/actions.ts\",\n    \"./actions/command\": \"./src/actions/command.ts\",\n    \"./actions/identity\": \"./src/actions/identity.ts\",\n    \"./actions/operation\": \"./src/actions/operation.ts\",\n    \"./actions/resource\": \"./src/actions/resource.ts\",\n    \"./actions/run\": \"./src/actions/run.ts\",\n    \"./actions/workflow\": \"./src/actions/workflow.ts\",\n    \"./agent\": \"./src/agent.ts\",\n    \"./agent-file\": \"./src/agent-file.ts\",\n    \"./atlas-knowledge\": \"./src/atlas-knowledge.ts\",\n    \"./atlas-review\": \"./src/atlas-review.ts\",\n    \"./atlas-screen\": \"./src/atlas-screen.ts\",\n    \"./atlas-setup\": \"./src/atlas-setup.ts\",\n    \"./behavior\": \"./src/behavior.ts\",\n    \"./board\": \"./src/board.ts\",\n    \"./board-queue\": \"./src/board-queue.ts\",\n    \"./capability\": \"./src/capability.ts\",\n    \"./capability-artifact-management\": \"./src/capability-artifact-management.ts\",\n    \"./capability-management\": \"./src/capability-management.ts\",\n    \"./capability-schedule-management\": \"./src/capability-schedule-management.ts\",\n    \"./capability-setup\": \"./src/capability-setup.ts\",\n    \"./catalog\": \"./src/catalog.ts\",\n    \"./command\": \"./src/command.ts\",\n    \"./config-maestro\": \"./src/config-maestro.ts\",\n    \"./config-mcp\": \"./src/config-mcp.ts\",\n    \"./connection\": \"./src/connection.ts\",\n    \"./credential\": \"./src/credential.ts\",\n    \"./durable-event-manifest\": \"./src/durable-event-manifest.ts\",\n    \"./elf\": \"./src/elf.ts\",\n    \"./event\": \"./src/event.ts\",\n    \"./event-manifest\": \"./src/event-manifest.ts\",\n    \"./file-diff\": \"./src/file-diff.ts\",\n    \"./filesystem\": \"./src/filesystem.ts\",\n    \"./filesystem-watcher\": \"./src/filesystem-watcher.ts\",\n    \"./guardrail\": \"./src/guardrail.ts\",\n    \"./hook-glob\": \"./src/hook-glob.ts\",\n    \"./hook-match\": \"./src/hook-match.ts\",\n    \"./ide-event\": \"./src/ide-event.ts\",\n    \"./identifier\": \"./src/identifier.ts\",\n    \"./inbox\": \"./src/inbox.ts\",\n    \"./index\": \"./src/index.ts\",\n    \"./installation-event\": \"./src/installation-event.ts\",\n    \"./integration\": \"./src/integration.ts\",\n    \"./integration-id\": \"./src/integration-id.ts\",\n    \"./lean-coverage\": \"./src/lean-coverage.ts\",\n    \"./lean-dashboard\": \"./src/lean-dashboard.ts\",\n    \"./lean-engine\": \"./src/lean-engine.ts\",\n    \"./lean-metrics\": \"./src/lean-metrics.ts\",\n    \"./llm\": \"./src/llm.ts\",\n    \"./location\": \"./src/location.ts\",\n    \"./lsp\": \"./src/lsp.ts\",\n    \"./lsp-event\": \"./src/lsp-event.ts\",\n    \"./maestro-context\": \"./src/maestro-context.ts\",\n    \"./maestro-event\": \"./src/maestro-event.ts\",\n    \"./mcp\": \"./src/mcp.ts\",\n    \"./mcp-event\": \"./src/mcp-event.ts\",\n    \"./meeting\": \"./src/meeting.ts\",\n    \"./model\": \"./src/model.ts\",\n    \"./models-dev\": \"./src/models-dev.ts\",\n    \"./permission\": \"./src/permission.ts\",\n    \"./permission-saved\": \"./src/permission-saved.ts\",\n    \"./plugin\": \"./src/plugin.ts\",\n    \"./project\": \"./src/project.ts\",\n    \"./project-copy\": \"./src/project-copy.ts\",\n    \"./project-directories\": \"./src/project-directories.ts\",\n    \"./project-id\": \"./src/project-id.ts\",\n    \"./prompt\": \"./src/prompt.ts\",\n    \"./prompt-context\": \"./src/prompt-context.ts\",\n    \"./prompt-input\": \"./src/prompt-input.ts\",\n    \"./provider\": \"./src/provider.ts\",\n    \"./pty\": \"./src/pty.ts\",\n    \"./pty-ticket\": \"./src/pty-ticket.ts\",\n    \"./pull-request\": \"./src/pull-request.ts\",\n    \"./question\": \"./src/question.ts\",\n    \"./rag-studio\": \"./src/rag-studio.ts\",\n    \"./reference\": \"./src/reference.ts\",\n    \"./relay-arm\": \"./src/relay-arm.ts\",\n    \"./relay-authoring\": \"./src/relay-authoring.ts\",\n    \"./relay-external\": \"./src/relay-external.ts\",\n    \"./relay-hook\": \"./src/relay-hook.ts\",\n    \"./relay-ledger\": \"./src/relay-ledger.ts\",\n    \"./relay-run\": \"./src/relay-run.ts\",\n    \"./relay-sprint\": \"./src/relay-sprint.ts\",\n    \"./research\": \"./src/research.ts\",\n    \"./research-event\": \"./src/research-event.ts\",\n    \"./revert\": \"./src/revert.ts\",\n    \"./review-precision-event\": \"./src/review-precision-event.ts\",\n    \"./scheduled-task\": \"./src/scheduled-task.ts\",\n    \"./schema\": \"./src/schema.ts\",\n    \"./server-event\": \"./src/server-event.ts\",\n    \"./session\": \"./src/session.ts\",\n    \"./session-activity\": \"./src/session-activity.ts\",\n    \"./session-compaction-event\": \"./src/session-compaction-event.ts\",\n    \"./session-delivery\": \"./src/session-delivery.ts\",\n    \"./session-event\": \"./src/session-event.ts\",\n    \"./session-id\": \"./src/session-id.ts\",\n    \"./session-input\": \"./src/session-input.ts\",\n    \"./session-message\": \"./src/session-message.ts\",\n    \"./session-status-event\": \"./src/session-status-event.ts\",\n    \"./session-subagent-models\": \"./src/session-subagent-models.ts\",\n    \"./session-todo\": \"./src/session-todo.ts\",\n    \"./skill\": \"./src/skill.ts\",\n    \"./sucafina/procurement\": \"./src/sucafina/procurement.ts\",\n    \"./tui-event\": \"./src/tui-event.ts\",\n    \"./upstream-attribution\": \"./src/upstream-attribution.ts\",\n    \"./vcs\": \"./src/vcs.ts\",\n    \"./vcs-event\": \"./src/vcs-event.ts\",\n    \"./workspace\": \"./src/workspace.ts\",\n    \"./workspace-event\": \"./src/workspace-event.ts\",\n    \"./workspace-id\": \"./src/workspace-id.ts\",\n    \"./worktree-event\": \"./src/worktree-event.ts\"\n  },\n  \"scripts\": {\n    \"test\": \"bun test ./test --preload ../../script/test-guard.ts --timeout 30000 --only-failures\",\n    \"typecheck\": \"tsgo --noEmit\"\n  },\n  \"dependencies\": {\n    \"effect\": \"catalog:\"\n  },\n  \"devDependencies\": {\n    \"@tsconfig/bun\": \"catalog:\",\n    \"@types/bun\": \"catalog:\",\n    \"@typescript/native-preview\": \"catalog:\"\n  }\n}\n",
+      "applied": false,
+      "mergeRule": "reconcile with HEAD; reject stale preimage; preserve other contributors"
+    },
+    {
+      "path": "packages/client/package.json",
+      "kind": "full-file-postimage",
+      "owner": "114 / I00",
+      "preimageSha": "4cd0244e98ff18b5e65d3c2808196705095b6691",
+      "preimage": "{\n  \"$schema\": \"https://json.schemastore.org/package.json\",\n  \"name\": \"@orchestra/client\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./effect\": \"./src/effect.ts\",\n    \"./contract\": \"./src/contract.ts\"\n  },\n  \"scripts\": {\n    \"generate\": \"bun run script/build.ts\",\n    \"check:generated\": \"bun run generate && git diff --exit-code -- src/generated src/generated-effect\",\n    \"test\": \"bun test --timeout 5000\",\n    \"typecheck\": \"tsgo --noEmit\"\n  },\n  \"dependencies\": {\n    \"@orchestra/schema\": \"workspace:*\",\n    \"@orchestra/protocol\": \"workspace:*\"\n  },\n  \"peerDependencies\": {\n    \"effect\": \"4.0.0-beta.83\"\n  },\n  \"peerDependenciesMeta\": {\n    \"effect\": {\n      \"optional\": true\n    }\n  },\n  \"devDependencies\": {\n    \"@effect/platform-node\": \"catalog:\",\n    \"@orchestra/httpapi-codegen\": \"workspace:*\",\n    \"@tsconfig/bun\": \"catalog:\",\n    \"@types/bun\": \"catalog:\",\n    \"@typescript/native-preview\": \"catalog:\",\n    \"effect\": \"catalog:\"\n  }\n}\n",
+      "postimageSha": "f673a9e165d0696a5522e3867389f4a84f1f35e7",
+      "postimage": "{\n  \"$schema\": \"https://json.schemastore.org/package.json\",\n  \"name\": \"@orchestra/client\",\n  \"private\": true,\n  \"type\": \"module\",\n  \"license\": \"MIT\",\n  \"exports\": {\n    \".\": \"./src/index.ts\",\n    \"./contract\": \"./src/contract.ts\",\n    \"./effect\": \"./src/effect.ts\",\n    \"./sucafina/procurement\": \"./src/sucafina/procurement.ts\"\n  },\n  \"scripts\": {\n    \"generate\": \"bun run script/build.ts\",\n    \"check:generated\": \"bun run generate && git diff --exit-code -- src/generated src/generated-effect\",\n    \"test\": \"bun test --timeout 5000\",\n    \"typecheck\": \"tsgo --noEmit\"\n  },\n  \"dependencies\": {\n    \"@orchestra/schema\": \"workspace:*\",\n    \"@orchestra/protocol\": \"workspace:*\"\n  },\n  \"peerDependencies\": {\n    \"effect\": \"4.0.0-beta.83\"\n  },\n  \"peerDependenciesMeta\": {\n    \"effect\": {\n      \"optional\": true\n    }\n  },\n  \"devDependencies\": {\n    \"@effect/platform-node\": \"catalog:\",\n    \"@orchestra/httpapi-codegen\": \"workspace:*\",\n    \"@tsconfig/bun\": \"catalog:\",\n    \"@types/bun\": \"catalog:\",\n    \"@typescript/native-preview\": \"catalog:\",\n    \"effect\": \"catalog:\"\n  }\n}\n",
+      "applied": false,
+      "mergeRule": "reconcile with HEAD; reject stale preimage; preserve other contributors"
+    }
+  ],
+  "pendingSharedArtifacts": [
+    {
+      "path": "packages/schema/src/sucafina/index.ts",
+      "owner": "I00",
+      "action": "register exact 39 SfProcurement.operations input/output codec pairs; static admitted bindings only, no fallback JSON/Schema.Unknown; do not edit generated"
+    },
+    {
+      "path": "packages/schema/src/sucafina/operation-registry.ts",
+      "owner": "I00",
+      "action": "use existing frozen contract catalog to include 39 Procurement metadata entries, no separate dispatcher"
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/native-ui/router.ts",
+      "owner": "F02 + 114",
+      "action": "mount five createSfProcurementProjectionHandlers(deps) GET pages CAP24..CAP28; route other 34 operations through exact existing original Request producers; no new POST handlers"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/runtime/application.ts",
+      "owner": "I00",
+      "action": "origin/owner expectation bound inside producer transaction; revalidate principal/install/project/host/policy/access, CAS in source; W11 supplies no patch to application.ts"
+    }
+  ],
+  "requiredFences": [
+    "GET: F01 readContext(request) before, producer authenticate(request,roleMap) inside transaction, F01 context revalidation before egress",
+    "POST: F02 original Request, static path/method/action/page and X-SF-Native-Owner expectation, I00 verifies inside runtime/application.ts transaction",
+    "CAS: versions['requests:'+id]/versions['suppliers:'+id]/versions.settings; never dataset/projection surrogate",
+    "PR-approval: original holder and version decision in runtime/procurement.ts, never from button or UI identity",
+    "Bank: only privileged source.domain.view may include decrypt; CAP25 omits bank, CAP27 only admin/supplier admin",
+    "Source contribution: C58 a0deff.. and a4ab02.. preserved; read/preview do not grant financial approval"
+  ],
+  "exactOperations": [
+    "domain.command.CAP25.approve",
+    "domain.command.CAP25.cancel",
+    "domain.command.CAP25.create",
+    "domain.command.CAP25.delete",
+    "domain.command.CAP25.issue",
+    "domain.command.CAP25.reject",
+    "domain.command.CAP25.save",
+    "domain.command.CAP25.select_quote",
+    "domain.command.CAP25.submit_po",
+    "domain.command.CAP25.submit_pr",
+    "domain.command.CAP25.submit_sourcing",
+    "domain.command.CAP26.approve",
+    "domain.command.CAP26.cancel",
+    "domain.command.CAP26.create",
+    "domain.command.CAP26.delete",
+    "domain.command.CAP26.issue",
+    "domain.command.CAP26.reject",
+    "domain.command.CAP26.save",
+    "domain.command.CAP26.select_quote",
+    "domain.command.CAP26.submit_po",
+    "domain.command.CAP26.submit_pr",
+    "domain.command.CAP26.submit_sourcing",
+    "domain.command.CAP27.activate",
+    "domain.command.CAP27.block",
+    "domain.command.CAP27.change-bank",
+    "domain.command.CAP27.create",
+    "domain.command.CAP27.delete",
+    "domain.command.CAP27.inactivate",
+    "domain.command.CAP27.save",
+    "domain.command.CAP28.reset",
+    "domain.command.CAP28.save",
+    "domain.page.CAP24",
+    "domain.page.CAP25",
+    "domain.page.CAP26",
+    "domain.page.CAP27",
+    "domain.page.CAP28",
+    "procurement.procurement-scenario-controls",
+    "procurement.procurement-scenario-preview",
+    "procurement.sourcing.prepare"
+  ],
+  "operationsBoundByW11": 39,
+  "codePaths": [
+    "packages/schema/src/sucafina/procurement.ts",
+    "packages/client/src/sucafina/procurement.ts",
+    "apps/cli/src/sucafina-product/native-ui/procurement.ts",
+    "modules/sucafina/Sucafinav1/test/native-ui-contract/procurement.test.ts"
+  ],
+  "testing": "PENDING_120_ACTIONS; NEVER_RUN_LOCAL",
+  "compiler": "PENDING_119_COMPILER",
+  "admission": "PER_OUTPUT_PENDING_114"
+}
