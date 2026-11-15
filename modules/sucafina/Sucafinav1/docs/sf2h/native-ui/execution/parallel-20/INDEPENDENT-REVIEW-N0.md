@@ -32,3 +32,7 @@ DOCUMENTARY_STRUCTURE_PASS não equivale a S0 GO, ARTIFACT_READY, INTEGRATED, QU
 
 ## Adendo de roteamento S0
 Control `8819df6169abd94aaa89d50a21f113e5596d2aae`: missão105 PREPARED_NOT_STARTED, não ACK; produto CI101/test:ci, compiler/guards45. O reviewer N0 deve testar 12 regressões e não confundir esses escopos.
+
+## Evidência posterior — não é aprovação N0
+
+ACK105 publicado no produto em `d083b422b6a587f47873abde4d866e35017ff8b8` (lease S0-C-e15-browser105); material até C53 `180212940105e7b9ad15171b067c1c1b7841df5f`. A designação inicial PREPARED é histórica. Isso NÃO torna o reviewer N0 independente nem concede GO à UX, e os doze testes Python seguem sem execução observada.

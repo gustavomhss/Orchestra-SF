@@ -32,3 +32,7 @@
 ## Adendo S0-control (2026-11-15)
 
 O HEAD S0-control `8819df6169abd94aaa89d50a21f113e5596d2aae` designou missão105 `S0-C-e15-browser105` como sucessora, porém `PREPARED_NOT_STARTED`. Isso atualiza o `new_integrator_appointee:null` do terminal100, que permanece histórico. Exigir ACK/lease ativos antes de escrita. O mesmo controle designou CI produto exclusivo101 (primeiro ciclo C51 4 SUCCESS/2 FAILURE) e compiler/guards45. Validador e cartas corrigidos; **doze** regressões preparadas, ainda NOT_RUN neste ambiente sem checkout.
+
+## Snapshot posterior C53 (re-pin obrigatório)
+
+ACK105 `d083b422b6a587f47873abde4d866e35017ff8b8` iniciou a custódia material S0-C-e15-browser105; stack observada C53 `180212940105e7b9ad15171b067c1c1b7841df5f`, tree `c423dd1e0828242534fd45d4183104ecc1d20edd`. O snapshot C51 acima é histórico, não candidato atual. Consulte `LIVE-STRUCTURAL-AUDIT-20261115.json` para resultado documental e pendências; nenhuma lease UX20 derivada automaticamente.

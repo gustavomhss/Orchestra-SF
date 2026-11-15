@@ -1,5 +1,8 @@
 # UX nativa Sucafina — execução agressiva com 20 sessões potenciais
 
+**Atualização de fato posterior ao S0-control:** ACK105 foi publicado em `sf2-stack@d083b422b6a587f47873abde4d866e35017ff8b8`; lease `S0-C-e15-browser105` ativa para a integração de produto. O candidato material observado posteriormente chegou a **C53** `180212940105e7b9ad15171b067c1c1b7841df5f`, tree `c423dd1e0828242534fd45d4183104ecc1d20edd`. Isso substitui o status antigo `PREPARED_NOT_STARTED` somente como **estado histórico observado**, mas **não autoriza C00/UX20** a compartilhar a lease sem designação exata nem inicia 19 writers; para executar, reconsultar HEAD/ACK/leases. Produto CI101 exclusivo, compiler/guards45. `GLOBAL_RELEASE=false`.
+
+
 **Estado exato: contrato e despacho RECONCILIADOS; GO de escrita ainda dependente de S0 e integradora sucessora vigente (71/100 encerradas), releases dos owners, material C/HEAD e parecer independente do delta.** Este arquivo não dá autorização, não cria lanes, não executa CI, não libera produto. `GLOBAL_RELEASE=false`. Não chamar de `RUNNING`, `QUALIFIED` ou `CLOSED` sem evidência instalada.
 
 ## Fonte única de verdade
@@ -18,6 +21,7 @@
 | [dispatch.json](dispatch.json) | 20 cartas, allowlists reais dos outputs, locks, deps, testes e prompts completos; nenhuma permissão implícita |
 | [PROMPTS.md](PROMPTS.md) | 20 mensagens individuais geradas diretamente dessas cartas, prontas para abrir sessões **após preflight** |
 | [GO-NOGO.md](GO-NOGO.md) | Ordem operacional do coordenador, lista de bloqueios, dedupe CI, estados, piloto, FINAL e métricas |
+| [LIVE-STRUCTURAL-AUDIT-20261115.json](LIVE-STRUCTURAL-AUDIT-20261115.json) | Evidência estrutural desta rodada: 78 ordens, 23 checks, delta I00 e limites NOT_RUN, sem GO |
 | [ADVERSARIAL-AUDIT.md](ADVERSARIAL-AUDIT.md) | R77-F01..F08 e contraexemplos adicionais, decisão, evidência, risco residual e provas exigidas |
 | [launch-record.template.json](launch-record.template.json) | Schema para registrar somente fatos observados: C/tree, autoridade, sources, owner ACK, lease, slots e runner |
 | [validate_dispatch.py](validate_dispatch.py) | Verificador documental fail-closed das 20 cartas versus 78 ordens/70 superfícies/305 operações; nunca concede GO |
