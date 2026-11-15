@@ -1,0 +1,325 @@
+{
+  "schema": "sf2h.operations-scanner63.read-coverage.v1",
+  "reader": "/root/normative_review",
+  "remote_mechanism": "GitHub MCP fetch_file at immutable refs",
+  "source_files": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/START.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "522782bb7e113124a937d7ef17313032be9d6850",
+      "js_characters": 1681,
+      "read": "FULL",
+      "method": "Read source text in chunks or all structured fields. Initial truncation of WP04 task1/task2 recovered by explicit full reread."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/WORKFLOW.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "043205bee6031b4517a98591b3588fca0ab12925",
+      "js_characters": 13571,
+      "read": "FULL",
+      "method": "Read source text in chunks or all structured fields. Initial truncation of WP04 task1/task2 recovered by explicit full reread."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/COMMON.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "d61f32af03fe10747a50274233f953af044decf6",
+      "js_characters": 43736,
+      "read": "FULL",
+      "method": "Read source text in chunks or all structured fields. Initial truncation of WP04 task1/task2 recovered by explicit full reread."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-A.json",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "7327be5449328c356a0f5b242ddc9d2014175e41",
+      "js_characters": 358360,
+      "read": "FULL",
+      "method": "Read source text in chunks or all structured fields. Initial truncation of WP04 task1/task2 recovered by explicit full reread."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/product-acceptance.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "ded082688fce327def0b48968fa3b89a5831029c",
+      "js_characters": 13825,
+      "read": "FULL",
+      "method": "Read source text in chunks or all structured fields. Initial truncation of WP04 task1/task2 recovered by explicit full reread."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/specs/resident-runtime.md",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "033737b1051b23443e633df7874c550629bf55a1",
+      "js_characters": 41053,
+      "read": "FULL",
+      "method": "Read source text in chunks or all structured fields. Initial truncation of WP04 task1/task2 recovered by explicit full reread."
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/work-packages/WP06.json",
+      "ref": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "blob": "1aacabdc304f9e298084960a52a5fe55fd8fe98a",
+      "js_characters": 59879,
+      "read": "FULL",
+      "method": "Read source text in chunks or all structured fields. Initial truncation of WP04 task1/task2 recovered by explicit full reread."
+    }
+  ],
+  "mission": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/control/handoff/astra/parallel-closure/operations-scanner-closure.json",
+    "ref": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "blob": "a5e3055c977ec60bb1eabf6e4c7d3870f95deff1",
+    "read": "FULL"
+  },
+  "applicable_agents": [
+    {
+      "path": "AGENTS.md",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+      "read": "FULL"
+    },
+    {
+      "path": "packages/app-shell/AGENTS.md",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob": "a9ed3dc797d2756089a032e75bc0ab77256b3a03",
+      "read": "FULL"
+    },
+    {
+      "path": "packages/app-shell/e2e/AGENTS.md",
+      "ref": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "blob": "2e24eecc8ccea104922263bf6c7ccc8e93da24ec",
+      "read": "FULL"
+    }
+  ],
+  "actor_field_coverage": [
+    {
+      "field": "provenance",
+      "type": "object",
+      "items": 7,
+      "read": "FULL"
+    },
+    {
+      "field": "job_id",
+      "type": "string",
+      "items": null,
+      "read": "FULL"
+    },
+    {
+      "field": "actor",
+      "type": "string",
+      "items": null,
+      "read": "FULL"
+    },
+    {
+      "field": "session",
+      "type": "string",
+      "items": null,
+      "read": "FULL"
+    },
+    {
+      "field": "assignment",
+      "type": "object",
+      "items": 2,
+      "read": "FULL"
+    },
+    {
+      "field": "branch_provenance",
+      "type": "array",
+      "items": 1,
+      "read": "FULL"
+    },
+    {
+      "field": "common",
+      "type": "object",
+      "items": 2,
+      "read": "FULL"
+    },
+    {
+      "field": "write_authority",
+      "type": "object",
+      "items": 7,
+      "read": "FULL"
+    },
+    {
+      "field": "allocation",
+      "type": "array",
+      "items": 6,
+      "read": "FULL"
+    },
+    {
+      "field": "physical_slot",
+      "type": "array",
+      "items": 1,
+      "read": "FULL"
+    },
+    {
+      "field": "work_packages",
+      "type": "array",
+      "items": 1,
+      "read": "FULL"
+    },
+    {
+      "field": "contracts",
+      "type": "array",
+      "items": 17,
+      "read": "FULL"
+    },
+    {
+      "field": "incoming_outgoing_handoffs",
+      "type": "array",
+      "items": 0,
+      "read": "FULL"
+    },
+    {
+      "field": "task_output_dependencies",
+      "type": "array",
+      "items": 0,
+      "read": "FULL"
+    },
+    {
+      "field": "consumer_edges",
+      "type": "array",
+      "items": 4,
+      "read": "FULL"
+    },
+    {
+      "field": "coverage",
+      "type": "object",
+      "items": 7,
+      "read": "FULL"
+    },
+    {
+      "field": "dependency_context",
+      "type": "array",
+      "items": 3,
+      "read": "FULL"
+    },
+    {
+      "field": "proof_bindings",
+      "type": "array",
+      "items": 111,
+      "read": "FULL"
+    },
+    {
+      "field": "evidence",
+      "type": "object",
+      "items": 10,
+      "read": "FULL"
+    },
+    {
+      "field": "execution_proofs",
+      "type": "array",
+      "items": 6,
+      "read": "FULL"
+    },
+    {
+      "field": "review_assignment",
+      "type": "array",
+      "items": 0,
+      "read": "FULL"
+    },
+    {
+      "field": "review_sources_read_only",
+      "type": "array",
+      "items": 0,
+      "read": "FULL"
+    },
+    {
+      "field": "resident",
+      "type": "object",
+      "items": 12,
+      "read": "FULL"
+    },
+    {
+      "field": "reference_context_rule",
+      "type": "string",
+      "items": null,
+      "read": "FULL"
+    },
+    {
+      "field": "resident_handoff_interfaces",
+      "type": "array",
+      "items": 0,
+      "read": "FULL"
+    },
+    {
+      "field": "resident_gate_requirements",
+      "type": "array",
+      "items": 5,
+      "read": "FULL"
+    },
+    {
+      "field": "resident_ui",
+      "type": "object",
+      "items": 4,
+      "read": "FULL"
+    },
+    {
+      "field": "mandatory_appendices",
+      "type": "array",
+      "items": 2,
+      "read": "FULL"
+    },
+    {
+      "field": "code_sources",
+      "type": "array",
+      "items": 14,
+      "read": "FULL"
+    },
+    {
+      "field": "source_receipt_index",
+      "type": "string",
+      "items": null,
+      "read": "FULL"
+    },
+    {
+      "field": "workflow",
+      "type": "string",
+      "items": null,
+      "read": "FULL"
+    },
+    {
+      "field": "coverage_source",
+      "type": "string",
+      "items": null,
+      "read": "FULL"
+    },
+    {
+      "field": "numeric_oracles",
+      "type": "array",
+      "items": 7,
+      "read": "FULL"
+    },
+    {
+      "field": "selection_pointers",
+      "type": "array",
+      "items": 6,
+      "read": "FULL"
+    },
+    {
+      "field": "criterion_ids",
+      "type": "array",
+      "items": 111,
+      "read": "FULL"
+    },
+    {
+      "field": "completion",
+      "type": "string",
+      "items": null,
+      "read": "FULL"
+    }
+  ],
+  "actor_nested_counts": {
+    "contracts": 17,
+    "primary_tasks": 5,
+    "criteria": 111,
+    "proof_bindings": 111,
+    "execution_proofs": 6,
+    "resident_profiles": 5,
+    "resident_skills_selected": 5,
+    "resident_packs_selected": 8,
+    "resident_routes_selected": 26,
+    "resident_integrated_proofs": 6,
+    "numeric_oracles": 7
+  },
+  "not_evidence_of": "No product test, typecheck, build, UI interaction, scanner or AM execution; all implementation/proof statuses remain NOT_RUN until real observed results.",
+  "notes": [
+    "The selected actor pack includes 5 skill definitions and26 operation routes as relevant context; global18/39 requirements remain unchanged.",
+    "Original pack branch sf2-procurement is superseded for this mission by operations-scanner-proof and lease operations-scanner-browser63; no additional domain write authorization."
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "sf2h.operations63.external-ci.v1",
+  "status": "PREPARED_NOT_APPLIED_OR_EXECUTED",
+  "owner": [
+    "45",
+    "60"
+  ],
+  "source_base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "target": ".github/workflows/test-ci.yml",
+  "preimage_blob": "9f078f4e37b758691bcd073e5590f05d5444392a",
+  "postimage_blob": "fee12907e72370b96aa4ddd79e6c4ebf25e2fdaa",
+  "patch_sha256": "a195d72f91020505a0570731d60e6e8b5396d906d7b5b473b047285bac6c755f",
+  "preimage_file": "test-ci.yml.preimage.txt",
+  "postimage_file": "test-ci.yml.postimage.txt",
+  "patch_file": "test-ci.patch",
+  "requires": [
+    "script/sf2h/operations-scanner/select.mjs",
+    "script/sf2h/operations-scanner/setup.sh",
+    "script/sf2h/operations-scanner/cleanup.sh",
+    "script/sf2h/operations-scanner/service.mjs",
+    "script/sf2h/operations-scanner/tools.lock.json",
+    "modules/sucafina/Sucafinav1/test/product/operations-scanner-closure/real-clamd.check.ts"
+  ],
+  "unchanged": [
+    "request env allowlist",
+    "test and journey timeouts",
+    "test job contents: read",
+    "matrix",
+    "normal test command",
+    "omni controls",
+    "existing artifact uploads",
+    "cleanup job"
+  ],
+  "qualification": "No scanner or workflow executed locally. Real setup and product tests remain required in the authorized hosted lane after owner integration."
+}

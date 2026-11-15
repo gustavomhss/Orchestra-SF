@@ -1,0 +1,2432 @@
+{
+  "schema": "sf2h.operations-scanner63.normative-matrix.v1",
+  "mission": 63,
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "source_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "actor_pack": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h-plan/execution/actors/S2-A.json",
+    "blob": "7327be5449328c356a0f5b242ddc9d2014175e41",
+    "criterion_ids": [
+      "WP04.CMP.01",
+      "WP04.CMP.02",
+      "WP04.CMP.03",
+      "WP04.CMP.10",
+      "WP04.DOD.01",
+      "WP04.DOD.02",
+      "WP04.DOD.03",
+      "WP04.DOD.10",
+      "WP04.INV.01",
+      "WP04.INV.02",
+      "WP04.INV.03",
+      "WP04.INV.10",
+      "WP04.QLT.01",
+      "WP04.QLT.02",
+      "WP04.QLT.03",
+      "WP04.QLT.10",
+      "WP04.SUC.01",
+      "WP04.SUC.02",
+      "WP04.SUC.03",
+      "WP04.SUC.10",
+      "WP04.T01.CHK.01",
+      "WP04.T01.CHK.02",
+      "WP04.T01.CHK.03",
+      "WP04.T01.CHK.04",
+      "WP04.T01.CHK.18",
+      "WP04.T01.CMP.01",
+      "WP04.T01.CMP.02",
+      "WP04.T01.CMP.18",
+      "WP04.T01.DOD.01",
+      "WP04.T01.DOD.02",
+      "WP04.T01.DOD.18",
+      "WP04.T01.INV.01",
+      "WP04.T01.INV.02",
+      "WP04.T01.INV.18",
+      "WP04.T01.QLT.01",
+      "WP04.T01.QLT.02",
+      "WP04.T01.QLT.18",
+      "WP04.T01.SUC.01",
+      "WP04.T01.SUC.02",
+      "WP04.T01.SUC.18",
+      "WP04.T02.CHK.01",
+      "WP04.T02.CHK.02",
+      "WP04.T02.CHK.03",
+      "WP04.T02.CHK.04",
+      "WP04.T02.CMP.01",
+      "WP04.T02.CMP.02",
+      "WP04.T02.DOD.01",
+      "WP04.T02.DOD.02",
+      "WP04.T02.INV.01",
+      "WP04.T02.INV.02",
+      "WP04.T02.QLT.01",
+      "WP04.T02.QLT.02",
+      "WP04.T02.SUC.01",
+      "WP04.T02.SUC.02",
+      "WP04.T03.CHK.01",
+      "WP04.T03.CHK.02",
+      "WP04.T03.CHK.03",
+      "WP04.T03.CHK.04",
+      "WP04.T03.CHK.05",
+      "WP04.T03.CHK.18",
+      "WP04.T03.CMP.01",
+      "WP04.T03.CMP.02",
+      "WP04.T03.CMP.18",
+      "WP04.T03.DOD.01",
+      "WP04.T03.DOD.02",
+      "WP04.T03.DOD.18",
+      "WP04.T03.INV.01",
+      "WP04.T03.INV.02",
+      "WP04.T03.INV.18",
+      "WP04.T03.QLT.01",
+      "WP04.T03.QLT.02",
+      "WP04.T03.QLT.18",
+      "WP04.T03.SUC.01",
+      "WP04.T03.SUC.02",
+      "WP04.T03.SUC.18",
+      "WP04.T04.CHK.01",
+      "WP04.T04.CHK.02",
+      "WP04.T04.CHK.03",
+      "WP04.T04.CHK.04",
+      "WP04.T04.CHK.05",
+      "WP04.T04.CMP.01",
+      "WP04.T04.CMP.02",
+      "WP04.T04.DOD.01",
+      "WP04.T04.DOD.02",
+      "WP04.T04.INV.01",
+      "WP04.T04.INV.02",
+      "WP04.T04.QLT.01",
+      "WP04.T04.QLT.02",
+      "WP04.T04.SUC.01",
+      "WP04.T04.SUC.02",
+      "WP04.T05.CHK.01",
+      "WP04.T05.CHK.02",
+      "WP04.T05.CHK.03",
+      "WP04.T05.CHK.04",
+      "WP04.T05.CHK.05",
+      "WP04.T05.CHK.18",
+      "WP04.T05.CMP.01",
+      "WP04.T05.CMP.02",
+      "WP04.T05.CMP.18",
+      "WP04.T05.DOD.01",
+      "WP04.T05.DOD.02",
+      "WP04.T05.DOD.18",
+      "WP04.T05.INV.01",
+      "WP04.T05.INV.02",
+      "WP04.T05.INV.18",
+      "WP04.T05.QLT.01",
+      "WP04.T05.QLT.02",
+      "WP04.T05.QLT.18",
+      "WP04.T05.SUC.01",
+      "WP04.T05.SUC.02",
+      "WP04.T05.SUC.18"
+    ],
+    "count": 111
+  },
+  "ownership": "S2-A historical WP04 pack is read context. Mission63 narrows write paths, forbids Procurement/Operations domain rule edits, finance/C12 changes and shared fixture/CLI/workflow edits; full owner patches go to60/45.",
+  "criteria": [
+    {
+      "id": "WP04.DOD.01",
+      "text": "As cinco páginas e o inventário de comandos/estados originais têm cobertura explícita, com views exportadas, C02/C03 reais e evidências locais reproduzíveis.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.DOD.02",
+      "text": "Fila, pedido guiado, comparação, resumos por etapa e fornecedores estão demonstrados com os mesmos registros e versões, sem um store paralelo de demonstração.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.DOD.03",
+      "text": "O handoff lista consumidores, casos adversos, artefatos de evidência e verificações de composição reservadas a WP10; não declara entrega integrada com base apenas em fixtures.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.DOD.10",
+      "text": "As entregas residentes atribuídas a WP04 têm produção, consumo e provas reais completos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.INV.01",
+      "text": "Alçadas, papéis, autorização por holder, opção de bloquear autoaprovação, política de fornecedores e transições legais permanecem os do domínio; decidir continua sendo ato explícito da pessoa autorizada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.INV.02",
+      "text": "Histórico, identificadores já emitidos, versões esperadas e snapshots de aprovação/câmbio são preservados; po_issued continua significando emissão interna.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.INV.03",
+      "text": "Recortes autorizados e restrições bancárias valem para tela, exportação, resumo e C02; referência textual ou ausência nunca vira relação, autorização ou valor zero.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.INV.10",
+      "text": "WP04 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.QLT.01",
+      "text": "Cada etapa informa próxima ação, responsável conhecido e motivo concreto da restrição, sem expor uma parede de comandos que só falham depois do clique.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.QLT.02",
+      "text": "Valores, ranking e resumos mostram origem, moeda, versão e limitações; notas humanas não são apresentadas como medida objetiva de qualidade do fornecedor.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.QLT.03",
+      "text": "Formulários e ações críticas são operáveis por teclado, mantêm foco após erro/conflito e apresentam a correção junto ao campo correspondente.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.CMP.01",
+      "text": "A matriz de cobertura inclui requester, buyer, approver, supplier admin, admin, viewer e combinações já permitidas; estados normais, rejeitados, cancelados e emitidos não ficam fora.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.CMP.02",
+      "text": "A cobertura monetária inclui moeda base, moeda estrangeira, FX ausente, mudança de taxa após submissão, proposta incompleta e divergência entre total informado e quantidade vezes preço.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "completeness_criteria",
+      "nominal_cases": [
+        "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version"
+      ],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.CMP.03",
+      "text": "Cadastro/ativação/bloqueio/inativação/banco de fornecedor, configurações/reset, histórico, registros/exportações e referências existentes permanecem acessíveis.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.CMP.10",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.SUC.01",
+      "text": "No roteiro sintético, o aprovador identifica em até 30 segundos a etapa que decide, o valor, a diferença relevante, a razão da escolha e o próximo passo, sem abrir Settings.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.SUC.02",
+      "text": "No roteiro PR até PO, o buyer não redigita fornecedor, moeda e quantidade já selecionados quando esses valores podem ser reutilizados; sugestões identificam a origem e preservam ajustes negociados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.SUC.03",
+      "text": "Os casos adversos distinguem aprovado de emitido, desconhecido de zero e versão atual de versão desatualizada; nenhuma dessas diferenças é ocultada por um resultado visual aparentemente correto.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.CHK.01",
+      "text": "Comparar a leitura do mesmo conjunto por requester puro e buyer: o requester recebe apenas seus pedidos também em totais, pendências e referências; inserir um pedido alheio deve alterar o buyer e não o requester.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.CHK.02",
+      "text": "Dado pedido submetido, rejeitado, ressubmetido e salvo depois, a idade usa a última entrada na etapa pendente; alterar apenas o horário do save não altera essa idade.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.CHK.03",
+      "text": "Retirar o evento que comprova a entrada na etapa: C02 marca idade indisponível e a fila mantém o pedido; não usa criação como fallback nem calcula uma duração fictícia.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.CHK.04",
+      "text": "Um pedido com holder diferente do ator não oferece aprovação como próxima ação; holder ausente aparece explicitamente sem responsável, sem criar autorização nova.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.CHK.18",
+      "text": "Executar sf_request_read pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.DOD.01",
+      "text": "As filas exportadas consomem a projeção C02 de Procurement e cobrem cada estado atual do baseline.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.DOD.02",
+      "text": "O mapa estado/papel/próxima ação e a proveniência da idade estão anexados ao handoff local.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.DOD.18",
+      "text": "Descritores C16 de sf_request_read são implementados e consumidos por T06 com referências reais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.INV.01",
+      "text": "Filas, totais e deep links compartilham o mesmo recorte autorizado de requests.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown"
+      ],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.INV.02",
+      "text": "Salvar um campo não reinicia a idade da etapa; histórico insuficiente não produz data presumida.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.QLT.01",
+      "text": "Cada linha explica estado, próxima ação e responsável conhecido sem depender de códigos internos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.QLT.02",
+      "text": "Ordenação e filtros são visíveis, reversíveis e operáveis por teclado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.CMP.01",
+      "text": "Incluir rejeitados, cancelados, emitidos, sem holder e históricos incompletos, além do caminho feliz.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.CMP.02",
+      "text": "Entregar referência estável de drilldown e contexto de versão para cada pedido visível.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "completeness_criteria",
+      "nominal_cases": [
+        "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown"
+      ],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.SUC.01",
+      "text": "Requester e buyer localizam seus pedidos e distinguem falta de informação de espera por outra pessoa sem executar uma ação inválida.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.SUC.02",
+      "text": "Aging e contagens fornecidos a WP05 reproduzem a seleção autorizada e não divergem da fila.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T01.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T01",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.CHK.01",
+      "text": "Percorrer PR aprovada até a proposta de PO: fornecedor, moeda e quantidade selecionados reaparecem sem redigitação; uma condição negociada já presente na PO não é substituída por default do fornecedor.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.CHK.02",
+      "text": "Alternar compra recorrente e não recorrente e estratégia existing/new: campos e validações aplicáveis acompanham o estado sem apagar valores previamente salvos nem aceitar submissão que o validador existente recusa.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.CHK.03",
+      "text": "Dois atores abrem a mesma versão; o segundo tenta salvar após a alteração do primeiro: o comando retorna conflito, os valores do segundo continuam visíveis e o primeiro registro não é sobrescrito silenciosamente.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.CHK.04",
+      "text": "Tentar excluir pedido fora de draft ou cancelar po_issued continua recusado; ocultar o botão não substitui a recusa do comando real.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.DOD.01",
+      "text": "PR, sourcing e PO têm apresentação progressiva e roundtrip completo dos campos originais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.DOD.02",
+      "text": "Os estados de erro e conflito conservam entradas locais e permitem retomar a tarefa.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.INV.01",
+      "text": "Pré-preenchimento é sugestão identificada ou cópia de dado existente; não inventa condição comercial nem substitui ajuste negociado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.INV.02",
+      "text": "Ocultar uma seção ou comando não altera a autorização, a transição legal ou os dados persistidos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.QLT.01",
+      "text": "A pendência aponta o campo e a correção necessária, sem um erro genérico no fim do formulário.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.QLT.02",
+      "text": "Ações de salvar, revisar conflito e continuar mantêm foco e contexto do pedido.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.CMP.01",
+      "text": "Cobrir os campos obrigatórios/condicionais de PR, sourcing e PO, defaults, linhas repetidas e histórico.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.CMP.02",
+      "text": "Cobrir retomada, rejeição, cancelamento e exclusão somente nas condições existentes.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.SUC.01",
+      "text": "O roteiro de compra reutiliza os dados já confirmados e deixa visível a origem de cada sugestão.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T02.SUC.02",
+      "text": "Uma edição concorrente não destrói entrada local nem produz confirmação de salvamento inexistente.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T02",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CHK.01",
+      "text": "Fixture: A USD 32.400, notas técnicas [5,4,4,4,4], comerciais manuais [4,4]; B EUR 28.000 a 1,08, notas [4,4,4,3,4] e [5,4]; C USD 29.000 não conforme. Esperar A 87,9333..., B 85, C fora do ranking, diferença A versus menor conforme USD 2.160/7,142857...%; a UI deve mostrar o arredondamento sem alterar a ordem.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "check",
+      "nominal_cases": [
+        "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown"
+      ],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CHK.02",
+      "text": "Deixar uma nota obrigatória vazia ou manter somente uma proposta: a UI declara incompletude/comparação limitada e a submissão segue exatamente o validador vigente; não inventa nota zero nem nova exceção.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "check",
+      "nominal_cases": [
+        "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes"
+      ],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CHK.03",
+      "text": "Mudar a taxa configurada depois da submissão: a decisão pendente preserva o valor/câmbio congelado; remover FX de uma comparação sem snapshot produz indisponibilidade/pendência, nunca total zero.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "check",
+      "nominal_cases": [
+        "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+        "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version"
+      ],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CHK.04",
+      "text": "Misturar PO em moeda base e estrangeira, uma po_approved e outra po_issued: totais por estado usam valores C02 comparáveis e apresentam itens não conversíveis; aprovado não vira emitido ou realizado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CHK.05",
+      "text": "Introduzir total informado diferente de qty vezes unitPrice: ambas as bases e a discrepância aparecem; nenhum cálculo silencioso altera preço, política de aprovação ou documento.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CHK.18",
+      "text": "Executar sf_sourcing_compare pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.DOD.01",
+      "text": "A comparação visual utiliza o motor existente e entrega componentes reconciliáveis no C02.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.DOD.02",
+      "text": "Moeda, taxa/snapshot e estado monetário ficam definidos para cada valor exibido.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.DOD.18",
+      "text": "Descritores C16 de sf_sourcing_compare são implementados e consumidos por T06 com referências reais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.INV.01",
+      "text": "Pesos, mínimo de propostas, critérios, elegibilidade e justificativas continuam os da configuração existente.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.INV.02",
+      "text": "Ausência de taxa/nota/valor não vira zero, precisão inventada ou confirmação de gasto realizado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes"
+      ],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.QLT.01",
+      "text": "A comparação distingue avaliação humana, cálculo e informação ausente; diferença de preço e razão do ranking são legíveis juntas.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.QLT.02",
+      "text": "Arredondamento é de apresentação e não altera ranking, valor aprovado ou reconciliação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CMP.01",
+      "text": "Cobrir moedas diferentes, snapshot, FX ausente, empate, proposta não conforme, menos propostas e notas incompletas.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "completeness_criteria",
+      "nominal_cases": [
+        "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version"
+      ],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CMP.02",
+      "text": "Cobrir PR estimada, sourcing, PO aprovada e PO emitida internamente sem agregar estados como se fossem equivalentes.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.SUC.01",
+      "text": "O leitor explica a liderança de A e seu custo adicional no cenário sintético usando apenas a comparação e sua decomposição.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.SUC.02",
+      "text": "O mesmo valor de domínio aparece coerentemente no detalhe, resumo e C02 entregue a consumidores.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T03.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T03",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.CHK.01",
+      "text": "Em cada variante, uma pessoa identifica em até 30 segundos o que está aprovando, valor, diferença relevante, razão/evidência e próximo passo; registrar respostas incorretas, não apenas tempo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.CHK.02",
+      "text": "Aprovar uma etapa intermediária mantém o pedido pendente se ainda houver holder seguinte; concluir sourcing libera po_draft, nunca po_issued ou aprovação de PO implícita.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.CHK.03",
+      "text": "Ator que não é o holder, inclusive admin sem direito de override, recebe a recusa existente também no comando; opção blockSelfApproval continua configurável e respeitada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.CHK.04",
+      "text": "Alterar a versão entre abertura e confirmação: decisão é recusada por conflito, comentário local permanece e nenhuma aprovação é reaplicada automaticamente após recarregar.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.CHK.05",
+      "text": "Executar a preparação determinística C02 consumida pela receita C07 de WP09 duas vezes na mesma versão: obter o mesmo conteúdo de decisão/pendências sem transição de estado, novo identificador de PO ou mensagem externa.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.DOD.01",
+      "text": "PR, sourcing e PO possuem resumos próprios ligados à versão e aos comandos reais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.DOD.02",
+      "text": "Preparação read-only e ações humanas estão separadas no contrato exportado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.INV.01",
+      "text": "Aprovar uma etapa não pula outras aprovações nem muda os poderes do holder/admin.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.INV.02",
+      "text": "Uma decisão desatualizada nunca é reaplicada automaticamente e referências textuais não ganham validação fictícia.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.QLT.01",
+      "text": "O título nomeia a decisão concreta e a área de ação explica seu efeito e a próxima etapa.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.QLT.02",
+      "text": "Resumo curto e drilldown detalhado apresentam os mesmos valores, contexto e limitações.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.CMP.01",
+      "text": "Cobrir PR, sourcing, PO, aprovador intermediário/final, rejeição com motivo, autoaprovação configurável e holder alheio.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.CMP.02",
+      "text": "Cobrir versão desatualizada, evidência incompleta e execução read-only por consumidor de rotinas.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.SUC.01",
+      "text": "O aprovador completa o roteiro de compreensão sem abrir Settings nem reconstruir a comparação manualmente.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T04.SUC.02",
+      "text": "Uma preparação automática é útil como rascunho e demonstravelmente não produz decisão de negócio.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T04",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CHK.01",
+      "text": "Fornecedor ativo tem IBAN/account alterado por ator permitido: volta a pending, validação é removida e a interface indica revalidação; ator sem permissão é recusado e não vê material bancário em view, erro, histórico, register ou C02.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CHK.02",
+      "text": "Fornecedor com taxId duplicado não é aceito; legalName duplicado segue o aviso existente; ativação incompleta aponta os requisitos reais sem declarar sanctions screening externo realizado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CHK.03",
+      "text": "Reset de Settings restaura exatamente os defaults do baseline sem apagar requests/suppliers; edição de matriz/câmbio não modifica snapshots já congelados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CHK.04",
+      "text": "Após importação representativa ou exclusão permitida, criar PR/PO/SUP não reutiliza identificador já emitido; registro/PO exportados preservam campos de negócio e omitem material restrito.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CHK.05",
+      "text": "Percorrer create → submit_pr → approve → sourcing/select/submit → approve → PO/submit → approve → issue e caminhos de rejeição/cancelamento: estados e recusas coincidem com o inventário; po_issued permanece interno e terminal para cancel/delete.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CHK.18",
+      "text": "Executar sf_supplier_read, sf_contract_read pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "check",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.DOD.01",
+      "text": "Suppliers e Settings conservam todas as operações e campos do inventário com feedback utilizável.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.DOD.02",
+      "text": "O pacote fecha o recibo de preservação dos fluxos e entrega as portas ao integrador com limitações explícitas.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.DOD.18",
+      "text": "Descritores C16 de sf_supplier_read, sf_contract_read são implementados e consumidos por T06 com referências reais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "dod",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.INV.01",
+      "text": "Alteração bancária e ativação seguem os papéis, cifragem, máscara e revalidação existentes; dados sensíveis não vazam para consumidores.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.INV.02",
+      "text": "Reset, exclusão e retomada não apagam histórico nem reutilizam identificadores PR/PO/SUP já emitidos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "invariants",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.QLT.01",
+      "text": "Pendências de fornecedor explicam a ação corretiva sem confundir preenchimento declarado com verificação externa.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.QLT.02",
+      "text": "Operações raras e Settings ficam em acesso secundário claro, preservando descoberta por teclado e todos os controles.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "quality_standards",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CMP.01",
+      "text": "Cobrir os quatro estados de fornecedor, dados comerciais/bancários/compliance, linked requests, auditoria, busca e exportação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CMP.02",
+      "text": "Cobrir configurações/reset, todos os comandos originais e preservação de identificadores/campos após dados migrados representativos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.CMP.18",
+      "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "completeness_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.SUC.01",
+      "text": "Buyer e supplier admin concluem cadastro, correção e revalidação sem consultar códigos internos nem expor informação bancária indevida.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.SUC.02",
+      "text": "O integrador consegue executar a jornada real completa com os exports entregues, sem solicitar um substituto de demonstração ou escrever dentro do domínio.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    },
+    {
+      "id": "WP04.T05.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP04.T05",
+      "family": "success_criteria",
+      "nominal_cases": [],
+      "scope": "Historical WP04 obligation retained; only observed criteria may receive source qualification. Native/AM/human timing cannot be claimed by these browser slices."
+    }
+  ],
+  "supplemental_wp06_criteria": [
+    {
+      "id": "WP06.DOD.01",
+      "text": "As famílias de import/export do baseline possuem catálogo de comportamento, prévia com manifesto e recibo, ou limitação original explicitamente preservada; cada fluxo aponta a prova discriminante.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.DOD.02",
+      "text": "A simulação usa o adapter puro de cada domínio e o mesmo comando da aplicação; o coordenador C04 e suas contribuições de UI estão publicados para montagem real pelo WP10.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.DOD.03",
+      "text": "O handoff entrega provas locais de parse/manifesto/recibo e uma suíte de conformidade para adapters e entrypoints reais; fixtures de contrato não são declaradas integração concluída.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.DOD.04",
+      "text": "Importações existentes e extração de PDF digital, DOCX e texto foram integradas; candidatos extraídos preservam fonte e exigem confirmação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.DOD.10",
+      "text": "As entregas residentes atribuídas a WP06 têm produção, consumo e provas reais completos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.DOD.40",
+      "text": "Imports e documentos saem de writers disjuntos e são consumidos reais; resolver 20 e extração 35 não esperam a task de roundtrip.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.INV.01",
+      "text": "Preview e cancelamento não alteram dados, versões, sequências, auditoria ou arquivos persistidos; aplicação ocorre somente após ação explícita e rechecagem do contexto-base C04.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.INV.02",
+      "text": "Permissões, locks, IDs, branco/zero, sigilo salarial, remoções permitidas e regras financeiras pertencem ao domínio; o importador não as substitui nem as contorna.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.INV.03",
+      "text": "Backup JSON comum preserva configuração confiável e referências privadas existentes e não injeta novos anexos/localizadores; um arquivo não expande acesso ou autoridade.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.INV.10",
+      "text": "WP06 conserva autoridade, dados oficiais e ownership; não assume identidade técnica ou novo acesso empresarial.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.INV.40",
+      "text": "Arquivo/documento só tem um escritor; transferência 53 não modifica origem/ACL nem permite inventar evidência.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.QLT.01",
+      "text": "A prévia explica por registro/campo o que muda, é incluído, será removido, permanece inalterado ou é ignorado, e separa impacto previsto de resultado aplicado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.QLT.02",
+      "text": "O recibo nasce do resultado confirmado, identifica contexto e diferenças reais e não pode anunciar sucesso parcial oculto ou números apenas simulados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.QLT.03",
+      "text": "Falhas de formato, autoridade e revisão têm tratamento distinto, mantêm arquivo/opções/entrada local quando apropriado e não expõem dados restritos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.QLT.10",
+      "text": "Interfaces são concretas, versões/digests são verificáveis e falhas possuem causa e estado explícitos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.QLT.40",
+      "text": "Handoff inclui revisão/trecho/hash e consumer real; recepção não equivale a prova final.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.CMP.01",
+      "text": "A cobertura inclui XLSX/XLS originais, abas e colunas suportadas, fórmulas com resultado zero, datas, IDs, export/import roundtrip, roster e JSON do Dashboard.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.CMP.02",
+      "text": "A cobertura inclui newVersion, removeMissing, referências desconhecidas, campos ignorados por lock/papel, permissões por owner, salário e conflito em qualquer registro afetado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.CMP.03",
+      "text": "A cobertura inclui preview, Apply explícito, cancelamento, falha sem aplicação parcial, reprévia e recibo, com portas reais a compor pelo WP10.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.CMP.04",
+      "text": "Importações existentes e extração de PDF digital, DOCX e texto foram integradas; candidatos extraídos preservam fonte e exigem confirmação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.CMP.10",
+      "text": "Todas as obrigações 5/18/8/C17 desta frente têm task, owner, paths, consumidor e negativos discriminantes.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.CMP.40",
+      "text": "Preservar todos os formatos de importação e PDFdigital/DOCX/texto, com casos negativos e consumidoresIA/Atlas/rotina.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.SUC.01",
+      "text": "Sem mudança do contexto-base, a aplicação real produz exatamente as mudanças e o impacto aprovados na prévia; divergência nunca é ocultada como sucesso.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.SUC.02",
+      "text": "No cenário financeiro de 590000, substituir uma previsão já incluída de 72000 por 84000 mostra e aplica 602000, sem somar o item duas vezes nem alterar budget/actual indevidos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.SUC.03",
+      "text": "Exportar e reimportar o arquivo suportado sem edição não cria diferenças financeiras, novos registros por erro de identidade ou vazamento de campos privados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.SUC.10",
+      "text": "O consumidor integrado utiliza a saída de produção sem substituto fictício e o revisor consegue reproduzir o resultado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.SUC.40",
+      "text": "IA e Atlas recebem fonte documental verificável cedo enquanto imports continuam em paralelo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.CHK.01",
+      "text": "Célula com resultado de fórmula 0 continua número 0, célula vazia continua ausente e data/ID numérico preservam a interpretação do baseline.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.CHK.02",
+      "text": "All Members com Summary by Leader mantém somente o roster permitido; aba auxiliar não é convertida em pessoas ou valores financeiros.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.CHK.03",
+      "text": "Arquivo inválido, com headers duplicados ou estrutura recusada pelos limites atuais retorna erro e nenhum conjunto parcial marcado como pronto para aplicar.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.CHK.04",
+      "text": "JSON que altera roleMap/access/índices de instalação mantém os valores confiáveis atuais; JSON que introduz referência privada de contrato ou remove contrato com arquivo é recusado conforme a regra existente.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.CHK.05",
+      "text": "Exportação por usuário sem salário mantém ausentes os campos privados, inclusive resultados calculados individuais e rate cards.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.DOD.01",
+      "text": "O catálogo cobre todas as famílias de arquivo do inventário e descreve explicitamente campos aceitos, ignorados, rejeitados e exportados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.DOD.02",
+      "text": "Parse/export e preparação de JSON têm fixtures de paridade com resultados esperados para zero, ausência, IDs e anexos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.INV.01",
+      "text": "Ler um arquivo não grava domínio, configuração, anexos ou revisão; valores não são inferidos de nomes de abas desconhecidas.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T01.INV.02",
+      "text": "Permissões e configuração de instalação não são importadas como autoridade de um backup de dados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.INV.03",
+      "text": "O parse preserva branco, zero, data, ID e resultado de fórmula segundo o baseline; não executa fórmulas externas.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.QLT.01",
+      "text": "O resultado aponta a origem interna do valor ou da falha por aba/linha/campo sem exigir inspeção manual do arquivo inteiro.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "quality_standards",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T01.QLT.02",
+      "text": "Arquivos ignorados ou campos não suportados são explicáveis sem prometer suporte universal.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.CMP.01",
+      "text": "Planner, XLS legado, roster, operações, projetos e JSON do Dashboard têm caminho de parse e executor de domínio identificados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.CMP.02",
+      "text": "Exports existentes, privacidade, abas auxiliares, dados ignorados e rejeições de formato possuem casos positivos e negativos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.SUC.01",
+      "text": "O mesmo arquivo suportado produz os mesmos valores normalizados que o baseline, inclusive zero de fórmula e IDs legados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T01.SUC.02",
+      "text": "Um backup comum não consegue conceder papel, mover arquivo privado ou criar referência de anexo externa.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T01",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CHK.01",
+      "text": "Caso de aceitação do adapter financeiro: base outlook 590000 com item 72000, arquivo altera esse item para 84000; manifesto mostra uma substituição, delta +12000 e outlook 602000, não 674000.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CHK.02",
+      "text": "Em versão bloqueada, budget/estrutura impedidos aparecem como não aplicados e o forecast autorizado mantém seu efeito; a prévia não sinaliza o arquivo inteiro como salvo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CHK.03",
+      "text": "removeMissing lista exatamente os registros removíveis das abas fornecidas; projetos órfãos e abas não fornecidas não são apagados pela simulação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CHK.04",
+      "text": "Owner desconhecido produz aviso e manutenção do campo conforme o domínio; usuário sem acesso não recebe salário em antes/depois, totais individuais, avisos ou erros.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CHK.05",
+      "text": "Simular duas vezes com o mesmo contexto determinístico mantém o snapshot original intacto e o mesmo manifesto; adapter ausente não retorna prévia fictícia de sucesso.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CHK.18",
+      "text": "Executar sf_import_preview pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CHK.60",
+      "text": "sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.DOD.01",
+      "text": "A prévia apresenta manifesto e impacto fornecidos pelo adapter puro, com contexto-base e restrições claramente identificados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.DOD.02",
+      "text": "Existem casos de conformidade por domínio e a ausência de adapter real é um estado indisponível, não uma entrega simulada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.DOD.18",
+      "text": "Descritores C16 de sf_import_preview são implementados e consumidos por T06 com referências reais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.DOD.60",
+      "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.INV.01",
+      "text": "Simular e aplicar usam o mesmo comando e regras do domínio; não existe caminho financeiro separado dentro do WP06.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T02.INV.02",
+      "text": "O snapshot original, sequências e auditoria permanecem intactos durante preview.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T02.INV.03",
+      "text": "A redação por papel ocorre antes da exibição de diffs e impacto; erro de permissão não devolve o valor restrito.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.INV.60",
+      "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.QLT.01",
+      "text": "Toda mudança pode ser aberta até registro/campo e diferenciada de uma informação ignorada ou mantida.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.QLT.02",
+      "text": "Impacto previsto é rotulado como previsão da aplicação e reconcilia com componentes autorizados de C02.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "quality_standards",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T02.QLT.60",
+      "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CMP.01",
+      "text": "Manifesto cobre criação, edição, exclusão, ausência de alteração, referências desconhecidas e recusa por campo/papel.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CMP.02",
+      "text": "newVersion, removeMissing, lock, HR sintético, salário e revisões afetadas são representados sem alterar a semântica do comando.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CMP.18",
+      "text": "Cobrir todos os exports desta task (1), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.CMP.60",
+      "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.SUC.01",
+      "text": "O usuário consegue identificar antes de Apply quais números mudarão e quais dados do arquivo permanecerão sem aplicação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.SUC.02",
+      "text": "O consumidor não calcula dinheiro por conta própria e o manifesto expõe diferença relevante sem vazamento de campos privados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T02.SUC.60",
+      "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. sf_import_preview produz o mesmo ImportManifest C04 para sf-enquadrar-decisao/sf-explicar-forecast; preview não grava domínio e invalida com base/arquivo alterados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T02",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CHK.01",
+      "text": "Cancelar após preview não muda dados, revisões, sequências, auditoria nem recibos de sucesso.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CHK.02",
+      "text": "Alterar a revisão de uma linha afetada ou bloquear a versão entre preview e Apply recusa a aplicação e preserva o arquivo/opções; nova prévia mostra o estado atual.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CHK.03",
+      "text": "Falha de validação em registro posterior não deixa alterações anteriores parcialmente aplicadas; recibo de sucesso não é criado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CHK.04",
+      "text": "Sem alteração relevante de contexto, os registros e deltas confirmados correspondem ao manifesto aprovado, respeitando a convenção C04 de IDs para inclusões.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "check",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T03.CHK.05",
+      "text": "Uma edição independente feita por outra pessoa permanece após a aplicação autorizada; o importador não substitui o snapshot inteiro por uma cópia antiga.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CHK.06",
+      "text": "O recibo distingue 'sem alterações', 'recusado' e 'aplicado' e conta somente mudanças efetivas, não quantidade de linhas lidas no Excel.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CHK.60",
+      "text": "Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística. Registrar entrada, binding/skill, saída, efeito de domínio e consumidor no mesmo candidato.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.DOD.01",
+      "text": "Apply, cancelamento, conflito/reprévia e recibo estão publicados como contribuição e coordenador C04 com porta C08 explícita.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.DOD.02",
+      "text": "Os resultados positivos e negativos possuem provas locais de estados e um roteiro executável contra a composição real do WP10.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.DOD.60",
+      "text": "A alteração descrita é integrada aos produtores/consumidores reais e provada por AM02/AM06 conforme o domínio. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.INV.01",
+      "text": "Nenhum preview é aplicado implicitamente e nenhuma recusa é convertida em sucesso parcial.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T03.INV.02",
+      "text": "A autoridade e as revisões são verificadas no momento de aplicar; o manifesto não funciona como autorização permanente.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.INV.03",
+      "text": "Recibo descreve resultado confirmado e preserva os campos restritos, inclusive quando a aplicação falha.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T03.INV.04",
+      "text": "Atomicidade vale para a aplicação dentro da superfície/import suportado; nunca declarar atomicidade global entre domínios. Metadados de confiança não são aceitos do JSON de entrada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.INV.60",
+      "text": "Identidade, perfil, skill carregada, concessão e autorização atual continuam obrigatórios; prévia não aplica e rotina não inventa admissão. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.QLT.01",
+      "text": "A pessoa entende por que precisa de nova prévia e não perde sua seleção/arquivo em um conflito recuperável.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.QLT.02",
+      "text": "Contexto e estado do recibo são inequívocos; números previstos e aplicados nunca aparecem com o mesmo rótulo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "quality_standards",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T03.QLT.60",
+      "text": "Grant, entrada, saída e estado visível concordam entre manifesto, wrapper e UI; falha tem motivo verificável. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CMP.01",
+      "text": "Aplicação na versão atual/nova, cancelamento, ausência de mudanças, erro de validação, conflito e alteração de autoridade têm fluxos completos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CMP.02",
+      "text": "Inclusões, exclusões, campos ignorados e referências mantidas são contabilizados no recibo segundo o resultado real.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.CMP.60",
+      "text": "Cobrir caminho autorizado, falta de SkillLoadReceipt, permissão revogada e os estados de preview/admissão pertinentes à task. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.SUC.01",
+      "text": "Nenhuma alteração concorrente alheia é perdida ao importar, e um conflito afetado pode ser revisado sem reconstruir a operação do zero.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T03.SUC.02",
+      "text": "Após sucesso, o usuário reconcilia o recibo com os valores exibidos pelo domínio; após falha, não encontra efeitos parciais ocultos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "success_criteria",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T03.SUC.60",
+      "text": "A pessoa consegue utilizar a contribuição prevista e abrir seu resultado real; uma ferramenta sempre recusada não conta como entregue. Consumir importPreviewRef da análise IA opcional na prévia existente; manter erros/deltas e rótulo de simulação, sem apply automático ou caso obrigatório para importação determinística.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T03",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.CHK.01",
+      "text": "Exportar e reimportar sem editar mantém valores financeiros e identidades sem novos registros; flags bm ausentes do formato seguem a normalização original do importador, explicitada sem exigir preservação bit a bit que o arquivo não suporta.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.CHK.02",
+      "text": "Alterar somente um Forecast mensal no arquivo modifica apenas os campos autorizados correspondentes; a contribuição já incluída é substituída e não duplicada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "check",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T04.CHK.03",
+      "text": "All Members importa apenas os campos de roster aceitos, ignora Summary by Leader e não transporta Classification/Outlook/Notes ou remuneração; lock preserva posições conforme baseline.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.CHK.04",
+      "text": "Arquivo de owner com forecast autorizado e forecast alheio proibido é rejeitado atomicamente quando a regra original assim exige; não se publica recibo de sucesso parcial.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.CHK.05",
+      "text": "Matriz cruza formatos e papéis com cancelamento, conflito, arquivo inválido e sucesso; cada célula aponta comportamento verificável, sem alegação genérica de testes verdes.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.CHK.06",
+      "text": "No WP10, o roteiro usa adapter de domínio e entrypoint reais para confirmar o impacto/recibo; antes disso, essa prova permanece identificada como não executada, sem bloquear o início paralelo do WP06.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.DOD.01",
+      "text": "Roundtrip, alteração mínima e recusas possuem fixtures e resultados esperados por formato/papel.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.DOD.02",
+      "text": "Handoff contém exports C04, composição C08 e pacote de aceitação real, com status honesto de evidência local e integrada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.INV.01",
+      "text": "Nenhum roundtrip cria despesa, identidade, permissão ou referência privada apenas por exportar/importar.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T04.INV.02",
+      "text": "Dados calculados e restritos continuam sujeitos às regras do domínio em todos os formatos, inclusive XLS legado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.INV.03",
+      "text": "Uma fixture de contrato pode provar conformidade local, mas nunca substitui adapter/entrypoint real como evidência de entrega integrada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.QLT.01",
+      "text": "Cada prova demonstra uma diferença que detectaria uma regressão concreta, como zero virando vazio, forecast duplicado ou posição indevidamente removida.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "quality_standards",
+      "nominal_cases": [
+        "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects"
+      ]
+    },
+    {
+      "id": "WP06.T04.QLT.02",
+      "text": "O material de handoff permite reproduzir falha/sucesso sem depender da memória da conversa ou de acesso externo novo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.CMP.01",
+      "text": "Todos os formatos, opções newVersion/removeMissing, referências, papéis e dados privados do inventário têm cobertura identificada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.CMP.02",
+      "text": "Preview, Apply, cancelamento, erro, reprévia e recibo são exercitados como jornada, além de verificações isoladas de parse.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.CMP.03",
+      "text": "Roundtrip cobre preservação/exclusão de metadados conforme contrato, invalidação por substituição e reuso de ID com nova encarnação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.SUC.01",
+      "text": "Um arquivo exportado do produto pode voltar sem produzir alteração financeira inesperada, e uma edição intencional gera somente seu efeito declarado.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T04.SUC.02",
+      "text": "WP10 consegue qualificar a cadeia real usando o pacote entregue, sem duplicar cálculo, alterar arquivos do WP03 ou inventar novas rotas de importação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T04",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.CHK.01",
+      "text": "Proposta com texto ignore regras permanece dado e não provoca tool call indevida.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.CHK.02",
+      "text": "Campo confirmado mantém trecho/arquivo/versão; documento atualizado torna candidato antigo identificável.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "check",
+      "nominal_cases": [
+        "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      ]
+    },
+    {
+      "id": "WP06.T05.CHK.03",
+      "text": "PDF sem camada textual é sinalizado; nenhuma cotação é inferida para preencher a lacuna.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.CHK.20",
+      "text": "Dossiê WP09.T04 consome a mesma evidenceRef após confirmação na UI; antes disso mostra candidato pendente. Atualização de documento/revogação alcança o consumidor sem parser, confirmação ou cópia paralelos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.CHK.18",
+      "text": "Executar sf_document_extract, sf_knowledge_search pela UI/native/MCP com base e autoridade iguais produz o mesmo handler, resultado e versão; chamada direta sem concessão ou após revogação é recusada pelo destino.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.CHK.19",
+      "text": "Documento autorizado é extraído e consultado pelos exports reais RAG Studio, citationProof/trecho conferem com revisão/offsets; DOCX não é lido como UTF-8 bruto e trocar SHA-256 por BLAKE3 não passa a validação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "check",
+      "nominal_cases": [
+        "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      ]
+    },
+    {
+      "id": "WP06.T05.CHK.40",
+      "text": "DOC-REF T+20 é consumido por createSfBusinessContext e DOC-EXTRACT T+35 por T02; imports T01-T04 executam em outro writer.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "check",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.DOD.01",
+      "text": "PDF digital, DOCX e texto reais produzem candidatos verificáveis e confirmáveis na mesa; formato sem texto não gera dados fabricados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.DOD.18",
+      "text": "Descritores C16 de sf_document_extract, sf_knowledge_search são implementados e consumidos por T06 com referências reais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.DOD.19",
+      "text": "Resolver e adapter RAG reais produzem candidatos e trechos consumidos pela UI e BCS.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.DOD.40",
+      "text": "Resolver e extração real têm entregas 20/35 e consumidores identificados.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "dod",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.INV.01",
+      "text": "Documento externo é evidência não confiável; instrução embutida não muda ferramentas, acesso ou autoridade, e extração não vira fato confirmado automaticamente.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "invariants",
+      "nominal_cases": [
+        "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      ]
+    },
+    {
+      "id": "WP06.T05.INV.18",
+      "text": "Permissões, locks, cálculos e comandos finais continuam no domínio; o transporte não cria poder novo.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.INV.19",
+      "text": "Conteúdo externo não vira instrução, Store da request não amplia ACL e algoritmo de digest não é substituído.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.INV.40",
+      "text": "S2 e S2-C jamais escrevem os mesmos arquivos documentais antes lease 53.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "invariants",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.QLT.01",
+      "text": "Origem é navegável até página/trecho ou parágrafo; valor ambíguo conserva opções/ausência sem falsa certeza.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.QLT.18",
+      "text": "Schema fechado, ausência/falha explícitas e provenance permitem comparar UI/native/MCP.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "quality_standards",
+      "nominal_cases": [
+        "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      ]
+    },
+    {
+      "id": "WP06.T05.QLT.19",
+      "text": "Revisão, source hash, unidade de offset e estado candidato/confirmado tornam a evidência recuperável.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "quality_standards",
+      "nominal_cases": [
+        "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      ]
+    },
+    {
+      "id": "WP06.T05.QLT.40",
+      "text": "Handoff mantém referência/hash/revisão/ACL e status de confirmação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "quality_standards",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.CMP.01",
+      "text": "Cobrir três formatos, número/moeda/data ambíguos, conteúdo grande, texto ausente, arquivo inválido, revogação e mudança de versão.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.CMP.18",
+      "text": "Cobrir todos os exports desta task (2), caso autorizado, direto proibido, stale e indisponível.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.CMP.19",
+      "text": "Cobrir PDF digital, DOCX, texto, sem camada textual, fonte revogada, revisão trocada, busca lexical e digests diferentes.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "completeness_criteria",
+      "nominal_cases": [
+        "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      ]
+    },
+    {
+      "id": "WP06.T05.CMP.40",
+      "text": "Três formatos, falhas, versão/revogação e imports paralelos permanecem cobertos.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "completeness_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.SUC.01",
+      "text": "Comprador confirma um valor extraído e o usa no cenário sem copiar novamente, preservando a origem.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.SUC.18",
+      "text": "O usuário recebe a mesma capacidade e resultado pelas superfícies sem divergência ou efeitos adicionais.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "success_criteria",
+      "nominal_cases": []
+    },
+    {
+      "id": "WP06.T05.SUC.19",
+      "text": "Usuário abre o trecho que sustentou a extração e fonte alterada não se passa pela versão confirmada.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "success_criteria",
+      "nominal_cases": [
+        "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation"
+      ]
+    },
+    {
+      "id": "WP06.T05.SUC.40",
+      "text": "Fontes alimentam IA/Atlas antes da integração final sem bloquear importação.",
+      "status": "NOT_RUN",
+      "entity_id": "WP06.T05",
+      "family": "success_criteria",
+      "nominal_cases": []
+    }
+  ],
+  "original_nominals": [
+    {
+      "name": "OP-PROC-01 real comparison preserves the J04 values and exact C02 drilldown",
+      "criterion_ids": [
+        "WP04.T03.CHK.01",
+        "WP04.T01.INV.01",
+        "WP04.T01.CMP.02"
+      ],
+      "status": "NOT_RUN",
+      "coverage": "Original annotation slice; no claim of full task closure."
+    },
+    {
+      "name": "OP-PROC-02 pending sourcing keeps its submitted FX while the future PO changes",
+      "criterion_ids": [
+        "WP04.T03.CHK.02",
+        "WP04.T03.CHK.03",
+        "WP04.T03.INV.02"
+      ],
+      "status": "NOT_RUN",
+      "coverage": "Original annotation slice; no claim of full task closure."
+    },
+    {
+      "name": "OP-PROC-03 missing FX stays unavailable and refuses submission without a new version",
+      "criterion_ids": [
+        "WP04.T03.CHK.03",
+        "WP04.T03.CMP.01",
+        "WP04.CMP.02"
+      ],
+      "status": "NOT_RUN",
+      "coverage": "Original annotation slice; no claim of full task closure."
+    },
+    {
+      "name": "OP-IMPORT-01 real preview and one Apply recover the same receipt without duplicate effects",
+      "criterion_ids": [
+        "WP06.T01.INV.01",
+        "WP06.T01.QLT.01",
+        "WP06.T02.INV.01",
+        "WP06.T02.INV.02",
+        "WP06.T02.QLT.18",
+        "WP06.T03.CHK.04",
+        "WP06.T03.INV.01",
+        "WP06.T03.INV.03",
+        "WP06.T03.QLT.02",
+        "WP06.T03.SUC.02",
+        "WP06.T04.CHK.02",
+        "WP06.T04.INV.01",
+        "WP06.T04.QLT.01"
+      ],
+      "status": "NOT_RUN",
+      "coverage": "Original annotation slice; no claim of full task closure."
+    },
+    {
+      "name": "OP-DOC-01 real schema and confirmation preserve exact evidence through source revocation",
+      "criterion_ids": [
+        "WP06.T05.CHK.02",
+        "WP06.T05.CHK.19",
+        "WP06.T05.INV.01",
+        "WP06.T05.QLT.18",
+        "WP06.T05.QLT.19",
+        "WP06.T05.CMP.19",
+        "WP06.T05.SUC.19"
+      ],
+      "status": "NOT_RUN",
+      "coverage": "Original annotation slice; no claim of full task closure."
+    }
+  ],
+  "original_nominal_identity_preservation": {
+    "retries": 0,
+    "spec_blob": "bab6a804e5f082cc60eb6f27209070b552981035",
+    "budgets": "Read from unchanged operation helpers; retain each original test budget; no timeout increase."
+  },
+  "mission_specific": [
+    {
+      "id": "M63-SCANNER-REAL",
+      "obligation": "Real approved ClamD INSTREAM on127.0.0.1. Real clean, EICAR rejection, down/error/control proof; no always-clean TCP or endpoint/allowlist bypass.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "M63-CI-CAPABILITY",
+      "obligation": "Inspect actual workflow/env permission. If absent, bounded ephemeral job-local setup with verified tools/image; complete inert owner patch45/60; permissions read-only, no secrets/Azure/global install.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "M63-NOMINALS",
+      "obligation": "Keep all five original identities, human UI actions and budgets; actual installed CLI with released cookie/Effect/Node body fixes manifested.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "M63-AUXILIARIES",
+      "obligation": "Execute all seven original auxiliaries plus needed scanner controls. Root is reconciling exact seven names; no claim of coverage from count alone.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "M63-IMPORTS",
+      "obligation": "Preview/cancel no business writes; one human Apply, authoritative durable receipt, recover lost effect without redispatch. Preserve canonical producers/ACL/CAS/null-zero/legacy format behavior.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "M63-DOCUMENTS",
+      "obligation": "PDF digital, DOCX, text mandatory; unsupported/no-text/corrupt/ambiguous/injection/oversize/stale/revoked controls, exact source/revision/incarnation/offset/digest; no confirmation duplication.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "M63-C06",
+      "obligation": "Material scope not global version: irrelevant change valid; material/dependency stale; revoked unavailable; recreated incarnation does not inherit validity; fresh revalidation on restoration; no disclosure of restricted value/hash/link.",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "M63-RELEASE",
+      "obligation": "One conventional draft PR to sf2-stack, exact source SHA/tree/pre/post/dependency closure/patches, W/S/run/job/status matrix and terminal authority/consumer60 ACK request. Source green never integrated-C proof.",
+      "status": "NOT_RUN"
+    }
+  ],
+  "distinction_scanners": {
+    "clamd": "Mission63 upload/document malware scanner; ClamD INSTREAM clean/EICAR/down/error controls.",
+    "atlas": "AM05 is separate secret scanner gitleaks/trufflehog through @orchestra/atlas-boundary/native-memory; requires secret-canary + append/commit/restart/recall and ACL. ClamD success does not qualify Atlas scanner or AM05."
+  },
+  "mandatory_external_proofs": {
+    "AM01": "18 actual skill-load/output/consumer witnesses, 5 profiles, independent reviewer runtime.",
+    "AM02": "39 UI/native/MCP positive routes on same handler/base/authority and forbidden direct controls.",
+    "AM03": "Two actual principal/session scopes, discovery-to-call and search-to-detail revocation, forged args/lease/provider/generation controls.",
+    "AM04": "Canonical choice/prepare/Apply/domain-atomic receipt/lost response and no duplicate effect; no financial approval fabricated.",
+    "AM05": "Real Atlas emission/durable commit/process restart/recall, source/field/record access and incarnation controls, separate real secret scanner and package/guard evidence.",
+    "AM06": "Actual admitted Relay/Schedule route and return to product, reauthorization/no recurrence loop.",
+    "human_timing": "WP04.SUC.01/WP04.T04.CHK.01 controlled human comprehension <=30s with participant/context/errors. Browser runtime measurement is not human comprehension.",
+    "physical_permissions": "No hypothetical host capabilities, new credentials/roles or app restart; missing permission remains blocker."
+  }
+}

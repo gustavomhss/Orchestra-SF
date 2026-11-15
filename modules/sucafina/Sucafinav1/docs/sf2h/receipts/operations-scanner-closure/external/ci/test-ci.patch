@@ -1,0 +1,46 @@
+--- a/.github/workflows/test-ci.yml
++++ b/.github/workflows/test-ci.yml
+@@ -76,6 +76,12 @@
+             `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)
+           NODE
+ 
++      # Mission63's scanner is a workflow-owned capability. Request env allowlists remain unchanged.
++      - name: Select Operations scanner qualification
++        id: operations_scanner
++        if: runner.os == 'Linux' && startsWith(github.ref_name, 'ci-run-linux-operations63-')
++        run: node script/sf2h/operations-scanner/select.mjs
++
+       - name: Fetch source history for Script fixtures
+         if: steps.request.outputs.package == 'script' && steps.request.outputs.runner == 'bun'
+         run: |
+@@ -183,6 +189,10 @@
+ 
+       # The control's scope comes from the request (script/test-ci-request.ts omniControlScope): a whole-package request
+       # is "suite" like every test.yml lane, a narrower one is "declared". Not an --env key; an empty value fails the run.
++      - name: Prepare ephemeral real ClamD for Operations63
++        if: steps.operations_scanner.outputs.selected == 'true'
++        run: bash script/sf2h/operations-scanner/setup.sh
++
+       - name: Run tests
+         env:
+           ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: ${{ runner.os == 'Windows' && 'true' || 'false' }}
+@@ -286,6 +296,19 @@
+               ;;
+           esac
+ 
++      - name: Stop only the Operations63 ClamD processes
++        if: always() && steps.operations_scanner.outputs.selected == 'true'
++        run: bash script/sf2h/operations-scanner/cleanup.sh
++
++      - name: Upload Operations63 scanner evidence
++        if: always() && steps.operations_scanner.outputs.selected == 'true'
++        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
++        with:
++          name: operations63-scanner-${{ matrix.host }}-${{ github.run_attempt }}
++          path: ${{ runner.temp }}/sf-operations63-*/evidence/
++          if-no-files-found: error
++          retention-days: 7
++
+       - name: Upload Lean dashboard previews (extension)
+         if: always() && hashFiles(format('{0}/e2e/test-results/lean-visual/*.png', steps.request.outputs.directory)) != ''
+         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
