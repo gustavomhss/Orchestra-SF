@@ -74,6 +74,12 @@ jobs:
             platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))
           appendFileSync(process.env.GITHUB_OUTPUT,
             `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)
+          const sf66Args = request.args[0] === '--timeout' && request.args[1] === '120000'
+            ? request.args.slice(2) : request.args
+          const sf66Exports = request.package === 'sucafina' && request.directory === 'modules/sucafina' &&
+            request.runner === 'bun' && sf66Args.length > 0 &&
+            sf66Args.every((file) => /^Sucafinav1\/test\/product\/export-artifact-closure\/[^/]+\.test\.ts$/.test(file))
+          appendFileSync(process.env.GITHUB_OUTPUT, `sf66_exports=${sf66Exports}\n`)
           NODE
 
       - name: Fetch source history for Script fixtures
@@ -285,6 +291,144 @@ jobs:
               node --experimental-strip-types --test "${args[@]}"
               ;;
           esac
+
+      # Inert proposal: apply only after the workflow owner receives an explicit lease from integrator60.
+      # This reuses the validated surgical request; it does not run another product selection.
+      - name: Install SF66 export readers
+        id: sf66_readers
+        if: always() && !cancelled() && runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true'
+        run: |
+          set -euo pipefail
+          test -d "$RUNNER_TEMP/sf66-export-artifacts"
+          test ! -L "$RUNNER_TEMP/sf66-export-artifacts"
+          compgen -G "$RUNNER_TEMP/sf66-export-artifacts/*.manifest.json" > /dev/null
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq --no-install-recommends libreoffice-writer libreoffice-impress libreoffice-calc poppler-utils fontconfig fonts-dejavu-core fonts-liberation fonts-crosextra-carlito fonts-crosextra-caladea
+
+      - name: Render SF66 generated exports
+        if: always() && !cancelled() && runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true' && steps.sf66_readers.outcome == 'success'
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import platform
+          import re
+          import subprocess
+          import sys
+
+          root = pathlib.Path(os.environ["RUNNER_TEMP"]) / "sf66-export-artifacts"
+          if not root.is_dir() or root.is_symlink():
+              raise SystemExit("SF66 artifact directory is missing or is a symlink")
+          if any(path.is_symlink() for path in root.rglob("*")):
+              raise SystemExit("SF66 artifacts must contain regular files and directories")
+          manifests = sorted(root.glob("*.manifest.json"))
+          if not manifests:
+              raise SystemExit("SF66 tests must write distinct *.manifest.json files")
+          for manifest in manifests:
+              json.loads(manifest.read_text(encoding="utf-8"))
+
+          inspection = root / "_inspection"
+          inspection.mkdir(exist_ok=False)
+          originals = sorted(path for path in root.rglob("*")
+                             if path.is_file() and inspection not in path.parents)
+          office = [path for path in originals if path.suffix.lower() in {".docx", ".pptx", ".xlsx"}]
+          if not office:
+              raise SystemExit("No generated Office file exists for real-reader inspection")
+
+          def digest(path):
+              with path.open("rb") as stream:
+                  return hashlib.file_digest(stream, "sha256").hexdigest()
+
+          def command(args):
+              result = subprocess.run(args, check=True, text=True,
+                                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+              return result.stdout.strip()
+
+          input_files = [{"path": str(path.relative_to(root)), "bytes": path.stat().st_size,
+                          "sha256": digest(path)} for path in originals]
+          request = json.loads(pathlib.Path(".ci-run.json").read_text(encoding="utf-8"))
+          (inspection / "request.json").write_text(json.dumps(request, indent=2) + "\n", encoding="utf-8")
+          commit_headers = command(["git", "cat-file", "-p", "HEAD"]).split("\n\n", 1)[0].splitlines()
+          versions = {
+              "python": platform.python_version(),
+              "libreoffice": command(["libreoffice", "--version"]),
+              "poppler": command(["pdftoppm", "-v"]),
+              "packages": command(["dpkg-query", "-W", "libreoffice-writer", "libreoffice-impress",
+                                   "libreoffice-calc", "poppler-utils", "fontconfig", "fonts-dejavu-core",
+                                   "fonts-liberation", "fonts-crosextra-carlito", "fonts-crosextra-caladea"]),
+              "fontMatches": {name: command(["fc-match", "--format", "%{family}|%{file}", name])
+                              for name in ["Arial", "Calibri", "Aptos", "Cambria", "Times New Roman"]},
+          }
+          entries = []
+          for index, source in enumerate(office, start=1):
+              target = inspection / f"file-{index:04d}"
+              target.mkdir()
+              before = digest(source)
+              entry = {"source": str(source.relative_to(root)), "sha256": before,
+                       "bytes": source.stat().st_size, "status": "PENDING"}
+              try:
+                  profile = pathlib.Path(os.environ["RUNNER_TEMP"]) / f"sf66-reader-profile-{index:04d}"
+                  output = command(["libreoffice", "--headless", "-env:UserInstallation=" + profile.as_uri(),
+                                    "--convert-to", "pdf", "--outdir", str(target), str(source)])
+                  (target / "conversion.txt").write_text(output + "\n", encoding="utf-8")
+                  pdfs = sorted(target.glob("*.pdf"))
+                  if len(pdfs) != 1:
+                      raise RuntimeError("LibreOffice did not produce exactly one PDF")
+                  pdf = pdfs[0]
+                  pdf_info = command(["pdfinfo", str(pdf)])
+                  (target / "pdfinfo.txt").write_text(pdf_info + "\n", encoding="utf-8")
+                  match = re.search(r"^Pages:\s+(\d+)\s*$", pdf_info, re.MULTILINE)
+                  if not match or int(match.group(1)) < 1:
+                      raise RuntimeError("Rendered PDF has no readable page count")
+                  command(["pdftotext", "-layout", str(pdf), str(target / "extracted.txt")])
+                  command(["pdftoppm", "-png", "-r", "96", str(pdf), str(target / "page")])
+                  pngs = sorted(target.glob("page-*.png"))
+                  if len(pngs) != int(match.group(1)):
+                      raise RuntimeError("Rendered PNG count differs from PDF page count")
+                  files = [pdf, target / "extracted.txt", target / "pdfinfo.txt", target / "conversion.txt", *pngs]
+                  entry.update({"status": "COMPLETED", "pages": len(pngs),
+                                "outputs": [{"path": str(path.relative_to(root)), "bytes": path.stat().st_size,
+                                             "sha256": digest(path)} for path in files]})
+              except Exception as error:
+                  entry.update({"status": "FAILED", "error": str(error)})
+              entry["sha256AfterRead"] = digest(source)
+              entry["originalUnchanged"] = entry["sha256AfterRead"] == before
+              if not entry["originalUnchanged"]:
+                  entry["status"] = "FAILED"
+              entries.append(entry)
+
+          result = {
+              "schema": "sf66-export-reader-inspection-v1",
+              "ciSnapshotSha": os.environ["GITHUB_SHA"],
+              "candidateParents": [line.split(" ", 1)[1] for line in commit_headers if line.startswith("parent ")],
+              "workflowBlobSha": command(["git", "hash-object", ".github/workflows/test-ci.yml"]),
+              "runId": os.environ["GITHUB_RUN_ID"],
+              "runAttempt": os.environ["GITHUB_RUN_ATTEMPT"],
+              "requestSha256": digest(inspection / "request.json"),
+              "tools": versions,
+              "inputs": input_files,
+              "readers": entries,
+              "readerVerdictOnly": True,
+              "functionalAcceptance": "NOT_ASSERTED: failed tests and the job conclusion remain failed",
+              "visualInspection": "PENDING: review these exact PNGs and text against the test manifests",
+              "pdfRole": "Reader-generated inspection copy; not an additional product export format",
+          }
+          (inspection / "manifest.json").write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+          if any(entry["status"] != "COMPLETED" for entry in entries):
+              raise SystemExit(1)
+          PY
+
+      - name: Upload SF66 generated exports and reader evidence
+        if: always() && !cancelled() && runner.os == 'Linux' && steps.request.outputs.sf66_exports == 'true'
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: sf66-exports-${{ github.sha }}-${{ matrix.host }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/sf66-export-artifacts/
+          if-no-files-found: error
+          retention-days: 7
 
       - name: Upload Lean dashboard previews (extension)
         if: always() && hashFiles(format('{0}/e2e/test-results/lean-visual/*.png', steps.request.outputs.directory)) != ''
