@@ -24,6 +24,35 @@ const actions: Readonly<Record<SfDomainCapability, readonly string[]>> = {
   CAP16: ["save", "save-item", "delete-item", "save-sub", "delete-sub"],
 }
 
+type SfDomainReadOutcome =
+  | Readonly<{ kind: "denied" }>
+  | Readonly<{ kind: "unavailable" }>
+  | Readonly<{
+      kind: "ok"
+      data: NonNullable<ReturnType<typeof projectSfDomainData>>
+      versions: ReturnType<typeof projectSfDomainVersions>
+      versionFence: string
+    }>
+
+// Pair each admitted capability with the exact frozen SfOperationId literal.
+// The mapped union rejects a mismatched CAP-to-operation pairing at compile time.
+type SfDomainPageRoute = {
+  [Capability in SfDomainCapability]: readonly [Capability, `domain.page.${Capability}`]
+}[SfDomainCapability]
+
+const domainPageRoutes: readonly SfDomainPageRoute[] = [
+  ["CAP01", "domain.page.CAP01"],
+  ["CAP03", "domain.page.CAP03"],
+  ["CAP04", "domain.page.CAP04"],
+  ["CAP05", "domain.page.CAP05"],
+  ["CAP09", "domain.page.CAP09"],
+  ["CAP10", "domain.page.CAP10"],
+  ["CAP13", "domain.page.CAP13"],
+  ["CAP14", "domain.page.CAP14"],
+  ["CAP15", "domain.page.CAP15"],
+  ["CAP16", "domain.page.CAP16"],
+]
+
 const json = (body: object, status: number) =>
   Response.json(body, { status, headers })
 const denied = () => json({ status: "denied" }, 403)
@@ -119,21 +148,21 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfDom
       ? (typeof selection.executiveMonth === "number" ? selection.executiveMonth
         : typeof selection.month === "number" ? selection.month : now.getMonth() + 1)
       : typeof selection.month === "number" ? selection.month : now.getMonth() + 1
-    const outcome = await deps.application.persistence.transaction("dashboard", async (snapshot) => {
+    const outcome = await deps.application.persistence.transaction<SfDomainReadOutcome>("dashboard", async (snapshot) => {
       const principal = await deps.application.authenticate(request, {
         surface: "dashboard", roleMap: roleMap(snapshot, "dashboard"),
       })
       const actor = authorizedActor(principal, snapshot.data)
       if (!actor || actor.id !== context.value.stamp.principalRef) {
-        return { commit: false, value: { kind: "denied" as const } }
+        return { commit: false, value: { kind: "denied" } }
       }
       const summaries = Array.isArray(snapshot.data.summaries)
         ? snapshot.data.summaries.filter((value): value is string => typeof value === "string") : []
       if (!dashboardPages(actor, summaries).includes(pageName)) {
-        return { commit: false, value: { kind: "denied" as const } }
+        return { commit: false, value: { kind: "denied" } }
       }
       const contribution = deps.application.domains.dashboard.find((item) => item.pages.includes(pageName))
-      if (!contribution) return { commit: false, value: { kind: "unavailable" as const } }
+      if (!contribution) return { commit: false, value: { kind: "unavailable" } }
 
       const beforeAudit = snapshot.audit.length
       // The producer owns visibility and business calculations. A private snapshot
@@ -142,14 +171,14 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfDom
         { ...snapshot, data: publicSfData(snapshot.data) }, actor, environment,
       )
       const data = projectSfDomainData(cap, publicSfData(view.data), year)
-      if (!data) return { commit: snapshot.audit.length > beforeAudit, value: { kind: "unavailable" as const } }
+      if (!data) return { commit: snapshot.audit.length > beforeAudit, value: { kind: "unavailable" } }
       const versions = projectSfDomainVersions(cap, view.versions)
       // This is a server-private fence, not a DTO. No actor, raw audit, role map,
       // full business snapshot, version.by or private data crosses the boundary.
       const versionFence = JSON.stringify(snapshot.versions)
       return {
         commit: snapshot.audit.length > beforeAudit,
-        value: { kind: "ok" as const, data, versions, versionFence },
+        value: { kind: "ok", data, versions, versionFence },
       }
     }, { signal: request.signal })
     if (outcome.kind === "denied") return denied()
@@ -233,9 +262,9 @@ async function localAdmin(deps: SfNativeHostDependencies, request: Request): Pro
 
 export function createSfDomainProjectionHandlers(deps: SfNativeHostDependencies): readonly SfProjectionHandler[] {
   return [
-    ...Object.keys(SF_DOMAIN_PAGES).map((cap) => ({
-      operationId: `domain.page.${cap}` as `domain.page.${SfDomainCapability}`,
-      handle: (request: Request) => page(deps, request, cap as SfDomainCapability),
+    ...domainPageRoutes.map(([cap, operationId]) => ({
+      operationId,
+      handle: (request: Request) => page(deps, request, cap),
     })),
     { operationId: "projection.local-admin", handle: (request: Request) => localAdmin(deps, request) },
   ]

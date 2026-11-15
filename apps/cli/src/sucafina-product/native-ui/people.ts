@@ -1,3 +1,5 @@
+import { Schema } from "effect"
+import { SfPeopleCio, SfPeopleLeader, SfPeopleMember, SfPeoplePageData, SfPeopleTopic } from "@orchestra/schema/sucafina/people"
 import type { SfNativeHostDependencies, SfProjectionHandler } from "./router"
 import { roleMap } from "../../../../../modules/sucafina/Sucafinav1/runtime/admin.ts"
 import { object } from "../../../../../modules/sucafina/Sucafinav1/runtime/contract.ts"
@@ -116,25 +118,34 @@ function sourceActor(
       ? access.domains.filter((item): item is string => typeof item === "string") : [],
   }
 }
-function sourceRows(value: unknown): Record<string, unknown>[] {
-  if (!Array.isArray(value) || value.some((row) => !row || typeof row !== "object" || Array.isArray(row))) {
+function sourceRecord(value: unknown): Record<string, unknown> {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
     throw new Error("SF_PEOPLE_SOURCE_INVALID")
   }
-  return value as Record<string, unknown>[]
+  return Object.fromEntries(Object.entries(value))
 }
-function sourceRecord(value: unknown): Record<string, unknown> {
-  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("SF_PEOPLE_SOURCE_INVALID")
-  return value as Record<string, unknown>
+function sourceRows(value: unknown): Record<string, unknown>[] {
+  if (!Array.isArray(value)) throw new Error("SF_PEOPLE_SOURCE_INVALID")
+  return value.map((row: unknown) => sourceRecord(row))
 }
 const idOf = (value: unknown): string =>
   typeof value === "string" ? value : typeof value === "number" && Number.isFinite(value) ? String(value) : ""
 const text = (value: unknown): string => typeof value === "string" ? value : ""
 const pick = (source: Record<string, unknown>, keys: readonly string[]) =>
   Object.fromEntries(keys.filter((key) => Object.hasOwn(source, key)).map((key) => [key, source[key]]))
-const projectRows = (source: unknown, keys: readonly string[]) => sourceRows(source).map((row) => {
-  if (!idOf(row.id)) throw new Error("SF_PEOPLE_ROW_ID_MISSING")
-  return { id: idOf(row.id), ...pick(row, keys) }
-})
+function projectRows<Row>(
+  source: unknown,
+  fields: readonly string[],
+  decode: (input: unknown) => Row,
+): Row[] {
+  return sourceRows(source).map((row) => {
+    const id = idOf(row.id)
+    if (!id) throw new Error("SF_PEOPLE_ROW_ID_MISSING")
+    return decode({ id, ...pick(row, fields) })
+  })
+}
+
+type SfPeopleProjectionData = (typeof SfPeoplePageData)[keyof typeof SfPeoplePageData]["Type"]
 
 /** Source-projected fields only; the admin boolean comes from CURRENT source actor, never the browser. */
 export function projectSfPeopleData(
@@ -143,17 +154,18 @@ export function projectSfPeopleData(
   selection: Selection & Readonly<{ year: number; month: number }>,
   at: string,
   admin: boolean,
-) {
+): SfPeopleProjectionData {
   if (cap === "CAP02") {
     return {
-      hotTopics: projectRows(source.hotTopics, topicFields)
+      hotTopics: projectRows(source.hotTopics, topicFields, Schema.decodeUnknownSync(SfPeopleTopic))
         .filter((row) => !selection.topicStatus || row.status === selection.topicStatus),
     }
   }
-  const members = projectRows(source.members, admin ? memberFields : publicMemberFields)
+  const members = projectRows(source.members, admin ? memberFields : publicMemberFields,
+    Schema.decodeUnknownSync(SfPeopleMember))
   if (cap === "CAP07") return {
-    cio: pick(sourceRecord(source.cio), cioFields),
-    leaders: projectRows(source.leaders, leaderFields),
+    cio: Schema.decodeUnknownSync(SfPeopleCio)(pick(sourceRecord(source.cio), cioFields)),
+    leaders: projectRows(source.leaders, leaderFields, Schema.decodeUnknownSync(SfPeopleLeader)),
     members,
   }
   if (cap === "CAP08") {
@@ -165,7 +177,7 @@ export function projectSfPeopleData(
 
   // CAP06: the same server-side derivations and values rendered by
   // dashboard-people.ts (not a frontend recomputation of financial/personnel data).
-  const leaders = projectRows(source.leaders, leaderFields)
+  const leaders = projectRows(source.leaders, leaderFields, Schema.decodeUnknownSync(SfPeopleLeader))
   const active = members.filter((row) => row.status === "Active")
   const terminated = members.filter((row) => row.status === "Terminated")
   const departures = terminated.filter((row) => text(row.end).startsWith(String(selection.year))).length
@@ -234,6 +246,18 @@ export function projectSfPeopleVersions(
     .map(([key, value]) => [key, value.version]))
 }
 
+type SfPeoplePageOutcome =
+  | Readonly<{ kind: "denied" }>
+  | Readonly<{
+      kind: "ok"
+      data: SfPeopleProjectionData
+      versions: Record<string, number>
+      canWrite: boolean
+      admin: boolean
+      actorCanWrite: boolean
+      versionFence: string
+    }>
+
 async function page(deps: SfNativeHostDependencies, request: Request, cap: SfPeopleCapability): Promise<Response> {
   const url = new URL(request.url)
   const pageName = SF_PEOPLE_PAGES[cap]
@@ -264,18 +288,18 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfPeo
       year: requested.year ?? sidebarYear(),
       month: requested.month ?? now.getMonth() + 1,
     }
-    const outcome = await deps.application.persistence.transaction("dashboard", async (snapshot) => {
+    const outcome = await deps.application.persistence.transaction<SfPeoplePageOutcome>("dashboard", async (snapshot) => {
       // The same original Request and roleMap as the admitted legacy dashboard.
       const principal = await deps.application.authenticate(request, {
         surface: "dashboard", roleMap: roleMap(snapshot, "dashboard"),
       })
       const actor = sourceActor(principal, snapshot.data)
       if (!actor || actor.id !== context.value.stamp.principalRef)
-        return { commit: false, value: { kind: "denied" as const } }
+        return { commit: false, value: { kind: "denied" } }
       const summaries = Array.isArray(snapshot.data.summaries)
         ? snapshot.data.summaries.filter((item): item is string => typeof item === "string") : []
       if (!dashboardPages(actor, summaries).includes(pageName))
-        return { commit: false, value: { kind: "denied" as const } }
+        return { commit: false, value: { kind: "denied" } }
 
       const beforeAudit = snapshot.audit.length
       const view = contribution.domain.view({ ...snapshot, data: publicSfData(snapshot.data) }, actor, environment)
@@ -288,7 +312,7 @@ async function page(deps: SfNativeHostDependencies, request: Request, cap: SfPeo
       return {
         commit: snapshot.audit.length !== beforeAudit,
         value: {
-          kind: "ok" as const,
+          kind: "ok",
           data, versions, canWrite,
           admin: actor.roles.includes("admin"),
           actorCanWrite: actor.canWrite,

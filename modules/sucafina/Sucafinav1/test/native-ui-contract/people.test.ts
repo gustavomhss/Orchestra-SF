@@ -205,6 +205,10 @@ describe("A10 Pessoas and Talent — source-boundary contract", () => {
       { ...sources, members: [null] }, selection, at, false)).toThrow("SF_PEOPLE_SOURCE_INVALID")
     expect(() => projectSfPeopleData("CAP07",
       { ...sources, cio: "not-a-record" }, selection, at, false)).toThrow("SF_PEOPLE_SOURCE_INVALID")
+    expect(() => projectSfPeopleData("CAP08",
+      { ...sources, members: [{ id: "m1", status: "Promoted" }] }, selection, at, true)).toThrow()
+    expect(() => projectSfPeopleData("CAP02",
+      { ...sources, hotTopics: [{ id: "t1", status: 0 }] }, selection, at, false)).toThrow()
   })
 
   test("client dispatches once and rejects unknown fields before any network", async () => {
