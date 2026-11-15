@@ -12,7 +12,7 @@ import type { JSX } from "solid-js"
 import { useLanguage } from "@/context/language"
 import type {
   SfCellCoordinate, SfDraftCell, SfGridCell, SfGridNavigation,
-  SfGridRange, SfMessage, SfMonthlyGridProps, SfPasteRow, SfUnit,
+  SfGridRange, SfMessage, SfMonthlyGridProps, SfUnit,
 } from "./types"
 import "./monthly-grid.css"
 
@@ -54,7 +54,8 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
   const protectedState = () => props.state === "denied" || props.state === "session-expired"
   const readable = () => props.state === "ready" || props.state === "partial"
     || props.state === "stale" || props.state === "conflict" || props.state === "outcome-unknown"
-  const writable = () => (props.state === "ready" || props.state === "partial") && !props.readOnlyReason
+  const monthShapeValid = () => props.months.length === 12 && props.months.every((month, index) => month.id === index)
+  const writable = () => (props.state === "ready" || props.state === "partial") && !props.readOnlyReason && monthShapeValid()
 
   // Identity is the source's opaque row ref and canonical month ID, never array index.
   const rowIndex = (ref: SfCellCoordinate["rowRef"]) =>
@@ -312,6 +313,8 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
   const firstIssue = (cell: SfGridCell) => {
     const draft = draftFor(cell.coordinate)
     if (draft?.error) return message(draft.error)
+    if (props.months.some((month) => month.id === cell.coordinate.month && month.closed))
+      return t("sf.s02.closedMonth")
     return cell.permission.editable ? undefined : message(cell.permission.reason)
   }
 
@@ -319,6 +322,9 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
     <section class="sf-s02" aria-label={t("sf.s02.grid")}>
       <Show when={stateMessage()}>
         {(key) => <div class="sf-s02-status" role={protectedState() ? "alert" : "status"}>{t(key())}</div>}
+      </Show>
+      <Show when={!monthShapeValid() && !protectedState()}>
+        <p class="sf-s02-readonly" role="alert">{t("sf.s02.invalidMonths")}</p>
       </Show>
       <Show when={props.readOnlyReason && !protectedState()}>
         <p class="sf-s02-readonly">{message(props.readOnlyReason!)}</p>
@@ -439,6 +445,11 @@ export function SfMonthlyGrid<Row>(props: SfMonthlyGridProps<Row>): JSX.Element 
                       <div>
                         <span>{t(COPY_MEASURE[cell.coordinate.measure])}: </span>
                         {renderValue(cell)}
+                        <button type="button" class="sf-s02-mobile-select"
+                          aria-pressed={selected(cell.coordinate)}
+                          onClick={() => props.onSelectRange({ anchor: cell.coordinate, extent: cell.coordinate })}>
+                          {t("sf.s02.paste.selectStart")}
+                        </button>
                         <Show when={firstIssue(cell)}>{(reason) => <small>{reason()}</small>}</Show>
                       </div>
                     }</For>
