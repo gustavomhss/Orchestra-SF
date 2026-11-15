@@ -1,0 +1,1141 @@
+--- a/apps/cli/src/sucafina-product/scenario-operation-access.ts
++++ b/apps/cli/src/sucafina-product/scenario-operation-access.ts
+@@ -1,11 +1,12 @@
+ import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
+ import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
+-import type { SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
++import type { DomainProjection, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+ import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
+ import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
+ import type { ScenarioOperation } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
+ import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
+ import type { PlannerScenarioInputs } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-port.ts"
++import { procurementRequestFields } from "../../../../modules/sucafina/Sucafinav1/product/procurement/source-projection.ts"
+ import type { createSfPlannerEvidence } from "./planner-evidence.ts"
+ import type { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
+ import type { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
+@@ -25,7 +26,9 @@
+   return async (value: DecisionCase, call: TrustedDomainContext): Promise<boolean> => {
+     const request = input.host.requestFor(call)
+     const binding = digestSfValue([call.kind, call.binding])
+-    const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding])
++    const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
++    const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding]) &&
++      requestDigest === digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+     if (!currentAuthority() || !await input.host.revalidate(call)) return false
+     const captured = structuredClone(value)
+     const original = digestSfValue(captured)
+@@ -144,15 +147,20 @@
+ /** Reauthorize every explicit external selector against C17; a condition is never an approval.
+  * A retained choice owns its original evidence even when the case attaches a newer source. */
+ export async function authorizeSfCompositeProcurementOperations(input: {
+-  host: Pick<DomainPortHost, "revalidate">
++  host: Pick<DomainPortHost, "revalidate" | "requestFor">
+   resolve: BusinessContextService["resolve"]
+ }, decision: DecisionCase, item: Pick<DecisionCase["alternatives"][number], "scenario" | "result">, call: TrustedDomainContext) {
++  const request = input.host.requestFor(call)
++  const binding = digestSfValue([call.kind, call.binding])
++  const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
++  const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding]) &&
++    requestDigest === digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+   const operations = item.scenario.operations.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
+-  if (!operations.length || new Set(operations.map((operation) => operation.targetRef)).size !== operations.length ||
++  if (!currentAuthority() || !operations.length || new Set(operations.map((operation) => operation.targetRef)).size !== operations.length ||
+     item.result.comparisonStatus !== "conditioned" || item.result.total !== null || item.result.currency !== decision.currency ||
+     digestSfValue(item.result.horizon) !== digestSfValue(decision.horizon) ||
+     ![...decision.alternatives, ...decision.choices].some((stored) => digestSfValue(stored.scenario) === digestSfValue(item.scenario) && digestSfValue(stored.result) === digestSfValue(item.result)) ||
+-    !await input.host.revalidate(call)) return false
++    !await input.host.revalidate(call) || !currentAuthority()) return false
+   const refs = operations.map((operation) => {
+     const matches = item.result.sourceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record" &&
+       ref.refId === operation.targetRef && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request")
+@@ -166,7 +174,7 @@
+     digestSfValue(operation.period) !== digestSfValue(item.result.horizon) || !item.result.unresolvedConditions.includes(`external-operation:${digestSfValue(operation)}:procurement-replacement-cost-unresolved`))) return false
+   const read = () => Promise.all(refs.map((ref) => input.resolve(ref!, call)))
+   const first = await read()
+-  if (first.some((resolution, index) => {
++  if (!currentAuthority() || first.some((resolution, index) => {
+     const ref = refs[index]!, current = resolution.currentRef, projection = resolution.authorizedProjection
+     // C17 proves physical continuity. Reissuing the current actor's scope may
+     // rotate its scoped incarnation; the fresh branch still requires the exact ref.
+@@ -175,10 +183,9 @@
+       current.installationId !== ref.installationId || current.projectId !== ref.projectId || current.target.surface !== "procurement" ||
+       current.target.recordType !== ref.target.recordType || current.target.recordId !== ref.target.recordId ||
+       digestSfValue(current.target.fields) !== digestSfValue(ref.target.fields) || digestSfValue(current.target.period) !== digestSfValue(ref.target.period) ||
+-      !projection || !("components" in projection) || projection.version !== ref.target.version || projection.context.surface !== "procurement" ||
++      !projection || !("components" in projection) || !canonicalProcurementProjection(projection, ref) || projection.version !== ref.target.version || projection.context.surface !== "procurement" ||
+       projection.context.installationId !== ref.installationId || projection.context.projectId !== ref.projectId || projection.context.currency !== item.result.currency ||
+-      digestSfValue(projection.context.period) !== digestSfValue(item.result.horizon) || !projection.context.sourceRefs.length ||
+-      projection.context.sourceRefs.some((source) => !covered(source, [ref])) ||
++      digestSfValue(projection.context.period) !== digestSfValue(item.result.horizon) ||
+       resolution.state === "historical" && !resolution.differences || resolution.state === "fresh" &&
+       (digestSfValue(current) !== digestSfValue(ref) || projection.context.principalRef !== call.binding.principalRef ||
+         projection.context.accessRevision !== call.binding.accessRevision || projection.context.policyVersion !== call.binding.policyVersion)
+@@ -191,5 +198,32 @@
+       components: projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) } }
+   })
+   const second = await read()
+-  return digestSfValue(material(first)) === digestSfValue(material(second)) && await input.host.revalidate(call)
++  return currentAuthority() && digestSfValue(material(first)) === digestSfValue(material(second)) && await input.host.revalidate(call) && currentAuthority()
++}
++
++/** C17 retains the canonical read projection: evidence belongs to its typed
++ * values; context SourceRefs and financial components may both be empty. */
++function canonicalProcurementProjection(projection: DomainProjection, ref: Extract<BusinessEvidenceRef, { kind: "record" }>) {
++  if (projection.engineVersion !== "procurement-v1" || !projection.context || !projection.context.period || !Array.isArray(projection.context.sourceRefs) ||
++    !Array.isArray(projection.components) || projection.components.length || projection.decision !== undefined || projection.comparison !== undefined ||
++    !Array.isArray(projection.values) || !Array.isArray(projection.missing) ||
++    ref.target.fields.some((field) => !procurementRequestFields.some((allowed) => field === allowed)) ||
++    projection.context.sourceRefs.some((source) => !source || !source.period || !Array.isArray(source.fields) || !source.fields.length ||
++      typeof source.observedAt !== "string" || !Number.isFinite(Date.parse(source.observedAt)) || !covered(source, [ref]))) return false
++  const fields = ref.target.fields.filter((field) => field !== "sourcing")
++  const numeric = ["ageDays", "baseAmount", "submittedAmount", "submittedFxRate", "originalAmount", "fxRate"]
++  if (new Set(fields).size !== fields.length || projection.values.length !== fields.length || new Set(projection.values.map((value) => value?.id)).size !== fields.length ||
++    projection.values.some((value) => !value || !fields.includes(value.id) || value.granularity !== "record" || !value.period ||
++      digestSfValue(value.period) !== digestSfValue(ref.target.period) || !Array.isArray(value.sourceRefs) || value.sourceRefs.length !== 1 || !value.sourceRefs[0] ||
++      digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref) || !value.drilldown || digestSfValue(value.drilldown) !== digestSfValue(ref) ||
++      !["confirmed", "estimated", "absent"].includes(value.evidenceState) ||
++      value.value !== null && (numeric.includes(value.id) ? typeof value.value !== "number" || !Number.isFinite(value.value) : typeof value.value !== "string") ||
++      value.currency !== undefined && (!/^[A-Z]{3}$/.test(value.currency) || !["baseAmount", "submittedAmount", "originalAmount"].includes(value.id)) ||
++      value.id === "baseAmount" && value.currency !== projection.context.currency ||
++      value.unit !== undefined && (value.id !== "ageDays" || value.unit !== "days")) ||
++    projection.missing.some((entry) => !entry || !fields.includes(entry.field) || !["missing", "unavailable", "missing-fx"].includes(entry.reason))) return false
++  const amount = projection.values.find((value) => value.id === "originalAmount")
++  const currency = projection.values.find((value) => value.id === "originalCurrency")
++  return !!amount && (amount.value === null ? amount.evidenceState === "absent" : amount.evidenceState === "confirmed" || amount.evidenceState === "estimated") &&
++    (!currency || (currency.value === null ? amount.currency === undefined : typeof currency.value === "string" && /^[A-Z]{3}$/.test(currency.value) && amount.currency === currency.value))
+ }
+--- a/apps/cli/src/sucafina-product/recorded-planner-operation-access.ts
++++ b/apps/cli/src/sucafina-product/recorded-planner-operation-access.ts
+@@ -33,8 +33,10 @@
+       const item = structuredClone(selected)
+       const request = input.host.requestFor(call)
+       const binding = digestSfValue([call.kind, call.binding])
++      const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+       const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request &&
+-        binding === digestSfValue([call.kind, call.binding]) && !frame.cycle
++        binding === digestSfValue([call.kind, call.binding]) && !frame.cycle &&
++        requestDigest === digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+       if (!currentAuthority() || !await input.host.revalidate(call) || !request ||
+         ![...decision.alternatives, ...decision.choices].some((entry) => same(entry.scenario, item.scenario) && same(entry.result, item.result))) return false
+       const parsed = decodeSfOperationInput("sf_scenario_simulate", item.scenario)
+@@ -64,7 +66,18 @@
+       const base = select(item.scenario.baseRef)
+       if (!base || !coversMonths(base.target.period!, item.result.horizon)) return false
+       const external = item.scenario.operations.some((operation) => operation.targetRef.startsWith("sf-procurement:"))
+-      if (external && !await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: input.resolveEvidence }, decision, item, call)) return false
++      const observeExternal = async () => {
++        const observations: string[] = []
++        const authorized = await authorizeSfCompositeProcurementOperations({ host: input.host, resolve: async (ref, context) => {
++          const resolution = structuredClone(await input.resolveEvidence(ref, context))
++          const projection = resolution.authorizedProjection
++          if (ref.kind === "record" && projection && "components" in projection) observations.push(digestSfValue(stableObservation({ ref, resolution, projection })))
++          return resolution
++        } }, decision, item, call)
++        return authorized ? observations.toSorted() : undefined
++      }
++      const externalBefore = external ? await observeExternal() : []
++      if (!externalBefore) return false
+       const operations = item.scenario.operations.filter((operation) => !operation.replacementRef?.startsWith("hot-topic-draft:") && !operation.targetRef.startsWith("sf-procurement:"))
+       if (!operations.length && !external) return false
+       const replacements = operations.map((operation) => operation.replacementRef ? amountSelector(operation.replacementRef) : undefined)
+@@ -104,7 +117,8 @@
+         }
+       }
+       const second = await read()
+-      if (!second || !same(first.map(stableObservation), second.map(stableObservation)) || !await readStored() ||
++      if (!second || !same(first.map(stableObservation), second.map(stableObservation)) ||
++        external && !same(externalBefore, await observeExternal()) || !await readStored() ||
+         !await input.host.revalidate(call) || !currentAuthority() || !same(incoming, decision) || !same(selected, item)) return false
+       return true
+     } catch { return false }
+--- a/apps/cli/src/sucafina-product/procurement-composite-planner.ts
++++ b/apps/cli/src/sucafina-product/procurement-composite-planner.ts
+@@ -28,7 +28,9 @@
+     const parsed = decodeSfOperationInput("sf_scenario_simulate", request)
+     if (!parsed.ok || digestSfValue(parsed.value) !== digestSfValue(request)) return { status: "needs-input", reason: "invalid-composite-procurement-scenario" }
+     const transport = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
+-    const current = () => !!transport && !transport.signal.aborted && input.host.requestFor(call) === transport && binding === digestSfValue([call.kind, call.binding])
++    const transportDigest = transport && digestSfValue({ method: transport.method, url: transport.url, headers: [...transport.headers] })
++    const current = () => !!transport && !transport.signal.aborted && input.host.requestFor(call) === transport && binding === digestSfValue([call.kind, call.binding]) &&
++      transportDigest === digestSfValue({ method: transport.method, url: transport.url, headers: [...transport.headers] })
+     if (!current() || !transport || !await input.host.revalidate(call)) return { status: "denied", reason: "composite-scenario-authority-unavailable" }
+     const selected = await input.selectedCase(call)
+     if (selected.status !== "ok") return selected
+@@ -75,7 +77,7 @@
+     const result = await composite.simulateScenario(request, call)
+     if (result.status !== "ok") return result
+     if (result.value.comparisonStatus !== "conditioned" || result.value.total !== null || result.value.currency !== decision.currency || digestSfValue(result.value.horizon) !== digestSfValue(decision.horizon)) return { status: "needs-input", reason: "composite-planner-result-basis-unavailable" }
+-    if (!current() || digestSfValue(await readCase()) !== digestSfValue(decision) || digestSfValue(await input.readSourceFences(call)) !== digestSfValue(fences) || !await input.host.revalidate(call)) return { status: "stale", reason: "composite-scenario-source-or-case-changed" }
++    if (!current() || digestSfValue(await readCase()) !== digestSfValue(decision) || digestSfValue(await input.readSourceFences(call)) !== digestSfValue(fences) || !await input.host.revalidate(call) || !current()) return { status: "stale", reason: "composite-scenario-source-or-case-changed" }
+     return result
+   } }
+   return { planner, supports }
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts
+@@ -0,0 +1,266 @@
++import { expect, test } from "bun:test"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { DomainProjection } from "../../../product/contracts/context.ts"
++import type { PlannerPort } from "../../../product/contracts/ports.ts"
++import { createSfProcurementCompositePlanner } from "../../../../../../apps/cli/src/sucafina-product/procurement-composite-planner.ts"
++import { authorizeSfCompositeProcurementOperations } from "../../../../../../apps/cli/src/sucafina-product/scenario-operation-access.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { createMixedPlannerFixture } from "./planner-fixture.ts"
++
++for (const mutation of ["revoked", "actor", "access", "policy", "request", "headers", "lease", "abort", "source"] as const) {
++  test(`mixed external authority refuses ${mutation} after a successful independent source read`, async () => {
++    const deadline = compositionTestDeadline(`mixed-between-reads-${mutation}`, 105_000)
++    try {
++      const f = await deadline.phase("real-mixed-producers", () => createMixedPlannerFixture(deadline))
++      const check = () => authorizeSfCompositeProcurementOperations({ host: f.authority.host, resolve: f.resolve }, f.decision, f.alternative, f.call)
++      expect(await check()).toBe(true)
++      expect(f.observations.refs.filter((entry) => entry.id === f.refs.procurement.refId)).toHaveLength(2)
++      const originalRequestFor = f.authority.host.requestFor
++      const replacement = new Request(f.transport)
++      const race: { fired: boolean; after?: Awaited<ReturnType<typeof f.audit>> } = { fired: false }
++      f.authority.host.requestFor = (context) => race.fired && mutation === "request" && context === f.call ? replacement : originalRequestFor(context)
++      f.observations.refs.length = 0
++      f.observations.afterResolve = async (ref) => {
++        if (race.fired || ref.refId !== f.refs.procurement.refId) return
++        expect(f.observations.refs.at(-1)).toEqual({ id: ref.refId, state: "fresh" })
++        expect(originalRequestFor(f.call)).toBe(f.transport)
++        race.fired = true
++        if (mutation === "revoked") f.identity.allowed = false
++        if (mutation === "actor") f.identity.principal = "other"
++        if (mutation === "access") f.identity.canWrite = false
++        if (mutation === "policy") f.config.policyVersion = "policy-after-source-read"
++        if (mutation === "headers") f.transport.headers.set("x-mixed-observation", "changed")
++        if (mutation === "lease") f.authority.ui.finish(f.call)
++        if (mutation === "abort") f.controller.abort(new Error("Requested source observation abort"))
++        if (mutation === "source") {
++          const version = await f.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: snapshot.versions[`requests:${f.requestId}`]!.version }))
++          expect((await f.execute({ page: "Requests", action: "save", id: f.requestId, version, values: { pr: { estAmount: 150 } } })).ok).toBe(true)
++        }
++        race.after = await f.audit()
++      }
++      const allowed = await deadline.phase("between-independent-reads", check)
++      expect(allowed).toBe(false)
++      expect(race.fired).toBe(true)
++      expect(race.after).toBeDefined()
++      expect(f.observations.refs[0]).toEqual({ id: f.refs.procurement.refId, state: "fresh" })
++      expect(await f.audit()).toEqual(race.after)
++      expect(f.decision.choices).toEqual([])
++      expect(f.decision.preparedChanges).toEqual([])
++      expect(f.decision.receipts).toEqual([])
++      console.info("SF_MIXED_AUTHORITY_PROOF", JSON.stringify({ mutation, eventFired: race.fired, allowed,
++        observations: f.observations.refs, persistentEffectsDigest: digestSfValue(race.after), promotion: false, financialEffect: false }))
++      f.authority.host.requestFor = originalRequestFor
++    } finally { await deadline.close() }
++  }, 120_000)
++}
++
++for (const mutation of ["request", "headers", "lease", "abort"] as const) {
++  test(`mixed preview fences ${mutation} after its final genuine authority observation`, async () => {
++    const deadline = compositionTestDeadline(`mixed-final-await-${mutation}`, 105_000)
++    try {
++      const f = await deadline.phase("real-mixed-producers", () => createMixedPlannerFixture(deadline))
++      const revalidate = f.authority.host.revalidate, requestFor = f.authority.host.requestFor
++      const replacement = new Request(f.transport)
++      const observed = { withinProducer: false, calls: 0, target: 0, fired: false }
++      f.authority.host.requestFor = (context) => observed.fired && mutation === "request" && context === f.call ? replacement : requestFor(context)
++      f.authority.host.revalidate = async (context) => {
++        const permitted = await revalidate(context)
++        if (context !== f.call || !observed.withinProducer) return permitted
++        observed.calls++
++        if (permitted && observed.target > 0 && observed.calls === observed.target) {
++          expect(requestFor(context)).toBe(f.transport)
++          if (mutation === "headers") f.transport.headers.set("x-mixed-final-observation", "changed")
++          if (mutation === "lease") f.authority.ui.finish(f.call)
++          if (mutation === "abort") f.controller.abort(new Error("Abort after genuine revalidation"))
++          observed.fired = true
++        }
++        return permitted
++      }
++      const direct = async () => {
++        const captured: { result?: Awaited<ReturnType<PlannerPort["simulateScenario"]>> } = {}
++        const outer = await f.business.withCase(f.call, f.caseRef, {}, async () => {
++          observed.withinProducer = true
++          try { captured.result = await f.business.planner.simulateScenario(f.scenario, f.call); return captured.result }
++          finally { observed.withinProducer = false }
++        })
++        return { result: captured.result, outer }
++      }
++      // Calibrate the completed genuine producer, excluding the outer case guard.
++      // The refusal assertion applies to the producer's own egress, so the outer
++      // guard cannot hide a leaked result from the missing final-await fence.
++      expect((await direct()).result?.status).toBe("ok")
++      observed.calls = 0
++      expect((await direct()).result?.status).toBe("ok")
++      expect(observed.calls).toBeGreaterThan(0)
++      observed.target = observed.calls
++      observed.calls = 0
++      const before = await f.audit()
++      const refused = await deadline.phase("after-final-await", direct)
++      expect(observed.fired).toBe(true)
++      expect(observed.calls).toBe(observed.target)
++      expect(refused.result?.status).not.toBe("ok")
++      expect(refused.result && "value" in refused.result).toBe(false)
++      expect(refused.outer.status).not.toBe("ok")
++      expect(await f.audit()).toEqual(before)
++      console.info("SF_MIXED_EGRESS_PROOF", JSON.stringify({ mutation, eventFired: observed.fired, finalObservation: observed.calls,
++        producerStatus: refused.result?.status, outerStatus: refused.outer.status, noProjection: !(refused.result && "value" in refused.result),
++        persistentEffectsDigest: digestSfValue(before), promotion: false, financialEffect: false }))
++      f.authority.host.revalidate = revalidate
++      f.authority.host.requestFor = requestFor
++    } finally { await deadline.close() }
++  }, 120_000)
++}
++
++test("mixed preview refuses a real C08 membership change between its protected case observations", async () => {
++  const deadline = compositionTestDeadline("mixed-case-read-race", 105_000)
++  try {
++    const f = await deadline.phase("real-mixed-producers", () => createMixedPlannerFixture(deadline))
++    const race: { armed: boolean; fired: boolean; reads: number; after?: Awaited<ReturnType<typeof f.audit>> } = { armed: false, fired: false, reads: 0 }
++    const composed = createSfProcurementCompositePlanner({ host: f.authority.host, state: f.authority.state, planner: f.business.plannerProduct.planner,
++      selectedCase: f.business.selectedCase, readSourceFences: async (context) => {
++        const actual = await f.business.readSourceFences(context)
++        race.reads++
++        if (race.armed && !race.fired) {
++          expect(actual).toBeDefined()
++          race.fired = true
++          await f.saveCase({ ...f.decision, participants: [] })
++          race.after = await f.audit()
++        }
++        return actual
++      } })
++    const direct = async () => {
++      const captured: { result?: Awaited<ReturnType<PlannerPort["simulateScenario"]>> } = {}
++      await f.business.withCase(f.call, f.caseRef, {}, async () => {
++        captured.result = await composed.planner.simulateScenario(f.scenario, f.call)
++        return captured.result
++      })
++      return captured.result
++    }
++    expect((await direct())?.status).toBe("ok")
++    race.reads = 0
++    race.armed = true
++    const result = await direct()
++    expect(race.fired).toBe(true)
++    expect(race.reads).toBeGreaterThan(0)
++    expect(result?.status).not.toBe("ok")
++    expect(result && "value" in result).toBe(false)
++    expect(await f.audit()).toEqual(race.after)
++    console.info("SF_MIXED_AUTHORITY_PROOF", JSON.stringify({ mutation: "C08-membership", eventFired: race.fired,
++      sourceFenceReads: race.reads, producerStatus: result?.status, effectsDigest: digestSfValue(race.after), financialEffect: false }))
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("mixed authority accepts canonical value evidence and rejects corrupted copies of actual Procurement observations", async () => {
++  const deadline = compositionTestDeadline("mixed-canonical-procurement-values", 105_000)
++  try {
++    const f = await deadline.phase("real-mixed-producers", () => createMixedPlannerFixture(deadline))
++    const original = await f.business.context.resolve(f.refs.procurement, f.call)
++    expect(original.state).toBe("fresh")
++    if (!original.authorizedProjection || !("components" in original.authorizedProjection)) throw new Error("Real canonical Procurement projection unavailable")
++    expect(original.authorizedProjection.engineVersion).toBe("procurement-v1")
++    expect(original.authorizedProjection.context.sourceRefs).toEqual([])
++    expect(original.authorizedProjection.components).toEqual([])
++    expect(original.authorizedProjection.values.find((value) => value.id === "originalAmount")).toMatchObject({
++      value: 100, currency: "USD", granularity: "record", sourceRefs: [f.refs.procurement], drilldown: f.refs.procurement, evidenceState: "estimated" })
++    const before = await f.audit()
++    const verify = (resolve = f.business.context.resolve) =>
++      authorizeSfCompositeProcurementOperations({ host: f.authority.host, resolve }, f.decision, f.alternative, f.call)
++    expect(await verify()).toBe(true)
++    const foreignBase = { ...f.refs.procurement, target: { ...f.refs.procurement.target, recordId: "another-request" }, refDigest: "" }
++    const foreign = { ...foreignBase, refDigest: digestSfEvidenceRef(foreignBase) }
++    const amount = (projection: DomainProjection, update: Partial<DomainProjection["values"][number]>): DomainProjection => ({ ...projection,
++      values: projection.values.map((value) => value.id === "originalAmount" ? { ...value, ...update } : value) })
++    const corruptions: { name: string; change: (projection: DomainProjection) => DomainProjection }[] = [
++      { name: "engine", change: (value) => ({ ...value, engineVersion: "substitute-engine" }) },
++      { name: "version", change: (value) => ({ ...value, version: value.version + 1 }) },
++      { name: "principal", change: (value) => ({ ...value, context: { ...value.context, principalRef: "other" } }) },
++      { name: "installation", change: (value) => ({ ...value, context: { ...value.context, installationId: "other" } }) },
++      { name: "policy", change: (value) => ({ ...value, context: { ...value.context, policyVersion: "other" } }) },
++      { name: "access", change: (value) => ({ ...value, context: { ...value.context, accessRevision: "other" } }) },
++      { name: "currency", change: (value) => ({ ...value, context: { ...value.context, currency: "EUR" } }) },
++      { name: "horizon", change: (value) => ({ ...value, context: { ...value.context, period: { start: "2026-02-01", end: "2026-12-31" } } }) },
++      { name: "component", change: (value) => ({ ...value, components: [f.alternative.result.components[0]!] }) },
++      { name: "missing-amount", change: (value) => ({ ...value, values: value.values.filter((entry) => entry.id !== "originalAmount") }) },
++      { name: "duplicate-amount", change: (value) => ({ ...value, values: [...value.values, value.values.find((entry) => entry.id === "originalAmount")!] }) },
++      { name: "unbound-amount", change: (value) => amount(value, { sourceRefs: [] }) },
++      { name: "foreign-amount", change: (value) => amount(value, { sourceRefs: [foreign] }) },
++      { name: "foreign-drilldown", change: (value) => amount(value, { drilldown: foreign }) },
++      { name: "non-numeric-amount", change: (value) => amount(value, { value: "100" }) },
++      { name: "non-finite-amount", change: (value) => amount(value, { value: NaN }) },
++      { name: "wrong-amount-currency", change: (value) => amount(value, { currency: "EUR" }) },
++      { name: "wrong-amount-period", change: (value) => amount(value, { period: { start: "2026-02-01", end: "2026-12-31" } }) },
++      { name: "wrong-granularity", change: (value) => amount(value, { granularity: "month" }) },
++      { name: "hypothetical-original", change: (value) => amount(value, { evidenceState: "hypothetical" }) },
++      { name: "foreign-context-source", change: (value) => ({ ...value, context: { ...value.context, sourceRefs: [{ surface: "procurement",
++        type: f.refs.procurement.target.recordType, id: "another-request", incarnation: f.refs.procurement.target.incarnation,
++        version: f.refs.procurement.target.version, fields: ["originalAmount"], period: value.context.period, observedAt: f.clock.at }] } }) },
++    ]
++    const outcomes: { fault: string; observations: number; allowed: boolean }[] = []
++    for (const fault of corruptions) {
++      const observation = { reads: 0 }
++      const allowed = await verify(async (ref, call) => {
++        const genuine = await f.business.context.resolve(ref, call)
++        expect(genuine.state).toBe("fresh")
++        if (!genuine.authorizedProjection || !("components" in genuine.authorizedProjection)) throw new Error("Real observation missing before corruption")
++        observation.reads++
++        // Faults affect only copies returned by a wrapper around a successful
++        // real read. No forged observation is used for any positive assertion.
++        return { ...genuine, authorizedProjection: fault.change(structuredClone(genuine.authorizedProjection)) }
++      })
++      expect(observation.reads).toBeGreaterThan(0)
++      expect(allowed).toBe(false)
++      outcomes.push({ fault: fault.name, observations: observation.reads, allowed })
++    }
++    expect(await verify()).toBe(true)
++    const latest = await f.business.context.resolve(f.refs.procurement, f.call)
++    const { checkedAt: _originalAt, ...originalMaterial } = original
++    const { checkedAt: _latestAt, ...latestMaterial } = latest
++    expect(latestMaterial).toEqual(originalMaterial)
++    expect(latest.authorizedProjection).toEqual(original.authorizedProjection)
++    expect(await f.audit()).toEqual(before)
++    console.info("SF_MIXED_CANONICAL_SHAPE_PROOF", JSON.stringify({ engine: original.authorizedProjection.engineVersion,
++      contextSources: original.authorizedProjection.context.sourceRefs.length, components: original.authorizedProjection.components.length,
++      reference: f.refs.procurement.refId, projectionDigest: digestSfValue(original.authorizedProjection), outcomes, financialEffect: false }))
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("mixed canonical Procurement retains a real absent estimate as unresolved evidence", async () => {
++  const deadline = compositionTestDeadline("mixed-canonical-absent-estimate", 105_000)
++  try {
++    const f = await createMixedPlannerFixture(deadline, { amount: null })
++    const source = await f.business.context.resolve(f.refs.procurement, f.call)
++    expect(source.state).toBe("fresh")
++    if (!source.authorizedProjection || !("components" in source.authorizedProjection)) throw new Error("Real missing-estimate source unavailable")
++    expect(source.authorizedProjection.values.find((value) => value.id === "originalAmount")).toMatchObject({
++      value: null, currency: "USD", evidenceState: "absent", sourceRefs: [f.refs.procurement], drilldown: f.refs.procurement })
++    expect(source.authorizedProjection.missing).toContainEqual({ field: "baseAmount", reason: "unavailable" })
++    expect(f.alternative.result.total).toBeNull()
++    expect(f.alternative.result.comparisonStatus).toBe("conditioned")
++    const before = await f.audit()
++    const allowed = await authorizeSfCompositeProcurementOperations({ host: f.authority.host, resolve: f.business.context.resolve }, f.decision, f.alternative, f.call)
++    expect(allowed).toBe(true)
++    expect(await f.audit()).toEqual(before)
++    console.info("SF_MIXED_CANONICAL_SHAPE_PROOF", JSON.stringify({ fixture: "real-absent-estimate", allowed,
++      reference: f.refs.procurement.refId, projectionDigest: digestSfValue(source.authorizedProjection), financialEffect: false }))
++  } finally { await deadline.close() }
++}, 120_000)
++
++test("mixed authority rejects substituted binding and lease objects while the genuine admitted context remains valid", async () => {
++  const deadline = compositionTestDeadline("mixed-immutable-admission", 105_000)
++  try {
++    const f = await createMixedPlannerFixture(deadline)
++    const verify = (context: Parameters<typeof authorizeSfCompositeProcurementOperations>[3]) =>
++      authorizeSfCompositeProcurementOperations({ host: f.authority.host, resolve: f.resolve }, f.decision, f.alternative, context)
++    expect(Object.isFrozen(f.call)).toBe(true)
++    expect(Object.isFrozen(f.call.binding)).toBe(true)
++    expect(Object.isFrozen(f.call.lease)).toBe(true)
++    expect(await verify(f.call)).toBe(true)
++    const before = await f.audit()
++    expect(await verify({ ...f.call, binding: { ...f.call.binding, principalRef: "other" } })).toBe(false)
++    expect(await verify({ ...f.call, binding: { ...f.call.binding, policyVersion: "other-policy" } })).toBe(false)
++    expect(await verify({ ...f.call, binding: { ...f.call.binding, accessRevision: "other-access" } })).toBe(false)
++    expect(await verify({ ...f.call, lease: structuredClone(f.call.lease) })).toBe(false)
++    expect(await verify(f.call)).toBe(true)
++    expect(await f.audit()).toEqual(before)
++  } finally { await deadline.close() }
++}, 120_000)
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts
+@@ -0,0 +1,65 @@
++import { expect, test } from "bun:test"
++import { object } from "../../../runtime/contract.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createFixture } from "../review-fixes/procurement-apply/fixture.ts"
++import { seedChoice } from "../review-fixes/procurement-apply/choice.ts"
++
++// A successful refusal is not the missing C17 archive positive. This test keeps
++// that prerequisite explicit and never inserts history, approval or a grant.
++test("real C08 Procurement preparation exposes the M31 blocker and cannot manufacture an original capture", async () => {
++  const fixture = await createFixture("draft")
++  try {
++    const selection = await seedChoice(fixture, 150)
++    const sourceCall = await fixture.ui("sf_request_read", { requestRef: fixture.evidence.refId })
++    try {
++      expect(await fixture.business.individual.resolveForPreparation(fixture.evidence.refId, sourceCall)).toMatchObject({ status: "ok", value: { evidence: fixture.evidence } })
++      expect(await fixture.business.procurement.read({ requestRef: fixture.evidence.refId }, sourceCall)).toMatchObject({ status: "ok", value: { values: expect.arrayContaining([expect.objectContaining({ id: "originalAmount", value: 100 })]) } })
++    } finally { fixture.authority.ui.finish(sourceCall) }
++    const before = await snapshots(fixture)
++    const originalKey = `sf:procurement-evidence:${fixture.evidence.refDigest}`
++    const privateState = object(before[0]!.data.__sfProductV1)
++    expect(object(privateState.preferences)[originalKey]).toBeUndefined()
++    const decision = (await fixture.storedCase()).value
++    expect(decision.choices).toHaveLength(1)
++    expect(decision.choices[0]?.id).toBe(selection.choiceId)
++    expect(decision.preparedChanges).toHaveLength(0)
++
++    const transport = fixture.request("alice", "decision-prepare-changes", selection)
++    const admitted = await fixture.authority.human.admit(transport, "decisions.prepare-changes", selection)
++    console.info("SF_MIXED_CAPTURE_ADMISSION", JSON.stringify({ phase: "human-admission", method: transport.method,
++      inputDigest: digestSfValue(selection), status: admitted.status, reason: admitted.status === "ok" ? null : admitted.reason }))
++    expect(admitted.status).toBe("ok")
++    if (admitted.status !== "ok") throw new Error(`Actual preparation admission failed: ${admitted.reason}`)
++    try {
++      expect(await fixture.authority.human.authorize(admitted.value, "decisions.prepare-changes", selection)).toBe(true)
++      const result = await fixture.business.procurementDecisions.prepareDomainCommands(selection.caseRef, selection.choiceId, selection.operations, admitted.value)
++      expect(result).toEqual({ status: "needs-input", reason: "financial-approval-command-unavailable" })
++      expect(Object.hasOwn(result, "value")).toBe(false)
++    } finally { fixture.authority.human.finish(admitted.value) }
++
++    const response = await fixture.http("decision-prepare-changes", selection)
++    console.info("SF_MIXED_CAPTURE_ADMISSION", JSON.stringify({ phase: "http-preparation", status: response.response.status,
++      outcome: response.body.status, reason: response.body.reason, inputDigest: digestSfValue(selection) }))
++    expect(response.response.status).toBe(400)
++    expect(response.body).toEqual({ status: "needs-input", reason: "financial-approval-command-unavailable" })
++    expect(await snapshots(fixture)).toEqual(before)
++    expect((await fixture.storedCase()).value).toEqual(decision)
++    expect(await fixture.receipts()).toEqual(object(privateState.receipts))
++    const after = object((await snapshots(fixture))[0]!.data.__sfProductV1)
++    expect(object(after.preferences)[originalKey]).toBeUndefined()
++    expect(Object.keys(object(after.preferences)).filter((key) => key.startsWith("sf:procurement-evidence:"))).toEqual(
++      Object.keys(object(privateState.preferences)).filter((key) => key.startsWith("sf:procurement-evidence:")),
++    )
++    console.info("SF_MIXED_CAPTURE_PREREQUISITE", JSON.stringify({ producer: "prepareDomainCommands", prerequisite: "M31-FINANCIAL-APPROVAL",
++      outcome: response.body.status, reason: response.body.reason, httpStatus: response.response.status,
++      archiveCountBefore: Object.keys(object(privateState.preferences)).filter((key) => key.startsWith("sf:procurement-evidence:")).length,
++      archiveCountAfter: Object.keys(object(after.preferences)).filter((key) => key.startsWith("sf:procurement-evidence:")).length,
++      preparedChangeCount: (await fixture.storedCase()).value.preparedChanges.length,
++      historicalCaptureCreated: Object.hasOwn(object(after.preferences), originalKey), historicalScopeRotationQualified: false }))
++  } finally { await fixture.dispose() }
++}, 120_000)
++
++function snapshots(fixture: Awaited<ReturnType<typeof createFixture>>) {
++  return Promise.all((["dashboard", "planner", "procurement"] as const).map((surface) =>
++    fixture.persistence.transaction(surface, async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))))
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts
+@@ -0,0 +1,206 @@
++import { randomUUID } from "node:crypto"
++import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
++import { tmpdir } from "node:os"
++import { join } from "node:path"
++import { KNOWN_SCANNERS } from "@orchestra/atlas-boundary/native-memory"
++import { BackendToolkit } from "@orchestra/core/backend-toolkit"
++import { AppProcess } from "@orchestra/core/process"
++import { LayerNode } from "@orchestra/core/effect/layer-node"
++import { AbsolutePath } from "@orchestra/core/schema"
++import { Location } from "@orchestra/core/location"
++import { Effect } from "effect"
++import { ChildProcess } from "effect/unstable/process"
++import { openLocalStore } from "../../../runtime/local-store.ts"
++import { domain } from "../../../runtime/procurement.ts"
++import { object } from "../../../runtime/contract.ts"
++import type { Actor, Command } from "../../../runtime/contract.ts"
++import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { CaseLedgerEvent, DecisionCase } from "../../../product/contracts/decisions.ts"
++import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
++import type { TrustedUiContext } from "../../../product/contracts/sf-execution.ts"
++import { createSfProductAuthority } from "../../../product/integration/product-authority.ts"
++import { createSfSourcePersistence } from "../../../product/integration/source-lifecycle.ts"
++import { createSfSourceScopeProjector } from "../../../product/integration/source-projections.ts"
++import { enumerateSfSources } from "../../../product/integration/source-inventory.ts"
++import { plannerValueRef } from "../../../product/planner/scenario-inputs.ts"
++import { createSfBusinessServices } from "../../../../../../apps/cli/src/sucafina-product/business-services.ts"
++import { createSfScenarioOperationAccess } from "../../../../../../apps/cli/src/sucafina-product/scenario-operation-access.ts"
++import { createSfRecordedPlannerOperationAccess } from "../../../../../../apps/cli/src/sucafina-product/recorded-planner-operation-access.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++
++export const mixedPeriod = { start: "2026-01-01", end: "2026-12-31" }
++
++// Synthetic identity and C08 membership; real SQLite, source issuers, mixed
++// scenario, authority, Atlas capture and scanner. No original or grant is seeded.
++export async function createMixedPlannerFixture(deadline: ReturnType<typeof compositionTestDeadline>, options: { amount?: number | null } = {}) {
++  const directory = await mkdtemp(join(await realpath(tmpdir()), "sf-mixed-contracts-"))
++  await chmod(directory, 0o700)
++  const store = await openLocalStore(join(directory, "store"))
++  deadline.own(async () => { await store.dispose(); await rm(directory, { recursive: true, force: true }) })
++  const identity = { principal: "person", allowed: true, canWrite: true }
++  const clock = { at: "2026-11-14T00:00:00Z" }
++  const persistence = createSfSourcePersistence({ persistence: store, enumerate: enumerateSfSources, createId: randomUUID,
++    projectScope: createSfSourceScopeProjector(() => clock.at) })
++  for (const surface of ["dashboard", "planner", "procurement"] as const) await persistence.initializeSources(surface)
++  await persistence.transaction("dashboard", async (snapshot) => {
++    snapshot.data.roleMap = [{ surface: "dashboard", role: "admin", entra: "admins", version: 1, by: "person" }]
++    snapshot.data.opexOwners = [{ id: "owner", name: "Operations", budget: 1200 }]
++    snapshot.data.opexEntries = []
++    snapshot.data.capexProjects = []
++    snapshot.data.capexEntries = []
++    return { commit: true, value: undefined }
++  })
++  const guards = { proposalCoverageWrites: new WeakSet<object>(), dashboardHostWrites: new WeakSet<object>(), procurementEvidenceWrites: new WeakSet<object>(),
++    caseSelectionWrites: new WeakSet<object>(), threadHistoryWrites: new WeakSet<object>(), analysisSelectionWrites: new WeakSet<object>() }
++  const config: Parameters<typeof createSfProductAuthority>[0] = {
++    installationId: "installation", origin: "https://example.test", policyVersion: "mixed-policy", persistence, ...guards,
++    identity: () => ({ installationId: "installation", hostId: "host", projectId: "project", location: Location.Ref.make({ directory: AbsolutePath.make(directory) }) }),
++    grants: ["person", "other"].map((principalRef) => ({ principalRef,
++      namespaces: ["cases", "preferences", "bi-artifacts", "reviews", "documents", "threads", "relations", "confirmations", "receipts", "outbox", "atlas"],
++      operations: ["sf_work_list", "sf_review_prepare", "sf_case_read", "sf_forecast_compare", "sf_scenario_simulate", "sf_scenario_compare"], humanActions: [] })),
++    createId: randomUUID, now: Date.now, commandIdentity: async (request) => request.headers.get("x-operation") ?? randomUUID(),
++    authenticate: async (_request, context) => identity.allowed && context ? { id: identity.principal, canWrite: identity.canWrite,
++      roles: [{ surface: context.surface, role: "admin" }] } : null,
++    environment: async () => { deadline.check(); return { at: clock.at, id: randomUUID, directory: [{ id: "person", name: "Person" }, { id: "other", name: "Other" }] } },
++    inspectSession: async () => undefined, verifySelection: async () => false, verifySkillReceipt: async () => false,
++    providerGeneration: async () => 1, authorizeDocument: async () => undefined,
++  }
++  const authority = createSfProductAuthority(config)
++  const business = createSfBusinessServices({ authority, persistence, ...guards })
++  deadline.own(() => business.dispose())
++  business.initializeAtlas(undefined, { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
++  const controller = new AbortController()
++  const request = (operation = randomUUID()) => new Request("https://example.test/dashboard", { method: "POST",
++    signal: AbortSignal.any([deadline.signal, controller.signal]), headers: { origin: "https://example.test", "x-operation": operation } })
++  const admit = async (operation = "sf_review_prepare", value: unknown = { purpose: "mixed-contract-read" }) => {
++    const transport = request(), digest = digestSfValue(value)
++    const admitted = await authority.ui.admit(transport, operation, digest)
++    if (admitted.status !== "ok" || !await authority.ui.validate(admitted.value, operation, digest)) throw new Error("Real mixed authority admission failed")
++    deadline.own(() => authority.ui.finish(admitted.value))
++    return { call: admitted.value, transport }
++  }
++  const { call, transport } = await admit()
++  const execute = async (command: Command) => persistence.transaction("procurement", async (snapshot) => {
++    const actor: Actor = { id: "person", roles: ["admin"], canWrite: true }
++    const result = domain.execute(snapshot, actor, command, { at: clock.at, id: randomUUID, directory: [{ id: "person", name: "Person" }] })
++    return { commit: result.ok, value: result }
++  })
++  if (!(await execute({ page: "Settings", action: "reset", version: 0, values: {} })).ok) throw new Error("Real Settings initialization failed")
++  const created = await execute({ page: "Requests", action: "create", version: 0, values: { pr: { title: "Mixed contract source", type: "service",
++    description: "Real mutable source for mixed historical authorization", estAmount: options.amount === undefined ? 100 : options.amount, recurring: false, expenseType: "OPEX", costCenter: "IT",
++    needBy: "2026-12-01", justification: "Compare a read-only external hypothesis" } } })
++  if (!created.ok) throw new Error("Real request creation failed")
++  const requestId = String(object(created.value).number)
++  const selection = await admit("sf_work_list", { purpose: "work-selection", period: mixedPeriod })
++  const selected = await business.procurementSelections.create(selection.call, mixedPeriod)
++  if (selected.status !== "ok") throw new Error(`Real Procurement period selection failed: ${selected.reason}`)
++  authority.ui.finish(selection.call)
++  const amounts = { base: 100, replacement: 80 }
++  const setForecast = (amount: number, id: "base" | "replacement" = "base") => persistence.transaction("planner", async (snapshot) => {
++    amounts[id] = amount
++    snapshot.data.versions = Object.entries(amounts).map(([versionId, forecast]) => ({ id: versionId, name: `Mixed ${versionId}`, year: 2026, closed: 0,
++      lines: [{ id: "line", name: "Service", ownerId: "owner", sec: "opex", el: "licenses", cur: "USD", b: Array(12).fill(100), a: Array(12).fill(null), f: Array(12).fill(forecast) }],
++      fx: [], hc: { positions: [], rates: [], hrAF: {} }, projects: [], lists: {} }))
++    return { commit: true, value: undefined }
++  })
++  await setForecast(100)
++  const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
++  const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
++    criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
++  // The state reader deliberately refuses an installation with no C08 state.
++  // Initialize through the real creation transaction before observing versions.
++  const seeded = await authority.state.transaction(transport, { namespace: "cases", expectedStorageVersion: 0,
++    targetRef: authority.creationTarget.ref, targetIncarnation: authority.creationTarget.incarnation,
++    idempotencyKey: "mixed-case-initial", commandDigest: digestSfValue(initial) }, async (state) => {
++    state.cases[caseRef.id] = structuredClone(initial)
++    return { commit: true, value: true }
++  })
++  if (seeded.status !== "ok") throw new Error(`Real C08 creation failed: ${JSON.stringify(seeded)}`)
++  const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
++    const versions = await authority.state.read(transport, "cases", (state) => state.versions)
++    if (versions.status !== "ok") throw new Error(`Real C08 versions unavailable: ${JSON.stringify(versions)}`)
++    const saved = await authority.state.transaction(transport, { namespace: "cases", expectedStorageVersion: versions.value.cases,
++      ...(eventRef ? { additionalNamespaces: [{ namespace: "outbox" as const, expectedStorageVersion: versions.value.outbox }] } : {}),
++      targetRef: caseRef.id, targetIncarnation: caseRef.incarnation,
++      idempotencyKey: randomUUID(), commandDigest: digestSfValue(value) }, async (state) => {
++      state.cases[caseRef.id] = structuredClone(value)
++      if (eventRef) state.outbox[JSON.stringify([caseRef.id, caseRef.incarnation, eventRef.target.eventId])] = {
++        eventRef, writerPrincipalRef: "person", accessRevision: call.binding.accessRevision, createdAt: clock.at, attempts: 0, state: "pending" }
++      return { commit: true, value: true }
++    })
++    if (saved.status !== "ok") throw new Error(`Real C08 fixture persistence failed: ${saved.reason}`)
++  }
++  business.bindForecastCoverage(async (reference, context) => {
++    const source = await business.plannerSources.resolveForecastSource(reference, context)
++    if (source.status !== "ok") return source
++    return { status: "ok", value: { coverageRef: "fixture:mixed-pending-coverage", basis: { id: "mixed-basis", version: 1,
++      decisionType: "renewal-transition-v1", categoryIds: ["training"], additionalCategoryIds: [], sourceRefs: [source.value.evidence] },
++      assessment: { basisId: "mixed-basis", basisVersion: 1, alternativeId: "mixed", alternativeVersion: 1, currency: "USD", horizon: mixedPeriod,
++        issues: ["fixture-training-unresolved"], evaluatedSourceRefs: [source.value.evidence], coverageState: "pending",
++        entries: [{ status: "pending", categoryId: "training", reason: "No training evidence" }], derivedMissingCategoryIds: ["training"] } } }
++  })
++  const issued = await business.withCase(call, caseRef, {}, async () => {
++    const base = await business.plannerProduct.issueSource("base", call)
++    if (base.status !== "ok") return base
++    const replacement = await business.plannerProduct.issueSource("replacement", call)
++    if (replacement.status !== "ok") return replacement
++    const procurement = await business.individual.issue("procurement-request", requestId, call)
++    if (procurement.status !== "ok") return procurement
++    const resolved = await business.individual.resolveForPreparation(procurement.value, call)
++    if (resolved.status !== "ok") return resolved
++    return { status: "ok", value: { base: base.value.evidence, replacement: replacement.value.evidence, procurement: resolved.value.evidence } }
++  })
++  if (issued.status !== "ok") throw new Error(`Real mixed source issuance failed: ${issued.reason}`)
++  const refs = issued.value
++  const sourceRefs = [refs.base, refs.replacement, refs.procurement]
++  const attached = { ...initial, sourceRefs }
++  await saveCase(attached)
++  const scenario: ScenarioRequest = { baseRef: refs.base.refId, operations: [
++    { kind: "replace", targetRef: refs.procurement.refId, amount: 140, currency: "USD", period: mixedPeriod },
++    { kind: "replace", targetRef: "line:2", replacementRef: plannerValueRef(refs.replacement.refId, "line:2:forecast") },
++  ], assumptions: [] }
++  const result = await business.withCase(call, caseRef, {}, () => business.planner.simulateScenario(scenario, call))
++  if (result.status !== "ok") throw new Error(`Real mixed scenario failed: ${JSON.stringify(result)}`)
++  const alternative = { id: "mixed", version: 1, title: "Produced mixed scenario", scenario, result: result.value }
++  const event: CaseLedgerEvent = { id: "mixed-analysis-event", caseRef, kind: "analysis-accepted", principalRef: "person", at: clock.at,
++    consideredActions: [alternative.id], factualGaps: ["training", "external-procurement-cost"], lifecycleState: "comparing",
++    rationale: "Record real mixed analysis, without selection, promotion, preparation or financial approval", evidenceRefs: sourceRefs, outputDigest: digestSfValue(alternative) }
++  const baseEvent: Extract<BusinessEvidenceRef, { kind: "case-event" }> = { schema: "sf-evidence-v1", kind: "case-event", refId: "mixed-analysis-event",
++    installationId: call.binding.installationId, projectId: call.binding.projectId, refDigest: "", evidenceLevel: "decision",
++    target: { caseId: caseRef.id, caseIncarnation: caseRef.incarnation, caseVersion: caseRef.version, eventId: event.id, outputDigest: event.outputDigest, evidenceRefs: sourceRefs } }
++  const eventRef = { ...baseEvent, refDigest: digestSfEvidenceRef(baseEvent) }
++  const decision: DecisionCase = { ...attached, alternatives: [alternative], ledger: [event] }
++  await saveCase(decision)
++  const archive = async () => {
++    const known = KNOWN_SCANNERS.find((entry) => entry.name === "gitleaks")
++    if (!known) throw new Error("Pinned Atlas scanner missing")
++    const ready = await Effect.runPromise(BackendToolkit.ensure("gitleaks").pipe(Effect.provideService(BackendToolkit.Root, join(directory, "toolkit"))))
++    const spec = { ...known, command: ready.executable }
++    const probe = await Effect.runPromise(AppProcess.Service.use((process) => process.run(ChildProcess.make(spec.command, ["--version"], { extendEnv: true, stdin: "ignore" })))
++      .pipe(Effect.provide(LayerNode.compile(AppProcess.node))))
++    const version = probe.stdout.toString("utf8").trim()
++    if (probe.exitCode !== 0 || !version || probe.stdoutTruncated) throw new Error("Real scanner version unavailable")
++    business.initializeAtlas({ spec, version }, { boundaryVersion: "fixture", schemaVersion: "fixture", manifestVersion: "fixture", skillVersion: "fixture" })
++    await saveCase(decision, eventRef)
++    const emitted = await business.context.emitFromLedger(eventRef, call)
++    if (emitted.status !== "committed") throw new Error(`Real mixed Atlas capture failed: ${JSON.stringify(emitted)}`)
++    return emitted
++  }
++  const observations: { fallback: number; refs: { id: string; state: string }[]; afterResolve?: (...args: Parameters<BusinessContextService["resolve"]>) => Promise<void> } = { fallback: 0, refs: [] }
++  const resolve: BusinessContextService["resolve"] = async (ref, context) => {
++    const found = await business.context.resolve(ref, context)
++    observations.refs.push({ id: ref.refId, state: found.state })
++    if (observations.afterResolve) await observations.afterResolve(ref, context)
++    return found
++  }
++  const recorded = createSfRecordedPlannerOperationAccess({ host: authority.host, state: authority.state, resolveEvidence: resolve })
++  const access = createSfScenarioOperationAccess({ host: authority.host, sources: business.plannerSources, projectPlanner: business.projectPlannerEvidence,
++    scenarioInputs: business.plannerProduct.scenarioInputs, readSourceFences: business.readSourceFences, resolveProcurementEvidence: resolve,
++    externalOperation: business.dashboardDecisions.resolveOperation, recordedPlanner: async (...args) => { observations.fallback++; return recorded(...args) } })
++  const audit = () => Promise.all((["dashboard", "planner", "procurement"] as const).map((surface) => persistence.transaction(surface, async (snapshot) =>
++    ({ commit: false, value: structuredClone({ surface, data: snapshot.data, versions: snapshot.versions }) }))))
++  const preview = (context: TrustedUiContext = call) => business.withCase(context, caseRef, {}, () => business.planner.simulateScenario(scenario, context))
++  return { directory, store, persistence, identity, config, controller, clock, authority, business, request, transport, call, admit, execute, requestId,
++    caseRef, refs, decision, scenario, alternative, setForecast, saveCase, archive, access, recorded, observations, resolve, audit, preview }
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts
+@@ -0,0 +1,78 @@
++import { randomUUID } from "node:crypto"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import type { DomainPortHost } from "../../../product/contracts/ports.ts"
++import type { TrustedDomainContext } from "../../../product/contracts/sf-execution.ts"
++import { createSfUiAuthority } from "../../../product/integration/ui-authority.ts"
++import { createProcurementSourceResolver } from "../../../product/procurement/sources.ts"
++import { createScenarioFixture, scenarioPeriod } from "../procurement-decision-producer/fixture.ts"
++
++/** Declared synthetic identity/data; every source, grant and snapshot comes from production code. */
++export async function createProcurementContractFixture() {
++  const base = await createScenarioFixture()
++  const authorization = { allowed: true, principal: "alice", accessRevision: "access-1", policyVersion: "policy-1", roles: ["requester"] }
++  const authenticate: DomainPortHost["authenticate"] = async (request) => {
++    const principal = await base.host.authenticate(request)
++    if (!authorization.allowed || !principal) return null
++    return { ...principal, id: principal.id === "alice" ? authorization.principal : principal.id,
++      roles: authorization.roles.map((role) => ({ surface: "procurement" as const, role })) }
++  }
++  const ui = createSfUiAuthority({
++    authorize: async (request) => {
++      const principal = await authenticate(request)
++      return principal ? { installationId: "scenario-install", projectId: "scenario-project", principalRef: principal.id,
++        accessRevision: authorization.accessRevision, policyVersion: authorization.policyVersion } : undefined
++    },
++    commandIdentity: async () => randomUUID(), createId: randomUUID, now: Date.now,
++  })
++  const host: DomainPortHost = { ...base.host, authenticate,
++    requestFor: (context) => context.kind === "ui" ? ui.requestFor(context) : undefined,
++    revalidate: (context) => context.kind === "ui" ? ui.revalidate(context) : Promise.resolve(false),
++  }
++  const observation: { reads: number; afterRead?: () => Promise<void> } = { reads: 0 }
++  const scopedSources = { ...base.persistence, resolveScopedSource: async (...args: Parameters<typeof base.persistence.resolveScopedSource>) => {
++    const resolved = await base.persistence.resolveScopedSource(...args)
++    if (resolved) {
++      observation.reads++
++      await observation.afterRead?.()
++    }
++    return resolved
++  } }
++  const sources = createProcurementSourceResolver({ host, scopedSources,
++    contextFor: async (context: TrustedDomainContext) => ({ status: "ok", value: {
++      installationId: context.binding.installationId, projectId: context.binding.projectId,
++      principalRef: context.binding.principalRef, accessRevision: context.binding.accessRevision,
++      policyVersion: context.binding.policyVersion, surface: "procurement", period: scenarioPeriod,
++      currency: "USD", sourceRefs: [], capabilities: [],
++    } }),
++  })
++  const controller = new AbortController()
++  const request = new Request("https://scenario.invalid/procurement", { headers: { authorization: "Bearer alice" }, signal: controller.signal })
++  const digest = digestSfValue({ contract: "mixed-source-procurement", request: base.requestId })
++  const admitted = await ui.admit(request, "sf_request_read", digest)
++  if (admitted.status !== "ok" || !await ui.validate(admitted.value, "sf_request_read", digest)) {
++    await base.dispose()
++    throw new Error("Real source contract UI admission unavailable")
++  }
++  const context = admitted.value
++  const issue = async () => {
++    const issued = await sources.issue("procurement-request", base.requestId, context)
++    if (issued.status !== "ok") throw new Error(`Actual source issuance failed: ${issued.reason}`)
++    const resolved = await sources.resolveForPreparation(issued.value, context)
++    if (resolved.status !== "ok") throw new Error(`Actual source resolution failed: ${resolved.reason}`)
++    return resolved.value.evidence
++  }
++  const original = await issue()
++  const snapshots = () => Promise.all((["dashboard", "planner", "procurement"] as const).map((surface) =>
++    base.persistence.transaction(surface, async (snapshot) => ({ commit: false, value: structuredClone(snapshot) }))))
++  return { ...base, authorization, host, ui, sources, observation, controller, request, context, original, issue, snapshots,
++    dispose: async () => { ui.finish(context); await base.dispose() },
++  }
++}
++
++export type ProcurementContractFixture = Awaited<ReturnType<typeof createProcurementContractFixture>>
++
++export async function sourceGrant(fixture: ProcurementContractFixture, original = fixture.original, current = original) {
++  const granted = await fixture.sources.prepareReissueScope(original, current, fixture.context)
++  if (granted.status !== "ok") throw new Error(`Actual private source grant unavailable: ${granted.reason}`)
++  return () => fixture.persistence.transaction("procurement", async () => ({ commit: false, value: await granted.value.fence() }))
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts
+@@ -0,0 +1,192 @@
++import { expect, test } from "bun:test"
++import { object } from "../../../runtime/contract.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { createProcurementContractFixture, sourceGrant } from "./procurement-fixture.ts"
++
++// These qualify real source/grant continuity. They do not invent the C17 private
++// historical capture whose canonical preparation still depends on M31 approval.
++test("Procurement scope rotation preserves physical lineage and binds a real private source grant", async () => {
++  const fixture = await createProcurementContractFixture()
++  try {
++    const original = fixture.original
++    const before = await fixture.snapshot()
++    const key = JSON.stringify([original.target.recordType, fixture.requestId])
++    const physical = before.sfSources?.records[key]
++    expect(physical?.alive).toBe(true)
++    const originalGrant = await sourceGrant(fixture)
++    const originalAccepted = await originalGrant()
++    expect(originalAccepted).toBe(true)
++
++    fixture.authorization.roles = ["admin"]
++    const reissued = await fixture.sources.issueForActor(original.target, fixture.context)
++    expect(reissued.status).toBe("ok")
++    if (reissued.status !== "ok") throw new Error("Authorized physical source reissue unavailable")
++    const current = reissued.value
++    expect(current.target.incarnation).not.toBe(original.target.incarnation)
++    expect(current.target).toMatchObject({ recordId: original.target.recordId, version: original.target.version,
++      fields: original.target.fields, period: original.target.period, projectionDigest: original.target.projectionDigest })
++    const rotated = await fixture.snapshot()
++    expect(rotated.sfSources?.records[key]).toEqual(physical)
++    expect(rotated.data).toEqual(before.data)
++    expect(rotated.audit).toEqual(before.audit)
++    const grant = await sourceGrant(fixture, original, current)
++    const currentAccepted = await grant(), oldAcceptedAfterRotation = await originalGrant()
++    expect(currentAccepted).toBe(true)
++    expect(oldAcceptedAfterRotation).toBe(false)
++    const settled = await fixture.snapshots(), writes = fixture.writes.length
++    expect(await fixture.sources.resolveForPreparation(current.refId, fixture.context)).toMatchObject({ status: "ok", value: { evidence: current } })
++    expect(await grant()).toBe(true)
++    expect(await fixture.snapshots()).toEqual(settled)
++    expect(fixture.writes).toHaveLength(writes)
++    console.info("SF_MIXED_PROCUREMENT_PROOF", JSON.stringify({ scenario: "scope-rotation", originalAccepted,
++      originalPhysical: physical?.incarnation, currentPhysical: rotated.sfSources?.records[key]?.incarnation,
++      originalScope: original.target.incarnation, currentScope: current.target.incarnation, currentAccepted, oldAcceptedAfterRotation,
++      financialDigest: digestSfValue(rotated.data), historicalCaptureQualified: false }))
++  } finally { await fixture.dispose() }
++})
++
++test("canonical delete and same-ID row replay create a new physical source and reject the old source and private grant", async () => {
++  const fixture = await createProcurementContractFixture()
++  try {
++    const original = fixture.original
++    const before = await fixture.snapshot()
++    const key = JSON.stringify([original.target.recordType, fixture.requestId])
++    const row = structuredClone(object(object(before.data.store).requests)[fixture.requestId])
++    expect(row).toBeDefined()
++    const granted = await sourceGrant(fixture)
++    expect(await granted()).toBe(true)
++    expect(await fixture.sources.resolveForPreparation(original.refId, fixture.context)).toMatchObject({ status: "ok", value: { evidence: original } })
++    const deleted = await fixture.execute(fixture.requester, { page: "Requests", action: "delete", id: fixture.requestId,
++      version: before.versions[`requests:${fixture.requestId}`]!.version, values: {} })
++    expect(deleted.ok).toBe(true)
++    const tombstone = await fixture.snapshot()
++    expect(object(object(tombstone.data.store).requests)[fixture.requestId]).toBeUndefined()
++    expect(tombstone.sfSources?.records[key]).toMatchObject({ alive: false, incarnation: before.sfSources!.records[key]!.incarnation })
++    expect(await granted()).toBe(false)
++
++    // Explicit synthetic same-visible-ID replay changes only the domain row.
++    // Production lifecycle generates the new identities; no archive or grant is seeded.
++    await fixture.persistence.transaction("procurement", async (snapshot) => {
++      const requests = object(object(snapshot.data.store).requests)
++      if (requests[fixture.requestId] !== undefined) throw new Error("Deleted synthetic record unexpectedly remains")
++      requests[fixture.requestId] = structuredClone(row)
++      return { commit: true, value: undefined }
++    })
++    const recreated = await fixture.snapshot()
++    expect(object(object(recreated.data.store).requests)[fixture.requestId]).toEqual(row)
++    expect(recreated.sfSources?.records[key]?.alive).toBe(true)
++    expect(recreated.sfSources?.records[key]?.incarnation).not.toBe(before.sfSources?.records[key]?.incarnation)
++    const current = await fixture.issue()
++    expect(current.target.recordId).toBe(original.target.recordId)
++    expect(current.target.incarnation).not.toBe(original.target.incarnation)
++    expect(current.target.projectionDigest).toBe(original.target.projectionDigest)
++    const replacementGrant = await sourceGrant(fixture, current)
++    expect(await replacementGrant()).toBe(true)
++    const settled = await fixture.snapshots(), writes = fixture.writes.length
++    const oldRead = await fixture.sources.resolveForPreparation(original.refId, fixture.context)
++    const oldReissue = await fixture.sources.issueForActor(original.target, fixture.context)
++    const oldGrant = await granted()
++    expect(oldRead.status).not.toBe("ok")
++    expect(oldReissue.status).not.toBe("ok")
++    expect(oldGrant).toBe(false)
++    expect(await fixture.sources.resolveForPreparation(current.refId, fixture.context)).toMatchObject({ status: "ok", value: { evidence: current } })
++    const newGrant = await replacementGrant()
++    expect(newGrant).toBe(true)
++    expect(await fixture.snapshots()).toEqual(settled)
++    expect(fixture.writes).toHaveLength(writes)
++    console.info("SF_MIXED_PROCUREMENT_PROOF", JSON.stringify({ scenario: "tombstone-recreate", deletion: deleted.ok,
++      tombstoned: tombstone.sfSources?.records[key]?.alive === false, originalPhysical: before.sfSources?.records[key]?.incarnation,
++      currentPhysical: recreated.sfSources?.records[key]?.incarnation, originalScope: original.target.incarnation,
++      currentScope: current.target.incarnation, oldRead: oldRead.status, oldReissue: oldReissue.status, oldGrant, newGrant,
++      financialDigest: digestSfValue(settled[2]?.data), historicalCaptureQualified: false }))
++  } finally { await fixture.dispose() }
++})
++
++test("removing a genuine original scope breaks its private grant while a current replacement source remains available", async () => {
++  const fixture = await createProcurementContractFixture()
++  try {
++    const original = fixture.original
++    const granted = await sourceGrant(fixture)
++    expect(await granted()).toBe(true)
++    const removed = await fixture.store.transaction("procurement", async (snapshot) => {
++      const entries = Object.entries(snapshot.sfSources?.scopes ?? {}).filter(([, entry]) => entry.incarnation === original.target.incarnation)
++      expect(entries).toHaveLength(1)
++      if (!snapshot.sfSources?.scopes || !entries[0]) throw new Error("Genuine original scope missing before corruption probe")
++      delete snapshot.sfSources.scopes[entries[0][0]]
++      return { commit: true, value: entries[0][1].sourceIncarnation }
++    })
++    expect(typeof removed).toBe("string")
++    expect(await granted()).toBe(false)
++    const replacement = await fixture.issue()
++    expect(replacement.target.incarnation).not.toBe(original.target.incarnation)
++    const current = await fixture.snapshot()
++    expect(current.sfSources?.records[JSON.stringify([original.target.recordType, fixture.requestId])]?.incarnation).toBe(removed)
++    const settled = await fixture.snapshots(), writes = fixture.writes.length
++    const refused = await fixture.sources.issueForActor(original.target, fixture.context)
++    expect(refused.status).not.toBe("ok")
++    expect(Object.hasOwn(refused, "value")).toBe(false)
++    const oldGrant = await granted(), replacementRead = await fixture.sources.resolveForPreparation(replacement.refId, fixture.context)
++    expect(oldGrant).toBe(false)
++    expect(replacementRead).toMatchObject({ status: "ok", value: { evidence: replacement } })
++    expect(await fixture.snapshots()).toEqual(settled)
++    expect(fixture.writes).toHaveLength(writes)
++    console.info("SF_MIXED_PROCUREMENT_PROOF", JSON.stringify({ scenario: "broken-scope-lineage", removedPhysical: removed,
++      currentPhysical: current.sfSources?.records[JSON.stringify([original.target.recordType, fixture.requestId])]?.incarnation,
++      originalScope: original.target.incarnation, currentScope: replacement.target.incarnation, oldReissue: refused.status, oldGrant, replacementRead: replacementRead.status,
++      financialDigest: digestSfValue(settled[2]?.data), historicalCaptureQualified: false }))
++  } finally { await fixture.dispose() }
++})
++
++for (const mutation of ["revoke", "actor", "policy", "access", "request-header", "lease", "abort", "role", "source"] as const) {
++  test(`real Procurement observation refuses ${mutation} between independent source reads without a private result`, async () => {
++    const fixture = await createProcurementContractFixture()
++    try {
++      const original = fixture.original
++      expect(await fixture.sources.resolveForPreparation(original.refId, fixture.context)).toMatchObject({ status: "ok", value: { evidence: original } })
++      const granted = await sourceGrant(fixture)
++      expect(await granted()).toBe(true)
++      const before = await fixture.snapshots()
++      const event = { happened: false, after: before, writes: fixture.writes.length }
++      const firstRead = fixture.observation.reads
++      fixture.observation.afterRead = async () => {
++        fixture.observation.afterRead = undefined
++        expect(fixture.observation.reads).toBe(firstRead + 1)
++        expect(await fixture.host.revalidate(fixture.context)).toBe(true)
++        if (mutation === "revoke") fixture.authorization.allowed = false
++        if (mutation === "actor") fixture.authorization.principal = "bob"
++        if (mutation === "policy") fixture.authorization.policyVersion = "policy-2"
++        if (mutation === "access") fixture.authorization.accessRevision = "access-2"
++        if (mutation === "request-header") fixture.request.headers.set("authorization", "Bearer bob")
++        if (mutation === "lease") fixture.ui.finish(fixture.context)
++        if (mutation === "abort") fixture.controller.abort()
++        if (mutation === "role") fixture.authorization.roles = ["admin"]
++        if (mutation === "source") {
++          const snapshot = await fixture.snapshot()
++          expect((await fixture.execute(fixture.requester, { page: "Requests", action: "save", id: fixture.requestId,
++            version: snapshot.versions[`requests:${fixture.requestId}`]!.version, values: { pr: { estAmount: 120 } } })).ok).toBe(true)
++        }
++        event.happened = true
++        event.after = await fixture.snapshots()
++        event.writes = fixture.writes.length
++      }
++      const result = await fixture.sources.resolveForPreparation(original.refId, fixture.context).catch((error: unknown) => {
++        if (mutation !== "abort") throw error
++        return undefined
++      })
++      expect(event.happened).toBe(true)
++      expect(fixture.observation.reads).toBeGreaterThanOrEqual(firstRead + 1)
++      expect(result?.status).not.toBe("ok")
++      if (result) expect(Object.hasOwn(result, "value")).toBe(false)
++      expect(await granted()).toBe(false)
++      expect(await fixture.snapshots()).toEqual(event.after)
++      expect(fixture.writes).toHaveLength(event.writes)
++      if (mutation !== "source") expect(event.after).toEqual(before)
++      if (mutation === "source") expect(event.after).not.toEqual(before)
++      console.info("SF_MIXED_PROCUREMENT_PROOF", JSON.stringify({ scenario: "between-source-reads", mutation, event: event.happened,
++        observedReads: fixture.observation.reads - firstRead, outcome: result?.status ?? "aborted", returnedPrivateValue: !!result && Object.hasOwn(result, "value"),
++        writesBeforeOperation: event.writes, writesAfterOperation: fixture.writes.length,
++        originalScope: original.target.incarnation, financialDigest: digestSfValue(event.after[2]?.data),
++        productStateDigest: digestSfValue(event.after[0]?.data.__sfProductV1), historicalCaptureQualified: false }))
++    } finally { await fixture.dispose() }
++  })
++}
+--- /dev/null
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts
+@@ -0,0 +1,143 @@
++import { expect, test } from "bun:test"
++import { expectSpawn } from "../../../../../../packages/core/test/fixture/omni-expect.ts"
++import { digestSfValue } from "../../../product/contracts/canonical.ts"
++import { encodeCaseRef } from "../../../product/decisions/case-port.ts"
++import { compositionTestDeadline } from "../wp10/integration/composition-test-deadline.ts"
++import { createMixedPlannerFixture } from "./planner-fixture.ts"
++
++test("mixed recorded Planner fallback reads real captured base and amount originals while Procurement stays independently authorized", async () => {
++  expectSpawn(import.meta.path)
++  const deadline = compositionTestDeadline("mixed-recorded-fallback", 165_000)
++  try {
++    const f = await deadline.phase("real-mixed-producers", () => createMixedPlannerFixture(deadline))
++    const original = structuredClone(f.decision)
++    const firstBase = await f.business.context.resolve(f.refs.base, f.call)
++    const firstAmount = await f.business.context.resolve(f.refs.replacement, f.call)
++    expect(firstBase.state).toBe("fresh")
++    expect(firstAmount.state).toBe("fresh")
++    expect((await f.business.context.resolve(f.refs.procurement, f.call)).state).toBe("fresh")
++    expect(f.alternative.result.total).toBeNull()
++    expect(f.alternative.result.comparisonStatus).toBe("conditioned")
++    expect(f.alternative.result.components.find((entry) => entry.id === "line:2")?.amount).toBe(80)
++    const capture = await deadline.phase("actual-capture", f.archive)
++    expect(capture.status).toBe("committed")
++    await f.setForecast(150, "replacement")
++    expect((await f.business.plannerSources.resolveForecastSource(f.refs.base.refId, f.call)).status).toBe("ok")
++    expect((await f.business.plannerProduct.scenarioInputs.resolveAmount(f.scenario.operations[1]!.replacementRef!, f.call)).status).toBe("stale")
++    const before = await f.audit()
++    expect(await deadline.phase("historical-amount-fallback", () => f.access(f.decision, f.call))).toBe(true)
++    expect(f.observations.fallback).toBe(1)
++    expect(await f.audit()).toEqual(before)
++    await f.setForecast(160)
++    expect((await f.business.plannerSources.resolveForecastSource(f.refs.base.refId, f.call)).status).toBe("stale")
++    const historicalBase = await f.business.context.resolve(f.refs.base, f.call)
++    const historicalAmount = await f.business.context.resolve(f.refs.replacement, f.call)
++    expect(historicalBase.state).toBe("historical")
++    expect(historicalAmount.state).toBe("historical")
++    expect(historicalBase.authorizedProjection).toEqual(firstBase.authorizedProjection)
++    expect(historicalAmount.authorizedProjection).toEqual(firstAmount.authorizedProjection)
++    expect(historicalBase.currentRef?.refDigest).not.toBe(f.refs.base.refDigest)
++    expect(historicalAmount.currentRef?.refDigest).not.toBe(f.refs.replacement.refDigest)
++    f.observations.refs.length = 0
++    f.observations.fallback = 0
++    const historicalBefore = await f.audit()
++    expect(await deadline.phase("historical-base-fallback", () => f.access(f.decision, f.call))).toBe(true)
++    expect(f.observations.fallback).toBe(1)
++    for (const ref of [f.refs.base, f.refs.replacement]) {
++      expect(f.observations.refs.filter((entry) => entry.id === ref.refId)).toEqual([
++        { id: ref.refId, state: "historical" }, { id: ref.refId, state: "historical" },
++      ])
++    }
++    // The outer guard observes twice; the recorded verifier observes twice both
++    // before and after Planner awaits. The archive never substitutes authority.
++    expect(f.observations.refs.filter((entry) => entry.id === f.refs.procurement.refId)).toEqual(
++      Array.from({ length: 6 }, () => ({ id: f.refs.procurement.refId, state: "fresh" })))
++    expect(await f.audit()).toEqual(historicalBefore)
++    const opened = await deadline.phase("installed-case-read", () => f.business.cases.read({ caseRef: encodeCaseRef(f.decision) }, f.call))
++    expect(opened.status).toBe("ok")
++    if (opened.status !== "ok") throw new Error(opened.reason)
++    expect(opened.value.case.alternatives).toEqual(original.alternatives)
++    expect((await f.preview()).status).not.toBe("ok")
++    expect(f.decision).toEqual(original)
++    expect(await f.audit()).toEqual(historicalBefore)
++    expect(opened.value.case.choices).toEqual([])
++    expect(opened.value.case.preparedChanges).toEqual([])
++    expect(opened.value.case.receipts).toEqual([])
++    console.info("SF_MIXED_RECORDED_PROOF", JSON.stringify({ fixture: "real-planner-archive-current-procurement", fallbackCount: f.observations.fallback,
++      baseOriginal: historicalBase.ref.refDigest, amountOriginal: historicalAmount.ref.refDigest,
++      captureStatus: capture.status, captureEvent: capture.sourceEventId, scannerVersion: capture.scanner.version,
++      observations: f.observations.refs, immutableCaseDigest: digestSfValue(original), financialApproval: false, originalM31Closed: false }))
++  } finally { await deadline.close() }
++}, 180_000)
++
++test("recorded mixed verifier rechecks Procurement after real historical Planner reads", async () => {
++  expectSpawn(import.meta.path)
++  const deadline = compositionTestDeadline("mixed-recorded-external-race", 165_000)
++  try {
++    const f = await deadline.phase("real-mixed-producers", () => createMixedPlannerFixture(deadline))
++    const capture = await deadline.phase("actual-capture", f.archive)
++    await f.setForecast(150)
++    expect(await f.recorded(f.decision, f.alternative, f.call)).toBe(true)
++    const race: { fired: boolean; after?: Awaited<ReturnType<typeof f.audit>> } = { fired: false }
++    f.observations.refs.length = 0
++    f.observations.afterResolve = async (ref) => {
++      if (race.fired || ref.refId !== f.refs.base.refId) return
++      expect(f.observations.refs.at(-1)).toEqual({ id: ref.refId, state: "historical" })
++      expect(f.observations.refs.filter((entry) => entry.id === f.refs.procurement.refId)).toEqual(
++        Array.from({ length: 2 }, () => ({ id: f.refs.procurement.refId, state: "fresh" })))
++      const version = await f.persistence.transaction("procurement", async (snapshot) => ({ commit: false, value: snapshot.versions[`requests:${f.requestId}`]!.version }))
++      expect((await f.execute({ page: "Requests", action: "save", id: f.requestId, version, values: { pr: { estAmount: 175 } } })).ok).toBe(true)
++      race.fired = true
++      race.after = await f.audit()
++    }
++    // Invoke the real recorded verifier directly so the outer global source
++    // fence cannot mask a missing reauthorization inside this producer.
++    const allowed = await deadline.phase("external-drift-during-planner", () => f.recorded(f.decision, f.alternative, f.call))
++    expect(allowed).toBe(false)
++    expect(race.fired).toBe(true)
++    expect(f.observations.refs.filter((entry) => entry.id === f.refs.procurement.refId).length).toBeGreaterThan(2)
++    expect(await f.audit()).toEqual(race.after)
++    console.info("SF_MIXED_RECORDED_PROOF", JSON.stringify({ fixture: "external-drift-during-planner", captureStatus: capture.status,
++      eventFired: race.fired, allowed, observations: f.observations.refs, effectsDigest: digestSfValue(race.after), financialEffect: false }))
++  } finally { await deadline.close() }
++}, 180_000)
++
++test("mixed fallback refuses genuine source change between independent reads and never substitutes latest values", async () => {
++  expectSpawn(import.meta.path)
++  const deadline = compositionTestDeadline("mixed-recorded-source-race", 165_000)
++  try {
++    const f = await deadline.phase("real-mixed-producers", () => createMixedPlannerFixture(deadline))
++    await deadline.phase("actual-capture", f.archive)
++    await f.setForecast(150)
++    expect(await f.access(f.decision, f.call)).toBe(true)
++    const original = structuredClone(f.decision)
++    const race: { fired: boolean; after?: Awaited<ReturnType<typeof f.audit>> } = { fired: false }
++    f.observations.refs.length = 0
++    f.observations.afterResolve = async (ref) => {
++      if (race.fired || ref.refId !== f.refs.base.refId) return
++      expect(f.observations.refs.at(-1)).toEqual({ id: ref.refId, state: "historical" })
++      race.fired = true
++      await f.setForecast(170)
++      race.after = await f.audit()
++    }
++    expect(await deadline.phase("real-source-race", () => f.access(f.decision, f.call))).toBe(false)
++    expect(race.fired).toBe(true)
++    expect(race.after).toBeDefined()
++    expect(f.observations.refs.filter((entry) => entry.id === f.refs.base.refId)).toHaveLength(2)
++    expect(await f.audit()).toEqual(race.after)
++    expect(f.decision).toEqual(original)
++    delete f.observations.afterResolve
++    expect(await f.access(f.decision, f.call)).toBe(true)
++    expect(f.decision.alternatives[0]!.result.components.find((entry) => entry.id === "line:2")?.amount).toBe(80)
++    // Deleting then recreating a Planner source preserves visible ID only.
++    await f.persistence.transaction("planner", async (snapshot) => { snapshot.data.versions = []; return { commit: true, value: undefined } })
++    await f.setForecast(170)
++    const recreated = await f.audit()
++    expect(await f.access(f.decision, f.call)).toBe(false)
++    expect((await f.business.cases.read({ caseRef: encodeCaseRef(f.decision) }, f.call)).status).not.toBe("ok")
++    expect(await f.audit()).toEqual(recreated)
++    console.info("SF_MIXED_RECORDED_PROOF", JSON.stringify({ fixture: "source-race-and-recreation", eventFired: race.fired,
++      independentPlannerReads: f.observations.refs.filter((entry) => entry.id === f.refs.base.refId).length,
++      originalCaseDigest: digestSfValue(original), denied: true, financialEffect: false }))
++  } finally { await deadline.close() }
++}, 180_000)

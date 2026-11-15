@@ -1,0 +1,65 @@
+{
+  "candidate": {
+    "symbol": "C31",
+    "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+    "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+    "parent": "947a4add941893c8247b95a5ce6386468313838b",
+    "source": 64,
+    "paths": 6,
+    "manifest": "candidates/C31-native64.json",
+    "readback": "PASS_TEXT_IDENTITIES_ONLY",
+    "validation": "NOT_RUN_NATIVE_HELD"
+  },
+  "checks": [
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-admission.ts",
+      "sha": "68f9114d94eaee84f19a5f353d12967fe05fdf86",
+      "match": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-governance.ts",
+      "sha": "f22fba2172e6502e6c1bed5a2ed8d5b5434ec845",
+      "match": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/routine-native-registry.ts",
+      "sha": "9f108bf7af9f2d23d912bc568bb1f3a0523af085",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/fixture.ts",
+      "sha": "63751102171be3ca9b61e3811a378b426ee36c3f",
+      "match": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/native-admission-closure/admission.test.ts",
+      "sha": "e6d0f3c7f8f2e6cfa19da57de109984bf3c7ada9",
+      "match": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "sha": "297a4050323d80648684725f9c7e9a8680aa318f",
+      "match": true
+    },
+    {
+      "kind": "commit",
+      "sha": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+      "tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+      "parents": [
+        "947a4add941893c8247b95a5ce6386468313838b"
+      ]
+    },
+    {
+      "kind": "diff",
+      "files": 63,
+      "unexpected": []
+    }
+  ],
+  "native_ACK": {
+    "id": 6888436534
+  },
+  "auth70_ACK": {
+    "id": 6888436676
+  },
+  "proof": "Text/blob/ancestry only; no product qualification"
+}

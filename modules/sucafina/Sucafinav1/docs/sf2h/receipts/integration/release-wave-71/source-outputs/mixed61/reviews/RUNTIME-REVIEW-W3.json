@@ -1,0 +1,1162 @@
+{
+  "schema": "sf2h.mixed-source-contracts.runtime-review.v1",
+  "mission": 61,
+  "reviewer": "/root/ci_authority_review",
+  "verdict": "SCOPED_RUNTIME_PROOFS_VERIFIED_OVERALL_CI_FAILURE_PRESERVED",
+  "overall_workflow_status": "FAIL",
+  "source_scope_status": "33_OWNED_TESTS_PASS_WITH_MANDATORY_C17_M31_GAP_HELD",
+  "review_method": "Independently read raw hosted logs and source assertions; independently GET GitHub run/jobs, W/S commits, W-to-S comparison and base-to-W file blobs through MCP. Local work only parsed evidence and hashed inert files; no tests, typechecks, guards or product code executed locally.",
+  "reviewed_at": "2026-11-15 02:47:02 UTC",
+  "binding": {
+    "schema": "mission61-runtime-review-remote-binding-v1",
+    "read_transport": "GitHub MCP GET only",
+    "observed_at": "2026-11-15 02:47:02 UTC",
+    "run": {
+      "id": 43668842101,
+      "event": "push",
+      "status": "completed",
+      "conclusion": "failure",
+      "head_sha": "7dc844027be65913de226178f2b11a9f682d5396",
+      "head_branch": "ci-run-linux-astra-m61-cb0343be-7e5c32fe-3",
+      "run_attempt": 1,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668842101"
+    },
+    "jobs": [
+      {
+        "id": 132674151887,
+        "name": "test (ubuntu-24.04)",
+        "status": "completed",
+        "conclusion": "failure",
+        "head_sha": "7dc844027be65913de226178f2b11a9f682d5396",
+        "started_at": "2026-11-15T02:40:04Z",
+        "completed_at": "2026-11-15T02:44:32Z"
+      },
+      {
+        "id": 132675184074,
+        "name": "cleanup",
+        "status": "completed",
+        "conclusion": "success",
+        "head_sha": "7dc844027be65913de226178f2b11a9f682d5396",
+        "started_at": "2026-11-15T02:44:33Z",
+        "completed_at": "2026-11-15T02:44:37Z"
+      }
+    ],
+    "W": {
+      "sha": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+      "tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+      "parents": [
+        "652f4d3aa20e98aa1588cc468d4590d45aefce02"
+      ]
+    },
+    "S": {
+      "sha": "7dc844027be65913de226178f2b11a9f682d5396",
+      "tree": "dfd4d27cbcf7053ace16d9053a4a24f022fe0e51",
+      "parents": [
+        "cb0343be4ad2bb8cf9b68e9db746176ab551c955"
+      ]
+    },
+    "delta": {
+      "base": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+      "ahead_by": 1,
+      "total_commits": 1,
+      "files": [
+        {
+          "path": ".ci-run.json",
+          "status": "added",
+          "git_blob": "d0e890453415092636f1f692b05ddc08dac3a9b2"
+        }
+      ]
+    },
+    "changed_files": [
+      {
+        "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+        "git_blob": "a59f695365a71614f6189eb6f2c2737c83ba233d",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cb0343be4ad2bb8cf9b68e9db746176ab551c955/apps/cli/src/sucafina-product/scenario-operation-access.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+        "git_blob": "6089391e6aaedcedc2ca2df8d0684ee25d930c94",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cb0343be4ad2bb8cf9b68e9db746176ab551c955/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts"
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+        "git_blob": "76ce8b8fb5d7e17ddc33002d239771a7260a9e65",
+        "url": "https://github.com/gustavomhss/Orchestra-SF/blob/cb0343be4ad2bb8cf9b68e9db746176ab551c955/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts"
+      }
+    ]
+  },
+  "source_code_binding": [
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "bytes": 21993,
+      "sha256": "95834088198ff33616ea8aebf726c11d415398f489864e3005d9e533ba8107e7",
+      "git_blob": "a59f695365a71614f6189eb6f2c2737c83ba233d",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "bytes": 13663,
+      "sha256": "cd0958e9d6438c039a9ed026773eaf75c95f106051851849f7779d3596328228",
+      "git_blob": "910701c103aba2866258adf2f3c99fc0bca28b11",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "bytes": 9237,
+      "sha256": "ae8250bdc2d37846e4bcd181395c6d2bd884ad6af12004490966115030e2bbf8",
+      "git_blob": "c6bdeb197675406c933046fb5ede19e92cc047e7",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+      "bytes": 17951,
+      "sha256": "814c1db6c3affe9db958d084b435af74c3597d43971356292d71753c120a9529",
+      "git_blob": "76ce8b8fb5d7e17ddc33002d239771a7260a9e65",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+      "bytes": 4981,
+      "sha256": "78afb88359946b997a75b73c1f9bca41874c0109c2a634f9e2877e520d9cb46f",
+      "git_blob": "8007eccb9dbf0813d4930f4a5b0a99657809c3fa",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "bytes": 5009,
+      "sha256": "e1c98faf32f0df8f23476c5377b5c3686ac8cee80399021d91a702e7652ff8ba",
+      "git_blob": "50e5e76f9c82687a303c3f70d664cfd97f1d33d8",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "bytes": 12813,
+      "sha256": "20e53d4435efdd62d5ebd06506a67a9587764f9180009e3f0faa229bd7b9da32",
+      "git_blob": "bf80dc2fe3a31a1953ee9c45a9e8a97c7de6cf66",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "bytes": 18695,
+      "sha256": "a3eaab811bd4dc702193492d5acd0fbb6675848d36adc8398eddff6d3d35ba1e",
+      "git_blob": "6089391e6aaedcedc2ca2df8d0684ee25d930c94",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "bytes": 9616,
+      "sha256": "ac774354d38026ab65dd6e0a24e6a5804bcf790d96c810addd66676d08f5e33d",
+      "git_blob": "9a44cca3e2e34f578e7d9d76458a83068371ff44",
+      "local_matches_cold_review": true,
+      "remote_W_matches_cold_review": true
+    }
+  ],
+  "binding_checks": {
+    "all_nine_remote_W_blobs_match_cold_review": true,
+    "all_nine_current_local_files_match_cold_review": true,
+    "S_parent_is_W": true,
+    "only_snapshot_delta_is_ci_request": true,
+    "run_and_all_jobs_are_on_S": true,
+    "raw_log_tests_match_results_json": true
+  },
+  "actual_results": {
+    "workflow": "failure",
+    "test_job": "failure",
+    "cleanup_job": "success",
+    "pass": 43,
+    "fail": 13,
+    "total": 56,
+    "assertions": 588,
+    "duration_seconds": 188.95,
+    "owned": {
+      "pass": 33,
+      "fail": 0,
+      "total": 33
+    },
+    "per_file": {
+      "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts": {
+        "pass": 12,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts": {
+        "pass": 1,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts": {
+        "pass": 17,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts": {
+        "pass": 3,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts": {
+        "pass": 4,
+        "fail": 0
+      },
+      "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts": {
+        "pass": 6,
+        "fail": 13
+      }
+    },
+    "omni": {
+      "nonce": "b2c561381e0fe447094f42e73c8065bc",
+      "verdict": "PASS",
+      "declaring_tests": 3,
+      "spawns": 6,
+      "delegated": 0,
+      "exact_log": "omni positive control [b2c561381e0fe447094f42e73c8065bc]: pass (declared: 3 test(s) in Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts); 6 omni spawn(s), 0 delegated."
+    },
+    "log": {
+      "path": "ci/attempt-3/job.log.txt",
+      "bytes": 128008,
+      "sha256": "72887efb5bb6b4e03df135fdde7e095626e3e4eae2e6f4eae1dd9f55edf213cb"
+    },
+    "results_file_sha256": "b9452af2be35c5b827dc23a8e62ffa983f2394901ab03350b65e90f22491a66e"
+  },
+  "bounded_claims": [
+    {
+      "finding": "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+      "status": "HELD_M31",
+      "qualified": "Real physical/scope source continuity and private source-grant rotation are exercised. Original grant succeeds before rotation, rotated scope retains physical identity, current grant succeeds and obsolete grant fails.",
+      "historical_positive_qualified": false,
+      "prerequisite_observed": {
+        "marker": "SF_MIXED_CAPTURE_PREREQUISITE",
+        "line": 842,
+        "payload": {
+          "producer": "prepareDomainCommands",
+          "prerequisite": "M31-FINANCIAL-APPROVAL",
+          "outcome": "needs-input",
+          "reason": "financial-approval-command-unavailable",
+          "httpStatus": 400,
+          "archiveCountBefore": 0,
+          "archiveCountAfter": 0,
+          "preparedChangeCount": 0,
+          "historicalCaptureCreated": false,
+          "historicalScopeRotationQualified": false
+        }
+      },
+      "exact_limit": "prepareDomainCommands and the real HTTP route return needs-input/financial-approval-command-unavailable (HTTP400), before capture; archives remain zero and no prepared change is produced. This successful refusal does not qualify a C17 Procurement archived-original positive or a post-capture historical negative.",
+      "scope_rotation_witness": {
+        "marker": "SF_MIXED_PROCUREMENT_PROOF",
+        "line": 814,
+        "payload": {
+          "scenario": "scope-rotation",
+          "originalAccepted": true,
+          "originalPhysical": "29646124-5ce5-4542-8150-2c54a3989e78",
+          "currentPhysical": "29646124-5ce5-4542-8150-2c54a3989e78",
+          "originalScope": "a13339ae-fe97-4b3a-bfde-d711b1dcc649",
+          "currentScope": "f983affc-4b23-4cc4-ad6f-dccc1c6870e6",
+          "currentAccepted": true,
+          "oldAcceptedAfterRotation": false,
+          "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+          "historicalCaptureQualified": false
+        }
+      }
+    },
+    {
+      "finding": "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+      "status": "SCOPED_PASS",
+      "qualified": "Actual mixed scenario, real Planner source issuance and canonical emitFromLedger capture; stale replacement selector and then stale Planner base use original captured projections while external Procurement is reauthorized.",
+      "capture_status": "committed",
+      "capture_event": "mixed-analysis-event",
+      "scanner_version": "gitleaks version 8.30.1",
+      "observation_counts": {
+        "Procurement_fresh": 6,
+        "Planner_base_historical": 2,
+        "Planner_amount_historical": 2
+      },
+      "original_base_ref_digest": "ffb777f5738c210738eff1e88d73c7f64965dae88dca2d9090062a1d7646a166",
+      "original_amount_ref_digest": "6ddd3f06b23826a260145c53bfd0e671c1e5a19b98c75956730468f92cabcc29",
+      "source_assertions_exercised": [
+        "Original retained replacement amount is80; later replacement/base mutations do not substitute150/160/170 into retained alternatives.",
+        "Historical Planner projections equal the prior fresh original projections.",
+        "Stored case read returns exact retained alternatives; new preview with stale sources is refused.",
+        "Three-surface data+versions snapshots remain equal during read-only fallback; choices/preparedChanges/receipts remain empty.",
+        "Direct recorded verifier rechecks external Procurement after genuine historical Planner reads and refuses actual external source drift."
+      ],
+      "witnesses": [
+        {
+          "marker": "SF_MIXED_RECORDED_PROOF",
+          "line": 947,
+          "payload": {
+            "fixture": "real-planner-archive-current-procurement",
+            "fallbackCount": 1,
+            "baseOriginal": "ffb777f5738c210738eff1e88d73c7f64965dae88dca2d9090062a1d7646a166",
+            "amountOriginal": "6ddd3f06b23826a260145c53bfd0e671c1e5a19b98c75956730468f92cabcc29",
+            "captureStatus": "committed",
+            "captureEvent": "mixed-analysis-event",
+            "scannerVersion": "gitleaks version 8.30.1",
+            "observations": [
+              {
+                "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+                "state": "fresh"
+              },
+              {
+                "id": "planner-version:base:13acd6a6-3777-4786-bd48-2460396b9cf2:1",
+                "state": "historical"
+              },
+              {
+                "id": "planner-version:replacement:845c2f0d-ec2c-4f41-bed8-be40dfe1b5b3:1",
+                "state": "historical"
+              },
+              {
+                "id": "planner-version:base:13acd6a6-3777-4786-bd48-2460396b9cf2:1",
+                "state": "historical"
+              },
+              {
+                "id": "planner-version:replacement:845c2f0d-ec2c-4f41-bed8-be40dfe1b5b3:1",
+                "state": "historical"
+              },
+              {
+                "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+                "state": "fresh"
+              }
+            ],
+            "immutableCaseDigest": "24ccbe050f84939fbb3817fa60ea88cd665570f5940baeceadced58d757dc227",
+            "financialApproval": false,
+            "originalM31Closed": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_RECORDED_PROOF",
+          "line": 955,
+          "payload": {
+            "fixture": "external-drift-during-planner",
+            "captureStatus": "committed",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:446b8d01-76ba-48ad-a99d-61222c6347b2:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:446b8d01-76ba-48ad-a99d-61222c6347b2:1",
+                "state": "fresh"
+              },
+              {
+                "id": "planner-version:base:8765eec6-858c-4350-92b7-5e54f37d4de7:1",
+                "state": "historical"
+              },
+              {
+                "id": "planner-version:replacement:f7150732-7241-4cee-b7b0-cde1c2e79636:1",
+                "state": "fresh"
+              },
+              {
+                "id": "planner-version:base:8765eec6-858c-4350-92b7-5e54f37d4de7:1",
+                "state": "historical"
+              },
+              {
+                "id": "planner-version:replacement:f7150732-7241-4cee-b7b0-cde1c2e79636:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:446b8d01-76ba-48ad-a99d-61222c6347b2:1",
+                "state": "unavailable"
+              }
+            ],
+            "effectsDigest": "ef5b8d46ec2ee08136e28563d92ea8d02126b4ceca5b4b5b31ad53b6366ca94e",
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_RECORDED_PROOF",
+          "line": 963,
+          "payload": {
+            "fixture": "source-race-and-recreation",
+            "eventFired": true,
+            "independentPlannerReads": 5,
+            "originalCaseDigest": "f53f146d923920d4b25d3ec8994c632635b010b85d9a5a3339e9692950778628",
+            "denied": true,
+            "financialEffect": false
+          }
+        }
+      ],
+      "count_note": "The main witness contains exactly6 fresh Procurement observations plus2 historical base and2 historical amount observations. The source-race-and-recreation witness logs5 cumulative Planner reads after later probes; the passing test separately asserts exactly2 at the immediate race checkpoint.",
+      "limits": [
+        "C08 event/outbox and identity are explicitly synthetic fixtures; protected originals are produced by the real Atlas path, not inserted.",
+        "This is source-component/installed service proof, not native resident, UI browser, or global end-to-end acceptance.",
+        "No Procurement historical capture or financial approval is inferred."
+      ]
+    },
+    {
+      "finding": "Q57-MIXED-TOMBSTONE-RECREATE",
+      "status": "SCOPED_PASS_WITH_C17_ARCHIVE_GAP",
+      "qualified": "Canonical Procurement delete tombstones the physical record. Explicit isolated same-ID row replay invokes real lifecycle to produce new physical lineage; old source/reissue/private grant refuse and new grant succeeds. Planner deletion/recreation also refuses retained mixed history and case read.",
+      "witnesses": [
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 816,
+          "payload": {
+            "scenario": "tombstone-recreate",
+            "deletion": true,
+            "tombstoned": true,
+            "originalPhysical": "f1d621e3-2e4f-4eed-a09d-25957cab92d6",
+            "currentPhysical": "e7586178-c8a3-4b4d-a7af-f7aa3c4584ab",
+            "originalScope": "975fde8f-3926-4f5e-9114-1338ad8a8530",
+            "currentScope": "6433a22e-5c72-4625-9389-cf34a29d5054",
+            "oldRead": "unavailable",
+            "oldReissue": "unavailable",
+            "oldGrant": false,
+            "newGrant": true,
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 818,
+          "payload": {
+            "scenario": "broken-scope-lineage",
+            "removedPhysical": "fb59f988-fe3c-45b4-8e3e-08470d0e4e6b",
+            "currentPhysical": "fb59f988-fe3c-45b4-8e3e-08470d0e4e6b",
+            "originalScope": "72a3dad8-48cd-45ae-9303-bd62849acc7a",
+            "currentScope": "f4e29102-9d7d-470e-adde-06baa871abdb",
+            "oldReissue": "unavailable",
+            "oldGrant": false,
+            "replacementRead": "ok",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "historicalCaptureQualified": false
+          }
+        }
+      ],
+      "limits": [
+        "Same-visible-ID Procurement replay is declared fixture data, not a claim that the business create command reused an ID.",
+        "Private C17 Procurement historical-archive denial after recreation remains unexercised because the original capture prerequisite is blocked."
+      ]
+    },
+    {
+      "finding": "Q57-MIXED-REVOKE-BETWEEN-READS",
+      "status": "SCOPED_PASS",
+      "qualified": "Nine genuine Procurement source/grant inter-observation faults and nine mixed external authorization faults refuse after a real positive observation; exact Request, headers, lease and abort also refuse at the composite producer final revalidation await. Real C08 membership drift and forged admission clones refuse.",
+      "procurement_source_faults": [
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 820,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "revoke",
+            "event": true,
+            "observedReads": 1,
+            "outcome": "stale",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 6,
+            "writesAfterOperation": 6,
+            "originalScope": "2eea921f-eaa8-4150-b11a-8c3d3a0f04d1",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 822,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "actor",
+            "event": true,
+            "observedReads": 1,
+            "outcome": "stale",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 6,
+            "writesAfterOperation": 6,
+            "originalScope": "9d14627d-938e-4899-b45a-155c7e7c459b",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 824,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "policy",
+            "event": true,
+            "observedReads": 2,
+            "outcome": "stale",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 6,
+            "writesAfterOperation": 6,
+            "originalScope": "1c2c75fc-e37a-4541-bb33-b0f0311b2ae3",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 826,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "access",
+            "event": true,
+            "observedReads": 2,
+            "outcome": "stale",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 6,
+            "writesAfterOperation": 6,
+            "originalScope": "69ac040d-5ddd-4f8c-8fc1-f112aa9d0639",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 828,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "request-header",
+            "event": true,
+            "observedReads": 1,
+            "outcome": "stale",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 6,
+            "writesAfterOperation": 6,
+            "originalScope": "1bc7bb51-8040-411c-b5f0-24eb0b3b561f",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 830,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "lease",
+            "event": true,
+            "observedReads": 2,
+            "outcome": "stale",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 6,
+            "writesAfterOperation": 6,
+            "originalScope": "3fb95761-76fe-428c-99b5-f787ea3e33be",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 832,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "abort",
+            "event": true,
+            "observedReads": 1,
+            "outcome": "aborted",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 6,
+            "writesAfterOperation": 6,
+            "originalScope": "6292cb5c-80e3-4019-9eac-8e0ded384c56",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 834,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "role",
+            "event": true,
+            "observedReads": 1,
+            "outcome": "stale",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 6,
+            "writesAfterOperation": 6,
+            "originalScope": "9a1511d9-a494-49fd-86fd-78cbacf066d1",
+            "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_PROCUREMENT_PROOF",
+          "line": 836,
+          "payload": {
+            "scenario": "between-source-reads",
+            "mutation": "source",
+            "event": true,
+            "observedReads": 1,
+            "outcome": "stale",
+            "returnedPrivateValue": false,
+            "writesBeforeOperation": 7,
+            "writesAfterOperation": 7,
+            "originalScope": "7838e14c-ada9-4bd2-9882-628957e82a02",
+            "financialDigest": "d8002faa73a0b8b407c866406e904f940c81103054f37f1fea50004b48e5013b",
+            "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+            "historicalCaptureQualified": false
+          }
+        }
+      ],
+      "mixed_authority_faults": [
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 850,
+          "payload": {
+            "mutation": "revoked",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:c03b2129-7c20-472c-9249-3f36ce4723bd:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:c03b2129-7c20-472c-9249-3f36ce4723bd:1",
+                "state": "unavailable"
+              }
+            ],
+            "persistentEffectsDigest": "1eede4591074dcd334b8c9b54b4218d72a50e66ba145eb3e5842a3ba71b07873",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 856,
+          "payload": {
+            "mutation": "actor",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:9ccd8a10-4d72-4b0b-a72d-503d52b4dfd7:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:9ccd8a10-4d72-4b0b-a72d-503d52b4dfd7:1",
+                "state": "unavailable"
+              }
+            ],
+            "persistentEffectsDigest": "36fb95d92788b920a45e17fa80e50c0c41a5a7d9b57236f3cc2b94b8b86ea322",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 862,
+          "payload": {
+            "mutation": "access",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:eea1c5b7-43ac-40fe-9abb-5051c2f4d918:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:eea1c5b7-43ac-40fe-9abb-5051c2f4d918:1",
+                "state": "unavailable"
+              }
+            ],
+            "persistentEffectsDigest": "30514c58d78e9f4045008ecbd771aec9698de6c9069cebb8b5d2285aca713aed",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 868,
+          "payload": {
+            "mutation": "policy",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:cc4fc341-a3e4-4acc-aebb-deeb72cbbe6e:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:cc4fc341-a3e4-4acc-aebb-deeb72cbbe6e:1",
+                "state": "unavailable"
+              }
+            ],
+            "persistentEffectsDigest": "c5bdd350ca63887a9db3ebfdcff739490f6135b6b4aac4ba000c9dfd6fbf77bc",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 874,
+          "payload": {
+            "mutation": "request",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:1c74ca46-6d86-4601-a0f2-76604e1e1243:1",
+                "state": "fresh"
+              }
+            ],
+            "persistentEffectsDigest": "4196412ff84a3174f47e8cc90dd19216e2f85d9c270839939f039dac5c2c3541",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 880,
+          "payload": {
+            "mutation": "headers",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:d84e3117-240f-4ade-8704-d58704ded3e6:1",
+                "state": "fresh"
+              }
+            ],
+            "persistentEffectsDigest": "cf4c6a9ab580f0e32d2fe3cdffaee37946660a8f9ff4d8544725c603fed5f87a",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 886,
+          "payload": {
+            "mutation": "lease",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:cd6129e2-36ad-4d54-bd2c-8822567f6475:1",
+                "state": "fresh"
+              }
+            ],
+            "persistentEffectsDigest": "de05e9d629512b246c4cd0f28945fd370276214a1a8074a30a9b07064558b15b",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 892,
+          "payload": {
+            "mutation": "abort",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:a279eaf5-6a48-4625-b12f-bf30f3c6c587:1",
+                "state": "fresh"
+              }
+            ],
+            "persistentEffectsDigest": "21011b524d66d7ae87c8b0408ffea7d38f71f6206478cae034ca35967ea0955e",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 898,
+          "payload": {
+            "mutation": "source",
+            "eventFired": true,
+            "allowed": false,
+            "observations": [
+              {
+                "id": "sf-procurement:0faa4414-14bf-402c-b15f-2efd3402d9da:1",
+                "state": "fresh"
+              },
+              {
+                "id": "sf-procurement:0faa4414-14bf-402c-b15f-2efd3402d9da:1",
+                "state": "unavailable"
+              }
+            ],
+            "persistentEffectsDigest": "8465fbcca788f8bfb59f6ed53595724bd6fe5ec0bfa43abbdf9aaa6d07cd1165",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_AUTHORITY_PROOF",
+          "line": 926,
+          "payload": {
+            "mutation": "C08-membership",
+            "eventFired": true,
+            "sourceFenceReads": 1,
+            "producerStatus": "stale",
+            "effectsDigest": "938e8ba24cd66861d268ebbf4b3f52f6d0e06fb7ccd57d12518cb71a3e731d64",
+            "financialEffect": false
+          }
+        }
+      ],
+      "final_await_faults": [
+        {
+          "marker": "SF_MIXED_EGRESS_PROOF",
+          "line": 904,
+          "payload": {
+            "mutation": "request",
+            "eventFired": true,
+            "finalObservation": 176,
+            "producerStatus": "stale",
+            "outerStatus": "denied",
+            "noProjection": true,
+            "persistentEffectsDigest": "7e9530af788fac906ac81559f71be79d17e85cb213c03db234d1fc611fcb0d9b",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_EGRESS_PROOF",
+          "line": 910,
+          "payload": {
+            "mutation": "headers",
+            "eventFired": true,
+            "finalObservation": 176,
+            "producerStatus": "stale",
+            "outerStatus": "stale",
+            "noProjection": true,
+            "persistentEffectsDigest": "82f61c4fca3a34c2a06b4b1e185f1a6d8313e573626b1f6186339275f9b0bea6",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_EGRESS_PROOF",
+          "line": 916,
+          "payload": {
+            "mutation": "lease",
+            "eventFired": true,
+            "finalObservation": 176,
+            "producerStatus": "stale",
+            "outerStatus": "denied",
+            "noProjection": true,
+            "persistentEffectsDigest": "8f4267a15af1907736a907d4090ee7b9baf282ebec0e28ba8c4df76d4f428658",
+            "promotion": false,
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_EGRESS_PROOF",
+          "line": 922,
+          "payload": {
+            "mutation": "abort",
+            "eventFired": true,
+            "finalObservation": 176,
+            "producerStatus": "stale",
+            "outerStatus": "denied",
+            "noProjection": true,
+            "persistentEffectsDigest": "3cce37f1f55ed3123b6fe061144e947fec49f874416ed047cefca3955a7288a4",
+            "promotion": false,
+            "financialEffect": false
+          }
+        }
+      ],
+      "final_await_observations": 176,
+      "egress_observed": "All4 final-await events fired; the inner producer itself returned stale and no value/projection before the outer case guard could mask an escape. Outer statuses were denied except headers=stale.",
+      "limits": [
+        "Binding/lease objects are truly frozen; their negative tests substitute clones rather than pretending to mutate them in place.",
+        "Case discriminator changes C08 membership and compares full case material; no independent caseVersion-only race is claimed.",
+        "Early fail-closed source paths can stop before a second successful read; observedReads1 or2 is preserved, not inflated."
+      ]
+    },
+    {
+      "finding": "INHERITED_MIXED_CANONICAL_PROJECTION_CONTRACT",
+      "status": "SCOPED_PASS",
+      "qualified": "Authorized consumer accepts the actual Procurement shape with empty context.sourceRefs/components and exact typed BusinessEvidenceRefs. All21 corrupted copies of successful real observations refuse, and an actual null estimate remains absent/unresolved.",
+      "witnesses": [
+        {
+          "marker": "SF_MIXED_CANONICAL_SHAPE_PROOF",
+          "line": 930,
+          "payload": {
+            "engine": "procurement-v1",
+            "contextSources": 0,
+            "components": 0,
+            "reference": "sf-procurement:e3b1491c-c603-477d-9ccf-ac9985627213:1",
+            "projectionDigest": "1f9d63227916e6406ff3f3b40b9337c83d218cfefedaeaa90ce20b051bab6a0a",
+            "outcomes": [
+              {
+                "fault": "engine",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "version",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "principal",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "installation",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "policy",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "access",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "currency",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "horizon",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "component",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "missing-amount",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "duplicate-amount",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "unbound-amount",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "foreign-amount",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "foreign-drilldown",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "non-numeric-amount",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "non-finite-amount",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "wrong-amount-currency",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "wrong-amount-period",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "wrong-granularity",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "hypothetical-original",
+                "observations": 1,
+                "allowed": false
+              },
+              {
+                "fault": "foreign-context-source",
+                "observations": 1,
+                "allowed": false
+              }
+            ],
+            "financialEffect": false
+          }
+        },
+        {
+          "marker": "SF_MIXED_CANONICAL_SHAPE_PROOF",
+          "line": 932,
+          "payload": {
+            "fixture": "real-absent-estimate",
+            "allowed": true,
+            "reference": "sf-procurement:7d5e6421-a77e-43af-8ef5-6f4d5712f494:1",
+            "projectionDigest": "92708b9621d0c3de956e5c33419f83b2bfab7f78b06666ba1b92e53f8eb219f8",
+            "financialEffect": false
+          }
+        }
+      ],
+      "inherited_consumer": "composite-planner.test.ts now4PASS0FAIL on W3; exact-base baseline had3PASS1FAIL at the mixed guard assertion. No inherited test was modified.",
+      "scope": "Only three authorized CLI producer files and six owned test/helper files changed; decision-host.ts is unchanged."
+    }
+  ],
+  "effect_scope": {
+    "procurement_source_tests": "Full snapshots of dashboard/planner/procurement plus storage-write counts are compared after intentional rotation/deletion/replay/source edits settle. No further writes or private values escape the tested read/grant operation.",
+    "capture_prerequisite": "Full three-surface snapshots, stored case, receipts and archive keys remain equal before/after actual producer and HTTP attempts.",
+    "mixed_planner_tests": "audit() compares data and versions of all three surfaces, including C08 state in dashboard data; it does not claim complete telemetry for every lifecycle metadata or audit-array write. Comparison baseline is taken after intentional injected changes when appropriate.",
+    "financial": "Tests show no additional promotion/prepared change/receipt/financial effect for these component operations. They neither perform nor qualify approval of a replacement.",
+    "normalization": "Static review confirms only checkedAt and fresh SourceRef.observedAt are excluded from cross-observation comparisons. Projection values, historical bytes, source digests and authority remain material."
+  },
+  "mandatory_failure_ledger": {
+    "count": 13,
+    "all_in_scenario_operation_access_file": true,
+    "all_already_failed_in_exact_base": true,
+    "raw_received_needs_input_count": 13,
+    "cause": "All13 stop at procurementScenarioFixture prepareDomainCommands expectedok/receivedneeds-input before their target historical/proof behavior. Exact M31 reason is independently exercised by the passing capture-prerequisite test and confirmed by producer source.",
+    "failed_tests": [
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicates retain two canonical observations per guard and recompute on every case read",
+        "duration": "58.57ms",
+        "line": 993
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "historical Procurement duplicates keep both independent canonical entry observations",
+        "duration": "56.65ms",
+        "line": 1010
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects source change after its canonical double observation",
+        "duration": "55.61ms",
+        "line": 1027
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects capture change after its canonical double observation",
+        "duration": "55.26ms",
+        "line": 1044
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects receipt change after its canonical double observation",
+        "duration": "56.20ms",
+        "line": 1061
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects preferences change after its canonical double observation",
+        "duration": "57.44ms",
+        "line": 1078
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects case change after its canonical double observation",
+        "duration": "57.65ms",
+        "line": 1095
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects principal change after its canonical double observation",
+        "duration": "56.54ms",
+        "line": 1112
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects period change after its canonical double observation",
+        "duration": "58.61ms",
+        "line": 1129
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects clock change after its canonical double observation",
+        "duration": "58.59ms",
+        "line": 1146
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects headers change after its canonical double observation",
+        "duration": "54.84ms",
+        "line": 1163
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement duplicate proof rejects lease change after its canonical double observation",
+        "duration": "87.19ms",
+        "line": 1178
+      },
+      {
+        "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+        "status": "fail",
+        "name": "fresh Procurement proofs do not cross overlapping invocations or survive final Request header replacement",
+        "duration": "64.87ms",
+        "line": 1193
+      }
+    ],
+    "must_preserve": "Overall run remainsFAIL. No skip, removed assertion, fabricated capture or approval, green transfer, or full-gate success is authorized."
+  },
+  "prior_evidence": {
+    "baseline": {
+      "run": 43667860058,
+      "W": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+      "pass": 9,
+      "fail": 14,
+      "tests": 23
+    },
+    "pure_Planner_history": "Two existing planner-recorded-history tests passed on W2 only and were not selected for W3. Their W2 result is not relabeled as a W3 execution.",
+    "attempts": "W1 and W2 failures remain preserved by root in the CI ledger; this review does not erase them."
+  },
+  "acceptance": {
+    "all_owned_selected_tests_pass": true,
+    "overall_CI_pass": false,
+    "C17_Procurement_historical_positive": "HELD_M31",
+    "M31": "OPEN",
+    "MI07": "OPEN",
+    "typecheck_sucafina": "NOT_EXECUTED_BY_THIS_MISSION_OWNER45_REQUEST",
+    "typecheck_cli": "NOT_EXECUTED_BY_THIS_MISSION_OWNER45_REQUEST",
+    "guards": "NOT_EXECUTED_BY_THIS_MISSION_OWNER45_REQUEST",
+    "integrated_candidate_qualified": false,
+    "full_original_criteria_promoted": 0,
+    "GLOBAL_RELEASE": false,
+    "consumer60_ACK": "NOT_OBSERVED",
+    "consumer_authority": "Root reports final sf2-stack faa30fddb7e7b61696b66fd069f51cf18c51125f with after-c27-60/AUTHORITY.json HANDOFF_TERMINAL_LEASE_ENDED. No active60 intake or automatic resume is assumed; explicit authorized60 resumption or successor is required.",
+    "source_terminal_lease": "Root must finalize terminal handoff and verify source-run inventory; this review only independently confirms W3 cleanup success."
+  }
+}

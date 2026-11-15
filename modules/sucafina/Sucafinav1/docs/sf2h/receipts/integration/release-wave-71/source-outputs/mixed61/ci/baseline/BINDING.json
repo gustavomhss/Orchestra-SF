@@ -1,0 +1,211 @@
+{
+  "schema": "mission61-baseline-v1",
+  "purpose": "Discriminate14 existing consumer failures from mission61 changes; no replacement for candidate tests.",
+  "product_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "product_tree": "12594fd5a48f934847db717dd872d51776484296",
+  "snapshot_sha": "449f8c51d2ee641e8d41cfa965de7c72b8443276",
+  "snapshot_tree": "8b40486404d88bd559b0ea269991c28df7f56501",
+  "snapshot_delta": [
+    ".ci-run.json"
+  ],
+  "request_blob": "fbcebc6a11a580a001fc287eb04792368563efcd",
+  "request_sha256": "a53cb1ddf6634d03c2151cc91cb7b81f5eb83d8a55bddb66f98800e438fd3bb5",
+  "branch": "ci-run-linux-astra-m61-base7e1-a53cb1dd-1",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "./Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "dedup": {
+    "checked_at": "2026-11-15T02:27:13.819Z",
+    "runs": []
+  },
+  "run_id": 43667860058,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43667860058",
+  "run_conclusion": "failure",
+  "jobs": [
+    {
+      "id": 132671155311,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 132671537982,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": {
+    "artifacts": []
+  },
+  "totals": {
+    "pass": 9,
+    "fail": 14,
+    "summary": "Ran 23 tests across 2 files. [3.74s]",
+    "assertions": "111 expect() calls"
+  },
+  "nonce_count": 1,
+  "nonce": "cef5ce96411e7f83ccdfcba3b45e1aed",
+  "omni_verdict_lines": [
+    "omni positive control [cef5ce96411e7f83ccdfcba3b45e1aed]: not applicable (focused: no declaring test ran); this run made no omni spawn and delegated none, so it proved nothing about omni."
+  ],
+  "tests": [
+    {
+      "name": "mixed original52 shape retains Planner 2400, difference 1200 and an unresolved external Procurement operation without writes",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "duration": "224.61ms"
+    },
+    {
+      "name": "mixed capability is transient and current case guards authorize the explicit external selector",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "duration": "128.86ms"
+    },
+    {
+      "name": "mixed preview rejects another holder, unbound currency, duplicated targets and stale Procurement source without writes",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "duration": "51.70ms"
+    },
+    {
+      "name": "mixed form offers explicit request and amount controls only for attached Procurement evidence",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "duration": "29.42ms"
+    },
+    {
+      "name": "stored Planner selectors use the exact domain projection without reopening coverage",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "857.66ms"
+    },
+    {
+      "name": "stored scenario rejects planner changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "167.97ms"
+    },
+    {
+      "name": "stored scenario rejects dashboard changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "121.51ms"
+    },
+    {
+      "name": "stored scenario rejects procurement changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "107.66ms"
+    },
+    {
+      "name": "stored scenario rejects principal changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "93.12ms"
+    },
+    {
+      "name": "stored scenario rejects case-input changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "105.14ms"
+    },
+    {
+      "name": "fresh Procurement duplicates retain two canonical observations per guard and recompute on every case read",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "86.12ms"
+    },
+    {
+      "name": "historical Procurement duplicates keep both independent canonical entry observations",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "61.39ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects source change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "74.64ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects capture change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "59.17ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects receipt change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "58.76ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects preferences change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "90.62ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects case change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "61.49ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects principal change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "62.31ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects period change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "110.39ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects clock change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "59.66ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects headers change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "58.65ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects lease change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "599.00ms"
+    },
+    {
+      "name": "fresh Procurement proofs do not cross overlapping invocations or survive final Request header replacement",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "58.86ms"
+    }
+  ],
+  "per_file": {
+    "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts": {
+      "pass": 3,
+      "fail": 1
+    },
+    "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts": {
+      "pass": 6,
+      "fail": 13
+    }
+  }
+}

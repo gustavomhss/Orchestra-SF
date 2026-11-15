@@ -1,0 +1,261 @@
+{
+  "schema": "sf2h.integration71.candidate.v1",
+  "mission": 71,
+  "symbol": "C32",
+  "identity": "CONTAINING_COMMIT; SHA/tree in external ACK and next readback",
+  "parent": "7e64ed4f2e59e0baabcc8655b8067ff9eb847665",
+  "parent_tree": "e7cfbfa92bd3c149ed9e36141c221c996b6974ae",
+  "status": "MATERIAL_COMPOSED_VALIDATION_NOT_RUN",
+  "source": {
+    "branch": "mixed-source-proof",
+    "pr": 73,
+    "terminal_sha": "600602f18e4ad95bd66e4d41f5a51211d19f92aa",
+    "terminal_tree": "c8fa17c6c83d70141b2b68f9e5ce2ed6c4aa8291",
+    "material_W": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "material_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+    "base": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "release_blob": "cc247a332e0ff10ba3885cc5cff44660b2359196",
+    "release_state": "COMPLETE_BOUNDED_SOURCE_RELEASE_WITH_HELD_ACCEPTANCE",
+    "authority_blob": "7b454ab1d835ee46239d39edc58756ae227bea9d",
+    "authority_state": "HANDOFF_TERMINAL_SOURCE_LEASE_ENDED_WITH_HELD_ACCEPTANCE",
+    "head_readback": "600602f18e4ad95bd66e4d41f5a51211d19f92aa",
+    "terminal_receipt_only_child_verified": true,
+    "terminal_additions": 45
+  },
+  "archive": {
+    "path": "source-outputs/mixed61",
+    "tree": "b621fd56d147e9895fc40ff281a733827d0ac91c",
+    "blob_count": 46
+  },
+  "paths": [
+    {
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage_git_blob": "5a0592e200e14fa801b1ed24150384070ea5298b",
+      "postimage_git_blob": "a59f695365a71614f6189eb6f2c2737c83ba233d",
+      "postimage_sha256": "95834088198ff33616ea8aebf726c11d415398f489864e3005d9e533ba8107e7",
+      "bytes": 21993
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage_git_blob": "d2158a10de3473edc5f5d509f3215e84140a8382",
+      "postimage_git_blob": "910701c103aba2866258adf2f3c99fc0bca28b11",
+      "postimage_sha256": "cd0958e9d6438c039a9ed026773eaf75c95f106051851849f7779d3596328228",
+      "bytes": 13663
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "mode": "100644",
+      "status": "modified",
+      "preimage_git_blob": "8570e0cab2686986ad81b304e8e3aeaf154cb20a",
+      "postimage_git_blob": "c6bdeb197675406c933046fb5ede19e92cc047e7",
+      "postimage_sha256": "ae8250bdc2d37846e4bcd181395c6d2bd884ad6af12004490966115030e2bbf8",
+      "bytes": 9237
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage_git_blob": null,
+      "postimage_git_blob": "6089391e6aaedcedc2ca2df8d0684ee25d930c94",
+      "postimage_sha256": "a3eaab811bd4dc702193492d5acd0fbb6675848d36adc8398eddff6d3d35ba1e",
+      "bytes": 18695
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage_git_blob": null,
+      "postimage_git_blob": "50e5e76f9c82687a303c3f70d664cfd97f1d33d8",
+      "postimage_sha256": "e1c98faf32f0df8f23476c5377b5c3686ac8cee80399021d91a702e7652ff8ba",
+      "bytes": 5009
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage_git_blob": null,
+      "postimage_git_blob": "76ce8b8fb5d7e17ddc33002d239771a7260a9e65",
+      "postimage_sha256": "814c1db6c3affe9db958d084b435af74c3597d43971356292d71753c120a9529",
+      "bytes": 17951
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-fixture.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage_git_blob": null,
+      "postimage_git_blob": "8007eccb9dbf0813d4930f4a5b0a99657809c3fa",
+      "postimage_sha256": "78afb88359946b997a75b73c1f9bca41874c0109c2a634f9e2877e520d9cb46f",
+      "bytes": 4981
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage_git_blob": null,
+      "postimage_git_blob": "bf80dc2fe3a31a1953ee9c45a9e8a97c7de6cf66",
+      "postimage_sha256": "20e53d4435efdd62d5ebd06506a67a9587764f9180009e3f0faa229bd7b9da32",
+      "bytes": 12813
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "mode": "100644",
+      "status": "added",
+      "preimage_git_blob": null,
+      "postimage_git_blob": "9a44cca3e2e34f578e7d9d76458a83068371ff44",
+      "postimage_sha256": "ac774354d38026ab65dd6e0a24e6a5804bcf790d96c810addd66676d08f5e33d",
+      "bytes": 9616
+    }
+  ],
+  "complete_patch": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/source-release/complete.patch",
+    "blob": "b983c7c4c371e55f41ea6a86faabe6bbd6d7b26d",
+    "sha256": "9a6ce9d90cbffea31596aa339183a1c0b9e4c533289749cb9041891d878ef62b"
+  },
+  "review": "reviews/mixed61.json",
+  "fresh_preimages": [
+    {
+      "kind": "pre61",
+      "path": "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+      "sha": "5a0592e200e14fa801b1ed24150384070ea5298b",
+      "match": true
+    },
+    {
+      "kind": "pre61",
+      "path": "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+      "sha": "d2158a10de3473edc5f5d509f3215e84140a8382",
+      "match": true
+    },
+    {
+      "kind": "pre61",
+      "path": "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+      "sha": "8570e0cab2686986ad81b304e8e3aeaf154cb20a",
+      "match": true
+    }
+  ],
+  "new_paths_absent": "Six paths absent at terminal60; C29/C30/C31 changes disjoint",
+  "dependency_closure": {
+    "imports": 92,
+    "repository_targets": 44,
+    "unresolved_static_imports": 0,
+    "readback_unique_paths": 58,
+    "source_anchors": "W3 tree pins unchanged transitive/package/config; no compilation claimed",
+    "actual_nonunit_differences": [
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/contract.ts",
+        "source_blob": "9e9bac976b503409de65868a366f352ca1e65071",
+        "target_sha": "342f04688aa173914f36a81e80e6781242616e82",
+        "target_blob": "8be1156b64e957eae4670f7ad1bb6cd51e61e649",
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/runtime/local-store.ts",
+        "source_blob": "666259511ad459629ef52f48aca20b231b0dff4b",
+        "target_sha": "342f04688aa173914f36a81e80e6781242616e82",
+        "target_blob": "a36440a750d5671a34c3ab41b2af48093af9f7ee",
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+        "source_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+        "target_sha": "342f04688aa173914f36a81e80e6781242616e82",
+        "target_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+        "error": false
+      },
+      {
+        "path": "modules/sucafina/Sucafinav1/product/integration/source-lifecycle.ts",
+        "source_blob": "d43a630254142bc5e5fb3589d1120a328abf2d1c",
+        "target_sha": "342f04688aa173914f36a81e80e6781242616e82",
+        "target_blob": "0e812842ad0d534998c182100a8466548d70e915",
+        "error": false
+      }
+    ],
+    "disposition": "Retain C28 product-authority and C29 readonly59 changes. No obsolete source dependency overwritten. Tests must bind the exact combined candidate; source W3 does not contain C28 or59.",
+    "consumer_wiring": [
+      "business-services.ts: canonicalCases.verifyScenarioOperations -> scenarioOperationAccess -> recordedPlanner; three producers mounted through actual canonical services",
+      "procurement-composite-planner.ts wraps actual product.planner and selectedCase/state/sourceFence; it never prepares or applies external financial effect",
+      "Procurement port projects canonical values with exact evidence/drilldown, empty components and potentially empty context.sourceRefs; field list verified against source-projection.ts and projectProcurementSource in port.ts",
+      "decision-host.ts keeps captureSource private after all bridge.prepareScenario commands succeed; historical read requires archive and physical lineage. No changed producer circumvents that boundary",
+      "59 optional readSnapshotRoot is forwarded through source-lifecycle; transactions/currentSnapshots, defensive copies and same-source publication/authority fences remain.61 changes no persistence API and adds no nested writer",
+      "63 scanner/helpers and64 admission/governance/registry/host changes are disjoint from61.64 host entry reaches unchanged business-services; no genuine native origin is activated by61. ClamD63 is distinct from gitleaks used for Planner Atlas capture"
+    ],
+    "remaining_invalidation": "C28 authority propagation plus readonly59 and any64 host composition require authorized composed checks/source consumers. Source33PASS is not integrated/native acceptance."
+  },
+  "semantics": [
+    "Read all three final producer modules, six added fixture/test files, full producer diff and complete9path patch reconstructed against actual target preimages; all matching Git blobs/SHA256/bytes/modes.",
+    "New Request identity/method/URL/header fingerprints and binding checks cover independent source reads and final successful revalidation egress, including last await in composite preview.",
+    "Recorded Planner verifier now independently reauthorizes/clones Procurement observations before and after historical Planner reads; compares stable full material, not only authority flag. Only checkedAt and fresh context/component SourceRef observedAt are normalized; historical bytes stay exact.",
+    "Canonical Procurement shape validation matches actual procurement-v1 read projection, field selection/types/null original amount/exact ref/drilldown/period/version/currency; 21 negative corruptions wrap real reads and are never positive substitute data.",
+    "Existing scope proof memo remains invocation-local and exact request/case/source fences; no new cross-call cache, financial permission or generated/native activation.",
+    "Fixtures declare synthetic identity/membership/C08 event/outbox/business data. SQLite, real admission/source issuers/grants and Planner emitFromLedger with actual gitleaks remain distinguished from installed/native proof.",
+    "Same-visible-ID Procurement recreation uses explicit domain-row replay after canonical delete; genuine source lifecycle assigns new physical incarnation. This is source/grant evidence, not an archived Procurement-original or business-create proof.",
+    "Direct producer egress is captured before outer case guard, so outer refusal cannot hide a leaked producer result. Side-effect assertions for mixed fixtures cover data+versions of all three surfaces, not all lifecycle telemetry."
+  ],
+  "source_evidence": {
+    "W": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "S": "7dc844027be65913de226178f2b11a9f682d5396",
+    "S_tree": "dfd4d27cbcf7053ace16d9053a4a24f022fe0e51",
+    "request_blob": "d0e890453415092636f1f692b05ddc08dac3a9b2",
+    "request_sha256": "7e5c32fe73dfd39aa4257365ca8729a3e584a8626e67e0a2d6948e645ee74b8c",
+    "W_S_only_ci_request_verified": true,
+    "run": 43668842101,
+    "job": 132674151887,
+    "cleanup_job": 132675184074,
+    "actual_run_readback": "completed/failure; event push; exact S",
+    "counts": "43PASS/13FAIL/56tests/588expect;33ownedPASS",
+    "log_blob": "3c3d07f04c25c490c0eebeda757b1c174c548e88",
+    "raw_log_summary_read": true,
+    "omni": "PASS6spawns0delegated3declaringtests",
+    "limits": "13 inherited scenarios stop at actual M31 preparation expected ok/received needs-input. Two pure Planner history tests only passed W2 and were not rerun W3; retain distinct provenance. No compiler/guards run by61."
+  },
+  "discriminators": [
+    {
+      "id": "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+      "state": "HELD_M31_GENUINE_ORIGINAL_CAPTURE_UNAVAILABLE",
+      "useful": "Source/grant physical-vs-scoped rotation and explicit preparation refusal",
+      "not_closed": "Genuine archived Procurement original across legitimate scope rotation"
+    },
+    {
+      "id": "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+      "state": "SOURCE_CONTRACT_PASS_COMPOSED_NOT_RUN",
+      "useful": "Real committed Planner archive; fallbackCount1, two historical reads each original, six fresh Procurement observations; direct verifier detects Procurement drift",
+      "not_closed": "Historical Procurement archive and installed/native/global consumer proof"
+    },
+    {
+      "id": "Q57-MIXED-TOMBSTONE-RECREATE",
+      "state": "PARTIAL_SOURCE_PROOF_COMPOSED_NOT_RUN",
+      "useful": "Planner old archive denied after recreation; Procurement old source/private grant denied and new source/grant accepted",
+      "not_closed": "Old private archived Procurement original after recreation"
+    },
+    {
+      "id": "Q57-MIXED-REVOKE-BETWEEN-READS",
+      "state": "SOURCE_CONTRACT_PASS_COMPOSED_NOT_RUN",
+      "useful": "Nine mixed events/nine Procurement events/four final-await cases, membership and binding/lease clone substitution",
+      "not_closed": "Full original criterion/native/installed proof; independent caseVersion-only race not claimed"
+    }
+  ],
+  "holds": [
+    "M31 original unwritten replacement approval, canonical100->150 ok/exactly1command/capture prerequisite remains OPEN",
+    "MI07 original225000/240000 budget and full tail remain HELD; no unchanged retry",
+    "Four discriminator IDs remain preserved with bounded source status; zero full global criteria promoted",
+    "Inherited13 failures retained; eight selections,AM01-06,5profiles18skills8packs39operations,threeFINAL reviews,C/G7,D/G8 remain",
+    "45 package typechecks and rootguards remainNOT_RUN;71 cannot execute them"
+  ],
+  "validation_queue": {
+    "owner_checks": 45,
+    "owner_epic_acceptance": "S0",
+    "candidate": "Exact combined future C",
+    "required": [
+      "Four mission61 test files plus inherited composite-planner, scenario-operation-access and planner-recorded-history with original assertions/budgets",
+      "C28 Reports authority behavior and59 readonlyroot/source-lifecycle/wrappers/freshness remain affected",
+      "Packages modules/sucafina and apps/cli typecheck; existing authorized rootguards with actual base identity",
+      "No duplicate unchanged M31/MI07 full journey until compatible genuine financial/capture prerequisite released"
+    ]
+  },
+  "checks": "45_OWNS_NOT_RUN_IN71",
+  "global_acceptance": "S0_ONLY",
+  "GLOBAL_RELEASE": false
+}

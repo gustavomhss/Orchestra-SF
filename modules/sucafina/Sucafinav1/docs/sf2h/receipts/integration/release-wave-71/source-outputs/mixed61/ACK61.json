@@ -1,0 +1,105 @@
+{
+  "schemaVersion": 1,
+  "mission": 61,
+  "id": "mixed-source-contracts",
+  "state": "ACKNOWLEDGED_ACTIVE",
+  "campaign": "sf2h-integral-20261112",
+  "T0": "2026-11-13T04:01:10Z",
+  "actor": "S0-C composition/authority qualification",
+  "branch": "mixed-source-proof",
+  "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "expected_head": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+  "source_tree": "12594fd5a48f934847db717dd872d51776484296",
+  "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "authority_sha": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+  "lease_epoch": "mixed-contracts-browser61",
+  "accepted_at": "2026-11-15T02:08:38Z",
+  "writer": "/root",
+  "platform_session_id": null,
+  "model": {
+    "host_label": "GPT-6 Astra Pro",
+    "effective_provider_model_id": null,
+    "reason": "Host supplied label; no provider execution ID exposed."
+  },
+  "capability": {
+    "remote": "GitHub MCP Git Data CAS expected_sha force:false",
+    "local": "Read/edit source copies and deterministic patch/hash preparation only; no local product tests",
+    "collaboration": "Four global slots including /root; helpers confined to disjoint delegated outputs; no second stack supervisor"
+  },
+  "limits": {
+    "stack_writer": "60 only",
+    "compiler": "45 only",
+    "final_acceptance": "S0",
+    "GLOBAL_RELEASE": false
+  },
+  "write_paths": [
+    "modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/",
+    "modules/sucafina/Sucafinav1/product/procurement/decision-host.ts",
+    "apps/cli/src/sucafina-product/scenario-operation-access.ts",
+    "apps/cli/src/sucafina-product/recorded-planner-operation-access.ts",
+    "apps/cli/src/sucafina-product/procurement-composite-planner.ts",
+    "modules/sucafina/Sucafinav1/docs/sf2h/receipts/mixed-source-contracts/"
+  ],
+  "finding_ids": [
+    "Q57-C17-HISTORICAL-SCOPE-ROTATION",
+    "Q57-MIXED-RECORDED-PLANNER-FALLBACK",
+    "Q57-MIXED-TOMBSTONE-RECREATE",
+    "Q57-MIXED-REVOKE-BETWEEN-READS"
+  ],
+  "criterion_ids": [
+    "CAMP.INV.02",
+    "CAMP.INV.04",
+    "CAMP.INV.06",
+    "WP10.INV.02",
+    "WP10.T02.CMP.10",
+    "WP10.T04.CHK.01",
+    "WP10.T04.CHK.02",
+    "WP10.T04.CHK.03",
+    "WP14.T01.CHK.03",
+    "WP14.T02.CHK.03",
+    "WP14.T02.CHK.11",
+    "WP14.T04.CHK.03",
+    "WP14.T04.CHK.10"
+  ],
+  "contracts": [
+    "C01",
+    "C02",
+    "C03",
+    "C08",
+    "C09",
+    "C10",
+    "C12",
+    "C13",
+    "C16",
+    "C17"
+  ],
+  "read_provenance": {
+    "mission_blob": "e729d03c31b9e594417465de57d064f2635dd1d3",
+    "AGENTS_blob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "START_blob": "522782bb7e113124a937d7ef17313032be9d6850",
+    "WORKFLOW_blob": "043205bee6031b4517a98591b3588fca0ab12925",
+    "COMMON_blob": "d61f32af03fe10747a50274233f953af044decf6",
+    "actor_pack_blob": "4eb6547c53ce65bc2170b9fdd6d8fd580e572e3b",
+    "gate_queue_blob": "cd79edc9c0f55cd1ce97144ee659f3a2318a7844",
+    "read_coverage": "Root owns mission/common/authority/contracts/tasks/product acceptance; helper ci_authority_review reads remaining resident/CI/evidence/numeric annexes from same full pinned pack. Source dependencies read by assigned writers before mutation."
+  },
+  "qualification": {
+    "tests": "NOT_RUN",
+    "typecheck": "NOT_RUN_REQUEST_TO45",
+    "guards": "NOT_RUN_REQUEST_TO45",
+    "source_pass_not_integrated_proof": true
+  },
+  "initial_findings": [
+    {
+      "id": "M31-FINANCIAL-APPROVAL",
+      "state": "OPEN",
+      "detail": "Canonical Procurement prepareScenario still returns financial-approval-command-unavailable before private capture. Do not forge archived C08 data, financial approval or historical grants; independent Planner fallback and source lifecycle proofs proceed."
+    }
+  ],
+  "plan": [
+    "Real persisted Planner capture with mixed recorded fallback and independent external-source authorization",
+    "Source scope rotation versus tombstone/recreate with real lifecycle producers",
+    "Inter-observation authority/request/lease/case/source/abort refusal and zero effect assertions",
+    "Bounded producer corrections, surgical Actions requests and exact-source terminal release to60"
+  ]
+}

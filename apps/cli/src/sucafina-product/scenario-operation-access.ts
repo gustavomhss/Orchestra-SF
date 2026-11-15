@@ -1,11 +1,12 @@
 import { digestSfEvidenceRef, digestSfValue } from "../../../../modules/sucafina/Sucafinav1/product/contracts/canonical.ts"
 import type { BusinessContextService, BusinessEvidenceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/business-context.ts"
-import type { SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
+import type { DomainProjection, SourceRef } from "../../../../modules/sucafina/Sucafinav1/product/contracts/context.ts"
 import type { DecisionCase } from "../../../../modules/sucafina/Sucafinav1/product/contracts/decisions.ts"
 import type { DomainPortHost, PlannerSourceHost, PortResult } from "../../../../modules/sucafina/Sucafinav1/product/contracts/ports.ts"
 import type { ScenarioOperation } from "../../../../modules/sucafina/Sucafinav1/product/contracts/operations.ts"
 import type { TrustedDomainContext } from "../../../../modules/sucafina/Sucafinav1/product/contracts/sf-execution.ts"
 import type { PlannerScenarioInputs } from "../../../../modules/sucafina/Sucafinav1/product/planner/scenario-port.ts"
+import { procurementRequestFields } from "../../../../modules/sucafina/Sucafinav1/product/procurement/source-projection.ts"
 import type { createSfPlannerEvidence } from "./planner-evidence.ts"
 import type { createSfRecordedPlannerOperationAccess } from "./recorded-planner-operation-access.ts"
 import type { createSfScenarioProcurementProofScope } from "./scenario-procurement-proof-scope.ts"
@@ -25,7 +26,9 @@ export function createSfScenarioOperationAccess(input: {
   return async (value: DecisionCase, call: TrustedDomainContext): Promise<boolean> => {
     const request = input.host.requestFor(call)
     const binding = digestSfValue([call.kind, call.binding])
-    const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding])
+    const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+    const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding]) &&
+      requestDigest === digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
     if (!currentAuthority() || !await input.host.revalidate(call)) return false
     const captured = structuredClone(value)
     const original = digestSfValue(captured)
@@ -144,15 +147,20 @@ function covered(source: SourceRef, refs: readonly BusinessEvidenceRef[]) {
 /** Reauthorize every explicit external selector against C17; a condition is never an approval.
  * A retained choice owns its original evidence even when the case attaches a newer source. */
 export async function authorizeSfCompositeProcurementOperations(input: {
-  host: Pick<DomainPortHost, "revalidate">
+  host: Pick<DomainPortHost, "revalidate" | "requestFor">
   resolve: BusinessContextService["resolve"]
 }, decision: DecisionCase, item: Pick<DecisionCase["alternatives"][number], "scenario" | "result">, call: TrustedDomainContext) {
+  const request = input.host.requestFor(call)
+  const binding = digestSfValue([call.kind, call.binding])
+  const requestDigest = request && digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
+  const currentAuthority = () => !!request && !request.signal.aborted && input.host.requestFor(call) === request && binding === digestSfValue([call.kind, call.binding]) &&
+    requestDigest === digestSfValue({ method: request.method, url: request.url, headers: [...request.headers] })
   const operations = item.scenario.operations.filter((operation) => operation.targetRef.startsWith("sf-procurement:"))
-  if (!operations.length || new Set(operations.map((operation) => operation.targetRef)).size !== operations.length ||
+  if (!currentAuthority() || !operations.length || new Set(operations.map((operation) => operation.targetRef)).size !== operations.length ||
     item.result.comparisonStatus !== "conditioned" || item.result.total !== null || item.result.currency !== decision.currency ||
     digestSfValue(item.result.horizon) !== digestSfValue(decision.horizon) ||
     ![...decision.alternatives, ...decision.choices].some((stored) => digestSfValue(stored.scenario) === digestSfValue(item.scenario) && digestSfValue(stored.result) === digestSfValue(item.result)) ||
-    !await input.host.revalidate(call)) return false
+    !await input.host.revalidate(call) || !currentAuthority()) return false
   const refs = operations.map((operation) => {
     const matches = item.result.sourceRefs.filter((ref): ref is Extract<BusinessEvidenceRef, { kind: "record" }> => ref.kind === "record" &&
       ref.refId === operation.targetRef && ref.target.surface === "procurement" && ref.target.recordType === "procurement-request")
@@ -166,7 +174,7 @@ export async function authorizeSfCompositeProcurementOperations(input: {
     digestSfValue(operation.period) !== digestSfValue(item.result.horizon) || !item.result.unresolvedConditions.includes(`external-operation:${digestSfValue(operation)}:procurement-replacement-cost-unresolved`))) return false
   const read = () => Promise.all(refs.map((ref) => input.resolve(ref!, call)))
   const first = await read()
-  if (first.some((resolution, index) => {
+  if (!currentAuthority() || first.some((resolution, index) => {
     const ref = refs[index]!, current = resolution.currentRef, projection = resolution.authorizedProjection
     // C17 proves physical continuity. Reissuing the current actor's scope may
     // rotate its scoped incarnation; the fresh branch still requires the exact ref.
@@ -175,10 +183,9 @@ export async function authorizeSfCompositeProcurementOperations(input: {
       current.installationId !== ref.installationId || current.projectId !== ref.projectId || current.target.surface !== "procurement" ||
       current.target.recordType !== ref.target.recordType || current.target.recordId !== ref.target.recordId ||
       digestSfValue(current.target.fields) !== digestSfValue(ref.target.fields) || digestSfValue(current.target.period) !== digestSfValue(ref.target.period) ||
-      !projection || !("components" in projection) || projection.version !== ref.target.version || projection.context.surface !== "procurement" ||
+      !projection || !("components" in projection) || !canonicalProcurementProjection(projection, ref) || projection.version !== ref.target.version || projection.context.surface !== "procurement" ||
       projection.context.installationId !== ref.installationId || projection.context.projectId !== ref.projectId || projection.context.currency !== item.result.currency ||
-      digestSfValue(projection.context.period) !== digestSfValue(item.result.horizon) || !projection.context.sourceRefs.length ||
-      projection.context.sourceRefs.some((source) => !covered(source, [ref])) ||
+      digestSfValue(projection.context.period) !== digestSfValue(item.result.horizon) ||
       resolution.state === "historical" && !resolution.differences || resolution.state === "fresh" &&
       (digestSfValue(current) !== digestSfValue(ref) || projection.context.principalRef !== call.binding.principalRef ||
         projection.context.accessRevision !== call.binding.accessRevision || projection.context.policyVersion !== call.binding.policyVersion)
@@ -191,5 +198,32 @@ export async function authorizeSfCompositeProcurementOperations(input: {
       components: projection.components.map((component) => ({ ...component, sourceRefs: component.sourceRefs.map(source) })) } }
   })
   const second = await read()
-  return digestSfValue(material(first)) === digestSfValue(material(second)) && await input.host.revalidate(call)
+  return currentAuthority() && digestSfValue(material(first)) === digestSfValue(material(second)) && await input.host.revalidate(call) && currentAuthority()
+}
+
+/** C17 retains the canonical read projection: evidence belongs to its typed
+ * values; context SourceRefs and financial components may both be empty. */
+function canonicalProcurementProjection(projection: DomainProjection, ref: Extract<BusinessEvidenceRef, { kind: "record" }>) {
+  if (projection.engineVersion !== "procurement-v1" || !projection.context || !projection.context.period || !Array.isArray(projection.context.sourceRefs) ||
+    !Array.isArray(projection.components) || projection.components.length || projection.decision !== undefined || projection.comparison !== undefined ||
+    !Array.isArray(projection.values) || !Array.isArray(projection.missing) ||
+    ref.target.fields.some((field) => !procurementRequestFields.some((allowed) => field === allowed)) ||
+    projection.context.sourceRefs.some((source) => !source || !source.period || !Array.isArray(source.fields) || !source.fields.length ||
+      typeof source.observedAt !== "string" || !Number.isFinite(Date.parse(source.observedAt)) || !covered(source, [ref]))) return false
+  const fields = ref.target.fields.filter((field) => field !== "sourcing")
+  const numeric = ["ageDays", "baseAmount", "submittedAmount", "submittedFxRate", "originalAmount", "fxRate"]
+  if (new Set(fields).size !== fields.length || projection.values.length !== fields.length || new Set(projection.values.map((value) => value?.id)).size !== fields.length ||
+    projection.values.some((value) => !value || !fields.includes(value.id) || value.granularity !== "record" || !value.period ||
+      digestSfValue(value.period) !== digestSfValue(ref.target.period) || !Array.isArray(value.sourceRefs) || value.sourceRefs.length !== 1 || !value.sourceRefs[0] ||
+      digestSfValue(value.sourceRefs[0]) !== digestSfValue(ref) || !value.drilldown || digestSfValue(value.drilldown) !== digestSfValue(ref) ||
+      !["confirmed", "estimated", "absent"].includes(value.evidenceState) ||
+      value.value !== null && (numeric.includes(value.id) ? typeof value.value !== "number" || !Number.isFinite(value.value) : typeof value.value !== "string") ||
+      value.currency !== undefined && (!/^[A-Z]{3}$/.test(value.currency) || !["baseAmount", "submittedAmount", "originalAmount"].includes(value.id)) ||
+      value.id === "baseAmount" && value.currency !== projection.context.currency ||
+      value.unit !== undefined && (value.id !== "ageDays" || value.unit !== "days")) ||
+    projection.missing.some((entry) => !entry || !fields.includes(entry.field) || !["missing", "unavailable", "missing-fx"].includes(entry.reason))) return false
+  const amount = projection.values.find((value) => value.id === "originalAmount")
+  const currency = projection.values.find((value) => value.id === "originalCurrency")
+  return !!amount && (amount.value === null ? amount.evidenceState === "absent" : amount.evidenceState === "confirmed" || amount.evidenceState === "estimated") &&
+    (!currency || (currency.value === null ? amount.currency === undefined : typeof currency.value === "string" && /^[A-Z]{3}$/.test(currency.value) && amount.currency === currency.value))
 }

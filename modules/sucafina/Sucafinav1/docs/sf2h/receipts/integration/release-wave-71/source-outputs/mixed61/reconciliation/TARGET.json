@@ -1,0 +1,315 @@
+{
+  "schema": "sf2h.mission61.target-reconciliation.v1",
+  "observed": {
+    "observed_at": "2026-11-15T02:46:21.973Z",
+    "source": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "target": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+    "control": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+    "compiler": "d317873c18bf224c4c1f4d3425179d12ad53e81b",
+    "pr": {
+      "number": 73,
+      "url": "https://github.com/gustavomhss/Orchestra-SF/pull/73",
+      "draft": true,
+      "state": "open",
+      "head": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+      "base": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+      "base_branch": "sf2-stack"
+    },
+    "runs": [
+      {
+        "id": 43668842101,
+        "branch": "ci-run-linux-astra-m61-cb0343be-7e5c32fe-3",
+        "sha": "7dc844027be65913de226178f2b11a9f682d5396",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43668099377,
+        "branch": "ci-run-linux-astra-m61-652f4d3a-eeb02ee6-2",
+        "sha": "03dc648952c9c56bc00058ce187fe7e27fe0db15",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43667860058,
+        "branch": "ci-run-linux-astra-m61-base7e1-a53cb1dd-1",
+        "sha": "449f8c51d2ee641e8d41cfa965de7c72b8443276",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 43667290771,
+        "branch": "ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1",
+        "sha": "92ac331081a61b4724193488777599d4d8eec257",
+        "status": "completed",
+        "conclusion": "failure"
+      }
+    ],
+    "active_own_runs": 0
+  },
+  "target_tree": "b3b4f89ddd6a3ca5d570681f91098214b5ce935d",
+  "target_docs_commit": "faa30fddb7e7b61696b66fd069f51cf18c51125f",
+  "target_material_sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+  "target_material_tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+  "authority60": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+    "blob": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+    "content": {
+      "schema": "sf2h.after-c27-60.authority-terminal.v1",
+      "mission": 60,
+      "state": "HANDOFF_TERMINAL_LEASE_ENDED",
+      "lease_epoch": "S0-C-e12-browser60",
+      "branch": "sf2-stack",
+      "PR": 65,
+      "predecessor": {
+        "mission": 57,
+        "terminal": "d6d9816bb09f7595330862616305e0791e23e61e",
+        "tree": "69cf88239d09ee164b12fecd482c6da3350b8b71",
+        "authority_blob": "5f2009672caed4b729924e88033b639fae8df7ee",
+        "handoff_blob": "91ae527cffe5315a8e67ec77efd88aede798b1a0",
+        "state": "HANDOFF_TERMINAL_LEASE_ENDED"
+      },
+      "T0": "2026-11-13T04:01:10Z",
+      "planning_sha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+      "acceptance_digest": "32205922d4a3a2417d5413c232bf892769b3c8fa95045434a0461b030ba081c4",
+      "current_material_candidate": {
+        "name": "C28",
+        "symbol": "C28",
+        "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+        "tree": "8b07ebf53f492a20ce3381a8b4ec50bd21ec1c6d",
+        "parent": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+        "material_paths": 45,
+        "qualification": "HOLD_NOT_RUN"
+      },
+      "terminal_identity": {
+        "commit": "CONTAINING_COMMIT",
+        "tree": "CONTAINING_COMMIT_TREE",
+        "parent": "d088708276b48f896ad4e0ecd2a95cb73dc413b1",
+        "rule": "SelfSHA/tree cannotbeembeddedwithoutselfreference. ExactGitidentitiesandCASreadbackpublishedinPR65terminalcomment."
+      },
+      "activation": "Effective only when this receipt is published on sf2-stack by successful expected-SHA CAS; then60ends itswriterlease. No automaticresumeornewstackwriter named.",
+      "sole_writer_record": "Root60only. Focuseddelegatedreviewersread-only, nosupervisor/Goalcreated; producerbranchesuntouched.",
+      "source_pins": [
+        {
+          "branch": "sf2-stack",
+          "sha": "d088708276b48f896ad4e0ecd2a95cb73dc413b1"
+        },
+        {
+          "branch": "sf2-control",
+          "sha": "173c3507e40579f1a1a2dfb068bda40084a678bc"
+        },
+        {
+          "branch": "astra-wp07",
+          "sha": "c4f6676325f2549b29719fd5ce86132ad34212bc"
+        },
+        {
+          "branch": "astra-wp11",
+          "sha": "c688f16d8d2d45f22fe72bf4ddc8df3dc4370381"
+        },
+        {
+          "branch": "runtime-read-scope",
+          "sha": "1b861df306260deed5e6af8a8e49e5da45c11b67"
+        },
+        {
+          "branch": "astra-compose",
+          "sha": "d317873c18bf224c4c1f4d3425179d12ad53e81b"
+        }
+      ],
+      "current_control": "173c3507e40579f1a1a2dfb068bda40084a678bc",
+      "next_authority": "Any authorized successor/resumption must reconcile realHEAD,thisterminal,latestcontrol/sourceauthorities/releases before newACK/CAS. No producerlease assumedendedfromsilence; no60continuationafterterminalwithoutauthority.",
+      "retained_owners": {
+        "checks": 45,
+        "epic_AM_acceptance": "S0",
+        "runtime_source": 59,
+        "Decisions_source": 52,
+        "Reports48": "ENDED; correctionneedsnewexplicitowner",
+        "sidebar": "planningonly",
+        "Azure": "separate"
+      },
+      "execution": {
+        "tests": 0,
+        "typechecks": 0,
+        "guards": 0,
+        "builds": 0,
+        "preflights": 0,
+        "CI_dispatches": 0,
+        "AM": 0,
+        "workflow_ref_moves": 0,
+        "producer_branch_writes": 0,
+        "dev_merge": 0,
+        "deploy": 0,
+        "Azure": 0,
+        "product_execution": 0
+      },
+      "GLOBAL_RELEASE": false
+    }
+  },
+  "handoff60": {
+    "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/HANDOFF.md",
+    "blob": "85b12d52c641a113c4e9b653fdb6b9f1dea8b9b7"
+  },
+  "target_delta_since_C28": [
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/AUTHORITY.json",
+      "sha": "83e9c35441aa09e8d81e35bfb8e1a711322e8bf9",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/HANDOFF.md",
+      "sha": "85b12d52c641a113c4e9b653fdb6b9f1dea8b9b7",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/candidates-final.json",
+      "sha": "340a00f43459041e260eb1cadd2f86f34be73bf9",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/communication-final.json",
+      "sha": "f3b35f69bab263428be2b95ccf8e116ff44c1818",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/consumer-acks-final.json",
+      "sha": "0f6363330696ff55bc7ac33ee670c15a63c346b6",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/dependency-closure-final.json",
+      "sha": "4b0456690ed32e15eea476b3d2885687ec4afa5b",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/errata-final.json",
+      "sha": "dcefa3fbfa60b3fbd126d5a03c7db8ff9516953a",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/finding-routing-final.json",
+      "sha": "663b1c8c3e5e6bb79a79b1ccd1a78f1e6894213c",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/future-source-inputs.json",
+      "sha": "f6d7e1132c33d108ed04bf5c0c94dc1de98fcb9f",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/gate-queue-final.json",
+      "sha": "29420a3dd7ec3c5c635125b12c57e84dfdf58dd6",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/pending-owners-final.json",
+      "sha": "5fca39dcfbd1376a7ba02ab8750800a2308ce229",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-manifest-01.json",
+      "sha": "1fe32b6eedb1624c45b35df5e8f693dfa3d39ca3",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-manifest-C28.json",
+      "sha": "6db999349464518f0558ff0c40d1aba4a5ec4672",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-manifest-terminal.json",
+      "sha": "9201d162781c98ccdfe438b2e80ee12bdc1bad85",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-readback-01.json",
+      "sha": "e1028e60e0cc8a96bf25f9173a5f8519e31b3864",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/publication-readback-C28.json",
+      "sha": "df784ff244b4266df0f8d334499b7d8281d46c5a",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/read-coverage-final.json",
+      "sha": "f14777bf0c5722fd5602003bc0bd4ef7c3418089",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/control-posterior.json",
+      "sha": "7fa4a7317a2a04354cc36fb3c0067404e6eda568",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/control65-70-final.json",
+      "sha": "5d80a7f3ee6301a5e495dae3c23e617542908968",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/decisions52-final.json",
+      "sha": "0dba9ae60f01a9d5d6dac8d5ff1231b60637b641",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/runtime59-final.json",
+      "sha": "af7c79a535534479dbb6723a539923dccedb2e3e",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reconciliation/runtime59-latest.json",
+      "sha": "6c2f7f0d13009887648b3b3227e28a11cff87120",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/requests/decisions52-nominal06.json.txt",
+      "sha": "3619f1fd8b14262b0c89ee9830269f2b05356aaf",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/requests/reports48-boundary01.json.txt",
+      "sha": "8812d55584bccb47b21f65a113f985f2cd57eef8",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/requests/reports48-nominal06.json.txt",
+      "sha": "b216b474fff3eb0dbb720678080899908fab5a0c",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/reviews/final-document-review.json",
+      "sha": "b6305de8f0b6283ea31c368229e84b6e20bd7cb0",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/source-census-final.json",
+      "sha": "a7165e25dfe518c468e9a3f553622d6bf946883b",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/source-output-manifest-final.json",
+      "sha": "b924900a40298c5a9fa8f7420bd252bacb4a25cd",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/validation-inputs-final.json",
+      "sha": "e3a4bdf1b55fbbd2d14d447117e2a5d05b6ef12c",
+      "status": "added"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/integration/after-c27-60/verification-final.json",
+      "sha": "052070ce8b768ff5888ce3f9ca3b6e076b06807c",
+      "status": "added"
+    }
+  ],
+  "functional_overlap_since_base": [],
+  "consumed_dependency_delta": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/integration/product-authority.ts",
+      "source_blob": "2c82d60d220d8d5365da8322bad648a64bbb62d2",
+      "target_blob": "8d563561be19d4f50a68033d4ba4ac2bf8cb3ea0",
+      "observed_delta": "Read operations now propagate identity resolution uncertainty instead of swallowing it."
+    }
+  ],
+  "consumer_ACK61": "NOT_OBSERVED",
+  "source_receipts_after60_census": "Mission61 delivers its own actual W3/test paths and requests additively. The historical60 census at base7e1 is not overwritten.",
+  "PR_base_observation": "PR metadata still reported d088 while live ref was faa; live ref controls authority/preimage reconciliation."
+}

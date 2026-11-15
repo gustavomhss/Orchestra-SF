@@ -1,0 +1,439 @@
+{
+  "schema": "mission61-ci-attempt-v1",
+  "attempt": 3,
+  "status": "COMPLETED_FAILURE_WITH_ALL_OWNED_TESTS_PASS",
+  "product_sha": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+  "product_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+  "snapshot_sha": "7dc844027be65913de226178f2b11a9f682d5396",
+  "snapshot_tree": "dfd4d27cbcf7053ace16d9053a4a24f022fe0e51",
+  "snapshot_parent": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+  "snapshot_delta": [
+    ".ci-run.json"
+  ],
+  "request_blob": "d0e890453415092636f1f692b05ddc08dac3a9b2",
+  "request_sha256": "7e5c32fe73dfd39aa4257365ca8729a3e584a8626e67e0a2d6948e645ee74b8c",
+  "request": {
+    "package": "sucafina",
+    "directory": "modules/sucafina",
+    "runner": "bun",
+    "args": [
+      "./Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "./Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "./Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "./Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "./Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "./Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "--timeout",
+      "120000"
+    ],
+    "env": {}
+  },
+  "branch": "ci-run-linux-astra-m61-cb0343be-7e5c32fe-3",
+  "dedup": {
+    "checked_at": "2026-11-15T02:39:57.493Z",
+    "runs": []
+  },
+  "run_id": 43668842101,
+  "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668842101",
+  "run_conclusion": "failure",
+  "jobs": [
+    {
+      "id": 132674151887,
+      "name": "test (ubuntu-24.04)",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 132675184074,
+      "name": "cleanup",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": {
+    "artifacts": []
+  },
+  "totals": {
+    "pass": 43,
+    "fail": 13,
+    "summary": "Ran 56 tests across 6 files. [188.95s]",
+    "assertions": "588 expect() calls"
+  },
+  "nonce_count": 1,
+  "nonce": "b2c561381e0fe447094f42e73c8065bc",
+  "omni_verdict_lines": [
+    "omni positive control [b2c561381e0fe447094f42e73c8065bc]: pass (declared: 3 test(s) in Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts); 6 omni spawn(s), 0 delegated."
+  ],
+  "tests": [
+    {
+      "name": "Procurement scope rotation preserves physical lineage and binds a real private source grant",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "93.83ms"
+    },
+    {
+      "name": "canonical delete and same-ID row replay create a new physical source and reject the old source and private grant",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "81.95ms"
+    },
+    {
+      "name": "removing a genuine original scope breaks its private grant while a current replacement source remains available",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "65.71ms"
+    },
+    {
+      "name": "real Procurement observation refuses revoke between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "45.37ms"
+    },
+    {
+      "name": "real Procurement observation refuses actor between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "43.53ms"
+    },
+    {
+      "name": "real Procurement observation refuses policy between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "43.26ms"
+    },
+    {
+      "name": "real Procurement observation refuses access between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "43.20ms"
+    },
+    {
+      "name": "real Procurement observation refuses request-header between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "39.55ms"
+    },
+    {
+      "name": "real Procurement observation refuses lease between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "40.34ms"
+    },
+    {
+      "name": "real Procurement observation refuses abort between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "40.89ms"
+    },
+    {
+      "name": "real Procurement observation refuses role between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "58.80ms"
+    },
+    {
+      "name": "real Procurement observation refuses source between independent source reads without a private result",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts",
+      "duration": "46.86ms"
+    },
+    {
+      "name": "real C08 Procurement preparation exposes the M31 blocker and cannot manufacture an original capture",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts",
+      "duration": "581.85ms"
+    },
+    {
+      "name": "mixed external authority refuses revoked after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "596.15ms"
+    },
+    {
+      "name": "mixed external authority refuses actor after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "562.40ms"
+    },
+    {
+      "name": "mixed external authority refuses access after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "572.43ms"
+    },
+    {
+      "name": "mixed external authority refuses policy after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "537.99ms"
+    },
+    {
+      "name": "mixed external authority refuses request after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "532.46ms"
+    },
+    {
+      "name": "mixed external authority refuses headers after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "562.70ms"
+    },
+    {
+      "name": "mixed external authority refuses lease after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "527.24ms"
+    },
+    {
+      "name": "mixed external authority refuses abort after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "526.47ms"
+    },
+    {
+      "name": "mixed external authority refuses source after a successful independent source read",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "555.79ms"
+    },
+    {
+      "name": "mixed preview fences request after its final genuine authority observation",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "2394.60ms"
+    },
+    {
+      "name": "mixed preview fences headers after its final genuine authority observation",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "2518.24ms"
+    },
+    {
+      "name": "mixed preview fences lease after its final genuine authority observation",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "4199.01ms"
+    },
+    {
+      "name": "mixed preview fences abort after its final genuine authority observation",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "2418.12ms"
+    },
+    {
+      "name": "mixed preview refuses a real C08 membership change between its protected case observations",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "1914.21ms"
+    },
+    {
+      "name": "mixed authority accepts canonical value evidence and rejects corrupted copies of actual Procurement observations",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "1724.26ms"
+    },
+    {
+      "name": "mixed canonical Procurement retains a real absent estimate as unresolved evidence",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "547.28ms"
+    },
+    {
+      "name": "mixed authority rejects substituted binding and lease objects while the genuine admitted context remains valid",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts",
+      "duration": "608.91ms"
+    },
+    {
+      "name": "mixed recorded Planner fallback reads real captured base and amount originals while Procurement stays independently authorized",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "duration": "115781.82ms"
+    },
+    {
+      "name": "recorded mixed verifier rechecks Procurement after real historical Planner reads",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "duration": "17501.98ms"
+    },
+    {
+      "name": "mixed fallback refuses genuine source change between independent reads and never substitutes latest values",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts",
+      "duration": "30306.81ms"
+    },
+    {
+      "name": "mixed original52 shape retains Planner 2400, difference 1200 and an unresolved external Procurement operation without writes",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "duration": "173.37ms"
+    },
+    {
+      "name": "mixed capability is transient and current case guards authorize the explicit external selector",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "duration": "139.14ms"
+    },
+    {
+      "name": "mixed preview rejects another holder, unbound currency, duplicated targets and stale Procurement source without writes",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "duration": "51.36ms"
+    },
+    {
+      "name": "mixed form offers explicit request and amount controls only for attached Procurement evidence",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts",
+      "duration": "31.96ms"
+    },
+    {
+      "name": "stored Planner selectors use the exact domain projection without reopening coverage",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "652.55ms"
+    },
+    {
+      "name": "stored scenario rejects planner changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "102.83ms"
+    },
+    {
+      "name": "stored scenario rejects dashboard changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "105.61ms"
+    },
+    {
+      "name": "stored scenario rejects procurement changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "100.09ms"
+    },
+    {
+      "name": "stored scenario rejects principal changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "93.19ms"
+    },
+    {
+      "name": "stored scenario rejects case-input changes across the actual projection await",
+      "status": "pass",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "106.14ms"
+    },
+    {
+      "name": "fresh Procurement duplicates retain two canonical observations per guard and recompute on every case read",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "58.57ms"
+    },
+    {
+      "name": "historical Procurement duplicates keep both independent canonical entry observations",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "56.65ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects source change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "55.61ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects capture change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "55.26ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects receipt change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "56.20ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects preferences change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "57.44ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects case change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "57.65ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects principal change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "56.54ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects period change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "58.61ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects clock change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "58.59ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects headers change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "54.84ms"
+    },
+    {
+      "name": "fresh Procurement duplicate proof rejects lease change after its canonical double observation",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "87.19ms"
+    },
+    {
+      "name": "fresh Procurement proofs do not cross overlapping invocations or survive final Request header replacement",
+      "status": "fail",
+      "file": "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts",
+      "duration": "64.87ms"
+    }
+  ],
+  "per_file": {
+    "Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts": {
+      "pass": 12,
+      "fail": 0
+    },
+    "Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts": {
+      "pass": 1,
+      "fail": 0
+    },
+    "Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts": {
+      "pass": 17,
+      "fail": 0
+    },
+    "Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts": {
+      "pass": 3,
+      "fail": 0
+    },
+    "Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts": {
+      "pass": 4,
+      "fail": 0
+    },
+    "Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts": {
+      "pass": 6,
+      "fail": 13
+    }
+  },
+  "interpretation": {
+    "owned_tests": "33PASS0FAIL across all4 owned test files;21 distinct corrupted-copy probes within one passing case.",
+    "mixed_consumer": "4PASS0FAIL; canonical source shape repair resolves the baseline mixed positive failure.",
+    "remaining_failures": "13 unchanged existing Procurement tests fail at real prepareDomainCommands expecting ok while financial-approval-command-unavailable remains the canonical prerequisite blocker. All13 reproduce on exact7e1 baseline.",
+    "omni": "PASS6 actual spawns0delegated3declaring tests; real scanner and actual Planner capture required by tests.",
+    "overall": "Workflow conclusion remains FAILURE. No full source suite, C17 archived Procurement positive, finance approval or global release PASS is claimed.",
+    "selection_delta": "The2 pure Planner-only history tests passed on W2. Their evidence is not relabeled as W3; they were not repeated because the subsequent adapter concerns external Procurement only. No failing test was dropped."
+  }
+}

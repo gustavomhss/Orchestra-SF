@@ -1,0 +1,1497 @@
+﻿2026-11-15T02:20:11.5859371Z Current runner version: '2.338.2'
+2026-11-15T02:20:11.5884415Z ##[group]Runner Image Provisioner
+2026-11-15T02:20:11.5885297Z Hosted Compute Agent
+2026-11-15T02:20:11.5885942Z Version: 20261103.629
+2026-11-15T02:20:11.5886628Z Commit: 15dbd9ccb5dbf34fae002b6ed1a2670f52df37bc
+2026-11-15T02:20:11.5887376Z Build Date: 2026-11-03T17:26:59Z
+2026-11-15T02:20:11.5888089Z Worker ID: {f5ceff64-0342-4432-b56f-576088c6163e}
+2026-11-15T02:20:11.5889066Z Region: us-east-1
+2026-11-15T02:20:11.5889651Z Cloud: AWS
+2026-11-15T02:20:11.5890206Z ##[endgroup]
+2026-11-15T02:20:11.5891745Z ##[group]Operating System
+2026-11-15T02:20:11.5892475Z Ubuntu
+2026-11-15T02:20:11.5893072Z 24.04.5
+2026-11-15T02:20:11.5893634Z LTS
+2026-11-15T02:20:11.5894169Z ##[endgroup]
+2026-11-15T02:20:11.5894712Z ##[group]Runner Image
+2026-11-15T02:20:11.5895362Z Image: ubuntu-24.04
+2026-11-15T02:20:11.5895947Z Version: 20261111.127.1
+2026-11-15T02:20:11.5897481Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261111.127/images/ubuntu/Ubuntu2404-Readme.md
+2026-11-15T02:20:11.5899377Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261111.127
+2026-11-15T02:20:11.5900412Z ##[endgroup]
+2026-11-15T02:20:11.5901622Z ##[group]GITHUB_TOKEN Permissions
+2026-11-15T02:20:11.5903838Z Contents: read
+2026-11-15T02:20:11.5904456Z Metadata: read
+2026-11-15T02:20:11.5904991Z ##[endgroup]
+2026-11-15T02:20:11.5907173Z Secret source: Actions
+2026-11-15T02:20:11.5908088Z Cache mode: write
+2026-11-15T02:20:11.5909098Z Prepare workflow directory
+2026-11-15T02:20:11.6300395Z Prepare all required actions
+2026-11-15T02:20:11.6351557Z Getting action download info
+2026-11-15T02:20:11.7819164Z Download action repository 'actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-11-15T02:20:13.7669709Z Download action repository 'actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020' (SHA:49933ea5288caeca8642d1e84afbd3f7d6820020)
+2026-11-15T02:20:13.9629726Z Download action repository 'actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1' (SHA:ece7cb06caefa5fff74198d8649806c4678c61a1)
+2026-11-15T02:20:14.1762500Z Download action repository 'actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+2026-11-15T02:20:14.5038598Z Complete job name: test (ubuntu-24.04)
+2026-11-15T02:20:14.5665263Z ##[group]Run actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+2026-11-15T02:20:14.5665794Z with:
+2026-11-15T02:20:14.5666118Z   repository: gustavomhss/Orchestra-SF
+2026-11-15T02:20:14.5668368Z   token: ***
+2026-11-15T02:20:14.5668904Z   ssh-strict: true
+2026-11-15T02:20:14.5669196Z   ssh-user: git
+2026-11-15T02:20:14.5669462Z   persist-credentials: true
+2026-11-15T02:20:14.5669750Z   clean: true
+2026-11-15T02:20:14.5670021Z   sparse-checkout-cone-mode: true
+2026-11-15T02:20:14.5670299Z   fetch-depth: 1
+2026-11-15T02:20:14.5670590Z   fetch-tags: false
+2026-11-15T02:20:14.5670853Z   show-progress: true
+2026-11-15T02:20:14.5671132Z   lfs: false
+2026-11-15T02:20:14.5671405Z   submodules: false
+2026-11-15T02:20:14.5671647Z   set-safe-directory: true
+2026-11-15T02:20:14.5672118Z ##[endgroup]
+2026-11-15T02:20:18.4377885Z Syncing repository: gustavomhss/Orchestra-SF
+2026-11-15T02:20:18.4379680Z ##[group]Getting Git version info
+2026-11-15T02:20:18.4380535Z Working directory is '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-15T02:20:18.4381435Z [command]/usr/bin/git version
+2026-11-15T02:20:18.7113427Z git version 2.56.1
+2026-11-15T02:20:18.7127946Z ##[endgroup]
+2026-11-15T02:20:18.7142251Z Temporarily overriding HOME='/home/runner/work/_temp/4afd6bff-f5a0-4bb6-b6c2-4167deff4b4a' before making global git config changes
+2026-11-15T02:20:18.7143253Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-15T02:20:18.7144864Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-15T02:20:18.7550677Z Deleting the contents of '/home/runner/work/Orchestra-SF/Orchestra-SF'
+2026-11-15T02:20:18.7553689Z ##[group]Initializing the repository
+2026-11-15T02:20:18.7557993Z [command]/usr/bin/git init /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-15T02:20:18.8432025Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-11-15T02:20:18.8433000Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-11-15T02:20:18.8433610Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-11-15T02:20:18.8434055Z hint: call:
+2026-11-15T02:20:18.8434330Z hint:
+2026-11-15T02:20:18.8434685Z hint: 	git config --global init.defaultBranch <name>
+2026-11-15T02:20:18.8435004Z hint:
+2026-11-15T02:20:18.8435323Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-11-15T02:20:18.8435774Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-11-15T02:20:18.8436174Z hint:
+2026-11-15T02:20:18.8436435Z hint: 	git branch -m <name>
+2026-11-15T02:20:18.8436712Z hint:
+2026-11-15T02:20:18.8437060Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-11-15T02:20:18.8444550Z Initialized empty Git repository in /home/runner/work/Orchestra-SF/Orchestra-SF/.git/
+2026-11-15T02:20:18.8454835Z [command]/usr/bin/git remote add origin https://github.com/gustavomhss/Orchestra-SF
+2026-11-15T02:20:18.8507580Z ##[endgroup]
+2026-11-15T02:20:18.8508397Z ##[group]Disabling automatic garbage collection
+2026-11-15T02:20:18.8510960Z [command]/usr/bin/git config --local gc.auto 0
+2026-11-15T02:20:18.8535403Z ##[endgroup]
+2026-11-15T02:20:18.8536136Z ##[group]Setting up auth
+2026-11-15T02:20:18.8541058Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-15T02:20:18.8571394Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-15T02:20:19.2646366Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-15T02:20:19.2676353Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-15T02:20:19.2826146Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-15T02:20:19.2848891Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-15T02:20:19.2995392Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-11-15T02:20:19.3020557Z ##[endgroup]
+2026-11-15T02:20:19.3021197Z ##[group]Fetching the repository
+2026-11-15T02:20:19.3034435Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +92ac331081a61b4724193488777599d4d8eec257:refs/remotes/origin/ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1
+2026-11-15T02:20:23.0757816Z From https://github.com/gustavomhss/Orchestra-SF
+2026-11-15T02:20:23.0758985Z  * [new ref]           92ac331081a61b4724193488777599d4d8eec257 -> origin/ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1
+2026-11-15T02:20:23.0762061Z ##[endgroup]
+2026-11-15T02:20:23.0762755Z ##[group]Determining the checkout info
+2026-11-15T02:20:23.0765433Z ##[endgroup]
+2026-11-15T02:20:23.0769126Z [command]/usr/bin/git sparse-checkout disable
+2026-11-15T02:20:23.0860077Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-11-15T02:20:23.0865233Z ##[group]Checking out the ref
+2026-11-15T02:20:23.0869650Z [command]/usr/bin/git checkout --progress --force -B ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1 refs/remotes/origin/ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1
+2026-11-15T02:20:24.0414222Z Switched to a new branch 'ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1'
+2026-11-15T02:20:24.0421081Z branch 'ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1' set up to track 'origin/ci-run-linux-astra-m61-8c3fefa7-eeb02ee6-1'.
+2026-11-15T02:20:24.0476582Z ##[endgroup]
+2026-11-15T02:20:24.0479319Z [command]/usr/bin/git log -1 --format=%H
+2026-11-15T02:20:24.0500130Z 92ac331081a61b4724193488777599d4d8eec257
+2026-11-15T02:20:24.0738113Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-15T02:20:24.0738872Z with:
+2026-11-15T02:20:24.0739090Z   node-version: 24.15
+2026-11-15T02:20:24.0739481Z   always-auth: false
+2026-11-15T02:20:24.0739738Z   check-latest: false
+2026-11-15T02:20:24.0741743Z   token: ***
+2026-11-15T02:20:24.0741954Z ##[endgroup]
+2026-11-15T02:20:24.2788660Z Attempting to download 24.15...
+2026-11-15T02:20:24.3333576Z (node:2145) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-15T02:20:24.3334515Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-15T02:20:24.8326360Z Acquiring 24.15.0 - x64 from https://github.com/actions/node-versions/releases/download/24.15.0-24511264946/node-24.15.0-linux-x64.tar.gz
+2026-11-15T02:20:25.4880612Z Extracting ...
+2026-11-15T02:20:25.4991339Z [command]/usr/bin/tar xz --strip 1 --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/0b73689f-683c-44e5-b6a0-d7256df97cc6 -f /home/runner/work/_temp/192274cf-f408-43e8-97a8-6f500254c402
+2026-11-15T02:20:26.5126111Z Adding to the cache ...
+2026-11-15T02:20:27.4054322Z ##[group]Environment details
+2026-11-15T02:20:27.9085142Z node: v24.15.0
+2026-11-15T02:20:27.9085476Z npm: 11.12.1
+2026-11-15T02:20:27.9085804Z yarn: 1.22.22
+2026-11-15T02:20:27.9086343Z ##[endgroup]
+2026-11-15T02:20:27.9211237Z ##[group]Run node --input-type=module <<'NODE'
+2026-11-15T02:20:27.9211712Z [36;1mnode --input-type=module <<'NODE'[0m
+2026-11-15T02:20:27.9212227Z [36;1mimport { appendFileSync, mkdirSync, readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'[0m
+2026-11-15T02:20:27.9212680Z [36;1mimport path from 'node:path'[0m
+2026-11-15T02:20:27.9213085Z [36;1mimport { omniControlScope, validateRequest } from './script/test-ci-request.ts'[0m
+2026-11-15T02:20:27.9213532Z [36;1mimport { locateTestPackage } from './script/test-ci-location.ts'[0m
+2026-11-15T02:20:27.9214140Z [36;1mconst request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),[0m
+2026-11-15T02:20:27.9214643Z [36;1m  (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&[0m
+2026-11-15T02:20:27.9215075Z [36;1m    realpathSync(file).startsWith(realpathSync('.') + path.sep),[0m
+2026-11-15T02:20:27.9215466Z [36;1m  (selector) => locateTestPackage('.', selector))[0m
+2026-11-15T02:20:27.9215907Z [36;1mwriteFileSync('.ci-run.json', JSON.stringify(request))[0m
+2026-11-15T02:20:27.9216304Z [36;1mmkdirSync('test-ci-evidence', { recursive: true })[0m
+2026-11-15T02:20:27.9216713Z [36;1mwriteFileSync('test-ci-evidence/request.json', JSON.stringify({ request,[0m
+2026-11-15T02:20:27.9217182Z [36;1m  platform: process.platform, arch: process.arch, sha: process.env.GITHUB_SHA }))[0m
+2026-11-15T02:20:27.9217655Z [36;1mappendFileSync(process.env.GITHUB_OUTPUT,[0m
+2026-11-15T02:20:27.9218182Z [36;1m  `package=${request.package}\ndirectory=${request.directory}\nrunner=${request.runner}\nomni_control=${omniControlScope(request)}\n`)[0m
+2026-11-15T02:20:27.9218952Z [36;1mNODE[0m
+2026-11-15T02:20:28.1529082Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:20:28.1529428Z ##[endgroup]
+2026-11-15T02:20:28.2230740Z (node:2182) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///home/runner/work/Orchestra-SF/Orchestra-SF/packages/script/src/module-catalog.ts is not specified and it doesn't parse as CommonJS.
+2026-11-15T02:20:28.2232291Z Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+2026-11-15T02:20:28.2250486Z To eliminate this warning, add "type": "module" to /home/runner/work/Orchestra-SF/Orchestra-SF/packages/script/package.json.
+2026-11-15T02:20:28.2253153Z (Use `node --trace-warnings ...` to show where the warning was created)
+2026-11-15T02:20:28.2573394Z Prepare all required actions
+2026-11-15T02:20:28.2574166Z Getting action download info
+2026-11-15T02:20:28.3284533Z Download action repository 'oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6' (SHA:0c5077e51419868618aeaa5fe8019c62421857d6)
+2026-11-15T02:20:28.4521258Z Download action repository 'actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830' (SHA:0057852bfaa89a56745cba8c7296529d2fc39830)
+2026-11-15T02:20:28.6539929Z ##[group]Run ./.github/actions/setup-bun
+2026-11-15T02:20:28.6540221Z with:
+2026-11-15T02:20:28.6540478Z ##[endgroup]
+2026-11-15T02:20:28.6592827Z ##[start-action display=Setup Node;id=__self.__actions_setup-node]
+2026-11-15T02:20:28.6643601Z ##[group]Run actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+2026-11-15T02:20:28.6643919Z with:
+2026-11-15T02:20:28.6644137Z   node-version: 24
+2026-11-15T02:20:28.6644346Z   always-auth: false
+2026-11-15T02:20:28.6644571Z   check-latest: false
+2026-11-15T02:20:28.6646547Z   token: ***
+2026-11-15T02:20:28.6646839Z ##[endgroup]
+2026-11-15T02:20:28.7676497Z Found in cache @ /opt/hostedtoolcache/node/24.22.2/x64
+2026-11-15T02:20:28.7679134Z (node:2193) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-15T02:20:28.7679765Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-15T02:20:28.7681266Z ##[group]Environment details
+2026-11-15T02:20:32.7419997Z node: v24.22.2
+2026-11-15T02:20:32.7420529Z npm: 11.19.1
+2026-11-15T02:20:32.7420841Z yarn: 1.22.22
+2026-11-15T02:20:32.7421425Z ##[endgroup]
+2026-11-15T02:20:32.7485540Z ##[end-action id=__self.__actions_setup-node;outcome=success;conclusion=success;duration_ms=4089]
+2026-11-15T02:20:32.7488022Z ##[start-action display=Get baseline download URL;id=__self.bun-url]
+2026-11-15T02:20:32.7504330Z ##[group]Run if [ "$RUNNER_ARCH" = "X64" ]; then
+2026-11-15T02:20:32.7504696Z [36;1mif [ "$RUNNER_ARCH" = "X64" ]; then[0m
+2026-11-15T02:20:32.7505076Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-15T02:20:32.7505441Z [36;1m  case "$RUNNER_OS" in[0m
+2026-11-15T02:20:32.7505693Z [36;1m    macOS)   OS=darwin ;;[0m
+2026-11-15T02:20:32.7505945Z [36;1m    Linux)   OS=linux ;;[0m
+2026-11-15T02:20:32.7506201Z [36;1m    Windows) OS=windows ;;[0m
+2026-11-15T02:20:32.7506437Z [36;1m  esac[0m
+2026-11-15T02:20:32.7506855Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-${OS}-x64-baseline.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-15T02:20:32.7507400Z [36;1melif [ "$RUNNER_OS-$RUNNER_ARCH" = "Windows-ARM64" ]; then[0m
+2026-11-15T02:20:32.7507787Z [36;1m  V=$(node -p "require('./package.json').packageManager.split('@')[1]")[0m
+2026-11-15T02:20:32.7508315Z [36;1m  echo "url=https://github.com/oven-sh/bun/releases/download/bun-v${V}/bun-windows-aarch64.zip" >> "$GITHUB_OUTPUT"[0m
+2026-11-15T02:20:32.7509013Z [36;1mfi[0m
+2026-11-15T02:20:32.7549169Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:20:32.7549491Z ##[endgroup]
+2026-11-15T02:20:32.7872986Z ##[end-action id=__self.bun-url;outcome=success;conclusion=success;duration_ms=38]
+2026-11-15T02:20:32.7875104Z ##[start-action display=Setup Bun;id=__self.__oven-sh_setup-bun]
+2026-11-15T02:20:32.7914857Z ##[group]Run oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6
+2026-11-15T02:20:32.7915197Z with:
+2026-11-15T02:20:32.7915591Z   bun-download-url: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-15T02:20:32.7916033Z   no-cache: false
+2026-11-15T02:20:32.7917995Z   token: ***
+2026-11-15T02:20:32.7918218Z ##[endgroup]
+2026-11-15T02:20:32.9081057Z Obtained version 1.3.14 from package.json
+2026-11-15T02:20:32.9088872Z Downloading a new version of Bun: https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64-baseline.zip
+2026-11-15T02:20:33.1603760Z [command]/usr/bin/unzip -o -q /home/runner/work/_temp/8c447ec2-36b5-4e06-95f6-7cf568b58d62.zip
+2026-11-15T02:20:33.7790460Z [command]/home/runner/.bun/bin/bun --revision
+2026-11-15T02:20:33.7823865Z 1.3.14+0d9b296af
+2026-11-15T02:20:33.7888859Z ##[end-action id=__self.__oven-sh_setup-bun;outcome=success;conclusion=success;duration_ms=1001]
+2026-11-15T02:20:33.7891153Z ##[start-action display=Get cache directory;id=__self.cache]
+2026-11-15T02:20:33.7905656Z ##[group]Run echo "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"
+2026-11-15T02:20:33.7906009Z [36;1mecho "dir=$(bun pm cache)" >> "$GITHUB_OUTPUT"[0m
+2026-11-15T02:20:33.7933642Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:20:33.7934018Z ##[endgroup]
+2026-11-15T02:20:33.8016946Z ##[end-action id=__self.cache;outcome=success;conclusion=success;duration_ms=12]
+2026-11-15T02:20:33.8019388Z ##[start-action display=Compute dependency cache keys;id=__self.keys]
+2026-11-15T02:20:33.9082481Z ##[group]Run echo "bun=Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131" >> "$GITHUB_OUTPUT"
+2026-11-15T02:20:33.9083255Z [36;1mecho "bun=Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131" >> "$GITHUB_OUTPUT"[0m
+2026-11-15T02:20:33.9084002Z [36;1mecho "modules=Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f" >> "$GITHUB_OUTPUT"[0m
+2026-11-15T02:20:33.9110902Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:20:33.9111245Z ##[endgroup]
+2026-11-15T02:20:33.9160030Z ##[end-action id=__self.keys;outcome=success;conclusion=success;duration_ms=114]
+2026-11-15T02:20:33.9162093Z ##[start-action display=Restore node_modules;id=__self.modules-cache]
+2026-11-15T02:20:33.9191280Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-15T02:20:33.9191624Z with:
+2026-11-15T02:20:33.9192259Z   path: node_modules
+packages/*/node_modules
+packages/*/*/node_modules
+apps/*/node_modules
+modules/*/node_modules
+modules/*/*/node_modules
+tooling/*/node_modules
+native/*/*/node_modules
+native/*/*/*/node_modules
+
+2026-11-15T02:20:33.9193060Z   key: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-15T02:20:33.9193495Z   enableCrossOsArchive: false
+2026-11-15T02:20:33.9193757Z   fail-on-cache-miss: false
+2026-11-15T02:20:33.9193994Z   lookup-only: false
+2026-11-15T02:20:33.9194217Z ##[endgroup]
+2026-11-15T02:20:33.9967729Z (node:2275) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-15T02:20:33.9968748Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-15T02:20:34.0513533Z Cache not found for input keys: Linux-X64-modules-v4-aae4ae6338ceda7ccd75de032d7ff87daba6bcf039d25a710aeb926654749a4f
+2026-11-15T02:20:34.0575039Z ##[end-action id=__self.modules-cache;outcome=success;conclusion=success;duration_ms=141]
+2026-11-15T02:20:34.0577353Z ##[start-action display=Restore Bun dependencies;id=__self.bun-cache]
+2026-11-15T02:20:34.0622299Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-15T02:20:34.0622638Z with:
+2026-11-15T02:20:34.0622895Z   path: /home/runner/.bun/install/cache
+2026-11-15T02:20:34.0623306Z   key: Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131
+2026-11-15T02:20:34.0623737Z   restore-keys: Linux-X64-bun-v3-
+
+2026-11-15T02:20:34.0624009Z   enableCrossOsArchive: false
+2026-11-15T02:20:34.0624253Z   fail-on-cache-miss: false
+2026-11-15T02:20:34.0624475Z   lookup-only: false
+2026-11-15T02:20:34.0624708Z ##[endgroup]
+2026-11-15T02:20:34.1414776Z (node:2288) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-15T02:20:34.1415523Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-15T02:20:34.2029044Z Cache not found for input keys: Linux-X64-bun-v3-0c8f60a1066d528daf061642e8c0f7c48c56d9708b6a63d02f376b0b5d7b7131, Linux-X64-bun-v3-
+2026-11-15T02:20:34.2065221Z ##[end-action id=__self.bun-cache;outcome=success;conclusion=success;duration_ms=148]
+2026-11-15T02:20:34.2067583Z ##[start-action display=Install setuptools for distutils compatibility;id=__self.__run]
+2026-11-15T02:20:34.2081698Z ##[group]Run python3 -m pip install setuptools || pip install setuptools || true
+2026-11-15T02:20:34.2082202Z [36;1mpython3 -m pip install setuptools || pip install setuptools || true[0m
+2026-11-15T02:20:34.2108215Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:20:34.2108749Z ##[endgroup]
+2026-11-15T02:20:35.5295498Z Defaulting to user installation because normal site-packages is not writeable
+2026-11-15T02:20:36.9413253Z Requirement already satisfied: setuptools in /usr/lib/python3/dist-packages (68.1.2)
+2026-11-15T02:20:37.1583970Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=2951]
+2026-11-15T02:20:37.1586263Z ##[start-action display=Install dependencies;id=__self.__run_2]
+2026-11-15T02:20:37.1604840Z ##[group]Run # Workaround for patched peer variants
+2026-11-15T02:20:37.1605287Z [36;1m# Workaround for patched peer variants[0m
+2026-11-15T02:20:37.1605601Z [36;1m# e.g. ./patches/ for standard-openapi[0m
+2026-11-15T02:20:37.1605928Z [36;1m# https://github.com/oven-sh/bun/issues/28147[0m
+2026-11-15T02:20:37.1606220Z [36;1mif [ "$RUNNER_OS" = "Windows" ]; then[0m
+2026-11-15T02:20:37.1606608Z [36;1m  # Bun can leave a patched package directory half-renamed on Windows.[0m
+2026-11-15T02:20:37.1607097Z [36;1m  # The hoisted layout nests several copies of a patched package (e.g. @ai-sdk/openai-compatible),[0m
+2026-11-15T02:20:37.1607700Z [36;1m  # and Bun applies the patch once per copy; concurrent renames into the same cache entry race[0m
+2026-11-15T02:20:37.1608208Z [36;1m  # with ENOTEMPTY. Every attempt starts from an empty cache because the loser may leave it partial.[0m
+2026-11-15T02:20:37.1608805Z [36;1m  cache_dir="$PWD/.bun-install-cache"[0m
+2026-11-15T02:20:37.1609147Z [36;1m  trap 'rm -rf "$cache_dir"' EXIT[0m
+2026-11-15T02:20:37.1609429Z [36;1m  for attempt in 1 2 3 4 5; do[0m
+2026-11-15T02:20:37.1609689Z [36;1m    rm -rf "$cache_dir"[0m
+2026-11-15T02:20:37.1609946Z [36;1m    rm -rf node_modules[0m
+2026-11-15T02:20:37.1610300Z [36;1m    if bun install --no-cache --cache-dir "$cache_dir" --linker hoisted ; then[0m
+2026-11-15T02:20:37.1610678Z [36;1m      exit 0[0m
+2026-11-15T02:20:37.1610899Z [36;1m    fi[0m
+2026-11-15T02:20:37.1611247Z [36;1m    echo "::warning::bun install attempt $attempt failed on Windows; retrying from an empty cache"[0m
+2026-11-15T02:20:37.1611634Z [36;1m  done[0m
+2026-11-15T02:20:37.1611837Z [36;1m  exit 1[0m
+2026-11-15T02:20:37.1612067Z [36;1melse[0m
+2026-11-15T02:20:37.1612277Z [36;1m  bun install [0m
+2026-11-15T02:20:37.1612492Z [36;1mfi[0m
+2026-11-15T02:20:37.1638677Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:20:37.1639082Z ##[endgroup]
+2026-11-15T02:20:37.1703416Z bun install v1.3.14 (0d9b296a)
+2026-11-15T02:20:37.1844475Z Resolving dependencies
+2026-11-15T02:20:41.8016223Z Resolved, downloaded and extracted [466]
+2026-11-15T02:20:41.8016782Z warn: GET https://registry.npmjs.org/hugr-omni-darwin-arm64 - 404
+2026-11-15T02:20:41.8017028Z 
+2026-11-15T02:20:41.8017264Z warn: GET https://registry.npmjs.org/hugr-omni-darwin-x64 - 404
+2026-11-15T02:20:41.8017522Z 
+2026-11-15T02:20:41.8017762Z warn: GET https://registry.npmjs.org/hugr-omni-linux-arm64-musl - 404
+2026-11-15T02:20:41.8018013Z 
+2026-11-15T02:20:41.8018244Z warn: GET https://registry.npmjs.org/hugr-omni-win32-arm64-msvc - 404
+2026-11-15T02:20:41.8018652Z 
+2026-11-15T02:20:41.8018941Z warn: GET https://registry.npmjs.org/hugr-omni-linux-x64-musl - 404
+2026-11-15T02:20:41.8019168Z 
+2026-11-15T02:20:41.8019397Z warn: GET https://registry.npmjs.org/hugr-omni-linux-arm64-gnu - 404
+2026-11-15T02:20:41.8019643Z 
+2026-11-15T02:20:41.8019843Z warn: GET https://registry.npmjs.org/hugr-omni-linux-x64-gnu - 404
+2026-11-15T02:20:41.8020091Z 
+2026-11-15T02:20:41.8020435Z warn: GET https://registry.npmjs.org/hugr-omni-win32-x64-msvc - 404
+2026-11-15T02:21:17.9571775Z Saved lockfile
+2026-11-15T02:21:17.9572022Z 
+2026-11-15T02:21:17.9572276Z $ bun run --cwd packages/core fix-node-pty
+2026-11-15T02:21:17.9603627Z $ bun run script/fix-node-pty.ts
+2026-11-15T02:21:17.9764730Z $ husky
+2026-11-15T02:21:18.0066260Z 
+2026-11-15T02:21:18.0067529Z + @actions/artifact@5.0.1 (v6.3.1 available)
+2026-11-15T02:21:18.0068025Z + @tsconfig/bun@1.0.9 (v1.0.12 available)
+2026-11-15T02:21:18.0068371Z + @types/mime-types@3.0.1
+2026-11-15T02:21:18.0069070Z + @typescript/native-preview@7.0.0-dev.20251207.1
+2026-11-15T02:21:18.0069474Z + glob@13.0.5 (v14.0.4 available)
+2026-11-15T02:21:18.0069781Z + husky@9.1.7
+2026-11-15T02:21:18.0070034Z + oxlint@1.60.0
+2026-11-15T02:21:18.0070293Z + oxlint-tsgolint@0.21.0
+2026-11-15T02:21:18.0070638Z + prettier@3.6.2 (v3.10.0 available)
+2026-11-15T02:21:18.0071022Z + semver@7.8.1 (v7.8.6 available)
+2026-11-15T02:21:18.0071314Z + turbo@2.10.2
+2026-11-15T02:21:18.0071665Z + @ai-sdk/openai-compatible@2.0.41 (v3.0.90 available)
+2026-11-15T02:21:18.0072093Z + heap-snapshot-toolkit@1.1.3
+2026-11-15T02:21:18.0072480Z + typescript@5.8.2 (v7.0.2 available)
+2026-11-15T02:21:18.0072690Z 
+2026-11-15T02:21:18.0072839Z 2953 packages installed [40.84s]
+2026-11-15T02:21:18.0310817Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=40872]
+2026-11-15T02:21:18.0313313Z ##[start-action display=Save Bun dependencies;id=__self.__actions_cache]
+2026-11-15T02:21:18.0327546Z ##[end-action id=__self.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-15T02:21:18.0330251Z ##[start-action display=Save node_modules;id=__self.__actions_cache_2]
+2026-11-15T02:21:18.0451781Z ##[end-action id=__self.__actions_cache_2;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-15T02:21:18.0527735Z Prepare all required actions
+2026-11-15T02:21:18.0528157Z Getting action download info
+2026-11-15T02:21:18.1410822Z ##[group]Run ./.github/actions/ripgrep
+2026-11-15T02:21:18.1411040Z with:
+2026-11-15T02:21:18.1411184Z   save: false
+2026-11-15T02:21:18.1411332Z ##[endgroup]
+2026-11-15T02:21:18.1415951Z ##[start-action display=Select ripgrep release;id=__self_2.release]
+2026-11-15T02:21:18.1426209Z ##[group]Run version=15.2.0
+2026-11-15T02:21:18.1426446Z [36;1mversion=15.2.0[0m
+2026-11-15T02:21:18.1426798Z [36;1mcase "$RUNNER_OS-$RUNNER_ARCH" in[0m
+2026-11-15T02:21:18.1427264Z [36;1m  Linux-X64) platform=x86_64-unknown-linux-musl; ext=tar.gz; sha=33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c ;;[0m
+2026-11-15T02:21:18.1427937Z [36;1m  Linux-ARM64) platform=aarch64-unknown-linux-gnu; ext=tar.gz; sha=a740b91c82eaf9914cfedd353572f2791cbe0162c84101ee0951058f4dcbc90d ;;[0m
+2026-11-15T02:21:18.1428774Z [36;1m  macOS-ARM64) platform=aarch64-apple-darwin; ext=tar.gz; sha=3750b2e93f37e0c692657da574d7019a101c0084da05a790c83fd335bad973e4 ;;[0m
+2026-11-15T02:21:18.1429424Z [36;1m  macOS-X64) platform=x86_64-apple-darwin; ext=tar.gz; sha=af7825fcc69a2afc7a7aea55fc9af90e26421d8f20fe59df32e233c0b8a231c1 ;;[0m
+2026-11-15T02:21:18.1430110Z [36;1m  Windows-X64) platform=x86_64-pc-windows-msvc; ext=zip; sha=71b2fef860abe467217a538ff31de02f5258807c0129f771846f87bd029aafc5 ;;[0m
+2026-11-15T02:21:18.1430894Z [36;1m  Windows-ARM64) platform=aarch64-pc-windows-msvc; ext=zip; sha=e4abca10c3a64ebea742667dd7009449d49403db5460dd6873e389fa2945360f ;;[0m
+2026-11-15T02:21:18.1431465Z [36;1m  *) echo "::error::no pinned ripgrep for $RUNNER_OS-$RUNNER_ARCH"; exit 1 ;;[0m
+2026-11-15T02:21:18.1431788Z [36;1mesac[0m
+2026-11-15T02:21:18.1432003Z [36;1m{[0m
+2026-11-15T02:21:18.1432227Z [36;1m  echo "version=$version"[0m
+2026-11-15T02:21:18.1432531Z [36;1m  echo "root=ripgrep-$version-$platform"[0m
+2026-11-15T02:21:18.1432859Z [36;1m  echo "ext=$ext"[0m
+2026-11-15T02:21:18.1433094Z [36;1m  echo "sha=$sha"[0m
+2026-11-15T02:21:18.1433349Z [36;1m  echo "archives=$RUNNER_TEMP/ripgrep-archives"[0m
+2026-11-15T02:21:18.1433680Z [36;1m  echo "bin=$RUNNER_TEMP/ripgrep-$version"[0m
+2026-11-15T02:21:18.1434019Z [36;1m} >> "$GITHUB_OUTPUT"[0m
+2026-11-15T02:21:18.1461047Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:21:18.1461291Z ##[endgroup]
+2026-11-15T02:21:18.1507543Z ##[end-action id=__self_2.release;outcome=success;conclusion=success;duration_ms=9]
+2026-11-15T02:21:18.1509199Z ##[start-action display=Restore ripgrep archive;id=__self_2.restore]
+2026-11-15T02:21:18.1531147Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-15T02:21:18.1531410Z with:
+2026-11-15T02:21:18.1531586Z   path: /home/runner/work/_temp/ripgrep-archives
+2026-11-15T02:21:18.1532038Z   key: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-15T02:21:18.1532492Z   enableCrossOsArchive: false
+2026-11-15T02:21:18.1532676Z   fail-on-cache-miss: false
+2026-11-15T02:21:18.1532846Z   lookup-only: false
+2026-11-15T02:21:18.1532998Z ##[endgroup]
+2026-11-15T02:21:18.2317725Z (node:2677) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-15T02:21:18.2318744Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-15T02:21:18.2793025Z Cache not found for input keys: ripgrep-archive-ripgrep-15.2.0-x86_64-unknown-linux-musl-33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-15T02:21:18.2830026Z ##[end-action id=__self_2.restore;outcome=success;conclusion=success;duration_ms=132]
+2026-11-15T02:21:18.2837727Z ##[start-action display=Download ripgrep archive (cache miss);id=__self_2.__run]
+2026-11-15T02:21:18.2852211Z ##[group]Run set -euo pipefail
+2026-11-15T02:21:18.2852445Z [36;1mset -euo pipefail[0m
+2026-11-15T02:21:18.2852627Z [36;1mmkdir -p "$ARCHIVES"[0m
+2026-11-15T02:21:18.2853094Z [36;1m# https only, redirects included. --retry covers timeouts and HTTP 408, 429, 500, 502, 503 and 504 (GitHub's[0m
+2026-11-15T02:21:18.2853585Z [36;1m# release CDN has answered 504 for this file); a 404 or another client error fails at once.[0m
+2026-11-15T02:21:18.2854126Z [36;1mcurl --fail --silent --show-error --location --proto '=https' --proto-redir '=https' \[0m
+2026-11-15T02:21:18.2854588Z [36;1m  --retry 6 --retry-connrefused --retry-delay 5 --connect-timeout 20 --max-time 120 \[0m
+2026-11-15T02:21:18.2855099Z [36;1m  -o "$ARCHIVES/$ROOT.$EXT" "https://github.com/BurntSushi/ripgrep/releases/download/$VERSION/$ROOT.$EXT"[0m
+2026-11-15T02:21:18.2879689Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:21:18.2879928Z env:
+2026-11-15T02:21:18.2880066Z   VERSION: 15.2.0
+2026-11-15T02:21:18.2880250Z   ROOT: ripgrep-15.2.0-x86_64-unknown-linux-musl
+2026-11-15T02:21:18.2880457Z   EXT: tar.gz
+2026-11-15T02:21:18.2880653Z   ARCHIVES: /home/runner/work/_temp/ripgrep-archives
+2026-11-15T02:21:18.2880874Z ##[endgroup]
+2026-11-15T02:21:18.3599633Z ##[end-action id=__self_2.__run;outcome=success;conclusion=success;duration_ms=76]
+2026-11-15T02:21:18.3602273Z ##[start-action display=Verify and extract ripgrep;id=__self_2.__run_2]
+2026-11-15T02:21:18.3611658Z ##[group]Run set -euo pipefail
+2026-11-15T02:21:18.3611895Z [36;1mset -euo pipefail[0m
+2026-11-15T02:21:18.3612088Z [36;1marchive="$ARCHIVES/$ROOT.$EXT"[0m
+2026-11-15T02:21:18.3612437Z [36;1m# Hashed from stdin: given a Windows path, sha256sum escapes its output with a leading backslash.[0m
+2026-11-15T02:21:18.3612873Z [36;1mactual=$( (sha256sum 2>/dev/null || shasum -a 256) < "$archive" | cut -d' ' -f1)[0m
+2026-11-15T02:21:18.3613177Z [36;1mif [ "$actual" != "$SHA" ]; then[0m
+2026-11-15T02:21:18.3613465Z [36;1m  echo "::error::ripgrep archive sha256 $actual does not match the pinned $SHA"[0m
+2026-11-15T02:21:18.3613746Z [36;1m  exit 1[0m
+2026-11-15T02:21:18.3613891Z [36;1mfi[0m
+2026-11-15T02:21:18.3614134Z [36;1mwork=$(mktemp -d)[0m
+2026-11-15T02:21:18.3614315Z [36;1mcp "$archive" "$work/"[0m
+2026-11-15T02:21:18.3614546Z [36;1mif [ "$EXT" = zip ] && command -v unzip >/dev/null; then[0m
+2026-11-15T02:21:18.3614917Z [36;1m  (cd "$work" && unzip -q "$ROOT.$EXT")[0m
+2026-11-15T02:21:18.3615132Z [36;1melif [ "$EXT" = zip ]; then[0m
+2026-11-15T02:21:18.3615348Z [36;1m  (cd "$work" && 7z x -y "$ROOT.$EXT" >/dev/null)[0m
+2026-11-15T02:21:18.3615566Z [36;1melse[0m
+2026-11-15T02:21:18.3615737Z [36;1m  (cd "$work" && tar -xzf "$ROOT.$EXT")[0m
+2026-11-15T02:21:18.3615929Z [36;1mfi[0m
+2026-11-15T02:21:18.3616073Z [36;1mrm -rf "$BIN"[0m
+2026-11-15T02:21:18.3616271Z [36;1mmkdir -p "$BIN"[0m
+2026-11-15T02:21:18.3616453Z [36;1mcp "$work/$ROOT/rg"* "$BIN/"[0m
+2026-11-15T02:21:18.3616640Z [36;1mrm -rf "$work"[0m
+2026-11-15T02:21:18.3637419Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:21:18.3637670Z env:
+2026-11-15T02:21:18.3637864Z   ROOT: ripgrep-15.2.0-x86_64-unknown-linux-musl
+2026-11-15T02:21:18.3638073Z   EXT: tar.gz
+2026-11-15T02:21:18.3638301Z   SHA: 33e15bcf1624b25cdd2a55813a47a2f95dbe126268203e76aa6a585d1e7b149c
+2026-11-15T02:21:18.3638768Z   ARCHIVES: /home/runner/work/_temp/ripgrep-archives
+2026-11-15T02:21:18.3639040Z   BIN: /home/runner/work/_temp/ripgrep-15.2.0
+2026-11-15T02:21:18.3639248Z ##[endgroup]
+2026-11-15T02:21:18.4169017Z ##[end-action id=__self_2.__run_2;outcome=success;conclusion=success;duration_ms=56]
+2026-11-15T02:21:18.4170435Z ##[start-action display=Save ripgrep archive;id=__self_2.__actions_cache]
+2026-11-15T02:21:18.4173216Z ##[end-action id=__self_2.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-15T02:21:18.4175030Z ##[start-action display=Put ripgrep on PATH;id=__self_2.__run_3]
+2026-11-15T02:21:18.4184678Z ##[group]Run set -euo pipefail
+2026-11-15T02:21:18.4184899Z [36;1mset -euo pipefail[0m
+2026-11-15T02:21:18.4185106Z [36;1m[ "$RUNNER_OS" = Windows ] || chmod +x "$BIN/rg"[0m
+2026-11-15T02:21:18.4185464Z [36;1mreported=$("$BIN/rg" --version | head -1)[0m
+2026-11-15T02:21:18.4185687Z [36;1mcase "$reported" in[0m
+2026-11-15T02:21:18.4185888Z [36;1m  "ripgrep $VERSION"*) echo "$reported" ;;[0m
+2026-11-15T02:21:18.4186180Z [36;1m  *) echo "::error::expected ripgrep $VERSION, got: $reported"; exit 1 ;;[0m
+2026-11-15T02:21:18.4186447Z [36;1mesac[0m
+2026-11-15T02:21:18.4186602Z [36;1mecho "$BIN" >> "$GITHUB_PATH"[0m
+2026-11-15T02:21:18.4186852Z [36;1mecho "ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD=1" >> "$GITHUB_ENV"[0m
+2026-11-15T02:21:18.4206674Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:21:18.4206914Z env:
+2026-11-15T02:21:18.4207054Z   VERSION: 15.2.0
+2026-11-15T02:21:18.4207228Z   BIN: /home/runner/work/_temp/ripgrep-15.2.0
+2026-11-15T02:21:18.4207424Z ##[endgroup]
+2026-11-15T02:21:18.4259963Z ripgrep 15.2.0 (rev e89fff89ac)
+2026-11-15T02:21:18.4267558Z ##[end-action id=__self_2.__run_3;outcome=success;conclusion=success;duration_ms=9]
+2026-11-15T02:21:18.4292237Z ##[group]Run # Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that
+2026-11-15T02:21:18.4292728Z [36;1m# Hosted ubuntu-24.04 sometimes cannot resolve azure.archive.ubuntu.com. apt reads that[0m
+2026-11-15T02:21:18.4293184Z [36;1m# name from apt-mirrors.txt. Fall back to archive.ubuntu.com only after the fetch fails.[0m
+2026-11-15T02:21:18.4293500Z [36;1minstall_sandbox() {[0m
+2026-11-15T02:21:18.4293688Z [36;1m  sudo apt-get update -qq[0m
+2026-11-15T02:21:18.4293984Z [36;1m  sudo apt-get install -y -qq bubblewrap socat[0m
+2026-11-15T02:21:18.4294222Z [36;1m}[0m
+2026-11-15T02:21:18.4294380Z [36;1mif ! install_sandbox; then[0m
+2026-11-15T02:21:18.4294793Z [36;1m  for file in /etc/apt/apt-mirrors.txt /etc/apt/sources.list /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list; do[0m
+2026-11-15T02:21:18.4295205Z [36;1m    [ -f "$file" ] || continue[0m
+2026-11-15T02:21:18.4295537Z [36;1m    sudo sed -i 's|azure.archive.ubuntu.com|archive.ubuntu.com|g' "$file"[0m
+2026-11-15T02:21:18.4295822Z [36;1m  done[0m
+2026-11-15T02:21:18.4295977Z [36;1m  install_sandbox[0m
+2026-11-15T02:21:18.4296142Z [36;1mfi[0m
+2026-11-15T02:21:18.4296423Z [36;1m# Ubuntu 24.04 blocks unprivileged user namespaces through AppArmor; bubblewrap needs them.[0m
+2026-11-15T02:21:18.4296913Z [36;1msudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0[0m
+2026-11-15T02:21:18.4315799Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:21:18.4316047Z env:
+2026-11-15T02:21:18.4316208Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:21:18.4316403Z ##[endgroup]
+2026-11-15T02:21:32.3212928Z Selecting previously unselected package bubblewrap.
+2026-11-15T02:21:32.5569921Z (Reading database ... 
+2026-11-15T02:21:32.5570211Z (Reading database ... 5%
+2026-11-15T02:21:32.5570420Z (Reading database ... 10%
+2026-11-15T02:21:32.5570615Z (Reading database ... 15%
+2026-11-15T02:21:32.5570796Z (Reading database ... 20%
+2026-11-15T02:21:32.5571155Z (Reading database ... 25%
+2026-11-15T02:21:32.5571383Z (Reading database ... 30%
+2026-11-15T02:21:32.5571586Z (Reading database ... 35%
+2026-11-15T02:21:32.5571803Z (Reading database ... 40%
+2026-11-15T02:21:32.5572018Z (Reading database ... 45%
+2026-11-15T02:21:32.5572239Z (Reading database ... 50%
+2026-11-15T02:21:32.6100086Z (Reading database ... 55%
+2026-11-15T02:21:33.2956959Z (Reading database ... 60%
+2026-11-15T02:21:33.5278863Z (Reading database ... 65%
+2026-11-15T02:21:33.6954322Z (Reading database ... 70%
+2026-11-15T02:21:33.8295095Z (Reading database ... 75%
+2026-11-15T02:21:34.0086934Z (Reading database ... 80%
+2026-11-15T02:21:34.9645217Z (Reading database ... 85%
+2026-11-15T02:21:36.4274260Z (Reading database ... 90%
+2026-11-15T02:21:37.7410592Z (Reading database ... 95%
+2026-11-15T02:21:37.7410889Z (Reading database ... 100%
+2026-11-15T02:21:37.7411208Z (Reading database ... 216380 files and directories currently installed.)
+2026-11-15T02:21:37.7453151Z Preparing to unpack .../bubblewrap_0.9.0-1ubuntu0.3_amd64.deb ...
+2026-11-15T02:21:37.7469513Z Unpacking bubblewrap (0.9.0-1ubuntu0.3) ...
+2026-11-15T02:21:37.7987343Z Selecting previously unselected package socat.
+2026-11-15T02:21:37.8081806Z Preparing to unpack .../socat_1.8.0.0-4ubuntu0.1_amd64.deb ...
+2026-11-15T02:21:37.8086030Z Unpacking socat (1.8.0.0-4ubuntu0.1) ...
+2026-11-15T02:21:37.8461319Z Setting up bubblewrap (0.9.0-1ubuntu0.3) ...
+2026-11-15T02:21:37.8490915Z Setting up socat (1.8.0.0-4ubuntu0.1) ...
+2026-11-15T02:21:37.8502822Z Processing triggers for man-db (2.12.0-4build2) ...
+2026-11-15T02:21:37.8527082Z Not building database; man-db/auto-update is not 'true'.
+2026-11-15T02:21:38.7043925Z 
+2026-11-15T02:21:38.7044555Z Running kernel seems to be up-to-date.
+2026-11-15T02:21:38.7044785Z 
+2026-11-15T02:21:38.7044896Z No services need to be restarted.
+2026-11-15T02:21:38.7045031Z 
+2026-11-15T02:21:38.7045134Z No containers need to be restarted.
+2026-11-15T02:21:38.7045269Z 
+2026-11-15T02:21:38.7046050Z No user sessions are running outdated binaries.
+2026-11-15T02:21:38.7046240Z 
+2026-11-15T02:21:38.7046447Z No VM guests are running outdated hypervisor (qemu) binaries on this host.
+2026-11-15T02:21:39.4164896Z kernel.apparmor_restrict_unprivileged_userns = 0
+2026-11-15T02:21:39.4202442Z ##[group]Run git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+2026-11-15T02:21:39.4202953Z [36;1mgit config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"[0m
+2026-11-15T02:21:39.4203326Z [36;1mgit config --global user.name "github-actions[bot]"[0m
+2026-11-15T02:21:39.4229232Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:21:39.4229522Z env:
+2026-11-15T02:21:39.4229741Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:21:39.4229954Z ##[endgroup]
+2026-11-15T02:21:39.4309832Z ##[group]Run jq -r '(.env // {}) | to_entries[] | "\(.key)=\(.value)"' .ci-run.json | tr -d '\r' | while IFS= read -r line; do
+2026-11-15T02:21:39.4310358Z [36;1mjq -r '(.env // {}) | to_entries[] | "\(.key)=\(.value)"' .ci-run.json | tr -d '\r' | while IFS= read -r line; do[0m
+2026-11-15T02:21:39.4310705Z [36;1m  key=${line%%=*}[0m
+2026-11-15T02:21:39.4310883Z [36;1m  value=${line#*=}[0m
+2026-11-15T02:21:39.4311177Z [36;1m  case "$key" in[0m
+2026-11-15T02:21:39.4311432Z [36;1m    ORCHESTRA_EXPERIMENTAL_OMNI_SPAWNER) pattern='^(1|strict)$' ;;[0m
+2026-11-15T02:21:39.4311731Z [36;1m    ORCHESTRA_CHANNEL) pattern='^prod$' ;;[0m
+2026-11-15T02:21:39.4312033Z [36;1m    *) echo "::error::.ci-run.json env key $key is not allow-listed"; exit 2 ;;[0m
+2026-11-15T02:21:39.4312308Z [36;1m  esac[0m
+2026-11-15T02:21:39.4312584Z [36;1m  # Omni permits only its two on states; channel checks permit only the production value.[0m
+2026-11-15T02:21:39.4312979Z [36;1m  if ! printf '%s' "$value" | grep -Eq "$pattern"; then[0m
+2026-11-15T02:21:39.4313280Z [36;1m    echo "::error::.ci-run.json env value for $key is not allowed"[0m
+2026-11-15T02:21:39.4313529Z [36;1m    exit 2[0m
+2026-11-15T02:21:39.4313676Z [36;1m  fi[0m
+2026-11-15T02:21:39.4313833Z [36;1m  echo "$key=$value" >> "$GITHUB_ENV"[0m
+2026-11-15T02:21:39.4314028Z [36;1mdone[0m
+2026-11-15T02:21:39.4333022Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:21:39.4333275Z env:
+2026-11-15T02:21:39.4333440Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:21:39.4333636Z ##[endgroup]
+2026-11-15T02:21:39.4433722Z Prepare all required actions
+2026-11-15T02:21:39.4434196Z Getting action download info
+2026-11-15T02:21:39.5142523Z Download action repository 'actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093' (SHA:d3f86a106a0bac45b974a628896c90dbdf5c8093)
+2026-11-15T02:21:39.6607702Z ##[group]Run ./.github/actions/omni-binaries
+2026-11-15T02:21:39.6607913Z with:
+2026-11-15T02:21:39.6608058Z   save: false
+2026-11-15T02:21:39.6608198Z env:
+2026-11-15T02:21:39.6608352Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:21:39.6608734Z ##[endgroup]
+2026-11-15T02:21:39.6612380Z ##[start-action display=Download same-run omni binaries;id=__self_3.__actions_download-artifact]
+2026-11-15T02:21:39.6614993Z ##[end-action id=__self_3.__actions_download-artifact;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-15T02:21:39.6616333Z ##[start-action display=Restore omni binaries;id=__self_3.restore]
+2026-11-15T02:21:39.7867623Z ##[group]Run actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
+2026-11-15T02:21:39.7867889Z with:
+2026-11-15T02:21:39.7868174Z   path: native/omni/target/release/*hugr_omni_node.*
+native/omni/target/release/hugr-omni-supervisor*
+
+2026-11-15T02:21:39.7868848Z   key: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-15T02:21:39.7869199Z   enableCrossOsArchive: false
+2026-11-15T02:21:39.7869391Z   fail-on-cache-miss: false
+2026-11-15T02:21:39.7869560Z   lookup-only: false
+2026-11-15T02:21:39.7869710Z env:
+2026-11-15T02:21:39.7869858Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:21:39.7870056Z ##[endgroup]
+2026-11-15T02:21:39.8659521Z (node:3183) [DEP0040] DeprecationWarning: The `punycode` module is deprecated. Please use a userland alternative instead.
+2026-11-15T02:21:39.8660073Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-11-15T02:21:39.9142704Z Cache not found for input keys: omni-bin-v2-Linux-X64-97518c5742e25a49884d3106c8ac013f1765c5fc5eee51b24c8c175f8f5f5189
+2026-11-15T02:21:39.9171942Z ##[end-action id=__self_3.restore;outcome=success;conclusion=success;duration_ms=255]
+2026-11-15T02:21:39.9173402Z ##[start-action display=Build omni binaries (cache miss);id=__self_3.__run]
+2026-11-15T02:21:39.9185662Z ##[group]Run # The toolchain pinned by native/omni/rust-toolchain.toml.
+2026-11-15T02:21:39.9186060Z [36;1m# The toolchain pinned by native/omni/rust-toolchain.toml.[0m
+2026-11-15T02:21:39.9186377Z [36;1mrustup show active-toolchain || rustup toolchain install[0m
+2026-11-15T02:21:39.9186697Z [36;1mcargo build --release -p hugr-omni-node -p omni-supervisor[0m
+2026-11-15T02:21:39.9210601Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:21:39.9210843Z env:
+2026-11-15T02:21:39.9211014Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:21:39.9211213Z ##[endgroup]
+2026-11-15T02:21:40.4432717Z info: syncing channel updates for 1.98.0-x86_64-unknown-linux-gnu
+2026-11-15T02:21:40.7402408Z info: latest update on 2026-08-20 for version 1.98.0 (88d9e12ae 2026-08-18)
+2026-11-15T02:21:40.7409413Z info: downloading 5 components
+2026-11-15T02:21:48.5219466Z warn: the missing active toolchain `1.98.0-x86_64-unknown-linux-gnu` has been auto-installed
+2026-11-15T02:21:48.5220192Z 1.98.0-x86_64-unknown-linux-gnu (overridden by '/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/rust-toolchain.toml')
+2026-11-15T02:21:48.5220731Z warn: auto-installation is deprecated for most `rustup` commands
+2026-11-15T02:21:48.5221270Z warn: scripts relying on this behavior in `rustup` may stop working in the future
+2026-11-15T02:21:48.5221718Z warn: to install the active toolchain, use `rustup install` instead
+2026-11-15T02:21:48.5222106Z warn: see <https://github.com/rust-lang/rustup/issues/4836> for more info
+2026-11-15T02:21:48.5702221Z     Updating crates.io index
+2026-11-15T02:21:48.6973823Z  Downloading crates ...
+2026-11-15T02:21:48.7906117Z   Downloaded futures-channel v0.3.34
+2026-11-15T02:21:48.8079862Z   Downloaded futures-sink v0.3.34
+2026-11-15T02:21:48.8132192Z   Downloaded cfg-if v1.0.5
+2026-11-15T02:21:48.8147594Z   Downloaded futures-core v0.3.34
+2026-11-15T02:21:48.8445799Z   Downloaded napi-build v2.6.0
+2026-11-15T02:21:48.8458235Z   Downloaded futures-io v0.3.34
+2026-11-15T02:21:48.8461893Z   Downloaded nohash-hasher v0.2.0
+2026-11-15T02:21:48.8472317Z   Downloaded futures-task v0.3.34
+2026-11-15T02:21:48.8491371Z   Downloaded futures-macro v0.3.34
+2026-11-15T02:21:48.8532708Z   Downloaded futures-executor v0.3.34
+2026-11-15T02:21:48.8539854Z   Downloaded pin-project-lite v0.2.17
+2026-11-15T02:21:48.8565807Z   Downloaded napi-sys v3.4.0
+2026-11-15T02:21:48.8704054Z   Downloaded rustc-hash v2.1.3
+2026-11-15T02:21:48.8721199Z   Downloaded libloading v0.9.0
+2026-11-15T02:21:48.8761012Z   Downloaded napi-derive v3.6.10
+2026-11-15T02:21:48.8768263Z   Downloaded slab v0.4.12
+2026-11-15T02:21:48.8881134Z   Downloaded quote v1.0.47
+2026-11-15T02:21:48.8891833Z   Downloaded convert_case v0.12.0
+2026-11-15T02:21:48.8900859Z   Downloaded ctor v1.0.13
+2026-11-15T02:21:48.8912139Z   Downloaded napi-derive-backend v6.1.4
+2026-11-15T02:21:48.8921833Z   Downloaded semver v1.0.28
+2026-11-15T02:21:48.8931877Z   Downloaded unicode-ident v1.0.26
+2026-11-15T02:21:48.8947228Z   Downloaded socket2 v0.6.5
+2026-11-15T02:21:48.8957384Z   Downloaded bitflags v2.13.2
+2026-11-15T02:21:48.8975290Z   Downloaded proc-macro2 v1.0.107
+2026-11-15T02:21:48.8988777Z   Downloaded futures v0.3.34
+2026-11-15T02:21:48.9076173Z   Downloaded bytes v1.12.1
+2026-11-15T02:21:48.9092405Z   Downloaded mio v1.2.3
+2026-11-15T02:21:48.9117954Z   Downloaded memchr v2.8.3
+2026-11-15T02:21:48.9141483Z   Downloaded unicode-segmentation v1.13.3
+2026-11-15T02:21:48.9157265Z   Downloaded tokio-util v0.7.19
+2026-11-15T02:21:48.9190928Z   Downloaded futures-util v0.3.34
+2026-11-15T02:21:48.9240562Z   Downloaded napi v3.14.0
+2026-11-15T02:21:48.9280124Z   Downloaded sysinfo v0.39.6
+2026-11-15T02:21:48.9330906Z   Downloaded syn v2.0.119
+2026-11-15T02:21:48.9383360Z   Downloaded syn v3.0.6
+2026-11-15T02:21:48.9434470Z   Downloaded libc v0.2.189
+2026-11-15T02:21:48.9606105Z   Downloaded tokio v1.53.1
+2026-11-15T02:21:48.9992172Z    Compiling proc-macro2 v1.0.107
+2026-11-15T02:21:48.9992488Z    Compiling quote v1.0.47
+2026-11-15T02:21:48.9992794Z    Compiling unicode-ident v1.0.26
+2026-11-15T02:21:48.9993093Z    Compiling libc v0.2.189
+2026-11-15T02:21:49.0429305Z    Compiling pin-project-lite v0.2.17
+2026-11-15T02:21:49.0699203Z    Compiling futures-sink v0.3.34
+2026-11-15T02:21:49.0924993Z    Compiling futures-core v0.3.34
+2026-11-15T02:21:49.1377168Z    Compiling memchr v2.8.3
+2026-11-15T02:21:49.1449289Z    Compiling napi-build v2.6.0
+2026-11-15T02:21:49.3012537Z    Compiling futures-channel v0.3.34
+2026-11-15T02:21:49.5403921Z    Compiling slab v0.4.12
+2026-11-15T02:21:49.5800367Z    Compiling syn v3.0.6
+2026-11-15T02:21:49.6549628Z    Compiling futures-task v0.3.34
+2026-11-15T02:21:49.7249739Z    Compiling futures-io v0.3.34
+2026-11-15T02:21:49.7899565Z    Compiling mio v1.2.3
+2026-11-15T02:21:49.8120444Z    Compiling socket2 v0.6.5
+2026-11-15T02:21:50.0849968Z    Compiling bytes v1.12.1
+2026-11-15T02:21:50.2790162Z    Compiling napi-sys v3.4.0
+2026-11-15T02:21:50.3359694Z    Compiling unicode-segmentation v1.13.3
+2026-11-15T02:21:50.5705852Z    Compiling cfg-if v1.0.5
+2026-11-15T02:21:50.5779638Z    Compiling convert_case v0.12.0
+2026-11-15T02:21:50.6146993Z    Compiling libloading v0.9.0
+2026-11-15T02:21:50.7399770Z    Compiling tokio v1.53.1
+2026-11-15T02:21:50.7519514Z    Compiling syn v2.0.119
+2026-11-15T02:21:50.7730031Z    Compiling napi v3.14.0
+2026-11-15T02:21:50.8359953Z    Compiling omni-proto v0.1.0 (/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/crates/omni-proto)
+2026-11-15T02:21:51.2179806Z    Compiling semver v1.0.28
+2026-11-15T02:21:51.4319219Z    Compiling sysinfo v0.39.6
+2026-11-15T02:21:52.1699890Z    Compiling futures-macro v0.3.34
+2026-11-15T02:21:52.5820013Z    Compiling futures-util v0.3.34
+2026-11-15T02:21:54.0799757Z    Compiling tokio-util v0.7.19
+2026-11-15T02:21:54.5029997Z    Compiling napi-derive-backend v6.1.4
+2026-11-15T02:21:54.8133154Z    Compiling futures-executor v0.3.34
+2026-11-15T02:21:55.1303107Z    Compiling futures v0.3.34
+2026-11-15T02:21:55.1550649Z    Compiling hugr-omni-node v0.1.0 (/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/bindings/node)
+2026-11-15T02:21:55.2079585Z    Compiling ctor v1.0.13
+2026-11-15T02:21:55.2281262Z    Compiling bitflags v2.13.2
+2026-11-15T02:21:55.2669713Z    Compiling nohash-hasher v0.2.0
+2026-11-15T02:21:55.3049608Z    Compiling rustc-hash v2.1.3
+2026-11-15T02:21:55.4610172Z    Compiling hugr-omni v0.1.0 (/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/crates/hugr-omni)
+2026-11-15T02:21:56.2879551Z    Compiling napi-derive v3.6.10
+2026-11-15T02:21:57.0315269Z    Compiling omni-supervisor v0.1.0 (/home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/crates/omni-supervisor)
+2026-11-15T02:22:04.3234440Z     Finished `release` profile [optimized] target(s) in 15.77s
+2026-11-15T02:22:04.3478093Z ##[end-action id=__self_3.__run;outcome=success;conclusion=success;duration_ms=24430]
+2026-11-15T02:22:04.3480180Z ##[start-action display=Save omni binaries;id=__self_3.__actions_cache]
+2026-11-15T02:22:04.3483821Z ##[end-action id=__self_3.__actions_cache;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-15T02:22:04.3484920Z ##[start-action display=Export omni paths;id=__self_3.__run_2]
+2026-11-15T02:22:04.3495140Z ##[group]Run dir="$GITHUB_WORKSPACE/native/omni/target/release"
+2026-11-15T02:22:04.3495485Z [36;1mdir="$GITHUB_WORKSPACE/native/omni/target/release"[0m
+2026-11-15T02:22:04.3495736Z [36;1mcase "$RUNNER_OS" in[0m
+2026-11-15T02:22:04.3496008Z [36;1m  Linux) addon=libhugr_omni_node.so; supervisor=hugr-omni-supervisor ;;[0m
+2026-11-15T02:22:04.3496383Z [36;1m  macOS) addon=libhugr_omni_node.dylib; supervisor=hugr-omni-supervisor ;;[0m
+2026-11-15T02:22:04.3496780Z [36;1m  Windows) addon=hugr_omni_node.dll; supervisor=hugr-omni-supervisor.exe ;;[0m
+2026-11-15T02:22:04.3497197Z [36;1m  *) echo "::error::unsupported omni runner: $RUNNER_OS"; exit 1 ;;[0m
+2026-11-15T02:22:04.3497456Z [36;1mesac[0m
+2026-11-15T02:22:04.3497648Z [36;1mfor file in "$dir/$addon" "$dir/$supervisor"; do[0m
+2026-11-15T02:22:04.3498019Z [36;1m  if [ ! -f "$file" ] || [ ! -s "$file" ]; then echo "::error::omni binary missing or empty: $file"; exit 1; fi[0m
+2026-11-15T02:22:04.3498327Z [36;1mdone[0m
+2026-11-15T02:22:04.3498933Z [36;1m# upload/download-artifact transfers file bytes, not Unix execute bits.[0m
+2026-11-15T02:22:04.3499364Z [36;1mif [ "$RUNNER_OS" != Windows ]; then[0m
+2026-11-15T02:22:04.3499587Z [36;1m  chmod +x "$dir/$supervisor"[0m
+2026-11-15T02:22:04.3499901Z [36;1m  [ -x "$dir/$supervisor" ] || { echo "::error::omni supervisor is not executable"; exit 1; }[0m
+2026-11-15T02:22:04.3500195Z [36;1mfi[0m
+2026-11-15T02:22:04.3500385Z [36;1mecho "HUGR_OMNI_ADDON=$dir/$addon" >> "$GITHUB_ENV"[0m
+2026-11-15T02:22:04.3500817Z [36;1mecho "HUGR_OMNI_SUPERVISOR=$dir/$supervisor" >> "$GITHUB_ENV"[0m
+2026-11-15T02:22:04.3526782Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:22:04.3527036Z env:
+2026-11-15T02:22:04.3527207Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:22:04.3527402Z ##[endgroup]
+2026-11-15T02:22:04.3582772Z ##[end-action id=__self_3.__run_2;outcome=success;conclusion=success;duration_ms=9]
+2026-11-15T02:22:04.3612232Z ##[group]Run nonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")
+2026-11-15T02:22:04.3613006Z [36;1mnonce=$(node -e "process.stdout.write(require('node:crypto').randomBytes(16).toString('hex'))")[0m
+2026-11-15T02:22:04.3613604Z [36;1mecho "ORCHESTRA_OMNI_CONTROL_NONCE=$nonce" >> "$GITHUB_ENV"[0m
+2026-11-15T02:22:04.3613984Z [36;1mecho "omni control nonce: $nonce"[0m
+2026-11-15T02:22:04.3641034Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:22:04.3641417Z env:
+2026-11-15T02:22:04.3641649Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:22:04.3642212Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-15T02:22:04.3643034Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-15T02:22:04.3643569Z ##[endgroup]
+2026-11-15T02:22:04.3940918Z omni control nonce: f82ca28ef5a224d3faf2e6b7821d178d
+2026-11-15T02:22:04.3965849Z ##[group]Run if [ "$RUNNER" = playwright ]; then
+2026-11-15T02:22:04.3966320Z [36;1mif [ "$RUNNER" = playwright ]; then[0m
+2026-11-15T02:22:04.3966671Z [36;1m  node --input-type=module <<'NODE'[0m
+2026-11-15T02:22:04.3967139Z [36;1mimport { readFileSync, realpathSync, statSync, writeFileSync } from 'node:fs'[0m
+2026-11-15T02:22:04.3967621Z [36;1mimport path from 'node:path'[0m
+2026-11-15T02:22:04.3967970Z [36;1mimport { spawnSync } from 'node:child_process'[0m
+2026-11-15T02:22:04.3969212Z [36;1mimport { benchmarkEnvironment, playwrightArgs, validateRequest, validateSelection } from './script/test-ci-request.ts'[0m
+2026-11-15T02:22:04.3969928Z [36;1mimport { locateTestPackage } from './script/test-ci-location.ts'[0m
+2026-11-15T02:22:04.3970474Z [36;1mconst request = validateRequest(JSON.parse(readFileSync('.ci-run.json', 'utf8')),[0m
+2026-11-15T02:22:04.3971048Z [36;1m  (file) => (statSync(file, { throwIfNoEntry: false })?.isFile() ?? false) &&[0m
+2026-11-15T02:22:04.3971597Z [36;1m    realpathSync(file).startsWith(realpathSync('.') + path.sep),[0m
+2026-11-15T02:22:04.3972039Z [36;1m  (selector) => locateTestPackage('.', selector))[0m
+2026-11-15T02:22:04.3972425Z [36;1mconst cwd = path.resolve(request.directory)[0m
+2026-11-15T02:22:04.3972977Z [36;1mconst benchmark = benchmarkEnvironment(request.benchmarkRenderer, process.env.GITHUB_SHA)[0m
+2026-11-15T02:22:04.3973680Z [36;1mwriteFileSync('test-ci-evidence/benchmark-runtime.json', JSON.stringify(benchmark))[0m
+2026-11-15T02:22:04.3974269Z [36;1mconst env = { ...process.env, ...benchmark }[0m
+2026-11-15T02:22:04.3974920Z [36;1mconst args = ['run', 'test:e2e:local', ...playwrightArgs(request), '--trace', 'retain-on-failure'][0m
+2026-11-15T02:22:04.3975671Z [36;1mconst listed = spawnSync('bun', [...args, '--list', '--reporter=json'], { cwd, env, encoding: 'utf8' })[0m
+2026-11-15T02:22:04.3976507Z [36;1mif (listed.error || listed.status !== 0) throw new Error(`playwright selection failed: ${listed.error ?? listed.stderr}`)[0m
+2026-11-15T02:22:04.3977291Z [36;1mwriteFileSync('test-ci-evidence/playwright-selection.json', listed.stdout)[0m
+2026-11-15T02:22:04.3977805Z [36;1mconst report = JSON.parse(listed.stdout)[0m
+2026-11-15T02:22:04.3978413Z [36;1mconst hasTests = (suite) => suite.specs?.some((spec) => spec.tests?.length > 0) || (suite.suites ?? []).some(hasTests)[0m
+2026-11-15T02:22:04.3979391Z [36;1mvalidateSelection(request.args.map((file) => path.resolve(cwd, file)),[0m
+2026-11-15T02:22:04.3980300Z [36;1m  report.suites.filter(hasTests).map((suite) => path.resolve(report.config.rootDir, suite.file)))[0m
+2026-11-15T02:22:04.3981023Z [36;1m// The flaky reporter lists tests that passed only on a retry in the log and the job summary.[0m
+2026-11-15T02:22:04.3981650Z [36;1mconst flaky = path.resolve(cwd, 'e2e/utils/flaky-reporter.ts')[0m
+2026-11-15T02:22:04.3982302Z [36;1mconst reporters = statSync(flaky, { throwIfNoEntry: false }) ? `html,line,json,${flaky}` : 'html,line,json'[0m
+2026-11-15T02:22:04.3983007Z [36;1mconst run = spawnSync('bun', [...args, `--reporter=${reporters}`], { cwd, stdio: 'inherit',[0m
+2026-11-15T02:22:04.3983694Z [36;1m  env: { ...env, PLAYWRIGHT_HTML_OUTPUT_DIR: path.resolve(cwd, 'e2e/playwright-report'),[0m
+2026-11-15T02:22:04.3984406Z [36;1m    PLAYWRIGHT_JSON_OUTPUT_NAME: path.resolve('test-ci-evidence/playwright-runtime.json') } })[0m
+2026-11-15T02:22:04.3985161Z [36;1mif (run.error || run.status === null) throw new Error(`playwright execution failed: ${run.error ?? run.signal}`)[0m
+2026-11-15T02:22:04.3985742Z [36;1mprocess.exit(run.status)[0m
+2026-11-15T02:22:04.3986008Z [36;1mNODE[0m
+2026-11-15T02:22:04.3986209Z [36;1m  exit $?[0m
+2026-11-15T02:22:04.3986426Z [36;1mfi[0m
+2026-11-15T02:22:04.3986607Z [36;1margs=()[0m
+2026-11-15T02:22:04.3986988Z [36;1mwhile IFS= read -r arg; do args+=("$arg"); done < <(jq -r '.args[]' .ci-run.json | tr -d '\r')[0m
+2026-11-15T02:22:04.3987451Z [36;1mcd "$DIRECTORY"[0m
+2026-11-15T02:22:04.3987951Z [36;1mcase "$RUNNER" in[0m
+2026-11-15T02:22:04.3988288Z [36;1m  pytest) python -m pytest -p no:cacheprovider "${args[@]}" ;;[0m
+2026-11-15T02:22:04.3988879Z [36;1m  bun)[0m
+2026-11-15T02:22:04.3989244Z [36;1m    # solid-sonner's compiled dist/index.js imports `use` from solid-js/web, a[0m
+2026-11-15T02:22:04.3989815Z [36;1m    # browser-only export that fails under bun's default (`node`) conditions.[0m
+2026-11-15T02:22:04.3990385Z [36;1m    # The `solid` condition routes solid-sonner to its untranspiled dist/index.jsx[0m
+2026-11-15T02:22:04.3990984Z [36;1m    # source, which does not make that import. test-ci bypasses the package's own[0m
+2026-11-15T02:22:04.3991587Z [36;1m    # `test:unit` script (which already passes `--conditions=solid`), so reproduce it.[0m
+2026-11-15T02:22:04.3992183Z [36;1m    # test-browser/ files follow `test:browser` instead: solid-js has no `solid`[0m
+2026-11-15T02:22:04.3993163Z [36;1m    # export, so under `solid` it falls through to `node` and loads its server build,[0m
+2026-11-15T02:22:04.3993762Z [36;1m    # where memos never recompute and onMount never runs. They also preload happydom.[0m
+2026-11-15T02:22:04.3994249Z [36;1m    if [ "$DIRECTORY" = "packages/app-shell" ]; then[0m
+2026-11-15T02:22:04.3994602Z [36;1m      unit=()[0m
+2026-11-15T02:22:04.3994838Z [36;1m      browser=()[0m
+2026-11-15T02:22:04.3995101Z [36;1m      common=()[0m
+2026-11-15T02:22:04.3995580Z [36;1m      # Only generated --timeout, -t and --test-name-pattern consume the next[0m
+2026-11-15T02:22:04.3996149Z [36;1m      # entry, including an empty name pattern. Other dash-prefixed tokens are[0m
+2026-11-15T02:22:04.3996638Z [36;1m      # one common token each; this is not a Bun CLI parser.[0m
+2026-11-15T02:22:04.3997057Z [36;1m      for ((index=0; index<${#args[@]}; index=index+1)); do[0m
+2026-11-15T02:22:04.3997402Z [36;1m        arg="${args[$index]}"[0m
+2026-11-15T02:22:04.3997687Z [36;1m        case "$arg" in[0m
+2026-11-15T02:22:04.3998002Z [36;1m          --timeout|-t|--test-name-pattern)[0m
+2026-11-15T02:22:04.3998340Z [36;1m            index=$((index+1))[0m
+2026-11-15T02:22:04.3999044Z [36;1m            if [ "$index" -ge "${#args[@]}" ]; then[0m
+2026-11-15T02:22:04.3999440Z [36;1m              echo "::error::$arg needs a following value"[0m
+2026-11-15T02:22:04.3999796Z [36;1m              exit 2[0m
+2026-11-15T02:22:04.4000044Z [36;1m            fi[0m
+2026-11-15T02:22:04.4000318Z [36;1m            common+=("$arg" "${args[$index]}")[0m
+2026-11-15T02:22:04.4000641Z [36;1m            ;;[0m
+2026-11-15T02:22:04.4001109Z [36;1m          -*)[0m
+2026-11-15T02:22:04.4001360Z [36;1m            common+=("$arg")[0m
+2026-11-15T02:22:04.4001644Z [36;1m            ;;[0m
+2026-11-15T02:22:04.4002011Z [36;1m          test-browser|test-browser/*|./test-browser/*) browser+=("$arg") ;;[0m
+2026-11-15T02:22:04.4002446Z [36;1m          *) unit+=("$arg") ;;[0m
+2026-11-15T02:22:04.4002720Z [36;1m        esac[0m
+2026-11-15T02:22:04.4002934Z [36;1m      done[0m
+2026-11-15T02:22:04.4003163Z [36;1m      status=0[0m
+2026-11-15T02:22:04.4003459Z [36;1m      if [ ${#unit[@]} -gt 0 ] || [ ${#browser[@]} -eq 0 ]; then[0m
+2026-11-15T02:22:04.4003970Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=solid "${unit[@]}" "${common[@]}" || status=$?[0m
+2026-11-15T02:22:04.4004431Z [36;1m      fi[0m
+2026-11-15T02:22:04.4004684Z [36;1m      if [ ${#browser[@]} -gt 0 ]; then[0m
+2026-11-15T02:22:04.4005455Z [36;1m        GITHUB_ACTIONS=false bun test --conditions=browser --preload ../../script/test-omni-control.ts --preload ./happydom.ts "${browser[@]}" "${common[@]}" || status=$?[0m
+2026-11-15T02:22:04.4006208Z [36;1m      fi[0m
+2026-11-15T02:22:04.4006429Z [36;1m      exit $status[0m
+2026-11-15T02:22:04.4006673Z [36;1m    fi[0m
+2026-11-15T02:22:04.4006925Z [36;1m    GITHUB_ACTIONS=false bun test "${args[@]}"[0m
+2026-11-15T02:22:04.4007223Z [36;1m    ;;[0m
+2026-11-15T02:22:04.4007408Z [36;1m  node)[0m
+2026-11-15T02:22:04.4007817Z [36;1m    for file in "${args[@]}"; do[0m
+2026-11-15T02:22:04.4008080Z [36;1m      case "$file" in[0m
+2026-11-15T02:22:04.4008314Z [36;1m        *.node-smoke.mjs) ;;[0m
+2026-11-15T02:22:04.4009006Z [36;1m        *) echo "::error::the node runner runs only *.node-smoke.mjs files, not $file"; exit 2 ;;[0m
+2026-11-15T02:22:04.4009489Z [36;1m      esac[0m
+2026-11-15T02:22:04.4009728Z [36;1m    done[0m
+2026-11-15T02:22:04.4010043Z [36;1m    node --experimental-strip-types --test "${args[@]}"[0m
+2026-11-15T02:22:04.4010399Z [36;1m    ;;[0m
+2026-11-15T02:22:04.4010611Z [36;1mesac[0m
+2026-11-15T02:22:04.4036615Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-11-15T02:22:04.4036997Z env:
+2026-11-15T02:22:04.4037233Z   ORCHESTRA_DISABLE_RIPGREP_DOWNLOAD: 1
+2026-11-15T02:22:04.4037821Z   HUGR_OMNI_ADDON: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/libhugr_omni_node.so
+2026-11-15T02:22:04.4038942Z   HUGR_OMNI_SUPERVISOR: /home/runner/work/Orchestra-SF/Orchestra-SF/native/omni/target/release/hugr-omni-supervisor
+2026-11-15T02:22:04.4039612Z   ORCHESTRA_OMNI_CONTROL_NONCE: f82ca28ef5a224d3faf2e6b7821d178d
+2026-11-15T02:22:04.4040050Z   ORCHESTRA_EXPERIMENTAL_DISABLE_FILEWATCHER: false
+2026-11-15T02:22:04.4040403Z   ORCHESTRA_OMNI_CONTROL: declared
+2026-11-15T02:22:04.4040656Z   PACKAGE: sucafina
+2026-11-15T02:22:04.4040897Z   DIRECTORY: modules/sucafina
+2026-11-15T02:22:04.4041156Z   RUNNER: bun
+2026-11-15T02:22:04.4041377Z ##[endgroup]
+2026-11-15T02:22:04.4129251Z bun test v1.3.14 (0d9b296a)
+2026-11-15T02:22:04.4192152Z 
+2026-11-15T02:22:04.4192921Z Sucafinav1/test/product/mixed-source-contracts/procurement-lifecycle.test.ts:
+2026-11-15T02:22:04.5449089Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"scope-rotation","originalAccepted":true,"originalPhysical":"0b9065d4-637b-47ce-9f54-d0265eeb1efc","currentPhysical":"0b9065d4-637b-47ce-9f54-d0265eeb1efc","originalScope":"11178eb0-f85e-4402-a426-73f13ce6b419","currentScope":"1fad39c8-99cd-4e05-bdcc-6d3773173cf1","currentAccepted":true,"oldAcceptedAfterRotation":false,"financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","historicalCaptureQualified":false}
+2026-11-15T02:22:04.5481244Z (pass) Procurement scope rotation preserves physical lineage and binds a real private source grant [95.87ms]
+2026-11-15T02:22:04.6263692Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"tombstone-recreate","deletion":true,"tombstoned":true,"originalPhysical":"8cfc319b-2c86-4603-8601-a0940b0964fd","currentPhysical":"f902c4da-8884-4719-844c-50a7cd41d9f3","originalScope":"8c4699ac-d504-4b21-bf4d-e35f476fe779","currentScope":"f4246901-baf2-49dd-8472-04d7aaf2fbc9","oldRead":"unavailable","oldReissue":"unavailable","oldGrant":false,"newGrant":true,"financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","historicalCaptureQualified":false}
+2026-11-15T02:22:04.6276167Z (pass) canonical delete and same-ID row replay create a new physical source and reject the old source and private grant [79.51ms]
+2026-11-15T02:22:04.6879608Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"broken-scope-lineage","removedPhysical":"5973dd6c-40be-4834-a67b-d878868a8f8f","currentPhysical":"5973dd6c-40be-4834-a67b-d878868a8f8f","originalScope":"0d26babd-ce4c-4ced-a898-619c57b35e66","currentScope":"ef506c2f-6a6e-49e4-afbe-14d462fd2549","oldReissue":"unavailable","oldGrant":false,"replacementRead":"ok","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","historicalCaptureQualified":false}
+2026-11-15T02:22:04.6887657Z (pass) removing a genuine original scope breaks its private grant while a current replacement source remains available [61.13ms]
+2026-11-15T02:22:04.7308697Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"revoke","event":true,"observedReads":1,"outcome":"stale","returnedPrivateValue":false,"writesBeforeOperation":6,"writesAfterOperation":6,"originalScope":"6137d18a-65fc-4a85-bbde-10a4ffb03d87","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:04.7315390Z (pass) real Procurement observation refuses revoke between independent source reads without a private result [42.78ms]
+2026-11-15T02:22:04.7690610Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"actor","event":true,"observedReads":1,"outcome":"stale","returnedPrivateValue":false,"writesBeforeOperation":6,"writesAfterOperation":6,"originalScope":"45333adc-7fe3-48cc-a5ec-ea5ef69dc024","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:04.7698169Z (pass) real Procurement observation refuses actor between independent source reads without a private result [38.28ms]
+2026-11-15T02:22:04.8086016Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"policy","event":true,"observedReads":2,"outcome":"stale","returnedPrivateValue":false,"writesBeforeOperation":6,"writesAfterOperation":6,"originalScope":"eb4915ac-d4f6-4fea-89bb-7aa63ea49aff","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:04.8092045Z (pass) real Procurement observation refuses policy between independent source reads without a private result [39.28ms]
+2026-11-15T02:22:04.8482141Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"access","event":true,"observedReads":2,"outcome":"stale","returnedPrivateValue":false,"writesBeforeOperation":6,"writesAfterOperation":6,"originalScope":"84996bfe-03e6-4a18-a042-54e8f9205f21","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:04.8491088Z (pass) real Procurement observation refuses access between independent source reads without a private result [40.00ms]
+2026-11-15T02:22:04.8904557Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"request-header","event":true,"observedReads":1,"outcome":"stale","returnedPrivateValue":false,"writesBeforeOperation":6,"writesAfterOperation":6,"originalScope":"ef4736fe-5dd8-4d93-962c-31f7335cd25f","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:04.8912170Z (pass) real Procurement observation refuses request-header between independent source reads without a private result [42.10ms]
+2026-11-15T02:22:04.9295977Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"lease","event":true,"observedReads":2,"outcome":"stale","returnedPrivateValue":false,"writesBeforeOperation":6,"writesAfterOperation":6,"originalScope":"4c71c97b-6bab-4e36-afab-4f0b6638bf08","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:04.9303268Z (pass) real Procurement observation refuses lease between independent source reads without a private result [39.14ms]
+2026-11-15T02:22:04.9665557Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"abort","event":true,"observedReads":1,"outcome":"aborted","returnedPrivateValue":false,"writesBeforeOperation":6,"writesAfterOperation":6,"originalScope":"b93ca3ac-3255-4727-92c9-0c1d5910f8c5","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:04.9674301Z (pass) real Procurement observation refuses abort between independent source reads without a private result [37.03ms]
+2026-11-15T02:22:05.0040242Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"role","event":true,"observedReads":1,"outcome":"stale","returnedPrivateValue":false,"writesBeforeOperation":6,"writesAfterOperation":6,"originalScope":"65c237ea-a52a-430d-a15f-386c7418c73c","financialDigest":"7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:05.0046835Z (pass) real Procurement observation refuses role between independent source reads without a private result [37.28ms]
+2026-11-15T02:22:05.0470921Z SF_MIXED_PROCUREMENT_PROOF {"scenario":"between-source-reads","mutation":"source","event":true,"observedReads":1,"outcome":"stale","returnedPrivateValue":false,"writesBeforeOperation":7,"writesAfterOperation":7,"originalScope":"4a1466ec-336b-46f8-a507-72abc0330cc5","financialDigest":"d8002faa73a0b8b407c866406e904f940c81103054f37f1fea50004b48e5013b","productStateDigest":"40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec","historicalCaptureQualified":false}
+2026-11-15T02:22:05.0480476Z (pass) real Procurement observation refuses source between independent source reads without a private result [43.34ms]
+2026-11-15T02:22:05.0480984Z 
+2026-11-15T02:22:05.0481259Z Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts:
+2026-11-15T02:22:05.7113786Z 22 |     expect(decision.choices).toHaveLength(1)
+2026-11-15T02:22:05.7114244Z 23 |     expect(decision.choices[0]?.id).toBe(selection.choiceId)
+2026-11-15T02:22:05.7114600Z 24 |     expect(decision.preparedChanges).toHaveLength(0)
+2026-11-15T02:22:05.7114830Z 25 | 
+2026-11-15T02:22:05.7115249Z 26 |     const admitted = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", selection)
+2026-11-15T02:22:05.7115668Z 27 |     expect(admitted.status).toBe("ok")
+2026-11-15T02:22:05.7115906Z                                  ^
+2026-11-15T02:22:05.7116166Z error: expect(received).toBe(expected)
+2026-11-15T02:22:05.7116305Z 
+2026-11-15T02:22:05.7116382Z Expected: "ok"
+2026-11-15T02:22:05.7116545Z Received: "denied"
+2026-11-15T02:22:05.7116635Z 
+2026-11-15T02:22:05.7117086Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/capture-prerequisite.test.ts:27:29)
+2026-11-15T02:22:05.7117835Z (fail) real C08 Procurement preparation exposes the M31 blocker and cannot manufacture an original capture [225.94ms]
+2026-11-15T02:22:05.7118425Z 
+2026-11-15T02:22:05.7118826Z Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:
+2026-11-15T02:22:05.7163309Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-revoked","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.7426281Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-revoked","phase":"real-mixed-producers","state":"returned","phaseMs":26,"elapsedMs":26,"aborted":false}
+2026-11-15T02:22:05.7463208Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.7464278Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.7465428Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.7466410Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.7467122Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.7467757Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.7468435Z                                                   ^
+2026-11-15T02:22:05.7468930Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.7469626Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.7470544Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.7471430Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.7472347Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.7472866Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.7473399Z (fail) mixed external authority refuses revoked after a successful independent source read [30.46ms]
+2026-11-15T02:22:05.7474321Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-actor","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.7691452Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-actor","phase":"real-mixed-producers","state":"returned","phaseMs":23,"elapsedMs":23,"aborted":false}
+2026-11-15T02:22:05.7723204Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.7724262Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.7725472Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.7726450Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.7727139Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.7727736Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.7728073Z                                                   ^
+2026-11-15T02:22:05.7728321Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.7729018Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.7729993Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.7731018Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.7731772Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.7732264Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.7732704Z (fail) mixed external authority refuses actor after a successful independent source read [26.00ms]
+2026-11-15T02:22:05.7733389Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-access","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.7950566Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-access","phase":"real-mixed-producers","state":"returned","phaseMs":23,"elapsedMs":23,"aborted":false}
+2026-11-15T02:22:05.7980932Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.7982430Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.7983852Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.7985048Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.7985963Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.7986723Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.7987238Z                                                   ^
+2026-11-15T02:22:05.7987630Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.7988638Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.7989999Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.7991298Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.7992608Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.7993484Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.7994128Z (fail) mixed external authority refuses access after a successful independent source read [25.75ms]
+2026-11-15T02:22:05.7995123Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-policy","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.8239019Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-policy","phase":"real-mixed-producers","state":"returned","phaseMs":26,"elapsedMs":26,"aborted":false}
+2026-11-15T02:22:05.8269124Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.8270063Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.8271201Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.8272292Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.8272951Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.8273506Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.8273840Z                                                   ^
+2026-11-15T02:22:05.8274134Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.8274647Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.8275492Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.8276330Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.8277273Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.8277818Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.8278324Z (fail) mixed external authority refuses policy after a successful independent source read [28.86ms]
+2026-11-15T02:22:05.8279114Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-request","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.8490699Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-request","phase":"real-mixed-producers","state":"returned","phaseMs":22,"elapsedMs":22,"aborted":false}
+2026-11-15T02:22:05.8520912Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.8521975Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.8523200Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.8524129Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.8524760Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.8525238Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.8525561Z                                                   ^
+2026-11-15T02:22:05.8525807Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.8526314Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.8527276Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.8528160Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.8529080Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.8529649Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.8530095Z (fail) mixed external authority refuses request after a successful independent source read [25.13ms]
+2026-11-15T02:22:05.8530738Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-headers","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.8734091Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-headers","phase":"real-mixed-producers","state":"returned","phaseMs":21,"elapsedMs":21,"aborted":false}
+2026-11-15T02:22:05.8765098Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.8765877Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-lease","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.8766891Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.8767940Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.8768913Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.8769492Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.8769956Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.8770272Z                                                   ^
+2026-11-15T02:22:05.8770514Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.8771293Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.8772253Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.8773071Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.8773823Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.8774410Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.8774933Z (fail) mixed external authority refuses headers after a successful independent source read [24.29ms]
+2026-11-15T02:22:05.8975416Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-lease","phase":"real-mixed-producers","state":"returned","phaseMs":21,"elapsedMs":21,"aborted":false}
+2026-11-15T02:22:05.9004807Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.9005852Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.9006927Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.9007730Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.9008377Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.9009062Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.9009411Z                                                   ^
+2026-11-15T02:22:05.9009659Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.9010160Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.9010982Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.9012157Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.9012908Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.9013397Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.9013920Z (fail) mixed external authority refuses lease after a successful independent source read [24.12ms]
+2026-11-15T02:22:05.9014545Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-abort","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.9220221Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-abort","phase":"real-mixed-producers","state":"returned","phaseMs":21,"elapsedMs":21,"aborted":false}
+2026-11-15T02:22:05.9250711Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.9251620Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.9252801Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.9254072Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.9254876Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.9255447Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.9255787Z                                                   ^
+2026-11-15T02:22:05.9256042Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.9256551Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.9257390Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.9258233Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.9259337Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.9259885Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.9260321Z (fail) mixed external authority refuses abort after a successful independent source read [24.59ms]
+2026-11-15T02:22:05.9260979Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-source","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.9457836Z SF_COMPOSITION_PHASE {"fixture":"mixed-between-reads-source","phase":"real-mixed-producers","state":"returned","phaseMs":21,"elapsedMs":21,"aborted":false}
+2026-11-15T02:22:05.9486727Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.9487747Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.9489292Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.9490473Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.9491322Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.9492213Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.9492622Z                                                   ^
+2026-11-15T02:22:05.9492887Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.9493556Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.9494607Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.9495676Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.9496626Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:16:29
+2026-11-15T02:22:05.9497272Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.9497882Z (fail) mixed external authority refuses source after a successful independent source read [23.56ms]
+2026-11-15T02:22:05.9498939Z SF_COMPOSITION_PHASE {"fixture":"mixed-final-await-request","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.9710504Z SF_COMPOSITION_PHASE {"fixture":"mixed-final-await-request","phase":"real-mixed-producers","state":"returned","phaseMs":22,"elapsedMs":22,"aborted":false}
+2026-11-15T02:22:05.9739457Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.9740509Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.9741543Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.9742483Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.9743162Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.9743640Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.9743980Z                                                   ^
+2026-11-15T02:22:05.9744226Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.9744732Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.9745596Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.9746412Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.9747174Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:50:139
+2026-11-15T02:22:05.9747694Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.9748088Z (fail) mixed preview fences request after its final genuine authority observation [25.30ms]
+2026-11-15T02:22:05.9748843Z SF_COMPOSITION_PHASE {"fixture":"mixed-final-await-headers","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:05.9946765Z SF_COMPOSITION_PHASE {"fixture":"mixed-final-await-headers","phase":"real-mixed-producers","state":"returned","phaseMs":20,"elapsedMs":20,"aborted":false}
+2026-11-15T02:22:05.9973015Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:05.9974065Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:05.9975474Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:05.9976407Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:05.9977047Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:05.9977588Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:05.9977934Z                                                   ^
+2026-11-15T02:22:05.9978192Z error: Real C08 versions unavailable
+2026-11-15T02:22:05.9978863Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:05.9979703Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:05.9980511Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:05.9981419Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:50:139
+2026-11-15T02:22:05.9981969Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:05.9982383Z (fail) mixed preview fences headers after its final genuine authority observation [23.36ms]
+2026-11-15T02:22:05.9982997Z SF_COMPOSITION_PHASE {"fixture":"mixed-final-await-lease","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:06.0182625Z SF_COMPOSITION_PHASE {"fixture":"mixed-final-await-lease","phase":"real-mixed-producers","state":"returned","phaseMs":20,"elapsedMs":20,"aborted":false}
+2026-11-15T02:22:06.0208705Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:06.0209723Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:06.0210777Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:06.0211693Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:06.0212376Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:06.0212854Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:06.0213172Z                                                   ^
+2026-11-15T02:22:06.0213412Z error: Real C08 versions unavailable
+2026-11-15T02:22:06.0213913Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:06.0214855Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:06.0215842Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:06.0216644Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:50:139
+2026-11-15T02:22:06.0217180Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:06.0217883Z (fail) mixed preview fences lease after its final genuine authority observation [23.55ms]
+2026-11-15T02:22:06.0218893Z SF_COMPOSITION_PHASE {"fixture":"mixed-final-await-abort","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:06.0420304Z SF_COMPOSITION_PHASE {"fixture":"mixed-final-await-abort","phase":"real-mixed-producers","state":"returned","phaseMs":21,"elapsedMs":21,"aborted":false}
+2026-11-15T02:22:06.0452411Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:06.0453206Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:06.0454161Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:06.0455009Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:06.0455639Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:06.0456282Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:06.0456619Z                                                   ^
+2026-11-15T02:22:06.0457116Z error: Real C08 versions unavailable
+2026-11-15T02:22:06.0457736Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:06.0458873Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:06.0459908Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:06.0460872Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:50:139
+2026-11-15T02:22:06.0461592Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:06.0462129Z (fail) mixed preview fences abort after its final genuine authority observation [24.36ms]
+2026-11-15T02:22:06.0462854Z SF_COMPOSITION_PHASE {"fixture":"mixed-case-read-race","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:06.0666716Z SF_COMPOSITION_PHASE {"fixture":"mixed-case-read-race","phase":"real-mixed-producers","state":"returned","phaseMs":21,"elapsedMs":21,"aborted":false}
+2026-11-15T02:22:06.0696000Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:06.0697523Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:06.0699277Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:06.0700299Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:06.0700947Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:06.0701490Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:06.0701877Z                                                   ^
+2026-11-15T02:22:06.0702149Z error: Real C08 versions unavailable
+2026-11-15T02:22:06.0702715Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:06.0703743Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:06.0704566Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:06.0705507Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:104:93
+2026-11-15T02:22:06.0706028Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:06.0706484Z (fail) mixed preview refuses a real C08 membership change between its protected case observations [24.33ms]
+2026-11-15T02:22:06.0960054Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:06.0961317Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:06.0962855Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:06.0964082Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:06.0965217Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:06.0965993Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:06.0966462Z                                                   ^
+2026-11-15T02:22:06.0966850Z error: Real C08 versions unavailable
+2026-11-15T02:22:06.0967638Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:06.0969141Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:06.0970454Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/authority-egress.test.ts:135:8
+2026-11-15T02:22:06.0971315Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:06.0972142Z (fail) mixed authority rejects substituted binding and lease objects while the genuine admitted context remains valid [26.38ms]
+2026-11-15T02:22:06.0972677Z 
+2026-11-15T02:22:06.0973023Z Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts:
+2026-11-15T02:22:06.0996160Z SF_COMPOSITION_PHASE {"fixture":"mixed-recorded-fallback","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:06.1222404Z SF_COMPOSITION_PHASE {"fixture":"mixed-recorded-fallback","phase":"real-mixed-producers","state":"returned","phaseMs":23,"elapsedMs":23,"aborted":false}
+2026-11-15T02:22:06.1255643Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:06.1256718Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:06.1257718Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:06.1258775Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:06.1259629Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:06.1260149Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:06.1260693Z                                                   ^
+2026-11-15T02:22:06.1260969Z error: Real C08 versions unavailable
+2026-11-15T02:22:06.1261601Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:06.1262520Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:06.1263314Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:06.1264084Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts:16:29
+2026-11-15T02:22:06.1264654Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:06.1265224Z (fail) mixed recorded Planner fallback reads real captured base and amount originals while Procurement stays independently authorized [26.75ms]
+2026-11-15T02:22:06.1266202Z SF_COMPOSITION_PHASE {"fixture":"mixed-recorded-external-race","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:06.1470619Z SF_COMPOSITION_PHASE {"fixture":"mixed-recorded-external-race","phase":"real-mixed-producers","state":"returned","phaseMs":21,"elapsedMs":21,"aborted":false}
+2026-11-15T02:22:06.1501501Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:06.1502693Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:06.1504212Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:06.1505396Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:06.1506190Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:06.1506810Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:06.1507217Z                                                   ^
+2026-11-15T02:22:06.1507496Z error: Real C08 versions unavailable
+2026-11-15T02:22:06.1508097Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:06.1509258Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:06.1510192Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:06.1511014Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts:74:27
+2026-11-15T02:22:06.1511510Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:06.1511934Z (fail) recorded mixed verifier rechecks Procurement after real historical Planner reads [24.53ms]
+2026-11-15T02:22:06.1512570Z SF_COMPOSITION_PHASE {"fixture":"mixed-recorded-source-race","phase":"real-mixed-producers","state":"started","elapsedMs":0}
+2026-11-15T02:22:06.1723151Z SF_COMPOSITION_PHASE {"fixture":"mixed-recorded-source-race","phase":"real-mixed-producers","state":"returned","phaseMs":22,"elapsedMs":22,"aborted":false}
+2026-11-15T02:22:06.1754059Z 108 |   const caseRef = { id: "mixed-recorded-case", incarnation: "mixed-recorded-incarnation", version: 1 }
+2026-11-15T02:22:06.1755116Z 109 |   const initial: DecisionCase = { ...caseRef, state: "comparing", objective: "Retain a mixed result without financial approval", horizon: mixedPeriod, currency: "USD",
+2026-11-15T02:22:06.1756786Z 110 |     criteria: [], participants: ["person"], sourceRefs: [], alternatives: [], costCoverageBases: [], assumptions: [], questions: [], choices: [], preparedChanges: [], receipts: [], ledger: [] }
+2026-11-15T02:22:06.1757909Z 111 |   const saveCase = async (value: DecisionCase, eventRef?: Extract<BusinessEvidenceRef, { kind: "case-event" }>) => {
+2026-11-15T02:22:06.1758947Z 112 |     const versions = await authority.state.read(transport, "cases", (state) => state.versions)
+2026-11-15T02:22:06.1759656Z 113 |     if (versions.status !== "ok") throw new Error("Real C08 versions unavailable")
+2026-11-15T02:22:06.1760153Z                                                   ^
+2026-11-15T02:22:06.1760518Z error: Real C08 versions unavailable
+2026-11-15T02:22:06.1761308Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:113:45
+2026-11-15T02:22:06.1762532Z       at createMixedPlannerFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts:98:3)
+2026-11-15T02:22:06.1763767Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/composition-test-deadline.ts:25:70
+2026-11-15T02:22:06.1765208Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts:102:5
+2026-11-15T02:22:06.1766033Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:06.1766846Z (fail) mixed fallback refuses genuine source change between independent reads and never substitutes latest values [25.25ms]
+2026-11-15T02:22:06.1767365Z 
+2026-11-15T02:22:06.1767742Z Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts:
+2026-11-15T02:22:06.3593727Z (pass) mixed original52 shape retains Planner 2400, difference 1200 and an unresolved external Procurement operation without writes [179.42ms]
+2026-11-15T02:22:06.4657153Z 81 |     expect(Object.hasOwn(preview, "outputRef")).toBe(false)
+2026-11-15T02:22:06.4657485Z 82 |     expect(persisted).toBe(0)
+2026-11-15T02:22:06.4657913Z 83 |     const scenario = await fixture.composite.planner.simulateScenario(proposal, fixture.context)
+2026-11-15T02:22:06.4658431Z 84 |     if (scenario.status !== "ok") throw new Error("Mixed scenario unavailable")
+2026-11-15T02:22:06.4659287Z 85 |     const decision: DecisionCase = { ...fixture.decision, alternatives: [{ id: "mixed", version: 1, title: "Human proposal", scenario: proposal, result: scenario.value }] }
+2026-11-15T02:22:06.4659965Z 86 |     expect(await fixture.guard(decision, fixture.context)).toBe(true)
+2026-11-15T02:22:06.4660291Z                                                                 ^
+2026-11-15T02:22:06.4660580Z error: expect(received).toBe(expected)
+2026-11-15T02:22:06.4660744Z 
+2026-11-15T02:22:06.4660825Z Expected: true
+2026-11-15T02:22:06.4661036Z Received: false
+2026-11-15T02:22:06.4661161Z 
+2026-11-15T02:22:06.4661789Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts:86:60)
+2026-11-15T02:22:06.4662870Z (fail) mixed capability is transient and current case guards authorize the explicit external selector [106.44ms]
+2026-11-15T02:22:06.5127412Z (pass) mixed preview rejects another holder, unbound currency, duplicated targets and stale Procurement source without writes [46.91ms]
+2026-11-15T02:22:06.5396949Z (pass) mixed form offers explicit request and amount controls only for attached Procurement evidence [26.97ms]
+2026-11-15T02:22:06.5397417Z 
+2026-11-15T02:22:06.5397778Z Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:
+2026-11-15T02:22:07.2412683Z (pass) stored Planner selectors use the exact domain projection without reopening coverage [687.89ms]
+2026-11-15T02:22:07.3371462Z (pass) stored scenario rejects planner changes across the actual projection await [95.90ms]
+2026-11-15T02:22:07.4337516Z (pass) stored scenario rejects dashboard changes across the actual projection await [96.43ms]
+2026-11-15T02:22:07.5274901Z (pass) stored scenario rejects procurement changes across the actual projection await [93.90ms]
+2026-11-15T02:22:07.6143816Z (pass) stored scenario rejects principal changes across the actual projection await [86.88ms]
+2026-11-15T02:22:07.7068885Z (pass) stored scenario rejects case-input changes across the actual projection await [92.52ms]
+2026-11-15T02:22:07.7642526Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:07.7642918Z 320 |   })
+2026-11-15T02:22:07.7643205Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:07.7644133Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:07.7644947Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:07.7645770Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:07.7646345Z       ^
+2026-11-15T02:22:07.7646554Z error: expect(received).toBe(expected)
+2026-11-15T02:22:07.7646707Z 
+2026-11-15T02:22:07.7646798Z Expected: "ok"
+2026-11-15T02:22:07.7647234Z Received: "needs-input"
+2026-11-15T02:22:07.7647354Z 
+2026-11-15T02:22:07.7647437Z       at toBe (unknown:1:1)
+2026-11-15T02:22:07.7648133Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:07.7649246Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:125:100
+2026-11-15T02:22:07.7649770Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:07.7650272Z (fail) fresh Procurement duplicates retain two canonical observations per guard and recompute on every case read [57.42ms]
+2026-11-15T02:22:07.8148201Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:07.8148618Z 320 |   })
+2026-11-15T02:22:07.8148847Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:07.8149545Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:07.8150217Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:07.8151130Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:07.8151698Z       ^
+2026-11-15T02:22:07.8151933Z error: expect(received).toBe(expected)
+2026-11-15T02:22:07.8152135Z 
+2026-11-15T02:22:07.8152205Z Expected: "ok"
+2026-11-15T02:22:07.8152387Z Received: "needs-input"
+2026-11-15T02:22:07.8152529Z 
+2026-11-15T02:22:07.8152604Z       at toBe (unknown:1:1)
+2026-11-15T02:22:07.8153325Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:07.8154297Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:134:24
+2026-11-15T02:22:07.8154809Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:07.8155250Z (fail) historical Procurement duplicates keep both independent canonical entry observations [50.57ms]
+2026-11-15T02:22:07.8659066Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:07.8659343Z 320 |   })
+2026-11-15T02:22:07.8659563Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:07.8660547Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:07.8661381Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:07.8662229Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:07.8662889Z       ^
+2026-11-15T02:22:07.8663115Z error: expect(received).toBe(expected)
+2026-11-15T02:22:07.8663290Z 
+2026-11-15T02:22:07.8663374Z Expected: "ok"
+2026-11-15T02:22:07.8663588Z Received: "needs-input"
+2026-11-15T02:22:07.8663741Z 
+2026-11-15T02:22:07.8663849Z       at toBe (unknown:1:1)
+2026-11-15T02:22:07.8664712Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:07.8665879Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:07.8666425Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:07.8666890Z (fail) fresh Procurement duplicate proof rejects source change after its canonical double observation [51.06ms]
+2026-11-15T02:22:07.9155831Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:07.9156456Z 320 |   })
+2026-11-15T02:22:07.9156739Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:07.9157776Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:07.9158986Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:07.9160065Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:07.9160887Z       ^
+2026-11-15T02:22:07.9161171Z error: expect(received).toBe(expected)
+2026-11-15T02:22:07.9161389Z 
+2026-11-15T02:22:07.9161484Z Expected: "ok"
+2026-11-15T02:22:07.9161746Z Received: "needs-input"
+2026-11-15T02:22:07.9161909Z 
+2026-11-15T02:22:07.9162028Z       at toBe (unknown:1:1)
+2026-11-15T02:22:07.9163018Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:07.9164449Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:07.9165325Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:07.9166051Z (fail) fresh Procurement duplicate proof rejects capture change after its canonical double observation [49.70ms]
+2026-11-15T02:22:07.9668176Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:07.9668822Z 320 |   })
+2026-11-15T02:22:07.9669169Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:07.9670186Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:07.9671183Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:07.9672117Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:07.9672638Z       ^
+2026-11-15T02:22:07.9672881Z error: expect(received).toBe(expected)
+2026-11-15T02:22:07.9673065Z 
+2026-11-15T02:22:07.9673162Z Expected: "ok"
+2026-11-15T02:22:07.9673343Z Received: "needs-input"
+2026-11-15T02:22:07.9673484Z 
+2026-11-15T02:22:07.9673575Z       at toBe (unknown:1:1)
+2026-11-15T02:22:07.9674213Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:07.9675377Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:07.9675901Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:07.9676376Z (fail) fresh Procurement duplicate proof rejects receipt change after its canonical double observation [51.21ms]
+2026-11-15T02:22:08.0170966Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:08.0171306Z 320 |   })
+2026-11-15T02:22:08.0171514Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:08.0172348Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:08.0173068Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:08.0173903Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:08.0174489Z       ^
+2026-11-15T02:22:08.0174762Z error: expect(received).toBe(expected)
+2026-11-15T02:22:08.0174966Z 
+2026-11-15T02:22:08.0175042Z Expected: "ok"
+2026-11-15T02:22:08.0175224Z Received: "needs-input"
+2026-11-15T02:22:08.0175550Z 
+2026-11-15T02:22:08.0175639Z       at toBe (unknown:1:1)
+2026-11-15T02:22:08.0176274Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:08.0177315Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:08.0177932Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:08.0178410Z (fail) fresh Procurement duplicate proof rejects preferences change after its canonical double observation [50.27ms]
+2026-11-15T02:22:08.0669602Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:08.0669918Z 320 |   })
+2026-11-15T02:22:08.0670161Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:08.0670885Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:08.0671785Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:08.0672737Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:08.0673415Z       ^
+2026-11-15T02:22:08.0673672Z error: expect(received).toBe(expected)
+2026-11-15T02:22:08.0673860Z 
+2026-11-15T02:22:08.0673960Z Expected: "ok"
+2026-11-15T02:22:08.0674176Z Received: "needs-input"
+2026-11-15T02:22:08.0674293Z 
+2026-11-15T02:22:08.0674372Z       at toBe (unknown:1:1)
+2026-11-15T02:22:08.0674979Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:08.0675838Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:08.0676376Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:08.0676846Z (fail) fresh Procurement duplicate proof rejects case change after its canonical double observation [49.89ms]
+2026-11-15T02:22:08.1153851Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:08.1154181Z 320 |   })
+2026-11-15T02:22:08.1154391Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:08.1155093Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:08.1156015Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:08.1156727Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:08.1157235Z       ^
+2026-11-15T02:22:08.1157433Z error: expect(received).toBe(expected)
+2026-11-15T02:22:08.1157579Z 
+2026-11-15T02:22:08.1157655Z Expected: "ok"
+2026-11-15T02:22:08.1157828Z Received: "needs-input"
+2026-11-15T02:22:08.1157936Z 
+2026-11-15T02:22:08.1158015Z       at toBe (unknown:1:1)
+2026-11-15T02:22:08.1158771Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:08.1159645Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:08.1160170Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:08.1160647Z (fail) fresh Procurement duplicate proof rejects principal change after its canonical double observation [48.39ms]
+2026-11-15T02:22:08.1670160Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:08.1670490Z 320 |   })
+2026-11-15T02:22:08.1670987Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:08.1671809Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:08.1672629Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:08.1673407Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:08.1673980Z       ^
+2026-11-15T02:22:08.1674205Z error: expect(received).toBe(expected)
+2026-11-15T02:22:08.1674397Z 
+2026-11-15T02:22:08.1674479Z Expected: "ok"
+2026-11-15T02:22:08.1674678Z Received: "needs-input"
+2026-11-15T02:22:08.1674786Z 
+2026-11-15T02:22:08.1674869Z       at toBe (unknown:1:1)
+2026-11-15T02:22:08.1675484Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:08.1676396Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:08.1676907Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:08.1677412Z (fail) fresh Procurement duplicate proof rejects period change after its canonical double observation [51.64ms]
+2026-11-15T02:22:08.2160341Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:08.2160765Z 320 |   })
+2026-11-15T02:22:08.2161054Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:08.2161988Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:08.2162823Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:08.2163626Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:08.2164212Z       ^
+2026-11-15T02:22:08.2164438Z error: expect(received).toBe(expected)
+2026-11-15T02:22:08.2164595Z 
+2026-11-15T02:22:08.2164664Z Expected: "ok"
+2026-11-15T02:22:08.2164864Z Received: "needs-input"
+2026-11-15T02:22:08.2164992Z 
+2026-11-15T02:22:08.2165074Z       at toBe (unknown:1:1)
+2026-11-15T02:22:08.2165797Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:08.2167020Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:08.2167550Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:08.2168041Z (fail) fresh Procurement duplicate proof rejects clock change after its canonical double observation [49.01ms]
+2026-11-15T02:22:08.2666634Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:08.2666970Z 320 |   })
+2026-11-15T02:22:08.2667194Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:08.2668091Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:08.2669047Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:08.2669913Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:08.2670520Z       ^
+2026-11-15T02:22:08.2670729Z error: expect(received).toBe(expected)
+2026-11-15T02:22:08.2670882Z 
+2026-11-15T02:22:08.2670955Z Expected: "ok"
+2026-11-15T02:22:08.2671169Z Received: "needs-input"
+2026-11-15T02:22:08.2671281Z 
+2026-11-15T02:22:08.2671546Z       at toBe (unknown:1:1)
+2026-11-15T02:22:08.2672163Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:08.2673042Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:08.2673575Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:08.2674081Z (fail) fresh Procurement duplicate proof rejects headers change after its canonical double observation [50.61ms]
+2026-11-15T02:22:08.3168349Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:08.3168792Z 320 |   })
+2026-11-15T02:22:08.3168996Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:08.3169671Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:08.3170339Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:08.3171043Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:08.3171612Z       ^
+2026-11-15T02:22:08.3171829Z error: expect(received).toBe(expected)
+2026-11-15T02:22:08.3171971Z 
+2026-11-15T02:22:08.3172045Z Expected: "ok"
+2026-11-15T02:22:08.3172248Z Received: "needs-input"
+2026-11-15T02:22:08.3172366Z 
+2026-11-15T02:22:08.3172447Z       at toBe (unknown:1:1)
+2026-11-15T02:22:08.3173101Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:08.3174175Z       at /home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:139:119
+2026-11-15T02:22:08.3174829Z       at processTicksAndRejections (unknown:7:39)
+2026-11-15T02:22:08.3175398Z (fail) fresh Procurement duplicate proof rejects lease change after its canonical double observation [50.18ms]
+2026-11-15T02:22:08.3633844Z 319 |     return { commit: true, value: true }
+2026-11-15T02:22:08.3634209Z 320 |   })
+2026-11-15T02:22:08.3634464Z 321 |   expect(seed.status).toBe("ok")
+2026-11-15T02:22:08.3635375Z 322 |   const preparation = await fixture.authority.human.admit(fixture.request(), "decisions.prepare-changes", { caseRef, choiceId: choice.choice.id, operations: [operation] })
+2026-11-15T02:22:08.3636539Z 323 |   if (preparation.status !== "ok") throw new Error(preparation.reason)
+2026-11-15T02:22:08.3637488Z 324 |   try { expect((await fixture.business.procurementDecisions.prepareDomainCommands(caseRef, choice.choice.id, [operation], preparation.value)).status).toBe("ok") }
+2026-11-15T02:22:08.3638363Z                                                                                                                                                             ^
+2026-11-15T02:22:08.3638971Z error: expect(received).toBe(expected)
+2026-11-15T02:22:08.3639153Z 
+2026-11-15T02:22:08.3639249Z Expected: "ok"
+2026-11-15T02:22:08.3639449Z Received: "needs-input"
+2026-11-15T02:22:08.3639560Z 
+2026-11-15T02:22:08.3640067Z       at procurementScenarioFixture (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:324:151)
+2026-11-15T02:22:08.3641002Z       at async <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/modules/sucafina/Sucafinav1/test/product/wp10/integration/scenario-operation-access.test.ts:244:27)
+2026-11-15T02:22:08.3641787Z (fail) fresh Procurement proofs do not cross overlapping invocations or survive final Request header replacement [46.50ms]
+2026-11-15T02:22:08.3642199Z 
+2026-11-15T02:22:08.3642518Z Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts:
+2026-11-15T02:22:08.3732637Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"actual-producers-and-archive","state":"started","elapsedMs":0}
+2026-11-15T02:22:09.9725998Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"actual-producers-and-archive","state":"returned","phaseMs":1599,"elapsedMs":1599,"aborted":false}
+2026-11-15T02:22:10.1164678Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"historical-replacement-only","state":"started","elapsedMs":1743}
+2026-11-15T02:22:17.1898308Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"historical-replacement-only","state":"returned","phaseMs":7073,"elapsedMs":8817,"aborted":false}
+2026-11-15T02:22:17.2100416Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"historical-source","state":"started","elapsedMs":8837}
+2026-11-15T02:22:20.4312170Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"historical-source","state":"returned","phaseMs":3221,"elapsedMs":12058,"aborted":false}
+2026-11-15T02:22:20.4315186Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"stored-operation-access","state":"started","elapsedMs":12058}
+2026-11-15T02:22:40.4341845Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"stored-operation-access","state":"returned","phaseMs":20002,"elapsedMs":32060,"aborted":false}
+2026-11-15T02:22:40.4342675Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"composed-case-read","state":"started","elapsedMs":32061}
+2026-11-15T02:23:35.1624237Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history","phase":"composed-case-read","state":"returned","phaseMs":54728,"elapsedMs":86789,"aborted":false}
+2026-11-15T02:23:35.2250260Z (pass) stored Planner operations read protected originals after drift while new execution stays current [86850.40ms]
+2026-11-15T02:23:35.2251376Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"actual-producers-and-archive","state":"started","elapsedMs":0}
+2026-11-15T02:23:36.8373440Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"actual-producers-and-archive","state":"returned","phaseMs":1613,"elapsedMs":1613,"aborted":false}
+2026-11-15T02:23:36.8395584Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"positive-before-faults","state":"started","elapsedMs":1615}
+2026-11-15T02:23:50.8003771Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"positive-before-faults","state":"returned","phaseMs":13961,"elapsedMs":15576,"aborted":false}
+2026-11-15T02:23:50.8005103Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"unrecorded-operation","state":"started","elapsedMs":15576}
+2026-11-15T02:23:50.8686752Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"unrecorded-operation","state":"returned","phaseMs":68,"elapsedMs":15645,"aborted":false}
+2026-11-15T02:23:50.8829805Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"missing-protected-capture","state":"started","elapsedMs":15659}
+2026-11-15T02:23:50.9181168Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"missing-protected-capture","state":"returned","phaseMs":35,"elapsedMs":15694,"aborted":false}
+2026-11-15T02:23:50.9457360Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"restored-capture","state":"started","elapsedMs":15722}
+2026-11-15T02:24:05.3178109Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"restored-capture","state":"returned","phaseMs":14372,"elapsedMs":30094,"aborted":false}
+2026-11-15T02:24:05.3406001Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"nested-selector","state":"started","elapsedMs":30116}
+2026-11-15T02:24:12.5879386Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"nested-selector","state":"returned","phaseMs":7247,"elapsedMs":37364,"aborted":false}
+2026-11-15T02:24:12.6100573Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"source-race","state":"started","elapsedMs":37386}
+2026-11-15T02:24:13.1354951Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"source-race","state":"returned","phaseMs":526,"elapsedMs":37911,"aborted":false}
+2026-11-15T02:24:13.1355796Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"fresh-source-after-race","state":"started","elapsedMs":37911}
+2026-11-15T02:24:27.4983423Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"fresh-source-after-race","state":"returned","phaseMs":14363,"elapsedMs":52274,"aborted":false}
+2026-11-15T02:24:27.4984364Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"membership-race","state":"started","elapsedMs":52274}
+2026-11-15T02:24:28.1290691Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"membership-race","state":"returned","phaseMs":631,"elapsedMs":52905,"aborted":false}
+2026-11-15T02:24:31.7565944Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"after-cycle","state":"started","elapsedMs":56532}
+2026-11-15T02:24:45.9288811Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"after-cycle","state":"returned","phaseMs":14172,"elapsedMs":70705,"aborted":false}
+2026-11-15T02:24:45.9590705Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"after-principal-revocation","state":"started","elapsedMs":70735}
+2026-11-15T02:25:00.3927974Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"after-principal-revocation","state":"returned","phaseMs":14434,"elapsedMs":85168,"aborted":false}
+2026-11-15T02:25:00.3982385Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"replaced-source-incarnation","state":"started","elapsedMs":85174}
+2026-11-15T02:25:00.7916801Z SF_COMPOSITION_PHASE {"fixture":"planner-recorded-history-negative","phase":"replaced-source-incarnation","state":"returned","phaseMs":394,"elapsedMs":85568,"aborted":false}
+2026-11-15T02:25:01.4725444Z (pass) stored Planner historical access rejects unrecorded input, missing capture, read races, cycles and replacement [86249.28ms]
+2026-11-15T02:25:01.4731078Z 70 |     scope === "suite"
+2026-11-15T02:25:01.4731403Z 71 |       ? "suite: every run must spawn through omni"
+2026-11-15T02:25:01.4731781Z 72 |       : declared.length > 0
+2026-11-15T02:25:01.4732189Z 73 |         ? `declared: ${declared.length} test(s) in ${files.join(", ")}`
+2026-11-15T02:25:01.4732936Z 74 |         : "focused: no declaring test ran"
+2026-11-15T02:25:01.4733326Z 75 |   if (silent.length > 0) throw new Error(`${tag}: FAIL (${reason}). ${silent.join("; ")}.`)
+2026-11-15T02:25:01.4733685Z                                         ^
+2026-11-15T02:25:01.4735372Z error: omni positive control [f82ca28ef5a224d3faf2e6b7821d178d]: FAIL (declared: 5 test(s) in Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts, Sucafinav1/test/product/wp10/integration/planner-recorded-history.test.ts). Sucafinav1/test/product/mixed-source-contracts/recorded-fallback.test.ts: 3 of 3 declaring test(s) made no omni spawn of their own.
+2026-11-15T02:25:01.4736679Z       at <anonymous> (/home/runner/work/Orchestra-SF/Orchestra-SF/script/test-omni-control.ts:75:36)
+2026-11-15T02:25:01.4737035Z (fail) (unnamed) [0.71ms]
+2026-11-15T02:25:01.4737172Z 
+2026-11-15T02:25:01.4737248Z 34 tests failed:
+2026-11-15T02:25:01.4737661Z (fail) real C08 Procurement preparation exposes the M31 blocker and cannot manufacture an original capture [225.94ms]
+2026-11-15T02:25:01.4738229Z (fail) mixed external authority refuses revoked after a successful independent source read [30.46ms]
+2026-11-15T02:25:01.4738926Z (fail) mixed external authority refuses actor after a successful independent source read [26.00ms]
+2026-11-15T02:25:01.4739456Z (fail) mixed external authority refuses access after a successful independent source read [25.75ms]
+2026-11-15T02:25:01.4740098Z (fail) mixed external authority refuses policy after a successful independent source read [28.86ms]
+2026-11-15T02:25:01.4740619Z (fail) mixed external authority refuses request after a successful independent source read [25.13ms]
+2026-11-15T02:25:01.4741170Z (fail) mixed external authority refuses headers after a successful independent source read [24.29ms]
+2026-11-15T02:25:01.4741695Z (fail) mixed external authority refuses lease after a successful independent source read [24.12ms]
+2026-11-15T02:25:01.4742205Z (fail) mixed external authority refuses abort after a successful independent source read [24.59ms]
+2026-11-15T02:25:01.4742723Z (fail) mixed external authority refuses source after a successful independent source read [23.56ms]
+2026-11-15T02:25:01.4743211Z (fail) mixed preview fences request after its final genuine authority observation [25.30ms]
+2026-11-15T02:25:01.4743676Z (fail) mixed preview fences headers after its final genuine authority observation [23.36ms]
+2026-11-15T02:25:01.4744141Z (fail) mixed preview fences lease after its final genuine authority observation [23.55ms]
+2026-11-15T02:25:01.4744595Z (fail) mixed preview fences abort after its final genuine authority observation [24.36ms]
+2026-11-15T02:25:01.4745101Z (fail) mixed preview refuses a real C08 membership change between its protected case observations [24.33ms]
+2026-11-15T02:25:01.4745715Z (fail) mixed authority rejects substituted binding and lease objects while the genuine admitted context remains valid [26.38ms]
+2026-11-15T02:25:01.4746420Z (fail) mixed recorded Planner fallback reads real captured base and amount originals while Procurement stays independently authorized [26.75ms]
+2026-11-15T02:25:01.4747038Z (fail) recorded mixed verifier rechecks Procurement after real historical Planner reads [24.53ms]
+2026-11-15T02:25:01.4747623Z (fail) mixed fallback refuses genuine source change between independent reads and never substitutes latest values [25.25ms]
+2026-11-15T02:25:01.4748243Z (fail) mixed capability is transient and current case guards authorize the explicit external selector [106.44ms]
+2026-11-15T02:25:01.4749015Z (fail) fresh Procurement duplicates retain two canonical observations per guard and recompute on every case read [57.42ms]
+2026-11-15T02:25:01.4749619Z (fail) historical Procurement duplicates keep both independent canonical entry observations [50.57ms]
+2026-11-15T02:25:01.4750172Z (fail) fresh Procurement duplicate proof rejects source change after its canonical double observation [51.06ms]
+2026-11-15T02:25:01.4750749Z (fail) fresh Procurement duplicate proof rejects capture change after its canonical double observation [49.70ms]
+2026-11-15T02:25:01.4751457Z (fail) fresh Procurement duplicate proof rejects receipt change after its canonical double observation [51.21ms]
+2026-11-15T02:25:01.4752069Z (fail) fresh Procurement duplicate proof rejects preferences change after its canonical double observation [50.27ms]
+2026-11-15T02:25:01.4752682Z (fail) fresh Procurement duplicate proof rejects case change after its canonical double observation [49.89ms]
+2026-11-15T02:25:01.4753276Z (fail) fresh Procurement duplicate proof rejects principal change after its canonical double observation [48.39ms]
+2026-11-15T02:25:01.4753883Z (fail) fresh Procurement duplicate proof rejects period change after its canonical double observation [51.64ms]
+2026-11-15T02:25:01.4754459Z (fail) fresh Procurement duplicate proof rejects clock change after its canonical double observation [49.01ms]
+2026-11-15T02:25:01.4755067Z (fail) fresh Procurement duplicate proof rejects headers change after its canonical double observation [50.61ms]
+2026-11-15T02:25:01.4755672Z (fail) fresh Procurement duplicate proof rejects lease change after its canonical double observation [50.18ms]
+2026-11-15T02:25:01.4756307Z (fail) fresh Procurement proofs do not cross overlapping invocations or survive final Request header replacement [46.50ms]
+2026-11-15T02:25:01.4756716Z (fail) (unnamed) [0.71ms]
+2026-11-15T02:25:01.4756844Z 
+2026-11-15T02:25:01.4756918Z  23 pass
+2026-11-15T02:25:01.4757080Z  34 fail
+2026-11-15T02:25:01.4757318Z  307 expect() calls
+2026-11-15T02:25:01.4757549Z Ran 57 tests across 7 files. [177.06s]
+2026-11-15T02:25:01.5014048Z ##[error]Process completed with exit code 1.
+2026-11-15T02:25:01.5547894Z Post job cleanup.
+2026-11-15T02:25:01.5551334Z ##[start-action display=Setup Bun;id=__f0437d15-dc4f-420d-bb54-a18e2bb9886f.__oven-sh_setup-bun]
+2026-11-15T02:25:01.5553089Z ##[end-action id=__f0437d15-dc4f-420d-bb54-a18e2bb9886f.__oven-sh_setup-bun;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-15T02:25:01.5554416Z ##[start-action display=Setup Node;id=__f0437d15-dc4f-420d-bb54-a18e2bb9886f.__actions_setup-node]
+2026-11-15T02:25:01.5555622Z ##[end-action id=__f0437d15-dc4f-420d-bb54-a18e2bb9886f.__actions_setup-node;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-11-15T02:25:01.5601320Z Post job cleanup.
+2026-11-15T02:25:01.6289962Z [command]/usr/bin/git version
+2026-11-15T02:25:01.6317697Z git version 2.56.1
+2026-11-15T02:25:01.6344243Z Copying '/home/runner/.gitconfig' to '/home/runner/work/_temp/1cce5ef7-cba2-47ea-a858-2ff06b7d2ebf/.gitconfig'
+2026-11-15T02:25:01.6351251Z Temporarily overriding HOME='/home/runner/work/_temp/1cce5ef7-cba2-47ea-a858-2ff06b7d2ebf' before making global git config changes
+2026-11-15T02:25:01.6352101Z Adding repository directory to the temporary git global config as a safe directory
+2026-11-15T02:25:01.6356217Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Orchestra-SF/Orchestra-SF
+2026-11-15T02:25:01.6390800Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-11-15T02:25:01.6418372Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-11-15T02:25:01.6610032Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-11-15T02:25:01.6635558Z http.https://github.com/.extraheader
+2026-11-15T02:25:01.6643936Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-11-15T02:25:01.6669985Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-11-15T02:25:01.6865309Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-11-15T02:25:01.6893798Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-11-15T02:25:01.7228168Z Cleaning up orphan processes
+2026-11-15T02:25:01.7460330Z ##[warning]Node.js 20 is deprecated. The following actions target Node.js 20 but are being forced to run on Node.js 24: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830, actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5, actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

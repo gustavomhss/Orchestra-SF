@@ -28,7 +28,9 @@ export function createSfProcurementCompositePlanner(input: {
     const parsed = decodeSfOperationInput("sf_scenario_simulate", request)
     if (!parsed.ok || digestSfValue(parsed.value) !== digestSfValue(request)) return { status: "needs-input", reason: "invalid-composite-procurement-scenario" }
     const transport = input.host.requestFor(call), binding = digestSfValue([call.kind, call.binding])
-    const current = () => !!transport && !transport.signal.aborted && input.host.requestFor(call) === transport && binding === digestSfValue([call.kind, call.binding])
+    const transportDigest = transport && digestSfValue({ method: transport.method, url: transport.url, headers: [...transport.headers] })
+    const current = () => !!transport && !transport.signal.aborted && input.host.requestFor(call) === transport && binding === digestSfValue([call.kind, call.binding]) &&
+      transportDigest === digestSfValue({ method: transport.method, url: transport.url, headers: [...transport.headers] })
     if (!current() || !transport || !await input.host.revalidate(call)) return { status: "denied", reason: "composite-scenario-authority-unavailable" }
     const selected = await input.selectedCase(call)
     if (selected.status !== "ok") return selected
@@ -75,7 +77,7 @@ export function createSfProcurementCompositePlanner(input: {
     const result = await composite.simulateScenario(request, call)
     if (result.status !== "ok") return result
     if (result.value.comparisonStatus !== "conditioned" || result.value.total !== null || result.value.currency !== decision.currency || digestSfValue(result.value.horizon) !== digestSfValue(decision.horizon)) return { status: "needs-input", reason: "composite-planner-result-basis-unavailable" }
-    if (!current() || digestSfValue(await readCase()) !== digestSfValue(decision) || digestSfValue(await input.readSourceFences(call)) !== digestSfValue(fences) || !await input.host.revalidate(call)) return { status: "stale", reason: "composite-scenario-source-or-case-changed" }
+    if (!current() || digestSfValue(await readCase()) !== digestSfValue(decision) || digestSfValue(await input.readSourceFences(call)) !== digestSfValue(fences) || !await input.host.revalidate(call) || !current()) return { status: "stale", reason: "composite-scenario-source-or-case-changed" }
     return result
   } }
   return { planner, supports }

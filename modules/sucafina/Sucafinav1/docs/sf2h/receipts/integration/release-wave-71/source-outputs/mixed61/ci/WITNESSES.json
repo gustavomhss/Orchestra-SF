@@ -1,0 +1,767 @@
+{
+  "schema": "sf2h.mission61.actual-witnesses.v1",
+  "binding": {
+    "base_sha": "7e1a36eb1d39ebd2e189dbb4adbe48abf1efcd85",
+    "ack_sha": "2b22b080b2673c7942351b8f05c2655a038aeebb",
+    "W": "cb0343be4ad2bb8cf9b68e9db746176ab551c955",
+    "W_tree": "fd41730c4c056cd79a339fe978adf78d9de632e9",
+    "S": "7dc844027be65913de226178f2b11a9f682d5396",
+    "S_tree": "dfd4d27cbcf7053ace16d9053a4a24f022fe0e51",
+    "request_blob": "d0e890453415092636f1f692b05ddc08dac3a9b2",
+    "request_sha256": "7e5c32fe73dfd39aa4257365ca8729a3e584a8626e67e0a2d6948e645ee74b8c",
+    "run": 43668842101,
+    "job": 132674151887,
+    "cleanup_job": 132675184074,
+    "run_url": "https://github.com/gustavomhss/Orchestra-SF/actions/runs/43668842101"
+  },
+  "origin": "Exact JSON payloads parsed from final hosted job log; no private projections are printed.",
+  "witnesses": [
+    {
+      "at": "2026-11-15T02:41:20.8460782Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "scope-rotation",
+        "originalAccepted": true,
+        "originalPhysical": "29646124-5ce5-4542-8150-2c54a3989e78",
+        "currentPhysical": "29646124-5ce5-4542-8150-2c54a3989e78",
+        "originalScope": "a13339ae-fe97-4b3a-bfde-d711b1dcc649",
+        "currentScope": "f983affc-4b23-4cc4-ad6f-dccc1c6870e6",
+        "currentAccepted": true,
+        "oldAcceptedAfterRotation": false,
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:20.9304659Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "tombstone-recreate",
+        "deletion": true,
+        "tombstoned": true,
+        "originalPhysical": "f1d621e3-2e4f-4eed-a09d-25957cab92d6",
+        "currentPhysical": "e7586178-c8a3-4b4d-a7af-f7aa3c4584ab",
+        "originalScope": "975fde8f-3926-4f5e-9114-1338ad8a8530",
+        "currentScope": "6433a22e-5c72-4625-9389-cf34a29d5054",
+        "oldRead": "unavailable",
+        "oldReissue": "unavailable",
+        "oldGrant": false,
+        "newGrant": true,
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:20.9931281Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "broken-scope-lineage",
+        "removedPhysical": "fb59f988-fe3c-45b4-8e3e-08470d0e4e6b",
+        "currentPhysical": "fb59f988-fe3c-45b4-8e3e-08470d0e4e6b",
+        "originalScope": "72a3dad8-48cd-45ae-9303-bd62849acc7a",
+        "currentScope": "f4e29102-9d7d-470e-adde-06baa871abdb",
+        "oldReissue": "unavailable",
+        "oldGrant": false,
+        "replacementRead": "ok",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.0418097Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "revoke",
+        "event": true,
+        "observedReads": 1,
+        "outcome": "stale",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 6,
+        "writesAfterOperation": 6,
+        "originalScope": "2eea921f-eaa8-4150-b11a-8c3d3a0f04d1",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.0855648Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "actor",
+        "event": true,
+        "observedReads": 1,
+        "outcome": "stale",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 6,
+        "writesAfterOperation": 6,
+        "originalScope": "9d14627d-938e-4899-b45a-155c7e7c459b",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.1287838Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "policy",
+        "event": true,
+        "observedReads": 2,
+        "outcome": "stale",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 6,
+        "writesAfterOperation": 6,
+        "originalScope": "1c2c75fc-e37a-4541-bb33-b0f0311b2ae3",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.1720410Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "access",
+        "event": true,
+        "observedReads": 2,
+        "outcome": "stale",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 6,
+        "writesAfterOperation": 6,
+        "originalScope": "69ac040d-5ddd-4f8c-8fc1-f112aa9d0639",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.2116951Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "request-header",
+        "event": true,
+        "observedReads": 1,
+        "outcome": "stale",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 6,
+        "writesAfterOperation": 6,
+        "originalScope": "1bc7bb51-8040-411c-b5f0-24eb0b3b561f",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.2520168Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "lease",
+        "event": true,
+        "observedReads": 2,
+        "outcome": "stale",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 6,
+        "writesAfterOperation": 6,
+        "originalScope": "3fb95761-76fe-428c-99b5-f787ea3e33be",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.2926139Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "abort",
+        "event": true,
+        "observedReads": 1,
+        "outcome": "aborted",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 6,
+        "writesAfterOperation": 6,
+        "originalScope": "6292cb5c-80e3-4019-9eac-8e0ded384c56",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.3327452Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "role",
+        "event": true,
+        "observedReads": 1,
+        "outcome": "stale",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 6,
+        "writesAfterOperation": 6,
+        "originalScope": "9a1511d9-a494-49fd-86fd-78cbacf066d1",
+        "financialDigest": "7d75661bb44309b2836de59c35b97346594aaf9ce20018ba5b59009b5cc30c6e",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:21.3984189Z",
+      "marker": "SF_MIXED_PROCUREMENT_PROOF",
+      "value": {
+        "scenario": "between-source-reads",
+        "mutation": "source",
+        "event": true,
+        "observedReads": 1,
+        "outcome": "stale",
+        "returnedPrivateValue": false,
+        "writesBeforeOperation": 7,
+        "writesAfterOperation": 7,
+        "originalScope": "7838e14c-ada9-4bd2-9882-628957e82a02",
+        "financialDigest": "d8002faa73a0b8b407c866406e904f940c81103054f37f1fea50004b48e5013b",
+        "productStateDigest": "40484e9c59942961cf6765b3c408cddd550d8eea3b5cc8cfd12aa1d88092abec",
+        "historicalCaptureQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:22.0630251Z",
+      "marker": "SF_MIXED_CAPTURE_ADMISSION",
+      "value": {
+        "phase": "human-admission",
+        "method": "POST",
+        "inputDigest": "c170fcc4eef088d3d8fa66346012d7b9d862b36d8044d019aee8e94ef5d641aa",
+        "status": "ok",
+        "reason": null
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:22.4008232Z",
+      "marker": "SF_MIXED_CAPTURE_ADMISSION",
+      "value": {
+        "phase": "http-preparation",
+        "status": 400,
+        "outcome": "needs-input",
+        "reason": "financial-approval-command-unavailable",
+        "inputDigest": "c170fcc4eef088d3d8fa66346012d7b9d862b36d8044d019aee8e94ef5d641aa"
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:22.4056479Z",
+      "marker": "SF_MIXED_CAPTURE_PREREQUISITE",
+      "value": {
+        "producer": "prepareDomainCommands",
+        "prerequisite": "M31-FINANCIAL-APPROVAL",
+        "outcome": "needs-input",
+        "reason": "financial-approval-command-unavailable",
+        "httpStatus": 400,
+        "archiveCountBefore": 0,
+        "archiveCountAfter": 0,
+        "preparedChangeCount": 0,
+        "historicalCaptureCreated": false,
+        "historicalScopeRotationQualified": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:23.0038876Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "revoked",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:c03b2129-7c20-472c-9249-3f36ce4723bd:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:c03b2129-7c20-472c-9249-3f36ce4723bd:1",
+            "state": "unavailable"
+          }
+        ],
+        "persistentEffectsDigest": "1eede4591074dcd334b8c9b54b4218d72a50e66ba145eb3e5842a3ba71b07873",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:23.5692208Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "actor",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:9ccd8a10-4d72-4b0b-a72d-503d52b4dfd7:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:9ccd8a10-4d72-4b0b-a72d-503d52b4dfd7:1",
+            "state": "unavailable"
+          }
+        ],
+        "persistentEffectsDigest": "36fb95d92788b920a45e17fa80e50c0c41a5a7d9b57236f3cc2b94b8b86ea322",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:24.1414390Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "access",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:eea1c5b7-43ac-40fe-9abb-5051c2f4d918:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:eea1c5b7-43ac-40fe-9abb-5051c2f4d918:1",
+            "state": "unavailable"
+          }
+        ],
+        "persistentEffectsDigest": "30514c58d78e9f4045008ecbd771aec9698de6c9069cebb8b5d2285aca713aed",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:24.6796198Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "policy",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:cc4fc341-a3e4-4acc-aebb-deeb72cbbe6e:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:cc4fc341-a3e4-4acc-aebb-deeb72cbbe6e:1",
+            "state": "unavailable"
+          }
+        ],
+        "persistentEffectsDigest": "c5bdd350ca63887a9db3ebfdcff739490f6135b6b4aac4ba000c9dfd6fbf77bc",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:25.2121227Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "request",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:1c74ca46-6d86-4601-a0f2-76604e1e1243:1",
+            "state": "fresh"
+          }
+        ],
+        "persistentEffectsDigest": "4196412ff84a3174f47e8cc90dd19216e2f85d9c270839939f039dac5c2c3541",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:25.7747769Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "headers",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:d84e3117-240f-4ade-8704-d58704ded3e6:1",
+            "state": "fresh"
+          }
+        ],
+        "persistentEffectsDigest": "cf4c6a9ab580f0e32d2fe3cdffaee37946660a8f9ff4d8544725c603fed5f87a",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:26.3020716Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "lease",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:cd6129e2-36ad-4d54-bd2c-8822567f6475:1",
+            "state": "fresh"
+          }
+        ],
+        "persistentEffectsDigest": "de05e9d629512b246c4cd0f28945fd370276214a1a8074a30a9b07064558b15b",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:26.8279903Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "abort",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:a279eaf5-6a48-4625-b12f-bf30f3c6c587:1",
+            "state": "fresh"
+          }
+        ],
+        "persistentEffectsDigest": "21011b524d66d7ae87c8b0408ffea7d38f71f6206478cae034ca35967ea0955e",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:27.3848983Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "source",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:0faa4414-14bf-402c-b15f-2efd3402d9da:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:0faa4414-14bf-402c-b15f-2efd3402d9da:1",
+            "state": "unavailable"
+          }
+        ],
+        "persistentEffectsDigest": "8465fbcca788f8bfb59f6ed53595724bd6fe5ec0bfa43abbdf9aaa6d07cd1165",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:29.7788449Z",
+      "marker": "SF_MIXED_EGRESS_PROOF",
+      "value": {
+        "mutation": "request",
+        "eventFired": true,
+        "finalObservation": 176,
+        "producerStatus": "stale",
+        "outerStatus": "denied",
+        "noProjection": true,
+        "persistentEffectsDigest": "7e9530af788fac906ac81559f71be79d17e85cb213c03db234d1fc611fcb0d9b",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:32.2831918Z",
+      "marker": "SF_MIXED_EGRESS_PROOF",
+      "value": {
+        "mutation": "headers",
+        "eventFired": true,
+        "finalObservation": 176,
+        "producerStatus": "stale",
+        "outerStatus": "stale",
+        "noProjection": true,
+        "persistentEffectsDigest": "82f61c4fca3a34c2a06b4b1e185f1a6d8313e573626b1f6186339275f9b0bea6",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:36.4967453Z",
+      "marker": "SF_MIXED_EGRESS_PROOF",
+      "value": {
+        "mutation": "lease",
+        "eventFired": true,
+        "finalObservation": 176,
+        "producerStatus": "stale",
+        "outerStatus": "denied",
+        "noProjection": true,
+        "persistentEffectsDigest": "8f4267a15af1907736a907d4090ee7b9baf282ebec0e28ba8c4df76d4f428658",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:38.9138845Z",
+      "marker": "SF_MIXED_EGRESS_PROOF",
+      "value": {
+        "mutation": "abort",
+        "eventFired": true,
+        "finalObservation": 176,
+        "producerStatus": "stale",
+        "outerStatus": "denied",
+        "noProjection": true,
+        "persistentEffectsDigest": "3cce37f1f55ed3123b6fe061144e947fec49f874416ed047cefca3955a7288a4",
+        "promotion": false,
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:40.8241980Z",
+      "marker": "SF_MIXED_AUTHORITY_PROOF",
+      "value": {
+        "mutation": "C08-membership",
+        "eventFired": true,
+        "sourceFenceReads": 1,
+        "producerStatus": "stale",
+        "effectsDigest": "938e8ba24cd66861d268ebbf4b3f52f6d0e06fb7ccd57d12518cb71a3e731d64",
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:42.5535450Z",
+      "marker": "SF_MIXED_CANONICAL_SHAPE_PROOF",
+      "value": {
+        "engine": "procurement-v1",
+        "contextSources": 0,
+        "components": 0,
+        "reference": "sf-procurement:e3b1491c-c603-477d-9ccf-ac9985627213:1",
+        "projectionDigest": "1f9d63227916e6406ff3f3b40b9337c83d218cfefedaeaa90ce20b051bab6a0a",
+        "outcomes": [
+          {
+            "fault": "engine",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "version",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "principal",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "installation",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "policy",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "access",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "currency",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "horizon",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "component",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "missing-amount",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "duplicate-amount",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "unbound-amount",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "foreign-amount",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "foreign-drilldown",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "non-numeric-amount",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "non-finite-amount",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "wrong-amount-currency",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "wrong-amount-period",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "wrong-granularity",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "hypothetical-original",
+            "observations": 1,
+            "allowed": false
+          },
+          {
+            "fault": "foreign-context-source",
+            "observations": 1,
+            "allowed": false
+          }
+        ],
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:41:43.1003993Z",
+      "marker": "SF_MIXED_CANONICAL_SHAPE_PROOF",
+      "value": {
+        "fixture": "real-absent-estimate",
+        "allowed": true,
+        "reference": "sf-procurement:7d5e6421-a77e-43af-8ef5-6f4d5712f494:1",
+        "projectionDigest": "92708b9621d0c3de956e5c33419f83b2bfab7f78b06666ba1b92e53f8eb219f8",
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:43:39.4915931Z",
+      "marker": "SF_MIXED_RECORDED_PROOF",
+      "value": {
+        "fixture": "real-planner-archive-current-procurement",
+        "fallbackCount": 1,
+        "baseOriginal": "ffb777f5738c210738eff1e88d73c7f64965dae88dca2d9090062a1d7646a166",
+        "amountOriginal": "6ddd3f06b23826a260145c53bfd0e671c1e5a19b98c75956730468f92cabcc29",
+        "captureStatus": "committed",
+        "captureEvent": "mixed-analysis-event",
+        "scannerVersion": "gitleaks version 8.30.1",
+        "observations": [
+          {
+            "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+            "state": "fresh"
+          },
+          {
+            "id": "planner-version:base:13acd6a6-3777-4786-bd48-2460396b9cf2:1",
+            "state": "historical"
+          },
+          {
+            "id": "planner-version:replacement:845c2f0d-ec2c-4f41-bed8-be40dfe1b5b3:1",
+            "state": "historical"
+          },
+          {
+            "id": "planner-version:base:13acd6a6-3777-4786-bd48-2460396b9cf2:1",
+            "state": "historical"
+          },
+          {
+            "id": "planner-version:replacement:845c2f0d-ec2c-4f41-bed8-be40dfe1b5b3:1",
+            "state": "historical"
+          },
+          {
+            "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:5f6d30c5-95d0-4d79-98d0-c4d230bf90de:1",
+            "state": "fresh"
+          }
+        ],
+        "immutableCaseDigest": "24ccbe050f84939fbb3817fa60ea88cd665570f5940baeceadced58d757dc227",
+        "financialApproval": false,
+        "originalM31Closed": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:43:56.9922506Z",
+      "marker": "SF_MIXED_RECORDED_PROOF",
+      "value": {
+        "fixture": "external-drift-during-planner",
+        "captureStatus": "committed",
+        "eventFired": true,
+        "allowed": false,
+        "observations": [
+          {
+            "id": "sf-procurement:446b8d01-76ba-48ad-a99d-61222c6347b2:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:446b8d01-76ba-48ad-a99d-61222c6347b2:1",
+            "state": "fresh"
+          },
+          {
+            "id": "planner-version:base:8765eec6-858c-4350-92b7-5e54f37d4de7:1",
+            "state": "historical"
+          },
+          {
+            "id": "planner-version:replacement:f7150732-7241-4cee-b7b0-cde1c2e79636:1",
+            "state": "fresh"
+          },
+          {
+            "id": "planner-version:base:8765eec6-858c-4350-92b7-5e54f37d4de7:1",
+            "state": "historical"
+          },
+          {
+            "id": "planner-version:replacement:f7150732-7241-4cee-b7b0-cde1c2e79636:1",
+            "state": "fresh"
+          },
+          {
+            "id": "sf-procurement:446b8d01-76ba-48ad-a99d-61222c6347b2:1",
+            "state": "unavailable"
+          }
+        ],
+        "effectsDigest": "ef5b8d46ec2ee08136e28563d92ea8d02126b4ceca5b4b5b31ad53b6366ca94e",
+        "financialEffect": false
+      }
+    },
+    {
+      "at": "2026-11-15T02:44:27.2973224Z",
+      "marker": "SF_MIXED_RECORDED_PROOF",
+      "value": {
+        "fixture": "source-race-and-recreation",
+        "eventFired": true,
+        "independentPlannerReads": 5,
+        "originalCaseDigest": "f53f146d923920d4b25d3ec8994c632635b010b85d9a5a3339e9692950778628",
+        "denied": true,
+        "financialEffect": false
+      }
+    }
+  ]
+}
