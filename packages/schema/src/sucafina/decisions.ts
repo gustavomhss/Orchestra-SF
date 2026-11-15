@@ -74,7 +74,7 @@ const reviewValue = Schema.Struct({reviewDigest:digest,changeId:text,choiceId:te
  target:Schema.Struct({type:text,id:text,label:Schema.optional(text)}),
  expectedVersion:nonnegative,state:Schema.Literal("planned","applied","awaiting-approval","conflict","failed","cancelled"),fields:Schema.Array(reviewField),receipt:Schema.optional(receiptView)})
 const resultFailure = Schema.Struct({
- status:Schema.Literal("needs-input","stale","denied","unavailable","conflict","provider-conflict","failed","invalid"),
+ status:Schema.Literal("unauthenticated","needs-input","stale","denied","unavailable","conflict","provider-conflict","failed","invalid"),
  reason:Schema.optional(Schema.String),
 })
 const portResult = <A,I,R>(value:Schema.Schema<A,I,R>) => Schema.Union(Schema.Struct({status:Schema.Literal("ok"),value}),resultFailure)

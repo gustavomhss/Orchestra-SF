@@ -33,7 +33,7 @@ function failed(request: Request, status: string, reason?: string) {
   const code = status === "denied" ? 403 : status === "unauthenticated" ? 401
     : status === "stale" || status === "conflict" ? 409
     : status === "needs-input" || status === "invalid" ? 400 : 503
-  return response(request, code, { status: status === "unauthenticated" ? "denied" : status, ...(reason ? { reason } : {}) })
+  return response(request, code, { status, ...(reason ? { reason } : {}) })
 }
 function matches(stamp: Stamp, binding: Binding) {
   return stamp.installationId === binding.installationId && stamp.projectId === binding.projectId &&

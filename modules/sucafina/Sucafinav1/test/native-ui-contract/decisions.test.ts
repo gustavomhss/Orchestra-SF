@@ -119,20 +119,14 @@ describe("W16/A04 — frozen decision operation manifest (schema only; CI120 qua
     expect("execute" in client).toBe(false)
   })
 
-  test("a denial or conflict from transport remains a distinct response, never a success", async () => {
-    const transport: SfTransport = {
-      execute: async () => ({
-        kind: "response" as const, status: 409, headers: { "content-type": "application/json" },
-        body: { status:"stale", reason:"case-changed" },
-      }),
-    }
-    const client = createSfDecisionsClient(transport)
-    const actual = await client["decisions.decision-review"](selected, { signal, idempotencyKey:"human:review-0001" })
-    expect(actual.kind).toBe("response")
-    if (actual.kind === "response") {
-      expect(actual.status).toBe(409)
-      expect(actual.body.status).toBe("stale")
-    }
+  test("unauthenticated, stale and conflict stay distinct typed outcomes", () => {
+    const projection = SfDecisions.operations["projection.case"].output
+    const review = SfDecisions.operations["decisions.decision-review"].output
+    expect(accepts(projection, { status:"unauthenticated" })).toBe(true)
+    expect(accepts(projection, { status:"denied" })).toBe(true)
+    expect(accepts(review, { status:"stale", reason:"case-changed" })).toBe(true)
+    expect(accepts(review, { status:"conflict", reason:"review-digest-changed" })).toBe(true)
+    expect(accepts(review, { status:"ok", receiptId:"invented" })).toBe(false)
   })
 })
 
