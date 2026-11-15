@@ -288,10 +288,13 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       return
     }
     if (result.body.status !== "ok") {
-      setView({ phase: "failed", notice:
+      const refused = ["stale", "denied", "needs-input", "invalid", "conflict"].includes(result.body.status)
+      if (refused) commandSent = false
+      setView({ phase: refused ? "failed" : "outcome-unknown", notice:
         result.body.status === "stale" ? "sf.u37.stale" :
           result.body.status === "denied" ? "sf.u37.denied" :
-            result.body.status === "needs-input" ? "sf.u37.needsInput" : "sf.u37.unavailable" })
+            result.body.status === "needs-input" ? "sf.u37.needsInput" :
+              refused ? "sf.u37.unavailable" : "sf.u37.unknownOutcome" })
       return
     }
     // No synthetic run state/receipt and no background replay. Human explicitly
@@ -322,11 +325,16 @@ export function SfAnalysesView(props: SfSurfaceProps<"UI41">): import("solid-js"
       setView({ phase: "outcome-unknown", notice: "sf.u37.unknownOutcome" })
       return
     }
-    commandSent = false
+    const refused = result.body.status === "denied" || result.body.status === "stale" ||
+      result.body.status === "needs-input" || result.body.status === "invalid" || result.body.status === "conflict"
+    const acknowledged = result.body.status === "ok"
+    if (acknowledged || refused) commandSent = false
     setView({
-      phase: "idle", notice: result.body.status === "ok" && result.body.value.cancelled
-        ? "sf.u37.cancelled" : result.body.status === "stale" ? "sf.u37.stale" :
-          result.body.status === "denied" ? "sf.u37.denied" : "sf.u37.unavailable",
+      phase: acknowledged || refused ? "idle" : "outcome-unknown",
+      notice: acknowledged && result.body.value.cancelled ? "sf.u37.cancelled" :
+        result.body.status === "stale" ? "sf.u37.stale" :
+          result.body.status === "denied" ? "sf.u37.denied" :
+            acknowledged ? "sf.u37.unavailable" : "sf.u37.unknownOutcome",
     })
   }
 
