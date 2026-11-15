@@ -38,6 +38,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
   const [view, setView] = createStore<{
     state: SfUiState
     projection?: SettingsProjection
+    readGeneration?: number
     refresh: number
     busy: boolean
     review: ReviewMode
@@ -57,12 +58,25 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     ...(props.route.query.year !== undefined ? { year: props.route.query.year } : {}),
     ...(props.route.query.month !== undefined ? { month: props.route.query.month } : {}),
   })
+  const currentProjection = () => {
+    const projection = view.projection
+    const ready = owner.ready()
+    if (!projection || !ready || owner.state().status !== "ready" ||
+        view.readGeneration !== owner.generation()) return undefined
+    const stamp = ready.context.stamp
+    return projection.context.installationId === stamp.installationId &&
+      projection.context.projectId === stamp.projectId &&
+      projection.context.hostId === stamp.hostId &&
+      projection.context.principalRef === stamp.principalRef &&
+      projection.context.policyVersion === stamp.policyVersion &&
+      projection.context.accessRevision === stamp.accessRevision ? projection : undefined
+  }
   const destination = () => owner.ready()?.context.destinations.find((item) =>
     item.capabilityId === "CAP28" && item.surface === "procurement" && item.page === "Settings")
   const pageAllowed = () => destination()?.canRead === true
   const actionAllowed = (action: "save" | "reset") =>
     pageAllowed() && destination()?.allowedActionIds.includes(action) === true &&
-    view.projection?.value.allowedActionIds.includes(action) === true
+    currentProjection()?.value.allowedActionIds.includes(action) === true
 
   createEffect(() => {
     const current = owner.state()
@@ -71,7 +85,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     const _refresh = view.refresh
     if (current.status !== "ready" || !ready) {
       setView({
-        projection: undefined, review: null, reviewRef: undefined, errorLines: [],
+        projection: undefined, readGeneration: undefined, review: null, reviewRef: undefined, errorLines: [],
         busy: false, confirmed: false, confirmDiscard: false, unknownOutcome: false,
         state: current.status === "resolving" ? "loading"
           : current.status === "unauthenticated" ? "session-expired"
@@ -84,11 +98,11 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
       item.capabilityId === "CAP28" && item.page === "Settings" &&
       item.surface === "procurement" && item.canRead)
     if (!allowed) {
-      setView({ projection: undefined, review: null, state: "denied" })
+      setView({ projection: undefined, readGeneration: undefined, review: null, state: "denied" })
       return
     }
     const abort = new AbortController()
-    setView({ projection: undefined, state: "loading", review: null, errorLines: [], confirmed: false })
+    setView({ projection: undefined, readGeneration: undefined, state: "loading", review: null, errorLines: [], confirmed: false })
     void createSfProcurementClient(ready.transport)["domain.page.CAP28"](selection(), {
       signal: abort.signal,
     }).then((response) => {
@@ -116,11 +130,12 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           body.context.projectId !== stamp.projectId ||
           body.context.hostId !== stamp.hostId ||
           body.context.principalRef !== stamp.principalRef ||
-          body.context.accessRevision !== stamp.accessRevision) {
+          body.context.accessRevision !== stamp.accessRevision ||
+          body.context.policyVersion !== stamp.policyVersion) {
         setView({ projection: undefined, state: "denied" })
         return
       }
-      setView({ projection: body, state: view.unknownOutcome ? "outcome-unknown" : "ready" })
+      setView({ projection: body, readGeneration: generation, state: view.unknownOutcome ? "outcome-unknown" : "ready" })
     }).catch((error: unknown) => {
       if (abort.signal.aborted || owner.generation() !== generation) return
       console.error("Procurement settings read failed", error instanceof Error ? error.name : "unknown")
@@ -131,7 +146,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
 
   const draft = createMemo(() => {
     const ready = owner.ready()
-    const projection = view.projection
+    const projection = currentProjection()
     if (!ready || owner.state().status !== "ready" || !projection) return undefined
     const version = projection.value.versions.settings?.version
     if (version === undefined || !Number.isSafeInteger(version)) return undefined
@@ -158,7 +173,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     })
   })
   createEffect(() => {
-    const projection = view.projection
+    const projection = currentProjection()
     const controller = draft()
     const currentVersion = projection?.value.versions.settings?.version
     if (projection && controller && currentVersion !== undefined)
@@ -174,10 +189,10 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
     active()?.phase === "conflict" || active()?.phase === "outcome-unknown"
   const canReview = () => actionAllowed("save") && active()?.dirty === true &&
     active()?.conflict === null && active()?.pendingOperation === null &&
-    changedSettings(view.projection!.value.data.settings, active()!.value).length > 0 &&
+    currentProjection() !== undefined && changedSettings(currentProjection()!.value.data.settings, active()!.value).length > 0 &&
     !view.busy && view.state === "ready"
   const review = createMemo(() => {
-    const projection = view.projection
+    const projection = currentProjection()
     const state = active()
     if (!projection || !state || !view.review || !view.reviewRef) return undefined
     return settingsReview(projection, state.value, view.reviewRef, view.review)
@@ -208,7 +223,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
   const save = async (confirmation: Extract<SfReviewConfirmation, { kind: "admitted" }>) => {
     const current = owner.state()
     const ready = owner.ready()
-    const page = view.projection
+    const page = currentProjection()
     const state = active()
     if (!ready || current.status !== "ready" || !page || !state || !view.reviewRef ||
         view.busy || !actionAllowed("save") || !canReview() ||
@@ -282,12 +297,12 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           baseVersion: refreshed.body.value.versions.settings.version,
           value: refreshed.body.value.data.settings,
         })
-        setView({ projection: refreshed.body, state: "ready", busy: false, confirmed: true, unknownOutcome: false })
+        setView({ projection: refreshed.body, readGeneration: generation, state: "ready", busy: false, confirmed: true, unknownOutcome: false })
       } else {
         draft()?.confirmSave({
           kind: "confirmed-without-projection", operationRef: opRef, resultVersion: null,
         })
-        setView({ projection: undefined, state: "unavailable", busy: false, confirmed: true, unknownOutcome: false })
+        setView({ projection: undefined, readGeneration: undefined, state: "unavailable", busy: false, confirmed: true, unknownOutcome: false })
       }
     } catch (error) {
       if (disposed || owner.generation() !== generation || owner.state().status !== "ready") return
@@ -346,7 +361,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
           onRetryRead={() => setView("refresh", (value) => value + 1)}
           onLogin={() => { void owner.reload() }}
         >
-          <Show when={view.projection && active()}>
+          <Show when={currentProjection() && active()}>
             {() => (
               <>
                 <Show when={!pageAllowed() || !actionAllowed("save")}>
@@ -362,7 +377,7 @@ export function SfProcurementSettingsView(props: SfSurfaceProps<"CAP28">): JSX.E
                   }}>
                     <SfProcurementSettingsFields
                       settings={active()!.value}
-                      directory={view.projection!.value.data.directory}
+                      directory={currentProjection()!.value.data.directory}
                       disabled={readOnly()}
                       onEdit={(next) => { if (!readOnly()) { draft()?.edit(next); setView("confirmed", false) } }}
                     />
