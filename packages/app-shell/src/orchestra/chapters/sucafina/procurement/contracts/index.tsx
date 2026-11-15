@@ -15,7 +15,7 @@ import { SF_U15_COPY } from "@/i18n/orchestra-chapters/sf-u15"
 import {
   decodeVendorContractsPage, vendorAuthorizedAction, vendorCommandInput,
   vendorEditFromRecord, vendorRef, vendorVersion,
-  type SfVendorAction, type SfVendorContract, type SfVendorEdit, type SfVendorRead,
+  type SfVendorAction, type SfVendorContract, type SfVendorEdit, type SfVendorRead, type SfVendorSave,
 } from "./model"
 import "./contracts.css"
 
@@ -63,10 +63,6 @@ function editableVendor(values: SfVendorEdit): boolean {
       (!Number.isFinite(Number(values.amount)) || Number(values.amount) < 0)) return false
   return true
 }
-function sameOwnerStamp(ready: ReturnType<typeof useSfContext>["ready"], epoch: number, sf: ReturnType<typeof useSfContext>, ownerKey: string) {
-  return sf.generation() === epoch && sf.state().status === "ready" &&
-    sf.state().ownerKey === ownerKey && sf.ready() === ready()
-}
 
 /** CAP14 consumes the A01 dashboard producer. It is not a second Procurement API. */
 export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
@@ -86,6 +82,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     outcomeUnknown: false,
     notice: undefined as Key | undefined,
     newIntentRef: crypto.randomUUID() as SfIntentRef,
+    layoutMode: "split" as "single" | "split" | "split-context",
   })
   let inFlight: AbortController | undefined
   const t = (value: Key) => language.t(value as Parameters<typeof language.t>[0])
@@ -104,8 +101,11 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     const ref = selectedRef()
     return ref && view.read ? vendorVersion(view.read, ref) : undefined
   }
-  const state = () => sf.state().status
   const sourceAvailable = () => !!view.read && view.state === "ready"
+  const sameOwner = (ownerKey: string, epoch: number) => {
+    const current = sf.state()
+    return sf.generation() === epoch && current.status === "ready" && current.ownerKey === ownerKey
+  }
   const buildHref = (ref?: SfRef, suffix: "" | "edit" = "") => {
     // Preserve only the F01-approved owner selection. Never put business data in URLs.
     const url = new URL(props.route.href, "http://orchestra.invalid")
@@ -137,8 +137,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
     const client = createSfDomainClient(ready.transport)
     void client["domain.page.CAP14"]({}, { signal: abort.signal })
       .then((result) => {
-        if (abort.signal.aborted || sf.generation() !== epoch || sf.state().status !== "ready" ||
-            sf.state().ownerKey !== ownerKey) return
+        if (abort.signal.aborted || !sameOwner(ownerKey, epoch)) return
         if (result.kind !== "response") { setView("state", "unavailable"); return }
         if (result.status === 401) { setView("state", "session-expired"); void sf.reload(); return }
         if (result.status === 403) { setView("state", "denied"); sf.invalidate("revoked"); return }
@@ -291,23 +290,21 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
       setView({ sending: false, reviewing: undefined, state: "unavailable" })
       return
     }
-    if (sf.generation() !== epoch || sf.state().status !== "ready" ||
-        sf.state().ownerKey !== ownerKey || abort.signal.aborted) return
+    if (!sameOwner(ownerKey, epoch) || abort.signal.aborted) return
     draft()?.setPending({ operationRef: review.operationRef, idempotencyKey: review.idempotencyKey,
       payloadDigest: digest, expectedVersion: review.ref ? review.version : null })
     draft()?.setPhase("submitting")
     const client = createSfDomainClient(ready.transport)
     try {
       const result = review.action === "save"
-        ? await client["domain.command.CAP14.save"](requestBody as ReturnType<typeof vendorCommandInput<"save">>, {
+        ? await client["domain.command.CAP14.save"](requestBody as SfVendorSave, {
           signal: abort.signal, idempotencyKey: review.idempotencyKey,
         })
         : await client["domain.command.CAP14.delete"](
           vendorCommandInput("delete", review.ref!, review.version, review.values),
           { signal: abort.signal, idempotencyKey: review.idempotencyKey },
         )
-      if (sf.generation() !== epoch || sf.state().status !== "ready" ||
-          sf.state().ownerKey !== ownerKey) return
+      if (!sameOwner(ownerKey, epoch)) return
       if (result.kind !== "response") {
         const uncertain = !["contract-unavailable", "contract-mismatch"].includes(result.reason)
         draft()?.setPhase(uncertain ? "outcome-unknown" : "failed")
@@ -332,8 +329,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
         return
       }
       const reread = await client["domain.page.CAP14"]({}, { signal: abort.signal })
-      if (sf.generation() !== epoch || sf.state().status !== "ready" ||
-          sf.state().ownerKey !== ownerKey) return
+      if (!sameOwner(ownerKey, epoch)) return
       const next = reread.kind === "response" && reread.status === 200
         ? decodeVendorContractsPage(reread.body, ready.context.stamp) : { kind: "unavailable" as const }
       const observed = next.kind === "ready" && review.ref
@@ -362,8 +358,7 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
       }
       setView({ sending: false, reviewing: undefined })
     } catch (error) {
-      if (sf.generation() === epoch && sf.state().status === "ready" &&
-          sf.state().ownerKey === ownerKey) {
+      if (sameOwner(ownerKey, epoch)) {
         console.error("CAP14 result unknown after dispatch", error)
         draft()?.setPhase("outcome-unknown")
         setView({ sending: false, reviewing: undefined, outcomeUnknown: true, notice: "sf.u15.outcomeUnknown" })
@@ -454,8 +449,8 @@ export function SfVendorContractsPage(props: SfSurfaceProps<"CAP14">) {
       } : undefined}
       secondaryActions={[]}
       density="comfortable"
-      layout="work"
-      onLayoutMode={() => undefined}
+      layout={view.layoutMode === "single" ? "reading" : "split"}
+      onLayoutMode={(mode) => setView("layoutMode", mode)}
     >
       <Show when={view.state === "ready" && view.read !== undefined} fallback={
         <SfStatePanel state={view.state} messageKey={key("sf.u15.notAvailable")}
