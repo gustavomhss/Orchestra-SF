@@ -55,7 +55,7 @@ export function SfRequisitionForm(props: PrProps) {
                 step={field === "estAmount" || field === "estAnnual" ? "any" : undefined}
                 required={props.creating && field === "title"}
                 value={textValue(value())}
-                onInput={(event) => edit(field, event.currentTarget.value)} />
+                onInput={(event) => edit(field, (field === "estAmount" || field === "estAnnual") && event.currentTarget.value === "" ? null : event.currentTarget.value)} />
             }>
               <textarea rows={3} value={textValue(value())}
                 onInput={(event) => edit(field, event.currentTarget.value)} />
@@ -78,7 +78,7 @@ export function SfPurchaseOrderForm(props: PoProps) {
   const copy = useCopy()
   const edit = (key: PoField, value: SfPoEdit[PoField]) =>
     !props.disabled && props.onEdit({ ...props.value, [key]: value })
-  const updateLine = (lineIndex: number, field: (typeof lineFields)[number], value: string) => {
+  const updateLine = (lineIndex: number, field: (typeof lineFields)[number], value: string | null) => {
     if (props.disabled || !Array.isArray(props.value.lines)) return
     props.onEdit({
       ...props.value,
@@ -130,7 +130,9 @@ export function SfPurchaseOrderForm(props: PoProps) {
                     type={field === "qty" || field === "unitPrice" ? "number" : "text"}
                     step={field === "qty" || field === "unitPrice" ? "any" : undefined}
                     value={textValue(line[field])}
-                    onInput={(event) => updateLine(index(), field, event.currentTarget.value)} />
+                    onInput={(event) => updateLine(index(), field,
+                      (field === "qty" || field === "unitPrice") && event.currentTarget.value === ""
+                        ? null : event.currentTarget.value)} />
                 </label>
               }</For>
             </div>
