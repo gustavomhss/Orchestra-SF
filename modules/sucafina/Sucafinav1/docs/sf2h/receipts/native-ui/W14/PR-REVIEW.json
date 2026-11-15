@@ -1,0 +1,37 @@
+{
+  "schema": "sf2h.native-ui.pr-compare-review.v1",
+  "seat": "W14",
+  "operation": "A01",
+  "pr": 133,
+  "url": "https://github.com/gustavomhss/Orchestra-SF/pull/133",
+  "headBranch": "sf-ux-w14",
+  "baseBranch": "sf2-stack",
+  "observedComparison": {
+    "baseSha": "2105c17b51fd9cb5131418c116433a05f9479cb7",
+    "headSha": "943950292e6d964c06971741a26e6c2162badd1d",
+    "mergeBase": "422f1ed7b549021d7c62c834c9d9041279112af4",
+    "state": "diverged",
+    "ahead": 4,
+    "behind": 1,
+    "diffFiles": 169,
+    "filesInW14Allowlist": 13,
+    "outOfW14Allowlist": 156,
+    "sourceOfUnownedChanges": "The W14 branch inherits the campaign-overlay preparation commit f8e4426; sf2-stack currently does not contain the same overlay tree"
+  },
+  "safety": "DO_NOT_MERGE_DIRECTLY",
+  "integratorInstructions": [
+    "114 remains sole integrator. Do not mistake the 156 inherited campaign files for W14 authorship.",
+    "Integrate only ACK+9 code/test+3 handoff receipt files via authorised selection/cherry-pick or a reconciled campaign baseline. Do not reset/rebase blindly.",
+    "Preserve changes after C58 on sf2-stack, all A01 frozen source/contract pins, all receipts and W15-W19 other authors.",
+    "Review per-output admission and missing F01/F02/local-admin producer port, then request Actions 120 and compiler 119.",
+    "Keep PR open as draft until comparison clean and integration dependencies present; no merge, deploy or Azure by W14."
+  ],
+  "checks": {
+    "localTests": "NOT_RUN",
+    "localTypecheck": "NOT_RUN",
+    "remoteActions": "NOT_RUN",
+    "integrated": false,
+    "qualified": false,
+    "globalRelease": false
+  }
+}
