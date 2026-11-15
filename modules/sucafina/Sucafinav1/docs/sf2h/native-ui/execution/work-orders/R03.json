@@ -1,6 +1,6 @@
 {
   "id": "R03",
-  "title": "FINAL independente: UX e acessibilidade",
+  "title": "FINAL independente: IA, MCP, Atlas, Relay, Schedule e integrações",
   "kind": "independent-review",
   "status": "PLANNED_NOT_AUTHORIZED",
   "priority": 9,
@@ -168,7 +168,8 @@
   },
   "deliver": [
     "Review the same frozen final material C with all required proofs available; reviewer has no implementation authorship.",
-    "Publish concrete findings immediately with path/line/causal sequence and owner; author corrects and reviewer rechecks affected findings."
+    "Publish concrete findings immediately with path/line/causal sequence and owner; author corrects and reviewer rechecks affected findings.",
+    "Trace every mandatory original reviewer scope and affected work-package criteria into exact C/tree, source SHA, access identity, observed controls and evidence; a reviewer with implementation authorship is replaced. Finding must include line/causal path and owner for correction."
   ],
   "acceptance_cases": [
     {
@@ -179,6 +180,11 @@
     {
       "id": "R03-AC02",
       "expected": "All three independent opinions identify exact same final C, authorship exclusions and evidence scope.",
+      "status": "PLANNED_NOT_RUN"
+    },
+    {
+      "id": "R03-SCOPE",
+      "expected": "Original third FINAL of canonical: real model/runtime, profiles/skills, eight MCP packs/39 operations, Atlas scanner, Relay, Schedule, documents/WP14, agent workflow integration, shipped assets and end-to-end operational readiness. No scope can be silently delegated away; same candidate C and all mandatory gates.",
       "status": "PLANNED_NOT_RUN"
     }
   ],
@@ -202,5 +208,11 @@
     "format": "Canonical executor receipt plus protocol fields; source commit/tree, exact path/blob preimages/postimages, contracts digests, exports, tests not run/run evidence, blockers, consumer list, lease terminal.",
     "slot_release": "ARTIFACT_READY may be per named incremental output. After receipt and explicit owner handoff, release slot; next actor needs new bounded lease. No idle wait and no inferred expiry.",
     "shared_changes": "Exact proposed diff with preimage/postimage; I00 applies only after current owner release, without rewriting the author output."
-  }
+  },
+  "reviewScope": "Original third FINAL of canonical: real model/runtime, profiles/skills, eight MCP packs/39 operations, Atlas scanner, Relay, Schedule, documents/WP14, agent workflow integration, shipped assets and end-to-end operational readiness.",
+  "reviewRequiredChecks": [
+    "Eight MCP packs and 39 cataloged actions with real providers/negative cases, no stub or mock truth",
+    "Atlas/scanner real, Relay/Schedule/recurrence/remote state, 15 WP and 17 contracts edges, no deferred HOLD passed as green",
+    "Documents WP14 render and integrity, shipped app/skill assets, real runtime integration and source graph in final C"
+  ]
 }

@@ -45,7 +45,12 @@
     "packages/client/package.json",
     "packages/app-shell/src/context/server.tsx",
     "packages/schema/src/sucafina/operation-registry.ts",
-    "modules/sucafina/Sucafinav1/product/interface/personal-views.ts"
+    "modules/sucafina/Sucafinav1/product/interface/personal-views.ts",
+    "packages/app-shell/src/context/layout-route.ts",
+    "packages/app-shell/src/context/language.tsx",
+    "packages/app-shell/src/orchestra/shell/navigation-commands.tsx",
+    "packages/app-shell/src/orchestra/compact-navigation.ts",
+    "packages/app-shell/src/orchestra/shell/mobile-navigation.tsx"
   ],
   "may_write_shared_registry": true,
   "canonical": {
@@ -137,7 +142,8 @@
     "Apply only the explicit package_exports entries; preserve all existing exports. No broad wildcard, dependency or lockfile change. Schema/Client callers import their public leaves through these entries.",
     "Compose the approved connection registration hook in packages/app-shell/src/context/server.tsx with D01 registerConnection per host-signatures; bind never silently registers renderer-provided URLs.",
     "Assemble metadata once from all catalog IDs, separately from the candidate-admitted codec map. Pilot registers only ctx plus A03 and dedicated auth/SDK operations; no runtime import of unintegrated families. Final readiness requires every catalog operation binding via its proper JSON/bytes/auth/SDK mode. A11 operations.ts remains the Operations family leaf.",
-    "Only after current producer writer release and S0/71 ACK: apply additive schemaVersion:2 native-view + landing CAS extension to existing personal-views.ts; legacy v1 bytes/response shape unchanged, no second persistence. A12/U43 consumers remain blocked until proof. Auth return-intents and nativeCommandPrecondition similarly require 72/73/74 release."
+    "Only after current producer writer release and S0/71 ACK: apply additive schemaVersion:2 native-view + landing CAS extension to existing personal-views.ts; legacy v1 bytes/response shape unchanged, no second persistence. A12/U43 consumers remain blocked until proof. Auth return-intents and nativeCommandPrecondition similarly require 72/73/74 release.",
+    "Compose every shell ingress through requestNativeTransition: layout-route, keyboard menu, sidebar, compact/mobile navigation, ConnectionGate and language plural; no second owner store or Chat fallback."
   ],
   "acceptance_cases": [
     {
