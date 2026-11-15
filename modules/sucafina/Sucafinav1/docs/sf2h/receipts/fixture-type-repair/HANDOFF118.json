@@ -1,0 +1,50 @@
+{
+  "schema": "sf2h-fixture-repair-handoff-v1",
+  "mission_id": 118,
+  "status": "SOURCE_PATCH_COMPLETE_PENDING_CI_AND_INTEGRATION",
+  "owner": "fixture-types-browser118",
+  "recipient": "114 sole integrator, sf2-stack PR65",
+  "repository": "gustavomhss/Orchestra-SF",
+  "source_branch": "fixture-type-repair",
+  "baseline_commit": "180212940105e7b9ad15171b067c1c1b7841df5f",
+  "source_commit": "27f8af1a8e4ded554449cc61fee0257a76fe281c",
+  "planning_commit": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+  "mission_commit": "111c29106bf02ddf38cc425826b764f8c5452ae6",
+  "scope": {
+    "source_files_changed": 33,
+    "source_files_authorized": 33,
+    "unauthorized_files": 0,
+    "receipt_files_before_handoff": 6
+  },
+  "batches": [
+    "A",
+    "B1",
+    "B2",
+    "C",
+    "D"
+  ],
+  "prepost_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fixture-type-repair/PREPOST118.json",
+  "patch_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fixture-type-repair/PATCH118.diff",
+  "finding_path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/fixture-type-repair/FINDINGS118.md",
+  "preimage_verification": "Every original SHA recorded from remote GitHub fetch_file before CAS and confirmed against source diff",
+  "postimage_verification": "Every proposed SHA returned by GitHub compare and linked to source commit",
+  "diagnostic_status": {
+    "source_files_addressed": 33,
+    "confirmed_resolved_by_119": 0,
+    "compiler_residual": "NOT_VERIFIED - 119 must run real 5 bun typecheck/TS check",
+    "test_residual": "NOT_VERIFIED - 120 must run changed surgical tests",
+    "known_contract_issue": "WP00-JOURNEY-ORACLE-MISSING-FIELDS"
+  },
+  "negative_paths": [
+    "No product files touched (116)",
+    "No matcher files touched (117)",
+    "No native deadline files touched (115)",
+    "No typecheck, tests, local, or epic invoked"
+  ],
+  "integration_notes": [
+    "114 must re-check baseline blob before each patch; do not cherry-pick unrelated branch commits or clobber later authored files",
+    "Compare 119 diagnostics and 120 surgical tests to edited postimages before accepting",
+    "WP00 oracle issue must be resolved by authentic authority and re-validated; test intentionally stays strict",
+    "No authority grant was inserted; fixture scenario-operation callback rejects any nonempty scenario operations and additionally revalidates request/digest"
+  ]
+}

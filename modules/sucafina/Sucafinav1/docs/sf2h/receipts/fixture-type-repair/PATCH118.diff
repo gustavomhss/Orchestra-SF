@@ -1,0 +1,734 @@
+diff --git a/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts b/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts
+index 4a055c82dfba70c09d9bcc3865bacdfd5e567b9f..e0eeb12408c292395d5d6621b2dc831740289692 100644
+--- a/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts
++++ b/modules/sucafina/Sucafinav1/test/microsoft-composition.test.ts
+@@ -94,7 +94,7 @@ test("real mounted transport rejects wrong host, missing Origin and replay; logo
+   expect((await f.request(signed.callback, { headers: { cookie: signed.loginCookie } })).status).toBe(403)
+   expect((await f.request("/sucafina/status", { headers: { host: "evil.example", "x-forwarded-host": new URL(ingressOrigin).host } })).status).toBe(403)
+   expect((await f.request("/sucafina/status", { headers: { forwarded: "proto=https;host=evil.example", "x-forwarded-proto": "https", "x-forwarded-host": "evil.example" } })).status).toBe(200)
+-  for (const headers of [{ cookie: signed.cookie }, { cookie: signed.cookie, origin: "https://evil.example" }, { cookie: signed.cookie, origin: publicOrigin, "sec-fetch-site": "cross-site" }]) {
++  for (const headers of [new Headers({ cookie: signed.cookie }), new Headers({ cookie: signed.cookie, origin: "https://evil.example" }), new Headers({ cookie: signed.cookie, origin: publicOrigin, "sec-fetch-site": "cross-site" })]) {
+     expect((await f.request("/sucafina/auth/logout", { method: "POST", headers })).status).toBe(403)
+     expect((await f.request("/sucafina/dashboard", { method: "POST", headers })).status).toBe(403)
+   }
+
+diff --git a/modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts b/modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts
+index 9f6556bd33444d37b4e5ddb6931e560d234cd28e..17422dc0c812b22da51cc3bd6b57bb9e9ab01966 100644
+--- a/modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts
++++ b/modules/sucafina/Sucafinav1/test/microsoft-entra-client.test.ts
+@@ -25,8 +25,9 @@ test("confidential web flow uses minimum scopes and sends the private credential
+   const f = await microsoftFixture()
+   const observed: { method: string; secret: boolean; authorization: boolean }[] = []
+   f.hooks.before = async (request) => {
+-    if (request.url !== f.metadata.token_endpoint) return
++    if (request.url !== f.metadata.token_endpoint) return undefined
+     observed.push({ method: request.method, secret: new URLSearchParams(await request.clone().text()).get("client_secret") === syntheticSecret, authorization: request.headers.has("authorization") })
++    return undefined
+   }
+   const result = await webExchange(f)
+   const url = new URL(result.location)
+@@ -72,9 +73,10 @@ test("role mapping cannot change privilege while a directory resolution is pendi
+   const entered = Promise.withResolvers<void>()
+   const release = Promise.withResolvers<void>()
+   f.hooks.before = async (request) => {
+-    if (new URL(request.url).pathname !== "/v1.0/me/checkMemberGroups") return
++    if (new URL(request.url).pathname !== "/v1.0/me/checkMemberGroups") return undefined
+     entered.resolve()
+     await release.promise
++    return undefined
+   }
+   const map = [row(`group:${group}`)]
+   const pending = f.client.resolve(result.tokens.accessToken, map)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts b/modules/sucafina/Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts
+index 2bf73c9b16a502ba9b858227697d0b509e3a7d60..e39a569201bff1daf590c3323acc8de60d32cf1f 100644
+--- a/modules/sucafina/Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/diagnostics/calculation/source-observation.test.ts
+@@ -1,6 +1,6 @@
+ import { expect, test } from "bun:test"
+ import { randomUUID } from "node:crypto"
+-import type { AssetPersistence } from "../../../../runtime/assets.ts"
++import type { AssetPersistence, BlobTransaction } from "../../../../runtime/assets.ts"
+ import type { Snapshot, TransactionOptions } from "../../../../runtime/contract.ts"
+ import type { Surface } from "../../../../src/identity.ts"
+ import { digestSfValue } from "../../../../product/contracts/canonical.ts"
+@@ -132,7 +132,7 @@ function observeSource(fixture: Fixture, call: TrustedDomainContext, mode: "fall
+     const started = performance.now()
+     let entered = false
+     try {
+-      return await fixture.store.transaction(surface, async (snapshot, blobs) => {
++      return await fixture.store.transaction(surface, async (snapshot: Snapshot, blobs: BlobTransaction) => {
+         const callbackStart = performance.now()
+         entered = true
+         // Includes queue/admission/open/BEGIN/decode; not an exclusive lock timer.
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.test.ts b/modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.test.ts
+index 8cccdc2a4fab35115e01f5e3e6b87ee9878464a5..986de13f9658d364b99a8460dc214b8a3633cc43 100644
+--- a/modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.test.ts
+@@ -3,6 +3,8 @@ import { chmod, mkdtemp, realpath, rm } from "node:fs/promises"
+ import { tmpdir } from "node:os"
+ import { join } from "node:path"
+ import { openLocalStore } from "../../../../runtime/local-store.ts"
++import type { Snapshot } from "../../../../runtime/contract.ts"
++import type { BlobTransaction } from "../../../../runtime/assets.ts"
+ import { observeMemoryPersistence } from "./persistence-observer.ts"
+ 
+ function latch() {
+@@ -24,7 +26,7 @@ test("Memory persistence observer preserves real nested, queued, cancelled and e
+     const pending: Promise<unknown>[] = []
+     try {
+       const value = { identity: "retained" }
+-      expect(await driver.transaction("dashboard", async (snapshot, blobs) => {
++      expect(await driver.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+         snapshot.data.amount = 1
+         await blobs.put("real", new Uint8Array([1, 2, 3]), "application/octet-stream")
+         return { commit: true, value }
+@@ -33,7 +35,7 @@ test("Memory persistence observer preserves real nested, queued, cancelled and e
+       expect(await driver.transactionAll(async (snapshots) => {
+         snapshots.planner.data.amount = 2
+         snapshots.procurement.data.amount = 3
+-        expect(await driver.transaction("dashboard", async (snapshot, blobs) => {
++        expect(await driver.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => {
+           expect(snapshot.data.amount).toBe(1)
+           expect(await blobs.get("real")).toEqual(new Uint8Array([1, 2, 3]))
+           return { commit: false, value: "nested" }
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.ts b/modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.ts
+index a2b3917c8a186ae3ea024bd2df50b0a919550bc1..6f7dd187e3f311d7317442f05201f311587fbef8 100644
+--- a/modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.ts
++++ b/modules/sucafina/Sucafinav1/test/product/diagnostics/memory/persistence-observer.ts
+@@ -1,7 +1,7 @@
+ import { AsyncLocalStorage } from "node:async_hooks"
+-import type { AssetPersistence } from "../../../../runtime/assets.ts"
++import type { AssetPersistence, BlobTransaction } from "../../../../runtime/assets.ts"
+ import type { LocalStore } from "../../../../runtime/local-contract.ts"
+-import type { Persistence } from "../../../../runtime/contract.ts"
++import type { Persistence, Snapshot } from "../../../../runtime/contract.ts"
+ 
+ export type MemoryPersistenceCounters = {
+   persistenceCalls: number
+@@ -82,7 +82,7 @@ export function observeMemoryPersistence(source: LocalStore, counters: MemoryPer
+     } catch (error) { settle(true); throw error }
+   }
+   const transaction: AssetPersistence["transaction"] = (surface, work, options) =>
+-    observe((inside) => source.transaction(surface, (snapshot, blobs) => inside(() => work(snapshot, blobs)), options), options?.signal)
++    observe((inside) => source.transaction(surface, (snapshot: Snapshot, blobs: BlobTransaction) => inside(() => work(snapshot, blobs)), options), options?.signal)
+   const transactionAll = source.transactionAll
+   const all: Persistence["transactionAll"] = transactionAll ? (work, options) =>
+     observe((inside) => transactionAll((snapshots) => inside(() => work(snapshots)), options), options?.signal) : undefined
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts
+index d941eaf91e301ff530a174c1e92192237e3d3ef0..03c918632f8c7bf40e1b4bbb91e71a6ae3de74ac 100644
+--- a/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/export-artifact-closure/fixture.ts
+@@ -23,6 +23,7 @@ import { createReviewApplication } from "../../../product/reviews/application.ts
+ import type { ReviewAgendaCatalog } from "../../../product/reviews/agenda-picker.ts"
+ import type { ReviewAgendaPreview } from "../../../product/reviews/selection.ts"
+ import { object, rows } from "../../../runtime/contract.ts"
++import type { Actor } from "../../../runtime/contract.ts"
+ import { validReportArtifactMetadata, validateReportArtifact } from "../../../runtime/artifact.ts"
+ import { DashboardPortfolio } from "../../../runtime/dashboard-portfolio.ts"
+ import { DashboardPeople } from "../../../runtime/dashboard-people.ts"
+@@ -72,7 +73,7 @@ export async function createExportArtifactFixture(options: { maxBytes?: number }
+     })
+   }
+   const note = "Café, ação e e\u0301; literal <scope> & evidence. " + "Complete source note. ".repeat(12) + "END-EXPORT-66-NOTE"
+-  const actor = { id: owner, roles: ["admin"], canWrite: true }
++  const actor: Actor = { id: owner, roles: ["admin"], canWrite: true }
+   const environment = (id = randomUUID()) => ({ at: clock.at, id: () => id, directory: [{ id: owner, name: "Synthetic export owner" }] })
+   await persistence.transaction("dashboard", async (snapshot) => {
+     const project = DashboardPortfolio.domain.execute(snapshot, actor, { page: "All Projects", action: "save", version: 0,
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts
+index 7d0ccfe23def8601eb152b8cbe45ddb1df40456d..2044835954009e55b8ba751022539596fa878d4d 100644
+--- a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-domain.test.ts
+@@ -7,9 +7,10 @@ test("Authorized binary domain upload preserves exact bytes, CAS and SQLite with
+   const f = await binaryFixture("http://localhost:43174")
+   const upload = (bytes: Uint8Array, version = 3, cookie = f.cookie) => {
+     const input = streamedBody(bytes, 1021)
+-    const request = new Request(`${f.origin}${f.uploadPath(version)}`, {
++    const options: RequestInit & { duplex: "half" } = {
+       method: "POST", body: input.stream, headers: { cookie, origin: f.origin, "content-type": "image/bmp" }, duplex: "half",
+-    })
++    }
++    const request = new Request(`${f.origin}${f.uploadPath(version)}`, options)
+     return { input, response: f.handler(request) }
+   }
+   try {
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts
+index c8865ac73ae4932ba79c8e90c38ce5ee78b3486c..1c7d2b14701911a9db2516f62b11bed3403adfbb 100644
+--- a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/binary-fixture.ts
+@@ -6,6 +6,8 @@ import { createModule } from "../../../index.ts"
+ import { openLocalStore } from "../../../runtime/local-store.ts"
+ import { createOperatorIdentity } from "../../../runtime/operator-identity.ts"
+ import { rows } from "../../../runtime/contract.ts"
++import type { Snapshot } from "../../../runtime/contract.ts"
++import type { BlobTransaction } from "../../../runtime/assets.ts"
+ 
+ /** A valid 256x128 24-bit BMP, larger than the Workbench budget and containing arbitrary binary octets. */
+ export function binaryUploadBytes() {
+@@ -62,7 +64,7 @@ export async function binaryFixture(origin: string) {
+       origin, cookie, handler, scans, accepted, acceptedDigest,
+       uploadPath: (version = 3) => `/sucafina/dashboard?${new URLSearchParams({ page: "Vendor Contracts", upload: "contract", record: "binary-c1", recordVersion: String(version), name: "binary.bmp" })}`,
+       async state() {
+-        return store.transaction("dashboard", async (snapshot, blobs) => ({ commit: false, value: {
++        return store.transaction("dashboard", async (snapshot: Snapshot, blobs: BlobTransaction) => ({ commit: false, value: {
+           snapshot: structuredClone(snapshot),
+           files: await Promise.all(rows(snapshot.data.assets).map(async (asset) => ({ key: asset.key, bytes: typeof asset.key === "string" ? await blobs.get(asset.key) : undefined }))),
+         } }))
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts
+index 869a66168c1b43189b2291f50a80742761ce6043..0a1cb6665c8df14609dbc95b201028de1f273526 100644
+--- a/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/http-body-limit-fix/workbench.test.ts
+@@ -52,7 +52,7 @@ test("Workbench cuts off oversized multibyte streams without Content-Length or w
+     expect(payload.length).toBeLessThan(65536)
+     const bytes = new TextEncoder().encode(payload)
+     expect(bytes.byteLength).toBeGreaterThan(65536)
+-    for (const headers of [{}, { "content-length": "65536" }]) {
++    for (const headers of [new Headers(), new Headers({ "content-length": "65536" })]) {
+       const input = streamedBody(bytes)
+       const request = f.request(input.stream, { headers })
+       const response = await f.product(request, "dashboard")
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts
+index 9fae52985c3e940845cbd746d850da8f52b8f68f..5e6ac478a5369f7b4e3fe1473069b3ad06e9c7dd 100644
+--- a/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/installed-bi-closure/view-rendering.test.ts
+@@ -18,7 +18,9 @@ const november: Period = { start: "2027-11-01", end: "2027-11-30" }
+ const originA = "a".repeat(64), originB = "b".repeat(64)
+ type Payload = { request: BiViewRequest; projection: DomainProjection; presentation: BiPresentation }
+ type BrowserState = { payload: Payload; changes: Period[]; opened: BiSelection[] }
+-type RendererWindow = Window & { syntheticBiRenderer: BrowserState }
++declare global {
++  interface Window { syntheticBiRenderer: BrowserState }
++}
+ 
+ function syntheticPayload(): Payload {
+   const reference = (id: string, refDigest: string): BusinessEvidenceRef => ({
+@@ -84,7 +86,7 @@ async function render(page: Page, moduleUrl: string, payload: Payload, period?:
+     }
+     freeze(payload)
+     const state: BrowserState = { payload, changes: [], opened: [] }
+-    ;(window as RendererWindow).syntheticBiRenderer = state
++    ;window.syntheticBiRenderer = state
+     const node = renderer.renderBiView(payload.request, payload.projection, (selection) => state.opened.push(selection), payload.presentation,
+       undefined, undefined, { period, onPeriodChange: (next) => state.changes.push(next) })
+     node.id = "synthetic-bi-renderer"
+@@ -127,8 +129,8 @@ test("C02 renderer BI10 crops observed dates, retains unknown dates and never pr
+       await expect(dataRow(page, "synthetic:whole-period-value").locator("td").nth(1)).toHaveText("200")
+       await expect(dataRow(page, "synthetic:explicit-zero").locator("td").nth(1)).toHaveText("0")
+       await expect(page.getByRole("status")).toContainText("permanecem integrais na tabela, sem repartição estimada")
+-      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([horizon, november])
+-      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.payload)).toEqual(payload)
++      expect(await page.evaluate(() => window.syntheticBiRenderer.changes)).toEqual([horizon, november])
++      expect(await page.evaluate(() => window.syntheticBiRenderer.payload)).toEqual(payload)
+     })
+     expect(errors).toEqual([])
+   } finally { await deadline.close() }
+@@ -144,17 +146,17 @@ test("C02 renderer restores only a valid visual crop and reports its changes wit
+       await expect(page.getByLabel("Início do período", { exact: true })).toHaveValue(november.start)
+       await expect(page.getByLabel("Fim do período", { exact: true })).toHaveValue(november.end)
+       await expect(page.getByLabel("Arrastar início do período", { exact: true })).toHaveAttribute("aria-valuetext", november.start)
+-      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([november])
++      expect(await page.evaluate(() => window.syntheticBiRenderer.changes)).toEqual([november])
+       await dataRow(page, "synthetic:inside-date").getByRole("button", { name: "Abrir origem", exact: true }).click()
+-      const state = await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer)
++      const state = await page.evaluate(() => window.syntheticBiRenderer)
+       expect(state.opened).toHaveLength(1)
+       expect(state.opened[0]).toMatchObject({ valueId: "synthetic:inside-date", visualPeriod: november, context: { period: horizon } })
+       expect(state.payload).toEqual(payload)
+       // An invalid apply leaves both the currently drawn data and callback unchanged.
+       await page.getByLabel("Início do período", { exact: true }).fill("2028-01-01")
+       await page.getByRole("button", { name: "Aplicar filtro", exact: true }).click()
+       await expect(page.getByRole("status")).toContainText("Escolha um período válido dentro da seleção autorizada")
+-      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([november])
++      expect(await page.evaluate(() => window.syntheticBiRenderer.changes)).toEqual([november])
+       await expect(dataRow(page, "synthetic:inside-date")).toHaveCount(1)
+       for (const invalid of [
+         { start: "2026-12-31", end: "2027-11-30" },
+@@ -164,9 +166,9 @@ test("C02 renderer restores only a valid visual crop and reports its changes wit
+         await render(page, moduleUrl, payload, invalid)
+         await expect(page.getByLabel("Início do período", { exact: true })).toHaveValue(horizon.start)
+         await expect(page.getByLabel("Fim do período", { exact: true })).toHaveValue(horizon.end)
+-        expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.changes)).toEqual([horizon])
++        expect(await page.evaluate(() => window.syntheticBiRenderer.changes)).toEqual([horizon])
+       }
+-      expect(await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.payload)).toEqual(payload)
++      expect(await page.evaluate(() => window.syntheticBiRenderer.payload)).toEqual(payload)
+     })
+     expect(errors).toEqual([])
+   } finally { await deadline.close() }
+@@ -186,7 +188,7 @@ test("C02 renderer restores the exact origin before the first value control and
+       expect(await focus(page, moduleUrl, { valueId, originDigest: originB })).toBe(true)
+       await expect(second).toBeFocused()
+       await page.keyboard.press("Enter")
+-      const opened = await page.evaluate(() => (window as RendererWindow).syntheticBiRenderer.opened)
++      const opened = await page.evaluate(() => window.syntheticBiRenderer.opened)
+       expect(opened).toHaveLength(1)
+       expect(opened[0]?.reference?.refDigest).toBe(originB)
+       // A fresh render can omit an origin; a retained selector cannot invent it.
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts b/modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts
+index 566e765f201d1a45677c0c52c75eb92ecb16d482..14e6ff5807ff2599fe8cc7793d22864c25af6652 100644
+--- a/modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/minimal-first-save/first-save-recovery.test.ts
+@@ -121,7 +121,7 @@ async function fixture() {
+           digestSfValue(item.value) === digestSfValue(draft.sourceRefs[index])) && await host.revalidate(context)
+       },
+       verifySnapshot: (snapshot, request, draft, context) =>
+-        ui.matchesIntent(context, "sf-human:decisions.edit", digestSfValue(request)) && sourceCurrent(snapshot, draft, context),
++        context.kind === "ui" && ui.matchesIntent(context, "sf-human:decisions.edit", digestSfValue(request)) && sourceCurrent(snapshot, draft, context),
+       verifyLookupSnapshot: (draft, context) => {
+         const dashboard = persistence.currentSnapshots?.()?.dashboard
+         return !!dashboard && sourceCurrent(dashboard, draft, context)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts
+index 76ce8b8fb5d7e17ddc33002d239771a7260a9e65..b2a9cc8fe662bd6f774166d6f0f57c4f0c39fde4 100644
+--- a/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/mixed-source-contracts/planner-fixture.ts
+@@ -129,7 +129,7 @@ export async function createMixedPlannerFixture(deadline: ReturnType<typeof comp
+         eventRef, writerPrincipalRef: "person", accessRevision: call.binding.accessRevision, createdAt: clock.at, attempts: 0, state: "pending" }
+       return { commit: true, value: true }
+     })
+-    if (saved.status !== "ok") throw new Error(`Real C08 fixture persistence failed: ${saved.reason}`)
++    if (saved.status !== "ok") throw new Error(`Real C08 fixture persistence failed: ${"reason" in saved ? saved.reason : saved.status}`)
+   }
+   business.bindForecastCoverage(async (reference, context) => {
+     const source = await business.plannerSources.resolveForecastSource(reference, context)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts
+index 24dda67176121efe50f91148d6b2291a4f975d4b..0d0bbf003d3ed35e71492fe2bf477b01a4ac4550 100644
+--- a/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-approval-closure/composite-planner.test.ts
+@@ -1,7 +1,7 @@
+ import { expect, test } from "bun:test"
+ import { randomUUID } from "node:crypto"
+ import { digestSfEvidenceRef, digestSfValue } from "../../../product/contracts/canonical.ts"
+-import type { BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
++import type { AuthorizedCaseProjection, BusinessContextService, BusinessEvidenceRef } from "../../../product/contracts/business-context.ts"
+ import type { CostCoverageBasis, DecisionCase } from "../../../product/contracts/decisions.ts"
+ import { RENEWAL_TRANSITION_CATEGORIES } from "../../../product/contracts/decisions.ts"
+ import type { ScenarioRequest } from "../../../product/contracts/operations.ts"
+@@ -126,13 +126,14 @@ test("mixed form offers explicit request and amount controls only for attached P
+   const fixture = await createCompositeFixture()
+   try {
+     const binding = fixture.context.binding
+-    const projection = { context: { kind: "ui" as const, installationId: binding.installationId, projectId: binding.projectId, principalRef: binding.principalRef, accessRevision: binding.accessRevision, policyVersion: binding.policyVersion }, case: fixture.decision, events: [], evidenceRefs: fixture.decision.sourceRefs, checkedAt: fixture.clock.at }
++    if (fixture.decision.preparedChanges.length || fixture.decision.receipts.length) throw new Error("Unexecuted form fixture must have no committed effects")
++    const projection: AuthorizedCaseProjection = { context: { kind: "ui", installationId: binding.installationId, projectId: binding.projectId, principalRef: binding.principalRef, accessRevision: binding.accessRevision, policyVersion: binding.policyVersion }, case: { ...fixture.decision, preparedChanges: [], receipts: [] }, events: [], evidenceRefs: fixture.decision.sourceRefs, checkedAt: fixture.clock.at }
+     const before = structuredClone(projection)
+     const html = decisionAlternativesForm(projection)
+     expect(html).toContain('Procurement request<select name="procurement-request" disabled')
+     expect(html).toContain('Proposed estimated amount<input name="procurement-proposed-amount" type="number" min="0" step="any" disabled')
+     expect(html).toContain("does not save or submit the requisition or grant financial approval")
+-    expect(decisionAlternativesForm({ ...projection, case: { ...fixture.decision, sourceRefs: fixture.plannerRefs } })).not.toContain('name="procurement-proposed-amount"')
++    expect(decisionAlternativesForm({ ...projection, case: { ...projection.case, sourceRefs: fixture.plannerRefs } })).not.toContain('name="procurement-proposed-amount"')
+     expect(projection).toEqual(before)
+     // Parse in Actions only. This file is delivered inert and is never executed locally.
+     expect(() => new Bun.Transpiler({ loader: "js" }).transformSync(decisionAlternativesScript)).not.toThrow()
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts
+index 3c735804c3956fc5df98113f8f76050da35c74b0..269831f1e6b269586bdc71bb6169b7adb573fe86 100644
+--- a/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/procurement-privacy-fix/commands.test.ts
+@@ -25,7 +25,7 @@ async function refused(fixture: Fixture, principal: string, input: Command, stat
+   return response.json()
+ }
+ 
+-test.each(actions)("M73 %s: requester-only sees identical missing/hidden responses at equal and divergent versions", async (action) => {
++test.each([...actions])("M73 %s: requester-only sees identical missing/hidden responses at equal and divergent versions", async (action) => {
+   const fixture = await createPrivacyFixture()
+   try {
+     await fixture.create("alice")
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts
+index 291e72cf1c356d76f1671ec971eac5b44a70edd0..88c0cbf4dd0fe2b2dd856ecf7819b0bd613e33f7 100644
+--- a/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/history-provider-read.test.ts
+@@ -24,7 +24,7 @@ async function createHistoryFixture() {
+   if (captured.status !== "ok") throw new Error("Actual durable C05 receipt unavailable")
+   expect(captured.value).toHaveLength(1)
+   const io = { armed: false, captures: 0 }
+-  const state: SfProductStatePort = { ...fixture.state, read: async (request, namespace, inspect) => {
++  const state: typeof fixture.state = { ...fixture.state, read: async (request, namespace, inspect) => {
+     const result = await fixture.state.read(request, namespace, inspect)
+     if (io.armed && namespace === "reviews" && ++io.captures === 2) {
+       io.armed = false
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts
+index 65dd8c157ad31d288ee0f9142e1b41e08221de7c..68973132641e5eb09cce84383156235d87e296d9 100644
+--- a/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/reports-draft-reconciliation/installed-read-integrity.test.ts
+@@ -21,7 +21,7 @@ async function createInstalledIntegrityFixture(localSnapshotReaders: boolean) {
+     if (result.status === "ok") await raw.afterRead?.()
+     return ordinal === raw.unavailableAt ? { status: "unavailable" as const, reason: "test-integrity-read-unavailable" } : result
+   } }
+-  const state: SfProductStatePort = { ...f.fixture.state, read: async (request, namespace, inspect) => {
++  const state: typeof f.fixture.state = { ...f.fixture.state, read: async (request, namespace, inspect) => {
+     const result = await f.fixture.state.read(request, namespace, inspect)
+     if (namespace !== "reviews") return result
+     const ordinal = ++proof.calls
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts b/modules/sucafina/Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts
+index 529f6b98b6215f750912ac87161555eb2d9a555d..8c6555129f5a1846e2b353515a0e86ecd03676c7 100644
+--- a/modules/sucafina/Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/ui-split/ui-recovery/recovery.test.ts
+@@ -10,7 +10,7 @@ import { editNewDraft, observedApplication, openWorkbench, prepareApply, reloadA
+ test("UI recovery rejects an incomplete apply ACK then recovers the exact authorized receipt after reload", async () => {
+   expectSpawn(import.meta.path)
+   const fixture = await createRecoveryFixture()
+-  const driver = await launchBrowserDriver("ui-recovery-invalid-ack").catch(async (error) => { await fixture.close(); throw error })
++  const driver = await launchBrowserDriver("host-response-recovery").catch(async (error) => { await fixture.close(); throw error })
+   try {
+     const page = await driver.browser.newPage(), errors: string[] = []
+     page.on("pageerror", (error) => errors.push(error.message))
+@@ -52,7 +52,7 @@ test("UI recovery rejects an incomplete apply ACK then recovers the exact author
+ test("UI recovery reauthorizes the restored attempt and purges it on real denial without another effect", async () => {
+   expectSpawn(import.meta.path)
+   const fixture = await createRecoveryFixture()
+-  const driver = await launchBrowserDriver("ui-recovery-revocation").catch(async (error) => { await fixture.close(); throw error })
++  const driver = await launchBrowserDriver("host-access-recovery").catch(async (error) => { await fixture.close(); throw error })
+   try {
+     const page = await driver.browser.newPage(), errors: string[] = []
+     page.on("pageerror", (error) => errors.push(error.message))
+@@ -132,7 +132,7 @@ test("UI recovery reauthorizes the restored attempt and purges it on real denial
+ test("UI recovery retains an ambiguous authoritative receipt outcome across repeated reloads without another apply", async () => {
+   expectSpawn(import.meta.path)
+   const fixture = await createRecoveryFixture()
+-  const driver = await launchBrowserDriver("ui-recovery-ambiguous-receipt").catch(async (error) => { await fixture.close(); throw error })
++  const driver = await launchBrowserDriver("host-egress-recovery").catch(async (error) => { await fixture.close(); throw error })
+   try {
+     const page = await driver.browser.newPage(), errors: string[] = []
+     page.on("pageerror", (error) => errors.push(error.message))
+@@ -181,7 +181,7 @@ test("UI recovery retains an ambiguous authoritative receipt outcome across repe
+ test("UI recovery distinguishes a lost first save without draftRef and never guesses its identity after reload", async () => {
+   expectSpawn(import.meta.path)
+   const fixture = await createRecoveryFixture()
+-  const driver = await launchBrowserDriver("ui-recovery-first-save").catch(async (error) => { await fixture.close(); throw error })
++  const driver = await launchBrowserDriver("host-draft-recovery").catch(async (error) => { await fixture.close(); throw error })
+   try {
+     const page = await driver.browser.newPage(), errors: string[] = []
+     page.on("pageerror", (error) => errors.push(error.message))
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts b/modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts
+index 5d0feb74e3a41424afa5c94ef09178dac80caecf..91205e4a9d58290733a4ce4ea511d00ed96734b9 100644
+--- a/modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/ui-split/ui-work/actors-fixture.ts
+@@ -128,7 +128,12 @@ export async function createThreadActorsFixture(origin: string) {
+     },
+   }
+   const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
+-  const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
++  const cases = createDecisionCasePort({ state, host, creationTarget: base.creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (value, context) => {
++    const request = host.requestFor(context)
++    const selectedDigest = digestSfValue(value)
++    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
++    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
++  }, evidence, createId: randomUUID, now: () => at })
+   const compose = () => createCollaborationHost({ host, state, creationTarget: base.creationTarget, scopedSources: base.persistence, evidence, human, authority: domainAuthority, recipientAuthority, issueForActor, prepareReissueScope: observer.prepareReissueScope, confirmationSource: observer, threadHistoryWrites, caseSelectionWrites, cases, workCaseAuthority: authorizeCase,
+     workSignals: async (_selection, period, context) => {
+       const issued = await createDashboardSourceIssuer({ host, scopedSources: base.persistence })({ page: "Executive Dashboard", fields: ["signals"], period }, context)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts b/modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts
+index fc4d57604c21ab5d007f747a908b17b67027ffd6..637cef4b9fb9ec24b3f279035a6a7f1c644d7cc1 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp00/baseline-corpus-coverage.test.ts
+@@ -57,7 +57,7 @@ test("new requirements and journeys retain explicit owners without claiming exec
+     expect(row.tasks.every((task) => /^WP\d{2}\.T\d{2}$/.test(task))).toBe(true)
+   }
+   expect(journeys.journeys.map((journey) => journey.id)).toEqual(["J01", "J02", "J03", "J04", "J05", "J06", "J07", "J08"])
+-  expect(journeys.journeys.every((journey) => journey.fixtureBindings.length > 0 && journey.executionStatus === "NOT_RUN")).toBe(true)
++  expect(journeys.journeys.every((journey) => "fixtureBindings" in journey && Array.isArray(journey.fixtureBindings) && journey.fixtureBindings.length > 0 && "executionStatus" in journey && journey.executionStatus === "NOT_RUN")).toBe(true)
+ })
+ 
+ test("native domain role fixtures retain restricted and unaffiliated entry behavior", () => {
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts b/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts
+index e22020011f464a2cc7277d4fe0f9a999c5587d38..70f1f6e634c92cd23a271d653ede0bf305bd22a7 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp01/decision-conflict-recovery.test.ts
+@@ -102,6 +102,14 @@ async function fixture() {
+       get promote() { return unmounted("portfolio.promote") },
+       get prepare() { return unmounted("portfolio.prepare") },
+     },
++    get hotTopicDraft() { return unmounted("hotTopicDraft") },
++    get changeStore() { return unmounted("changeStore") },
++    get assumptionDivergence() { return unmounted("assumptionDivergence") },
++    get applicationStatus() { return unmounted("applicationStatus") },
++    get promoteAnalysis() { return unmounted("promoteAnalysis") },
++    get currentChoicePreview() { return unmounted("currentChoicePreview") },
++    get promoteCurrentChoice() { return unmounted("promoteCurrentChoice") },
++    bindAdmittedApply: () => unmounted("bindAdmittedApply"),
+     get history() { return unmounted("history") },
+     get choiceCatalog() { return unmounted("choiceCatalog") },
+     get coverageCatalog() { return unmounted("coverageCatalog") },
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts b/modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts
+index d239f1056f97a85f4caafac772ee79921806289a..333cb8751dea4833ce0f127d9d924e2c790b3e2e 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp01/thread-domain-fixture.ts
+@@ -180,7 +180,12 @@ export async function createThreadDomainFixture() {
+         const prepared = await answers.prepare(questionId, issued.value.refId, context)
+         if (prepared.status !== "ok") return prepared
+         const { observation, ...display } = prepared.value
+-        return { status: "ok", value: { ...display, evidence: observation.evidence, projection: observation.projection } }
++        const fresh = await observer.observe(prepared.value.scope, context)
++        if (fresh.state !== "available" || fresh.sourceVersion !== observation.sourceVersion || fresh.incarnation !== observation.incarnation ||
++          fresh.physicalIncarnation !== observation.physicalIncarnation || fresh.scopeFingerprint !== observation.scopeFingerprint ||
++          fresh.sourceFingerprint !== observation.sourceFingerprint || fresh.dependencyFingerprint !== observation.dependencyFingerprint ||
++          !await authority.host.revalidate(context)) return { status: "stale", reason: "answer-observation-changed" }
++        return { status: "ok", value: { ...display, evidence: fresh.evidence, projection: fresh.projection } }
+       })
+       const response = reply(result)
+       answerAttempts.push({ route: action, body: raw, key: incoming.headers.get("idempotency-key"), status: response.status, value: result })
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts b/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts
+index c9fa74a4e59e9204e6873619b9c580257d7d793d..268c49a2bedbaf85eab24de01bbed2fb71f3c8cc 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp04/finance-sourcing-integration.test.ts
+@@ -385,13 +385,18 @@ async function sourcingFixture(variant?: "missing-fx" | "missing-assessment" | "
+   })
+   const bindings = createProcurementUiBindings({ authority: ui, dispatch: (_operation, payload, call) => dispatch(payload, call) })
+   const payload = { requestRef: issued.value, proposalRefs: variant === "single-offer" ? ["A"] : ["A", "B", "C"], criteria: [...settings.criteria, ...settings.commCriteria].map((criterion) => criterion.name) }
+-  const resolveSource = createSfProcurementSourceAccess({ host, resolve: sources.resolve, procurement: port })
++  const resolveSource = createSfProcurementSourceAccess({ host, resolve: { resolve: sources.resolve }, procurement: port })
+   const context = createSfBusinessContext({ revalidate: host.revalidate, resolveSource, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not requested by sourcing verification" }) })
+   const state = createSfProductState({ persistence, createId: randomUUID,
+     authorize: async (request) => authorized(request) ? { principalRef: "buyer", accessRevision: "1", policyVersion: "1" } : undefined,
+     resolveTarget: async (request, _snapshot, _namespace, targetRef) => authorized(request) && targetRef === "cases-root" ? { incarnation: "cases-root-v1" } : undefined,
+   })
+-  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "cases-root", incarnation: "cases-root-v1" }, operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined, authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call), evidence: context, createId: randomUUID, now: () => at })
++  const cases = createDecisionCasePort({ state, host, creationTarget: { ref: "cases-root", incarnation: "cases-root-v1" }, operationIdentity: (call) => call.kind === "ui" ? ui.operationIdentity(call) : undefined, authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call), verifyScenarioOperations: async (value, context) => {
++    const request = host.requestFor(context)
++    const selectedDigest = digestSfValue(value)
++    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
++    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
++  }, evidence: context, createId: randomUUID, now: () => at })
+   const draft = { objective: "Compare the recorded sourcing proposals", criteria: ["Technical fit", "Commercial terms"], horizon: period, currency: "USD", sourceRefs: [evidence] }
+   const caseCall = await admit("sf_case_draft", draft)
+   const created = await cases.draft(draft, caseCall)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts b/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts
+index 4087659570356188c546b59ba112dfd33a2a189c..9c2895e47b9e49b742f1ebdcdc67abc9c7a0b6fc 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp06/native/import-analysis.test.ts
+@@ -127,7 +127,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
+     const forecastProof = await fixture.human("analysis.read", { caseRef: fixture.caseRef }, (call) =>
+       fixture.stage("forecast:verify", () => producer.verifier.verify(prepared.value, analysisRequest, call)))
+     if (forecastProof.status !== "ok") throw new Error(forecastProof.reason)
+-    expect(forecastProof.value.promptContext?.importPreview.manifest).toEqual(chosen)
++    expect((forecastProof.value.promptContext && "importPreview" in forecastProof.value.promptContext ? forecastProof.value.promptContext.importPreview.manifest : undefined)).toEqual(chosen)
+     const forecastPrompt = sfAnalysisPrompt(analysisRequest.objective, forecastProof.value)
+     const native = await fixture.bind("sf-explicar-forecast", prepared.value, forecastPrompt)
+     expect(native.requestedModel).not.toHaveProperty("variant")
+@@ -163,7 +163,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
+     const forecastReference = await fixture.importHttp(new Request(forecastLink, { headers: { cookie: app.cookie } }), "planner")
+     if (!forecastReference) throw new Error("Rendered import reference unavailable")
+     const reference = await readNativeResponse<{ manifest: ImportManifest; detail: ImportDetail }>(forecastReference)
+-    expect(forecastProof.value.promptContext?.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
++    expect((forecastProof.value.promptContext && "importPreview" in forecastProof.value.promptContext ? forecastProof.value.promptContext.importPreview : undefined)).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
+     expect(reference.manifest).toEqual(chosen)
+     expect(reference.manifest.domainApplied).toBe(false)
+     expect(reference.manifest.issues).toEqual(chosen.issues)
+@@ -202,7 +202,7 @@ test("recorded forecast and intent Sessions preserve selected C04 importPreviewR
+       fixture.stage("intent:verify", () => intentProducer.verifier.verify(intentPrepared.value, intentRequest, call)))
+     if (intentProof.status !== "ok") throw new Error(intentProof.reason)
+     expect(intentProof.status).toBe("ok")
+-    expect(intentProof.value.promptContext?.importPreview).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
++    expect((intentProof.value.promptContext && "importPreview" in intentProof.value.promptContext ? intentProof.value.promptContext.importPreview : undefined)).toEqual({ importPreviewRef: chosen.id, manifest: chosen, detail: reference.detail })
+     const intentPrompt = sfAnalysisPrompt(intentRequest.objective, intentProof.value)
+     const intentNative = await fixture.bind("sf-enquadrar-decisao", intentPrepared.value, intentPrompt)
+     expect(intentNative.promptAdmission?.prompt.text).toBe(intentPrompt)
+@@ -321,7 +321,7 @@ async function prepareImportWorkbook(fixture: Parameters<Parameters<typeof withN
+ }
+ 
+ function renderedPreviewUrl(output: ContributionEnvelope, origin: string) {
+-  const html = contribution(output, { mount: "/sucafina" })
++  const html = contribution(output)
+   const href = /<a href="([^"]+)" data-import-preview-link>/.exec(html)?.[1]
+   if (!href) throw new Error("Persisted contribution has no preview link")
+   const url = new URL(href.replaceAll("&amp;", "&"), origin)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts b/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts
+index 68dda95afd92154dc426ef40479648c21576de01..ca0e83b316f368be5ede080f881db86743bd0435 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/collaboration-journey.test.ts
+@@ -76,7 +76,12 @@ test("contextual request → explicit confirmation → one canonical Hot Topic 
+     }, proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
+     const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
+     const state = createSfProductState({ persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => actor.active && candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
+-    const cases = createDecisionCasePort({ host, state, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context), evidence, createId: randomUUID, now: () => at })
++    const cases = createDecisionCasePort({ host, state, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context), verifyScenarioOperations: async (value, context) => {
++    const request = host.requestFor(context)
++    const selectedDigest = digestSfValue(value)
++    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
++    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
++  }, evidence, createId: randomUUID, now: () => at })
+     const draft = { objective: "Review the current delivery and assign its follow-up", horizon: period, currency: "USD", criteria: ["Delivery follow-up is resolved"], sourceRefs: [source] }
+     const decision = admitted(await cases.draft(draft, await readContext("sf_case_draft", draft)), "case draft")
+     const caseRef = encodeCaseRef(decision)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts b/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts
+index 552284d39866ad866e5f30dfdba7f765537f6507..2308b7ebbf791e792894c1d2ac777b70e17d83b1 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/confirmation-work-integration.test.ts
+@@ -80,7 +80,12 @@ test("real confirmation and case selection keep v7 January valid after global v8
+     const state = createSfProductState({ caseSelectionWrites, persistence, createId: randomUUID, resolveTarget: async () => ({ incarnation: creationTarget.incarnation }), authorize: async (candidate) => candidate.headers.get("actor") === "person" ? { principalRef: "person", accessRevision: "access", policyVersion: "policy" } : undefined })
+     // Exactly the canonical host's private authority; one closure is shared by both consumers.
+     const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
+-    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
++    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (value, context) => {
++    const request = host.requestFor(context)
++    const selectedDigest = digestSfValue(value)
++    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
++    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
++  }, evidence, createId: randomUUID, now: () => at })
+     const draft = { objective: "Review January material changes", horizon: period, currency: "USD", criteria: ["January has a current human review"], sourceRefs: [source] }
+     const decision = ok(await cases.draft(draft, await readContext("sf_case_draft", draft)), "case draft")
+     const caseRef = encodeCaseRef(decision)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts b/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts
+index f68bb2735774adf670ab30d38dafbfbfb4d3544a..7652cb023376e2321662acae5e46ac530f491d81 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/host-answer-reuse.test.ts
+@@ -76,7 +76,12 @@ test("host-created capabilities consume a confirmed answer through shared dispat
+     const source = issued.value.evidence
+     const creationTarget = { ref: "workspace", incarnation: "workspace-inc" }
+     const authorizeCase = async (value: DecisionCase, context: TrustedDomainContext) => value.participants.includes(context.binding.principalRef) && await host.revalidate(context)
+-    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, evidence, createId: randomUUID, now: () => at })
++    const cases = createDecisionCasePort({ state, host, creationTarget, operationIdentity: (context) => context.kind === "ui" ? ui.operationIdentity(context) : undefined, authorizeCase, verifyScenarioOperations: async (value, context) => {
++    const request = host.requestFor(context)
++    const selectedDigest = digestSfValue(value)
++    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
++    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
++  }, evidence, createId: randomUUID, now: () => at })
+     const caseDraft = { objective: "Review January answers", horizon: workPeriod, currency: "USD", criteria: ["January has a current answer"], sourceRefs: [source] }
+     const caseContext = ok(await ui.admit(request(), "sf_case_draft", digestSfValue(caseDraft)), "case admission")
+     if (!await ui.validate(caseContext, "sf_case_draft", digestSfValue(caseDraft))) throw new Error("case validation failed")
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts b/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts
+index 878e27f5abab286fd2c8e0720ba192b1b253af08..ab57b52bd0901c5e396f070c1ff444f3ba7d7b9f 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp08/question-consumer.test.ts
+@@ -41,7 +41,12 @@ async function fixture(narrowCase = false) {
+       if (!await f.ui.validate(context, operation, digestSfValue(payload))) throw new Error(`read admission failed: ${operation}`)
+       return context
+     }
+-    const cases = createDecisionCasePort({ host: f.host, state, creationTarget: f.creationTarget, operationIdentity: (context) => context.kind === "ui" ? f.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await f.host.revalidate(context), evidence: f.evidence, createId: randomUUID, now })
++    const cases = createDecisionCasePort({ host: f.host, state, creationTarget: f.creationTarget, operationIdentity: (context) => context.kind === "ui" ? f.ui.operationIdentity(context) : undefined, authorizeCase: async (value, context) => value.participants.includes(context.binding.principalRef) && await f.host.revalidate(context), verifyScenarioOperations: async (value, context) => {
++    const request = f.host.requestFor(context)
++    const selectedDigest = digestSfValue(value)
++    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
++    return await f.host.revalidate(context) && f.host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
++  }, evidence: f.evidence, createId: randomUUID, now })
+     const draft = { objective: "Review delivery in the selected cycle", horizon, currency: "USD", criteria: ["Delivery is understood"], sourceRefs: [source] }
+     const decision = available(await cases.draft(draft, await readContext("sf_case_draft", draft)))
+     const caseRef = encodeCaseRef(decision)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts b/modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts
+index 712cce53626fca058f0e66dbfafb6fb09cccc9cf..e0ff844b564285cb6503a7c491a568c8c64e43c1 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp09/decision-answer-consumer.test.ts
+@@ -73,7 +73,12 @@ test("routine answer uses the real versioned case command and a replay cannot cr
+     const evidence = createSfBusinessContext({ revalidate: host.revalidate, resolveSource: createSfDashboardRecordSourceAccess({ host, records }), proveContinuity: async () => false, recall: async () => [], emitFromLedger: async () => ({ status: "unavailable", sourceEventId: "", scanner: { name: "", version: "", status: "unavailable" }, reason: "not-selected" }) })
+     const operationIdentity = (binding: TrustedDomainContext) => binding.kind === "ui" ? ui.operationIdentity(binding) : undefined
+     const authorizeCase = async (value: DecisionCase, binding: TrustedDomainContext) => gate.active && value.participants.includes(binding.binding.principalRef)
+-    const cases = createDecisionCasePort({ state, host, evidence, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity, authorizeCase, createId: randomUUID, now: () => at })
++    const cases = createDecisionCasePort({ state, host, evidence, creationTarget: { ref: caseRef.id, incarnation: caseRef.incarnation }, operationIdentity, authorizeCase, verifyScenarioOperations: async (value, context) => {
++    const request = host.requestFor(context)
++    const selectedDigest = digestSfValue(value)
++    if (!request || request.signal.aborted || [...value.alternatives, ...value.choices].some((item) => item.scenario.operations.length > 0)) return false
++    return await host.revalidate(context) && host.requestFor(context) === request && !request.signal.aborted && digestSfValue(value) === selectedDigest
++  }, createId: randomUUID, now: () => at })
+     const unused = async () => ({ status: "unavailable" as const, reason: "not-selected" })
+     const mutations = createDecisionMutations({ state, host, operationIdentity, authorizeCase,
+       planner: { compareForecast: unused, simulateScenario: unused, compareScenarios: unused, evaluateSensitivity: unused }, sources: { resolveForecastSource: unused, resolveForecastCoverage: unused },
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts b/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts
+index d4f8162b24dd9c4e97aff176e2dc4410b079271a..d5ff9678845709429a80f04d98f552ef1b45c1fe 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp10/integration/analysis-lifecycle-admission.test.ts
+@@ -84,7 +84,7 @@ test("Analysis lifecycle admission keeps strict fresh projection and refuses fre
+     if (admitted.status !== "ok") throw new Error(admitted.reason)
+     try {
+       const mutable = { ...selected }
+-      expect((await business.withAnalysisCase(admitted.value, mutable, async () => {
++      expect((await business.withCase(admitted.value, mutable, { allowHistoricalRetry: true }, async () => {
+         mutable.version = 2
+         expect((await business.selectedCase(admitted.value)).status).toBe("unavailable")
+         return { status: "ok", value: "must-not-escape" }
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts b/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts
+index ca583dd473bdfb13299dfe470e301a6a113c0b73..617d60edb2602803c4f27e336cf6dc1a9591f1e5 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp13/sensitivity-disclosure.test.ts
+@@ -30,7 +30,7 @@ test("conditioned exact sensitivity keeps both consumer disclosures and every or
+   expect(found.value.thresholdEvidence).toEqual({ state: "exact", value: 55000, evidenceRefs: evidence })
+   expect(found.value.evaluated).toEqual(before.result.evaluated)
+   expect(found.value.costCoverageRefs).toEqual(["baseline-coverage", "selected-coverage"])
+-  expect(found.value.unresolvedConditions.slice(0, 2)).toEqual(before.result.unresolvedConditions)
++  expect(found.value.unresolvedConditions.slice(0, 2)).toEqual([...before.result.unresolvedConditions])
+   expect(found.value.unresolvedConditions.map((condition) => condition.id)).toEqual(["sample:missing-category:training", "sample:preview-not-applied", "known-components-threshold", "sample-low:baseline-pending", "known-subtotal-threshold"])
+   expect(found.value.unresolvedConditions.find((condition) => condition.id === "known-components-threshold")?.reason).toContain("55000 USD applies only to the known components")
+   expect(found.value.unresolvedConditions.find((condition) => condition.id === "known-subtotal-threshold")?.reason).toContain("known subtotal differences")
+@@ -81,7 +81,9 @@ test("union retains original source and baseline gaps while rebuilding Intellige
+   const original = input()
+   const horizon = { start: "2027-01-01", end: "2027-12-31" }
+   const scenario: ScenarioResult = { id: "original", version: 1, components: [], currency: "USD", horizon, sourceRefs: evidence, unresolvedConditions: ["unconfirmed-source"], restrictions: [], comparisonStatus: "conditioned", knownSubtotal: 210000, total: null, costCoverage: { basisId: "basis", basisVersion: 1, alternativeId: "selected", alternativeVersion: 1, currency: "USD", horizon, issues: [], evaluatedSourceRefs: evidence, coverageState: "pending", entries: [], derivedMissingCategoryIds: ["training"] } }
+-  original.originalScenarios = [{ resultRef: "original-source", scenario, coverageRef: "selected-coverage" }, { resultRef: "original-baseline", scenario: { ...scenario, costCoverage: { ...scenario.costCoverage, derivedMissingCategoryIds: ["support"] } }, coverageRef: "baseline-coverage" }]
++  const pendingCoverage = scenario.costCoverage
++  if (pendingCoverage.coverageState !== "pending") throw new Error("Synthetic sensitivity coverage must remain pending")
++  original.originalScenarios = [{ resultRef: "original-source", scenario, coverageRef: "selected-coverage" }, { resultRef: "original-baseline", scenario: { ...scenario, costCoverage: { ...pendingCoverage, derivedMissingCategoryIds: ["support"] } }, coverageRef: "baseline-coverage" }]
+   const certificateOnly = { refDigest: "certificate-only-unit-test" } as unknown as BusinessEvidenceRef
+   original.exact = { value: 55000, evidenceRefs: [certificateOnly, ...evidence] }
+   const before = structuredClone(original)
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts b/modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts
+index 789bd248dff04f61119fd7bef5108754f14af423..694bf7f659b5b26eb8a1441db38699223af00e3d 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp14/recall.test.ts
+@@ -228,6 +228,7 @@ test("native recall keeps the bound case and uses one explicit scoped candidate
+     recall: async () => { throw new Error("Selection orchestration must not replace the real Atlas reader") },
+     readOriginal: async () => { throw new Error("Selection orchestration must not invent a protected capture") },
+     readOriginalCapture: async () => { throw new Error("Selection orchestration must not invent an authenticated Atlas capture") },
++    readOriginalRecords: async () => { throw new Error("Selection orchestration must not invent original protected Atlas records") },
+   }
+   const observed = { ranked: 0, scopedFeatures: 0, scopedContinuity: 0, active: true }
+   const base: Parameters<typeof createSfCaseRecall>[0] = {
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts
+index a7d5b4c8346c8f092b4497e7ae8c44aa5f8b53c9..75f8fe05373865d0497184a9c710a382ff06a737 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-atlas.test.ts
+@@ -274,7 +274,7 @@ test("confirmed C17 document is published and recalled by real Atlas, then withh
+       authorizeCase: async (value, call) => value.participants.includes(call.binding.principalRef) && await host.revalidate(call),
+       dashboard: product.dashboard, dashboardIssue: createDashboardSourceIssuer({ host, scopedSources: app.store }),
+       dashboardRecords: createDashboardRecordEvidenceHost({ host, scopedSources: app.store, issueRecord: createDashboardRecordSourceIssuer({ host, scopedSources: app.store }) }),
+-      procurement: product.procurement, procurementResolve: product.resolveProcurement, documentRead: service.documents.reader,
++      procurement: product.procurement, procurementResolve: { resolve: product.resolveProcurement }, documentRead: service.documents.reader,
+       scanner: { spec, version }, now: () => app.at,
+       caseForEvidence: async (digest, call) => {
+         const ref = selectedCase
+
+diff --git a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts
+index ad6a5cea4e1eb5eb5e1b7faeea5ed2091f9f73f1..7c34d4f11d490e0697fb4d45d40dbc3b5e1c618a 100644
+--- a/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts
++++ b/modules/sucafina/Sucafinav1/test/product/wp14/source-access-procurement.test.ts
+@@ -35,10 +35,10 @@ test("Procurement evidence is read through current source and domain ports", asy
+     const first = await resolver.resolve(issued.value, call)
+     expect(first.status).toBe("ok")
+     if (first.status !== "ok") return
+-    const access = createSfProcurementSourceAccess({ host, resolve: resolver.resolve, procurement: port })
++    const access = createSfProcurementSourceAccess({ host, resolve: { resolve: resolver.resolve }, procurement: port })
+     expect((await access(first.value.evidence, call)).state).toBe("fresh")
+     let resolutions = 0
+-    const racing = createSfProcurementSourceAccess({ host, resolve: async (ref, context) => { const result = await resolver.resolve(ref, context); resolutions += 1; if (resolutions === 2) session.active = false; return result }, procurement: port })
++    const racing = createSfProcurementSourceAccess({ host, resolve: { resolve: async (ref, context) => { const result = await resolver.resolve(ref, context); resolutions += 1; if (resolutions === 2) session.active = false; return result } }, procurement: port })
+     expect((await racing(first.value.evidence, call)).state).toBe("unavailable")
+     expect(resolutions).toBe(2)
+     session.active = false
