@@ -1,0 +1,1315 @@
+{
+  "schema": "sf2h.advance165.handoff-terminal.v1",
+  "campaign": "sf2h-integral-20261112",
+  "executionInstance": "sf2h-01a1d309-ba0e-7490-b044-0899d9fa008f",
+  "mission": 165,
+  "epoch": "proof-am01-e1-browser165",
+  "branch": "sf-am01-proof",
+  "goal": "paused",
+  "qualification": "QUALIFICATION_NOT_FINAL_REVIEW",
+  "integrator": "162/S0-C-e20-browser162 PR65",
+  "compiler": "163/compiler-e4-browser163 PR107",
+  "ciDispatcher": "164/product-ci-e4-browser164 PR106",
+  "reviewer": "S3-R3",
+  "effectiveModel": "GPT-6 (coding session only; not a product inference model)",
+  "nativeSessionId": null,
+  "source": {
+    "packetCommit": "c5947d78329f4f0cf3666fa27d38364c67009688",
+    "packetBlob": "001c8e38a0d5b1d8f26ce2a68ff0a5edddac9ce6",
+    "planningSha": "dbf9547211d9b0fade619790de7c19c0869b7c7d",
+    "headPrepared": "690a34cdd81c12d7311f3717c19679b950276161",
+    "treePrepared": "07133fe09922121f3cca3bffd6b4463053b48ece",
+    "agentsBlob": "643ec9f8f960895b2e3294f7f2cc25db6f8488e4",
+    "manifestBlob": "453c6f3a5b48c081223909af8293f854ad31d7c8",
+    "originalNativeHarnessBlob": "49300a78a44ac0739791d10a11c386b317f4b51a",
+    "originalLoadSuiteBlob": "b95e8b8b5c281872b07164f7faa47f21f64de684",
+    "ackCommit": "937f57376b9417ba991fa3d021e0ed11ae8d3900",
+    "codePublishedCommit": "b5fcd8bf78cae7d2478e452690996e3977dfc072",
+    "codePublishedTree": "c491dd9fd85f8422341fa1d20d2dfb638bb2cee3",
+    "patchBlobs": {
+      "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts": "3aa9c1e325853678a738a793580c0d0a6f035e33",
+      "script/sf2h/proofs/am01/correlate-hosted-evidence.ts": "c0d5f2434936e7db47e96b22e063ea1c0c78d3b1"
+    },
+    "postCommit": null,
+    "postTree": null,
+    "postReceiptBlob": null,
+    "postCommitPolicy": "The commit that stores this receipt identifies it; no self-referential SHA is asserted"
+  },
+  "implementation": [
+    {
+      "path": "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+      "purpose": "New missing portfolio-specific shared recall execution via existing native host and real scenario producer; unauthorized operation, wrong incarnation and unissued precedent fail closed; actual persisted UI consumer when provider installed",
+      "parserOrFakeProvider": false,
+      "executedLocally": false,
+      "status": "CODE_WRITTEN_NOT_RUN"
+    },
+    {
+      "path": "script/sf2h/proofs/am01/correlate-hosted-evidence.ts",
+      "purpose": "Qualify only GitHub Actions logs for 5/18 known profile/skill instances, 18 native loads/refusals, actual installed model and typed tests, native session/run/tool receipts, output/consumer after reload, independent reviewer. Independent CI and C/D attestation still mandatory",
+      "parserOrFakeProvider": false,
+      "executedLocally": false,
+      "status": "CODE_WRITTEN_NOT_RUN"
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/docs/sf2h/receipts/advance165/ack-proof-am01-e1-browser165.json",
+      "purpose": "ACK with effective model/epoch/branch/initial head/allowlist/inputs",
+      "status": "PUBLISHED"
+    }
+  ],
+  "criteria": [
+    {
+      "criterionId": "WP00.DOD.40",
+      "entityId": "WP00",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.INV.40",
+      "entityId": "WP00",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.QLT.40",
+      "entityId": "WP00",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.CMP.40",
+      "entityId": "WP00",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.SUC.40",
+      "entityId": "WP00",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.T04.DOD.40",
+      "entityId": "WP00.T04",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.T04.INV.40",
+      "entityId": "WP00.T04",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.T04.QLT.40",
+      "entityId": "WP00.T04",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.T04.CMP.40",
+      "entityId": "WP00.T04",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.T04.SUC.40",
+      "entityId": "WP00.T04",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.T04.CHK.40",
+      "entityId": "WP00.T04",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.T04.CHK.41",
+      "entityId": "WP00.T04",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP00.T04.CHK.42",
+      "entityId": "WP00.T04",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.DOD.40",
+      "entityId": "WP12",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.INV.40",
+      "entityId": "WP12",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.QLT.40",
+      "entityId": "WP12",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.CMP.40",
+      "entityId": "WP12",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.SUC.40",
+      "entityId": "WP12",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T01.DOD.40",
+      "entityId": "WP12.T01",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T01.INV.40",
+      "entityId": "WP12.T01",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T01.QLT.40",
+      "entityId": "WP12.T01",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T01.CMP.40",
+      "entityId": "WP12.T01",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T01.SUC.40",
+      "entityId": "WP12.T01",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T01.CHK.40",
+      "entityId": "WP12.T01",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T02.DOD.40",
+      "entityId": "WP12.T02",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T02.INV.40",
+      "entityId": "WP12.T02",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T02.QLT.40",
+      "entityId": "WP12.T02",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T02.CMP.40",
+      "entityId": "WP12.T02",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T02.SUC.40",
+      "entityId": "WP12.T02",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T02.CHK.40",
+      "entityId": "WP12.T02",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP12.T02.CHK.41",
+      "entityId": "WP12.T02",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.DOD.40",
+      "entityId": "WP10",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.INV.40",
+      "entityId": "WP10",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.QLT.40",
+      "entityId": "WP10",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.CMP.40",
+      "entityId": "WP10",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.SUC.40",
+      "entityId": "WP10",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T06.DOD.40",
+      "entityId": "WP10.T06",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T06.INV.40",
+      "entityId": "WP10.T06",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T06.QLT.40",
+      "entityId": "WP10.T06",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T06.CMP.40",
+      "entityId": "WP10.T06",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T06.SUC.40",
+      "entityId": "WP10.T06",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T06.CHK.40",
+      "entityId": "WP10.T06",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T03.DOD.40",
+      "entityId": "WP10.T03",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T03.INV.40",
+      "entityId": "WP10.T03",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T03.QLT.40",
+      "entityId": "WP10.T03",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T03.CMP.40",
+      "entityId": "WP10.T03",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T03.SUC.40",
+      "entityId": "WP10.T03",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    },
+    {
+      "criterionId": "WP10.T03.CHK.40",
+      "entityId": "WP10.T03",
+      "scope": "AM01",
+      "status": "NOT_RUN",
+      "fixtureId": "AM01-FINANCE/PROCUREMENT/PORTFOLIO/MAESTRO/REVIEWER",
+      "expected": "Real load + inference + persistent typed output + real authorized consumer per skill, with negative source/grant cases",
+      "observed": null,
+      "ciRequestHash": null,
+      "ciSnapshotSha": null,
+      "evidenceUri": null,
+      "reviewer": "S3-R3",
+      "verifiedAt": null
+    }
+  ],
+  "cases": [
+    {
+      "caseId": "AM01-FINANCE",
+      "profileId": "sf_finance",
+      "status": "NOT_RUN",
+      "expected": "FinancialAnalysis/ScenarioComparison/SensitivityResult e BI consumidos WP01/WP05/WP11; totais iguais a C02/C10.",
+      "positiveObserved": false,
+      "positiveReason": "No hosted/model run executed by mission 165",
+      "negativeObserved": false,
+      "skills": [
+        {
+          "skillId": "sf-explicar-forecast",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-explicar-forecast/SKILL.md",
+          "sourceDigest": "7ebaf18536cb91d9ab6a075e45cc1d85147b544bae8eb5a2915d39f533c1e740",
+          "instructionsDigest": "ba80c66c9a4b41677c0e2ffb94f94cc63b5e2a3c81e8a4a230739d80f0ff9227",
+          "expectedOutputTypes": [
+            "FinancialAnalysis"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-comparar-cenarios",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-cenarios/SKILL.md",
+          "sourceDigest": "65f975cbfa6e7f78528b58d3bdea90f4991357378667e4a6e3ba41b8b52b7cd2",
+          "instructionsDigest": "4a5ee94713eb474032dcc089f5cac3a073ea089479dba7ea0f90aebeb67c8ef9",
+          "expectedOutputTypes": [
+            "ScenarioComparison"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-avaliar-sensibilidade",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-avaliar-sensibilidade/SKILL.md",
+          "sourceDigest": "e55e50dbc3a108570c59c432b50382ac3a8d5f38281fe76cfcdf27a99626b9e5",
+          "instructionsDigest": "fc415d2d3c3e7ca205e9ba92b34537f69a1a3f036ddfc0274785349d56d0e9f0",
+          "expectedOutputTypes": [
+            "SensitivityResult"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-produzir-bi-contextual",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-bi-contextual/SKILL.md",
+          "sourceDigest": "db1f3b552ea8d317ce8c27cc7e69f7912630ec314f1adfdb789137fccd48dfd7",
+          "instructionsDigest": "4b0f8eda17125e40a9458f9390328419f9460a34f291c0d7ab9636ed89686bd0",
+          "expectedOutputTypes": [
+            "ContextualBIProposal"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "caseId": "AM01-PROCUREMENT",
+      "profileId": "sf_procurement",
+      "status": "NOT_RUN",
+      "expected": "CommercialComparison/CommercialGap/EvidenceCandidate/PreparedChange visíveis no caso e UI; extração confirmada preserva fonte.",
+      "positiveObserved": false,
+      "positiveReason": "No hosted/model run executed by mission 165",
+      "negativeObserved": false,
+      "skills": [
+        {
+          "skillId": "sf-comparar-sourcing",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-comparar-sourcing/SKILL.md",
+          "sourceDigest": "be1605aea670cae00db5c63c4592cdedc0acf8ec70775b721dfe08715d637553",
+          "instructionsDigest": "bd851ccc61d93d5978b7f5068f51b7f774458e70b3a6a8caee9b9076667fb050",
+          "expectedOutputTypes": [
+            "CommercialComparison"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-revisar-condicoes-contratuais",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-condicoes-contratuais/SKILL.md",
+          "sourceDigest": "7bcddfa9054f8d7c2f53428631106c8dc717ed246956cdf6aa58349fc491bbdb",
+          "instructionsDigest": "f170a1a4cf8fadd83716d70428425446b33b0849c9eac7af476df44c1b863fd1",
+          "expectedOutputTypes": [
+            "CommercialGap",
+            "EvidenceCandidate"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-preparar-compra",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-compra/SKILL.md",
+          "sourceDigest": "7134f86374e622e82353c93c68504462f6d75dab85d496c74a1c9d0294510cf0",
+          "instructionsDigest": "6b5a139ed88269b55c86f711c922cb7ec16ddaef7d9285e0891514319e125213",
+          "expectedOutputTypes": [
+            "PreparedChangeSet",
+            "DossierDraft"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-purchase.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-extrair-evidencias",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-extrair-evidencias/SKILL.md",
+          "sourceDigest": "344827329b05b260be70c2dfbdbfcee22e329b090e38af82863bacfc2a610a1f",
+          "instructionsDigest": "e5097d33f0505ab51088100b25bae02dc830bdcdd55eb4bf4c54acd976bf558b",
+          "expectedOutputTypes": [
+            "DocumentEvidence"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "caseId": "AM01-PORTFOLIO",
+      "profileId": "sf_portfolio",
+      "status": "NOT_RUN",
+      "expected": "DeliveryAssessment/DependencyConflict/PortfolioComparison/ReconsiderationProposal e precedente com diferenças atuais.",
+      "positiveObserved": false,
+      "positiveReason": "No hosted/model run executed by mission 165",
+      "negativeObserved": false,
+      "skills": [
+        {
+          "skillId": "sf-revisar-dependencias",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-dependencias/SKILL.md",
+          "sourceDigest": "6adbeb96f182706d6125cfad31f679801a24becd9589231121ff54d62d476005",
+          "instructionsDigest": "bc18710e773e2ef7902e2899886ffd4081e6553be7bc2b076204f826b74bbdf0",
+          "expectedOutputTypes": [
+            "DeliveryAssessment",
+            "DependencyConflict"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-compor-portfolio",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-compor-portfolio/SKILL.md",
+          "sourceDigest": "8910dd159591b5849f60a734ed27549e57ec3de6d05c125b004202c217166642",
+          "instructionsDigest": "0f6f8d575fd60b062fe2b700cde10fadd9e93bcb47409a0b8b362f028629cd07",
+          "expectedOutputTypes": [
+            "PortfolioComparison",
+            "AlternativeDraft"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-reavaliar-compromissos",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-reavaliar-compromissos/SKILL.md",
+          "sourceDigest": "a7f8d1b51ab0d5ac5182a4f9bbf8035c9227be27f45c50d85e76318919d356d6",
+          "instructionsDigest": "a8f4ee47edb3c6d51ae9494ffee887af9c9d2072679f663583dbcc8ed30f6ea1",
+          "expectedOutputTypes": [
+            "ReconsiderationProposal"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-consultar-memoria-decisoria",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-consultar-memoria-decisoria/SKILL.md",
+          "sourceDigest": "46912ccaacbcd9488f36ed8258f0780c4451412967e79506558f8aee68c64db2",
+          "instructionsDigest": "67d4166705d222b9d654f4e32d0b804ae0fdf7a157755545fde5ed7da92629a6",
+          "expectedOutputTypes": [
+            "CaseRecall",
+            "MatchExplanation"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+          "origin": "new-portfolio-specific",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "caseId": "AM01-MAESTRO",
+      "profileId": "sf_maestro",
+      "status": "NOT_RUN",
+      "expected": "IntentFrame/AnalysisPlan/DecisionBrief/QuestionProposal e relatório real, fontes recuperáveis e perguntas à identidade conhecida.",
+      "positiveObserved": false,
+      "positiveReason": "No hosted/model run executed by mission 165",
+      "negativeObserved": false,
+      "skills": [
+        {
+          "skillId": "sf-enquadrar-decisao",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-enquadrar-decisao/SKILL.md",
+          "sourceDigest": "0fd53b0f08deef41253462578105b5571dd055c140120ba7045a4893a75422e4",
+          "instructionsDigest": "cc342bb2b520a8ae37220bf600508d085553308ead08eb6e1b0843e52cb8f464",
+          "expectedOutputTypes": [
+            "IntentFrame",
+            "AnalysisPlan"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-preparar-revisao-executiva",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-preparar-revisao-executiva/SKILL.md",
+          "sourceDigest": "52f0925150ea70b1e059ffac88386f9339c871affc951e35a010b824b3e7ccf6",
+          "instructionsDigest": "acaae8c302cfe934e9a9b1d6e31784090ac96fa48e66dc5859d4f81cbbb4e801",
+          "expectedOutputTypes": [
+            "DecisionBrief"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-coordenar-perguntas",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-coordenar-perguntas/SKILL.md",
+          "sourceDigest": "4768df83520cafc5492d13d4d5c6ca9c0900916930726904e92c35ca70108f33",
+          "instructionsDigest": "9dd6da0563e59248ba5dca0ffd2c26437a0a6bafb5abeae5a0f77aacef82fafa",
+          "expectedOutputTypes": [
+            "QuestionProposal"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-produzir-material-reuniao",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-produzir-material-reuniao/SKILL.md",
+          "sourceDigest": "d5389ae1fa4cebab61ddf53cc75a1d25c5a293182fff7b5d03bce5f90ac1a7bb",
+          "instructionsDigest": "a18bc877c2b0abc80836667342f53833446c1328a6464edc2dcac05ed8a56879",
+          "expectedOutputTypes": [
+            "MeetingMaterialProposal"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        }
+      ]
+    },
+    {
+      "caseId": "AM01-REVIEWER",
+      "profileId": "sf_reviewer",
+      "status": "NOT_RUN",
+      "expected": "CritiqueReport/ClaimIssue/UnresolvedCondition em execução distinta; resposta humana altera objeto/viabilidade em vez de só reescrever texto.",
+      "positiveObserved": false,
+      "positiveReason": "No hosted/model run executed by mission 165",
+      "negativeObserved": false,
+      "skills": [
+        {
+          "skillId": "sf-contestar-decisao",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-contestar-decisao/SKILL.md",
+          "sourceDigest": "9d0a00c76ce8064f87eeb325eb0bc5c252bc9119d25e2047b78a55803b735696",
+          "instructionsDigest": "ea13087b54f1c8e8d94974cba313f407c6fbb21bc825e4452aa57c7789e81def",
+          "expectedOutputTypes": [
+            "CritiqueReport",
+            "UnresolvedCondition"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        },
+        {
+          "skillId": "sf-revisar-evidencias",
+          "version": "1.0.0",
+          "sourcePath": "modules/sucafina/Sucafinav1/product/ai/skills/sf-revisar-evidencias/SKILL.md",
+          "sourceDigest": "eda2166e5a588ba51888b1b7968544f05debb7179be8959c24cf681c4d1f0be8",
+          "instructionsDigest": "8f407777a68965d86469eb1ce1554a231ac1b546af0e4d8e080734984f7f9a1d",
+          "expectedOutputTypes": [
+            "ClaimIssue"
+          ],
+          "existingOrNewSelector": "Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+          "origin": "preexisting-source",
+          "load": "NOT_RUN",
+          "run": "NOT_RUN",
+          "outputRef": null,
+          "actualModel": null,
+          "consumer": "NOT_RUN"
+        }
+      ]
+    }
+  ],
+  "requiredEvidence": [
+    "model-identity",
+    "native-skill-loaded-message",
+    "effective-model",
+    "native-run-ref",
+    "native-session-id",
+    "source-and-instruction-digests",
+    "real-C09-case",
+    "real-C16-MCP-tool-receipts",
+    "persistent-C09/C11-output",
+    "HTTP/decision/meeting/Planner-consumer-after-reload",
+    "C02/C10 domain source totals",
+    "no-grant-and-missing-data-rejection",
+    "independent-reviewer-author-run-link",
+    "real-scanner-version-and-admission",
+    "164-verified-CI-log"
+  ],
+  "proofStatus": "NOT_RUN",
+  "positiveCount": 0,
+  "negativeCountFromHostedRun": 0,
+  "prohibitions": {
+    "noLocalTests": true,
+    "noLocalTypecheck": true,
+    "noLocalBuilds": true,
+    "noLocalParsers": true,
+    "noLocalValidators": true,
+    "noCIOrDispatchFrom165": true,
+    "noRuntimeEdits": true,
+    "noAlternateIntegrator": true,
+    "noForce": true,
+    "noGoalRestart": true
+  },
+  "requests": {
+    "162": {
+      "action": "Integrate these exact new proof blobs only into the unique sf2-stack PR65 after reconciling the existing code; never merge the proof branch wholesale or touch protected preexisting tests",
+      "patchSources": "from source.patchBlobs",
+      "inputSourceCommit": "b5fcd8bf78cae7d2478e452690996e3977dfc072",
+      "requiredNext": "Publish integrated product candidate SHA/tree, preserve all existing WP12 tests, send integration SHA to 163 and 164"
+    },
+    "163": {
+      "action": "AFTER 162 integrates, inspect only new TS test/proof import/type edges in existing compiler/SDK/guards lane, no generator needed merely for an evidence file",
+      "paths": [
+        "modules/sucafina/Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts",
+        "script/sf2h/proofs/am01/correlate-hosted-evidence.ts"
+      ],
+      "sourceCommit": "b5fcd8bf78cae7d2478e452690996e3977dfc072",
+      "requestStatus": "QUEUED_FOR_163_NOT_RUN",
+      "CIOnly": true
+    },
+    "164": {
+      "action": "AFTER 162 integrates the patch, run the exact validated GitHub Actions sucafina selections, no 165 direct CI",
+      "runner": "bun",
+      "package": "sucafina",
+      "directory": "modules/sucafina",
+      "candidateSha": null,
+      "ciSnapshotSha": null,
+      "ciRequestHash": null,
+      "groups": [
+        {
+          "id": "AM01-LOAD-NEGATIVE",
+          "purpose": "5 AgentV2 profiles, 18 SessionV2 native skill loads and real refusal checks; admission-only never counts as inference",
+          "selectorArgs": [
+            "--timeout",
+            "240000",
+            "Sucafinav1/test/product/wp12/resident-native.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-admission.test.ts"
+          ],
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "240000",
+              "Sucafinav1/test/product/wp12/resident-native.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-admission.test.ts"
+            ],
+            "env": {}
+          }
+        },
+        {
+          "id": "AM01-FINANCE-PORTFOLIO-REVIEWER",
+          "purpose": "Finance's four skill outputs plus portfolio composition/sensitivity and independent CritiqueReport",
+          "selectorArgs": [
+            "--timeout",
+            "240000",
+            "Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+          ],
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "240000",
+              "Sucafinav1/test/product/wp12/native-execution-forecast-kpi.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-scenarios-review.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-portfolio.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-bi-public-selection.test.ts"
+            ],
+            "env": {}
+          }
+        },
+        {
+          "id": "AM01-PROCUREMENT-REVIEWER",
+          "purpose": "Procurement four skills and independent evidence reviewer, source bytes/confirmation/contract gaps",
+          "selectorArgs": [
+            "--timeout",
+            "240000",
+            "Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+          ],
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "240000",
+              "Sucafinav1/test/product/wp12/native-execution-sourcing.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-documents-contract.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-purchase.test.ts"
+            ],
+            "env": {}
+          }
+        },
+        {
+          "id": "AM01-PORTFOLIO-RECALL",
+          "purpose": "Portfolio dependency/reevaluation plus NEW shared recall under sf_portfolio, negative no grant, real C09/C10 missing training",
+          "selectorArgs": [
+            "--timeout",
+            "240000",
+            "Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+            "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts"
+          ],
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "240000",
+              "Sucafinav1/test/product/wp12/native-execution-dependencies.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-reevaluation.test.ts",
+              "Sucafinav1/test/product/integrated-proofs/am01/portfolio-recall-proof.test.ts"
+            ],
+            "env": {}
+          }
+        },
+        {
+          "id": "AM01-MAESTRO-NEGATIVES",
+          "purpose": "Maestro four skills, WP07/Question consumers and financial false-total/unknown-source negatives",
+          "selectorArgs": [
+            "--timeout",
+            "240000",
+            "Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+            "Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+            "Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts"
+          ],
+          "request": {
+            "package": "sucafina",
+            "directory": "modules/sucafina",
+            "runner": "bun",
+            "args": [
+              "--timeout",
+              "240000",
+              "Sucafinav1/test/product/wp12/native-execution-intent.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-executive.test.ts",
+              "Sucafinav1/test/product/wp12/native-execution-questions.test.ts",
+              "Sucafinav1/test/product/wp12/native-verifier-negatives.test.ts"
+            ],
+            "env": {}
+          }
+        }
+      ],
+      "prerequisites": [
+        "162 integrated head/tree/CAS verified",
+        "correct .ci-run.json snapshot",
+        "GitHub MCP verified exact run/attempt/jobs/log/source selection",
+        "installed model/provider observed",
+        "scanner and identity evidence observed",
+        "do not repeat previously failed identical C64 runs"
+      ],
+      "requiredReceipt": "Pass actual raw job logs, stable GitHub URL, snapshotSHA, selections and run statuses to the correlator; record output/NOT_RUN as appropriate"
+    },
+    "S3-R3": {
+      "action": "Independent review only after actual same-candidate 164 proof and scanner/model/identity, no authorship credit or final signoff from 165"
+    }
+  },
+  "terminal": {
+    "status": "PATCH_PUBLISHED_PROOF_NOT_RUN",
+    "unresolved": [
+      "GitHub Actions runs for the exact selectors after 162 integration",
+      "correlator raw verified input logs",
+      "real model/identity/scanner/version provenance",
+      "five integrated human consumers and missing-data cases",
+      "S3-R3 independent review",
+      "C/8CI/epic/AM01-AM06/3FINAL/D/guards"
+    ],
+    "evidenceProduced": [
+      "ACK GitHub commit",
+      "new narrowly owned proof test blob",
+      "new hosted-log correlator blob"
+    ],
+    "falsifiedEvidenceClaims": 0
+  }
+}
