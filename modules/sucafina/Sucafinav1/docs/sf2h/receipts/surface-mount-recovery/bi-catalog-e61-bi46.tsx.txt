@@ -413,7 +413,7 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
                     <ul><For each={detail().links}>{(link) => <li><a href={link.url} target="_blank" rel="noopener noreferrer">{link.label}</a></li>}</For></ul>
                   </section>}
                 </Show>
-                <Show when={store.selectedSource && store.viewId !== "BI09" && store.viewId !== "BI10" && store.viewId !== "BI11"}>
+                <Show when={store.viewId !== "BI09" && store.viewId !== "BI10" && store.viewId !== "BI11" ? store.selectedSource : null}>
                   {(ref) => <div class="sf-bi-selected-source">
                     <button class="mx-btn" type="button" onClick={() => { void openSource(ref()) }}>
                       {t(sfBiKey("sf.u21.resolveSource"))}
