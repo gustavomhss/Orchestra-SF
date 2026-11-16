@@ -289,12 +289,12 @@ export function SfBiCatalog(props: SfSurfaceProps<"UI45" | "UI46">) {
       ? store.data : undefined
 
   return (
-    <SfPageFrame titleKey={sfBiKey("sf.ui45.title")}
+    <SfPageFrame titleKey={sfBiKey(props.surfaceId === "UI46" ? "sf.ui46.title" : "sf.ui45.title")}
       context={[]} tabs={[]} activeTab={null} secondaryActions={[]}
       primaryAction={undefined} density="comfortable" layout="work"
       onLayoutMode={(mode) => setStore("layout", mode)}
     >
-      <section class="sf-bi-catalog" data-sf-catalog="UI45" data-sf-layout-mode={store.layout}>
+      <section class="sf-bi-catalog" data-sf-catalog={props.surfaceId} data-sf-layout-mode={store.layout}>
         <SfStatePanel state={ownerState()}
           messageKey={sfCommonKey(ownerState() === "denied" ? "sf.common.denied" : "sf.common.unavailable")}
           onRetryRead={() => { void context.reload() }}>
