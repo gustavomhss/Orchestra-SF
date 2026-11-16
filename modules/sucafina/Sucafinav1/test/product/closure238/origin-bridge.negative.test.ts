@@ -241,6 +241,7 @@ test("reconnect bind completing after abort is released and cannot publish an ow
 function stagedFixture() {
   const callbacks = new Map<string, (event: SfDesktopInvalidation) => void>()
   const released: string[] = []
+  const releaseRequests: Parameters<SfDesktopCapability["release"]>[0][] = []
   const revoked: string[] = []
   let delay: Promise<void> = Promise.resolve()
   let next = 0
@@ -260,11 +261,11 @@ function stagedFixture() {
     abort: async () => undefined,
     login: async () => ({ status: "denied" }),
     logout: async () => ({ status: "cleared", remote: "unavailable" }),
-    release: async (request) => { if (request.kind === "binding") released.push(request.bindingHandle) },
+    release: async (request) => { releaseRequests.push(request); if (request.kind === "binding") released.push(request.bindingHandle) },
   }
   const bridge = createSfDesktopOriginBridge238({ desktop, server, directory: "/real/project",
     fetch: async () => { throw new Error("unexpected renderer fetch") }, onInvalidated: (reason) => revoked.push(reason) })
-  return { bridge, callbacks, released, revoked, delay: (value: Promise<void>) => { delay = value } }
+  return { bridge, callbacks, released, releaseRequests, revoked, delay: (value: Promise<void>) => { delay = value } }
 }
 const other = { ...selected, projectId: "other-project", installationId: "other-install" } as SfOwnerSelection
 
@@ -277,6 +278,8 @@ test("preflight retains the active binding until promotion and discard only rele
   expect(f.bridge.transportIdentity(other)).toBe("")
   stage.discard()
   expect(f.released).toEqual(["handle-2"])
+  expect(f.releaseRequests).toHaveLength(1)
+  expect(f.releaseRequests.every((request) => request.kind === "binding")).toBe(true)
   expect(f.bridge.transportIdentity(selected)).toBe(selected.projectId)
   f.bridge.dispose()
 })
