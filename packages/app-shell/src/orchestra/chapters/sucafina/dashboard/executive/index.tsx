@@ -49,8 +49,9 @@ export function SfExecutiveDashboard(props: SfSurfaceProps<"CAP01">): JSX.Elemen
     return period ? data()?.executiveMonths?.[period] : undefined
   }
   const versions = () => reader.snapshot()?.versions ?? {}
-  const usersTarget = createMemo(() => sfU02ExecutiveTarget(data()?.itUsersMonthly, year(), month(), "itUsersMonthly", versions()))
-  const benchmarkTarget = createMemo(() => sfU02ExecutiveTarget(data()?.costPerUserBenchmarks, year(), month(), "costPerUserBenchmarks", versions()))
+  const sourceSelected = () => reader.snapshot()?.selection.year === year() && reader.snapshot()?.selection.month === month()
+  const usersTarget = createMemo(() => sfU02ExecutiveTarget(sourceSelected() ? data()?.itUsersMonthly : undefined, year(), month(), "itUsersMonthly", versions()))
+  const benchmarkTarget = createMemo(() => sfU02ExecutiveTarget(sourceSelected() ? data()?.costPerUserBenchmarks : undefined, year(), month(), "costPerUserBenchmarks", versions()))
   const users = () => { const target = usersTarget();return target.kind === "record" ? target.row : undefined }
   const benchmark = () => { const target = benchmarkTarget();return target.kind === "record" ? target.row : undefined }
   const usersVersion = () => { const target = usersTarget();return target.kind === "unavailable" ? undefined : target.version }

@@ -64,12 +64,14 @@ describe("U02 scalar editor conflict controls", () => {
     }
   })
   test("remount reacquires the same restored unsent controller and conflict for the same owner and scope", async () => {
-    for (const selected of [
+    const selections: readonly { surfaceId: "CAP01" | "CAP03"; scope: string; operationId: "domain.page.CAP01" | "domain.page.CAP03";
+      input: Readonly<Record<string, number>>; field: string; action: string }[] = [
       { surfaceId: "CAP03" as const, scope: "2026:month", operationId: "domain.page.CAP03" as const,
         input: { year: 2026 }, field: "data.budgetCurrentMonth", action: "save-month" },
       { surfaceId: "CAP01" as const, scope: "2026:4:users", operationId: "domain.page.CAP01" as const,
         input: { execYear: 2026, executiveMonth: 4 }, field: "data.itUsersMonthly", action: "save-users" },
-    ]) {
+    ]
+    for (const selected of selections) {
       const drafts = createSfOwnerDrafts(deps, { key: "old" as SfOwnerKey, identity })
       const registration = () => ({ surfaceId: selected.surfaceId,
         identity: { kind: "new" as const, newIntentRef: sfU02IntentRef(selected.surfaceId, selected.scope) },
@@ -100,7 +102,7 @@ describe("U02 scalar editor conflict controls", () => {
     expect(sfU02ExecutiveTarget([row, { ...row, year: 2025 }], 2026, 4, "costPerUserBenchmarks", versions)).toEqual({ kind: "unavailable" })
   })
   test("review changes during the actual digest gate cannot post, even with the same CAS", async () => {
-    for (const changed of ["record", "selector", "year", "month", "owner", "generation", "remount"] as const) {
+    for (const changed of ["record", "selector", "year", "month", "scope", "value", "controller", "owner", "generation", "remount"] as const) {
       const { draft, drafts } = makeDraft()
       const calls: number[] = []
       const review: SfU02ReviewIntent = { ownerKey: "old" as SfOwnerKey, generation: 1, registry: drafts.registry, transport,
@@ -116,6 +118,9 @@ describe("U02 scalar editor conflict controls", () => {
       if (changed === "selector") live = { ...review, selector: '[["year",2025]]' }
       if (changed === "year") live = { ...review, year: 2025 }
       if (changed === "month") live = { ...review, month: 5 }
+      if (changed === "scope") live = { ...review, scope: "2025:month" }
+      if (changed === "value") live = { ...review, value: 5, text: "5" }
+      if (changed === "controller") live = { ...review, controller: makeDraft().draft }
       if (changed === "owner") live = { ...review, ownerKey: "other" as SfOwnerKey }
       if (changed === "generation") live = { ...review, generation: 2 }
       if (changed === "remount") live = undefined
@@ -136,5 +141,21 @@ describe("U02 scalar editor conflict controls", () => {
     expect(await sfU02SubmitReview(review, () => review, "op" as SfOperationRef, "key", async () => "hash"))
       .toMatchObject({ status: "response" })
     expect(calls).toEqual([{ value: 4, version: 10, key: "key" }])
+  })
+  test("a late write response after unmount retains the original pending outcome", async () => {
+    const { draft, drafts } = makeDraft()
+    let release: ((response: { kind: "response"; status: number; body: { ok: true } }) => void) | undefined
+    const review: SfU02ReviewIntent = { ownerKey: "old" as SfOwnerKey, generation: 1, registry: drafts.registry, transport,
+      controller: draft, surfaceId: "CAP03", operationId: "domain.command.CAP03.save-month", actionId: "save-month",
+      scope: "2026:month", recordId: undefined, year: 2026, month: undefined, selector: '[["year",2026]]',
+      sourceValue: 4, version: 10, value: 4, text: "4", onConfirmed: () => {},
+      onWrite: () => new Promise((resolve) => { release = resolve }) }
+    let live: SfU02ReviewIntent | undefined = review
+    const pending = sfU02SubmitReview(review, () => live, "op" as SfOperationRef, "key", async () => "hash")
+    await Promise.resolve()
+    live = undefined
+    release!({ kind: "response", status: 200, body: { ok: true } })
+    expect(await pending).toEqual({ status: "stale" })
+    expect(draft.snapshot()).toMatchObject({ phase: "outcome-unknown", pendingOperation: { operationRef: "op" } })
   })
 })
