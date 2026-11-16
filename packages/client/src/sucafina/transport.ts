@@ -149,6 +149,7 @@ export function createSfTransport(options: Readonly<{
   const webOrigin = () => typeof window !== "undefined" && window.location.origin === options.binding.publicOrigin
   let stamp: SfContextStamp | undefined
   const pending = new Map<string, string>()
+  const reportInFlight = new Set<string>()
 
   const clear = () => { stamp = undefined; pending.clear() }
   const transport: SfTransport = {
@@ -251,17 +252,22 @@ export function createSfTransport(options: Readonly<{
       if (mutating && digest === undefined) return failure("contract-unavailable")
       const ownerHeader = legacyMutation ? nativeOwnerHeader(stamp!) : undefined
       if (legacyMutation && !ownerHeader) return failure("contract-mismatch")
+      const previous = mutating ? pending.get(key!) : undefined
+      const reportRetry = operation.operationId === "reviews.report.prepare"
       if (mutating) {
-        const previous = pending.get(key!)
+        if (reportRetry && reportInFlight.has(key!)) return failure("outcome-unknown")
         if (previous !== undefined) {
-          // A lost response leaves an unresolved intent. Neither concurrent
-          // dispatch nor a second execute is proof of source-side deduplication.
-          return failure(previous === digest ? "outcome-unknown" : "contract-mismatch")
+          if (previous !== digest) return failure("contract-mismatch")
+          // Only this source producer has a stable operation identity and
+          // preserves the first artifact for the exact same command.
+          if (!reportRetry) return failure("outcome-unknown")
         }
         pending.set(key!, digest!)
+        if (reportRetry) reportInFlight.add(key!)
       }
+      try {
       if (!isCurrent() || call.signal.aborted) {
-        if (mutating) pending.delete(key!)
+        if (mutating && previous === undefined) pending.delete(key!)
         return failure("aborted")
       }
       if (operation.operationId.startsWith("files.") && stamp &&
@@ -406,7 +412,7 @@ export function createSfTransport(options: Readonly<{
       if (!Number.isInteger(response.status) || response.status < 200 || response.status >= 600) return failure(mutating ? "outcome-unknown" : "invalid-response")
       if (response.status === 401 || response.status === 403) clear()
       // A 5xx after submission is not a durable negative mutation receipt.
-      if (mutating && response.status >= 500 && operation.operationId !== "reviews.report.prepare") return failure("outcome-unknown")
+      if (mutating && response.status >= 500) return failure("outcome-unknown")
       const uncertain = mutating && response.status !== 401 && response.status !== 403
       if (isBytes) {
         if (response.status !== 200 || !(response.body instanceof Uint8Array))
@@ -422,11 +428,6 @@ export function createSfTransport(options: Readonly<{
       if (wireDecoded.status !== "ok") return failure(uncertain ? "outcome-unknown" : "invalid-response")
       const parsedOutput = Schema.decodeUnknownOption(Schema.toType(operation.output), { onExcessProperty: "error" })(wireDecoded.value)
       if (Option.isNone(parsedOutput)) return failure(uncertain ? "outcome-unknown" : "invalid-response")
-      // A typed, explicit report rejection is the producer's result, not a
-      // successful artifact. An inconsistent 5xx success remains uncertain.
-      if (mutating && response.status >= 500 &&
-          (typeof parsedOutput.value !== "object" || parsedOutput.value === null ||
-           !("status" in parsedOutput.value) || parsedOutput.value.status === "ok")) return failure("outcome-unknown")
       if (operation.operationId.startsWith("files.") && stamp && !options.desktop &&
           !await refreshSfFileAuthority(options, stamp, operation.operationId))
         return failure(mutating ? "outcome-unknown" : "contract-unavailable")
@@ -442,6 +443,9 @@ export function createSfTransport(options: Readonly<{
       }
       if (mutating) pending.delete(key!)
       return { kind: "response", status: response.status, headers: response.headers, body: parsedOutput.value }
+      } finally {
+        if (mutating && reportRetry) reportInFlight.delete(key!)
+      }
     },
     /**
      * A06 original supplier CSV producer, exactly {mount}/procurement?download=suppliers.
