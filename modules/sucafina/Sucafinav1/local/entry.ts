@@ -198,6 +198,20 @@ export async function createConfiguredInstallation(
       ...createSfProcurementProjectionHandlers(nativeDependencies),
       ...createSfDecisionsProjectionHandlers(nativeDependencies),
       ...createSfRoutinesHandlers(nativeDependencies),
+      // Resolve the real host producer per Request: host services may not yet be
+      // live when this installation factory first registers its routes.
+      // An absent Review service is an explicit 503, never synthetic data.
+      {
+        operationId: "projection.review" as const,
+        handle: async (request: Request) => {
+          const producer = runtime?.services?.()?.nativeReviewProjection
+          return producer ? producer.handle(request) : Response.json(
+            { status: "unavailable", reason: "review-producer-unavailable" },
+            { status: 503, headers: { "Cache-Control": "no-store",
+              "X-Content-Type-Options": "nosniff" } },
+          )
+        },
+      },
     ],
   })
   // Started only after composition succeeds, outside request/business scopes.

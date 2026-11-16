@@ -60,6 +60,11 @@ export type SfHostServices = ReturnType<typeof createSfProductAuthority> & {
   work?: Pick<ReturnType<typeof createCollaborationWorkPort>, "listPresentation">
   /** Exact C58 human-authorized destination reader and its terminal witness.
    * Never expose producer authority, a grant factory or its resolver to UI. */
+  /** Authorized, host-owned A07 projection. Never serializes authority or source ports. */
+  nativeReviewProjection?: Readonly<{
+    operationId: "projection.review"
+    handle: (request: Request) => Promise<Response>
+  }>
   workDestinations?: Readonly<{
     read: (selection: WorkListRequest, actionRef: string, call: TrustedDomainContext) =>
       Promise<PortResult<{

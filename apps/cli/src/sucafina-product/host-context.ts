@@ -51,6 +51,7 @@ import { createSfMemoryServices } from "./memory-services.ts"
 import { createSfMemoryHttp } from "./memory-http.ts"
 import { createSfWorkSignals, deriveSfWorkRefKey } from "./work-signals.ts"
 import { createSfWorkDestinations } from "./work-destinations.ts"
+import { createSfReviewsProjectionHandlers } from "./native-ui/reviews.ts"
 import { createSfWorkHttp } from "./work-http.ts"
 import { materialSelection } from "./memory-selection.ts"
 import { createSfResidentReviewReaders } from "./review-resident-readers.ts"
@@ -899,7 +900,15 @@ export const createSfHostRuntimeWithRoutineNative = async (
       return { status: "ok", stamp: admitted.stamp, authMode: input.authMode, destinations } as const
     },
   })
-  const services: SfHostServices & { productHtml: SfProductHtml; nativeUiProducts: typeof nativeUiProducts } = { ...authority, nativeUiProducts, productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
+  // Keep original A07 authority, business, Review application and scoped persistence;
+  // never manufacture a principal or dispatch a second review engine.
+  const nativeReviewProjection = extended.reviews
+    ? createSfReviewsProjectionHandlers({ origin: input.origin, mount: input.mount,
+        authority, business, reviews: extended.reviews, persistence: input.persistence })
+    : undefined
+  const services: SfHostServices & { productHtml: SfProductHtml; nativeUiProducts: typeof nativeUiProducts } = { ...authority, nativeUiProducts,
+    ...(nativeReviewProjection ? { nativeReviewProjection } : {}),
+    productView: business.procurementQueueView, productHtml: extended.productHtml, caseCreationRecovery: business.cases.recoverCreation,
     procurementSelections: business.procurementSelections, forecastInputs: createSfForecastInputAdapter({ authority, business, selected, inputs: analysisInputs }), sourcingInputs, work: business.collaboration.work, workDestinations: { read: workDestinations.read },
     analysisInputs, analyses, plannerMonthly, personalViews, documents: documents?.documents,
     routineRuns: { discoverRuns: async (context) =>

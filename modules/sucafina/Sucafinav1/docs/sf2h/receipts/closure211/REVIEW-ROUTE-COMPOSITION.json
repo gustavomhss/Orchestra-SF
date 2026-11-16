@@ -1,0 +1,53 @@
+{
+  "schema": "sf2h.closure211.review-route.v1",
+  "epoch": "closure-composer-e1-browser211",
+  "parent_head": "b0159b461f843fdb2cc6f708b5d1eb9d3331b0d4",
+  "parent_tree": "4a429e87ea82ac16afbfbe68025590855c0a50ff",
+  "review": "S1-R1-207",
+  "causal_findings": [
+    "PRE-R01-146-002"
+  ],
+  "behavior": {
+    "producer": "Existing A07 createSfReviewsProjectionHandlers with original authority, business, reviews, persistence",
+    "host": "Exposes private in-process nativeReviewProjection only when real review application exists",
+    "installation": "Late-bound per-original-Request projection.review under F02 frozen operation registry; no cloned Request, new service, principal, or grant",
+    "missing_producer": "503 unavailable; does not fabricate review agenda or unauthorized data"
+  },
+  "status": "STATIC_PROPOSAL_NOT_RUN",
+  "paths": [
+    {
+      "path": "modules/sucafina/Sucafinav1/product/contracts/host-context.ts",
+      "pre": "55bbaf8abe337586823cea89ed45c438e6c979d2",
+      "post": "d21526bdfb2f48877a1ca77463ef8bcef6cdf87d",
+      "bytes_before": 7946,
+      "bytes_after": 8170
+    },
+    {
+      "path": "apps/cli/src/sucafina-product/host-context.ts",
+      "pre": "b8cc6b18221b5f2c18d6e281cd091df2ed8c8c83",
+      "post": "6cef1eaefd5a92be6f9893eb4812f700bc102442",
+      "bytes_before": 83038,
+      "bytes_after": 83582
+    },
+    {
+      "path": "modules/sucafina/Sucafinav1/local/entry.ts",
+      "pre": "8dcafe957590c47f342786e6fb79cd231fe69714",
+      "post": "0075a06fcafca75030741bc50ce2cdd53f00d3d0",
+      "bytes_before": 28546,
+      "bytes_after": 29257
+    }
+  ],
+  "proofs": {
+    "unit": "NOT_RUN",
+    "typecheck": "NOT_RUN",
+    "installed_A07_UI47": "NOT_RUN",
+    "reviewer_final": "NOT_RUN"
+  },
+  "consumer": {
+    "S0": 189,
+    "compiler": 190,
+    "productCI": 214
+  },
+  "candidate_C_accepted": false,
+  "GLOBAL_RELEASE": false
+}
