@@ -133,7 +133,7 @@ export class PromptConflictError extends Schema.TaggedErrorClass<PromptConflictE
   sessionID: SessionSchema.ID,
   messageID: SessionMessage.ID,
 }) {}
-/** An installed `prompt` hook refused the prompt before admission; `detail` is what the person reads. */
+/** A pre-admission prompt observer or installed hook refused; `detail` is what the person reads. */
 export class PromptBlockedError extends Schema.TaggedErrorClass<PromptBlockedError>()("Session.PromptBlockedError", {
   sessionID: SessionSchema.ID,
   reason: Schema.String,
@@ -302,7 +302,7 @@ const layer = Layer.effect(
       ).pipe(Effect.provide(locations.get(session.location)))
     })
 
-    // Before admission and interruptible, since an Ask waits for a person: a refused prompt is never admitted. A message
+    // Before admission and interruptible, since an observer or hook may wait for a person: a refused prompt is never admitted. A message
     // ID that already names a durable prompt is left to admission, which reconciles an exact retry or refuses a
     // conflict, without asking again. It reads the Session first, as admission did.
     const promptHooks = Effect.fnUntraced(function* (input: {
