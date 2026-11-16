@@ -54,8 +54,8 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
   }
   const sameRecoveryOwner = () => {
     const state = owner.state(), access = owner.ready(), intent = recovery()
-    return !!intent && !!access && state.status === "ready" && intent.ownerKey === state.ownerKey &&
-      intent.stamp === JSON.stringify(access.context.stamp) && intent.payload.reviewRef === ref()
+    return !!intent && !!access && state.status === "ready" && !!store.markerScope &&
+      intent.ownerScope === store.markerScope && intent.payload.reviewRef === ref()
   }
   const canRecover = () => sameRecoveryOwner() && !!store.markerScope && store.marker === recovery()?.idempotencyKey
   const storage = () => {
@@ -67,7 +67,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     if (state.status !== "ready" || !access) return
     let alive = true
     onCleanup(() => { alive = false })
-    void reportMarkerScope(state.owner, access.context.stamp).then((scope) => {
+    void reportMarkerScope(state.owner).then((scope) => {
       if (!alive) return
       const saved = storage()
       setStore({ markerScope: scope, marker: saved ? readReportMarker(saved, scope) : undefined })
@@ -121,6 +121,11 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     owner.state()
     onCleanup(() => requestAbort?.abort())
   })
+  createEffect(() => {
+    const pending = recovery(), review = store.review
+    if (!pending || !review || !sameRecoveryOwner() || review.id !== pending.payload.reviewRef) return
+    setStore({ selected: [...pending.payload.sectionRefs], format: pending.payload.format })
+  })
   const validSelection = () => !!store.review && store.selected.length >= 1 &&
     store.selected.length <= 40 && new Set(store.selected).size === store.selected.length &&
     store.selected.every((id) => !!id.trim() && id.length <= 16384 &&
@@ -138,7 +143,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
     const idempotencyKey = existing?.idempotencyKey ?? crypto.randomUUID()
     if (!existing && (store.marker !== null || !writeReportMarker(saved, scope, idempotencyKey))) return
     if (!existing) setStore("marker", idempotencyKey)
-    const intent = existing ?? beginReportRecovery(access.drafts, { ownerKey, stamp, idempotencyKey,
+    const intent = existing ?? beginReportRecovery(access.drafts, { ownerScope: scope, idempotencyKey,
       payload: { reviewRef: store.review.id, sectionRefs: [...store.selected], format: store.format } })
     if (!intent) return
     requestAbort?.abort()
@@ -177,8 +182,12 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
       }}
     >
       <div class="sf-n28" data-sf-surface="UI50" data-export-state={operationState()}>
+        <Show when={typeof store.marker === "string" && !recovery()}>
+          <p role="alert">{t("sf.u33.unknown")}</p>
+        </Show>
         <SfStatePanel state={store.readState}
-          messageKey={key(!ref() ? "sf.u33.noReview" : "sf.u33.unavailable")}
+          messageKey={key(recovery() || typeof store.marker === "string" ? "sf.common.unavailable" :
+            !ref() ? "sf.u33.noReview" : "sf.u33.unavailable")}
           onRetryRead={() => setStore("retry", (count) => count + 1)}>
           <Show when={store.review}>{(review) => <section class="sf-n28-section" data-preserved-review={review().id}>
             <dl class="sf-n28-summary mx-card">
@@ -198,13 +207,9 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
                   <option value="pptx">{t("sf.u33.pptx")}</option>
                 </select>
               </label>
-              <label class="sf-n28-field" for={uid + "-title"}>{t("sf.u33.title")}
-                <input id={uid + "-title"} value={`Review ${review().id}`} readOnly />
-              </label>
             </div>
             <section class="sf-n28-section" aria-label={t("sf.u33.contents")}>
               <h2>{t("sf.u33.contents")}</h2>
-              <p>{t("sf.u33.limit")}</p>
               <ul class="sf-n28-items">
                 <For each={review().sections}>{(section) => <li class="mx-card" data-section-id={section.id} data-source-record-count={section.count}>
                   <label>
@@ -240,8 +245,7 @@ export function SfReportsView(props: SfSurfaceProps<"UI50">) {
             <section class="sf-n28-section" aria-label={t("sf.u33.download")}>
               <h2>{t("sf.u33.download")}</h2>
               <Show when={!exportAdmitted() || store.marker !== null || !!recovery() && !store.busy}>
-                <p role="status" data-sf-file-unavailable>{t("sf.u33.notAvailable")}</p>
-                <Show when={canRecover() && recovery()?.reason}><p>{recovery()?.reason}</p></Show>
+                <p role="status" data-sf-file-unavailable>{t("sf.common.unavailable")}</p>
               </Show>
               <For each={canRecover() ? recovery()?.gaps ?? [] : []}>{(gap) => <p>{gap}</p>}</For>
               <Show when={store.busy}>

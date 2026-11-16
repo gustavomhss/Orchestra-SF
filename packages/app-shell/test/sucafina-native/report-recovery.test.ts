@@ -23,7 +23,8 @@ const options = (drafts: ReturnType<typeof owner>["registry"], transport: SfTran
 
 test("owner marker refuses replacement or removal with another correlation", () => {
   const data = new Map<string, string>()
-  const storage = { getItem: (name: string) => data.get(name) ?? null,
+  const storage = { get length() { return data.size }, key: (index: number) => [...data.keys()][index] ?? null,
+    getItem: (name: string) => data.get(name) ?? null,
     setItem: (name: string, value: string) => { data.set(name, value) },
     removeItem: (name: string) => { data.delete(name) } }
   expect(readReportMarker(storage, "owner-scope")).toBeNull()
@@ -35,12 +36,16 @@ test("owner marker refuses replacement or removal with another correlation", () 
   storage.setItem("owner-scope", "invalid")
   expect(readReportMarker(storage, "owner-scope")).toBeUndefined()
   expect(writeReportMarker(storage, "owner-scope", key)).toBe(false)
+  storage.removeItem("owner-scope")
+  storage.setItem("sf:ui50:report:v1:old-host", key)
+  expect(readReportMarker(storage, "new-owner-scope")).not.toBeNull()
+  expect(writeReportMarker(storage, "new-owner-scope", key)).toBe(false)
 })
 
 test("a transport contract mismatch cannot clear a possibly submitted intent", async () => {
   const scope = owner()
   const transport = { execute: async () => ({ kind: "transport-error", reason: "contract-mismatch" }) } as unknown as SfTransport
-  beginReportRecovery(scope.registry, { ownerKey: "owner", stamp: "stamp", idempotencyKey: key, payload })
+  beginReportRecovery(scope.registry, { ownerScope: "owner-scope", idempotencyKey: key, payload })
   await runReportRecovery(options(scope.registry, transport))
   expect(readReportRecovery(scope.registry)).toMatchObject({ idempotencyKey: key, payload, reason: "contract-mismatch" })
   expect(scope.discardAll()).toBe(false)
@@ -53,12 +58,12 @@ test("uncertain prepare survives a view reload and retries only the original pay
     return { kind: "transport-error", reason: "outcome-unknown" }
   } } as unknown as SfTransport
   const selection = { ...payload, sectionRefs: [...payload.sectionRefs] }
-  beginReportRecovery(scope.registry, { ownerKey: "owner", stamp: "stamp", idempotencyKey: key, payload: selection })
+  beginReportRecovery(scope.registry, { ownerScope: "owner-scope", idempotencyKey: key, payload: selection })
   selection.sectionRefs.reverse()
   await runReportRecovery(options(scope.registry, transport))
   expect(scope.discardAll()).toBe(false)
   expect(readReportRecovery(scope.registry)?.payload).toEqual(payload)
-  expect(beginReportRecovery(scope.registry, { ownerKey: "owner", stamp: "stamp", idempotencyKey: "another-key", payload })).toBeUndefined()
+  expect(beginReportRecovery(scope.registry, { ownerScope: "owner-scope", idempotencyKey: "another-key", payload })).toBeUndefined()
   // A new view obtains the same owner registry, rather than reconstructing a command.
   await runReportRecovery(options(scope.registry, transport))
   expect(sent).toEqual([1, 2].map(() => ({ operation: "reviews.report.prepare", value: payload, key })))
@@ -75,7 +80,7 @@ test("a prepared artifact is retained after a download error and retry never pre
         coverage: payload.sectionRefs.map((sectionRef) => ({ sectionRef, includedCount: 1, totalCount: 1 })), gaps: [] },
       receipt: { operation: "sf_report_prepare", principalRef: "person", accessRevision: "revision" } } }
   } } as unknown as SfTransport
-  beginReportRecovery(scope.registry, { ownerKey: "owner", stamp: "stamp", idempotencyKey: key, payload })
+  beginReportRecovery(scope.registry, { ownerScope: "owner-scope", idempotencyKey: key, payload })
   await runReportRecovery(options(scope.registry, transport))
   expect(readReportRecovery(scope.registry)?.artifactRef).toBe(artifactRef)
   await runReportRecovery(options(scope.registry, transport))
@@ -88,7 +93,7 @@ test("late results cannot enter a changed owner's recovery", async () => {
   let release!: (value: unknown) => void
   let current = true
   const transport = { execute: () => new Promise((resolve) => { release = resolve }) } as unknown as SfTransport
-  beginReportRecovery(scope.registry, { ownerKey: "owner", stamp: "stamp", idempotencyKey: key, payload })
+  beginReportRecovery(scope.registry, { ownerScope: "owner-scope", idempotencyKey: key, payload })
   const running = runReportRecovery(options(scope.registry, transport, () => current))
   current = false
   scope.revoke("owner-changed")
