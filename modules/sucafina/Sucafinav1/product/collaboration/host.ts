@@ -119,7 +119,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       return source.observe(scope, context)
     }
     const fence: ConfirmationObserver<T>["fence"] = async (scope, observation, context) => await source.fenceManifest(scope, context) && await source.fence(scope, observation, context)
-    const observations = createConfirmationObservationReceipts<T>({ host: input.host, observe, now: () => Date.parse(input.now()) })
+    const observations = createConfirmationObservationReceipts<T>({ host: input.host, observe, fence, now: () => Date.parse(input.now()) })
     const port = createConfirmationPort<T>({ host: input.host, state: input.state, creationTarget: input.creationTarget, human: input.human, observe, fence, verifyObserved: observations.verifyObserved, createId: input.createId, now: input.now })
     const work = async (id: string, context: TrustedDomainContext): Promise<PortResult<ConfirmationWork>> => {
       const request = input.host.requestFor(context)
@@ -140,7 +140,15 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
     const prepare = async (scope: ConfirmationScope, context: TrustedDomainContext) => {
       const result = await observations.prepare(scope, context)
       if (result.status !== "ok") return result
-      return { status: "ok" as const, value: { sourceVersion: result.value.sourceVersion, incarnation: result.value.incarnation, scopeFingerprint: result.value.scopeFingerprint, evidence: result.value.evidence, projection: result.value.projection } }
+      return { status: "ok" as const, value: { sourceVersion: result.value.sourceVersion, incarnation: result.value.incarnation, scopeFingerprint: result.value.scopeFingerprint, evidence: result.value.evidence, projection: result.value.projection, selectionRef: result.value.selectionRef } }
+    }
+    const readSelection = async (selectionRef: string, context: TrustedDomainContext) => {
+      const result = await observations.readSelection(selectionRef, context)
+      if (result.status !== "ok") return result
+      const observation = result.value.observation
+      return { status: "ok" as const, value: { kind: "prepared-selection" as const, selectionRef: result.value.selectionRef,
+        scope: result.value.scope, observation: { sourceVersion: observation.sourceVersion, incarnation: observation.incarnation,
+          scopeFingerprint: observation.scopeFingerprint, evidence: observation.evidence, projection: observation.projection } } }
     }
     const confirm = async (command: ConfirmationCommand, context: TrustedDomainContext) => {
       const result = await port.confirm(command, context)
@@ -148,7 +156,7 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
       const record = result.value
       return { status: "ok" as const, value: { id: record.id, sourceRef: record.sourceRef, observedSourceVersion: record.observedSourceVersion, observedScopeFingerprint: record.observedScopeFingerprint, scope: record.scope, authorId: record.authorId, confirmedAt: record.confirmedAt, auditRef: record.auditRef } }
     }
-    return { prepare, confirm, project: port.project, readScope: port.readScope, find: port.find, inspect: port.inspect, work }
+    return { prepare, readSelection, confirm, project: port.project, readScope: port.readScope, find: port.find, inspect: port.inspect, work }
   })()
   const answerWork = input.confirmationSource ? createAnswerWorkPort({ host: input.host, state: input.state, source: input.confirmationSource, reviewSource: input.reviewAnswerSource, authorizeSources: authority.sources, authorizeHistoricalSources: authority.historicalSources }) : undefined
   const collaboration = createCollaborationComposition({ host: input.host, state: input.state, creationTarget: input.creationTarget, evidence: input.evidence, procurement: input.procurement, selections, signals: input.workSignals, reviewContexts: input.reviewContexts, prepareReviewThreadFence, authorizeReviewThreadContext: input.authorizeReviewThreadContext, recordEvidence, human: input.human, recipientAuthority: input.recipientAuthority, reviewRecipientAuthority: input.reviewRecipientAuthority, recipientThread, reissue, refreshWorkSource, captureWorkSource: input.captureWorkSource, confirmationWork: confirmation?.work, answerWork: answerWork?.project, createId: input.createId, now: input.now })
@@ -273,6 +281,5 @@ export function createCollaborationHost<T extends HostConfirmationObservation = 
   const cycle = createCollaborationCycleView({ cases: input.cases, work: collaboration.work, host: input.host, resolveCase: caseSelection?.resolveCase })
   return { ...collaboration, questions, cycle, caseSelection, confirmation, answerReuse, threadHistory, threadReads, authorizeThreadSourceContinuity, listRecipients, storageVersion, recipientThread, recipientActions, captureWorkSource, resolveWorkDestination, recordEvidence, selections, sourceFence: createCollaborationSourceFence({ host: input.host, scopedSources: input.scopedSources }), resolveQuestion: createQuestionSource(threadReads), answerEvidence, resolveAnswer: answerEvidence.resolve, projectAnswer: answerEvidence.project, capabilities: createCollaborationCapabilities(dispatch) }
 }
-
 
 

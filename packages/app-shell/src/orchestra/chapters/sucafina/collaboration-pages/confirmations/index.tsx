@@ -1,4 +1,5 @@
 import { For, Show, createEffect, createSignal, on, onCleanup } from "solid-js"
+import { useNavigate } from "@solidjs/router"
 import { Schema } from "effect"
 import { useLanguage } from "@/context/language"
 import { SF_U44_COPY } from "@/i18n/orchestra-chapters/sf-u44"
@@ -11,12 +12,13 @@ import type { SfSurfaceProps } from "../../context/contracts"
 import { SfConfirmation, type SfCoverage } from "../../collaboration"
 import { SfPageFrame } from "../../shared/frame"
 import { SfStatePanel, type SfUiState } from "../../shared/states"
+import { encodeSfRouteRef } from "../../navigation-state"
 import "./confirmations.css"
 
 type Scope = typeof SfConfirmationScope.Type
 type Prepared = Extract<typeof SfCollaboration.operations["collaboration.confirmation-prepare"]["output"]["Type"], { status: "ok" }>["value"]
 type Recorded = Extract<typeof SfCollaboration.operations["collaboration.confirmation-confirm"]["output"]["Type"], { status: "ok" }>["value"]
-type Projection = Extract<typeof SfCollaboration.operations["collaboration.confirmation-project"]["output"]["Type"], { status: "ok" }>["value"]
+type Projection = Exclude<Extract<typeof SfCollaboration.operations["collaboration.confirmation-project"]["output"]["Type"], { status: "ok" }>["value"], { kind: "prepared-selection" }>
 type Snapshot = Readonly<{ transport: SfTransport; generation: number; ownerKey: string; accessRevision: string }>
 function failure(result: { kind: string; reason?: string; status?: number; body?: unknown }): SfUiState {
   if (result.kind === "transport-error") return result.reason === "outcome-unknown" ? "outcome-unknown" : "unavailable"
@@ -32,6 +34,7 @@ function failure(result: { kind: string; reason?: string; status?: number; body?
 export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
   const owner = useSfContext()
   const language = useLanguage()
+  const navigate = useNavigate()
   type Key = Parameters<typeof SfPageFrame>[0]["titleKey"]
   const key = (copy: keyof typeof SF_U44_COPY | "sf.common.loading" | "sf.common.empty" |
     "sf.common.unavailable" | "sf.common.noAccess" | "sf.common.conflict" |
@@ -39,10 +42,10 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     "sf.common.stale" | "sf.common.partial"): Key => copy as Key
   const t = (copy: keyof typeof SF_U44_COPY) => language.t(copy as Parameters<typeof language.t>[0])
   const selectedRef = () => String(props.route.params.selectionRef)
-  const [scopeInput, setScopeInput] = createSignal("")
+  const [manualScope, setManualScope] = createSignal("")
   const [scope, setScope] = createSignal<Scope>()
   const [prepared, setPrepared] = createSignal<Prepared>()
-  const [sourceTextAtPrepare, setSourceTextAtPrepare] = createSignal("")
+  const [preparedFence, setPreparedFence] = createSignal("")
   const [storageVersion, setStorageVersion] = createSignal<number>()
   const [confirmed, setConfirmed] = createSignal<Recorded>()
   const [projection, setProjection] = createSignal<Projection>()
@@ -73,56 +76,81 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
       "|" + owner.generation() + "|" + selectedRef()
   }, () => {
     readAbort?.abort(); writeAbort?.abort()
-    setScopeInput(""); setScope(undefined); setPrepared(undefined); setSourceTextAtPrepare("")
+    setScope(undefined); setPrepared(undefined); setPreparedFence(""); setManualScope("")
     setStorageVersion(undefined); setConfirmed(undefined); setProjection(undefined)
     setConfirmationId(""); setBusy(false); setPendingKey(undefined); setError(undefined); setState("ready")
   }))
   onCleanup(() => { readAbort?.abort(); writeAbort?.abort() })
-  const changeScope = (text: string) => {
-    if (busy() || pendingKey()) return
-    setScopeInput(text); setScope(undefined); setPrepared(undefined); setStorageVersion(undefined)
-    setSourceTextAtPrepare(""); setError(undefined); setProjection(undefined)
-  }
-  const prepare = async () => {
+  const prepareManual = async () => {
     const s = snapshot()
     if (!s || busy() || pendingKey()) return
-    let selected: Scope
-    try {
-      selected = Schema.decodeUnknownSync(SfConfirmationScope)(JSON.parse(scopeInput()))
-      if (!selected.fields.length || !selected.fields.every((name) => name.trim()) ||
-          !selected.scopeDefinitionVersion.trim() || !selected.sourceRef.id.trim() ||
-          !selected.sourceRef.incarnation.trim()) throw Error("incomplete material scope")
-    } catch {
-      setState("invalid"); setError("sf.u44.scopeInvalid"); return
-    }
+    const parsed = Schema.decodeUnknownOption(Schema.toType(SfConfirmationScope), { onExcessProperty: "error" })(
+      (() => { try { return JSON.parse(manualScope()) as unknown } catch { return undefined } })(),
+    )
+    if (parsed._tag === "None") { setState("invalid"); setError("sf.u44.scopeInvalid"); return }
     readAbort?.abort()
     const abort = new AbortController()
     readAbort = abort
-    setPrepared(undefined); setScope(undefined); setStorageVersion(undefined)
+    setBusy(true); setState("loading"); setError(undefined)
+    try {
+      const result = await createSfCollaborationClient(s.transport)["collaboration.confirmation-prepare"]({ scope: parsed.value }, { signal: abort.signal })
+      if (!current(s, abort.signal)) return
+      if (result.kind !== "response" || result.body.status !== "ok") { setState(failure(result)); return }
+      const issued = result.body.value.selectionRef
+      if (!issued || !/^confirmation-selection:[a-f0-9]{64}$/.test(issued) || result.body.value.incarnation !== parsed.value.sourceRef.incarnation) { setState("unavailable"); return }
+      navigate("/orchestra/sf-work/confirmations/" + encodeSfRouteRef(issued))
+    } catch { if (current(s, abort.signal)) setState("unavailable") }
+    finally { if (current(s, abort.signal)) setBusy(false) }
+  }
+  const readSelection = async () => {
+    const s = snapshot()
+    if (!s || busy() || pendingKey()) return
+    const reference = selectedRef()
+    if (!/^confirmation-selection:[a-f0-9]{64}$/.test(reference)) { setState("invalid"); return }
+    readAbort?.abort()
+    const abort = new AbortController()
+    readAbort = abort
+    setPrepared(undefined); setScope(undefined); setPreparedFence(""); setStorageVersion(undefined)
     setConfirmed(undefined); setProjection(undefined); setError(undefined)
     setState("loading"); setBusy(true)
     try {
       const client = createSfCollaborationClient(s.transport)
-      const prep = await client["collaboration.confirmation-prepare"]({ scope: selected }, { signal: abort.signal })
+      const prep = await client["collaboration.confirmation-project"]({ selectionRef: reference }, { signal: abort.signal })
       if (!current(s, abort.signal)) return
       if (prep.kind !== "response" || prep.body.status !== "ok") {
         setState(failure(prep)); return
       }
+      if (!("kind" in prep.body.value) || prep.body.value.kind !== "prepared-selection" || prep.body.value.selectionRef !== reference) {
+        setState("invalid"); return
+      }
+      const selected = prep.body.value.scope
+      const observed = prep.body.value.observation
       const version = await client["collaboration.storage-version"]({ namespace: "confirmations" }, { signal: abort.signal })
       if (!current(s, abort.signal)) return
       if (version.kind !== "response" || version.body.status !== "ok") {
         setState(failure(version)); return
       }
-      if (prep.body.value.incarnation !== selected.sourceRef.incarnation ||
-          prep.body.value.evidence.target.incarnation !== selected.sourceRef.incarnation) {
+      if (selectedRef() !== reference || observed.incarnation !== selected.sourceRef.incarnation ||
+          observed.evidence.target.incarnation !== selected.sourceRef.incarnation) {
         setState("stale"); return
       }
-      setScope(selected); setPrepared(prep.body.value)
-      setSourceTextAtPrepare(scopeInput()); setStorageVersion(version.body.value)
+      const fixed = structuredClone(selected)
+      Object.freeze(fixed.sourceRef); Object.freeze(fixed.fields); Object.freeze(fixed.period)
+      fixed.materialDependencies.forEach((dependency) => {
+        Object.freeze(dependency.fields); Object.freeze(dependency.period); Object.freeze(dependency)
+      })
+      Object.freeze(fixed.materialDependencies); Object.freeze(fixed)
+      setScope(fixed); setPrepared(structuredClone(observed))
+      setPreparedFence(JSON.stringify([fixed, observed.sourceVersion, observed.scopeFingerprint]))
+      setStorageVersion(version.body.value)
       setState("ready")
     } catch { if (current(s, abort.signal)) setState("unavailable") }
     finally { if (current(s, abort.signal)) setBusy(false) }
   }
+  createEffect(on(() => {
+    const state = owner.state()
+    return state.status === "ready" ? `${state.ownerKey}|${owner.generation()}|${selectedRef()}` : ""
+  }, (value) => { if (value) void readSelection() }))
   const project = async (id: string) => {
     const s = snapshot()
     if (!s || !id.trim() || busy()) return
@@ -138,7 +166,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
       if (result.kind !== "response" || result.body.status !== "ok") {
         setState(failure(result)); return
       }
-      if (result.body.value.confirmationId !== id) { setState("invalid"); return }
+      if ("kind" in result.body.value || result.body.value.confirmationId !== id) { setState("invalid"); return }
       setProjection(result.body.value)
       setState(result.body.value.state === "valid" ? "ready" :
         result.body.value.state === "stale" ? "stale" : "partial")
@@ -149,7 +177,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     const s = snapshot(), selected = scope(), material = prepared(), version = storageVersion()
     if (!s || !selected || !material || version === undefined || busy() || pendingKey() ||
         request.selectionRef !== selectedRef() || request.materialVersion !== material.sourceVersion ||
-        sourceTextAtPrepare() !== scopeInput() || state() !== "ready") return
+        preparedFence() !== JSON.stringify([selected, material.sourceVersion, material.scopeFingerprint]) || state() !== "ready") return
     const abort = new AbortController()
     writeAbort = abort
     const idempotencyKey = crypto.randomUUID()
@@ -204,24 +232,27 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
     >
       <section class="sf-u44-confirm" data-sf-surface="UI53">
         <p>{t("sf.u44.navigationSelection")}: <code data-sf-selection-ref>{selectedRef()}</code></p>
-        <p>{t("sf.u44.scopeRequired")}</p>
         <Show when={owner.state().status === "ready" && !confirmed()}>
-          <form class="sf-u44-scope-form" onSubmit={(event) => { event.preventDefault(); void prepare() }}>
-            <label>{t("sf.u44.scopeJson")}
-              <textarea data-sf-confirm-scope rows={9} required value={scopeInput()}
-                disabled={busy() || !!pendingKey()} onInput={(event) => changeScope(event.currentTarget.value)} />
-            </label>
-            <button type="submit" class="mx-btn" disabled={busy() || !!pendingKey()}>
-              {t("sf.u44.prepareMaterial")}
-            </button>
-          </form>
+          <details><summary>{t("sf.u44.prepareMaterial")}</summary>
+            <form class="sf-u44-scope-form" onSubmit={(event) => { event.preventDefault(); void prepareManual() }}>
+              <label>{t("sf.u44.scopeJson")}<textarea data-sf-confirm-scope rows={9} required value={manualScope()}
+                disabled={busy() || !!pendingKey()} onInput={(event) => setManualScope(event.currentTarget.value)} /></label>
+              <button type="submit" class="mx-btn" disabled={busy() || !!pendingKey()}>{t("sf.u44.prepareMaterial")}</button>
+            </form>
+          </details>
+          <details><summary>{t("sf.u44.revalidateMaterial")}</summary>
+            <form class="sf-u44-project-form" onSubmit={(event) => { event.preventDefault(); void project(confirmationId()) }}>
+              <label>{t("sf.u44.confirmationId")}<input data-sf-confirm-lookup required value={confirmationId()} onInput={(event) => setConfirmationId(event.currentTarget.value)} /></label>
+              <button type="submit" class="mx-btn" disabled={busy()}>{t("sf.u44.revalidateMaterial")}</button>
+            </form>
+          </details>
         </Show>
         <Show when={error()}>{(message) => <p role="alert">{t(message())}</p>}</Show>
         <SfStatePanel state={effectiveState()} messageKey={stateKey(effectiveState())}
           onRetryRead={() => {
             if (pendingKey()) return
             if (confirmed()) void project(confirmed()!.id)
-            else void prepare()
+            else void readSelection()
           }}>
           <Show when={scope() && prepared() && !confirmed()}>
             <section class="sf-u44-material" data-sf-confirm-material>
@@ -252,7 +283,7 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
                 coverage={coverage()}
                 state={effectiveState()}
                 onConfirm={(request) => void confirm(request)}
-                onRevalidate={() => void prepare()}
+                onRevalidate={() => void readSelection()}
               />
             </section>
           </Show>
@@ -276,15 +307,6 @@ export function SfConfirmationView(props: SfSurfaceProps<"UI53">) {
             {(observed) => <p role="status">{t("sf.u44.status")}: {observed().state} ({observed().reason})</p>}
           </Show>
         </SfStatePanel>
-        <Show when={owner.state().status === "ready" && !confirmed() && !prepared() && !pendingKey()}>
-          <form class="sf-u44-project-form" onSubmit={(event) => { event.preventDefault(); void project(confirmationId()) }}>
-            <label>{t("sf.u44.confirmationId")}
-              <input data-sf-confirm-lookup required value={confirmationId()}
-                onInput={(event) => setConfirmationId(event.currentTarget.value)} />
-            </label>
-            <button class="mx-btn" type="submit" disabled={busy()}>{t("sf.u44.revalidateMaterial")}</button>
-          </form>
-        </Show>
         <Show when={pendingKey()}>
           {(id) => <p role="alert" data-sf-confirm-pending>{t("sf.u44.unknownReceipt")} <code>{id()}</code></p>}
         </Show>

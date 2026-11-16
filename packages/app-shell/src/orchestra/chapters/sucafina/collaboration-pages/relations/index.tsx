@@ -104,7 +104,35 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
       } else setState("partial")
     } catch { if (current(s, abort.signal)) setState("unavailable") }
   }
-  // On entry the source is a query/case ref only, never the relation ID itself.
+  const readReference = async (relationRef: string) => {
+    const s = snapshot()
+    if (!s || !relationRef.trim()) { setState("invalid"); return }
+    readAbort?.abort()
+    const abort = new AbortController()
+    readAbort = abort
+    setState("loading"); setRelations([]); setStorageVersion(undefined)
+    try {
+      const client = createSfCollaborationClient(s.transport)
+      const result = await client["collaboration.relation-read"]({ relationRef }, { signal: abort.signal })
+      if (!current(s, abort.signal) || props.route.kind !== "entry" || props.route.params.relationRef !== relationRef) return
+      if (result.kind !== "response" || result.body.status !== "ok") { setState(stateOf(result)); return }
+      const rows = result.body.value.relations
+      if (rows.length !== 1 || rows[0]?.id !== relationRef) { setState("unavailable"); return }
+      const version = await client["collaboration.storage-version"]({ namespace: "relations" }, { signal: abort.signal })
+      if (!current(s, abort.signal) || props.route.kind !== "entry" || props.route.params.relationRef !== relationRef) return
+      setSource(rows[0]!.fromRef); setRelations(rows)
+      if (version.kind === "response" && version.body.status === "ok") { setStorageVersion(version.body.value); setState("ready") }
+      else setState("partial")
+    } catch { if (current(s, abort.signal)) setState("unavailable") }
+  }
+  createEffect(on(() => {
+    const state = owner.state()
+    return state.status === "ready" && props.route.kind === "entry"
+      ? `${state.ownerKey}|${owner.generation()}|${props.route.params.relationRef}` : ""
+  }, (ready) => {
+    if (ready && props.route.kind === "entry") void readReference(props.route.params.relationRef)
+  }))
+  // Query and case-alias routes keep their original record-reference read.
   createEffect(on(routeSource, (ref) => { if (ref && snapshot() && source() === ref) void read(ref) }, { defer: true }))
   const visibleRelations = createMemo<readonly SfRelation[]>(() => relations()
     .filter((record) => record.fromRef === source())
@@ -243,7 +271,7 @@ export function SfRelationsView(props: SfSurfaceProps<"UI51">) {
           </Show>
         </Show>
         <SfStatePanel state={effectiveState()} messageKey={stateKey(effectiveState())}
-          onRetryRead={() => void read(source())}>
+          onRetryRead={() => { if (props.route.kind === "entry") void readReference(props.route.params.relationRef); else void read(source()) }}>
           <Show when={source()}>
             <SfRelations
               sourceRef={source() as SfRef}
